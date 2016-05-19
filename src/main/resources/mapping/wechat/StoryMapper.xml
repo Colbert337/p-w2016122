@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hbkis.boss.wechat.dao.StoryMapper" >
-  <resultMap id="BaseResultMap" type="com.hbkis.boss.wechat.model.Story" >
+<mapper namespace="com.sysongy.poms.wechat.dao.StoryMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.wechat.model.Story" >
     <id column="wx_story_id" property="wxStoryId" jdbcType="VARCHAR" />
     <result column="story_name" property="storyName" jdbcType="VARCHAR" />
     <result column="cover_img" property="coverImg" jdbcType="VARCHAR" />
@@ -26,7 +26,7 @@
     delete from wx_story
     where wx_story_id = #{wxStoryId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.hbkis.boss.wechat.model.Story" >
+  <insert id="insert" parameterType="com.sysongy.poms.wechat.model.Story" >
     insert into wx_story (wx_story_id, story_name, cover_img, 
       story_intro, story_time, comment_count, 
       author_intro, created_date, modified_date
@@ -36,7 +36,7 @@
       #{authorIntro,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{modifiedDate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hbkis.boss.wechat.model.Story" >
+  <insert id="insertSelective" parameterType="com.sysongy.poms.wechat.model.Story" >
     insert into wx_story
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="wxStoryId != null" >
@@ -97,7 +97,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hbkis.boss.wechat.model.Story" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.wechat.model.Story" >
     update wx_story
     <set >
       <if test="storyName != null" >
@@ -127,7 +127,7 @@
     </set>
     where wx_story_id = #{wxStoryId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hbkis.boss.wechat.model.Story" >
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.wechat.model.Story" >
     update wx_story
     set story_name = #{storyName,jdbcType=VARCHAR},
       cover_img = #{coverImg,jdbcType=VARCHAR},

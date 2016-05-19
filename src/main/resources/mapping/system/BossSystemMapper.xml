@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hbkis.boss.system.dao.BossSystemMapper" >
-  <resultMap id="BaseResultMap" type="com.hbkis.boss.system.model.BossSystem" >
+<mapper namespace="com.sysongy.poms.system.dao.BossSystemMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.system.model.BossSystem" >
     <id column="system_id" property="systemId" jdbcType="VARCHAR" />
     <result column="system_name" property="systemName" jdbcType="VARCHAR" />
     <result column="system_status" property="systemStatus" jdbcType="INTEGER" />
@@ -59,7 +59,7 @@
     delete from system
     where system_id = #{systemId,jdbcType=VARCHAR}
   </delete>
-  <insert id="add" parameterType="com.hbkis.boss.system.model.BossSystem" >
+  <insert id="add" parameterType="com.sysongy.poms.system.model.BossSystem" >
     insert into system (system_id, system_name, system_status, 
       school_count, manager, phone_number, 
       created_date, modified_date)
@@ -67,7 +67,7 @@
       #{schoolCount,jdbcType=INTEGER}, #{manager,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, 
       #{createdDate,jdbcType=TIMESTAMP}, #{modifiedDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="addBossSystem" parameterType="com.hbkis.boss.system.model.BossSystem" >
+  <insert id="addBossSystem" parameterType="com.sysongy.poms.system.model.BossSystem" >
     insert into system
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="systemId != null" >
@@ -122,7 +122,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateBossSystem" parameterType="com.hbkis.boss.system.model.BossSystem" >
+  <update id="updateBossSystem" parameterType="com.sysongy.poms.system.model.BossSystem" >
     update system
     <set >
       <if test="systemName != null" >
@@ -149,7 +149,7 @@
     </set>
     where system_id = #{systemId,jdbcType=VARCHAR}
   </update>
-  <update id="update" parameterType="com.hbkis.boss.system.model.BossSystem" >
+  <update id="update" parameterType="com.sysongy.poms.system.model.BossSystem" >
     update system
     set system_name = #{systemName,jdbcType=VARCHAR},
       system_status = #{systemStatus,jdbcType=INTEGER},

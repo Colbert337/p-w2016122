@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hbkis.boss.system.dao.SystemMenuRoleMapper" >
-  <resultMap id="BaseResultMap" type="com.hbkis.boss.system.model.SystemMenuRole" >
+<mapper namespace="com.sysongy.poms.system.dao.SystemMenuRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.system.model.SystemMenuRole" >
     <id column="system_menu_role_id" property="systemMenuRoleId" jdbcType="VARCHAR" />
     <result column="system_menu_id" property="systemMenuId" jdbcType="VARCHAR" />
     <result column="role_id" property="roleId" jdbcType="VARCHAR" />
@@ -29,13 +29,13 @@
     delete from system_menu_role
     where system_menu_role_id = #{systemMenuRoleId,jdbcType=VARCHAR}
   </delete>
-  <insert id="add" parameterType="com.hbkis.boss.system.model.SystemMenuRole" >
+  <insert id="add" parameterType="com.sysongy.poms.system.model.SystemMenuRole" >
     insert into system_menu_role (system_menu_role_id, system_menu_id, role_id, 
       created_date)
     values (#{systemMenuRoleId,jdbcType=VARCHAR}, #{systemMenuId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, 
       #{createdDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="addSystemMenuRole" parameterType="com.hbkis.boss.system.model.SystemMenuRole" >
+  <insert id="addSystemMenuRole" parameterType="com.sysongy.poms.system.model.SystemMenuRole" >
     insert into system_menu_role
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="systemMenuRoleId != null" >
@@ -66,7 +66,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateSystemMenuRole" parameterType="com.hbkis.boss.system.model.SystemMenuRole" >
+  <update id="updateSystemMenuRole" parameterType="com.sysongy.poms.system.model.SystemMenuRole" >
     update system_menu_role
     <set >
       <if test="systemMenuId != null" >
@@ -81,7 +81,7 @@
     </set>
     where system_menu_role_id = #{systemMenuRoleId,jdbcType=VARCHAR}
   </update>
-  <update id="update" parameterType="com.hbkis.boss.system.model.SystemMenuRole" >
+  <update id="update" parameterType="com.sysongy.poms.system.model.SystemMenuRole" >
     update system_menu_role
     set system_menu_id = #{systemMenuId,jdbcType=VARCHAR},
       role_id = #{roleId,jdbcType=VARCHAR},

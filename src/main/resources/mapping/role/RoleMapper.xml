@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hbkis.boss.role.dao.RoleMapper" >
-  <resultMap id="BaseResultMap" type="com.hbkis.boss.role.model.Role" >
+<mapper namespace="com.sysongy.poms.role.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.role.model.Role" >
     <id column="role_id" property="roleId" jdbcType="VARCHAR" />
     <result column="system_id" property="systemId" jdbcType="VARCHAR" />
     <result column="role_name" property="roleName" jdbcType="VARCHAR" />
@@ -32,7 +32,7 @@
     delete from role
     where role_id = #{roleId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.hbkis.boss.role.model.Role" >
+  <insert id="insert" parameterType="com.sysongy.poms.role.model.Role" >
     insert into role (role_id, system_id, role_name, 
       role_type, role_desc, role_status, 
       created_date, modified_date)
@@ -40,7 +40,7 @@
       #{roleType,jdbcType=INTEGER}, #{roleDesc,jdbcType=VARCHAR}, #{roleStatus,jdbcType=INTEGER}, 
       #{createdDate,jdbcType=TIMESTAMP}, #{modifiedDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hbkis.boss.role.model.Role" >
+  <insert id="insertSelective" parameterType="com.sysongy.poms.role.model.Role" >
     insert into role
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="roleId != null" >
@@ -95,7 +95,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hbkis.boss.role.model.Role" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.role.model.Role" >
     update role
     <set >
       <if test="systemId != null" >
@@ -122,7 +122,7 @@
     </set>
     where role_id = #{roleId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hbkis.boss.role.model.Role" >
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.role.model.Role" >
     update role
     set system_id = #{systemId,jdbcType=VARCHAR},
       role_name = #{roleName,jdbcType=VARCHAR},

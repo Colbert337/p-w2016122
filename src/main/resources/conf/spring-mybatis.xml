@@ -75,7 +75,7 @@
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.hbkis.*.*.dao" />
+		<property name="basePackage" value="com.sysongy.*.*.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
 	<!-- myBatis文件结束 -->
@@ -109,7 +109,7 @@
 	<!-- Spring aop事务管理 -->
 	<aop:config>
 		<aop:pointcut id="transactionPointcut"
-			expression="execution(* com.hbkis.*.*.service..*Impl.*(..))" />
+			expression="execution(* com.sysongy.*.*.service..*Impl.*(..))" />
 		<aop:advisor pointcut-ref="transactionPointcut"
 			advice-ref="transactionAdvice" />
 	</aop:config>

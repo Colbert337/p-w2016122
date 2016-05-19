@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hbkis.boss.system.dao.SystemMenuMapper" >
-  <resultMap id="BaseResultMap" type="com.hbkis.boss.system.model.SystemMenu" >
+<mapper namespace="com.sysongy.poms.system.dao.SystemMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.system.model.SystemMenu" >
     <id column="system_menu_id" property="systemMenuId" jdbcType="VARCHAR" />
     <result column="system_id" property="systemId" jdbcType="VARCHAR" />
     <result column="menu_id" property="menuId" jdbcType="VARCHAR" />
@@ -36,7 +36,7 @@
     delete from system_menu
     where system_menu_id = #{systemMenuId,jdbcType=VARCHAR}
   </delete>
-  <insert id="add" parameterType="com.hbkis.boss.system.model.SystemMenu" >
+  <insert id="add" parameterType="com.sysongy.poms.system.model.SystemMenu" >
     insert into system_menu (system_menu_id, system_id, menu_id, 
       menu_name, menu_sort, parent_id, 
       menu_status, is_deleted, created_date, 
@@ -46,7 +46,7 @@
       #{menuStatus,jdbcType=INTEGER}, #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
       #{modifiedDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="addSystemMenu" parameterType="com.hbkis.boss.system.model.SystemMenu" >
+  <insert id="addSystemMenu" parameterType="com.sysongy.poms.system.model.SystemMenu" >
     insert into system_menu
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="systemMenuId != null" >
@@ -113,7 +113,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateSystemMenu" parameterType="com.hbkis.boss.system.model.SystemMenu" >
+  <update id="updateSystemMenu" parameterType="com.sysongy.poms.system.model.SystemMenu" >
     update system_menu
     <set >
       <if test="systemId != null" >
@@ -146,7 +146,7 @@
     </set>
     where system_menu_id = #{systemMenuId,jdbcType=VARCHAR}
   </update>
-  <update id="update" parameterType="com.hbkis.boss.system.model.SystemMenu" >
+  <update id="update" parameterType="com.sysongy.poms.system.model.SystemMenu" >
     update system_menu
     set system_id = #{systemId,jdbcType=VARCHAR},
       menu_id = #{menuId,jdbcType=VARCHAR},

@@ -12,7 +12,7 @@
 	<!-- 添加注解驱动 -->  
     <mvc:annotation-driven />  
 	<!-- 自动扫描controller包下的所有类，如果@Controller注入为bean -->
-	<context:component-scan base-package="com.hbkis.*.*.controller" />
+	<context:component-scan base-package="com.sysongy.*.*.controller" />
 
 	<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
 	<bean id="mappingJacksonHttpMessageConverter"
@@ -47,7 +47,7 @@
     <!-- 设置不过滤内容，比如:css,jquery,img 等资源文件 --> 
     <mvc:resources mapping="/assets/**"  location="/assets/" /> 
     <mvc:resources mapping="/webpage/**"  location="/webpage/" /> 
-    <mvc:resources mapping="/comm/**"  location="/comm/" />
+    <mvc:resources mapping="/common/**"  location="/common/" />
     <mvc:resources mapping="/upload/**"  location="/upload/" />  
     <mvc:resources mapping="/docs/**"  location="/docs/" /> 
     <mvc:resources mapping="/wechat/**"  location="/wechat/" /> 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hbkis.boss.evaluate.dao.BossOverallEvaluationMapper" >
-  <resultMap id="BaseResultMap" type="com.hbkis.boss.evaluate.model.BossOverallEvaluation" >
+<mapper namespace="com.sysongy.poms.evaluate.dao.BossOverallEvaluationMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.evaluate.model.BossOverallEvaluation" >
     <id column="boss_overall_evaluation_id" property="bossOverallEvaluationId" jdbcType="VARCHAR" />
     <result column="height_level" property="heightLevel" jdbcType="INTEGER" />
     <result column="weight_level" property="weightLevel" jdbcType="INTEGER" />
@@ -26,7 +26,7 @@
     delete from boss_overall_evaluation
     where boss_overall_evaluation_id = #{bossOverallEvaluationId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.hbkis.boss.evaluate.model.BossOverallEvaluation" >
+  <insert id="insert" parameterType="com.sysongy.poms.evaluate.model.BossOverallEvaluation" >
     insert into boss_overall_evaluation (boss_overall_evaluation_id, height_level, 
       weight_level, bmi_level, evaluate, 
       suggest, sort, is_deleted, created_date, 
@@ -36,7 +36,7 @@
       #{suggest,jdbcType=VARCHAR},#{sort,jdbcType=INTEGER}, #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
       #{modifiedDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hbkis.boss.evaluate.model.BossOverallEvaluation" >
+  <insert id="insertSelective" parameterType="com.sysongy.poms.evaluate.model.BossOverallEvaluation" >
     insert into boss_overall_evaluation
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="bossOverallEvaluationId != null" >
@@ -103,7 +103,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateBossOverallEvaluationById" parameterType="com.hbkis.boss.evaluate.model.BossOverallEvaluation" >
+  <update id="updateBossOverallEvaluationById" parameterType="com.sysongy.poms.evaluate.model.BossOverallEvaluation" >
     update boss_overall_evaluation
     <set >
       <if test="heightLevel != null" >
@@ -136,7 +136,7 @@
     </set>
     where boss_overall_evaluation_id = #{bossOverallEvaluationId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hbkis.boss.evaluate.model.BossOverallEvaluation" >
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.evaluate.model.BossOverallEvaluation" >
     update boss_overall_evaluation
     set height_level = #{heightLevel,jdbcType=INTEGER},
       weight_level = #{weightLevel,jdbcType=INTEGER},
