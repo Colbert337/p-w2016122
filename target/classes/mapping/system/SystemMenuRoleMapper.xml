@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hbkis.boss.system.dao.SystemMenuRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.hbkis.boss.system.model.SystemMenuRole" >
+    <id column="system_menu_role_id" property="systemMenuRoleId" jdbcType="VARCHAR" />
+    <result column="system_menu_id" property="systemMenuId" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    system_menu_role_id, system_menu_id, role_id, created_date
+  </sql>
+  <select id="selectBySystemMenuRoleId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from system_menu_role
+    where system_menu_role_id = #{systemMenuRoleId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据 systemMenuId 查询  list -->
+  <select id="querySystemMenuRoleListBySystemMenuId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+  	 <include refid="Base_Column_List" />
+    from system_menu_role smr
+    where smr.system_menu_id = #{systemMenuId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteBySystemMenuRoleId" parameterType="java.lang.String" >
+    delete from system_menu_role
+    where system_menu_role_id = #{systemMenuRoleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="add" parameterType="com.hbkis.boss.system.model.SystemMenuRole" >
+    insert into system_menu_role (system_menu_role_id, system_menu_id, role_id, 
+      created_date)
+    values (#{systemMenuRoleId,jdbcType=VARCHAR}, #{systemMenuId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, 
+      #{createdDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="addSystemMenuRole" parameterType="com.hbkis.boss.system.model.SystemMenuRole" >
+    insert into system_menu_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="systemMenuRoleId != null" >
+        system_menu_role_id,
+      </if>
+      <if test="systemMenuId != null" >
+        system_menu_id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="systemMenuRoleId != null" >
+        #{systemMenuRoleId,jdbcType=VARCHAR},
+      </if>
+      <if test="systemMenuId != null" >
+        #{systemMenuId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateSystemMenuRole" parameterType="com.hbkis.boss.system.model.SystemMenuRole" >
+    update system_menu_role
+    <set >
+      <if test="systemMenuId != null" >
+        system_menu_id = #{systemMenuId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where system_menu_role_id = #{systemMenuRoleId,jdbcType=VARCHAR}
+  </update>
+  <update id="update" parameterType="com.hbkis.boss.system.model.SystemMenuRole" >
+    update system_menu_role
+    set system_menu_id = #{systemMenuId,jdbcType=VARCHAR},
+      role_id = #{roleId,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP}
+    where system_menu_role_id = #{systemMenuRoleId,jdbcType=VARCHAR}
+  </update>
+</mapper>

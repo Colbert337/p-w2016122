@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hbkis.boss.system.dao.SystemMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.hbkis.boss.system.model.SystemMenu" >
+    <id column="system_menu_id" property="systemMenuId" jdbcType="VARCHAR" />
+    <result column="system_id" property="systemId" jdbcType="VARCHAR" />
+    <result column="menu_id" property="menuId" jdbcType="VARCHAR" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="menu_sort" property="menuSort" jdbcType="INTEGER" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="menu_status" property="menuStatus" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    system_menu_id, system_id, menu_id, menu_name, menu_sort, parent_id, menu_status, 
+    is_deleted, created_date, modified_date
+  </sql>
+  <select id="queryBySystemMenuId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from system_menu
+    where system_menu_id = #{systemMenuId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据系统id  查询系统菜单 -->
+  <select id="querySystemBySystemId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from system_menu sm 
+    where sm.system_id = #{systemId}
+  </select>
+  
+  <delete id="deleteBySystemMenuId" parameterType="java.lang.String" >
+    delete from system_menu
+    where system_menu_id = #{systemMenuId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="add" parameterType="com.hbkis.boss.system.model.SystemMenu" >
+    insert into system_menu (system_menu_id, system_id, menu_id, 
+      menu_name, menu_sort, parent_id, 
+      menu_status, is_deleted, created_date, 
+      modified_date)
+    values (#{systemMenuId,jdbcType=VARCHAR}, #{systemId,jdbcType=VARCHAR}, #{menuId,jdbcType=VARCHAR}, 
+      #{menuName,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{parentId,jdbcType=VARCHAR}, 
+      #{menuStatus,jdbcType=INTEGER}, #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
+      #{modifiedDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="addSystemMenu" parameterType="com.hbkis.boss.system.model.SystemMenu" >
+    insert into system_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="systemMenuId != null" >
+        system_menu_id,
+      </if>
+      <if test="systemId != null" >
+        system_id,
+      </if>
+      <if test="menuId != null" >
+        menu_id,
+      </if>
+      <if test="menuName != null" >
+        menu_name,
+      </if>
+      <if test="menuSort != null" >
+        menu_sort,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="menuStatus != null" >
+        menu_status,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="systemMenuId != null" >
+        #{systemMenuId,jdbcType=VARCHAR},
+      </if>
+      <if test="systemId != null" >
+        #{systemId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuId != null" >
+        #{menuId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null" >
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuSort != null" >
+        #{menuSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuStatus != null" >
+        #{menuStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDate != null" >
+        #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateSystemMenu" parameterType="com.hbkis.boss.system.model.SystemMenu" >
+    update system_menu
+    <set >
+      <if test="systemId != null" >
+        system_id = #{systemId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuId != null" >
+        menu_id = #{menuId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null" >
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuSort != null" >
+        menu_sort = #{menuSort,jdbcType=INTEGER},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuStatus != null" >
+        menu_status = #{menuStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where system_menu_id = #{systemMenuId,jdbcType=VARCHAR}
+  </update>
+  <update id="update" parameterType="com.hbkis.boss.system.model.SystemMenu" >
+    update system_menu
+    set system_id = #{systemId,jdbcType=VARCHAR},
+      menu_id = #{menuId,jdbcType=VARCHAR},
+      menu_name = #{menuName,jdbcType=VARCHAR},
+      menu_sort = #{menuSort,jdbcType=INTEGER},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      menu_status = #{menuStatus,jdbcType=INTEGER},
+      is_deleted = #{isDeleted,jdbcType=INTEGER},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      modified_date = #{modifiedDate,jdbcType=TIMESTAMP}
+    where system_menu_id = #{systemMenuId,jdbcType=VARCHAR}
+  </update>
+</mapper>

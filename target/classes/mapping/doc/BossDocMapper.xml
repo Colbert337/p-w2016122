@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hbkis.boss.doc.dao.BossDocMapper" >
+  <resultMap id="BaseResultMap" type="com.hbkis.boss.doc.model.BossDoc" >
+    <id column="boss_doc_id" property="bossDocId" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="document_name" property="documentName" jdbcType="VARCHAR" />
+    <result column="document_type" property="documentType" jdbcType="INTEGER" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    boss_doc_id, parent_id, document_name, document_type, remarks, file_path, is_deleted, 
+    created_date, modified_date
+  </sql>
+  <select id="queryByBossDocId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss_doc
+    where boss_doc_id = #{bossDocId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询所有系统文档 -->
+  <select id="queryAllBossDoc" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from boss_doc bd 
+    where bd.is_deleted = 0 and bd.parent_id is null order by bd.created_date asc
+  </select>
+  
+  <!-- 根据parentId 查询 系统文档 -->
+  <select id="queryBossDocByParentId" resultMap="BaseResultMap"  parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from boss_doc bd 
+    where bd.is_deleted = 0 and bd.parent_id = #{parentId} order by bd.created_date asc
+  </select>
+  
+  <!-- 根据名称查询是否有相同的文件夹 -->
+  <select id="checkBossDocBydocumentName" resultMap="BaseResultMap"  parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    from boss_doc bd 
+    where bd.is_deleted = 0 and bd.document_name = #{documentName}
+  </select>
+  
+  
+  <delete id="deleteByBossDocId" parameterType="java.lang.String" >
+    delete from boss_doc
+    where boss_doc_id = #{bossDocId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="add" parameterType="com.hbkis.boss.doc.model.BossDoc" >
+    insert into boss_doc (boss_doc_id, parent_id, document_name, 
+      document_type, remarks, file_path, 
+      is_deleted, created_date, modified_date
+      )
+    values (#{bossDocId,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{documentName,jdbcType=VARCHAR}, 
+      #{documentType,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
+      #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, #{modifiedDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="addBossDoc" parameterType="com.hbkis.boss.doc.model.BossDoc" >
+    insert into boss_doc
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bossDocId != null" >
+        boss_doc_id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="documentName != null" >
+        document_name,
+      </if>
+      <if test="documentType != null" >
+        document_type,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="filePath != null" >
+        file_path,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bossDocId != null" >
+        #{bossDocId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="documentName != null" >
+        #{documentName,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null" >
+        #{documentType,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDate != null" >
+        #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateBossDoc" parameterType="com.hbkis.boss.doc.model.BossDoc" >
+    update boss_doc
+    <set >
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="documentName != null" >
+        document_name = #{documentName,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null" >
+        document_type = #{documentType,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedDate != null" >
+        modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where boss_doc_id = #{bossDocId,jdbcType=VARCHAR}
+  </update>
+  <update id="update" parameterType="com.hbkis.boss.doc.model.BossDoc" >
+    update boss_doc
+    set parent_id = #{parentId,jdbcType=VARCHAR},
+      document_name = #{documentName,jdbcType=VARCHAR},
+      document_type = #{documentType,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=INTEGER},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      modified_date = #{modifiedDate,jdbcType=TIMESTAMP}
+    where boss_doc_id = #{bossDocId,jdbcType=VARCHAR}
+  </update>
+</mapper>

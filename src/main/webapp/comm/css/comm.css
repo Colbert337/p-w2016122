@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+.all-hidden{display: none;}
+.all-show{display: block;}
+.fl-l{float: left;}
+.fl-r{float: right;}
+body{}
+
+.panel-title{text-align: center;}
+
+.b-dialog-content{min-height: 300px;}
+.b-dialog-hint{font-size: 30px;}
+.dialog-font{margin: 20px;}
+
+/* 按钮样式 */
+.btn-bottom{margin-bottom: 3px;}
