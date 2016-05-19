@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.sysongy.poms.system.dao.BossSystemMapper;
 import com.sysongy.poms.system.model.BossSystem;
 import com.sysongy.poms.system.service.BossSystemService;
-import com.sysongy.util.HttpClientUtil;
 
 /**
  * @FileName     :  BossSystemServiceImpl.java
@@ -71,7 +70,7 @@ public class BossSystemServiceImpl implements BossSystemService{
 			paramsMap.put("manager", bossSystem.getManager());
 			String resultStr = "";
 			try {
-				resultStr = HttpClientUtil.post(url, paramsMap ,"UTF-8");
+				/*resultStr = HttpClientUtil.post(url, paramsMap ,"UTF-8");*/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -113,7 +112,7 @@ public class BossSystemServiceImpl implements BossSystemService{
 			paramsMap.put("userId", bossSystem.getUserId());	//这说明是修改
 			String resultStr = "";
 			try {
-				resultStr = HttpClientUtil.post(url, paramsMap);
+				/*resultStr = HttpClientUtil.post(url, paramsMap);*/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
