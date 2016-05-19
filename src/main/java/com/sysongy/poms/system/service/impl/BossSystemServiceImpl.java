@@ -59,7 +59,6 @@ public class BossSystemServiceImpl implements BossSystemService{
 		int flag = 0;
 		if(bossSystem != null && !"".equals(bossSystem)){
 			
-			
 			flag = bossSystemMapper.addBossSystem(bossSystem);
 			String url = httpPath+"/pems-web/api/system/createSystem";
 			Map<String, Object> paramsMap = new HashMap<String, Object>();
