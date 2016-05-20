@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.card.dao.GasCardPropMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.card.model.GasCardProp" >
+    <id column="card_prop_id" property="cardPropId" jdbcType="VARCHAR" />
+    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+    <result column="owner_id" property="ownerId" jdbcType="VARCHAR" />
+    <result column="owner_card_no" property="ownerCardNo" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="operation_sys" property="operationSys" jdbcType="VARCHAR" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    card_prop_id, card_no, owner_id, owner_card_no, update_time, operation_sys, batch_no, 
+    memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gas_card_prop
+    where card_prop_id = #{cardPropId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from gas_card_prop
+    where card_prop_id = #{cardPropId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.card.model.GasCardProp" >
+    insert into gas_card_prop (card_prop_id, card_no, owner_id, 
+      owner_card_no, update_time, operation_sys, 
+      batch_no, memo)
+    values (#{cardPropId,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, #{ownerId,jdbcType=VARCHAR}, 
+      #{ownerCardNo,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{operationSys,jdbcType=VARCHAR}, 
+      #{batchNo,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.card.model.GasCardProp" >
+    insert into gas_card_prop
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cardPropId != null" >
+        card_prop_id,
+      </if>
+      <if test="cardNo != null" >
+        card_no,
+      </if>
+      <if test="ownerId != null" >
+        owner_id,
+      </if>
+      <if test="ownerCardNo != null" >
+        owner_card_no,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="operationSys != null" >
+        operation_sys,
+      </if>
+      <if test="batchNo != null" >
+        batch_no,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cardPropId != null" >
+        #{cardPropId,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNo != null" >
+        #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerId != null" >
+        #{ownerId,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerCardNo != null" >
+        #{ownerCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationSys != null" >
+        #{operationSys,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null" >
+        #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.card.model.GasCardProp" >
+    update gas_card_prop
+    <set >
+      <if test="cardNo != null" >
+        card_no = #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerId != null" >
+        owner_id = #{ownerId,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerCardNo != null" >
+        owner_card_no = #{ownerCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationSys != null" >
+        operation_sys = #{operationSys,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null" >
+        batch_no = #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where card_prop_id = #{cardPropId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.card.model.GasCardProp" >
+    update gas_card_prop
+    set card_no = #{cardNo,jdbcType=VARCHAR},
+      owner_id = #{ownerId,jdbcType=VARCHAR},
+      owner_card_no = #{ownerCardNo,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      operation_sys = #{operationSys,jdbcType=VARCHAR},
+      batch_no = #{batchNo,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR}
+    where card_prop_id = #{cardPropId,jdbcType=VARCHAR}
+  </update>
+</mapper>
