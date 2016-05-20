@@ -92,8 +92,6 @@ public class BaseContoller {
     
     /**
      * 跳转控制面板
-     * @param request
-     * @param response
      * @param map
      * @return
      */
