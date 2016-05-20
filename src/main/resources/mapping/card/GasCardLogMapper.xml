@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.card.dao.GasCardLogMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.card.model.GasCardLog" >
+    <id column="card_log_id" property="cardLogId" jdbcType="VARCHAR" />
+    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+    <result column="card_type" property="cardType" jdbcType="INTEGER" />
+    <result column="card_name" property="cardName" jdbcType="VARCHAR" />
+    <result column="card_status" property="cardStatus" jdbcType="INTEGER" />
+    <result column="owner_id" property="ownerId" jdbcType="VARCHAR" />
+    <result column="owner_card_no" property="ownerCardNo" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="optime" property="optime" jdbcType="TIMESTAMP" />
+    <result column="operation_sys" property="operationSys" jdbcType="VARCHAR" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="storage_time" property="storageTime" jdbcType="TIMESTAMP" />
+    <result column="release_time" property="releaseTime" jdbcType="TIMESTAMP" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    card_log_id, card_no, card_type, card_name, card_status, owner_id, owner_card_no, 
+    update_time, optime, operation_sys, batch_no, operator, storage_time, release_time, 
+    memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gas_card_log
+    where card_log_id = #{cardLogId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from gas_card_log
+    where card_log_id = #{cardLogId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.card.model.GasCardLog" >
+    insert into gas_card_log (card_log_id, card_no, card_type, 
+      card_name, card_status, owner_id, 
+      owner_card_no, update_time, optime, 
+      operation_sys, batch_no, operator, 
+      storage_time, release_time, memo
+      )
+    values (#{cardLogId,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, #{cardType,jdbcType=INTEGER}, 
+      #{cardName,jdbcType=VARCHAR}, #{cardStatus,jdbcType=INTEGER}, #{ownerId,jdbcType=VARCHAR}, 
+      #{ownerCardNo,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{optime,jdbcType=TIMESTAMP}, 
+      #{operationSys,jdbcType=VARCHAR}, #{batchNo,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{storageTime,jdbcType=TIMESTAMP}, #{releaseTime,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.card.model.GasCardLog" >
+    insert into gas_card_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cardLogId != null" >
+        card_log_id,
+      </if>
+      <if test="cardNo != null" >
+        card_no,
+      </if>
+      <if test="cardType != null" >
+        card_type,
+      </if>
+      <if test="cardName != null" >
+        card_name,
+      </if>
+      <if test="cardStatus != null" >
+        card_status,
+      </if>
+      <if test="ownerId != null" >
+        owner_id,
+      </if>
+      <if test="ownerCardNo != null" >
+        owner_card_no,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="optime != null" >
+        optime,
+      </if>
+      <if test="operationSys != null" >
+        operation_sys,
+      </if>
+      <if test="batchNo != null" >
+        batch_no,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="storageTime != null" >
+        storage_time,
+      </if>
+      <if test="releaseTime != null" >
+        release_time,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cardLogId != null" >
+        #{cardLogId,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNo != null" >
+        #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        #{cardType,jdbcType=INTEGER},
+      </if>
+      <if test="cardName != null" >
+        #{cardName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardStatus != null" >
+        #{cardStatus,jdbcType=INTEGER},
+      </if>
+      <if test="ownerId != null" >
+        #{ownerId,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerCardNo != null" >
+        #{ownerCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="optime != null" >
+        #{optime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationSys != null" >
+        #{operationSys,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null" >
+        #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="storageTime != null" >
+        #{storageTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="releaseTime != null" >
+        #{releaseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.card.model.GasCardLog" >
+    update gas_card_log
+    <set >
+      <if test="cardNo != null" >
+        card_no = #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        card_type = #{cardType,jdbcType=INTEGER},
+      </if>
+      <if test="cardName != null" >
+        card_name = #{cardName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardStatus != null" >
+        card_status = #{cardStatus,jdbcType=INTEGER},
+      </if>
+      <if test="ownerId != null" >
+        owner_id = #{ownerId,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerCardNo != null" >
+        owner_card_no = #{ownerCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="optime != null" >
+        optime = #{optime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationSys != null" >
+        operation_sys = #{operationSys,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null" >
+        batch_no = #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="storageTime != null" >
+        storage_time = #{storageTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="releaseTime != null" >
+        release_time = #{releaseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where card_log_id = #{cardLogId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.card.model.GasCardLog" >
+    update gas_card_log
+    set card_no = #{cardNo,jdbcType=VARCHAR},
+      card_type = #{cardType,jdbcType=INTEGER},
+      card_name = #{cardName,jdbcType=VARCHAR},
+      card_status = #{cardStatus,jdbcType=INTEGER},
+      owner_id = #{ownerId,jdbcType=VARCHAR},
+      owner_card_no = #{ownerCardNo,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      optime = #{optime,jdbcType=TIMESTAMP},
+      operation_sys = #{operationSys,jdbcType=VARCHAR},
+      batch_no = #{batchNo,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      storage_time = #{storageTime,jdbcType=TIMESTAMP},
+      release_time = #{releaseTime,jdbcType=TIMESTAMP},
+      memo = #{memo,jdbcType=VARCHAR}
+    where card_log_id = #{cardLogId,jdbcType=VARCHAR}
+  </update>
+</mapper>

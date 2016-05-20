@@ -12,7 +12,7 @@
 	<!-- 添加注解驱动 -->  
     <mvc:annotation-driven />  
 	<!-- 自动扫描controller包下的所有类，如果@Controller注入为bean -->
-	<context:component-scan base-package="com.sysongy.*.*.controller" />
+	<context:component-scan base-package="com.sysongy.poms.card.controller" />
 
 	<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
 	<bean id="mappingJacksonHttpMessageConverter"
