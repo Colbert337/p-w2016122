@@ -4,8 +4,8 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-	<jsp:include page="../common/g_head.jsp"/>
-	<jsp:include page="../common/g_navbar.jsp"/>
+	<jsp:include page="/common/g_head.jsp"/>
+	<jsp:include page="/common/g_navbar.jsp"/>
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
