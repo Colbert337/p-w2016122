@@ -12,7 +12,7 @@
 	<!-- 添加注解驱动 -->  
     <mvc:annotation-driven />  
 	<!-- 自动扫描controller包下的所有类，如果@Controller注入为bean -->
-	<context:component-scan base-package="com.sysongy.poms.card.controller" />
+	<context:component-scan base-package="com.sysongy.*.*.controller" />
 
 	<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
 	<bean id="mappingJacksonHttpMessageConverter"
@@ -48,7 +48,7 @@
     <mvc:resources mapping="/assets/**"  location="/assets/" /> 
     <mvc:resources mapping="/webpage/**"  location="/webpage/" /> 
     <mvc:resources mapping="/common/**"  location="/common/" />
-    <mvc:resources mapping="/upload/**"  location="/upload/" />  
+    <mvc:resources mapping="/upload/**"  location="/upload/" />
     <mvc:resources mapping="/docs/**"  location="/docs/" /> 
     <mvc:resources mapping="/wechat/**"  location="/wechat/" /> 
     <mvc:resources mapping="/schools/**"  location="/schools/" /> 
@@ -61,7 +61,7 @@
     <mvc:resources mapping="/course/**"  location="/course/" /> 
     <mvc:resources mapping="/child/**"  location="/child/" />
     <mvc:resources mapping="/auth/**"  location="/auth/" /> 
-    <mvc:resources mapping="/attendance/**"  location="/attendance/" /> 
+    <mvc:resources mapping="/attendance/**"  location="/attendance/"/>
     <mvc:resources mapping="/health/**"  location="/health/" />
     
 	<!-- 配置多文件上传 -->

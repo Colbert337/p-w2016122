@@ -3,7 +3,7 @@
   <display-name>boss</display-name>
   <context-param>
     <param-name>webAppRootKey</param-name>
-    <param-value>hbkis.boss</param-value>
+    <param-value>sysongy.poms</param-value>
   </context-param>
   <context-param>
     <param-name>contextConfigLocation</param-name>
