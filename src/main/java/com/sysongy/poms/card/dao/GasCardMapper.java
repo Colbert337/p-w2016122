@@ -1,8 +1,11 @@
 package com.sysongy.poms.card.dao;
 
+import java.util.List;
+
 import com.sysongy.poms.card.model.GasCard;
 
 public interface GasCardMapper {
+	
     int deleteByPrimaryKey(String cardId);
 
     int insert(GasCard record);
@@ -14,4 +17,6 @@ public interface GasCardMapper {
     int updateByPrimaryKeySelective(GasCard record);
 
     int updateByPrimaryKey(GasCard record);
+    
+    List<GasCard> queryForPage(GasCard record);
 }

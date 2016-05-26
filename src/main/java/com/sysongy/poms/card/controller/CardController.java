@@ -28,242 +28,94 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.doc.model.BossDoc;
 import com.sysongy.poms.doc.service.BossDocService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
-/**
- * @FileName     :  BossDocController.java
- * @Encoding     :  UTF-8
- * @Package      :  com.hbkis.boss.doc.controller
- * @Link         :  http://www.hbkis.com
- * @Created on   :  2015年12月16日, 下午4:06:47
- * @Author       :  DongdongHe
- * @Copyright    :  Copyright(c) 2015 西安海贝信息科技有限公司
- * @Description  :
- *
- */
 
 @RequestMapping("/web/card")
 @Controller
 public class CardController extends BaseContoller{
 
 	@Autowired
+	private GasCardService service;
+	@Autowired
 	private BossDocService bossDocService;
 	
 	/**
-	 * 查询所以系统文件夹 ceshi
+	 * 表单查询
+	 * @param map
+	 * @param gascard
 	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping("/cardList")
-	public String queryAllCardList(ModelMap map){
-		List<BossDoc> bossList = new ArrayList<BossDoc>();
-		bossList = bossDocService.queryAllBossDoc();
-		map.addAttribute("bossList", bossList);
-	    map.addAttribute("current_module", "webpage/poms/card/card_list");
-	    return "common/g_main";
+	public String queryAllCardList(ModelMap map, GasCard gascard) throws Exception{
+		
+		if(gascard.getPageNum() == null){
+			gascard.setPageNum(1);
+			gascard.setPageSize(10);
+		}
+		
+		PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
+		map.addAttribute("pageinfo", pageinfo);
+		map.addAttribute("gascard",gascard);
+	    map.addAttribute("current_module", "page/card/card_list");
+	    return "page/card/card_list";
+	}
+
+	@RequestMapping("/saveCard")
+	public String saveCard(ModelMap map, GasCard gascard) throws Exception{
+		
+		Integer ret = service.saveGasCard(gascard);
+		map.addAttribute("ret", ret);
+		
+		return  "page/card/new_card";
 	}
 	
-	
-	/**
-	 * 查询所有系统文档  （树形结构）
-	 * @return
-	 */
-	@RequestMapping("/queryBossDocTree")
-	@ResponseBody
-	//根据systemId查询学校信息  用于树的展示
-	public Map<String, Object> queryBossDocTree(ModelMap map){
-		Map<String, Object> treeMap = new HashMap<String, Object>(); 
-		JSONArray array = new JSONArray();
-		List<BossDoc> bosslist = new ArrayList<BossDoc>();
-		bosslist = bossDocService.queryAllBossDoc();
-		map.addAttribute("rootId", 1);
-		//设置根节点
-		JSONObject rootjson = new JSONObject();
-		rootjson.put("rootId", 1);
-		rootjson.put("name","所有文档");
-		rootjson.put("open", true);
-		JSONArray bossArray = new JSONArray();
+	@SuppressWarnings("finally")
+	@RequestMapping("/deleteCard")
+	public String deleteCard(HttpServletResponse response, ModelMap map, @RequestParam String cardid) throws Exception{
 		
-		if(bosslist != null && bosslist.size() > 0){
-			for (BossDoc bossDoc : bosslist) {
-				JSONObject bossjson = new JSONObject();
-				String bossDocId = bossDoc.getBossDocId();	//获取文档id
-				String bossDocName = bossDoc.getDocumentName();
-				bossjson.put("pId", bossDocId);
-				bossjson.put("name", bossDocName);
-				bossArray.add(bossjson);
+		PageBean bean = new PageBean();
+		HashMap<String, String> b = new HashMap<String, String>();
+		String ret = "page/card/card_list";
+		Integer rowcount = null;
+		
+		try {
+				if(cardid != null && !"".equals(cardid)){
+					rowcount = service.delGasCard(cardid);
+				}
 				
-				String parentId = bossDoc.getBossDocId();
-				if(parentId != null && !"".equals(parentId) && !parentId.equals("0")){
-					JSONArray nextArray = queryTreeNode(parentId);
-					bossjson.put("children", nextArray);
-				}
-			}
-			rootjson.put("children", bossArray);
-			array.add(rootjson);
-			treeMap.put("tree", array);
+				ret = this.queryAllCardList(map, new GasCard());
+				
+				bean.setRetCode(100);
+				bean.setRetMsg("["+cardid+"]删除成功");
+				bean.setRetValue(rowcount.toString());
+				
+				b.put("retCode", "100");
+				b.put("retMsg", "["+cardid+"]删除成功");
+				b.put("retValue", rowcount.toString());
+				throw new Exception("我是故意的");
+				
+		} catch (Exception e) {
+			response.setStatus(5000);
+			response.getWriter().write(e.getMessage());
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+			throw e;
 		}
-		return treeMap;
+//		finally {
+//			map.addAttribute("ret", b);
+//			return ret;
+//		}
 	}
-	
-	
-	
-	/**
-	 * 递归调用的方法   用来查看树节点
-	 * @param docCatgId
-	 * @param parentId
-	 * @return
-	 */
-	public JSONArray queryTreeNode(String parentId){
-		
-		List<BossDoc> bossDocList = bossDocService.queryBossDocByParentId(parentId);	//根据id 查找
-		JSONArray menuArray = new JSONArray();//年级 数组
-		if(bossDocList != null && bossDocList.size() >0){
-			for (BossDoc boss : bossDocList) {
-				JSONObject bossjson = new JSONObject();
-				bossjson.put("id", boss.getBossDocId());
-				bossjson.put("name", boss.getDocumentName());
-				menuArray.add(bossjson);
-				String docId = boss.getBossDocId();
-				if(!"".equals(docId) && docId != null && !docId.equals("0")){
-					List<BossDoc> bossDocList2 = bossDocService.queryBossDocByParentId(docId);	//根据id 查找
-					if(bossDocList2 != null && bossDocList2.size() >0){
-						JSONArray menuArray2 = new JSONArray();//年级 数组
-						for (BossDoc boss2 : bossDocList2) {
-							
-							JSONObject bossjson2 = new JSONObject();
-							bossjson2.put("id", boss2.getBossDocId());
-							bossjson2.put("name", boss2.getDocumentName());
-							menuArray2.add(bossjson2);
-							bossjson.put("children", menuArray2);
-							
-							String docId2 = boss2.getBossDocId();
-							if(!"".equals(docId2) && docId2 != null && !docId2.equals("0")){
-								List<BossDoc> bossDocList3 = bossDocService.queryBossDocByParentId(docId2);	//根据id 查找
-								if(bossDocList3 != null && bossDocList3.size() >0){
-									JSONArray menuArray3 = new JSONArray();
-									for (BossDoc boss3 : bossDocList3) {
-										
-										JSONObject bossjson3 = new JSONObject();
-										bossjson3.put("id", boss3.getBossDocId());
-										bossjson3.put("name", boss3.getDocumentName());
-										menuArray3.add(bossjson3);
-										bossjson2.put("children", menuArray3);
-										
-										String docId3 = boss3.getBossDocId();
-										if(!"".equals(docId3) && docId3 != null && !docId3.equals("0")){
-											List<BossDoc> bossDocList4 = bossDocService.queryBossDocByParentId(docId3);	//根据id 查找
-											if(bossDocList4 != null && bossDocList4.size() >0){
-												JSONArray menuArray4 = new JSONArray();//年级 数组
-												for (BossDoc boss4 : bossDocList4) {
-													
-													JSONObject bossjson4 = new JSONObject();
-													bossjson4.put("id", boss4.getBossDocId());
-													bossjson4.put("name", boss4.getDocumentName());
-													menuArray4.add(bossjson4);
-													bossjson3.put("children", menuArray4);
-												}
-											}
-										
-										}
-										
-										
-									}
-								}
-							
-							}
-						}
-					}
-				}
-			}
-		}
-		return menuArray;
-	}
-	
-	
-	/**
-	 * 获取某个文档下面的文档
-	 * @param map
-	 * @return
-	 */
-	@RequestMapping("/queryNextDoc")
-	public String queryNextDoc(ModelMap map,@RequestParam String parentId){
-		
-		List<BossDoc> bosslist = new ArrayList<BossDoc>();
-		if(parentId != null && !"".equals(parentId)){
-			bosslist = bossDocService.queryBossDocByParentId(parentId);
-		}
-		map.addAttribute("bossList", bosslist);
-		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-		map.addAttribute("menuId", parentId);
-        return "common/g_main";
-	}
-	
-	
-	/**
-	 * 查询此文件夹是否有重复文件夹
-	 * @param menuName
-	 * @return
-	 * @throws UnsupportedEncodingException 
-	 */
-	@RequestMapping("/check")
-	@ResponseBody
-	public Map<String,String> checkDocumentByDocumentName(@RequestParam String documentName,@RequestParam String bossDocId) throws UnsupportedEncodingException{
-		
-		documentName= new String( documentName.getBytes("iso-8859-1"), "UTF-8");
-		List<BossDoc> docList = new ArrayList<BossDoc>();
-		Map<String, String> map = new HashMap<String, String>();  
-		if((documentName != null && !"".equals(documentName))){
-			
-			docList = bossDocService.checkBossDocBydocumentName(documentName);
-			if(docList.size() > 0 && docList != null){
-				if(bossDocId != null && !"".equals(bossDocId)){
-					map.put("isHave","1");
-					map.put("update", "yes");//说明是修改
-				}else{
-					map.put("isHave","1");
-					map.put("update","no");
-				}
-			}else{
-				map.put("isHave","0");
-			}
-		}
-		return map;
-	}
-	
-	
-	/**
-	 * 保存文件夹信息
-	 * @param bossDoc
-	 * @return
-	 */
-	@RequestMapping("/saveFolder")
-	public String saveFolder(BossDoc bossDoc){
-		if(bossDoc != null && !"".equals(bossDoc)){
-			if(bossDoc.getBossDocId() != null && !"".equals(bossDoc.getBossDocId())){
-				//修改
-				bossDocService.updateBossDoc(bossDoc);
-			}else{
-				//新增
-				bossDoc.setBossDocId(UUIDGenerator.getUUID());
-				if(bossDoc.getParentId().equals("")){
-					bossDoc.setParentId(null);
-				}
-				bossDoc.setDocumentType(1);   //设置为文件夹
-				bossDocService.addBossDoc(bossDoc);
-			}
-		}
-		
-		if(bossDoc.getParentId() != null && !bossDoc.getParentId().equals("0") && !"".equals(bossDoc.getParentId())){
-			return  "redirect:/web/bossDoc/queryNextDoc?parentId="+bossDoc.getParentId();
-		}else{
-			return  "redirect:/web/bossDoc/queryAllBossDoc";
-		}
-	}
-	
 	
 	/**
 	 * 上传文档、文件
@@ -462,28 +314,6 @@ public class CardController extends BaseContoller{
 		//一下这个链接没有实际意义
 		return  null;
 	}
-	/**
-	 * 删除文件
-	 * @param bossDocId
-	 * @return
-	 */
-	@RequestMapping("/deleteBossDoc")
-	public String deleteBossDoc(@RequestParam String bossDocId){
-		if(bossDocId != null && !"".equals(bossDocId)){
-			List<BossDoc> list = new ArrayList<BossDoc>();
-			list = bossDocService.queryBossDocByParentId(bossDocId);//查看下面有没有子集
-			if(list != null && list.size() >0){
-				for (BossDoc bossDoc : list) {
-					deleteBossDoc(bossDoc.getBossDocId());
-				}
-			}
-			bossDocService.deleteByBossDocId(bossDocId);
-		}
-		
-		return  "redirect:/web/bossDoc/queryAllBossDoc";
-		
-	}
-	
 	
 	/**
 	 * 修改文件夹  或者 文档  名称

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
 import com.sysongy.poms.doc.dao.BossDocMapper;
 import com.sysongy.poms.doc.model.BossDoc;
 import com.sysongy.poms.doc.service.BossDocService;

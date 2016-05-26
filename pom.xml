@@ -289,6 +289,14 @@
 			<artifactId>httpmime</artifactId>
 			<version>4.5.1</version>
 		</dependency>
+		
+		<!-- 原生SQL支持 -->
+		<dependency>
+		    <groupId>com.github.abel533</groupId>
+		    <artifactId>entitymapper</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
+		
 
 	</dependencies>
 	

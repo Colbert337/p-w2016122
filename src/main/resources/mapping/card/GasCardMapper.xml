@@ -1,95 +1,127 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sysongy.poms.card.dao.GasCardMapper" >
-  <resultMap id="BaseResultMap" type="com.sysongy.poms.card.model.GasCard" >
-    <id column="card_id" property="cardId" jdbcType="VARCHAR" />
-    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
-    <result column="card_type" property="cardType" jdbcType="INTEGER" />
-    <result column="card_name" property="cardName" jdbcType="VARCHAR" />
-    <result column="card_status" property="cardStatus" jdbcType="INTEGER" />
+
+  <resultMap id="BaseResultList" type="com.sysongy.poms.card.model.GasCard" >
+    <id column="card_id" property="card_id" jdbcType="VARCHAR" />
+    <result column="card_no" property="card_no" jdbcType="VARCHAR" />
+    <result column="card_type" property="card_type" jdbcType="INTEGER" />
+    <result column="card_name" property="card_name" jdbcType="VARCHAR" />
+    <result column="card_status" property="card_status" jdbcType="INTEGER" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
-    <result column="storage_time" property="storageTime" jdbcType="TIMESTAMP" />
-    <result column="release_time" property="releaseTime" jdbcType="TIMESTAMP" />
+    <result column="storage_time" property="storage_time" jdbcType="TIMESTAMP" />
+    <result column="release_time" property="release_time" jdbcType="TIMESTAMP" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    card_id, card_no, card_type, card_name, card_status, operator, storage_time, release_time, 
-    memo
+    card_id, card_no, card_type, card_name, card_status, operator, storage_time, release_time, memo
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  
+  
+  <select id="queryForPage" resultMap="BaseResultList"  parameterType="com.sysongy.poms.card.model.GasCard" >
+  	 select <include refid="Base_Column_List" />
+    from gas_card gc where 1=1
+    <trim>
+      <if test="card_id != null" >
+        and card_id = #{card_id,jdbcType=VARCHAR}
+      </if>
+      <if test="card_no != null" >
+        and card_no = #{card_no,jdbcType=VARCHAR}
+      </if>
+      <if test="card_type != null" >
+        and card_type = #{card_type,jdbcType=INTEGER}
+      </if>
+      <if test="card_name != null" >
+        and card_name = #{card_name,jdbcType=VARCHAR}
+      </if>
+      <if test="card_status != null" >
+        and card_status = #{card_status,jdbcType=INTEGER}
+      </if>
+      <if test="operator != null" >
+        and operator = #{operator,jdbcType=VARCHAR}
+      </if>
+      <if test="storage_time != null" >
+         storage_time,
+      </if>
+      <if test="release_time != null" >
+        release_time,
+      </if>
+    </trim>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultList" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from gas_card
     where card_id = #{cardId,jdbcType=VARCHAR}
   </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from gas_card
     where card_id = #{cardId,jdbcType=VARCHAR}
   </delete>
+  
   <insert id="insert" parameterType="com.sysongy.poms.card.model.GasCard" >
     insert into gas_card (card_id, card_no, card_type, 
       card_name, card_status, operator, 
       storage_time, release_time, memo
       )
-    values (#{cardId,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, #{cardType,jdbcType=INTEGER}, 
-      #{cardName,jdbcType=VARCHAR}, #{cardStatus,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, 
-      #{storageTime,jdbcType=TIMESTAMP}, #{releaseTime,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}
+    values (#{card_id,jdbcType=VARCHAR}, #{card_no,jdbcType=VARCHAR}, #{card_type,jdbcType=INTEGER}, 
+      #{card_name,jdbcType=VARCHAR}, #{card_status,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, 
+      #{storage_time,jdbcType=TIMESTAMP}, #{release_time,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.card.model.GasCard" >
     insert into gas_card
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="cardId != null" >
+      <if test="card_id != null" >
         card_id,
       </if>
-      <if test="cardNo != null" >
-        card_no,
+      <if test="card_no != null" >
+        and card_no,
       </if>
-      <if test="cardType != null" >
-        card_type,
+      <if test="card_type != null" >
+        and card_type,
       </if>
-      <if test="cardName != null" >
-        card_name,
+      <if test="card_name != null" >
+        and card_name,
       </if>
-      <if test="cardStatus != null" >
-        card_status,
+      <if test="card_status != null" >
+        and card_status,
       </if>
       <if test="operator != null" >
-        operator,
+        and operator,
       </if>
-      <if test="storageTime != null" >
-        storage_time,
+      <if test="storage_time != null" >
+         storage_time,
       </if>
-      <if test="releaseTime != null" >
+      <if test="release_time != null" >
         release_time,
-      </if>
-      <if test="memo != null" >
-        memo,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="cardId != null" >
+      <if test="card_id != null" >
         #{cardId,jdbcType=VARCHAR},
       </if>
-      <if test="cardNo != null" >
+      <if test="card_no != null" >
         #{cardNo,jdbcType=VARCHAR},
       </if>
-      <if test="cardType != null" >
+      <if test="card_type != null" >
         #{cardType,jdbcType=INTEGER},
       </if>
-      <if test="cardName != null" >
+      <if test="card_name != null" >
         #{cardName,jdbcType=VARCHAR},
       </if>
-      <if test="cardStatus != null" >
+      <if test="card_status != null" >
         #{cardStatus,jdbcType=INTEGER},
       </if>
       <if test="operator != null" >
         #{operator,jdbcType=VARCHAR},
       </if>
-      <if test="storageTime != null" >
+      <if test="storage_time != null" >
         #{storageTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="releaseTime != null" >
+      <if test="release_time != null" >
         #{releaseTime,jdbcType=TIMESTAMP},
       </if>
       <if test="memo != null" >

@@ -24,7 +24,7 @@
   </select>
   
   <!-- 查询所有系统文档 -->
-  <select id="queryAllBossDoc" resultMap="BaseResultMap">
+  <select id="queryForPage" resultMap="BaseResultMap">
   	 select 
     <include refid="Base_Column_List" />
     from boss_doc bd 

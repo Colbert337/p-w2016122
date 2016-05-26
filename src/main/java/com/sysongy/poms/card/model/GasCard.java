@@ -2,94 +2,96 @@ package com.sysongy.poms.card.model;
 
 import java.util.Date;
 
-public class GasCard {
-    private String cardId;
+import com.sysongy.poms.base.model.BaseModel;
 
-    private String cardNo;
+public class GasCard extends BaseModel{
+	private String card_id;
 
-    private Integer cardType;
+	private String card_no;
 
-    private String cardName;
+	private Integer card_type;
+	
+	private String card_name;
 
-    private Integer cardStatus;
+	private Integer card_status;
 
-    private String operator;
+	private String operator;
 
-    private Date storageTime;
+	private Date storage_time;
 
-    private Date releaseTime;
+	private Date release_time;
 
-    private String memo;
+	private String memo;
 
-    public String getCardId() {
-        return cardId;
-    }
+	public String getCard_id() {
+		return card_id;
+	}
 
-    public void setCardId(String cardId) {
-        this.cardId = cardId == null ? null : cardId.trim();
-    }
+	public void setCard_id(String card_id) {
+		this.card_id = card_id;
+	}
 
-    public String getCardNo() {
-        return cardNo;
-    }
+	public String getCard_no() {
+		return card_no;
+	}
 
-    public void setCardNo(String cardNo) {
-        this.cardNo = cardNo == null ? null : cardNo.trim();
-    }
+	public void setCard_no(String card_no) {
+		this.card_no = card_no;
+	}
 
-    public Integer getCardType() {
-        return cardType;
-    }
+	public Integer getCard_type() {
+		return card_type;
+	}
 
-    public void setCardType(Integer cardType) {
-        this.cardType = cardType;
-    }
+	public void setCard_type(Integer card_type) {
+		this.card_type = card_type;
+	}
 
-    public String getCardName() {
-        return cardName;
-    }
+	public String getCard_name() {
+		return card_name;
+	}
 
-    public void setCardName(String cardName) {
-        this.cardName = cardName == null ? null : cardName.trim();
-    }
+	public void setCard_name(String card_name) {
+		this.card_name = card_name;
+	}
 
-    public Integer getCardStatus() {
-        return cardStatus;
-    }
+	public Integer getCard_status() {
+		return card_status;
+	}
 
-    public void setCardStatus(Integer cardStatus) {
-        this.cardStatus = cardStatus;
-    }
+	public void setCard_status(Integer card_status) {
+		this.card_status = card_status;
+	}
 
-    public String getOperator() {
-        return operator;
-    }
+	public String getOperator() {
+		return operator;
+	}
 
-    public void setOperator(String operator) {
-        this.operator = operator == null ? null : operator.trim();
-    }
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
 
-    public Date getStorageTime() {
-        return storageTime;
-    }
+	public Date getStorage_time() {
+		return storage_time;
+	}
 
-    public void setStorageTime(Date storageTime) {
-        this.storageTime = storageTime;
-    }
+	public void setStorage_time(Date storage_time) {
+		this.storage_time = storage_time;
+	}
 
-    public Date getReleaseTime() {
-        return releaseTime;
-    }
+	public Date getRelease_time() {
+		return release_time;
+	}
 
-    public void setReleaseTime(Date releaseTime) {
-        this.releaseTime = releaseTime;
-    }
+	public void setRelease_time(Date release_time) {
+		this.release_time = release_time;
+	}
 
-    public String getMemo() {
-        return memo;
-    }
+	public String getMemo() {
+		return memo;
+	}
 
-    public void setMemo(String memo) {
-        this.memo = memo == null ? null : memo.trim();
-    }
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
 }
