@@ -38,7 +38,7 @@ import java.util.*;
  * @Description:
  */
 
-@RequestMapping("/web/system/user")
+@RequestMapping("/web/authority/user")
 @Controller
 public class SystemUserController extends BaseContoller{
 
