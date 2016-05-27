@@ -47,7 +47,7 @@ public class BaseContoller {
     	result.addObject("current_module", "webpage/test");
         result.setViewName("comm/g_main");*/
         
-        map.addAttribute("current_module", "webpage/panel/panel");
+        map.addAttribute("current_module", "webpage/demo/panel");
         
         return "login";
     }
@@ -60,7 +60,7 @@ public class BaseContoller {
     	result.addObject("current_module", "webpage/test");
         result.setViewName("comm/g_main");*/
 
-        map.addAttribute("current_module", "webpage/panel/panel");
+        map.addAttribute("current_module", "webpage/demo/panel");
 
         return "common/g_main";
     }
@@ -70,7 +70,7 @@ public class BaseContoller {
     	String password = request.getParameter("password");
     	String returnPath = "login";
     	if(userName != null && password != null && userName.equals("wdq") && password.equals("wdq123456")){
-    		map.addAttribute("current_module", "webpage/panel/demo");
+    		map.addAttribute("current_module", "webpage/demo/demo");
     		returnPath = "common/g_main";
     	}
     	
@@ -99,7 +99,7 @@ public class BaseContoller {
     @RequestMapping(value = {"/web/panel/list"})  
     public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){  
     	
-    	return "/panel/panel_list";
+    	return "/demo/panel_list";
     }
     
     /**

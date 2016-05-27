@@ -45,7 +45,7 @@
 
 				<!-- /.sidebar-shortcuts -->
 				<ul class="nav nav-list">
-					<li class="">
+					<li class="active">
 						<a href="<%=basePath%>/web/login/">
 							<i class="menu-icon fa fa-tachometer"></i>
 							<span class="menu-text"> 总览 </span>
@@ -64,7 +64,7 @@
 						</a>
 						<b class="arrow"></b>
 						<ul class="submenu">
-							<li class="active">
+							<li class="">
 								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/system/user/list')">
 									<i class="menu-icon fa fa-caret-right"></i>
 									系统账号

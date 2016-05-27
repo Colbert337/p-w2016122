@@ -3,6 +3,7 @@
 .all-show{display: block;}
 .fl-l{float: left;}
 .fl-r{float: right;}
+.clear{clear:both;}
 body{}
 
 .panel-title{text-align: center;}
@@ -13,3 +14,5 @@ body{}
 
 /* 按钮样式 */
 .btn-bottom{margin-bottom: 3px;}
+.pad-top-10{padding-top: 7px;}
+.mar-right-30{margin-right: 30px;}

@@ -183,6 +183,12 @@
 						animate: ace.vars['old_ie'] ? false : 1000,
 						size: size
 					});
+
+					/*文本域输入字数限制提示*/
+					$('textarea.limited').inputlimiter({
+						remText: '%n character%s remaining...',
+						limitText: 'max allowed : %n.'
+					});
 				})
 			
 				$('.sparkline').each(function(){

@@ -155,7 +155,7 @@
 		<input id="pageSize" type="text" name="pageSize"  value ="10"/>
 		<input id="pageNumMax" type="text" name="pageNumMax" value ="${pageinfo.pages}"/>
 		<input id="total" type="text" name="total"  value =" ${pageinfo.total}"/>
-		
+
 	<div class="row">
 		<div class="col-xs-12">
 			<!-- PAGE CONTENT BEGINS -->
