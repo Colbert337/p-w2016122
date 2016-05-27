@@ -51,7 +51,19 @@ public class BaseContoller {
         
         return "login";
     }
-    
+
+    @RequestMapping(value = {"main"})
+    public String main(ModelMap map){
+    	/*ModelAndView result = new ModelAndView();
+    	String pmcName = "登录测试成功！";
+    	result.addObject("pmcName", pmcName);
+    	result.addObject("current_module", "webpage/test");
+        result.setViewName("comm/g_main");*/
+
+        map.addAttribute("current_module", "webpage/panel/panel");
+
+        return "common/g_main";
+    }
     @RequestMapping(value = {"/web/login"})  
     public String login( HttpServletRequest request,HttpServletResponse response,ModelMap map){ 
     	String userName = request.getParameter("userName");
