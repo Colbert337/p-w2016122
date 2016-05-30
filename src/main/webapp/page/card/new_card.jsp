@@ -7,11 +7,8 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-
- <link rel="stylesheet" href="<%=basePath %>/dist/css/bootstrapValidator.css" />
- <link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap.css" />
-  
-  <!--   <script type="text/javascript" src="../assets/js/jquery.js"></script>
+<!--  
+   <script type="text/javascript" src="../assets/js/jquery.js"></script>
 	<script type="text/javascript" src="../assets/js/bootstrap.js"></script>  -->
 	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
 
