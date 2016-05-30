@@ -27,7 +27,7 @@ public class GasCardServiceImpl implements GasCardService{
 //		SqlMapper sqlMapper = new SqlMapper(session);;
 //		String excuteSQL = "SELECT * FROM GAS_CARD";
 //		PageHelper.startPage(1, 5);
-		PageHelper.startPage(cascard.getPageNum(), cascard.getPageSize());
+		PageHelper.startPage(cascard.getPageNum(), cascard.getPageSize(), cascard.getOrderby());
 //		List<GasCard> list = sqlMapper.selectList(excuteSQL, GasCard.class);
 //		long total = this.count(excuteSQL);
 		
@@ -63,6 +63,8 @@ public class GasCardServiceImpl implements GasCardService{
 
 	@Override
 	public Integer delGasCard(String cardid) throws Exception{
+		if(1==1)
+			throw new Exception("我是故意的在里面");
 		return gasCardMapper.deleteByPrimaryKey(cardid);
 	}
 	

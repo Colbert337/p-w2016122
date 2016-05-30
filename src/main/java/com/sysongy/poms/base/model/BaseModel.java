@@ -9,6 +9,15 @@ public class BaseModel {
 	private Integer pageNum;
 	private Integer pageSize;
 	private Long total;
+	private String orderby;
+
+	public String getOrderby() {
+		return orderby;
+	}
+
+	public void setOrderby(String orderby) {
+		this.orderby = orderby;
+	}
 
 	public List<?> getList() {
 		return list;

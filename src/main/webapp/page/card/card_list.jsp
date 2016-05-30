@@ -151,10 +151,7 @@
 	<!-- /.page-header -->
 	<form id="formcard">
 	
-		<input id="pageNum" type="text" name="pageNum"  value ="${pageinfo.pageNum}"/>
-		<input id="pageSize" type="text" name="pageSize"  value ="10"/>
-		<input id="pageNumMax" type="text" name="pageNumMax" value ="${pageinfo.pages}"/>
-		<input id="total" type="text" name="total"  value =" ${pageinfo.total}"/>
+	<jsp:include page="../form_pageinfo.jsp"></jsp:include>
 
 	<div class="row">
 		<div class="col-xs-12">
@@ -174,7 +171,7 @@
 					<div class="form-group">
 						<div class="col-md-2 control-label no-padding-right">
 						    <label>用户卡号:</label>
-							<input type="text" name="card_id" placeholder="States of USA"  maxlength="12" value="${gascard.card_id}"/>
+							<input type="text" name="card_no" placeholder="States of USA"  maxlength="12" value="${gascard.card_no}"/>
 						</div>
 						<div class="col-md-2 control-label no-padding-right">
 						    <label>用户卡类型:</label>
@@ -191,7 +188,7 @@
 							<span class="input-group-addon">
 									<i class="fa fa-calendar bigger-110"></i>
 							</span>
-							<input type="text" name="date-range-picker" id="id-date-range-picker-1" />
+							<input type="text" name="release_time_range" id="date-range-picker" value="value="${gascard.release_time_range}"/>
 						</div>
 						
 						
@@ -207,7 +204,6 @@
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 										查询
 								</button>
-								<!-- <input type="submit" value="提交"/> -->
 						</div>
 					</div>
 					
@@ -234,12 +230,12 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'cardno');">用户卡号<i class="glyphicon glyphicon-chevron-up"></i></th>
-									<th onclick="orderBy(this,'cardtype');">用户卡类型<i class="glyphicon glyphicon-chevron-up"></i></th>
-									<th onclick="orderBy(this,'ownerid');">所属人身份证号<i class="glyphicon glyphicon-chevron-up"></i></th> 
-									<th onclick="orderBy(this,'mobile');">所属人电话<i class="glyphicon glyphicon-chevron-up"></i></th>
-									<th onclick="orderBy(this,'operater');">操作人工号<i class="glyphicon glyphicon-chevron-up"></i></th> 
-									<th onclick="orderBy(this,'optime');"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间<i class="glyphicon glyphicon-chevron-up"></i></th>
+									<th onclick="orderBy(this,'card_no');commitForm();" id="card_no_order">用户卡号</th>
+									<th onclick="orderBy(this,'card_type');commitForm();" id="card_type_order">用户卡类型</th>
+									<th onclick="orderBy(this,'card_name');commitForm();" id="card_name_order">所属人姓名</th> 
+									<th onclick="orderBy(this,'card_status');commitForm();" id="card_status_order">用户卡状态</th>
+									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人工号</th> 
+									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th>
 									<th>更多操作</th>
 								</tr>
 							</thead>
@@ -317,22 +313,16 @@
 			<label>共 ${pageinfo.total} 条</label>
 			
 			<nav>
-				  <ul class="pagination pull-right no-margin">
+				  <ul id="ulhandle" class="pagination pull-right no-margin">
 				  
 				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage();">
+					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
 					        <span aria-hidden="true">&laquo;</span>
 					      </a>
 				    </li>
-
-				    <li id="navigator"><a href="javascript:void(0);" onclick="commitForm(this)">1</a></li>
-				    <li id="navigator"><a href="javascript:void(0);" onclick="commitForm(this)">2</a></li>
-				    <li id="navigator"><a href="javascript:void(0);" onclick="commitForm(this)">3</a></li>
-				    <li id="navigator"><a href="javascript:void(0);" onclick="commitForm(this)">4</a></li>
-				    <li id="navigator"><a href="javascript:void(0);" onclick="commitForm(this)">5</a></li>
 				    
 				    <li id="next">
-					      <a href="javascript:void(0);" aria-label="Next" onclick="nextpage();">
+					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
 					        <span aria-hidden="true">&raquo;</span>
 					      </a>
 				    </li>
@@ -341,102 +331,8 @@
 			</nav>
 
 			
-
-			<div id="modal-table" class="modal fade" tabindex="-1">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header no-padding">
-							<div class="table-header">
-								<button type="button" class="close" data-dismiss="modal"
-									aria-hidden="true">
-									<span class="white">&times;</span>
-								</button>
-								Results for "Latest Registered Domains
-							</div>
-						</div>
-
-						<div class="modal-body no-padding">
-							<table
-								class="table table-striped table-bordered table-hover no-margin-bottom no-border-top">
-								<thead>
-									<tr>
-										<th>Domain</th>
-										<th>Price</th>
-										<th>Clicks</th>
-
-										<th><i class="ace-icon fa fa-clock-o bigger-110"></i>
-											Update</th>
-									</tr>
-								</thead>
-
-								<tbody>
-									<tr>
-										<td><a href="#">ace.com</a></td>
-										<td>$45</td>
-										<td>3,330</td>
-										<td>Feb 12</td>
-									</tr>
-
-									<tr>
-										<td><a href="#">base.com</a></td>
-										<td>$35</td>
-										<td>2,595</td>
-										<td>Feb 18</td>
-									</tr>
-
-									<tr>
-										<td><a href="#">max.com</a></td>
-										<td>$60</td>
-										<td>4,400</td>
-										<td>Mar 11</td>
-									</tr>
-
-									<tr>
-										<td><a href="#">best.com</a></td>
-										<td>$75</td>
-										<td>6,500</td>
-										<td>Apr 03</td>
-									</tr>
-
-									<tr>
-										<td><a href="#">pro.com</a></td>
-										<td>$55</td>
-										<td>4,250</td>
-										<td>Jan 21</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-
-						<div class="modal-footer no-margin-top">
-							
-							<button class="btn btn-sm btn-danger pull-left" data-dismiss="modal">
-								<i class="ace-icon fa fa-times"></i> Close
-							</button>
-							 
-							<ul class="pagination pull-right no-margin">
-								<li class="prev disabled"><a href="#"> <i
-										class="ace-icon fa fa-angle-double-left"></i>
-								</a></li>
-
-								<li class="active"><a href="#">1</a></li>
-
-								<li><a href="#">2</a></li>
-
-								<li><a href="#">3</a></li>
-
-								<li class="next">
-									<a href="#"> 
-										<i class="ace-icon fa fa-angle-double-right"></i>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
+			<jsp:include page="../message.jsp"></jsp:include>
+			
 
 			<!-- PAGE CONTENT ENDS -->
 		</div>
@@ -465,11 +361,15 @@
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-	$('input[name=date-range-picker]').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
+var mydate = new Date();
+	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
 					locale: {
 						applyLabel: 'Apply',
 						cancelLabel: 'Cancel',
-					}
+						format: "YYYY/MM/DD",
+					}, 
+					"startDate": "${gascard.release_time_after}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/1":"${gascard.release_time_after}",
+				    "endDate": "${gascard.release_time_before}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/"+mydate.getDate():"${gascard.release_time_before}"
 				})
 				.prev().on(ace.click_event, function(){
 					$(this).next().focus();
@@ -480,17 +380,11 @@
             type:'post',                    
             dataType:'html',
             success:function(data){
-	              if(data.statusCode=="OK") {  
-	                	
-	              }
 	              $("#main").html(data);
-	              
-	              setCurrentPage();
             }
 	}
 	
 	window.onload = setCurrentPage();
-
 	
 	function commitForm(obj){
 		//设置当前页的值
@@ -498,124 +392,9 @@
 			$("#pageNum").val("1");
 		}else{
 			$("#pageNum").val($(obj).text());
-		
-			//设置当前选中的页数样式
-			$("li[id=navigator]").removeClass("active");
-			$(obj).parent("li").attr("class","active");
-			//设置上一页按钮样式
-			if(parseInt($("#pageNum").val())>1){
-				$("#previous").removeAttr("class");
-			}else if(parseInt($("#pageNum").val())==1){
-				$("#previous").attr("class","disabled");
-			}
-			//设置下一页按钮样式
-			if(parseInt($("#pageNum").val())>= parseInt($("#pageNumMax").val())){
-				$("#next").attr("class","disabled");
-			}else{
-				$("#next").removeAttr("class");
-			}
 		}
 		
 		$("#formcard").ajaxSubmit(options);
-	}
-	
-	function changePagenum(activiti){
-		var pagenum = parseInt($("#pageNum").val());
-		var pageNumMax = parseInt($("#pageNumMax").val());
-		
-		$("li[id=navigator]").each(function(index){
-			if(activiti == "next"){
-				$(this).find("a").text(pagenum+index);
-				if(parseInt($(this).find("a").text())>pageNumMax){
-					$(this).find("a").attr("style","display:none");
-				}
-			}else if(activiti == "pre"){
-				$(this).find("a").removeAttr("style");
-				$(this).find("a").text(pagenum-4+index);
-			}
-		});
-	}
-	
-	function prepage(){
-		if(parseInt($("#pageNum").val()) <= 1){
-			return ;	
-		}
-		//设置下一页按钮enable
-		$("li[id=next]").removeClass("disabled");
-		//设置当前页-1
-		$("#pageNum").val(parseInt($("#pageNum").val())-1);
-		//如果是第一页
-		if(parseInt($("#pageNum").val()) == 1){
-			$("li[id=previous]").attr("class","disabled");
-		}	
-		//动态刷新页面编号
-		if($("li[id=navigator]:first").attr("class") == "active"){
-			changePagenum("pre");
-		}
-		//设置当前页按钮选中样式
-		$("li[id=navigator]").removeClass("active");
-		$("li[id=navigator]").each(function(){
-			if($("#pageNum").val() == $(this).find("a").html()){
-				$(this).attr("class","active");
-			}
-		});
-		
-		$("#formcard").ajaxSubmit(options);
-	}
-	
-	function nextpage(){	
-
-		//设置上一页按钮enable
-		$("#previous").removeClass("disabled");
-		//如果是最后一页
-		if(parseInt($("#pageNum").val()) >= parseInt($("#pageNumMax").val())){
-			return ;	
-		}
-		
-		$("#pageNum").val(parseInt($("#pageNum").val())+1);
-		
-		//动态刷新页面编号
-		if($("li[id=navigator]:last").attr("class") == "active"){
-			changePagenum("next");
-		}
-		
-		var total = parseInt($("#total").val());
-		var pagenum = parseInt($("#pageNum").val());
-		var pageSize = parseInt($("#pageSize").val());
-		var pageNumMax = parseInt($("#pageNumMax").val());
-		
-		//设置下一页按钮disabled
-		if(parseInt($("#pageNum").val()) >= parseInt($("#pageNumMax").val())){
-			$("#next").attr("class","disabled");
-		}
-		
-		setCurrentPage();
-		
-		$("#formcard").ajaxSubmit(options);
-	}
-	
-	//设置当前页按钮选中样式
-	function setCurrentPage(){
-		var pagenum = parseInt($("#pageNum").val());
-		var pageNumMax = parseInt($("#pageNumMax").val());
-		
-		if(pagenum == 1){
-			$("#previous").attr("class","disabled");
-		}
-		if(pagenum == pageNumMax){
-			$("#next").attr("class","disabled");
-		}
-		
-		$("li[id=navigator]").removeClass("active");
-		$("li[id=navigator]").each(function(){
-			if($("#pageNum").val() == $(this).find("a").html()){
-				$(this).attr("class","active");
-			}
-			
-			if(parseInt($(this).find("a").text())>pageNumMax){
-				$(this).find("a").attr("style","display:none");
-			}
-		});
 	}
 	
 	function del(obj){
@@ -624,28 +403,15 @@
 		var deloptions ={   
 	            url:'../web/card/deleteCard?cardid='+cardid,   
 	            type:'post',                    
-	            dataType:'html',
-	            async:false,
+	            dataType:'text',
 	            success:function(data){
-	            	var ret = "${ret}";
-	            	console.debug("ret"+ret);
-					console.debug("sucess"+data);
-					alert("sucess"+data);
-		              $("#main").html(data);
-		              
-		              setCurrentPage();
+		             $("#main").html(data);
+		             if($("#retCode").val() != "100"){
+		            	 $("#modal-table").modal("show");
+		             }
 	            },
 	            error:function(XMLHttpRequest, textStatus, errorThrown) {
-	            		console.debug(XMLHttpRequest);
-	            		 alert(XMLHttpRequest.status);
-	            		 alert(XMLHttpRequest.readyState);
-	            		 alert(XMLHttpRequest.responseText);
-	            		 alert(textStatus);
-	            		 alert(errorThrown);
-	            	var ret = "${ret}";
-	            	console.debug("ret"+ret.retCode);
-	            	//console.debug("error   "+data.retCode);
-	            	//alert("error   "+data.retCode);
+					
 	            }
 		}
 		
