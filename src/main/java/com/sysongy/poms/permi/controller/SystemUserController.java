@@ -27,7 +27,7 @@ public class SystemUserController extends BaseContoller{
 	@RequestMapping("/list/page")
 	public String queryUserListPage(ModelMap map){
 	    map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-	    return "webpage/permi/demo";
+	    return "webpage/poms/permi/user_list";
 	}
 
 	/**

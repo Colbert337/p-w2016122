@@ -71,6 +71,13 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							<li class="">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/user/list/page')">
+									<i class="menu-icon fa fa-caret-right"></i>
+									用户管理
+								</a>
+								<b class="arrow"></b>
+							</li>
 						</ul>
 					</li>
 

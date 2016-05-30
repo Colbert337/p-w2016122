@@ -48,22 +48,9 @@
     <mvc:resources mapping="/assets/**"  location="/assets/" /> 
     <mvc:resources mapping="/webpage/**"  location="/webpage/" /> 
     <mvc:resources mapping="/common/**"  location="/common/" />
+	<mvc:resources mapping="/docs/**"  location="/docs/" />
     <mvc:resources mapping="/upload/**"  location="/upload/" />
-    <mvc:resources mapping="/docs/**"  location="/docs/" /> 
-    <mvc:resources mapping="/wechat/**"  location="/wechat/" /> 
-    <mvc:resources mapping="/schools/**"  location="/schools/" /> 
-    <mvc:resources mapping="/grade/**"  location="/grade/" /> 
-    <mvc:resources mapping="/index/**"  location="/error/" /> 
-    <mvc:resources mapping="/classes/**"  location="/classes/" /> 
-    <mvc:resources mapping="/dep/**"  location="/dep/" /> 
-    <mvc:resources mapping="/doc/**"  location="/doc/" /> 
-    <mvc:resources mapping="/document/**"  location="/document/" /> 
-    <mvc:resources mapping="/course/**"  location="/course/" /> 
-    <mvc:resources mapping="/child/**"  location="/child/" />
-    <mvc:resources mapping="/auth/**"  location="/auth/" /> 
-    <mvc:resources mapping="/attendance/**"  location="/attendance/"/>
-    <mvc:resources mapping="/health/**"  location="/health/" />
-    <mvc:resources mapping="/page/**"  location="/page/" />
+	<mvc:resources mapping="/page/**"  location="/page/" />
     <mvc:resources mapping="/js/**"  location="/js/" />
     <mvc:resources mapping="/dist/**"  location="/dist/" />
     
