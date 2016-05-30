@@ -1,15 +1,9 @@
 package com.sysongy.poms.permi.controller;
 
 import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.doc.model.BossDoc;
-import com.sysongy.poms.doc.service.BossDocService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @FileName: SystemUserController
@@ -26,16 +20,12 @@ import java.util.List;
 @Controller
 public class SystemUserController extends BaseContoller{
 
-	@Autowired
-	private BossDocService bossDocService;
-	
 	/**
 	 * 查询用户列表
 	 * @return
 	 */
 	@RequestMapping("/list/page")
 	public String queryUserListPage(ModelMap map){
-		List<BossDoc> bossList = new ArrayList<BossDoc>();
 	    map.addAttribute("current_module", "webpage/doc/boss_doc_list");
 	    return "webpage/permi/demo";
 	}
@@ -46,7 +36,6 @@ public class SystemUserController extends BaseContoller{
 	 */
 	@RequestMapping("/info")
 	public String queryUserInfoByUserId(ModelMap map){
-		List<BossDoc> bossList = new ArrayList<BossDoc>();
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
 		return "webpage/permi/demo";
 	}
@@ -57,7 +46,6 @@ public class SystemUserController extends BaseContoller{
 	 */
 	@RequestMapping("/add")
 	public String addUser(ModelMap map){
-		List<BossDoc> bossList = new ArrayList<BossDoc>();
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
 		return "webpage/permi/demo";
 	}
@@ -68,7 +56,6 @@ public class SystemUserController extends BaseContoller{
 	 */
 	@RequestMapping("/update")
 	public String updateUserByUserId(ModelMap map){
-		List<BossDoc> bossList = new ArrayList<BossDoc>();
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
 		return "webpage/permi/demo";
 	}
@@ -79,7 +66,6 @@ public class SystemUserController extends BaseContoller{
 	 */
 	@RequestMapping("/delete")
 	public String deleteUserByUserId(ModelMap map){
-		List<BossDoc> bossList = new ArrayList<BossDoc>();
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
 		return "webpage/permi/demo";
 	}
