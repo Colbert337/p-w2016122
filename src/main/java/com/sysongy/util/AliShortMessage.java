@@ -44,7 +44,7 @@ public class AliShortMessage {
      * @return
      */
     public static String sendShortMessage(AliShortMessageBean aliShortMessageBean, SHORT_MESSAGE_TYPE msgType) {
-        logger.debug("********************send the short message begin: telephone =" + aliShortMessageBean.getSendNumber() +
+        logger.info("********************send the short message begin: telephone =" + aliShortMessageBean.getSendNumber() +
                 "msgType=" + msgType.toString() + "*******************");
         String resp = null;
         TaobaoClient client = new DefaultTaobaoClient(SHORT_MESSAGE_URL, APP_KEY, SECRET_STRING);
@@ -54,10 +54,9 @@ public class AliShortMessage {
             rsp = client.execute(req);
             resp = rsp.getBody();
         } catch (ApiException e) {
-            logger.debug("----------Send short message error: " + e.getErrMsg() + "----------");
-            e.printStackTrace();
+            logger.error("----------Send short message error: " + e + "----------");
         }
-        logger.debug("********************send the short message end*******************");
+        logger.info("********************send the short message end*******************");
         return resp;
     }
 

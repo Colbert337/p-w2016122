@@ -99,6 +99,7 @@ public class MailEngine {
     public void sendMessage(String[] emailAddresses, String fromEmail,
                             String bodyText, String subject, String attachmentName,
                             ClassPathResource resource) throws MessagingException {
+        logger.info("********************send the mail begin: receiver =" + emailAddresses + "Subject=" + subject + "*******************");
         MimeMessage message = ((JavaMailSenderImpl) mailSender).createMimeMessage();
         // use the true flag to indicate you need a multipart message
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -111,6 +112,7 @@ public class MailEngine {
         if(attachmentName!=null && resource!=null)
             helper.addAttachment(attachmentName, resource);
         ((JavaMailSenderImpl) mailSender).send(message);
+        logger.info("********************send the mail end!*******************");
     }
 
     /**
@@ -121,6 +123,7 @@ public class MailEngine {
      * @param model        渲染模版所需的数据
      */
     public void send(SimpleMailMessage msg, String templateName, Map model) {
+        logger.info("********************send the mail begin: receiver =" + msg.getTo() + "Subject=" + msg.getSubject() + "*******************");
         String content = generateEmailContent(templateName, model);         //生成html邮件内容
         MimeMessage mimeMsg = null;
         try {
@@ -133,6 +136,7 @@ public class MailEngine {
                 helper.setFrom(msg.getFrom());
             helper.setText(content, true);
             ((JavaMailSenderImpl) mailSender).send(mimeMsg);
+            logger.info("********************send the mail end!*******************");
         } catch (MessagingException ex) {
             logger.error(ex.getMessage(), ex);
         }
