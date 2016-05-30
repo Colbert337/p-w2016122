@@ -4,16 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,8 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
@@ -62,8 +59,19 @@ public class CardController extends BaseContoller{
 			gascard.setPageNum(1);
 			gascard.setPageSize(10);
 		}
+		if(gascard.getOrderby() == null){
+			//gascard.setOrderby("card_id asc");
+		}
+		if(!StringUtils.isEmpty(gascard.getRelease_time_range())){
+			String []tmpRange = gascard.getRelease_time_range().split("-");
+			if(tmpRange.length==2){
+				gascard.setRelease_time_after(tmpRange[0].trim());
+				gascard.setRelease_time_before(tmpRange[1]);
+			}
+		}
 		
 		PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
+		List<GasCard> list = pageinfo.getList();
 		map.addAttribute("pageinfo", pageinfo);
 		map.addAttribute("gascard",gascard);
 	    map.addAttribute("current_module", "page/card/card_list");
@@ -79,12 +87,10 @@ public class CardController extends BaseContoller{
 		return  "page/card/new_card";
 	}
 	
-	@SuppressWarnings("finally")
 	@RequestMapping("/deleteCard")
-	public String deleteCard(HttpServletResponse response, ModelMap map, @RequestParam String cardid) throws Exception{
+	public String deleteCard(ModelMap map, @RequestParam String cardid){
 		
 		PageBean bean = new PageBean();
-		HashMap<String, String> b = new HashMap<String, String>();
 		String ret = "page/card/card_list";
 		Integer rowcount = null;
 		
@@ -98,23 +104,24 @@ public class CardController extends BaseContoller{
 				bean.setRetCode(100);
 				bean.setRetMsg("["+cardid+"]删除成功");
 				bean.setRetValue(rowcount.toString());
+				bean.setPageInfo(ret);
 				
-				b.put("retCode", "100");
-				b.put("retMsg", "["+cardid+"]删除成功");
-				b.put("retValue", rowcount.toString());
-				throw new Exception("我是故意的");
+				map.addAttribute("ret", JSON.toJSONString(bean));
+				
 				
 		} catch (Exception e) {
-			response.setStatus(5000);
-			response.getWriter().write(e.getMessage());
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
+			
+			ret = this.queryAllCardList(map, new GasCard());
+			
+			map.addAttribute("ret", bean);
+			logger.error("", e);
 			throw e;
 		}
-//		finally {
-//			map.addAttribute("ret", b);
-//			return ret;
-//		}
+		finally {
+			return ret;
+		}
 	}
 	
 	/**

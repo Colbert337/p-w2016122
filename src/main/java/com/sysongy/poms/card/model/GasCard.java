@@ -20,6 +20,12 @@ public class GasCard extends BaseModel{
 	private Date storage_time;
 
 	private Date release_time;
+	
+	private String release_time_range;
+	
+	private String release_time_before;
+	
+	private String release_time_after;
 
 	private String memo;
 
@@ -94,4 +100,29 @@ public class GasCard extends BaseModel{
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+	
+	public String getRelease_time_range() {
+		return release_time_range;
+	}
+
+	public void setRelease_time_range(String release_time_range) {
+		this.release_time_range = release_time_range;
+	}
+
+	public String getRelease_time_before() {
+		return release_time_before;
+	}
+
+	public void setRelease_time_before(String release_time_before) {
+		this.release_time_before = release_time_before;
+	}
+
+	public String getRelease_time_after() {
+		return release_time_after;
+	}
+
+	public void setRelease_time_after(String release_time_after) {
+		this.release_time_after = release_time_after;
+	}
+
 }

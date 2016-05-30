@@ -5,6 +5,15 @@ public class PageBean extends BaseModel {
 	private String retValue;
 	private String retMsg;
 	private Integer retCode;
+	private String pageInfo;
+
+	public String getPageInfo() {
+		return pageInfo;
+	}
+
+	public void setPageInfo(String pageInfo) {
+		this.pageInfo = pageInfo;
+	}
 
 	public String getRetValue() {
 		return retValue;
