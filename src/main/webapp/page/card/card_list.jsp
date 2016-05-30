@@ -152,7 +152,7 @@
 	<form id="formcard">
 	
 	<jsp:include page="../form_pageinfo.jsp"></jsp:include>
-		
+
 	<div class="row">
 		<div class="col-xs-12">
 			<!-- PAGE CONTENT BEGINS -->

@@ -9,8 +9,8 @@
 					<!-- #section:basics/footer -->
 					<div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">海贝</span>
-							运维支撑系统 &copy; 2014-2015
+							<span class="blue bolder">司集</span>
+							运维管理平台 &copy; 2015-2016
 						</span>
 
 						&nbsp; &nbsp;
@@ -37,8 +37,6 @@
 				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 			</a>
 
-
-	
 	<!--弹层-成功提示-->
 	<div id="suc-hint" class="all-hidden">
 		<!--弹层内容 -->
@@ -163,6 +161,11 @@
 		<script src="<%=basePath %>/assets/js/ace/ace.widget-on-reload.js"></script>
 		<script src="<%=basePath %>/assets/js/ace/ace.searchbox-autocomplete.js"></script>
 
+
+		<!-- 表单提交及请求处理 -->
+		<script src="<%=basePath %>/common/js/sysongy_commons.js"></script>
+		<script src="<%=basePath %>/common/js/jquery.form.js"></script>
+
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
 			jQuery(function($) {
@@ -179,6 +182,12 @@
 						lineWidth: parseInt(size/10),
 						animate: ace.vars['old_ie'] ? false : 1000,
 						size: size
+					});
+
+					/*文本域输入字数限制提示*/
+					$('textarea.limited').inputlimiter({
+						remText: '%n character%s remaining...',
+						limitText: 'max allowed : %n.'
 					});
 				})
 			
@@ -197,8 +206,8 @@
 			
 			  //flot chart resize plugin, somehow manipulates default browser resize event to optimize it!
 			  //but sometimes it brings up errors with normal resize event handlers
-			  $.resize.throttleWindow = false;
-			
+			  /*$.resize.throttleWindow = false;*/
+
 			  var placeholder = $('#piechart-placeholder').css({'width':'90%' , 'min-height':'150px'});
 			  var data = [
 				{ label: "social networks",  data: 38.7, color: "#68BC31"},
@@ -207,7 +216,7 @@
 				{ label: "direct traffic",  data: 18.6, color: "#DA5430"},
 				{ label: "other",  data: 10, color: "#FEE074"}
 			  ]
-			  function drawPieChart(placeholder, data, position) {
+			  /*function drawPieChart(placeholder, data, position) {
 			 	  $.plot(placeholder, data, {
 					series: {
 						pie: {
@@ -236,14 +245,14 @@
 					}
 				 })
 			 }
-			 drawPieChart(placeholder, data);
+			 drawPieChart(placeholder, data);*/
 			
 			 /**
 			 we saved the drawing function and the data to redraw with different position later when switching to RTL mode dynamically
 			 so that's not needed actually.
 			 */
-			 placeholder.data('chart', data);
-			 placeholder.data('draw', drawPieChart);
+			 /*placeholder.data('chart', data);
+			 placeholder.data('draw', drawPieChart);*/
 			
 			
 			  //pie chart tooltip example
@@ -290,7 +299,7 @@
 				
 			
 				var sales_charts = $('#sales-charts').css({'width':'100%' , 'height':'220px'});
-				$.plot("#sales-charts", [
+				/*$.plot("#sales-charts", [
 					{ label: "Domains", data: d1 },
 					{ label: "Hosting", data: d2 },
 					{ label: "Services", data: d3 }
@@ -315,7 +324,7 @@
 						borderWidth: 1,
 						borderColor:'#555'
 					}
-				});
+				});*/
 			
 			
 				$('#recent-box [data-rel="tooltip"]').tooltip({placement: tooltip_placement});

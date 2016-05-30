@@ -42,7 +42,7 @@
 						<span class="btn btn-danger"></span>
 					</div>
 				</div>
-				
+
 				<!-- /.sidebar-shortcuts -->
 				<ul class="nav nav-list">
 					<li class="active">
@@ -58,17 +58,14 @@
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-desktop"></i>
 							<span class="menu-text">
-								账号管理
+								系统管理
 							</span>
-
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
-
 						<b class="arrow"></b>
-
 						<ul class="submenu">
 							<li class="">
-								<a href="<%=basePath%>/web/bossSystem/queryAllSystem">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/system/user/list')">
 									<i class="menu-icon fa fa-caret-right"></i>
 									系统账号
 								</a>
@@ -81,7 +78,6 @@
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-list"></i>
 							<span class="menu-text"> 文档管理 </span>
-
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
 
@@ -164,7 +160,7 @@
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
 						<b class="arrow"></b>
-						
+
 						<ul class="submenu">
 							<li class="">
 								<a href="<%=basePath%>/web/evaluate/item/list?itemType=1">
@@ -203,8 +199,8 @@
 							</li>
 						</ul>
 					</li>
-					
-					
+
+
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-list-alt"></i>
@@ -213,10 +209,10 @@
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
 						<b class="arrow"></b>
-						
+
 						<ul class="submenu">
 							<li class="">
-								<a href="<%=basePath%>/webpage/poms/card/card_list.jsp">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/card/cardList')">
 									<i class="menu-icon fa fa-caret-right"></i>
 									卡片信息管理
 								</a>
@@ -224,7 +220,7 @@
 							</li>
 						</ul>
 					</li>
-					
+
 
 					<!-- <li class="">
 						<a href="#" class="dropdown-toggle">
