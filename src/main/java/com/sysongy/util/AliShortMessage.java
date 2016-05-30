@@ -117,6 +117,10 @@ public class AliShortMessage {
         return req;
     }
 
+    /**
+     * @param rec_num
+     * 短信接收号码。支持单个或多个手机号码，传入号码为11位手机号码，不能加0或+86。群发短信需传入多个号码，以英文逗号分隔，一次调用最多传入200个号码。示例：18600000000,13911111111,13322222222
+     */
     public static void main(String[] args){
         Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
         AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
