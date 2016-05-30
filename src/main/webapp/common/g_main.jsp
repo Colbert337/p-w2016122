@@ -23,7 +23,7 @@
 				<div class="page-content">
 				<jsp:include page="../common/g_set.jsp"/>
 				<div id="main">
-					<jsp:include page="../webpage/demo/info.jsp"></jsp:include>
+					<jsp:include page="../webpage/demo/form.jsp"></jsp:include>
 				</div>
 				</div><!-- /.page-content -->
 			</div><!-- /main-content-inner -->

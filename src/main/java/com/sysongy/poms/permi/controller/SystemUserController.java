@@ -1,4 +1,4 @@
-package com.sysongy.poms.authority.controller;
+package com.sysongy.poms.permi.controller;
 
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.doc.model.BossDoc;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @FileName: SystemUserController
  * @Encoding: UTF-8
- * @Package: com.sysongy.poms.authority.controller
+ * @Package: com.sysongy.poms.permi.controller
  * @Link: http://www.sysongy.com
  * @Created on: 2016年05月27日, 9:51
  * @Author: Dongqiang.Wang [wdq_2012@126.com]
@@ -22,7 +22,7 @@ import java.util.List;
  * @Description:
  */
 
-@RequestMapping("/web/authority/user")
+@RequestMapping("/web/permi/user")
 @Controller
 public class SystemUserController extends BaseContoller{
 
@@ -37,7 +37,7 @@ public class SystemUserController extends BaseContoller{
 	public String queryUserListPage(ModelMap map){
 		List<BossDoc> bossList = new ArrayList<BossDoc>();
 	    map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-	    return "webpage/authority/demo";
+	    return "webpage/permi/demo";
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class SystemUserController extends BaseContoller{
 	public String queryUserInfoByUserId(ModelMap map){
 		List<BossDoc> bossList = new ArrayList<BossDoc>();
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-		return "webpage/authority/demo";
+		return "webpage/permi/demo";
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class SystemUserController extends BaseContoller{
 	public String addUser(ModelMap map){
 		List<BossDoc> bossList = new ArrayList<BossDoc>();
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-		return "webpage/authority/demo";
+		return "webpage/permi/demo";
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class SystemUserController extends BaseContoller{
 	public String updateUserByUserId(ModelMap map){
 		List<BossDoc> bossList = new ArrayList<BossDoc>();
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-		return "webpage/authority/demo";
+		return "webpage/permi/demo";
 	}
 
 	/**
@@ -81,6 +81,6 @@ public class SystemUserController extends BaseContoller{
 	public String deleteUserByUserId(ModelMap map){
 		List<BossDoc> bossList = new ArrayList<BossDoc>();
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-		return "webpage/authority/demo";
+		return "webpage/permi/demo";
 	}
 }
