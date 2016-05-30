@@ -22,29 +22,29 @@
   	 select <include refid="Base_Column_List" />
     from gas_card gc where 1=1
     <trim>
-      <if test="card_id != null" >
+      <if test="card_id != null &amp;&amp; card_id != ''" >
         and card_id = #{card_id,jdbcType=VARCHAR}
       </if>
-      <if test="card_no != null" >
+      <if test="card_no != null &amp;&amp; card_no != ''" >
         and card_no = #{card_no,jdbcType=VARCHAR}
       </if>
-      <if test="card_type != null" >
+      <if test="card_type != null &amp;&amp; card_type != ''" >
         and card_type = #{card_type,jdbcType=INTEGER}
       </if>
-      <if test="card_name != null" >
+      <if test="card_name != null &amp;&amp; card_name != ''" >
         and card_name = #{card_name,jdbcType=VARCHAR}
       </if>
-      <if test="card_status != null" >
+      <if test="card_status != null &amp;&amp; card_status != ''" >
         and card_status = #{card_status,jdbcType=INTEGER}
       </if>
-      <if test="operator != null" >
+      <if test="operator != null &amp;&amp; operator != ''">
         and operator = #{operator,jdbcType=VARCHAR}
       </if>
-      <if test="storage_time != null" >
-         storage_time,
+      <if test="storage_time != null &amp;&amp; storage_time != ''">
+         storage_time
       </if>
-      <if test="release_time != null" >
-        release_time,
+      <if test="release_time_range != null &amp;&amp; release_time_range != ''">
+        and release_time  between #{release_time_after,jdbcType=VARCHAR } and #{release_time_before,jdbcType=VARCHAR}
       </if>
     </trim>
   </select>
