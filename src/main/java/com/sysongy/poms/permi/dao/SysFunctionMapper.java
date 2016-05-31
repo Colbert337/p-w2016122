@@ -15,4 +15,6 @@ public interface SysFunctionMapper {
     int addFunction(SysFunction record);
 
     int updateFunction(SysFunction record);
+
+    int deleteFunctionByParentId(String parentId);
 }

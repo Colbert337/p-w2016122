@@ -1,9 +1,11 @@
 package com.sysongy.poms.permi.service.impl;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.permi.dao.SysRoleMapper;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysRoleFunction;
 import com.sysongy.poms.permi.service.SysRoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,8 @@ import java.util.Map;
  */
 public class SysRoleServiceImpl implements SysRoleService{
 
+    @Autowired
+    SysRoleMapper sysRoleMapper;
     /**
      * 查询角色列表（分页）
      * @param conditionMap 查询条件
@@ -27,7 +31,9 @@ public class SysRoleServiceImpl implements SysRoleService{
      */
     @Override
     public PageInfo<SysRole> queryRoleListPage(Map<String, Object> conditionMap) {
-        return null;
+        List<SysRole> roleList = sysRoleMapper.queryRoleList();
+        PageInfo<SysRole> rolePageInfo = new PageInfo<SysRole>(roleList);
+        return rolePageInfo;
     }
     /**
      * 根据角色ID查询角色详情
@@ -36,7 +42,7 @@ public class SysRoleServiceImpl implements SysRoleService{
      */
     @Override
     public SysRole queryRoleByRoleId(String roleId) {
-        return null;
+        return sysRoleMapper.queryRoleById(roleId);
     }
     /**
      * 添加角色
@@ -45,7 +51,7 @@ public class SysRoleServiceImpl implements SysRoleService{
      */
     @Override
     public int addRole(SysRole role) {
-        return 0;
+        return sysRoleMapper.addRole(role);
     }
     /**
      * 修改角色
@@ -54,7 +60,7 @@ public class SysRoleServiceImpl implements SysRoleService{
      */
     @Override
     public int updateRole(SysRole role) {
-        return 0;
+        return sysRoleMapper.updateRole(role);
     }
     /**
      * 根据角色编号删除用户角色关系

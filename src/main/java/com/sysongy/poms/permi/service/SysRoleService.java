@@ -66,4 +66,5 @@ public interface SysRoleService {
      * @return
      */
     int addRoleFunction(List<SysRoleFunction> roleFunctionList);
+
 }

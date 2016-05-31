@@ -46,7 +46,7 @@ public class SysFunctionServiceImpl implements SysFunctionService{
      */
     @Override
     public SysFunction queryFunctionByFunctionId(String functionId) {
-        return null;
+        return sysFunctionMapper.queryFunctionById(functionId);
     }
     /**
      * 添加功能
@@ -55,7 +55,7 @@ public class SysFunctionServiceImpl implements SysFunctionService{
      */
     @Override
     public int addFunction(SysFunction function) {
-        return 0;
+        return sysFunctionMapper.addFunction(function);
     }
     /**
      * 更新功能
@@ -64,7 +64,7 @@ public class SysFunctionServiceImpl implements SysFunctionService{
      */
     @Override
     public int updateFunction(SysFunction function) {
-        return 0;
+        return sysFunctionMapper.updateFunction(function);
     }
     /**
      * 根据功能编号删除功能
@@ -73,7 +73,7 @@ public class SysFunctionServiceImpl implements SysFunctionService{
      */
     @Override
     public int deleteFunctionById(String functionId) {
-        return 0;
+        return sysFunctionMapper.deleteFunctionById(functionId);
     }
     /**
      * 根据父级编号删除父级功能下的所有功能
@@ -82,6 +82,6 @@ public class SysFunctionServiceImpl implements SysFunctionService{
      */
     @Override
     public int deleteFunctionByParentId(String parentId) {
-        return 0;
+        return sysFunctionMapper.deleteFunctionByParentId(parentId);
     }
 }

@@ -37,6 +37,10 @@
     delete from sys_function
     where sys_function_id = #{sysFunctionId,jdbcType=VARCHAR}
   </delete>
+  <delete id="deleteFunctionByParentId" parameterType="java.lang.String" >
+    delete from sys_function
+    where parent_id = #{parentId,jdbcType=VARCHAR}
+  </delete>
   <insert id="addFunction" parameterType="com.sysongy.poms.permi.model.SysFunction" >
     insert into sys_function
     <trim prefix="(" suffix=")" suffixOverrides="," >
