@@ -137,14 +137,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.36</version>
 		</dependency>
-		
-		<!--DBCP数据库连接池 -->
-		<!-- <dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.4</version>
-		</dependency> -->
-		
+
 		<!--DBCP数据库连接池 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
@@ -200,13 +193,6 @@
 			<version>2.4</version>
 			<classifier>jdk15</classifier>
 		</dependency>
-
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.3</version>
-		</dependency>
-
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -296,7 +282,7 @@
 		    <artifactId>entitymapper</artifactId>
 		    <version>1.0.0</version>
 		</dependency>
-		
+		<!-- redis start -->
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -314,6 +300,7 @@
 			<artifactId>spring-data-redis</artifactId>
 			<version>1.7.1.RELEASE</version>
 		</dependency>
+		<!-- redis start -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -324,12 +311,12 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
 		</dependency>
+		<!--模板引擎-->
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 			<version>2.3.23</version>
 		</dependency>
-
 
 	</dependencies>
 	
@@ -366,13 +353,14 @@
                     <overwrite>true</overwrite>  
                 </configuration>
             </plugin>
-			<plugin>
+
+			<!--<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
 					<url>http://localhost:8088/manager/text</url>
-					<!-- server、username、password对应maven的setting下的配置 -->
+					&lt;!&ndash; server、username、password对应maven的setting下的配置 &ndash;&gt;
 					<server>tomcat7</server>
 					<username>admin</username>
 					<password>admin</password>
@@ -380,7 +368,7 @@
 					<uriEncoding>UTF-8</uriEncoding>
 					<path>/${project.build.finalName}</path>
 				</configuration>
-			</plugin>
+			</plugin>-->
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -398,8 +386,6 @@
 					</webResources>
 				</configuration>
 			</plugin>
-
-
-	    </plugins>  
+	    </plugins>
 	</build>  
 </project>
