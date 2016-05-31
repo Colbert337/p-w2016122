@@ -25,7 +25,7 @@ public class SysUser {
 
     private String email;
 
-    private Date llastDate;
+    private Date lastDate;
 
     private Integer status;
 
@@ -127,14 +127,6 @@ public class SysUser {
         this.email = email == null ? null : email.trim();
     }
 
-    public Date getLlastDate() {
-        return llastDate;
-    }
-
-    public void setLlastDate(Date llastDate) {
-        this.llastDate = llastDate;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -181,5 +173,13 @@ public class SysUser {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public Date getLastDate() {
+        return lastDate;
+    }
+
+    public void setLastDate(Date lastDate) {
+        this.lastDate = lastDate;
     }
 }

@@ -13,7 +13,7 @@
     <result column="avatar_b" property="avatarB" jdbcType="VARCHAR" />
     <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
-    <result column="llast_date" property="llastDate" jdbcType="TIMESTAMP" />
+    <result column="last_date" property="lastDate" jdbcType="TIMESTAMP" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="online_state" property="onlineState" jdbcType="INTEGER" />
     <result column="is_admin" property="isAdmin" jdbcType="INTEGER" />
@@ -26,33 +26,22 @@
     avatar_b, mobile_phone, email, llast_date, status, online_state, is_admin, is_deleted, 
     created_date, updated_date
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="queryUserList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+  </select>
+  <select id="queryUserById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from sys_user
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteUserById" parameterType="java.lang.String" >
     delete from sys_user
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysUser" >
-    insert into sys_user (sys_user_id, user_name, password, 
-      user_type, alias_name, real_name, 
-      gender, avatar_s, avatar_b, 
-      mobile_phone, email, llast_date, 
-      status, online_state, is_admin, 
-      is_deleted, created_date, updated_date
-      )
-    values (#{sysUserId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{userType,jdbcType=INTEGER}, #{aliasName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=INTEGER}, #{avatarS,jdbcType=VARCHAR}, #{avatarB,jdbcType=VARCHAR}, 
-      #{mobilePhone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{llastDate,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER}, #{onlineState,jdbcType=INTEGER}, #{isAdmin,jdbcType=INTEGER}, 
-      #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysUser" >
+  <insert id="addUser" parameterType="com.sysongy.poms.permi.model.SysUser" >
     insert into sys_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="sysUserId != null" >
@@ -167,7 +156,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.permi.model.SysUser" >
+  <update id="updateUser" parameterType="com.sysongy.poms.permi.model.SysUser" >
     update sys_user
     <set >
       <if test="userName != null" >
@@ -222,27 +211,6 @@
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.permi.model.SysUser" >
-    update sys_user
-    set user_name = #{userName,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      user_type = #{userType,jdbcType=INTEGER},
-      alias_name = #{aliasName,jdbcType=VARCHAR},
-      real_name = #{realName,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=INTEGER},
-      avatar_s = #{avatarS,jdbcType=VARCHAR},
-      avatar_b = #{avatarB,jdbcType=VARCHAR},
-      mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      llast_date = #{llastDate,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=INTEGER},
-      online_state = #{onlineState,jdbcType=INTEGER},
-      is_admin = #{isAdmin,jdbcType=INTEGER},
-      is_deleted = #{isDeleted,jdbcType=INTEGER},
-      created_date = #{createdDate,jdbcType=TIMESTAMP},
-      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
   </update>
 </mapper>

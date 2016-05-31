@@ -1,17 +1,18 @@
 package com.sysongy.poms.permi.dao;
 
+import com.sysongy.poms.permi.model.SysFunction;
 import com.sysongy.poms.permi.model.SysUser;
 
+import java.util.List;
+
 public interface SysUserMapper {
-    int deleteByPrimaryKey(String sysUserId);
+    List<SysUser> queryUserList();
 
-    int insert(SysUser record);
+    SysUser queryUserById(String userId);
 
-    int insertSelective(SysUser record);
+    int deleteUserById(String userId);
 
-    SysUser selectByPrimaryKey(String sysUserId);
+    int addUser(SysUser record);
 
-    int updateByPrimaryKeySelective(SysUser record);
-
-    int updateByPrimaryKey(SysUser record);
+    int updateUser(SysUser record);
 }

@@ -69,10 +69,10 @@ public class BaseContoller {
     	String userName = request.getParameter("userName");
     	String password = request.getParameter("password");
     	String returnPath = "login";
-    	if(userName != null && password != null && userName.equals("wdq") && password.equals("wdq123456")){
+    	/*if(userName != null && password != null && userName.equals("wdq") && password.equals("wdq123456")){*/
     		map.addAttribute("current_module", "webpage/demo/demo");
     		returnPath = "common/g_main";
-    	}
+    	/*}*/
     	
     	return returnPath;
     }
