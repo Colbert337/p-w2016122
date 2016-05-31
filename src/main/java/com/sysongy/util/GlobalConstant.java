@@ -49,6 +49,12 @@ public class GlobalConstant {
 	 */
 	public static final int PAGE_SIZE = 10;
 
+	/********************************** 用户类型************************************************/
+	public static final int USER_TYPE_STATION = 1;//气站用户
+	public static final int USER_TYPE_TRANSPORT = 2;//运输公司用户
+	public static final int USER_TYPE_CRM = 3;//CRM客户端用户
+	public static final int USER_TYPE_ORG = 4;//集团用户
+	public static final int USER_TYPE_MANAGE = 5;//后台管理用户
 	/********************************** 路径配置 ************************************************/
 	/* 小头像 */
 	public static final String CHILD_AVATAR_S_PATH = "/upload/child/avatar/small/";
@@ -59,21 +65,6 @@ public class GlobalConstant {
 	public static final String USER_AVATAR_S_PATH = "/upload/user/avatar/small/";
 	/* 大头像 */
 	public static final String USER_AVATAR_B_PATH = "/upload/user/avatar/big/";
-
-	/********************************** 用户类型 ************************************************/
-
-	/**
-	 * 系统管理员
-	 */
-	public static final int USER_ADMIN = 1;
-	/**
-	 * 员工
-	 */
-	public static final int USER_EMPLOYEE = 2;
-	/**
-	 * 家长
-	 */
-	public static final int USER_PARENT = 3;
 
 	/********************************** 图片路径 ************************************************/
 

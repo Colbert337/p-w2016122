@@ -1,11 +1,13 @@
 package com.sysongy.poms.permi.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.permi.dao.SysUserMapper;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserRole;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +31,17 @@ public class SysUserServiceImpl implements SysUserService{
     SysUserMapper sysUserMapper;
     /**
      * 查询用户列表（分页）
-     * @param conditionMap
+     * @param sysUser
      * @return
      */
     @Override
-    public PageInfo<SysUser> queryUserListPage(Map<String, Object> conditionMap) {
-        List<SysUser> userList = sysUserMapper.queryUserList();
+    public PageInfo<SysUser> queryUserListPage(SysUser sysUser) {
+        /**
+         * 获取分页参数
+         */
+
+        PageHelper.startPage(sysUser.getPageNum(), sysUser.getPageSize());
+        List<SysUser> userList = sysUserMapper.queryUserList(sysUser);
         PageInfo<SysUser> userPageInfo = new PageInfo<SysUser>(userList);
         return userPageInfo;
     }

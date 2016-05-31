@@ -6,7 +6,7 @@ import com.sysongy.poms.permi.model.SysUser;
 import java.util.List;
 
 public interface SysUserMapper {
-    List<SysUser> queryUserList();
+    List<SysUser> queryUserList(SysUser sysUser);
 
     SysUser queryUserById(String userId);
 

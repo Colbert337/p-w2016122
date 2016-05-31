@@ -44,7 +44,7 @@ public class SysRoleController extends BaseContoller{
 	 * 查询角色列表
 	 * @return
 	 */
-	@RequestMapping("/list")
+	@RequestMapping("/add")
 	public String addRole(ModelMap map){
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
 		return "webpage/poms/permi/role_list";
@@ -54,7 +54,7 @@ public class SysRoleController extends BaseContoller{
 	 * 查询角色列表
 	 * @return
 	 */
-	@RequestMapping("/list")
+	@RequestMapping("/update")
 	public String updateRole(ModelMap map){
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
 		return "webpage/poms/permi/role_list";
@@ -64,7 +64,7 @@ public class SysRoleController extends BaseContoller{
 	 * 查询角色列表
 	 * @return
 	 */
-	@RequestMapping("/list")
+	@RequestMapping("/save")
 	public String saveRole(ModelMap map){
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
 		return "webpage/poms/permi/role_list";

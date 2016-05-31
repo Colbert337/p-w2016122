@@ -16,6 +16,7 @@
     <result column="last_date" property="lastDate" jdbcType="TIMESTAMP" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="online_state" property="onlineState" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="is_admin" property="isAdmin" jdbcType="INTEGER" />
     <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
@@ -23,13 +24,44 @@
   </resultMap>
   <sql id="Base_Column_List" >
     sys_user_id, user_name, password, user_type, alias_name, real_name, gender, avatar_s, 
-    avatar_b, mobile_phone, email, llast_date, status, online_state, is_admin, is_deleted, 
+    avatar_b, mobile_phone, email, last_date, status, online_state, remark, is_admin, is_deleted,
     created_date, updated_date
   </sql>
   <select id="queryUserList" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from sys_user
+    where 1=1
+    <trim>
+      <if test="sysUserId != null" >
+        and sys_user_id = #{sysUserId},
+      </if>
+      <if test="userName != null" >
+        and user_name = #{userName},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender},
+      </if>
+      <if test="mobilePhone != null" >
+        mobile_phone = #{mobilePhone},
+      </if>
+      <if test="email != null" >
+        email = #{email},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="isAdmin != null" >
+        is_admin = #{isAdmin},
+      </if>
+    </trim>
+    order by created_date desc
   </select>
   <select id="queryUserById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -77,14 +109,17 @@
       <if test="email != null" >
         email,
       </if>
-      <if test="llastDate != null" >
-        llast_date,
+      <if test="lastDate != null" >
+        last_date,
       </if>
       <if test="status != null" >
         status,
       </if>
       <if test="onlineState != null" >
         online_state,
+      </if>
+      <if test="remark != null" >
+        remark,
       </if>
       <if test="isAdmin != null" >
         is_admin,
@@ -133,14 +168,17 @@
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
       </if>
-      <if test="llastDate != null" >
-        #{llastDate,jdbcType=TIMESTAMP},
+      <if test="lastDate != null" >
+        #{lastDate,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
       </if>
       <if test="onlineState != null" >
         #{onlineState,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
       </if>
       <if test="isAdmin != null" >
         #{isAdmin,jdbcType=INTEGER},
@@ -189,14 +227,17 @@
       <if test="email != null" >
         email = #{email,jdbcType=VARCHAR},
       </if>
-      <if test="llastDate != null" >
-        llast_date = #{llastDate,jdbcType=TIMESTAMP},
+      <if test="lastDate != null" >
+        last_date = #{lastDate,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
       </if>
       <if test="onlineState != null" >
         online_state = #{onlineState,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="isAdmin != null" >
         is_admin = #{isAdmin,jdbcType=INTEGER},

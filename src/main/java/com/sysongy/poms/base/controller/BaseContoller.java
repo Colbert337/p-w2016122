@@ -73,7 +73,7 @@ public class BaseContoller {
     		map.addAttribute("current_module", "webpage/demo/demo");
     		returnPath = "common/g_main";
     	/*}*/
-    	
+
     	return returnPath;
     }
     /**

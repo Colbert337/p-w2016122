@@ -119,7 +119,7 @@ function prepage(formid){
 	//设置当前页-1
 	$("#pageNum").val(parseInt($("#pageNum").val())-1);
 
-	$(formid).ajaxSubmit(options);
+	$(formid).ajaxSubmit(listOptions);
 }
 
 function nextpage(formid){
@@ -129,5 +129,5 @@ function nextpage(formid){
 	}
 	//设置当前页+1
 	$("#pageNum").val(parseInt($("#pageNum").val())+1);
-	$(formid).ajaxSubmit(options);
+	$(formid).ajaxSubmit(listOptions);
 }

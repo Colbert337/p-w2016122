@@ -21,10 +21,10 @@ public interface SysUserService {
 
     /**
      * 查询用户列表（分页）
-     * @param conditionMap
+     * @param sysUser
      * @return
      */
-    PageInfo<SysUser> queryUserListPage(Map<String, Object> conditionMap);
+    PageInfo<SysUser> queryUserListPage(SysUser sysUser);
 
     /**
      * 根据用户ID查询用户信息
