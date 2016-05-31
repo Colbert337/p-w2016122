@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/web/permi/user")
 @Controller
-public class SystemUserController extends BaseContoller{
+public class SysUserController extends BaseContoller{
 
 	/**
 	 * 查询用户列表
