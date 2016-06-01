@@ -97,10 +97,11 @@ public class BaseContoller {
      * @param map
      * @return
      */
-    @RequestMapping(value = {"/web/panel/list"})  
-    public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){  
-    	
-    	return "/demo/panel_list";
+    @RequestMapping(value = {"/web/panel/list"})
+    @ResponseBody
+    public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){
+
+        return "login";
     }
     
     /**

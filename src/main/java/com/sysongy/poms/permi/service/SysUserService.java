@@ -34,6 +34,13 @@ public interface SysUserService {
     SysUser queryUserByUserId(String userId);
 
     /**
+     * 用户登录
+     * @param user
+     * @return
+     */
+    SysUser queryUserByAccount(SysUser user);
+
+    /**
      * 添加用户
      * @param user 用户信息实体类
      * @return

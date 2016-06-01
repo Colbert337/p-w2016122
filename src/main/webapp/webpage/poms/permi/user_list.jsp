@@ -12,12 +12,7 @@
 <script type="text/javascript">
 $(function() {
 	/*表单验证*/
-	jQuery('#userForm').validationEngine('attach', {
-		promptPosition: 'topRight',		//提示信息的位置，可设置为：'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'centerRight', 'centerLeft', 'inline'
-		validationEventTrigger:'blur',	//触发验证的事件
-		binded:true,						//是否绑定即时验证
-		scroll: false 					//屏幕自动滚动到第一个验证不通过的位置
-	});
+	/*$('#userForm').validationEngine();*/
 });
 
 /*分页相关方法 start*/
@@ -46,7 +41,7 @@ var listOptions ={
 /*分页相关方法 end*/
 //显示添加用户弹出层
 function addUser(){
-	closeDialog();
+	/*closeDialog();*/
 	var d = dialog({
 		width:550,
 		height:500,
@@ -78,15 +73,17 @@ function updateUser(){
 	d.showModal();
 }
 /*取消弹层方法*/
-function closeDialog(){
+/*function closeDialog(){
 	jQuery('#userForm').validationEngine('hide');//隐藏验证弹窗
 	$("#userForm :input").each(function () {
 		$(this).val("");
 	});
-}
+}*/
 
 function saveUser(){
-	$("#userForm").ajaxSubmit(saveOptions);
+//	if(jQuery('#userForm').validationEngine('validate')){
+		$("#userForm").ajaxSubmit(saveOptions);
+//	}
 }
 function editUser(userId){
 	//ajax获取用户信息
