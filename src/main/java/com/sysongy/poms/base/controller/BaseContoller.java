@@ -5,8 +5,11 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,15 +33,16 @@ import com.sysongy.util.PropertyUtil;
  *
  */
 @Controller
-@SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
+@SessionAttributes({"currUser","userId"})
 public class BaseContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
-
 	private static final long serialVersionUID = 6357869213649815390L;
-	
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
-	
+
+    @Autowired
+    SysUserService sysUserService;
+
     @RequestMapping(value = {"","/","/test"})  
     public String index(ModelMap map){  
     	/*ModelAndView result = new ModelAndView();
@@ -46,8 +50,6 @@ public class BaseContoller {
     	result.addObject("pmcName", pmcName);
     	result.addObject("current_module", "webpage/test");
         result.setViewName("comm/g_main");*/
-        
-        map.addAttribute("current_module", "webpage/demo/panel");
         
         return "login";
     }
@@ -69,10 +71,15 @@ public class BaseContoller {
     	String userName = request.getParameter("userName");
     	String password = request.getParameter("password");
     	String returnPath = "login";
-    	/*if(userName != null && password != null && userName.equals("wdq") && password.equals("wdq123456")){*/
-    		map.addAttribute("current_module", "webpage/demo/demo");
-    		returnPath = "common/g_main";
-    	/*}*/
+        SysUser sysUser = new SysUser();
+        sysUser.setUserName(userName);
+        sysUser.setPassword(password);
+
+        sysUser = sysUserService.queryUserByAccount(sysUser);
+    	if(sysUser != null && userName != null && password != null){
+            map.addAttribute("current_module", "webpage/demo/demo");
+            returnPath = "common/g_main";
+    	}
 
     	return returnPath;
     }

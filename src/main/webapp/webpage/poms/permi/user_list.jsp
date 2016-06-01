@@ -10,6 +10,11 @@
 %>
 
 <script type="text/javascript">
+$(function() {
+	/*表单验证*/
+	/*$('#userForm').validationEngine();*/
+});
+
 /*分页相关方法 start*/
 window.onload = setCurrentPage();
 function commitForm(obj){
@@ -20,7 +25,7 @@ function commitForm(obj){
 		$("#pageNum").val($(obj).text());
 	}
 
-	$("#userListForm").ajaxSubmit(listOptions);
+	$("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
 	url:'<%=basePath%>/web/permi/user/list/page',
@@ -34,8 +39,9 @@ var listOptions ={
 	}
 }
 /*分页相关方法 end*/
-//显示用户弹出层
+//显示添加用户弹出层
 function addUser(){
+	/*closeDialog();*/
 	var d = dialog({
 		width:550,
 		height:500,
@@ -45,14 +51,39 @@ function addUser(){
 		fixed: false,
 		drag: true,
 		onclose: function () {
-// 	        alert('对话框已经关闭!!!!');
+			/*closeDialog();*/
 		}
 	});
 	d.showModal();
 }
+//显示编辑用户弹出层
+function updateUser(){
+	var d = dialog({
+		width:550,
+		height:500,
+		top:'20%',
+		title: '修改用户',
+		content: $("#user-edit-dg"),
+		fixed: false,
+		drag: true,
+		onclose: function () {
+			/*closeDialog();*/
+		}
+	});
+	d.showModal();
+}
+/*取消弹层方法*/
+/*function closeDialog(){
+	jQuery('#userForm').validationEngine('hide');//隐藏验证弹窗
+	$("#userForm :input").each(function () {
+		$(this).val("");
+	});
+}*/
 
 function saveUser(){
-	$("#userForm").ajaxSubmit(saveOptions);
+//	if(jQuery('#userForm').validationEngine('validate')){
+		$("#userForm").ajaxSubmit(saveOptions);
+//	}
 }
 function editUser(userId){
 	//ajax获取用户信息
@@ -71,7 +102,7 @@ function editUser(userId){
 			$("#gender").val(data.gender);
 			$("#email").val(data.email);
 			$("#mobile_phone").val(data.mobilePhone);
-			addUser();
+			updateUser();
 		}
 	});
 
@@ -100,7 +131,7 @@ var saveOptions ={
 
 <div class="row">
 	<div class="col-xs-12">
-		<form class="form-horizontal" role="userForm" id="userListForm">
+		<form class="form-horizontal"  id="listForm">
 			<jsp:include page="/common/page_param.jsp"></jsp:include>
 			<!-- PAGE CONTENT BEGINS -->
 			<div class="row">
@@ -148,12 +179,12 @@ var saveOptions ={
 											<span class="lbl"></span>
 										</label>
 									</td>
+									<td>${user.userName}</td>
 									<td>${user.realName}</td>
 									<td>${user.gender}</td>
 									<td>${user.email}</td>
 									<td>${user.mobilePhone}</td>
 									<td class="hidden-480">${user.userName}</td>
-									<td>${user.userName}</td>
 									<td>${user.status}</td>
 									<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd"/></td>
 									<td>
@@ -174,13 +205,13 @@ var saveOptions ={
 					<div class="col-sm-6">
 						<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
 							<ul id="ulhandle" class="pagination">
-								<li id="previous" class="paginate_button previous disabled" aria-controls="dynamic-table" tabindex="0">
-									<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+								<li id="previous" class="paginate_button previous" aria-controls="dynamic-table" tabindex="0">
+									<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#listForm');">
 										<span aria-hidden="true">上一页</span>
 									</a>
 								</li>
 								<li id="next" class="paginate_button next" aria-controls="dynamic-table" tabindex="0">
-									<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+									<a id="nexthandle" href="javascript:nextpage('#listForm');" aria-label="Next" >
 										<span aria-hidden="true">下一页</span>
 									</a>
 								</li>
@@ -202,18 +233,18 @@ var saveOptions ={
 		<div class="row">
 			<div class="col-xs-12">
 				<!-- PAGE CONTENT BEGINS -->
-				<form class="form-horizontal" role="userForm" id="userForm">
+				<form class="form-horizontal" id="userForm">
 					<!-- #section:elements.form -->
 					<h5 class="header smaller lighter blue">账户信息</h5>
 					<div class="form-group">
 						<label class="col-sm-2 control-label no-padding-right" for="user_name"> 用户ID： </label>
 						<div class="col-sm-4">
-							<input type="text" name="userName" id="user_name" placeholder="用户ID" class="col-xs-10 col-sm-12" />
+							<input type="text" name="userName" id="user_name" placeholder="用户ID" class="validate[required] col-xs-10 col-sm-12" />
 							<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
 						</div>
 						<label class="col-sm-2 control-label no-padding-right" for="role_id"> 用户角色： </label>
 						<div class="col-sm-4">
-							<select class="chosen-select col-xs-10 col-sm-12" name="roleId" id="role_id">
+							<select class="chosen-select col-xs-10 col-sm-12" id="role_id">
 								<option value="">选择角色</option>
 								<option value="AL">Alabama</option>
 								<option value="AK">Alaska</option>
@@ -230,13 +261,13 @@ var saveOptions ={
 						</div>
 						<label class="col-sm-2 control-label no-padding-right" for="re_password"> 确认密码： </label>
 						<div class="col-sm-4">
-							<input type="password" name="rePassword" id="re_password" placeholder="确认密码" class="col-xs-10 col-sm-12" />
+							<input type="password" id="re_password" placeholder="确认密码" class="col-xs-10 col-sm-12" />
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label no-padding-right" for="remark"> 备注： </label>
+						<label class="col-sm-2 control-label no-padding-right"> 备注： </label>
 						<div class="col-sm-10">
-							<textarea class="limited col-xs-10 col-sm-12" name="remark" id="remark" maxlength="50"></textarea>
+							<textarea class="limited col-xs-10 col-sm-12"  id="remark" maxlength="50"></textarea>
 						</div>
 					</div>
 					<h5 class="header smaller lighter blue">基本信息</h5>
@@ -245,9 +276,18 @@ var saveOptions ={
 						<div class="col-sm-4">
 							<input type="text" name="realName" id="real_name" placeholder="姓名" class="col-xs-10 col-sm-12" />
 						</div>
-						<label class="col-sm-2 control-label no-padding-right" for="gender"> 性别： </label>
+						<label class="col-sm-2 control-label no-padding-right"> 性别： </label>
 						<div class="col-sm-4">
-							<input type="text" name="gender" id="gender" placeholder="性别" class="col-xs-10 col-sm-12" />
+							<div class="radio">
+								<label>
+									<input name="gender" id="gender_b" type="radio" class="ace" checked="checked" value="0">
+									<span class="lbl"> 男</span>
+								</label>
+								<label>
+									<input name="gender" id="gender_g" type="radio" class="ace" value="1">
+									<span class="lbl"> 女</span>
+								</label>
+							</div>
 						</div>
 					</div>
 					<div class="form-group">
@@ -270,7 +310,7 @@ var saveOptions ={
 	<div class="row">
 		<div class="col-xs-3"></div>
 		<div class="col-xs-3"><button class="btn btn-primary" i="close" onclick="saveUser()">确   定</button></div>
-		<div class="col-xs-6"><button class="btn" i="close" onclick="close_mslog()">取   消 </button></div>
+		<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog()">取   消 </button></div>
 	</div>
 </div>
 <!--添加用户弹层-结束-->

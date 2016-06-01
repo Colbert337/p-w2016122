@@ -55,6 +55,8 @@ public class GlobalConstant {
 	public static final int USER_TYPE_CRM = 3;//CRM客户端用户
 	public static final int USER_TYPE_ORG = 4;//集团用户
 	public static final int USER_TYPE_MANAGE = 5;//后台管理用户
+
+	public static final String PASSWORD_ENCRYPTION = "sysongy";
 	/********************************** 路径配置 ************************************************/
 	/* 小头像 */
 	public static final String CHILD_AVATAR_S_PATH = "/upload/child/avatar/small/";

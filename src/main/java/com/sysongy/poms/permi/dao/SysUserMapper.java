@@ -10,6 +10,8 @@ public interface SysUserMapper {
 
     SysUser queryUserById(String userId);
 
+    SysUser queryUserByAccount(String userName, String password);
+
     int deleteUserById(String userId);
 
     int addUser(SysUser record);

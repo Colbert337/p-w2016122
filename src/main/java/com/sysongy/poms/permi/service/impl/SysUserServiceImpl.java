@@ -7,6 +7,7 @@ import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserRole;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,29 @@ public class SysUserServiceImpl implements SysUserService{
         PageInfo<SysUser> userPageInfo = new PageInfo<SysUser>(userList);
         return userPageInfo;
     }
+
+    /**
+     * 用户登录
+     * @param user
+     * @return
+     */
+    @Override
+    public SysUser queryUserByAccount(SysUser user) {
+        SysUser sysUser = null;
+        if (user != null) {
+            String password = user.getPassword();
+            String userName = user.getUserName();
+            try {
+                password = Encoder.MD5Encode(password.getBytes());
+                user.setPassword(password);
+                sysUser = sysUserMapper.queryUserByAccount(userName, password);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return sysUser;
+    }
+
     /**
      * 根据用户ID查询用户信息
      * @param userId 用户编号
