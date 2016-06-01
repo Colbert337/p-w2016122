@@ -68,4 +68,16 @@
 			<value>4096</value>
 		</property>
 	</bean>
+
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="cacheSeconds" value="0" />
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+			</list>
+		</property>
+		<property name="webBindingInitializer">
+			<bean class="com.sysongy.core.interceptors.DateWebBinding" />
+		</property>
+	</bean>
 </beans>

@@ -1,6 +1,7 @@
 package com.sysongy.poms.base.model;
 
-import net.sf.json.JSONObject;
+
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.Map;
 
@@ -51,6 +52,6 @@ public class AjaxJson {
         obj.put("msg", this.getMsg());
         obj.put("obj", this.obj);
         obj.put("attributes", this.attributes);
-        return obj.toString();
+        return obj.toJSONString();
     }
 }

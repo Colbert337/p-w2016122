@@ -16,6 +16,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -71,6 +72,7 @@ public class CRMBaseContoller {
         AjaxJson ajaxJson = new AjaxJson();
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
+
         if(userName.equalsIgnoreCase("test")){
             return ajaxJson;
         } else {
