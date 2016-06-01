@@ -5,6 +5,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import org.slf4j.Logger;
@@ -43,7 +44,12 @@ public class BaseContoller {
     @Autowired
     SysUserService sysUserService;
 
-    @RequestMapping(value = {"","/","/test"})  
+    /**
+     * 进入登录页面
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = {"","/"})
     public String index(ModelMap map){  
     	/*ModelAndView result = new ModelAndView();
     	String pmcName = "登录测试成功！";
@@ -54,18 +60,13 @@ public class BaseContoller {
         return "login";
     }
 
-    @RequestMapping(value = {"main"})
-    public String main(ModelMap map){
-    	/*ModelAndView result = new ModelAndView();
-    	String pmcName = "登录测试成功！";
-    	result.addObject("pmcName", pmcName);
-    	result.addObject("current_module", "webpage/test");
-        result.setViewName("comm/g_main");*/
-
-        map.addAttribute("current_module", "webpage/demo/panel");
-
-        return "common/g_main";
-    }
+    /**
+     * 用户登录
+     * @param request
+     * @param response
+     * @param map
+     * @return
+     */
     @RequestMapping(value = {"/web/login"})  
     public String login( HttpServletRequest request,HttpServletResponse response,ModelMap map){ 
     	String userName = request.getParameter("userName");
@@ -77,12 +78,16 @@ public class BaseContoller {
 
         sysUser = sysUserService.queryUserByAccount(sysUser);
     	if(sysUser != null && userName != null && password != null){
-            map.addAttribute("current_module", "webpage/demo/demo");
+            CurrUser currUser = new CurrUser();
+            currUser.setUserId(sysUser.getSysUserId());
+            map.addAttribute("currUser",currUser);
+
             returnPath = "common/g_main";
     	}
 
     	return returnPath;
     }
+
     /**
      * 退出登录
      * @param request
