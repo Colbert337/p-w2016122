@@ -101,8 +101,10 @@
     text-overflow: ellipsis;
     font-weight: bold;
     cursor: default;
+    font-size:18px;
+    color: #478fca !important;
     /* color:#fff;
-    background: #438eb9;  ×Ô¶¨Òåtitle±³¾°É«
+    background: #438eb9;  ï¿½Ô¶ï¿½ï¿½ï¿½titleï¿½ï¿½ï¿½ï¿½É«
     -moz-border-radius: 5px;      Gecko browsers
     -webkit-border-radius: 5px;   Webkit browsers
     border-radius:5px;  */

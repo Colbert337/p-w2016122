@@ -1,8 +1,10 @@
 package com.sysongy.poms.permi.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.util.Date;
 
-public class SysUser {
+public class SysUser  extends BaseModel {
     private String sysUserId;
 
     private String userName;
@@ -25,7 +27,7 @@ public class SysUser {
 
     private String email;
 
-    private Date llastDate;
+    private Date lastDate;
 
     private Integer status;
 
@@ -38,6 +40,8 @@ public class SysUser {
     private Date createdDate;
 
     private Date updatedDate;
+
+    private String remark;
 
     public String getSysUserId() {
         return sysUserId;
@@ -127,14 +131,6 @@ public class SysUser {
         this.email = email == null ? null : email.trim();
     }
 
-    public Date getLlastDate() {
-        return llastDate;
-    }
-
-    public void setLlastDate(Date llastDate) {
-        this.llastDate = llastDate;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -181,5 +177,21 @@ public class SysUser {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public Date getLastDate() {
+        return lastDate;
+    }
+
+    public void setLastDate(Date lastDate) {
+        this.lastDate = lastDate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

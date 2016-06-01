@@ -49,31 +49,24 @@ public class GlobalConstant {
 	 */
 	public static final int PAGE_SIZE = 10;
 
+	/********************************** 用户类型************************************************/
+	public static final int USER_TYPE_STATION = 1;//气站用户
+	public static final int USER_TYPE_TRANSPORT = 2;//运输公司用户
+	public static final int USER_TYPE_CRM = 3;//CRM客户端用户
+	public static final int USER_TYPE_ORG = 4;//集团用户
+	public static final int USER_TYPE_MANAGE = 5;//后台管理用户
+
+	public static final String PASSWORD_ENCRYPTION = "sysongy";
 	/********************************** 路径配置 ************************************************/
-	/* 幼儿小头像 */
+	/* 小头像 */
 	public static final String CHILD_AVATAR_S_PATH = "/upload/child/avatar/small/";
-	/* 幼儿大头像 */
+	/* 大头像 */
 	public static final String CHILD_AVATAR_B_PATH = "/upload/child/avatar/big/";
 
-	/* 员工小头像 */
+	/* 小头像 */
 	public static final String USER_AVATAR_S_PATH = "/upload/user/avatar/small/";
-	/* 员工大头像 */
+	/* 大头像 */
 	public static final String USER_AVATAR_B_PATH = "/upload/user/avatar/big/";
-
-	/********************************** 用户类型 ************************************************/
-
-	/**
-	 * 系统管理员
-	 */
-	public static final int USER_ADMIN = 1;
-	/**
-	 * 员工
-	 */
-	public static final int USER_EMPLOYEE = 2;
-	/**
-	 * 家长
-	 */
-	public static final int USER_PARENT = 3;
 
 	/********************************** 图片路径 ************************************************/
 
@@ -87,80 +80,6 @@ public class GlobalConstant {
 	public static final String MENU_PATH = "/upload/menuImage/";
 
 	/********************************** 字典类型 ************************************************/
-	/**
-	 * 民族
-	 */
-	public static final String DIC_NATIONALITY = "dic_nationality";
-	/**
-	 * 国籍地区
-	 */
-	public static final String DIC_GJDQ = "dic_gjdq";
-	/**
-	 * 户口所在地
-	 */
-	public static final String DIC_HKSZD = "dic_hkszd";
-	/**
-	 * 户口性质
-	 */
-	public static final String DIC_HKXZ = "dic_hkxz";
-	/**
-	 * 非农业户口类型
-	 */
-	public static final String DIC_FNYHKLX = "dic_fnyhklx";
-	/**
-	 * 港澳台侨外
-	 */
-	public static final String DIC_GATQW = "dic_gatqw";
-	/**
-	 * 出生所在地
-	 */
-	public static final String DIC_CSSZD = "dic_csszd";
-	/**
-	 * 就读方式
-	 */
-	public static final String DIC_JDFS = "dic_jdfs";
-	/**
-	 * 血型
-	 */
-	public static final String DIC_BLOOD_TYPE = "dic_blood_type";
-	/**
-	 * 健康状况
-	 */
-	public static final String DIC_HEALTH_STATUS = "dic_health_status";
-	/**
-	 * 残疾幼儿类别
-	 */
-	public static final String DIC_DEFORMITY_TYPE = "dic_deformity_type";
-	/**
-	 * 学历
-	 */
-	public static final String DIC_EDUCATION = "dic_education";
-	/**
-	 * 政治面貌
-	 */
-	public static final String DIC_POLITICAL_STATUS = "dic_political_status";
-	/**
-	 * 教师等级
-	 */
-	public static final String DIC_LEVEL = "dic_level";
-	/**
-	 * 证件类型
-	 */
-	public static final String DIC_CARD_TYPE = "dic_card_type";
-	/**
-	 * 籍贯
-	 */
-	public static final String DIC_NATIVE_PLACE = "dic_native_place";
-
-	/**
-	 * 与幼儿关系
-	 */
-	public static final String DIC_RELATION = "dic_relation";
-
-	/**
-	 * 监护人身份证件类型
-	 */
-	public static final String DIC_GUARDIAN_CARD_TYPE = "guardian_card_type";
 
 	/********************************** 分页参数 ************************************************/
 	/**
@@ -175,10 +94,6 @@ public class GlobalConstant {
 	 * 下一页
 	 */
 	public static final String PAGE_LAST = "l";
-	/**
-	 * 默认当前菜单编号
-	 */
-	public static final String MENU_CODE_DEFALT = "zl";
 
 	// http请求的地址
 	public static final String HTTP_PEMS_PATH = "http_pems_path";
