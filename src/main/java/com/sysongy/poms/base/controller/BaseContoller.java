@@ -108,10 +108,11 @@ public class BaseContoller {
      * @param map
      * @return
      */
-    @RequestMapping(value = {"/web/panel/list"})  
+    @RequestMapping(value = {"/web/panel/list"})
+    @ResponseBody
     public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){  
     	
-    	return "/demo/panel_list";
+    	return "爱上当姐夫拉克时间的弗拉斯柯达";
     }
     
     /**
