@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="s" uri="/WEB-INF/sysongytag.tld" %>
 
 <!-- page specific plugin styles -->
 <link rel="stylesheet" href="../assets/css/bootstrap-duallistbox.css" />
@@ -48,7 +49,7 @@
 <!-- /section:basics/content.breadcrumbs -->
 <div class="page-content">
 	<!-- #section:settings.box -->
-	<div class="ace-settings-container" id="ace-settings-container">
+	<!-- <div class="ace-settings-container" id="ace-settings-container">
 		<div class="btn btn-app btn-xs btn-warning ace-settings-btn"
 			id="ace-settings-btn">
 			<i class="ace-icon fa fa-cog bigger-130"></i>
@@ -56,7 +57,7 @@
 
 		<div class="ace-settings-box clearfix" id="ace-settings-box">
 			<div class="pull-left width-50">
-				<!-- #section:settings.skins -->
+				#section:settings.skins
 				<div class="ace-settings-item">
 					<div class="pull-left">
 						<select id="skin-colorpicker" class="hide">
@@ -69,45 +70,45 @@
 					<span>&nbsp; Choose Skin</span>
 				</div>
 
-				<!-- /section:settings.skins -->
+				/section:settings.skins
 
-				<!-- #section:settings.navbar -->
+				#section:settings.navbar
 				<div class="ace-settings-item">
 					<input type="checkbox" class="ace ace-checkbox-2"
 						id="ace-settings-navbar" /> <label class="lbl"
 						for="ace-settings-navbar"> Fixed Navbar</label>
 				</div>
 
-				<!-- /section:settings.navbar -->
+				/section:settings.navbar
 
-				<!-- #section:settings.sidebar -->
+				#section:settings.sidebar
 				<div class="ace-settings-item">
 					<input type="checkbox" class="ace ace-checkbox-2"
 						id="ace-settings-sidebar" /> <label class="lbl"
 						for="ace-settings-sidebar"> Fixed Sidebar</label>
 				</div>
 
-				<!-- /section:settings.sidebar -->
+				/section:settings.sidebar
 
-				<!-- #section:settings.breadcrumbs -->
+				#section:settings.breadcrumbs
 				<div class="ace-settings-item">
 					<input type="checkbox" class="ace ace-checkbox-2"
 						id="ace-settings-breadcrumbs" /> <label class="lbl"
 						for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
 				</div>
 
-				<!-- /section:settings.breadcrumbs -->
+				/section:settings.breadcrumbs
 
-				<!-- #section:settings.rtl -->
+				#section:settings.rtl
 				<div class="ace-settings-item">
 					<input type="checkbox" class="ace ace-checkbox-2"
 						id="ace-settings-rtl" /> <label class="lbl"
 						for="ace-settings-rtl"> Right To Left (rtl)</label>
 				</div>
 
-				<!-- /section:settings.rtl -->
+				/section:settings.rtl
 
-				<!-- #section:settings.container -->
+				#section:settings.container
 				<div class="ace-settings-item">
 					<input type="checkbox" class="ace ace-checkbox-2"
 						id="ace-settings-add-container" /> <label class="lbl"
@@ -115,12 +116,12 @@
 					</label>
 				</div>
 
-				<!-- /section:settings.container -->
+				/section:settings.container
 			</div>
-			<!-- /.pull-left -->
+			/.pull-left
 
 			<div class="pull-left width-50">
-				<!-- #section:basics/sidebar.options -->
+				#section:basics/sidebar.options
 				<div class="ace-settings-item">
 					<input type="checkbox" class="ace ace-checkbox-2"
 						id="ace-settings-hover" /> <label class="lbl"
@@ -139,12 +140,12 @@
 						for="ace-settings-highlight"> Alt. Active Item</label>
 				</div>
 
-				<!-- /section:basics/sidebar.options -->
+				/section:basics/sidebar.options
 			</div>
-			<!-- /.pull-left -->
+			/.pull-left
 		</div>
-		<!-- /.ace-settings-box -->
-	</div>
+		/.ace-settings-box
+	</div> -->
 	<!-- /.ace-settings-container -->
 
 
@@ -157,12 +158,12 @@
 		<div class="col-xs-12">
 			<!-- PAGE CONTENT BEGINS -->
 
-			<h4 class="pink">
+<!-- 			<h4 class="pink">
 				<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
 				<a href="#modal-table" role="button" class="green" data-toggle="modal"> Table Inside a Modal Box </a>
-			</h4>
+			</h4> 
 
-			<div class="hr hr-18 dotted hr-double"></div>
+			<div class="hr hr-18 dotted hr-double"></div>-->
 						
 			<div class="row">
 				<div class="col-xs-12">
@@ -171,16 +172,23 @@
 					<div class="form-group">
 						<div class="col-md-2 control-label no-padding-right">
 						    <label>用户卡号:</label>
-							<input type="text" name="card_no" placeholder="States of USA"  maxlength="12" value="${gascard.card_no}"/>
+							<input type="text" name="card_no" placeholder="States of USA"  maxlength="9" value="${gascard.card_no}"/>
 						</div>
-						<div class="col-md-2 control-label no-padding-right">
+						
+						<div class="col-md-3 control-label no-padding-right">
 						    <label>用户卡类型:</label>
-							<input type="text" name="card_type" placeholder="States of USA"  maxlength="12" value="${gascard.card_type}"/>
+							<select class="chosen-select " name="card_type" >
+									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type" link="true" />
+							</select>
+							<label>用户卡状态:</label>
+							<select class="chosen-select " name="card_status" >
+									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" link="true" />
+							</select>
 						</div>
 						
 						<div class="col-md-2 control-label  no-padding-right">
 						    <label>操作员:</label>
-							<input type="text" name="operator" placeholder="States of USA"  maxlength="12" value="${gascard.operator}"/>
+							<input type="text" name="operator" placeholder="States of USA"  maxlength="10" value="${gascard.operator}"/>
 						</div>
 						
 						<div class="col-md-4 input-group no-padding-right  control-label">
@@ -198,7 +206,11 @@
 						<div class="col-md-12 pull-right">
 								<button class="btn btn-primary" type="button" onclick="loadPage('#main','card/new_card.jsp');">
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										新建
+										入库
+								</button>
+								<button class="btn btn-primary" type="button" onclick="loadPage('#main','card/move_card.jsp');">
+										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+										出库
 								</button>
 								<button class="btn btn-primary" type="button" onclick="commitForm();">
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
@@ -232,10 +244,12 @@
 									</th>
 									<th onclick="orderBy(this,'card_no');commitForm();" id="card_no_order">用户卡号</th>
 									<th onclick="orderBy(this,'card_type');commitForm();" id="card_type_order">用户卡类型</th>
-									<th onclick="orderBy(this,'card_name');commitForm();" id="card_name_order">所属人姓名</th> 
 									<th onclick="orderBy(this,'card_status');commitForm();" id="card_status_order">用户卡状态</th>
+									<th onclick="orderBy(this,'workstation');commitForm();" id="workstation_order">所属工作站</th>
+									<th onclick="orderBy(this,'workstation_resp');commitForm();" id="workstation_resp_order">工作站领取人</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人工号</th> 
-									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th>
+									<th onclick="orderBy(this,'storage_time');commitForm();" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
+									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
 									<th>更多操作</th>
 								</tr>
 							</thead>
@@ -246,17 +260,19 @@
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.card_id}"/> 
+											<input type="checkbox" class="ace" id="pks" value="${list.card_no}"/> 
 											<span class="lbl"></span>
 										</label>
 									</td>
 
 									<td>${list.card_no}</td>
-								 	<td>${list.card_type}</td> 
-									<td>${list.card_name}</td>
-									<td>${list.card_status}</td>
+								 	<td><s:Code2Name mcode="${list.card_type}" gcode="CARDTYPE"></s:Code2Name> </td> 
+									<td><s:Code2Name mcode="${list.card_status}" gcode="CARDSTATUS"></s:Code2Name> </td>
+									<td><s:Code2Name mcode="${list.workstation}" gcode="WORKSTATION"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.workstation_resp}" gcode="WORKSTATION_RESP"></s:Code2Name></td>
 									<td>${list.operator}</td> 
 									<td><fmt:formatDate value="${list.storage_time}" type="both"/></td>
+									<td><fmt:formatDate value="${list.release_time}" type="both"/></td>
 
 									<td>
 										<div class="hidden-sm hidden-xs action-buttons">
@@ -368,7 +384,7 @@ var mydate = new Date();
 						cancelLabel: 'Cancel',
 						format: "YYYY/MM/DD",
 					}, 
-					"startDate": "${gascard.release_time_after}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/1":"${gascard.release_time_after}",
+					"startDate": "${gascard.release_time_after}"==""?mydate.getFullYear()+"/1/1":"${gascard.release_time_after}",
 				    "endDate": "${gascard.release_time_before}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/"+mydate.getDate():"${gascard.release_time_before}"
 				})
 				.prev().on(ace.click_event, function(){

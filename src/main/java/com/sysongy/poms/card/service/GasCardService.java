@@ -11,4 +11,9 @@ public interface GasCardService {
 	
 	public Integer delGasCard(String cardid) throws Exception;
 	
+	public Boolean checkCardExist(String cardno) throws Exception;
+	
+	public String checkMoveCard(String cardno) throws Exception;
+	
+	public Integer moveCard(GasCard obj) throws Exception;
 }

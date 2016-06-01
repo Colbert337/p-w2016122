@@ -185,5 +185,11 @@ public class GlobalConstant {
 
 	/* 配置文件路径 */
 	public static final String CONF_PATH = "conf/system-conf.properties";
+	
+	public interface CardStatus{
+		public static final String SUSPEND ="0";
+		public static final String UN_USED ="1";
+		public static final String USED ="2";
+	}
 
 }

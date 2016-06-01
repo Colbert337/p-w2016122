@@ -3,45 +3,41 @@
 <mapper namespace="com.sysongy.poms.card.dao.GasCardMapper" >
 
   <resultMap id="BaseResultList" type="com.sysongy.poms.card.model.GasCard" >
-    <id column="card_id" property="card_id" jdbcType="VARCHAR" />
-    <result column="card_no" property="card_no" jdbcType="VARCHAR" />
-    <result column="card_type" property="card_type" jdbcType="INTEGER" />
-    <result column="card_name" property="card_name" jdbcType="VARCHAR" />
-    <result column="card_status" property="card_status" jdbcType="INTEGER" />
+    <id column="card_no" property="card_no" jdbcType="VARCHAR" />
+    <result column="card_type" property="card_type" jdbcType="VARCHAR" />
+    <result column="card_status" property="card_status" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="storage_time" property="storage_time" jdbcType="TIMESTAMP" />
     <result column="release_time" property="release_time" jdbcType="TIMESTAMP" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="workstation" property="workstation" jdbcType="VARCHAR" />
+    <result column="workstation_resp" property="workstation_resp" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    card_id, card_no, card_type, card_name, card_status, operator, storage_time, release_time, memo
-  </sql>
-  
+    card_no, card_type, card_status, operator, storage_time, release_time, memo, workstation, workstation_resp
+  </sql>  
   
   <select id="queryForPage" resultMap="BaseResultList"  parameterType="com.sysongy.poms.card.model.GasCard" >
   	 select <include refid="Base_Column_List" />
     from gas_card gc where 1=1
     <trim>
-      <if test="card_id != null &amp;&amp; card_id != ''" >
-        and card_id = #{card_id,jdbcType=VARCHAR}
-      </if>
       <if test="card_no != null &amp;&amp; card_no != ''" >
         and card_no = #{card_no,jdbcType=VARCHAR}
       </if>
       <if test="card_type != null &amp;&amp; card_type != ''" >
-        and card_type = #{card_type,jdbcType=INTEGER}
-      </if>
-      <if test="card_name != null &amp;&amp; card_name != ''" >
-        and card_name = #{card_name,jdbcType=VARCHAR}
+        and card_type = #{card_type,jdbcType=VARCHAR}
       </if>
       <if test="card_status != null &amp;&amp; card_status != ''" >
-        and card_status = #{card_status,jdbcType=INTEGER}
+        and card_status = #{card_status,jdbcType=VARCHAR}
       </if>
       <if test="operator != null &amp;&amp; operator != ''">
         and operator = #{operator,jdbcType=VARCHAR}
       </if>
-      <if test="storage_time != null &amp;&amp; storage_time != ''">
-         storage_time
+      <if test="workstation != null &amp;&amp; workstation != ''">
+         and workstation = #{workstation,jdbcType=VARCHAR}
+      </if>
+      <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
+         workstation_resp = #{workstation_resp,jdbcType=VARCHAR}
       </if>
       <if test="release_time_range != null &amp;&amp; release_time_range != ''">
         and release_time  between #{release_time_after,jdbcType=VARCHAR } and #{release_time_before,jdbcType=VARCHAR}
@@ -49,42 +45,33 @@
     </trim>
   </select>
   
+  <select id="selectByCardNo" resultMap="BaseResultList" parameterType="java.lang.String" >
+    select card_status from gas_card where card_no = #{cardNo,jdbcType=VARCHAR}
+  </select>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultList" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from gas_card
-    where card_id = #{cardId,jdbcType=VARCHAR}
+    from gas_card where card_no = #{cardNo,jdbcType=VARCHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from gas_card
-    where card_id = #{cardId,jdbcType=VARCHAR}
+    delete from gas_card where card_no = #{cardNo,jdbcType=VARCHAR}
   </delete>
   
   <insert id="insert" parameterType="com.sysongy.poms.card.model.GasCard" >
-    insert into gas_card (card_id, card_no, card_type, 
-      card_name, card_status, operator, 
-      storage_time, release_time, memo
-      )
-    values (#{card_id,jdbcType=VARCHAR}, #{card_no,jdbcType=VARCHAR}, #{card_type,jdbcType=INTEGER}, 
-      #{card_name,jdbcType=VARCHAR}, #{card_status,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, 
-      #{storage_time,jdbcType=TIMESTAMP}, #{release_time,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}
-      )
+    insert into gas_card (card_no, card_type, card_status, operator, storage_time, release_time, memo, workstation, workstation_resp)
+    values (#{card_no,jdbcType=VARCHAR}, #{card_type,jdbcType=VARCHAR}, #{card_status,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{storage_time,jdbcType=TIMESTAMP}, #{release_time,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}, #{workstation,jdbcType=VARCHAR}, #{workstation_resp,jdbcType=VARCHAR})
   </insert>
+  
   <insert id="insertSelective" parameterType="com.sysongy.poms.card.model.GasCard" >
     insert into gas_card
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="card_id != null" >
-        card_id,
-      </if>
       <if test="card_no != null" >
         and card_no,
       </if>
       <if test="card_type != null" >
         and card_type,
-      </if>
-      <if test="card_name != null" >
-        and card_name,
       </if>
       <if test="card_status != null" >
         and card_status,
@@ -98,77 +85,93 @@
       <if test="release_time != null" >
         release_time,
       </if>
+      <if test="workstation != null" >
+        workstation,
+      </if>
+      <if test="workstation_resp != null" >
+        workstation_resp,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="card_id != null" >
-        #{cardId,jdbcType=VARCHAR},
-      </if>
       <if test="card_no != null" >
-        #{cardNo,jdbcType=VARCHAR},
+        #{card_no,jdbcType=VARCHAR},
       </if>
       <if test="card_type != null" >
-        #{cardType,jdbcType=INTEGER},
-      </if>
-      <if test="card_name != null" >
-        #{cardName,jdbcType=VARCHAR},
+        #{card_type,jdbcType=VARCHAR},
       </if>
       <if test="card_status != null" >
-        #{cardStatus,jdbcType=INTEGER},
+        #{card_status,jdbcType=VARCHAR},
       </if>
       <if test="operator != null" >
         #{operator,jdbcType=VARCHAR},
       </if>
       <if test="storage_time != null" >
-        #{storageTime,jdbcType=TIMESTAMP},
+        #{storage_time,jdbcType=TIMESTAMP},
       </if>
       <if test="release_time != null" >
-        #{releaseTime,jdbcType=TIMESTAMP},
+        #{release_time,jdbcType=TIMESTAMP},
       </if>
       <if test="memo != null" >
         #{memo,jdbcType=VARCHAR},
       </if>
+      <if test="workstation != null" >
+        #{workstation,jdbcType=VARCHAR},
+      </if>
+      <if test="workstation_resp != null" >
+        #{workstation_resp,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
+  
+  <insert id="insertBatch" parameterType="java.util.List" >
+    insert into gas_card (card_no, card_type, card_status, operator, storage_time, release_time, memo)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.card_no},#{item.card_type},#{item.card_status},#{item.operator},#{item.storage_time},#{item.release_time},#{item.memo})  
+    </foreach> 
+  </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.card.model.GasCard" >
     update gas_card
     <set >
-      <if test="cardNo != null" >
-        card_no = #{cardNo,jdbcType=VARCHAR},
+      <if test="card_type != null" >
+        card_type = #{card_type,jdbcType=VARCHAR},
       </if>
-      <if test="cardType != null" >
-        card_type = #{cardType,jdbcType=INTEGER},
-      </if>
-      <if test="cardName != null" >
-        card_name = #{cardName,jdbcType=VARCHAR},
-      </if>
-      <if test="cardStatus != null" >
-        card_status = #{cardStatus,jdbcType=INTEGER},
+      <if test="card_status != null" >
+        card_status = #{card_status,jdbcType=VARCHAR},
       </if>
       <if test="operator != null" >
         operator = #{operator,jdbcType=VARCHAR},
       </if>
-      <if test="storageTime != null" >
-        storage_time = #{storageTime,jdbcType=TIMESTAMP},
+      <if test="storage_time != null" >
+        storage_time = #{storage_time,jdbcType=TIMESTAMP},
       </if>
-      <if test="releaseTime != null" >
-        release_time = #{releaseTime,jdbcType=TIMESTAMP},
+      <if test="release_time != null" >
+        release_time = #{release_time,jdbcType=TIMESTAMP},
       </if>
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
       </if>
+      <if test="workstation != null" >
+        workstation = #{workstation,jdbcType=VARCHAR},
+      </if>
+      <if test="workstation_resp != null" >
+        workstation_resp = #{workstation_resp,jdbcType=VARCHAR},
+      </if>
     </set>
-    where card_id = #{cardId,jdbcType=VARCHAR}
+    where card_no = #{card_no,jdbcType=VARCHAR}
   </update>
+  
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.card.model.GasCard" >
     update gas_card
-    set card_no = #{cardNo,jdbcType=VARCHAR},
-      card_type = #{cardType,jdbcType=INTEGER},
-      card_name = #{cardName,jdbcType=VARCHAR},
-      card_status = #{cardStatus,jdbcType=INTEGER},
+    set card_type = #{card_type,jdbcType=VARCHAR},
+      card_status = #{card_status,jdbcType=VARCHAR},
       operator = #{operator,jdbcType=VARCHAR},
-      storage_time = #{storageTime,jdbcType=TIMESTAMP},
-      release_time = #{releaseTime,jdbcType=TIMESTAMP},
-      memo = #{memo,jdbcType=VARCHAR}
-    where card_id = #{cardId,jdbcType=VARCHAR}
+      storage_time = #{storage_time,jdbcType=TIMESTAMP},
+      release_time = #{release_time,jdbcType=TIMESTAMP},
+      memo = #{memo,jdbcType=VARCHAR},
+      workstation = #{workstation,jdbcType=VARCHAR},
+      workstation_resp = #{workstation_resp,jdbcType=VARCHAR}
+    where card_no = #{card_no,jdbcType=VARCHAR}
   </update>
 </mapper>

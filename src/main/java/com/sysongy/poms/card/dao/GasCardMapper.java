@@ -11,8 +11,12 @@ public interface GasCardMapper {
     int insert(GasCard record);
 
     int insertSelective(GasCard record);
+    
+    int insertBatch(List<GasCard> recordlist);
 
     GasCard selectByPrimaryKey(String cardId);
+    
+    GasCard selectByCardNo(String cardNo);
 
     int updateByPrimaryKeySelective(GasCard record);
 

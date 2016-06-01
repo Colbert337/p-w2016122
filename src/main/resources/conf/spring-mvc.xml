@@ -10,7 +10,18 @@
 		http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
 
 	<!-- 添加注解驱动 -->  
-    <mvc:annotation-driven />  
+    <mvc:annotation-driven> 
+		<mvc:message-converters>   
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">   
+				<property name="supportedMediaTypes">   
+					<list>   
+						<value>text/plain;charset=UTF-8</value>   
+						<value>text/html;charset=UTF-8</value>   
+					</list>   
+				</property>   
+			</bean>    
+		</mvc:message-converters>   
+	</mvc:annotation-driven>   
 	<!-- 自动扫描controller包下的所有类，如果@Controller注入为bean -->
 	<context:component-scan base-package="com.sysongy.*.*.controller" />
 
