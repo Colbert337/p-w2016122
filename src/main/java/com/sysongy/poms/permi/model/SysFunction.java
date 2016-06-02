@@ -3,7 +3,7 @@ package com.sysongy.poms.permi.model;
 import java.util.Date;
 
 public class SysFunction {
-    private String plFunctionId;
+    private String sysFunctionId;
 
     private String parentId;
 
@@ -31,12 +31,12 @@ public class SysFunction {
 
     private Date updatedDate;
 
-    public String getPlFunctionId() {
-        return plFunctionId;
+    public String getSysFunctionId() {
+        return sysFunctionId;
     }
 
-    public void setPlFunctionId(String plFunctionId) {
-        this.plFunctionId = plFunctionId == null ? null : plFunctionId.trim();
+    public void setSysFunctionId(String sysFunctionId) {
+        this.sysFunctionId = sysFunctionId;
     }
 
     public String getParentId() {

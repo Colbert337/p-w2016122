@@ -13,9 +13,10 @@
     <result column="avatar_b" property="avatarB" jdbcType="VARCHAR" />
     <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
-    <result column="llast_date" property="llastDate" jdbcType="TIMESTAMP" />
+    <result column="last_date" property="lastDate" jdbcType="TIMESTAMP" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="online_state" property="onlineState" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="is_admin" property="isAdmin" jdbcType="INTEGER" />
     <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
@@ -23,36 +24,63 @@
   </resultMap>
   <sql id="Base_Column_List" >
     sys_user_id, user_name, password, user_type, alias_name, real_name, gender, avatar_s, 
-    avatar_b, mobile_phone, email, llast_date, status, online_state, is_admin, is_deleted, 
+    avatar_b, mobile_phone, email, last_date, status, online_state, remark, is_admin, is_deleted,
     created_date, updated_date
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="queryUserList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where 1=1
+    <trim>
+      <if test="sysUserId != null" >
+        and sys_user_id = #{sysUserId},
+      </if>
+      <if test="userName != null" >
+        and user_name = #{userName},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender},
+      </if>
+      <if test="mobilePhone != null" >
+        mobile_phone = #{mobilePhone},
+      </if>
+      <if test="email != null" >
+        email = #{email},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="isAdmin != null" >
+        is_admin = #{isAdmin},
+      </if>
+    </trim>
+    order by created_date desc
+  </select>
+  <select id="queryUserByAccount" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where user_name = #{0} and password = #{1}
+    and status = 1 and is_deleted = 1
+  </select>
+  <select id="queryUserById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from sys_user
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteUserById" parameterType="java.lang.String" >
     delete from sys_user
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysUser" >
-    insert into sys_user (sys_user_id, user_name, password, 
-      user_type, alias_name, real_name, 
-      gender, avatar_s, avatar_b, 
-      mobile_phone, email, llast_date, 
-      status, online_state, is_admin, 
-      is_deleted, created_date, updated_date
-      )
-    values (#{sysUserId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{userType,jdbcType=INTEGER}, #{aliasName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
-      #{gender,jdbcType=INTEGER}, #{avatarS,jdbcType=VARCHAR}, #{avatarB,jdbcType=VARCHAR}, 
-      #{mobilePhone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{llastDate,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER}, #{onlineState,jdbcType=INTEGER}, #{isAdmin,jdbcType=INTEGER}, 
-      #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysUser" >
+  <insert id="addUser" parameterType="com.sysongy.poms.permi.model.SysUser" >
     insert into sys_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="sysUserId != null" >
@@ -88,14 +116,17 @@
       <if test="email != null" >
         email,
       </if>
-      <if test="llastDate != null" >
-        llast_date,
+      <if test="lastDate != null" >
+        last_date,
       </if>
       <if test="status != null" >
         status,
       </if>
       <if test="onlineState != null" >
         online_state,
+      </if>
+      <if test="remark != null" >
+        remark,
       </if>
       <if test="isAdmin != null" >
         is_admin,
@@ -144,14 +175,17 @@
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
       </if>
-      <if test="llastDate != null" >
-        #{llastDate,jdbcType=TIMESTAMP},
+      <if test="lastDate != null" >
+        #{lastDate,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
       </if>
       <if test="onlineState != null" >
         #{onlineState,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
       </if>
       <if test="isAdmin != null" >
         #{isAdmin,jdbcType=INTEGER},
@@ -167,7 +201,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.permi.model.SysUser" >
+  <update id="updateUser" parameterType="com.sysongy.poms.permi.model.SysUser" >
     update sys_user
     <set >
       <if test="userName != null" >
@@ -200,14 +234,17 @@
       <if test="email != null" >
         email = #{email,jdbcType=VARCHAR},
       </if>
-      <if test="llastDate != null" >
-        llast_date = #{llastDate,jdbcType=TIMESTAMP},
+      <if test="lastDate != null" >
+        last_date = #{lastDate,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
       </if>
       <if test="onlineState != null" >
         online_state = #{onlineState,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="isAdmin != null" >
         is_admin = #{isAdmin,jdbcType=INTEGER},
@@ -222,27 +259,6 @@
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.permi.model.SysUser" >
-    update sys_user
-    set user_name = #{userName,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      user_type = #{userType,jdbcType=INTEGER},
-      alias_name = #{aliasName,jdbcType=VARCHAR},
-      real_name = #{realName,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=INTEGER},
-      avatar_s = #{avatarS,jdbcType=VARCHAR},
-      avatar_b = #{avatarB,jdbcType=VARCHAR},
-      mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      llast_date = #{llastDate,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=INTEGER},
-      online_state = #{onlineState,jdbcType=INTEGER},
-      is_admin = #{isAdmin,jdbcType=INTEGER},
-      is_deleted = #{isDeleted,jdbcType=INTEGER},
-      created_date = #{createdDate,jdbcType=TIMESTAMP},
-      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
   </update>
 </mapper>

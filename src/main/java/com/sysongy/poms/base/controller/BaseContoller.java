@@ -5,8 +5,11 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,8 +41,11 @@ public class BaseContoller {
 	private static final long serialVersionUID = 6357869213649815390L;
 	
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
-	
-    @RequestMapping(value = {"","/","/test"})  
+
+    @Autowired
+    SysUserService sysUserService;
+
+    @RequestMapping(value = {"","/"})
     public String index(ModelMap map){  
     	/*ModelAndView result = new ModelAndView();
     	String pmcName = "登录测试成功！";
@@ -69,13 +75,21 @@ public class BaseContoller {
     	String userName = request.getParameter("userName");
     	String password = request.getParameter("password");
     	String returnPath = "login";
-    	if(userName != null && password != null && userName.equals("wdq") && password.equals("wdq123456")){
+
+        SysUser user = new SysUser();
+        user.setUserName(userName);
+        user.setPassword(password);
+
+        user = sysUserService.queryUserByAccount(user);
+
+    	if(user != null && user.getUserName() != null && user.getPassword() != null){
     		map.addAttribute("current_module", "webpage/demo/demo");
     		returnPath = "common/g_main";
     	}
-    	
+
     	return returnPath;
     }
+
     /**
      * 退出登录
      * @param request
@@ -96,10 +110,11 @@ public class BaseContoller {
      * @param map
      * @return
      */
-    @RequestMapping(value = {"/web/panel/list"})  
-    public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){  
-    	
-    	return "/demo/panel_list";
+    @RequestMapping(value = {"/web/panel/list"})
+    @ResponseBody
+    public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){
+
+        return "login";
     }
     
     /**

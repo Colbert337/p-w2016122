@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sysongy.poms.permi.dao.SysFunctionMapper" >
   <resultMap id="BaseResultMap" type="com.sysongy.poms.permi.model.SysFunction" >
-    <id column="pl_function_id" property="plFunctionId" jdbcType="VARCHAR" />
+    <id column="sys_function_id" property="sysFunctionId" jdbcType="VARCHAR" />
     <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
     <result column="function_name" property="functionName" jdbcType="VARCHAR" />
     <result column="function_type" property="functionType" jdbcType="INTEGER" />
@@ -18,37 +18,34 @@
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    pl_function_id, parent_id, function_name, function_type, function_desc, function_code, 
+    sys_function_id, parent_id, function_name, function_type, function_desc, function_code,
     function_sort, function_path, function_icon, function_status, is_menu, is_deleted, 
     created_date, updated_date
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="queryFunctionList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_function
+  </select>
+  <select id="queryFunctionById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from sys_function
-    where pl_function_id = #{plFunctionId,jdbcType=VARCHAR}
+    where sys_function_id = #{sysFunctionId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteFunctionById" parameterType="java.lang.String" >
     delete from sys_function
-    where pl_function_id = #{plFunctionId,jdbcType=VARCHAR}
+    where sys_function_id = #{sysFunctionId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysFunction" >
-    insert into sys_function (pl_function_id, parent_id, function_name, 
-      function_type, function_desc, function_code, 
-      function_sort, function_path, function_icon, 
-      function_status, is_menu, is_deleted, 
-      created_date, updated_date)
-    values (#{plFunctionId,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{functionName,jdbcType=VARCHAR}, 
-      #{functionType,jdbcType=INTEGER}, #{functionDesc,jdbcType=VARCHAR}, #{functionCode,jdbcType=VARCHAR}, 
-      #{functionSort,jdbcType=INTEGER}, #{functionPath,jdbcType=VARCHAR}, #{functionIcon,jdbcType=VARCHAR}, 
-      #{functionStatus,jdbcType=INTEGER}, #{isMenu,jdbcType=INTEGER}, #{isDeleted,jdbcType=INTEGER}, 
-      #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysFunction" >
+  <delete id="deleteFunctionByParentId" parameterType="java.lang.String" >
+    delete from sys_function
+    where parent_id = #{parentId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="addFunction" parameterType="com.sysongy.poms.permi.model.SysFunction" >
     insert into sys_function
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="plFunctionId != null" >
-        pl_function_id,
+      <if test="sysFunctionId != null" >
+        sys_function_id,
       </if>
       <if test="parentId != null" >
         parent_id,
@@ -91,8 +88,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="plFunctionId != null" >
-        #{plFunctionId,jdbcType=VARCHAR},
+      <if test="sysFunctionId != null" >
+        #{sysFunctionId,jdbcType=VARCHAR},
       </if>
       <if test="parentId != null" >
         #{parentId,jdbcType=VARCHAR},
@@ -135,7 +132,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.permi.model.SysFunction" >
+  <update id="updateFunction" parameterType="com.sysongy.poms.permi.model.SysFunction" >
     update sys_function
     <set >
       <if test="parentId != null" >
@@ -178,23 +175,6 @@
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where pl_function_id = #{plFunctionId,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.permi.model.SysFunction" >
-    update sys_function
-    set parent_id = #{parentId,jdbcType=VARCHAR},
-      function_name = #{functionName,jdbcType=VARCHAR},
-      function_type = #{functionType,jdbcType=INTEGER},
-      function_desc = #{functionDesc,jdbcType=VARCHAR},
-      function_code = #{functionCode,jdbcType=VARCHAR},
-      function_sort = #{functionSort,jdbcType=INTEGER},
-      function_path = #{functionPath,jdbcType=VARCHAR},
-      function_icon = #{functionIcon,jdbcType=VARCHAR},
-      function_status = #{functionStatus,jdbcType=INTEGER},
-      is_menu = #{isMenu,jdbcType=INTEGER},
-      is_deleted = #{isDeleted,jdbcType=INTEGER},
-      created_date = #{createdDate,jdbcType=TIMESTAMP},
-      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
-    where pl_function_id = #{plFunctionId,jdbcType=VARCHAR}
+    where sys_function_id = #{sysFunctionId,jdbcType=VARCHAR}
   </update>
 </mapper>

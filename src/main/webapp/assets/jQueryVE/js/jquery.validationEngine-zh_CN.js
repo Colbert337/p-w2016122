@@ -6,10 +6,10 @@
 			$.validationEngineLanguage.allRules = {
 				"required":{ // Add your regex rules here, you can take telephone as an example
 					"regex":"none",
-					"alertText":"* 此处不可空白",
+					"alertText":"* 此处不可为空",
 					"alertTextCheckboxMultiple":"* 请选择一个项目",
 					"alertTextCheckboxe":"* 该选项为必选",
-					"alertTextDateRange":"* 日期范围不可空白"
+					"alertTextDateRange":"* 日期范围不可为空"
 				},
 				"dateRange":{
 					"regex":"none",

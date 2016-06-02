@@ -1,17 +1,20 @@
 package com.sysongy.poms.permi.dao;
 
+import com.alibaba.druid.sql.visitor.functions.Function;
 import com.sysongy.poms.permi.model.SysFunction;
 
+import java.util.List;
+
 public interface SysFunctionMapper {
-    int deleteByPrimaryKey(String plFunctionId);
+    List<SysFunction> queryFunctionList();
 
-    int insert(SysFunction record);
+    SysFunction queryFunctionById(String sysFunctionId);
 
-    int insertSelective(SysFunction record);
+    int deleteFunctionById(String sysFunctionId);
 
-    SysFunction selectByPrimaryKey(String plFunctionId);
+    int addFunction(SysFunction record);
 
-    int updateByPrimaryKeySelective(SysFunction record);
+    int updateFunction(SysFunction record);
 
-    int updateByPrimaryKey(SysFunction record);
+    int deleteFunctionByParentId(String parentId);
 }
