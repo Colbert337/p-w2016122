@@ -76,9 +76,13 @@ public class BaseContoller {
     	String password = request.getParameter("password");
     	String returnPath = "login";
 
-        SysUser user = sysUserService.queryUserByAccount();
+        SysUser user = new SysUser();
+        user.setUserName(userName);
+        user.setPassword(password);
 
-    	if(userName != null && password != null && userName.equals("wdq") && password.equals("wdq123456")){
+        user = sysUserService.queryUserByAccount(user);
+
+    	if(user != null && user.getUserName() != null && user.getPassword() != null){
     		map.addAttribute("current_module", "webpage/demo/demo");
     		returnPath = "common/g_main";
     	}
