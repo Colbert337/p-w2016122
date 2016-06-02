@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.model.GasCardLog;
 import com.sysongy.poms.card.service.GasCardService;
 
 
@@ -24,7 +24,7 @@ public class CardController extends BaseContoller{
 	private GasCardService service;
 
 	/**
-	 * 表单查询
+	 * 用户卡查询
 	 * @param map
 	 * @param gascard
 	 * @return
@@ -33,26 +33,44 @@ public class CardController extends BaseContoller{
 	@RequestMapping("/cardList")
 	public String queryAllCardList(ModelMap map, GasCard gascard) throws Exception{
 		
-		if(gascard.getPageNum() == null){
-			gascard.setPageNum(1);
-			gascard.setPageSize(10);
-		}
-
-		if(!StringUtils.isEmpty(gascard.getRelease_time_range())){
-			String []tmpRange = gascard.getRelease_time_range().split("-");
-			if(tmpRange.length==2){
-				gascard.setRelease_time_after(tmpRange[0].trim()+" 00:00:00");
-				gascard.setRelease_time_before(tmpRange[1]+" 23:59:59");
-			}
-		}
+		PageBean bean = new PageBean();
+		String ret = "page/card/card_list";
 		
-		PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
+		try {
+			if(gascard.getPageNum() == null){
+				gascard.setPageNum(1);
+				gascard.setPageSize(10);
+			}
 
-		map.addAttribute("pageinfo", pageinfo);
-		map.addAttribute("gascard",gascard);
-	    map.addAttribute("current_module", "page/card/card_list");
-	    
-	    return "page/card/card_list";
+			if(!StringUtils.isEmpty(gascard.getStorage_time_range())){
+				String []tmpRange = gascard.getStorage_time_range().split("-");
+				if(tmpRange.length==2){
+					gascard.setStorage_time_after(tmpRange[0].trim()+" 00:00:00");
+					gascard.setStorage_time_before(tmpRange[1]+" 23:59:59");
+				}
+			}
+			
+			PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+			
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageinfo", pageinfo);
+			map.addAttribute("gascard",gascard);
+			map.addAttribute("current_module", "page/card/card_list");
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+						
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
 	}
 
 	/**
@@ -64,11 +82,30 @@ public class CardController extends BaseContoller{
 	 */
 	@RequestMapping("/saveCard")
 	public String saveCard(ModelMap map, GasCard gascard) throws Exception{
+		PageBean bean = new PageBean();
+		String ret = "page/card/card_new";
+		Integer rowcount = null;
 		
-		Integer ret = service.saveGasCard(gascard);
-		map.addAttribute("ret", ret);
-		
-		return  "page/card/new_card";
+		try {
+			rowcount = service.saveGasCard(gascard);
+			
+			bean.setRetCode(100);
+			bean.setRetMsg("入库成功");
+			bean.setRetValue(rowcount.toString());
+			bean.setPageInfo(ret);
+			
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+						
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return  ret;
+		}
 	}
 	
 	/**
@@ -96,7 +133,7 @@ public class CardController extends BaseContoller{
 				bean.setRetValue(rowcount.toString());
 				bean.setPageInfo(ret);
 				
-				map.addAttribute("ret", JSON.toJSONString(bean));
+				map.addAttribute("ret", bean);
 				
 				
 		} catch (Exception e) {
@@ -152,11 +189,81 @@ public class CardController extends BaseContoller{
 	 * @throws Exception
 	 */
 	@RequestMapping("/moveCard")
-	public String moveCard(ModelMap map, GasCard gascard) throws Exception{
+	public String updateAndMoveCard(ModelMap map, GasCard gascard) throws Exception{
 		
-		Integer ret = service.moveCard(gascard);
-		map.addAttribute("ret", ret);
+		PageBean bean = new PageBean();
+		String ret = "page/card/card_move";
+		Integer rowcount = null;
 		
-		return  "page/card/move_card";
+		try {
+			rowcount = service.updateAndMoveCard(gascard);
+			
+			bean.setRetCode(100);
+			bean.setRetMsg("出库成功");
+			bean.setRetValue(rowcount.toString());
+			bean.setPageInfo(ret);
+			
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+						
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return  ret;
+		}
+	}
+	
+	/**
+	 * 用户卡轨迹查询
+	 * @param map
+	 * @param gascard
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/cardLogList")
+	public String queryAllCardLogList(ModelMap map, GasCardLog gascardlog) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "page/card/cardlog_list";
+		
+		try {
+			if(gascardlog.getPageNum() == null){
+				gascardlog.setPageNum(1);
+				gascardlog.setPageSize(10);
+			}
+
+			if(!StringUtils.isEmpty(gascardlog.getOptime_range())){
+				String []tmpRange = gascardlog.getOptime_range().split("-");
+				if(tmpRange.length==2){
+					gascardlog.setOptime_after(tmpRange[0].trim()+" 00:00:00");
+					gascardlog.setOptime_before(tmpRange[1]+" 23:59:59");
+				}
+			}
+			
+			PageInfo<GasCardLog> pageinfo = service.queryGasCardLog(gascardlog);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+			
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageinfo", pageinfo);
+			map.addAttribute("gascardlog",gascardlog);
+			map.addAttribute("current_module", "page/card/cardlog_list");
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+						
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
 	}
 }

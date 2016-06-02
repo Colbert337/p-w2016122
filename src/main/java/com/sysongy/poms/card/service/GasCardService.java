@@ -2,6 +2,7 @@ package com.sysongy.poms.card.service;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.model.GasCardLog;
 
 public interface GasCardService {
 	
@@ -15,5 +16,7 @@ public interface GasCardService {
 	
 	public String checkMoveCard(String cardno) throws Exception;
 	
-	public Integer moveCard(GasCard obj) throws Exception;
+	public Integer updateAndMoveCard(GasCard obj) throws Exception;
+	
+	public PageInfo<GasCardLog> queryGasCardLog(GasCardLog obj) throws Exception;
 }

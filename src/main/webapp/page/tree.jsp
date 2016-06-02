@@ -63,6 +63,13 @@
 					</a> 
 					<b class="arrow"></b>
 				</li>
+				
+				<li class="">
+					<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/card/cardLogList')"> 
+						<i class="menu-icon fa fa-caret-right"></i> 用户卡轨迹信息
+					</a> 
+					<b class="arrow"></b>
+				</li>
 
 				<li class="">
 					<a href="jqgrid.html"> 

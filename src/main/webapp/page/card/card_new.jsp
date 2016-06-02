@@ -34,6 +34,10 @@
 						<!-- #section:basics/content.searchbox -->
 						<div class="nav-search" id="nav-search">
 							<form class="form-search" >
+							
+								<input id="retCode" type="text" value=" ${ret.retCode}" />
+								<input id="retMsg" type="text" value=" ${ret.retMsg}" />
+								
 								<span class="input-icon">
 									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
@@ -97,7 +101,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人工号： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="form-field-1" id="operator" name="operator" class="col-xs-10 col-sm-5" readonly="readonly" value="GZCYKFA001"/>
+											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5" readonly="readonly" value="GZCYKFA001"/>
 										</div>
 									</div>
 						
@@ -152,7 +156,9 @@
 											</button>
 										</div>
 									</div>
-
+									
+										<jsp:include page="../message.jsp"></jsp:include>
+										
 								</form>						
 							</div><!-- /.col -->
 						</div><!-- /.row -->
@@ -162,12 +168,7 @@
 
 		<!-- inline scripts related to this page -->
 	<script type="text/javascript">
-	
-		var ret = "${ret}";
-		if(ret != "" && ret != null){
-			alert("添加完成!");
-			 $("#modal-table").modal("show");
-		}
+		var contral = "0";
 		
 			//bootstrap验证控件
 		    $('#newcardform').bootstrapValidator({
@@ -246,6 +247,10 @@
 			
 		    
 		function save(){
+			if(contral == "0"){
+				alert("列表中没有需要入库的卡");
+				return;
+			}
 			/*手动验证表单，当是普通按钮时。*/
 			$('#newcardform').data('bootstrapValidator').validate();
 			if(!$('#newcardform').data('bootstrapValidator').isValid()){
@@ -255,10 +260,13 @@
 			var options ={   
 		            url:'../web/card/saveCard',   
 		            type:'post',                    
-		            dataType:'html',
+		            dataType:'text',
 		            success:function(data){
-			              $("#main").html(data);
-		            }
+		            	$("#main").html(data);
+						$("#modal-table").modal("show");
+		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+
+		 	       }
 			}
 			
 			$("#storage_data").attr("disabled","disabled");
@@ -283,6 +291,11 @@
 			var start = parseFloat($("#card_no_1").val());
 			var end = parseFloat($("#card_no_2").val());
 			
+			if(end - start >=2000){
+				alert("单批次操作卡数量最大值为2000");
+				return;
+			}
+			
 			for(var i=start; i<=end; i++){
 				$.ajax({
 					   type: "POST",
@@ -293,10 +306,11 @@
 			           success:function(data){
 			           		if(data == "0"){
 			           			var tmp_card_type = $('#card_type').val();
-								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td><s:Code2Name mcode='"+tmp_card_type+"' gcode='CARDTYPE'></s:Code2Name></td><td>"+$('#card_property').val()+"</td><td>未使用</td><td>555</td></tr>");
+			           			contral = "1";
+								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+tmp_card_type+"</td><td>"+$('#card_property').val()+"</td><td>未使用</td><td>"+$('#operator').val()+"</td></tr>");
 			           			$("#card_no_arr").val($("#card_no_arr").val()+i+",");
 			           		}else{
-								$("#dynamic-table").find("tbody").append("<tr class='danger'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').val()+"</td><td>"+$('#card_property').val()+"</td><td>已使用</td><td>555</td></tr>");
+								$("#dynamic-table").find("tbody").append("<tr class='danger'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').val()+"</td><td>"+$('#card_property').val()+"</td><td>已使用</td><td>"+$('#operator').val()+"</td></tr>");
 			           		}
 			            }
 					});

@@ -6,7 +6,7 @@ import com.sysongy.poms.card.model.GasCard;
 
 public interface GasCardMapper {
 	
-    int deleteByPrimaryKey(String cardId);
+    int deleteByPrimaryKey(String cardNo);
 
     int insert(GasCard record);
 
@@ -14,7 +14,7 @@ public interface GasCardMapper {
     
     int insertBatch(List<GasCard> recordlist);
 
-    GasCard selectByPrimaryKey(String cardId);
+    GasCard selectByPrimaryKey(String cardNo);
     
     GasCard selectByCardNo(String cardNo);
 
