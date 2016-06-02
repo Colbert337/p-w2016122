@@ -1,15 +1,11 @@
 package com.sysongy.poms.base.controller;
 
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.sysongy.poms.permi.model.SysUser;
-import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @FileName     :  BaseContoller.java
@@ -34,7 +32,8 @@ import com.sysongy.util.PropertyUtil;
  */
 @Controller
 @SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
-public class BaseContoller {
+@RequestMapping("/crmService")
+public class CRMBaseContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -42,10 +41,7 @@ public class BaseContoller {
 	
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 
-    @Autowired
-    SysUserService sysUserService;
-
-    @RequestMapping(value = {"","/"})
+    @RequestMapping(value = {"","/","/test"})  
     public String index(ModelMap map){  
     	/*ModelAndView result = new ModelAndView();
     	String pmcName = "登录测试成功！";
@@ -70,24 +66,20 @@ public class BaseContoller {
 
         return "common/g_main";
     }
-    @RequestMapping(value = {"/web/login"})  
-    public String login( HttpServletRequest request,HttpServletResponse response,ModelMap map){ 
-    	String userName = request.getParameter("userName");
-    	String password = request.getParameter("password");
-    	String returnPath = "login";
+    @RequestMapping(value = {"/web/login"})
+    @ResponseBody
+    public AjaxJson login( HttpServletRequest request,HttpServletResponse response,ModelMap map){
+        AjaxJson ajaxJson = new AjaxJson();
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
 
-        SysUser user = new SysUser();
-        user.setUserName(userName);
-        user.setPassword(password);
-
-        user = sysUserService.queryUserByAccount(user);
-
-    	if(user != null && user.getUserName() != null && user.getPassword() != null){
-    		map.addAttribute("current_module", "webpage/demo/demo");
-    		returnPath = "common/g_main";
-    	}
-
-    	return returnPath;
+        if(userName.equalsIgnoreCase("test")){
+            return ajaxJson;
+        } else {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.ERROR_AUTHORITY);
+        }
+    	return ajaxJson;
     }
 
     /**
@@ -102,33 +94,6 @@ public class BaseContoller {
     	sessionStatus.setComplete();
     	return "redirect:/";
     }
-    
-    /**
-     * 跳转控制面板
-     * @param request
-     * @param response
-     * @param map
-     * @return
-     */
-    @RequestMapping(value = {"/web/panel/list"})
-    @ResponseBody
-    public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){
 
-        return "login";
-    }
-    
-    /**
-     * 跳转控制面板
-     * @param map
-     * @return
-     */
-    @RequestMapping(value = {"/web/menu/update"})  
-    @ResponseBody
-    public String updateMenu( @RequestParam String menuCode, @RequestParam String menuIndex,ModelMap map ){  
-    	String result = "suc";
-    	map.put("menuCode", menuCode);
-    	map.put("menuIndex", menuIndex);
-    	return result;
-    }
     
 }

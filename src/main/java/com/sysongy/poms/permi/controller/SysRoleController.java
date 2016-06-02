@@ -6,7 +6,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @FileName: SystemUserController
+ * @FileName: SysRoleController
  * @Encoding: UTF-8
  * @Package: com.sysongy.poms.permi.controller
  * @Link: http://www.sysongy.com
@@ -16,57 +16,57 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Description:
  */
 
-@RequestMapping("/web/permi/user")
+@RequestMapping("/web/permi/role")
 @Controller
-public class SystemUserController extends BaseContoller{
+public class SysRoleController extends BaseContoller{
 
 	/**
-	 * 查询用户列表
+	 * 查询角色列表(分页)
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryUserListPage(ModelMap map){
+	public String queryRoleListPage(ModelMap map){
 	    map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-	    return "webpage/poms/permi/user_list";
+	    return "webpage/poms/permi/role_list";
 	}
 
 	/**
-	 * 查询用户详情
+	 * 查询角色列表
 	 * @return
 	 */
-	@RequestMapping("/info")
-	public String queryUserInfoByUserId(ModelMap map){
+	@RequestMapping("/list")
+	public String queryRoleList(ModelMap map){
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-		return "webpage/permi/demo";
+		return "webpage/poms/permi/role_list";
 	}
 
 	/**
-	 * 添加用户
+	 * 查询角色列表
 	 * @return
 	 */
 	@RequestMapping("/add")
-	public String addUser(ModelMap map){
+	public String addRole(ModelMap map){
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-		return "webpage/permi/demo";
+		return "webpage/poms/permi/role_list";
 	}
 
 	/**
-	 * 修改用户
+	 * 查询角色列表
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public String updateUserByUserId(ModelMap map){
+	public String updateRole(ModelMap map){
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-		return "webpage/permi/demo";
+		return "webpage/poms/permi/role_list";
 	}
 
 	/**
-	 * 删除用户
+	 * 查询角色列表
 	 * @return
 	 */
-	@RequestMapping("/delete")
-	public String deleteUserByUserId(ModelMap map){
+	@RequestMapping("/save")
+	public String saveRole(ModelMap map){
 		map.addAttribute("current_module", "webpage/doc/boss_doc_list");
-		return "webpage/permi/demo";
+		return "webpage/poms/permi/role_list";
 	}
 }

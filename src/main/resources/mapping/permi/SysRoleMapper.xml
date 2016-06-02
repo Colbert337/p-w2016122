@@ -17,27 +17,22 @@
     sys_role_id, role_name, role_code, role_type, role_desc, is_admin, role_status, is_deleted, 
     created_date, updated_date
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="queryRoleList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_role
+  </select>
+  <select id="queryRoleById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from sys_role
     where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteRoleById" parameterType="java.lang.String" >
     delete from sys_role
     where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysRole" >
-    insert into sys_role (sys_role_id, role_name, role_code, 
-      role_type, role_desc, is_admin, 
-      role_status, is_deleted, created_date, 
-      updated_date)
-    values (#{sysRoleId,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, #{roleCode,jdbcType=VARCHAR}, 
-      #{roleType,jdbcType=INTEGER}, #{roleDesc,jdbcType=VARCHAR}, #{isAdmin,jdbcType=INTEGER}, 
-      #{roleStatus,jdbcType=INTEGER}, #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
-      #{updatedDate,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysRole" >
+  <insert id="addRole" parameterType="com.sysongy.poms.permi.model.SysRole" >
     insert into sys_role
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="sysRoleId != null" >
@@ -104,7 +99,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.permi.model.SysRole" >
+  <update id="updateRole" parameterType="com.sysongy.poms.permi.model.SysRole" >
     update sys_role
     <set >
       <if test="roleName != null" >
@@ -135,19 +130,6 @@
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.permi.model.SysRole" >
-    update sys_role
-    set role_name = #{roleName,jdbcType=VARCHAR},
-      role_code = #{roleCode,jdbcType=VARCHAR},
-      role_type = #{roleType,jdbcType=INTEGER},
-      role_desc = #{roleDesc,jdbcType=VARCHAR},
-      is_admin = #{isAdmin,jdbcType=INTEGER},
-      role_status = #{roleStatus,jdbcType=INTEGER},
-      is_deleted = #{isDeleted,jdbcType=INTEGER},
-      created_date = #{createdDate,jdbcType=TIMESTAMP},
-      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
   </update>
 </mapper>

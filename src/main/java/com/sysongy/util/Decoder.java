@@ -94,6 +94,18 @@ public class Decoder {
 		return result;
 	}
 
+	/**
+	 * 对称解密
+	 * @param strSource 待解密字符串
+	 * @param operator	 加密算子
+	 * @return
+	 * @throws Exception 解密后字符串
+     */
+	public static String symmetricDecrypto(String strSource, String operator) throws Exception {
+		String result = symmetricDecrypto(strSource.trim());
+		result = result.replace(operator.trim(),"");
+		return result;
+	}
 	public static void main(String[] args) throws Exception {
 		// byte[] byteArr =
 		// Decoder.hexStringToByteArray("18e5e907c60ffeaac25d6b38e84baceec86483c7f185899e");

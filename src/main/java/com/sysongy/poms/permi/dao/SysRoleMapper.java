@@ -1,17 +1,18 @@
 package com.sysongy.poms.permi.dao;
 
 import com.sysongy.poms.permi.model.SysRole;
+import com.sysongy.poms.permi.model.SysUser;
+
+import java.util.List;
 
 public interface SysRoleMapper {
-    int deleteByPrimaryKey(String sysRoleId);
+    List<SysRole> queryRoleList();
 
-    int insert(SysRole record);
+    SysRole queryRoleById(String roleId);
 
-    int insertSelective(SysRole record);
+    int deleteRoleById(String roleId);
 
-    SysRole selectByPrimaryKey(String sysRoleId);
+    int addRole(SysRole record);
 
-    int updateByPrimaryKeySelective(SysRole record);
-
-    int updateByPrimaryKey(SysRole record);
+    int updateRole(SysRole record);
 }
