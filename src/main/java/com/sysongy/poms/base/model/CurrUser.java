@@ -110,4 +110,11 @@ public class CurrUser {
 		this.roleList = roleList;
 	}
 
+	public SysUser getUser() {
+		return user;
+	}
+
+	public void setUser(SysUser user) {
+		this.user = user;
+	}
 }

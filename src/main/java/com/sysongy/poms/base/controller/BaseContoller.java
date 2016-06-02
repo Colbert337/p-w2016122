@@ -5,6 +5,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ import com.sysongy.util.PropertyUtil;
  *
  */
 @Controller
-@SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
+@SessionAttributes({"currUser"})
 public class BaseContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -75,15 +76,19 @@ public class BaseContoller {
     	String userName = request.getParameter("userName");
     	String password = request.getParameter("password");
     	String returnPath = "login";
+        CurrUser currUser = new CurrUser();
 
         SysUser user = new SysUser();
         user.setUserName(userName);
         user.setPassword(password);
 
         user = sysUserService.queryUserByAccount(user);
+        currUser.setUserId(user.getSysUserId());
+        currUser.setUser(user);
 
     	if(user != null && user.getUserName() != null && user.getPassword() != null){
     		map.addAttribute("current_module", "webpage/demo/demo");
+            map.addAttribute("currUser",currUser);
     		returnPath = "common/g_main";
     	}
 
