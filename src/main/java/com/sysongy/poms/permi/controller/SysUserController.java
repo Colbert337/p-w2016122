@@ -41,7 +41,7 @@ public class SysUserController extends BaseContoller{
 			sysUser.setPageNum(GlobalConstant.PAGE_NUM);
 			sysUser.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
-
+		sysUser.setStatus(GlobalConstant.STATUS_ENABLE);
 		//封装分页参数，用于查询分页内容
 		PageInfo<SysUser> userPageInfo = new PageInfo<SysUser>();
 		userPageInfo = sysUserService.queryUserListPage(sysUser);
@@ -110,7 +110,13 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/delete")
-	public String deleteUserByUserId(ModelMap map){
-		return "webpage/poms/permi/demo";
+	public String deleteUserByUserId(@RequestParam String userId, ModelMap map){
+		SysUser user = new SysUser();
+		if (userId != null) {
+			user.setSysUserId(userId);
+			user.setStatus(GlobalConstant.STATUS_DISABLE);//
+			sysUserService.updateUser(user);
+		}
+		return "redirect:/web/permi/user/list/page";
 	}
 }

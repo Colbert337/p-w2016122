@@ -16,11 +16,11 @@ public class GlobalConstant {
 	/**
 	 * 状态-启用
 	 */
-	public static final int STATUS_ENABLE = 1;
+	public static final int STATUS_ENABLE = 0;
 	/**
 	 * 状态-禁用
 	 */
-	public static final int STATUS_DISABLE = 0;
+	public static final int STATUS_DISABLE = 1;
 	/**
 	 * 登录-成功
 	 */

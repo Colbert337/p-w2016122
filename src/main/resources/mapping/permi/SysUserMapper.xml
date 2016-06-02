@@ -34,31 +34,31 @@
     where 1=1
     <trim>
       <if test="sysUserId != null" >
-        and sys_user_id = #{sysUserId},
+        and sys_user_id = #{sysUserId}
       </if>
       <if test="userName != null" >
-        and user_name = #{userName},
+        and user_name = #{userName}
       </if>
       <if test="userType != null" >
-        user_type = #{userType},
+        and  user_type = #{userType}
       </if>
       <if test="realName != null" >
-        real_name = #{realName},
+        and  real_name = #{realName}
       </if>
       <if test="gender != null" >
-        gender = #{gender},
+        and  gender = #{gender}
       </if>
       <if test="mobilePhone != null" >
-        mobile_phone = #{mobilePhone},
+        and  mobile_phone = #{mobilePhone}
       </if>
       <if test="email != null" >
-        email = #{email},
+        and  email = #{email}
       </if>
       <if test="status != null" >
-        status = #{status},
+        and  status = #{status}
       </if>
       <if test="isAdmin != null" >
-        is_admin = #{isAdmin},
+        and  is_admin = #{isAdmin}
       </if>
     </trim>
     order by created_date desc

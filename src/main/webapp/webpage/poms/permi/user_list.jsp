@@ -37,9 +37,6 @@ var listOptions ={
 	type:'post',
 	dataType:'html',
 	success:function(data){
-		/*if(data.statusCode=="OK") {
-
-		 }*/
 		$("#main").html(data);
 	}
 }
@@ -85,6 +82,7 @@ function updateUser(){
 	updateModel = d;
 	d.showModal();
 }
+
 /*取消弹层方法*/
 function closeDialog(){
 	jQuery('#userForm').validationEngine('hide');//隐藏验证弹窗
@@ -92,9 +90,20 @@ function closeDialog(){
 		$(this).val("");
 	});
 }
-
+/**
+ * 保存用户信息
+ */
 function saveUser(){
 	if(jQuery('#userForm').validationEngine('validate')){
+		var saveOptions ={
+			url:'<%=basePath%>/web/permi/user/save',
+			type:'post',
+			dataType:'html',
+			success:function(data){
+				$("#main").html(data);
+			}
+		}
+
 		$("#userForm").ajaxSubmit(saveOptions);
 		if(addUserModel){
 			addUserModel.close();
@@ -104,8 +113,13 @@ function saveUser(){
 		}
 	}
 }
+
+/**
+ * 回显用户信息
+ */
 function editUser(userId){
-	//ajax获取用户信息
+	closeDialog();
+	/*alert("张三");*/
 	$.ajax({
 		url:"<%=basePath%>/web/permi/user/update",
 		data:{sysUserId:userId},
@@ -130,17 +144,24 @@ function editUser(userId){
 	});
 
 }
-var saveOptions ={
-	url:'<%=basePath%>/web/permi/user/save',
-	type:'post',
-	dataType:'html',
-	success:function(data){
-		/*if(data.statusCode=="OK") {
 
-		}*/
-		$("#main").html(data);
+/**
+ * 删除用户
+ */
+function deleteUser(userId){
+	var deleteOptions ={
+		url:'<%=basePath%>/web/permi/user/delete',
+		data:{userId:userId},
+		type:'post',
+		dataType:'text',
+		success:function(data){
+			$("#main").html(data);
+		}
 	}
+	$("#listForm").ajaxSubmit(deleteOptions);
+
 }
+
 </script>
 <div class="page-header">
 	<h1>
@@ -232,7 +253,7 @@ var saveOptions ={
 										<c:if test="${user.status == 1}">
 											<a class="btn btn-sm btn-white btn-primary">启用</a>
 										</c:if>
-										<a class="btn btn-sm btn-white btn-danger">删除</a>
+										<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteUser('${user.sysUserId}');">删除</a>
 									</td>
 								</tr>
 							</c:forEach>
