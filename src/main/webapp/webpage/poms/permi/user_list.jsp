@@ -12,7 +12,12 @@
 <script type="text/javascript">
 $(function() {
 	/*表单验证*/
-	/*$('#userForm').validationEngine();*/
+	jQuery('#userForm').validationEngine('attach', {
+		promptPosition: 'topRight',		//提示信息的位置，可设置为：'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'centerRight', 'centerLeft', 'inline'
+		validationEventTrigger:'blur',	//触发验证的事件
+		binded:true,						//是否绑定即时验证
+		scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
+	});
 });
 
 /*分页相关方法 start*/
@@ -40,6 +45,7 @@ var listOptions ={
 }
 /*分页相关方法 end*/
 //显示添加用户弹出层
+var addUserModel;
 function addUser(){
 	/*closeDialog();*/
 	var d = dialog({
@@ -54,10 +60,16 @@ function addUser(){
 			/*closeDialog();*/
 		}
 	});
+	/*密码输入框改为可编辑*/
+	$("#password").removeAttr("readonly");
+	$("#re_password").removeAttr("readonly");
+	addUserModel = d;
 	d.showModal();
 }
 //显示编辑用户弹出层
+var updateModel;
 function updateUser(){
+
 	var d = dialog({
 		width:550,
 		height:500,
@@ -70,6 +82,7 @@ function updateUser(){
 			/*closeDialog();*/
 		}
 	});
+	updateModel = d;
 	d.showModal();
 }
 /*取消弹层方法*/
@@ -81,9 +94,15 @@ function closeDialog(){
 }
 
 function saveUser(){
-//	if(jQuery('#userForm').validationEngine('validate')){
+	if(jQuery('#userForm').validationEngine('validate')){
 		$("#userForm").ajaxSubmit(saveOptions);
-//	}
+		if(addUserModel){
+			addUserModel.close();
+		}
+		if(updateModel){
+			updateModel.close();
+		}
+	}
 }
 function editUser(userId){
 	//ajax获取用户信息
@@ -95,13 +114,17 @@ function editUser(userId){
 		success: function(data){
 			$("#sys_user_id").val(data.sysUserId);
 			$("#user_name").val(data.userName);
-			$("#password").val(data.password);
-			$("#re_password").val(data.rePassword);
 			$("#remark").val(data.remark);
 			$("#real_name").val(data.realName);
 			$("#gender").val(data.gender);
 			$("#email").val(data.email);
 			$("#mobile_phone").val(data.mobilePhone);
+			/*密码输入框改为只读*/
+			$("#password").val(data.password);
+			$("#re_password").val(data.password);
+			/*密码输入框改为可编辑*/
+			$("#password").attr("readonly","readonly");
+			$("#re_password").attr("readonly","readonly");
 			updateUser();
 		}
 	});
@@ -181,15 +204,34 @@ var saveOptions ={
 									</td>
 									<td>${user.userName}</td>
 									<td>${user.realName}</td>
-									<td>${user.gender}</td>
+									<td>
+										<c:if test="${user.gender == 0}">
+											男
+										</c:if>
+										<c:if test="${user.gender == 1}">
+											女
+										</c:if>
+									</td>
 									<td>${user.email}</td>
 									<td>${user.mobilePhone}</td>
 									<td class="hidden-480">${user.userName}</td>
-									<td>${user.status}</td>
+									<td>
+										<c:if test="${user.status == 0}">
+											启用
+										</c:if>
+										<c:if test="${user.status == 1}">
+											禁用
+										</c:if>
+									</td>
 									<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd"/></td>
 									<td>
 										<a class="btn btn-sm btn-white btn-primary" href="javascript:editUser('${user.sysUserId}');">修改</a>
-										<a class="btn btn-sm btn-white btn-inverse">禁用</a>
+										<c:if test="${user.status == 0}">
+											<a class="btn btn-sm btn-white btn-inverse">禁用</a>
+										</c:if>
+										<c:if test="${user.status == 1}">
+											<a class="btn btn-sm btn-white btn-primary">启用</a>
+										</c:if>
 										<a class="btn btn-sm btn-white btn-danger">删除</a>
 									</td>
 								</tr>
@@ -237,12 +279,12 @@ var saveOptions ={
 					<!-- #section:elements.form -->
 					<h5 class="header smaller lighter blue">账户信息</h5>
 					<div class="form-group">
-						<label class="col-sm-2 control-label no-padding-right" for="user_name"> 用户ID： </label>
+						<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
 						<div class="col-sm-4">
-							<input type="text" name="userName" id="user_name" placeholder="用户ID" class="validate[required] col-xs-10 col-sm-12" />
+							<input type="text" name="userName" id="user_name" placeholder="用户名" class="validate[required,minSize[3],custom[onlyLetterNumber]]] col-xs-10 col-sm-12" />
 							<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
 						</div>
-						<label class="col-sm-2 control-label no-padding-right" for="role_id"> 用户角色： </label>
+						<label class="col-sm-2 control-label no-padding-right" for="role_id"><span class="red_star">*</span> 用户角色： </label>
 						<div class="col-sm-4">
 							<select class="chosen-select col-xs-10 col-sm-12" id="role_id">
 								<option value="">选择角色</option>
@@ -255,13 +297,13 @@ var saveOptions ={
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label no-padding-right" for="password"> 用户密码： </label>
+						<label class="col-sm-2 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码： </label>
 						<div class="col-sm-4">
-							<input type="password" name="password" id="password" placeholder="用户密码" class="col-xs-10 col-sm-12" />
+							<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6]] col-xs-10 col-sm-12" />
 						</div>
-						<label class="col-sm-2 control-label no-padding-right" for="re_password"> 确认密码： </label>
+						<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 						<div class="col-sm-4">
-							<input type="password" id="re_password" placeholder="确认密码" class="col-xs-10 col-sm-12" />
+							<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],equals[password]] col-xs-10 col-sm-12" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -293,11 +335,11 @@ var saveOptions ={
 					<div class="form-group">
 						<label class="col-sm-2 control-label no-padding-right" for="email"> 邮箱： </label>
 						<div class="col-sm-4">
-							<input type="text" name="email" id="email" placeholder="邮箱" class="col-xs-10 col-sm-12" />
+							<input type="email" name="email" id="email" placeholder="邮箱" class="validate[custom[email]] col-xs-10 col-sm-12" />
 						</div>
 						<label class="col-sm-2 control-label no-padding-right" for="mobile_phone"> 手机： </label>
 						<div class="col-sm-4">
-							<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="col-xs-10 col-sm-12" />
+							<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[custom[phone]] col-xs-10 col-sm-12" />
 						</div>
 					</div>
 				</form>
@@ -309,7 +351,7 @@ var saveOptions ={
 	<!--底部按钮 -->
 	<div class="row">
 		<div class="col-xs-3"></div>
-		<div class="col-xs-3"><button class="btn btn-primary" i="close" onclick="saveUser()">确   定</button></div>
+		<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
 		<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog()">取   消 </button></div>
 	</div>
 </div>

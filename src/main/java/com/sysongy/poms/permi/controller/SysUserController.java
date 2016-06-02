@@ -89,7 +89,11 @@ public class SysUserController extends BaseContoller{
 	 */
 	@RequestMapping("/save")
 	public String saveUser(SysUser user, ModelMap map){
-		if(user != null){
+		if(user != null && user.getSysUserId() != null && !"".equals(user.getSysUserId())){
+			//修改用户
+			user.setPassword(null);//不修改用户密码
+			sysUserService.updateUser(user);
+		}else if(user != null){//添加
 			user.setSysUserId(UUIDGenerator.getUUID());
 			user.setUserType(GlobalConstant.USER_TYPE_MANAGE);
 			String passwordStr = user.getPassword();

@@ -11,6 +11,8 @@ body{}
 .b-dialog-content{min-height: 300px;}
 .b-dialog-hint{font-size: 30px;}
 .dialog-font{margin: 20px;}
+.red_star{color: red;}
+.dis_none{display: none;}
 
 /* 按钮样式 */
 .btn-bottom{margin-bottom: 3px;}

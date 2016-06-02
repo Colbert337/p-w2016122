@@ -45,7 +45,7 @@ public class BaseContoller {
     @Autowired
     SysUserService sysUserService;
 
-    @RequestMapping(value = {"","/","/test"})  
+    @RequestMapping(value = {"","/"})
     public String index(ModelMap map){  
     	/*ModelAndView result = new ModelAndView();
     	String pmcName = "登录测试成功！";
