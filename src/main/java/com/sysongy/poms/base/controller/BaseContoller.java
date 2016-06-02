@@ -5,8 +5,11 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +42,9 @@ public class BaseContoller {
 	
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 
+    @Autowired
+    SysUserService sysUserService;
+
     @RequestMapping(value = {"","/","/test"})  
     public String index(ModelMap map){  
     	/*ModelAndView result = new ModelAndView();
@@ -69,10 +75,17 @@ public class BaseContoller {
     	String userName = request.getParameter("userName");
     	String password = request.getParameter("password");
     	String returnPath = "login";
-    	/*if(userName != null && password != null && userName.equals("wdq") && password.equals("wdq123456")){*/
+
+        SysUser user = new SysUser();
+        user.setUserName(userName);
+        user.setPassword(password);
+
+        user = sysUserService.queryUserByAccount(user);
+
+    	if(user != null && user.getUserName() != null && user.getPassword() != null){
     		map.addAttribute("current_module", "webpage/demo/demo");
     		returnPath = "common/g_main";
-    	/*}*/
+    	}
 
     	return returnPath;
     }
