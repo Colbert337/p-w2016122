@@ -9,7 +9,7 @@
 									aria-hidden="true">
 									<span class="white">&times;</span>
 								</button>
-								error ${ret.retCode}
+								Return Code =  ${ret.retCode}
 							</div>
 						</div>
 

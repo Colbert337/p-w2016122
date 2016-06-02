@@ -15,8 +15,6 @@ public class GasCard extends BaseModel{
 	
 	private String card_type; //用户卡类型 0:LNG  1:柴油  2:CNG
 	
-	private String card_name;
-
 	private String card_status; //用户卡状态  0:已冻结  1:未使用  2:使用中
 
 	private String workstation; //用户卡所在地
@@ -25,17 +23,27 @@ public class GasCard extends BaseModel{
 	
 	private String operator; //操作员
 	
+	private String batch_no; //批次号
+	
 	private Date storage_time;  //入库时间
 
 	private Date release_time;  //出库时间
 	
-	private String release_time_range;
+	private String storage_time_range;
 	
-	private String release_time_before;
+	private String storage_time_before;
 	
-	private String release_time_after;
+	private String storage_time_after;
 
 	private String memo;
+
+	public String getBatch_no() {
+		return batch_no;
+	}
+
+	public void setBatch_no(String batch_no) {
+		this.batch_no = batch_no;
+	}
 
 	public String getCard_no() {
 		return card_no;
@@ -51,14 +59,6 @@ public class GasCard extends BaseModel{
 
 	public void setCard_no_arr(String card_no_arr) {
 		this.card_no_arr = card_no_arr;
-	}
-
-	public String getCard_name() {
-		return card_name;
-	}
-
-	public void setCard_name(String card_name) {
-		this.card_name = card_name;
 	}
 
 	public String getOperator() {
@@ -92,31 +92,31 @@ public class GasCard extends BaseModel{
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
-	
-	public String getRelease_time_range() {
-		return release_time_range;
+
+	public String getStorage_time_range() {
+		return storage_time_range;
 	}
 
-	public void setRelease_time_range(String release_time_range) {
-		this.release_time_range = release_time_range;
+	public void setStorage_time_range(String storage_time_range) {
+		this.storage_time_range = storage_time_range;
 	}
 
-	public String getRelease_time_before() {
-		return release_time_before;
+	public String getStorage_time_before() {
+		return storage_time_before;
 	}
 
-	public void setRelease_time_before(String release_time_before) {
-		this.release_time_before = release_time_before;
+	public void setStorage_time_before(String storage_time_before) {
+		this.storage_time_before = storage_time_before;
 	}
 
-	public String getRelease_time_after() {
-		return release_time_after;
+	public String getStorage_time_after() {
+		return storage_time_after;
 	}
 
-	public void setRelease_time_after(String release_time_after) {
-		this.release_time_after = release_time_after;
+	public void setStorage_time_after(String storage_time_after) {
+		this.storage_time_after = storage_time_after;
 	}
-	
+
 	public List<String> getCard_no_list() {
 		return card_no_list;
 	}

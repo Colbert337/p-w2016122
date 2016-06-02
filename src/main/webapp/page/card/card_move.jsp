@@ -58,6 +58,10 @@
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
 								<form class="form-horizontal"  id="newcardform">
+								
+									<input id="retCode" type="hidden" value=" ${ret.retCode}" />
+									<input id="retMsg" type="hidden" value=" ${ret.retMsg}" />
+									
 									<!-- #section:elements.form -->
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户卡起始编号： </label>
@@ -152,7 +156,9 @@
 											</button>
 										</div>
 									</div>
-
+									
+									<jsp:include page="../message.jsp"></jsp:include>
+								
 								</form>						
 							</div><!-- /.col -->
 						</div><!-- /.row -->
@@ -162,13 +168,6 @@
 
 		<!-- inline scripts related to this page -->
 	<script type="text/javascript">
-	
-		var ret = "${ret}";
-	
-		if(ret != "" && ret != null){
-			alert("出库完成!");
-		}
-		
 			//bootstrap验证控件
 		    $('#newcardform').bootstrapValidator({
 		        message: 'This value is not valid',
@@ -258,6 +257,7 @@
 		            dataType:'html',
 		            success:function(data){
 			              $("#main").html(data);
+			              $("#modal-table").modal("show");
 		            }
 			}
 			

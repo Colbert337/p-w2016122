@@ -106,5 +106,11 @@ public class GlobalConstant {
 		public static final String UN_USED ="1";
 		public static final String USED ="2";
 	}
+	
+	public interface CardAction{
+		public static final String STORAGE ="0";
+		public static final String MOVE ="1";
+		public static final String DESTORY="2";
+	}
 
 }
