@@ -60,6 +60,7 @@
 		<link rel="stylesheet" type="text/css" href="<%=basePath %>/assets/jQueryVE/css/validationEngine.jquery.css" />
 		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine-zh_CN.js"></script>
 		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine.min.js"></script>
+		<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
 	</head>
 
 	<body class="no-skin">
