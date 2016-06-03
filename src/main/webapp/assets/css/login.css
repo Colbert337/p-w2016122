@@ -47,7 +47,7 @@ body{background: #b5dfeb url(../images/login/login_bg.png) center center no-repe
 .login{top: 10%; background: url(../images/login/lobin_content_bg.png) 0 0 repeat; width: 550px; min-height: 270px; padding: 20px 0; margin: 0 auto; box-shadow: 0 1px 2px #ddd;}
 .login ul{background: url(../images/login/login_logo.png) center top no-repeat; padding: 90px 0 0 0; margin: 0;}
 .login ul li{list-style: none;}
-.form-control{width: 240px; height: 36px; outline:none; box-shadow: 1px 1px 1px #ccc; background: url(../images/login/login_icon_bg.png) 0 0 no-repeat; padding-left: 52px; border: 1px solid #fff;}
+.form-control{width: 240px; height: 36px; outline:none; box-shadow: 1px 1px 1px #ccc; background: #fff url(../images/login/login_icon_bg.png) 0 0 no-repeat; padding-left: 52px; border: 1px solid #fff;}
 .form-control:hover{border-color: #78a443;}
 .form-control.error,
 .form-control.error:hover{border-color: #f00;}
