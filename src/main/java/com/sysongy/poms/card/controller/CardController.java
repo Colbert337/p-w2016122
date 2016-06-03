@@ -34,7 +34,7 @@ public class CardController extends BaseContoller{
 	public String queryAllCardList(ModelMap map, GasCard gascard) throws Exception{
 
 		PageBean bean = new PageBean();
-		String ret = "page/card/card_list";
+		String ret = "webpage/poms/card/card_list";
 
 		try {
 			if(gascard.getPageNum() == null){
@@ -57,9 +57,9 @@ public class CardController extends BaseContoller{
 			bean.setPageInfo(ret);
 
 			map.addAttribute("ret", bean);
-			map.addAttribute("pageinfo", pageinfo);
+			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("gascard",gascard);
-			map.addAttribute("current_module", "page/card/card_list");
+			map.addAttribute("current_module", "webpage/poms/card/card_list");
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());

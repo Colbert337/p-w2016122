@@ -71,6 +71,14 @@ public class BaseContoller {
 
         return "common/g_main";
     }
+
+    /**
+     * 用户登录
+     * @param request
+     * @param response
+     * @param map
+     * @return
+     */
     @RequestMapping(value = {"/web/login"})  
     public String login( HttpServletRequest request,HttpServletResponse response,ModelMap map){ 
     	String userName = request.getParameter("userName");
