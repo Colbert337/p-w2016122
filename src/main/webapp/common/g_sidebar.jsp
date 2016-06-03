@@ -84,17 +84,29 @@
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-list"></i>
-							<span class="menu-text"> 文档管理 </span>
+							<span class="menu-text">资源管理</span>
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
-
 						<b class="arrow"></b>
 
 						<ul class="submenu">
 							<li class="">
-								<a href="<%=basePath%>/web/bossDoc/queryAllBossDoc">
-									<i class="menu-icon fa fa-caret-right"></i>
-									系统文档
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/card/cardList')">
+									<i class="menu-icon fa fa-caret-right"></i> 用户卡管理
+								</a>
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/card/cardLogList')">
+									<i class="menu-icon fa fa-caret-right"></i> 用户卡轨迹信息
+								</a>
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="jqgrid.html">
+									<i class="menu-icon fa fa-caret-right"></i> jqGrid plugin
 								</a>
 								<b class="arrow"></b>
 							</li>
