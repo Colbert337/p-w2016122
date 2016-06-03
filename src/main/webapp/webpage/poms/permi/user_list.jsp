@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="s" uri="/WEB-INF/sysongytag.tld" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -41,7 +42,6 @@ var listOptions ={
 }
 /*分页相关方法 end*/
 //显示添加用户弹出层
-var addUserModel;
 function addUser(){
 	$("#userModel").modal('show');
 	/*密码输入框改为可编辑*/
@@ -49,7 +49,6 @@ function addUser(){
 	$("#re_password").removeAttr("readonly");
 }
 //显示编辑用户弹出层
-var updateModel;
 function updateUser(){
 	$("#userModel").modal('show');
 }
@@ -96,6 +95,7 @@ function editUser(userId){
 			$("#user_name").val(data.userName);
 			$("#remark").val(data.remark);
 			$("#real_name").val(data.realName);
+			$("#user_type").val(data.userType);
 			$("#gender").val(data.gender);
 			$("#email").val(data.email);
 			$("#mobile_phone").val(data.mobilePhone);
@@ -191,6 +191,7 @@ function updateStatus(userId,status){
 								<th>邮箱</th>
 								<th class="hidden-480">联系电话</th>
 								<th>用户角色</th>
+								<th>用户类型</th>
 								<th>用户状态</th>
 								<th>创建时间</th>
 								<th>操作</th>
@@ -218,6 +219,7 @@ function updateStatus(userId,status){
 									<td>${user.email}</td>
 									<td>${user.mobilePhone}</td>
 									<td class="hidden-480">${user.userName}</td>
+									<td><s:Code2Name mcode="${user.userType}" gcode="PLF_TYPE"></s:Code2Name></td>
 									<td>
 										<c:if test="${user.status == 0}">
 											启用
@@ -290,18 +292,13 @@ function updateStatus(userId,status){
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="userName" id="user_name" placeholder="用户名" class="validate[required,minSize[3],custom[onlyLetterNumber]]] col-xs-10 col-sm-12" />
+										<input type="text" name="userName" id="user_name" placeholder="用户名" class="validate[required,minSize[3],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
 										<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
 									</div>
-									<label class="col-sm-2 control-label no-padding-right" for="role_id"><span class="red_star">*</span> 用户角色： </label>
+									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户类型： </label>
 									<div class="col-sm-4">
-										<select class="chosen-select col-xs-10 col-sm-12" id="role_id">
-											<option value="">选择角色</option>
-											<option value="AL">Alabama</option>
-											<option value="AK">Alaska</option>
-											<option value="AZ">Arizona</option>
-											<option value="AR">Arkansas</option>
-											<option value="CA">California</option>
+										<select class="chosen-select col-xs-10 col-sm-12" id="user_type" name="userType">
+											<s:option flag="true" gcode="PLF_TYPE" link="false" />
 										</select>
 									</div>
 								</div>
@@ -358,6 +355,7 @@ function updateStatus(userId,status){
 				</div>
 				<!--底部按钮 -->
 				<div class="row">
+					<div class="space"></div>
 					<div class="col-xs-3"></div>
 					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
 					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('userModel')">取   消 </button></div>

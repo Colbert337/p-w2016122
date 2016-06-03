@@ -65,6 +65,8 @@ public class GlobalConstant {
 	public static final int USER_TYPE_MANAGE = 5;//后台管理用户
 
 	public static final String PASSWORD_ENCRYPTION = "sysongy";
+	public static final int ADMIN_YES = 0;//是管理员
+	public static final int ADMIN_NO = 1;//不是管理员
 	/********************************** 路径配置 ************************************************/
 	/* 小头像 */
 	public static final String CHILD_AVATAR_S_PATH = "/upload/child/avatar/small/";
