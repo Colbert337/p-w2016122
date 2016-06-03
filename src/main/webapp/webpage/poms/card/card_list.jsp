@@ -207,11 +207,11 @@
 					
 					<div class="form-group">
 						<div class="col-md-12 pull-right">
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','card/card_new.jsp');">
+								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 										入库
 								</button>
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','card/card_move.jsp');">
+								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_move.jsp');">
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 										出库
 								</button>
