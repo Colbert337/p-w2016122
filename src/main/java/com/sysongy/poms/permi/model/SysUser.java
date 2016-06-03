@@ -194,4 +194,5 @@ public class SysUser  extends BaseModel {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
 }
