@@ -11,7 +11,7 @@
 		功能管理
 		<small>
 			<i class="ace-icon fa fa-angle-double-right"></i>
-			功能列表 &amp;
+			功能列表
 		</small>
 	</h1>
 </div><!-- /.page-header -->

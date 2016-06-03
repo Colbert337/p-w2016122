@@ -1,8 +1,10 @@
 package com.sysongy.poms.permi.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.util.Date;
 
-public class SysRole {
+public class SysRole extends BaseModel{
     private String sysRoleId;
 
     private String roleName;

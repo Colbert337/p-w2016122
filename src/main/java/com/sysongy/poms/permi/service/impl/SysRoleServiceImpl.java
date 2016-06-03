@@ -1,11 +1,14 @@
 package com.sysongy.poms.permi.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.permi.dao.SysRoleMapper;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysRoleFunction;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -20,21 +23,24 @@ import java.util.Map;
  * @Version: V2.0 Copyright(c)陕西司集能源科技有限公司
  * @Description:
  */
+@Service
 public class SysRoleServiceImpl implements SysRoleService{
 
     @Autowired
     SysRoleMapper sysRoleMapper;
+
     /**
      * 查询角色列表（分页）
-     * @param conditionMap 查询条件
      * @return
      */
     @Override
-    public PageInfo<SysRole> queryRoleListPage(Map<String, Object> conditionMap) {
-        List<SysRole> roleList = sysRoleMapper.queryRoleList();
+    public PageInfo<SysRole> queryRoleListPage(SysRole sysRole) {
+        PageHelper.startPage(sysRole.getPageNum(), sysRole.getPageSize());
+        List<SysRole> roleList = sysRoleMapper.queryRoleList(sysRole);
         PageInfo<SysRole> rolePageInfo = new PageInfo<SysRole>(roleList);
         return rolePageInfo;
     }
+
     /**
      * 根据角色ID查询角色详情
      * @param roleId 角色编号

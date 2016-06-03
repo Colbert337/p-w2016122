@@ -21,6 +21,40 @@
     select
     <include refid="Base_Column_List" />
     from sys_role
+    where 1=1
+    <trim>
+      <if test="sysRoleId != null" >
+        and sys_role_id = #{sysRoleId}
+      </if>
+      <if test="roleName != null" >
+        and role_name = #{roleName}
+      </if>
+      <if test="roleCode != null" >
+        and role_code = #{roleCode}
+      </if>
+      <if test="roleType != null" >
+      and role_type = #{roleType}
+      </if>
+      <if test="roleDesc != null" >
+        and role_desc = #{roleDesc}
+      </if>
+      <if test="isAdmin != null" >
+        and is_admin = #{isAdmin}
+      </if>
+      <if test="roleStatus != null" >
+        and role_status = #{roleStatus}
+      </if>
+      <if test="isDeleted != null" >
+        and is_deleted = #{isDeleted}
+      </if>
+      <if test="createdDate != null" >
+        and created_date = #{createdDate}
+      </if>
+      <if test="updatedDate != null" >
+        and updated_date = #{updatedDate}
+      </if>
+    </trim>
+    order by created_date desc
   </select>
   <select id="queryRoleById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
