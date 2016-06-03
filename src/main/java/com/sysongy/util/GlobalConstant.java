@@ -22,6 +22,14 @@ public class GlobalConstant {
 	 */
 	public static final int STATUS_DISABLE = 1;
 	/**
+	 * 状态-删除
+	 */
+	public static final int STATUS_DELETE = 0;
+	/**
+	 * 状态-未删除
+	 */
+	public static final int STATUS_NOTDELETE = 1;
+	/**
 	 * 登录-成功
 	 */
 	public static final String LOGIN_SUCCESS = "1";
