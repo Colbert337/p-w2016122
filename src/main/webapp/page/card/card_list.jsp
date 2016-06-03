@@ -3,7 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="s" uri="/WEB-INF/sysongytag.tld" %>
-
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+%>
 <!-- page specific plugin styles -->
 <link rel="stylesheet" href="../assets/css/bootstrap-duallistbox.css" />
 <link rel="stylesheet" href="../assets/css/bootstrap-multiselect.css" />
@@ -204,11 +207,11 @@
 					
 					<div class="form-group">
 						<div class="col-md-12 pull-right">
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','card/card_new.jsp');">
+								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 										入库
 								</button>
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','card/card_move.jsp');">
+								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_move.jsp');">
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 										出库
 								</button>
@@ -227,7 +230,7 @@
 					
 					
 					
-					<div class="table-header">用户卡详细信息列表</div>
+					<div class="table-header">用户卡详细信息列表1111</div>
 
 					<!-- div.table-responsive -->
 

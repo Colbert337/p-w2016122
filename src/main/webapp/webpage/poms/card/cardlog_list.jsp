@@ -252,7 +252,7 @@
 
 							<tbody>
 								
-							<c:forEach items="${pageinfo.list}" var="list" varStatus="s"> 		
+							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
@@ -281,7 +281,7 @@
 			</div>
 			
 
-			<label>共 ${pageinfo.total} 条</label>
+			<label>共 ${pageInfo.total} 条</label>
 			
 			<nav>
 				  <ul id="ulhandle" class="pagination pull-right no-margin">
