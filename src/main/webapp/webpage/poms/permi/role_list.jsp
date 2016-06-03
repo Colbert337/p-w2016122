@@ -188,7 +188,7 @@
 									</c:if>
 								</td>
 								<td>${role.roleDesc}</td>
-								<td><fmt:formatDate value="${role.createdDate}" type="both" pattern="yyyy-MM-dd"/></td>
+								<td><fmt:formatDate value="${role.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
 									<a class="btn btn-sm btn-white btn-primary" href="javascript:editRole('${role.sysRoleId}');">修改</a>
 									<c:if test="${role.roleStatus == 0}">
