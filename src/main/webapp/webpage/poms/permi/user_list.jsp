@@ -202,12 +202,12 @@ function deleteUser(userId){
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
-								<th class="center">
+								<%--<th class="center">
 									<label class="pos-rel">
 										<input type="checkbox" class="ace" />
 										<span class="lbl"></span>
 									</label>
-								</th>
+								</th>--%>
 								<th>账号</th>
 								<th>姓名</th>
 								<th class="hidden-480">性别</th>
@@ -222,12 +222,12 @@ function deleteUser(userId){
 						<tbody>
 							<c:forEach items="${userList}" var="user">
 								<tr>
-									<td class="center">
+									<%--<td class="center">
 										<label class="pos-rel">
 											<input type="checkbox" class="ace" />
 											<span class="lbl"></span>
 										</label>
-									</td>
+									</td>--%>
 									<td>${user.userName}</td>
 									<td>${user.realName}</td>
 									<td>
@@ -249,7 +249,7 @@ function deleteUser(userId){
 											禁用
 										</c:if>
 									</td>
-									<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd"/></td>
+									<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 									<td>
 										<a class="btn btn-sm btn-white btn-primary" href="javascript:editUser('${user.sysUserId}');">修改</a>
 										<c:if test="${user.status == 0}">

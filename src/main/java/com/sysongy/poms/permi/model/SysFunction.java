@@ -1,8 +1,10 @@
 package com.sysongy.poms.permi.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.util.Date;
 
-public class SysFunction {
+public class SysFunction extends BaseModel{
     private String sysFunctionId;
 
     private String parentId;
