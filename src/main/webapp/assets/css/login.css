@@ -44,11 +44,11 @@ textarea { overflow: auto; }
 html,body{height: 100%;}
 body{background: #b5dfeb url(../images/login/login_bg.png) center center no-repeat;}
 
-.login{top: 10%; background: url(../images/login/lobin_content_bg.png) 0 0 repeat; width: 550px; min-height: 270px; padding: 20px 0; margin: 0 auto; box-shadow: 0 1px 2px #ddd;}
+.login{ background-color: #777877; opacity: 0.85; filter:alpha(opacity=85); width: 550px; min-height: 270px; padding: 20px 0; margin: 0 auto; box-shadow: 0 1px 2px #ddd;}
 .login ul{background: url(../images/login/login_logo.png) center top no-repeat; padding: 90px 0 0 0; margin: 0;}
 .login ul li{list-style: none;}
-.form-control{width: 240px; height: 36px; outline:none; box-shadow: 1px 1px 1px #ccc; background: #fff url(../images/login/login_icon_bg.png) 0 0 no-repeat; padding-left: 52px; border: 1px solid #fff;}
-.form-control:hover{border-color: #78a443;}
+.form-control{width: 240px; height: 36px; outline:none; background: #fff url(../images/login/login_icon_bg.png) 0 0 no-repeat; padding-left: 52px; border: 1px solid #fff;}
+.form-control:hover{border-color: #6f9b3c;}
 .form-control.error,
 .form-control.error:hover{border-color: #f00;}
 .user{background-position: 0 -165px;}
@@ -62,3 +62,4 @@ body{background: #b5dfeb url(../images/login/login_bg.png) center center no-repe
 .btn{float: right; width: 93px; height: 42px; background: url(../images/login/login_icon_bg.png) 0 0 no-repeat; border: 0; cursor: pointer; text-indent: -200px; overflow: hidden;}
 .btn:hover{background-position: 0 -42px;}
 .rememberpw{padding-top: 13px;}
+.rememberpw label{color: #fff;}
