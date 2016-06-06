@@ -6,7 +6,7 @@ import com.sysongy.poms.permi.model.SysUser;
 import java.util.List;
 
 public interface SysRoleMapper {
-    List<SysRole> queryRoleList();
+    List<SysRole> queryRoleList(SysRole sysRole);
 
     SysRole queryRoleById(String roleId);
 

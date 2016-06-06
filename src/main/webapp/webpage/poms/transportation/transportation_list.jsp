@@ -26,8 +26,8 @@
 		<li><i class="ace-icon fa fa-home home-icon"></i> <a href="javascript:void(0);">主页</a>
 		</li>
 
-		<li><a href="javascript:void(0);">资源管理</a></li>
-		<li class="active">用户卡管理</li>
+		<li><a href="javascript:void(0);">加气站管理</a></li>
+		<li class="active">加气站信息管理</li>
 	</ul>
 	<!-- /.breadcrumb -->
 
@@ -153,7 +153,7 @@
 
 
 	<!-- /.page-header -->
-	<form id="formcard">
+	<form id="formgastation">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -170,19 +170,35 @@
 						
 			<div class="row">
 				<div class="col-xs-12">
-					<h3 class="header smaller lighter blue">用户卡管理</h3>
+					<h3 class="header smaller lighter blue">加气站管理</h3>
 
 					<div class="form-group">
 						<div class="col-md-2 control-label no-padding-right">
-						    <label>用户卡号:</label>
-							<input type="text" name="card_no" placeholder="输入用户卡号"  maxlength="9" value="${gascard.card_no}"/>
+						    <label>加气站编号:</label>
+							<input type="text" name="sys_gas_station_id" placeholder="输入加气站编号"  maxlength="9" value="${gastation.sys_gas_station_id}"/>
 						</div>
 						
-						<div class="col-md-3 control-label no-padding-right">
-						    <label>用户卡类型:</label>
-							<select class="chosen-select " name="card_type" >
-									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type" link="true" />
+						<div class="col-md-2 control-label no-padding-right">
+						    <label>加气站名称:</label>
+							<input type="text" name="gas_station_name" placeholder="输入加气站名称"  maxlength="9" value="${gastation.gas_station_name}"/>
+						</div>
+						
+						<div class="col-md-2 control-label no-padding-right">
+							<label>气站状态:</label>
+							<select class="chosen-select " name="status" >
+									<s:option flag="true" gcode="GASTATION_STATUS" form="gastation" field="status" link="true" />
 							</select>
+						</div>
+						
+						<div class="col-md-4 input-group no-padding-right  control-label">
+						    <label>平台有效期:</label>
+							<span class="input-group-addon">
+									<i class="fa fa-calendar bigger-110"></i>
+							</span>
+							<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${gascard.expiry_date_frompage}"/>
+						</div>
+						<%-- <div class="col-md-3 control-label no-padding-right">
+						    
 							<label>用户卡状态:</label>
 							<select class="chosen-select " name="card_status" >
 									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" link="true" />
@@ -200,20 +216,14 @@
 									<i class="fa fa-calendar bigger-110"></i>
 							</span>
 							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${gascard.storage_time_range}"/>
-						</div>
-						
-						
+						</div> --%>
 					</div>
-					
+					<br/>
 					<div class="form-group">
 						<div class="col-md-12 pull-right">
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
+								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										入库
-								</button>
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_move.jsp');">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										出库
+										新建加气站
 								</button>
 								<button class="btn btn-primary" type="button" onclick="commitForm();">
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
@@ -230,7 +240,7 @@
 					
 					
 					
-					<div class="table-header">用户卡详细信息列表</div>
+					<div class="table-header">加气站详细信息列表</div>
 
 					<!-- div.table-responsive -->
 
@@ -245,15 +255,15 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'card_no');commitForm();" id="card_no_order">用户卡号</th>
-									<th onclick="orderBy(this,'card_type');commitForm();" id="card_type_order">用户卡类型</th>
-									<th onclick="orderBy(this,'card_status');commitForm();" id="card_status_order">用户卡状态</th>
-									<th onclick="orderBy(this,'workstation');commitForm();" id="workstation_order">所属工作站</th>
-									<th onclick="orderBy(this,'workstation_resp');commitForm();" id="workstation_resp_order">工作站领取人</th>
-									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人工号</th> 
-									<th onclick="orderBy(this,'batch_no');commitForm();" id="batch_no_order">入库批次号</th> 
-									<th onclick="orderBy(this,'storage_time');commitForm();" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
-									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
+									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加气站编号</th>
+									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加气站名称</th>
+									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
+									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
+									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
+									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
+									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
+									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
+									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
 									<th>更多操作</th>
 								</tr>
 							</thead>
@@ -264,32 +274,33 @@
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.card_no}"/> 
+											<input type="checkbox" class="ace" id="pks" value="${list.sys_gas_station_id}"/> 
 											<span class="lbl"></span>
 										</label>
 									</td>
 
-									<td>${list.card_no}</td>
-								 	<td><s:Code2Name mcode="${list.card_type}" gcode="CARDTYPE"></s:Code2Name> </td> 
-									<td><s:Code2Name mcode="${list.card_status}" gcode="CARDSTATUS"></s:Code2Name> </td>
-									<td><s:Code2Name mcode="${list.workstation}" gcode="WORKSTATION"></s:Code2Name></td>
-									<td><s:Code2Name mcode="${list.workstation_resp}" gcode="WORKSTATION_RESP"></s:Code2Name></td>
-									<td>${list.operator}</td> 
-									<td>${list.batch_no}</td> 
-									<td><fmt:formatDate value="${list.storage_time}" type="both"/></td>
-									<td><fmt:formatDate value="${list.release_time}" type="both"/></td>
+									<td>${list.sys_gas_station_id}</td>
+								 	<td>${list.gas_station_name}</td> 
+									<td>${list.salesmen_name}</td>
+									<td>${list.operations_name}</td>
+									<td>${list.indu_com_number}</td>
+									<td><s:Code2Name mcode="${list.status}" gcode="GASTATION_STATUS"></s:Code2Name></td>
+									<td>${list.address}</td> 
+									<%-- <td>${list.batch_no}</td>  --%>
+									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
+									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 
 									<td>
 										<div class="hidden-sm hidden-xs action-buttons">
-											<a class="blue" href="#"> 
+											<a class="blue" href="javascript:void(0);"> 
 												<i class="ace-icon fa fa-search-plus bigger-130"></i>
 											</a> 
-											<a class="green" href="#"> 
-												<i class="ace-icon fa fa-pencil bigger-130"></i>
+											<a class="green" href="javascript:void(0);"> 
+												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a> 
-											<a class="red"  href="javascript:void(0);" onclick="del(this);"> 
+											<!-- <a class="red"  href="javascript:void(0);" onclick="del(this);"> 
 												<i class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a>
+											</a> -->
 										</div>
 
 										<div class="hidden-md hidden-lg">
@@ -337,13 +348,13 @@
 				  <ul id="ulhandle" class="pagination pull-right no-margin">
 				  
 				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formgastation');">
 					        <span aria-hidden="true">&laquo;</span>
 					      </a>
 				    </li>
 				    
 				    <li id="next">
-					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
 					        <span aria-hidden="true">&raquo;</span>
 					      </a>
 				    </li>
@@ -381,22 +392,23 @@
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-var mydate = new Date();
+
+	var mydate = new Date();
 	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
 					locale: {
 						applyLabel: 'Apply',
 						cancelLabel: 'Cancel',
 						format: "YYYY/MM/DD",
 					}, 
-					"startDate": "${gascard.storage_time_after}"==""?mydate.getFullYear()+"/1/1":"${gascard.storage_time_after}",
-				    "endDate": "${gascard.storage_time_before}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/"+mydate.getDate():"${gascard.storage_time_before}"
+					"startDate": "${gastation.expiry_date_after}"==""?mydate.getFullYear()+"/1/1":"${gastation.expiry_date_after}",
+				    "endDate": "${gastation.expiry_date_before}"==""?mydate.getFullYear()+"/12/31":"${gastation.expiry_date_before}"
 				})
 				.prev().on(ace.click_event, function(){
 					$(this).next().focus();
 				});
 	
 	var listOptions ={   
-            url:'<%=basePath%>/web/card/cardList',
+            url:'<%=basePath%>/web/gastation/gastationList',
             type:'post',                    
             dataType:'html',
             success:function(data){
@@ -411,6 +423,11 @@ var mydate = new Date();
 	
 	window.onload = setCurrentPage();
 	
+	function preUpdate(obj){
+		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
+		loadPage('#main', '../web/gastation/preUpdate?gastationid='+stationid);
+	}
+	
 	function commitForm(obj){
 		//设置当前页的值
 		if(typeof obj == "undefined") {
@@ -419,14 +436,14 @@ var mydate = new Date();
 			$("#pageNum").val($(obj).text());
 		}
 		
-		$("#formcard").ajaxSubmit(listOptions);
+		$("#formgastation").ajaxSubmit(listOptions);
 	}
 	
 	function del(obj){
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
 		var deloptions ={   
-	            url:'../web/card/deleteCard?cardid='+cardid,   
+	            url:'../web/gastation/deleteGastation?gastationid='+cardid,   
 	            type:'post',                    
 	            dataType:'text',
 	            success:function(data){
@@ -440,6 +457,6 @@ var mydate = new Date();
 	            }
 		}
 		
-		$("#formcard").ajaxSubmit(deloptions);
+		$("#formgastation").ajaxSubmit(deloptions);
 	}
 	</script>

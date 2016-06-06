@@ -6,7 +6,7 @@ import com.sysongy.poms.permi.model.SysFunction;
 import java.util.List;
 
 public interface SysFunctionMapper {
-    List<SysFunction> queryFunctionList();
+    List<SysFunction> queryFunctionList(SysFunction function);
 
     SysFunction queryFunctionById(String sysFunctionId);
 

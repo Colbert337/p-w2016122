@@ -22,6 +22,14 @@ public class GlobalConstant {
 	 */
 	public static final int STATUS_DISABLE = 1;
 	/**
+	 * 状态-删除
+	 */
+	public static final int STATUS_DELETE = 0;
+	/**
+	 * 状态-未删除
+	 */
+	public static final int STATUS_NOTDELETE = 1;
+	/**
 	 * 登录-成功
 	 */
 	public static final String LOGIN_SUCCESS = "1";
@@ -57,6 +65,8 @@ public class GlobalConstant {
 	public static final int USER_TYPE_MANAGE = 5;//后台管理用户
 
 	public static final String PASSWORD_ENCRYPTION = "sysongy";
+	public static final int ADMIN_YES = 0;//是管理员
+	public static final int ADMIN_NO = 1;//不是管理员
 	/********************************** 路径配置 ************************************************/
 	/* 小头像 */
 	public static final String CHILD_AVATAR_S_PATH = "/upload/child/avatar/small/";
@@ -113,4 +123,8 @@ public class GlobalConstant {
 		public static final String DESTORY="2";
 	}
 
+	public interface GastationStatus{
+		public static final String PAUSE ="0";
+		public static final String USED="1";
+	}
 }

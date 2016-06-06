@@ -26,6 +26,46 @@
     select
     <include refid="Base_Column_List" />
     from sys_function
+    where 1=1
+    <trim>
+      <if test="sysFunctionId != null" >
+        and sys_function_id = #{sysFunctionId}
+      </if>
+      <if test="parentId != null" >
+        and parent_id = #{parentId}
+      </if>
+      <if test="functionName != null" >
+        and function_name = #{functionName}
+      </if>
+      <if test="functionType != null" >
+        and function_type = #{functionType}
+      </if>
+      <if test="functionDesc != null" >
+        and function_desc = #{functionDesc}
+      </if>
+      <if test="functionCode != null" >
+        and function_code = #{functionCode}
+      </if>
+      <if test="functionSort != null" >
+        and function_sort = #{functionSort}
+      </if>
+      <if test="functionPath != null" >
+        and function_path = #{functionPath}
+      </if>
+      <if test="functionIcon != null" >
+        and function_icon = #{functionIcon}
+      </if>
+      <if test="functionStatus != null" >
+        and function_status = #{functionStatus}
+      </if>
+      <if test="isMenu != null" >
+        and is_menu = #{isMenu}
+      </if>
+      <if test="isDeleted != null" >
+        and is_deleted = #{isDeleted}
+      </if>
+    </trim>
+    order by created_date desc
   </select>
   <select id="queryFunctionById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

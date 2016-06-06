@@ -91,10 +91,11 @@ public class BaseContoller {
         user.setPassword(password);
 
         user = sysUserService.queryUserByAccount(user);
-        currUser.setUserId(user.getSysUserId());
-        currUser.setUser(user);
 
     	if(user != null && user.getUserName() != null && user.getPassword() != null){
+            currUser.setUserId(user.getSysUserId());
+            currUser.setUser(user);
+
     		map.addAttribute("current_module", "webpage/demo/demo");
             map.addAttribute("currUser",currUser);
     		returnPath = "common/g_main";
