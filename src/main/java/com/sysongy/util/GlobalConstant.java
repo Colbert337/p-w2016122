@@ -123,4 +123,8 @@ public class GlobalConstant {
 		public static final String DESTORY="2";
 	}
 
+	public interface GastationStatus{
+		public static final String PAUSE ="0";
+		public static final String USED="1";
+	}
 }

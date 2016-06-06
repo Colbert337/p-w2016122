@@ -101,7 +101,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人工号： </label>
 										<div class="col-sm-4">
-											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5"  maxlength="10" value="GZCYKFA001"/>										
+											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>										
 										</div>
 									</div>
 						
