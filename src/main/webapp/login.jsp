@@ -19,7 +19,7 @@
 <body>
 
 	<form action="<%=basePath%>/web/login" method="post" name="login" id="login">
-		<div class="login">
+		<div class="login" autocomplete="off">
 			<ul>
 				<li>
 					<div class="form-item">
