@@ -9,5 +9,5 @@ public class InterfaceConstants {
 
     public static final String WRONG_USERNAME_PASSWORD = "用户名或密码错误！";
 
-
+    public static final String QUERY_CARD_ERROR = "查询实体卡失败！";
 }

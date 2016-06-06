@@ -2,12 +2,14 @@ package com.sysongy.poms.base.model;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Map;
 
 /**
  * Created by Administrator on 2016/6/1.
  */
+@JsonIgnoreProperties
 public class AjaxJson {
 
     private boolean success = true;// 是否成功

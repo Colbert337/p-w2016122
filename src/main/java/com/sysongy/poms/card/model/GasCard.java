@@ -3,8 +3,10 @@ package com.sysongy.poms.card.model;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sysongy.poms.base.model.BaseModel;
 
+@JsonIgnoreProperties
 public class GasCard extends BaseModel{
 	
 	private String card_no;  //用户卡号

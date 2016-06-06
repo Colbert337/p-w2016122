@@ -1,7 +1,10 @@
 package com.sysongy.poms.permi.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.Encoder;
@@ -13,6 +16,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @FileName: SystemUserController
@@ -120,4 +128,17 @@ public class SysUserController extends BaseContoller{
 		return "redirect:/web/permi/user/list/page";
 	}
 
+	/**
+	 * 获取气站用户列表
+	 * @return
+	 */
+	@RequestMapping("/list/userType")
+	@ResponseBody
+	public String queryStationList(@RequestParam int userType, ModelMap map){
+		Map<String, Object> userMap = new HashMap<>();
+		List<SysUser> sysUserList = new ArrayList<>();
+		sysUserList = sysUserService.queryUserListByUserType(userType);
+		String resultStr = JSON.toJSONString(sysUserList);
+		return resultStr;
+	}
 }
