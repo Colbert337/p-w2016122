@@ -281,8 +281,8 @@
 
 									<td>${list.sys_gas_station_id}</td>
 								 	<td>${list.gas_station_name}</td> 
-									<td><s:Code2Name mcode="${list.salesmen_name}" gcode="CARDSTATUS"></s:Code2Name> </td>
-									<td><s:Code2Name mcode="${list.operations_name}" gcode="WORKSTATION"></s:Code2Name></td>
+									<td>${list.salesmen_name}</td>
+									<td>${list.operations_name}</td>
 									<td>${list.indu_com_number}</td>
 									<td><s:Code2Name mcode="${list.status}" gcode="GASTATION_STATUS"></s:Code2Name></td>
 									<td>${list.address}</td> 
@@ -348,13 +348,13 @@
 				  <ul id="ulhandle" class="pagination pull-right no-margin">
 				  
 				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formgastation');">
 					        <span aria-hidden="true">&laquo;</span>
 					      </a>
 				    </li>
 				    
 				    <li id="next">
-					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
 					        <span aria-hidden="true">&raquo;</span>
 					      </a>
 				    </li>
@@ -407,7 +407,7 @@
 					$(this).next().focus();
 				});
 	
-	var options ={   
+	var listOptions ={   
             url:'<%=basePath%>/web/gastation/gastationList',
             type:'post',                    
             dataType:'html',
@@ -436,7 +436,7 @@
 			$("#pageNum").val($(obj).text());
 		}
 		
-		$("#formgastation").ajaxSubmit(options);
+		$("#formgastation").ajaxSubmit(listOptions);
 	}
 	
 	function del(obj){

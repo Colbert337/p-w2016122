@@ -75,6 +75,14 @@
 									</div>
 									
 									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> E-mail： </label>
+
+										<div class="col-sm-3">
+											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5"  value="${station.email}"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期：</label>
 										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
@@ -90,18 +98,18 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 销售负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="salesmen_id" name="salesmen_id" multiple="multiple">
-														<s:option flag="true" gcode="CARDTYPE" link="true" />
+												<select class="form-control" id="salesmen_id" name="salesmen_id" multiple="multiple" onchange="setSalesmenName(this);">
 												</select>
+												<input type="hidden" id="salesmen_name" name="salesmen_name"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="operations_id" name="operations_id" multiple="multiple">
-														<s:option flag="true" gcode="CARDPROPERTY" link="true" />
+												<select class="form-control" id="operations_id" name="operations_id" multiple="multiple" onchange="setOperationName(this);">
 												</select>
+												<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
 									</div>
 									
@@ -148,7 +156,7 @@
 											<select class="form-control" id="city" name="city_id">
 											</select>
 											<input type="text"  id="detail" name="detail" class="col-sm-12" />
-											<input type="text"  id="address" name="address" class="col-sm-12" />
+											<input type="hidden"  id="address" name="address" class="col-sm-12" />
 										</div>
 									</div>
 									
@@ -166,7 +174,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5" value="${station.indu_com_number}"/>
+											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5"   placeholder="输入工商注册号"/>
 										</div>
 									</div>
 									
@@ -174,7 +182,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5" value="${station.tax_certif}"/>
+											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5"  placeholder="输入税务注册号"/>
 										</div>
 									</div>
 									
@@ -262,16 +270,44 @@
 		china['990']=new Array('乌鲁木齐市','克拉玛依市');
 		china['852']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
 		
+		//初始化销售（运管）负责人下拉框
+		$.ajax({
+			   type: "POST",
+			   url:'../web/permi/user/list/userType?userType=1',   
+	           dataType:'text',
+	           async:false,
+	           success:function(data){
+	           		if(data != ""){
+			        	   $("#salesmen_id").empty();
+			        	   var s = JSON.parse(data);
+			        	   for(var i=0;i<s.length;i++){
+			        		   $("#salesmen_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
+			        	   }
+	           		}
+	            }
+		});
+		
 		//下拉框默认选中当前对象的值
 		var province_id = '${station.province_id}';
 		var city_id =  '${station.city_id}';
 		var detail = '${station.address}';
+		var salesmen_id = '${station.salesmen_id}';
+		var operations_id = '${station.operations_id}';
 		
 		if(province_id!=null && province_id!=""){
 			$("#province").find("option[value="+province_id+"]").attr("selected",true);
 			$("#province").trigger("change");
 			$("#city").find("option[value="+city_id+"]").attr("selected",true);
 			$("#detail").val(detail.split(" ")[2]);
+		}
+		
+		if(salesmen_id!=null && salesmen_id!=""){
+			$("#salesmen_id").find("option[value="+salesmen_id+"]").attr("selected",true);
+		}
+		
+		if(operations_id!=null && salesmen_id!=""){
+			$("#operations_id").find("option[value="+operations_id+"]").attr("selected",true);
 		}
 		
 		function chinaChange(province, city) {
@@ -456,5 +492,11 @@
 			loadPage('#main', '../web/gastation/gastationList');
 		}
 		
-
+		function setSalesmenName(obj){
+			$("#salesmen_name").val($(obj).val());
+		}
+		
+		function setOperationName(obj){
+			$("#operations_name").val($(obj).val());
+		}
 		</script>

@@ -9,6 +9,7 @@ public class Gastation extends BaseModel {
 	private String sys_gas_station_id;
 	private String gas_station_name;
 	private String area_id;
+	private String email;
 	private String province_id;
 	private String city_id;
 	private String address;
@@ -34,6 +35,14 @@ public class Gastation extends BaseModel {
 	private Date created_time;
 	private Date expiry_date;
 	private Date updated_time;
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	public String getExpiry_date_after() {
 		return expiry_date_after;

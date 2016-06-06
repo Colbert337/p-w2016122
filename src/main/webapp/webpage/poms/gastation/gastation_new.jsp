@@ -73,6 +73,14 @@
 									</div>
 									
 									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> E-mail： </label>
+
+										<div class="col-sm-3">
+											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5" />
+										</div>
+									</div>
+									
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期： </label>
 										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
@@ -88,16 +96,18 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 销售负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="salesmen_id" name="salesmen_id" multiple="multiple">
+												<select class="form-control" id="salesmen_id" name="salesmen_id" multiple="multiple" onchange="setSalesmenName(this);">
 												</select>
+												<input type="hidden" id="salesmen_name" name="salesmen_name"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="operations_id" name="operations_id" multiple="multiple">
+												<select class="form-control" id="operations_id" name="operations_id" multiple="multiple" onchange="setOperationName(this);">
 												</select>
+												<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
 									</div>
 									
@@ -143,8 +153,8 @@
 											</select>
 											<select class="form-control" id="city" name="city_id">
 											</select>
-											<input type="text"  id="detail" name="detail" class="col-sm-12" />
-											<input type="text"  id="address" name="address" class="col-sm-12" />
+											<input type="text"  id="detail" name="detail" class="col-sm-12"  placeholder="输入详细地址"/>
+											<input type="hidden"  id="address" name="address" class="col-sm-12" />
 										</div>
 									</div>
 									
@@ -162,7 +172,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5" />
+											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5"   placeholder="输入工商注册号"/>
 										</div>
 									</div>
 									
@@ -170,7 +180,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5" />
+											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5"  placeholder="输入税务注册号"/>
 										</div>
 									</div>
 									
@@ -250,7 +260,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'../web/usysparam/query?userType=1',   
+			   url:'../web/permi/user/list/userType?userType=1',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
@@ -258,8 +268,8 @@
 			        	   $("#salesmen_id").empty();
 			        	   var s = JSON.parse(data);
 			        	   for(var i=0;i<s.length;i++){
-			        		   $("#salesmen_id").append("<option value='"+s[i].mcode+"''>"+s[i].mcode+"- "+s[i].mname+"</option>");
-			        		   $("#operations_id").append("<option value='"+s[i].mcode+"''>"+s[i].mcode+"- "+s[i].mname+"</option>");
+			        		   $("#salesmen_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
 			        	   }
 	           		}
 	            }
@@ -447,5 +457,12 @@
 			loadPage('#main', '../web/gastation/gastationList');
 		}
 		
+		function setSalesmenName(obj){
+			$("#salesmen_name").val($(obj).val());
+		}
+		
+		function setOperationName(obj){
+			$("#operations_name").val($(obj).val());
+		}
 
 		</script>
