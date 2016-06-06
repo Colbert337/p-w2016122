@@ -8,11 +8,11 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 <!-- page specific plugin styles -->
-<link rel="stylesheet" href="../assets/css/bootstrap-duallistbox.css" />
-<link rel="stylesheet" href="../assets/css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="../assets/css/select2.css" />
-<link rel="stylesheet" href="../assets/css/daterangepicker.css" />
-<link rel="stylesheet" href="../assets/css/bootstrap-datepicker3.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-duallistbox.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-multiselect.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/select2.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/daterangepicker.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
 
 <div class="breadcrumbs" id="breadcrumbs">
 	<script type="text/javascript">
@@ -154,8 +154,8 @@
 
 	<!-- /.page-header -->
 	<form id="formcard">
-	
-	<jsp:include page="../form_pageinfo.jsp"></jsp:include>
+
+	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 	<div class="row">
 		<div class="col-xs-12">
@@ -170,28 +170,28 @@
 						
 			<div class="row">
 				<div class="col-xs-12">
-					<h3 class="header smaller lighter blue">用户卡管理</h3>
+					<h3 class="header smaller lighter blue">用户卡轨迹信息</h3>
 
 					<div class="form-group">
 						<div class="col-md-2 control-label no-padding-right">
 						    <label>用户卡号:</label>
-							<input type="text" name="card_no" placeholder="输入用户卡号"  maxlength="9" value="${gascard.card_no}"/>
+							<input type="text" name="card_no" placeholder="输入用户卡号"  maxlength="9" value="${gascardlog.card_no}"/>
 						</div>
 						
 						<div class="col-md-3 control-label no-padding-right">
 						    <label>用户卡类型:</label>
 							<select class="chosen-select " name="card_type" >
-									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type" link="true" />
+									<s:option flag="true" gcode="CARDTYPE" form="gascardlog" field="card_type" link="true" />
 							</select>
 							<label>用户卡状态:</label>
 							<select class="chosen-select " name="card_status" >
-									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" link="true" />
+									 <s:option flag="true" gcode="CARDSTATUS" form="gascardlog" field="card_status" link="true" />
 							</select>
 						</div>
 						
 						<div class="col-md-2 control-label  no-padding-right">
 						    <label>操作员:</label>
-							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${gascard.operator}"/>
+							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${gascardlog.operator}"/>
 						</div>
 						
 						<div class="col-md-4 input-group no-padding-right  control-label">
@@ -199,7 +199,7 @@
 							<span class="input-group-addon">
 									<i class="fa fa-calendar bigger-110"></i>
 							</span>
-							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${gascard.storage_time_range}"/>
+							 <input type="text" name="optime_range" id="date-range-picker" value="value="${gascardlog.optime_range}"/>
 						</div>
 						
 						
@@ -207,14 +207,6 @@
 					
 					<div class="form-group">
 						<div class="col-md-12 pull-right">
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										入库
-								</button>
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_move.jsp');">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										出库
-								</button>
 								<button class="btn btn-primary" type="button" onclick="commitForm();">
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 										查询
@@ -230,7 +222,7 @@
 					
 					
 					
-					<div class="table-header">用户卡详细信息列表1111</div>
+					<div class="table-header">用户卡详细信息列表</div>
 
 					<!-- div.table-responsive -->
 
@@ -254,13 +246,13 @@
 									<th onclick="orderBy(this,'batch_no');commitForm();" id="batch_no_order">入库批次号</th> 
 									<th onclick="orderBy(this,'storage_time');commitForm();" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
 									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
-									<th>更多操作</th>
+									<th onclick="orderBy(this,'optime');commitForm();" id="optime_order"><i id="optime" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th>
 								</tr>
 							</thead>
 
 							<tbody>
 								
-							<c:forEach items="${pageinfo.list}" var="list" varStatus="s"> 		
+							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
@@ -278,50 +270,8 @@
 									<td>${list.batch_no}</td> 
 									<td><fmt:formatDate value="${list.storage_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.release_time}" type="both"/></td>
-
-									<td>
-										<div class="hidden-sm hidden-xs action-buttons">
-											<a class="blue" href="#"> 
-												<i class="ace-icon fa fa-search-plus bigger-130"></i>
-											</a> 
-											<a class="green" href="#"> 
-												<i class="ace-icon fa fa-pencil bigger-130"></i>
-											</a> 
-											<a class="red"  href="javascript:void(0);" onclick="del(this);"> 
-												<i class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a>
-										</div>
-
-										<div class="hidden-md hidden-lg">
-											<div class="inline pos-rel">
-												<button class="btn btn-minier btn-yellow dropdown-toggle"
-													data-toggle="dropdown" data-position="auto">
-													<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-												</button>
-
-												<ul
-													class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-													<li>
-														<a href="#" class="tooltip-info" data-rel="tooltip" title="View"> 
-															<span class="blue">
-																	<i class="ace-icon fa fa-search-plus bigger-120"></i>
-															</span>
-														</a>
-													</li>
-
-													<li><a href="#" class="tooltip-success" data-rel="tooltip" title="Edit"> <span class="green">
-																<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-														</span>
-													</a></li>
-
-													<li><a href="#" class="tooltip-error" data-rel="tooltip" title="Delete"> <span class="red">
-																<i class="ace-icon fa fa-trash-o bigger-120"></i>
-														</span>
-													</a></li>
-												</ul>
-											</div>
-										</div>
-									</td>
+					                <td><fmt:formatDate value="${list.optime}" type="both"/></td>
+									
 								</tr>
 								</c:forEach>
 							</tbody>
@@ -331,7 +281,7 @@
 			</div>
 			
 
-			<label>共 ${pageinfo.total} 条</label>
+			<label>共 ${pageInfo.total} 条</label>
 			
 			<nav>
 				  <ul id="ulhandle" class="pagination pull-right no-margin">
@@ -351,8 +301,8 @@
 				  </ul>
 			</nav>
 
-			
-			<jsp:include page="../message.jsp"></jsp:include>
+
+			<jsp:include page="/common/message.jsp"></jsp:include>
 			
 
 			<!-- PAGE CONTENT ENDS -->
@@ -367,18 +317,18 @@
 
 
 <!-- page specific plugin scripts -->
-<script src="../assets/js/dataTables/jquery.dataTables.js"></script>
-<script src="../assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
-<script src="../assets/js/dataTables/extensions/buttons/dataTables.buttons.js"></script>
-<script src="../assets/js/dataTables/extensions/buttons/buttons.flash.js"></script>
-<script src="../assets/js/dataTables/extensions/buttons/buttons.html5.js"></script>
-<script src="../assets/js/dataTables/extensions/buttons/buttons.print.js"></script>
-<script src="../assets/js/dataTables/extensions/buttons/buttons.colVis.js"></script>
-<script src="../assets/js/dataTables/extensions/select/dataTables.select.js"></script>
+<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.js"></script>
+<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/dataTables.buttons.js"></script>
+<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.flash.js"></script>
+<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.html5.js"></script>
+<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.print.js"></script>
+<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.colVis.js"></script>
+<script src="<%=basePath%>/assets/js/dataTables/extensions/select/dataTables.select.js"></script>
 
-<script src="../assets/js/date-time/moment.js"></script>
-<script src="../assets/js/date-time/daterangepicker.js"></script>
-<script src="../assets/js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
+<script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
+<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
@@ -389,15 +339,15 @@ var mydate = new Date();
 						cancelLabel: 'Cancel',
 						format: "YYYY/MM/DD",
 					}, 
-					"startDate": "${gascard.storage_time_after}"==""?mydate.getFullYear()+"/1/1":"${gascard.storage_time_after}",
-				    "endDate": "${gascard.storage_time_before}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/"+mydate.getDate():"${gascard.storage_time_before}"
+					"startDate": "${gascardlog.optime_after}"==""?mydate.getFullYear()+"/1/1":"${gascardlog.optime_after}",
+				    "endDate": "${gascardlog.optime_before}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/"+mydate.getDate():"${gascardlog.optime_before}"
 				})
 				.prev().on(ace.click_event, function(){
 					$(this).next().focus();
 				});
 	
 	var options ={   
-            url:'../web/card/cardList',   
+            url:'../web/card/cardLogList',   
             type:'post',                    
             dataType:'html',
             success:function(data){
@@ -423,24 +373,4 @@ var mydate = new Date();
 		$("#formcard").ajaxSubmit(options);
 	}
 	
-	function del(obj){
-		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
-		
-		var deloptions ={   
-	            url:'../web/card/deleteCard?cardid='+cardid,   
-	            type:'post',                    
-	            dataType:'text',
-	            success:function(data){
-		             $("#main").html(data);
-		             if($("#retCode").val() != "100"){
-		            	 $("#modal-table").modal("show");
-		             }
-	            },
-	            error:function(XMLHttpRequest, textStatus, errorThrown) {
-					
-	            }
-		}
-		
-		$("#formcard").ajaxSubmit(deloptions);
-	}
 	</script>

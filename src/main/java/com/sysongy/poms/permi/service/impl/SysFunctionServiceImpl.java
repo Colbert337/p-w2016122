@@ -7,6 +7,7 @@ import com.sysongy.poms.permi.model.SysFunction;
 import com.sysongy.poms.permi.service.SysFunctionService;
 import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -21,24 +22,25 @@ import java.util.Map;
  * @Version: V2.0 Copyright(c)陕西司集能源科技有限公司
  * @Description:
  */
+@Service
 public class SysFunctionServiceImpl implements SysFunctionService{
 
     @Autowired
     SysFunctionMapper sysFunctionMapper;
     /**
      * 查询功能列表(分页)
-     * @param conditionMap 查询条件
      * @return
      */
     @Override
-    public PageInfo<SysFunction> queryFunctionListPage(Map<String, Object> conditionMap) {
+    public PageInfo<SysFunction> queryFunctionListPage(SysFunction function) {
         Integer pageSize = GlobalConstant.PAGE_SIZE;
         Integer pageNum = GlobalConstant.PAGE_NUM;
         PageHelper.startPage(pageNum, pageSize);
-        List<SysFunction> functionList = sysFunctionMapper.queryFunctionList();
+        List<SysFunction> functionList = sysFunctionMapper.queryFunctionList(function);
         PageInfo<SysFunction> functionPageInfo = new PageInfo<SysFunction>(functionList);
         return functionPageInfo;
     }
+
     /**
      * 根据功能ID查询功能详情
      * @param functionId 功能编号

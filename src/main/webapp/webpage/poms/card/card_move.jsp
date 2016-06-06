@@ -9,7 +9,8 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
-
+	<script type="text/javascript" src="<%=basePath %>/js/json2.js"></script>
+	
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
 				<div class="main-content-inner">
@@ -34,10 +35,6 @@
 						<!-- #section:basics/content.searchbox -->
 						<div class="nav-search" id="nav-search">
 							<form class="form-search" >
-							
-								<input id="retCode" type="text" value=" ${ret.retCode}" />
-								<input id="retMsg" type="text" value=" ${ret.retMsg}" />
-								
 								<span class="input-icon">
 									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
 									<i class="ace-icon fa fa-search nav-search-icon"></i>
@@ -53,7 +50,7 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								新建用户卡
+								用户卡出库
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -61,6 +58,10 @@
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
 								<form class="form-horizontal"  id="newcardform">
+								
+									<input id="retCode" type="hidden" value=" ${ret.retCode}" />
+									<input id="retMsg" type="hidden" value=" ${ret.retMsg}" />
+									
 									<!-- #section:elements.form -->
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户卡起始编号： </label>
@@ -80,28 +81,27 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 用户卡类型： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 调拨工作站： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="card_type" name="card_type" multiple="multiple">
-														<s:option flag="true" gcode="CARDTYPE" link="true" />
+												<select class="form-control" id="workstation" name="workstation" multiple="multiple" onchange="initworkstation_resp(this);">
+														<s:option flag="true" gcode="WORKSTATION" link="true" />
 												</select>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 用户卡属性： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 工作站领取人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="card_property" name="card_property" multiple="multiple">
-														<s:option flag="true" gcode="CARDPROPERTY" link="true" />
+												<select class="form-control" id="workstation_resp" name="workstation_resp" multiple="multiple">
+														<%-- <s:option flag="true" gcode="WORKSTATION_RESP" link="true" /> --%>
 												</select>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人工号： </label>
-
 										<div class="col-sm-4">
-											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5" readonly="readonly" value="${sessionScope.currUser.userId} }"/>
+											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>										
 										</div>
 									</div>
 						
@@ -119,8 +119,8 @@
 																</label>
 															</th>
 															<th id="card_no_order">用户卡号</th>
-															<th id="card_type_order">用户卡类型</th>
-															<th id="card_name_order">用户卡属性</th> 
+															<th id="card_type_order">调拨工作站</th>
+															<th id="card_name_order">工作站领取人</th> 
 															<th id="card_status_order">用户卡状态</th>
 															<th id="operator_order">操作人工号</th> 
 														</tr>
@@ -140,7 +140,7 @@
 											
 											<button class="btn btn-info" type="button" onclick="save();" disabled="disabled" id="storage_data">
 												<i class="ace-icon fa fa-check bigger-110"></i>
-												用户卡入库
+												用户卡出库
 											</button>
 
 											&nbsp; &nbsp; &nbsp;
@@ -156,9 +156,9 @@
 											</button>
 										</div>
 									</div>
-									
-										<jsp:include page="../message.jsp"></jsp:include>
-										
+
+									<jsp:include page="/common/message.jsp"></jsp:include>
+								
 								</form>						
 							</div><!-- /.col -->
 						</div><!-- /.row -->
@@ -168,8 +168,6 @@
 
 		<!-- inline scripts related to this page -->
 	<script type="text/javascript">
-		var contral = "0";
-		
 			//bootstrap验证控件
 		    $('#newcardform').bootstrapValidator({
 		        message: 'This value is not valid',
@@ -203,17 +201,17 @@
 		                    }
 		                }
 		            },
-		            card_type: {
+		            workstation: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '用户卡类型不能为空'
+		                        message: '调拨工作站不能为空'
 		                    }
 		                }
 		            },
-		            card_property: {
+		            workstation_resp: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '用户卡属性不能为空'
+		                        message: '工作站领取人不能为空'
 		                    }
 		                }
 		            },
@@ -247,10 +245,6 @@
 			
 		    
 		function save(){
-			if(contral == "0"){
-				alert("列表中没有需要入库的卡");
-				return;
-			}
 			/*手动验证表单，当是普通按钮时。*/
 			$('#newcardform').data('bootstrapValidator').validate();
 			if(!$('#newcardform').data('bootstrapValidator').isValid()){
@@ -258,15 +252,13 @@
 			}
 			
 			var options ={   
-		            url:'../web/card/saveCard',   
+		            url:'../web/card/moveCard',   
 		            type:'post',                    
-		            dataType:'text',
+		            dataType:'html',
 		            success:function(data){
-		            	$("#main").html(data);
-						$("#modal-table").modal("show");
-		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
-		 	       }
+			              $("#main").html(data);
+			              $("#modal-table").modal("show");
+		            }
 			}
 			
 			$("#storage_data").attr("disabled","disabled");
@@ -291,26 +283,17 @@
 			var start = parseFloat($("#card_no_1").val());
 			var end = parseFloat($("#card_no_2").val());
 			
-			if(end - start >=2000){
-				alert("单批次操作卡数量最大值为2000");
-				return;
-			}
-			
 			for(var i=start; i<=end; i++){
 				$.ajax({
 					   type: "POST",
-					   url:'../web/card/checkCard?cardid='+i,   
-			           type:'post',                    
+					   url:'../web/card/checkMoveCard?cardid='+i,   
+			           contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 			           dataType:'text',
 			           async:false,
 			           success:function(data){
-			           		if(data == "0"){
-			           			var tmp_card_type = $('#card_type').val();
-			           			contral = "1";
-								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+tmp_card_type+"</td><td>"+$('#card_property').val()+"</td><td>未使用</td><td>"+$('#operator').val()+"</td></tr>");
+			           		if(data != ""){
+								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#workstation').val()+"</td><td>"+$('#workstation_resp').val()+"</td><td>"+data+"</td><td>"+$("#operator").val()+"</td></tr>");
 			           			$("#card_no_arr").val($("#card_no_arr").val()+i+",");
-			           		}else{
-								$("#dynamic-table").find("tbody").append("<tr class='danger'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').val()+"</td><td>"+$('#card_property').val()+"</td><td>已使用</td><td>"+$('#operator').val()+"</td></tr>");
 			           		}
 			            }
 					});
@@ -477,7 +460,25 @@
 		
 		function init(){
 			$("#dynamic-table_div").remove();
-			$("#dynamic-table_after_handler").after("<div class='col-sm-7' id='dynamic-table_div'><div class='table-header'>用户卡列表</div><table id='dynamic-table' class='table table-striped table-bordered table-hover'><thead><tr><th class='center'><label class='pos-rel'><input type='checkbox' class='ace' onclick='checkedAllRows(this);'' /><span class='lbl'></span></label></th><th id='card_no_order'>用户卡号</th><th id='card_type_order'>用户卡类型</th><th id='card_name_order'>用户卡属性</th> <th id='card_status_order'>用户卡状态</th><th id='operator_order'>操作人工号</th></tr></thead><tbody></tbody></table></div>");
+			$("#dynamic-table_after_handler").after("<div class='col-sm-7' id='dynamic-table_div'><div class='table-header'>用户卡列表</div><table id='dynamic-table' class='table table-striped table-bordered table-hover'><thead><tr><th class='center'><label class='pos-rel'><input type='checkbox' class='ace' onclick='checkedAllRows(this);'' /><span class='lbl'></span></label></th><th id='card_no_order'>用户卡号</th><th id='card_type_order'>调拨工作站</th><th id='card_name_order'>工作站领取人</th> <th id='card_status_order'>用户卡状态</th><th id='operator_order'>操作人工号</th></tr></thead><tbody></tbody></table></div>");
 			$("#init_dynamic_data").removeAttr("disabled");
+		}
+		
+		function initworkstation_resp(obj){
+			$.ajax({
+				   type: "POST",
+				   url:'../web/usysparam/query?gcode=WORKSTATION_RESP&scode='+$(obj).val(),   
+		           dataType:'text',
+		           async:false,
+		           success:function(data){
+		           		if(data != ""){
+				        	   $("#workstation_resp").empty();
+				        	   var s = JSON.parse(data);
+				        	   for(var i=0;i<s.length;i++){
+				        		   $("#workstation_resp").append("<option value='"+s[i].mcode+"''>"+s[i].mcode+"- "+s[i].mname+"</option>");
+				        	   }
+		           		}
+		            }
+				});
 		}
 		</script>

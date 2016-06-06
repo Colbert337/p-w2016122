@@ -20,10 +20,9 @@ import java.util.Map;
 public interface SysRoleService {
     /**
      * 查询角色列表（分页）
-     * @param conditionMap 查询条件
      * @return
      */
-    PageInfo<SysRole> queryRoleListPage(Map<String, Object> conditionMap);
+    PageInfo<SysRole> queryRoleListPage(SysRole sysRole);
 
     /**
      * 根据角色ID查询角色详情

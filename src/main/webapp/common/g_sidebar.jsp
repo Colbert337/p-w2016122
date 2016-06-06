@@ -65,16 +65,23 @@
 						<b class="arrow"></b>
 						<ul class="submenu">
 							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/system/user/list')">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/user/list/page')">
 									<i class="menu-icon fa fa-caret-right"></i>
-									系统账号
+									用户管理
 								</a>
 								<b class="arrow"></b>
 							</li>
 							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/user/list/page')">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/role//list/page')">
 									<i class="menu-icon fa fa-caret-right"></i>
-									用户管理
+									角色管理
+								</a>
+								<b class="arrow"></b>
+							</li>
+							<li class="">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/function//list/page')">
+									<i class="menu-icon fa fa-caret-right"></i>
+									功能管理
 								</a>
 								<b class="arrow"></b>
 							</li>
@@ -84,17 +91,29 @@
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-list"></i>
-							<span class="menu-text"> 文档管理 </span>
+							<span class="menu-text">资源管理</span>
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
-
 						<b class="arrow"></b>
 
 						<ul class="submenu">
 							<li class="">
-								<a href="<%=basePath%>/web/bossDoc/queryAllBossDoc">
-									<i class="menu-icon fa fa-caret-right"></i>
-									系统文档
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/card/cardList')">
+									<i class="menu-icon fa fa-caret-right"></i> 用户卡管理
+								</a>
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/card/cardLogList')">
+									<i class="menu-icon fa fa-caret-right"></i> 用户卡轨迹信息
+								</a>
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="jqgrid.html">
+									<i class="menu-icon fa fa-caret-right"></i> jqGrid plugin
 								</a>
 								<b class="arrow"></b>
 							</li>
@@ -122,7 +141,7 @@
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-pencil-square-o"></i>
-							<span class="menu-text"> 模块管理 </span>
+							<span class="menu-text"> 加注站管理 </span>
 
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
@@ -139,9 +158,9 @@
 							</li> --%>
 
 							<li class="">
-								<a href="<%=basePath%>/web/bossMenu/goBossMenuList">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/gastation/gastationList')">
 									<i class="menu-icon fa fa-caret-right"></i>
-									系统菜单
+									加注站信息管理
 								</a>
 
 								<b class="arrow"></b>

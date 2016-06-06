@@ -32,10 +32,10 @@ public class CardController extends BaseContoller{
 	 */
 	@RequestMapping("/cardList")
 	public String queryAllCardList(ModelMap map, GasCard gascard) throws Exception{
-		
+
 		PageBean bean = new PageBean();
-		String ret = "page/card/card_list";
-		
+		String ret = "webpage/poms/card/card_list";
+
 		try {
 			if(gascard.getPageNum() == null){
 				gascard.setPageNum(1);
@@ -49,21 +49,21 @@ public class CardController extends BaseContoller{
 					gascard.setStorage_time_before(tmpRange[1]+" 23:59:59");
 				}
 			}
-			
+
 			PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
 
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");
 			bean.setPageInfo(ret);
-			
+
 			map.addAttribute("ret", bean);
-			map.addAttribute("pageinfo", pageinfo);
+			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("gascard",gascard);
-			map.addAttribute("current_module", "page/card/card_list");
+			map.addAttribute("current_module", "webpage/poms/card/card_list");
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
-						
+
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
@@ -83,22 +83,22 @@ public class CardController extends BaseContoller{
 	@RequestMapping("/saveCard")
 	public String saveCard(ModelMap map, GasCard gascard) throws Exception{
 		PageBean bean = new PageBean();
-		String ret = "page/card/card_new";
+		String ret = "webpage/poms/card/card_new";
 		Integer rowcount = null;
-		
+
 		try {
 			rowcount = service.saveGasCard(gascard);
-			
+
 			bean.setRetCode(100);
 			bean.setRetMsg("入库成功");
 			bean.setRetValue(rowcount.toString());
 			bean.setPageInfo(ret);
-			
+
 			map.addAttribute("ret", bean);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
-						
+
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
@@ -107,7 +107,7 @@ public class CardController extends BaseContoller{
 			return  ret;
 		}
 	}
-	
+
 	/**
 	 * 用户卡删除
 	 * @param map
@@ -116,32 +116,32 @@ public class CardController extends BaseContoller{
 	 */
 	@RequestMapping("/deleteCard")
 	public String deleteCard(ModelMap map, @RequestParam String cardid){
-		
+
 		PageBean bean = new PageBean();
-		String ret = "page/card/card_list";
+		String ret = "webpage/poms/card/card_list";
 		Integer rowcount = null;
-		
+
 		try {
 				if(cardid != null && !"".equals(cardid)){
 					rowcount = service.delGasCard(cardid);
 				}
-				
+
 				ret = this.queryAllCardList(map, new GasCard());
-				
+
 				bean.setRetCode(100);
 				bean.setRetMsg("["+cardid+"]删除成功");
 				bean.setRetValue(rowcount.toString());
 				bean.setPageInfo(ret);
-				
+
 				map.addAttribute("ret", bean);
-				
-				
+
+
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
-			
+
 			ret = this.queryAllCardList(map, new GasCard());
-			
+
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
@@ -161,12 +161,12 @@ public class CardController extends BaseContoller{
 	@ResponseBody
 	@RequestMapping("/checkCard")
 	public String checkCard(ModelMap map, @RequestParam String cardid) throws Exception{
-		
+
 		Boolean exist = service.checkCardExist(cardid);
-		
+
 		return  exist?"1":"0";
 	}
-	
+
 	/**
 	 * 用户卡出库前检验卡状态
 	 * @param map
@@ -177,10 +177,10 @@ public class CardController extends BaseContoller{
 	@ResponseBody
 	@RequestMapping("/checkMoveCard")
 	public String checkMoveCard(ModelMap map, @RequestParam String cardid) throws Exception{
-		
+
 		return service.checkMoveCard(cardid);
 	}
-	
+
 	/**
 	 * 用户卡出库
 	 * @param map
@@ -190,24 +190,24 @@ public class CardController extends BaseContoller{
 	 */
 	@RequestMapping("/moveCard")
 	public String updateAndMoveCard(ModelMap map, GasCard gascard) throws Exception{
-		
+
 		PageBean bean = new PageBean();
-		String ret = "page/card/card_move";
+		String ret = "webpage/poms/card/card_move";
 		Integer rowcount = null;
-		
+
 		try {
 			rowcount = service.updateAndMoveCard(gascard);
-			
+
 			bean.setRetCode(100);
 			bean.setRetMsg("出库成功");
 			bean.setRetValue(rowcount.toString());
 			bean.setPageInfo(ret);
-			
+
 			map.addAttribute("ret", bean);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
-						
+
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
@@ -216,20 +216,19 @@ public class CardController extends BaseContoller{
 			return  ret;
 		}
 	}
-	
+
 	/**
 	 * 用户卡轨迹查询
 	 * @param map
-	 * @param gascard
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/cardLogList")
 	public String queryAllCardLogList(ModelMap map, GasCardLog gascardlog) throws Exception{
-		
+
 		PageBean bean = new PageBean();
-		String ret = "page/card/cardlog_list";
-		
+		String ret = "webpage/poms/card/cardlog_list";
+
 		try {
 			if(gascardlog.getPageNum() == null){
 				gascardlog.setPageNum(1);
@@ -243,17 +242,17 @@ public class CardController extends BaseContoller{
 					gascardlog.setOptime_before(tmpRange[1]+" 23:59:59");
 				}
 			}
-			
+
 			PageInfo<GasCardLog> pageinfo = service.queryGasCardLog(gascardlog);
 
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");
 			bean.setPageInfo(ret);
-			
+
 			map.addAttribute("ret", bean);
-			map.addAttribute("pageinfo", pageinfo);
+			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("gascardlog",gascardlog);
-			map.addAttribute("current_module", "page/card/cardlog_list");
+			map.addAttribute("current_module", "webpage/poms/card/cardlog_list");
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());

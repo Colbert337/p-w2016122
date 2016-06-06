@@ -30,7 +30,7 @@
         </javaTypeResolver>  
           	
         <!-- 生成实体类地址 -->    
-        <javaModelGenerator targetPackage="com.sysongy.poms.usysparam.model"
+        <javaModelGenerator targetPackage="com.sysongy.poms.gastation.model"
             targetProject="src/main/java" >  
             
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
@@ -41,14 +41,14 @@
         </javaModelGenerator>  
           
         <!-- 生成mapxml文件 -->  
-        <sqlMapGenerator targetPackage="usysparam"
+        <sqlMapGenerator targetPackage="gastation"
             targetProject="src/main/resources/mapping" >  
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
             <property name="enableSubPackages" value="false" />  
         </sqlMapGenerator>  
           
         <!-- 生成mapxml对应client，也就是接口dao -->      
-        <javaClientGenerator targetPackage="com.sysongy.poms.usysparam.dao"
+        <javaClientGenerator targetPackage="com.sysongy.poms.gastation.dao"
             targetProject="src/main/java" type="XMLMAPPER" >  
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
             <property name="enableSubPackages" value="false" />  
@@ -74,7 +74,7 @@
          -->
         
        
-       <table schema="${jdbc.database}" tableName="usysparam" domainObjectName="Usysparam"
+       <table schema="${jdbc.database}" tableName="sys_gas_station" domainObjectName="SysGasStation"
        		enableCountByExample="false"  
             enableDeleteByExample="false" 
             enableSelectByExample="false"  
