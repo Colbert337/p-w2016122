@@ -55,7 +55,8 @@
 						<div class="main_input_box">
 							<span class="add-on bg_lg">
 							<i><img height="37" src="<%=basePath%>/assets/camera/user.png" /></i>
-							</span><input type="text" name="userName" id="loginname" value="" placeholder="请输入用户名" />
+							</span>
+							<input type="text" name="userName" id="loginname" value="wdq" placeholder="请输入用户名" />
 						</div>
 					</div>
 				</div>
@@ -64,7 +65,8 @@
 						<div class="main_input_box">
 							<span class="add-on bg_ly">
 							<i><img height="37" src="<%=basePath%>/assets/camera/suo.png" /></i>
-							</span><input type="password" name="password" id="password" placeholder="请输入密码" value="" />
+							</span>
+							<input type="password" name="password" id="password" placeholder="请输入密码" value="111111" />
 						</div>
 					</div>
 				</div>

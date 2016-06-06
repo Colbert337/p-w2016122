@@ -18,7 +18,10 @@ $(function() {
 		binded:true,						//是否绑定即时验证
 		scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
 	});
+
+
 });
+
 
 /*分页相关方法 start*/
 window.onload = setCurrentPage();
@@ -93,17 +96,19 @@ function closeDialog(){
 /**
  * 保存用户信息
  */
-function saveUser(){
+function saveUser(){alert($("#real_name").val());
 	if(jQuery('#userForm').validationEngine('validate')){
 		var saveOptions ={
 			url:'<%=basePath%>/web/permi/user/save',
 			type:'post',
 			dataType:'html',
+			cache:false,
 			success:function(data){
 				$("#main").html(data);
 			}
 		}
-
+		console.debug($("#real_name").val());
+		alert("123");
 		$("#userForm").ajaxSubmit(saveOptions);
 		if(addUserModel){
 			addUserModel.close();
@@ -197,12 +202,12 @@ function deleteUser(userId){
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
-								<th class="center">
+								<%--<th class="center">
 									<label class="pos-rel">
 										<input type="checkbox" class="ace" />
 										<span class="lbl"></span>
 									</label>
-								</th>
+								</th>--%>
 								<th>账号</th>
 								<th>姓名</th>
 								<th class="hidden-480">性别</th>
@@ -217,12 +222,12 @@ function deleteUser(userId){
 						<tbody>
 							<c:forEach items="${userList}" var="user">
 								<tr>
-									<td class="center">
+									<%--<td class="center">
 										<label class="pos-rel">
 											<input type="checkbox" class="ace" />
 											<span class="lbl"></span>
 										</label>
-									</td>
+									</td>--%>
 									<td>${user.userName}</td>
 									<td>${user.realName}</td>
 									<td>
@@ -244,7 +249,7 @@ function deleteUser(userId){
 											禁用
 										</c:if>
 									</td>
-									<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd"/></td>
+									<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 									<td>
 										<a class="btn btn-sm btn-white btn-primary" href="javascript:editUser('${user.sysUserId}');">修改</a>
 										<c:if test="${user.status == 0}">
@@ -289,7 +294,97 @@ function deleteUser(userId){
 	</div><!-- /.col -->
 </div><!-- /.row -->
 <!--添加用户弹层-开始-->
-<div id="user-edit-dg" class="all-hidden container col-xs-12">
+<%--<div id="user-edit-dg" class="all-hidden container col-xs-12">
+	<!--弹层内容 -->
+	<div class="b-dialog-content">
+		&lt;%&ndash;两行表单 开始&ndash;%&gt;
+		<div class="row">
+			<div class="col-xs-12">
+				<!-- PAGE CONTENT BEGINS -->
+				<form class="form-horizontal" id="userForm">
+					<!-- #section:elements.form -->
+					<h5 class="header smaller lighter blue">账户信息</h5>
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
+						<div class="col-sm-4">
+							<input type="text" name="userName" id="user_name" placeholder="用户名" class="validate[required,minSize[3],custom[onlyLetterNumber]]] col-xs-10 col-sm-12" />
+							<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
+						</div>
+						<label class="col-sm-2 control-label no-padding-right" for="role_id"><span class="red_star">*</span> 用户角色： </label>
+						<div class="col-sm-4">
+							<select class="chosen-select col-xs-10 col-sm-12" id="role_id">
+								<option value="">选择角色</option>
+								<option value="AL">Alabama</option>
+								<option value="AK">Alaska</option>
+								<option value="AZ">Arizona</option>
+								<option value="AR">Arkansas</option>
+								<option value="CA">California</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码： </label>
+						<div class="col-sm-4">
+							<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6]] col-xs-10 col-sm-12" />
+						</div>
+						<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
+						<div class="col-sm-4">
+							<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],equals[password]] col-xs-10 col-sm-12" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right"> 备注： </label>
+						<div class="col-sm-10">
+							<textarea class="limited col-xs-10 col-sm-12"  id="remark" maxlength="50"></textarea>
+						</div>
+					</div>
+					<h5 class="header smaller lighter blue">基本信息</h5>
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="real_name"> 姓名： </label>
+						<div class="col-sm-4">
+							<input type="text" name="realName" id="real_name" placeholder="姓名" class="col-xs-10 col-sm-12" />
+						</div>
+						<label class="col-sm-2 control-label no-padding-right"> 性别： </label>
+						<div class="col-sm-4">
+							<div class="radio">
+								<label>
+									<input name="gender" id="gender_b" type="radio" class="ace" checked="checked" value="0">
+									<span class="lbl"> 男</span>
+								</label>
+								<label>
+									<input name="gender" id="gender_g" type="radio" class="ace" value="1">
+									<span class="lbl"> 女</span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="email"> 邮箱： </label>
+						<div class="col-sm-4">
+							<input type="email" name="email" id="email" placeholder="邮箱" class="validate[custom[email]] col-xs-10 col-sm-12" />
+						</div>
+						<label class="col-sm-2 control-label no-padding-right" for="mobile_phone"> 手机： </label>
+						<div class="col-sm-4">
+							<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[custom[phone]] col-xs-10 col-sm-12" />
+						</div>
+					</div>
+				</form>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+		&lt;%&ndash;两行表单 结束&ndash;%&gt;
+	</div>
+	<div class="space"></div>
+	<!--底部按钮 -->
+	<div class="row">
+		<div class="col-xs-3"></div>
+		<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
+		<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog()">取   消 </button></div>
+	</div>
+</div>--%>
+<!--添加用户弹层-结束-->
+
+<%--弹出模态狂--%>
+<div id="user-edit-dg" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
 	<!--弹层内容 -->
 	<div class="b-dialog-content">
 		<%--两行表单 开始--%>
@@ -375,5 +470,4 @@ function deleteUser(userId){
 		<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
 		<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog()">取   消 </button></div>
 	</div>
-</div>
-<!--添加用户弹层-结束-->
+</div><!-- /.modal -->

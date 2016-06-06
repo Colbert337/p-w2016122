@@ -27,6 +27,13 @@ public interface SysUserService {
     PageInfo<SysUser> queryUserListPage(SysUser sysUser);
 
     /**
+     * 查询用户列表
+     * @param userType
+     * @return
+     */
+    List<SysUser> queryUserListByUserType(int userType);
+
+    /**
      * 根据用户ID查询用户信息
      * @param userId 用户编号
      * @return

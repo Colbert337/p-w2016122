@@ -65,16 +65,23 @@
 						<b class="arrow"></b>
 						<ul class="submenu">
 							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/system/user/list')">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/user/list/page')">
 									<i class="menu-icon fa fa-caret-right"></i>
-									系统账号
+									用户管理
 								</a>
 								<b class="arrow"></b>
 							</li>
 							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/user/list/page')">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/role//list/page')">
 									<i class="menu-icon fa fa-caret-right"></i>
-									用户管理
+									角色管理
+								</a>
+								<b class="arrow"></b>
+							</li>
+							<li class="">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/function//list/page')">
+									<i class="menu-icon fa fa-caret-right"></i>
+									功能管理
 								</a>
 								<b class="arrow"></b>
 							</li>

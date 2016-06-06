@@ -18,10 +18,9 @@ import java.util.Map;
 public interface SysFunctionService {
     /**
      * 查询功能列表(分页)
-     * @param conditionMap 查询条件
      * @return
      */
-    PageInfo<SysFunction> queryFunctionListPage(Map<String, Object> conditionMap);
+    PageInfo<SysFunction> queryFunctionListPage(SysFunction function);
 
     /**
      * 根据功能ID查询功能详情

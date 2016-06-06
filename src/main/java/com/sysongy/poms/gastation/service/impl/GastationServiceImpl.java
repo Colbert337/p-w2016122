@@ -62,8 +62,7 @@ public class GastationServiceImpl implements GastationService {
 
 	@Override
 	public List<Gastation> getAllStationByArea(String areacode) throws Exception {
-		gasStationMapper.getAllStationByArea(areacode);
-		return null;
+		return gasStationMapper.getAllStationByArea(areacode);
 	}
 
 	@Override
