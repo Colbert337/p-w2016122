@@ -18,8 +18,8 @@
 </head>
 <body>
 
-	<form action="<%=basePath%>/web/login" method="post" name="login" id="login">
-		<div class="login" autocomplete="off">
+	<form action="<%=basePath%>/web/login" method="post" name="login" id="login" autocomplete="off">
+		<div class="login">
 			<ul>
 				<li>
 					<div class="form-item">
