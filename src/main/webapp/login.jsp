@@ -94,7 +94,8 @@
 
 						<span class="pull-right" style="padding-right:3%;">
 							<a href="javascript:quxiao();" class="btn btn-success">取消</a>
-						</span> 
+						</span>
+
 						<span class="pull-right">
 							<a onclick="severCheck();" class="flip-link btn btn-info" id="to-recover">登录</a>
 						</span>
