@@ -46,6 +46,19 @@ public class SysUserServiceImpl implements SysUserService{
         PageInfo<SysUser> userPageInfo = new PageInfo<SysUser>(userList);
         return userPageInfo;
     }
+    /**
+     * 查询用户列表
+     * @param userType
+     * @return
+     */
+    @Override
+    public List<SysUser> queryUserListByUserType(int userType) {
+        SysUser sysUser = new SysUser();
+        sysUser.setUserType(userType);
+        sysUser.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+        List<SysUser> userList = sysUserMapper.queryUserList(sysUser);
+        return userList;
+    }
 
     /**
      * 用户登录
