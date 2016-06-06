@@ -134,7 +134,7 @@
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-pencil-square-o"></i>
-							<span class="menu-text"> 模块管理 </span>
+							<span class="menu-text"> 加注站管理 </span>
 
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
@@ -151,9 +151,9 @@
 							</li> --%>
 
 							<li class="">
-								<a href="<%=basePath%>/web/bossMenu/goBossMenuList">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/gastation/gastationList')">
 									<i class="menu-icon fa fa-caret-right"></i>
-									系统菜单
+									加注站信息管理
 								</a>
 
 								<b class="arrow"></b>
