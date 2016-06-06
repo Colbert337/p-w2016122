@@ -1,11 +1,17 @@
 package com.sysongy.api.client.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +21,8 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 @Controller
@@ -24,47 +32,29 @@ public class CRMGasStationContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private static final long serialVersionUID = 6357869213649815390L;
-	
-	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
-
-    @RequestMapping(value = {"","/","/test"})  
-    public String index(ModelMap map){
-        map.addAttribute("current_module", "webpage/demo/panel");
-        return "login";
-    }
-
-    @RequestMapping(value = {"main"})
-    public String main(ModelMap map){
-        map.addAttribute("current_module", "webpage/demo/panel");
-        return "common/g_main";
-    }
-
-    @RequestMapping(value = {"/web/login"})
-    @ResponseBody
-    public AjaxJson login( HttpServletRequest request,HttpServletResponse response, ModelMap map){
-        AjaxJson ajaxJson = new AjaxJson();
-        String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
-        if(userName.equalsIgnoreCase("test")){
-            return ajaxJson;
-        } else {
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg(InterfaceConstants.ERROR_AUTHORITY);
-        }
-    	return ajaxJson;
-    }
+    @Autowired
+    private GastationService gastationService;
 
     /**
-     * 退出登录
-     * @param request
-     * @param response
+     *
      * @param map
+     * @param gastation
      * @return
+     * @throws Exception
      */
-    @RequestMapping(value = {"/web/loginOut"})  
-    public String loginOut( HttpServletRequest request,HttpServletResponse response, SessionStatus sessionStatus, ModelMap map ){  
-    	sessionStatus.setComplete();
-    	return "redirect:/";
+    @RequestMapping("/queryGastationInfo")
+    @ResponseBody
+    public AjaxJson queryGastationInfo(ModelMap map, Gastation gastation) throws Exception{
+        AjaxJson ajaxJson = new AjaxJson();
+        try{
+            Gastation gasStationInfo = gastationService.queryGastationByPK(gastation.getSys_gas_station_id());
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            attributes.put("gasStationInfo", gasStationInfo);
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(e.getMessage());
+        }
+        return ajaxJson;
     }
 }
