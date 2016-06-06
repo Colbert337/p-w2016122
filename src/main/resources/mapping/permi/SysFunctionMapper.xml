@@ -67,6 +67,15 @@
     </trim>
     order by created_date desc
   </select>
+  <!--根据父级ID查询功能列表-->
+  <select id="queryFunctionListByParentId" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_function
+    where parent_id = #{1}
+    <!--and user_type = #{1}-->
+    and is_deleted = #{0}
+  </select>
   <select id="queryFunctionById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

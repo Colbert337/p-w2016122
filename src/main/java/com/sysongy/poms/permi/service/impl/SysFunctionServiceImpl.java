@@ -42,6 +42,17 @@ public class SysFunctionServiceImpl implements SysFunctionService{
     }
 
     /**
+     * 根据父级ID查询功能列表
+     * @param userType 用户类型
+     * @param parentId 父级节点编号
+     * @return
+     */
+    @Override
+    public List<Map<String,Object>> queryFunctionListByParentId(int userType, String parentId) {
+        return sysFunctionMapper.queryFunctionListByParentId(userType, parentId);
+    }
+
+    /**
      * 根据功能ID查询功能详情
      * @param functionId 功能编号
      * @return

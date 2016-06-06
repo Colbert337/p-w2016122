@@ -3,6 +3,7 @@ package com.sysongy.poms.permi.service;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.permi.model.SysFunction;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +22,14 @@ public interface SysFunctionService {
      * @return
      */
     PageInfo<SysFunction> queryFunctionListPage(SysFunction function);
+
+    /**
+     * 根据父级ID查询功能列表
+     * @param userType 用户类型
+     * @param parentId 父级节点编号
+     * @return
+     */
+    List<Map<String,Object>> queryFunctionListByParentId(int userType, String parentId);
 
     /**
      * 根据功能ID查询功能详情
