@@ -174,15 +174,31 @@
 
 					<div class="form-group">
 						<div class="col-md-2 control-label no-padding-right">
-						    <label>加气站名称:</label>
-							<input type="text" name="card_no" placeholder="输入用户卡号"  maxlength="9" value="${gastation.gas_station_name}"/>
+						    <label>加气站编号:</label>
+							<input type="text" name="sys_gas_station_id" placeholder="输入加气站编号"  maxlength="9" value="${gastation.sys_gas_station_id}"/>
 						</div>
 						
-						<%-- <div class="col-md-3 control-label no-padding-right">
-						    <label>用户卡类型:</label>
-							<select class="chosen-select " name="card_type" >
-									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type" link="true" />
+						<div class="col-md-2 control-label no-padding-right">
+						    <label>加气站名称:</label>
+							<input type="text" name="gas_station_name" placeholder="输入加气站名称"  maxlength="9" value="${gastation.gas_station_name}"/>
+						</div>
+						
+						<div class="col-md-2 control-label no-padding-right">
+							<label>气站状态:</label>
+							<select class="chosen-select " name="status" >
+									<s:option flag="true" gcode="GASTATION_STATUS" form="gastation" field="status" link="true" />
 							</select>
+						</div>
+						
+						<div class="col-md-4 input-group no-padding-right  control-label">
+						    <label>平台有效期:</label>
+							<span class="input-group-addon">
+									<i class="fa fa-calendar bigger-110"></i>
+							</span>
+							<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${gascard.expiry_date_frompage}"/>
+						</div>
+						<%-- <div class="col-md-3 control-label no-padding-right">
+						    
 							<label>用户卡状态:</label>
 							<select class="chosen-select " name="card_status" >
 									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" link="true" />
@@ -201,8 +217,6 @@
 							</span>
 							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${gascard.storage_time_range}"/>
 						</div> --%>
-						
-						
 					</div>
 					<br/>
 					<div class="form-group">
@@ -269,7 +283,7 @@
 								 	<td>${list.gas_station_name}</td> 
 									<td><s:Code2Name mcode="${list.salesmen_name}" gcode="CARDSTATUS"></s:Code2Name> </td>
 									<td><s:Code2Name mcode="${list.operations_name}" gcode="WORKSTATION"></s:Code2Name></td>
-									<td><s:Code2Name mcode="${list.indu_com_number}" gcode="WORKSTATION_RESP"></s:Code2Name></td>
+									<td>${list.indu_com_number}</td>
 									<td><s:Code2Name mcode="${list.status}" gcode="GASTATION_STATUS"></s:Code2Name></td>
 									<td>${list.address}</td> 
 									<%-- <td>${list.batch_no}</td>  --%>
@@ -278,15 +292,15 @@
 
 									<td>
 										<div class="hidden-sm hidden-xs action-buttons">
-											<a class="blue" href="#"> 
+											<a class="blue" href="javascript:void(0);"> 
 												<i class="ace-icon fa fa-search-plus bigger-130"></i>
 											</a> 
-											<a class="green" href="#"> 
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="loadPage('#main','<%=basePath%>/web/gastation/preUpdate?gastationid=${list.sys_gas_station_id);"></i>
+											<a class="green" href="javascript:void(0);"> 
+												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a> 
-											<a class="red"  href="javascript:void(0);" onclick="del(this);"> 
+											<!-- <a class="red"  href="javascript:void(0);" onclick="del(this);"> 
 												<i class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a>
+											</a> -->
 										</div>
 
 										<div class="hidden-md hidden-lg">
@@ -379,6 +393,19 @@
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 
+	var mydate = new Date();
+	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
+					locale: {
+						applyLabel: 'Apply',
+						cancelLabel: 'Cancel',
+						format: "YYYY/MM/DD",
+					}, 
+					"startDate": "${gastation.expiry_date_after}"==""?mydate.getFullYear()+"/1/1":"${gastation.expiry_date_after}",
+				    "endDate": "${gastation.expiry_date_before}"==""?mydate.getFullYear()+"/12/31":"${gastation.expiry_date_before}"
+				})
+				.prev().on(ace.click_event, function(){
+					$(this).next().focus();
+				});
 	
 	var options ={   
             url:'<%=basePath%>/web/gastation/gastationList',
@@ -395,6 +422,11 @@
 	}
 	
 	window.onload = setCurrentPage();
+	
+	function preUpdate(obj){
+		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
+		loadPage('#main', '../web/gastation/preUpdate?gastationid='+stationid);
+	}
 	
 	function commitForm(obj){
 		//设置当前页的值

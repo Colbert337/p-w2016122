@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
+import com.mchange.v1.util.StringTokenizerUtils;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.model.GasCard;
@@ -44,13 +45,13 @@ public class GastationController extends BaseContoller{
 				gastation.setPageSize(10);
 			}
 
-//			if(!StringUtils.isEmpty(gastation.getStorage_time_range())){
-//				String []tmpRange = gascard.getStorage_time_range().split("-");
-//				if(tmpRange.length==2){
-//					gascard.setStorage_time_after(tmpRange[0].trim()+" 00:00:00");
-//					gascard.setStorage_time_before(tmpRange[1]+" 23:59:59");
-//				}
-//			}
+			if(!StringUtils.isEmpty(gastation.getExpiry_date_frompage())){
+				String []tmpRange = gastation.getExpiry_date_frompage().split("-");
+				if(tmpRange.length==2){
+					gastation.setExpiry_date_after(tmpRange[0].trim()+" 00:00:00");
+					gastation.setExpiry_date_before(tmpRange[1]+" 23:59:59");
+				}
+			}
 
 			PageInfo<Gastation> pageinfo = service.queryGastation(gastation);
 
@@ -89,10 +90,18 @@ public class GastationController extends BaseContoller{
 		Integer rowcount = null;
 
 		try {
-			rowcount = service.saveGastation(gastation);
+			if(StringUtils.isEmpty(gastation.getSys_gas_station_id())){
+				rowcount = service.saveGastation(gastation,"insert");
+			}else{
+				rowcount = service.saveGastation(gastation,"update");
+				if(rowcount == 1){
+					ret = this.queryAllGastationList(map, new Gastation());
+				}
+			}
+			
 
 			bean.setRetCode(100);
-			bean.setRetMsg("入库成功");
+			bean.setRetMsg("保存成功");
 			bean.setRetValue(rowcount.toString());
 			bean.setPageInfo(ret);
 

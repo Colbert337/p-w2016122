@@ -42,8 +42,17 @@
     from sys_gas_station
     where 1=1
   <trim>
+  	  <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''" >
+        and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+      </if>
       <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
         and gas_station_name = #{gas_station_name,jdbcType=VARCHAR}
+      </if>
+      <if test="status!= null &amp;&amp; status != ''" >
+        and status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="expiry_date_frompage != null &amp;&amp; expiry_date_frompage != ''">
+        and expiry_date between #{expiry_date_after,jdbcType=VARCHAR } and #{expiry_date_before,jdbcType=VARCHAR}
       </if>
     </trim>
   </select>
@@ -59,6 +68,7 @@
      
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
+     <include refid="Base_Column_List" />
     from sys_gas_station
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </select>

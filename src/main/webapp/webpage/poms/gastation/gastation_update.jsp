@@ -37,8 +37,8 @@
 						<div class="nav-search" id="nav-search">
 							<form class="form-search" >
 							
-								<input id="retCode" type="text" value=" ${ret.retCode}" />
-								<input id="retMsg" type="text" value=" ${ret.retMsg}" />
+								<input id="retCode" type="hidden" value=" ${ret.retCode}" />
+								<input id="retMsg" type="hidden" value=" ${ret.retMsg}" />
 								
 								<span class="input-icon">
 									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
@@ -64,6 +64,8 @@
 								<!-- PAGE CONTENT BEGINS -->
 								<form class="form-horizontal"  id="gastationform">
 									<!-- #section:elements.form -->
+									<input type="hidden" id="sys_gas_station_id"  name="sys_gas_station_id" value="${station.sys_gas_station_id}" />
+							
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 加气站名称： </label>
 
@@ -73,7 +75,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期：</label>
 										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
@@ -143,7 +145,7 @@
 													<option value ="852">香港特别行政区</option>
 													<option value ="853">澳门特别行政区</option>
 											</select>
-											<select class="form-control" id="city" >
+											<select class="form-control" id="city" name="city_id">
 											</select>
 											<input type="text"  id="detail" name="detail" class="col-sm-12" />
 											<input type="text"  id="address" name="address" class="col-sm-12" />
@@ -154,9 +156,9 @@
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-5">
 										<label class="col-sm-1 control-label no-padding-right" > 经度：</label>
-										<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="5"/>
+										<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="5" value="${station.longitude}"/>
 										<label class="col-sm-1 control-label no-padding-right" > 纬度：</label>
-										<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="5"/>
+										<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="5" value="${station.latitude}"/>
 										</div>
 									</div>
 									
@@ -164,7 +166,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_certif" name="indu_com_certif" class="col-xs-10 col-sm-5" />
+											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5" value="${station.indu_com_number}"/>
 										</div>
 									</div>
 									
@@ -172,33 +174,17 @@
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5" />
+											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5" value="${station.tax_certif}"/>
 										</div>
 									</div>
-						
+									
 									<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="form-field-1" id="dynamic-table_after_handler"> 明细列表： </label>
-											<div class="col-sm-7" id="dynamic-table_div">
-											<div class="table-header">用户卡列表</div>
-												<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-													<thead>
-														<tr>
-															<th class="center">
-																<label class="pos-rel"> 
-																	<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
-																	<span class="lbl"></span>
-																</label>
-															</th>
-															<th id="card_no_order">用户卡号</th>
-															<th id="card_type_order">用户卡类型</th>
-															<th id="card_name_order">用户卡属性</th> 
-															<th id="card_status_order">用户卡状态</th>
-															<th id="operator_order">操作人工号</th> 
-														</tr>
-													</thead>
-													<tbody>
-													</tbody>
-												</table>
+										<label class="col-sm-3 control-label no-padding-right"> 加气站状态： </label>
+
+										<div class="col-sm-4">
+											<select class="chosen-select " name="status" >
+												<s:option gcode="GASTATION_STATUS" form="station" field="status" link="true" />
+											</select>										
 										</div>
 									</div>
 									
@@ -240,12 +226,13 @@
 	</div>
 		<!-- inline scripts related to this page -->
 	<script type="text/javascript">
+	
 		var china=new Object();
 		china['100']=new Array('北京市区','北京市辖区');
 		china['210']=new Array('上海市区','上海市辖区');
 		china['220']=new Array('天津市区','天津市辖区');
 		china['230']=new Array('重庆市区','重庆市辖区');
-		china['310'] = new Array('石家庄', '唐山市', '邯郸市', '秦皇市岛', '保市定', '张家市口', '承德市', '廊坊市', '沧州市', '衡水市', '邢台市');
+		china['310']=new Array('石家庄', '唐山市', '邯郸市', '秦皇市岛', '保市定', '张家市口', '承德市', '廊坊市', '沧州市', '衡水市', '邢台市');
 		china['350']=new Array('太原市','大同市','阳泉市','长治市','晋城市','朔州市','晋中市','运城市','忻州市','临汾市','吕梁市');
 		china['240']=new Array('沈阳市','大连市','鞍山市','抚顺市','本溪市','丹东市','锦州市','营口市','阜新市','辽阳市','盘锦市','铁岭市','朝阳市','葫芦岛市');
 		china['430']=new Array('长春市','吉林市','四平市','辽源市','通化市','白山市','松原市','白城市','延边州','长白山管委会');
@@ -261,7 +248,7 @@
 		china['730']=new Array('长沙市','株洲市','湘潭市','衡阳市','邵阳市','岳阳市','常德市','张家界市','益阳市','郴州市','永州市','怀化市','娄底市');
 		china['200']=new Array('广州市','深圳市','珠海市','汕头市','韶关市','佛山市','江门市','湛江市','茂名市','肇庆市','惠州市','梅州市','汕尾市','河源市','阳江市','清远市','东莞市','中山市','潮州市','揭阳市','云浮市');
 		china['890']=new Array('文昌市','琼海市','万宁市','五指山市','东方市','儋州市');
-		china['810 ']=new Array('成都市','自贡市','攀枝花市','泸州市','德阳市','绵阳市','广元市','遂宁市','内江市','乐山市','南充市','眉山市','宜宾市','广安市','达州市','雅安市','巴中市','资阳市');
+		china['810']=new Array('成都市','自贡市','攀枝花市','泸州市','德阳市','绵阳市','广元市','遂宁市','内江市','乐山市','南充市','眉山市','宜宾市','广安市','达州市','雅安市','巴中市','资阳市');
 		china['850']=new Array('贵阳市','六盘水市','遵义市','安顺市');
 		china['870']=new Array('昆明市','曲靖市','玉溪市','保山市','昭通市','丽江市','普洱市','临沧市');
 		china['290']=new Array('西安市','铜川市','宝鸡市','咸阳市','渭南市','延安市','汉中市','榆林市','安康市','商洛市');
@@ -274,6 +261,18 @@
 		china['950']=new Array('银川市','石嘴山市','吴忠市','固原市','中卫市');
 		china['990']=new Array('乌鲁木齐市','克拉玛依市');
 		china['852']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
+		
+		//下拉框默认选中当前对象的值
+		var province_id = '${station.province_id}';
+		var city_id =  '${station.city_id}';
+		var detail = '${station.address}';
+		
+		if(province_id!=null && province_id!=""){
+			$("#province").find("option[value="+province_id+"]").attr("selected",true);
+			$("#province").trigger("change");
+			$("#city").find("option[value="+city_id+"]").attr("selected",true);
+			$("#detail").val(detail.split(" ")[2]);
+		}
 		
 		function chinaChange(province, city) {
 			var pv, cv;
@@ -289,14 +288,15 @@
 			
 			if (typeof (china[pv]) == 'undefined'){
 				return;
-			}
+			} 
 	
 			for (i = 0; i < china[pv].length; i++) { 
 				ii = i;
 			
 				city.options[ii] = new Option();
 				city.options[ii].text = china[pv][i];
-				city.options[ii].value = china[pv][i];
+				//city.options[ii].value = china[pv][i];
+				city.options[ii].value = parseInt(pv+i)
 				}
 		};
 	
@@ -429,8 +429,7 @@
 		    });
 			    
 		function save(){
-			
-			$("#address").val($("#province").find("option:selected").text()+$("#city").find("option:selected").text()+$("#detail").val());
+			$("#address").val($("#province").find("option:selected").text()+" "+$("#city").find("option:selected").text()+" "+$("#detail").val());
 			
 			/*手动验证表单，当是普通按钮时。*/
 			$('#gastationform').data('bootstrapValidator').validate();
