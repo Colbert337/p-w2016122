@@ -37,8 +37,8 @@
 						<div class="nav-search" id="nav-search">
 							<form class="form-search" >
 							
-								<input id="retCode" type="text" value=" ${ret.retCode}" />
-								<input id="retMsg" type="text" value=" ${ret.retMsg}" />
+								<input id="retCode" type="hidden" value=" ${ret.retCode}" />
+								<input id="retMsg" type="hidden" value=" ${ret.retMsg}" />
 								
 								<span class="input-icon">
 									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
@@ -73,6 +73,14 @@
 									</div>
 									
 									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> E-mail： </label>
+
+										<div class="col-sm-3">
+											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5" />
+										</div>
+									</div>
+									
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期： </label>
 										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
@@ -88,18 +96,18 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 销售负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="salesmen_id" name="salesmen_id" multiple="multiple">
-														<s:option flag="true" gcode="CARDTYPE" link="true" />
+												<select class="form-control" id="salesmen_id" name="salesmen_id" multiple="multiple" onchange="setSalesmenName(this);">
 												</select>
+												<input type="hidden" id="salesmen_name" name="salesmen_name"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="operations_id" name="operations_id" multiple="multiple">
-														<s:option flag="true" gcode="CARDPROPERTY" link="true" />
+												<select class="form-control" id="operations_id" name="operations_id" multiple="multiple" onchange="setOperationName(this);">
 												</select>
+												<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
 									</div>
 									
@@ -108,45 +116,45 @@
 										<div class="col-sm-2">
 											<select class="form-control" name="province_id" id="province" multiple="multiple" onchange="chinaChange(this,document.getElementById('city'));">
 													<option value ="请选择市区">请选择省份</option>
-													<option value ="100">北京市 </option>
-													<option value ="220">天津市 </option>
-													<option value ="210">上海市 </option>
-													<option value ="230">重庆市 </option>
-													<option value ="310">河北省 </option>
-													<option value ="350">山西省 </option>
-													<option value ="240">辽宁省 </option>
-													<option value ="430">吉林省 </option>
+													<option value ="100">北京市</option>
+													<option value ="220">天津市</option>
+													<option value ="210">上海市</option>
+													<option value ="230">重庆市</option>
+													<option value ="310">河北省</option>
+													<option value ="350">山西省</option>
+													<option value ="240">辽宁省</option>
+													<option value ="430">吉林省</option>
 													<option value ="450">黑龙江省</option>
-													<option value ="250"> 江苏省 </option>
-													<option value ="570">浙江省 </option>
-													<option value ="550">安徽省 </option>
-													<option value ="590">福建省 </option>
-													<option value ="790">江西省 </option>
-													<option value ="530">山东省 </option>
-													<option value ="370">河南省 </option>
-													<option value ="270">湖北省 </option>
-													<option value ="730">湖南省 </option>
-													<option value ="200">广东省 </option>
-													<option value ="890">海南省 </option>
-													<option value ="810">四川省 </option>
-													<option value ="850">贵州省 </option>
-													<option value ="870">云南省 </option>
-													<option value ="290">陕西省 </option>
-													<option value ="930">甘肃省 </option>
-													<option value ="970">青海省 </option>
-													<option value ="886">台湾省 </option>
+													<option value ="250"> 江苏省</option>
+													<option value ="570">浙江省</option>
+													<option value ="550">安徽省</option>
+													<option value ="590">福建省</option>
+													<option value ="790">江西省</option>
+													<option value ="530">山东省</option>
+													<option value ="370">河南省</option>
+													<option value ="270">湖北省</option>
+													<option value ="730">湖南省</option>
+													<option value ="200">广东省</option>
+													<option value ="890">海南省</option>
+													<option value ="810">四川省</option>
+													<option value ="850">贵州省</option>
+													<option value ="870">云南省</option>
+													<option value ="290">陕西省</option>
+													<option value ="930">甘肃省</option>
+													<option value ="970">青海省</option>
+													<option value ="886">台湾省</option>
 													<option value ="770">广西壮族自治区</option>
 													<option value ="470"> 内蒙古自治区</option>
 													<option value ="890"> 西藏自治区</option>
-													<option value ="950"> 宁夏回族自治区 </option>
+													<option value ="950"> 宁夏回族自治区</option>
 													<option value ="990">新疆维吾尔自治区</option>
 													<option value ="852">香港特别行政区</option>
 													<option value ="853">澳门特别行政区</option>
 											</select>
-											<select class="form-control" id="city" >
+											<select class="form-control" id="city" name="city_id">
 											</select>
-											<input type="text"  id="detail" name="detail" class="col-sm-12" />
-											<input type="text"  id="address" name="address" class="col-sm-12" />
+											<input type="text"  id="detail" name="detail" class="col-sm-12"  placeholder="输入详细地址"/>
+											<input type="hidden"  id="address" name="address" class="col-sm-12" />
 										</div>
 									</div>
 									
@@ -164,7 +172,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_certif" name="indu_com_certif" class="col-xs-10 col-sm-5" />
+											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5"   placeholder="输入工商注册号"/>
 										</div>
 									</div>
 									
@@ -172,33 +180,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5" />
-										</div>
-									</div>
-						
-									<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="form-field-1" id="dynamic-table_after_handler"> 明细列表： </label>
-											<div class="col-sm-7" id="dynamic-table_div">
-											<div class="table-header">用户卡列表</div>
-												<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-													<thead>
-														<tr>
-															<th class="center">
-																<label class="pos-rel"> 
-																	<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
-																	<span class="lbl"></span>
-																</label>
-															</th>
-															<th id="card_no_order">用户卡号</th>
-															<th id="card_type_order">用户卡类型</th>
-															<th id="card_name_order">用户卡属性</th> 
-															<th id="card_status_order">用户卡状态</th>
-															<th id="operator_order">操作人工号</th> 
-														</tr>
-													</thead>
-													<tbody>
-													</tbody>
-												</table>
+											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5"  placeholder="输入税务注册号"/>
 										</div>
 									</div>
 									
@@ -275,6 +257,24 @@
 		china['990']=new Array('乌鲁木齐市','克拉玛依市');
 		china['852']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
 		
+		//初始化销售（运管）负责人下拉框
+		$.ajax({
+			   type: "POST",
+			   url:'../web/permi/user/list/userType?userType=1',   
+	           dataType:'text',
+	           async:false,
+	           success:function(data){
+	           		if(data != ""){
+			        	   $("#salesmen_id").empty();
+			        	   var s = JSON.parse(data);
+			        	   for(var i=0;i<s.length;i++){
+			        		   $("#salesmen_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
+			        	   }
+	           		}
+	            }
+		});
+		
 		function chinaChange(province, city) {
 			var pv, cv;
 			var i, ii;
@@ -296,8 +296,9 @@
 			
 				city.options[ii] = new Option();
 				city.options[ii].text = china[pv][i];
-				city.options[ii].value = china[pv][i];
-				}
+				//city.options[ii].value = china[pv][i];
+				city.options[ii].value = parseInt(pv+i);
+			}
 		};
 	
 	//datepicker plugin
@@ -429,8 +430,7 @@
 		    });
 			    
 		function save(){
-			
-			$("#address").val($("#province").find("option:selected").text()+$("#city").find("option:selected").text()+$("#detail").val());
+			$("#address").val($("#province").find("option:selected").text()+" "+$("#city").find("option:selected").text()+" "+$("#detail").val());
 			
 			/*手动验证表单，当是普通按钮时。*/
 			$('#gastationform').data('bootstrapValidator').validate();
@@ -457,5 +457,12 @@
 			loadPage('#main', '../web/gastation/gastationList');
 		}
 		
+		function setSalesmenName(obj){
+			$("#salesmen_name").val($(obj).val());
+		}
+		
+		function setOperationName(obj){
+			$("#operations_name").val($(obj).val());
+		}
 
 		</script>

@@ -32,21 +32,27 @@ public class GastationServiceImpl implements GastationService {
 	}
 
 	@Override
-	public Integer saveGastation(Gastation record) throws Exception {
-		Gastation station = gasStationMapper.findGastationid(record.getProvince_id());
-		String newid;
-		
-		if(station == null || StringUtils.isEmpty(station.getSys_gas_station_id())){
-			newid = record.getProvince_id() + "0001";
+	public Integer saveGastation(Gastation record, String operation) throws Exception {
+		if("insert".equals(operation)){
+			Gastation station = gasStationMapper.findGastationid(record.getProvince_id());
+			String newid;
+			
+			if(station == null || StringUtils.isEmpty(station.getSys_gas_station_id())){
+				newid = record.getProvince_id() + "0001";
+			}else{
+				Integer tmp = Integer.valueOf(station.getSys_gas_station_id().substring(3, 7)) + 1;
+				newid = record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
+			}
+			record.setStatus(GlobalConstant.GastationStatus.USED);
+			record.setCreated_time(new Date());
+			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
+			record.setSys_gas_station_id(newid);
+			return gasStationMapper.insert(record);
 		}else{
-			Integer tmp = Integer.valueOf(station.getSys_gas_station_id().substring(3, 7)) + 1;
-			newid = record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
+			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
+			return gasStationMapper.updateByPrimaryKeySelective(record);
 		}
-		record.setStatus(GlobalConstant.GastationStatus.USED);
-		record.setCreated_time(new Date());
-		record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
-		record.setSys_gas_station_id(newid);
-		return gasStationMapper.insert(record);
+		
 	}
 
 	@Override
@@ -61,7 +67,9 @@ public class GastationServiceImpl implements GastationService {
 
 	@Override
 	public Gastation queryGastationByPK(String gastationid) throws Exception {
-		return gasStationMapper.selectByPrimaryKey(gastationid);
+		 Gastation station =  gasStationMapper.selectByPrimaryKey(gastationid);
+		 station.setExpiry_date_frompage(new SimpleDateFormat("yyyy-MM-dd").format(station.getExpiry_date()));
+		 return station;
 	}
 
 }
