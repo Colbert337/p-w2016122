@@ -25,6 +25,28 @@
     plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card, 
     card_id, wallet_id, created_date, updated_date
   </sql>
+
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+    where 1=1
+    <trim>
+      <if test="sysDriverId != null &amp;&amp; sysDriverId != ''" >
+        and sysDriverId = #{sysDriverId,jdbcType=VARCHAR}
+      </if>
+      <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
+        and plateNumber = #{plateNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="userName!= null &amp;&amp; userName != ''" >
+        and userName = #{userName,jdbcType=VARCHAR}
+      </if>
+      <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
+        and mobilePhone = #{mobilePhone,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

@@ -6,8 +6,8 @@ public class BaseModel {
 
 	private List<?> list;
 	private Object model;
-	private Integer pageNum;
-	private Integer pageSize;
+	private Integer pageNum = 1;
+	private Integer pageSize = 20;
 	private Long total;
 	private String orderby;
 

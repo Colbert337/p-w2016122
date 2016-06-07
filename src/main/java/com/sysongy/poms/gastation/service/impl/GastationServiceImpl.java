@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.sysongy.poms.gastation.service.GastationService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.gastation.dao.GastationMapper;
 import com.sysongy.poms.gastation.model.Gastation;
-import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.util.GlobalConstant;
 
 @Service
-public class GastationServiceImpl implements GastationService {
+public class GastationServiceImpl implements GastationService{
 	
 	@Autowired
 	private GastationMapper gasStationMapper;

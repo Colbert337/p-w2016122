@@ -14,4 +14,6 @@ public class InterfaceConstants {
     public static final String QUERY_CRM_USER_ERROR = "查询用户失败！";
 
     public static final String QUERY_CRM_STSTION_ERROR = "查询气站失败！";
+
+    public static final String QUERY_CRM_SEND_MSG_ERROR = "发送验证码失败！";
 }
