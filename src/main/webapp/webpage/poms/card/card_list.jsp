@@ -50,7 +50,7 @@
 
 
 <!-- /section:basics/content.breadcrumbs -->
-<div class="page-content">
+
 	<!-- #section:settings.box -->
 	<!-- <div class="ace-settings-container" id="ace-settings-container">
 		<div class="btn btn-app btn-xs btn-warning ace-settings-btn"
@@ -172,64 +172,61 @@
 				<div class="col-xs-12">
 					<h3 class="header smaller lighter blue">用户卡管理</h3>
 
-					<div class="form-group">
-						<div class="col-md-2 control-label no-padding-right">
+					<div class="row form-group">
+						<div class="col-md-2">
 						    <label>用户卡号:</label>
 							<input type="text" name="card_no" placeholder="输入用户卡号"  maxlength="9" value="${gascard.card_no}"/>
 						</div>
 						
-						<div class="col-md-3 control-label no-padding-right">
+						<div class="col-md-2">
 						    <label>用户卡类型:</label>
 							<select class="chosen-select " name="card_type" >
 									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type" link="true" />
 							</select>
+						</div>
+
+						<div class="col-md-2">
 							<label>用户卡状态:</label>
 							<select class="chosen-select " name="card_status" >
 									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" link="true" />
 							</select>
 						</div>
 						
-						<div class="col-md-2 control-label  no-padding-right">
+						<div class="col-md-2">
 						    <label>操作员:</label>
 							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${gascard.operator}"/>
 						</div>
 						
-						<div class="col-md-4 input-group no-padding-right  control-label">
-						    <label>操作时间:</label>
-							<span class="input-group-addon">
-									<i class="fa fa-calendar bigger-110"></i>
-							</span>
-							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${gascard.storage_time_range}"/>
+						<div class="col-md-2">
+							<div class="input-group">
+								<label>操作时间:</label>
+								<%--<span class="input-group-addon">--%>
+										<%--<i class="fa fa-calendar bigger-110"></i>--%>
+								<%--</span>--%>
+								<input type="text" name="storage_time_range" id="date-range-picker" value="value="${gascard.storage_time_range}"/>
+							</div>
 						</div>
-						
-						
-					</div>
-					
-					<div class="form-group">
-						<div class="col-md-12 pull-right">
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										入库
-								</button>
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_move.jsp');">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										出库
-								</button>
-								<button class="btn btn-primary" type="button" onclick="commitForm();">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										查询
-								</button>
+
+						<div class="col-md-2 text-right">
+							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								入库
+							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_move.jsp');">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								出库
+							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								查询
+							</button>
 						</div>
 					</div>
-					
-					<br/><br/>
 
 					<div class="clearfix">
 						<div class="pull-right tableTools-container"></div>
 					</div>
-					
-					
-					
+
 					<div class="table-header">用户卡详细信息列表</div>
 
 					<!-- div.table-responsive -->
@@ -360,8 +357,7 @@
 	</div>
 	<!-- /.row -->
 	</form>
-</div>
-<!-- /.page-content -->
+
 
 
 
