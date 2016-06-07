@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.permi.dao.SysUserAccountMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.permi.model.SysUserAccount" >
+    <id column="sys_user_account_id" property="sysUserAccountId" jdbcType="VARCHAR" />
+    <result column="account_code" property="accountCode" jdbcType="VARCHAR" />
+    <result column="account_type" property="accountType" jdbcType="INTEGER" />
+    <result column="account_balance" property="accountBalance" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user_account
+    where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_user_account
+    where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
+    insert into sys_user_account (sys_user_account_id, account_code, account_type, 
+      account_balance, created_date, updated_date
+      )
+    values (#{sysUserAccountId,jdbcType=VARCHAR}, #{accountCode,jdbcType=VARCHAR}, #{accountType,jdbcType=INTEGER}, 
+      #{accountBalance,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
+    insert into sys_user_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysUserAccountId != null" >
+        sys_user_account_id,
+      </if>
+      <if test="accountCode != null" >
+        account_code,
+      </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
+      <if test="accountBalance != null" >
+        account_balance,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysUserAccountId != null" >
+        #{sysUserAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCode != null" >
+        #{accountCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=INTEGER},
+      </if>
+      <if test="accountBalance != null" >
+        #{accountBalance,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
+    update sys_user_account
+    <set >
+      <if test="accountCode != null" >
+        account_code = #{accountCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        account_type = #{accountType,jdbcType=INTEGER},
+      </if>
+      <if test="accountBalance != null" >
+        account_balance = #{accountBalance,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
+    update sys_user_account
+    set account_code = #{accountCode,jdbcType=VARCHAR},
+      account_type = #{accountType,jdbcType=INTEGER},
+      account_balance = #{accountBalance,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+  </update>
+</mapper>
