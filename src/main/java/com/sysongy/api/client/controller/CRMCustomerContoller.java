@@ -1,10 +1,14 @@
 package com.sysongy.api.client.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.mysql.jdbc.StringUtils;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.pojo.AliShortMessageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +26,14 @@ import java.util.Map;
 @SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
 @RequestMapping("/crmUserService")
 public class CRMCustomerContoller {
-	
+
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     DriverService driverService;
+
+    @Autowired
+    RedisClientInterface redisClientImpl;
 
     @RequestMapping(value = {"/web/queryCustomerInfo"})
     @ResponseBody
@@ -52,9 +59,21 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson sendMsg(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
         AjaxJson ajaxJson = new AjaxJson();
+        if(StringUtils.isNullOrEmpty(sysDriver.getMobilePhone())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("手机号为空！！！");
+            return ajaxJson;
+        }
         try
         {
-            PageInfo<SysDriver> drivers = driverService.queryDrivers(sysDriver);
+            Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
+            AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+            aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
+            aliShortMessageBean.setCode(checkCode.toString());
+            aliShortMessageBean.setProduct("司集能源科技平台");
+            AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
+
+
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());
