@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.permi.dao.SysRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.permi.model.SysRole" >
+    <id column="sys_role_id" property="sysRoleId" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="role_type" property="roleType" jdbcType="INTEGER" />
+    <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+    <result column="is_admin" property="isAdmin" jdbcType="INTEGER" />
+    <result column="role_status" property="roleStatus" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sys_role_id, role_name, role_code, role_type, role_desc, is_admin, role_status, is_deleted, 
+    created_date, updated_date
+  </sql>
+  <select id="queryRoleList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_role
+    where 1=1
+    <trim>
+      <if test="sysRoleId != null" >
+        and sys_role_id = #{sysRoleId}
+      </if>
+      <if test="roleName != null" >
+        and role_name = #{roleName}
+      </if>
+      <if test="roleCode != null" >
+        and role_code = #{roleCode}
+      </if>
+      <if test="roleType != null" >
+      and role_type = #{roleType}
+      </if>
+      <if test="roleDesc != null" >
+        and role_desc = #{roleDesc}
+      </if>
+      <if test="isAdmin != null" >
+        and is_admin = #{isAdmin}
+      </if>
+      <if test="roleStatus != null" >
+        and role_status = #{roleStatus}
+      </if>
+      <if test="isDeleted != null" >
+        and is_deleted = #{isDeleted}
+      </if>
+      <if test="createdDate != null" >
+        and created_date = #{createdDate}
+      </if>
+      <if test="updatedDate != null" >
+        and updated_date = #{updatedDate}
+      </if>
+    </trim>
+    order by created_date desc
+  </select>
+  <select id="queryRoleById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteRoleById" parameterType="java.lang.String" >
+    delete from sys_role
+    where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="addRole" parameterType="com.sysongy.poms.permi.model.SysRole" >
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysRoleId != null" >
+        sys_role_id,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="roleCode != null" >
+        role_code,
+      </if>
+      <if test="roleType != null" >
+        role_type,
+      </if>
+      <if test="roleDesc != null" >
+        role_desc,
+      </if>
+      <if test="isAdmin != null" >
+        is_admin,
+      </if>
+      <if test="roleStatus != null" >
+        role_status,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysRoleId != null" >
+        #{sysRoleId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleCode != null" >
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null" >
+        #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="roleDesc != null" >
+        #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isAdmin != null" >
+        #{isAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="roleStatus != null" >
+        #{roleStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateRole" parameterType="com.sysongy.poms.permi.model.SysRole" >
+    update sys_role
+    <set >
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleCode != null" >
+        role_code = #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null" >
+        role_type = #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="roleDesc != null" >
+        role_desc = #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isAdmin != null" >
+        is_admin = #{isAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="roleStatus != null" >
+        role_status = #{roleStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
+  </update>
+</mapper>

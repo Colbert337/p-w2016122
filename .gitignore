@@ -3,3 +3,6 @@
 .gitignore
 /.idea/*
 /classes/*
+/target/
+.classpath
+.project

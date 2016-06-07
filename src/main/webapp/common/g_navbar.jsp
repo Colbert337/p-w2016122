@@ -28,7 +28,7 @@
 					<a href="#" class="navbar-brand">
 						<small>
 							<i class="fa fa-leaf"></i>
-							海贝运维支撑系统
+							司集能源运维管理平台
 						</small>
 					</a>
 
@@ -303,7 +303,7 @@
 								<img class="nav-user-photo" src="<%=basePath %>/assets/avatars/user.jpg" alt="Jason's Photo" />
 								<span class="user-info">
 									<small>欢迎登陆,</small>
-									海贝
+									司集
 								</span>
 
 								<i class="ace-icon fa fa-caret-down"></i>

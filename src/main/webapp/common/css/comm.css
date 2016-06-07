@@ -3,6 +3,7 @@
 .all-show{display: block;}
 .fl-l{float: left;}
 .fl-r{float: right;}
+.clear{clear:both;}
 body{}
 
 .panel-title{text-align: center;}
@@ -10,6 +11,12 @@ body{}
 .b-dialog-content{min-height: 300px;}
 .b-dialog-hint{font-size: 30px;}
 .dialog-font{margin: 20px;}
+.red_star{color: red;}
+.dis_none{display: none;}
 
 /* 按钮样式 */
 .btn-bottom{margin-bottom: 3px;}
+.pad-top-10{padding-top: 7px;}
+.mar-right-30{margin-right: 30px;}
+.mar-left-15{margin-left: 15px;}
+.btn-botton{margin-bottom: 10px;}

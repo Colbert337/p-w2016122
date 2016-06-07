@@ -5,8 +5,12 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +34,7 @@ import com.sysongy.util.PropertyUtil;
  *
  */
 @Controller
-@SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
+@SessionAttributes({"currUser"})
 public class BaseContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -38,8 +42,11 @@ public class BaseContoller {
 	private static final long serialVersionUID = 6357869213649815390L;
 	
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
-	
-    @RequestMapping(value = {"","/","/test"})  
+
+    @Autowired
+    SysUserService sysUserService;
+
+    @RequestMapping(value = {"","/"})
     public String index(ModelMap map){  
     	/*ModelAndView result = new ModelAndView();
     	String pmcName = "登录测试成功！";
@@ -47,23 +54,56 @@ public class BaseContoller {
     	result.addObject("current_module", "webpage/test");
         result.setViewName("comm/g_main");*/
         
-        map.addAttribute("current_module", "webpage/panel/panel");
+        map.addAttribute("current_module", "webpage/demo/panel");
         
         return "login";
     }
-    
+
+    @RequestMapping(value = {"main"})
+    public String main(ModelMap map){
+    	/*ModelAndView result = new ModelAndView();
+    	String pmcName = "登录测试成功！";
+    	result.addObject("pmcName", pmcName);
+    	result.addObject("current_module", "webpage/test");
+        result.setViewName("comm/g_main");*/
+
+        map.addAttribute("current_module", "webpage/demo/panel");
+
+        return "common/g_main";
+    }
+
+    /**
+     * 用户登录
+     * @param request
+     * @param response
+     * @param map
+     * @return
+     */
     @RequestMapping(value = {"/web/login"})  
     public String login( HttpServletRequest request,HttpServletResponse response,ModelMap map){ 
     	String userName = request.getParameter("userName");
     	String password = request.getParameter("password");
     	String returnPath = "login";
-    	if(userName != null && password != null && userName.equals("wdq") && password.equals("wdq1234567")){
-    		map.addAttribute("current_module", "webpage/panel/panel");
+        CurrUser currUser = new CurrUser();
+
+        SysUser user = new SysUser();
+        user.setUserName(userName);
+        user.setPassword(password);
+
+        user = sysUserService.queryUserByAccount(user);
+
+    	if(user != null && user.getUserName() != null && user.getPassword() != null){
+            currUser.setUserId(user.getSysUserId());
+            currUser.setUser(user);
+
+    		map.addAttribute("current_module", "webpage/demo/demo");
+            map.addAttribute("currUser",currUser);
     		returnPath = "common/g_main";
     	}
-    	
+
     	return returnPath;
     }
+
     /**
      * 退出登录
      * @param request
@@ -84,16 +124,15 @@ public class BaseContoller {
      * @param map
      * @return
      */
-    @RequestMapping(value = {"/web/panel/list"})  
-    public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){  
-    	
-    	return "/panel/panel_list";
+    @RequestMapping(value = {"/web/panel/list"})
+    @ResponseBody
+    public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){
+
+        return "login";
     }
     
     /**
      * 跳转控制面板
-     * @param request
-     * @param response
      * @param map
      * @return
      */

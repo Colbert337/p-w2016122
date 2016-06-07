@@ -171,32 +171,45 @@ public class Encoder {
 		return result;
 	}
 
+	/**
+	 * 对称加密
+	 * @param strSource 待加密字符串
+	 * @param operator  加密算子
+	 * @return 加密后字符串
+	 * @throws Exception
+     */
+	public static String symmetricEncrypto(String strSource, String operator)throws Exception {
+		String result = strSource.trim() + operator.trim();
+		result = symmetricEncrypto(result);
+		return result;
+	}
 	public static void main(String[] args) throws Exception {
 		// System.out.println(Encoder.byteArrayToHexString("我".getBytes()));
-		System.out.println(Encoder.MD5Encode("111111".getBytes()));
+		/*System.out.println(Encoder.MD5Encode("111111".getBytes()));*/
 		// System.out.println(Encoder.SHA1Encode("我".getBytes()));
 
-		// String uiatc = Encoder.encryptMD5("wdq2012");
+		String uiatc = "wdq2012";
 		// try {
 		// byte[] byteArr = Encoder.symmetricEncrypto("fee".getBytes());
 		// uiatc = Encoder.byteArrayToHexString(byteArr);
 		// } catch (Exception ex) {
 		// }
 		// try {
-		// uiatc = Encoder.symmetricEncrypto(System.currentTimeMillis() + "," +
-		// "fee");
+		uiatc = Encoder.symmetricEncrypto(uiatc,"anday");
+
 		// } catch (Exception ex) {
 		// Logger.getLogger(Encoder.class.getName()).log(Level.SEVERE, null,
 		// ex);
 		// }
-		// System.out.println(uiatc);
+		System.out.println(uiatc);
 		// try {
-		// System.out.println(Decoder.symmetricDecrypto("82d9eda349f249b881458e2ad409bba41e161e00191cd0b1"));
+		System.out.println(Decoder.symmetricDecrypto(uiatc));
+		System.out.println(Decoder.symmetricDecrypto(uiatc,"anday"));
 		// } catch (Exception ex) {
 		// Logger.getLogger(Encoder.class.getName()).log(Level.SEVERE, null,
 		// ex);
 		// }
-		// System.out.println(symmetricEncrypto("123456"));
+		/*System.out.println(uiatc);*/
 
 	}
 }

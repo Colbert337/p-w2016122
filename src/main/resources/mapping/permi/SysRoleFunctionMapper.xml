@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.permi.dao.SysRoleFunctionMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.permi.model.SysRoleFunction" >
+    <id column="sys_role_function_id" property="sysRoleFunctionId" jdbcType="VARCHAR" />
+    <result column="sys_role_id" property="sysRoleId" jdbcType="VARCHAR" />
+    <result column="sys_function_id" property="sysFunctionId" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sys_role_function_id, sys_role_id, sys_function_id, created_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role_function
+    where sys_role_function_id = #{sysRoleFunctionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_role_function
+    where sys_role_function_id = #{sysRoleFunctionId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysRoleFunction" >
+    insert into sys_role_function (sys_role_function_id, sys_role_id, sys_function_id, 
+      created_date)
+    values (#{sysRoleFunctionId,jdbcType=VARCHAR}, #{sysRoleId,jdbcType=VARCHAR}, #{sysFunctionId,jdbcType=VARCHAR}, 
+      #{createdDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysRoleFunction" >
+    insert into sys_role_function
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysRoleFunctionId != null" >
+        sys_role_function_id,
+      </if>
+      <if test="sysRoleId != null" >
+        sys_role_id,
+      </if>
+      <if test="sysFunctionId != null" >
+        sys_function_id,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysRoleFunctionId != null" >
+        #{sysRoleFunctionId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysRoleId != null" >
+        #{sysRoleId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysFunctionId != null" >
+        #{sysFunctionId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.permi.model.SysRoleFunction" >
+    update sys_role_function
+    <set >
+      <if test="sysRoleId != null" >
+        sys_role_id = #{sysRoleId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysFunctionId != null" >
+        sys_function_id = #{sysFunctionId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sys_role_function_id = #{sysRoleFunctionId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.permi.model.SysRoleFunction" >
+    update sys_role_function
+    set sys_role_id = #{sysRoleId,jdbcType=VARCHAR},
+      sys_function_id = #{sysFunctionId,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP}
+    where sys_role_function_id = #{sysRoleFunctionId,jdbcType=VARCHAR}
+  </update>
+</mapper>

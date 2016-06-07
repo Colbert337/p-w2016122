@@ -58,7 +58,9 @@ public class UUIDGenerator {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String uuidString = getUUID();
-		System.out.println("uuid:" + uuidString);
+		for (int i = 0; i < 10; i++) {
+			String uuidString = getUUID();
+			System.out.println("uuid:" + uuidString);
+		}
 	}
 }

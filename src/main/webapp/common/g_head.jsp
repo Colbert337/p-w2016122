@@ -9,11 +9,11 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>海贝运维支撑系统</title>
+		<title>陕西司集能源运维管理平台</title>
 
 		<meta name="description" content="overview &amp; stats" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-
+		<link type="image/x-icon" href="<%=basePath %>/common/favicon.ico" rel="shortcut icon" />
 		<!-- bootstrap & fontawesome -->
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap.css" />
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
@@ -60,6 +60,7 @@
 		<link rel="stylesheet" type="text/css" href="<%=basePath %>/assets/jQueryVE/css/validationEngine.jquery.css" />
 		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine-zh_CN.js"></script>
 		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine.min.js"></script>
+		<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
 	</head>
 
 	<body class="no-skin">

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.card.dao.GasCardLogMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.card.model.GasCardLog" >
+    <id column="card_log_id" property="cardLogId" jdbcType="VARCHAR" />
+    <result column="card_no" property="card_no" jdbcType="VARCHAR" />
+    <result column="card_type" property="card_type" jdbcType="INTEGER" />
+    <result column="card_status" property="card_status" jdbcType="INTEGER" />
+    <result column="workstation" property="workstation" jdbcType="VARCHAR" />
+    <result column="workstation_resp" property="workstation_resp" jdbcType="VARCHAR" />
+    <result column="optime" property="optime" jdbcType="TIMESTAMP" />
+    <result column="batch_no" property="batch_no" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="storage_time" property="storage_time" jdbcType="TIMESTAMP" />
+    <result column="release_time" property="release_time" jdbcType="TIMESTAMP" />
+    <result column="action" property="action" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    card_log_id, card_no, card_type, card_status, workstation, workstation_resp, optime, batch_no, operator, storage_time, release_time, action, memo
+  </sql>
+  
+  <select id="queryForPage" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCardLog" >
+  	 select <include refid="Base_Column_List" />
+    from gas_card_log gc where 1=1
+    <trim>
+      <if test="card_no != null &amp;&amp; card_no != ''" >
+        and card_no = #{card_no,jdbcType=VARCHAR}
+      </if>
+      <if test="card_type != null &amp;&amp; card_type != ''" >
+        and card_type = #{card_type,jdbcType=VARCHAR}
+      </if>
+      <if test="card_status != null &amp;&amp; card_status != ''" >
+        and card_status = #{card_status,jdbcType=VARCHAR}
+      </if>
+      <if test="operator != null &amp;&amp; operator != ''">
+        and operator = #{operator,jdbcType=VARCHAR}
+      </if>
+      <if test="workstation != null &amp;&amp; workstation != ''">
+         and workstation = #{workstation,jdbcType=VARCHAR}
+      </if>
+      <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
+         workstation_resp = #{workstation_resp,jdbcType=VARCHAR}
+      </if>
+      <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
+         batch_no = #{batch_no,jdbcType=VARCHAR}
+      </if>
+      <if test="optime_range != null &amp;&amp; optime_range != ''">
+        and optime between #{optime_after,jdbcType=VARCHAR } and #{optime_before,jdbcType=VARCHAR}
+      </if> 
+    </trim>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gas_card_log
+    where card_log_id = #{cardLogId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from gas_card_log
+    where card_log_id = #{cardLogId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insertBatch" parameterType="java.util.List" >
+    insert into gas_card_log (card_no, card_type, card_status, workstation, workstation_resp, optime, batch_no, operator, storage_time, release_time, action, memo)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.card_no},#{item.card_type},#{item.card_status},#{item.workstation},#{item.workstation_resp},#{item.optime},#{item.batch_no},#{item.operator},#{item.storage_time},#{item.release_time},#{item.action},#{item.memo})  
+    </foreach> 
+  </insert>
+  
+  <insert id="insert" parameterType="com.sysongy.poms.card.model.GasCardLog" >
+    insert into gas_card_log (card_no, card_type, card_status, workstation, workstation_resp, optime, batch_no, operator, storage_time, release_time, action, memo)
+    values (#{card_no,jdbcType=VARCHAR}, #{card_type,jdbcType=INTEGER}, #{card_status,jdbcType=INTEGER}, #{workstation,jdbcType=VARCHAR}, 
+      #{workstation_resp,jdbcType=VARCHAR}, #{optime,jdbcType=TIMESTAMP}, #{batch_no,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{storage_time,jdbcType=TIMESTAMP}, #{release_time,jdbcType=TIMESTAMP}, #{action,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.sysongy.poms.card.model.GasCardLog" >
+    insert into gas_card_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cardLogId != null" >
+        card_log_id,
+      </if>
+      <if test="card_no != null" >
+        card_no,
+      </if>
+      <if test="card_type != null" >
+        card_type,
+      </if>
+      <if test="card_name != null" >
+        card_name,
+      </if>
+      <if test="card_status != null" >
+        card_status,
+      </if>
+      <if test="optime != null" >
+        optime,
+      </if>
+      <if test="batch_no != null" >
+        batch_no,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="storage_time != null" >
+        storage_time,
+      </if>
+      <if test="release_time != null" >
+        release_time,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cardLogId != null" >
+        #{cardLogId,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNo != null" >
+        #{card_no,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        #{card_type,jdbcType=INTEGER},
+      </if>
+      <if test="cardName != null" >
+        #{card_name,jdbcType=VARCHAR},
+      </if>
+      <if test="cardStatus != null" >
+        #{card_status,jdbcType=INTEGER},
+      </if>
+      <if test="optime != null" >
+        #{optime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="batchNo != null" >
+        #{batch_no,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="storageTime != null" >
+        #{storage_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="releaseTime != null" >
+        #{release_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.card.model.GasCardLog" >
+    update gas_card_log
+    <set >
+      <if test="card_no != null" >
+        card_no = #{card_no,jdbcType=VARCHAR},
+      </if>
+      <if test="card_type != null" >
+        card_type = #{card_type,jdbcType=INTEGER},
+      </if>
+      <if test="card_name != null" >
+        card_name = #{card_name,jdbcType=VARCHAR},
+      </if>
+      <if test="card_status != null" >
+        card_status = #{card_status,jdbcType=INTEGER},
+      </if>
+      <if test="optime != null" >
+        optime = #{optime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="batch_no != null" >
+        batch_no = #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="storage_time != null" >
+        storage_time = #{storage_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="release_time != null" >
+        release_time = #{release_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where card_log_id = #{cardLogId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.card.model.GasCardLog" >
+    update gas_card_log
+    set card_no = #{card_no,jdbcType=VARCHAR},
+      card_type = #{card_type,jdbcType=INTEGER},
+      card_status = #{card_status,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      optime = #{optime,jdbcType=TIMESTAMP},
+      batch_no = #{batch_no,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      storage_time = #{storage_time,jdbcType=TIMESTAMP},
+      release_time = #{release_time,jdbcType=TIMESTAMP},
+      memo = #{memo,jdbcType=VARCHAR}
+    where card_log_id = #{cardLogId,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

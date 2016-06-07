@@ -2,13 +2,13 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.hbkis.boss</groupId>
-	<artifactId>boss-web</artifactId>
+	<groupId>com.sysongy.poms</groupId>
+	<artifactId>poms-web</artifactId>
 	<version>2.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>boss</name>
+	<name>poms</name>
 	<url>http://maven.apache.org</url>
-  
+
 <!--   springFrameword版本号 -->
 	<properties>
 	  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -125,10 +125,10 @@
 			<version>1.2.2</version>
 		</dependency>
 		
-		<dependency>
+	 	<dependency>
 		    <groupId>com.github.pagehelper</groupId>
 		    <artifactId>pagehelper</artifactId>
-		    <version>4.0.2</version>
+		    <version>4.1.4</version>
 		</dependency>
 		
 		<!--mysql驱动包 -->
@@ -195,10 +195,18 @@
         </dependency>
 
 		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+
+		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.3</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -281,6 +289,14 @@
 			<artifactId>httpmime</artifactId>
 			<version>4.5.1</version>
 		</dependency>
+		
+		<!-- 原生SQL支持 -->
+		<dependency>
+		    <groupId>com.github.abel533</groupId>
+		    <artifactId>entitymapper</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
+		
 
 
 	</dependencies>

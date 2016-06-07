@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.permi.dao.SysFunctionMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.permi.model.SysFunction" >
+    <id column="sys_function_id" property="sysFunctionId" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="function_name" property="functionName" jdbcType="VARCHAR" />
+    <result column="function_type" property="functionType" jdbcType="INTEGER" />
+    <result column="function_desc" property="functionDesc" jdbcType="VARCHAR" />
+    <result column="function_code" property="functionCode" jdbcType="VARCHAR" />
+    <result column="function_sort" property="functionSort" jdbcType="INTEGER" />
+    <result column="function_path" property="functionPath" jdbcType="VARCHAR" />
+    <result column="function_icon" property="functionIcon" jdbcType="VARCHAR" />
+    <result column="function_status" property="functionStatus" jdbcType="INTEGER" />
+    <result column="is_menu" property="isMenu" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sys_function_id, parent_id, function_name, function_type, function_desc, function_code,
+    function_sort, function_path, function_icon, function_status, is_menu, is_deleted, 
+    created_date, updated_date
+  </sql>
+  <select id="queryFunctionList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_function
+    where 1=1
+    <trim>
+      <if test="sysFunctionId != null" >
+        and sys_function_id = #{sysFunctionId}
+      </if>
+      <if test="parentId != null" >
+        and parent_id = #{parentId}
+      </if>
+      <if test="functionName != null" >
+        and function_name = #{functionName}
+      </if>
+      <if test="functionType != null" >
+        and function_type = #{functionType}
+      </if>
+      <if test="functionDesc != null" >
+        and function_desc = #{functionDesc}
+      </if>
+      <if test="functionCode != null" >
+        and function_code = #{functionCode}
+      </if>
+      <if test="functionSort != null" >
+        and function_sort = #{functionSort}
+      </if>
+      <if test="functionPath != null" >
+        and function_path = #{functionPath}
+      </if>
+      <if test="functionIcon != null" >
+        and function_icon = #{functionIcon}
+      </if>
+      <if test="functionStatus != null" >
+        and function_status = #{functionStatus}
+      </if>
+      <if test="isMenu != null" >
+        and is_menu = #{isMenu}
+      </if>
+      <if test="isDeleted != null" >
+        and is_deleted = #{isDeleted}
+      </if>
+    </trim>
+    order by created_date desc
+  </select>
+  <select id="queryFunctionById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_function
+    where sys_function_id = #{sysFunctionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteFunctionById" parameterType="java.lang.String" >
+    delete from sys_function
+    where sys_function_id = #{sysFunctionId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteFunctionByParentId" parameterType="java.lang.String" >
+    delete from sys_function
+    where parent_id = #{parentId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="addFunction" parameterType="com.sysongy.poms.permi.model.SysFunction" >
+    insert into sys_function
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysFunctionId != null" >
+        sys_function_id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="functionName != null" >
+        function_name,
+      </if>
+      <if test="functionType != null" >
+        function_type,
+      </if>
+      <if test="functionDesc != null" >
+        function_desc,
+      </if>
+      <if test="functionCode != null" >
+        function_code,
+      </if>
+      <if test="functionSort != null" >
+        function_sort,
+      </if>
+      <if test="functionPath != null" >
+        function_path,
+      </if>
+      <if test="functionIcon != null" >
+        function_icon,
+      </if>
+      <if test="functionStatus != null" >
+        function_status,
+      </if>
+      <if test="isMenu != null" >
+        is_menu,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysFunctionId != null" >
+        #{sysFunctionId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="functionName != null" >
+        #{functionName,jdbcType=VARCHAR},
+      </if>
+      <if test="functionType != null" >
+        #{functionType,jdbcType=INTEGER},
+      </if>
+      <if test="functionDesc != null" >
+        #{functionDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="functionCode != null" >
+        #{functionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="functionSort != null" >
+        #{functionSort,jdbcType=INTEGER},
+      </if>
+      <if test="functionPath != null" >
+        #{functionPath,jdbcType=VARCHAR},
+      </if>
+      <if test="functionIcon != null" >
+        #{functionIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="functionStatus != null" >
+        #{functionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isMenu != null" >
+        #{isMenu,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateFunction" parameterType="com.sysongy.poms.permi.model.SysFunction" >
+    update sys_function
+    <set >
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="functionName != null" >
+        function_name = #{functionName,jdbcType=VARCHAR},
+      </if>
+      <if test="functionType != null" >
+        function_type = #{functionType,jdbcType=INTEGER},
+      </if>
+      <if test="functionDesc != null" >
+        function_desc = #{functionDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="functionCode != null" >
+        function_code = #{functionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="functionSort != null" >
+        function_sort = #{functionSort,jdbcType=INTEGER},
+      </if>
+      <if test="functionPath != null" >
+        function_path = #{functionPath,jdbcType=VARCHAR},
+      </if>
+      <if test="functionIcon != null" >
+        function_icon = #{functionIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="functionStatus != null" >
+        function_status = #{functionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isMenu != null" >
+        is_menu = #{isMenu,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sys_function_id = #{sysFunctionId,jdbcType=VARCHAR}
+  </update>
+</mapper>
