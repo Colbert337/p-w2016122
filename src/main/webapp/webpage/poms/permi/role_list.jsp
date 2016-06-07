@@ -8,6 +8,8 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
+<link href="<%=basePath %>/assets/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+<script src="<%=basePath %>/assets/zTree/js/jquery.ztree.all-3.5.min.js"/>
 <script type="text/javascript">
 	$(function() {
 		/*表单验证*/
@@ -18,6 +20,52 @@
 			scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
 		});
 	});
+
+
+	//初始化菜单树
+	function intiTree(option){
+		var path = "<%=basePath%>/web/permi/function/list";
+		if(option == "update"){
+			path = "<%=basePath%>/web/permi/function/list";
+		}
+		var zTreeObj;
+		// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+		var setting = {
+			view: {
+				selectedMulti: false
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			check: {
+				enable: true
+			}
+			,
+			callback: {
+				onCheck: zTreeOnCheck
+			}
+		};
+		var zNodes = [];
+		//初始化左侧树
+		$.ajax({
+			url:path,
+			data:{},
+			async:false,
+			type: "POST",
+			success: function(data){
+				zNodes = data;
+			}
+		});
+		zTreeObj = $.fn.zTree.init($("#treeDiv"), setting, zNodes);
+		zTreeObj.expandAll(true);//展开所有节点
+	}
+
+	//勾选菜单回调函数
+	function zTreeOnCheck(event, treeId, treeNode) {
+		alert(treeNode.tId + ", " + treeNode.name + "," + treeNode.checked);
+	};
 
 	/*分页相关方法 start*/
 	window.onload = setCurrentPage();
@@ -42,6 +90,7 @@
 	/*分页相关方法 end*/
 	//显示添加用户弹出层
 	function addRole(){
+		intiTree("add");
 		$("#roleModel").modal('show');
 	}
 
@@ -88,6 +137,7 @@
 				$("#role_type").val(data.roleType);
 				$("#role_desc").val(data.roleDesc);
 
+				intiTree("update");
 				$("#roleModel").modal('show');
 			}
 		});
@@ -268,6 +318,13 @@
 									<label class="col-sm-4 control-label no-padding-right" for="role_desc"> 描述： </label>
 									<div class="col-sm-8">
 										<textarea class="limited col-xs-10 col-sm-10" id="role_desc" name="roleDesc" maxlength="50"></textarea>
+									</div>
+								</div>
+								<hr/>
+								<div class="form-group">
+									<div class="col-sm-4"></div>
+									<div class="col-sm-3">
+										<ul id="treeDiv" class="ztree"></ul>
 									</div>
 								</div>
 							</form>
