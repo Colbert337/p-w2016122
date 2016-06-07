@@ -149,14 +149,6 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
-							<%-- <li class="">
-								<a href="<%=basePath %>/web/bossMenu/queryMenuTree">
-									<i class="menu-icon fa fa-caret-right"></i>
-									系统模块
-								</a>
-								<b class="arrow"></b>
-							</li> --%>
-
 							<li class="">
 								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/gastation/gastationList')">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -165,23 +157,13 @@
 
 								<b class="arrow"></b>
 							</li>
-
-							<li class="">
-								<a href="<%=basePath%>/web/bossSystem/querySystemPower">
-									<i class="menu-icon fa fa-caret-right"></i>
-									园所权限
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
 						</ul>
 					</li>
 
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-list-alt"></i>
-							<span class="menu-text"> 评价管理 </span>
+							<span class="menu-text">运输公司管理</span>
 
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
@@ -189,9 +171,9 @@
 
 						<ul class="submenu">
 							<li class="">
-								<a href="<%=basePath%>/web/evaluate/item/list?itemType=1">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/transportation/transportationList')">
 									<i class="menu-icon fa fa-caret-right"></i>
-									身高评价
+									运输公司信息管理
 								</a>
 
 								<b class="arrow"></b>

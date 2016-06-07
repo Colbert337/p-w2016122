@@ -8,6 +8,7 @@
     <result column="area_id" property="area_id" jdbcType="VARCHAR" />
     <result column="province_id" property="province_id" jdbcType="VARCHAR" />
     <result column="city_id" property="city_id" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="longitude" property="longitude" jdbcType="VARCHAR" />
     <result column="latitude" property="latitude" jdbcType="VARCHAR" />
@@ -29,7 +30,7 @@
   </resultMap>
   
   <sql id="Base_Column_List" >
-    sys_gas_station_id, gas_station_name, contact_phone, 
+    sys_gas_station_id, gas_station_name, contact_phone, email,
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
@@ -42,8 +43,17 @@
     from sys_gas_station
     where 1=1
   <trim>
+  	  <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''" >
+        and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+      </if>
       <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
         and gas_station_name = #{gas_station_name,jdbcType=VARCHAR}
+      </if>
+      <if test="status!= null &amp;&amp; status != ''" >
+        and status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="expiry_date_frompage != null &amp;&amp; expiry_date_frompage != ''">
+        and expiry_date between #{expiry_date_after,jdbcType=VARCHAR } and #{expiry_date_before,jdbcType=VARCHAR}
       </if>
     </trim>
   </select>
@@ -59,6 +69,7 @@
      
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
+     <include refid="Base_Column_List" />
     from sys_gas_station
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </select>
@@ -69,7 +80,7 @@
   </delete>
   
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.Gastation" >
-    insert into sys_gas_station (sys_gas_station_id, gas_station_name, contact_phone, 
+    insert into sys_gas_station (sys_gas_station_id, gas_station_name, contact_phone, email,
       area_id, province_id, 
       city_id, address, longitude, 
       latitude, expiry_date, salesmen_id, 
@@ -78,8 +89,10 @@
       tax_certif, lng_certif, dcp_certif, 
       platform_type, status, created_time, 
       updated_time)
-    values (#{sys_gas_station_id,jdbcType=VARCHAR}, #{gas_station_name,jdbcType=VARCHAR}, 
+    values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
+      #{gas_station_name,jdbcType=VARCHAR}, 
       #{contact_phone,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, 
       #{area_id,jdbcType=VARCHAR}, #{province_id,jdbcType=VARCHAR}, 
       #{city_id,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, 
       #{latitude,jdbcType=VARCHAR}, #{expiry_date,jdbcType=TIMESTAMP}, #{salesmen_id,jdbcType=VARCHAR}, 
@@ -89,6 +102,7 @@
       #{platform_type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{created_time,jdbcType=TIMESTAMP}, 
       #{updated_time,jdbcType=TIMESTAMP})
   </insert>
+  
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
     insert into sys_gas_station
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -240,6 +254,7 @@
       </if>
     </trim>
   </insert>
+  
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
     update sys_gas_station
     <set >
@@ -266,6 +281,9 @@
       </if>
       <if test="latitude != null" >
         latitude = #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
       </if>
       <if test="expiry_date != null" >
         expiry_date = #{expiry_date,jdbcType=TIMESTAMP},
@@ -315,10 +333,12 @@
     </set>
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </update>
+  
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.gastation.model.Gastation" >
     update sys_gas_station
     set gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
       contact_phone = #{contact_phone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
       area_id = #{area_id,jdbcType=VARCHAR},
       province_id = #{province_id,jdbcType=VARCHAR},
       city_id = #{city_id,jdbcType=VARCHAR},

@@ -395,7 +395,7 @@ var mydate = new Date();
 					$(this).next().focus();
 				});
 	
-	var options ={   
+	var listOptions ={   
             url:'<%=basePath%>/web/card/cardList',
             type:'post',                    
             dataType:'html',
@@ -419,7 +419,7 @@ var mydate = new Date();
 			$("#pageNum").val($(obj).text());
 		}
 		
-		$("#formcard").ajaxSubmit(options);
+		$("#formcard").ajaxSubmit(listOptions);
 	}
 	
 	function del(obj){
