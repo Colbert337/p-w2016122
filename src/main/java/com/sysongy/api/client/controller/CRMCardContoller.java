@@ -73,6 +73,4 @@ public class CRMCardContoller {
         ajaxJson.setAttributes(map);
     	return pageinfo;
     }
-
-
 }

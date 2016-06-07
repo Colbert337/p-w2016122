@@ -4,8 +4,10 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.gastation.model.Gastation;
-import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import org.apache.commons.lang.StringUtils;
@@ -17,7 +19,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,34 +28,29 @@ import java.util.Properties;
 
 @Controller
 @SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
-@RequestMapping("/crmGasService")
-public class CRMGasStationContoller {
+@RequestMapping("/crmUserService")
+public class CRMUserContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private GastationService gastationService;
+    SysUserService sysUserService;
 
-    /**
-     *
-     * @param map
-     * @param gastation
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping("/queryGastationInfo")
+    @RequestMapping(value = {"/web/queryUserInfo"})
     @ResponseBody
-    public AjaxJson queryGastationInfo(ModelMap map, Gastation gastation) throws Exception{
+    public AjaxJson queryUserInfo(HttpServletRequest request, HttpServletResponse response, SysUser sysUser){
         AjaxJson ajaxJson = new AjaxJson();
-        try{
-            Gastation gasStationInfo = gastationService.queryGastationByPK(gastation.getSys_gas_station_id());
-            Map<String, Object> attributes = new HashMap<String, Object>();
-            attributes.put("gasStationInfo", gasStationInfo);
-            ajaxJson.setAttributes(attributes);
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            SysUser sysUserInfo = sysUserService.queryUserByUserId(sysUser.getSysUserId());
+            attributes.put("sysUserInfo", sysUserInfo);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_STSTION_ERROR + e.getMessage());
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
         }
-        return ajaxJson;
+        ajaxJson.setAttributes(attributes);
+    	return ajaxJson;
     }
 }

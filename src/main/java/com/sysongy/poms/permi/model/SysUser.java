@@ -4,7 +4,7 @@ import com.sysongy.poms.base.model.BaseModel;
 
 import java.util.Date;
 
-public class SysUser  extends BaseModel {
+public class SysUser extends BaseModel {
     private String sysUserId;
 
     private String userName;
