@@ -32,13 +32,19 @@ public class SysFunctionServiceImpl implements SysFunctionService{
      * @return
      */
     @Override
-    public PageInfo<SysFunction> queryFunctionListPage(SysFunction function) {
-        Integer pageSize = GlobalConstant.PAGE_SIZE;
-        Integer pageNum = GlobalConstant.PAGE_NUM;
-        PageHelper.startPage(pageNum, pageSize);
+    public List<SysFunction> queryFunctionListPage(SysFunction function) {
         List<SysFunction> functionList = sysFunctionMapper.queryFunctionList(function);
-        PageInfo<SysFunction> functionPageInfo = new PageInfo<SysFunction>(functionList);
-        return functionPageInfo;
+        return functionList;
+    }
+
+    /**
+     * 查询功能列表
+     * @param userType 用户类型
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> queryFunctionAllList(int userType) {
+        return sysFunctionMapper.queryFunctionAllList(userType);
     }
 
     /**

@@ -21,8 +21,14 @@ public interface SysFunctionService {
      * 查询功能列表(分页)
      * @return
      */
-    PageInfo<SysFunction> queryFunctionListPage(SysFunction function);
+    List<SysFunction> queryFunctionListPage(SysFunction function);
 
+    /**
+     * 查询功能列表
+     * @param userType 用户类型
+     * @return
+     */
+    List<Map<String,Object>> queryFunctionAllList(int userType);
     /**
      * 根据父级ID查询功能列表
      * @param userType 用户类型
