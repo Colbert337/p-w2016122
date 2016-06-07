@@ -46,7 +46,9 @@ public class SysFunctionController extends BaseContoller{
 	public String queryFunctionListPage(SysFunction function, ModelMap map){
 		function.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
 		String parentId = "1";//根节点父ID
-		//封装分页参数，用于查询分页内容
+		if (function == null || function.getParentId() == null) {
+			function.setParentId(parentId);
+		}
 		List<SysFunction> functionList = new ArrayList<>();
 		functionList = sysFunctionService.queryFunctionListPage(function);
 		map.addAttribute("functionList",functionList);
@@ -64,6 +66,7 @@ public class SysFunctionController extends BaseContoller{
 	public List<Map<String,Object>> queryFunctionAllList(@ModelAttribute("currUser") CurrUser currUser, ModelMap mapTemp){
 		Map<String,Object> functionMap = new HashMap<>();
 		int userType = currUser.getUser().getUserType();
+//		String urlPath = "permi/function/list/page?parentId=";
 
 		userType = 1;
 		List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionAllList(userType);
@@ -73,6 +76,7 @@ public class SysFunctionController extends BaseContoller{
 			functionTree.put("id",function.get("sysFunctionId"));
 			functionTree.put("pId",function.get("parentId"));
 			functionTree.put("name",function.get("functionName"));
+//			functionTree.put("url",urlPath+function.get("sysFunctionId"));
 
 			functionListTree.add(functionTree);
 		}

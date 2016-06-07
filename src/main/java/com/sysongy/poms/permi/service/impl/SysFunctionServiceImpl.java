@@ -33,6 +33,14 @@ public class SysFunctionServiceImpl implements SysFunctionService{
      */
     @Override
     public List<SysFunction> queryFunctionListPage(SysFunction function) {
+        if (function.getParentId() != null && function.getParentId().equals("1")) {
+            int userType = 1;
+            List<Map<String,Object>> functionMapList = sysFunctionMapper.queryFunctionListByParentId(userType,function.getParentId());
+            if (functionMapList != null && functionMapList.size() > 0) {
+                Map<String,Object> functionMap = functionMapList.get(0);
+                function.setParentId(functionMap.get("sysFunctionId").toString());
+            }
+        }
         List<SysFunction> functionList = sysFunctionMapper.queryFunctionList(function);
         return functionList;
     }

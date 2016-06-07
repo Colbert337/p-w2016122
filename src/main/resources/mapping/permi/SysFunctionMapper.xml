@@ -92,7 +92,7 @@
     <!--and user_type = #{1}-->
   </select>
   <!--根据父级ID查询功能列表-->
-  <select id="queryFunctionListByParentId" resultMap="BaseResultMap" >
+  <select id="queryFunctionListByParentId" resultMap="ResultMap" >
     select
     <include refid="Base_Column_List" />
     from sys_function

@@ -22,7 +22,7 @@ public interface SysFunctionMapper {
      * @param parentId 父级节点编号
      * @return
      */
-    List<Map<String,Object>> queryFunctionListByParentId(int userType, String parentId);
+    List<Map<String, Object>> queryFunctionListByParentId(int userType, String parentId);
 
     SysFunction queryFunctionById(String sysFunctionId);
 

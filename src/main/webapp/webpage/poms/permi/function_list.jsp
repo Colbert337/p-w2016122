@@ -13,6 +13,7 @@
 <script type="text/javascript">
 
 	$(function() {
+		/*左侧树初始化 开始*/
 		var zTreeObj;
 		// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
 		var setting = {
@@ -23,6 +24,9 @@
 				simpleData: {
 					enable: true
 				}
+			},
+			callback: {
+				onClick: queryMenuClick
 			}
 		};
 		var zNodes = [];
@@ -38,6 +42,22 @@
 		});
 		zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
 		zTreeObj.expandAll(true);//展开所有节点
+
+
+		function queryMenuClick(event, treeId, treeNode){
+			/*alert(treeNode.id + ", " + treeNode.name);*/
+			var queryMenuOptions ={
+				url:'<%=basePath%>/web/permi/function/list/page',
+				data:{parentId:treeNode.id},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
+			}
+			$("#listForm").ajaxSubmit(queryMenuOptions);
+		}
+		/*左侧树初始化 结束*/
 		/*表单验证*/
 		jQuery('#functionForm').validationEngine('attach', {
 			promptPosition: 'topRight',		//提示信息的位置，可设置为：'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'centerRight', 'centerLeft', 'inline'
