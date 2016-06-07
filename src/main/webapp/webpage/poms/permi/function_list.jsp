@@ -43,7 +43,9 @@
 		zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
 		zTreeObj.expandAll(true);//展开所有节点
 
-
+		/**
+		 * 获取当前节点下菜单
+		 */
 		function queryMenuClick(event, treeId, treeNode){
 			/*alert(treeNode.id + ", " + treeNode.name);*/
 			var queryMenuOptions ={
@@ -93,6 +95,8 @@
 		if(functionId != null && functionId != ""){
 			$("#parent_id").val(functionId);
 		}
+		$("#parent_id").val('${parentId}');
+		$("#parent_name").val('${parentName}');
 		$("#functionModel").modal('show');
 	}
 
@@ -138,6 +142,7 @@
 				$("#function_name").val(data.functionName);
 				$("#function_path").val(data.functionPath);
 				$("#parent_id").val(data.parentId);
+				$("#parent_name").val('${parentName}');
 				$("#function_type").val(data.functionType);
 				$("#function_icon").val(data.functionIcon);
 				$("#function_sort").val(data.functionSort);
@@ -152,10 +157,10 @@
 	/**
 	 * 删除用户
 	 */
-	function deleteFunction(functionId){
+	function deleteFunction(functionId,parentId){
 		var deleteOptions ={
 			url:'<%=basePath%>/web/permi/function/delete',
-			data:{functionId:functionId},
+			data:{functionId:functionId,parentId:parentId},
 			type:'post',
 			dataType:'text',
 			success:function(data){
@@ -206,6 +211,7 @@
 			<!-- PAGE CONTENT BEGINS -->
 			<div class="row">
 				<div class="col-xs-12">
+					<div class="pull-left">当前选择菜单：<span id="currMenu" style="color: #2679b5;font-size: 18px">${parentName}</span></div>
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
 						<a class="btn btn-primary" href="javascript:addFunction();">
@@ -263,7 +269,7 @@
 									<c:if test="${function.functionStatus == 1}">
 										<a class="btn btn-sm btn-white btn-primary" href="javascript:updateStatus('${function.sysFunctionId}',0);">启用</a>
 									</c:if>
-									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteFunction('${function.sysFunctionId}');">删除</a>
+									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteFunction('${function.sysFunctionId}','${function.parentId}');">删除</a>
 								</td>
 							</tr>
 						</c:forEach>
@@ -329,9 +335,10 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="parent_id"> <span class="red_star">*</span>父级菜单： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="parent_id">父级菜单： </label>
 									<div class="col-sm-8">
-										<input type="text" id="parent_id" name="parentId" placeholder="父级菜单" class="validate[required] col-xs-10 col-sm-10" />
+										<input type="text" id="parent_name" placeholder="父级菜单" class="col-xs-10 col-sm-10"  readonly="readonly"/>
+										<input type="hidden" id="parent_id" name="parentId" placeholder="父级菜单"/>
 									</div>
 								</div>
 								<div class="form-group">
