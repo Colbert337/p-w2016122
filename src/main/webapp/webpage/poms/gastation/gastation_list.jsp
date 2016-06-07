@@ -172,31 +172,43 @@
 				<div class="col-xs-12">
 					<h3 class="header smaller lighter blue">加气站管理</h3>
 
-					<div class="form-group">
-						<div class="col-md-2 control-label no-padding-right">
+					<div class="row form-group">
+						<div class="col-md-2">
 						    <label>加气站编号:</label>
 							<input type="text" name="sys_gas_station_id" placeholder="输入加气站编号"  maxlength="9" value="${gastation.sys_gas_station_id}"/>
 						</div>
 						
-						<div class="col-md-2 control-label no-padding-right">
+						<div class="col-md-2">
 						    <label>加气站名称:</label>
 							<input type="text" name="gas_station_name" placeholder="输入加气站名称"  maxlength="9" value="${gastation.gas_station_name}"/>
 						</div>
 						
-						<div class="col-md-2 control-label no-padding-right">
+						<div class="col-md-2">
 							<label>气站状态:</label>
 							<select class="chosen-select " name="status" >
 									<s:option flag="true" gcode="GASTATION_STATUS" form="gastation" field="status" link="true" />
 							</select>
 						</div>
 						
-						<div class="col-md-4 input-group no-padding-right  control-label">
+						<div class="col-md-2">
 						    <label>平台有效期:</label>
-							<span class="input-group-addon">
-									<i class="fa fa-calendar bigger-110"></i>
-							</span>
+							<%--<span class="input-group-addon">--%>
+									<%--<i class="fa fa-calendar bigger-110"></i>--%>
+							<%--</span>--%>
 							<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${gascard.expiry_date_frompage}"/>
 						</div>
+
+						<div class="col-md-4 text-right">
+							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								新建加气站
+							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								查询
+							</button>
+						</div>
+
 						<%-- <div class="col-md-3 control-label no-padding-right">
 						    
 							<label>用户卡状态:</label>
@@ -218,21 +230,6 @@
 							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${gascard.storage_time_range}"/>
 						</div> --%>
 					</div>
-					<br/>
-					<div class="form-group">
-						<div class="col-md-12 pull-right">
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										新建加气站
-								</button>
-								<button class="btn btn-primary" type="button" onclick="commitForm();">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										查询
-								</button>
-						</div>
-					</div>
-					
-					<br/><br/>
 
 					<div class="clearfix">
 						<div class="pull-right tableTools-container"></div>

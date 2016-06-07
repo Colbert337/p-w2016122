@@ -188,7 +188,7 @@
 				<div class="col-xs-12">
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
-						<a class="btn btn-primary" href="javascript:addFunction();">
+						<a class="btn btn-sm btn-primary" href="javascript:addFunction();">
 							添加功能
 						</a>
 					</div>

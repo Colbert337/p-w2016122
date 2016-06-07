@@ -131,3 +131,37 @@ function nextpage(formid){
 	$("#pageNum").val(parseInt($("#pageNum").val())+1);
 	$(formid).ajaxSubmit(listOptions);
 }
+
+
+//Add by xiukun
+var sjny = sjny || {};
+sjny.admin = sjny.admin || {};
+sjny.admin.comm = {
+	clickShowModal: function() {
+		$('#testModal').on('click', function(){
+			$('#myModal').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+		});
+	},
+	selectedSubMenuItem: function() {
+		$('.nav-list > li').on('click', '.submenu > li', function(){
+			var $this = $(this),
+				$parent = $this.parents('li');
+			function isActive(){
+				$this.addClass('active').siblings().removeClass('active');
+				$parent.addClass('active').siblings().removeClass('active');
+				$parent.addClass('open').siblings().removeClass('open');
+				$parent.siblings().find('.submenu').removeClass('nav-show').hide();
+				$parent.siblings().find('li').removeClass('active');
+			}
+			setTimeout(isActive,10);
+		});
+	}
+};
+
+$(document).ready(function() {
+	sjny.admin.comm.clickShowModal();
+	sjny.admin.comm.selectedSubMenuItem();
+});
