@@ -11,20 +11,53 @@
 <link href="<%=basePath %>/assets/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
 <script src="<%=basePath %>/assets/zTree/js/jquery.ztree.all-3.5.min.js"/>
 <script type="text/javascript">
-	var zTreeObj;
-	// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-	var setting = {};
-	// zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-	var zNodes = [
-		{name:"test1", open:true, children:[
-			{name:"test1_1"}, {name:"test1_2"}]},
-		{name:"test2", open:true, children:[
-			{name:"test2_1"}, {name:"test2_2"}]}
-	];
 
 	$(function() {
+		/*左侧树初始化 开始*/
+		var zTreeObj;
+		// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+		var setting = {
+			view: {
+				selectedMulti: false
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+				onClick: queryMenuClick
+			}
+		};
+		var zNodes = [];
 		//初始化左侧树
+		$.ajax({
+			url:"<%=basePath%>/web/permi/function/list",
+			data:{},
+			async:false,
+			type: "POST",
+			success: function(data){
+				zNodes = data;
+			}
+		});
 		zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+		zTreeObj.expandAll(true);//展开所有节点
+
+
+		function queryMenuClick(event, treeId, treeNode){
+			/*alert(treeNode.id + ", " + treeNode.name);*/
+			var queryMenuOptions ={
+				url:'<%=basePath%>/web/permi/function/list/page',
+				data:{parentId:treeNode.id},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
+			}
+			$("#listForm").ajaxSubmit(queryMenuOptions);
+		}
+		/*左侧树初始化 结束*/
 		/*表单验证*/
 		jQuery('#functionForm').validationEngine('attach', {
 			promptPosition: 'topRight',		//提示信息的位置，可设置为：'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'centerRight', 'centerLeft', 'inline'
@@ -56,7 +89,10 @@
 	}
 	/*分页相关方法 end*/
 	//显示添加用户弹出层
-	function addRole(){
+	function addFunction(functionId){
+		if(functionId != null && functionId != ""){
+			$("#parent_id").val(functionId);
+		}
 		$("#functionModel").modal('show');
 	}
 
@@ -146,7 +182,9 @@
 		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
+
 </script>
+
 <div class="page-header">
 	<h1>
 		功能管理
@@ -170,7 +208,7 @@
 				<div class="col-xs-12">
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
-						<a class="btn btn-primary" href="javascript:addRole();">
+						<a class="btn btn-primary" href="javascript:addFunction();">
 							添加功能
 						</a>
 					</div>
@@ -233,7 +271,7 @@
 					</table>
 				</div><!-- /.span -->
 				<%--分页start--%>
-				<div class="row">
+				<%--<div class="row">
 					<div class="col-sm-6">
 						<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
 					</div>
@@ -253,7 +291,7 @@
 							</ul>
 						</div>
 					</div>
-				</div>
+				</div>--%>
 				<%--分页 end--%>
 			</div><!-- /.row -->
 		</form>
@@ -278,26 +316,26 @@
 							<form class="form-horizontal" id="functionForm">
 								<!-- #section:elements.form -->
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_name"> <span class="red_star">*</span>功能名称： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_name"> <span class="red_star">*</span>功能名称： </label>
 									<div class="col-sm-8">
 										<input type="text" id="function_name" name="functionName" placeholder="功能名称" class="validate[required] col-xs-10 col-sm-10" />
 										<input type="hidden" id="sys_function_id" name="sysFunctionId" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_path"> <span class="red_star">*</span>功能路径： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_path"> <span class="red_star">*</span>功能路径： </label>
 									<div class="col-sm-8">
 										<input type="text" id="function_path" name="functionPath" placeholder="功能路径" class="validate[required] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="parent_id"> <span class="red_star">*</span>父级菜单： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="parent_id"> <span class="red_star">*</span>父级菜单： </label>
 									<div class="col-sm-8">
 										<input type="text" id="parent_id" name="parentId" placeholder="父级菜单" class="validate[required] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_type"> <span class="red_star">*</span>功能类型： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_type"> <span class="red_star">*</span>功能类型： </label>
 									<div class="col-sm-8">
 										<select class="chosen-select col-xs-10 col-sm-10" id="function_type" name="functionType" data-placeholder="功能类型">
 											<s:option flag="true" gcode="PLF_TYPE" link="false" />
@@ -305,19 +343,19 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_icon">功能图标： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_icon">功能图标： </label>
 									<div class="col-sm-8">
 										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_sort">功能排序： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_sort">功能排序： </label>
 									<div class="col-sm-8">
 										<input type="text" id="function_sort" name="functionSort" placeholder="功能排序" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="is_menu_yes">是否菜单： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="is_menu_yes">是否菜单： </label>
 									<div class="col-sm-8">
 										<div class="radio">
 										<label>
@@ -332,7 +370,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_desc"> 描述： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_desc"> 描述： </label>
 									<div class="col-sm-8">
 										<textarea class="limited col-xs-10 col-sm-10" id="function_desc" name="roleDesc" maxlength="50"></textarea>
 									</div>
