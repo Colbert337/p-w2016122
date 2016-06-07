@@ -60,6 +60,9 @@
       <if test="isAdmin != null" >
         and  is_admin = #{isAdmin}
       </if>
+      <if test="isDeleted != null" >
+        and  is_deleted = #{isDeleted}
+      </if>
     </trim>
     order by created_date desc
   </select>

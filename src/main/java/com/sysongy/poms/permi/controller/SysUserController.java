@@ -122,7 +122,7 @@ public class SysUserController extends BaseContoller{
 		SysUser user = new SysUser();
 		if (userId != null) {
 			user.setSysUserId(userId);
-			user.setStatus(GlobalConstant.STATUS_DISABLE);//
+			user.setIsDeleted(GlobalConstant.STATUS_DELETE);
 			sysUserService.updateUser(user);
 		}
 		return "redirect:/web/permi/user/list/page";

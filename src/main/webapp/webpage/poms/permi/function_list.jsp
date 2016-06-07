@@ -233,7 +233,6 @@
 							<th class="hidden-480">图标</th>
 							<th>类型</th>
 							<th class="hidden-480">排序</th>
-							<th>状态</th>
 							<th>创建时间</th>
 							<th>操作</th>
 						</tr>
@@ -252,23 +251,9 @@
 								<td>${function.functionIcon}</td>
 								<td><s:Code2Name mcode="${function.functionType}" gcode="PLF_TYPE"></s:Code2Name></td>
 								<td class="hidden-480">${function.functionSort}</td>
-								<td>
-									<c:if test="${function.functionStatus == 0}">
-										启用
-									</c:if>
-									<c:if test="${function.functionStatus == 1}">
-										禁用
-									</c:if>
-								</td>
 								<td class="hidden-480"><fmt:formatDate value="${function.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
 									<a class="btn btn-sm btn-white btn-primary" href="javascript:editFunction('${function.sysFunctionId}');">修改</a>
-									<c:if test="${function.functionStatus == 0}">
-										<a class="btn btn-sm btn-white btn-inverse" href="javascript:updateStatus('${function.sysFunctionId}',1);">禁用</a>
-									</c:if>
-									<c:if test="${function.functionStatus == 1}">
-										<a class="btn btn-sm btn-white btn-primary" href="javascript:updateStatus('${function.sysFunctionId}',0);">启用</a>
-									</c:if>
 									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteFunction('${function.sysFunctionId}','${function.parentId}');">删除</a>
 								</td>
 							</tr>
