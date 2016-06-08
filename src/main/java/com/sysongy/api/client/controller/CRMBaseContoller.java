@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Properties;
 
 @Controller
-@SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
 @RequestMapping("/crmBaseService")
 public class CRMBaseContoller {
 	

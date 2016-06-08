@@ -18,7 +18,7 @@
 <div class="row">
 	<div class="col-xs-12 panel-title">
 		 <div class="space-32" style="margin-top: 10%;"></div>
-		 <h1>欢迎登陆司集运维管理系统！</h1>
+		 <h1>${currUser.user.userName},欢迎登陆司集运维管理系统！</h1>
 	</div>
 </div>
 

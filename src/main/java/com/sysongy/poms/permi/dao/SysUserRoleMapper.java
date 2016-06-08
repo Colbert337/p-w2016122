@@ -3,11 +3,11 @@ package com.sysongy.poms.permi.dao;
 import com.sysongy.poms.permi.model.SysUserRole;
 
 public interface SysUserRoleMapper {
-    int deleteByPrimaryKey(String sysUserRoleId);
+    int deleteUserRoleByUserId(String userId);
 
     int insert(SysUserRole record);
 
-    int insertSelective(SysUserRole record);
+    int addUserRole(SysUserRole record);
 
     SysUserRole selectByPrimaryKey(String sysUserRoleId);
 

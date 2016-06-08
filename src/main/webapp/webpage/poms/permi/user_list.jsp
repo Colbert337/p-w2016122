@@ -43,13 +43,30 @@
 	/*分页相关方法 end*/
 	//显示添加用户弹出层
 	function addUser(){
-		$("#userModel").modal('show');
+		/*$("#userModel").modal('show');*/
+		queryRoleList();
 		/*密码输入框改为可编辑*/
 		$("#password").removeAttr("readonly");
 		$("#re_password").removeAttr("readonly");
 	}
 	//显示编辑用户弹出层
-	function updateUser(){
+	function queryRoleList(roleId){
+		$.ajax({
+			url:"<%=basePath%>/web/permi/user/list/role",
+			data:{},
+			async:false,
+			type: "POST",
+			success: function(data){
+				$("#avatar_b").append("<option value='0'>--选择角色--</option>");
+				$.each(data,function(i,val){
+					if(val.sysRoleId == roleId){
+						$("#avatar_b").append("<option value='"+val.sysRoleId+"' selected='selected'>"+val.roleName+"</option>");
+					}else{
+						$("#avatar_b").append("<option value='"+val.sysRoleId+"'>"+val.roleName+"</option>");
+					}
+				})
+			}
+		})
 		$("#userModel").modal('show');
 	}
 
@@ -59,7 +76,14 @@
 		$("#userForm :input").each(function () {
 			$(this).val("");
 		});
+		$("#avatar_b").empty();
 		$("#"+divId).modal('hide');
+	}
+	function clearDiv(){
+		$("#roleForm :input").each(function () {
+			$(this).val("");
+		});
+		$("#avatar_b").empty();
 	}
 	/**
 	 * 保存用户信息
@@ -105,7 +129,8 @@
 				/*密码输入框改为可编辑*/
 				$("#password").attr("readonly","readonly");
 				$("#re_password").attr("readonly","readonly");
-				updateUser();
+
+				queryRoleList(data.sysRoleId);
 			}
 		});
 
@@ -218,7 +243,7 @@
 								</td>
 								<td>${user.email}</td>
 								<td>${user.mobilePhone}</td>
-								<td class="hidden-480">${user.userName}</td>
+								<td class="hidden-480">${user.avatarB}</td>
 								<td><s:Code2Name mcode="${user.userType}" gcode="PLF_TYPE"></s:Code2Name></td>
 								<td>
 									<c:if test="${user.status == 0}">
@@ -313,9 +338,13 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户角色： </label>
+									<div class="col-sm-4">
+										<select class="chosen-select col-xs-10 col-sm-12" id="avatar_b" name="avatarB"></select>
+									</div>
 									<label class="col-sm-2 control-label no-padding-right"> 备注： </label>
-									<div class="col-sm-10">
-										<textarea class="limited col-xs-10 col-sm-12"  id="remark" maxlength="50"></textarea>
+									<div class="col-sm-4">
+										<textarea class="limited col-xs-10 col-sm-12"  id="remark" name="remark" maxlength="50"></textarea>
 									</div>
 								</div>
 								<h5 class="header smaller lighter blue">基本信息</h5>

@@ -1,11 +1,12 @@
 package com.sysongy.poms.permi.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysRoleService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
@@ -13,12 +14,12 @@ import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,8 @@ public class SysUserController extends BaseContoller{
 
 	@Autowired
 	SysUserService sysUserService;
+	@Autowired
+	SysRoleService sysRoleService;
 	/**
 	 * 查询用户列表
 	 * @return
@@ -85,12 +88,21 @@ public class SysUserController extends BaseContoller{
 	 */
 	@RequestMapping("/update")
 	@ResponseBody
-	public SysUser updateUserByUserId(@RequestParam String sysUserId, ModelMap map){
-		SysUser user = sysUserService.queryUserByUserId(sysUserId);
-
-		return user;
+	public Map<String, Object> updateUserByUserId(@RequestParam String sysUserId, ModelMap map){
+		Map<String, Object> userMap = sysUserService.queryUserMapByUserId(sysUserId);
+		return userMap;
 	}
 
+	/**
+	 * 修改状态
+	 * @return
+	 */
+	@RequestMapping("/update/staruts")
+	@ResponseBody
+	public Map<String, Object> updateStatusByUserId(SysUser sysUser, ModelMap map){
+		Map<String, Object> userMap = sysUserService.updateStatus(sysUser);
+		return userMap;
+	}
 	/**
 	 * 保存用户
 	 * @return
@@ -128,6 +140,18 @@ public class SysUserController extends BaseContoller{
 		return "redirect:/web/permi/user/list/page";
 	}
 
+	/**
+	 * 根据当前用户ID获取角色列表
+	 * @return
+	 */
+	@RequestMapping("/list/role")
+	@ResponseBody
+	public List<SysRole> queryRoleList(@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
+		int userType = currUser.getUser().getUserType();
+		List<SysRole> roleList = sysRoleService.queryRoleListByUserType(userType+"");
+
+		return roleList;
+	}
 	/**
 	 * 获取气站用户列表
 	 * @return

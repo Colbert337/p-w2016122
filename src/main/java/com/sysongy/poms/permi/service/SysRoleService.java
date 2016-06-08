@@ -32,6 +32,12 @@ public interface SysRoleService {
     Map<String, Object> queryRoleByRoleId(String roleId);
 
     /**
+     * 根据用户类型查询用户角色列表
+     * @param userType 用户类型
+     * @return
+     */
+    List<SysRole> queryRoleListByUserType(String userType);
+    /**
      * 添加角色
      * @param role
      * @return

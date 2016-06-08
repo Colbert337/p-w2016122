@@ -121,6 +121,17 @@ public class SysRoleServiceImpl implements SysRoleService{
         roleMap.put("functionStr",functionStr);
         return roleMap;
     }
+
+    /**
+     * 根据用户类型查询用户角色列表
+     * @param userType 用户类型
+     * @return
+     */
+    @Override
+    public List<SysRole> queryRoleListByUserType(String userType) {
+        return sysRoleMapper.queryRoleListByUserType(userType);
+    }
+
     /**
      * 添加角色
      * @param role

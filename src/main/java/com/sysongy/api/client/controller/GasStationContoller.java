@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Properties;
 
 @Controller
-@SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
 @RequestMapping("/crmGasService")
 public class GasStationContoller {
 	
