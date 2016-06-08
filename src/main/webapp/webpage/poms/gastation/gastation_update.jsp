@@ -7,10 +7,22 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/colorbox.css" />
+	
 	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
+	<script src="<%=basePath %>/assets/js/ace-extra.js"></script>
+	<script src="<%=basePath %>/assets/js/jquery.colorbox.js"></script>
+	
+	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
 
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
@@ -55,7 +67,7 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								新建加气站
+								修改加气站信息
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -83,6 +95,22 @@
 									</div>
 									
 									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
+
+										<div class="col-sm-3">
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="col-xs-10 col-sm-5" maxlength="20" value="${station.station_manager}"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
+
+										<div class="col-sm-3">
+											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15" value="${station.contact_phone}"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期：</label>
 										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
@@ -96,11 +124,9 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 销售负责人： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 销售负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="salesmen_id" name="salesmen_id" multiple="multiple" onchange="setSalesmenName(this);">
-												</select>
-												<input type="hidden" id="salesmen_name" name="salesmen_name"/>
+												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
 									</div>
 									
@@ -174,7 +200,40 @@
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5"   placeholder="输入工商注册号"/>
+											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5" placeholder="输入工商注册号" value="${station.indu_com_number}"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right"> 工商注册证书： </label>
+										<div class="col-sm-4">
+											<div class="widget-box">
+												<div class="widget-header">
+													<h4 class="widget-title">工商注册证书照片上传</h4>
+												</div>
+													
+													<ul class="ace-thumbnails clearfix">
+														<li>
+															<a href="<%=imagePath %>${station.indu_com_certif}" data-rel="colorbox">
+																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.indu_com_certif}" />
+																<div class="text">
+																	<div class="inner">点击放大</div>
+																</div>
+															</a>
+														</li>
+													</ul>
+
+												<div class="widget-body">
+													<div class="widget-main">
+														<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
+														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
+														<button class="btn btn-info" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
+															<i class="ace-icon fa fa-check bigger-110"></i>
+															图片上传
+														</button>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 									
@@ -182,10 +241,109 @@
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5"  placeholder="输入税务注册号"/>
+											<input type="text"  id="tax_number" name="tax_number" class="col-xs-10 col-sm-5"  placeholder="输入税务注册号" value=" ${station.tax_number}"/>
 										</div>
 									</div>
 									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right"> 税务注册证书： </label>
+										<div class="col-sm-4">
+											<div class="widget-box">
+												<div class="widget-header">
+													<h4 class="widget-title">税务注册证书照片上传</h4>
+												</div>
+													
+													<ul class="ace-thumbnails clearfix">
+														<li>
+															<a href="<%=imagePath %>${station.tax_certif}" data-rel="colorbox">
+																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.tax_certif}" />
+																<div class="text">
+																	<div class="inner">点击放大</div>
+																</div>
+															</a>
+														</li>
+													</ul>
+
+												<div class="widget-body">
+													<div class="widget-main">
+														<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
+														<input type="hidden" id="tax_certif" name="tax_certif"/> 
+														<button class="btn btn-info" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
+															<i class="ace-icon fa fa-check bigger-110"></i>
+															图片上传
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right"> LNG储装证书： </label>
+										<div class="col-sm-4">
+											<div class="widget-box">
+												<div class="widget-header">
+													<h4 class="widget-title">LNG储装证书照片上传</h4>
+												</div>
+													
+													<ul class="ace-thumbnails clearfix">
+														<li>
+															<a href="<%=imagePath %>${station.lng_certif}" data-rel="colorbox">
+																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.lng_certif}" />
+																<div class="text">
+																	<div class="inner">点击放大</div>
+																</div>
+															</a>
+														</li>
+													</ul>
+
+												<div class="widget-body">
+													<div class="widget-main">
+														<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
+														<input type="hidden" id="lng_certif" name="lng_certif"/> 
+														<button class="btn btn-info" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
+															<i class="ace-icon fa fa-check bigger-110"></i>
+															图片上传
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">  危化品证书： </label>
+										<div class="col-sm-4">
+											<div class="widget-box">
+												<div class="widget-header">
+													<h4 class="widget-title"> 危化品证书照片上传</h4>
+												</div>
+													
+													<ul class="ace-thumbnails clearfix">
+														<li>
+															<a href="<%=imagePath %>${station.dcp_certif}" data-rel="colorbox">
+																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.dcp_certif}" />
+																<div class="text">
+																	<div class="inner">点击放大</div>
+																</div>
+															</a>
+														</li>
+													</ul>
+
+												<div class="widget-body">
+													<div class="widget-main">
+														<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
+														<input type="hidden" id="dcp_certif" name="dcp_certif"/> 
+														<button class="btn btn-info" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
+															<i class="ace-icon fa fa-check bigger-110"></i>
+															图片上传
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 加气站状态： </label>
 
@@ -234,6 +392,30 @@
 	</div>
 		<!-- inline scripts related to this page -->
 	<script type="text/javascript">
+	
+	var projectfileoptions = {
+	        showUpload : false,
+	        showRemove : false,
+	        language : 'zh',
+	        allowedPreviewTypes : [ 'image' ],
+	        allowedFileExtensions : [ 'jpg', 'png', 'gif', 'jepg' ],
+	        maxFileSize : 1000,
+	    }
+	// 文件上传框
+	$('input[class=projectfile]').each(function() {
+	    var imageurl = $(this).attr("value");
+	
+	    if (imageurl) {
+	        var op = $.extend({
+	            initialPreview : [ // 预览图片的设置
+	            "<img src='" + imageurl + "' class='file-preview-image'>", ]
+	        }, projectfileoptions);
+	
+	        $(this).fileinput(op);
+	    } else {
+	        $(this).fileinput(projectfileoptions);
+	    }
+	});
 	
 		var china=new Object();
 		china['100']=new Array('北京市区','北京市辖区');
@@ -376,7 +558,32 @@
 		                    }
 		                }
 		            },
-		            salesmen_id: {
+		            station_manager: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '加气站站长不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 1,
+		                        max: 20,
+		                        message: '加气站站长不能超过20个汉字'
+		                    }
+		                }
+		            },
+		            contact_phone: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '联系电话不能为空'
+		                    },
+		                    regexp: {
+		                        regexp: '^[0-9]*[1-9][0-9]*$',
+		                        message: '联系电话必须是数字'
+		                    }
+		                }
+		            },
+		            salesmen_name: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '销售负责人不能为空'
@@ -499,4 +706,70 @@
 		function setOperationName(obj){
 			$("#operations_name").val($(obj).val());
 		}
+		
+function save_photo(fileobj,obj,obj1){
+			
+			$(fileobj).parents("div").find("input[name=uploadfile]").each(function(){
+				$(this).attr("name","");
+			});
+			
+			$(fileobj).parent("div").find("input:first").attr("name","uploadfile");
+			
+			if($(obj).val()==null || $(obj).val()==""){
+				alert("请先上传文件");	
+				return;
+			}
+			
+			var multipartOptions ={   
+					url:'../crmBaseService/web/upload?gasstationid='+$("#sys_gas_station_id").val(),
+		            type:'post',                    
+		            dataType:'text',
+		            enctype:"multipart/form-data",
+		            success:function(data){
+		            	var s = JSON.parse(data);
+		            	if(s.success == true){
+		            		alert("上传成功");
+		            		$(obj1).val(s.obj);
+		            	}
+		            	
+		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+
+		 	       }
+			}
+			$("#gastationform").ajaxSubmit(multipartOptions);
+		}
+		
+		jQuery(function($) {
+			var $overflow = '';
+			var colorbox_params = {
+				rel: 'colorbox',
+				reposition:true,
+				scalePhotos:true,
+				scrolling:false,
+				previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+				next:'<i class="ace-icon fa fa-arrow-right"></i>',
+				close:'&times;',
+				current:'{current} of {total}',
+				maxWidth:'100%',
+				maxHeight:'100%',
+				onOpen:function(){
+					$overflow = document.body.style.overflow;
+					document.body.style.overflow = 'hidden';
+				},
+				onClosed:function(){
+					document.body.style.overflow = $overflow;
+				},
+				onComplete:function(){
+					$.colorbox.resize();
+				}
+			};
+		
+			$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+			$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
+			
+			
+			$(document).one('ajaxloadstart.page', function(e) {
+				$('#colorbox, #cboxOverlay').remove();
+		   });
+		})
 		</script>

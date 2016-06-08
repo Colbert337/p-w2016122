@@ -32,7 +32,7 @@ public class GastationServiceImpl implements GastationService {
 	}
 
 	@Override
-	public Integer saveGastation(Gastation record, String operation) throws Exception {
+	public String saveGastation(Gastation record, String operation) throws Exception {
 		if("insert".equals(operation)){
 			Gastation station = gasStationMapper.findGastationid(record.getProvince_id());
 			String newid;
@@ -47,12 +47,14 @@ public class GastationServiceImpl implements GastationService {
 			record.setCreated_time(new Date());
 			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			record.setSys_gas_station_id(newid);
-			return gasStationMapper.insert(record);
+			gasStationMapper.insert(record);
+			return newid;
 		}else{
-			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
-			return gasStationMapper.updateByPrimaryKeySelective(record);
+			if(!StringUtils.isEmpty(record.getExpiry_date_frompage())){
+				record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
+			}
+			return String.valueOf(gasStationMapper.updateByPrimaryKeySelective(record));
 		}
-		
 	}
 
 	@Override

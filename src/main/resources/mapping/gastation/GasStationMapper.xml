@@ -30,7 +30,7 @@
   </resultMap>
   
   <sql id="Base_Column_List" >
-    sys_gas_station_id, gas_station_name, contact_phone, email,
+    sys_gas_station_id, gas_station_name, contact_phone, email,station_manager,
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
@@ -80,7 +80,7 @@
   </delete>
   
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.Gastation" >
-    insert into sys_gas_station (sys_gas_station_id, gas_station_name, contact_phone, email,
+    insert into sys_gas_station (sys_gas_station_id, gas_station_name, contact_phone, email,station_manager,
       area_id, province_id, 
       city_id, address, longitude, 
       latitude, expiry_date, salesmen_id, 
@@ -92,7 +92,8 @@
     values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
       #{gas_station_name,jdbcType=VARCHAR}, 
       #{contact_phone,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR},
+      #{station_manager,jdbcType=VARCHAR},  
       #{area_id,jdbcType=VARCHAR}, #{province_id,jdbcType=VARCHAR}, 
       #{city_id,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, 
       #{latitude,jdbcType=VARCHAR}, #{expiry_date,jdbcType=TIMESTAMP}, #{salesmen_id,jdbcType=VARCHAR}, 
@@ -111,6 +112,12 @@
       </if>
       <if test="gas_station_name != null" >
         gas_station_name,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+       <if test="station_manager != null" >
+        station_manager,
       </if>
       <if test="contact_phone != null" >
         contact_phone,
@@ -186,6 +193,12 @@
       <if test="gas_station_name != null" >
         #{gasStation_name,jdbcType=VARCHAR},
       </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="station_manager != null" >
+        #{station_manager,jdbcType=VARCHAR},
+      </if>
       <if test="contact_phone != null" >
         #{contact_phone,jdbcType=VARCHAR},
       </if>
@@ -258,76 +271,79 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
     update sys_gas_station
     <set >
-      <if test="gas_station_name != null" >
+      <if test="gas_station_name != null &amp;&amp; gas_station_name != ''">
         gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
       </if>
-      <if test="contact_phone != null" >
+      <if test="station_manager != null &amp;&amp; station_manager != ''" >
+        station_manager = #{station_manager,jdbcType=VARCHAR},
+      </if>
+      <if test="contact_phone != null &amp;&amp; contact_phone != ''" >
         contact_phone = #{contact_phone,jdbcType=VARCHAR},
       </if>
-      <if test="area_id != null" >
+      <if test="area_id != null &amp;&amp; area_id != ''" >
         area_id = #{area_id,jdbcType=VARCHAR},
       </if>
-      <if test="province_id != null" >
+      <if test="province_id != null &amp;&amp; province_id != ''" >
         province_id = #{province_id,jdbcType=VARCHAR},
       </if>
-      <if test="city_id != null" >
+      <if test="city_id != null &amp;&amp; city_id != ''">
         city_id = #{city_id,jdbcType=VARCHAR},
       </if>
-      <if test="address != null" >
+      <if test="address != null &amp;&amp; address != ''" >
         address = #{address,jdbcType=VARCHAR},
       </if>
-      <if test="longitude != null" >
+      <if test="longitude != null &amp;&amp; longitude != ''">
         longitude = #{longitude,jdbcType=VARCHAR},
       </if>
-      <if test="latitude != null" >
+      <if test="latitude != null &amp;&amp; latitude != ''" >
         latitude = #{latitude,jdbcType=VARCHAR},
       </if>
-      <if test="email != null" >
+      <if test="email != null &amp;&amp; email != ''" >
         email = #{email,jdbcType=VARCHAR},
       </if>
-      <if test="expiry_date != null" >
+      <if test="expiry_date != null &amp;&amp; expiry_date != ''" >
         expiry_date = #{expiry_date,jdbcType=TIMESTAMP},
       </if>
-      <if test="salesmen_id != null" >
+      <if test="salesmen_id != null &amp;&amp; salesmen_id != ''" >
         salesmen_id = #{salesmen_id,jdbcType=VARCHAR},
       </if>
-      <if test="salesmen_name != null" >
+      <if test="salesmen_name != null &amp;&amp; salesmen_name != ''" >
         salesmen_name = #{salesmen_name,jdbcType=VARCHAR},
       </if>
-      <if test="operations_id != null" >
+      <if test="operations_id != null &amp;&amp; operations_id != ''" >
         operations_id = #{operations_id,jdbcType=VARCHAR},
       </if>
-      <if test="operations_name != null" >
+      <if test="operations_name != null &amp;&amp; operations_name != ''" >
         operations_name = #{operations_name,jdbcType=VARCHAR},
       </if>
-      <if test="indu_com_number != null" >
+      <if test="indu_com_number != null &amp;&amp; indu_com_number != ''" >
         indu_com_number = #{indu_com_number,jdbcType=VARCHAR},
       </if>
-      <if test="tax_number != null" >
+      <if test="tax_number != null &amp;&amp; tax_number != ''" >
         tax_number = #{tax_number,jdbcType=VARCHAR},
       </if>
-      <if test="indu_com_certif != null" >
+      <if test="indu_com_certif != null &amp;&amp; indu_com_certif != ''" >
         indu_com_certif = #{indu_com_certif,jdbcType=VARCHAR},
       </if>
-      <if test="tax_certif != null" >
+      <if test="tax_certif != null &amp;&amp; tax_certif != ''" >
         tax_certif = #{tax_certif,jdbcType=VARCHAR},
       </if>
-      <if test="lng_certif != null" >
+      <if test="lng_certif != null &amp;&amp; lng_certif != ''" >
         lng_certif = #{lng_certif,jdbcType=VARCHAR},
       </if>
-      <if test="dcp_certif != null" >
+      <if test="dcp_certif != null &amp;&amp; dcp_certif != ''" >
         dcp_certif = #{dcp_certif,jdbcType=VARCHAR},
       </if>
-      <if test="platform_type != null" >
+      <if test="platform_type != null &amp;&amp; platform_type != ''" >
         platform_type = #{platform_type,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
+      <if test="status != null &amp;&amp; status != ''" >
         status = #{status,jdbcType=VARCHAR},
       </if>
-      <if test="created_time != null" >
+      <if test="created_time != null &amp;&amp; created_time != ''" >
         created_time = #{created_time,jdbcType=TIMESTAMP},
       </if>
-      <if test="updated_time != null" >
+      <if test="updated_time != null &amp;&amp; updated_time != ''" >
         updated_time = #{updated_time,jdbcType=TIMESTAMP},
       </if>
     </set>
@@ -339,6 +355,7 @@
     set gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
       contact_phone = #{contact_phone,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
+      station_manager = #{station_manager,jdbcType=VARCHAR},
       area_id = #{area_id,jdbcType=VARCHAR},
       province_id = #{province_id,jdbcType=VARCHAR},
       city_id = #{city_id,jdbcType=VARCHAR},
