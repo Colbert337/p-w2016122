@@ -110,13 +110,6 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
-
-							<li class="">
-								<a href="jqgrid.html">
-									<i class="menu-icon fa fa-caret-right"></i> jqGrid plugin
-								</a>
-								<b class="arrow"></b>
-							</li>
 						</ul>
 					</li>
 					<%-- <li class="">

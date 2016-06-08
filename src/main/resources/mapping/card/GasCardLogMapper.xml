@@ -4,8 +4,9 @@
   <resultMap id="BaseResultMap" type="com.sysongy.poms.card.model.GasCardLog" >
     <id column="card_log_id" property="cardLogId" jdbcType="VARCHAR" />
     <result column="card_no" property="card_no" jdbcType="VARCHAR" />
-    <result column="card_type" property="card_type" jdbcType="INTEGER" />
-    <result column="card_status" property="card_status" jdbcType="INTEGER" />
+    <result column="card_type" property="card_type" jdbcType="VARCHAR" />
+    <result column="card_status" property="card_status" jdbcType="VARCHAR" />
+    <result column="card_property" property="card_property" jdbcType="VARCHAR" />
     <result column="workstation" property="workstation" jdbcType="VARCHAR" />
     <result column="workstation_resp" property="workstation_resp" jdbcType="VARCHAR" />
     <result column="optime" property="optime" jdbcType="TIMESTAMP" />
@@ -18,7 +19,7 @@
   </resultMap>
   
   <sql id="Base_Column_List" >
-    card_log_id, card_no, card_type, card_status, workstation, workstation_resp, optime, batch_no, operator, storage_time, release_time, action, memo
+    card_log_id, card_no, card_type, card_status, card_property, workstation, workstation_resp, optime, batch_no, operator, storage_time, release_time, action, memo
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCardLog" >
@@ -65,16 +66,16 @@
   </delete>
   
   <insert id="insertBatch" parameterType="java.util.List" >
-    insert into gas_card_log (card_no, card_type, card_status, workstation, workstation_resp, optime, batch_no, operator, storage_time, release_time, action, memo)
+    insert into gas_card_log (card_no, card_type, card_status, card_property, workstation, workstation_resp, optime, batch_no, operator, storage_time, release_time, action, memo)
     values
     <foreach collection="list" item="item" index="index" separator="," >  
-        (#{item.card_no},#{item.card_type},#{item.card_status},#{item.workstation},#{item.workstation_resp},#{item.optime},#{item.batch_no},#{item.operator},#{item.storage_time},#{item.release_time},#{item.action},#{item.memo})  
+        (#{item.card_no},#{item.card_type},#{item.card_status},#{item.card_property},#{item.workstation},#{item.workstation_resp},#{item.optime},#{item.batch_no},#{item.operator},#{item.storage_time},#{item.release_time},#{item.action},#{item.memo})  
     </foreach> 
   </insert>
   
   <insert id="insert" parameterType="com.sysongy.poms.card.model.GasCardLog" >
-    insert into gas_card_log (card_no, card_type, card_status, workstation, workstation_resp, optime, batch_no, operator, storage_time, release_time, action, memo)
-    values (#{card_no,jdbcType=VARCHAR}, #{card_type,jdbcType=INTEGER}, #{card_status,jdbcType=INTEGER}, #{workstation,jdbcType=VARCHAR}, 
+    insert into gas_card_log (card_no, card_type, card_status, card_property, workstation, workstation_resp, optime, batch_no, operator, storage_time, release_time, action, memo)
+    values (#{card_no,jdbcType=VARCHAR}, #{card_type,jdbcType=VARCHAR}, #{card_status,jdbcType=VARCHAR}, #{card_property,jdbcType=VARCHAR}, #{workstation,jdbcType=VARCHAR}, 
       #{workstation_resp,jdbcType=VARCHAR}, #{optime,jdbcType=TIMESTAMP}, #{batch_no,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
       #{storage_time,jdbcType=TIMESTAMP}, #{release_time,jdbcType=TIMESTAMP}, #{action,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR})
   </insert>

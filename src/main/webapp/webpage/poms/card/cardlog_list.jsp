@@ -211,6 +211,10 @@
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 										查询
 								</button>
+								<button class="btn" type="button" onclick="init();">
+										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+										重置
+								</button>
 						</div>
 					</div>
 					
@@ -240,6 +244,7 @@
 									<th onclick="orderBy(this,'card_no');commitForm();" id="card_no_order">用户卡号</th>
 									<th onclick="orderBy(this,'card_type');commitForm();" id="card_type_order">用户卡类型</th>
 									<th onclick="orderBy(this,'card_status');commitForm();" id="card_status_order">用户卡状态</th>
+									<th onclick="orderBy(this,'card_property');commitForm();" id="card_property_order">用户卡属性</th>
 									<th onclick="orderBy(this,'workstation');commitForm();" id="workstation_order">所属工作站</th>
 									<th onclick="orderBy(this,'workstation_resp');commitForm();" id="workstation_resp_order">工作站领取人</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人工号</th> 
@@ -264,6 +269,7 @@
 									<td>${list.card_no}</td>
 								 	<td><s:Code2Name mcode="${list.card_type}" gcode="CARDTYPE"></s:Code2Name> </td> 
 									<td><s:Code2Name mcode="${list.card_status}" gcode="CARDSTATUS"></s:Code2Name> </td>
+									<td><s:Code2Name mcode="${list.card_property}" gcode="CARDPROPERTY"></s:Code2Name> </td>
 									<td><s:Code2Name mcode="${list.workstation}" gcode="WORKSTATION"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.workstation_resp}" gcode="WORKSTATION_RESP"></s:Code2Name></td>
 									<td>${list.operator}</td> 
@@ -346,7 +352,7 @@ var mydate = new Date();
 					$(this).next().focus();
 				});
 	
-	var options ={   
+	var listOptions ={   
             url:'../web/card/cardLogList',   
             type:'post',                    
             dataType:'html',
@@ -370,7 +376,10 @@ var mydate = new Date();
 			$("#pageNum").val($(obj).text());
 		}
 		
-		$("#formcard").ajaxSubmit(options);
+		$("#formcard").ajaxSubmit(listOptions);
 	}
 	
+	function init(){
+		loadPage('#main', '../web/card/cardLogList');
+	}
 	</script>

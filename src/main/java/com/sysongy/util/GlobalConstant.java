@@ -122,9 +122,18 @@ public class GlobalConstant {
 		public static final String MOVE ="1";
 		public static final String DESTORY="2";
 	}
-
+	
 	public interface GastationStatus{
 		public static final String PAUSE ="0";
 		public static final String USED="1";
+	}
+	
+	/*
+	 * 	1气站 2 运输公司 3 司机
+	 */
+	public interface AccounType{
+		public static final String GASTATION ="1";
+		public static final String TRANSPORTION="2";
+		public static final String DRIVER="3";
 	}
 }

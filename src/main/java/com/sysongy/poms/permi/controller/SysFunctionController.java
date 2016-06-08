@@ -43,13 +43,31 @@ public class SysFunctionController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryFunctionListPage(SysFunction function, ModelMap map){
+	public String queryFunctionListPage(SysFunction function,@RequestParam(required = false) String parentIdTemp, ModelMap map){
 		function.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+		SysFunction sysFunction = new SysFunction();
 		String parentId = "1";//根节点父ID
-		//封装分页参数，用于查询分页内容
+		String currName = "功能列表";
+
+		if(parentIdTemp != null && !"".equals(parentIdTemp)){
+			function.setParentId(parentIdTemp);
+		}
+		if (function != null && function.getParentId() != null) {
+			parentId = function.getParentId();
+			sysFunction = sysFunctionService.queryFunctionByFunctionId(parentId);
+			if(sysFunction != null){
+				currName = sysFunction.getFunctionName();
+				parentId = sysFunction.getSysFunctionId();
+			}
+		}else{
+			function.setParentId(parentId);
+		}
+
 		List<SysFunction> functionList = new ArrayList<>();
 		functionList = sysFunctionService.queryFunctionListPage(function);
 		map.addAttribute("functionList",functionList);
+		map.addAttribute("parentId",parentId);
+		map.addAttribute("parentName",currName);
 		return "webpage/poms/permi/function_list";
 	}
 
@@ -64,6 +82,7 @@ public class SysFunctionController extends BaseContoller{
 	public List<Map<String,Object>> queryFunctionAllList(@ModelAttribute("currUser") CurrUser currUser, ModelMap mapTemp){
 		Map<String,Object> functionMap = new HashMap<>();
 		int userType = currUser.getUser().getUserType();
+//		String urlPath = "permi/function/list/page?parentId=";
 
 		userType = 1;
 		List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionAllList(userType);
@@ -73,6 +92,7 @@ public class SysFunctionController extends BaseContoller{
 			functionTree.put("id",function.get("sysFunctionId"));
 			functionTree.put("pId",function.get("parentId"));
 			functionTree.put("name",function.get("functionName"));
+//			functionTree.put("url",urlPath+function.get("sysFunctionId"));
 
 			functionListTree.add(functionTree);
 		}
@@ -184,7 +204,7 @@ public class SysFunctionController extends BaseContoller{
 			sysFunctionService.addFunction(function);
 		}
 
-		return "redirect:/web/permi/function/list/page";
+		return "redirect:/web/permi/function/list/page?parentIdTemp="+function.getParentId();
 	}
 
 	/**
@@ -194,11 +214,15 @@ public class SysFunctionController extends BaseContoller{
 	@RequestMapping("/delete")
 	public String deleteFunctionByFunctionId(@RequestParam String functionId, ModelMap map){
 		SysFunction function = new SysFunction();
+		String parentId = "1";
 		if (functionId != null) {
 			function.setSysFunctionId(functionId);
 			function.setIsDeleted(GlobalConstant.STATUS_DELETE);//
 			sysFunctionService.updateFunction(function);
+
+			SysFunction sysFunction = sysFunctionService.queryFunctionByFunctionId(functionId);
+			parentId = sysFunction.getParentId();
 		}
-		return "redirect:/web/permi/function/list/page";
+		return "redirect:/web/permi/function/list/page?parentIdTemp="+parentId;
 	}
 }

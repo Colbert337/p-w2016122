@@ -2,11 +2,14 @@ package com.sysongy.api.client.controller;
 
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +37,9 @@ public class CRMBaseContoller {
 	private static final long serialVersionUID = 6357869213649815390L;
 	
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+	
+	@Autowired
+	private GastationService service;
 
     @RequestMapping(value = {"/web/login"})
     @ResponseBody
@@ -112,6 +118,7 @@ public class CRMBaseContoller {
     @ResponseBody
     public AjaxJson queryFileData(@RequestParam("uploadfile") CommonsMultipartFile file, HttpServletRequest request){
         AjaxJson ajaxJson = new AjaxJson();
+        String gasstationid = request.getParameter("gasstationid");
         //MultipartFile是对当前上传的文件的封装，当要同时上传多个文件时，可以给定多个MultipartFile参数(数组)
         if (file.isEmpty()) {
             ajaxJson.setMsg("上传文件为空！！！");
@@ -120,13 +127,20 @@ public class CRMBaseContoller {
         }
         String type = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));// 取文件格式后缀名
         String filename = System.currentTimeMillis() + type;// 取当前时间戳作为文件名
-        String path = request.getSession().getServletContext().getRealPath("/upload/" + filename);// 存放位置
+//        String path = request.getSession().getServletContext().getRealPath("/upload/" + filename);// 存放位置
+//        path = request.getContextPath()+"/upload/"+ filename;
+        String path = (String) prop.get("images_upload_path");
+        if(!StringUtils.isEmpty(gasstationid)){
+        	path = path + "/"+gasstationid+"/";
+        }
+        path+= filename;
         File destFile = new File(path);
         try {
             FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        ajaxJson.setObj(path);
         return ajaxJson;
     }
 
@@ -141,19 +155,17 @@ public class CRMBaseContoller {
             return ajaxJson;
         }
         for (int i = 0; i < files.length; i++) {
-            String type = files[i].getOriginalFilename().substring(
-                    files[i].getOriginalFilename().indexOf("."));// 取文件格式后缀名
+            String type = files[i].getOriginalFilename().substring(files[i].getOriginalFilename().indexOf("."));// 取文件格式后缀名
             String filename = System.currentTimeMillis() + type;// 取当前时间戳作为文件名
-            String path = request.getSession().getServletContext()
-                    .getRealPath("/upload/" + filename);// 存放位置
+            String path = request.getSession().getServletContext().getRealPath("/upload/" + filename);// 存放位置
             File destFile = new File(path);
             try {
-                FileUtils.copyInputStreamToFile(files[i].getInputStream(),
-                        destFile);// 复制临时文件到指定目录下
+                FileUtils.copyInputStreamToFile(files[i].getInputStream(),destFile);// 复制临时文件到指定目录下
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+//        ajaxJson.setObj(path);
         return ajaxJson;
     }
 }

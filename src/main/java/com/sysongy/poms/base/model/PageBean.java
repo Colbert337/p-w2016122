@@ -6,6 +6,15 @@ public class PageBean extends BaseModel {
 	private String retMsg;
 	private Integer retCode;
 	private String pageInfo;
+	private Object pageobj;
+
+	public Object getPageobj() {
+		return pageobj;
+	}
+
+	public void setPageobj(Object pageobj) {
+		this.pageobj = pageobj;
+	}
 
 	public String getPageInfo() {
 		return pageInfo;

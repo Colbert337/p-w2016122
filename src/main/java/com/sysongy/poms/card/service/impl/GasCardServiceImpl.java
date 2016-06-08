@@ -102,10 +102,27 @@ public class GasCardServiceImpl implements GasCardService{
 	@Override
 	public String checkMoveCard(String cardno) throws Exception {
 		GasCard card = gasCardMapper.selectByCardNo(cardno);
+		String cardstatus="";
+		
 		if(card == null){
-			return "";
+			return cardstatus;
 		}
-		return card.getCard_status();
+		
+		switch (card.getCard_status()) {
+		case "0":
+			cardstatus = "已冻结";
+			break;
+		case "1":
+			cardstatus = "未使用";
+			break;
+		case "2":
+			cardstatus = "已使用";
+			break;
+		default:
+			break;
+		}
+		
+		return cardstatus;
 	}
 
 	@Override

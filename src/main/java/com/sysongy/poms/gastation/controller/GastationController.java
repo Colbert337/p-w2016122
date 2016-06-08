@@ -86,23 +86,20 @@ public class GastationController extends BaseContoller{
 	@RequestMapping("/saveGastation")
 	public String saveGastation(ModelMap map, Gastation gastation) throws Exception{
 		PageBean bean = new PageBean();
-		String ret = "webpage/poms/gastation/gastation_new";
-		Integer rowcount = null;
+		String ret = "webpage/poms/gastation/gastation_upload";
+		String gastationid = null;
 
 		try {
 			if(StringUtils.isEmpty(gastation.getSys_gas_station_id())){
-				rowcount = service.saveGastation(gastation,"insert");
+				gastationid = service.saveGastation(gastation,"insert");
 			}else{
-				rowcount = service.saveGastation(gastation,"update");
-				if(rowcount == 1){
-					ret = this.queryAllGastationList(map, new Gastation());
-				}
+				gastationid = service.saveGastation(gastation,"update");
+				ret = this.queryAllGastationList(map, new Gastation());
 			}
-			
 
 			bean.setRetCode(100);
 			bean.setRetMsg("保存成功");
-			bean.setRetValue(rowcount.toString());
+			bean.setRetValue(gastationid);
 			bean.setPageInfo(ret);
 
 			map.addAttribute("ret", bean);
