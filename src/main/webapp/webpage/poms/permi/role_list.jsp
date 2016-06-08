@@ -8,6 +8,8 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
+<link href="<%=basePath %>/assets/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+<script src="<%=basePath %>/assets/zTree/js/jquery.ztree.all-3.5.min.js"/>
 <script type="text/javascript">
 	$(function() {
 		/*表单验证*/
@@ -18,6 +20,90 @@
 			scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
 		});
 	});
+
+
+	//初始化菜单树
+	function intiTree(option){
+		var path = "<%=basePath%>/web/permi/function/list";
+		if(option == "update"){
+			path = "<%=basePath%>/web/permi/function/list";
+		}
+		var zTreeObj;
+		// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+		var setting = {
+			view: {
+				selectedMulti: false
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			check: {
+				enable: true
+			}
+			,
+			callback: {
+				onCheck: zTreeOnCheck
+			}
+		};
+		var zNodes = [];
+		//初始化左侧树
+		$.ajax({
+			url:path,
+			data:{},
+			async:false,
+			type: "POST",
+			success: function(data){
+				zNodes = data;
+			}
+		});
+		zTreeObj = $.fn.zTree.init($("#treeDiv"), setting, zNodes);
+		zTreeObj.expandAll(true);//展开所有节点
+	}
+
+	//跟新菜单树
+	function updateTree(treeData){
+		var zTreeObj;
+		// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+		var setting = {
+			view: {
+				selectedMulti: false
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			check: {
+				enable: true
+			}
+			,
+			callback: {
+				onCheck: zTreeOnCheck
+			}
+		};
+		var zNodes = treeData;
+		//初始化左侧树
+		zTreeObj = $.fn.zTree.init($("#treeDiv"), setting, zNodes);
+		zTreeObj.expandAll(true);//展开所有节点
+	}
+	//勾选菜单回调函数
+	function zTreeOnCheck(event, treeId, treeNode) {
+		var treeObj = $.fn.zTree.getZTreeObj("treeDiv");
+		var nodes = treeObj.getCheckedNodes(true);
+		var roleCode = "";
+		if(nodes != null && nodes.length > 0){
+			$.each(nodes,function(i,node){
+				console.log("i:"+i+" node"+node.name);
+				roleCode += node.id;
+				if(i < nodes.length - 1){
+					roleCode += ",";
+				}
+			});
+		}
+		$("#role_code").val(roleCode);
+	};
 
 	/*分页相关方法 start*/
 	window.onload = setCurrentPage();
@@ -40,8 +126,15 @@
 		}
 	}
 	/*分页相关方法 end*/
+	function clearDiv(){
+		$("#roleForm :input").each(function () {
+			$(this).val("");
+		});
+	}
 	//显示添加用户弹出层
 	function addRole(){
+		clearDiv();
+		intiTree("add");
 		$("#roleModel").modal('show');
 	}
 
@@ -70,6 +163,7 @@
 
 			$("#roleModel").modal('hide');
 			$(".modal-backdrop").css("display","none");
+			clearDiv();
 		}
 	}
 
@@ -77,17 +171,20 @@
 	 * 回显用户信息
 	 */
 	function editRole(roleId){
+		clearDiv();
 		$.ajax({
 			url:"<%=basePath%>/web/permi/role/update",
 			data:{sysRoleId:roleId},
 			async:false,
 			type: "POST",
 			success: function(data){
-				$("#sys_role_id").val(data.sysRoleId);
-				$("#role_name").val(data.roleName);
-				$("#role_type").val(data.roleType);
-				$("#role_desc").val(data.roleDesc);
+				$("#sys_role_id").val(data.sysRole.sysRoleId);
+				$("#role_name").val(data.sysRole.roleName);
+				$("#role_type").val(data.sysRole.roleType);
+				$("#role_desc").val(data.sysRole.roleDesc);
+				$("#role_code").val(data.functionStr);
 
+				updateTree(data.functionList);
 				$("#roleModel").modal('show');
 			}
 		});
@@ -254,8 +351,9 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="role_name"> <span class="red_star">*</span>角色名称： </label>
 									<div class="col-sm-8">
-										<input type="text" id="role_name" name="roleName" placeholder="角色名称" class="validate[required,minSize[3],custom[onlyLetterNumber]] col-xs-10 col-sm-10" />
+										<input type="text" id="role_name" name="roleName" placeholder="角色名称" class="validate[required,minSize[3]] col-xs-10 col-sm-10" />
 										<input type="hidden" id="sys_role_id" name="sysRoleId" class="col-xs-10 col-sm-10" />
+										<input type="hidden" id="role_code" name="roleCode" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -270,6 +368,13 @@
 									<label class="col-sm-4 control-label no-padding-right" for="role_desc"> 描述： </label>
 									<div class="col-sm-8">
 										<textarea class="limited col-xs-10 col-sm-10" id="role_desc" name="roleDesc" maxlength="50"></textarea>
+									</div>
+								</div>
+								<hr/>
+								<div class="form-group">
+									<div class="col-sm-4"></div>
+									<div class="col-sm-3">
+										<ul id="treeDiv" class="ztree"></ul>
 									</div>
 								</div>
 							</form>

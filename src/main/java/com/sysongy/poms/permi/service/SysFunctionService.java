@@ -29,6 +29,13 @@ public interface SysFunctionService {
      * @return
      */
     List<Map<String,Object>> queryFunctionAllList(int userType);
+
+    /**
+     * 根据当前用户查询功能列表
+     * @param userId 用户类型
+     * @return
+     */
+    List<SysFunction> queryFunctionListByUserId(String userId);
     /**
      * 根据父级ID查询功能列表
      * @param userType 用户类型

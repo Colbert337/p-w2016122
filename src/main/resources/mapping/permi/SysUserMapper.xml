@@ -22,56 +22,83 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
+  <resultMap id="MapResultMap" type="java.util.Map" >
+    <id column="sys_user_id" property="sysUserId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="INTEGER" />
+    <result column="alias_name" property="aliasName" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="avatar_s" property="avatarS" jdbcType="VARCHAR" />
+    <result column="avatar_b" property="avatarB" jdbcType="VARCHAR" />
+    <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="last_date" property="lastDate" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="online_state" property="onlineState" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_admin" property="isAdmin" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="sys_role_id" property="sysRoleId" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
     sys_user_id, user_name, password, user_type, alias_name, real_name, gender, avatar_s, 
     avatar_b, mobile_phone, email, last_date, status, online_state, remark, is_admin, is_deleted,
     created_date, updated_date
   </sql>
+  <sql id="User_Role_List" >
+    su.sys_user_id, su.user_name, su.password, su.user_type, su.alias_name, su.real_name, su.gender, su.avatar_s,
+    sr.role_name as avatar_b, su.mobile_phone, su.email, su.last_date, su.status, su.online_state, su.remark, su.is_admin, su.is_deleted,
+    su.created_date, su.updated_date
+  </sql>
   <select id="queryUserList" resultMap="BaseResultMap" >
     select
-    <include refid="Base_Column_List" />
-    from sys_user
+    <include refid="User_Role_List" />
+    from sys_user su left join sys_user_role sur on su.sys_user_id = sur.sys_user_id left join sys_role sr on sur.sys_role_id = sr.sys_role_id
     where 1=1
     <trim>
       <if test="sysUserId != null" >
-        and sys_user_id = #{sysUserId}
+        and su.sys_user_id = #{sysUserId}
       </if>
       <if test="userName != null" >
-        and user_name = #{userName}
+        and su.user_name = #{userName}
       </if>
       <if test="userType != null" >
-        and  user_type = #{userType}
+        and  su.user_type = #{userType}
       </if>
       <if test="realName != null" >
-        and  real_name = #{realName}
+        and  su.real_name = #{realName}
       </if>
       <if test="gender != null" >
-        and  gender = #{gender}
+        and  su.gender = #{gender}
       </if>
       <if test="mobilePhone != null" >
-        and  mobile_phone = #{mobilePhone}
+        and  su.mobile_phone = #{mobilePhone}
       </if>
       <if test="email != null" >
-        and  email = #{email}
+        and  su.email = #{email}
       </if>
       <if test="status != null" >
-        and  status = #{status}
+        and  su.status = #{status}
       </if>
       <if test="isAdmin != null" >
-        and  is_admin = #{isAdmin}
+        and  su.is_admin = #{isAdmin}
       </if>
       <if test="isDeleted != null" >
-        and  is_deleted = #{isDeleted}
+        and  su.is_deleted = #{isDeleted}
       </if>
     </trim>
-    order by created_date desc
+    order by su.created_date desc
   </select>
   <select id="queryUserByAccount" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from sys_user
     where user_name = #{0} and password = #{1}
-    and status = 1 and is_deleted = 1
+    and status = 0 and is_deleted = 1
   </select>
   <select id="queryUserById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -79,6 +106,12 @@
     from sys_user
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
   </select>
+  <!--根据用户ID查询用户及角色信息-->
+  <select id="queryUserMapByUserId" resultMap="MapResultMap" parameterType="java.lang.String" >
+    select su.*,sur.sys_role_id from sys_user su left join sys_user_role sur on su.sys_user_id = sur.sys_user_id
+    where su.sys_user_id = #{0}
+  </select>
+
   <delete id="deleteUserById" parameterType="java.lang.String" >
     delete from sys_user
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
