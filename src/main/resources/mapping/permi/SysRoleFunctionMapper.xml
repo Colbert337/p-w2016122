@@ -20,11 +20,12 @@
     delete from sys_role_function
     where sys_role_function_id = #{sysRoleFunctionId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysRoleFunction" >
-    insert into sys_role_function (sys_role_function_id, sys_role_id, sys_function_id, 
-      created_date)
-    values (#{sysRoleFunctionId,jdbcType=VARCHAR}, #{sysRoleId,jdbcType=VARCHAR}, #{sysFunctionId,jdbcType=VARCHAR}, 
-      #{createdDate,jdbcType=TIMESTAMP})
+  <insert id="addRoleFunctionList" parameterType="java.util.List" >
+    insert into sys_role_function (sys_role_function_id, sys_role_id, sys_function_id, created_date, storage_time, release_time, memo, batch_no)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.card_no},#{item.card_type},#{item.card_status},#{item.operator},#{item.storage_time},#{item.release_time},#{item.memo},#{item.batch_no})
+    </foreach>
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysRoleFunction" >
     insert into sys_role_function

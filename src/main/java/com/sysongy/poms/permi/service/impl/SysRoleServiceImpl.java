@@ -2,6 +2,7 @@ package com.sysongy.poms.permi.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.permi.dao.SysRoleFunctionMapper;
 import com.sysongy.poms.permi.dao.SysRoleMapper;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysRoleFunction;
@@ -30,6 +31,8 @@ public class SysRoleServiceImpl implements SysRoleService{
 
     @Autowired
     SysRoleMapper sysRoleMapper;
+    @Autowired
+    SysRoleFunctionMapper sysRoleFunctionMapper;
 
     /**
      * 查询角色列表（分页）
@@ -61,6 +64,9 @@ public class SysRoleServiceImpl implements SysRoleService{
     public int addRole(SysRole role) {
         String function = role.getRoleCode();
         role.setRoleCode(null);
+        /**
+         * 添加角色功能关系
+         */
         if(function != null && !"".equals(function)){
             List<SysRoleFunction> roleFunctionList = new ArrayList<>();
             String[] functionArray = function.split(",");
@@ -74,8 +80,9 @@ public class SysRoleServiceImpl implements SysRoleService{
                     roleFunctionList.add(sysRoleFunction);
                 }
             }
-
+            sysRoleFunctionMapper.addRoleFunctionList(roleFunctionList);
         }
+        //添加角色
         return sysRoleMapper.addRole(role);
     }
     /**
