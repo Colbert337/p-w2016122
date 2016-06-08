@@ -4,7 +4,6 @@
 .fl-l{float: left;}
 .fl-r{float: right;}
 .clear{clear:both;}
-body{}
 
 .panel-title{text-align: center;}
 
@@ -20,3 +19,9 @@ body{}
 .mar-right-30{margin-right: 30px;}
 .mar-left-15{margin-left: 15px;}
 .btn-botton{margin-bottom: 10px;}
+
+/*Add by xiukun*/
+body,
+h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
+label{font-size: 12px;}
+.breadcrumbs{display:none;}

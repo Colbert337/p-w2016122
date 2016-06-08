@@ -219,6 +219,10 @@
 										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 										查询
 								</button>
+								<button class="btn" type="button" onclick="init();">
+										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+										重置
+								</button>
 						</div>
 					</div>
 					
@@ -248,6 +252,7 @@
 									<th onclick="orderBy(this,'card_no');commitForm();" id="card_no_order">用户卡号</th>
 									<th onclick="orderBy(this,'card_type');commitForm();" id="card_type_order">用户卡类型</th>
 									<th onclick="orderBy(this,'card_status');commitForm();" id="card_status_order">用户卡状态</th>
+									<th onclick="orderBy(this,'card_property');commitForm();" id="card_property_order">用户卡属性</th>
 									<th onclick="orderBy(this,'workstation');commitForm();" id="workstation_order">所属工作站</th>
 									<th onclick="orderBy(this,'workstation_resp');commitForm();" id="workstation_resp_order">工作站领取人</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人工号</th> 
@@ -272,6 +277,7 @@
 									<td>${list.card_no}</td>
 								 	<td><s:Code2Name mcode="${list.card_type}" gcode="CARDTYPE"></s:Code2Name> </td> 
 									<td><s:Code2Name mcode="${list.card_status}" gcode="CARDSTATUS"></s:Code2Name> </td>
+									<td><s:Code2Name mcode="${list.card_property}" gcode="CARDPROPERTY"></s:Code2Name> </td>
 									<td><s:Code2Name mcode="${list.workstation}" gcode="WORKSTATION"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.workstation_resp}" gcode="WORKSTATION_RESP"></s:Code2Name></td>
 									<td>${list.operator}</td> 
@@ -281,13 +287,13 @@
 
 									<td>
 										<div class="hidden-sm hidden-xs action-buttons">
-											<a class="blue" href="#"> 
+											<!-- <a class="blue" href="#"> 
 												<i class="ace-icon fa fa-search-plus bigger-130"></i>
 											</a> 
 											<a class="green" href="#"> 
 												<i class="ace-icon fa fa-pencil bigger-130"></i>
-											</a> 
-											<a class="red"  href="javascript:void(0);" onclick="del(this);"> 
+											</a>  -->
+											<a class="red"  href="javascript:void(0);" onclick="del(this);" title="删除该卡" data-rel="tooltip"> 
 												<i class="ace-icon fa fa-trash-o bigger-130"></i>
 											</a>
 										</div>
@@ -381,6 +387,12 @@
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
+
+//悬停样式加载
+$('[data-rel=tooltip]').tooltip({container:'body'});
+$('[data-rel=popover]').popover({container:'body'});
+
+
 var mydate = new Date();
 	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
 					locale: {
@@ -423,8 +435,12 @@ var mydate = new Date();
 	}
 	
 	function del(obj){
-		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
+		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
+		var tmp = confirm("是否删除卡号为["+cardid+"]的用户卡?");
+		if(!tmp){
+			return;
+		}
 		var deloptions ={   
 	            url:'../web/card/deleteCard?cardid='+cardid,   
 	            type:'post',                    
@@ -441,5 +457,9 @@ var mydate = new Date();
 		}
 		
 		$("#formcard").ajaxSubmit(deloptions);
+	}
+	
+	function init(){
+		loadPage('#main', '../web/card/cardList');
 	}
 	</script>

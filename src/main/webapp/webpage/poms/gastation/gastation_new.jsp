@@ -11,6 +11,23 @@
 	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
+	
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-fonts.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+	
+	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
 
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
@@ -65,7 +82,7 @@
 								<form class="form-horizontal"  id="gastationform">
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 加气站名称： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 加气站名称： </label>
 
 										<div class="col-sm-3">
 											<input type="text" id="gas_station_name"  name="gas_station_name" placeholder="输入加气站名称" class="col-xs-10 col-sm-5" maxlength="20"/>
@@ -73,10 +90,26 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> E-mail： </label>
+										<label class="col-sm-3 control-label no-padding-right" > E-mail： </label>
 
 										<div class="col-sm-3">
 											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5" />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
+
+										<div class="col-sm-3">
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="col-xs-10 col-sm-5" maxlength="20"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
+
+										<div class="col-sm-3">
+											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15"/>
 										</div>
 									</div>
 									
@@ -94,18 +127,16 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 销售负责人： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 销售负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="salesmen_id" name="salesmen_id" multiple="multiple" onchange="setSalesmenName(this);">
-												</select>
-												<input type="hidden" id="salesmen_name" name="salesmen_name"/>
+												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="operations_id" name="operations_id" multiple="multiple" onchange="setOperationName(this);">
+												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
 												<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
@@ -114,7 +145,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
 										<div class="col-sm-2">
-											<select class="form-control" name="province_id" id="province" multiple="multiple" onchange="chinaChange(this,document.getElementById('city'));">
+											<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
 													<option value ="请选择市区">请选择省份</option>
 													<option value ="100">北京市</option>
 													<option value ="220">天津市</option>
@@ -160,27 +191,17 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
-										<div class="col-sm-5">
-										<label class="col-sm-1 control-label no-padding-right" > 经度：</label>
-										<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="5"/>
-										<label class="col-sm-1 control-label no-padding-right" > 纬度：</label>
-										<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="5"/>
+										<div class="col-sm-4">
+											<label class="col-sm-2 control-label no-padding-right" > 经度：</label>
+											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="5"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
-
+										<label class="col-sm-3 control-label no-padding-right" > </label>
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5"   placeholder="输入工商注册号"/>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
-
-										<div class="col-sm-4">
-											<input type="text"  id="tax_certif" name="tax_certif" class="col-xs-10 col-sm-5"  placeholder="输入税务注册号"/>
+											<label class="col-sm-2 control-label no-padding-right" > 纬度：</label>
+											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="5"/>
 										</div>
 									</div>
 									
@@ -191,13 +212,11 @@
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
-
 											&nbsp; &nbsp; &nbsp;
 											<button class="btn" type="reset">
 												<i class="ace-icon fa fa-repeat bigger-110"></i>
 												重置
 											</button>
-											
 											&nbsp; &nbsp; &nbsp;
 											<button class="btn btn-success" type="buttom" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
@@ -220,8 +239,35 @@
 	</div>
 	</div>
 	</div>
-		<!-- inline scripts related to this page -->
+
 	<script type="text/javascript">
+	
+			var projectfileoptions = {
+		        showUpload : false,
+		        showRemove : false,
+		        language : 'zh',
+		        allowedPreviewTypes : [ 'image' ],
+		        allowedFileExtensions : [ 'jpg', 'png', 'gif', 'jepg' ],
+		        maxFileSize : 1000,
+		    }
+		// 文件上传框
+		$('input[class=projectfile]').each(function() {
+		    var imageurl = $(this).attr("value");
+		
+		    if (imageurl) {
+		        var op = $.extend({
+		            initialPreview : [ // 预览图片的设置
+		            "<img src='" + imageurl + "' class='file-preview-image'>", ]
+		        }, projectfileoptions);
+		
+		        $(this).fileinput(op);
+		    } else {
+		        $(this).fileinput(projectfileoptions);
+		    }
+		});
+	
+	
+	
 		var china=new Object();
 		china['100']=new Array('北京市区','北京市辖区');
 		china['210']=new Array('上海市区','上海市辖区');
@@ -333,6 +379,31 @@
 		                    }
 		                }
 		            },
+		            station_manager: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '加气站站长不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 1,
+		                        max: 20,
+		                        message: '加气站站长不能超过20个汉字'
+		                    }
+		                }
+		            },
+		            contact_phone: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '联系电话不能为空'
+		                    },
+		                    regexp: {
+		                        regexp: '^[0-9]*[1-9][0-9]*$',
+		                        message: '联系电话必须是数字'
+		                    }
+		                }
+		            },
 		            expiry_date_frompage: {
 		                message: 'The cardno is not valid',
 		                validators: { 
@@ -341,7 +412,7 @@
 		                    }
 		                }
 		            },
-		            salesmen_id: {
+		            salesmen_name: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '销售负责人不能为空'
@@ -393,7 +464,7 @@
 		            longitude: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '注册地址经度'
+		                        message: '注册地址经度不能为空'
 		                    },
 		                    regexp: {
 		                        regexp: '^[0-9]{5}$',
@@ -404,29 +475,15 @@
 		            latitude: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '注册地址经度'
+		                        message: '注册地址纬度不能为空'
 		                    },
 		                    regexp: {
 		                        regexp: '^[0-9]{5}$',
 		                        message: '注册地址纬度必须是5位数字'
 		                    }
 		                }
-		            },
-		            indu_com_certif: {
-		                message: 'The cardno is not valid',
-		                    stringLength: {
-		                        max: 15,
-		                        message: '工商注册号不能超过15位'
-		                    }
-		                }
-		            },
-		            tax_certif: {
-		                message: 'The cardno is not valid',
-		                    stringLength: {
-		                        max: 15,
-		                        message: '税务注册号不能超过15位'
-		                    }
-		                }
+		            }
+		         }
 		    });
 			    
 		function save(){
@@ -443,8 +500,13 @@
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
-		            	$("#main").html(data);
-						$("#modal-table").modal("show");
+		            	var tmp = confirm("保存成功，是否上传许可证图片?");
+		            	if(tmp){
+		            		$("#main").html(data);
+		            	}else{
+		            		loadPage('#main', '../webpage/poms/gastation/gastation_new.jsp');
+							$("#modal-table").modal("show");
+		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
 		 	       }
@@ -457,12 +519,7 @@
 			loadPage('#main', '../web/gastation/gastationList');
 		}
 		
-		function setSalesmenName(obj){
-			$("#salesmen_name").val($(obj).val());
-		}
-		
 		function setOperationName(obj){
 			$("#operations_name").val($(obj).val());
 		}
-
 		</script>

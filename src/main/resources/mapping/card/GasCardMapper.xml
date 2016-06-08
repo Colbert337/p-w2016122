@@ -6,6 +6,7 @@
     <id column="card_no" property="card_no" jdbcType="VARCHAR" />
     <result column="card_type" property="card_type" jdbcType="VARCHAR" />
     <result column="card_status" property="card_status" jdbcType="VARCHAR" />
+    <result column="card_property" property="card_property" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="storage_time" property="storage_time" jdbcType="TIMESTAMP" />
     <result column="release_time" property="release_time" jdbcType="TIMESTAMP" />
@@ -15,7 +16,7 @@
     <result column="batch_no" property="batch_no" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    card_no, card_type, card_status, operator, storage_time, release_time, memo, workstation, workstation_resp, batch_no
+    card_no, card_type, card_status, card_property, operator, storage_time, release_time, memo, workstation, workstation_resp, batch_no
   </sql>  
   
   <select id="queryForPage" resultMap="BaseResultList"  parameterType="com.sysongy.poms.card.model.GasCard" >
@@ -64,8 +65,8 @@
   </delete>
   
   <insert id="insert" parameterType="com.sysongy.poms.card.model.GasCard" >
-    insert into gas_card (card_no, card_type, card_status, operator, storage_time, release_time, memo, workstation, workstation_resp, batch_no)
-    values (#{card_no,jdbcType=VARCHAR}, #{card_type,jdbcType=VARCHAR}, #{card_status,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{storage_time,jdbcType=TIMESTAMP}, #{release_time,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}, #{workstation,jdbcType=VARCHAR}, #{workstation_resp,jdbcType=VARCHAR}, #{batch_no,jdbcType=VARCHAR})
+    insert into gas_card (card_no, card_type, card_status, card_property, operator, storage_time, release_time, memo, workstation, workstation_resp, batch_no)
+    values (#{card_no,jdbcType=VARCHAR}, #{card_type,jdbcType=VARCHAR}, #{card_status,jdbcType=VARCHAR}, #{card_property,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{storage_time,jdbcType=TIMESTAMP}, #{release_time,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}, #{workstation,jdbcType=VARCHAR}, #{workstation_resp,jdbcType=VARCHAR}, #{batch_no,jdbcType=VARCHAR})
   </insert>
   
   <insert id="insertSelective" parameterType="com.sysongy.poms.card.model.GasCard" >
@@ -134,10 +135,10 @@
   </insert>
   
   <insert id="insertBatch" parameterType="java.util.List" >
-    insert into gas_card (card_no, card_type, card_status, operator, storage_time, release_time, memo, batch_no)
+    insert into gas_card (card_no, card_type, card_status, card_property, operator, storage_time, release_time, memo, batch_no)
     values
     <foreach collection="list" item="item" index="index" separator="," >  
-        (#{item.card_no},#{item.card_type},#{item.card_status},#{item.operator},#{item.storage_time},#{item.release_time},#{item.memo},#{item.batch_no})  
+        (#{item.card_no},#{item.card_type},#{item.card_status}, #{item.card_property}, #{item.operator},#{item.storage_time},#{item.release_time},#{item.memo},#{item.batch_no})  
     </foreach> 
   </insert>
 
@@ -149,6 +150,9 @@
       </if>
       <if test="card_status != null" >
         card_status = #{card_status,jdbcType=VARCHAR},
+      </if>
+      <if test="card_property != null" >
+        card_property = #{card_property,jdbcType=VARCHAR},
       </if>
       <if test="operator != null" >
         operator = #{operator,jdbcType=VARCHAR},

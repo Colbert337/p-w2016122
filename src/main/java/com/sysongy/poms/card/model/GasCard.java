@@ -18,6 +18,8 @@ public class GasCard extends BaseModel{
 	private String card_type; //用户卡类型 0:LNG  1:柴油  2:CNG
 	
 	private String card_status; //用户卡状态  0:已冻结  1:未使用  2:使用中
+	
+	private String card_property;//用户卡属性 0:车辆卡  1:个人卡
 
 	private String workstation; //用户卡所在地
 	
@@ -38,6 +40,14 @@ public class GasCard extends BaseModel{
 	private String storage_time_after;
 
 	private String memo;
+
+	public String getCard_property() {
+		return card_property;
+	}
+
+	public void setCard_property(String card_property) {
+		this.card_property = card_property;
+	}
 
 	public String getBatch_no() {
 		return batch_no;

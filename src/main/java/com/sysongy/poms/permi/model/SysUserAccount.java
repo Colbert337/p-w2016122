@@ -7,7 +7,7 @@ public class SysUserAccount {
 
     private String accountCode;
 
-    private Integer accountType;
+    private String accountType;
 
     private String accountBalance;
 
@@ -31,11 +31,11 @@ public class SysUserAccount {
         this.accountCode = accountCode == null ? null : accountCode.trim();
     }
 
-    public Integer getAccountType() {
+    public String getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(Integer accountType) {
+    public void setAccountType(String accountType) {
         this.accountType = accountType;
     }
 
