@@ -11,20 +11,55 @@
 <link href="<%=basePath %>/assets/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
 <script src="<%=basePath %>/assets/zTree/js/jquery.ztree.all-3.5.min.js"/>
 <script type="text/javascript">
-	var zTreeObj;
-	// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-	var setting = {};
-	// zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-	var zNodes = [
-		{name:"test1", open:true, children:[
-			{name:"test1_1"}, {name:"test1_2"}]},
-		{name:"test2", open:true, children:[
-			{name:"test2_1"}, {name:"test2_2"}]}
-	];
 
 	$(function() {
+		/*左侧树初始化 开始*/
+		var zTreeObj;
+		// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+		var setting = {
+			view: {
+				selectedMulti: false
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+				onClick: queryMenuClick
+			}
+		};
+		var zNodes = [];
 		//初始化左侧树
+		$.ajax({
+			url:"<%=basePath%>/web/permi/function/list",
+			data:{},
+			async:false,
+			type: "POST",
+			success: function(data){
+				zNodes = data;
+			}
+		});
 		zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+		zTreeObj.expandAll(true);//展开所有节点
+
+		/**
+		 * 获取当前节点下菜单
+		 */
+		function queryMenuClick(event, treeId, treeNode){
+			/*alert(treeNode.id + ", " + treeNode.name);*/
+			var queryMenuOptions ={
+				url:'<%=basePath%>/web/permi/function/list/page',
+				data:{parentId:treeNode.id},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
+			}
+			$("#listForm").ajaxSubmit(queryMenuOptions);
+		}
+		/*左侧树初始化 结束*/
 		/*表单验证*/
 		jQuery('#functionForm').validationEngine('attach', {
 			promptPosition: 'topRight',		//提示信息的位置，可设置为：'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'centerRight', 'centerLeft', 'inline'
@@ -56,7 +91,12 @@
 	}
 	/*分页相关方法 end*/
 	//显示添加用户弹出层
-	function addRole(){
+	function addFunction(functionId){
+		if(functionId != null && functionId != ""){
+			$("#parent_id").val(functionId);
+		}
+		$("#parent_id").val('${parentId}');
+		$("#parent_name").val('${parentName}');
 		$("#functionModel").modal('show');
 	}
 
@@ -102,6 +142,7 @@
 				$("#function_name").val(data.functionName);
 				$("#function_path").val(data.functionPath);
 				$("#parent_id").val(data.parentId);
+				$("#parent_name").val('${parentName}');
 				$("#function_type").val(data.functionType);
 				$("#function_icon").val(data.functionIcon);
 				$("#function_sort").val(data.functionSort);
@@ -116,10 +157,10 @@
 	/**
 	 * 删除用户
 	 */
-	function deleteFunction(functionId){
+	function deleteFunction(functionId,parentId){
 		var deleteOptions ={
 			url:'<%=basePath%>/web/permi/function/delete',
-			data:{functionId:functionId},
+			data:{functionId:functionId,parentId:parentId},
 			type:'post',
 			dataType:'text',
 			success:function(data){
@@ -146,7 +187,9 @@
 		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
+
 </script>
+
 <div class="page-header">
 	<h1>
 		功能管理
@@ -168,9 +211,10 @@
 			<!-- PAGE CONTENT BEGINS -->
 			<div class="row">
 				<div class="col-xs-12">
+					<div class="pull-left">当前选择菜单：<span id="currMenu" style="color: #2679b5;font-size: 18px">${parentName}</span></div>
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
-						<a class="btn btn-primary" href="javascript:addRole();">
+						<a class="btn btn-sm btn-primary" href="javascript:addFunction();">
 							添加功能
 						</a>
 					</div>
@@ -189,7 +233,6 @@
 							<th class="hidden-480">图标</th>
 							<th>类型</th>
 							<th class="hidden-480">排序</th>
-							<th>状态</th>
 							<th>创建时间</th>
 							<th>操作</th>
 						</tr>
@@ -208,24 +251,10 @@
 								<td>${function.functionIcon}</td>
 								<td><s:Code2Name mcode="${function.functionType}" gcode="PLF_TYPE"></s:Code2Name></td>
 								<td class="hidden-480">${function.functionSort}</td>
-								<td>
-									<c:if test="${function.functionStatus == 0}">
-										启用
-									</c:if>
-									<c:if test="${function.functionStatus == 1}">
-										禁用
-									</c:if>
-								</td>
 								<td class="hidden-480"><fmt:formatDate value="${function.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
 									<a class="btn btn-sm btn-white btn-primary" href="javascript:editFunction('${function.sysFunctionId}');">修改</a>
-									<c:if test="${function.functionStatus == 0}">
-										<a class="btn btn-sm btn-white btn-inverse" href="javascript:updateStatus('${function.sysFunctionId}',1);">禁用</a>
-									</c:if>
-									<c:if test="${function.functionStatus == 1}">
-										<a class="btn btn-sm btn-white btn-primary" href="javascript:updateStatus('${function.sysFunctionId}',0);">启用</a>
-									</c:if>
-									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteFunction('${function.sysFunctionId}');">删除</a>
+									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteFunction('${function.sysFunctionId}','${function.parentId}');">删除</a>
 								</td>
 							</tr>
 						</c:forEach>
@@ -233,7 +262,7 @@
 					</table>
 				</div><!-- /.span -->
 				<%--分页start--%>
-				<div class="row">
+				<%--<div class="row">
 					<div class="col-sm-6">
 						<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
 					</div>
@@ -253,7 +282,7 @@
 							</ul>
 						</div>
 					</div>
-				</div>
+				</div>--%>
 				<%--分页 end--%>
 			</div><!-- /.row -->
 		</form>
@@ -278,26 +307,27 @@
 							<form class="form-horizontal" id="functionForm">
 								<!-- #section:elements.form -->
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_name"> <span class="red_star">*</span>功能名称： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_name"> <span class="red_star">*</span>功能名称： </label>
 									<div class="col-sm-8">
 										<input type="text" id="function_name" name="functionName" placeholder="功能名称" class="validate[required] col-xs-10 col-sm-10" />
 										<input type="hidden" id="sys_function_id" name="sysFunctionId" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_path"> <span class="red_star">*</span>功能路径： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_path"> <span class="red_star">*</span>功能路径： </label>
 									<div class="col-sm-8">
 										<input type="text" id="function_path" name="functionPath" placeholder="功能路径" class="validate[required] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="parent_id"> <span class="red_star">*</span>父级菜单： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="parent_id">父级菜单： </label>
 									<div class="col-sm-8">
-										<input type="text" id="parent_id" name="parentId" placeholder="父级菜单" class="validate[required] col-xs-10 col-sm-10" />
+										<input type="text" id="parent_name" placeholder="父级菜单" class="col-xs-10 col-sm-10"  readonly="readonly"/>
+										<input type="hidden" id="parent_id" name="parentId" placeholder="父级菜单"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_type"> <span class="red_star">*</span>功能类型： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_type"> <span class="red_star">*</span>功能类型： </label>
 									<div class="col-sm-8">
 										<select class="chosen-select col-xs-10 col-sm-10" id="function_type" name="functionType" data-placeholder="功能类型">
 											<s:option flag="true" gcode="PLF_TYPE" link="false" />
@@ -305,19 +335,19 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_icon">功能图标： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_icon">功能图标： </label>
 									<div class="col-sm-8">
 										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_sort">功能排序： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_sort">功能排序： </label>
 									<div class="col-sm-8">
 										<input type="text" id="function_sort" name="functionSort" placeholder="功能排序" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="is_menu_yes">是否菜单： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="is_menu_yes">是否菜单： </label>
 									<div class="col-sm-8">
 										<div class="radio">
 										<label>
@@ -332,7 +362,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="function_desc"> 描述： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="function_desc"> 描述： </label>
 									<div class="col-sm-8">
 										<textarea class="limited col-xs-10 col-sm-10" id="function_desc" name="roleDesc" maxlength="50"></textarea>
 									</div>

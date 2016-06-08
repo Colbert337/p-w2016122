@@ -122,7 +122,7 @@ public class SysUserController extends BaseContoller{
 		SysUser user = new SysUser();
 		if (userId != null) {
 			user.setSysUserId(userId);
-			user.setStatus(GlobalConstant.STATUS_DISABLE);//
+			user.setIsDeleted(GlobalConstant.STATUS_DELETE);
 			sysUserService.updateUser(user);
 		}
 		return "redirect:/web/permi/user/list/page";
@@ -135,7 +135,6 @@ public class SysUserController extends BaseContoller{
 	@RequestMapping("/list/userType")
 	@ResponseBody
 	public String queryStationList(@RequestParam int userType, ModelMap map){
-		Map<String, Object> userMap = new HashMap<>();
 		List<SysUser> sysUserList = new ArrayList<>();
 		sysUserList = sysUserService.queryUserListByUserType(userType);
 		String resultStr = JSON.toJSONString(sysUserList);

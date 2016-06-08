@@ -11,13 +11,14 @@
 		总览
 		<small>
 			<i class="ace-icon fa fa-angle-double-right"></i>
-			总览 &amp; 页面
+			总览页面
 		</small>
 	</h1>
 </div><!-- /.page-header -->
 <div class="row">
 	<div class="col-xs-12 panel-title">
-		 <h1>欢迎登陆海贝运维支撑系统！</h1>
+		 <div class="space-32" style="margin-top: 10%;"></div>
+		 <h1>欢迎登陆司集运维管理系统！</h1>
 	</div>
 </div>
 

@@ -23,13 +23,13 @@
 			<ul>
 				<li>
 					<div class="form-item">
-						<input id="userName" name="userName" class="form-control required user" type="text">
+						<input id="userName" name="userName" class="form-control required user" type="text" value="wdq">
 						<div class="form-item-error"></div>
 					</div>
 				</li>
 				<li>
 					<div class="form-item">
-						<input id="password" name="password" class="form-control required pw" type="password">
+						<input id="password" name="password" class="form-control required pw" type="password" value="111111">
 						<div class="form-item-error"></div>
 					</div>
 				</li>

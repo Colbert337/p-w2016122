@@ -17,6 +17,22 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
+  <resultMap id="ResultMap" type="java.util.Map" >
+    <id column="sys_function_id" property="sysFunctionId" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="function_name" property="functionName" jdbcType="VARCHAR" />
+    <result column="function_type" property="functionType" jdbcType="INTEGER" />
+    <result column="function_desc" property="functionDesc" jdbcType="VARCHAR" />
+    <result column="function_code" property="functionCode" jdbcType="VARCHAR" />
+    <result column="function_sort" property="functionSort" jdbcType="INTEGER" />
+    <result column="function_path" property="functionPath" jdbcType="VARCHAR" />
+    <result column="function_icon" property="functionIcon" jdbcType="VARCHAR" />
+    <result column="function_status" property="functionStatus" jdbcType="INTEGER" />
+    <result column="is_menu" property="isMenu" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
   <sql id="Base_Column_List" >
     sys_function_id, parent_id, function_name, function_type, function_desc, function_code,
     function_sort, function_path, function_icon, function_status, is_menu, is_deleted, 
@@ -66,6 +82,23 @@
       </if>
     </trim>
     order by created_date desc
+  </select>
+  <!--查询功能列表-->
+  <select id="queryFunctionAllList" resultMap="ResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_function
+    where is_deleted = #{0}
+    <!--and user_type = #{1}-->
+  </select>
+  <!--根据父级ID查询功能列表-->
+  <select id="queryFunctionListByParentId" resultMap="ResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_function
+    where parent_id = #{1}
+    <!--and user_type = #{1}-->
+    and is_deleted = #{0}
   </select>
   <select id="queryFunctionById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
