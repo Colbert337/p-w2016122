@@ -26,7 +26,8 @@
     <result column="platform_type" property="platform_type" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="created_time" property="created_time" jdbcType="TIMESTAMP" />
-    <result column="created_time" property="created_time" jdbcType="TIMESTAMP" />
+    <result column="updated_time" property="updated_time" jdbcType="TIMESTAMP" />
+    <result column="sys_user_account_id" property="sys_user_account_id" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -34,7 +35,7 @@
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
-    updated_time
+    updated_time,sys_user_account_id
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -88,7 +89,7 @@
       indu_com_number, tax_number, indu_com_certif, 
       tax_certif, lng_certif, dcp_certif, 
       platform_type, status, created_time, 
-      updated_time)
+      updated_time,sys_user_account_id)
     values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
       #{gas_station_name,jdbcType=VARCHAR}, 
       #{contact_phone,jdbcType=VARCHAR}, 
@@ -101,7 +102,7 @@
       #{indu_com_number,jdbcType=VARCHAR}, #{tax_number,jdbcType=VARCHAR}, #{indu_com_certif,jdbcType=VARCHAR}, 
       #{tax_certif,jdbcType=VARCHAR}, #{lng_certif,jdbcType=VARCHAR}, #{dcp_certif,jdbcType=VARCHAR}, 
       #{platform_type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{created_time,jdbcType=TIMESTAMP}, 
-      #{updated_time,jdbcType=TIMESTAMP})
+      #{updated_time,jdbcType=TIMESTAMP}, #{sys_user_account_id,jdbcType=VARCHAR})
   </insert>
   
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >

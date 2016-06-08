@@ -504,7 +504,7 @@
 		            	if(tmp){
 		            		$("#main").html(data);
 		            	}else{
-		            		$("#main").html("../webpage/poms/gastation/gastation_new.jsp");
+		            		loadPage('#main', '../webpage/poms/gastation/gastation_new.jsp');
 							$("#modal-table").modal("show");
 		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {

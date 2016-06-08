@@ -81,8 +81,8 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 用户卡类型： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="card_type" name="card_type" multiple="multiple">
-														<s:option flag="true" gcode="CARDTYPE" link="true" />
+												<select class="form-control" id="card_type" name="card_type">
+														<s:option flag="true" gcode="CARDTYPE" />
 												</select>
 										</div>
 									</div>
@@ -90,8 +90,8 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 用户卡属性： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="card_property" name="card_property" multiple="multiple">
-														<s:option flag="true" gcode="CARDPROPERTY" link="true" />
+												<select class="form-control" id="card_property" name="card_property">
+														<s:option flag="true" gcode="CARDPROPERTY" />
 												</select>
 										</div>
 									</div>
@@ -309,12 +309,11 @@
 			           async:false,
 			           success:function(data){
 			           		if(data == "0"){
-			           			var tmp_card_type = $('#card_type').val();
 			           			contral = "1";
-								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+tmp_card_type+"</td><td>"+$('#card_property').val()+"</td><td>未入库</td><td>"+$('#operator').val()+"</td></tr>");
+								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').find("option:selected").text()+"</td><td>"+$('#card_property').find("option:selected").text()+"</td><td>未入库</td><td>"+$('#operator').val()+"</td></tr>");
 			           			$("#card_no_arr").val($("#card_no_arr").val()+i+",");
 			           		}else{
-								$("#dynamic-table").find("tbody").append("<tr class='danger'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').val()+"</td><td>"+$('#card_property').val()+"</td><td>已入库</td><td>"+$('#operator').val()+"</td></tr>");
+								$("#dynamic-table").find("tbody").append("<tr class='danger'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').find("option:selected").text()+"</td><td>"+$('#card_property').find("option:selected").text()+"</td><td>已入库</td><td>"+$('#operator').val()+"</td></tr>");
 			           		}
 			            }
 					});

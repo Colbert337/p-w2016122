@@ -36,6 +36,15 @@ public class Gastation extends BaseModel {
 	private Date created_time;
 	private Date expiry_date;
 	private Date updated_time;
+	private String sys_user_account_id;
+
+	public String getSys_user_account_id() {
+		return sys_user_account_id;
+	}
+
+	public void setSys_user_account_id(String sys_user_account_id) {
+		this.sys_user_account_id = sys_user_account_id;
+	}
 
 	public String getStation_manager() {
 		return station_manager;

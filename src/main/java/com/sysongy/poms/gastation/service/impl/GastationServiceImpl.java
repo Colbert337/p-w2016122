@@ -13,13 +13,18 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.gastation.dao.GastationMapper;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.UUIDGenerator;
 
 @Service
 public class GastationServiceImpl implements GastationService {
 	
 	@Autowired
 	private GastationMapper gasStationMapper;
+	@Autowired
+	private SysUserAccountMapper sysUserAccountMapper;
 	
 	@Override
 	public PageInfo<Gastation> queryGastation(Gastation record) throws Exception {
@@ -43,11 +48,26 @@ public class GastationServiceImpl implements GastationService {
 				Integer tmp = Integer.valueOf(station.getSys_gas_station_id().substring(3, 7)) + 1;
 				newid = record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
 			}
+			//初始化钱袋信息
+			SysUserAccount sysUserAccount = new SysUserAccount();
+			sysUserAccount.setSysUserAccountId(UUIDGenerator.getUUID());
+			sysUserAccount.setAccountCode("GS"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+			sysUserAccount.setAccountType(GlobalConstant.AccounType.GASTATION);
+			sysUserAccount.setAccountBalance("0.0");
+			sysUserAccount.setCreatedDate(new Date());
+			sysUserAccount.setUpdatedDate(new Date());
+			int ret = sysUserAccountMapper.insert(sysUserAccount);
+			if(ret != 1){
+				throw new Exception("钱袋初始化失败");
+			}
+			
+			record.setSys_user_account_id(sysUserAccount.getSysUserAccountId());
 			record.setStatus(GlobalConstant.GastationStatus.USED);
 			record.setCreated_time(new Date());
 			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			record.setSys_gas_station_id(newid);
 			gasStationMapper.insert(record);
+			
 			return newid;
 		}else{
 			if(!StringUtils.isEmpty(record.getExpiry_date_frompage())){

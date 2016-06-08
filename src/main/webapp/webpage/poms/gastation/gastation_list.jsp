@@ -190,13 +190,14 @@
 							</select>
 						</div>
 						
-						<div class="col-md-2">
+						 <div class="col-md-2">
 						    <label>平台有效期:</label>
 							<%--<span class="input-group-addon">--%>
 									<%--<i class="fa fa-calendar bigger-110"></i>--%>
 							<%--</span>--%>
 							<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${gascard.expiry_date_frompage}"/>
-						</div>
+						</div> 
+
 
 						<div class="col-md-4 text-right">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
@@ -206,6 +207,10 @@
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
+							</button>
+							<button class="btn btn-sm" type="button" onclick="init();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								重置
 							</button>
 						</div>
 
@@ -455,5 +460,9 @@
 		}
 		
 		$("#formgastation").ajaxSubmit(deloptions);
+	}
+	
+	function init(){
+		loadPage('#main', '../web/gastation/gastationList');
 	}
 	</script>
