@@ -62,6 +62,32 @@
 		zTreeObj.expandAll(true);//展开所有节点
 	}
 
+	//跟新菜单树
+	function updateTree(treeData){
+		var zTreeObj;
+		// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+		var setting = {
+			view: {
+				selectedMulti: false
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			check: {
+				enable: true
+			}
+			,
+			callback: {
+				onCheck: zTreeOnCheck
+			}
+		};
+		var zNodes = treeData;
+		//初始化左侧树
+		zTreeObj = $.fn.zTree.init($("#treeDiv"), setting, zNodes);
+		zTreeObj.expandAll(true);//展开所有节点
+	}
 	//勾选菜单回调函数
 	function zTreeOnCheck(event, treeId, treeNode) {
 		var treeObj = $.fn.zTree.getZTreeObj("treeDiv");
@@ -77,7 +103,6 @@
 			});
 		}
 		$("#role_code").val(roleCode);
-		alert("val:"+$("#role_code").val());
 	};
 
 	/*分页相关方法 start*/
@@ -157,9 +182,9 @@
 				$("#role_name").val(data.sysRole.roleName);
 				$("#role_type").val(data.sysRole.roleType);
 				$("#role_desc").val(data.sysRole.roleDesc);
-				$("#role_code").val(data.functionList);
+				$("#role_code").val(data.functionStr);
 
-				intiTree("update");
+				updateTree(data.functionList);
 				$("#roleModel").modal('show');
 			}
 		});

@@ -59,39 +59,56 @@ public class SysRoleServiceImpl implements SysRoleService{
      */
     @Override
     public Map<String, Object> queryRoleByRoleId(String roleId) {
-        Map<String, Object> roleMap = new HashMap<>();
-        List<Map<String, Object>> functionMapList = new ArrayList<>();
+        Map<String, Object> roleMap = new HashMap<>();//角色信息
+        List<Map<String, Object>> functionMapList = new ArrayList<>();//菜单树，已标记是否选中
+        List<String> functionIdList = new ArrayList<>();//已选中菜单ID集合
+        String functionStr = "";//已选中菜单字符串
         //查询角色信息
         SysRole sysRole = sysRoleMapper.queryRoleById(roleId);
-        roleMap.put("sysRole", sysRole);
 
         //查询角色功能列表
         List<SysFunction> functionList = sysFunctionMapper.queryFunctionListByRoleId(roleId);
         int userType = 1;//用户类型（暂时用作删除状态）
         List<Map<String, Object>> functionAllList = sysFunctionMapper.queryFunctionAllList(userType);
-        if(functionAllList != null && functionList != null && functionList.size() > 0){
+        if(functionAllList != null && functionAllList.size() > 0){
             for(int i=0;i<functionAllList.size();i++){
                 Map<String, Object> functionMap = functionAllList.get(i);
                 int count = 0;//计数器
-                for(int j=0;j<functionList.size();j++){
-                    SysFunction sysFunction = functionList.get(j);
-                    //判断当前功能节点是否被选中
-                    if(sysFunction.getSysFunctionId().equals(functionMap.get("SysFunctionId").toString())){
-                        count++;
+                if(functionList != null && functionList.size() > 0){
+                    for(int j=0;j<functionList.size();j++){
+                        SysFunction sysFunction = functionList.get(j);
+                        //判断当前功能节点是否被选中
+                        if(sysFunction.getSysFunctionId().equals(functionMap.get("sysFunctionId").toString())){
+                            count++;
+                        }
                     }
                 }
 
                 //封装功能树中的属性
                 Map<String, Object> functionResultMap = new HashMap<>();
-                functionResultMap.put("id","");
-                functionResultMap.put("name","");
-                functionResultMap.put("pId","");
+                functionResultMap.put("id",functionMap.get("sysFunctionId"));
+                functionResultMap.put("name",functionMap.get("functionName"));
+                functionResultMap.put("pId",functionMap.get("parentId"));
 
                 //添加功能节点是否选中判断
                 if(count > 0){
                     functionResultMap.put("checked","true");
+                    String functionId = functionMap.get("sysFunctionId").toString();
+                    functionIdList.add(functionId);
                 }else{
                     functionResultMap.put("checked","false");
+                }
+
+                functionMapList.add(functionResultMap);
+            }
+
+            //将选中菜单ID集合拼接为字符串
+            if(functionIdList != null && functionIdList.size() > 0){
+                for (int i=0;i<functionIdList.size();i++){
+                    functionStr += functionIdList.get(i);
+                    if(i < functionIdList.size() - 1){
+                        functionStr += ",";
+                    }
                 }
             }
         }else{
@@ -99,7 +116,9 @@ public class SysRoleServiceImpl implements SysRoleService{
             functionMapList = functionAllList;
         }
 
+        roleMap.put("sysRole", sysRole);
         roleMap.put("functionList",functionMapList);
+        roleMap.put("functionStr",functionStr);
         return roleMap;
     }
     /**
