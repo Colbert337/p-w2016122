@@ -5,13 +5,13 @@ import com.sysongy.poms.permi.model.SysRoleFunction;
 import java.util.List;
 
 public interface SysRoleFunctionMapper {
-    int deleteByPrimaryKey(String sysRoleFunctionId);
+    int deleteFunctionList(String sysRoleId);
 
-    int insert(SysRoleFunction record);
+    int insertSelective(SysRoleFunction record);
 
     int addRoleFunctionList(List<SysRoleFunction> sysRoleFunctionList);
 
-    SysRoleFunction selectByPrimaryKey(String sysRoleFunctionId);
+    List<SysRoleFunction> queryRoleFunctionList(String sysRoleId);
 
     int updateByPrimaryKeySelective(SysRoleFunction record);
 

@@ -29,7 +29,7 @@ public interface SysRoleService {
      * @param roleId 角色编号
      * @return
      */
-    SysRole queryRoleByRoleId(String roleId);
+    Map<String, Object> queryRoleByRoleId(String roleId);
 
     /**
      * 添加角色

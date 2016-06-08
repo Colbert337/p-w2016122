@@ -64,10 +64,11 @@ public class SysRoleController extends BaseContoller{
 	 */
 	@RequestMapping("/update")
 	@ResponseBody
-	public SysRole updateRoleByRoleId(@RequestParam String sysRoleId, ModelMap map){
-		SysRole role = sysRoleService.queryRoleByRoleId(sysRoleId);
+	public Map<String, Object> updateRoleByRoleId(@RequestParam String sysRoleId, ModelMap map){
+		Map<String, Object> roleMap = new HashMap<>();
+		roleMap = sysRoleService.queryRoleByRoleId(sysRoleId);
 
-		return role;
+		return roleMap;
 	}
 
 	/**

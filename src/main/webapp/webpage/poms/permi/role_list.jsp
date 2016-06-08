@@ -153,10 +153,11 @@
 			async:false,
 			type: "POST",
 			success: function(data){
-				$("#sys_role_id").val(data.sysRoleId);
-				$("#role_name").val(data.roleName);
-				$("#role_type").val(data.roleType);
-				$("#role_desc").val(data.roleDesc);
+				$("#sys_role_id").val(data.sysRole.sysRoleId);
+				$("#role_name").val(data.sysRole.roleName);
+				$("#role_type").val(data.sysRole.roleType);
+				$("#role_desc").val(data.sysRole.roleDesc);
+				$("#role_code").val(data.functionList);
 
 				intiTree("update");
 				$("#roleModel").modal('show');

@@ -26,6 +26,13 @@ public interface SysFunctionMapper {
 
     SysFunction queryFunctionById(String sysFunctionId);
 
+    /**
+     * 根据角色ID查询功能列表
+     * @param sysRoleId
+     * @return
+     */
+    List<SysFunction> queryFunctionListByRoleId(String sysRoleId);
+
     int deleteFunctionById(String sysFunctionId);
 
     int addFunction(SysFunction record);
