@@ -120,7 +120,15 @@
 				$("#remark").val(data.remark);
 				$("#real_name").val(data.realName);
 				$("#user_type").val(data.userType);
-				$("#gender").val(data.gender);
+
+				if(data.gender == 0){
+					$("#gender_b").attr("checked","checked");
+					$("#gender_g").removeAttr("checked");
+				}else if(data.gender == 1){
+					$("#gender_g").attr("checked","checked");
+					$("#gender_b").removeAttr("checked");
+				}
+
 				$("#email").val(data.email);
 				$("#mobile_phone").val(data.mobilePhone);
 				/*密码输入框改为只读*/
