@@ -41,6 +41,13 @@ public interface SysUserService {
     SysUser queryUserByUserId(String userId);
 
     /**
+     * 根据用户ID查询用户信息
+     * @param userId 用户编号
+     * @return
+     */
+    Map<String,Object> queryUserMapByUserId(String userId);
+
+    /**
      * 用户登录
      * @param user
      * @return
@@ -60,6 +67,13 @@ public interface SysUserService {
      * @return
      */
     int updateUser(SysUser user);
+
+    /**
+     * 修改用户状态
+     * @param user 用户信息
+     * @return
+     */
+    int updateStatus(SysUser user);
 
     /**
      * 根据用户编号删除用户角色关系

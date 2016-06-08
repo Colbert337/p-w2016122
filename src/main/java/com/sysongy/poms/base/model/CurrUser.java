@@ -1,5 +1,6 @@
 package com.sysongy.poms.base.model;
 
+import com.sysongy.poms.permi.model.SysFunction;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
 
@@ -22,10 +23,16 @@ public class CurrUser {
 	 * 用户ID
 	 */
 	private String userId;
+
 	/**
-	 * 当前园所ID
+	 * 用户类型
 	 */
-	private String schoolId;
+	private int userType;
+
+	/**
+	 * 当前站点D
+	 */
+	private String stationId;
 	/**
 	 * 当前菜单编号
 	 */
@@ -38,8 +45,8 @@ public class CurrUser {
 	/**
 	 * 用户菜单列表
 	 */
-	private List<Map<String, Object>> userMenuList;
-	
+	private List<SysFunction> userFunctionList;
+
 	/**
 	 * 页面头部菜单
 	 */
@@ -82,18 +89,12 @@ public class CurrUser {
 		this.userId = userId;
 	}
 
-	/**
-	 * @return the userMenuList
-	 */
-	public List<Map<String, Object>> getUserMenuList() {
-		return userMenuList;
+	public List<SysFunction> getUserFunctionList() {
+		return userFunctionList;
 	}
 
-	/**
-	 * @param userMenuList the userMenuList to set
-	 */
-	public void setUserMenuList(List<Map<String, Object>> userMenuList) {
-		this.userMenuList = userMenuList;
+	public void setUserFunctionList(List<SysFunction> userFunctionList) {
+		this.userFunctionList = userFunctionList;
 	}
 
 	/**
@@ -116,5 +117,21 @@ public class CurrUser {
 
 	public void setUser(SysUser user) {
 		this.user = user;
+	}
+
+	public int getUserType() {
+		return userType;
+	}
+
+	public void setUserType(int userType) {
+		this.userType = userType;
+	}
+
+	public String getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(String stationId) {
+		this.stationId = stationId;
 	}
 }

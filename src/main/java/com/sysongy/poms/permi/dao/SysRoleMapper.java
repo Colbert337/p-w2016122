@@ -10,6 +10,8 @@ public interface SysRoleMapper {
 
     SysRole queryRoleById(String roleId);
 
+    List<SysRole> queryRoleListByUserType(String userType);
+
     int deleteRoleById(String roleId);
 
     int addRole(SysRole record);
