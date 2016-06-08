@@ -98,10 +98,9 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/update/staruts")
-	@ResponseBody
-	public Map<String, Object> updateStatusByUserId(SysUser sysUser, ModelMap map){
-		Map<String, Object> userMap = sysUserService.updateStatus(sysUser);
-		return userMap;
+	public String updateStatusByUserId(SysUser sysUser, ModelMap map){
+		sysUserService.updateStatus(sysUser);
+		return "redirect:/web/permi/user/list/page";
 	}
 	/**
 	 * 保存用户
@@ -135,7 +134,7 @@ public class SysUserController extends BaseContoller{
 		if (userId != null) {
 			user.setSysUserId(userId);
 			user.setIsDeleted(GlobalConstant.STATUS_DELETE);
-			sysUserService.updateUser(user);
+			sysUserService.updateStatus(user);
 		}
 		return "redirect:/web/permi/user/list/page";
 	}

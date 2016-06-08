@@ -158,7 +158,7 @@
 	 */
 	function updateStatus(userId,status){
 		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/user/save',
+			url:'<%=basePath%>/web/permi/user/update/staruts',
 			data:{sysUserId:userId,status:status},
 			type:'post',
 			dataType:'text',
@@ -256,11 +256,11 @@
 								<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
 									<a class="btn btn-sm btn-white btn-primary" href="javascript:editUser('${user.sysUserId}');">修改</a>
-									<c:if test="${user.status == 0}">
-										<a class="btn btn-sm btn-white btn-inverse" href="javascript:updateStatus('${user.sysUserId}',1);">禁用</a>
-									</c:if>
 									<c:if test="${user.status == 1}">
-										<a class="btn btn-sm btn-white btn-primary" href="javascript:updateStatus('${user.sysUserId}',0);">启用</a>
+										<a class="btn btn-sm btn-white btn-inverse" href="javascript:updateStatus('${user.sysUserId}',0);">启用</a>
+									</c:if>
+									<c:if test="${user.status == 0}">
+										<a class="btn btn-sm btn-white btn-primary" href="javascript:updateStatus('${user.sysUserId}',1);">禁用</a>
 									</c:if>
 									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteUser('${user.sysUserId}');">删除</a>
 								</td>
