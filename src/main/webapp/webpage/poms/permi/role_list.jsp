@@ -64,7 +64,20 @@
 
 	//勾选菜单回调函数
 	function zTreeOnCheck(event, treeId, treeNode) {
-		alert(treeNode.tId + ", " + treeNode.name + "," + treeNode.checked);
+		var treeObj = $.fn.zTree.getZTreeObj("treeDiv");
+		var nodes = treeObj.getCheckedNodes(true);
+		var roleCode = "";
+		if(nodes != null && nodes.length > 0){
+			$.each(nodes,function(i,node){
+				console.log("i:"+i+" node"+node.name);
+				roleCode += node.id;
+				if(i < nodes.length - 1){
+					roleCode += ",";
+				}
+			});
+		}
+		$("#role_code").val(roleCode);
+		alert("val:"+$("#role_code").val());
 	};
 
 	/*分页相关方法 start*/
@@ -88,8 +101,14 @@
 		}
 	}
 	/*分页相关方法 end*/
+	function clearDiv(){
+		$("#roleForm :input").each(function () {
+			$(this).val("");
+		});
+	}
 	//显示添加用户弹出层
 	function addRole(){
+		clearDiv();
 		intiTree("add");
 		$("#roleModel").modal('show');
 	}
@@ -119,6 +138,7 @@
 
 			$("#roleModel").modal('hide');
 			$(".modal-backdrop").css("display","none");
+			clearDiv();
 		}
 	}
 
@@ -126,6 +146,7 @@
 	 * 回显用户信息
 	 */
 	function editRole(roleId){
+		clearDiv();
 		$.ajax({
 			url:"<%=basePath%>/web/permi/role/update",
 			data:{sysRoleId:roleId},
@@ -302,8 +323,9 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="role_name"> <span class="red_star">*</span>角色名称： </label>
 									<div class="col-sm-8">
-										<input type="text" id="role_name" name="roleName" placeholder="角色名称" class="validate[required,minSize[3],custom[onlyLetterNumber]] col-xs-10 col-sm-10" />
+										<input type="text" id="role_name" name="roleName" placeholder="角色名称" class="validate[required,minSize[3]] col-xs-10 col-sm-10" />
 										<input type="hidden" id="sys_role_id" name="sysRoleId" class="col-xs-10 col-sm-10" />
+										<input type="hidden" id="role_code" name="roleCode" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">

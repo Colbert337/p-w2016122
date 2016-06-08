@@ -7,9 +7,11 @@ import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysRoleFunction;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysRoleService;
+import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +59,23 @@ public class SysRoleServiceImpl implements SysRoleService{
      */
     @Override
     public int addRole(SysRole role) {
+        String function = role.getRoleCode();
+        role.setRoleCode(null);
+        if(function != null && !"".equals(function)){
+            List<SysRoleFunction> roleFunctionList = new ArrayList<>();
+            String[] functionArray = function.split(",");
+            if(functionArray != null && functionArray.length > 0){
+                for (String functionId: functionArray) {
+                    SysRoleFunction sysRoleFunction = new SysRoleFunction();
+                    sysRoleFunction.setSysRoleFunctionId(UUIDGenerator.getUUID());
+                    sysRoleFunction.setSysRoleId(role.getSysRoleId());
+                    sysRoleFunction.setSysFunctionId(functionId);
+
+                    roleFunctionList.add(sysRoleFunction);
+                }
+            }
+
+        }
         return sysRoleMapper.addRole(role);
     }
     /**
