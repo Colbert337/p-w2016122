@@ -33,16 +33,16 @@
     where 1=1
     <trim>
       <if test="sysDriverId != null &amp;&amp; sysDriverId != ''" >
-        and sysDriverId = #{sysDriverId,jdbcType=VARCHAR}
+        and sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
       </if>
       <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
-        and plateNumber = #{plateNumber,jdbcType=VARCHAR}
+        and plate_number = #{plateNumber,jdbcType=VARCHAR}
       </if>
       <if test="userName!= null &amp;&amp; userName != ''" >
-        and userName = #{userName,jdbcType=VARCHAR}
+        and user_name = #{userName,jdbcType=VARCHAR}
       </if>
       <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
-        and mobilePhone = #{mobilePhone,jdbcType=VARCHAR}
+        and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
       </if>
     </trim>
   </select>

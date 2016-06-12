@@ -40,6 +40,11 @@ public class CRMUserContoller {
     @ResponseBody
     public AjaxJson queryUserInfo(HttpServletRequest request, HttpServletResponse response, SysUser sysUser){
         AjaxJson ajaxJson = new AjaxJson();
+        if(!StringUtils.isNotEmpty(sysUser.getSysUserId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("当前用户为空，请检查输入参数！");
+            return ajaxJson;
+        }
         Map<String, Object> attributes = new HashMap<String, Object>();
         try
         {
@@ -52,5 +57,55 @@ public class CRMUserContoller {
         }
         ajaxJson.setAttributes(attributes);
     	return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/updateUserInfo"})
+    @ResponseBody
+    public AjaxJson updateUserInfo(HttpServletRequest request, HttpServletResponse response, SysUser sysUser){
+        AjaxJson ajaxJson = new AjaxJson();
+        if(!StringUtils.isNotEmpty(sysUser.getSysUserId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("当前用户为空，请检查输入参数！");
+            return ajaxJson;
+        }
+
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            SysUser sysUserInfo = sysUserService.queryUserByUserId(sysUser.getSysUserId());
+            if(StringUtils.isNotEmpty(sysUser.getAvatarS())){
+                sysUserInfo.setAvatarS(sysUser.getAvatarS());
+            }
+
+            if(StringUtils.isNotEmpty(sysUser.getUserName())){
+                sysUserInfo.setUserName(sysUser.getUserName());
+            }
+
+            if(StringUtils.isNotEmpty(sysUser.getMobilePhone())){
+                sysUserInfo.setMobilePhone(sysUser.getMobilePhone());
+            }
+
+            if(sysUser.getGender() != null){
+                sysUserInfo.setGender(sysUser.getGender());
+            }
+
+            if(StringUtils.isNotEmpty(sysUser.getPassword())){
+                sysUserInfo.setPassword(sysUser.getPassword());
+            }
+
+            int nRet = sysUserService.updateUser(sysUserInfo);
+            if(nRet < 1){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_SYSUSER_ERROR);
+                return ajaxJson;
+            }
+
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_SYSUSER_ERROR + e.getMessage());
+            logger.error("updateCardInfo error： " + e);
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
     }
 }

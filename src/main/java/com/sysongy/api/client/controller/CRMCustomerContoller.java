@@ -1,7 +1,6 @@
 package com.sysongy.api.client.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.mysql.jdbc.StringUtils;
 import com.sysongy.api.client.controller.model.ShortMessageInfoModel;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
@@ -13,6 +12,7 @@ import com.sysongy.util.IPUtil;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import java.util.Map;
 
 @Controller
 @SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
-@RequestMapping("/crmUserService")
+@RequestMapping("/crmCustomerService")
 public class CRMCustomerContoller {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -43,6 +43,22 @@ public class CRMCustomerContoller {
 
     @Autowired
     RedisClientInterface redisClientImpl;
+
+    public DriverService getDriverService() {
+        return driverService;
+    }
+
+    public void setDriverService(DriverService driverService) {
+        this.driverService = driverService;
+    }
+
+    public RedisClientInterface getRedisClientImpl() {
+        return redisClientImpl;
+    }
+
+    public void setRedisClientImpl(RedisClientInterface redisClientImpl) {
+        this.redisClientImpl = redisClientImpl;
+    }
 
     @RequestMapping(value = {"/web/queryCustomerInfo"})
     @ResponseBody
@@ -68,7 +84,8 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson sendMsg(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
         AjaxJson ajaxJson = new AjaxJson();
-        if(StringUtils.isNullOrEmpty(sysDriver.getMobilePhone())){
+
+        if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("手机号为空！！！");
             return ajaxJson;
@@ -106,6 +123,7 @@ public class CRMCustomerContoller {
 
     private boolean checkIfFrequent(HttpServletRequest request, SysDriver sysDriver){
         boolean bRet = false;
+
         try {
             String ip = IPUtil.getIpAddress(request);
             Date catchIPTime = (Date)redisClientImpl.getFromCache(ip);
@@ -143,17 +161,25 @@ public class CRMCustomerContoller {
         try
         {
             String checkCode = (String)redisClientImpl.getFromCache(sysDriver.getSysDriverId());
-            if(StringUtils.isNullOrEmpty(checkCode)){
+            if(!StringUtils.isNotEmpty(checkCode)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("验证码已失效，请重新生成验证码！！！");
                 return ajaxJson;
             }
 
             String inputCode = request.getParameter("inputCode");
-            if(StringUtils.isNullOrEmpty(inputCode) || !inputCode.equalsIgnoreCase(checkCode)){
+            if(!StringUtils.isNotEmpty(inputCode) || !inputCode.equalsIgnoreCase(checkCode)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("验证码输入错误！！！");
                 return ajaxJson;
+            }
+
+            if(sysDriver.getIsIdent() == null){
+                sysDriver.setIsIdent(0);
+            }
+
+            if(sysDriver.getFuelType() == null){
+                sysDriver.setIsIdent(0);
             }
 
             int renum = driverService.saveDriver(sysDriver, "insert");
@@ -200,14 +226,14 @@ public class CRMCustomerContoller {
             String msgType = request.getParameter("msgType");
             if(msgType.equalsIgnoreCase("changePassword")){
                 String checkCode = (String)redisClientImpl.getFromCache(sysDriver.getSysDriverId());
-                if(StringUtils.isNullOrEmpty(checkCode)){
+                if(StringUtils.isNotEmpty(checkCode)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("验证码已失效，请重新输入！！！");
                     return ajaxJson;
                 }
 
                 String inputCode = request.getParameter("inputCode");
-                if(StringUtils.isNullOrEmpty(inputCode) || !inputCode.equalsIgnoreCase(checkCode)){
+                if(StringUtils.isNotEmpty(inputCode) || !inputCode.equalsIgnoreCase(checkCode)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("验证码输入错误！！！");
                     return ajaxJson;
@@ -228,19 +254,19 @@ public class CRMCustomerContoller {
         boolean bRet = false;
         try {
             SysDriver orgSysDriver = driverService.queryDriverByPK(sysDriver.getSysDriverId());
-            if(StringUtils.isNullOrEmpty(sysDriver.getPassword())){
+            if(StringUtils.isNotEmpty(sysDriver.getPassword())){
                 orgSysDriver.setPassword(sysDriver.getPassword());
             }
 
-            if(StringUtils.isNullOrEmpty(sysDriver.getCardId())){
+            if(StringUtils.isNotEmpty(sysDriver.getCardId())){
                 orgSysDriver.setCardId(sysDriver.getCardId());
             }
 
-            if(StringUtils.isNullOrEmpty(sysDriver.getIdentityCard())){
+            if(StringUtils.isNotEmpty(sysDriver.getIdentityCard())){
                 orgSysDriver.setIdentityCard(sysDriver.getIdentityCard());
             }
 
-            if(StringUtils.isNullOrEmpty(sysDriver.getUserName())){
+            if(StringUtils.isNotEmpty(sysDriver.getUserName())){
                 orgSysDriver.setUserName(sysDriver.getUserName());
             }
 
@@ -248,7 +274,7 @@ public class CRMCustomerContoller {
                 orgSysDriver.setFuelType(sysDriver.getFuelType());
             }
 
-            if(StringUtils.isNullOrEmpty(sysDriver.getPlateNumber())){
+            if(StringUtils.isNotEmpty(sysDriver.getPlateNumber())){
                 orgSysDriver.setPlateNumber(sysDriver.getPlateNumber());
             }
 
@@ -256,11 +282,11 @@ public class CRMCustomerContoller {
                 orgSysDriver.setExpiryDate(sysDriver.getExpiryDate());
             }
 
-            if(StringUtils.isNullOrEmpty(sysDriver.getDrivingLice())){
+            if(StringUtils.isNotEmpty(sysDriver.getDrivingLice())){
                 orgSysDriver.setDrivingLice(sysDriver.getDrivingLice());
             }
 
-            if(StringUtils.isNullOrEmpty(sysDriver.getVehicleLice())){
+            if(StringUtils.isNotEmpty(sysDriver.getVehicleLice())){
                 orgSysDriver.setVehicleLice(sysDriver.getVehicleLice());
             }
             int renum = driverService.saveDriver(orgSysDriver, "update");
@@ -284,7 +310,7 @@ public class CRMCustomerContoller {
         }
 
         String sysDriverId = request.getParameter("sysDriverId");
-        if(StringUtils.isNullOrEmpty(sysDriverId)){
+        if(!StringUtils.isNotEmpty(sysDriverId)){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("sysDriverId 为空！！！");
             return ajaxJson;
