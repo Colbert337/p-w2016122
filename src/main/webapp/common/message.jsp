@@ -15,7 +15,7 @@
 
 						<div class="modal-body no-padding">
 							<br/>
-							${ret.retMsg}"
+							${ret.retMsg}
 						</div>
 
 						<div class="modal-footer no-margin-top">

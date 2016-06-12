@@ -140,6 +140,7 @@ public class GasCardServiceImpl implements GasCardService{
 					card.setWorkstation(gascard.getWorkstation());
 					card.setWorkstation_resp(gascard.getWorkstation_resp());
 					card.setRelease_time(new Date());
+					card.setOperator(gascard.getOperator());
 					
 					Integer count = gasCardMapper.updateByPrimaryKeySelective(card);
 					 if(count > 0){

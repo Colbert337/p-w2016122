@@ -97,7 +97,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人工号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人： </label>
 
 										<div class="col-sm-4">
 											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5" readonly="readonly" value=" ${sessionScope.currUser.user.userName}"/>
@@ -121,7 +121,7 @@
 															<th id="card_type_order">用户卡类型</th>
 															<th id="card_name_order">用户卡属性</th> 
 															<th id="card_status_order">库存状态</th>
-															<th id="operator_order">操作人工号</th> 
+															<th id="operator_order">操作人</th> 
 														</tr>
 													</thead>
 													<tbody>
@@ -290,8 +290,6 @@
 				return ;
 			}
 			
-			$("#init_dynamic_data").attr("disabled","disabled");
-			
 			var start = parseFloat($("#card_no_1").val());
 			var end = parseFloat($("#card_no_2").val());
 			
@@ -299,6 +297,8 @@
 				alert("单批次操作卡数量最大值为2000");
 				return;
 			}
+			
+			$("#dynamic-table").find("tbody").find("tr").remove();
 			
 			for(var i=start; i<=end; i++){
 				$.ajax({
@@ -318,6 +318,13 @@
 			            }
 					});
 			}
+			
+			if(contral == "0"){
+				alert("该批次中没有需要入库的卡");
+				return;
+			}
+			
+			$("#init_dynamic_data").attr("disabled","disabled");
 				
 			//动态初始化详细列表
 			jQuery(function($) {

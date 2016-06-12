@@ -252,6 +252,7 @@
 									<th onclick="orderBy(this,'storage_time');commitForm();" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
 									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
 									<th onclick="orderBy(this,'optime');commitForm();" id="optime_order"><i id="optime" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th>
+									<th onclick="orderBy(this,'action');commitForm();" id="action_order">操作动作</th> 
 								</tr>
 							</thead>
 
@@ -277,7 +278,7 @@
 									<td><fmt:formatDate value="${list.storage_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.release_time}" type="both"/></td>
 					                <td><fmt:formatDate value="${list.optime}" type="both"/></td>
-									
+									<td><s:Code2Name mcode="${list.action}" gcode="ACTION"></s:Code2Name></td>
 								</tr>
 								</c:forEach>
 							</tbody>
