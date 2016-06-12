@@ -145,7 +145,7 @@ public class CRMCustomerContoller {
             String checkCode = (String)redisClientImpl.getFromCache(sysDriver.getSysDriverId());
             if(StringUtils.isNullOrEmpty(checkCode)){
                 ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("验证码已失效，请重新输入！！！");
+                ajaxJson.setMsg("验证码已失效，请重新生成验证码！！！");
                 return ajaxJson;
             }
 
