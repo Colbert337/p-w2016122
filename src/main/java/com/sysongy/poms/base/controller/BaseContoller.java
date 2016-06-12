@@ -1,12 +1,16 @@
 package com.sysongy.poms.base.controller;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.permi.model.SysFunction;
 import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysFunctionService;
 import com.sysongy.poms.permi.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +49,8 @@ public class BaseContoller {
 
     @Autowired
     SysUserService sysUserService;
+    @Autowired
+    SysFunctionService sysFunctionService;
 
     @RequestMapping(value = {"","/"})
     public String index(ModelMap map){  
@@ -55,7 +61,6 @@ public class BaseContoller {
         result.setViewName("comm/g_main");*/
         
         map.addAttribute("current_module", "webpage/demo/panel");
-        
         return "login";
     }
 
@@ -92,14 +97,24 @@ public class BaseContoller {
 
         user = sysUserService.queryUserByAccount(user);
 
+        //判断登录是否成功
     	if(user != null && user.getUserName() != null && user.getPassword() != null){
+            //封装用户信息
+            int userType = user.getUserType();
             currUser.setUserId(user.getSysUserId());
             currUser.setUser(user);
+            currUser.setUserType(userType);
+
+            //封装用户菜单信息
+            List<SysFunction> functionList = sysFunctionService.queryFunctionListByUserId(user.getSysUserId());
+            currUser.setUserFunctionList(functionList);
 
     		map.addAttribute("current_module", "webpage/demo/demo");
             map.addAttribute("currUser",currUser);
     		returnPath = "common/g_main";
-    	}
+    	}else{
+            returnPath = "login";
+        }
 
     	return returnPath;
     }

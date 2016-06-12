@@ -10,21 +10,22 @@
   <sql id="Base_Column_List" >
     sys_role_function_id, sys_role_id, sys_function_id, created_date
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="queryRoleFunctionList" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from sys_role_function
-    where sys_role_function_id = #{sysRoleFunctionId,jdbcType=VARCHAR}
+    where sys_role_id = #{0}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteFunctionList" parameterType="java.lang.String" >
     delete from sys_role_function
-    where sys_role_function_id = #{sysRoleFunctionId,jdbcType=VARCHAR}
+    where sys_role_id = #{0}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysRoleFunction" >
-    insert into sys_role_function (sys_role_function_id, sys_role_id, sys_function_id, 
-      created_date)
-    values (#{sysRoleFunctionId,jdbcType=VARCHAR}, #{sysRoleId,jdbcType=VARCHAR}, #{sysFunctionId,jdbcType=VARCHAR}, 
-      #{createdDate,jdbcType=TIMESTAMP})
+  <insert id="addRoleFunctionList" parameterType="java.util.List" >
+    insert into sys_role_function (sys_role_function_id, sys_role_id, sys_function_id)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.sysRoleFunctionId},#{item.sysRoleId},#{item.sysFunctionId})
+    </foreach>
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysRoleFunction" >
     insert into sys_role_function
