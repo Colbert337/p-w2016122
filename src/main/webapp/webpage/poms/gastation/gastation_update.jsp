@@ -454,10 +454,8 @@
 	           async:false,
 	           success:function(data){
 	           		if(data != ""){
-			        	   $("#salesmen_id").empty();
 			        	   var s = JSON.parse(data);
 			        	   for(var i=0;i<s.length;i++){
-			        		   $("#salesmen_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
 			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
 			        	   }
 	           		}
@@ -468,7 +466,6 @@
 		var province_id = '${station.province_id}';
 		var city_id =  '${station.city_id}';
 		var detail = '${station.address}';
-		var salesmen_id = '${station.salesmen_id}';
 		var operations_id = '${station.operations_id}';
 		
 		if(province_id!=null && province_id!=""){
@@ -477,12 +474,8 @@
 			$("#city").find("option[value="+city_id+"]").attr("selected",true);
 			$("#detail").val(detail.split(" ")[2]);
 		}
-		
-		if(salesmen_id!=null && salesmen_id!=""){
-			$("#salesmen_id").find("option[value="+salesmen_id+"]").attr("selected",true);
-		}
-		
-		if(operations_id!=null && salesmen_id!=""){
+
+		if(operations_id!=null){
 			$("#operations_id").find("option[value="+operations_id+"]").attr("selected",true);
 		}
 		
@@ -715,7 +708,7 @@ function save_photo(fileobj,obj,obj1){
 			}
 			
 			var multipartOptions ={   
-					url:'../crmBaseService/web/upload?gasstationid='+$("#sys_gas_station_id").val(),
+					url:'../crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),
 		            type:'post',                    
 		            dataType:'text',
 		            enctype:"multipart/form-data",

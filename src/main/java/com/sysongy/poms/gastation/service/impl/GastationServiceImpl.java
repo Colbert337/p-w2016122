@@ -73,7 +73,8 @@ public class GastationServiceImpl implements GastationService {
 			if(!StringUtils.isEmpty(record.getExpiry_date_frompage())){
 				record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			}
-			return String.valueOf(gasStationMapper.updateByPrimaryKeySelective(record));
+			gasStationMapper.updateByPrimaryKeySelective(record);
+			return record.getSys_gas_station_id();
 		}
 	}
 
