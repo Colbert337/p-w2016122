@@ -181,14 +181,14 @@
 						<div class="item">
 						    <label>用户卡类型:</label>
 							<select class="chosen-select " name="card_type" >
-									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type" link="true" />
+									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type"/>
 							</select>
 						</div>
 
 						<div class="item">
 							<label>用户卡状态:</label>
 							<select class="chosen-select " name="card_status" >
-									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" link="true" />
+									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" />
 							</select>
 						</div>
 						
@@ -248,7 +248,7 @@
 									<th onclick="orderBy(this,'card_property');commitForm();" id="card_property_order">用户卡属性</th>
 									<th onclick="orderBy(this,'workstation');commitForm();" id="workstation_order">所属工作站</th>
 									<th onclick="orderBy(this,'workstation_resp');commitForm();" id="workstation_resp_order">工作站领取人</th>
-									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人工号</th> 
+									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th> 
 									<th onclick="orderBy(this,'batch_no');commitForm();" id="batch_no_order">入库批次号</th> 
 									<th onclick="orderBy(this,'storage_time');commitForm();" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
 									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>

@@ -13,6 +13,7 @@ public class Gastation extends BaseModel {
 	private String email;
 	private String province_id;
 	private String city_id;
+	private String detail;
 	private String address;
 	private String salesmen_id;
 	private String salesmen_name;
@@ -37,6 +38,14 @@ public class Gastation extends BaseModel {
 	private Date expiry_date;
 	private Date updated_time;
 	private String sys_user_account_id;
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
 
 	public String getSys_user_account_id() {
 		return sys_user_account_id;
