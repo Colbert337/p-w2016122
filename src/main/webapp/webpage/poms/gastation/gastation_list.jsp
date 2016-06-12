@@ -172,34 +172,34 @@
 				<div class="col-xs-12">
 					<h3 class="header smaller lighter blue">加气站管理</h3>
 
-					<div class="row form-group">
-						<div class="col-md-2">
+					<div class="search-types">
+						<div class="item">
 						    <label>加气站编号:</label>
 							<input type="text" name="sys_gas_station_id" placeholder="输入加气站编号"  maxlength="9" value="${gastation.sys_gas_station_id}"/>
 						</div>
 						
-						<div class="col-md-2">
+						<div class="item">
 						    <label>加气站名称:</label>
 							<input type="text" name="gas_station_name" placeholder="输入加气站名称"  maxlength="9" value="${gastation.gas_station_name}"/>
 						</div>
 						
-						<div class="col-md-2">
+						<div class="item">
 							<label>气站状态:</label>
 							<select class="chosen-select " name="status" >
 									<s:option flag="true" gcode="GASTATION_STATUS" form="gastation" field="status" link="true" />
 							</select>
 						</div>
 						
-						 <div class="col-md-2">
+						 <div class="item">
 						    <label>平台有效期:</label>
 							<%--<span class="input-group-addon">--%>
 									<%--<i class="fa fa-calendar bigger-110"></i>--%>
 							<%--</span>--%>
-							<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${gascard.expiry_date_frompage}"/>
+							<input type="text" name="expiry_date_frompage" id="date-range-picker" size="22" value="${gascard.expiry_date_frompage}"/>
 						</div> 
 
 
-						<div class="col-md-4 text-right">
+						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								新建加气站
@@ -398,9 +398,14 @@
 	var mydate = new Date();
 	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
 					locale: {
-						applyLabel: 'Apply',
-						cancelLabel: 'Cancel',
-						format: "YYYY/MM/DD",
+						"format": 'YYYY.MM.DD',
+						"applyLabel": "确定",
+						"cancelLabel": "取消",
+						"fromLabel": "起始时间",
+						"toLabel": "结束时间'",
+						"daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+						"monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+						"firstDay": 1
 					}, 
 					"startDate": "${gastation.expiry_date_after}"==""?mydate.getFullYear()+"/1/1":"${gastation.expiry_date_after}",
 				    "endDate": "${gastation.expiry_date_before}"==""?mydate.getFullYear()+"/12/31":"${gastation.expiry_date_before}"
