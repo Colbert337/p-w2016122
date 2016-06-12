@@ -92,14 +92,14 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 工作站领取人： </label>
 										<div class="col-sm-2">
-												<input type="text" name="workstation_resp" maxlength="10"/>
+												<input type="text" name="workstation_resp" id="workstation_resp" maxlength="10"/>
 												<%-- <select class="form-control" id="workstation_resp" name="workstation_resp">
 												</select> --%>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人工号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人： </label>
 										<div class="col-sm-4">
 											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>										
 										</div>
@@ -122,7 +122,7 @@
 															<th id="card_type_order">调拨工作站</th>
 															<th id="card_name_order">工作站领取人</th> 
 															<th id="card_status_order">用户卡状态</th>
-															<th id="operator_order">操作人工号</th> 
+															<th id="operator_order">操作人</th> 
 														</tr>
 													</thead>
 													<tbody>
@@ -198,6 +198,16 @@
 		                    regexp: {
 		                        regexp: /^1\d{8}$/,
 		                        message: '用户卡号格式必须是1开头的9位数字'
+		                    },
+		                    callback: {
+		                    	message: '用户卡结束编号必须不小于起始编号',
+		                    	callback: function (value, validator, $field) {
+	                                var start = $('#card_no_1').val();
+	                                 if(parseFloat($('#card_no_1').val()) > value){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
 		                }
 		            },
@@ -273,10 +283,13 @@
 				return ;
 			}
 			
-			$("#init_dynamic_data").attr("disabled","disabled");
-			
 			var start = parseFloat($("#card_no_1").val());
 			var end = parseFloat($("#card_no_2").val());
+			
+			if(end - start >=2000){
+				alert("单批次操作卡数量最大值为2000");
+				return;
+			}
 			
 			for(var i=start; i<=end; i++){
 				$.ajax({
@@ -287,12 +300,20 @@
 			           async:false,
 			           success:function(data){
 			           		if(data != ""){
-								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#workstation').find("option:selected").text()+"</td><td>"+$('#workstation_resp').find("option:selected").text()+"</td><td>"+data+"</td><td>"+$("#operator").val()+"</td></tr>");
+								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#workstation').find("option:selected").text()+"</td><td>"+$('#workstation_resp').val()+"</td><td>"+data+"</td><td>"+$("#operator").val()+"</td></tr>");
 			           			$("#card_no_arr").val($("#card_no_arr").val()+i+",");
 			           		}
 			            }
 					});
 			}
+			
+			var tr = $("#dynamic-table").find("tbody").find("tr");
+		 	if(tr.length==0){
+				alert("此号段没有可出库的用户卡");
+				return;
+			}
+		 	
+		 	$("#init_dynamic_data").attr("disabled","disabled");
 				
 			//动态初始化详细列表
 			jQuery(function($) {

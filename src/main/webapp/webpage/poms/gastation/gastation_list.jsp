@@ -186,7 +186,7 @@
 						<div class="col-md-2">
 							<label>气站状态:</label>
 							<select class="chosen-select " name="status" >
-									<s:option flag="true" gcode="GASTATION_STATUS" form="gastation" field="status" link="true" />
+									<s:option flag="true" gcode="STATION_STATUS" form="gastation" field="status" link="true" />
 							</select>
 						</div>
 						
@@ -286,7 +286,7 @@
 									<td>${list.salesmen_name}</td>
 									<td>${list.operations_name}</td>
 									<td>${list.indu_com_number}</td>
-									<td><s:Code2Name mcode="${list.status}" gcode="GASTATION_STATUS"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
 									<td>${list.address}</td> 
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
@@ -450,12 +450,10 @@
 	            dataType:'text',
 	            success:function(data){
 		             $("#main").html(data);
-		             if($("#retCode").val() != "100"){
-		            	 $("#modal-table").modal("show");
-		             }
+		             $("#modal-table").modal("show");
 	            },
 	            error:function(XMLHttpRequest, textStatus, errorThrown) {
-					
+	            	$("#modal-table").modal("show");
 	            }
 		}
 		

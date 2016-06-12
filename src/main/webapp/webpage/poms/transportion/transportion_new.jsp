@@ -45,9 +45,9 @@
 							</li>
 
 							<li>
-								<a href="#">加气站管理</a>
+								<a href="#">运输公司管理</a>
 							</li>
-							<li class="active">加气站信息管理</li>
+							<li class="active">运输公司信息管理</li>
 						</ul><!-- /.breadcrumb -->
 
 						<!-- #section:basics/content.searchbox -->
@@ -72,20 +72,20 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								新建加气站
+								新建运输公司
 							</h1>
 						</div><!-- /.page-header -->
 
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								<form class="form-horizontal"  id="gastationform">
+								<form class="form-horizontal"  id="transportion">
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 加气站名称： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 运输公司名称： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="gas_station_name"  name="gas_station_name" placeholder="输入加气站名称" class="col-xs-10 col-sm-5" maxlength="20"/>
+											<input type="text" id="transportion_name"  name="transportion_name" placeholder="输入运输公司名称" class="col-xs-10 col-sm-5" maxlength="20"/>
 										</div>
 									</div>
 									
@@ -138,7 +138,7 @@
 										<div class="col-sm-2">
 												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
-												<input type="hidden" id="operations_name" name="operations_name"/>
+												<input type="text" id="operations_name" name="operations_name"/>
 										</div>
 									</div>
 									
@@ -306,14 +306,15 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'../web/permi/user/list/userType?userType=1',   
+			   url:'../web/permi/user/list/userType?userType=2',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
 	           		if(data != ""){
 			        	   var s = JSON.parse(data);
+			        	   $("#operations_id").append("<option value=''>请选择</option>");
 			        	   for(var i=0;i<s.length;i++){
-			        		   $("#operations_id").append("<option value=''>请选择</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
 			        	   }
 	           		}
 	            }
@@ -356,7 +357,7 @@
 		var contral = "0";
 		
 			//bootstrap验证控件		
-		    $('#gastationform').bootstrapValidator({
+		    $('#transportion').bootstrapValidator({
 		        message: 'This value is not valid',
 		        feedbackIcons: {
 		            valid: 'glyphicon glyphicon-ok',
@@ -364,16 +365,16 @@
 		            validating: 'glyphicon glyphicon-refresh'
 		        },
 		        fields: {
-		        	gas_station_name: {
+		        	transportion_name: {
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站名称不能为空'
+		                        message: '运输公司名称不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加气站名称不能超过20个汉字'
+		                        message: '运输公司名称不能超过20个汉字'
 		                    }
 		                }
 		            },
@@ -381,12 +382,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站站长不能为空'
+		                        message: '运输公司站长不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加气站站长不能超过20个汉字'
+		                        message: '运输公司站长不能超过20个汉字'
 		                    }
 		                }
 		            },
@@ -414,20 +415,6 @@
 		                validators: {
 		                    notEmpty: {
 		                        message: '销售负责人不能为空'
-		                    }
-		                }
-		            },
-		            operations_id: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '运管负责人不能为空'
-		                    }
-		                }
-		            },
-		            operations_id: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '运管负责人不能为空'
 		                    }
 		                }
 		            },
@@ -488,13 +475,13 @@
 			$("#address").val($("#province").find("option:selected").text()+" "+$("#city").find("option:selected").text()+" "+$("#detail").val());
 			
 			/*手动验证表单，当是普通按钮时。*/
-			$('#gastationform').data('bootstrapValidator').validate();
-			if(!$('#gastationform').data('bootstrapValidator').isValid()){
+			$('#transportion').data('bootstrapValidator').validate();
+			if(!$('#transportion').data('bootstrapValidator').isValid()){
 				return ;
 			}
 			
 			var options ={   
-		            url:'../web/gastation/saveGastation',   
+		            url:'../web/transportion/saveTransportion',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -502,19 +489,19 @@
 		            	if(tmp){
 		            		$("#main").html(data);
 		            	}else{
-		            		loadPage('#main', '../webpage/poms/gastation/gastation_new.jsp');
+		            		loadPage('#main', '../webpage/poms/transportion/transportion_new.jsp');
 							$("#modal-table").modal("show");
 		            	}
-		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+		            },error:function(XMLHttpRequest, textStatus, errorThrown) {;
+		            	$("#modal-table").modal("show");
 		 	       }
 			}
 						
-			$("#gastationform").ajaxSubmit(options);
+			$("#transportion").ajaxSubmit(options);
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/gastation/gastationList');
+			loadPage('#main', '../web/transportion/transportionList');
 		}
 		
 		function setOperationName(obj){

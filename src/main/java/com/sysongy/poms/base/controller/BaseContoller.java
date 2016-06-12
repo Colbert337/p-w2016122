@@ -34,7 +34,7 @@ import com.sysongy.util.PropertyUtil;
  *
  */
 @Controller
-@SessionAttributes({"currUser"})
+@SessionAttributes({"currUser","ret"})
 public class BaseContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
