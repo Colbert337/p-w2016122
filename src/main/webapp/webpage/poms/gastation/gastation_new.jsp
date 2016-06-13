@@ -120,7 +120,7 @@
 										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
-														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
+														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
 														<span class="input-group-addon">
 																<i class="fa fa-calendar bigger-110"></i>
 														</span>
@@ -433,8 +433,9 @@
 		                validators: {
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
-		                    }
-		                }
+		                    },
+		                },
+		                trigger: 'change'
 		            },
 		            operations_id: {
 		                validators: {
