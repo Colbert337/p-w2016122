@@ -23,21 +23,21 @@
 			<ul>
 				<li>
 					<div class="form-item">
-						<input id="userName" name="userName" class="form-control required user" type="text" value="wdq">
+						<input id="userName" name="userName" class="form-control required user" type="text" tabIndex="1" value="wdq">
 						<div class="form-item-error"></div>
 					</div>
 				</li>
 				<li>
 					<div class="form-item">
-						<input id="password" name="password" class="form-control required pw" type="password" value="111111">
+						<input id="password" name="password" class="form-control required pw" type="password" tabIndex="2" value="111111">
 						<div class="form-item-error"></div>
 					</div>
 				</li>
 				<li>
 					<div class="form-item">
-						<button class="btn" type="submit">btn</button>
+						<button class="btn" type="submit" tabIndex="4">btn</button>
 						<div class="rememberpw">
-							<input name="" id="rememberpw" type="checkbox">
+							<input name="" id="rememberpw" type="checkbox" tabIndex="3">
 							<label for="rememberpw">记住密码</label>
 						</div>
 					</div>

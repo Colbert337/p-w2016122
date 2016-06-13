@@ -71,35 +71,30 @@
 				<div class="col-xs-12">
 					<h3 class="header smaller lighter blue">运输公司管理</h3>
 
-					<div class="row form-group">
-						<div class="col-md-2">
+					<div class="search-types">
+						<div class="item">
 						    <label>运输公司编号:</label>
 							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号"  maxlength="9" value="${transportion.sys_transportion_id}"/>
 						</div>
 						
-						<div class="col-md-2">
+						<div class="item">
 						    <label>运输公司名称:</label>
 							<input type="text" name="transportion_name" placeholder="输入运输公司名称"  maxlength="9" value="${transportion.transportion_name}"/>
 						</div>
 						
-						<div class="col-md-2">
+						<div class="item">
 							<label>运输公司状态:</label>
 							<select class="chosen-select " name="status" >
 									<s:option flag="true" gcode="STATION_STATUS" form="transportion" field="status" />
 							</select>
 						</div>
-						
-						<div class="col-md-4">
-							<div class="input-group">
-								<label>平台有效期:</label>
-								<%--<span class="input-group-addon">--%>
-										<%--<i class="fa fa-calendar bigger-110"></i>--%>
-								<%--</span>--%>
-								<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${transportion.expiry_date_frompage}"/>
-							</div>
+
+						<div class="item">
+							<label>平台有效期:</label>
+							<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${transportion.expiry_date_frompage}"/>
 						</div>
 
-						<div class="col-md-2">
+						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/transportion/transportion_new.jsp');">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								新建
