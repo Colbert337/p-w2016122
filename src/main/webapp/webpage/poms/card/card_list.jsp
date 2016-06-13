@@ -382,8 +382,8 @@
 <script type="text/javascript">
 
 //悬停样式加载
-$('[data-rel=tooltip]').tooltip({container:'body'});
-$('[data-rel=popover]').popover({container:'body'});
+$('[data-rel=tooltip]').tooltip();
+//$('[data-rel=popover]').popover({container:'body'});
 
 
 var mydate = new Date();
@@ -437,6 +437,7 @@ var mydate = new Date();
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		var tmp = confirm("是否删除卡号为["+cardid+"]的用户卡?");
 		if(!tmp){
+			$('[data-rel=tooltip]').tooltip('hide');
 			return;
 		}
 		var deloptions ={   
