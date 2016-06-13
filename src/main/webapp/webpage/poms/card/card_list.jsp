@@ -172,68 +172,61 @@
 				<div class="col-xs-12">
 					<h3 class="header smaller lighter blue">用户卡管理</h3>
 
-					<div class="form-group">
-						<div class="col-md-2 control-label no-padding-right">
+					<div class="search-types">
+						<div class="item">
 						    <label>用户卡号:</label>
 							<input type="text" name="card_no" placeholder="输入用户卡号"  maxlength="9" value="${gascard.card_no}"/>
 						</div>
 						
-						<div class="col-md-3 control-label no-padding-right">
+						<div class="item">
 						    <label>用户卡类型:</label>
 							<select class="chosen-select " name="card_type" >
-									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type" link="true" />
+									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type"/>
 							</select>
+						</div>
+
+						<div class="item">
 							<label>用户卡状态:</label>
 							<select class="chosen-select " name="card_status" >
-									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" link="true" />
+									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" />
 							</select>
 						</div>
 						
-						<div class="col-md-2 control-label  no-padding-right">
+						<div class="item">
 						    <label>操作员:</label>
 							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${gascard.operator}"/>
 						</div>
 						
-						<div class="col-md-4 input-group no-padding-right  control-label">
-						    <label>操作时间:</label>
-							<span class="input-group-addon">
-									<i class="fa fa-calendar bigger-110"></i>
-							</span>
-							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${gascard.storage_time_range}"/>
+						<div class="item">
+							<label>操作时间:</label>
+							<input type="text" name="storage_time_range" id="date-range-picker" size="22" value="${gascard.storage_time_range}"/>
 						</div>
-						
-						
-					</div>
-					
-					<div class="form-group">
-						<div class="col-md-12 pull-right">
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										入库
-								</button>
-								<button class="btn btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_move.jsp');">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										出库
-								</button>
-								<button class="btn btn-primary" type="button" onclick="commitForm();">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										查询
-								</button>
-								<button class="btn" type="button" onclick="init();">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										重置
-								</button>
+
+						<div class="item">
+							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								入库
+							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_move.jsp');">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								出库
+							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								查询
+							</button>
+							<button class="btn btn-sm" type="button" onclick="init();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								重置
+							</button>
 						</div>
+
 					</div>
-					
-					<br/><br/>
 
 					<div class="clearfix">
 						<div class="pull-right tableTools-container"></div>
 					</div>
-					
-					
-					
+
 					<div class="table-header">用户卡详细信息列表</div>
 
 					<!-- div.table-responsive -->
@@ -255,7 +248,7 @@
 									<th onclick="orderBy(this,'card_property');commitForm();" id="card_property_order">用户卡属性</th>
 									<th onclick="orderBy(this,'workstation');commitForm();" id="workstation_order">所属工作站</th>
 									<th onclick="orderBy(this,'workstation_resp');commitForm();" id="workstation_resp_order">工作站领取人</th>
-									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人工号</th> 
+									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th> 
 									<th onclick="orderBy(this,'batch_no');commitForm();" id="batch_no_order">入库批次号</th> 
 									<th onclick="orderBy(this,'storage_time');commitForm();" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
 									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
@@ -396,9 +389,14 @@ $('[data-rel=popover]').popover({container:'body'});
 var mydate = new Date();
 	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
 					locale: {
-						applyLabel: 'Apply',
-						cancelLabel: 'Cancel',
-						format: "YYYY/MM/DD",
+						"format": 'YYYY.MM.DD',
+						"applyLabel": "确定",
+						"cancelLabel": "取消",
+						"fromLabel": "起始时间",
+						"toLabel": "结束时间'",
+						"daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+						"monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+						"firstDay": 1
 					}, 
 					"startDate": "${gascard.storage_time_after}"==""?mydate.getFullYear()+"/1/1":"${gascard.storage_time_after}",
 				    "endDate": "${gascard.storage_time_before}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/"+mydate.getDate():"${gascard.storage_time_before}"

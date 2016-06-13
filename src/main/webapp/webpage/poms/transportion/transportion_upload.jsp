@@ -45,9 +45,9 @@
 							</li>
 
 							<li>
-								<a href="#">加气站管理</a>
+								<a href="#">运输公司管理</a>
 							</li>
-							<li class="active">加气站信息管理</li>
+							<li class="active">运输公司信息管理</li>
 						</ul><!-- /.breadcrumb -->
 
 						<!-- #section:basics/content.searchbox -->
@@ -83,10 +83,10 @@
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 加气站编号： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 运输公司编号： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="sys_gas_station_id"  name="sys_gas_station_id" value="${param.gastationid}" readonly="readonly"/>
+											<input type="text" id="sys_transportion_id"  name="sys_transportion_id" value="${ret.retValue}" readonly="readonly"/>
 										</div>
 									</div>
 									
@@ -300,15 +300,15 @@
 				return ;
 			}
 			
-			var options ={   
-		            url:'../web/gastation/saveGastation',
+			var options ={
+		            url:'../web/transportion/saveTransportion',
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
 		            	$("#main").html(data);
-		            	$("#modal-table").modal("show");
+						$("#modal-table").modal("show");
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+		            	$("#modal-table").modal("show");
 		 	       }
 			}
 						
@@ -316,7 +316,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/gastation/gastationList');
+			loadPage('#main', '../web/transportion/transportionList');
 		}
 		
 		function save_photo(fileobj,obj,obj1){
@@ -333,7 +333,7 @@
 			}
 			
 			var multipartOptions ={   
-		            url:'../crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),   
+		            url:'../crmBaseService/web/upload?stationid='+$("#sys_transportion_id").val(),   
 		            type:'post',                    
 		            dataType:'text',
 		            enctype:"multipart/form-data",
