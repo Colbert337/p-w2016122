@@ -118,7 +118,7 @@
 										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
-														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" />
+														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" readonly="readonly"/>
 														<span class="input-group-addon">
 																<i class="fa fa-calendar bigger-110"></i>
 														</span>
@@ -127,18 +127,18 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 销售负责人： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
 										<div class="col-sm-2">
 												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 运管负责人： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
 										<div class="col-sm-2">
 												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
-												<input type="text" id="operations_name" name="operations_name"/>
+												<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
 									</div>
 									
@@ -193,7 +193,7 @@
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-4">
 											<label class="col-sm-2 control-label no-padding-right" > 经度：</label>
-											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="5"/>
+											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="8"/>
 										</div>
 									</div>
 									
@@ -201,7 +201,7 @@
 										<label class="col-sm-3 control-label no-padding-right" > </label>
 										<div class="col-sm-4">
 											<label class="col-sm-2 control-label no-padding-right" > 纬度：</label>
-											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="5"/>
+											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="8"/>
 										</div>
 									</div>
 									
@@ -391,6 +391,19 @@
 		                    }
 		                }
 		            },
+		            email: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '加气站email不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 1,
+		                        max: 20,
+		                        message: '加气站email不能超过20个字符'
+		                    }
+		                }
+		            },
 		            contact_phone: {
 		                message: 'The cardno is not valid',
 		                validators: {
@@ -409,19 +422,20 @@
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
 		                    }
-		                }
+		                },
+		                trigger: 'change'
 		            },
 		            salesmen_name: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '销售负责人不能为空'
+		                        message: '销售人员不能为空'
 		                    }
 		                }
 		            },
 		            operations_id: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '运管负责人不能为空'
+		                        message: '运管人员不能为空'
 		                    }
 		                }
 		            },
@@ -452,8 +466,8 @@
 		                        message: '注册地址经度不能为空'
 		                    },
 		                    regexp: {
-		                        regexp: '^[0-9]{5}$',
-		                        message: '注册地址经度必须是5位数字'
+		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
+		                        message: '注册地址经度必须是数字'
 		                    }
 		                }
 		            },
@@ -463,8 +477,8 @@
 		                        message: '注册地址纬度不能为空'
 		                    },
 		                    regexp: {
-		                        regexp: '^[0-9]{5}$',
-		                        message: '注册地址纬度必须是5位数字'
+		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
+		                        message: '注册地址纬度必须是数字'
 		                    }
 		                }
 		            }
@@ -481,19 +495,47 @@
 			}
 			
 			var options ={   
+		            url:'../web/gastation/saveGastation',   
+		            type:'post',                    
+		            dataType:'text',
+		            success:function(data){
+		            	$("#main").html(data);
+		            	if($("#retCode").val() != 100){
+		            		$("#modal-table").modal("show");
+		            		return;
+		            	}else{
+		            		var tmp = confirm("保存成功，是否上传许可证图片?");
+			            	if(tmp){
+			            		loadPage('#main', '../webpage/poms/gastation/gastation_upload.jsp?gastationid='+$("#retValue").val());
+			            	}else{
+			            		//$("#main").html(data);
+			            		loadPage('#main', '../web/gastation/gastationList');
+			            	}
+		            	}
+		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+		            	
+		 	       }
+			}
+			
+			var options ={   
 		            url:'../web/transportion/saveTransportion',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
-		            	var tmp = confirm("保存成功，是否上传许可证图片?");
-		            	if(tmp){
-		            		$("#main").html(data);
+		            	$("#main").html(data);
+		            	if($("#retCode").val() != 100){
+		            		$("#modal-table").modal("show");
+		            		return;
 		            	}else{
-		            		loadPage('#main', '../webpage/poms/transportion/transportion_new.jsp');
-							$("#modal-table").modal("show");
+		            		var tmp = confirm("保存成功，是否上传许可证图片?");
+			            	if(tmp){
+			            		loadPage('#main', '../webpage/poms/transportion/transportion_upload.jsp?transportionid='+$("#retValue").val());
+			            	}else{
+			            		loadPage('#main', '../web/transportion/transportionList');
+			            	}
 		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {;
-		            	$("#modal-table").modal("show");
+		            	
 		 	       }
 			}
 						

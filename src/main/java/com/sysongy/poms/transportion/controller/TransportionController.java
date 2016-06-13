@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 
@@ -81,19 +80,21 @@ public class TransportionController extends BaseContoller{
 	@RequestMapping("/saveTransportion")
 	public String saveTransportion(ModelMap map, Transportion transportion) throws Exception{
 		PageBean bean = new PageBean();
-		String ret = "webpage/poms/transportion/transportion_upload";
+		String ret = "webpage/poms/transportion/transportion_new";
 		String transportionid = null;
 
 		try {
 			if(StringUtils.isEmpty(transportion.getSys_transportion_id())){
 				transportionid = service.saveTransportion(transportion,"insert");
+				bean.setRetMsg("["+transportionid+"]新增成功");
+				ret = "webpage/poms/transportion/transportion_upload";
 			}else{
 				transportionid = service.saveTransportion(transportion,"update");
+				bean.setRetMsg("["+transportionid+"]保存成功");
 				ret = this.queryAllTransportionList(map, new Transportion());
 			}
 
 			bean.setRetCode(100);
-			bean.setRetMsg("保存成功");
 			bean.setRetValue(transportionid);
 			bean.setPageInfo(ret);
 
@@ -123,7 +124,7 @@ public class TransportionController extends BaseContoller{
 				}
 		
 				bean.setRetCode(100);
-				bean.setRetMsg("根据["+transportionid+"]查询Gastation成功");
+				bean.setRetMsg("根据["+transportionid+"]查询Transportion成功");
 				bean.setPageInfo(ret);
 	
 				map.addAttribute("ret", bean);
