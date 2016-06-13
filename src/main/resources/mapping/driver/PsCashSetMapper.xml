@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.driver.dao.PsCashSetMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.driver.model.PsCashSet" >
+    <id column="ps_cash_set_id" property="psCashSetId" jdbcType="VARCHAR" />
+    <result column="min_value" property="minValue" jdbcType="VARCHAR" />
+    <result column="max_value" property="maxValue" jdbcType="VARCHAR" />
+    <result column="cash_per" property="cashPer" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="sys_user_id" property="sysUserId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ps_cash_set_id, min_value, max_value, cash_per, status, level, sys_user_id, user_name, 
+    remark, start_date, end_date, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ps_cash_set
+    where ps_cash_set_id = #{psCashSetId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ps_cash_set
+    where ps_cash_set_id = #{psCashSetId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.driver.model.PsCashSet" >
+    insert into ps_cash_set (ps_cash_set_id, min_value, max_value, 
+      cash_per, status, level, 
+      sys_user_id, user_name, remark, 
+      start_date, end_date, created_date, 
+      updated_date)
+    values (#{psCashSetId,jdbcType=VARCHAR}, #{minValue,jdbcType=VARCHAR}, #{maxValue,jdbcType=VARCHAR}, 
+      #{cashPer,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, 
+      #{sysUserId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, #{createdDate,jdbcType=TIMESTAMP}, 
+      #{updatedDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.driver.model.PsCashSet" >
+    insert into ps_cash_set
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="psCashSetId != null" >
+        ps_cash_set_id,
+      </if>
+      <if test="minValue != null" >
+        min_value,
+      </if>
+      <if test="maxValue != null" >
+        max_value,
+      </if>
+      <if test="cashPer != null" >
+        cash_per,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="sysUserId != null" >
+        sys_user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="psCashSetId != null" >
+        #{psCashSetId,jdbcType=VARCHAR},
+      </if>
+      <if test="minValue != null" >
+        #{minValue,jdbcType=VARCHAR},
+      </if>
+      <if test="maxValue != null" >
+        #{maxValue,jdbcType=VARCHAR},
+      </if>
+      <if test="cashPer != null" >
+        #{cashPer,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUserId != null" >
+        #{sysUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.driver.model.PsCashSet" >
+    update ps_cash_set
+    <set >
+      <if test="minValue != null" >
+        min_value = #{minValue,jdbcType=VARCHAR},
+      </if>
+      <if test="maxValue != null" >
+        max_value = #{maxValue,jdbcType=VARCHAR},
+      </if>
+      <if test="cashPer != null" >
+        cash_per = #{cashPer,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUserId != null" >
+        sys_user_id = #{sysUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ps_cash_set_id = #{psCashSetId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.driver.model.PsCashSet" >
+    update ps_cash_set
+    set min_value = #{minValue,jdbcType=VARCHAR},
+      max_value = #{maxValue,jdbcType=VARCHAR},
+      cash_per = #{cashPer,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      sys_user_id = #{sysUserId,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      start_date = #{startDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where ps_cash_set_id = #{psCashSetId,jdbcType=VARCHAR}
+  </update>
+</mapper>

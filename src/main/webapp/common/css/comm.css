@@ -10,7 +10,7 @@
 .b-dialog-content{min-height: 300px;}
 .b-dialog-hint{font-size: 30px;}
 .dialog-font{margin: 20px;}
-.red_star{color: f00;}
+.red_star{color: #f00;}
 .dis_none{display: none;}
 
 /* 按钮样式 */
@@ -26,3 +26,4 @@ h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
 label{font-size: 12px;}
 .breadcrumbs{display:none;}
 .search-types .item {padding-right:20px; display: inline-block; margin-bottom:8px;}
+.input-daterange.top input{width:100px;}
