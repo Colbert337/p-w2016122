@@ -120,7 +120,7 @@
 										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
-														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
+														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
 														<span class="input-group-addon">
 																<i class="fa fa-calendar bigger-110"></i>
 														</span>
@@ -129,14 +129,14 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 销售负责人： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
 										<div class="col-sm-2">
 												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 运管负责人： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
 										<div class="col-sm-2">
 												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
@@ -195,7 +195,7 @@
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-4">
 											<label class="col-sm-2 control-label no-padding-right" > 经度：</label>
-											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="5" value="${station.longitude}"/>
+											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="8" value="${station.longitude}"/>
 										</div>
 									</div>
 									
@@ -203,7 +203,7 @@
 										<label class="col-sm-3 control-label no-padding-right" > </label>
 										<div class="col-sm-4">
 											<label class="col-sm-2 control-label no-padding-right" > 纬度：</label>
-											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="5" value="${station.latitude}"/>
+											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="8" value="${station.latitude}"/>
 										</div>
 									</div>
 									
@@ -397,6 +397,19 @@
 		                    }
 		                }
 		            },
+		            email: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '加气站email不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 1,
+		                        max: 20,
+		                        message: '加气站email不能超过20个字符'
+		                    }
+		                }
+		            },
 		            station_manager: {
 		                message: 'The cardno is not valid',
 		                validators: {
@@ -433,8 +446,9 @@
 		                validators: {
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
-		                    }
-		                }
+		                    },
+		                },
+		                trigger: 'change'
 		            },
 		            operations_id: {
 		                validators: {
@@ -470,8 +484,8 @@
 		                        message: '注册地址经度不能为空'
 		                    },
 		                    regexp: {
-		                        regexp: '^[0-9]{5}$',
-		                        message: '注册地址经度必须是5位数字'
+		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
+		                        message: '注册地址经度必须是数字'
 		                    }
 		                }
 		            },
@@ -481,8 +495,8 @@
 		                        message: '注册地址纬度不能为空'
 		                    },
 		                    regexp: {
-		                        regexp: '^[0-9]{5}$',
-		                        message: '注册地址纬度必须是5位数字'
+		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
+		                        message: '注册地址纬度必须是数字'
 		                    }
 		                }
 		            }

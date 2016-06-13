@@ -201,6 +201,17 @@
 							<label>操作时间:</label>
 							<input type="text" name="storage_time_range" id="date-range-picker" size="22" value="${gascard.storage_time_range}"/>
 						</div>
+						
+						<div class="item">
+							<div class="input-daterange top" id="j-input-daterange-top">
+								<label>操作时间:</label>
+								<input type="text" class="" name="start" />
+								<span class="">
+									<i class="fa fa-exchange"></i>
+								</span>
+								<input type="text" class="" name="end" />
+							</div>
+						</div>
 
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
@@ -376,15 +387,17 @@
 
 <script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
 <script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
+<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
 <script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
 
 //悬停样式加载
-$('[data-rel=tooltip]').tooltip({container:'body'});
-$('[data-rel=popover]').popover({container:'body'});
+$('[data-rel=tooltip]').tooltip();
+//$('[data-rel=popover]').popover({container:'body'});
 
+$('#j-input-daterange-top').datepicker({autoclose:true});
 
 var mydate = new Date();
 	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
@@ -437,6 +450,7 @@ var mydate = new Date();
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		var tmp = confirm("是否删除卡号为["+cardid+"]的用户卡?");
 		if(!tmp){
+			$('[data-rel=tooltip]').tooltip('hide');
 			return;
 		}
 		var deloptions ={   

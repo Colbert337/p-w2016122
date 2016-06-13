@@ -86,7 +86,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 运输公司编号： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="sys_transportion_id"  name="sys_transportion_id" value="${ret.retValue}" readonly="readonly"/>
+											<input type="text" id="sys_transportion_id"  name="sys_transportion_id" value="${param.transportionid}" readonly="readonly"/>
 										</div>
 									</div>
 									

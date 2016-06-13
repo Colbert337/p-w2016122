@@ -129,17 +129,20 @@ public class CRMBaseContoller {
 //        String path = request.getSession().getServletContext().getRealPath("/upload/" + filename);// 存放位置
 //        path = request.getContextPath()+"/upload/"+ filename;
         String path = (String) prop.get("images_upload_path");
+        String show_path = (String) prop.get("show_images_path");
         if(!StringUtils.isEmpty(stationid)){
         	path = path + "/"+stationid+"/";
+        	show_path = show_path + "/"+stationid+"/";
         }
         path+= filename;
+        show_path+= filename;
         File destFile = new File(path);
         try {
             FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ajaxJson.setObj(path);
+        ajaxJson.setObj(show_path);
         return ajaxJson;
     }
 

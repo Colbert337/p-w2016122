@@ -26,3 +26,4 @@ h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
 label{font-size: 12px;}
 .breadcrumbs{display:none;}
 .search-types .item {padding-right:20px; display: inline-block; margin-bottom:8px;}
+.input-daterange.top input{width:100px;}

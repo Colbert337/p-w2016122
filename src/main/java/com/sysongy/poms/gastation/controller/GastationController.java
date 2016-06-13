@@ -89,6 +89,7 @@ public class GastationController extends BaseContoller{
 			if(StringUtils.isEmpty(gastation.getSys_gas_station_id())){
 				gastationid = service.saveGastation(gastation,"insert");
 				bean.setRetMsg("["+gastationid+"]新增成功");
+				ret = "webpage/poms/gastation/gastation_upload";
 			}else{
 				gastationid = service.saveGastation(gastation,"update");
 				bean.setRetMsg("["+gastationid+"]保存成功");
@@ -101,7 +102,6 @@ public class GastationController extends BaseContoller{
 			bean.setPageInfo(ret);
 
 			map.addAttribute("ret", bean);
-			ret = "webpage/poms/gastation/gastation_upload";
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
