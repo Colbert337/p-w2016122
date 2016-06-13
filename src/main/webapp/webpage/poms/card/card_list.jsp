@@ -202,20 +202,16 @@
 							<input type="text" name="storage_time_range" id="date-range-picker" size="22" value="${gascard.storage_time_range}"/>
 						</div>
 						
-														<div class="row">
-															<div class="col-xs-8 col-sm-11">
-																<div class="input-daterange input-group">
-																	<input type="text" class="input-sm form-control" name="start" />
-																	<span class="input-group-addon">
-																		<i class="fa fa-exchange"></i>
-																	</span>
-
-																	<input type="text" class="input-sm form-control" name="end" />
-																</div>
-
-																<!-- /section:plugins/date-time.datepicker -->
-															</div>
-														</div>
+						<div class="item">
+							<div class="input-daterange top" id="j-input-daterange-top">
+								<label>操作时间:</label>
+								<input type="text" class="" name="start" />
+								<span class="">
+									<i class="fa fa-exchange"></i>
+								</span>
+								<input type="text" class="" name="end" />
+							</div>
+						</div>
 
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/card_new.jsp');">
@@ -401,7 +397,7 @@
 $('[data-rel=tooltip]').tooltip({container:'body'});
 $('[data-rel=popover]').popover({container:'body'});
 
-$('.input-daterange').datepicker({autoclose:true});
+$('#j-input-daterange-top').datepicker({autoclose:true});
 
 var mydate = new Date();
 	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
