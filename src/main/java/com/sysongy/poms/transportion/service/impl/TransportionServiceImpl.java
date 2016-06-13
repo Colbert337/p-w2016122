@@ -1,4 +1,4 @@
-package com.sysongy.poms.gastation.service.impl;
+package com.sysongy.poms.transportion.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,43 +10,43 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.gastation.dao.GastationMapper;
-import com.sysongy.poms.gastation.model.Gastation;
-import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.transportion.dao.TransportionMapper;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
 @Service
-public class GastationServiceImpl implements GastationService {
+public class TransportionServiceImpl implements TransportionService {
 	
 	@Autowired
-	private GastationMapper gasStationMapper;
+	private TransportionMapper transportionMapper;
 	@Autowired
 	private SysUserAccountMapper sysUserAccountMapper;
 	
 	@Override
-	public PageInfo<Gastation> queryGastation(Gastation record) throws Exception {
+	public PageInfo<Transportion> queryTransportion(Transportion record) throws Exception {
 		
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
-		List<Gastation> list = gasStationMapper.queryForPage(record);
-		PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(list);
+		List<Transportion> list = transportionMapper.queryForPage(record);
+		PageInfo<Transportion> pageInfo = new PageInfo<Transportion>(list);
 		
 		return pageInfo;
 	}
 
 	@Override
-	public String saveGastation(Gastation record, String operation) throws Exception {
+	public String saveTransportion(Transportion record, String operation) throws Exception {
 		if("insert".equals(operation)){
-			Gastation station = gasStationMapper.findGastationid("s"+record.getProvince_id());
+			Transportion station = transportionMapper.findTransportationid("t"+record.getProvince_id());
 			String newid;
 			
-			if(station == null || StringUtils.isEmpty(station.getSys_gas_station_id())){
-				newid = "s"+record.getProvince_id() + "0001";
+			if(station == null || StringUtils.isEmpty(station.getSys_transportion_id())){
+				newid = "t"+record.getProvince_id() + "0001";
 			}else{
-				Integer tmp = Integer.valueOf(station.getSys_gas_station_id().substring(4, 8)) + 1;
-				newid = "s"+record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
+				Integer tmp = Integer.valueOf(station.getSys_transportion_id().substring(4, 8)) + 1;
+				newid = "t"+record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
 			}
 			//初始化钱袋信息
 			SysUserAccount sysUserAccount = new SysUserAccount();
@@ -65,32 +65,32 @@ public class GastationServiceImpl implements GastationService {
 			record.setStatus(GlobalConstant.GastationStatus.USED);
 			record.setCreated_time(new Date());
 			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
-			record.setSys_gas_station_id(newid);
-			gasStationMapper.insert(record);
+			record.setSys_transportion_id(newid);
+			transportionMapper.insert(record);
 			
 			return newid;
 		}else{
 			if(!StringUtils.isEmpty(record.getExpiry_date_frompage())){
 				record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			}
-			gasStationMapper.updateByPrimaryKeySelective(record);
-			return record.getSys_gas_station_id();
+			return String.valueOf(transportionMapper.updateByPrimaryKeySelective(record));
 		}
 	}
 
 	@Override
-	public Integer delGastation(String gastation) throws Exception {
-		return gasStationMapper.deleteByPrimaryKey(gastation);
+	public Integer delTransportion(String transportion) throws Exception {
+		return transportionMapper.deleteByPrimaryKey(transportion);
 	}
 
 	@Override
-	public List<Gastation> getAllStationByArea(String areacode) throws Exception {
-		return gasStationMapper.getAllStationByArea(areacode);
+	public List<Transportion> getAllTransportionByArea(String areacode) throws Exception {
+//		return transportionMapper.getAllStationByArea(areacode);
+		return null;
 	}
 
 	@Override
-	public Gastation queryGastationByPK(String gastationid) throws Exception {
-		 Gastation station =  gasStationMapper.selectByPrimaryKey(gastationid);
+	public Transportion queryTransportionByPK(String transportionid) throws Exception {
+		Transportion station =  transportionMapper.selectByPrimaryKey(transportionid);
 		 station.setExpiry_date_frompage(new SimpleDateFormat("yyyy-MM-dd").format(station.getExpiry_date()));
 		 return station;
 	}

@@ -13,6 +13,8 @@ public class GasCardLog extends BaseModel{
     private String card_type;
 
     private String card_status;
+    
+    private String card_property;
 
     private String workstation;
 
@@ -38,7 +40,15 @@ public class GasCardLog extends BaseModel{
 
     private String memo;
     
-    public String getOptime_range() {
+    public String getCard_property() {
+		return card_property;
+	}
+
+	public void setCard_property(String card_property) {
+		this.card_property = card_property;
+	}
+
+	public String getOptime_range() {
 		return optime_range;
 	}
 

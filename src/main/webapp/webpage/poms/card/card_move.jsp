@@ -9,7 +9,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/js/json2.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
 	
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
@@ -83,8 +83,8 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 调拨工作站： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="workstation" name="workstation" multiple="multiple" onchange="initworkstation_resp(this);">
-														<s:option flag="true" gcode="WORKSTATION" link="true" />
+												<select class="form-control" id="workstation" name="workstation">
+														<s:option flag="true" gcode="WORKSTATION" />
 												</select>
 										</div>
 									</div>
@@ -92,14 +92,14 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 工作站领取人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="workstation_resp" name="workstation_resp" multiple="multiple">
-														<%-- <s:option flag="true" gcode="WORKSTATION_RESP" link="true" /> --%>
-												</select>
+												<input type="text" name="workstation_resp" id="workstation_resp" maxlength="10"/>
+												<%-- <select class="form-control" id="workstation_resp" name="workstation_resp">
+												</select> --%>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人工号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人： </label>
 										<div class="col-sm-4">
 											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>										
 										</div>
@@ -122,7 +122,7 @@
 															<th id="card_type_order">调拨工作站</th>
 															<th id="card_name_order">工作站领取人</th> 
 															<th id="card_status_order">用户卡状态</th>
-															<th id="operator_order">操作人工号</th> 
+															<th id="operator_order">操作人</th> 
 														</tr>
 													</thead>
 													<tbody>
@@ -198,6 +198,16 @@
 		                    regexp: {
 		                        regexp: /^1\d{8}$/,
 		                        message: '用户卡号格式必须是1开头的9位数字'
+		                    },
+		                    callback: {
+		                    	message: '用户卡结束编号必须不小于起始编号',
+		                    	callback: function (value, validator, $field) {
+	                                var start = $('#card_no_1').val();
+	                                 if(parseFloat($('#card_no_1').val()) > value){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
 		                }
 		            },
@@ -219,11 +229,6 @@
 		                validators: {
 		                    notEmpty: {
 		                        message: '操作员工号不能为空'
-		                    },
-		                    stringLength: {
-		                        min: 10,
-		                        max: 10,
-		                        message: '操作人工号只能是10位'
 		                    }
 		                }
 		            },
@@ -278,10 +283,13 @@
 				return ;
 			}
 			
-			$("#init_dynamic_data").attr("disabled","disabled");
-			
 			var start = parseFloat($("#card_no_1").val());
 			var end = parseFloat($("#card_no_2").val());
+			
+			if(end - start >=2000){
+				alert("单批次操作卡数量最大值为2000");
+				return;
+			}
 			
 			for(var i=start; i<=end; i++){
 				$.ajax({
@@ -292,12 +300,20 @@
 			           async:false,
 			           success:function(data){
 			           		if(data != ""){
-								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#workstation').val()+"</td><td>"+$('#workstation_resp').val()+"</td><td>"+data+"</td><td>"+$("#operator").val()+"</td></tr>");
+								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#workstation').find("option:selected").text()+"</td><td>"+$('#workstation_resp').val()+"</td><td>"+data+"</td><td>"+$("#operator").val()+"</td></tr>");
 			           			$("#card_no_arr").val($("#card_no_arr").val()+i+",");
 			           		}
 			            }
 					});
 			}
+			
+			var tr = $("#dynamic-table").find("tbody").find("tr");
+		 	if(tr.length==0){
+				alert("此号段没有可出库的用户卡");
+				return;
+			}
+		 	
+		 	$("#init_dynamic_data").attr("disabled","disabled");
 				
 			//动态初始化详细列表
 			jQuery(function($) {
@@ -459,12 +475,13 @@
 		}
 		
 		function init(){
-			$("#dynamic-table_div").remove();
-			$("#dynamic-table_after_handler").after("<div class='col-sm-7' id='dynamic-table_div'><div class='table-header'>用户卡列表</div><table id='dynamic-table' class='table table-striped table-bordered table-hover'><thead><tr><th class='center'><label class='pos-rel'><input type='checkbox' class='ace' onclick='checkedAllRows(this);'' /><span class='lbl'></span></label></th><th id='card_no_order'>用户卡号</th><th id='card_type_order'>调拨工作站</th><th id='card_name_order'>工作站领取人</th> <th id='card_status_order'>用户卡状态</th><th id='operator_order'>操作人工号</th></tr></thead><tbody></tbody></table></div>");
-			$("#init_dynamic_data").removeAttr("disabled");
+			//$("#dynamic-table_div").remove();
+			//$("#dynamic-table_after_handler").after("<div class='col-sm-7' id='dynamic-table_div'><div class='table-header'>用户卡列表</div><table id='dynamic-table' class='table table-striped table-bordered table-hover'><thead><tr><th class='center'><label class='pos-rel'><input type='checkbox' class='ace' onclick='checkedAllRows(this);'' /><span class='lbl'></span></label></th><th id='card_no_order'>用户卡号</th><th id='card_type_order'>调拨工作站</th><th id='card_name_order'>工作站领取人</th> <th id='card_status_order'>用户卡状态</th><th id='operator_order'>操作人工号</th></tr></thead><tbody></tbody></table></div>");
+			//$("#init_dynamic_data").removeAttr("disabled");
+			loadPage('#main', '../webpage/poms/card/card_move.jsp');
 		}
 		
-		function initworkstation_resp(obj){
+	/* 	function initworkstation_resp(obj){
 			$.ajax({
 				   type: "POST",
 				   url:'../web/usysparam/query?gcode=WORKSTATION_RESP&scode='+$(obj).val(),   
@@ -475,10 +492,10 @@
 				        	   $("#workstation_resp").empty();
 				        	   var s = JSON.parse(data);
 				        	   for(var i=0;i<s.length;i++){
-				        		   $("#workstation_resp").append("<option value='"+s[i].mcode+"''>"+s[i].mcode+"- "+s[i].mname+"</option>");
+				        		   $("#workstation_resp").append("<option value='"+s[i].mcode+"''>"+s[i].mname+"</option>");
 				        	   }
 		           		}
 		            }
 				});
-		}
+		} */
 		</script>

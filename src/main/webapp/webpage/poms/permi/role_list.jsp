@@ -243,12 +243,14 @@
 				<div class="col-xs-12">
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
-						<a class="btn btn-primary" href="javascript:addRole();">
+						<a class="btn btn-sm btn-primary" href="javascript:addRole();">
 							添加角色
 						</a>
 					</div>
-					<%--</h4>--%>
-					<table id="simple-table" class="table table-striped table-bordered table-hover">
+				</div>
+			</div><!-- /.row -->
+
+			<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
 							<%--<th class="center">
@@ -300,31 +302,31 @@
 						</c:forEach>
 						</tbody>
 					</table>
-				</div><!-- /.span -->
-				<%--分页start--%>
-				<div class="row">
-					<div class="col-sm-6">
-						<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
-							<ul id="ulhandle" class="pagination">
-								<li id="previous" class="paginate_button previous" aria-controls="dynamic-table" tabindex="0">
-									<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#listForm');">
-										<span aria-hidden="true">上一页</span>
-									</a>
-								</li>
-								<li id="next" class="paginate_button next" aria-controls="dynamic-table" tabindex="0">
-									<a id="nexthandle" href="javascript:nextpage('#listForm');" aria-label="Next" >
-										<span aria-hidden="true">下一页</span>
-									</a>
-								</li>
-							</ul>
-						</div>
+
+			<%--分页start--%>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+						<ul id="ulhandle" class="pagination">
+							<li id="previous" class="paginate_button previous" aria-controls="dynamic-table" tabindex="0">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#listForm');">
+									<span aria-hidden="true">上一页</span>
+								</a>
+							</li>
+							<li id="next" class="paginate_button next" aria-controls="dynamic-table" tabindex="0">
+								<a id="nexthandle" href="javascript:nextpage('#listForm');" aria-label="Next" >
+									<span aria-hidden="true">下一页</span>
+								</a>
+							</li>
+						</ul>
 					</div>
 				</div>
-				<%--分页 end--%>
-			</div><!-- /.row -->
+			</div>
+			<%--分页 end--%>
+
 		</form>
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->

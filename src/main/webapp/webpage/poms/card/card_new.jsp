@@ -35,8 +35,7 @@
 						<div class="nav-search" id="nav-search">
 							<form class="form-search" >
 							
-								<input id="retCode" type="text" value=" ${ret.retCode}" />
-								<input id="retMsg" type="text" value=" ${ret.retMsg}" />
+								<jsp:include page="/common/page_param.jsp"></jsp:include>
 								
 								<span class="input-icon">
 									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
@@ -53,7 +52,7 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								新建用户卡
+								实体卡入库
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -82,8 +81,8 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 用户卡类型： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="card_type" name="card_type" multiple="multiple">
-														<s:option flag="true" gcode="CARDTYPE" link="true" />
+												<select class="form-control" id="card_type" name="card_type">
+														<s:option flag="true" gcode="CARDTYPE" />
 												</select>
 										</div>
 									</div>
@@ -91,14 +90,14 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 用户卡属性： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="card_property" name="card_property" multiple="multiple">
-														<s:option flag="true" gcode="CARDPROPERTY" link="true" />
+												<select class="form-control" id="card_property" name="card_property">
+														<s:option flag="true" gcode="CARDPROPERTY" />
 												</select>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人工号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人： </label>
 
 										<div class="col-sm-4">
 											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5" readonly="readonly" value=" ${sessionScope.currUser.user.userName}"/>
@@ -121,8 +120,8 @@
 															<th id="card_no_order">用户卡号</th>
 															<th id="card_type_order">用户卡类型</th>
 															<th id="card_name_order">用户卡属性</th> 
-															<th id="card_status_order">用户卡状态</th>
-															<th id="operator_order">操作人工号</th> 
+															<th id="card_status_order">库存状态</th>
+															<th id="operator_order">操作人</th> 
 														</tr>
 													</thead>
 													<tbody>
@@ -200,6 +199,16 @@
 		                    regexp: {
 		                        regexp: /^1\d{8}$/,
 		                        message: '用户卡号格式必须是1开头的9位数字'
+		                    },
+		                    callback: {
+		                    	message: '用户卡结束编号必须不小于起始编号',
+		                    	callback: function (value, validator, $field) {
+	                                var start = $('#card_no_1').val();
+	                                 if(parseFloat($('#card_no_1').val()) > value){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
 		                }
 		            },
@@ -281,8 +290,6 @@
 				return ;
 			}
 			
-			$("#init_dynamic_data").attr("disabled","disabled");
-			
 			var start = parseFloat($("#card_no_1").val());
 			var end = parseFloat($("#card_no_2").val());
 			
@@ -290,6 +297,8 @@
 				alert("单批次操作卡数量最大值为2000");
 				return;
 			}
+			
+			$("#dynamic-table").find("tbody").find("tr").remove();
 			
 			for(var i=start; i<=end; i++){
 				$.ajax({
@@ -300,37 +309,56 @@
 			           async:false,
 			           success:function(data){
 			           		if(data == "0"){
-			           			var tmp_card_type = $('#card_type').val();
 			           			contral = "1";
-								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+tmp_card_type+"</td><td>"+$('#card_property').val()+"</td><td>未使用</td><td>"+$('#operator').val()+"</td></tr>");
+								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').find("option:selected").text()+"</td><td>"+$('#card_property').find("option:selected").text()+"</td><td>未入库</td><td>"+$('#operator').val()+"</td></tr>");
 			           			$("#card_no_arr").val($("#card_no_arr").val()+i+",");
 			           		}else{
-								$("#dynamic-table").find("tbody").append("<tr class='danger'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').val()+"</td><td>"+$('#card_property').val()+"</td><td>已使用</td><td>"+$('#operator').val()+"</td></tr>");
+								$("#dynamic-table").find("tbody").append("<tr class='danger'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').find("option:selected").text()+"</td><td>"+$('#card_property').find("option:selected").text()+"</td><td>已入库</td><td>"+$('#operator').val()+"</td></tr>");
 			           		}
 			            }
 					});
 			}
+			
+			if(contral == "0"){
+				alert("该批次中没有需要入库的卡");
+				return;
+			}
+			
+			$("#init_dynamic_data").attr("disabled","disabled");
 				
 			//动态初始化详细列表
 			jQuery(function($) {
+				//提示信息
+				var lang = {
+					"sProcessing": "处理中...",
+					"sLengthMenu": "显示 _MENU_ 项结果",
+					"sZeroRecords": "没有匹配结果",
+					"sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+					"sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+					"sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+					"sInfoPostFix": "",
+					"sSearch": "搜索:",
+					"sUrl": "",
+					"sEmptyTable": "表中数据为空",
+					"sLoadingRecords": "载入中...",
+					"sInfoThousands": ",",
+					"oPaginate": {
+						"sFirst": "首页",
+						"sPrevious": "上页",
+						"sNext": "下页",
+						"sLast": "末页"
+					},
+					"oAria": {
+						"sSortAscending": ": 以升序排列此列",
+						"sSortDescending": ": 以降序排列此列"
+					}
+				};
 				//initiate dataTables plugin
 				var myTable = $('#dynamic-table')
 				//.wrap("<div class='dataTables_borderWrap' />")   //if you are applying horizontal scrolling (sScrollX)
-				.DataTable( {bAutoWidth: false,"aoColumns": [{ "bSortable": false },null, null,null, null, null],"aaSorting": [],					
-					
-					//"bProcessing": true,
-			        //"bServerSide": true,
-			        //"sAjaxSource": "http://127.0.0.1/table.php"	,
-					//,
-					//"sScrollY": "200px",
-					//"bPaginate": false,
-					//"sScrollX": "100%",
-					//"sScrollXInner": "120%",
-					//"bScrollCollapse": true,
-					//Note: if you are applying horizontal scrolling (sScrollX) on a ".table-bordered"
-					//you may want to wrap the table inside a "div.dataTables_borderWrap" element
-			
-					//"iDisplayLength": 50		
+				.DataTable( {bAutoWidth: false,"aoColumns": [{ "bSortable": false },null, null,null, null, null],"aaSorting": [],
+
+					"oLanguage" :lang, //提示信息
 			
 					select: {
 						style: 'multi'
@@ -471,8 +499,9 @@
 		}
 		
 		function init(){
-			$("#dynamic-table_div").remove();
-			$("#dynamic-table_after_handler").after("<div class='col-sm-7' id='dynamic-table_div'><div class='table-header'>用户卡列表</div><table id='dynamic-table' class='table table-striped table-bordered table-hover'><thead><tr><th class='center'><label class='pos-rel'><input type='checkbox' class='ace' onclick='checkedAllRows(this);'' /><span class='lbl'></span></label></th><th id='card_no_order'>用户卡号</th><th id='card_type_order'>用户卡类型</th><th id='card_name_order'>用户卡属性</th> <th id='card_status_order'>用户卡状态</th><th id='operator_order'>操作人工号</th></tr></thead><tbody></tbody></table></div>");
-			$("#init_dynamic_data").removeAttr("disabled");
+			loadPage('#main', '../webpage/poms/card/card_new.jsp');
+			//$("#dynamic-table_div").remove();
+			//$("#dynamic-table_after_handler").after("<div class='col-sm-7' id='dynamic-table_div'><div class='table-header'>用户卡列表</div><table id='dynamic-table' class='table table-striped table-bordered table-hover'><thead><tr><th class='center'><label class='pos-rel'><input type='checkbox' class='ace' onclick='checkedAllRows(this);'' /><span class='lbl'></span></label></th><th id='card_no_order'>用户卡号</th><th id='card_type_order'>用户卡类型</th><th id='card_name_order'>用户卡属性</th> <th id='card_status_order'>用户卡状态</th><th id='operator_order'>操作人工号</th></tr></thead><tbody></tbody></table></div>");
+			//$("#init_dynamic_data").removeAttr("disabled");
 		}
 		</script>

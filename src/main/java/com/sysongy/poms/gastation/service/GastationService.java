@@ -11,7 +11,7 @@ public interface GastationService {
 	
 	public Gastation queryGastationByPK(String gastationid) throws Exception;
 	
-	public Integer saveGastation(Gastation obj,  String operation) throws Exception;
+	public String saveGastation(Gastation obj,  String operation) throws Exception;
 	
 	public Integer delGastation(String gastation) throws Exception;
 	

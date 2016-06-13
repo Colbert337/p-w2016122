@@ -8,11 +8,8 @@
 				<div class="footer-inner">
 					<!-- #section:basics/footer -->
 					<div class="footer-content">
-						<span class="bigger-120">
-							<span class="blue bolder">司集</span>
-							运维管理平台 &copy; 2015-2016
-						</span>
-
+						<span class="blue bolder">司集</span>
+						运维管理平台 &copy; 2015-2016
 						&nbsp; &nbsp;
 						<span class="action-buttons">
 							<!-- <a href="#">

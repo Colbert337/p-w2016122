@@ -86,7 +86,7 @@
 		</property>
 		<property name="maxUploadSize">
 			<!-- 上传文件大小限制为31M，31*1024*1024 -->
-			<value>32505856</value>
+			<value>1505856</value>
 		</property>
 		<property name="maxInMemorySize">
 			<value>4096</value>

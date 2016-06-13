@@ -221,7 +221,7 @@
 					<div class="pull-left">当前选择菜单：<span id="currMenu" style="color: #2679b5;font-size: 18px">${parentName}</span></div>
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
-						<a class="btn btn-primary" href="javascript:addFunction();">
+						<a class="btn btn-sm btn-primary" href="javascript:addFunction();">
 							添加功能
 						</a>
 					</div>

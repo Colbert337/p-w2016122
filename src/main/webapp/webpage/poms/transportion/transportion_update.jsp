@@ -40,9 +40,9 @@
 							</li>
 
 							<li>
-								<a href="#">加气站管理</a>
+								<a href="#">运输公司管理</a>
 							</li>
-							<li class="active">加气站信息管理</li>
+							<li class="active">运输公司信息管理</li>
 						</ul><!-- /.breadcrumb -->
 
 						<!-- #section:basics/content.searchbox -->
@@ -67,22 +67,22 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								修改加气站信息
+								修改运输公司信息
 							</h1>
 						</div><!-- /.page-header -->
 
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								<form class="form-horizontal"  id="gastationform">
+								<form class="form-horizontal"  id="transportionform">
 									<!-- #section:elements.form -->
-									<input type="hidden" id="sys_gas_station_id"  name="sys_gas_station_id" value="${station.sys_gas_station_id}" />
+									<input type="hidden" id="sys_transportion_id"  name="sys_transportion_id" value="${station.sys_transportion_id}" />
 							
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 加气站名称： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 运输公司名称： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="gas_station_name"  name="gas_station_name" value="${station.gas_station_name}" placeholder="输入加气站名称" class="col-xs-10 col-sm-5" maxlength="20"/>
+											<input type="text" id="transportion_name"  name="transportion_name" value="${station.transportion_name}" placeholder="输入运输公司名称" class="col-xs-10 col-sm-5" maxlength="20"/>
 										</div>
 									</div>
 									
@@ -95,10 +95,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 联系人姓名： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="col-xs-10 col-sm-5" maxlength="20" value="${station.station_manager}"/>
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入联系人姓名" class="col-xs-10 col-sm-5" maxlength="20" value="${station.station_manager}"/>
 										</div>
 									</div>
 									
@@ -133,7 +133,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管负责人： </label>
 										<div class="col-sm-2">
-												<select class="form-control" id="operations_id" name="operations_id" multiple="multiple" onchange="setOperationName(this);">
+												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
 												<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
@@ -142,7 +142,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
 										<div class="col-sm-2">
-											<select class="form-control" name="province_id" id="province" multiple="multiple" onchange="chinaChange(this,document.getElementById('city'));">
+											<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
 													<option value ="请选择市区">请选择省份</option>
 													<option value ="100">北京市 </option>
 													<option value ="220">天津市 </option>
@@ -345,7 +345,7 @@
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 加气站状态： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 运输公司状态： </label>
 
 										<div class="col-sm-4">
 											<select class="chosen-select " name="status" >
@@ -454,8 +454,10 @@
 	           async:false,
 	           success:function(data){
 	           		if(data != ""){
+			        	   $("#salesmen_id").empty();
 			        	   var s = JSON.parse(data);
 			        	   for(var i=0;i<s.length;i++){
+			        		   $("#salesmen_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
 			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
 			        	   }
 	           		}
@@ -466,6 +468,7 @@
 		var province_id = '${station.province_id}';
 		var city_id =  '${station.city_id}';
 		var detail = '${station.address}';
+		var salesmen_id = '${station.salesmen_id}';
 		var operations_id = '${station.operations_id}';
 		
 		if(province_id!=null && province_id!=""){
@@ -474,8 +477,12 @@
 			$("#city").find("option[value="+city_id+"]").attr("selected",true);
 			$("#detail").val(detail.split(" ")[2]);
 		}
-
-		if(operations_id!=null){
+		
+		if(salesmen_id!=null && salesmen_id!=""){
+			$("#salesmen_id").find("option[value="+salesmen_id+"]").attr("selected",true);
+		}
+		
+		if(operations_id!=null && salesmen_id!=""){
 			$("#operations_id").find("option[value="+operations_id+"]").attr("selected",true);
 		}
 		
@@ -516,7 +523,7 @@
 		var contral = "0";
 		
 			//bootstrap验证控件		
-		    $('#gastationform').bootstrapValidator({
+		    $('#transportionform').bootstrapValidator({
 		        message: 'This value is not valid',
 		        feedbackIcons: {
 		            valid: 'glyphicon glyphicon-ok',
@@ -528,12 +535,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站名称不能为空'
+		                        message: '运输公司名称不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加气站名称不能超过20个汉字'
+		                        message: '运输公司名称不能超过20个汉字'
 		                    }
 		                }
 		            },
@@ -542,19 +549,6 @@
 		                validators: { 
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
-		                    }
-		                }
-		            },
-		            station_manager: {
-		                message: 'The cardno is not valid',
-		                validators: {
-		                    notEmpty: {
-		                        message: '加气站站长不能为空'
-		                    },
-		                    stringLength: {
-		                        min: 1,
-		                        max: 20,
-		                        message: '加气站站长不能超过20个汉字'
 		                    }
 		                }
 		            },
@@ -662,13 +656,13 @@
 			$("#address").val($("#province").find("option:selected").text()+" "+$("#city").find("option:selected").text()+" "+$("#detail").val());
 			
 			/*手动验证表单，当是普通按钮时。*/
-			$('#gastationform').data('bootstrapValidator').validate();
-			if(!$('#gastationform').data('bootstrapValidator').isValid()){
+			$('#transportionform').data('bootstrapValidator').validate();
+			if(!$('#transportionform').data('bootstrapValidator').isValid()){
 				return ;
 			}
 			
 			var options ={   
-		            url:'../web/gastation/saveGastation',   
+		            url:'../web/transportion/saveTransportion',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -679,11 +673,11 @@
 		 	       }
 			}
 						
-			$("#gastationform").ajaxSubmit(options);
+			$("#transportionform").ajaxSubmit(options);
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/gastation/gastationList');
+			loadPage('#main', '../web/transportion/transportionList');
 		}
 		
 		function setSalesmenName(obj){
@@ -708,7 +702,7 @@ function save_photo(fileobj,obj,obj1){
 			}
 			
 			var multipartOptions ={   
-					url:'../crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),
+					url:'../crmBaseService/web/upload?stationid='+$("#sys_transportion_id").val(),
 		            type:'post',                    
 		            dataType:'text',
 		            enctype:"multipart/form-data",
@@ -723,7 +717,7 @@ function save_photo(fileobj,obj,obj1){
 
 		 	       }
 			}
-			$("#gastationform").ajaxSubmit(multipartOptions);
+			$("#transportionform").ajaxSubmit(multipartOptions);
 		}
 		
 		jQuery(function($) {

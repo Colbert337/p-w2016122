@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sysongy.poms.gastation.dao.GastationMapper" >
-  <resultMap id="BaseResultMap" type="com.sysongy.poms.gastation.model.Gastation" >
-    <id column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
-    <result column="gas_station_name" property="gas_station_name" jdbcType="VARCHAR" />
+<mapper namespace="com.sysongy.poms.transportion.dao.TransportionMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.transportion.model.Transportion" >
+    <id column="sys_transportion_id" property="sys_transportion_id" jdbcType="VARCHAR" />
+    <result column="sys_user_account_id" property="sys_user_account_id" jdbcType="VARCHAR" />
+    <result column="transportion_name" property="transportion_name" jdbcType="VARCHAR" />
+    <result column="station_manager" property="station_manager" jdbcType="VARCHAR" />
     <result column="contact_phone" property="contact_phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="area_id" property="area_id" jdbcType="VARCHAR" />
     <result column="province_id" property="province_id" jdbcType="VARCHAR" />
     <result column="city_id" property="city_id" jdbcType="VARCHAR" />
-    <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="longitude" property="longitude" jdbcType="VARCHAR" />
     <result column="latitude" property="latitude" jdbcType="VARCHAR" />
@@ -27,28 +29,25 @@
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="created_time" property="created_time" jdbcType="TIMESTAMP" />
     <result column="updated_time" property="updated_time" jdbcType="TIMESTAMP" />
-    <result column="sys_user_account_id" property="sys_user_account_id" jdbcType="VARCHAR" />
   </resultMap>
-  
   <sql id="Base_Column_List" >
-    sys_gas_station_id, gas_station_name, contact_phone, email,station_manager,
-    area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
-    salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
-    indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
-    updated_time,sys_user_account_id
+    sys_transportion_id, sys_user_account_id, transportion_name, station_manager, contact_phone, email, 
+    area_id, province_id, city_id, address, longitude, latitude, expiry_date, salesmen_id, 
+    salesmen_name, operations_id, operations_name, indu_com_number, tax_number, indu_com_certif, 
+    tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, updated_time
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
   select 
     <include refid="Base_Column_List" />
-    from sys_gas_station
+    from sys_transportion
     where 1=1
   <trim>
-  	  <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''" >
-        and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+  	  <if test="sys_transportion_id != null &amp;&amp; sys_transportion_id != ''" >
+        and sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
       </if>
-      <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
-        and gas_station_name = #{gas_station_name,jdbcType=VARCHAR}
+      <if test="transportion_name != null &amp;&amp; transportion_name != ''" >
+        and transportion_name = #{transportion_name,jdbcType=VARCHAR}
       </if>
       <if test="status!= null &amp;&amp; status != ''" >
         and status = #{status,jdbcType=VARCHAR}
@@ -59,69 +58,60 @@
     </trim>
   </select>
   
-  <select id="findGastationid" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select sys_gas_station_id from sys_gas_station where sys_gas_station_id like CONCAT(#{gas_station_province_id,jdbcType=VARCHAR},'%') order by sys_gas_station_id desc limit 1  
+  <select id="findTransportationid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select sys_transportion_id from sys_transportion where sys_transportion_id like CONCAT(#{province_id,jdbcType=VARCHAR},'%') order by sys_transportion_id desc limit 1  
   </select>
   
-  <select id="getAllStationByArea" resultMap="BaseResultMap" parameterType="java.lang.String" >
-	select <include refid="Base_Column_List" />
-     from sys_gas_station where province_id = #{province_id,jdbcType=VARCHAR}  
-  </select>
-     
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
-     <include refid="Base_Column_List" />
-    from sys_gas_station
-    where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+    <include refid="Base_Column_List" />
+    from sys_transportion
+    where sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
   </select>
-  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from sys_gas_station
-    where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+    delete from sys_transportion
+    where sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
   </delete>
   
-  <insert id="insert" parameterType="com.sysongy.poms.gastation.model.Gastation" >
-    insert into sys_gas_station (sys_gas_station_id, gas_station_name, contact_phone, email,station_manager,
-      area_id, province_id, 
-      city_id, address, longitude, 
-      latitude, expiry_date, salesmen_id, 
-      salesmen_name, operations_id, operations_name, 
-      indu_com_number, tax_number, indu_com_certif, 
-      tax_certif, lng_certif, dcp_certif, 
-      platform_type, status, created_time, 
-      updated_time,sys_user_account_id)
-    values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
-      #{gas_station_name,jdbcType=VARCHAR}, 
-      #{contact_phone,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR},
-      #{station_manager,jdbcType=VARCHAR},  
-      #{area_id,jdbcType=VARCHAR}, #{province_id,jdbcType=VARCHAR}, 
-      #{city_id,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, 
-      #{latitude,jdbcType=VARCHAR}, #{expiry_date,jdbcType=TIMESTAMP}, #{salesmen_id,jdbcType=VARCHAR}, 
-      #{salesmen_name,jdbcType=VARCHAR}, #{operations_id,jdbcType=VARCHAR}, #{operations_name,jdbcType=VARCHAR}, 
-      #{indu_com_number,jdbcType=VARCHAR}, #{tax_number,jdbcType=VARCHAR}, #{indu_com_certif,jdbcType=VARCHAR}, 
-      #{tax_certif,jdbcType=VARCHAR}, #{lng_certif,jdbcType=VARCHAR}, #{dcp_certif,jdbcType=VARCHAR}, 
-      #{platform_type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{created_time,jdbcType=TIMESTAMP}, 
-      #{updated_time,jdbcType=TIMESTAMP}, #{sys_user_account_id,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.sysongy.poms.transportion.model.Transportion" >
+    insert into sys_transportion (sys_transportion_id, sys_user_account_id, 
+      transportion_name, station_manager, contact_phone, email, 
+      area_id, province_id, city_id, 
+      address, longitude, latitude, 
+      expiry_date, salesmen_id, salesmen_name, 
+      operations_id, operations_name, indu_com_number, 
+      tax_number, indu_com_certif, tax_certif, 
+      lng_certif, dcp_certif, platform_type, 
+      status, created_time, updated_time
+      )
+    values (#{sys_transportion_id,jdbcType=VARCHAR}, #{sys_user_account_id,jdbcType=VARCHAR}, 
+      #{transportion_name,jdbcType=VARCHAR}, #{station_manager,jdbcType=VARCHAR}, #{contact_phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{area_id,jdbcType=VARCHAR}, #{province_id,jdbcType=VARCHAR}, #{city_id,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, 
+      #{expiry_date,jdbcType=TIMESTAMP}, #{salesmen_id,jdbcType=VARCHAR}, #{salesmen_name,jdbcType=VARCHAR}, 
+      #{operations_id,jdbcType=VARCHAR}, #{operations_name,jdbcType=VARCHAR}, #{indu_com_number,jdbcType=VARCHAR}, 
+      #{tax_number,jdbcType=VARCHAR}, #{indu_com_certif,jdbcType=VARCHAR}, #{tax_certif,jdbcType=VARCHAR}, 
+      #{lng_certif,jdbcType=VARCHAR}, #{dcp_certif,jdbcType=VARCHAR}, #{platform_type,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{created_time,jdbcType=TIMESTAMP}, #{updated_time,jdbcType=TIMESTAMP}
+      )
   </insert>
-  
-  <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
-    insert into sys_gas_station
+  <insert id="insertSelective" parameterType="com.sysongy.poms.transportion.model.Transportion" >
+    insert into sys_transportion
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="sys_gas_station_id != null" >
-        sys_gas_station_id,
+      <if test="sys_transportion_id != null" >
+        sys_transportion_id,
       </if>
-      <if test="gas_station_name != null" >
-        gas_station_name,
+      <if test="sys_user_account_id != null" >
+        sys_user_account_id,
       </if>
-      <if test="email != null" >
-        email,
-      </if>
-       <if test="station_manager != null" >
-        station_manager,
+      <if test="transportion_name != null" >
+        transportion_name,
       </if>
       <if test="contact_phone != null" >
         contact_phone,
+      </if>
+      <if test="email != null" >
+        email,
       </if>
       <if test="area_id != null" >
         area_id,
@@ -188,20 +178,20 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="sys_gasStation_id != null" >
-        #{sys_gasStation_id,jdbcType=VARCHAR},
+      <if test="sys_transportion_id != null" >
+        #{sys_transportion_id,jdbcType=VARCHAR},
       </if>
-      <if test="gas_station_name != null" >
-        #{gasStation_name,jdbcType=VARCHAR},
+      <if test="sys_user_account_id != null" >
+        #{sys_user_account_id,jdbcType=VARCHAR},
       </if>
-      <if test="email != null" >
-        #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="station_manager != null" >
-        #{station_manager,jdbcType=VARCHAR},
+      <if test="transportion_name != null" >
+        #{transportion_name,jdbcType=VARCHAR},
       </if>
       <if test="contact_phone != null" >
         #{contact_phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
       </if>
       <if test="area_id != null" >
         #{area_id,jdbcType=VARCHAR},
@@ -236,14 +226,14 @@
       <if test="operations_name != null" >
         #{operations_name,jdbcType=VARCHAR},
       </if>
-      <if test="induComNumber != null" >
-        #{induComNumber,jdbcType=VARCHAR},
+      <if test="indu_com_number != null" >
+        #{indu_com_number,jdbcType=VARCHAR},
       </if>
       <if test="tax_number != null" >
         #{tax_number,jdbcType=VARCHAR},
       </if>
-      <if test="induComCertif != null" >
-        #{induComCertif,jdbcType=VARCHAR},
+      <if test="indu_com_certif != null" >
+        #{indu_com_certif,jdbcType=VARCHAR},
       </if>
       <if test="tax_certif != null" >
         #{tax_certif,jdbcType=VARCHAR},
@@ -263,17 +253,19 @@
       <if test="created_time != null" >
         #{created_time,jdbcType=TIMESTAMP},
       </if>
-      <if test="updatedDate != null" >
+      <if test="updated_time != null" >
         #{updated_time,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
-    update sys_gas_station
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.transportion.model.Transportion" >
+    update sys_transportion
     <set >
-      <if test="gas_station_name != null &amp;&amp; gas_station_name != ''">
-        gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
+      <if test="sys_user_account_id != null &amp;&amp; sys_user_account_id != ''">
+        sys_user_account_id = #{sys_user_account_id,jdbcType=VARCHAR},
+      </if>
+      <if test="transportion_name != null &amp;&amp; transportion_name != ''" >
+        transportion_name = #{transportion_name,jdbcType=VARCHAR},
       </if>
       <if test="station_manager != null &amp;&amp; station_manager != ''" >
         station_manager = #{station_manager,jdbcType=VARCHAR},
@@ -281,26 +273,26 @@
       <if test="contact_phone != null &amp;&amp; contact_phone != ''" >
         contact_phone = #{contact_phone,jdbcType=VARCHAR},
       </if>
+      <if test="email != null &amp;&amp; email != ''" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
       <if test="area_id != null &amp;&amp; area_id != ''" >
         area_id = #{area_id,jdbcType=VARCHAR},
       </if>
       <if test="province_id != null &amp;&amp; province_id != ''" >
         province_id = #{province_id,jdbcType=VARCHAR},
       </if>
-      <if test="city_id != null &amp;&amp; city_id != ''">
+      <if test="city_id != null &amp;&amp; city_id != ''" >
         city_id = #{city_id,jdbcType=VARCHAR},
       </if>
       <if test="address != null &amp;&amp; address != ''" >
         address = #{address,jdbcType=VARCHAR},
       </if>
-      <if test="longitude != null &amp;&amp; longitude != ''">
+      <if test="longitude != null &amp;&amp; longitude != ''" >
         longitude = #{longitude,jdbcType=VARCHAR},
       </if>
       <if test="latitude != null &amp;&amp; latitude != ''" >
         latitude = #{latitude,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null &amp;&amp; email != ''" >
-        email = #{email,jdbcType=VARCHAR},
       </if>
       <if test="expiry_date != null &amp;&amp; expiry_date != ''" >
         expiry_date = #{expiry_date,jdbcType=TIMESTAMP},
@@ -348,15 +340,15 @@
         updated_time = #{updated_time,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+    where sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
   </update>
-  
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.gastation.model.Gastation" >
-    update sys_gas_station
-    set gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.transportion.model.Transportion" >
+    update sys_transportion
+    set sys_user_account_id = #{sys_user_account_id,jdbcType=VARCHAR},
+      transportion_name = #{transportion_name,jdbcType=VARCHAR},
+      station_manager = #{station_manager,jdbcType=VARCHAR},
       contact_phone = #{contact_phone,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
-      station_manager = #{station_manager,jdbcType=VARCHAR},
       area_id = #{area_id,jdbcType=VARCHAR},
       province_id = #{province_id,jdbcType=VARCHAR},
       city_id = #{city_id,jdbcType=VARCHAR},
@@ -378,6 +370,6 @@
       status = #{status,jdbcType=VARCHAR},
       created_time = #{created_time,jdbcType=TIMESTAMP},
       updated_time = #{updated_time,jdbcType=TIMESTAMP}
-    where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+    where sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
   </update>
 </mapper>
