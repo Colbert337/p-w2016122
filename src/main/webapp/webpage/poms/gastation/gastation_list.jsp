@@ -96,7 +96,17 @@
 							<%--</span>--%>
 							<input type="text" name="expiry_date_frompage" id="date-range-picker" size="22" value="${gascard.expiry_date_frompage}"/>
 						</div> 
-
+						
+						<div class="item">
+							<div class="input-daterange top" id="j-input-daterange-top">
+								<label>平台有效期:</label>
+								<input type="text" class="" name="expiry_date_after" value="${gastation.expiry_date_after}" readonly="readonly"/>
+								<span class="">
+									<i class="fa fa-exchange"></i>
+								</span>
+								<input type="text" class="" name="expiry_date_before" value="${gastation.expiry_date_before}" readonly="readonly"/>
+							</div>
+						</div>
 
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
@@ -112,27 +122,6 @@
 								重置
 							</button>
 						</div>
-
-						<%-- <div class="col-md-3 control-label no-padding-right">
-						    
-							<label>用户卡状态:</label>
-							<select class="chosen-select " name="card_status" >
-									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" link="true" />
-							</select>
-						</div>
-						
-						<div class="col-md-2 control-label  no-padding-right">
-						    <label>操作员:</label>
-							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${gascard.operator}"/>
-						</div>
-						
-						<div class="col-md-4 input-group no-padding-right  control-label">
-						    <label>操作时间:</label>
-							<span class="input-group-addon">
-									<i class="fa fa-calendar bigger-110"></i>
-							</span>
-							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${gascard.storage_time_range}"/>
-						</div> --%>
 					</div>
 
 					<div class="clearfix">
@@ -290,28 +279,11 @@
 <script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
 <script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
 <script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-
-	var mydate = new Date();
-	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
-					locale: {
-						"format": 'YYYY.MM.DD',
-						"applyLabel": "确定",
-						"cancelLabel": "取消",
-						"fromLabel": "起始时间",
-						"toLabel": "结束时间'",
-						"daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
-						"monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-						"firstDay": 1
-					}, 
-					"startDate": "${gastation.expiry_date_after}"==""?mydate.getFullYear()+"/1/1":"${gastation.expiry_date_after}",
-				    "endDate": "${gastation.expiry_date_before}"==""?mydate.getFullYear()+"/12/31":"${gastation.expiry_date_before}"
-				})
-				.prev().on(ace.click_event, function(){
-					$(this).next().focus();
-				});
+	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 	
 	var listOptions ={   
             url:'<%=basePath%>/web/gastation/gastationList',

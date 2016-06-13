@@ -1,15 +1,16 @@
 package com.sysongy.poms.card.controller;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.model.GasCardLog;
@@ -40,14 +41,6 @@ public class CardController extends BaseContoller{
 			if(gascard.getPageNum() == null){
 				gascard.setPageNum(1);
 				gascard.setPageSize(10);
-			}
-
-			if(!StringUtils.isEmpty(gascard.getStorage_time_range())){
-				String []tmpRange = gascard.getStorage_time_range().split("-");
-				if(tmpRange.length==2){
-					gascard.setStorage_time_after(tmpRange[0].trim()+" 00:00:00");
-					gascard.setStorage_time_before(tmpRange[1]+" 23:59:59");
-				}
 			}
 
 			PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
@@ -115,7 +108,7 @@ public class CardController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/deleteCard")
-	public String deleteCard(ModelMap map, @RequestParam String cardid){
+	public String deleteCard(ModelMap map, @RequestParam String cardid, @ModelAttribute("currUser") CurrUser currUser){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/card/card_list";
@@ -123,7 +116,7 @@ public class CardController extends BaseContoller{
 
 		try {
 				if(cardid != null && !"".equals(cardid)){
-					rowcount = service.delGasCard(cardid);
+					rowcount = service.deleteGasCard(cardid, currUser);
 				}
 
 				ret = this.queryAllCardList(map, new GasCard());
@@ -233,14 +226,6 @@ public class CardController extends BaseContoller{
 			if(gascardlog.getPageNum() == null){
 				gascardlog.setPageNum(1);
 				gascardlog.setPageSize(10);
-			}
-
-			if(!StringUtils.isEmpty(gascardlog.getOptime_range())){
-				String []tmpRange = gascardlog.getOptime_range().split("-");
-				if(tmpRange.length==2){
-					gascardlog.setOptime_after(tmpRange[0].trim()+" 00:00:00");
-					gascardlog.setOptime_before(tmpRange[1]+" 23:59:59");
-				}
 			}
 
 			PageInfo<GasCardLog> pageinfo = service.queryGasCardLog(gascardlog);
