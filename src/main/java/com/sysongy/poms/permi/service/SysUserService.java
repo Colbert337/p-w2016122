@@ -55,6 +55,13 @@ public interface SysUserService {
     SysUser queryUserByAccount(SysUser user);
 
     /**
+     * 用户登录
+     * @param user
+     * @return map
+     */
+    SysUser queryUserMapByAccount(SysUser user);
+
+    /**
      * 添加用户
      * @param user 用户信息实体类
      * @return
