@@ -16,4 +16,6 @@ public interface GastationService {
 	public Integer delGastation(String gastation) throws Exception;
 	
 	public List<Gastation> getAllStationByArea(String areacode) throws Exception;
+
+
 }

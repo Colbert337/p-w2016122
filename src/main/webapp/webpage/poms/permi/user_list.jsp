@@ -181,10 +181,10 @@
 <div class="page-header">
 	<h1>
 		用户管理
-		<small>
+		<%--<small>
 			<i class="ace-icon fa fa-angle-double-right"></i>
 			用户列表
-		</small>
+		</small>--%>
 	</h1>
 </div><!-- /.page-header -->
 

@@ -3,8 +3,10 @@ package com.sysongy.poms.permi.model;
 import com.sysongy.poms.base.model.BaseModel;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-public class SysUser  extends BaseModel {
+public class SysUser extends BaseModel {
     private String sysUserId;
 
     private String userName;
@@ -42,6 +44,8 @@ public class SysUser  extends BaseModel {
     private Date updatedDate;
 
     private String remark;
+
+    List<Map<String, Object>> sysFunctionList;
 
     public String getSysUserId() {
         return sysUserId;
@@ -195,4 +199,11 @@ public class SysUser  extends BaseModel {
         this.remark = remark;
     }
 
+    public List<Map<String, Object>> getSysFunctionList() {
+        return sysFunctionList;
+    }
+
+    public void setSysFunctionList(List<Map<String, Object>> sysFunctionList) {
+        this.sysFunctionList = sysFunctionList;
+    }
 }

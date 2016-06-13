@@ -46,19 +46,32 @@
 	<!-- /section:basics/content.searchbox -->
 </div>
 
+<!-- /section:basics/content.breadcrumbs -->
+<div class="">
 
-<div class="page-content">
-
+	<!-- /.page-header -->
 	<form id="formcard">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 	<div class="row">
 		<div class="col-xs-12">
+			<!-- PAGE CONTENT BEGINS -->
+
+<!-- 			<h4 class="pink">
+				<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+				<a href="#modal-table" role="button" class="green" data-toggle="modal"> Table Inside a Modal Box </a>
+			</h4> 
+
+			<div class="hr hr-18 dotted hr-double"></div>-->
 						
 			<div class="row">
 				<div class="col-xs-12">
-					<h3 class="header smaller lighter blue">用户卡管理</h3>
+					<div class="page-header">
+						<h1>
+							用户卡管理
+						</h1>
+					</div>
 
 					<div class="search-types">
 						<div class="item">
@@ -86,13 +99,18 @@
 						</div>
 						
 						<div class="item">
+							<label>操作时间:</label>
+							<input type="text" name="storage_time_range" id="date-range-picker" size="22" value="${gascard.storage_time_range}"/>
+						</div>
+						
+						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>入库时间:</label>
-								<input type="text" class="" name="storage_time_after" value="${gascard.storage_time_after}" readonly="readonly"/>
+								<label>操作时间:</label>
+								<input type="text" class="" name="start" />
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="storage_time_before" value="${gascard.storage_time_before}" readonly="readonly"/>
+								<input type="text" class="" name="end" />
 							</div>
 						</div>
 
@@ -166,7 +184,7 @@
 									<td><s:Code2Name mcode="${list.card_status}" gcode="CARDSTATUS"></s:Code2Name> </td>
 									<td><s:Code2Name mcode="${list.card_property}" gcode="CARDPROPERTY"></s:Code2Name> </td>
 									<td><s:Code2Name mcode="${list.workstation}" gcode="WORKSTATION"></s:Code2Name></td>
-									<td>${list.workstation_resp}</td>
+									<td><s:Code2Name mcode="${list.workstation_resp}" gcode="WORKSTATION_RESP"></s:Code2Name></td>
 									<td>${list.operator}</td> 
 									<td>${list.batch_no}</td> 
 									<td><fmt:formatDate value="${list.storage_time}" type="both"/></td>
@@ -280,9 +298,9 @@
 $('[data-rel=tooltip]').tooltip();
 //$('[data-rel=popover]').popover({container:'body'});
 
-$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
+$('#j-input-daterange-top').datepicker({autoclose:true});
 
-/* var mydate = new Date();
+var mydate = new Date();
 	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
 					locale: {
 						"format": 'YYYY.MM.DD',
@@ -299,7 +317,7 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 				})
 				.prev().on(ace.click_event, function(){
 					$(this).next().focus();
-				}); */
+				});
 	
 	var listOptions ={   
             url:'<%=basePath%>/web/card/cardList',
@@ -318,8 +336,6 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 	window.onload = setCurrentPage();
 	
 	function commitForm(obj){
-		/* var storage_time_range = $("input[name=start]").val()+" - "+$("input[name=end]").val();
-		$("input[name=storage_time_range]").val(storage_time_range); */
 		//设置当前页的值
 		if(typeof obj == "undefined") {
 			$("#pageNum").val("1");

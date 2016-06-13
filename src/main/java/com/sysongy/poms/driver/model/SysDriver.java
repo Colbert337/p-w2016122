@@ -1,8 +1,10 @@
 package com.sysongy.poms.driver.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.util.Date;
 
-public class SysDriver {
+public class SysDriver extends BaseModel {
     private String sysDriverId;
 
     private String userName;

@@ -104,4 +104,99 @@
 			<bean class="com.sysongy.core.interceptors.DateWebBinding" />
 		</property>
 	</bean>
+
+	<context:property-placeholder location="classpath:conf/applicationContext-redis.properties" />
+
+	<!-- Jedis 连接池配置-->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="${redis.pool.maxIdle}" />
+		<property name="maxTotal" value="${redis.pool.maxTotal}" />
+		<property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}" />
+		<property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
+	</bean>
+	<!-- Jedis ConnectionFactory 数据库连接配置-->
+	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="${redis.hostname}" />
+		<property name="port" value="${redis.port}" />
+		<property name="password" value="${redis.password}" />
+		<property name="poolConfig" ref="jedisPoolConfig" />
+	</bean>
+
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="jedisConnectionFactory" />
+		<property name="keySerializer">
+			<bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
+		<property name="valueSerializer">
+			<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+		</property>
+	</bean>
+
+	<bean id="redisClientImpl"  class="com.sysongy.util.RedisClientImpl">
+		<property name="connectionFactory" ref="jedisConnectionFactory" />
+		<property name="redisTemplate" ref="redisTemplate" />
+	</bean>
+
+	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.mxhichina.com" />			<!-- 服务器 -->
+		<property name="port" value="25" />							<!-- 端口号 -->
+		<property name="username" value="rdadmin@sysongy.com" />	<!-- 用户名 -->
+		<property name="password" value="12345.com"/>				<!--  密码   -->
+		<property name="javaMailProperties">						<!-- SMTP服务器验证 -->
+			<props>
+				<prop key="mail.smtp.auth">true</prop>				<!-- 验证身份 -->
+			</props>
+		</property>
+	</bean>
+
+	<!-- 设置freeMarker的配置文件路径 -->
+	<bean id="freemarkerConfiguration"
+		  class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="location" value="classpath:conf/freemarker.properties" />
+	</bean>
+
+	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
+
+	<!-- 配置freeMarker的模板路径 -->
+	<bean id="freemarkerConfig"
+		  class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath">
+			<value>/WEB-INF/views/</value>
+		</property>
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="xml_escape" value-ref="fmXmlEscape" />
+			</map>
+		</property>
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 配置freeMarker视图解析器 -->
+	<bean id="viewResolver"
+		  class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass"
+				  value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="contentType" value="text/html; charset=utf-8" />
+		<property name="cache" value="true" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="exposeSpringMacroHelpers" value="true"></property>
+		<property name="exposeRequestAttributes" value="true"></property>
+	</bean>
+
+	<bean id="mailEngine" class="com.sysongy.util.mail.MailEngine">
+		<property name="mailSender" ref="javaMailSender"/>
+		<property name="freeMarkerConfigurer" ref="freemarkerConfig" />
+	</bean>
+
+	<bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from" value="rdadmin@sysongy.com"/>
+	</bean>
+
 </beans>

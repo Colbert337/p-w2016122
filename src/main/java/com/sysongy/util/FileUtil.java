@@ -12,6 +12,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -19,6 +20,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 public class FileUtil {
+
+	private static Logger logger = Logger.getLogger(IPUtil.class);
 
 	/**
 	 * 写文件
@@ -174,5 +177,28 @@ public class FileUtil {
 		}
 		String str = array.toString();
 		return str;
+	}
+
+	public static boolean createIfNoExist(String filePath){
+		String paths[] = filePath.split("\\\\");
+		String dir = paths[0];
+		for (int i = 0; i < paths.length - 2; i++) {
+			try {
+				dir = dir + "/" + paths[i + 1];
+				File dirFile = new File(dir);
+				if (!dirFile.exists()) {
+					dirFile.mkdir();
+					logger.debug("创建目录为：" + dir);
+				}
+			} catch (Exception err) {
+				logger.error("文件夹创建发生异常:" + err);
+			}
+		}
+		File fp = new File(filePath);
+		if(!fp.exists()){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
