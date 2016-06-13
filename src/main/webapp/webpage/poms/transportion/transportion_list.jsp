@@ -46,11 +46,8 @@
 	<!-- /section:basics/content.searchbox -->
 </div>
 
-
-
-
 <!-- /section:basics/content.breadcrumbs -->
-<div class="page-content">
+<div class="">
 	<!-- /.page-header -->
 	<form id="formtransportion">
 
@@ -58,19 +55,12 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			<!-- PAGE CONTENT BEGINS -->
 
-<!-- 			<h4 class="pink">
-				<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-				<a href="#modal-table" role="button" class="green" data-toggle="modal"> Table Inside a Modal Box </a>
-			</h4> 
-
-			<div class="hr hr-18 dotted hr-double"></div>-->
-						
-			<div class="row">
-				<div class="col-xs-12">
-					<h3 class="header smaller lighter blue">运输公司管理</h3>
-
+					<div class="page-header">
+						<h1>
+							运输公司管理
+						</h1>
+					</div>
 					<div class="search-types">
 						<div class="item">
 						    <label>运输公司编号:</label>
@@ -134,9 +124,7 @@
 					<div class="clearfix">
 						<div class="pull-right tableTools-container"></div>
 					</div>
-					
-					
-					
+			
 					<div class="table-header">运输公司详细信息列表</div>
 
 					<!-- div.table-responsive -->
@@ -234,9 +222,6 @@
 							</tbody>
 						</table>
 					</div>
-				</div>
-			</div>
-			
 
 			<label>共 ${pageInfo.total} 条</label>
 			

@@ -14,8 +14,7 @@
 	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
-	
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap.css" />
+
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
@@ -24,8 +23,6 @@
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-fonts.css" />
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
 	
 	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
 
@@ -68,7 +65,7 @@
 					</div>
 
 					<!-- /section:basics/content.breadcrumbs -->
-					<div class="page-content">
+					<div class="">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>

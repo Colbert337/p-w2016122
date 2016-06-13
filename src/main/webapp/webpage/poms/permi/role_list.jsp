@@ -228,10 +228,10 @@
 <div class="page-header">
 	<h1>
 		角色管理
-		<small>
+		<%--<small>
 			<i class="ace-icon fa fa-angle-double-right"></i>
 			角色列表
-		</small>
+		</small>--%>
 	</h1>
 </div><!-- /.page-header -->
 <div class="row">
