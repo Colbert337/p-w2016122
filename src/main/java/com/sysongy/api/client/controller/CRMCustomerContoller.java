@@ -299,7 +299,7 @@ public class CRMCustomerContoller {
     //多文件上传
     @RequestMapping(value = "/web/upload")
     @ResponseBody
-    public AjaxJson uploadFileData(@RequestParam("filename") CommonsMultipartFile[] files, HttpServletRequest request) {
+    public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request) {
         AjaxJson ajaxJson = new AjaxJson();
         String imgTag = request.getParameter("imgTag");
 
