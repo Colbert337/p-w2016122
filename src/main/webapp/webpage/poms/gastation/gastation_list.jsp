@@ -50,108 +50,7 @@
 
 
 <!-- /section:basics/content.breadcrumbs -->
-<div class="page-content">
-	<!-- #section:settings.box -->
-	<!-- <div class="ace-settings-container" id="ace-settings-container">
-		<div class="btn btn-app btn-xs btn-warning ace-settings-btn"
-			id="ace-settings-btn">
-			<i class="ace-icon fa fa-cog bigger-130"></i>
-		</div>
-
-		<div class="ace-settings-box clearfix" id="ace-settings-box">
-			<div class="pull-left width-50">
-				#section:settings.skins
-				<div class="ace-settings-item">
-					<div class="pull-left">
-						<select id="skin-colorpicker" class="hide">
-							<option data-skin="no-skin" value="#438EB9">#438EB9</option>
-							<option data-skin="skin-1" value="#222A2D">#222A2D</option>
-							<option data-skin="skin-2" value="#C6487E">#C6487E</option>
-							<option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
-						</select>
-					</div>
-					<span>&nbsp; Choose Skin</span>
-				</div>
-
-				/section:settings.skins
-
-				#section:settings.navbar
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-navbar" /> <label class="lbl"
-						for="ace-settings-navbar"> Fixed Navbar</label>
-				</div>
-
-				/section:settings.navbar
-
-				#section:settings.sidebar
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-sidebar" /> <label class="lbl"
-						for="ace-settings-sidebar"> Fixed Sidebar</label>
-				</div>
-
-				/section:settings.sidebar
-
-				#section:settings.breadcrumbs
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-breadcrumbs" /> <label class="lbl"
-						for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
-				</div>
-
-				/section:settings.breadcrumbs
-
-				#section:settings.rtl
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-rtl" /> <label class="lbl"
-						for="ace-settings-rtl"> Right To Left (rtl)</label>
-				</div>
-
-				/section:settings.rtl
-
-				#section:settings.container
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-add-container" /> <label class="lbl"
-						for="ace-settings-add-container"> Inside <b>.container</b>
-					</label>
-				</div>
-
-				/section:settings.container
-			</div>
-			/.pull-left
-
-			<div class="pull-left width-50">
-				#section:basics/sidebar.options
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-hover" /> <label class="lbl"
-						for="ace-settings-hover"> Submenu on Hover</label>
-				</div>
-
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-compact" /> <label class="lbl"
-						for="ace-settings-compact"> Compact Sidebar</label>
-				</div>
-
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-highlight" /> <label class="lbl"
-						for="ace-settings-highlight"> Alt. Active Item</label>
-				</div>
-
-				/section:basics/sidebar.options
-			</div>
-			/.pull-left
-		</div>
-		/.ace-settings-box
-	</div> -->
-	<!-- /.ace-settings-container -->
-
-
+<div class="">
 	<!-- /.page-header -->
 	<form id="formgastation">
 
@@ -159,47 +58,41 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			<!-- PAGE CONTENT BEGINS -->
 
-<!-- 			<h4 class="pink">
-				<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-				<a href="#modal-table" role="button" class="green" data-toggle="modal"> Table Inside a Modal Box </a>
-			</h4> 
+					<div class="page-header">
+						<h1>
+							加气站管理
+						</h1>
+					</div>
 
-			<div class="hr hr-18 dotted hr-double"></div>-->
-						
-			<div class="row">
-				<div class="col-xs-12">
-					<h3 class="header smaller lighter blue">加气站管理</h3>
-
-					<div class="row form-group">
-						<div class="col-md-2">
+					<div class="search-types">
+						<div class="item">
 						    <label>加气站编号:</label>
 							<input type="text" name="sys_gas_station_id" placeholder="输入加气站编号"  maxlength="9" value="${gastation.sys_gas_station_id}"/>
 						</div>
 						
-						<div class="col-md-2">
+						<div class="item">
 						    <label>加气站名称:</label>
 							<input type="text" name="gas_station_name" placeholder="输入加气站名称"  maxlength="9" value="${gastation.gas_station_name}"/>
 						</div>
 						
-						<div class="col-md-2">
+						<div class="item">
 							<label>气站状态:</label>
 							<select class="chosen-select " name="status" >
-									<s:option flag="true" gcode="GASTATION_STATUS" form="gastation" field="status" link="true" />
+									<s:option flag="true" gcode="STATION_STATUS" form="gastation" field="status" />
 							</select>
 						</div>
 						
-						 <div class="col-md-2">
+						 <div class="item">
 						    <label>平台有效期:</label>
 							<%--<span class="input-group-addon">--%>
 									<%--<i class="fa fa-calendar bigger-110"></i>--%>
 							<%--</span>--%>
-							<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${gascard.expiry_date_frompage}"/>
+							<input type="text" name="expiry_date_frompage" id="date-range-picker" size="22" value="${gascard.expiry_date_frompage}"/>
 						</div> 
 
 
-						<div class="col-md-4 text-right">
+						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								新建加气站
@@ -239,8 +132,6 @@
 					<div class="clearfix">
 						<div class="pull-right tableTools-container"></div>
 					</div>
-					
-					
 					
 					<div class="table-header">加气站详细信息列表</div>
 
@@ -286,7 +177,7 @@
 									<td>${list.salesmen_name}</td>
 									<td>${list.operations_name}</td>
 									<td>${list.indu_com_number}</td>
-									<td><s:Code2Name mcode="${list.status}" gcode="GASTATION_STATUS"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
 									<td>${list.address}</td> 
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
@@ -340,8 +231,6 @@
 							</tbody>
 						</table>
 					</div>
-				</div>
-			</div>
 			
 
 			<label>共 ${pageInfo.total} 条</label>
@@ -398,9 +287,14 @@
 	var mydate = new Date();
 	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
 					locale: {
-						applyLabel: 'Apply',
-						cancelLabel: 'Cancel',
-						format: "YYYY/MM/DD",
+						"format": 'YYYY.MM.DD',
+						"applyLabel": "确定",
+						"cancelLabel": "取消",
+						"fromLabel": "起始时间",
+						"toLabel": "结束时间'",
+						"daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+						"monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+						"firstDay": 1
 					}, 
 					"startDate": "${gastation.expiry_date_after}"==""?mydate.getFullYear()+"/1/1":"${gastation.expiry_date_after}",
 				    "endDate": "${gastation.expiry_date_before}"==""?mydate.getFullYear()+"/12/31":"${gastation.expiry_date_before}"
@@ -450,12 +344,10 @@
 	            dataType:'text',
 	            success:function(data){
 		             $("#main").html(data);
-		             if($("#retCode").val() != "100"){
-		            	 $("#modal-table").modal("show");
-		             }
+		             $("#modal-table").modal("show");
 	            },
 	            error:function(XMLHttpRequest, textStatus, errorThrown) {
-					
+	            	
 	            }
 		}
 		

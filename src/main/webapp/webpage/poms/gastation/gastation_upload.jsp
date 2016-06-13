@@ -86,7 +86,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 加气站编号： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="sys_gas_station_id"  name="sys_gas_station_id" value="${ret.retValue}" readonly="readonly"/>
+											<input type="text" id="sys_gas_station_id"  name="sys_gas_station_id" value="${param.gastationid}" readonly="readonly"/>
 										</div>
 									</div>
 									
@@ -306,7 +306,7 @@
 		            dataType:'text',
 		            success:function(data){
 		            	$("#main").html(data);
-						$("#modal-table").modal("show");
+		            	$("#modal-table").modal("show");
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
 		 	       }
@@ -333,7 +333,7 @@
 			}
 			
 			var multipartOptions ={   
-		            url:'../crmBaseService/web/upload?gasstationid='+$("#sys_gas_station_id").val(),   
+		            url:'../crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),   
 		            type:'post',                    
 		            dataType:'text',
 		            enctype:"multipart/form-data",

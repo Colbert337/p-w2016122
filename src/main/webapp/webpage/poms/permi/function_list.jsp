@@ -146,7 +146,14 @@
 				$("#function_type").val(data.functionType);
 				$("#function_icon").val(data.functionIcon);
 				$("#function_sort").val(data.functionSort);
-				$("#is_menu_yes").val(data.isMenu);
+
+				if(data.isMenu == 0){
+					$("#is_menu_yes").attr("checked","checked");
+					$("#is_menu_no").removeAttr("checked");
+				}else if(data.isMenu == 1){
+					$("#is_menu_no").attr("checked","checked");
+					$("#is_menu_yes").removeAttr("checked");
+				}
 
 				$("#functionModel").modal('show');
 			}

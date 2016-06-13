@@ -74,12 +74,18 @@
          -->
         
        
-       <table schema="${jdbc.database}" tableName="sys_driver" domainObjectName="SysDriver"
-       		enableCountByExample="false"  
-            enableDeleteByExample="false" 
-            enableSelectByExample="false"  
+       <table schema="${jdbc.database}" tableName="ps_cash_set" domainObjectName="PsCashSet"
+       		enableCountByExample="false"
+            enableDeleteByExample="false"
+            enableSelectByExample="false"
             enableUpdateByExample="false">
        </table>
+        <table schema="${jdbc.database}" tableName="ps_cash_mode" domainObjectName="PsCashMode"
+               enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               enableUpdateByExample="false">
+        </table>
         <!-- <table schema="${jdbc.database}" tableName="course_user_info" domainObjectName="CourseUserInfo"></table>  -->
         
   

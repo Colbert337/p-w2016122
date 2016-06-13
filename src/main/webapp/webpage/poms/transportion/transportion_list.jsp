@@ -26,8 +26,8 @@
 		<li><i class="ace-icon fa fa-home home-icon"></i> <a href="javascript:void(0);">主页</a>
 		</li>
 
-		<li><a href="javascript:void(0);">加气站管理</a></li>
-		<li class="active">加气站信息管理</li>
+		<li><a href="javascript:void(0);">运输公司管理</a></li>
+		<li class="active">运输公司信息管理</li>
 	</ul>
 	<!-- /.breadcrumb -->
 
@@ -46,168 +46,56 @@
 	<!-- /section:basics/content.searchbox -->
 </div>
 
-
-
-
 <!-- /section:basics/content.breadcrumbs -->
-<div class="page-content">
-	<!-- #section:settings.box -->
-	<!-- <div class="ace-settings-container" id="ace-settings-container">
-		<div class="btn btn-app btn-xs btn-warning ace-settings-btn"
-			id="ace-settings-btn">
-			<i class="ace-icon fa fa-cog bigger-130"></i>
-		</div>
-
-		<div class="ace-settings-box clearfix" id="ace-settings-box">
-			<div class="pull-left width-50">
-				#section:settings.skins
-				<div class="ace-settings-item">
-					<div class="pull-left">
-						<select id="skin-colorpicker" class="hide">
-							<option data-skin="no-skin" value="#438EB9">#438EB9</option>
-							<option data-skin="skin-1" value="#222A2D">#222A2D</option>
-							<option data-skin="skin-2" value="#C6487E">#C6487E</option>
-							<option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
-						</select>
-					</div>
-					<span>&nbsp; Choose Skin</span>
-				</div>
-
-				/section:settings.skins
-
-				#section:settings.navbar
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-navbar" /> <label class="lbl"
-						for="ace-settings-navbar"> Fixed Navbar</label>
-				</div>
-
-				/section:settings.navbar
-
-				#section:settings.sidebar
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-sidebar" /> <label class="lbl"
-						for="ace-settings-sidebar"> Fixed Sidebar</label>
-				</div>
-
-				/section:settings.sidebar
-
-				#section:settings.breadcrumbs
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-breadcrumbs" /> <label class="lbl"
-						for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
-				</div>
-
-				/section:settings.breadcrumbs
-
-				#section:settings.rtl
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-rtl" /> <label class="lbl"
-						for="ace-settings-rtl"> Right To Left (rtl)</label>
-				</div>
-
-				/section:settings.rtl
-
-				#section:settings.container
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-add-container" /> <label class="lbl"
-						for="ace-settings-add-container"> Inside <b>.container</b>
-					</label>
-				</div>
-
-				/section:settings.container
-			</div>
-			/.pull-left
-
-			<div class="pull-left width-50">
-				#section:basics/sidebar.options
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-hover" /> <label class="lbl"
-						for="ace-settings-hover"> Submenu on Hover</label>
-				</div>
-
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-compact" /> <label class="lbl"
-						for="ace-settings-compact"> Compact Sidebar</label>
-				</div>
-
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-highlight" /> <label class="lbl"
-						for="ace-settings-highlight"> Alt. Active Item</label>
-				</div>
-
-				/section:basics/sidebar.options
-			</div>
-			/.pull-left
-		</div>
-		/.ace-settings-box
-	</div> -->
-	<!-- /.ace-settings-container -->
-
-
+<div class="">
 	<!-- /.page-header -->
-	<form id="formgastation">
+	<form id="formtransportion">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 	<div class="row">
 		<div class="col-xs-12">
-			<!-- PAGE CONTENT BEGINS -->
 
-<!-- 			<h4 class="pink">
-				<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-				<a href="#modal-table" role="button" class="green" data-toggle="modal"> Table Inside a Modal Box </a>
-			</h4> 
-
-			<div class="hr hr-18 dotted hr-double"></div>-->
-						
-			<div class="row">
-				<div class="col-xs-12">
-					<h3 class="header smaller lighter blue">加气站管理</h3>
-
-					<div class="row form-group">
-						<div class="col-md-2">
-						    <label>加气站编号:</label>
-							<input type="text" name="sys_gas_station_id" placeholder="输入加气站编号"  maxlength="9" value="${gastation.sys_gas_station_id}"/>
+					<div class="page-header">
+						<h1>
+							运输公司管理
+						</h1>
+					</div>
+					<div class="search-types">
+						<div class="item">
+						    <label>运输公司编号:</label>
+							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号"  maxlength="9" value="${transportion.sys_transportion_id}"/>
 						</div>
 						
-						<div class="col-md-2">
-						    <label>加气站名称:</label>
-							<input type="text" name="gas_station_name" placeholder="输入加气站名称"  maxlength="9" value="${gastation.gas_station_name}"/>
+						<div class="item">
+						    <label>运输公司名称:</label>
+							<input type="text" name="transportion_name" placeholder="输入运输公司名称"  maxlength="9" value="${transportion.transportion_name}"/>
 						</div>
 						
-						<div class="col-md-2">
-							<label>气站状态:</label>
+						<div class="item">
+							<label>运输公司状态:</label>
 							<select class="chosen-select " name="status" >
-									<s:option flag="true" gcode="GASTATION_STATUS" form="gastation" field="status" link="true" />
+									<s:option flag="true" gcode="STATION_STATUS" form="transportion" field="status" />
 							</select>
 						</div>
-						
-						<div class="col-md-4">
-							<div class="input-group">
-								<label>平台有效期:</label>
-								<%--<span class="input-group-addon">--%>
-										<%--<i class="fa fa-calendar bigger-110"></i>--%>
-								<%--</span>--%>
-								<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${gascard.expiry_date_frompage}"/>
-							</div>
+
+						<div class="item">
+							<label>平台有效期:</label>
+							<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${transportion.expiry_date_frompage}"/>
 						</div>
 
-						<div class="col-md-2">
-							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
+						<div class="item">
+							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/transportion/transportion_new.jsp');">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								新建加气站
+								新建
 							</button>
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
+							</button>
+							<button class="btn btn-sm" type="button" onclick="init();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								重置
 							</button>
 						</div>
 
@@ -215,13 +103,13 @@
 						    
 							<label>用户卡状态:</label>
 							<select class="chosen-select " name="card_status" >
-									 <s:option flag="true" gcode="CARDSTATUS" form="gascard" field="card_status" link="true" />
+									 <s:option flag="true" gcode="CARDSTATUS" form="transportion" field="card_status" link="true" />
 							</select>
 						</div>
 						
 						<div class="col-md-2 control-label  no-padding-right">
 						    <label>操作员:</label>
-							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${gascard.operator}"/>
+							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${transportion.operator}"/>
 						</div>
 						
 						<div class="col-md-4 input-group no-padding-right  control-label">
@@ -229,17 +117,15 @@
 							<span class="input-group-addon">
 									<i class="fa fa-calendar bigger-110"></i>
 							</span>
-							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${gascard.storage_time_range}"/>
+							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${transportion.storage_time_range}"/>
 						</div> --%>
 					</div>
 
 					<div class="clearfix">
 						<div class="pull-right tableTools-container"></div>
 					</div>
-					
-					
-					
-					<div class="table-header">加气站详细信息列表</div>
+			
+					<div class="table-header">运输公司详细信息列表</div>
 
 					<!-- div.table-responsive -->
 
@@ -254,8 +140,8 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加气站编号</th>
-									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加气站名称</th>
+									<th onclick="orderBy(this,'sys_transportion_id');commitForm();" id="sys_transportion_id_order">运输公司编号</th>
+									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
 									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
@@ -273,17 +159,16 @@
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.sys_gas_station_id}"/> 
+											<input type="checkbox" class="ace" id="pks" value="${list.sys_transportion_id}"/> 
 											<span class="lbl"></span>
 										</label>
 									</td>
-
-									<td>${list.sys_gas_station_id}</td>
-								 	<td>${list.gas_station_name}</td> 
+									<td>${list.sys_transportion_id}</td>
+								 	<td>${list.transportion_name}</td> 
 									<td>${list.salesmen_name}</td>
-									<td>${list.operations_name}</td>
+									<td>${list.operations_id}</td>
 									<td>${list.indu_com_number}</td>
-									<td><s:Code2Name mcode="${list.status}" gcode="GASTATION_STATUS"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
 									<td>${list.address}</td> 
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
@@ -337,9 +222,6 @@
 							</tbody>
 						</table>
 					</div>
-				</div>
-			</div>
-			
 
 			<label>共 ${pageInfo.total} 条</label>
 			
@@ -347,13 +229,13 @@
 				  <ul id="ulhandle" class="pagination pull-right no-margin">
 				  
 				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formgastation');">
+					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formtransportion');">
 					        <span aria-hidden="true">&laquo;</span>
 					      </a>
 				    </li>
 				    
 				    <li id="next">
-					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
+					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formtransportion');">
 					        <span aria-hidden="true">&raquo;</span>
 					      </a>
 				    </li>
@@ -399,15 +281,15 @@
 						cancelLabel: 'Cancel',
 						format: "YYYY/MM/DD",
 					}, 
-					"startDate": "${gastation.expiry_date_after}"==""?mydate.getFullYear()+"/1/1":"${gastation.expiry_date_after}",
-				    "endDate": "${gastation.expiry_date_before}"==""?mydate.getFullYear()+"/12/31":"${gastation.expiry_date_before}"
+					"startDate": "${transportion.expiry_date_after}"==""?mydate.getFullYear()+"/1/1":"${transportion.expiry_date_after}",
+				    "endDate": "${transportion.expiry_date_before}"==""?mydate.getFullYear()+"/12/31":"${transportion.expiry_date_before}"
 				})
 				.prev().on(ace.click_event, function(){
 					$(this).next().focus();
 				});
 	
 	var listOptions ={   
-            url:'<%=basePath%>/web/gastation/gastationList',
+            url:'<%=basePath%>/web/transportion/transportionList',
             type:'post',                    
             dataType:'html',
             success:function(data){
@@ -424,7 +306,7 @@
 	
 	function preUpdate(obj){
 		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
-		loadPage('#main', '../web/gastation/preUpdate?gastationid='+stationid);
+		loadPage('#main', '../web/transportion/preUpdate?transportionid='+stationid);
 	}
 	
 	function commitForm(obj){
@@ -435,14 +317,14 @@
 			$("#pageNum").val($(obj).text());
 		}
 		
-		$("#formgastation").ajaxSubmit(listOptions);
+		$("#formtransportion").ajaxSubmit(listOptions);
 	}
 	
 	function del(obj){
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
 		var deloptions ={   
-	            url:'../web/gastation/deleteGastation?gastationid='+cardid,   
+	            url:'../web/transportion/deletetransportion?transportionid='+cardid,   
 	            type:'post',                    
 	            dataType:'text',
 	            success:function(data){
@@ -456,6 +338,10 @@
 	            }
 		}
 		
-		$("#formgastation").ajaxSubmit(deloptions);
+		$("#formtransportion").ajaxSubmit(deloptions);
+	}
+	
+	function init(){
+		loadPage('#main', '../web/transportion/transportionList');
 	}
 	</script>

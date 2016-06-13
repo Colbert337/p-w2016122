@@ -46,111 +46,8 @@
 	<!-- /section:basics/content.searchbox -->
 </div>
 
-
-
-
 <!-- /section:basics/content.breadcrumbs -->
-<div class="page-content">
-	<!-- #section:settings.box -->
-	<!-- <div class="ace-settings-container" id="ace-settings-container">
-		<div class="btn btn-app btn-xs btn-warning ace-settings-btn"
-			id="ace-settings-btn">
-			<i class="ace-icon fa fa-cog bigger-130"></i>
-		</div>
-
-		<div class="ace-settings-box clearfix" id="ace-settings-box">
-			<div class="pull-left width-50">
-				#section:settings.skins
-				<div class="ace-settings-item">
-					<div class="pull-left">
-						<select id="skin-colorpicker" class="hide">
-							<option data-skin="no-skin" value="#438EB9">#438EB9</option>
-							<option data-skin="skin-1" value="#222A2D">#222A2D</option>
-							<option data-skin="skin-2" value="#C6487E">#C6487E</option>
-							<option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
-						</select>
-					</div>
-					<span>&nbsp; Choose Skin</span>
-				</div>
-
-				/section:settings.skins
-
-				#section:settings.navbar
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-navbar" /> <label class="lbl"
-						for="ace-settings-navbar"> Fixed Navbar</label>
-				</div>
-
-				/section:settings.navbar
-
-				#section:settings.sidebar
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-sidebar" /> <label class="lbl"
-						for="ace-settings-sidebar"> Fixed Sidebar</label>
-				</div>
-
-				/section:settings.sidebar
-
-				#section:settings.breadcrumbs
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-breadcrumbs" /> <label class="lbl"
-						for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
-				</div>
-
-				/section:settings.breadcrumbs
-
-				#section:settings.rtl
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-rtl" /> <label class="lbl"
-						for="ace-settings-rtl"> Right To Left (rtl)</label>
-				</div>
-
-				/section:settings.rtl
-
-				#section:settings.container
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-add-container" /> <label class="lbl"
-						for="ace-settings-add-container"> Inside <b>.container</b>
-					</label>
-				</div>
-
-				/section:settings.container
-			</div>
-			/.pull-left
-
-			<div class="pull-left width-50">
-				#section:basics/sidebar.options
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-hover" /> <label class="lbl"
-						for="ace-settings-hover"> Submenu on Hover</label>
-				</div>
-
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-compact" /> <label class="lbl"
-						for="ace-settings-compact"> Compact Sidebar</label>
-				</div>
-
-				<div class="ace-settings-item">
-					<input type="checkbox" class="ace ace-checkbox-2"
-						id="ace-settings-highlight" /> <label class="lbl"
-						for="ace-settings-highlight"> Alt. Active Item</label>
-				</div>
-
-				/section:basics/sidebar.options
-			</div>
-			/.pull-left
-		</div>
-		/.ace-settings-box
-	</div> -->
-	<!-- /.ace-settings-container -->
-
+<div class="">
 
 	<!-- /.page-header -->
 	<form id="formcard">
@@ -159,72 +56,60 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			<!-- PAGE CONTENT BEGINS -->
 
-<!-- 			<h4 class="pink">
-				<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-				<a href="#modal-table" role="button" class="green" data-toggle="modal"> Table Inside a Modal Box </a>
-			</h4> 
-
-			<div class="hr hr-18 dotted hr-double"></div>-->
-						
 			<div class="row">
 				<div class="col-xs-12">
-					<h3 class="header smaller lighter blue">用户卡轨迹信息</h3>
-
-					<div class="form-group">
-						<div class="col-md-2 control-label no-padding-right">
+					<div class="page-header">
+						<h1>
+							用户卡轨迹信息
+						</h1>
+					</div>
+					<div class="search-types">
+						<div class="item">
 						    <label>用户卡号:</label>
 							<input type="text" name="card_no" placeholder="输入用户卡号"  maxlength="9" value="${gascardlog.card_no}"/>
 						</div>
 						
-						<div class="col-md-3 control-label no-padding-right">
+						<div class="item">
 						    <label>用户卡类型:</label>
 							<select class="chosen-select " name="card_type" >
 									<s:option flag="true" gcode="CARDTYPE" form="gascardlog" field="card_type" link="true" />
 							</select>
+						</div>
+
+						<div class="item">
 							<label>用户卡状态:</label>
 							<select class="chosen-select " name="card_status" >
 									 <s:option flag="true" gcode="CARDSTATUS" form="gascardlog" field="card_status" link="true" />
 							</select>
 						</div>
 						
-						<div class="col-md-2 control-label  no-padding-right">
+						<div class="item">
 						    <label>操作员:</label>
 							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${gascardlog.operator}"/>
 						</div>
 						
-						<div class="col-md-4 input-group no-padding-right  control-label">
+						<div class="item">
 						    <label>操作时间:</label>
-							<span class="input-group-addon">
-									<i class="fa fa-calendar bigger-110"></i>
-							</span>
-							 <input type="text" name="optime_range" id="date-range-picker" value="value="${gascardlog.optime_range}"/>
+							 <input type="text" name="optime_range" id="date-range-picker" size="22" value="${gascardlog.optime_range}"/>
 						</div>
-						
-						
-					</div>
-					
-					<div class="form-group">
-						<div class="col-md-12 pull-right">
-								<button class="btn btn-primary" type="button" onclick="commitForm();">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										查询
-								</button>
-								<button class="btn" type="button" onclick="init();">
-										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-										重置
-								</button>
+
+						<div class="item">
+							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								查询
+							</button>
+							<button class="btn btn-sm" type="button" onclick="init();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								重置
+							</button>
 						</div>
+
 					</div>
-					
-					<br/><br/>
 
 					<div class="clearfix">
 						<div class="pull-right tableTools-container"></div>
 					</div>
-					
-					
 					
 					<div class="table-header">用户卡详细信息列表</div>
 
@@ -252,6 +137,7 @@
 									<th onclick="orderBy(this,'storage_time');commitForm();" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
 									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
 									<th onclick="orderBy(this,'optime');commitForm();" id="optime_order"><i id="optime" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th>
+									<th onclick="orderBy(this,'action');commitForm();" id="action_order">操作动作</th> 
 								</tr>
 							</thead>
 
@@ -277,7 +163,7 @@
 									<td><fmt:formatDate value="${list.storage_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.release_time}" type="both"/></td>
 					                <td><fmt:formatDate value="${list.optime}" type="both"/></td>
-									
+									<td><s:Code2Name mcode="${list.action}" gcode="ACTION"></s:Code2Name></td>
 								</tr>
 								</c:forEach>
 							</tbody>
@@ -341,9 +227,14 @@
 var mydate = new Date();
 	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
 					locale: {
-						applyLabel: 'Apply',
-						cancelLabel: 'Cancel',
-						format: "YYYY/MM/DD",
+						"format": 'YYYY.MM.DD',
+						"applyLabel": "确定",
+						"cancelLabel": "取消",
+						"fromLabel": "起始时间",
+						"toLabel": "结束时间'",
+						"daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+						"monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+						"firstDay": 1
 					}, 
 					"startDate": "${gascardlog.optime_after}"==""?mydate.getFullYear()+"/1/1":"${gascardlog.optime_after}",
 				    "endDate": "${gascardlog.optime_before}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/"+mydate.getDate():"${gascardlog.optime_before}"

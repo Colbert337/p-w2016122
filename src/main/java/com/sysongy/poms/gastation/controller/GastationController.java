@@ -1,17 +1,18 @@
 package com.sysongy.poms.gastation.controller;
 
-import com.sysongy.poms.gastation.service.GastationService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
 
 
 @RequestMapping("/web/gastation")
@@ -81,19 +82,22 @@ public class GastationController extends BaseContoller{
 	@RequestMapping("/saveGastation")
 	public String saveGastation(ModelMap map, Gastation gastation) throws Exception{
 		PageBean bean = new PageBean();
-		String ret = "webpage/poms/gastation/gastation_upload";
+		String ret = "webpage/poms/gastation/gastation_new";
 		String gastationid = null;
 
 		try {
 			if(StringUtils.isEmpty(gastation.getSys_gas_station_id())){
 				gastationid = service.saveGastation(gastation,"insert");
+				bean.setRetMsg("["+gastationid+"]新增成功");
+				ret = "webpage/poms/gastation/gastation_upload";
 			}else{
 				gastationid = service.saveGastation(gastation,"update");
+				bean.setRetMsg("["+gastationid+"]保存成功");
 				ret = this.queryAllGastationList(map, new Gastation());
 			}
 
 			bean.setRetCode(100);
-			bean.setRetMsg("保存成功");
+			
 			bean.setRetValue(gastationid);
 			bean.setPageInfo(ret);
 
@@ -103,11 +107,12 @@ public class GastationController extends BaseContoller{
 			bean.setRetMsg(e.getMessage());
 
 			map.addAttribute("ret", bean);
+			map.addAttribute("station", gastation);
+			
 			logger.error("", e);
-			throw e;
 		}
 		finally {
-			return  ret;
+			return ret;
 		}
 	}
 	

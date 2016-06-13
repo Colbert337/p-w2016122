@@ -14,8 +14,7 @@
 	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
-	
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap.css" />
+
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
@@ -24,8 +23,6 @@
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-fonts.css" />
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
 	
 	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
 
@@ -68,7 +65,7 @@
 					</div>
 
 					<!-- /section:basics/content.breadcrumbs -->
-					<div class="page-content">
+					<div class="">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
@@ -80,12 +77,14 @@
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
 								<form class="form-horizontal"  id="gastationform">
-									<!-- #section:elements.form -->
+								
+								<jsp:include page="/common/page_param.jsp"></jsp:include>
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 加气站名称： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="gas_station_name"  name="gas_station_name" placeholder="输入加气站名称" class="col-xs-10 col-sm-5" maxlength="20"/>
+											<input type="text" id="gas_station_name"  name="gas_station_name" placeholder="输入加气站名称" class="col-xs-10 col-sm-5" maxlength="20" value="${station.gas_station_name}"/>
 										</div>
 									</div>
 									
@@ -93,7 +92,7 @@
 										<label class="col-sm-3 control-label no-padding-right" > E-mail： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5" />
+											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5" value="${station.email}"/>
 										</div>
 									</div>
 									
@@ -101,7 +100,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="col-xs-10 col-sm-5" maxlength="20"/>
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="col-xs-10 col-sm-5" maxlength="20" value="${station.station_manager}"/>
 										</div>
 									</div>
 									
@@ -109,7 +108,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15"/>
+											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15" value="${station.contact_phone}"/>
 										</div>
 									</div>
 									
@@ -118,7 +117,7 @@
 										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
-														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" />
+														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
 														<span class="input-group-addon">
 																<i class="fa fa-calendar bigger-110"></i>
 														</span>
@@ -127,14 +126,14 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 销售负责人： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
 										<div class="col-sm-2">
-												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20"/>
+												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 运管负责人： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
 										<div class="col-sm-2">
 												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
@@ -184,8 +183,8 @@
 											</select>
 											<select class="form-control" id="city" name="city_id">
 											</select>
-											<input type="text"  id="detail" name="detail" class="col-sm-12"  placeholder="输入详细地址"/>
-											<input type="hidden"  id="address" name="address" class="col-sm-12" />
+											<input type="text"  id="detail" name="detail" class="col-sm-12"  placeholder="输入详细地址" value="${station.detail}"/>
+											<input type="hidden"  id="address" name="address" class="col-sm-12"  value="${station.address}"/>
 										</div>
 									</div>
 									
@@ -193,7 +192,7 @@
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-4">
 											<label class="col-sm-2 control-label no-padding-right" > 经度：</label>
-											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="5"/>
+											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="8" value="${station.longitude}"/>
 										</div>
 									</div>
 									
@@ -201,7 +200,7 @@
 										<label class="col-sm-3 control-label no-padding-right" > </label>
 										<div class="col-sm-4">
 											<label class="col-sm-2 control-label no-padding-right" > 纬度：</label>
-											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="5"/>
+											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="8" value="${station.latitude}"/>
 										</div>
 									</div>
 									
@@ -311,15 +310,31 @@
 	           async:false,
 	           success:function(data){
 	           		if(data != ""){
-			        	   $("#salesmen_id").empty();
 			        	   var s = JSON.parse(data);
+			        	   $("#operations_id").append("<option value=''>请选择</option>");
 			        	   for(var i=0;i<s.length;i++){
-			        		   $("#salesmen_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
-			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"'>"+s[i].userName+"</option>");
 			        	   }
 	           		}
 	            }
 		});
+		
+		//下拉框默认选中当前对象的值
+		var province_id = '${station.province_id}';
+		var city_id =  '${station.city_id}';
+		var detail = '${station.address}';
+		var operations_id = '${station.operations_id}';
+		
+		if(province_id!=null && province_id!=""){
+			$("#province").find("option[value="+province_id+"]").attr("selected",true);
+			$("#province").trigger("change");
+			$("#city").find("option[value="+city_id+"]").attr("selected",true);
+			$("#detail").val(detail.split(" ")[2]);
+		}
+
+		if(operations_id!=null){
+			$("#operations_id").find("option[value="+operations_id+"]").attr("selected",true);
+		}
 		
 		function chinaChange(province, city) {
 			var pv, cv;
@@ -379,6 +394,19 @@
 		                    }
 		                }
 		            },
+		            email: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '加气站email不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 1,
+		                        max: 20,
+		                        message: '加气站email不能超过20个字符'
+		                    }
+		                }
+		            },
 		            station_manager: {
 		                message: 'The cardno is not valid',
 		                validators: {
@@ -404,14 +432,6 @@
 		                    }
 		                }
 		            },
-		            expiry_date_frompage: {
-		                message: 'The cardno is not valid',
-		                validators: { 
-		                    notEmpty: {
-		                        message: '平台有效期不能为空'
-		                    }
-		                }
-		            },
 		            salesmen_name: {
 		                validators: {
 		                    notEmpty: {
@@ -419,19 +439,13 @@
 		                    }
 		                }
 		            },
-		            operations_id: {
+		            expiry_date_frompage: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '运管负责人不能为空'
-		                    }
-		                }
-		            },
-		            operations_id: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '运管负责人不能为空'
-		                    }
-		                }
+		                        message: '平台有效期不能为空'
+		                    },
+		                },
+		                trigger: 'change'
 		            },
 		            operations_id: {
 		                validators: {
@@ -467,8 +481,8 @@
 		                        message: '注册地址经度不能为空'
 		                    },
 		                    regexp: {
-		                        regexp: '^[0-9]{5}$',
-		                        message: '注册地址经度必须是5位数字'
+		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
+		                        message: '注册地址经度必须是数字'
 		                    }
 		                }
 		            },
@@ -478,8 +492,8 @@
 		                        message: '注册地址纬度不能为空'
 		                    },
 		                    regexp: {
-		                        regexp: '^[0-9]{5}$',
-		                        message: '注册地址纬度必须是5位数字'
+		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
+		                        message: '注册地址纬度必须是数字'
 		                    }
 		                }
 		            }
@@ -500,15 +514,21 @@
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
-		            	var tmp = confirm("保存成功，是否上传许可证图片?");
-		            	if(tmp){
-		            		$("#main").html(data);
+		            	$("#main").html(data);
+		            	if($("#retCode").val() != 100){
+		            		$("#modal-table").modal("show");
+		            		return;
 		            	}else{
-		            		loadPage('#main', '../webpage/poms/gastation/gastation_new.jsp');
-							$("#modal-table").modal("show");
+		            		var tmp = confirm("保存成功，是否上传许可证图片?");
+			            	if(tmp){
+			            		loadPage('#main', '../webpage/poms/gastation/gastation_upload.jsp?gastationid='+$("#retValue").val());
+			            	}else{
+			            		//$("#main").html(data);
+			            		loadPage('#main', '../web/gastation/gastationList');
+			            	}
 		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+		            	
 		 	       }
 			}
 						

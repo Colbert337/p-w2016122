@@ -43,13 +43,30 @@
 	/*分页相关方法 end*/
 	//显示添加用户弹出层
 	function addUser(){
-		$("#userModel").modal('show');
+		/*$("#userModel").modal('show');*/
+		queryRoleList();
 		/*密码输入框改为可编辑*/
 		$("#password").removeAttr("readonly");
 		$("#re_password").removeAttr("readonly");
 	}
 	//显示编辑用户弹出层
-	function updateUser(){
+	function queryRoleList(roleId){
+		$.ajax({
+			url:"<%=basePath%>/web/permi/user/list/role",
+			data:{},
+			async:false,
+			type: "POST",
+			success: function(data){
+				$("#avatar_b").append("<option value='0'>--选择角色--</option>");
+				$.each(data,function(i,val){
+					if(val.sysRoleId == roleId){
+						$("#avatar_b").append("<option value='"+val.sysRoleId+"' selected='selected'>"+val.roleName+"</option>");
+					}else{
+						$("#avatar_b").append("<option value='"+val.sysRoleId+"'>"+val.roleName+"</option>");
+					}
+				})
+			}
+		})
 		$("#userModel").modal('show');
 	}
 
@@ -59,7 +76,14 @@
 		$("#userForm :input").each(function () {
 			$(this).val("");
 		});
+		$("#avatar_b").empty();
 		$("#"+divId).modal('hide');
+	}
+	function clearDiv(){
+		$("#roleForm :input").each(function () {
+			$(this).val("");
+		});
+		$("#avatar_b").empty();
 	}
 	/**
 	 * 保存用户信息
@@ -96,7 +120,15 @@
 				$("#remark").val(data.remark);
 				$("#real_name").val(data.realName);
 				$("#user_type").val(data.userType);
-				$("#gender").val(data.gender);
+
+				if(data.gender == 0){
+					$("#gender_b").attr("checked","checked");
+					$("#gender_g").removeAttr("checked");
+				}else if(data.gender == 1){
+					$("#gender_g").attr("checked","checked");
+					$("#gender_b").removeAttr("checked");
+				}
+
 				$("#email").val(data.email);
 				$("#mobile_phone").val(data.mobilePhone);
 				/*密码输入框改为只读*/
@@ -105,7 +137,8 @@
 				/*密码输入框改为可编辑*/
 				$("#password").attr("readonly","readonly");
 				$("#re_password").attr("readonly","readonly");
-				updateUser();
+
+				queryRoleList(data.sysRoleId);
 			}
 		});
 
@@ -133,7 +166,7 @@
 	 */
 	function updateStatus(userId,status){
 		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/user/save',
+			url:'<%=basePath%>/web/permi/user/update/staruts',
 			data:{sysUserId:userId,status:status},
 			type:'post',
 			dataType:'text',
@@ -148,10 +181,10 @@
 <div class="page-header">
 	<h1>
 		用户管理
-		<small>
+		<%--<small>
 			<i class="ace-icon fa fa-angle-double-right"></i>
 			用户列表
-		</small>
+		</small>--%>
 	</h1>
 </div><!-- /.page-header -->
 
@@ -165,7 +198,7 @@
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
 						<%--<a class="btn btn-primary" href="javascript:loadPage('#main', '<%=basePath%>/web/permi/user/add')">--%>
-						<a class="btn btn-primary" href="javascript:addUser();">
+						<a class="btn btn-sm btn-primary" href="javascript:addUser();">
 							添加用户
 						</a>
 						<%--<a class="btn btn-primary" href="javascript:addUser();">
@@ -218,7 +251,7 @@
 								</td>
 								<td>${user.email}</td>
 								<td>${user.mobilePhone}</td>
-								<td class="hidden-480">${user.userName}</td>
+								<td class="hidden-480">${user.avatarB}</td>
 								<td><s:Code2Name mcode="${user.userType}" gcode="PLF_TYPE"></s:Code2Name></td>
 								<td>
 									<c:if test="${user.status == 0}">
@@ -231,11 +264,11 @@
 								<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
 									<a class="btn btn-sm btn-white btn-primary" href="javascript:editUser('${user.sysUserId}');">修改</a>
-									<c:if test="${user.status == 0}">
-										<a class="btn btn-sm btn-white btn-inverse" href="javascript:updateStatus('${user.sysUserId}',1);">禁用</a>
-									</c:if>
 									<c:if test="${user.status == 1}">
-										<a class="btn btn-sm btn-white btn-primary" href="javascript:updateStatus('${user.sysUserId}',0);">启用</a>
+										<a class="btn btn-sm btn-white btn-inverse" href="javascript:updateStatus('${user.sysUserId}',0);">启用</a>
+									</c:if>
+									<c:if test="${user.status == 0}">
+										<a class="btn btn-sm btn-white btn-primary" href="javascript:updateStatus('${user.sysUserId}',1);">禁用</a>
 									</c:if>
 									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteUser('${user.sysUserId}');">删除</a>
 								</td>
@@ -243,31 +276,31 @@
 						</c:forEach>
 						</tbody>
 					</table>
-				</div><!-- /.span -->
-				<%--分页start--%>
-				<div class="row">
-					<div class="col-sm-6">
-						<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
-							<ul id="ulhandle" class="pagination">
-								<li id="previous" class="paginate_button previous" aria-controls="dynamic-table" tabindex="0">
-									<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#listForm');">
-										<span aria-hidden="true">上一页</span>
-									</a>
-								</li>
-								<li id="next" class="paginate_button next" aria-controls="dynamic-table" tabindex="0">
-									<a id="nexthandle" href="javascript:nextpage('#listForm');" aria-label="Next" >
-										<span aria-hidden="true">下一页</span>
-									</a>
-								</li>
-							</ul>
-						</div>
+				</div><!-- /.col-xs-12 -->
+			</div><!-- /.row -->
+			<%--分页start--%>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+						<ul id="ulhandle" class="pagination">
+							<li id="previous" class="paginate_button previous" aria-controls="dynamic-table" tabindex="0">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#listForm');">
+									<span aria-hidden="true">上一页</span>
+								</a>
+							</li>
+							<li id="next" class="paginate_button next" aria-controls="dynamic-table" tabindex="0">
+								<a id="nexthandle" href="javascript:nextpage('#listForm');" aria-label="Next" >
+									<span aria-hidden="true">下一页</span>
+								</a>
+							</li>
+						</ul>
 					</div>
 				</div>
-				<%--分页 end--%>
-			</div><!-- /.row -->
+			</div>
+			<%--分页 end--%>
 		</form>
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
@@ -313,9 +346,13 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户角色： </label>
+									<div class="col-sm-4">
+										<select class="chosen-select col-xs-10 col-sm-12" id="avatar_b" name="avatarB"></select>
+									</div>
 									<label class="col-sm-2 control-label no-padding-right"> 备注： </label>
-									<div class="col-sm-10">
-										<textarea class="limited col-xs-10 col-sm-12"  id="remark" maxlength="50"></textarea>
+									<div class="col-sm-4">
+										<textarea class="limited col-xs-10 col-sm-12"  id="remark" name="remark" maxlength="50"></textarea>
 									</div>
 								</div>
 								<h5 class="header smaller lighter blue">基本信息</h5>

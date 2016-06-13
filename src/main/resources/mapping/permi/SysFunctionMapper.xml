@@ -91,6 +91,13 @@
     where is_deleted = #{0}
     <!--and user_type = #{1}-->
   </select>
+  <!--根据当前用户ID查询功能列表-->
+  <select id="queryFunctionListByUserId" resultMap="BaseResultMap" >
+    select sf.* from sys_function sf left join sys_role_function srf on sf.sys_function_id = srf.sys_role_id
+    left join sys_user_role sur on srf.sys_role_id = sur.sys_role_id
+    where sur.sys_user_id = #{0}
+    <!--and user_type = #{1}-->
+  </select>
   <!--根据父级ID查询功能列表-->
   <select id="queryFunctionListByParentId" resultMap="ResultMap" >
     select
@@ -105,6 +112,11 @@
     <include refid="Base_Column_List" />
     from sys_function
     where sys_function_id = #{sysFunctionId,jdbcType=VARCHAR}
+  </select>
+  <!--根据角色ID查询功能列表-->
+  <select id="queryFunctionListByRoleId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select sf.* from sys_function sf left join sys_role_function srf on sf.sys_function_id = srf.sys_function_id
+    where srf.sys_role_id = #{0}
   </select>
   <delete id="deleteFunctionById" parameterType="java.lang.String" >
     delete from sys_function

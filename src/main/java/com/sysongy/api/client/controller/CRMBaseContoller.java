@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Properties;
 
 @Controller
-@SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
 @RequestMapping("/crmBaseService")
 public class CRMBaseContoller {
 	
@@ -118,7 +117,7 @@ public class CRMBaseContoller {
     @ResponseBody
     public AjaxJson queryFileData(@RequestParam("uploadfile") CommonsMultipartFile file, HttpServletRequest request){
         AjaxJson ajaxJson = new AjaxJson();
-        String gasstationid = request.getParameter("gasstationid");
+        String stationid = request.getParameter("stationid");
         //MultipartFile是对当前上传的文件的封装，当要同时上传多个文件时，可以给定多个MultipartFile参数(数组)
         if (file.isEmpty()) {
             ajaxJson.setMsg("上传文件为空！！！");
@@ -130,17 +129,20 @@ public class CRMBaseContoller {
 //        String path = request.getSession().getServletContext().getRealPath("/upload/" + filename);// 存放位置
 //        path = request.getContextPath()+"/upload/"+ filename;
         String path = (String) prop.get("images_upload_path");
-        if(!StringUtils.isEmpty(gasstationid)){
-        	path = path + "/"+gasstationid+"/";
+        String show_path = (String) prop.get("show_images_path");
+        if(!StringUtils.isEmpty(stationid)){
+        	path = path + "/"+stationid+"/";
+        	show_path = show_path + "/"+stationid+"/";
         }
         path+= filename;
+        show_path+= filename;
         File destFile = new File(path);
         try {
             FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ajaxJson.setObj(path);
+        ajaxJson.setObj(show_path);
         return ajaxJson;
     }
 

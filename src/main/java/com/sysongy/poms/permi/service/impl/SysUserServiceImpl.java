@@ -3,12 +3,13 @@ package com.sysongy.poms.permi.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.permi.dao.SysUserMapper;
-import com.sysongy.poms.permi.model.SysRole;
+import com.sysongy.poms.permi.dao.SysUserRoleMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserRole;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,8 @@ public class SysUserServiceImpl implements SysUserService{
 
     @Autowired
     SysUserMapper sysUserMapper;
+    @Autowired
+    SysUserRoleMapper sysUserRoleMapper;
     /**
      * 查询用户列表（分页）
      * @param sysUser
@@ -91,6 +94,17 @@ public class SysUserServiceImpl implements SysUserService{
     public SysUser queryUserByUserId(String userId) {
         return sysUserMapper.queryUserById(userId);
     }
+
+    /**
+     * 根据用户ID查询用户信息
+     * @param userId 用户编号
+     * @return
+     */
+    @Override
+    public Map<String, Object> queryUserMapByUserId(String userId) {
+        return sysUserMapper.queryUserMapByUserId(userId);
+    }
+
     /**
      * 添加用户
      * @param user 用户信息实体类
@@ -98,6 +112,12 @@ public class SysUserServiceImpl implements SysUserService{
      */
     @Override
     public int addUser(SysUser user) {
+        //添加用户对应角色
+        SysUserRole sysUserRole = new SysUserRole();
+        sysUserRole.setSysUserRoleId(UUIDGenerator.getUUID());
+        sysUserRole.setSysUserId(user.getSysUserId());
+        sysUserRole.setSysRoleId(user.getAvatarB());
+        sysUserRoleMapper.addUserRole(sysUserRole);
         return sysUserMapper.addUser(user);
     }
     /**
@@ -107,8 +127,27 @@ public class SysUserServiceImpl implements SysUserService{
      */
     @Override
     public int updateUser(SysUser user) {
+        //删除用户对应角色
+        sysUserRoleMapper.deleteUserRoleByUserId(user.getSysUserId());
+        //添加用户对应角色
+        SysUserRole sysUserRole = new SysUserRole();
+        sysUserRole.setSysUserRoleId(UUIDGenerator.getUUID());
+        sysUserRole.setSysUserId(user.getSysUserId());
+        sysUserRole.setSysRoleId(user.getAvatarB());
+        sysUserRoleMapper.addUserRole(sysUserRole);
         return sysUserMapper.updateUser(user);
     }
+
+    /**
+     * 修改用户状态
+     * @param user 用户信息
+     * @return
+     */
+    @Override
+    public int updateStatus(SysUser user) {
+        return sysUserMapper.updateUser(user);
+    }
+
     /**
      * 根据用户编号删除用户角色关系
      * @param userId 用户编号
