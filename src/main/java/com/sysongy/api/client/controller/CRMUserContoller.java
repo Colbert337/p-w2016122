@@ -32,22 +32,25 @@ public class CRMUserContoller {
     public AjaxJson queryUserInfo(HttpServletRequest request, HttpServletResponse response, SysUser sysUser){
         AjaxJson ajaxJson = new AjaxJson();
         Map<String, Object> attributes = new HashMap<String, Object>();
-
         try
         {
             if(sysUser == null || sysUser.getUserName() == null || sysUser.getPassword() == null){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("用户名或密码为空，请检查输入参数！");
                 return ajaxJson;
-            }else if(sysUser.getUserType() != 3){
+            }else if(sysUser.getUserType() != InterfaceConstants.USER_TYPE_CRM_USER){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("用户名类型错误，无权限登录！");
                 return ajaxJson;
             }else{
                 SysUser user = sysUserService.queryUserMapByAccount(sysUser);
+                if(user == null){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("用户名或密码错误，请重新登录！");
+                    return ajaxJson;
+                }
                 attributes.put("UserInfo",user);
                 ajaxJson.setAttributes(attributes);
-
                 ajaxJson.setSuccess(true);
                 ajaxJson.setMsg("用户登录成功！");
             }

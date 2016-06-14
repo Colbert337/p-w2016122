@@ -5,6 +5,16 @@ package com.sysongy.poms.base.model;
  */
 public class InterfaceConstants {
 
+    public static final Integer USER_TYPE_GAS_STATION_USER = 1;    //气站用户
+
+    public static final Integer USER_TYPE_TRANSPORTATION_COMPANY_USER = 2;  //运输公司
+
+    public static final Integer USER_TYPE_CRM_USER = 3;     //CRM用户
+
+    public static final Integer USER_TYPE_BLOC_USER = 4; //集团用户
+
+    public static final Integer USER_TYPE_SYSTEM_USER = 5;  //后台用户
+
     public static final String ERROR_AUTHORITY = "请求认证失败！";
 
     public static final String WRONG_USERNAME_PASSWORD = "用户名或密码错误！";
