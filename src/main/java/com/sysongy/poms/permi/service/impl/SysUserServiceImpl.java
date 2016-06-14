@@ -187,10 +187,7 @@ public class SysUserServiceImpl implements SysUserService{
             String password = user.getPassword();
             String userName = user.getUserName();
             try {
-                password = Encoder.MD5Encode(password.getBytes());
-                user.setPassword(password);
                 sysUser = sysUserMapper.queryUserByAccount(userName, password);
-
                 /*用户有效*/
                 if(sysUser != null){
                     /*查询用户菜单列表*/
