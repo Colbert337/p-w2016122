@@ -45,6 +45,7 @@
 	function addUser(){
 		/*$("#userModel").modal('show');*/
 		queryRoleList();
+		queryUserTypeList("");
 		/*密码输入框改为可编辑*/
 		$("#password").removeAttr("readonly");
 		$("#re_password").removeAttr("readonly");
@@ -57,6 +58,7 @@
 			async:false,
 			type: "POST",
 			success: function(data){
+
 				$("#avatar_b").append("<option value='0'>--选择角色--</option>");
 				$.each(data,function(i,val){
 					if(val.sysRoleId == roleId){
@@ -65,6 +67,21 @@
 						$("#avatar_b").append("<option value='"+val.sysRoleId+"'>"+val.roleName+"</option>");
 					}
 				})
+			}
+		})
+		$("#userModel").modal('show');
+	}
+
+	//显示编辑用户弹出层
+	function queryUserTypeList(userType){
+		$.ajax({
+			url:"<%=basePath%>/web/usysparam/info",
+			data:{mcode:userType},
+			async:false,
+			type: "POST",
+			success: function(data){
+				$("#mname").text(data.mname);
+				$("#user_type").val(data.mcode);
 			}
 		})
 		$("#userModel").modal('show');
@@ -139,6 +156,7 @@
 				$("#re_password").attr("readonly","readonly");
 
 				queryRoleList(data.sysRoleId);
+				queryUserTypeList(data.userType);
 			}
 		});
 
@@ -175,7 +193,6 @@
 			}
 		}
 		$("#listForm").ajaxSubmit(deleteOptions);
-
 	}
 </script>
 <div class="page-header">
@@ -330,9 +347,8 @@
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户类型： </label>
 									<div class="col-sm-4">
-										<select class="chosen-select col-xs-10 col-sm-12" id="user_type" name="userType">
-											<s:option flag="true" gcode="PLF_TYPE" link="false" />
-										</select>
+										<label class="col-xs-10 col-sm-12 pad-top-10" id="mname"></label>
+										<input type="hidden" id="user_type" name="userType"/>
 									</div>
 								</div>
 								<div class="form-group">
@@ -352,7 +368,7 @@
 									</div>
 									<label class="col-sm-2 control-label no-padding-right"> 备注： </label>
 									<div class="col-sm-4">
-										<textarea class="limited col-xs-10 col-sm-12"  id="remark" name="remark" maxlength="50"></textarea>
+										<textarea class="limited col-xs-10 col-sm-12"  id="remark" name="remark" maxlength="50" style="resize: none;"></textarea>
 									</div>
 								</div>
 								<h5 class="header smaller lighter blue">基本信息</h5>

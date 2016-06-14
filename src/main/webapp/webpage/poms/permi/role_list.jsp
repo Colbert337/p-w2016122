@@ -24,9 +24,9 @@
 
 	//初始化菜单树
 	function intiTree(option){
-		var path = "<%=basePath%>/web/permi/function/list";
+		var path = "<%=basePath%>/web/permi/function/list/type";
 		if(option == "update"){
-			path = "<%=basePath%>/web/permi/function/list";
+			path = "<%=basePath%>/web/permi/function/list/type";
 		}
 		var zTreeObj;
 		// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
@@ -135,6 +135,7 @@
 	function addRole(){
 		clearDiv();
 		intiTree("add");
+		queryUserTypeList();
 		$("#roleModel").modal('show');
 	}
 
@@ -166,7 +167,20 @@
 			clearDiv();
 		}
 	}
-
+	//显示编辑用户弹出层
+	function queryUserTypeList(userType){
+		$.ajax({
+			url:"<%=basePath%>/web/usysparam/info",
+			data:{mcode:userType},
+			async:false,
+			type: "POST",
+			success: function(data){
+				$("#mname").text(data.mname);
+				$("#user_type").val(data.mcode);
+			}
+		})
+		$("#roleModel").modal('show');
+	}
 	/**
 	 * 回显用户信息
 	 */
@@ -185,6 +199,7 @@
 				$("#role_code").val(data.functionStr);
 
 				updateTree(data.functionList);
+				queryUserTypeList(data.roleType);
 				$("#roleModel").modal('show');
 			}
 		});
@@ -357,17 +372,16 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="role_type"> <span class="red_star">*</span>角色类型： </label>
+									<label class="col-sm-4 control-label no-padding-right" for="user_type"> <span class="red_star">*</span>角色类型： </label>
 									<div class="col-sm-8">
-										<select class="chosen-select col-xs-10 col-sm-10" id="role_type" name="roleType" data-placeholder="角色类型">
-											<s:option flag="true" gcode="PLF_TYPE" link="false" />
-										</select>
+										<label class="col-xs-10 col-sm-12 pad-top-10" id="mname"></label>
+										<input type="hidden" id="user_type" name="userType"/>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="role_desc"> 描述： </label>
 									<div class="col-sm-8">
-										<textarea class="limited col-xs-10 col-sm-10" id="role_desc" name="roleDesc" maxlength="50"></textarea>
+										<textarea class="limited col-xs-10 col-sm-10" id="role_desc" name="roleDesc" maxlength="50" style="resize: none;"></textarea>
 									</div>
 								</div>
 								<hr/>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.gastation.dao.GsGasPriceMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.gastation.model.GsGasPrice" >
+    <id column="gs_gas_price_id" property="gsGasPriceId" jdbcType="VARCHAR" />
+    <result column="sys_gas_station_id" property="sysGasStationId" jdbcType="VARCHAR" />
+    <result column="gas_num" property="gasNum" jdbcType="VARCHAR" />
+    <result column="gas_name" property="gasName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    gs_gas_price_id, sys_gas_station_id, gas_num, gas_name, price, unit, remark, created_date, 
+    updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from gs_gas_price
+    where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from gs_gas_price
+    where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
+    insert into gs_gas_price (gs_gas_price_id, sys_gas_station_id, gas_num, 
+      gas_name, price, unit, 
+      remark, created_date, updated_date
+      )
+    values (#{gsGasPriceId,jdbcType=VARCHAR}, #{sysGasStationId,jdbcType=VARCHAR}, #{gasNum,jdbcType=VARCHAR}, 
+      #{gasName,jdbcType=VARCHAR}, #{price,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
+    insert into gs_gas_price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="gsGasPriceId != null" >
+        gs_gas_price_id,
+      </if>
+      <if test="sysGasStationId != null" >
+        sys_gas_station_id,
+      </if>
+      <if test="gasNum != null" >
+        gas_num,
+      </if>
+      <if test="gasName != null" >
+        gas_name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="gsGasPriceId != null" >
+        #{gsGasPriceId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysGasStationId != null" >
+        #{sysGasStationId,jdbcType=VARCHAR},
+      </if>
+      <if test="gasNum != null" >
+        #{gasNum,jdbcType=VARCHAR},
+      </if>
+      <if test="gasName != null" >
+        #{gasName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
+    update gs_gas_price
+    <set >
+      <if test="sysGasStationId != null" >
+        sys_gas_station_id = #{sysGasStationId,jdbcType=VARCHAR},
+      </if>
+      <if test="gasNum != null" >
+        gas_num = #{gasNum,jdbcType=VARCHAR},
+      </if>
+      <if test="gasName != null" >
+        gas_name = #{gasName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
+    update gs_gas_price
+    set sys_gas_station_id = #{sysGasStationId,jdbcType=VARCHAR},
+      gas_num = #{gasNum,jdbcType=VARCHAR},
+      gas_name = #{gasName,jdbcType=VARCHAR},
+      price = #{price,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
+  </update>
+</mapper>
