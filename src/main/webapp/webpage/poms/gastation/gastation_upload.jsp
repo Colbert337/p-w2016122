@@ -45,9 +45,9 @@
 							</li>
 
 							<li>
-								<a href="#">加气站管理</a>
+								<a href="#">加注站管理</a>
 							</li>
-							<li class="active">加气站信息管理</li>
+							<li class="active">加注站信息管理</li>
 						</ul><!-- /.breadcrumb -->
 
 						<!-- #section:basics/content.searchbox -->
@@ -83,7 +83,7 @@
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 加气站编号： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 加注站编号： </label>
 
 										<div class="col-sm-3">
 											<input type="text" id="sys_gas_station_id"  name="sys_gas_station_id" value="${param.gastationid}" readonly="readonly"/>

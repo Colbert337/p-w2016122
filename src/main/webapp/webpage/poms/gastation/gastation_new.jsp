@@ -42,9 +42,9 @@
 							</li>
 
 							<li>
-								<a href="#">加气站管理</a>
+								<a href="#">加注站管理</a>
 							</li>
-							<li class="active">加气站信息管理</li>
+							<li class="active">加注站信息管理</li>
 						</ul><!-- /.breadcrumb -->
 
 						<!-- #section:basics/content.searchbox -->
@@ -69,7 +69,7 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								新建加气站
+								新建加注站
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -81,40 +81,40 @@
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 加气站名称： </label>
+										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 加注站名称： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="gas_station_name"  name="gas_station_name" placeholder="输入加气站名称" class="col-xs-10 col-sm-5" maxlength="20" value="${station.gas_station_name}"/>
+										<div class="col-sm-4">
+											<input type="text" id="gas_station_name"  name="gas_station_name" placeholder="输入加注站名称" class="form-control" maxlength="20" value="${station.gas_station_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" > E-mail： </label>
+										<label for="email" class="col-sm-3 control-label no-padding-right" > E-mail： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5" value="${station.email}"/>
+										<div class="col-sm-4">
+											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
+										<label for="station_manager" class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="col-xs-10 col-sm-5" maxlength="20" value="${station.station_manager}"/>
+										<div class="col-sm-4">
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="form-control" maxlength="20" value="${station.station_manager}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
+										<label for="contact_phone" class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15" value="${station.contact_phone}"/>
+										<div class="col-sm-4">
+											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15" value="${station.contact_phone}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期： </label>
-										<div class="col-sm-2">
+										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
+										<div class="col-sm-2 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
 														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
@@ -126,15 +126,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
-										<div class="col-sm-2">
-												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20" value="${station.salesmen_name}"/>
+										<label for="salesmen_name" class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
+										<div class="col-sm-4">
+												<input type="text" id="salesmen_name" name="salesmen_name" placeholder="输入销售人员" class="form-control" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
-										<div class="col-sm-2">
+										<label for="operations_id" class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
+										<div class="col-sm-4">
 												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
 												<input type="hidden" id="operations_name" name="operations_name"/>
@@ -143,64 +143,72 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
-										<div class="col-sm-2">
-											<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
-													<option value ="请选择市区">请选择省份</option>
-													<option value ="100">北京市</option>
-													<option value ="220">天津市</option>
-													<option value ="210">上海市</option>
-													<option value ="230">重庆市</option>
-													<option value ="310">河北省</option>
-													<option value ="350">山西省</option>
-													<option value ="240">辽宁省</option>
-													<option value ="430">吉林省</option>
-													<option value ="450">黑龙江省</option>
-													<option value ="250"> 江苏省</option>
-													<option value ="570">浙江省</option>
-													<option value ="550">安徽省</option>
-													<option value ="590">福建省</option>
-													<option value ="790">江西省</option>
-													<option value ="530">山东省</option>
-													<option value ="370">河南省</option>
-													<option value ="270">湖北省</option>
-													<option value ="730">湖南省</option>
-													<option value ="200">广东省</option>
-													<option value ="890">海南省</option>
-													<option value ="810">四川省</option>
-													<option value ="850">贵州省</option>
-													<option value ="870">云南省</option>
-													<option value ="290">陕西省</option>
-													<option value ="930">甘肃省</option>
-													<option value ="970">青海省</option>
-													<option value ="886">台湾省</option>
-													<option value ="770">广西壮族自治区</option>
-													<option value ="470"> 内蒙古自治区</option>
-													<option value ="890"> 西藏自治区</option>
-													<option value ="950"> 宁夏回族自治区</option>
-													<option value ="990">新疆维吾尔自治区</option>
-													<option value ="852">香港特别行政区</option>
-													<option value ="853">澳门特别行政区</option>
-											</select>
-											<select class="form-control" id="city" name="city_id">
-											</select>
-											<input type="text"  id="detail" name="detail" class="col-sm-12"  placeholder="输入详细地址" value="${station.detail}"/>
+										<div class="col-sm-4">
+											<div class="row form-group">
+												<div class="col-sm-6">
+													<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
+															<option value ="请选择市区">请选择省份</option>
+															<option value ="100">北京市</option>
+															<option value ="220">天津市</option>
+															<option value ="210">上海市</option>
+															<option value ="230">重庆市</option>
+															<option value ="310">河北省</option>
+															<option value ="350">山西省</option>
+															<option value ="240">辽宁省</option>
+															<option value ="430">吉林省</option>
+															<option value ="450">黑龙江省</option>
+															<option value ="250"> 江苏省</option>
+															<option value ="570">浙江省</option>
+															<option value ="550">安徽省</option>
+															<option value ="590">福建省</option>
+															<option value ="790">江西省</option>
+															<option value ="530">山东省</option>
+															<option value ="370">河南省</option>
+															<option value ="270">湖北省</option>
+															<option value ="730">湖南省</option>
+															<option value ="200">广东省</option>
+															<option value ="890">海南省</option>
+															<option value ="810">四川省</option>
+															<option value ="850">贵州省</option>
+															<option value ="870">云南省</option>
+															<option value ="290">陕西省</option>
+															<option value ="930">甘肃省</option>
+															<option value ="970">青海省</option>
+															<option value ="886">台湾省</option>
+															<option value ="770">广西壮族自治区</option>
+															<option value ="470"> 内蒙古自治区</option>
+															<option value ="890"> 西藏自治区</option>
+															<option value ="950"> 宁夏回族自治区</option>
+															<option value ="990">新疆维吾尔自治区</option>
+															<option value ="852">香港特别行政区</option>
+															<option value ="853">澳门特别行政区</option>
+													</select>
+												</div>
+												<div class="col-sm-6">
+													<select class="form-control" id="city" name="city_id">
+													</select>
+												</div>
+											</div>
+											<input type="text"  id="detail" name="detail" class="form-control"  placeholder="输入详细地址" value="${station.detail}"/>
 											<input type="hidden"  id="address" name="address" class="col-sm-12"  value="${station.address}"/>
 										</div>
 									</div>
 									
-									<div class="form-group">
+									<div class="row">
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-4">
-											<label class="col-sm-2 control-label no-padding-right" > 经度：</label>
-											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="20" value="${station.longitude}"/>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" > </label>
-										<div class="col-sm-4">
-											<label class="col-sm-2 control-label no-padding-right" > 纬度：</label>
-											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="20" value="${station.latitude}"/>
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group nospace">
+														<input type="text"  id="longitude" name="longitude" class="form-control" placeholder="经度" maxlength="20" value="${station.longitude}"/>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group nospace">
+														<input type="text"  id="latitude" name="latitude" class="form-control" placeholder="纬度" maxlength="20" value="${station.latitude}"/>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 									
@@ -386,12 +394,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站名称不能为空'
+		                        message: '加注站名称不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加气站名称不能超过20个汉字'
+		                        message: '加注站名称不能超过20个汉字'
 		                    }
 		                }
 		            },
@@ -399,12 +407,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站email不能为空'
+		                        message: '加注站email不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加气站email不能超过20个字符'
+		                        message: '加注站email不能超过20个字符'
 		                    }
 		                }
 		            },
@@ -412,12 +420,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站站长不能为空'
+		                        message: '加注站站长不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加气站站长不能超过20个汉字'
+		                        message: '加注站站长不能超过20个汉字'
 		                    }
 		                }
 		            },
