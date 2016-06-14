@@ -27,5 +27,13 @@ public class UsysparamServiceImpl implements UsysparamService {
 		
 		return usysparamMapper.selectDefault(param);
 	}
-
+	/**
+	 * 根据gcode查询参数对象
+	 * @param gcode
+	 * @return
+	 */
+	@Override
+	public Usysparam queryUsysparamByCode(String gcode,String mcode) {
+		return usysparamMapper.queryUsysparamByCode(gcode,mcode);
+	}
 }

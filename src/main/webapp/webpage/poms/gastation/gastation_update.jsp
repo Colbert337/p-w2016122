@@ -236,7 +236,9 @@
 
 												<div class="widget-body">
 													<div class="widget-main">
-														<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
+														<label for="indu_com_certif_select">
+															<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
+														</label>
 														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
@@ -277,7 +279,9 @@
 
 												<div class="widget-body">
 													<div class="widget-main">
-														<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
+														<label for="tax_certif_select">
+															<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
+														</label>
 														<input type="hidden" id="tax_certif" name="tax_certif"/> 
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
@@ -310,7 +314,9 @@
 
 												<div class="widget-body">
 													<div class="widget-main">
-														<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
+														<label for="lng_certif_select">
+															<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
+														</label>
 														<input type="hidden" id="lng_certif" name="lng_certif"/> 
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
@@ -343,7 +349,9 @@
 
 												<div class="widget-body">
 													<div class="widget-main">
-														<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
+														<label for="dcp_certif_select">
+															<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
+														</label>
 														<input type="hidden" id="dcp_certif" name="dcp_certif"/> 
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>

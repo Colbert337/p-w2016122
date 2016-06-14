@@ -47,12 +47,13 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryUserListPage(SysUser sysUser, ModelMap map){
+	public String queryUserListPage(@ModelAttribute CurrUser currUser,SysUser sysUser, ModelMap map){
 		if(sysUser.getPageNum() == null){
 			sysUser.setPageNum(GlobalConstant.PAGE_NUM);
 			sysUser.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
 		sysUser.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+		sysUser.setUserType(currUser.getUserType());
 		//封装分页参数，用于查询分页内容
 		PageInfo<SysUser> userPageInfo = new PageInfo<SysUser>();
 		userPageInfo = sysUserService.queryUserListPage(sysUser);

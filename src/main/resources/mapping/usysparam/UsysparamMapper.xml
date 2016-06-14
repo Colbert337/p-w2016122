@@ -8,6 +8,9 @@
     <result column="data" property="data" jdbcType="VARCHAR" />
     <result column="scode" property="scode" jdbcType="VARCHAR" />
   </resultMap>
+  <select id="queryUsysparamByCode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+    select * from usysparam where gcode = #{0} and mcode = #{1}
+  </select>
   <select id="selectDefault" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
   	 select * from usysparam u where 1=1
     <trim>
