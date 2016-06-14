@@ -125,6 +125,30 @@ public class SysFunctionController extends BaseContoller{
 
 		return functionListTree;
 	}
+
+	/**
+	 * 根据父级ID查询功能列表
+	 * @param currUser 当前登录用户
+	 * @param mapTemp
+	 * @return
+	 */
+	@RequestMapping("/list/type")
+	@ResponseBody
+	public List<Map<String,Object>> queryFunctionListByType(@ModelAttribute("currUser") CurrUser currUser, ModelMap mapTemp){
+		int userType = currUser.getUser().getUserType();
+		List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionAllList(userType);
+		List<Map<String,Object>> functionListTree = new ArrayList<>();
+		for (Map<String,Object> function:sysFunctionList) {
+			Map<String,Object> functionTree = new HashMap<>();
+			functionTree.put("id",function.get("sysFunctionId"));
+			functionTree.put("pId",function.get("parentId"));
+			functionTree.put("name",function.get("functionName"));
+
+			functionListTree.add(functionTree);
+		}
+
+		return functionListTree;
+	}
 	/**
 	 * 根据父级ID查询功能列表
 	 * @param currUser 当前登录用户

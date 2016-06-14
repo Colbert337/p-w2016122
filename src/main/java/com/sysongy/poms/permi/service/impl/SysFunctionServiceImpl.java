@@ -56,6 +56,16 @@ public class SysFunctionServiceImpl implements SysFunctionService{
     }
 
     /**
+     * 根据类型查询功能列表
+     * @param userType 用户类型
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> queryFunctionListByType(int userType) {
+        return sysFunctionMapper.queryFunctionListByType(userType);
+    }
+
+    /**
      * 根据当前用户查询功能列表
      * @param userId 用户类型
      * @return
