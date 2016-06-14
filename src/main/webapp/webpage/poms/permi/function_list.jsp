@@ -222,7 +222,7 @@
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
 						<a class="btn btn-sm btn-primary" href="javascript:addFunction();">
-							添加功能
+							添加
 						</a>
 					</div>
 					<%--</h4>--%>
