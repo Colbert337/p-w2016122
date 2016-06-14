@@ -157,7 +157,7 @@
 									<td><s:Code2Name mcode="${list.card_status}" gcode="CARDSTATUS"></s:Code2Name> </td>
 									<td><s:Code2Name mcode="${list.card_property}" gcode="CARDPROPERTY"></s:Code2Name> </td>
 									<td><s:Code2Name mcode="${list.workstation}" gcode="WORKSTATION"></s:Code2Name></td>
-									<td><s:Code2Name mcode="${list.workstation_resp}" gcode="WORKSTATION_RESP"></s:Code2Name></td>
+									<td>${list.workstation_resp}</td>
 									<td>${list.operator}</td> 
 									<td>${list.batch_no}</td> 
 									<td><fmt:formatDate value="${list.storage_time}" type="both"/></td>

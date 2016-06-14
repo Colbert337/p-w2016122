@@ -112,15 +112,18 @@ public class GlobalConstant {
 	public static final String CONF_PATH = "conf/system-conf.properties";
 	
 	public interface CardStatus{
-		public static final String SUSPEND ="0";
-		public static final String UN_USED ="1";
-		public static final String USED ="2";
+		public static final String STORAGED ="0";
+		public static final String MOVED ="1";
+		public static final String PROVIDE="2";
+		public static final String USED="3";
+		public static final String PAUSED="4";
+		public static final String INVALID="5";
 	}
 	
 	public interface CardAction{
-		public static final String STORAGE ="0";
-		public static final String MOVE ="1";
-		public static final String DESTORY="2";
+		public static final String ADD="3";
+		public static final String UPDATE="4";
+		public static final String DELETE="5";
 	}
 	
 	public interface GastationStatus{
