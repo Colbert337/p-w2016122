@@ -92,6 +92,8 @@ public class GastationServiceImpl implements GastationService {
 	public Gastation queryGastationByPK(String gastationid) throws Exception {
 		 Gastation station =  gasStationMapper.selectByPrimaryKey(gastationid);
 		 station.setExpiry_date_frompage(new SimpleDateFormat("yyyy-MM-dd").format(station.getExpiry_date()));
+		 SysUserAccount account = sysUserAccountMapper.selectByPrimaryKey(station.getSys_user_account_id());
+		 station.setAccount(account);
 		 return station;
 	}
 

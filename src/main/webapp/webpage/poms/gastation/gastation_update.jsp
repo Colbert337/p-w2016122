@@ -144,33 +144,33 @@
 										<div class="col-sm-2">
 											<select class="form-control" name="province_id" id="province" multiple="multiple" onchange="chinaChange(this,document.getElementById('city'));">
 													<option value ="请选择市区">请选择省份</option>
-													<option value ="100">北京市 </option>
-													<option value ="220">天津市 </option>
-													<option value ="210">上海市 </option>
-													<option value ="230">重庆市 </option>
-													<option value ="310">河北省 </option>
-													<option value ="350">山西省 </option>
-													<option value ="240">辽宁省 </option>
-													<option value ="430">吉林省 </option>
+													<option value ="100">北京市</option>
+													<option value ="220">天津市</option>
+													<option value ="210">上海市</option>
+													<option value ="230">重庆市</option>
+													<option value ="310">河北省</option>
+													<option value ="350">山西省</option>
+													<option value ="240">辽宁省</option>
+													<option value ="430">吉林省</option>
 													<option value ="450">黑龙江省</option>
-													<option value ="250"> 江苏省 </option>
-													<option value ="570">浙江省 </option>
-													<option value ="550">安徽省 </option>
-													<option value ="590">福建省 </option>
-													<option value ="790">江西省 </option>
-													<option value ="530">山东省 </option>
-													<option value ="370">河南省 </option>
-													<option value ="270">湖北省 </option>
-													<option value ="730">湖南省 </option>
-													<option value ="200">广东省 </option>
-													<option value ="890">海南省 </option>
-													<option value ="810">四川省 </option>
-													<option value ="850">贵州省 </option>
-													<option value ="870">云南省 </option>
-													<option value ="290">陕西省 </option>
-													<option value ="930">甘肃省 </option>
-													<option value ="970">青海省 </option>
-													<option value ="886">台湾省 </option>
+													<option value ="250"> 江苏省</option>
+													<option value ="570">浙江省</option>
+													<option value ="550">安徽省</option>
+													<option value ="590">福建省</option>
+													<option value ="790">江西省</option>
+													<option value ="530">山东省</option>
+													<option value ="370">河南省</option>
+													<option value ="270">湖北省</option>
+													<option value ="730">湖南省</option>
+													<option value ="200">广东省</option>
+													<option value ="890">海南省</option>
+													<option value ="810">四川省</option>
+													<option value ="850">贵州省</option>
+													<option value ="870">云南省</option>
+													<option value ="290">陕西省</option>
+													<option value ="930">甘肃省</option>
+													<option value ="970">青海省</option>
+													<option value ="886">台湾省</option>
 													<option value ="770">广西壮族自治区</option>
 													<option value ="470"> 内蒙古自治区</option>
 													<option value ="890"> 西藏自治区</option>
@@ -190,9 +190,9 @@
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-5">
 										<label class="col-sm-1 control-label no-padding-right" > 经度：</label>
-										<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="8" value="${station.longitude}"/>
+										<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="20" value="${station.longitude}"/>
 										<label class="col-sm-1 control-label no-padding-right" > 纬度：</label>
-										<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="8" value="${station.latitude}"/>
+										<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="20" value="${station.latitude}"/>
 										</div>
 									</div>
 									
@@ -508,7 +508,8 @@
 	//datepicker plugin
 	$('.date-picker').datepicker({
 		autoclose: true,
-		todayHighlight: true
+		todayHighlight: true,
+		language: 'cn'
 	}).next().on(ace.click_event, function(){
 		$(this).prev().focus();
 	});

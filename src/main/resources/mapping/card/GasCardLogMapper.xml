@@ -47,8 +47,8 @@
       <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
          batch_no = #{batch_no,jdbcType=VARCHAR}
       </if>
-      <if test="optime_range != null &amp;&amp; optime_range != ''">
-        and optime between #{optime_after,jdbcType=VARCHAR } and #{optime_before,jdbcType=VARCHAR}
+      <if test="optime_after != null &amp;&amp; optime_after != ''">
+        and optime between CONCAT(#{optime_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{optime_before,jdbcType=VARCHAR},' 23:59:59')
       </if> 
     </trim>
   </select>
