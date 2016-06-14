@@ -58,7 +58,7 @@ public class SysRoleServiceImpl implements SysRoleService{
      * @return
      */
     @Override
-    public Map<String, Object> queryRoleByRoleId(String roleId) {
+    public Map<String, Object> queryRoleByRoleId(String roleId,int userType) {
         Map<String, Object> roleMap = new HashMap<>();//角色信息
         List<Map<String, Object>> functionMapList = new ArrayList<>();//菜单树，已标记是否选中
         List<String> functionIdList = new ArrayList<>();//已选中菜单ID集合
@@ -68,8 +68,7 @@ public class SysRoleServiceImpl implements SysRoleService{
 
         //查询角色功能列表
         List<SysFunction> functionList = sysFunctionMapper.queryFunctionListByRoleId(roleId);
-        int userType = 1;//用户类型（暂时用作删除状态）
-        List<Map<String, Object>> functionAllList = sysFunctionMapper.queryFunctionAllList(userType);
+        List<Map<String, Object>> functionAllList = sysFunctionMapper.queryFunctionListByType(userType);
         if(functionAllList != null && functionAllList.size() > 0){
             for(int i=0;i<functionAllList.size();i++){
                 Map<String, Object> functionMap = functionAllList.get(i);
