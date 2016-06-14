@@ -99,18 +99,13 @@
 						</div>
 						
 						<div class="item">
-							<label>操作时间:</label>
-							<input type="text" name="storage_time_range" id="date-range-picker" size="22" value="${gascard.storage_time_range}"/>
-						</div>
-						
-						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>操作时间:</label>
-								<input type="text" class="" name="start" />
+								<input type="text" class="" name="storage_time_after"  value="${gascard.storage_time_after}"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="end" />
+								<input type="text" class="" name="storage_time_before" value="${gascard.storage_time_before}"/>
 							</div>
 						</div>
 
@@ -298,27 +293,8 @@
 $('[data-rel=tooltip]').tooltip();
 //$('[data-rel=popover]').popover({container:'body'});
 
-$('#j-input-daterange-top').datepicker({autoclose:true});
+$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 
-var mydate = new Date();
-	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
-					locale: {
-						"format": 'YYYY.MM.DD',
-						"applyLabel": "确定",
-						"cancelLabel": "取消",
-						"fromLabel": "起始时间",
-						"toLabel": "结束时间'",
-						"daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
-						"monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-						"firstDay": 1
-					}, 
-					"startDate": "${gascard.storage_time_after}"==""?mydate.getFullYear()+"/1/1":"${gascard.storage_time_after}",
-				    "endDate": "${gascard.storage_time_before}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/"+mydate.getDate():"${gascard.storage_time_before}"
-				})
-				.prev().on(ace.click_event, function(){
-					$(this).next().focus();
-				});
-	
 	var listOptions ={   
             url:'<%=basePath%>/web/card/cardList',
             type:'post',                    

@@ -90,8 +90,14 @@
 						</div>
 						
 						<div class="item">
-						    <label>操作时间:</label>
-							 <input type="text" name="optime_range" id="date-range-picker" size="22" value="${gascardlog.optime_range}"/>
+							<div class="input-daterange top" id="j-input-daterange-top">
+								<label>操作时间:</label>
+								<input type="text" class="" name="optime_after"  value="${gascardlog.optime_after}"/>
+								<span class="">
+									<i class="fa fa-exchange"></i>
+								</span>
+								<input type="text" class="" name="optime_before" value="${gascardlog.optime_before}"/>
+							</div>
 						</div>
 
 						<div class="item">
@@ -224,24 +230,7 @@
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
-var mydate = new Date();
-	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
-					locale: {
-						"format": 'YYYY.MM.DD',
-						"applyLabel": "确定",
-						"cancelLabel": "取消",
-						"fromLabel": "起始时间",
-						"toLabel": "结束时间'",
-						"daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
-						"monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-						"firstDay": 1
-					}, 
-					"startDate": "${gascardlog.optime_after}"==""?mydate.getFullYear()+"/1/1":"${gascardlog.optime_after}",
-				    "endDate": "${gascardlog.optime_before}"==""?mydate.getFullYear()+"/"+(parseInt(mydate.getMonth())+1)+"/"+mydate.getDate():"${gascardlog.optime_before}"
-				})
-				.prev().on(ace.click_event, function(){
-					$(this).next().focus();
-				});
+	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 	
 	var listOptions ={   
             url:'../web/card/cardLogList',   
