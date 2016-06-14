@@ -97,7 +97,7 @@
     <include refid="Base_Column_List" />
     from sys_function
     where is_deleted = 1
-    and user_type = #{0}
+    and function_type = #{0}
   </select>
   <!--根据当前用户ID查询功能列表-->
   <select id="queryFunctionListByUserId" resultMap="BaseResultMap" >
