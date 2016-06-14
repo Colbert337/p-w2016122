@@ -2,6 +2,7 @@ package com.sysongy.poms.permi.dao;
 
 import com.sysongy.poms.permi.model.SysFunction;
 import com.sysongy.poms.permi.model.SysUser;
+
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ public interface SysUserMapper {
     List<SysUser> queryUserList(SysUser sysUser);
 
     SysUser queryUserById(String userId);
+
+    Map<String, Object> queryUserMapByAccount(SysUser user);
 
     Map<String,Object> queryUserMapByUserId(String userId);
 

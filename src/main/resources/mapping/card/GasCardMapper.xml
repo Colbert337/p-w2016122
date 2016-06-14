@@ -44,14 +44,14 @@
       <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
          batch_no = #{batch_no,jdbcType=VARCHAR}
       </if>
-      <if test="storage_time_range != null &amp;&amp; storage_time_range != ''">
-        and storage_time  between #{storage_time_after,jdbcType=VARCHAR } and #{storage_time_before,jdbcType=VARCHAR}
+      <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
+        and storage_time between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59') 
       </if>
     </trim>
   </select>
   
   <select id="selectByCardNo" resultMap="BaseResultList" parameterType="java.lang.String" >
-    select card_status from gas_card where card_no = #{cardNo,jdbcType=VARCHAR}
+    select card_status,workstation from gas_card where card_no = #{cardNo,jdbcType=VARCHAR}
   </select>
   
   <select id="selectByPrimaryKey" resultMap="BaseResultList" parameterType="java.lang.String" >

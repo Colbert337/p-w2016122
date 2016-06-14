@@ -6,13 +6,17 @@ import com.sysongy.poms.permi.dao.SysUserMapper;
 import com.sysongy.poms.permi.dao.SysUserRoleMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserRole;
+import com.sysongy.poms.permi.service.SysFunctionService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.GroupUtil;
 import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +37,8 @@ public class SysUserServiceImpl implements SysUserService{
     SysUserMapper sysUserMapper;
     @Autowired
     SysUserRoleMapper sysUserRoleMapper;
+    @Autowired
+    SysFunctionService sysFunctionService;
     /**
      * 查询用户列表（分页）
      * @param sysUser
@@ -166,4 +172,59 @@ public class SysUserServiceImpl implements SysUserService{
     public int addUserRole(List<SysUserRole> userRoleList) {
         return 0;
     }
+
+    /*************************************CRM客户端接口*************************************/
+    /**
+     * 用户登录
+     * @param user
+     * @return map
+     */
+    @Override
+    public SysUser queryUserMapByAccount(SysUser user) {
+//        判断用户是否有效
+        SysUser sysUser = null;
+        if (user != null) {
+            String password = user.getPassword();
+            String userName = user.getUserName();
+            try {
+                password = Encoder.MD5Encode(password.getBytes());
+                user.setPassword(password);
+                sysUser = sysUserMapper.queryUserByAccount(userName, password);
+
+                /*用户有效*/
+                if(sysUser != null){
+                    /*查询用户菜单列表*/
+                    int userType = 1;
+                    List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionAllList(userType);
+                    //将数据做分组处理，需要优化分组函数
+                    Map group = GroupUtil.group(sysFunctionList, new GroupUtil.GroupBy<String>() {
+                        @Override
+                        public String groupby(Object obj) {
+                            Map m = (Map) obj;
+                            return m.get("parentId").toString();    // 分组依据为parent
+                        }
+                    });
+
+                    List childL = new ArrayList();
+                    for (Map<String, Object> map : sysFunctionList) {
+                        String groupKey = map.get("sysFunctionId").toString();
+                        //groupkey 包含id时，当前id对象有一个子集
+                        if (group.containsKey(groupKey)) {
+                            List childList = (List) group.get(groupKey);
+                            childL.addAll(childList);
+                            map.put("children", childList);
+                        }
+                    }
+
+                    sysFunctionList.removeAll(childL);
+                    sysUser.setSysFunctionList(sysFunctionList);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return sysUser;
+    }
+
 }

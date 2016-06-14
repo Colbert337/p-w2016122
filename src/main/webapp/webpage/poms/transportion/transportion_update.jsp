@@ -190,9 +190,9 @@
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-5">
 										<label class="col-sm-1 control-label no-padding-right" > 经度：</label>
-										<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="8" value="${station.longitude}"/>
+										<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="20" value="${station.longitude}"/>
 										<label class="col-sm-1 control-label no-padding-right" > 纬度：</label>
-										<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="8" value="${station.latitude}"/>
+										<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="20" value="${station.latitude}"/>
 										</div>
 									</div>
 									
@@ -515,7 +515,8 @@
 	//datepicker plugin
 	$('.date-picker').datepicker({
 		autoclose: true,
-		todayHighlight: true
+		todayHighlight: true,
+		language: 'cn'
 	}).next().on(ace.click_event, function(){
 		$(this).prev().focus();
 	});

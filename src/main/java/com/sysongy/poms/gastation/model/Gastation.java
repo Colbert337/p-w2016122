@@ -3,6 +3,7 @@ package com.sysongy.poms.gastation.model;
 import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.permi.model.SysUserAccount;
 
 public class Gastation extends BaseModel {
 
@@ -38,6 +39,15 @@ public class Gastation extends BaseModel {
 	private Date expiry_date;
 	private Date updated_time;
 	private String sys_user_account_id;
+	private SysUserAccount account;
+
+	public SysUserAccount getAccount() {
+		return account;
+	}
+
+	public void setAccount(SysUserAccount account) {
+		this.account = account;
+	}
 
 	public String getDetail() {
 		return detail;

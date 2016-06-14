@@ -52,8 +52,8 @@
       <if test="status!= null &amp;&amp; status != ''" >
         and status = #{status,jdbcType=VARCHAR}
       </if>
-      <if test="expiry_date_frompage != null &amp;&amp; expiry_date_frompage != ''">
-        and expiry_date between #{expiry_date_after,jdbcType=VARCHAR } and #{expiry_date_before,jdbcType=VARCHAR}
+      <if test="expiry_date_after != null &amp;&amp; expiry_date_after != ''">
+        and expiry_date between CONCAT(#{expiry_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{expiry_date_before,jdbcType=VARCHAR},' 23:59:59')
       </if>
     </trim>
   </select>

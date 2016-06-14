@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.card.dao.GasCardLogMapper;
 import com.sysongy.poms.card.dao.GasCardMapper;
 import com.sysongy.poms.card.model.GasCard;
@@ -55,7 +56,7 @@ public class GasCardServiceImpl implements GasCardService{
 					GasCard card = new GasCard();
 					BeanUtils.copyProperties(gascard, card);
 					
-					card.setCard_status("1");
+					card.setCard_status(GlobalConstant.CardStatus.STORAGED);
 					card.setCard_no(tmp[i]);
 					card.setStorage_time(new Date());
 					card.setBatch_no(new SimpleDateFormat("YYYYMMddHHmmss").format(new Date()));
@@ -63,7 +64,7 @@ public class GasCardServiceImpl implements GasCardService{
 					//写日志表
 					GasCardLog gascardlog = new GasCardLog();
 					BeanUtils.copyProperties(card, gascardlog);
-					gascardlog.setAction(GlobalConstant.CardAction.STORAGE);
+					gascardlog.setAction(GlobalConstant.CardAction.ADD);
 					gascardlog.setOptime(new Date());
 					loglist.add(gascardlog);
 				}
@@ -76,15 +77,16 @@ public class GasCardServiceImpl implements GasCardService{
 	}
 
 	@Override
-	public Integer delGasCard(String cardno) throws Exception{
+	public Integer deleteGasCard(String cardno, CurrUser user) throws Exception{
 		 GasCard card = gasCardMapper.selectByPrimaryKey(cardno);
 		 Integer ret = gasCardMapper.deleteByPrimaryKey(cardno);
 		 if(ret > 0){
 			//写日志表
 			 GasCardLog log = new GasCardLog();
 			 BeanUtils.copyProperties(card, log);
+			 log.setOperator(user.getUser().getUserName());
 			 log.setOptime(new Date());
-			 log.setAction(GlobalConstant.CardAction.DESTORY);
+			 log.setAction(GlobalConstant.CardAction.DELETE);
 			 gasCardLogMapper.insert(log);
 		 }
 		 return ret;
@@ -104,19 +106,14 @@ public class GasCardServiceImpl implements GasCardService{
 		GasCard card = gasCardMapper.selectByCardNo(cardno);
 		String cardstatus="";
 		
-		if(card == null){
+		//未查到卡信息或者已经出库了的卡
+		if(card == null || !StringUtils.isEmpty(card.getWorkstation())){
 			return cardstatus;
 		}
-		
+				
 		switch (card.getCard_status()) {
-		case "0":
-			cardstatus = "已冻结";
-			break;
-		case "1":
-			cardstatus = "未使用";
-			break;
-		case "2":
-			cardstatus = "已使用";
+		case GlobalConstant.CardStatus.STORAGED:
+			cardstatus = "已入库";
 			break;
 		default:
 			break;
@@ -137,6 +134,7 @@ public class GasCardServiceImpl implements GasCardService{
 				for(int i=0;i<tmp.length;i++){
 					GasCard card = new GasCard();
 					card.setCard_no(tmp[i]);
+					card.setCard_status(GlobalConstant.CardStatus.MOVED);
 					card.setWorkstation(gascard.getWorkstation());
 					card.setWorkstation_resp(gascard.getWorkstation_resp());
 					card.setRelease_time(new Date());
@@ -149,7 +147,7 @@ public class GasCardServiceImpl implements GasCardService{
 						 GasCardLog log = new GasCardLog();
 						 BeanUtils.copyProperties(cardtmp, log);
 						 log.setOptime(new Date());
-						 log.setAction(GlobalConstant.CardAction.MOVE);
+						 log.setAction(GlobalConstant.CardAction.UPDATE);
 						 gasCardLogMapper.insert(log);
 					 }
 					 ret++;

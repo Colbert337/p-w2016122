@@ -1,25 +1,19 @@
-package com.sysongy.poms.driver.model;
+package com.sysongy.poms.system.model;
 
 import java.util.Date;
 
-public class PsCashSet {
-    private String psCashSetId;
+public class SysCashBack {
+    private String sysCashBackId;
 
-    private String minValue;
+    private String thresholdMinValue;
 
-    private String maxValue;
+    private String thresholdMaxValue;
 
     private String cashPer;
 
     private String status;
 
     private String level;
-
-    private String sysUserId;
-
-    private String userName;
-
-    private String remark;
 
     private Date startDate;
 
@@ -29,28 +23,28 @@ public class PsCashSet {
 
     private Date updatedDate;
 
-    public String getPsCashSetId() {
-        return psCashSetId;
+    public String getSysCashBackId() {
+        return sysCashBackId;
     }
 
-    public void setPsCashSetId(String psCashSetId) {
-        this.psCashSetId = psCashSetId == null ? null : psCashSetId.trim();
+    public void setSysCashBackId(String sysCashBackId) {
+        this.sysCashBackId = sysCashBackId == null ? null : sysCashBackId.trim();
     }
 
-    public String getMinValue() {
-        return minValue;
+    public String getThresholdMinValue() {
+        return thresholdMinValue;
     }
 
-    public void setMinValue(String minValue) {
-        this.minValue = minValue == null ? null : minValue.trim();
+    public void setThresholdMinValue(String thresholdMinValue) {
+        this.thresholdMinValue = thresholdMinValue == null ? null : thresholdMinValue.trim();
     }
 
-    public String getMaxValue() {
-        return maxValue;
+    public String getThresholdMaxValue() {
+        return thresholdMaxValue;
     }
 
-    public void setMaxValue(String maxValue) {
-        this.maxValue = maxValue == null ? null : maxValue.trim();
+    public void setThresholdMaxValue(String thresholdMaxValue) {
+        this.thresholdMaxValue = thresholdMaxValue == null ? null : thresholdMaxValue.trim();
     }
 
     public String getCashPer() {
@@ -75,30 +69,6 @@ public class PsCashSet {
 
     public void setLevel(String level) {
         this.level = level == null ? null : level.trim();
-    }
-
-    public String getSysUserId() {
-        return sysUserId;
-    }
-
-    public void setSysUserId(String sysUserId) {
-        this.sysUserId = sysUserId == null ? null : sysUserId.trim();
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
     }
 
     public Date getStartDate() {

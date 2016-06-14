@@ -4,12 +4,14 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
@@ -39,14 +41,6 @@ public class GastationController extends BaseContoller{
 			if(gastation.getPageNum() == null){
 				gastation.setPageNum(1);
 				gastation.setPageSize(10);
-			}
-
-			if(!StringUtils.isEmpty(gastation.getExpiry_date_frompage())){
-				String []tmpRange = gastation.getExpiry_date_frompage().split("-");
-				if(tmpRange.length==2){
-					gastation.setExpiry_date_after(tmpRange[0].trim()+" 00:00:00");
-					gastation.setExpiry_date_before(tmpRange[1]+" 23:59:59");
-				}
 			}
 
 			PageInfo<Gastation> pageinfo = service.queryGastation(gastation);

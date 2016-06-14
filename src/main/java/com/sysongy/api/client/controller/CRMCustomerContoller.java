@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@SessionAttributes({"currUser","systemId","userId","menuCode","menuIndex"})
 @RequestMapping("/crmCustomerService")
 public class CRMCustomerContoller {
 

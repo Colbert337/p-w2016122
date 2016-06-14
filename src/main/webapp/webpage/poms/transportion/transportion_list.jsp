@@ -78,10 +78,16 @@
 									<s:option flag="true" gcode="STATION_STATUS" form="transportion" field="status" />
 							</select>
 						</div>
-
+						
 						<div class="item">
-							<label>平台有效期:</label>
-							<input type="text" name="expiry_date_frompage" id="date-range-picker" value="${transportion.expiry_date_frompage}"/>
+							<div class="input-daterange top" id="j-input-daterange-top">
+								<label>平台有效期:</label>
+								<input type="text" class="" name="expiry_date_after" value="${transportion.expiry_date_after}" readonly="readonly"/>
+								<span class="">
+									<i class="fa fa-exchange"></i>
+								</span>
+								<input type="text" class="" name="expiry_date_before" value="${transportion.expiry_date_before}" readonly="readonly"/>
+							</div>
 						</div>
 
 						<div class="item">
@@ -270,24 +276,12 @@
 <script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
 <script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
 <script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
+	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 
-	var mydate = new Date();
-	$('#date-range-picker').daterangepicker({'applyClass' : 'btn-sm btn-success', 'cancelClass' : 'btn-sm btn-default',
-					locale: {
-						applyLabel: 'Apply',
-						cancelLabel: 'Cancel',
-						format: "YYYY/MM/DD",
-					}, 
-					"startDate": "${transportion.expiry_date_after}"==""?mydate.getFullYear()+"/1/1":"${transportion.expiry_date_after}",
-				    "endDate": "${transportion.expiry_date_before}"==""?mydate.getFullYear()+"/12/31":"${transportion.expiry_date_before}"
-				})
-				.prev().on(ace.click_event, function(){
-					$(this).next().focus();
-				});
-	
 	var listOptions ={   
             url:'<%=basePath%>/web/transportion/transportionList',
             type:'post',                    
