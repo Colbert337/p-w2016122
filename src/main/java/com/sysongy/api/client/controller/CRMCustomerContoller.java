@@ -6,10 +6,7 @@ import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
-import com.sysongy.util.AliShortMessage;
-import com.sysongy.util.FileUtil;
-import com.sysongy.util.IPUtil;
-import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -30,12 +27,15 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 @Controller
 @RequestMapping("/crmCustomerService")
 public class CRMCustomerContoller {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 
     @Autowired
     DriverService driverService;
@@ -318,15 +318,16 @@ public class CRMCustomerContoller {
         }
 
         String realPath =  sysDriverId + "/" ;
-        //String realPath = request.getSession().getServletContext().getRealPath("/")+ "/upload/" + sysDriverId + "/" ;
-        String filePath = "D:/upload/" + realPath;
+        String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
         FileUtil.createIfNoExist(filePath);
         try {
             for (int i = 0; i < files.length; i++) {
                 Map<String, Object> attributes = new HashMap<String, Object>();
                 String path = filePath + files[i].getOriginalFilename();
                 File destFile = new File(path);
-                attributes.put(imgTag, request.getContextPath() + "/upload/" + realPath + files[i].getOriginalFilename());
+                String contextPath = request.getContextPath();
+                String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
+                attributes.put(imgTag, basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
                 ajaxJson.setAttributes(attributes);
                 FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
             }
