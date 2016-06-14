@@ -199,7 +199,7 @@
 					<div class="pull-right btn-botton">
 						<%--<a class="btn btn-primary" href="javascript:loadPage('#main', '<%=basePath%>/web/permi/user/add')">--%>
 						<a class="btn btn-sm btn-primary" href="javascript:addUser();">
-							添加用户
+							新建
 						</a>
 						<%--<a class="btn btn-primary" href="javascript:addUser();">
 							批量导入

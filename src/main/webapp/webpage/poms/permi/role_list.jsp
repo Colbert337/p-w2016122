@@ -244,7 +244,7 @@
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
 						<a class="btn btn-sm btn-primary" href="javascript:addRole();">
-							添加角色
+							添加
 						</a>
 					</div>
 				</div>
