@@ -26,8 +26,8 @@
 		<li><i class="ace-icon fa fa-home home-icon"></i> <a href="javascript:void(0);">主页</a>
 		</li>
 
-		<li><a href="javascript:void(0);">加气站管理</a></li>
-		<li class="active">加气站信息管理</li>
+		<li><a href="javascript:void(0);">加注站管理</a></li>
+		<li class="active">加注站信息管理</li>
 	</ul>
 	<!-- /.breadcrumb -->
 
@@ -61,19 +61,19 @@
 
 					<div class="page-header">
 						<h1>
-							加气站管理
+							加注站管理
 						</h1>
 					</div>
 
 					<div class="search-types">
 						<div class="item">
-						    <label>加气站编号:</label>
-							<input type="text" name="sys_gas_station_id" placeholder="输入加气站编号"  maxlength="9" value="${gastation.sys_gas_station_id}"/>
+						    <label>加注站编号:</label>
+							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号"  maxlength="9" value="${gastation.sys_gas_station_id}"/>
 						</div>
 						
 						<div class="item">
-						    <label>加气站名称:</label>
-							<input type="text" name="gas_station_name" placeholder="输入加气站名称"  maxlength="9" value="${gastation.gas_station_name}"/>
+						    <label>加注站名称:</label>
+							<input type="text" name="gas_station_name" placeholder="输入加注站名称"  maxlength="9" value="${gastation.gas_station_name}"/>
 						</div>
 						
 						<div class="item">
@@ -82,15 +82,7 @@
 									<s:option flag="true" gcode="STATION_STATUS" form="gastation" field="status" />
 							</select>
 						</div>
-						
-						 <div class="item">
-						    <label>平台有效期:</label>
-							<%--<span class="input-group-addon">--%>
-									<%--<i class="fa fa-calendar bigger-110"></i>--%>
-							<%--</span>--%>
-							<input type="text" name="expiry_date_frompage" id="date-range-picker" size="22" value="${gascard.expiry_date_frompage}"/>
-						</div> 
-						
+
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>平台有效期:</label>
@@ -105,7 +97,7 @@
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								新建加气站
+								新建
 							</button>
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
@@ -122,7 +114,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">加气站详细信息列表</div>
+					<div class="table-header">加注站详细信息列表</div>
 
 					<!-- div.table-responsive -->
 
@@ -137,8 +129,8 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加气站编号</th>
-									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加气站名称</th>
+									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
+									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
 									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
@@ -173,46 +165,10 @@
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 
 									<td>
-										<div class="hidden-sm hidden-xs action-buttons">
-											<a class="blue" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-search-plus bigger-130"></i>
-											</a> 
+										<div class="text-center">
 											<a class="green" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
-											</a> 
-											<!-- <a class="red"  href="javascript:void(0);" onclick="del(this);"> 
-												<i class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a> -->
-										</div>
-
-										<div class="hidden-md hidden-lg">
-											<div class="inline pos-rel">
-												<button class="btn btn-minier btn-yellow dropdown-toggle"
-													data-toggle="dropdown" data-position="auto">
-													<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-												</button>
-
-												<ul
-													class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-													<li>
-														<a href="#" class="tooltip-info" data-rel="tooltip" title="View"> 
-															<span class="blue">
-																	<i class="ace-icon fa fa-search-plus bigger-120"></i>
-															</span>
-														</a>
-													</li>
-
-													<li><a href="#" class="tooltip-success" data-rel="tooltip" title="Edit"> <span class="green">
-																<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-														</span>
-													</a></li>
-
-													<li><a href="#" class="tooltip-error" data-rel="tooltip" title="Delete"> <span class="red">
-																<i class="ace-icon fa fa-trash-o bigger-120"></i>
-														</span>
-													</a></li>
-												</ul>
-											</div>
+												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);" title="编辑"></i>
+											</a>
 										</div>
 									</td>
 								</tr>

@@ -9,10 +9,8 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap.css" />
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/colorbox.css" />
-	
+
 	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
@@ -20,9 +18,8 @@
 	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
 	<script src="<%=basePath %>/assets/js/ace-extra.js"></script>
 	<script src="<%=basePath %>/assets/js/jquery.colorbox.js"></script>
-	
+
 	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
 
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
@@ -40,9 +37,9 @@
 							</li>
 
 							<li>
-								<a href="#">加气站管理</a>
+								<a href="#">加注站管理</a>
 							</li>
-							<li class="active">加气站信息管理</li>
+							<li class="active">加注站信息管理</li>
 						</ul><!-- /.breadcrumb -->
 
 						<!-- #section:basics/content.searchbox -->
@@ -67,7 +64,7 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								修改加气站信息
+								修改加注站信息
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -79,40 +76,40 @@
 									<input type="hidden" id="sys_gas_station_id"  name="sys_gas_station_id" value="${station.sys_gas_station_id}" />
 							
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 加气站名称： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="gas_station_name"> 加注站名称： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="gas_station_name"  name="gas_station_name" value="${station.gas_station_name}" placeholder="输入加气站名称" class="col-xs-10 col-sm-5" maxlength="20"/>
+										<div class="col-sm-4">
+											<input type="text" id="gas_station_name"  name="gas_station_name" value="${station.gas_station_name}" placeholder="输入加注站名称" class="form-control" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> E-mail： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="email"> E-mail： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5"  value="${station.email}"/>
+										<div class="col-sm-4">
+											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control"  value="${station.email}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="station_manager"> 站长姓名： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="col-xs-10 col-sm-5" maxlength="20" value="${station.station_manager}"/>
+										<div class="col-sm-4">
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="form-control" maxlength="20" value="${station.station_manager}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="contact_phone"> 联系电话： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15" value="${station.contact_phone}"/>
+										<div class="col-sm-4">
+											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15" value="${station.contact_phone}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期：</label>
-										<div class="col-sm-2">
+										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期：</label>
+										<div class="col-sm-2 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
 														<input class="form-control date-picker" name="expiry_date_frompage"  readonly="readonly" id="expiry_date" type="text" value="${station.expiry_date_frompage}" data-date-format="yyyy-mm-dd" />
@@ -124,16 +121,16 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
-										<div class="col-sm-2">
-												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20" value="${station.salesmen_name}"/>
+										<label class="col-sm-3 control-label no-padding-right" for="salesmen_name"> 销售人员： </label>
+										<div class="col-sm-4">
+												<input class="form-control" type="text" id="salesmen_name" name="salesmen_name" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
-										<div class="col-sm-2">
-												<select class="form-control" id="operations_id" name="operations_id" multiple="multiple" onchange="setOperationName(this);">
+										<div class="col-sm-4">
+												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
 												<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
@@ -141,66 +138,80 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
-										<div class="col-sm-2">
-											<select class="form-control" name="province_id" id="province" multiple="multiple" onchange="chinaChange(this,document.getElementById('city'));">
-													<option value ="请选择市区">请选择省份</option>
-													<option value ="100">北京市</option>
-													<option value ="220">天津市</option>
-													<option value ="210">上海市</option>
-													<option value ="230">重庆市</option>
-													<option value ="310">河北省</option>
-													<option value ="350">山西省</option>
-													<option value ="240">辽宁省</option>
-													<option value ="430">吉林省</option>
-													<option value ="450">黑龙江省</option>
-													<option value ="250"> 江苏省</option>
-													<option value ="570">浙江省</option>
-													<option value ="550">安徽省</option>
-													<option value ="590">福建省</option>
-													<option value ="790">江西省</option>
-													<option value ="530">山东省</option>
-													<option value ="370">河南省</option>
-													<option value ="270">湖北省</option>
-													<option value ="730">湖南省</option>
-													<option value ="200">广东省</option>
-													<option value ="890">海南省</option>
-													<option value ="810">四川省</option>
-													<option value ="850">贵州省</option>
-													<option value ="870">云南省</option>
-													<option value ="290">陕西省</option>
-													<option value ="930">甘肃省</option>
-													<option value ="970">青海省</option>
-													<option value ="886">台湾省</option>
-													<option value ="770">广西壮族自治区</option>
-													<option value ="470"> 内蒙古自治区</option>
-													<option value ="890"> 西藏自治区</option>
-													<option value ="950"> 宁夏回族自治区 </option>
-													<option value ="990">新疆维吾尔自治区</option>
-													<option value ="852">香港特别行政区</option>
-													<option value ="853">澳门特别行政区</option>
-											</select>
-											<select class="form-control" id="city" name="city_id">
-											</select>
-											<input type="text"  id="detail" name="detail" class="col-sm-12" />
-											<input type="hidden"  id="address" name="address" class="col-sm-12" />
+										<div class="col-sm-4">
+											<div class="row form-group">
+												<div class="col-sm-6">
+													<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
+															<option value ="请选择市区">请选择省份</option>
+															<option value ="100">北京市</option>
+															<option value ="220">天津市</option>
+															<option value ="210">上海市</option>
+															<option value ="230">重庆市</option>
+															<option value ="310">河北省</option>
+															<option value ="350">山西省</option>
+															<option value ="240">辽宁省</option>
+															<option value ="430">吉林省</option>
+															<option value ="450">黑龙江省</option>
+															<option value ="250"> 江苏省</option>
+															<option value ="570">浙江省</option>
+															<option value ="550">安徽省</option>
+															<option value ="590">福建省</option>
+															<option value ="790">江西省</option>
+															<option value ="530">山东省</option>
+															<option value ="370">河南省</option>
+															<option value ="270">湖北省</option>
+															<option value ="730">湖南省</option>
+															<option value ="200">广东省</option>
+															<option value ="890">海南省</option>
+															<option value ="810">四川省</option>
+															<option value ="850">贵州省</option>
+															<option value ="870">云南省</option>
+															<option value ="290">陕西省</option>
+															<option value ="930">甘肃省</option>
+															<option value ="970">青海省</option>
+															<option value ="886">台湾省</option>
+															<option value ="770">广西壮族自治区</option>
+															<option value ="470"> 内蒙古自治区</option>
+															<option value ="890"> 西藏自治区</option>
+															<option value ="950"> 宁夏回族自治区 </option>
+															<option value ="990">新疆维吾尔自治区</option>
+															<option value ="852">香港特别行政区</option>
+															<option value ="853">澳门特别行政区</option>
+													</select>
+												</div>
+												<div class="col-sm-6">
+													<select class="form-control" id="city" name="city_id">
+													</select>
+												</div>
+											</div>
+											<input type="text"  id="detail" name="detail" class="form-control" />
+											<input type="hidden"  id="address" name="address" />
 										</div>
 									</div>
 									
-									<div class="form-group">
+									<div class="row">
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
-										<div class="col-sm-5">
-										<label class="col-sm-1 control-label no-padding-right" > 经度：</label>
-										<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="20" value="${station.longitude}"/>
-										<label class="col-sm-1 control-label no-padding-right" > 纬度：</label>
-										<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="20" value="${station.latitude}"/>
+										<div class="col-sm-4">
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group nospace">
+														<input type="text"  id="longitude" name="longitude" class="form-control" maxlength="20" value="${station.longitude}"/>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group nospace">
+														<input type="text"  id="latitude" name="latitude" class="form-control" maxlength="20" value="${station.latitude}"/>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5" placeholder="输入工商注册号" value="${station.indu_com_number}"/>
+											<input type="text"  id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}"/>
 										</div>
 									</div>
 									
@@ -209,25 +220,25 @@
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
-													<h4 class="widget-title">工商注册证书照片上传</h4>
+													<h5 class="widget-title">工商注册证书照片上传</h5>
 												</div>
 													
-													<ul class="ace-thumbnails clearfix">
-														<li>
-															<a href="<%=imagePath %>${station.indu_com_certif}" data-rel="colorbox">
-																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.indu_com_certif}" />
-																<div class="text">
-																	<div class="inner">点击放大</div>
-																</div>
-															</a>
-														</li>
-													</ul>
+												<ul class="ace-thumbnails file-space clearfix">
+													<li>
+														<a href="<%=imagePath %>${station.indu_com_certif}" data-rel="colorbox">
+															<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.indu_com_certif}" />
+															<div class="text">
+																<div class="inner">点击放大</div>
+															</div>
+														</a>
+													</li>
+												</ul>
 
 												<div class="widget-body">
 													<div class="widget-main">
 														<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
 														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -238,10 +249,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="tax_number"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_number" name="tax_number" class="col-xs-10 col-sm-5"  placeholder="输入税务注册号" value=" ${station.tax_number}"/>
+											<input type="text"  id="tax_number" name="tax_number" class="form-control" value=" ${station.tax_number}"/>
 										</div>
 									</div>
 									
@@ -250,10 +261,10 @@
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
-													<h4 class="widget-title">税务注册证书照片上传</h4>
+													<h5 class="widget-title">税务注册证书照片上传</h5>
 												</div>
 													
-													<ul class="ace-thumbnails clearfix">
+													<ul class="ace-thumbnails file-space clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.tax_certif}" data-rel="colorbox">
 																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.tax_certif}" />
@@ -268,7 +279,7 @@
 													<div class="widget-main">
 														<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
 														<input type="hidden" id="tax_certif" name="tax_certif"/> 
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -283,10 +294,10 @@
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
-													<h4 class="widget-title">LNG储装证书照片上传</h4>
+													<h5 class="widget-title">LNG储装证书照片上传</h5>
 												</div>
 													
-													<ul class="ace-thumbnails clearfix">
+													<ul class="ace-thumbnails file-space clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.lng_certif}" data-rel="colorbox">
 																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.lng_certif}" />
@@ -301,7 +312,7 @@
 													<div class="widget-main">
 														<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
 														<input type="hidden" id="lng_certif" name="lng_certif"/> 
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -316,10 +327,10 @@
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
-													<h4 class="widget-title"> 危化品证书照片上传</h4>
+													<h5 class="widget-title"> 危化品证书照片上传</h5>
 												</div>
 													
-													<ul class="ace-thumbnails clearfix">
+													<ul class="ace-thumbnails file-space clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.dcp_certif}" data-rel="colorbox">
 																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.dcp_certif}" />
@@ -334,7 +345,7 @@
 													<div class="widget-main">
 														<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
 														<input type="hidden" id="dcp_certif" name="dcp_certif"/> 
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -345,7 +356,7 @@
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 加气站状态： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 加注站状态： </label>
 
 										<div class="col-sm-4">
 											<select class="chosen-select " name="status" >
@@ -529,12 +540,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站名称不能为空'
+		                        message: '加注站名称不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加气站名称不能超过20个汉字'
+		                        message: '加注站名称不能超过20个汉字'
 		                    }
 		                }
 		            },
@@ -542,12 +553,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站email不能为空'
+		                        message: '加注站email不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加气站email不能超过20个字符'
+		                        message: '加注站email不能超过20个字符'
 		                    }
 		                }
 		            },
@@ -564,12 +575,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站站长不能为空'
+		                        message: '加注站站长不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加气站站长不能超过20个汉字'
+		                        message: '加注站站长不能超过20个汉字'
 		                    }
 		                }
 		            },
@@ -642,21 +653,31 @@
 		                    }
 		                }
 		            },
-		            indu_com_certif: {
+					indu_com_number: {
 		                message: 'The cardno is not valid',
-		                    stringLength: {
-		                        max: 15,
-		                        message: '工商注册号不能超过15位'
-		                    }
+						validators: {
+							notEmpty: {
+								message: '工商注册号不能为空'
+							},
+							stringLength: {
+								max: 15,
+								message: '工商注册号不能超过15位'
+							}
+						}
 		                }
 		            },
-		            tax_certif: {
+					tax_number: {
 		                message: 'The cardno is not valid',
-		                    stringLength: {
-		                        max: 15,
-		                        message: '税务注册号不能超过15位'
-		                    }
-		                }
+						validators: {
+							notEmpty: {
+								message: '税务注册号不能为空'
+							},
+							stringLength: {
+								max: 15,
+								message: '税务注册号不能超过15位'
+							}
+						}
+					}
 		    });
 			    
 		function save(){

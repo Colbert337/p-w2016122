@@ -23,8 +23,19 @@
 /*Add by xiukun*/
 body,
 h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
-label{font-size: 12px;}
 .breadcrumbs{display:none;}
 .search-types .item {padding-right:20px; display: inline-block; margin-bottom:8px;}
 .input-daterange.top input{width:100px;}
 .page-header h1{font-weight: normal; font-size: 21px;}
+.form-horizontal .form-group.nospace{margin-left: 0; margin-right: 0;}
+.file-space{padding: 12px 12px 0 12px;}
+.btn-file-space{margin-top: 12px;}
+.file-input .btn-file{
+    border-width: 4px;
+    font-size: 13px;
+    padding: 4px 9px;
+    line-height: 1.38;
+}
+.datepicker-noicon .glyphicon-ok:before {
+    content: "";
+}
