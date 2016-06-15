@@ -301,7 +301,7 @@
 			}
 			
 			var options ={
-		            url:'../web/transportion/saveTransportion',
+		            url:'<%=basePath%>/web/transportion/saveTransportion',
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -316,7 +316,8 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/transportion/transportionList');
+			alert('lls')
+			loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 		}
 		
 		function save_photo(fileobj,obj,obj1){

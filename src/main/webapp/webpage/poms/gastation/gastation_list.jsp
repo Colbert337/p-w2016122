@@ -249,7 +249,7 @@
 	
 	function preUpdate(obj){
 		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
-		loadPage('#main', '../web/gastation/preUpdate?gastationid='+stationid);
+		loadPage('#main', '<%=basePath%>/web/gastation/preUpdate?gastationid='+stationid);
 		console.log(stationid);
 	}
 	
@@ -268,7 +268,7 @@
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
 		var deloptions ={   
-	            url:'../web/gastation/deleteGastation?gastationid='+cardid,   
+	            url:'<%=basePath%>/web/gastation/deleteGastation?gastationid='+cardid,   
 	            type:'post',                    
 	            dataType:'text',
 	            success:function(data){
@@ -284,6 +284,6 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/gastation/gastationList');
+		loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
 	}
 	</script>
