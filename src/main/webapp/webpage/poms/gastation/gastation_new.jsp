@@ -313,7 +313,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'../web/permi/user/list/userType?userType=1',   
+			   url:'<%=basePath%>/web/permi/user/list/userType?userType=1',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
@@ -519,7 +519,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/gastation/saveGastation',   
+		            url:'<%=basePath%>/web/gastation/saveGastation',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -533,7 +533,7 @@
 			            		loadPage('#main', '../webpage/poms/gastation/gastation_upload.jsp?gastationid='+$("#retValue").val());
 			            	}else{
 			            		//$("#main").html(data);
-			            		loadPage('#main', '../web/gastation/gastationList');
+			            		loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
 			            	}
 		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
@@ -545,7 +545,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/gastation/gastationList');
+			loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
 		}
 		
 		function setOperationName(obj){

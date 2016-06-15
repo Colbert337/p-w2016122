@@ -300,7 +300,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/gastation/saveGastation',
+		            url:'<%=basePath%>/web/gastation/saveGastation',
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -315,7 +315,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/gastation/gastationList');
+			loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
 		}
 		
 		function save_photo(fileobj,obj,obj1){

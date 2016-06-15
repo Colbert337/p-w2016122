@@ -62,7 +62,7 @@
 					</div>
 
 					<!-- /section:basics/content.breadcrumbs -->
-					<div class="page-content">
+					<div class="">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
@@ -76,7 +76,7 @@
 								<form class="form-horizontal"  id="transportionform">
 									<!-- #section:elements.form -->
 									<input type="hidden" id="sys_transportion_id"  name="sys_transportion_id" value="${station.sys_transportion_id}" />
-							
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 运输公司名称： </label>
 
@@ -84,7 +84,7 @@
 											<input type="text" id="transportion_name"  name="transportion_name" value="${station.transportion_name}" placeholder="输入运输公司名称" class="col-xs-10 col-sm-5" maxlength="20"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> E-mail： </label>
 
@@ -92,7 +92,7 @@
 											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5"  value="${station.email}"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 联系人姓名： </label>
 
@@ -100,7 +100,7 @@
 											<input type="text" id="station_manager"  name="station_manager" placeholder="输入联系人姓名" class="col-xs-10 col-sm-5" maxlength="20" value="${station.station_manager}"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
 
@@ -108,7 +108,7 @@
 											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15" value="${station.contact_phone}"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期：</label>
 										<div class="col-sm-2">
@@ -121,14 +121,14 @@
 												</div>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
 										<div class="col-sm-2">
 												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
 										<div class="col-sm-2">
@@ -137,7 +137,7 @@
 												<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
 										<div class="col-sm-2">
@@ -184,7 +184,7 @@
 											<input type="hidden"  id="address" name="address" class="col-sm-12" />
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-5">
@@ -194,7 +194,7 @@
 										<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="20" value="${station.latitude}"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
@@ -202,7 +202,7 @@
 											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5" placeholder="输入工商注册号" value="${station.indu_com_number}"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册证书： </label>
 										<div class="col-sm-4">
@@ -210,7 +210,7 @@
 												<div class="widget-header">
 													<h4 class="widget-title">工商注册证书照片上传</h4>
 												</div>
-													
+
 													<ul class="ace-thumbnails clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.indu_com_certif}" data-rel="colorbox">
@@ -225,7 +225,7 @@
 												<div class="widget-body">
 													<div class="widget-main">
 														<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
-														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
+														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/>
 														<button class="btn btn-info" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
@@ -235,7 +235,7 @@
 											</div>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
 
@@ -243,7 +243,7 @@
 											<input type="text"  id="tax_number" name="tax_number" class="col-xs-10 col-sm-5"  placeholder="输入税务注册号" value=" ${station.tax_number}"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册证书： </label>
 										<div class="col-sm-4">
@@ -251,7 +251,7 @@
 												<div class="widget-header">
 													<h4 class="widget-title">税务注册证书照片上传</h4>
 												</div>
-													
+
 													<ul class="ace-thumbnails clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.tax_certif}" data-rel="colorbox">
@@ -266,7 +266,7 @@
 												<div class="widget-body">
 													<div class="widget-main">
 														<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
-														<input type="hidden" id="tax_certif" name="tax_certif"/> 
+														<input type="hidden" id="tax_certif" name="tax_certif"/>
 														<button class="btn btn-info" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
@@ -276,7 +276,7 @@
 											</div>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> LNG储装证书： </label>
 										<div class="col-sm-4">
@@ -284,7 +284,7 @@
 												<div class="widget-header">
 													<h4 class="widget-title">LNG储装证书照片上传</h4>
 												</div>
-													
+
 													<ul class="ace-thumbnails clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.lng_certif}" data-rel="colorbox">
@@ -299,7 +299,7 @@
 												<div class="widget-body">
 													<div class="widget-main">
 														<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
-														<input type="hidden" id="lng_certif" name="lng_certif"/> 
+														<input type="hidden" id="lng_certif" name="lng_certif"/>
 														<button class="btn btn-info" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
@@ -309,7 +309,7 @@
 											</div>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">  危化品证书： </label>
 										<div class="col-sm-4">
@@ -317,7 +317,7 @@
 												<div class="widget-header">
 													<h4 class="widget-title"> 危化品证书照片上传</h4>
 												</div>
-													
+
 													<ul class="ace-thumbnails clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.dcp_certif}" data-rel="colorbox">
@@ -332,7 +332,7 @@
 												<div class="widget-body">
 													<div class="widget-main">
 														<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
-														<input type="hidden" id="dcp_certif" name="dcp_certif"/> 
+														<input type="hidden" id="dcp_certif" name="dcp_certif"/>
 														<button class="btn btn-info" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
@@ -349,18 +349,18 @@
 										<div class="col-sm-4">
 											<select class="chosen-select " name="status" >
 												<s:option gcode="STATION_STATUS" form="station" field="status" />
-											</select>										
+											</select>
 										</div>
 									</div>
-									
+
 									<div class="clearfix form-actions">
-										<div class="col-md-offset-3 col-md-9">
-											
+										<div class="col-sm-offset-3 col-sm-9">
+
 											<button class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
-											
+
 											&nbsp; &nbsp; &nbsp;
 											<button class="btn btn-success" type="buttom" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
@@ -370,19 +370,14 @@
 									</div>
 
 									<jsp:include page="/common/message.jsp"></jsp:include>
-										
-								</form>						
+
+								</form>
 							</div><!-- /.col -->
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div>
 	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
+
 		<!-- inline scripts related to this page -->
 	<script type="text/javascript">
 	
@@ -448,7 +443,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'../web/permi/user/list/userType?userType=1',   
+			   url:'<%=basePath%>/web/permi/user/list/userType?userType=1',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
@@ -663,7 +658,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/transportion/saveTransportion',   
+		            url:'<%=basePath%>/web/transportion/saveTransportion',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -678,7 +673,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/transportion/transportionList');
+			loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 		}
 		
 		function setSalesmenName(obj){

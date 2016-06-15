@@ -300,7 +300,7 @@
 	
 	function preUpdate(obj){
 		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
-		loadPage('#main', '../web/transportion/preUpdate?transportionid='+stationid);
+		loadPage('#main', '<%=basePath%>/web/transportion/preUpdate?transportionid='+stationid);
 	}
 	
 	function commitForm(obj){
@@ -318,7 +318,7 @@
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
 		var deloptions ={   
-	            url:'../web/transportion/deletetransportion?transportionid='+cardid,   
+	            url:'<%=basePath%>/web/transportion/deletetransportion?transportionid='+cardid,   
 	            type:'post',                    
 	            dataType:'text',
 	            success:function(data){
@@ -336,6 +336,6 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/transportion/transportionList');
+		loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 	}
 	</script>
