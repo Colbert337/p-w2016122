@@ -33,34 +33,13 @@
 		<!--[if lte IE 9]>
 		  <link rel="stylesheet" href="<%=basePath %>/assets/css/ace-ie.css" />
 		<![endif]-->
-
-		<!-- inline styles related to this page -->
-		<!-- basic scripts -->
-
-		<!--[if IE]>
-		<script type="text/javascript">
-		 window.jQuery || document.write("<script src='../assets/js/jquery1x.js'>"+"<"+"/script>");
-		</script>
-		<![endif]-->
-		<script src="<%=basePath %>/assets/js/jquery-1.9.1.min.js"></script>
-		<!-- ace settings handler -->
-		<script src="<%=basePath %>/assets/js/ace-extra.js"></script>
-		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
-
-		<!--[if lte IE 8]>
-		<script src="<%=basePath %>/assets/js/html5shiv.js"></script>
-		<script src="<%=basePath %>/assets/js/respond.js"></script>
-		<![endif]-->
 		
 		<link rel="stylesheet" href="<%=basePath %>/common/css/comm.css" />
 		<!-- 弹层样式及插件 -->
 		<link type="text/css" href="<%=basePath %>/assets/artDialog/css/ui-dialog.css" rel="stylesheet" />
-		<script type="text/javascript"  src="<%=basePath %>/assets/artDialog/dist/dialog-plus-min.js"></script>
-		<!-- JqueryValidationEngine表单验证  -->
-		<link rel="stylesheet" type="text/css" href="<%=basePath %>/assets/jQueryVE/css/validationEngine.jquery.css" />
-		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine-zh_CN.js"></script>
-		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine.min.js"></script>
-		<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
+		<!-- 日期控件 -->
+		<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
+
 	</head>
 
 	<body class="no-skin">
