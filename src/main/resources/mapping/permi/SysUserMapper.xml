@@ -100,6 +100,45 @@
     where user_name = #{0} and password = #{1}
     and status = 0 and is_deleted = 1
   </select>
+  <select id="queryUser" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where 1 = 1
+    <trim>
+      <if test="sysUserId != null" >
+        and sys_user_id = #{sysUserId}
+      </if>
+      <if test="userName != null" >
+        and user_name = #{userName}
+      </if>
+      <if test="userType != null" >
+        and  user_type = #{userType}
+      </if>
+      <if test="realName != null" >
+        and  real_name = #{realName}
+      </if>
+      <if test="gender != null" >
+        and  gender = #{gender}
+      </if>
+      <if test="mobilePhone != null" >
+        and  mobile_phone = #{mobilePhone}
+      </if>
+      <if test="email != null" >
+        and  email = #{email}
+      </if>
+      <if test="status != null" >
+        and  status = #{status}
+      </if>
+      <if test="isAdmin != null" >
+        and  is_admin = #{isAdmin}
+      </if>
+      <if test="isDeleted != null" >
+        and  is_deleted = #{isDeleted}
+      </if>
+    </trim>
+    and status = 0 and is_deleted = 1
+  </select>
   <select id="queryUserMapByAccount" resultMap="MapResultMap" >
     select
     <include refid="Base_Column_List" />

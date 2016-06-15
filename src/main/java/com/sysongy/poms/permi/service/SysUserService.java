@@ -55,6 +55,13 @@ public interface SysUserService {
     SysUser queryUserByAccount(SysUser user);
 
     /**
+     * 查询用户
+     * @param user
+     * @return
+     */
+    SysUser queryUser(SysUser user);
+
+    /**
      * 用户登录
      * @param user
      * @return map
@@ -95,4 +102,11 @@ public interface SysUserService {
      * @return
      */
     int addUserRole(List<SysUserRole> userRoleList);
+
+    /**
+     * 添加业务系统管理员
+     * @param user
+     * @return
+     */
+    int addAdminUser(SysUser user) throws Exception;
 }
