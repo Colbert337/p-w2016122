@@ -2,11 +2,10 @@ package com.sysongy.poms.permi.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.permi.dao.SysUserMapper;
-import com.sysongy.poms.permi.dao.SysUserRoleMapper;
-import com.sysongy.poms.permi.model.SysUser;
-import com.sysongy.poms.permi.model.SysUserRole;
+import com.sysongy.poms.permi.dao.*;
+import com.sysongy.poms.permi.model.*;
 import com.sysongy.poms.permi.service.SysFunctionService;
+import com.sysongy.poms.permi.service.SysRoleService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
@@ -39,6 +38,12 @@ public class SysUserServiceImpl implements SysUserService{
     SysUserRoleMapper sysUserRoleMapper;
     @Autowired
     SysFunctionService sysFunctionService;
+    @Autowired
+    SysFunctionMapper sysFunctionMapper;
+    @Autowired
+    SysRoleMapper sysRoleMapper;
+    @Autowired
+    SysRoleFunctionMapper sysRoleFunctionMapper;
     /**
      * 查询用户列表（分页）
      * @param sysUser
@@ -89,6 +94,16 @@ public class SysUserServiceImpl implements SysUserService{
             }
         }
         return sysUser;
+    }
+
+    /**
+     * 查询用户
+     * @param user
+     * @return
+     */
+    @Override
+    public SysUser queryUser(SysUser user) {
+        return sysUserMapper.queryUser(user);
     }
 
     /**
@@ -224,4 +239,63 @@ public class SysUserServiceImpl implements SysUserService{
         return sysUser;
     }
 
+    /**
+     * 添加业务系统管理员
+     * @param user
+     * @return
+     */
+    @Override
+    public int addAdminUser(SysUser user) throws Exception{
+        int result = 0;
+        //添加用户信息
+        String userId = UUIDGenerator.getUUID();
+        int userType = user.getUserType();
+        user.setSysUserId(userId);
+        user.setMobilePhone(user.getUserName());
+        user.setIsAdmin(GlobalConstant.ADMIN_YES);
+        result = sysUserMapper.addUser(user);
+
+        //创建管理员角色
+        SysRole sysRole = new SysRole();
+        String roleId = UUIDGenerator.getUUID();
+        sysRole.setSysRoleId(roleId);
+        sysRole.setRoleType(userType);
+        sysRole.setIsAdmin(GlobalConstant.ADMIN_YES);
+        sysRole.setRoleName("管理员");
+        result = sysRoleMapper.addRole(sysRole);
+
+        //创建管理员角色用户关系
+        SysUserRole sysUserRole = new SysUserRole();
+        String userRoleId = UUIDGenerator.getUUID();
+        sysUserRole.setSysUserRoleId(userRoleId);
+        sysUserRole.setSysRoleId(roleId);
+        sysUserRole.setSysUserId(userId);
+        result = sysUserRoleMapper.addUserRole(sysUserRole);
+
+        //查询当前业务系统功能菜单列表
+        List<SysFunction> functionList = new ArrayList<>();
+        SysFunction sysFunction = new SysFunction();
+        sysFunction.setFunctionType(userType);
+        sysFunction.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+        sysFunction.setFunctionStatus(GlobalConstant.STATUS_DELETE);
+        functionList = sysFunctionMapper.queryFunctionList(sysFunction);
+
+        //创建管理员角色与功能菜单关系
+        List<SysRoleFunction> sysRoleFunctionList = new ArrayList<>();
+        if(functionList != null && functionList.size() > 0){
+            for (SysFunction function:functionList) {
+                SysRoleFunction sysRoleFunction = new SysRoleFunction();
+                String roleFunctionId = UUIDGenerator.getUUID();
+                sysRoleFunction.setSysRoleFunctionId(roleFunctionId);
+                sysRoleFunction.setSysFunctionId(function.getSysFunctionId());
+                sysRoleFunction.setSysRoleId(roleId);
+
+                sysRoleFunctionList.add(sysRoleFunction);
+            }
+
+            result = sysRoleFunctionMapper.addRoleFunctionList(sysRoleFunctionList);
+        }
+
+        return result;
+    }
 }
