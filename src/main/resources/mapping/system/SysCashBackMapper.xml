@@ -2,54 +2,86 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sysongy.poms.system.dao.SysCashBackMapper" >
   <resultMap id="BaseResultMap" type="com.sysongy.poms.system.model.SysCashBack" >
-    <id column="sys_cash_back_id" property="sysCashBackId" jdbcType="VARCHAR" />
-    <result column="threshold_min_value" property="thresholdMinValue" jdbcType="VARCHAR" />
-    <result column="threshold _max_value" property="thresholdMaxValue" jdbcType="VARCHAR" />
-    <result column="cash_per" property="cashPer" jdbcType="VARCHAR" />
+  	<id column="sys_cash_back_id" property="sys_cash_back_id" jdbcType="VARCHAR" />
+    <result column="sys_cash_back_no" property="sys_cash_back_no" jdbcType="VARCHAR" />
+    <result column="threshold_min_value" property="threshold_min_value" jdbcType="VARCHAR" />
+    <result column="threshold_max_value" property="threshold_max_value" jdbcType="VARCHAR" />
+    <result column="cash_per" property="cash_per" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="level" property="level" jdbcType="VARCHAR" />
-    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
-    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
-    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
-    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="start_date" property="start_date" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="end_date" jdbcType="TIMESTAMP" />
+    <result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updated_date" jdbcType="TIMESTAMP" />
   </resultMap>
+  
   <sql id="Base_Column_List" >
-    sys_cash_back_id, threshold_min_value, "threshold _max_value", cash_per, status, 
+    sys_cash_back_id, sys_cash_back_no, threshold_min_value, threshold_max_value, cash_per, status, 
     level, start_date, end_date, created_date, updated_date
   </sql>
+  
+  <select id="queryForPage" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCard" >
+  	 select <include refid="Base_Column_List" />
+    from sys_cash_back gc where 1=1
+    <trim>
+      <if test="level != null &amp;&amp; level != ''" >
+        and level = #{level,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null &amp;&amp; status != ''" >
+        and status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="sys_cash_back_no != null &amp;&amp; sys_cash_back_no != ''" >
+        and sys_cash_back_no = #{sys_cash_back_no,jdbcType=VARCHAR}
+      </if>
+      <if test="start_date_after != null &amp;&amp; start_date_after != ''">
+        and start_date between CONCAT(#{start_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{start_date_before,jdbcType=VARCHAR},' 23:59:59') 
+      </if>
+    </trim>
+  </select>
+  
+  <select id="checkvalid" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCard" >
+  	 select <include refid="Base_Column_List" />
+    from sys_cash_back gc where 1=1
+    <trim>
+        and level = #{level,jdbcType=VARCHAR}
+        and sys_cash_back_no = #{sys_cash_back_no,jdbcType=VARCHAR}
+    </trim>
+  </select>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from sys_cash_back
-    where sys_cash_back_id = #{sysCashBackId,jdbcType=VARCHAR}
+    where sys_cash_back_id = #{sys_cash_back_id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_cash_back
-    where sys_cash_back_id = #{sysCashBackId,jdbcType=VARCHAR}
+    where sys_cash_back_id = #{sys_cash_back_id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.system.model.SysCashBack" >
-    insert into sys_cash_back (sys_cash_back_id, threshold_min_value, 
-      "threshold _max_value", cash_per, status, 
+    insert into sys_cash_back (sys_cash_back_id, sys_cash_back_no, threshold_min_value, 
+      threshold_max_value, cash_per, status, 
       level, start_date, end_date, 
       created_date, updated_date)
-    values (#{sysCashBackId,jdbcType=VARCHAR}, #{thresholdMinValue,jdbcType=VARCHAR}, 
-      #{thresholdMaxValue,jdbcType=VARCHAR}, #{cashPer,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-      #{level,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
-      #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP})
+    values (#{sys_cash_back_id,jdbcType=VARCHAR}, #{sys_cash_back_no,jdbcType=VARCHAR}, #{threshold_min_value,jdbcType=VARCHAR}, 
+      #{threshold_max_value,jdbcType=VARCHAR}, #{cash_per,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{start_date,jdbcType=TIMESTAMP}, #{end_date,jdbcType=TIMESTAMP}, 
+      #{created_date,jdbcType=TIMESTAMP}, #{updated_date,jdbcType=TIMESTAMP})
   </insert>
+  
   <insert id="insertSelective" parameterType="com.sysongy.poms.system.model.SysCashBack" >
     insert into sys_cash_back
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="sysCashBackId != null" >
+      <if test="sys_cash_back_id != null" >
         sys_cash_back_id,
       </if>
-      <if test="thresholdMinValue != null" >
+      <if test="threshold_min_value != null" >
         threshold_min_value,
       </if>
-      <if test="thresholdMaxValue != null" >
-        "threshold _max_value",
+      <if test="threshold_max_value != null" >
+        threshold_max_value,
       </if>
-      <if test="cashPer != null" >
+      <if test="cash_per != null" >
         cash_per,
       </if>
       <if test="status != null" >
@@ -58,31 +90,31 @@
       <if test="level != null" >
         level,
       </if>
-      <if test="startDate != null" >
+      <if test="start_date != null" >
         start_date,
       </if>
-      <if test="endDate != null" >
+      <if test="end_date != null" >
         end_date,
       </if>
-      <if test="createdDate != null" >
+      <if test="created_date != null" >
         created_date,
       </if>
-      <if test="updatedDate != null" >
+      <if test="updated_date != null" >
         updated_date,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="sysCashBackId != null" >
-        #{sysCashBackId,jdbcType=VARCHAR},
+      <if test="sys_cash_back_id != null" >
+        #{sys_cash_back_id,jdbcType=VARCHAR},
       </if>
-      <if test="thresholdMinValue != null" >
-        #{thresholdMinValue,jdbcType=VARCHAR},
+      <if test="threshold_min_value != null" >
+        #{threshold_min_value,jdbcType=VARCHAR},
       </if>
-      <if test="thresholdMaxValue != null" >
-        #{thresholdMaxValue,jdbcType=VARCHAR},
+      <if test="threshold_max_value != null" >
+        #{threshold_max_value,jdbcType=VARCHAR},
       </if>
-      <if test="cashPer != null" >
-        #{cashPer,jdbcType=VARCHAR},
+      <if test="cash_per != null" >
+        #{cash_per,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
         #{status,jdbcType=VARCHAR},
@@ -90,31 +122,31 @@
       <if test="level != null" >
         #{level,jdbcType=VARCHAR},
       </if>
-      <if test="startDate != null" >
-        #{startDate,jdbcType=TIMESTAMP},
+      <if test="start_date != null" >
+        #{start_date,jdbcType=TIMESTAMP},
       </if>
-      <if test="endDate != null" >
-        #{endDate,jdbcType=TIMESTAMP},
+      <if test="end_date != null" >
+        #{end_date,jdbcType=TIMESTAMP},
       </if>
-      <if test="createdDate != null" >
-        #{createdDate,jdbcType=TIMESTAMP},
+      <if test="created_date != null" >
+        #{created_date,jdbcType=TIMESTAMP},
       </if>
-      <if test="updatedDate != null" >
-        #{updatedDate,jdbcType=TIMESTAMP},
+      <if test="updated_date != null" >
+        #{updated_date,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.system.model.SysCashBack" >
     update sys_cash_back
     <set >
-      <if test="thresholdMinValue != null" >
-        threshold_min_value = #{thresholdMinValue,jdbcType=VARCHAR},
+      <if test="threshold_min_value != null" >
+        threshold_min_value = #{threshold_min_value,jdbcType=VARCHAR},
       </if>
-      <if test="thresholdMaxValue != null" >
-        "threshold _max_value" = #{thresholdMaxValue,jdbcType=VARCHAR},
+      <if test="threshold_max_value != null" >
+        threshold_max_value = #{threshold_max_value,jdbcType=VARCHAR},
       </if>
-      <if test="cashPer != null" >
-        cash_per = #{cashPer,jdbcType=VARCHAR},
+      <if test="cash_per != null" >
+        cash_per = #{cash_per,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
         status = #{status,jdbcType=VARCHAR},
@@ -122,32 +154,32 @@
       <if test="level != null" >
         level = #{level,jdbcType=VARCHAR},
       </if>
-      <if test="startDate != null" >
-        start_date = #{startDate,jdbcType=TIMESTAMP},
+      <if test="start_date != null" >
+        start_date = #{start_date,jdbcType=TIMESTAMP},
       </if>
-      <if test="endDate != null" >
-        end_date = #{endDate,jdbcType=TIMESTAMP},
+      <if test="end_date != null" >
+        end_date = #{end_date,jdbcType=TIMESTAMP},
       </if>
-      <if test="createdDate != null" >
-        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      <if test="created_date != null" >
+        created_date = #{created_date,jdbcType=TIMESTAMP},
       </if>
-      <if test="updatedDate != null" >
-        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      <if test="updated_date != null" >
+        updated_date = #{updated_date,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where sys_cash_back_id = #{sysCashBackId,jdbcType=VARCHAR}
+    where sys_cash_back_id = #{sys_cash_back_id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.system.model.SysCashBack" >
     update sys_cash_back
-    set threshold_min_value = #{thresholdMinValue,jdbcType=VARCHAR},
-      "threshold _max_value" = #{thresholdMaxValue,jdbcType=VARCHAR},
-      cash_per = #{cashPer,jdbcType=VARCHAR},
+    set threshold_min_value = #{threshold_min_value,jdbcType=VARCHAR},
+      threshold_max_value = #{threshold_max_value,jdbcType=VARCHAR},
+      cash_per = #{cash_per,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       level = #{level,jdbcType=VARCHAR},
-      start_date = #{startDate,jdbcType=TIMESTAMP},
-      end_date = #{endDate,jdbcType=TIMESTAMP},
-      created_date = #{createdDate,jdbcType=TIMESTAMP},
-      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
-    where sys_cash_back_id = #{sysCashBackId,jdbcType=VARCHAR}
+      start_date = #{start_date,jdbcType=TIMESTAMP},
+      end_date = #{end_date,jdbcType=TIMESTAMP},
+      created_date = #{created_date,jdbcType=TIMESTAMP},
+      updated_date = #{updated_date,jdbcType=TIMESTAMP}
+    where sys_cash_back_id = #{sys_cash_back_id,jdbcType=VARCHAR}
   </update>
 </mapper>

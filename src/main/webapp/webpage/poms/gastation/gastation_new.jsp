@@ -313,7 +313,7 @@
 			        	   var s = JSON.parse(data);
 			        	   $("#operations_id").append("<option value=''>请选择</option>");
 			        	   for(var i=0;i<s.length;i++){
-			        		   $("#operations_id").append("<option value='"+s[i].userName+"'>"+s[i].userName+"</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"'>"+s[i].userName+" - "+s[i].realName+"</option>");
 			        	   }
 	           		}
 	            }

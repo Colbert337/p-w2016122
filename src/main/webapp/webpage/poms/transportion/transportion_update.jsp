@@ -457,8 +457,7 @@
 			        	   $("#salesmen_id").empty();
 			        	   var s = JSON.parse(data);
 			        	   for(var i=0;i<s.length;i++){
-			        		   $("#salesmen_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
-			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].userName+" - "+s[i].realName+"</option>");
 			        	   }
 	           		}
 	            }

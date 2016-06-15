@@ -131,6 +131,29 @@
 							</li>
 						</ul>
 					</li> --%>
+					
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-tag"></i>
+							<span class="menu-text"> 个人用户管理 </span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/sysparam/cashbackList')">
+									<i class="menu-icon fa fa-caret-right"></i>
+									返现设置
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+						</ul>
+					</li>
+					
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-pencil-square-o"></i>
@@ -175,46 +198,6 @@
 						</ul>
 					</li>
 
-
-					<!-- <li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-tag"></i>
-							<span class="menu-text"> 权限管理 </span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="">
-								<a href="#">
-									<i class="menu-icon fa fa-caret-right"></i>
-									用户管理
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="">
-								<a href="#">
-									<i class="menu-icon fa fa-caret-right"></i>
-									角色管理
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="">
-								<a href="#">
-									<i class="menu-icon fa fa-caret-right"></i>
-									资源管理
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li> -->
 
 					<!-- <li class="">
 						<a href="#" class="dropdown-toggle">

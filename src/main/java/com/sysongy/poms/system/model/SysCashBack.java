@@ -2,104 +2,138 @@ package com.sysongy.poms.system.model;
 
 import java.util.Date;
 
-public class SysCashBack {
-    private String sysCashBackId;
+import com.sysongy.poms.base.model.BaseModel;
 
-    private String thresholdMinValue;
+public class SysCashBack extends BaseModel{
 
-    private String thresholdMaxValue;
+	private String sys_cash_back_id;
+	
+	private String sys_cash_back_no;
 
-    private String cashPer;
+	private String threshold_min_value;
 
-    private String status;
+	private String threshold_max_value;
 
-    private String level;
+	private String cash_per;
 
-    private Date startDate;
+	private String status;
 
-    private Date endDate;
+	private String level;
 
-    private Date createdDate;
+	private Date start_date;
 
-    private Date updatedDate;
+	private Date end_date;
 
-    public String getSysCashBackId() {
-        return sysCashBackId;
-    }
+	private Date created_date;
 
-    public void setSysCashBackId(String sysCashBackId) {
-        this.sysCashBackId = sysCashBackId == null ? null : sysCashBackId.trim();
-    }
+	private Date updated_date;
+	
+	private String start_date_after;
+	
+	private String start_date_before;
 
-    public String getThresholdMinValue() {
-        return thresholdMinValue;
-    }
+	public String getSys_cash_back_no() {
+		return sys_cash_back_no;
+	}
 
-    public void setThresholdMinValue(String thresholdMinValue) {
-        this.thresholdMinValue = thresholdMinValue == null ? null : thresholdMinValue.trim();
-    }
+	public void setSys_cash_back_no(String sys_cash_back_no) {
+		this.sys_cash_back_no = sys_cash_back_no;
+	}
 
-    public String getThresholdMaxValue() {
-        return thresholdMaxValue;
-    }
+	public String getStart_date_after() {
+		return start_date_after;
+	}
 
-    public void setThresholdMaxValue(String thresholdMaxValue) {
-        this.thresholdMaxValue = thresholdMaxValue == null ? null : thresholdMaxValue.trim();
-    }
+	public void setStart_date_after(String start_date_after) {
+		this.start_date_after = start_date_after;
+	}
 
-    public String getCashPer() {
-        return cashPer;
-    }
+	public String getStart_date_before() {
+		return start_date_before;
+	}
 
-    public void setCashPer(String cashPer) {
-        this.cashPer = cashPer == null ? null : cashPer.trim();
-    }
+	public void setStart_date_before(String start_date_before) {
+		this.start_date_before = start_date_before;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public String getSys_cash_back_id() {
+		return sys_cash_back_id;
+	}
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
+	public void setSys_cash_back_id(String sys_cash_back_id) {
+		this.sys_cash_back_id = sys_cash_back_id;
+	}
 
-    public String getLevel() {
-        return level;
-    }
+	public String getThreshold_min_value() {
+		return threshold_min_value;
+	}
 
-    public void setLevel(String level) {
-        this.level = level == null ? null : level.trim();
-    }
+	public void setThreshold_min_value(String threshold_min_value) {
+		this.threshold_min_value = threshold_min_value;
+	}
 
-    public Date getStartDate() {
-        return startDate;
-    }
+	public String getThreshold_max_value() {
+		return threshold_max_value;
+	}
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+	public void setThreshold_max_value(String threshold_max_value) {
+		this.threshold_max_value = threshold_max_value;
+	}
 
-    public Date getEndDate() {
-        return endDate;
-    }
+	public String getCash_per() {
+		return cash_per;
+	}
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+	public void setCash_per(String cash_per) {
+		this.cash_per = cash_per;
+	}
 
-    public Date getCreatedDate() {
-        return createdDate;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public Date getUpdatedDate() {
-        return updatedDate;
-    }
+	public String getLevel() {
+		return level;
+	}
 
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
-    }
+	public void setLevel(String level) {
+		this.level = level;
+	}
+
+	public Date getStart_date() {
+		return start_date;
+	}
+
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
+	}
+
+	public Date getEnd_date() {
+		return end_date;
+	}
+
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
+	}
+
+	public Date getCreated_date() {
+		return created_date;
+	}
+
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
+
+	public Date getUpdated_date() {
+		return updated_date;
+	}
+
+	public void setUpdated_date(Date updated_date) {
+		this.updated_date = updated_date;
+	}
+
 }

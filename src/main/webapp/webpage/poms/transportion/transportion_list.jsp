@@ -104,27 +104,6 @@
 								重置
 							</button>
 						</div>
-
-						<%-- <div class="col-md-3 control-label no-padding-right">
-						    
-							<label>用户卡状态:</label>
-							<select class="chosen-select " name="card_status" >
-									 <s:option flag="true" gcode="CARDSTATUS" form="transportion" field="card_status" link="true" />
-							</select>
-						</div>
-						
-						<div class="col-md-2 control-label  no-padding-right">
-						    <label>操作员:</label>
-							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${transportion.operator}"/>
-						</div>
-						
-						<div class="col-md-4 input-group no-padding-right  control-label">
-						    <label>操作时间:</label>
-							<span class="input-group-addon">
-									<i class="fa fa-calendar bigger-110"></i>
-							</span>
-							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${transportion.storage_time_range}"/>
-						</div> --%>
 					</div>
 
 					<div class="clearfix">

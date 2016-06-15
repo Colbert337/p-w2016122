@@ -132,6 +132,9 @@ function nextpage(formid){
 	$(formid).ajaxSubmit(listOptions);
 }
 
+function compareDate(d1,d2){
+	return Date.parse(new Date(d1)) > Date.parse(new Date(d2));
+}
 
 //Add by xiukun
 var sjny = sjny || {};
