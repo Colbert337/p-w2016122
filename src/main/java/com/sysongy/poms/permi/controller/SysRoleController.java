@@ -2,6 +2,7 @@ package com.sysongy.poms.permi.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.model.SysRole;
@@ -11,6 +12,7 @@ import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,13 +45,15 @@ public class SysRoleController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryRoleListPage(SysRole role, ModelMap map){
+	public String queryRoleListPage(@ModelAttribute CurrUser currUser, SysRole role, ModelMap map){
 		if(role.getPageNum() == null){
 			role.setPageNum(GlobalConstant.PAGE_NUM);
 			role.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
 
 		role.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+		int roleType = currUser.getUserType();
+		role.setRoleType(roleType);
 		//封装分页参数，用于查询分页内容
 		PageInfo<SysRole> rolePageInfo = new PageInfo<SysRole>();
 		rolePageInfo = sysRoleService.queryRoleListPage(role);
@@ -64,9 +68,10 @@ public class SysRoleController extends BaseContoller{
 	 */
 	@RequestMapping("/update")
 	@ResponseBody
-	public Map<String, Object> updateRoleByRoleId(@RequestParam String sysRoleId, ModelMap map){
+	public Map<String, Object> updateRoleByRoleId(@ModelAttribute CurrUser currUser,@RequestParam String sysRoleId, ModelMap map){
 		Map<String, Object> roleMap = new HashMap<>();
-		roleMap = sysRoleService.queryRoleByRoleId(sysRoleId);
+		int userType = currUser.getUserType();
+		roleMap = sysRoleService.queryRoleByRoleId(sysRoleId,userType);
 		return roleMap;
 	}
 

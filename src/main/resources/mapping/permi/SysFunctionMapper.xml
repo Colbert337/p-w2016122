@@ -91,11 +91,20 @@
     where is_deleted = #{0}
     <!--and user_type = #{1}-->
   </select>
+  <!--根据类型查询功能列表-->
+  <select id="queryFunctionListByType" resultMap="ResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_function
+    where is_deleted = 1
+    and function_type = #{0}
+  </select>
   <!--根据当前用户ID查询功能列表-->
-  <select id="queryFunctionListByUserId" resultMap="BaseResultMap" >
-    select sf.* from sys_function sf left join sys_role_function srf on sf.sys_function_id = srf.sys_role_id
+  <select id="queryFunctionListByUserId" resultMap="ResultMap" >
+    select sf.* from sys_function sf left join sys_role_function srf on sf.sys_function_id = srf.sys_function_id
     left join sys_user_role sur on srf.sys_role_id = sur.sys_role_id
-    where sur.sys_user_id = #{0}
+    where sur.sys_user_id = #{0} and sf.function_type = #{1} and parent_id != '1'
+    order by sf.function_sort desc
     <!--and user_type = #{1}-->
   </select>
   <!--根据父级ID查询功能列表-->

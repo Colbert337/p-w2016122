@@ -16,12 +16,20 @@ public interface SysFunctionMapper {
      */
     List<Map<String, Object>> queryFunctionAllList(int userType);
 
+
+    /**
+     * 根据类型查询功能列表
+     * @param userType 用户类型
+     * @return
+     */
+    List<Map<String, Object>> queryFunctionListByType(int userType);
+
     /**
      * 根据当前用户ID查询功能菜单列表
      * @param userId 用户编号
      * @return
      */
-    List<SysFunction> queryFunctionListByUserId(String userId);
+    List<Map<String, Object>> queryFunctionListByUserId(String userId,int userType);
 
     /**
      * 根据父级ID查询功能列表

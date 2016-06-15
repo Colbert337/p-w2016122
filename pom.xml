@@ -319,6 +319,13 @@
 			<artifactId>spring-data-redis</artifactId>
 			<version>1.7.1.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>taobao-sdk</groupId>
+			<artifactId>taobao-sdk</artifactId>
+			<version>1455</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/taobao-sdk-java-auto_1455552377940-20160503.jar</systemPath>
+		</dependency>
 	</dependencies>
 	
 	<build>
@@ -354,23 +361,6 @@
                     <overwrite>true</overwrite>  
                 </configuration>
             </plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<webResources>
-						<resource>
-							<directory>${project.basedir}/lib</directory>
-							<targetPath>WEB-INF/lib</targetPath>
-							<filtering>true</filtering>
-							<includes>
-								<include>**/*.jar</include>
-							</includes>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
 
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
