@@ -42,7 +42,7 @@ public interface SysFunctionService {
      * @param userId 用户类型
      * @return
      */
-    List<SysFunction> queryFunctionListByUserId(String userId);
+    List<Map<String,Object>> queryFunctionListByUserId(String userId,int userType);
     /**
      * 根据父级ID查询功能列表
      * @param userType 用户类型

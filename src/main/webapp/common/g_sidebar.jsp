@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -50,219 +53,33 @@
 							<i class="menu-icon fa fa-tachometer"></i>
 							<span class="menu-text"> 总览 </span>
 						</a>
-
 						<b class="arrow"></b>
 					</li>
-
-					<li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-desktop"></i>
+					<c:forEach items="${currUser.userFunctionList}" var="function">
+						<li class="">
+							<a href="#" class="dropdown-toggle">
+								<i class="menu-icon fa ${function.functionIcon}"></i>
 							<span class="menu-text">
-								系统管理
+								${function.functionName}
 							</span>
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-						<b class="arrow"></b>
-						<ul class="submenu">
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/user/list/page')">
-									<i class="menu-icon fa fa-caret-right"></i>
-									用户管理
-								</a>
-								<b class="arrow"></b>
-							</li>
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/role//list/page')">
-									<i class="menu-icon fa fa-caret-right"></i>
-									角色管理
-								</a>
-								<b class="arrow"></b>
-							</li>
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/function//list/page')">
-									<i class="menu-icon fa fa-caret-right"></i>
-									功能管理
-								</a>
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li>
-
-					<li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-list"></i>
-							<span class="menu-text">资源管理</span>
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/card/cardList')">
-									<i class="menu-icon fa fa-caret-right"></i> 用户卡管理
-								</a>
-								<b class="arrow"></b>
-							</li>
-
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/card/cardLogList')">
-									<i class="menu-icon fa fa-caret-right"></i> 用户卡轨迹信息
-								</a>
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li>
-					<%-- <li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-list"></i>
-							<span class="menu-text"> 保健管理 </span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-						<ul class="submenu">
-							<li class="">
-								<a href="<%=basePath%>/web/health/showcategory">
-									<i class="menu-icon fa fa-caret-right"></i>
-									保健管理
-								</a>
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li> --%>
-					<li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-pencil-square-o"></i>
-							<span class="menu-text"> 加注站管理 </span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/gastation/gastationList')">
-									<i class="menu-icon fa fa-caret-right"></i>
-									加注站信息管理
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li>
-
-					<li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-list-alt"></i>
-							<span class="menu-text">运输公司管理</span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/transportion/transportionList')">
-									<i class="menu-icon fa fa-caret-right"></i>
-									运输公司信息管理
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-						</ul>
-					</li>
-
-
-					<!-- <li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-tag"></i>
-							<span class="menu-text"> 权限管理 </span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="">
-								<a href="#">
-									<i class="menu-icon fa fa-caret-right"></i>
-									用户管理
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="">
-								<a href="#">
-									<i class="menu-icon fa fa-caret-right"></i>
-									角色管理
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="">
-								<a href="#">
-									<i class="menu-icon fa fa-caret-right"></i>
-									资源管理
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li> -->
-
-					<!-- <li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-file-o"></i>
-
-							<span class="menu-text">
-								系统设置
-
-								#section:basics/sidebar.layout.badge
-								<span class="badge badge-primary">5</span>
-
-								/section:basics/sidebar.layout.badge
-							</span>
-
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-
-						<b class="arrow"></b>
-
-						<ul class="submenu">
-							<li class="">
-								<a href="#">
-									<i class="menu-icon fa fa-caret-right"></i>
-									支付接口
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="">
-								<a href="#">
-									<i class="menu-icon fa fa-caret-right"></i>
-									短信接口
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-
-							<li class="">
-								<a href="#">
-									<i class="menu-icon fa fa-caret-right"></i>
-									操作日志
-								</a>
-
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li> -->
+								<b class="arrow fa fa-angle-down"></b>
+							</a>
+							<b class="arrow"></b>
+							<c:if test="${function.children.size() > 0}">
+							<ul class="submenu">
+								<c:forEach items="${function.children}" var="childFunction">
+									<li class="">
+										<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>${childFunction.functionPath}')">
+											<i class="menu-icon fa fa-caret-right"></i>
+											${childFunction.functionName}
+										</a>
+										<b class="arrow"></b>
+									</li>
+								</c:forEach>
+							</ul>
+							</c:if>
+						</li>
+					</c:forEach>
 				</ul><!-- /.nav-list -->
 
 				<!-- #section:basics/sidebar.layout.minimize -->

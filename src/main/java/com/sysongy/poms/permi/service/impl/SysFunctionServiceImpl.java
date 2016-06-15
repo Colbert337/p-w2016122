@@ -6,9 +6,12 @@ import com.sysongy.poms.permi.dao.SysFunctionMapper;
 import com.sysongy.poms.permi.model.SysFunction;
 import com.sysongy.poms.permi.service.SysFunctionService;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.GroupUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,8 +74,49 @@ public class SysFunctionServiceImpl implements SysFunctionService{
      * @return
      */
     @Override
-    public List<SysFunction> queryFunctionListByUserId(String userId) {
-        return sysFunctionMapper.queryFunctionListByUserId(userId);
+    public List<Map<String,Object>> queryFunctionListByUserId(String userId,int userType) {
+
+        List<Map<String,Object>> sysFunctionList = sysFunctionMapper.queryFunctionListByUserId(userId,userType);
+        List<Map<String,Object>> functionListTree = new ArrayList<>();
+        for (Map<String,Object> function:sysFunctionList) {
+            Map<String,Object> functionTree = new HashMap<>();
+            functionTree.put("id",function.get("sysFunctionId"));
+            functionTree.put("pId",function.get("parentId"));
+            functionTree.put("name",function.get("functionName"));
+            functionTree.put("icon",function.get("functionIcon"));
+            functionTree.put("path",function.get("functionPath"));
+
+            functionListTree.add(functionTree);
+        }
+        //将数据做分组处理，需要优化分组函数
+		Map group = GroupUtil.group(sysFunctionList, new GroupUtil.GroupBy<String>() {
+			@Override
+			public String groupby(Object obj) {
+				Map m = (Map) obj;
+				return m.get("parentId").toString();    // 分组依据为parent
+			}
+		});
+
+		List childL = new ArrayList();
+		for (Map<String, Object> map : sysFunctionList) {
+			String groupKey = map.get("sysFunctionId").toString();
+			//groupkey 包含id时，当前id对象有一个子集
+			//移除子集中的对象
+			//{}
+			if (group.containsKey(groupKey)) {
+				List childList = (List) group.get(groupKey);
+				childL.addAll(childList);
+				map.put("children", childList);
+			}
+		}
+
+		sysFunctionList.removeAll(childL);
+
+		//combination data to response
+		Map<String,Object> m = new HashMap<>();
+		m.put("resMenu", sysFunctionList);
+		/*functionMap.put("sysFunctionList",sysFunctionList);*/
+        return sysFunctionList;
     }
 
     /**

@@ -17,10 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.sysongy.util.GlobalConstant;
@@ -65,16 +62,18 @@ public class BaseContoller {
     }
 
     @RequestMapping(value = {"main"})
-    public String main(ModelMap map){
+    @ResponseBody
+    public List<Map<String, Object>> main(@ModelAttribute CurrUser currUser, ModelMap map){
     	/*ModelAndView result = new ModelAndView();
     	String pmcName = "登录测试成功！";
     	result.addObject("pmcName", pmcName);
     	result.addObject("current_module", "webpage/test");
         result.setViewName("comm/g_main");*/
-
+        SysUser user = currUser.getUser();
+        List<Map<String, Object>> functionList = sysFunctionService.queryFunctionListByUserId(user.getSysUserId(),user.getUserType());
         map.addAttribute("current_module", "webpage/demo/panel");
 
-        return "common/g_main";
+        return functionList;
     }
 
     /**
@@ -106,7 +105,7 @@ public class BaseContoller {
             currUser.setUserType(userType);
 
             //封装用户菜单信息
-            List<SysFunction> functionList = sysFunctionService.queryFunctionListByUserId(user.getSysUserId());
+            List<Map<String, Object>> functionList = sysFunctionService.queryFunctionListByUserId(user.getSysUserId(),user.getUserType());
             currUser.setUserFunctionList(functionList);
 
     		map.addAttribute("current_module", "webpage/demo/demo");

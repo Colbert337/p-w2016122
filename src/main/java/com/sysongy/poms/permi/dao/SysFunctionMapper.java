@@ -29,7 +29,7 @@ public interface SysFunctionMapper {
      * @param userId 用户编号
      * @return
      */
-    List<SysFunction> queryFunctionListByUserId(String userId);
+    List<Map<String, Object>> queryFunctionListByUserId(String userId,int userType);
 
     /**
      * 根据父级ID查询功能列表
