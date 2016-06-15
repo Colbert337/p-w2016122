@@ -268,29 +268,17 @@
 			<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
-							<%--<th class="center">
-								<label class="pos-rel">
-									<input type="checkbox" class="ace" />
-									<span class="lbl"></span>
-								</label>
-							</th>--%>
 							<th>角色名称</th>
 							<th>角色类型</th>
 							<th>角色状态</th>
 							<th class="hidden-480">角色描述</th>
 							<th>添加时间</th>
-							<th>操作</th>
+							<th class="text-center">操作</th>
 						</tr>
 						</thead>
 						<tbody>
 						<c:forEach items="${roleList}" var="role">
 							<tr>
-								<%--<td class="center">
-									<label class="pos-rel">
-										<input type="checkbox" class="ace" />
-										<span class="lbl"></span>
-									</label>
-								</td>--%>
 								<td>${role.roleName}</td>
 								<td><s:Code2Name mcode="${role.roleType}" gcode="PLF_TYPE"></s:Code2Name></td>
 								<td>
@@ -303,15 +291,25 @@
 								</td>
 								<td>${role.roleDesc}</td>
 								<td><fmt:formatDate value="${role.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td>
-									<a class="btn btn-sm btn-white btn-primary" href="javascript:editRole('${role.sysRoleId}');">修改</a>
-									<c:if test="${role.roleStatus == 0}">
-										<a class="btn btn-sm btn-white btn-inverse" href="javascript:updateStatus('${role.sysRoleId}',1);">禁用</a>
-									</c:if>
-									<c:if test="${role.roleStatus == 1}">
-										<a class="btn btn-sm btn-white btn-primary" href="javascript:updateStatus('${role.sysRoleId}',0);">启用</a>
-									</c:if>
-									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteRole('${role.sysRoleId}');">删除</a>
+								<td class="text-center">
+									<a href="javascript:editRole('${role.sysRoleId}');" title="修改">
+										<span class="ace-icon fa fa-pencil bigger-130"></span>
+									</a>
+									<span class="span-state">
+										<c:if test="${role.roleStatus == 0}">
+											<a class="green" href="javascript:updateStatus('${role.sysRoleId}',1);" title="禁用">
+												<span class="ace-icon fa fa-unlock bigger-130"></span>
+											</a>
+										</c:if>
+										<c:if test="${role.roleStatus == 1}">
+											<a class="red" href="javascript:updateStatus('${role.sysRoleId}',0);" title="启用">
+												<span class="ace-icon fa fa-lock bigger-130"></span>
+											</a>
+										</c:if>
+									</span>
+									<a class="" href="javascript:deleteRole('${role.sysRoleId}');">
+										<span class="ace-icon fa fa-trash-o bigger-130" title="删除"></span>
+									</a>
 								</td>
 							</tr>
 						</c:forEach>

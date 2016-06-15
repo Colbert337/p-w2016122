@@ -60,69 +60,35 @@
 			<div class="fl-l dialog-font" id="warn-content">警告！</div>
 		</div>
 	</div>
-	<script type="text/javascript" >
 
-	//成功提示
-	function sucDialog(cont){
-		if(cont != ""){
-			$("#suc-content").text(cont)
-		}
-		var d = dialog({
-			width:470,
-			height:90,
-//			top:'20%',
-			content: $("#suc-hint"),
-			fixed: false,
-			drag: true
-			});
-			d.show();
-			setTimeout(function () {
-			    d.close().remove();
-			}, 1000); 
-	}
-
-	//失败提示
-	function failDialog(cont){
-		if(cont != ""){
-			$("#fail-content").text(cont)
-		}
-		var d = dialog({
-			width:470,
-			height:90,
-			top:'20%',
-			content: $("#fail-hint"),
-			fixed: false,
-			drag: true
-			});
-			d.show();
-			setTimeout(function () {
-			    d.close().remove();
-			}, 1000);
-	}
-
-	//警告提示
-	function warnDialog(cont){
-		if(cont != ""){
-			$("#warn-content").text(cont)
-		}
-		var d = dialog({
-			width:470,
-			height:90,
-			top:'20%',
-			content: $("#warn-hint"),
-			fixed: false,
-			drag: true
-			});
-			d.show();
-			setTimeout(function () {
-			    d.close().remove();
-			}, 1000);
-	}
-
-	</script>
 		<script type="text/javascript">
 			if('ontouchstart' in document.documentElement) document.write("<script src='<%=basePath %>/assets/js/jquery.mobile.custom.js'>"+"<"+"/script>");
+			var sjny = sjny || {};
+			sjny.basePath = '<%=basePath %>';
 		</script>
+
+		<!--[if IE]>
+		<script type="text/javascript">
+		window.jQuery || document.write("<script src='../assets/js/jquery1x.js'>"+"<"+"/script>");
+		</script>
+		<![endif]-->
+		<script src="<%=basePath %>/assets/js/jquery-1.9.1.min.js"></script>
+		<!-- ace settings handler -->
+		<script src="<%=basePath %>/assets/js/ace-extra.js"></script>
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+		<!--[if lte IE 8]>
+		<script src="<%=basePath %>/assets/js/html5shiv.js"></script>
+		<script src="<%=basePath %>/assets/js/respond.js"></script>
+		<![endif]-->
+
+		<script type="text/javascript"  src="<%=basePath %>/assets/artDialog/dist/dialog-plus-min.js"></script>
+		<!-- JqueryValidationEngine表单验证  -->
+		<link rel="stylesheet" type="text/css" href="<%=basePath %>/assets/jQueryVE/css/validationEngine.jquery.css" />
+		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine-zh_CN.js"></script>
+		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine.min.js"></script>
+		<script type="text/javascript" src="<%=basePath %>/assets/js/bootstrapValidator.js"></script>
+
 		<script src="<%=basePath %>/assets/js/bootstrap.js"></script>
 
 		<!-- page specific plugin scripts -->
@@ -134,6 +100,12 @@
 		<script src="<%=basePath %>/assets/js/jquery.ui.touch-punch.js"></script>
 		<script src="<%=basePath %>/assets/js/jquery.easypiechart.js"></script>
 		<script src="<%=basePath %>/assets/js/jquery.sparkline.js"></script>
+
+		<!-- datepicker -->
+		<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
+		<script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
+		<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
+		<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
 
 		<!-- ace scripts -->
 		<script src="<%=basePath %>/assets/js/ace/elements.scroller.js"></script>
@@ -157,7 +129,6 @@
 		<script src="<%=basePath %>/assets/js/ace/ace.settings-skin.js"></script>
 		<script src="<%=basePath %>/assets/js/ace/ace.widget-on-reload.js"></script>
 		<script src="<%=basePath %>/assets/js/ace/ace.searchbox-autocomplete.js"></script>
-
 
 		<!-- 表单提交及请求处理 -->
 		<script src="<%=basePath %>/common/js/sysongy_commons.js"></script>
@@ -373,5 +344,6 @@
 		<script src="<%=basePath %>/docs/assets/js/language/html.js"></script>
 		<script src="<%=basePath %>/docs/assets/js/language/css.js"></script>
 		<script src="<%=basePath %>/docs/assets/js/language/javascript.js"></script>
+
 	</body>
 </html>

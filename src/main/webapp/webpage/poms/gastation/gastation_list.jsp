@@ -250,6 +250,7 @@
 	function preUpdate(obj){
 		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
 		loadPage('#main', '../web/gastation/preUpdate?gastationid='+stationid);
+		console.log(stationid);
 	}
 	
 	function commitForm(obj){
