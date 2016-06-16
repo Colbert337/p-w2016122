@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.system.dao.SysGasPositionMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.system.model.SysGasPosition" >
+    <id column="sys_gas_position_id" property="sysGasPositionId" jdbcType="VARCHAR" />
+    <result column="gas_station_name" property="gasStationName" jdbcType="VARCHAR" />
+    <result column="gas_station_type" property="gasStationType" jdbcType="VARCHAR" />
+    <result column="gas_station_addr" property="gasStationAddr" jdbcType="VARCHAR" />
+    <result column="lng" property="lng" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+    <result column="service" property="service" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="goods_info" property="goodsInfo" jdbcType="VARCHAR" />
+    <result column="is_cooperation" property="isCooperation" jdbcType="VARCHAR" />
+    <result column="is_authenticate" property="isAuthenticate" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sys_gas_position_id, gas_station_name, gas_station_type, gas_station_addr, lng, lat, 
+    service, telephone, goods_info, is_cooperation, is_authenticate, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_gas_position
+    where sys_gas_position_id = #{sysGasPositionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_gas_position
+    where sys_gas_position_id = #{sysGasPositionId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.system.model.SysGasPosition" >
+    insert into sys_gas_position (sys_gas_position_id, gas_station_name, 
+      gas_station_type, gas_station_addr, lng, 
+      lat, service, telephone, 
+      goods_info, is_cooperation, is_authenticate, 
+      created_date, updated_date)
+    values (#{sysGasPositionId,jdbcType=VARCHAR}, #{gasStationName,jdbcType=VARCHAR}, 
+      #{gasStationType,jdbcType=VARCHAR}, #{gasStationAddr,jdbcType=VARCHAR}, #{lng,jdbcType=VARCHAR}, 
+      #{lat,jdbcType=VARCHAR}, #{service,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{goodsInfo,jdbcType=VARCHAR}, #{isCooperation,jdbcType=VARCHAR}, #{isAuthenticate,jdbcType=VARCHAR}, 
+      #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.system.model.SysGasPosition" >
+    insert into sys_gas_position
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysGasPositionId != null" >
+        sys_gas_position_id,
+      </if>
+      <if test="gasStationName != null" >
+        gas_station_name,
+      </if>
+      <if test="gasStationType != null" >
+        gas_station_type,
+      </if>
+      <if test="gasStationAddr != null" >
+        gas_station_addr,
+      </if>
+      <if test="lng != null" >
+        lng,
+      </if>
+      <if test="lat != null" >
+        lat,
+      </if>
+      <if test="service != null" >
+        service,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="goodsInfo != null" >
+        goods_info,
+      </if>
+      <if test="isCooperation != null" >
+        is_cooperation,
+      </if>
+      <if test="isAuthenticate != null" >
+        is_authenticate,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysGasPositionId != null" >
+        #{sysGasPositionId,jdbcType=VARCHAR},
+      </if>
+      <if test="gasStationName != null" >
+        #{gasStationName,jdbcType=VARCHAR},
+      </if>
+      <if test="gasStationType != null" >
+        #{gasStationType,jdbcType=VARCHAR},
+      </if>
+      <if test="gasStationAddr != null" >
+        #{gasStationAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="service != null" >
+        #{service,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsInfo != null" >
+        #{goodsInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isCooperation != null" >
+        #{isCooperation,jdbcType=VARCHAR},
+      </if>
+      <if test="isAuthenticate != null" >
+        #{isAuthenticate,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.system.model.SysGasPosition" >
+    update sys_gas_position
+    <set >
+      <if test="gasStationName != null" >
+        gas_station_name = #{gasStationName,jdbcType=VARCHAR},
+      </if>
+      <if test="gasStationType != null" >
+        gas_station_type = #{gasStationType,jdbcType=VARCHAR},
+      </if>
+      <if test="gasStationAddr != null" >
+        gas_station_addr = #{gasStationAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        lng = #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        lat = #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="service != null" >
+        service = #{service,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsInfo != null" >
+        goods_info = #{goodsInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isCooperation != null" >
+        is_cooperation = #{isCooperation,jdbcType=VARCHAR},
+      </if>
+      <if test="isAuthenticate != null" >
+        is_authenticate = #{isAuthenticate,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sys_gas_position_id = #{sysGasPositionId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.system.model.SysGasPosition" >
+    update sys_gas_position
+    set gas_station_name = #{gasStationName,jdbcType=VARCHAR},
+      gas_station_type = #{gasStationType,jdbcType=VARCHAR},
+      gas_station_addr = #{gasStationAddr,jdbcType=VARCHAR},
+      lng = #{lng,jdbcType=VARCHAR},
+      lat = #{lat,jdbcType=VARCHAR},
+      service = #{service,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      goods_info = #{goodsInfo,jdbcType=VARCHAR},
+      is_cooperation = #{isCooperation,jdbcType=VARCHAR},
+      is_authenticate = #{isAuthenticate,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where sys_gas_position_id = #{sysGasPositionId,jdbcType=VARCHAR}
+  </update>
+</mapper>

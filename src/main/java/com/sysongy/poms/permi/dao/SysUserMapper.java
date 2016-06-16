@@ -20,6 +20,12 @@ public interface SysUserMapper {
     Map<String,Object> queryUserMapByUserId(String userId);
 
     SysUser queryUserByAccount(String userName, String password);
+    /**
+     * 查询用户
+     * @param user
+     * @return
+     */
+    SysUser queryUser(SysUser user);
 
     int deleteUserById(String userId);
 

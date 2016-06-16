@@ -3,6 +3,7 @@ package com.sysongy.poms.permi.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
@@ -163,5 +164,22 @@ public class SysUserController extends BaseContoller{
 		sysUserList = sysUserService.queryUserListByUserType(userType);
 		String resultStr = JSON.toJSONString(sysUserList);
 		return resultStr;
+	}
+
+	@RequestMapping("/info/isExist")
+	@ResponseBody
+	public AjaxJson queryUserByNameAndType(@ModelAttribute CurrUser currUser, @RequestParam String userName,
+										   @RequestParam int userType, ModelMap map){
+		AjaxJson result = new AjaxJson();
+
+		SysUser sysUser = new SysUser();
+		sysUser.setUserName(userName);
+		sysUser.setUserType(userType);
+		SysUser user = sysUserService.queryUser(sysUser);
+		if(user != null){
+			result.setSuccess(true);
+			result.setMsg("获取成功！");
+		}
+		return result;
 	}
 }

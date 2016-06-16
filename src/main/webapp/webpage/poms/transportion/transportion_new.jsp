@@ -303,7 +303,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'../web/permi/user/list/userType?userType=2',   
+			   url:'<%=basePath%>/web/permi/user/list/userType?userType=2',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
@@ -502,7 +502,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/gastation/saveGastation',   
+		            url:'<%=basePath%>/web/gastation/saveGastation',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -516,7 +516,7 @@
 			            		loadPage('#main', '../webpage/poms/gastation/gastation_upload.jsp?gastationid='+$("#retValue").val());
 			            	}else{
 			            		//$("#main").html(data);
-			            		loadPage('#main', '../web/gastation/gastationList');
+			            		loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
 			            	}
 		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
@@ -525,7 +525,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/transportion/saveTransportion',   
+		            url:'<%=basePath%>/web/transportion/saveTransportion',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -538,7 +538,7 @@
 			            	if(tmp){
 			            		loadPage('#main', '../webpage/poms/transportion/transportion_upload.jsp?transportionid='+$("#retValue").val());
 			            	}else{
-			            		loadPage('#main', '../web/transportion/transportionList');
+			            		loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 			            	}
 		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {;
@@ -550,7 +550,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/transportion/transportionList');
+			loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 		}
 		
 		function setOperationName(obj){

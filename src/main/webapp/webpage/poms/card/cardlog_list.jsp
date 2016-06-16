@@ -233,7 +233,7 @@
 	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 	
 	var listOptions ={   
-            url:'../web/card/cardLogList',   
+            url:'<%=basePath%>/web/card/cardLogList',   
             type:'post',                    
             dataType:'html',
             success:function(data){
@@ -260,6 +260,6 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/card/cardLogList');
+		loadPage('#main', '<%=basePath%>/web/card/cardLogList');
 	}
 	</script>
