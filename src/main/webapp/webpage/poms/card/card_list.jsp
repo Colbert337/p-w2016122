@@ -141,7 +141,7 @@
 									<th onclick="orderBy(this,'card_property');" id="card_property_order">用户卡属性</th>
 									<th onclick="orderBy(this,'workstation');" id="workstation_order">所属工作站</th>
 									<th onclick="orderBy(this,'workstation_resp');" id="workstation_resp_order">工作站领取人</th>
-									<th onclick="orderBy(this,'operator');" id="operator_order">操作人</th>
+									<th onclick="orderBy(this,'operator');" id="operator_order">操作员</th>
 									<th onclick="orderBy(this,'batch_no');" id="batch_no_order">入库批次号</th>
 									<th onclick="orderBy(this,'storage_time');" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
 									<th onclick="orderBy(this,'release_time');" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>

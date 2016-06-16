@@ -8,11 +8,6 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
-	
-	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/sysongy_commons.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/poms/sysparam/system_cashback_new.js"></script>
 
 			<!-- /section:basics/sidebar -->

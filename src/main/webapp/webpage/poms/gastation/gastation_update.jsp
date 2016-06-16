@@ -574,6 +574,15 @@
 		                validators: { 
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
+		                    },
+		                    callback: {
+		                    	message: '平台有效期必须大于当前日期',
+		                    	callback: function (value, validator, $field) {
+	                                 if(compareDate(new Date().toLocaleDateString(),value)){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
 		                },
 		                trigger: 'change'

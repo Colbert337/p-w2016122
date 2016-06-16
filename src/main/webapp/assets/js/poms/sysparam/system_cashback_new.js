@@ -63,7 +63,7 @@
 		                    }
 		                }
 		            },
-		            start_date: {
+		            start_date_after: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '生效日期不能为空'
@@ -71,7 +71,7 @@
 		                },
 		                trigger: 'change'
 		            },
-		            end_date: {
+		            start_date_before: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '失效日期不能为空'
@@ -79,7 +79,7 @@
 		                    callback: {
 		                    	message: '失效日期必须大于生效日期',
 		                    	callback: function (value, validator, $field) {
-		                    		return compareDate($('[name=end_date]').val(),$('[name=start_date]').val());
+		                    		return compareDate(value, $('[name=start_date_after]').val());
 	                            }
 		                    }
 		                },
@@ -109,10 +109,11 @@
 		            dataType:'text',
 		            success:function(data){
 		            	$("#main").html(data);
+		            	$("#modal-table").modal("show");
 						 if($("#retCode").val() != "100"){
 			            	 init();	
 			          }
-						 $("#modal-table").modal("show");
+						
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
 		 	       }

@@ -42,6 +42,9 @@ public class GastationController extends BaseContoller{
 				gastation.setPageNum(1);
 				gastation.setPageSize(10);
 			}
+			if(StringUtils.isEmpty(gastation.getOrderby())){
+				gastation.setOrderby("created_time asc");
+			}
 
 			PageInfo<Gastation> pageinfo = service.queryGastation(gastation);
 

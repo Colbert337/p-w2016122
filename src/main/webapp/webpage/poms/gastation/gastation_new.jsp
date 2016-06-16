@@ -220,11 +220,13 @@
 												保存
 											</button>
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn" type="reset">
+											
+											<button class="btn" type="button" onclick="init();">
 												<i class="ace-icon fa fa-repeat bigger-110"></i>
 												重置
 											</button>
 											&nbsp; &nbsp; &nbsp;
+											
 											<button class="btn btn-success" type="buttom" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
@@ -453,6 +455,15 @@
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
 		                    },
+		                    callback: {
+		                    	message: '平台有效期必须大于当前日期',
+		                    	callback: function (value, validator, $field) {
+	                                 if(compareDate(new Date().toLocaleDateString(),value)){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
+		                    }
 		                },
 		                trigger: 'change'
 		            },
@@ -550,5 +561,9 @@
 		
 		function setOperationName(obj){
 			$("#operations_name").val($(obj).val());
+		}
+		
+		function init(){
+			loadPage('#main', '../webpage/poms/gastation/gastation_new.jsp');
 		}
 		</script>

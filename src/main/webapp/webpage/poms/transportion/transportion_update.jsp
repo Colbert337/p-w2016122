@@ -276,72 +276,6 @@
 											</div>
 										</div>
 									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> LNG储装证书： </label>
-										<div class="col-sm-4">
-											<div class="widget-box">
-												<div class="widget-header">
-													<h4 class="widget-title">LNG储装证书照片上传</h4>
-												</div>
-													
-													<ul class="ace-thumbnails clearfix">
-														<li>
-															<a href="<%=imagePath %>${station.lng_certif}" data-rel="colorbox">
-																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.lng_certif}" />
-																<div class="text">
-																	<div class="inner">点击放大</div>
-																</div>
-															</a>
-														</li>
-													</ul>
-
-												<div class="widget-body">
-													<div class="widget-main">
-														<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
-														<input type="hidden" id="lng_certif" name="lng_certif"/> 
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
-															<i class="ace-icon fa fa-check bigger-110"></i>
-															图片上传
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">  危化品证书： </label>
-										<div class="col-sm-4">
-											<div class="widget-box">
-												<div class="widget-header">
-													<h4 class="widget-title"> 危化品证书照片上传</h4>
-												</div>
-													
-													<ul class="ace-thumbnails clearfix">
-														<li>
-															<a href="<%=imagePath %>${station.dcp_certif}" data-rel="colorbox">
-																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.dcp_certif}" />
-																<div class="text">
-																	<div class="inner">点击放大</div>
-																</div>
-															</a>
-														</li>
-													</ul>
-
-												<div class="widget-body">
-													<div class="widget-main">
-														<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
-														<input type="hidden" id="dcp_certif" name="dcp_certif"/> 
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
-															<i class="ace-icon fa fa-check bigger-110"></i>
-															图片上传
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
 
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运输公司状态： </label>
@@ -548,8 +482,16 @@
 		                validators: { 
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
+		                    },
+		                    callback: {
+		                    	message: '平台有效期必须大于当前日期',
+		                    	callback: function (value, validator, $field) {
+	                                 if(compareDate(new Date().toLocaleDateString(),value)){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
-		            
 		                },
 		                trigger: 'change'
 		            },

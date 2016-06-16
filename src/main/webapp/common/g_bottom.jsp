@@ -133,6 +133,9 @@
 		<!-- 表单提交及请求处理 -->
 		<script src="<%=basePath %>/common/js/sysongy_commons.js"></script>
 		<script src="<%=basePath %>/common/js/jquery.form.js"></script>
+		
+		
+		<script src="<%=basePath %>/assets/js/jquery.nestable.js"></script>
 
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">

@@ -95,10 +95,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 公司管理员： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="col-xs-10 col-sm-5" maxlength="20"/>
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入公司管理员" class="col-xs-10 col-sm-5" maxlength="20"/>
 										</div>
 									</div>
 									
@@ -210,7 +210,7 @@
 												保存
 											</button>
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn" type="reset">
+											<button class="btn" type="button" onclick="init();">
 												<i class="ace-icon fa fa-repeat bigger-110"></i>
 												重置
 											</button>
@@ -419,6 +419,15 @@
 		                validators: { 
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
+		                    },
+		                    callback: {
+		                    	message: '平台有效期必须大于当前日期',
+		                    	callback: function (value, validator, $field) {
+	                                 if(compareDate(new Date().toLocaleDateString(),value)){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
 		                },
 		                trigger: 'change'
@@ -546,5 +555,9 @@
 		
 		function setOperationName(obj){
 			$("#operations_name").val($(obj).val());
+		}
+		
+		function init(){
+			loadPage('#main', '../webpage/poms/transportion/transportion_new.jsp');
 		}
 		</script>

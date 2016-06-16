@@ -64,12 +64,12 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>运输公司编号:</label>
-							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号"  maxlength="9" value="${transportion.sys_transportion_id}"/>
+							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号"  maxlength="8" value="${transportion.sys_transportion_id}"/>
 						</div>
 						
 						<div class="item">
 						    <label>运输公司名称:</label>
-							<input type="text" name="transportion_name" placeholder="输入运输公司名称"  maxlength="9" value="${transportion.transportion_name}"/>
+							<input type="text" name="transportion_name" placeholder="输入运输公司名称"  maxlength="20" value="${transportion.transportion_name}"/>
 						</div>
 						
 						<div class="item">
@@ -165,7 +165,7 @@
 												<i class="ace-icon fa fa-search-plus bigger-130"></i>
 											</a> 
 											<a class="green" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);" title="修改数据" data-rel="tooltip"></i>
 											</a> 
 											<!-- <a class="red"  href="javascript:void(0);" onclick="del(this);"> 
 												<i class="ace-icon fa fa-trash-o bigger-130"></i>

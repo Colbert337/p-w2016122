@@ -8,11 +8,6 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
-	
-	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/sysongy_commons.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/poms/sysparam/system_cashback_update.js"></script>
 
 			<!-- /section:basics/sidebar -->
@@ -36,8 +31,8 @@
 										
 										<div class="col-sm-3">
 											<label class="control-label no-padding-right" > <s:Code2Name mcode="${sysCashBack.sys_cash_back_no}" gcode="CASHBACK"></s:Code2Name> </label>
-											<input type="text" name="sys_cash_back_id" value="${sysCashBack.sys_cash_back_id}"/>
-											<input type="text" name="sys_cash_back_no" value="${sysCashBack.sys_cash_back_no}"/>
+											<input type="hidden" name="sys_cash_back_id" value="${sysCashBack.sys_cash_back_id}"/>
+											<input type="hidden" name="sys_cash_back_no" value="${sysCashBack.sys_cash_back_no}"/>
 										</div>
 									</div>
 									
