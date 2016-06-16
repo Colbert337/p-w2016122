@@ -366,7 +366,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="real_name"> 姓名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[minSize[5]] col-xs-10 col-sm-12" />
+										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[maxSize[5]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right"> 性别： </label>
 									<div class="col-sm-4">
@@ -385,11 +385,11 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="email"> 邮箱： </label>
 									<div class="col-sm-4">
-										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[minSize[20],custom[email]] col-xs-10 col-sm-12" />
+										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[maxSize[20],custom[email]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="mobile_phone"> 手机： </label>
 									<div class="col-sm-4">
-										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[minSize[11],custom[phone]] col-xs-10 col-sm-12" />
+										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[maxSize[11],custom[phone]] col-xs-10 col-sm-12" />
 									</div>
 								</div>
 							</form>
