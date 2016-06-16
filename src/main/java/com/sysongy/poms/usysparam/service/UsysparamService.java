@@ -13,6 +13,11 @@ public interface UsysparamService {
 	 * @param gcode
 	 * @return
      */
-	Usysparam queryUsysparamByCode(String gcode,String mcode);
+	public Usysparam queryUsysparamByCode(String gcode,String mcode);
 	
+	public Integer saveUsysparam(Usysparam recode);
+	
+	public Integer updateUsysparam(Usysparam recode);
+	
+	public Integer deleteUsysparam(Usysparam recode);
 }

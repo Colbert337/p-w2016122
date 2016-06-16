@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.transportion.dao.TransportionMapper;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
@@ -25,6 +27,8 @@ public class TransportionServiceImpl implements TransportionService {
 	private TransportionMapper transportionMapper;
 	@Autowired
 	private SysUserAccountMapper sysUserAccountMapper;
+	@Autowired
+	private SysUserService sysUserService;
 	
 	@Override
 	public PageInfo<Transportion> queryTransportion(Transportion record) throws Exception {
@@ -67,6 +71,12 @@ public class TransportionServiceImpl implements TransportionService {
 			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			record.setSys_transportion_id(newid);
 			transportionMapper.insert(record);
+			
+			SysUser user = new SysUser();
+			user.setUserName(record.getAdmin_username());
+			user.setPassword(record.getAdmin_userpassword());
+			user.setUserType(GlobalConstant.USER_TYPE_TRANSPORT);
+			sysUserService.addAdminUser(user);
 			
 			return newid;
 		}else{

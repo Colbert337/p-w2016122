@@ -5,6 +5,8 @@
     <id column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
     <result column="gas_station_name" property="gas_station_name" jdbcType="VARCHAR" />
     <result column="contact_phone" property="contact_phone" jdbcType="VARCHAR" />
+    <result column="admin_username" property="admin_username" jdbcType="VARCHAR" />
+    <result column="admin_userpassword" property="admin_userpassword" jdbcType="VARCHAR" />
     <result column="area_id" property="area_id" jdbcType="VARCHAR" />
     <result column="province_id" property="province_id" jdbcType="VARCHAR" />
     <result column="city_id" property="city_id" jdbcType="VARCHAR" />
@@ -31,7 +33,7 @@
   </resultMap>
   
   <sql id="Base_Column_List" >
-    sys_gas_station_id, gas_station_name, contact_phone, email,station_manager,
+    sys_gas_station_id, gas_station_name, contact_phone, admin_username, admin_username, email,station_manager,
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
@@ -81,7 +83,7 @@
   </delete>
   
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.Gastation" >
-    insert into sys_gas_station (sys_gas_station_id, gas_station_name, contact_phone, email,station_manager,
+    insert into sys_gas_station (sys_gas_station_id, gas_station_name, contact_phone,admin_username, admin_userpassword, email,station_manager,
       area_id, province_id, 
       city_id, address, longitude, 
       latitude, expiry_date, salesmen_id, 
@@ -93,6 +95,8 @@
     values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
       #{gas_station_name,jdbcType=VARCHAR}, 
       #{contact_phone,jdbcType=VARCHAR}, 
+      #{admin_username,jdbcType=VARCHAR}, 
+      #{admin_userpassword,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR},
       #{station_manager,jdbcType=VARCHAR},  
       #{area_id,jdbcType=VARCHAR}, #{province_id,jdbcType=VARCHAR}, 
