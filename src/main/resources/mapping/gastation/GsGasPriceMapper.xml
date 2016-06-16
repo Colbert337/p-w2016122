@@ -16,6 +16,20 @@
     gs_gas_price_id, sys_gas_station_id, gas_num, gas_name, price, unit, remark, created_date, 
     updated_date
   </sql>
+
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from gs_gas_price
+    where 1=1
+    <trim>
+      <if test="gasName != null &amp;&amp; gasName != ''" >
+        and gas_name = #{gasName,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

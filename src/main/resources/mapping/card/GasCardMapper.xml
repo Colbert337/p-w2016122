@@ -14,6 +14,7 @@
     <result column="workstation" property="workstation" jdbcType="VARCHAR" />
     <result column="workstation_resp" property="workstation_resp" jdbcType="VARCHAR" />
     <result column="batch_no" property="batch_no" jdbcType="VARCHAR" />
+    <result column="card_flag_id" property="batch_no" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     card_no, card_type, card_status, card_property, operator, storage_time, release_time, memo, workstation, workstation_resp, batch_no
@@ -188,5 +189,15 @@
       workstation_resp = #{workstation_resp,jdbcType=VARCHAR}
       batch_no = #{batch_no,jdbcType=VARCHAR}
     where card_no = #{card_no,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateCardStatus" parameterType="com.sysongy.api.client.controller.model.CRMCardUpdateInfo" >
+    update gas_card
+    <set >
+      <if test="card_status != null" >
+        card_status = #{card_status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where card_flag_id &gt; #{startID,jdbcType=INTEGER} and card_flag_id &lt; #{endID,jdbcType=INTEGER}
   </update>
 </mapper>

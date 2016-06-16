@@ -159,7 +159,18 @@ public class CRMCustomerContoller {
         AjaxJson ajaxJson = new AjaxJson();
         try
         {
+            if(!StringUtils.isNotEmpty(sysDriver.getSysDriverId())){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("用户ID未生成，请重新添加！！！");
+                return ajaxJson;
+            }
 
+            SysDriver isAlreadyHaveDrivers = driverService.queryDriverByPK(sysDriver.getSysDriverId());
+            if(isAlreadyHaveDrivers != null){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该用户已经创建成功，请勿重复创建！！！");
+                return ajaxJson;
+            }
 
             String checkCode = (String)redisClientImpl.getFromCache(sysDriver.getSysDriverId());
             if(!StringUtils.isNotEmpty(checkCode)){
@@ -193,7 +204,6 @@ public class CRMCustomerContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_USER_ERROR + e.getMessage());
             logger.error("add customer error： " + e);
-            e.printStackTrace();
         }
         return ajaxJson;
     }

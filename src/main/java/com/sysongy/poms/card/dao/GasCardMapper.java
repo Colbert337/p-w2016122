@@ -2,6 +2,7 @@ package com.sysongy.poms.card.dao;
 
 import java.util.List;
 
+import com.sysongy.api.client.controller.model.CRMCardUpdateInfo;
 import com.sysongy.poms.card.model.GasCard;
 
 public interface GasCardMapper {
@@ -23,4 +24,6 @@ public interface GasCardMapper {
     int updateByPrimaryKey(GasCard record);
     
     List<GasCard> queryForPage(GasCard record);
+
+    int updateCardStatus(CRMCardUpdateInfo crmCardUpdateInfo);
 }

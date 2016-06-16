@@ -1,6 +1,7 @@
 package com.sysongy.poms.card.service;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.api.client.controller.model.CRMCardUpdateInfo;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.model.GasCardLog;
@@ -20,4 +21,10 @@ public interface GasCardService {
 	public Integer updateAndMoveCard(GasCard obj) throws Exception;
 	
 	public PageInfo<GasCardLog> queryGasCardLog(GasCardLog obj) throws Exception;
+
+	public GasCard queryGasCardInfo(String cardNo) throws Exception;
+
+	public Integer updateGasCardInfo(GasCard cascard) throws Exception;
+
+	public Integer updateGasCardStatus(CRMCardUpdateInfo crmCardUpdateInfo) throws Exception;
 }
