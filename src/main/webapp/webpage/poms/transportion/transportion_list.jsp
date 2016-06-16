@@ -134,7 +134,7 @@
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
@@ -159,48 +159,10 @@
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 
-									<td>
-										<div class="hidden-sm hidden-xs action-buttons">
-											<a class="blue" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-search-plus bigger-130"></i>
-											</a> 
-											<a class="green" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
-											</a> 
-											<!-- <a class="red"  href="javascript:void(0);" onclick="del(this);"> 
-												<i class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a> -->
-										</div>
-
-										<div class="hidden-md hidden-lg">
-											<div class="inline pos-rel">
-												<button class="btn btn-minier btn-yellow dropdown-toggle"
-													data-toggle="dropdown" data-position="auto">
-													<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-												</button>
-
-												<ul
-													class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-													<li>
-														<a href="#" class="tooltip-info" data-rel="tooltip" title="View"> 
-															<span class="blue">
-																	<i class="ace-icon fa fa-search-plus bigger-120"></i>
-															</span>
-														</a>
-													</li>
-
-													<li><a href="#" class="tooltip-success" data-rel="tooltip" title="Edit"> <span class="green">
-																<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-														</span>
-													</a></li>
-
-													<li><a href="#" class="tooltip-error" data-rel="tooltip" title="Delete"> <span class="red">
-																<i class="ace-icon fa fa-trash-o bigger-120"></i>
-														</span>
-													</a></li>
-												</ul>
-											</div>
-										</div>
+									<td class="text-center">
+										<a class="" href="javascript:void(0);" title="编辑">
+											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+										</a>
 									</td>
 								</tr>
 								</c:forEach>

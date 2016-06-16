@@ -138,7 +138,7 @@
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
@@ -164,12 +164,10 @@
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 
-									<td>
-										<div class="text-center">
-											<a class="green" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);" title="编辑"></i>
-											</a>
-										</div>
+									<td class="text-center">
+										<a href="javascript:void(0);">
+											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);" title="编辑"></i>
+										</a>
 									</td>
 								</tr>
 								</c:forEach>
@@ -209,23 +207,6 @@
 	</form>
 </div>
 <!-- /.page-content -->
-
-
-
-<!-- page specific plugin scripts -->
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/dataTables.buttons.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.flash.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.html5.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.print.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.colVis.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/select/dataTables.select.js"></script>
-
-<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">

@@ -40,6 +40,9 @@
 		<!-- 日期控件 -->
 		<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
 
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorbox.css" />
+		<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
+
 	</head>
 
 	<body class="no-skin">

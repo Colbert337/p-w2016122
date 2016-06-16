@@ -12,16 +12,12 @@
 	<script type="text/javascript">
 			var path = "<%=basePath%>" ;
 	</script>
-			<script src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
+			
 			<script src="<%=basePath %>/assets/js/jquery.nestable.js"></script>
-			<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
 			<script src="<%=basePath %>/assets/js/poms/sysparam/system_cashback.js"></script>
 			
-			<div class="main-container" id="main-container">
-			<!-- /section:basics/sidebar -->
-			<div class="main-content">
-				<div class="main-content-inner">
-						<form id="formcashback">
+			<div class="">
+				<form id="formcashback">
 						<jsp:include page="/common/page_param.jsp"></jsp:include>
 						<div class="page-header">
 							<h1>
@@ -41,9 +37,7 @@
 											</ol>
 										</div>
 									</div>
-									
-									<div class="vspace-16-sm"></div>
-									
+
 									<div class="col-sm-10">
 											<div class="page-header">
 											<h1>
@@ -228,65 +222,4 @@
 						<jsp:include page="/common/message.jsp"></jsp:include>
 						
 						</form>
-						
-					</div><!-- /.page-content -->
-				</div>
 			</div><!-- /.main-content -->
-			
-			
-			
-<script type="text/javascript">
-			$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
-			
-			$.ajax({
-			    type: "POST",
-			    url:'../web/usysparam/query?gcode=CASHBACK&scode=',   
-			    contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-			    dataType:'text',
-			    async:false,
-			    success:function(data){
-			    		if(data != ""){
-							var s = JSON.parse(data);
-				        	   for(var i=0;i<s.length;i++){
-				        		   $("#cashbackol").append("<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value='"+s[i].mcode+"'><div class='dd-handle dd2-handle'><i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i><i class='drag-icon ace-icon fa fa-arrows bigger-125'></i></div><div class='dd2-content'>"+s[i].mname+"</div></li>");
-				        	   }
-			    		}
-			     }
-			});
-			
-			jQuery(function($){
-				$('.dd').nestable();
-			
-				$('.dd-handle a').on('mousedown', function(e){
-					e.stopPropagation();
-				});
-				
-				$('[data-rel="tooltip"]').tooltip();
-			});
-			
-			function commitForm(){
-				//设置当前页的值
-				if(typeof obj == "undefined") {
-					$("#pageNum").val("1");
-				}else{
-					$("#pageNum").val($(obj).text());
-				}
-				
-				var listOptions ={   
-			            url:'../web/sysparam/cashbackList',
-			            type:'post',                    
-			            dataType:'html',
-			            success:function(data){
-				              $("#main").html(data);
-			            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-			            	
-				       }
-				}
-				
-				$("#formcashback").ajaxSubmit(listOptions);
-			}
-			
-			function init(){
-				loadPage('#main', '../web/sysparam/cashbackList');
-			}
-		</script>
