@@ -1,8 +1,10 @@
 package com.sysongy.poms.gastation.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.util.Date;
 
-public class GsGasPrice {
+public class GsGasPrice  extends BaseModel {
     private String gsGasPriceId;
 
     private String sysGasStationId;
