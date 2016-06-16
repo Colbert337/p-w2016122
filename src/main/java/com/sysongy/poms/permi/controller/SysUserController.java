@@ -12,6 +12,9 @@ import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
+
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -168,18 +171,20 @@ public class SysUserController extends BaseContoller{
 
 	@RequestMapping("/info/isExist")
 	@ResponseBody
-	public AjaxJson queryUserByNameAndType(@ModelAttribute CurrUser currUser, @RequestParam String userName,
-										   @RequestParam int userType, ModelMap map){
-		AjaxJson result = new AjaxJson();
+	public JSONObject queryUserByNameAndType(@ModelAttribute CurrUser currUser, @RequestParam String admin_username,@RequestParam String userType, ModelMap map){
+		JSONObject json = new JSONObject();
 
 		SysUser sysUser = new SysUser();
-		sysUser.setUserName(userName);
-		sysUser.setUserType(userType);
+		sysUser.setUserName(admin_username);
+		sysUser.setUserType(Integer.valueOf(userType));
 		SysUser user = sysUserService.queryUser(sysUser);
-		if(user != null){
-			result.setSuccess(true);
-			result.setMsg("获取成功！");
+
+		if(user == null){
+			json.put("valid",true);
+		}else{
+			json.put("valid",false); 
 		}
-		return result;
+		
+		return json;
 	}
 }
