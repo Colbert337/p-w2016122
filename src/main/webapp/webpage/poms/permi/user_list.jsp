@@ -214,27 +214,14 @@
 				<div class="col-xs-12">
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
-						<%--<a class="btn btn-primary" href="javascript:loadPage('#main', '<%=basePath%>/web/permi/user/add')">--%>
 						<a class="btn btn-sm btn-primary" href="javascript:addUser();">
 							新建
 						</a>
-						<%--<a class="btn btn-primary" href="javascript:addUser();">
-							批量导入
-						</a>
-						<a href="javascript:addUser();">
-							下载模板
-						</a>--%>
 					</div>
 					<%--</h4>--%>
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
-							<%--<th class="center">
-                                <label class="pos-rel">
-                                    <input type="checkbox" class="ace" />
-                                    <span class="lbl"></span>
-                                </label>
-                            </th>--%>
 							<th>账号</th>
 							<th>姓名</th>
 							<th class="hidden-480">性别</th>
@@ -244,18 +231,12 @@
 							<th>用户类型</th>
 							<th>用户状态</th>
 							<th>创建时间</th>
-							<th>操作</th>
+							<th class="text-center">操作</th>
 						</tr>
 						</thead>
 						<tbody>
 						<c:forEach items="${userList}" var="user">
 							<tr>
-									<%--<td class="center">
-										<label class="pos-rel">
-											<input type="checkbox" class="ace" />
-											<span class="lbl"></span>
-										</label>
-									</td>--%>
 								<td>${user.userName}</td>
 								<td>${user.realName}</td>
 								<td>
@@ -279,15 +260,25 @@
 									</c:if>
 								</td>
 								<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td>
-									<a class="btn btn-sm btn-white btn-primary" href="javascript:editUser('${user.sysUserId}');">修改</a>
-									<c:if test="${user.status == 1}">
-										<a class="btn btn-sm btn-white btn-inverse" href="javascript:updateStatus('${user.sysUserId}',0);">启用</a>
-									</c:if>
-									<c:if test="${user.status == 0}">
-										<a class="btn btn-sm btn-white btn-primary" href="javascript:updateStatus('${user.sysUserId}',1);">禁用</a>
-									</c:if>
-									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteUser('${user.sysUserId}');">删除</a>
+								<td class="text-center">
+									<a class="" href="javascript:editUser('${user.sysUserId}');" title="修改">
+										<span class="ace-icon fa fa-pencil bigger-130"></span>
+									</a>
+									<span class="span-state">
+										<c:if test="${user.status == 0}">
+											<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="禁用">
+												<span class="ace-icon fa fa-unlock bigger-130"></span>
+											</a>
+										</c:if>
+										<c:if test="${user.status == 1}">
+											<a class="red" href="javascript:updateStatus('${user.sysUserId}',0);" title="启用">
+												<span class="ace-icon fa fa-lock bigger-130"></span>
+											</a>
+										</c:if>
+									</span>
+									<a class="" href="javascript:deleteUser('${user.sysUserId}');">
+										<span class="ace-icon fa fa-trash-o bigger-130" title="删除"></span>
+									</a>
 								</td>
 							</tr>
 						</c:forEach>
@@ -375,7 +366,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="real_name"> 姓名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="realName" id="real_name" placeholder="姓名" class="col-xs-10 col-sm-12" />
+										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[minSize[5]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right"> 性别： </label>
 									<div class="col-sm-4">
@@ -394,11 +385,11 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="email"> 邮箱： </label>
 									<div class="col-sm-4">
-										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[custom[email]] col-xs-10 col-sm-12" />
+										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[minSize[20],custom[email]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="mobile_phone"> 手机： </label>
 									<div class="col-sm-4">
-										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[custom[phone]] col-xs-10 col-sm-12" />
+										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[minSize[11],custom[phone]] col-xs-10 col-sm-12" />
 									</div>
 								</div>
 							</form>

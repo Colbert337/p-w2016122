@@ -8,12 +8,6 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 <!-- page specific plugin styles -->
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-duallistbox.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/select2.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/daterangepicker.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
-
 <div class="breadcrumbs" id="breadcrumbs">
 	<script type="text/javascript">
 		try {
@@ -56,15 +50,7 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			<!-- PAGE CONTENT BEGINS -->
 
-<!-- 			<h4 class="pink">
-				<i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
-				<a href="#modal-table" role="button" class="green" data-toggle="modal"> Table Inside a Modal Box </a>
-			</h4> 
-
-			<div class="hr hr-18 dotted hr-double"></div>-->
-						
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="page-header">
@@ -118,11 +104,11 @@
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								出库
 							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+							<button id="logic-btn-card-search" class="btn btn-sm btn-primary" type="button">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
 							</button>
-							<button class="btn btn-sm" type="button" onclick="init();">
+							<button id="logic-btn-card-reset" class="btn btn-sm" type="button">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
 							</button>
@@ -149,24 +135,24 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'card_no');commitForm();" id="card_no_order">用户卡号</th>
-									<th onclick="orderBy(this,'card_type');commitForm();" id="card_type_order">用户卡类型</th>
-									<th onclick="orderBy(this,'card_status');commitForm();" id="card_status_order">用户卡状态</th>
-									<th onclick="orderBy(this,'card_property');commitForm();" id="card_property_order">用户卡属性</th>
-									<th onclick="orderBy(this,'workstation');commitForm();" id="workstation_order">所属工作站</th>
-									<th onclick="orderBy(this,'workstation_resp');commitForm();" id="workstation_resp_order">工作站领取人</th>
-									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th> 
-									<th onclick="orderBy(this,'batch_no');commitForm();" id="batch_no_order">入库批次号</th> 
-									<th onclick="orderBy(this,'storage_time');commitForm();" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
-									<th onclick="orderBy(this,'release_time');commitForm();" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
-									<th>更多操作</th>
+									<th onclick="orderBy(this,'card_no');" id="card_no_order">用户卡号</th>
+									<th onclick="orderBy(this,'card_type');" id="card_type_order">用户卡类型</th>
+									<th onclick="orderBy(this,'card_status');" id="card_status_order">用户卡状态</th>
+									<th onclick="orderBy(this,'card_property');" id="card_property_order">用户卡属性</th>
+									<th onclick="orderBy(this,'workstation');" id="workstation_order">所属工作站</th>
+									<th onclick="orderBy(this,'workstation_resp');" id="workstation_resp_order">工作站领取人</th>
+									<th onclick="orderBy(this,'operator');" id="operator_order">操作员</th>
+									<th onclick="orderBy(this,'batch_no');" id="batch_no_order">入库批次号</th>
+									<th onclick="orderBy(this,'storage_time');" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
+									<th onclick="orderBy(this,'release_time');" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
+									<th class="text-center">操作</th>
 								</tr>
 							</thead>
 
 							<tbody>
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
-								<tr id="listobj">
+								<tr class="logic-card-tbody-tr">
 									<td class="center">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.card_no}"/> 
@@ -185,48 +171,10 @@
 									<td><fmt:formatDate value="${list.storage_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.release_time}" type="both"/></td>
 
-									<td>
-										<div class="hidden-sm hidden-xs action-buttons">
-											<!-- <a class="blue" href="#"> 
-												<i class="ace-icon fa fa-search-plus bigger-130"></i>
-											</a> 
-											<a class="green" href="#"> 
-												<i class="ace-icon fa fa-pencil bigger-130"></i>
-											</a>  -->
-											<a class="red"  href="javascript:void(0);" onclick="del(this);" title="删除该卡" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a>
-										</div>
-
-										<div class="hidden-md hidden-lg">
-											<div class="inline pos-rel">
-												<button class="btn btn-minier btn-yellow dropdown-toggle"
-													data-toggle="dropdown" data-position="auto">
-													<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-												</button>
-
-												<ul
-													class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-													<li>
-														<a href="#" class="tooltip-info" data-rel="tooltip" title="View"> 
-															<span class="blue">
-																	<i class="ace-icon fa fa-search-plus bigger-120"></i>
-															</span>
-														</a>
-													</li>
-
-													<li><a href="#" class="tooltip-success" data-rel="tooltip" title="Edit"> <span class="green">
-																<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-														</span>
-													</a></li>
-
-													<li><a href="#" class="tooltip-error" data-rel="tooltip" title="Delete"> <span class="red">
-																<i class="ace-icon fa fa-trash-o bigger-120"></i>
-														</span>
-													</a></li>
-												</ul>
-											</div>
-										</div>
+									<td class="text-center">
+										<a href="" class="red logic-del" title="删除该卡" data-rel="tooltip">
+											<i class="ace-icon fa fa-trash-o bigger-130"></i>
+										</a>
 									</td>
 								</tr>
 								</c:forEach>
@@ -269,86 +217,4 @@
 </div>
 <!-- /.page-content -->
 
-
-
-<!-- page specific plugin scripts -->
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/dataTables.buttons.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.flash.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.html5.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.print.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.colVis.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/select/dataTables.select.js"></script>
-
-<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
-
-<!-- inline scripts related to this page -->
-<script type="text/javascript">
-
-//悬停样式加载
-$('[data-rel=tooltip]').tooltip();
-//$('[data-rel=popover]').popover({container:'body'});
-
-$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
-
-	var listOptions ={   
-            url:'<%=basePath%>/web/card/cardList',
-            type:'post',                    
-            dataType:'html',
-            success:function(data){
-	              $("#main").html(data);
-	              if($("#retCode").val() != "100"){
-		            	 //$("#modal-table").modal("show");
-		          }
-            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-            	alert("error");
-	       }
-	}
-	
-	window.onload = setCurrentPage();
-	
-	function commitForm(obj){
-		//设置当前页的值
-		if(typeof obj == "undefined") {
-			$("#pageNum").val("1");
-		}else{
-			$("#pageNum").val($(obj).text());
-		}
-		
-		$("#formcard").ajaxSubmit(listOptions);
-	}
-	
-	function del(obj){
-		
-		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
-		var tmp = confirm("是否删除卡号为["+cardid+"]的用户卡?");
-		if(!tmp){
-			$('[data-rel=tooltip]').tooltip('hide');
-			return;
-		}
-		var deloptions ={   
-	            url:'../web/card/deleteCard?cardid='+cardid,   
-	            type:'post',                    
-	            dataType:'text',
-	            success:function(data){
-		             $("#main").html(data);
-		             if($("#retCode").val() != "100"){
-		            	 $("#modal-table").modal("show");
-		             }
-	            },
-	            error:function(XMLHttpRequest, textStatus, errorThrown) {
-					
-	            }
-		}
-		
-		$("#formcard").ajaxSubmit(deloptions);
-	}
-	
-	function init(){
-		loadPage('#main', '../web/card/cardList');
-	}
-	</script>
+<script src="<%=basePath %>/dist/js/sjny.admin.card.js"></script>

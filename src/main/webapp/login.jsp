@@ -50,7 +50,7 @@
 	<script type='text/javascript' src='<%=basePath%>/assets/js/jquery-1.9.1.min.js'></script>
 	<script type='text/javascript' src='<%=basePath%>/assets/js/jquery.validate.js'></script>
 	<script type="text/javascript" src="<%=basePath%>/assets/js/jquery.cookie.js"></script>
-	<script type='text/javascript' src='<%=basePath%>/assets/js/jquery.login.js'></script>
+	<script type='text/javascript' src='<%=basePath%>/dist/js/sjny.admin.login.js'></script>
 </body>
 
 </html>

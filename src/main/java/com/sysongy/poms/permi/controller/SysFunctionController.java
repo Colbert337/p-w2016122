@@ -136,7 +136,7 @@ public class SysFunctionController extends BaseContoller{
 	@ResponseBody
 	public List<Map<String,Object>> queryFunctionListByType(@ModelAttribute("currUser") CurrUser currUser, ModelMap mapTemp){
 		int userType = currUser.getUser().getUserType();
-		List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionAllList(userType);
+		List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionListByType(userType);
 		List<Map<String,Object>> functionListTree = new ArrayList<>();
 		for (Map<String,Object> function:sysFunctionList) {
 			Map<String,Object> functionTree = new HashMap<>();

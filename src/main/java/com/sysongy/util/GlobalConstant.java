@@ -121,9 +121,9 @@ public class GlobalConstant {
 	}
 	
 	public interface CardAction{
-		public static final String ADD="3";
-		public static final String UPDATE="4";
-		public static final String DELETE="5";
+		public static final String ADD="0";
+		public static final String UPDATE="1";
+		public static final String DELETE="2";
 	}
 	
 	public interface GastationStatus{

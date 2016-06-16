@@ -1,5 +1,6 @@
 package com.sysongy.poms.card.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -38,11 +39,10 @@ public class CardController extends BaseContoller{
 		String ret = "webpage/poms/card/card_list";
 
 		try {
-			if(gascard.getPageNum() == null){
-				gascard.setPageNum(1);
-				gascard.setPageSize(10);
+			if(StringUtils.isEmpty(gascard.getOrderby())){
+				gascard.setOrderby("storage_time asc");
 			}
-
+			
 			PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
 
 			bean.setRetCode(100);
@@ -223,9 +223,8 @@ public class CardController extends BaseContoller{
 		String ret = "webpage/poms/card/cardlog_list";
 
 		try {
-			if(gascardlog.getPageNum() == null){
-				gascardlog.setPageNum(1);
-				gascardlog.setPageSize(10);
+			if(StringUtils.isEmpty(gascardlog.getOrderby())){
+				gascardlog.setOrderby("storage_time asc");
 			}
 
 			PageInfo<GasCardLog> pageinfo = service.queryGasCardLog(gascardlog);

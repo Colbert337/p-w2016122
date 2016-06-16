@@ -64,12 +64,12 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>运输公司编号:</label>
-							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号"  maxlength="9" value="${transportion.sys_transportion_id}"/>
+							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号"  maxlength="8" value="${transportion.sys_transportion_id}"/>
 						</div>
 						
 						<div class="item">
 						    <label>运输公司名称:</label>
-							<input type="text" name="transportion_name" placeholder="输入运输公司名称"  maxlength="9" value="${transportion.transportion_name}"/>
+							<input type="text" name="transportion_name" placeholder="输入运输公司名称"  maxlength="20" value="${transportion.transportion_name}"/>
 						</div>
 						
 						<div class="item">
@@ -104,27 +104,6 @@
 								重置
 							</button>
 						</div>
-
-						<%-- <div class="col-md-3 control-label no-padding-right">
-						    
-							<label>用户卡状态:</label>
-							<select class="chosen-select " name="card_status" >
-									 <s:option flag="true" gcode="CARDSTATUS" form="transportion" field="card_status" link="true" />
-							</select>
-						</div>
-						
-						<div class="col-md-2 control-label  no-padding-right">
-						    <label>操作员:</label>
-							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${transportion.operator}"/>
-						</div>
-						
-						<div class="col-md-4 input-group no-padding-right  control-label">
-						    <label>操作时间:</label>
-							<span class="input-group-addon">
-									<i class="fa fa-calendar bigger-110"></i>
-							</span>
-							<input type="text" name="storage_time_range" id="date-range-picker" value="value="${transportion.storage_time_range}"/>
-						</div> --%>
 					</div>
 
 					<div class="clearfix">
@@ -186,7 +165,7 @@
 												<i class="ace-icon fa fa-search-plus bigger-130"></i>
 											</a> 
 											<a class="green" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);" title="修改数据" data-rel="tooltip"></i>
 											</a> 
 											<!-- <a class="red"  href="javascript:void(0);" onclick="del(this);"> 
 												<i class="ace-icon fa fa-trash-o bigger-130"></i>
@@ -300,7 +279,7 @@
 	
 	function preUpdate(obj){
 		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
-		loadPage('#main', '../web/transportion/preUpdate?transportionid='+stationid);
+		loadPage('#main', '<%=basePath%>/web/transportion/preUpdate?transportionid='+stationid);
 	}
 	
 	function commitForm(obj){
@@ -318,7 +297,7 @@
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
 		var deloptions ={   
-	            url:'../web/transportion/deletetransportion?transportionid='+cardid,   
+	            url:'<%=basePath%>/web/transportion/deletetransportion?transportionid='+cardid,   
 	            type:'post',                    
 	            dataType:'text',
 	            success:function(data){
@@ -336,6 +315,6 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/transportion/transportionList');
+		loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 	}
 	</script>

@@ -45,7 +45,7 @@ public class CurrUser {
 	/**
 	 * 用户菜单列表
 	 */
-	private List<SysFunction> userFunctionList;
+	private List<Map<String, Object>> userFunctionList;
 
 	/**
 	 * 页面头部菜单
@@ -89,11 +89,11 @@ public class CurrUser {
 		this.userId = userId;
 	}
 
-	public List<SysFunction> getUserFunctionList() {
+	public List<Map<String, Object>> getUserFunctionList() {
 		return userFunctionList;
 	}
 
-	public void setUserFunctionList(List<SysFunction> userFunctionList) {
+	public void setUserFunctionList(List<Map<String, Object>> userFunctionList) {
 		this.userFunctionList = userFunctionList;
 	}
 

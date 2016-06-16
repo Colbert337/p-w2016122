@@ -8,8 +8,6 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
-
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
 				<div class="main-content-inner">
@@ -262,7 +260,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/card/saveCard',   
+		            url:'<%=basePath%>/web/card/saveCard',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -279,7 +277,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/card/cardList');
+			loadPage('#main', '<%=basePath%>/web/card/cardList');
 		}
 		
 		function dynamicSheet(){
@@ -303,7 +301,7 @@
 			for(var i=start; i<=end; i++){
 				$.ajax({
 					   type: "POST",
-					   url:'../web/card/checkCard?cardid='+i,   
+					   url:'<%=basePath%>/web/card/checkCard?cardid='+i,   
 			           type:'post',                    
 			           dataType:'text',
 			           async:false,

@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
+
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
@@ -95,10 +95,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 公司管理员： </label>
 
 										<div class="col-sm-3">
-											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="col-xs-10 col-sm-5" maxlength="20"/>
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入公司管理员" class="col-xs-10 col-sm-5" maxlength="20"/>
 										</div>
 									</div>
 									
@@ -210,7 +210,7 @@
 												保存
 											</button>
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn" type="reset">
+											<button class="btn" type="button" onclick="init();">
 												<i class="ace-icon fa fa-repeat bigger-110"></i>
 												重置
 											</button>
@@ -303,7 +303,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'../web/permi/user/list/userType?userType=2',   
+			   url:'<%=basePath%>/web/permi/user/list/userType?userType=2',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
@@ -311,7 +311,7 @@
 			        	   var s = JSON.parse(data);
 			        	   $("#operations_id").append("<option value=''>请选择</option>");
 			        	   for(var i=0;i<s.length;i++){
-			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].userName+" - "+s[i].realName+"</option>");
 			        	   }
 	           		}
 	            }
@@ -419,6 +419,15 @@
 		                validators: { 
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
+		                    },
+		                    callback: {
+		                    	message: '平台有效期必须大于当前日期',
+		                    	callback: function (value, validator, $field) {
+	                                 if(compareDate(new Date().toLocaleDateString(),value)){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
 		                },
 		                trigger: 'change'
@@ -493,7 +502,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/gastation/saveGastation',   
+		            url:'<%=basePath%>/web/gastation/saveGastation',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -507,7 +516,7 @@
 			            		loadPage('#main', '../webpage/poms/gastation/gastation_upload.jsp?gastationid='+$("#retValue").val());
 			            	}else{
 			            		//$("#main").html(data);
-			            		loadPage('#main', '../web/gastation/gastationList');
+			            		loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
 			            	}
 		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
@@ -516,7 +525,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/transportion/saveTransportion',   
+		            url:'<%=basePath%>/web/transportion/saveTransportion',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -529,7 +538,7 @@
 			            	if(tmp){
 			            		loadPage('#main', '../webpage/poms/transportion/transportion_upload.jsp?transportionid='+$("#retValue").val());
 			            	}else{
-			            		loadPage('#main', '../web/transportion/transportionList');
+			            		loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 			            	}
 		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {;
@@ -541,10 +550,14 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/transportion/transportionList');
+			loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 		}
 		
 		function setOperationName(obj){
 			$("#operations_name").val($(obj).val());
+		}
+		
+		function init(){
+			loadPage('#main', '../webpage/poms/transportion/transportion_new.jsp');
 		}
 		</script>

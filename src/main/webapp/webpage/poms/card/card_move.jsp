@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
+
 	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
 	
 			<!-- /section:basics/sidebar -->
@@ -257,7 +257,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/card/moveCard',   
+		            url:'<%=basePath%>/web/card/moveCard',   
 		            type:'post',                    
 		            dataType:'html',
 		            success:function(data){
@@ -272,7 +272,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/card/cardList');
+			loadPage('#main', '<%=basePath%>/web/card/cardList');
 		}
 		
 		function dynamicSheet(){
@@ -294,7 +294,7 @@
 			for(var i=start; i<=end; i++){
 				$.ajax({
 					   type: "POST",
-					   url:'../web/card/checkMoveCard?cardid='+i,   
+					   url:'<%=basePath%>/web/card/checkMoveCard?cardid='+i,   
 			           contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 			           dataType:'text',
 			           async:false,
@@ -497,7 +497,7 @@
 	/* 	function initworkstation_resp(obj){
 			$.ajax({
 				   type: "POST",
-				   url:'../web/usysparam/query?gcode=WORKSTATION_RESP&scode='+$(obj).val(),   
+				   url:'<%=basePath%>/web/usysparam/query?gcode=WORKSTATION_RESP&scode='+$(obj).val(),   
 		           dataType:'text',
 		           async:false,
 		           success:function(data){

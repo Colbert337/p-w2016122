@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
+
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
@@ -152,54 +152,6 @@
 										</div>
 									</div>
 									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> LNG储装证书： </label>
-										<div class="col-sm-4">
-											<div class="widget-box">
-												<div class="widget-header">
-													<h4 class="widget-title">LNG储装证书照片上传</h4>
-												</div>
-
-												<div class="widget-body">
-													<div class="widget-main">
-														<!-- <input type="file" id="id-input-file-32" /> -->
-														<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
-														<input type="hidden" id="lng_certif" name="lng_certif"/>
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
-															<i class="ace-icon fa fa-check bigger-110"></i>
-															图片上传
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 危化品证书： </label>
-										<div class="col-sm-4">
-											<div class="widget-box">
-												<div class="widget-header">
-													<h4 class="widget-title">危化品证书照片上传</h4>
-												</div>
-
-												<div class="widget-body">
-													<div class="widget-main">
-														<!-- <input type="file" id="id-input-file-33" /> -->
-														
-														<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
-														
-														<input type="hidden" name="dcp_certif" id="dcp_certif"/>
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
-															<i class="ace-icon fa fa-check bigger-110"></i>
-															图片上传
-														</button>
-														
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
@@ -301,7 +253,7 @@
 			}
 			
 			var options ={
-		            url:'../web/transportion/saveTransportion',
+		            url:'<%=basePath%>/web/transportion/saveTransportion',
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -316,7 +268,8 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/transportion/transportionList');
+			alert('lls')
+			loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 		}
 		
 		function save_photo(fileobj,obj,obj1){

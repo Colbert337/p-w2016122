@@ -68,12 +68,12 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>加注站编号:</label>
-							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号"  maxlength="9" value="${gastation.sys_gas_station_id}"/>
+							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号"  maxlength="8" value="${gastation.sys_gas_station_id}"/>
 						</div>
 						
 						<div class="item">
 						    <label>加注站名称:</label>
-							<input type="text" name="gas_station_name" placeholder="输入加注站名称"  maxlength="9" value="${gastation.gas_station_name}"/>
+							<input type="text" name="gas_station_name" placeholder="输入加注站名称"  maxlength="20" value="${gastation.gas_station_name}"/>
 						</div>
 						
 						<div class="item">
@@ -166,9 +166,12 @@
 
 									<td>
 										<div class="text-center">
-											<a class="green" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);" title="编辑"></i>
+											<a class="green" href="javascript:void(0);" title="修改数据" data-rel="tooltip"> 
+												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a>
+											<a href="" class="red logic-del" title="删除该卡" data-rel="tooltip">
+											<i class="ace-icon fa fa-trash-o bigger-130"></i>
+										</a>
 										</div>
 									</td>
 								</tr>

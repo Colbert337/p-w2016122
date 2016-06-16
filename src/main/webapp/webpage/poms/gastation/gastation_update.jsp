@@ -11,7 +11,6 @@
 %>
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/colorbox.css" />
 
-	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
@@ -468,14 +467,14 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'../web/permi/user/list/userType?userType=1',   
+			   url:'<%=basePath%>/web/permi/user/list/userType?userType=1',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
 	           		if(data != ""){
 			        	   var s = JSON.parse(data);
 			        	   for(var i=0;i<s.length;i++){
-			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].realName+"</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].userName+" - "+s[i].realName+"</option>");
 			        	   }
 	           		}
 	            }
@@ -575,6 +574,15 @@
 		                validators: { 
 		                    notEmpty: {
 		                        message: '平台有效期不能为空'
+		                    },
+		                    callback: {
+		                    	message: '平台有效期必须大于当前日期',
+		                    	callback: function (value, validator, $field) {
+	                                 if(compareDate(new Date().toLocaleDateString(),value)){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
 		                },
 		                trigger: 'change'
@@ -698,7 +706,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/gastation/saveGastation',   
+		            url:'<%=basePath%>/web/gastation/saveGastation',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -713,7 +721,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/gastation/gastationList');
+			loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
 		}
 		
 		function setSalesmenName(obj){

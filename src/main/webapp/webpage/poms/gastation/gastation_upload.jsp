@@ -8,7 +8,6 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-	<script type="text/javascript" src="<%=basePath %>/dist/js/bootstrapValidator.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
@@ -301,7 +300,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/gastation/saveGastation',
+		            url:'<%=basePath%>/web/gastation/saveGastation',
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -316,7 +315,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/gastation/gastationList');
+			loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
 		}
 		
 		function save_photo(fileobj,obj,obj1){

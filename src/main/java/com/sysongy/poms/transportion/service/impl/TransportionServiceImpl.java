@@ -73,6 +73,7 @@ public class TransportionServiceImpl implements TransportionService {
 			if(!StringUtils.isEmpty(record.getExpiry_date_frompage())){
 				record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			}
+			record.setUpdated_time(new Date());
 			return String.valueOf(transportionMapper.updateByPrimaryKeySelective(record));
 		}
 	}
