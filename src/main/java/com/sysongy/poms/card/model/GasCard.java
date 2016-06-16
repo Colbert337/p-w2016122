@@ -16,8 +16,9 @@ public class GasCard extends BaseModel{
 	private List<String> card_no_list;
 	
 	private String card_type; //用户卡类型 0:LNG  1:柴油  2:CNG
-	
-	private String card_status; //用户卡状态  0:已冻结  1:未使用  2:使用中
+
+	//用户卡状态  0:已冻结 1：已入库；2：已出库；3:已/未发放 4:使用中 5:已失效
+	private String card_status;
 	
 	private String card_property;//用户卡属性 0:车辆卡  1:个人卡
 
@@ -40,6 +41,8 @@ public class GasCard extends BaseModel{
 	private String storage_time_after;
 
 	private String memo;
+
+	private int card_flag_id;
 
 	public String getCard_property() {
 		return card_property;
@@ -169,4 +172,11 @@ public class GasCard extends BaseModel{
 		this.workstation_resp = workstation_resp;
 	}
 
+	public int getCard_flag_id() {
+		return card_flag_id;
+	}
+
+	public void setCard_flag_id(int card_flag_id) {
+		this.card_flag_id = card_flag_id;
+	}
 }

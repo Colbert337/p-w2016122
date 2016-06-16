@@ -1,6 +1,7 @@
 package com.sysongy.api.client.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.api.client.controller.model.CRMCardUpdateInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.base.model.PageBean;
@@ -29,29 +30,21 @@ import java.util.Properties;
 @Controller
 @RequestMapping("/crmCardService")
 public class CRMCardContoller {
-	
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private static final long serialVersionUID = 6357869213649815390L;
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 
     @Autowired
-    private GasCardService service;
+    private GasCardService gasCardService;
 
     @RequestMapping(value = {"/web/queryCardInfo"})
     @ResponseBody
-    public PageInfo<GasCard> queryCardInfo(HttpServletRequest request, HttpServletResponse response, ModelMap map, GasCard gascard){
+    public AjaxJson queryCardInfo(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
         AjaxJson ajaxJson = new AjaxJson();
-        PageInfo<GasCard> pageinfo = null;
         Map<String, Object> attributes = new HashMap<String, Object>();
-        PageBean bean = new PageBean();
         try
         {
-            if(gascard.getPageNum() == null){
-                gascard.setPageNum(1);
-                gascard.setPageSize(10);
-            }
             if(!StringUtils.isEmpty(gascard.getStorage_time_range())){
                 String []tmpRange = gascard.getStorage_time_range().split("-");
                 if(tmpRange.length == 2){
@@ -59,17 +52,75 @@ public class CRMCardContoller {
                     gascard.setStorage_time_before(tmpRange[1]+" 23:59:59");
                 }
             }
-            pageinfo = service.queryGasCard(gascard);
-            map.addAttribute("ret", bean);
-            map.addAttribute("pageInfo", pageinfo);
-            map.addAttribute("gascard",gascard);
-            map.addAttribute("current_module", "webpage/poms/card/card_list");
+            PageInfo<GasCard> pageinfo = gasCardService.queryGasCard(gascard);
+            attributes.put("pageInfo", pageinfo);
+            attributes.put("gascard",pageinfo.getList());
+            ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CARD_ERROR);
             logger.error("queryCardInfo error： " + e);
         }
-        ajaxJson.setAttributes(map);
-    	return pageinfo;
+    	return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/distributeCard"})
+    @ResponseBody
+    public AjaxJson distributeCard(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
+        AjaxJson ajaxJson = new AjaxJson();
+        if((gascard == null) || (!StringUtils.isNotEmpty(gascard.getCard_no()))){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("用户卡号为空！！！");
+            return ajaxJson;
+        }
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            GasCard gasCard = gasCardService.queryGasCardInfo(gascard.getCard_no());
+            if(!gasCard.getCard_status().equalsIgnoreCase(InterfaceConstants.CARD_STSTUS_ALREADY_SEND)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("当前卡状态无法使用，错误号：" + gasCard.getCard_status());
+                return ajaxJson;
+            }
+            gasCard.setCard_status(InterfaceConstants.CARD_STSTUS_IN_USE);
+            Integer nRet = gasCardService.updateGasCardInfo(gasCard);
+            if(nRet < 1){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("无卡信息修改！！！");
+                return ajaxJson;
+            }
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.DISTUBUTE_CARD_ERROR);
+            logger.error("distributeCard error： " + e);
+        }
+        return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/putCardToCRMStore"})
+    @ResponseBody
+    public AjaxJson putCardToCRMStore(HttpServletRequest request, HttpServletResponse response, CRMCardUpdateInfo crmCardUpdateInfo) {
+        AjaxJson ajaxJson = new AjaxJson();
+        if((crmCardUpdateInfo == null) || (crmCardUpdateInfo.getEndID() != null)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("要入库卡片为空！！！");
+            return ajaxJson;
+        }
+        try
+        {
+            crmCardUpdateInfo.setStatusType(InterfaceConstants.CARD_STSTUS_ALREADY_SEND);
+            Integer nRet = gasCardService.updateGasCardStatus(crmCardUpdateInfo);
+            if(nRet < 1){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("无卡信息修改！！！");
+                return ajaxJson;
+            }
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.PUT_CARD_STORAGE_ERROR);
+            logger.error("putCardToCRMStore error： " + e);
+        }
+
+        return ajaxJson;
     }
 }

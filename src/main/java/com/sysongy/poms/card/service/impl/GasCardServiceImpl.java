@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.sysongy.api.client.controller.model.CRMCardUpdateInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,19 @@ public class GasCardServiceImpl implements GasCardService{
 		PageInfo<GasCard> pageInfo = new PageInfo<GasCard>(list);
 		
 		return pageInfo;
+	}
+
+
+	@Override
+	public GasCard queryGasCardInfo(String cardNo) throws Exception{
+		GasCard gasCard = gasCardMapper.selectByCardNo(cardNo);
+		return gasCard;
+	}
+
+	@Override
+	public Integer updateGasCardInfo(GasCard cascard) throws Exception{
+		int nRet = gasCardMapper.updateByPrimaryKeySelective(cascard);
+		return nRet;
 	}
 
 	@Override
@@ -164,5 +178,12 @@ public class GasCardServiceImpl implements GasCardService{
 		
 		return pageInfo;
 	}
-	
+
+	@Override
+	public Integer updateGasCardStatus(CRMCardUpdateInfo crmCardUpdateInfo) throws Exception{
+		crmCardUpdateInfo.setStartID(crmCardUpdateInfo.getStartID() + 1);
+		crmCardUpdateInfo.setEndID(crmCardUpdateInfo.getEndID() + 1);
+		int nRet = gasCardMapper.updateCardStatus(crmCardUpdateInfo);
+		return nRet;
+	}
 }
