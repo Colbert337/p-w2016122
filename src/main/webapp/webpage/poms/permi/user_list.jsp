@@ -364,7 +364,7 @@
 								</div>
 								<h5 class="header smaller lighter blue">基本信息</h5>
 								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="real_name"> 姓名： </label>
+									<label class="col-sm-2 control-label no-padding-right" for="real_name">  <span class="red_star">*</span>姓名： </label>
 									<div class="col-sm-4">
 										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[required,maxSize[5]] col-xs-10 col-sm-12" />
 									</div>
@@ -409,3 +409,34 @@
 	</div><!-- /.modal -->
 </div>
 <!--添加用户弹层-结束-->
+
+<!--提示弹层-开始-->
+<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="alertModalLabel">友情提示</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+				<!--底部按钮 -->
+				<div class="row">
+					<div class="space"></div>
+					<div class="col-xs-3"></div>
+					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
+					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+<!--提示弹层-结束-->

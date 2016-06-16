@@ -102,7 +102,7 @@
 			async:false,
 			type: "POST",
 			success: function(data){
-				zNodes = data;
+				$("#function_sort").val(data);
 			}
 		});
 		$("#parent_id").val('${parentId}');

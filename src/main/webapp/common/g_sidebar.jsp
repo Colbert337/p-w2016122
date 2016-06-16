@@ -55,39 +55,6 @@
 						</a>
 						<b class="arrow"></b>
 					</li>
-					<li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-desktop"></i>
-							<span class="menu-text">
-								系统管理
-							</span>
-							<b class="arrow fa fa-angle-down"></b>
-						</a>
-						<b class="arrow"></b>
-						<ul class="submenu">
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/user/list/page')">
-									<i class="menu-icon fa fa-caret-right"></i>
-									用户管理
-								</a>
-								<b class="arrow"></b>
-							</li>
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/role//list/page')">
-									<i class="menu-icon fa fa-caret-right"></i>
-									角色管理
-								</a>
-								<b class="arrow"></b>
-							</li>
-							<li class="">
-								<a href="javascript:void(0);" onclick="loadPage('#main', '<%=basePath %>/web/permi/function//list/page')">
-									<i class="menu-icon fa fa-caret-right"></i>
-									功能管理
-								</a>
-								<b class="arrow"></b>
-							</li>
-						</ul>
-					</li>
 					<c:forEach items="${currUser.userFunctionList}" var="function">
 						<li class="">
 							<a href="#" class="dropdown-toggle">

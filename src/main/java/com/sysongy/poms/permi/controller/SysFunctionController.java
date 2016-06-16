@@ -259,6 +259,7 @@ public class SysFunctionController extends BaseContoller{
 		SysFunction function = sysFunctionService.queryFunctionSort();
 		if(function != null){
 			sortIndex = function.getFunctionSort();
+			sortIndex ++;
 		}
 		return sortIndex;
 	}
