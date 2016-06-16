@@ -343,4 +343,10 @@
     </set>
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
   </update>
+  <update id="updateUserByName" parameterType="com.sysongy.poms.permi.model.SysUser" >
+    update sys_user
+    set is_deleted = 0
+    where user_name = #{userName}
+    and user_type = #{userType}
+  </update>
 </mapper>

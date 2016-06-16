@@ -183,7 +183,11 @@
 	 * @param userId
 	 */
 	function updateStatus(userId,status){
-		var deleteOptions ={
+		$("#alertModel").modal({
+			show : true,
+			backdrop : 'static'
+		});
+		/*var deleteOptions ={
 			url:'<%=basePath%>/web/permi/user/update/staruts',
 			data:{sysUserId:userId,status:status},
 			type:'post',
@@ -192,7 +196,7 @@
 				$("#main").html(data);
 			}
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
+		$("#listForm").ajaxSubmit(deleteOptions);*/
 	}
 </script>
 <div class="page-header">
@@ -423,7 +427,7 @@
 					<%--两行表单 开始--%>
 					<div class="row">
 						<div class="col-xs-12">
-
+							sadfasdfasdf
 						</div><!-- /.col -->
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
