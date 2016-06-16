@@ -95,6 +95,16 @@
 		if(functionId != null && functionId != ""){
 			$("#parent_id").val(functionId);
 		}
+		//获取当前排序
+		$.ajax({
+			url:"<%=basePath%>/web/permi/function/info/sort",
+			data:{},
+			async:false,
+			type: "POST",
+			success: function(data){
+				zNodes = data;
+			}
+		});
 		$("#parent_id").val('${parentId}');
 		$("#parent_name").val('${parentName}');
 		$("#functionModel").modal('show');

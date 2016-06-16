@@ -100,6 +100,14 @@
     where is_deleted = 1
     and function_type = #{0}
   </select>
+
+  <!--获取当前排序序号-->
+  <select id="queryFunctionSort" resultMap="BaseResultMap" >
+    select
+    max(function_sort) function_sort
+    from sys_function
+    where is_deleted = 1
+  </select>
   <!--根据当前用户ID查询功能列表-->
   <select id="queryFunctionListByUserId" resultMap="ResultMap" >
     select sf.* from sys_function sf left join sys_role_function srf on sf.sys_function_id = srf.sys_function_id
