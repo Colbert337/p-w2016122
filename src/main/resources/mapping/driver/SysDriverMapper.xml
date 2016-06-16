@@ -16,14 +16,14 @@
     <result column="vehicle_lice" property="vehicleLice" jdbcType="VARCHAR" />
     <result column="identity_card" property="identityCard" jdbcType="VARCHAR" />
     <result column="card_id" property="cardId" jdbcType="VARCHAR" />
-    <result column="wallet_id" property="walletId" jdbcType="VARCHAR" />
+    <result column="sys_user_account_id" property="sys_user_account_id" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, is_ident, 
     plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card, 
-    card_id, wallet_id, created_date, updated_date
+    card_id, sys_user_account_id, created_date, updated_date
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -62,13 +62,13 @@
       full_name, mobile_phone, pay_code, 
       is_ident, plate_number, expiry_date, 
       fuel_type, driving_lice, vehicle_lice, 
-      identity_card, card_id, wallet_id, 
+      identity_card, card_id, sys_user_account_id, 
       created_date, updated_date)
     values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR}, 
       #{isIdent,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR}, #{expiryDate,jdbcType=TIMESTAMP}, 
       #{fuelType,jdbcType=INTEGER}, #{drivingLice,jdbcType=VARCHAR}, #{vehicleLice,jdbcType=VARCHAR}, 
-      #{identityCard,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR}, #{walletId,jdbcType=VARCHAR}, 
+      #{identityCard,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR}, #{sys_user_account_id,jdbcType=VARCHAR}, 
       #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.driver.model.SysDriver" >
@@ -116,8 +116,8 @@
       <if test="cardId != null" >
         card_id,
       </if>
-      <if test="walletId != null" >
-        wallet_id,
+      <if test="sys_user_account_id != null" >
+        sys_user_account_id,
       </if>
       <if test="createdDate != null" >
         created_date,
@@ -169,8 +169,8 @@
       <if test="cardId != null" >
         #{cardId,jdbcType=VARCHAR},
       </if>
-      <if test="walletId != null" >
-        #{walletId,jdbcType=VARCHAR},
+      <if test="sys_user_account_id != null" >
+        #{sys_user_account_id,jdbcType=VARCHAR},
       </if>
       <if test="createdDate != null" >
         #{createdDate,jdbcType=TIMESTAMP},
@@ -222,8 +222,8 @@
       <if test="cardId != null" >
         card_id = #{cardId,jdbcType=VARCHAR},
       </if>
-      <if test="walletId != null" >
-        wallet_id = #{walletId,jdbcType=VARCHAR},
+      <if test="sys_user_account_id != null" >
+        sys_user_account_id = #{sys_user_account_id,jdbcType=VARCHAR},
       </if>
       <if test="createdDate != null" >
         created_date = #{createdDate,jdbcType=TIMESTAMP},
@@ -249,7 +249,7 @@
       vehicle_lice = #{vehicleLice,jdbcType=VARCHAR},
       identity_card = #{identityCard,jdbcType=VARCHAR},
       card_id = #{cardId,jdbcType=VARCHAR},
-      wallet_id = #{walletId,jdbcType=VARCHAR},
+      sys_user_account_id = #{sys_user_account_id,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP},
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}

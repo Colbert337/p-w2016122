@@ -33,7 +33,7 @@ public class SysDriver extends BaseModel {
 
     private String cardId;
 
-    private String walletId;
+    private String sysUserAccountId;
 
     private Date createdDate;
 
@@ -151,12 +151,12 @@ public class SysDriver extends BaseModel {
         this.cardId = cardId == null ? null : cardId.trim();
     }
 
-    public String getWalletId() {
-        return walletId;
+    public String getsysUserAccountId() {
+        return sysUserAccountId;
     }
 
-    public void setWalletId(String walletId) {
-        this.walletId = walletId == null ? null : walletId.trim();
+    public void setsysUserAccountId(String sysUserAccountId) {
+        this.sysUserAccountId = sysUserAccountId == null ? null : sysUserAccountId.trim();
     }
 
     public Date getCreatedDate() {

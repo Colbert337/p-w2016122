@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.order.dao.SysOrderDealMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.order.model.SysOrderDeal" >
+    <id column="deal_id" property="dealId" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="deal_number" property="dealNumber" jdbcType="VARCHAR" />
+    <result column="deal_date" property="dealDate" jdbcType="TIMESTAMP" />
+    <result column="deal_type" property="dealType" jdbcType="VARCHAR" />
+    <result column="cash_back_per" property="cashBackPer" jdbcType="VARCHAR" />
+    <result column="cash_back" property="cashBack" jdbcType="DECIMAL" />
+    <result column="run_success" property="runSuccess" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    deal_id, order_id, deal_number, deal_date, deal_type, cash_back_per, cash_back, run_success
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_order_deal
+    where deal_id = #{dealId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_order_deal
+    where deal_id = #{dealId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
+    insert into sys_order_deal (deal_id, order_id, deal_number, 
+      deal_date, deal_type, cash_back_per, 
+      cash_back, run_success)
+    values (#{dealId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{dealNumber,jdbcType=VARCHAR}, 
+      #{dealDate,jdbcType=TIMESTAMP}, #{dealType,jdbcType=VARCHAR}, #{cashBackPer,jdbcType=VARCHAR}, 
+      #{cashBack,jdbcType=DECIMAL}, #{runSuccess,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
+    insert into sys_order_deal
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dealId != null" >
+        deal_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="dealNumber != null" >
+        deal_number,
+      </if>
+      <if test="dealDate != null" >
+        deal_date,
+      </if>
+      <if test="dealType != null" >
+        deal_type,
+      </if>
+      <if test="cashBackPer != null" >
+        cash_back_per,
+      </if>
+      <if test="cashBack != null" >
+        cash_back,
+      </if>
+      <if test="runSuccess != null" >
+        run_success,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dealId != null" >
+        #{dealId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="dealNumber != null" >
+        #{dealNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null" >
+        #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealType != null" >
+        #{dealType,jdbcType=VARCHAR},
+      </if>
+      <if test="cashBackPer != null" >
+        #{cashBackPer,jdbcType=VARCHAR},
+      </if>
+      <if test="cashBack != null" >
+        #{cashBack,jdbcType=DECIMAL},
+      </if>
+      <if test="runSuccess != null" >
+        #{runSuccess,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
+    update sys_order_deal
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="dealNumber != null" >
+        deal_number = #{dealNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDate != null" >
+        deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealType != null" >
+        deal_type = #{dealType,jdbcType=VARCHAR},
+      </if>
+      <if test="cashBackPer != null" >
+        cash_back_per = #{cashBackPer,jdbcType=VARCHAR},
+      </if>
+      <if test="cashBack != null" >
+        cash_back = #{cashBack,jdbcType=DECIMAL},
+      </if>
+      <if test="runSuccess != null" >
+        run_success = #{runSuccess,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where deal_id = #{dealId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
+    update sys_order_deal
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      deal_number = #{dealNumber,jdbcType=VARCHAR},
+      deal_date = #{dealDate,jdbcType=TIMESTAMP},
+      deal_type = #{dealType,jdbcType=VARCHAR},
+      cash_back_per = #{cashBackPer,jdbcType=VARCHAR},
+      cash_back = #{cashBack,jdbcType=DECIMAL},
+      run_success = #{runSuccess,jdbcType=VARCHAR}
+    where deal_id = #{dealId,jdbcType=VARCHAR}
+  </update>
+</mapper>
