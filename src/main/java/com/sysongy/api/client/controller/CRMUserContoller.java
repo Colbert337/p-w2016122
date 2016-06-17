@@ -112,6 +112,7 @@ public class CRMUserContoller {
                 ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_SYSUSER_ERROR);
                 return ajaxJson;
             }
+            attributes.put("UserInfo", sysUserInfo);
 
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
