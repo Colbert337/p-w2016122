@@ -210,16 +210,18 @@
 	 * 删除用户
 	 */
 	function deleteRole(roleId){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/role/delete',
-			data:{roleId:roleId},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
+		if(confirm("确定要删除该角色吗？")){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/role/delete',
+				data:{roleId:roleId},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
 			}
+			$("#listForm").ajaxSubmit(deleteOptions);
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
 	/**
@@ -227,16 +229,22 @@
 	 * @param userId
 	 */
 	function updateStatus(roleId,status){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/role/save',
-			data:{sysRoleId:roleId,roleStatus:status},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
-			}
+		var alertStr = "确定禁用该角色吗？";
+		if(status == 0){
+			alertStr = "确定启用该角色吗？";
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
+		if(confirm(alertStr)){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/role/save',
+				data:{sysRoleId:roleId,roleStatus:status},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
+			}
+			$("#listForm").ajaxSubmit(deleteOptions);
+		}
 
 	}
 </script>

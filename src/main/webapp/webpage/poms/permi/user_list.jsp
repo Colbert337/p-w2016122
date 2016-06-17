@@ -166,16 +166,18 @@
 	 * 删除用户
 	 */
 	function deleteUser(userId){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/user/delete',
-			data:{userId:userId},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
+		if(confirm("确定要删除该用户吗？")){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/user/delete',
+				data:{userId:userId},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
 			}
+			$("#listForm").ajaxSubmit(deleteOptions);
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
 	/**
@@ -183,20 +185,23 @@
 	 * @param userId
 	 */
 	function updateStatus(userId,status){
-		$("#alertModel").modal({
-			show : true,
-			backdrop : 'static'
-		});
-		/*var deleteOptions ={
-			url:'<%=basePath%>/web/permi/user/update/staruts',
-			data:{sysUserId:userId,status:status},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
-			}
+		var alertStr = "确定要禁用该用户吗？";
+		if(status == 0){
+			alertStr = "确定要启用该用户吗？";
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);*/
+		if(confirm(alertStr)){
+			 var deleteOptions ={
+			 url:'<%=basePath%>/web/permi/user/update/staruts',
+			 data:{sysUserId:userId,status:status},
+			 type:'post',
+			 dataType:'text',
+				 success:function(data){
+				 $("#main").html(data);
+				 }
+			 }
+			 $("#listForm").ajaxSubmit(deleteOptions);
+		}
+
 	}
 </script>
 <div class="page-header">
@@ -420,7 +425,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="alertModalLabel">友情提示</h4>
+				<h4 class="modal-title" id="alertModalLabel">警告提示</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
