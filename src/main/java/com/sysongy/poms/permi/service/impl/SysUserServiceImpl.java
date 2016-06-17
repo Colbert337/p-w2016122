@@ -188,6 +188,16 @@ public class SysUserServiceImpl implements SysUserService{
         return 0;
     }
 
+    /**
+     * 根据用户名和用户类型删除用户
+     * @param record
+     * @return
+     */
+    @Override
+    public int updateUserByName(SysUser record)  throws Exception{
+        return sysUserMapper.updateUserByName(record);
+    }
+
     /*************************************CRM客户端接口*************************************/
     /**
      * 用户登录

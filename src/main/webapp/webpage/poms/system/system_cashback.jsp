@@ -108,8 +108,8 @@
 																<span class="lbl"></span>
 															</label>
 														</th>
-														<th onclick="orderBy(this,'sys_cash_back_id');commitForm();" id="sys_cash_back_id_order">触发编号</th>
-														<th onclick="orderBy(this,'sys_cash_back_no');commitForm();" id="sys_cash_back_no_order">触发条件</th>
+														<th onclick="orderBy(this,'sys_cash_back_id');commitForm();" id="sys_cash_back_id_order">触发编号</th> 
+<!-- 													<th onclick="orderBy(this,'sys_cash_back_no');commitForm();" id="sys_cash_back_no_order">触发条件</th>-->
 														<th onclick="orderBy(this,'threshold_min_value');commitForm();" id="threshold_min_value_order">返现阈值</th>
 														<th onclick="orderBy(this,'threshold_max_value');commitForm();" id="threshold_max_value_order">返现阈值</th>
 														<th onclick="orderBy(this,'cash_per');commitForm();" id="cash_per_order">返点比例</th>
@@ -134,8 +134,8 @@
 															</label>
 														</td>
 														<td>${list.sys_cash_back_id}</td>
-														<td>${list.sys_cash_back_no}</td>
-													 	<td>${list.threshold_min_value}</td> 
+												<%--<td>${list.sys_cash_back_no}</td>--%>
+ 													 	<td>${list.threshold_min_value}</td> 
 														<td>${list.threshold_max_value}</td>
 														<td>${list.cash_per} </td>
 														<td><s:Code2Name mcode="${list.status}" gcode="CASHBACKSTATUS"></s:Code2Name></td>

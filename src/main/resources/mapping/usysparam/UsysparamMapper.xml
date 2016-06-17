@@ -31,47 +31,24 @@
       </if>
     </trim>
   </select>
+  
   <insert id="insert" parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
     insert into usysparam (gcode, mcode, mname, 
       data, scode)
     values (#{gcode,jdbcType=VARCHAR}, #{mcode,jdbcType=VARCHAR}, #{mname,jdbcType=VARCHAR}, 
       #{data,jdbcType=VARCHAR}, #{scode,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
-    insert into usysparam
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="gcode != null" >
-        gcode,
-      </if>
-      <if test="mcode != null" >
-        mcode,
-      </if>
-      <if test="mname != null" >
-        mname,
-      </if>
-      <if test="data != null" >
-        data,
-      </if>
-      <if test="scode != null" >
-        scode,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="gcode != null" >
-        #{gcode,jdbcType=VARCHAR},
-      </if>
-      <if test="mcode != null" >
-        #{mcode,jdbcType=VARCHAR},
-      </if>
-      <if test="mname != null" >
-        #{mname,jdbcType=VARCHAR},
-      </if>
-      <if test="data != null" >
-        #{data,jdbcType=VARCHAR},
-      </if>
-      <if test="scode != null" >
-        #{scode,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
+  
+ <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+    update usysparam
+    set mname = #{mname,jdbcType=VARCHAR},
+      data = #{data,jdbcType=VARCHAR},
+      scode = #{scode,jdbcType=VARCHAR}
+    where gcode = #{gcode,jdbcType=VARCHAR} and mcode = #{mcode,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="deleteByPrimaryKey" parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+    delete usysparam where gcode = #{gcode,jdbcType=VARCHAR} and mcode = #{mcode,jdbcType=VARCHAR}
+  </update>
+
 </mapper>

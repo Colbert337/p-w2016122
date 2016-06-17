@@ -107,6 +107,14 @@
 									</div>
 									
 									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">管理员账号（建议为11位手机号码）： </label>
+
+										<div class="col-sm-4">
+											<input class="form-control" name="admin_username"  type="text"  placeholder="输入管理员账号" maxlength="20" value="${station.admin_username}" readonly="readonly"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期：</label>
 										<div class="col-sm-2 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
@@ -467,7 +475,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'<%=basePath%>/web/permi/user/list/userType?userType=1',   
+			   url:'<%=basePath%>/web/permi/user/list/userType?userType=5',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
@@ -748,7 +756,7 @@ function save_photo(fileobj,obj,obj1){
 			var multipartOptions ={   
 					url:'../crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),
 		            type:'post',                    
-		            dataType:'text',
+		            dataType:'html',
 		            enctype:"multipart/form-data",
 		            success:function(data){
 		            	var s = JSON.parse(data);

@@ -133,8 +133,15 @@
 		<!-- 表单提交及请求处理 -->
 		<script src="<%=basePath %>/common/js/sysongy_commons.js"></script>
 		<script src="<%=basePath %>/common/js/jquery.form.js"></script>
-		
-		
+		<!-- datatable -->
+		<script src="<%=basePath %>/assets/js/dataTables/jquery.dataTables.js"></script>
+		<script src="<%=basePath %>/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
+		<script src="<%=basePath %>/assets/js/dataTables/extensions/buttons/dataTables.buttons.js"></script>
+		<script src="<%=basePath %>/assets/js/dataTables/extensions/buttons/buttons.flash.js"></script>
+		<script src="<%=basePath %>/assets/js/dataTables/extensions/buttons/buttons.html5.js"></script>
+		<script src="<%=basePath %>/assets/js/dataTables/extensions/buttons/buttons.print.js"></script>
+		<script src="<%=basePath %>/assets/js/dataTables/extensions/buttons/buttons.colVis.js"></script>
+		<script src="<%=basePath %>/assets/js/dataTables/extensions/select/dataTables.select.js"></script>
 		<script src="<%=basePath %>/assets/js/jquery.nestable.js"></script>
 
 		<!-- inline scripts related to this page -->

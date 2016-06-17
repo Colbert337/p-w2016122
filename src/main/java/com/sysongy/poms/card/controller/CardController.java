@@ -40,7 +40,7 @@ public class CardController extends BaseContoller{
 
 		try {
 			if(StringUtils.isEmpty(gascard.getOrderby())){
-				gascard.setOrderby("storage_time asc");
+				gascard.setOrderby("storage_time desc");
 			}
 			
 			PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
@@ -224,7 +224,7 @@ public class CardController extends BaseContoller{
 
 		try {
 			if(StringUtils.isEmpty(gascardlog.getOrderby())){
-				gascardlog.setOrderby("storage_time asc");
+				gascardlog.setOrderby("storage_time desc");
 			}
 
 			PageInfo<GasCardLog> pageinfo = service.queryGasCardLog(gascardlog);

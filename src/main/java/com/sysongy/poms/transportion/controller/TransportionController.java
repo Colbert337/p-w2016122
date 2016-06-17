@@ -39,7 +39,7 @@ public class TransportionController extends BaseContoller{
 				transportion.setPageSize(10);
 			}
 			if(StringUtils.isEmpty(transportion.getOrderby())){
-				transportion.setOrderby("created_time asc");
+				transportion.setOrderby("created_time desc");
 			}
 
 			if(!StringUtils.isEmpty(transportion.getExpiry_date_frompage())){

@@ -45,6 +45,8 @@ public class SysUser extends BaseModel {
 
     private String remark;
 
+    private String stationId;
+
     List<Map<String, Object>> sysFunctionList;
 
     public String getSysUserId() {
@@ -205,5 +207,13 @@ public class SysUser extends BaseModel {
 
     public void setSysFunctionList(List<Map<String, Object>> sysFunctionList) {
         this.sysFunctionList = sysFunctionList;
+    }
+
+    public String getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(String stationId) {
+        this.stationId = stationId;
     }
 }

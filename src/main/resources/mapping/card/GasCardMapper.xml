@@ -158,9 +158,6 @@
       <if test="operator != null" >
         operator = #{operator,jdbcType=VARCHAR},
       </if>
-      <if test="storage_time != null" >
-        storage_time = #{storage_time,jdbcType=TIMESTAMP},
-      </if>
       <if test="release_time != null" >
         release_time = #{release_time,jdbcType=TIMESTAMP},
       </if>
