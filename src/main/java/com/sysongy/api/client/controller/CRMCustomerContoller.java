@@ -196,8 +196,10 @@ public class CRMCustomerContoller {
             if(sysDriver.getFuelType() == null){
                 sysDriver.setIsIdent(0);
             }
-
+            Map<String, Object> attributes = new HashMap<String, Object>();
             int renum = driverService.saveDriver(sysDriver, "insert");
+            attributes.put("driver", sysDriver);
+            ajaxJson.setAttributes(attributes);
             if(renum < 1){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("无用户添加！！！");
@@ -335,7 +337,6 @@ public class CRMCustomerContoller {
         String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
         FileUtil.createIfNoExist(filePath);
         try {
-
             Map<String, Object> attributes = new HashMap<String, Object>();
             for (int i = 0; i < files.length; i++) {
                 String path = filePath + files[i].getOriginalFilename();
