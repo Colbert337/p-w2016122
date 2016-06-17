@@ -169,9 +169,9 @@
 											<a class="green" href="javascript:void(0);" title="修改数据" data-rel="tooltip"> 
 												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a>
-											<a href="" class="red logic-del" title="删除该卡" data-rel="tooltip">
-											<i class="ace-icon fa fa-trash-o bigger-130"></i>
-										</a>
+											<!-- <a href="" class="red logic-del" title="删除该卡" data-rel="tooltip">
+												<i class="ace-icon fa fa-trash-o bigger-130"></i>
+											</a> -->
 										</div>
 									</td>
 								</tr>

@@ -139,12 +139,11 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
 										<div class="col-sm-2 datepicker-noicon">
-										<!-- #section:plugins/date-time.datepicker -->
-												<div class="input-group">
-														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
-														<span class="input-group-addon">
-																<i class="fa fa-calendar bigger-110"></i>
-														</span>
+											<div class="input-group">
+												<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
+													<span class="input-group-addon">
+														<i class="fa fa-calendar bigger-110"></i>
+													</span>
 												</div>
 										</div>
 									</div>
@@ -152,16 +151,16 @@
 									<div class="form-group">
 										<label for="salesmen_name" class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
 										<div class="col-sm-4">
-												<input type="text" id="salesmen_name" name="salesmen_name" placeholder="输入销售人员" class="form-control" maxlength="20" value="${station.salesmen_name}"/>
+											<input type="text" id="salesmen_name" name="salesmen_name" placeholder="输入销售人员" class="form-control" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label for="operations_id" class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
 										<div class="col-sm-4">
-												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
-												</select>
-												<input type="hidden" id="operations_name" name="operations_name"/>
+											<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
+											</select>
+											<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
 									</div>
 									
@@ -181,7 +180,7 @@
 															<option value ="240">辽宁省</option>
 															<option value ="430">吉林省</option>
 															<option value ="450">黑龙江省</option>
-															<option value ="250"> 江苏省</option>
+															<option value ="250">江苏省</option>
 															<option value ="570">浙江省</option>
 															<option value ="550">安徽省</option>
 															<option value ="590">福建省</option>
@@ -191,20 +190,20 @@
 															<option value ="270">湖北省</option>
 															<option value ="730">湖南省</option>
 															<option value ="200">广东省</option>
-															<option value ="890">海南省</option>
+															<option value ="891">海南省</option>
 															<option value ="810">四川省</option>
 															<option value ="850">贵州省</option>
 															<option value ="870">云南省</option>
 															<option value ="290">陕西省</option>
 															<option value ="930">甘肃省</option>
 															<option value ="970">青海省</option>
-															<option value ="886">台湾省</option>
+															<option value ="852">台湾省</option>
 															<option value ="770">广西壮族自治区</option>
-															<option value ="470"> 内蒙古自治区</option>
-															<option value ="890"> 西藏自治区</option>
-															<option value ="950"> 宁夏回族自治区</option>
+															<option value ="470">内蒙古自治区</option>
+															<option value ="890">西藏自治区</option>
+															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
-															<option value ="852">香港特别行政区</option>
+															<option value ="851">香港特别行政区</option>
 															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
@@ -306,7 +305,7 @@
 		china['210']=new Array('上海市区','上海市辖区');
 		china['220']=new Array('天津市区','天津市辖区');
 		china['230']=new Array('重庆市区','重庆市辖区');
-		china['310'] = new Array('石家庄', '唐山市', '邯郸市', '秦皇市岛', '保市定', '张家市口', '承德市', '廊坊市', '沧州市', '衡水市', '邢台市');
+		china['310']=new Array('石家庄', '唐山市', '邯郸市', '秦皇市岛', '保市定', '张家市口', '承德市', '廊坊市', '沧州市', '衡水市', '邢台市');
 		china['350']=new Array('太原市','大同市','阳泉市','长治市','晋城市','朔州市','晋中市','运城市','忻州市','临汾市','吕梁市');
 		china['240']=new Array('沈阳市','大连市','鞍山市','抚顺市','本溪市','丹东市','锦州市','营口市','阜新市','辽阳市','盘锦市','铁岭市','朝阳市','葫芦岛市');
 		china['430']=new Array('长春市','吉林市','四平市','辽源市','通化市','白山市','松原市','白城市','延边州','长白山管委会');
@@ -322,16 +321,17 @@
 		china['730']=new Array('长沙市','株洲市','湘潭市','衡阳市','邵阳市','岳阳市','常德市','张家界市','益阳市','郴州市','永州市','怀化市','娄底市');
 		china['200']=new Array('广州市','深圳市','珠海市','汕头市','韶关市','佛山市','江门市','湛江市','茂名市','肇庆市','惠州市','梅州市','汕尾市','河源市','阳江市','清远市','东莞市','中山市','潮州市','揭阳市','云浮市');
 		china['890']=new Array('文昌市','琼海市','万宁市','五指山市','东方市','儋州市');
-		china['810 ']=new Array('成都市','自贡市','攀枝花市','泸州市','德阳市','绵阳市','广元市','遂宁市','内江市','乐山市','南充市','眉山市','宜宾市','广安市','达州市','雅安市','巴中市','资阳市');
+		china['810']=new Array('成都市','自贡市','攀枝花市','泸州市','德阳市','绵阳市','广元市','遂宁市','内江市','乐山市','南充市','眉山市','宜宾市','广安市','达州市','雅安市','巴中市','资阳市');
 		china['850']=new Array('贵阳市','六盘水市','遵义市','安顺市');
 		china['870']=new Array('昆明市','曲靖市','玉溪市','保山市','昭通市','丽江市','普洱市','临沧市');
 		china['290']=new Array('西安市','铜川市','宝鸡市','咸阳市','渭南市','延安市','汉中市','榆林市','安康市','商洛市');
 		china['930']=new Array('兰州市','金昌市','白银市','天水市','嘉峪关市','武威市','张掖市','平凉市','酒泉市','庆阳市','定西市','陇南市');
-		china['970']=new Array('西宁市');
+		china['970']=new Array('西宁市','海东市','玉树市','格尔木市','德令哈市');
 		china['886']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
 		china['770']=new Array('南宁市','柳州市','桂林市','梧州市','北海市','防城港市','钦州市','贵港市','玉林市','百色市','贺州市','河池市','来宾市','崇左市');
 		china['470']=new Array('呼和浩特市','包头市','乌海市','赤峰市','通辽市','鄂尔多斯市','呼伦贝尔市','巴彦淖尔市','乌兰察布市'); 
 		china['890']=new Array('拉萨市');
+		china['891']=new Array('海口市','三亚市','三沙市','儋州市');
 		china['950']=new Array('银川市','石嘴山市','吴忠市','固原市','中卫市');
 		china['990']=new Array('乌鲁木齐市','克拉玛依市');
 		china['852']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
@@ -383,6 +383,7 @@
 			}
 			
 			if (typeof (china[pv]) == 'undefined'){
+				$("#city").find("option").remove();
 				return;
 			}
 	
@@ -594,7 +595,31 @@
 		                        message: '注册地址纬度必须是数字'
 		                    }
 		                }
-		            }
+		            },
+		            indu_com_number: {
+		                message: 'The cardno is not valid',
+						validators: {
+							notEmpty: {
+								message: '工商注册号不能为空'
+							},
+							stringLength: {
+								max: 15,
+								message: '工商注册号不能超过15位'
+							}
+						}
+		            },
+					tax_number: {
+		                message: 'The cardno is not valid',
+						validators: {
+							notEmpty: {
+								message: '税务注册号不能为空'
+							},
+							stringLength: {
+								max: 15,
+								message: '税务注册号不能超过15位'
+							}
+						}
+					}
 		         }
 		    });
 			    

@@ -110,7 +110,7 @@
 											</button>
 
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn" type="reset" onclick="init();">
+											<button class="btn" type="reset">
 												<i class="ace-icon fa fa-repeat bigger-110"></i>
 												重置
 											</button>
