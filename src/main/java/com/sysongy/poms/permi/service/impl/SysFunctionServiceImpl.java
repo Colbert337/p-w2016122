@@ -139,6 +139,17 @@ public class SysFunctionServiceImpl implements SysFunctionService{
     public SysFunction queryFunctionByFunctionId(String functionId) {
         return sysFunctionMapper.queryFunctionById(functionId);
     }
+
+
+    /**
+     * 获取当前排序序号
+     * @return
+     */
+    @Override
+    public SysFunction queryFunctionSort() {
+        return sysFunctionMapper.queryFunctionSort();
+    }
+
     /**
      * 添加功能
      * @param function 功能信息

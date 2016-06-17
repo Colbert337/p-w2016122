@@ -42,12 +42,12 @@
     <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
-    <result column="sys_role_id" property="sysRoleId" jdbcType="VARCHAR" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     sys_user_id, user_name, password, user_type, alias_name, real_name, gender, avatar_s, 
     avatar_b, mobile_phone, email, last_date, status, online_state, remark, is_admin, is_deleted,
-    created_date, updated_date
+    created_date, updated_date, station_id
   </sql>
   <sql id="User_Role_List" >
     su.sys_user_id, su.user_name, su.password, su.user_type, su.alias_name, su.real_name, su.gender, su.avatar_s,
@@ -342,5 +342,11 @@
       </if>
     </set>
     where sys_user_id = #{sysUserId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateUserByName" parameterType="com.sysongy.poms.permi.model.SysUser" >
+    update sys_user
+    set is_deleted = 0
+    where user_name = #{userName}
+    and user_type = #{userType}
   </update>
 </mapper>

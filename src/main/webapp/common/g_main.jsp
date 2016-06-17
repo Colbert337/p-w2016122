@@ -24,6 +24,7 @@
 				<jsp:include page="../common/g_set.jsp"/>
 				<div id="main">
 					<jsp:include page="../webpage/panel/panel.jsp"></jsp:include>
+					<%--<jsp:include page="../webpage/demo/demo.jsp"></jsp:include>--%>
 				</div>
 				</div><!-- /.page-content -->
 			</div><!-- /main-content-inner -->
