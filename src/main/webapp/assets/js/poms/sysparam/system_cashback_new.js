@@ -125,6 +125,3 @@
 			loadPage('#main', '../web/sysparam/cashbackList');
 		}
 		
-			function init(){
-				loadPage('#main', '../webpage/poms/system/system_cashback_new.jsp');
-			}

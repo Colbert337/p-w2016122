@@ -8,6 +8,25 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
+	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
+	
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-fonts.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+	
+	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
 
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
@@ -63,10 +82,10 @@
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="sys_gas_station_id"> 加注站编号： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 加注站编号： </label>
 
-										<div class="col-sm-4">
-											<input type="text" id="sys_gas_station_id"  name="sys_gas_station_id" value="${param.gastationid}" class="form-control" readonly="readonly"/>
+										<div class="col-sm-3">
+											<input type="text" id="sys_gas_station_id"  name="sys_gas_station_id" value="${param.gastationid}" readonly="readonly"/>
 										</div>
 									</div>
 									
@@ -74,7 +93,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="form-control"   placeholder="输入工商注册号"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5" maxlength="15" placeholder="输入工商注册号"/>
 										</div>
 									</div>
 									
@@ -83,7 +102,7 @@
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
-													<h5 class="widget-title">工商注册证书照片上传</h5>
+													<h4 class="widget-title">工商注册证书照片上传</h4>
 												</div>
 
 												<div class="widget-body">
@@ -91,7 +110,7 @@
 														<!-- <input type="file" id="id-input-file-3"/>-->
 														<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
 														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
+														<button class="btn btn-info" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -105,7 +124,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_number" name="tax_number" class="form-control"  placeholder="输入税务注册号"/>
+											<input type="text" id="tax_number" name="tax_number" class="col-xs-10 col-sm-5" maxlength="15" placeholder="输入税务注册号"/>
 										</div>
 									</div>
 									
@@ -114,7 +133,7 @@
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
-													<h5 class="widget-title">税务注册证书照片上传</h5>
+													<h4 class="widget-title">税务注册证书照片上传</h4>
 												</div>
 
 												<div class="widget-body">
@@ -122,7 +141,7 @@
 														<!-- <input type="file" id="id-input-file-31"/> -->
 														<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
 														<input type="hidden" id="tax_certif" name="tax_certif"/>
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
+														<button class="btn btn-info" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -137,7 +156,7 @@
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
-													<h5 class="widget-title">LNG储装证书照片上传</h5>
+													<h4 class="widget-title">LNG储装证书照片上传</h4>
 												</div>
 
 												<div class="widget-body">
@@ -145,7 +164,7 @@
 														<!-- <input type="file" id="id-input-file-32" /> -->
 														<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
 														<input type="hidden" id="lng_certif" name="lng_certif"/>
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
+														<button class="btn btn-info" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -159,7 +178,7 @@
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
-													<h5 class="widget-title">危化品证书照片上传</h5>
+													<h4 class="widget-title">危化品证书照片上传</h4>
 												</div>
 
 												<div class="widget-body">
@@ -169,7 +188,7 @@
 														<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
 														
 														<input type="hidden" name="dcp_certif" id="dcp_certif"/>
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
+														<button class="btn btn-info" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -183,7 +202,7 @@
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="submit" onclick="save();">
+											<button class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
@@ -209,6 +228,12 @@
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
 	</div>
 
 	<script type="text/javascript">
@@ -248,31 +273,21 @@
 		            validating: 'glyphicon glyphicon-refresh'
 		        },
 		        fields: {
-					indu_com_number: {
-						message: 'The cardno is not valid',
-						validators: {
-							notEmpty: {
-								message: '工商注册号不能为空'
-							},
-							stringLength: {
-								max: 15,
-								message: '工商注册号不能超过15位'
-							}
-						}
-					}
+		            indu_com_number: {
+		                message: 'The cardno is not valid',
+		                    stringLength: {
+		                        max: 15,
+		                        message: '工商注册号不能超过15位'
+		                    }
+		                }
 		            },
-				tax_number: {
-					message: 'The cardno is not valid',
-					validators: {
-						notEmpty: {
-							message: '税务注册号不能为空'
-						},
-						stringLength: {
-							max: 15,
-							message: '税务注册号不能超过15位'
-						}
-					}
-				}
+		            tax_number: {
+		                message: 'The cardno is not valid',
+		                    stringLength: {
+		                        max: 15,
+		                        message: '税务注册号不能超过15位'
+		                    }
+		                }
 		    });
 			    
 		function save(){

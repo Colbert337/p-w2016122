@@ -3,6 +3,7 @@ package com.sysongy.poms.gastation.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.UUIDGenerator;
 
 @Service
@@ -69,11 +71,18 @@ public class GastationServiceImpl implements GastationService {
 				throw new Exception("钱袋初始化失败");
 			}
 			
+			Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+			String show_path = (String) prop.get("default_img");
 			record.setSys_user_account_id(sysUserAccount.getSysUserAccountId());
 			record.setStatus(GlobalConstant.GastationStatus.USED);
 			record.setCreated_time(new Date());
 			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			record.setSys_gas_station_id(newid);
+			record.setIndu_com_certif(show_path);
+			record.setTax_certif(show_path);
+			record.setLng_certif(show_path);
+			record.setDcp_certif(show_path);
+			
 			gasStationMapper.insert(record);
 			//创建管理员
 			SysUser user = new SysUser();
@@ -116,7 +125,7 @@ public class GastationServiceImpl implements GastationService {
 		user.setUserName(gastation.getAdmin_username());
 		user.setUserType(GlobalConstant.USER_TYPE_STATION);
 		user.setStatus(GlobalConstant.STATUS_DELETE);
-		sysUserService.updateStatus(user);
+		sysUserService.updateUserByName(user);
 		//删除对应的系统参数字典表
 		Usysparam usysparam = new Usysparam();
 		usysparam.setGcode("WORKSTATION");

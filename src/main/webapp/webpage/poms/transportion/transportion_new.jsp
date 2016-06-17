@@ -8,6 +8,24 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
+
+	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
+
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
+	
+	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
+
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
 				<div class="main-content-inner">
@@ -61,32 +79,34 @@
 								<form class="form-horizontal"  id="transportion">
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="transportion_name"> 运输公司名称： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 运输公司名称： </label>
 
-										<div class="col-sm-4">
-											<input type="text" id="transportion_name"  name="transportion_name" placeholder="输入运输公司名称" class="form-control" maxlength="20"/>
+										<div class="col-sm-3">
+											<input type="text" id="transportion_name"  name="transportion_name" placeholder="输入运输公司名称" class="col-xs-10 col-sm-5" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="email"> E-mail： </label>
+										<label class="col-sm-3 control-label no-padding-right" > E-mail： </label>
 
-										<div class="col-sm-4">
-											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control" />
+										<div class="col-sm-3">
+											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="station_manager"> 公司管理员： </label>
-										<div class="col-sm-4">
-											<input type="text" id="station_manager"  name="station_manager" placeholder="输入公司管理员" class="form-control" maxlength="20"/>
+										<label class="col-sm-3 control-label no-padding-right"> 公司管理员： </label>
+
+										<div class="col-sm-3">
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入公司管理员" class="col-xs-10 col-sm-5" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="contact_phone"> 联系电话： </label>
-										<div class="col-sm-4">
-											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15"/>
+										<label class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
+
+										<div class="col-sm-3">
+											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15"/>
 										</div>
 									</div>
 									
@@ -115,8 +135,8 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
-										<div class="col-sm-2 datepicker-noicon">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期： </label>
+										<div class="col-sm-2">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
 														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" readonly="readonly"/>
@@ -128,15 +148,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="salesmen_name"> 销售人员： </label>
-										<div class="col-sm-4">
-												<input type="text" id="salesmen_name" class="form-control" name="salesmen_name" maxlength="20"/>
+										<label class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
+										<div class="col-sm-2">
+												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
-										<div class="col-sm-4">
+										<div class="col-sm-2">
 												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
 												<input type="hidden" id="operations_name" name="operations_name"/>
@@ -145,84 +165,76 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
-										<div class="col-sm-4">
-											<div class="row form-group">
-												<div class="col-sm-6">
-													<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
-															<option value ="请选择市区">请选择省份</option>
-															<option value ="100">北京市</option>
-															<option value ="220">天津市</option>
-															<option value ="210">上海市</option>
-															<option value ="230">重庆市</option>
-															<option value ="310">河北省</option>
-															<option value ="350">山西省</option>
-															<option value ="240">辽宁省</option>
-															<option value ="430">吉林省</option>
-															<option value ="450">黑龙江省</option>
-															<option value ="250"> 江苏省</option>
-															<option value ="570">浙江省</option>
-															<option value ="550">安徽省</option>
-															<option value ="590">福建省</option>
-															<option value ="790">江西省</option>
-															<option value ="530">山东省</option>
-															<option value ="370">河南省</option>
-															<option value ="270">湖北省</option>
-															<option value ="730">湖南省</option>
-															<option value ="200">广东省</option>
-															<option value ="890">海南省</option>
-															<option value ="810">四川省</option>
-															<option value ="850">贵州省</option>
-															<option value ="870">云南省</option>
-															<option value ="290">陕西省</option>
-															<option value ="930">甘肃省</option>
-															<option value ="970">青海省</option>
-															<option value ="886">台湾省</option>
-															<option value ="770">广西壮族自治区</option>
-															<option value ="470"> 内蒙古自治区</option>
-															<option value ="890"> 西藏自治区</option>
-															<option value ="950"> 宁夏回族自治区</option>
-															<option value ="990">新疆维吾尔自治区</option>
-															<option value ="852">香港特别行政区</option>
-															<option value ="853">澳门特别行政区</option>
-													</select>
-												</div>
-												<div class="col-sm-6">
-													<select class="form-control" id="city" name="city_id">
-													</select>
-												</div>
-											</div>
-											<input type="text"  id="detail" name="detail" class="form-control"  placeholder="输入详细地址"/>
+										<div class="col-sm-2">
+											<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
+													<option value ="请选择市区">请选择省份</option>
+													<option value ="100">北京市</option>
+													<option value ="220">天津市</option>
+													<option value ="210">上海市</option>
+													<option value ="230">重庆市</option>
+													<option value ="310">河北省</option>
+													<option value ="350">山西省</option>
+													<option value ="240">辽宁省</option>
+													<option value ="430">吉林省</option>
+													<option value ="450">黑龙江省</option>
+													<option value ="250">江苏省</option>
+													<option value ="570">浙江省</option>
+													<option value ="550">安徽省</option>
+													<option value ="590">福建省</option>
+													<option value ="790">江西省</option>
+													<option value ="530">山东省</option>
+													<option value ="370">河南省</option>
+													<option value ="270">湖北省</option>
+													<option value ="730">湖南省</option>
+													<option value ="200">广东省</option>
+													<option value ="891">海南省</option>
+													<option value ="810">四川省</option>
+													<option value ="850">贵州省</option>
+													<option value ="870">云南省</option>
+													<option value ="290">陕西省</option>
+													<option value ="930">甘肃省</option>
+													<option value ="970">青海省</option>
+													<option value ="852">台湾省</option>
+													<option value ="770">广西壮族自治区</option>
+													<option value ="470">内蒙古自治区</option>
+													<option value ="890">西藏自治区</option>
+													<option value ="950">宁夏回族自治区</option>
+													<option value ="990">新疆维吾尔自治区</option>
+													<option value ="851">香港特别行政区</option>
+													<option value ="853">澳门特别行政区</option>
+											</select>
+											<select class="form-control" id="city" name="city_id">
+											</select>
+											<input type="text"  id="detail" name="detail" class="col-sm-12"  placeholder="输入详细地址"/>
 											<input type="hidden"  id="address" name="address" class="col-sm-12" />
 										</div>
 									</div>
-
-									<div class="row">
+									
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-4">
-											<div class="row">
-												<div class="col-sm-6">
-													<div class="form-group nospace">
-														<input type="text"  id="longitude" name="longitude" class="form-control" placeholder="经度" maxlength="20" />
-													</div>
-												</div>
-												<div class="col-sm-6">
-													<div class="form-group nospace">
-														<input type="text"  id="latitude" name="latitude" class="form-control" placeholder="纬度" maxlength="20" />
-													</div>
-												</div>
-											</div>
+											<label class="col-sm-2 control-label no-padding-right" > 经度：</label>
+											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="20"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" > </label>
+										<div class="col-sm-4">
+											<label class="col-sm-2 control-label no-padding-right" > 纬度：</label>
+											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="submit" onclick="save();">
+											<button class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn" type="reset" onclick="init()">
+											<button class="btn" type="button" onclick="init();">
 												<i class="ace-icon fa fa-repeat bigger-110"></i>
 												重置
 											</button>
@@ -241,6 +253,12 @@
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
 	</div>
 
 	<script type="text/javascript">
@@ -268,13 +286,15 @@
 		        $(this).fileinput(projectfileoptions);
 		    }
 		});
-
+	
+	
+	
 		var china=new Object();
 		china['100']=new Array('北京市区','北京市辖区');
 		china['210']=new Array('上海市区','上海市辖区');
 		china['220']=new Array('天津市区','天津市辖区');
 		china['230']=new Array('重庆市区','重庆市辖区');
-		china['310'] = new Array('石家庄', '唐山市', '邯郸市', '秦皇市岛', '保市定', '张家市口', '承德市', '廊坊市', '沧州市', '衡水市', '邢台市');
+		china['310']=new Array('石家庄', '唐山市', '邯郸市', '秦皇市岛', '保市定', '张家市口', '承德市', '廊坊市', '沧州市', '衡水市', '邢台市');
 		china['350']=new Array('太原市','大同市','阳泉市','长治市','晋城市','朔州市','晋中市','运城市','忻州市','临汾市','吕梁市');
 		china['240']=new Array('沈阳市','大连市','鞍山市','抚顺市','本溪市','丹东市','锦州市','营口市','阜新市','辽阳市','盘锦市','铁岭市','朝阳市','葫芦岛市');
 		china['430']=new Array('长春市','吉林市','四平市','辽源市','通化市','白山市','松原市','白城市','延边州','长白山管委会');
@@ -290,16 +310,17 @@
 		china['730']=new Array('长沙市','株洲市','湘潭市','衡阳市','邵阳市','岳阳市','常德市','张家界市','益阳市','郴州市','永州市','怀化市','娄底市');
 		china['200']=new Array('广州市','深圳市','珠海市','汕头市','韶关市','佛山市','江门市','湛江市','茂名市','肇庆市','惠州市','梅州市','汕尾市','河源市','阳江市','清远市','东莞市','中山市','潮州市','揭阳市','云浮市');
 		china['890']=new Array('文昌市','琼海市','万宁市','五指山市','东方市','儋州市');
-		china['810 ']=new Array('成都市','自贡市','攀枝花市','泸州市','德阳市','绵阳市','广元市','遂宁市','内江市','乐山市','南充市','眉山市','宜宾市','广安市','达州市','雅安市','巴中市','资阳市');
+		china['810']=new Array('成都市','自贡市','攀枝花市','泸州市','德阳市','绵阳市','广元市','遂宁市','内江市','乐山市','南充市','眉山市','宜宾市','广安市','达州市','雅安市','巴中市','资阳市');
 		china['850']=new Array('贵阳市','六盘水市','遵义市','安顺市');
 		china['870']=new Array('昆明市','曲靖市','玉溪市','保山市','昭通市','丽江市','普洱市','临沧市');
 		china['290']=new Array('西安市','铜川市','宝鸡市','咸阳市','渭南市','延安市','汉中市','榆林市','安康市','商洛市');
 		china['930']=new Array('兰州市','金昌市','白银市','天水市','嘉峪关市','武威市','张掖市','平凉市','酒泉市','庆阳市','定西市','陇南市');
-		china['970']=new Array('西宁市');
+		china['970']=new Array('西宁市','海东市','玉树市','格尔木市','德令哈市');
 		china['886']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
 		china['770']=new Array('南宁市','柳州市','桂林市','梧州市','北海市','防城港市','钦州市','贵港市','玉林市','百色市','贺州市','河池市','来宾市','崇左市');
 		china['470']=new Array('呼和浩特市','包头市','乌海市','赤峰市','通辽市','鄂尔多斯市','呼伦贝尔市','巴彦淖尔市','乌兰察布市'); 
 		china['890']=new Array('拉萨市');
+		china['891']=new Array('海口市','三亚市','三沙市','儋州市');
 		china['950']=new Array('银川市','石嘴山市','吴忠市','固原市','中卫市');
 		china['990']=new Array('乌鲁木齐市','克拉玛依市');
 		china['852']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
@@ -334,6 +355,7 @@
 			}
 			
 			if (typeof (china[pv]) == 'undefined'){
+				$("#city").find("option").remove();
 				return;
 			}
 	
@@ -358,7 +380,7 @@
 	
 		var contral = "0";
 		
-			//bootstrap验证控件
+			//bootstrap验证控件		
 		    $('#transportion').bootstrapValidator({
 		        message: 'This value is not valid',
 		        feedbackIcons: {
@@ -384,12 +406,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '运输公司管理员不能为空'
+		                        message: '运输公司站长不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '运输公司管理员不能超过20个汉字'
+		                        message: '运输公司站长不能超过20个汉字'
 		                    }
 		                }
 		            },
@@ -399,9 +421,11 @@
 		                    notEmpty: {
 		                        message: '加气站email不能为空'
 		                    },
-							emailAddress: {
-								message: '请输入正确的电子邮箱格式'
-							}
+		                    stringLength: {
+		                        min: 1,
+		                        max: 20,
+		                        message: '加气站email不能超过20个字符'
+		                    }
 		                }
 		            },
 		            contact_phone: {
@@ -422,6 +446,11 @@
 		                    notEmpty: {
 		                        message: '管理员账号不能为空'
 		                    },
+		                    stringLength: {
+		                        min: 6,
+		                        max: 20,
+		                        message: '管理员账号长度必须大于6位'
+		                    },
 		                    remote: {
                                 url: '../web/permi/user/info/isExist',
                                 type: "post",
@@ -440,6 +469,11 @@
 		                validators: {
 		                    notEmpty: {
 		                        message: '管理员密码不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 6,
+		                        max: 20,
+		                        message: '管理员密码长度必须大于6位'
 		                    }
 		                }
 		            },
@@ -587,8 +621,8 @@
 			            		loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 			            	}
 		            	}
-		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+		            },error:function(XMLHttpRequest, textStatus, errorThrown) {;
+		            	
 		 	       }
 			}
 						
@@ -597,10 +631,6 @@
 		
 		function returnpage(){
 			loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
-		}
-
-		function init(){
-			loadPage('#main', '../webpage/poms/transportion/transportion_new.jsp');
 		}
 		
 		function setOperationName(obj){
