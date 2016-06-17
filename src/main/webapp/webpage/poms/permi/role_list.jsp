@@ -176,7 +176,7 @@
 			type: "POST",
 			success: function(data){
 				$("#mname").text(data.mname);
-				$("#user_type").val(data.mcode);
+				$("#role_type").val(data.mcode);
 			}
 		})
 		$("#roleModel").modal('show');
@@ -378,10 +378,10 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="user_type"> <span class="red_star">*</span>角色类型： </label>
+									<label class="col-sm-4 control-label no-padding-right" for="role_type"> <span class="red_star">*</span>角色类型： </label>
 									<div class="col-sm-8">
 										<label class="col-xs-10 col-sm-12 pad-top-10" id="mname"></label>
-										<input type="hidden" id="user_type" name="userType"/>
+										<input type="hidden" id="role_type" name="roleType"/>
 									</div>
 								</div>
 								<div class="form-group">
