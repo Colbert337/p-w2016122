@@ -18,6 +18,13 @@
 			binded:true,						//是否绑定即时验证
 			scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
 		});
+
+		$.extend($.validationEngineLanguage.allRules,{ "isUserExist": {
+			"url": "<%=basePath%>/web/permi/user/info/isUserName",
+			"extraData": "dt="+(new Date()).getTime(),
+			"alertText": "* 验证失败！",
+			"alertTextLoad": "* 验证中，请稍候..."}
+		});
 	});
 
 	/*分页相关方法 start*/

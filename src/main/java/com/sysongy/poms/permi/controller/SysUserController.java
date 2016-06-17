@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +157,7 @@ public class SysUserController extends BaseContoller{
 
 		return roleList;
 	}
+
 	/**
 	 * 获取气站用户列表
 	 * @return
@@ -169,6 +171,14 @@ public class SysUserController extends BaseContoller{
 		return resultStr;
 	}
 
+	/**
+	 * 根据用户名称和用户类型判断用户名称是否存在
+	 * @param currUser
+	 * @param admin_username
+	 * @param userType
+	 * @param map
+     * @return
+     */
 	@RequestMapping("/info/isExist")
 	@ResponseBody
 	public JSONObject queryUserByNameAndType(@ModelAttribute CurrUser currUser, @RequestParam String admin_username,@RequestParam String userType, ModelMap map){
@@ -185,6 +195,35 @@ public class SysUserController extends BaseContoller{
 			json.put("valid",false); 
 		}
 		
+		return json;
+	}
+
+	/**
+	 * 根据用户名称判断用户名称是否存在
+	 * @param currUser
+	 * @param userName
+	 * @param userType
+	 * @param map
+     * @return
+     */
+	@RequestMapping("/info/isUserName")
+	@ResponseBody
+	public JSONObject queryUserByName(HttpServletRequest request, @ModelAttribute CurrUser currUser, @RequestParam String userName, @RequestParam String userType, ModelMap map){
+		String validateId = request.getParameter("fieldId");
+		String validateValue = request.getParameter("fieldValue");
+
+		JSONObject json = new JSONObject();
+
+		SysUser sysUser = new SysUser();
+		sysUser.setUserName(userName);
+		SysUser user = sysUserService.queryUser(sysUser);
+
+		if(user == null){
+			json.put("valid",true);
+		}else{
+			json.put("valid",false);
+		}
+
 		return json;
 	}
 }
