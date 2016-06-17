@@ -159,7 +159,7 @@
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 									<td class="text-center">
-										<a class="" href="javascript:void(0);" title="编辑数据" data-rel="tooltip">
+										<a class="" href="javascript:void(0);" title="编辑" data-rel="tooltip">
 											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 										</a>
 									</td>

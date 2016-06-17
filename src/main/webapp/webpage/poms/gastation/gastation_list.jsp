@@ -158,10 +158,10 @@
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 									<td class="text-center">
-											<a class="green" href="javascript:void(0);" title="修改数据" data-rel="tooltip"> 
+											<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a>
-											<a href="" class="red logic-del" title="删除该卡" data-rel="tooltip">
+											<a href="" class="logic-del" title="删除" data-rel="tooltip">
 											<i class="ace-icon fa fa-trash-o bigger-130"></i>
 										</a>
 									</td>

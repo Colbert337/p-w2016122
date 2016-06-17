@@ -52,8 +52,6 @@ function del(obj) {
 
 function init() {
 
-	$('[data-rel=tooltip]').tooltip();
-
 	$('#j-input-daterange-top').datepicker({
 		autoclose: true,
 		format: 'yyyy/mm/dd',

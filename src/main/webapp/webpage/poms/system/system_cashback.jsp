@@ -114,7 +114,7 @@
 														<th onclick="orderBy(this,'end_date');commitForm();" id="end_date_order"><i id="end_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>失效时间</th>
 														<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
 														<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th>
-														<th>更多操作</th>
+														<th class="text-center">更多操作</th>
 													</tr>
 												</thead>
 					
@@ -140,48 +140,13 @@
 														<td><fmt:formatDate value="${list.created_date}" type="both"/></td>
 														<td><fmt:formatDate value="${list.updated_date}" type="both"/></td>
 					
-														<td>
-															<div class="hidden-sm hidden-xs action-buttons">
-																<!-- <a class="blue" href="#"> 
-																	<i class="ace-icon fa fa-search-plus bigger-130"></i>
-																</a> -->
-																<a class="green" href="javascript:void(0);"  title="修改配置" data-rel="tooltip"> 
-																	<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
-																</a>  
-																<a class="red"  href="javascript:void(0);" onclick="del(this);" title="删除配置" data-rel="tooltip"> 
-																	<i class="ace-icon fa fa-trash-o bigger-130"></i>
-																</a>
-															</div>
-					
-															<div class="hidden-md hidden-lg">
-																<div class="inline pos-rel">
-																	<button class="btn btn-minier btn-yellow dropdown-toggle"
-																		data-toggle="dropdown" data-position="auto">
-																		<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-																	</button>
-					
-																	<ul
-																		class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-																		<li>
-																			<a href="#" class="tooltip-info" data-rel="tooltip" title="View"> 
-																				<span class="blue">
-																						<i class="ace-icon fa fa-search-plus bigger-120"></i>
-																				</span>
-																			</a>
-																		</li>
-					
-																		<li><a href="#" class="tooltip-success" data-rel="tooltip" title="Edit"> <span class="green">
-																					<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-																			</span>
-																		</a></li>
-					
-																		<li><a href="#" class="tooltip-error" data-rel="tooltip" title="Delete"> <span class="red">
-																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
-																			</span>
-																		</a></li>
-																	</ul>
-																</div>
-															</div>
+														<td class="text-center">
+															<a class="option-btn-m" href="javascript:void(0);"  title="修改" data-rel="tooltip">
+																<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+															</a>
+															<a class=""  href="javascript:void(0);" onclick="del(this);" title="删除" data-rel="tooltip">
+																<i class="ace-icon fa fa-trash-o bigger-130"></i>
+															</a>
 														</td>
 													</tr>
 													</c:forEach>

@@ -258,11 +258,11 @@
 								<td class="hidden-480">${function.functionSort}</td>
 								<td class="hidden-480"><fmt:formatDate value="${function.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td class="text-center">
-									<a class="option-btn-m" href="javascript:editFunction('${function.sysFunctionId}');" title="修改">
+									<a class="option-btn-m" href="javascript:editFunction('${function.sysFunctionId}');" title="修改" data-rel="tooltip">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
 									</a>
-									<a href="javascript:deleteFunction('${function.sysFunctionId}','${function.parentId}');">
-										<span class="ace-icon fa fa-trash-o bigger-130" title="删除"></span>
+									<a href="javascript:deleteFunction('${function.sysFunctionId}','${function.parentId}');" title="删除" data-rel="tooltip">
+										<span class="ace-icon fa fa-trash-o bigger-130"></span>
 									</a>
 								</td>
 							</tr>

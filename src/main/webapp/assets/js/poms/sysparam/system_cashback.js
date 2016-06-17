@@ -11,9 +11,6 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 					e.stopPropagation();
 				});
 				
-				$('[data-rel="tooltip"]').tooltip();
-
-
 				$.ajax({
 					type: "POST",
 					url:'../web/usysparam/query?gcode=CASHBACK&scode=',
