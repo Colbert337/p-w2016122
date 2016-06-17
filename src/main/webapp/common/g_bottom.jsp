@@ -348,5 +348,8 @@
 		<script src="<%=basePath %>/docs/assets/js/language/css.js"></script>
 		<script src="<%=basePath %>/docs/assets/js/language/javascript.js"></script>
 
+		<script src="<%=basePath %>/common/js/fileinput.js"></script>
+		<script src="<%=basePath %>/assets/js/jquery.colorbox.js"></script>
+		<script src="<%=basePath %>/common/js/zh.js"></script>
 	</body>
 </html>

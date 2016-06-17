@@ -9,23 +9,6 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
-
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
-	
-	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
-
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
 				<div class="main-content-inner">
@@ -92,7 +75,7 @@
 										<label for="email" class="col-sm-3 control-label no-padding-right" > E-mail： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
+											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
 										</div>
 									</div>
 									
@@ -126,7 +109,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="salesmen_name" class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
+										<label for="salesmen_name" class="col-sm-3 control-label no-padding-right" for="salesmen_name"> 销售人员： </label>
 										<div class="col-sm-4">
 												<input type="text" id="salesmen_name" name="salesmen_name" placeholder="输入销售人员" class="form-control" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
@@ -215,7 +198,7 @@
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="button" onclick="save();">
+											<button class="btn btn-info" type="submit" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
@@ -241,12 +224,6 @@
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
 	</div>
 
 	<script type="text/javascript">
@@ -411,11 +388,9 @@
 		                    notEmpty: {
 		                        message: '加注站email不能为空'
 		                    },
-		                    stringLength: {
-		                        min: 1,
-		                        max: 20,
-		                        message: '加注站email不能超过20个字符'
-		                    }
+		                    emailAddress: {
+								message: '请输入正确的电子邮箱格式'
+							}
 		                }
 		            },
 		            station_manager: {

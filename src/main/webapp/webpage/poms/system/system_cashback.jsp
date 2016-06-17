@@ -8,14 +8,11 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-
 			<script src="<%=basePath %>/assets/js/poms/sysparam/system_cashback.js"></script>
 			
-			<div class="main-container" id="main-container">
+			<div class="">
+				<form id="formcashback">
 
-			<div class="main-content">
-				<div class="main-content-inner">
-						<form id="formcashback">
 						<jsp:include page="/common/page_param.jsp"></jsp:include>
 						<div class="page-header">
 							<h1>
@@ -35,9 +32,7 @@
 											</ol>
 										</div>
 									</div>
-									
-									<div class="vspace-16-sm"></div>
-									
+
 									<div class="col-sm-10">
 											<div class="page-header">
 											<h1>
@@ -222,7 +217,6 @@
 						<jsp:include page="/common/message.jsp"></jsp:include>
 						
 						</form>
-						
-					</div><!-- /.page-content -->
-				</div>
+
 			</div><!-- /.main-content -->
+

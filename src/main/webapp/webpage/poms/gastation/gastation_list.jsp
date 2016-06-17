@@ -7,12 +7,6 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<!-- page specific plugin styles -->
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-duallistbox.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/select2.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/daterangepicker.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
 
 <div class="breadcrumbs" id="breadcrumbs">
 	<script type="text/javascript">
@@ -138,7 +132,7 @@
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
@@ -163,16 +157,13 @@
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
-
-									<td>
-										<div class="text-center">
+									<td class="text-center">
 											<a class="green" href="javascript:void(0);" title="修改数据" data-rel="tooltip"> 
 												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a>
 											<a href="" class="red logic-del" title="删除该卡" data-rel="tooltip">
 											<i class="ace-icon fa fa-trash-o bigger-130"></i>
 										</a>
-										</div>
 									</td>
 								</tr>
 								</c:forEach>
@@ -212,23 +203,6 @@
 	</form>
 </div>
 <!-- /.page-content -->
-
-
-
-<!-- page specific plugin scripts -->
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/dataTables.buttons.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.flash.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.html5.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.print.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.colVis.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/select/dataTables.select.js"></script>
-
-<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">

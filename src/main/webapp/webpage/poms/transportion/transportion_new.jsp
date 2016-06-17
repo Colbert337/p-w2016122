@@ -8,24 +8,6 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
-
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
-	
-	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
-
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
 				<div class="main-content-inner">
@@ -79,40 +61,38 @@
 								<form class="form-horizontal"  id="transportion">
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 运输公司名称： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="transportion_name"> 运输公司名称： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="transportion_name"  name="transportion_name" placeholder="输入运输公司名称" class="col-xs-10 col-sm-5" maxlength="20"/>
+										<div class="col-sm-4">
+											<input type="text" id="transportion_name"  name="transportion_name" placeholder="输入运输公司名称" class="form-control" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" > E-mail： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="email"> E-mail： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5" />
+										<div class="col-sm-4">
+											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control" />
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 公司管理员： </label>
-
-										<div class="col-sm-3">
-											<input type="text" id="station_manager"  name="station_manager" placeholder="输入公司管理员" class="col-xs-10 col-sm-5" maxlength="20"/>
+										<label class="col-sm-3 control-label no-padding-right" for="station_manager"> 公司管理员： </label>
+										<div class="col-sm-4">
+											<input type="text" id="station_manager"  name="station_manager" placeholder="输入公司管理员" class="form-control" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
-
-										<div class="col-sm-3">
-											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15"/>
+										<label class="col-sm-3 control-label no-padding-right" for="contact_phone"> 联系电话： </label>
+										<div class="col-sm-4">
+											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期： </label>
-										<div class="col-sm-2">
+										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
+										<div class="col-sm-2 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
 														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" readonly="readonly"/>
@@ -124,15 +104,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
-										<div class="col-sm-2">
-												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20"/>
+										<label class="col-sm-3 control-label no-padding-right" for="salesmen_name"> 销售人员： </label>
+										<div class="col-sm-4">
+												<input type="text" id="salesmen_name" class="form-control" name="salesmen_name" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
 												<input type="hidden" id="operations_name" name="operations_name"/>
@@ -141,76 +121,84 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
-										<div class="col-sm-2">
-											<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
-													<option value ="请选择市区">请选择省份</option>
-													<option value ="100">北京市</option>
-													<option value ="220">天津市</option>
-													<option value ="210">上海市</option>
-													<option value ="230">重庆市</option>
-													<option value ="310">河北省</option>
-													<option value ="350">山西省</option>
-													<option value ="240">辽宁省</option>
-													<option value ="430">吉林省</option>
-													<option value ="450">黑龙江省</option>
-													<option value ="250"> 江苏省</option>
-													<option value ="570">浙江省</option>
-													<option value ="550">安徽省</option>
-													<option value ="590">福建省</option>
-													<option value ="790">江西省</option>
-													<option value ="530">山东省</option>
-													<option value ="370">河南省</option>
-													<option value ="270">湖北省</option>
-													<option value ="730">湖南省</option>
-													<option value ="200">广东省</option>
-													<option value ="890">海南省</option>
-													<option value ="810">四川省</option>
-													<option value ="850">贵州省</option>
-													<option value ="870">云南省</option>
-													<option value ="290">陕西省</option>
-													<option value ="930">甘肃省</option>
-													<option value ="970">青海省</option>
-													<option value ="886">台湾省</option>
-													<option value ="770">广西壮族自治区</option>
-													<option value ="470"> 内蒙古自治区</option>
-													<option value ="890"> 西藏自治区</option>
-													<option value ="950"> 宁夏回族自治区</option>
-													<option value ="990">新疆维吾尔自治区</option>
-													<option value ="852">香港特别行政区</option>
-													<option value ="853">澳门特别行政区</option>
-											</select>
-											<select class="form-control" id="city" name="city_id">
-											</select>
-											<input type="text"  id="detail" name="detail" class="col-sm-12"  placeholder="输入详细地址"/>
+										<div class="col-sm-4">
+											<div class="row form-group">
+												<div class="col-sm-6">
+													<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
+															<option value ="请选择市区">请选择省份</option>
+															<option value ="100">北京市</option>
+															<option value ="220">天津市</option>
+															<option value ="210">上海市</option>
+															<option value ="230">重庆市</option>
+															<option value ="310">河北省</option>
+															<option value ="350">山西省</option>
+															<option value ="240">辽宁省</option>
+															<option value ="430">吉林省</option>
+															<option value ="450">黑龙江省</option>
+															<option value ="250"> 江苏省</option>
+															<option value ="570">浙江省</option>
+															<option value ="550">安徽省</option>
+															<option value ="590">福建省</option>
+															<option value ="790">江西省</option>
+															<option value ="530">山东省</option>
+															<option value ="370">河南省</option>
+															<option value ="270">湖北省</option>
+															<option value ="730">湖南省</option>
+															<option value ="200">广东省</option>
+															<option value ="890">海南省</option>
+															<option value ="810">四川省</option>
+															<option value ="850">贵州省</option>
+															<option value ="870">云南省</option>
+															<option value ="290">陕西省</option>
+															<option value ="930">甘肃省</option>
+															<option value ="970">青海省</option>
+															<option value ="886">台湾省</option>
+															<option value ="770">广西壮族自治区</option>
+															<option value ="470"> 内蒙古自治区</option>
+															<option value ="890"> 西藏自治区</option>
+															<option value ="950"> 宁夏回族自治区</option>
+															<option value ="990">新疆维吾尔自治区</option>
+															<option value ="852">香港特别行政区</option>
+															<option value ="853">澳门特别行政区</option>
+													</select>
+												</div>
+												<div class="col-sm-6">
+													<select class="form-control" id="city" name="city_id">
+													</select>
+												</div>
+											</div>
+											<input type="text"  id="detail" name="detail" class="form-control"  placeholder="输入详细地址"/>
 											<input type="hidden"  id="address" name="address" class="col-sm-12" />
 										</div>
 									</div>
-									
-									<div class="form-group">
+
+									<div class="row">
 										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
 										<div class="col-sm-4">
-											<label class="col-sm-2 control-label no-padding-right" > 经度：</label>
-											<input type="text"  id="longitude" name="longitude" class="col-sm-2" maxlength="20"/>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" > </label>
-										<div class="col-sm-4">
-											<label class="col-sm-2 control-label no-padding-right" > 纬度：</label>
-											<input type="text"  id="latitude" name="latitude" class="col-sm-2" maxlength="20"/>
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group nospace">
+														<input type="text"  id="longitude" name="longitude" class="form-control" placeholder="经度" maxlength="20" />
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group nospace">
+														<input type="text"  id="latitude" name="latitude" class="form-control" placeholder="纬度" maxlength="20" />
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 									
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="button" onclick="save();">
+											<button class="btn btn-info" type="submit" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn" type="button" onclick="init();">
+											<button class="btn" type="reset" onclick="init()">
 												<i class="ace-icon fa fa-repeat bigger-110"></i>
 												重置
 											</button>
@@ -229,12 +217,6 @@
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
 	</div>
 
 	<script type="text/javascript">
@@ -262,9 +244,7 @@
 		        $(this).fileinput(projectfileoptions);
 		    }
 		});
-	
-	
-	
+
 		var china=new Object();
 		china['100']=new Array('北京市区','北京市辖区');
 		china['210']=new Array('上海市区','上海市辖区');
@@ -354,7 +334,7 @@
 	
 		var contral = "0";
 		
-			//bootstrap验证控件		
+			//bootstrap验证控件
 		    $('#transportion').bootstrapValidator({
 		        message: 'This value is not valid',
 		        feedbackIcons: {
@@ -380,12 +360,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '运输公司站长不能为空'
+		                        message: '运输公司管理员不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '运输公司站长不能超过20个汉字'
+		                        message: '运输公司管理员不能超过20个汉字'
 		                    }
 		                }
 		            },
@@ -395,11 +375,9 @@
 		                    notEmpty: {
 		                        message: '加气站email不能为空'
 		                    },
-		                    stringLength: {
-		                        min: 1,
-		                        max: 20,
-		                        message: '加气站email不能超过20个字符'
-		                    }
+							emailAddress: {
+								message: '请输入正确的电子邮箱格式'
+							}
 		                }
 		            },
 		            contact_phone: {
@@ -541,8 +519,8 @@
 			            		loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 			            	}
 		            	}
-		            },error:function(XMLHttpRequest, textStatus, errorThrown) {;
-		            	
+		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+
 		 	       }
 			}
 						
@@ -551,6 +529,10 @@
 		
 		function returnpage(){
 			loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
+		}
+
+		function init(){
+			loadPage('#main', '../webpage/poms/transportion/transportion_new.jsp');
 		}
 		
 		function setOperationName(obj){
