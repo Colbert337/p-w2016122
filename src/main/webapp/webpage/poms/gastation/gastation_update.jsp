@@ -161,20 +161,20 @@
 															<option value ="270">湖北省</option>
 															<option value ="730">湖南省</option>
 															<option value ="200">广东省</option>
-															<option value ="890">海南省</option>
+															<option value ="891">海南省</option>
 															<option value ="810">四川省</option>
 															<option value ="850">贵州省</option>
 															<option value ="870">云南省</option>
 															<option value ="290">陕西省</option>
 															<option value ="930">甘肃省</option>
 															<option value ="970">青海省</option>
-															<option value ="886">台湾省</option>
+															<option value ="852">台湾省</option>
 															<option value ="770">广西壮族自治区</option>
 															<option value ="470">内蒙古自治区</option>
 															<option value ="890">西藏自治区</option>
 															<option value ="950">宁夏回族自治区 </option>
 															<option value ="990">新疆维吾尔自治区</option>
-															<option value ="852">香港特别行政区</option>
+															<option value ="851">香港特别行政区</option>
 															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
@@ -210,7 +210,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}" maxlength="15"/>
 										</div>
 									</div>
 									
@@ -253,7 +253,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="tax_number"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_number" name="tax_number" class="form-control" value=" ${station.tax_number}"/>
+											<input type="text" id="tax_number" name="tax_number" class="form-control" maxlength="15" value=" ${station.tax_number}"/>
 										</div>
 									</div>
 									
@@ -328,11 +328,11 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">  危化品证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">危化品证书： </label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
-													<h5 class="widget-title"> 危化品证书照片上传</h5>
+													<h5 class="widget-title">危化品证书照片上传</h5>
 												</div>
 													
 													<ul class="ace-thumbnails file-space clearfix">
@@ -455,11 +455,12 @@
 		china['870']=new Array('昆明市','曲靖市','玉溪市','保山市','昭通市','丽江市','普洱市','临沧市');
 		china['290']=new Array('西安市','铜川市','宝鸡市','咸阳市','渭南市','延安市','汉中市','榆林市','安康市','商洛市');
 		china['930']=new Array('兰州市','金昌市','白银市','天水市','嘉峪关市','武威市','张掖市','平凉市','酒泉市','庆阳市','定西市','陇南市');
-		china['970']=new Array('西宁市');
+		china['970']=new Array('西宁市','海东市','玉树市','格尔木市','德令哈市');
 		china['886']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
 		china['770']=new Array('南宁市','柳州市','桂林市','梧州市','北海市','防城港市','钦州市','贵港市','玉林市','百色市','贺州市','河池市','来宾市','崇左市');
 		china['470']=new Array('呼和浩特市','包头市','乌海市','赤峰市','通辽市','鄂尔多斯市','呼伦贝尔市','巴彦淖尔市','乌兰察布市'); 
 		china['890']=new Array('拉萨市');
+		china['891']=new Array('海口市','三亚市','三沙市','儋州市');
 		china['950']=new Array('银川市','石嘴山市','吴忠市','固原市','中卫市');
 		china['990']=new Array('乌鲁木齐市','克拉玛依市');
 		china['852']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
@@ -510,6 +511,7 @@
 			}
 			
 			if (typeof (china[pv]) == 'undefined'){
+				$("#city").find("option").remove();
 				return;
 			} 
 	

@@ -93,7 +93,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5"   placeholder="输入工商注册号"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5" maxlength="15" placeholder="输入工商注册号"/>
 										</div>
 									</div>
 									
@@ -124,7 +124,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_number" name="tax_number" class="col-xs-10 col-sm-5"  placeholder="输入税务注册号"/>
+											<input type="text" id="tax_number" name="tax_number" class="col-xs-10 col-sm-5" maxlength="15" placeholder="输入税务注册号"/>
 										</div>
 									</div>
 									

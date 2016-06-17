@@ -161,12 +161,14 @@
 
 									<td>
 										<div class="hidden-sm hidden-xs action-buttons">
-											<a class="blue" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-search-plus bigger-130"></i>
-											</a> 
+											
 											<a class="green" href="javascript:void(0);"> 
 												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);" title="修改数据" data-rel="tooltip"></i>
 											</a> 
+											<!--
+											<a class="blue" href="javascript:void(0);"> 
+												<i class="ace-icon fa fa-search-plus bigger-130"></i>
+											</a> -->
 											<!-- <a class="red"  href="javascript:void(0);" onclick="del(this);"> 
 												<i class="ace-icon fa fa-trash-o bigger-130"></i>
 											</a> -->
