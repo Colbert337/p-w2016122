@@ -176,7 +176,7 @@
 			type: "POST",
 			success: function(data){
 				$("#mname").text(data.mname);
-				$("#user_type").val(data.mcode);
+				$("#role_type").val(data.mcode);
 			}
 		})
 		$("#roleModel").modal('show');
@@ -210,16 +210,18 @@
 	 * 删除用户
 	 */
 	function deleteRole(roleId){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/role/delete',
-			data:{roleId:roleId},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
+		if(confirm("确定要删除该角色吗？")){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/role/delete',
+				data:{roleId:roleId},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
 			}
+			$("#listForm").ajaxSubmit(deleteOptions);
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
 	/**
@@ -227,16 +229,22 @@
 	 * @param userId
 	 */
 	function updateStatus(roleId,status){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/role/save',
-			data:{sysRoleId:roleId,roleStatus:status},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
-			}
+		var alertStr = "确定禁用该角色吗？";
+		if(status == 0){
+			alertStr = "确定启用该角色吗？";
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
+		if(confirm(alertStr)){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/role/save',
+				data:{sysRoleId:roleId,roleStatus:status},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
+			}
+			$("#listForm").ajaxSubmit(deleteOptions);
+		}
 
 	}
 </script>
@@ -370,10 +378,10 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="user_type"> <span class="red_star">*</span>角色类型： </label>
+									<label class="col-sm-4 control-label no-padding-right" for="role_type"> <span class="red_star">*</span>角色类型： </label>
 									<div class="col-sm-8">
 										<label class="col-xs-10 col-sm-12 pad-top-10" id="mname"></label>
-										<input type="hidden" id="user_type" name="userType"/>
+										<input type="hidden" id="role_type" name="roleType"/>
 									</div>
 								</div>
 								<div class="form-group">

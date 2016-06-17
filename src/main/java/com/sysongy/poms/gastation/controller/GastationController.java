@@ -4,14 +4,11 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
@@ -88,6 +85,7 @@ public class GastationController extends BaseContoller{
 				bean.setRetMsg("["+gastationid+"]新增成功");
 				ret = "webpage/poms/gastation/gastation_upload";
 			}else{
+				ret = "webpage/poms/gastation/gastation_update";
 				gastationid = service.saveGastation(gastation,"update");
 				bean.setRetMsg("["+gastationid+"]保存成功");
 				ret = this.queryAllGastationList(map, new Gastation());

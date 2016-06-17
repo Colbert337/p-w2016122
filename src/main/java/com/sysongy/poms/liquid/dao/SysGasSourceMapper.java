@@ -1,6 +1,6 @@
-package com.sysongy.poms.system.dao;
+package com.sysongy.poms.liquid.dao;
 
-import com.sysongy.poms.system.model.SysGasSource;
+import com.sysongy.poms.liquid.model.SysGasSource;
 
 public interface SysGasSourceMapper {
     int deleteByPrimaryKey(String sysGasSourceId);

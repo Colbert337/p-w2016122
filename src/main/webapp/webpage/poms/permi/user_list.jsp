@@ -18,6 +18,13 @@
 			binded:true,						//是否绑定即时验证
 			scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
 		});
+
+		$.extend($.validationEngineLanguage.allRules,{ "isUserExist": {
+			"url": "<%=basePath%>/web/permi/user/info/isUserName",
+			"extraData": "dt="+(new Date()).getTime(),
+			"alertText": "* 验证失败！",
+			"alertTextLoad": "* 验证中，请稍候..."}
+		});
 	});
 
 	/*分页相关方法 start*/
@@ -166,16 +173,18 @@
 	 * 删除用户
 	 */
 	function deleteUser(userId){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/user/delete',
-			data:{userId:userId},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
+		if(confirm("确定要删除该用户吗？")){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/user/delete',
+				data:{userId:userId},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
 			}
+			$("#listForm").ajaxSubmit(deleteOptions);
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
 	/**
@@ -183,18 +192,22 @@
 	 * @param userId
 	 */
 	function updateStatus(userId,status){
-
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/user/update/staruts',
-			data:{sysUserId:userId,status:status},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
-				$('[data-rel="tooltip"]').tooltip();
-			}
+		var alertStr = "确定要禁用该用户吗？";
+		if(status == 0){
+			alertStr = "确定要启用该用户吗？";
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
+		if(confirm(alertStr)){
+			 var deleteOptions ={
+			 url:'<%=basePath%>/web/permi/user/update/staruts',
+			 data:{sysUserId:userId,status:status},
+			 type:'post',
+			 dataType:'text',
+				 success:function(data){
+				 $("#main").html(data);
+				 }
+			 }
+			 $("#listForm").ajaxSubmit(deleteOptions);
+		}
 
 	}
 </script>
@@ -264,23 +277,23 @@
 								</td>
 								<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td class="text-center">
-									<a class="" href="javascript:editUser('${user.sysUserId}');" title="修改" data-rel="tooltip">
+									<a class="" href="javascript:editUser('${user.sysUserId}');" title="修改">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
 									</a>
 									<span class="span-state">
 										<c:if test="${user.status == 0}">
-											<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="禁用" data-rel="tooltip">
+											<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="禁用">
 												<span class="ace-icon fa fa-unlock bigger-130"></span>
 											</a>
 										</c:if>
 										<c:if test="${user.status == 1}">
-											<a class="red" href="javascript:updateStatus('${user.sysUserId}',0);" title="启用" data-rel="tooltip">
+											<a class="red" href="javascript:updateStatus('${user.sysUserId}',0);" title="启用">
 												<span class="ace-icon fa fa-lock bigger-130"></span>
 											</a>
 										</c:if>
 									</span>
-									<a class="" href="javascript:deleteUser('${user.sysUserId}');" title="删除" data-rel="tooltip">
-										<span class="ace-icon fa fa-trash-o bigger-130"></span>
+									<a class="" href="javascript:deleteUser('${user.sysUserId}');">
+										<span class="ace-icon fa fa-trash-o bigger-130" title="删除"></span>
 									</a>
 								</td>
 							</tr>
@@ -292,7 +305,7 @@
 			<%--分页start--%>
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
@@ -419,7 +432,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="alertModalLabel">友情提示</h4>
+				<h4 class="modal-title" id="alertModalLabel">警告提示</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">

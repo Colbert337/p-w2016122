@@ -105,6 +105,7 @@
 				$("#function_sort").val(data);
 			}
 		});
+		<%--alert("parentId:${parentId} +parentName:${parentName}");--%>
 		$("#parent_id").val('${parentId}');
 		$("#parent_name").val('${parentName}');
 		$("#functionModel").modal('show');
@@ -172,19 +173,21 @@
 	}
 
 	/**
-	 * 删除用户
+	 * 删除功能
 	 */
 	function deleteFunction(functionId,parentId){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/function/delete',
-			data:{functionId:functionId,parentId:parentId},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
+		if(confirm("确定删除该功能吗？")){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/function/delete',
+				data:{functionId:functionId,parentId:parentId},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
 			}
+			$("#listForm").ajaxSubmit(deleteOptions);
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
 	/**
@@ -192,16 +195,22 @@
 	 * @param userId
 	 */
 	function updateStatus(functionId,status){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/function/save',
-			data:{sysFunctionId:functionId,functionStatus:status},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
-			}
+		var alertStr = "确定禁用该功能吗？";
+		if(status == 0){
+			alertStr = "确定启用该功能吗？";
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
+		if(confirm(alertStr)){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/function/save',
+				data:{sysFunctionId:functionId,functionStatus:status},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
+			}
+			$("#listForm").ajaxSubmit(deleteOptions);
+		}
 
 	}
 

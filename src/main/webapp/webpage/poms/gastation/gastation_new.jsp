@@ -9,6 +9,23 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
+	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
+
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
+	
+	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
+
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
 				<div class="main-content-inner">
@@ -75,7 +92,7 @@
 										<label for="email" class="col-sm-3 control-label no-padding-right" > E-mail： </label>
 
 										<div class="col-sm-4">
-											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
+											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
 										</div>
 									</div>
 									
@@ -132,7 +149,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="salesmen_name" class="col-sm-3 control-label no-padding-right" for="salesmen_name"> 销售人员： </label>
+										<label for="salesmen_name" class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
 										<div class="col-sm-4">
 											<input type="text" id="salesmen_name" name="salesmen_name" placeholder="输入销售人员" class="form-control" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
@@ -221,7 +238,7 @@
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="submit" onclick="save();">
+											<button class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
@@ -247,6 +264,12 @@
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
 	</div>
 
 	<script type="text/javascript">
@@ -316,7 +339,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'<%=basePath%>/web/permi/user/list/userType?userType=5',   
+			   url:'<%=basePath%>/web/permi/user/list/userType?userType=5',
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
@@ -407,59 +430,17 @@
 		                    }
 		                }
 		            },
-		            admin_username: {
-		                message: 'The cardno is not valid',
-		                validators: {
-		                    notEmpty: {
-		                        message: '管理员账号不能为空'
-		                    },
-		                    remote: {
-                                url: '../web/permi/user/info/isExist',
-                                type: "post",
-                                async: false,
-                                data: function(validator, $field, value) {
-                                	return{
-                                		userType:1
-                                	};
-                               	},
-                                message: '用户名已存在'
-                            }
-		                }
-		            },
-		            admin_userpassword: {
-		                message: 'The cardno is not valid',
-		                validators: {
-		                    notEmpty: {
-		                        message: '管理员密码不能为空'
-		                    }
-		                }
-		            },
-		            admin_userpassword_repert: {
-		                message: 'The cardno is not valid',
-		                validators: {
-		                    notEmpty: {
-		                        message: '管理员密码确认不能为空'
-		                    },
-		                    callback: {
-		                    	message: '管理员密码不一致',
-		                    	callback: function (value, validator, $field) {
-	                                 if($("[name=admin_userpassword]").val() != value){
-	                                	 return false;
-	                                 }
-	                                 return true;
-	                            }
-		                    }
-		                }
-		            },
 		            email: {
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
 		                        message: '加注站email不能为空'
 		                    },
-		                    emailAddress: {
-								message: '请输入正确的电子邮箱格式'
-							}
+		                    stringLength: {
+		                        min: 1,
+		                        max: 20,
+		                        message: '加注站email不能超过30个字符'
+		                    }
 		                }
 		            },
 		            station_manager: {
@@ -618,9 +599,6 @@
 		            indu_com_number: {
 		                message: 'The cardno is not valid',
 						validators: {
-							notEmpty: {
-								message: '工商注册号不能为空'
-							},
 							stringLength: {
 								max: 15,
 								message: '工商注册号不能超过15位'
@@ -630,9 +608,6 @@
 					tax_number: {
 		                message: 'The cardno is not valid',
 						validators: {
-							notEmpty: {
-								message: '税务注册号不能为空'
-							},
 							stringLength: {
 								max: 15,
 								message: '税务注册号不能超过15位'

@@ -7,17 +7,23 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
-	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/colorbox.css" />
 
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
-	<script src="<%=basePath %>/assets/js/ace-extra.js"></script>
-	<script src="<%=basePath %>/assets/js/jquery.colorbox.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
 
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
+	
 	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
 
 			<!-- /section:basics/sidebar -->
@@ -59,11 +65,11 @@
 					</div>
 
 					<!-- /section:basics/content.breadcrumbs -->
-					<div class="page-content">
+					<div class="">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								修改加注站信息
+								新建加注站
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -71,27 +77,27 @@
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
 								<form class="form-horizontal"  id="gastationform">
-									<!-- #section:elements.form -->
-									<input type="hidden" id="sys_gas_station_id"  name="sys_gas_station_id" value="${station.sys_gas_station_id}" />
-							
+								
+								<jsp:include page="/common/page_param.jsp"></jsp:include>
+
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="gas_station_name"> 加注站名称： </label>
+										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 加注站名称： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="gas_station_name"  name="gas_station_name" value="${station.gas_station_name}" placeholder="输入加注站名称" class="form-control" maxlength="20"/>
+											<input type="text" id="gas_station_name"  name="gas_station_name" placeholder="输入加注站名称" class="form-control" maxlength="20" value="${station.gas_station_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="email"> E-mail： </label>
+										<label for="email" class="col-sm-3 control-label no-padding-right" > E-mail： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control"  value="${station.email}"/>
+											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="station_manager"> 站长姓名： </label>
+										<label for="station_manager" class="col-sm-3 control-label no-padding-right"> 站长姓名： </label>
 
 										<div class="col-sm-4">
 											<input type="text" id="station_manager"  name="station_manager" placeholder="输入站长姓名" class="form-control" maxlength="20" value="${station.station_manager}"/>
@@ -99,7 +105,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="contact_phone"> 联系电话： </label>
+										<label for="contact_phone" class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
 
 										<div class="col-sm-4">
 											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15" value="${station.contact_phone}"/>
@@ -107,31 +113,54 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期：</label>
+										<label class="col-sm-3 control-label no-padding-right">管理员账号（建议为11位手机号码）： </label>
+
+										<div class="col-sm-4">
+											<input class="form-control" name="admin_username"  type="text"  placeholder="输入管理员账号" maxlength="20" value="${station.admin_username}"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">管理员密码： </label>
+
+										<div class="col-sm-4">
+											<input class="form-control" name="admin_userpassword"  type="password"  placeholder="输入管理员密码" maxlength="20" value="${station.admin_userpassword}"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">确认管理员密码： </label>
+
+										<div class="col-sm-4">
+											<input class="form-control" name="admin_userpassword_repert"  type="password"  placeholder="输入管理员密码" maxlength="20" />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
 										<div class="col-sm-2 datepicker-noicon">
-										<!-- #section:plugins/date-time.datepicker -->
-												<div class="input-group">
-														<input class="form-control date-picker" name="expiry_date_frompage"  readonly="readonly" id="expiry_date" type="text" value="${station.expiry_date_frompage}" data-date-format="yyyy-mm-dd" />
-														<span class="input-group-addon">
-																<i class="fa fa-calendar bigger-110"></i>
-														</span>
+											<div class="input-group">
+												<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
+													<span class="input-group-addon">
+														<i class="fa fa-calendar bigger-110"></i>
+													</span>
 												</div>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="salesmen_name"> 销售人员： </label>
+										<label for="salesmen_name" class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
 										<div class="col-sm-4">
-												<input class="form-control" type="text" id="salesmen_name" name="salesmen_name" maxlength="20" value="${station.salesmen_name}"/>
+											<input type="text" id="salesmen_name" name="salesmen_name" placeholder="输入销售人员" class="form-control" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
+										<label for="operations_id" class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
 										<div class="col-sm-4">
-												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
-												</select>
-												<input type="hidden" id="operations_name" name="operations_name"/>
+											<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
+											</select>
+											<input type="hidden" id="operations_name" name="operations_name"/>
 										</div>
 									</div>
 									
@@ -172,7 +201,7 @@
 															<option value ="770">广西壮族自治区</option>
 															<option value ="470">内蒙古自治区</option>
 															<option value ="890">西藏自治区</option>
-															<option value ="950">宁夏回族自治区 </option>
+															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
 															<option value ="851">香港特别行政区</option>
 															<option value ="853">澳门特别行政区</option>
@@ -183,8 +212,8 @@
 													</select>
 												</div>
 											</div>
-											<input type="text"  id="detail" name="detail" class="form-control" />
-											<input type="hidden"  id="address" name="address" />
+											<input type="text" id="detail" name="detail" class="form-control" placeholder="输入详细地址" value="${station.detail}"/>
+											<input type="hidden" id="address" name="address" class="col-sm-12"  value="${station.address}"/>
 										</div>
 									</div>
 									
@@ -194,181 +223,15 @@
 											<div class="row">
 												<div class="col-sm-6">
 													<div class="form-group nospace">
-														<input type="text"  id="longitude" name="longitude" class="form-control" maxlength="20" value="${station.longitude}"/>
+														<input type="text"  id="longitude" name="longitude" class="form-control" placeholder="经度" maxlength="20" value="${station.longitude}"/>
 													</div>
 												</div>
 												<div class="col-sm-6">
 													<div class="form-group nospace">
-														<input type="text"  id="latitude" name="latitude" class="form-control" maxlength="20" value="${station.latitude}"/>
+														<input type="text"  id="latitude" name="latitude" class="form-control" placeholder="纬度" maxlength="20" value="${station.latitude}"/>
 													</div>
 												</div>
 											</div>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number"> 工商注册号： </label>
-
-										<div class="col-sm-4">
-											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}" maxlength="15"/>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 工商注册证书： </label>
-										<div class="col-sm-4">
-											<div class="widget-box">
-												<div class="widget-header">
-													<h5 class="widget-title">工商注册证书照片上传</h5>
-												</div>
-													
-												<ul class="ace-thumbnails file-space clearfix">
-													<li>
-														<a href="<%=imagePath %>${station.indu_com_certif}" data-rel="colorbox">
-															<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.indu_com_certif}" />
-															<div class="text">
-																<div class="inner">点击放大</div>
-															</div>
-														</a>
-													</li>
-												</ul>
-
-												<div class="widget-body">
-													<div class="widget-main">
-														<label for="indu_com_certif_select">
-															<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
-														</label>
-														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
-															<i class="ace-icon fa fa-check bigger-110"></i>
-															图片上传
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="tax_number"> 税务注册号： </label>
-
-										<div class="col-sm-4">
-											<input type="text" id="tax_number" name="tax_number" class="form-control" maxlength="15" value=" ${station.tax_number}"/>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 税务注册证书： </label>
-										<div class="col-sm-4">
-											<div class="widget-box">
-												<div class="widget-header">
-													<h5 class="widget-title">税务注册证书照片上传</h5>
-												</div>
-													
-													<ul class="ace-thumbnails file-space clearfix">
-														<li>
-															<a href="<%=imagePath %>${station.tax_certif}" data-rel="colorbox">
-																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.tax_certif}" />
-																<div class="text">
-																	<div class="inner">点击放大</div>
-																</div>
-															</a>
-														</li>
-													</ul>
-
-												<div class="widget-body">
-													<div class="widget-main">
-														<label for="tax_certif_select">
-															<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
-														</label>
-														<input type="hidden" id="tax_certif" name="tax_certif"/> 
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
-															<i class="ace-icon fa fa-check bigger-110"></i>
-															图片上传
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> LNG储装证书： </label>
-										<div class="col-sm-4">
-											<div class="widget-box">
-												<div class="widget-header">
-													<h5 class="widget-title">LNG储装证书照片上传</h5>
-												</div>
-													
-													<ul class="ace-thumbnails file-space clearfix">
-														<li>
-															<a href="<%=imagePath %>${station.lng_certif}" data-rel="colorbox">
-																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.lng_certif}" />
-																<div class="text">
-																	<div class="inner">点击放大</div>
-																</div>
-															</a>
-														</li>
-													</ul>
-
-												<div class="widget-body">
-													<div class="widget-main">
-														<label for="lng_certif_select">
-															<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
-														</label>
-														<input type="hidden" id="lng_certif" name="lng_certif"/> 
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
-															<i class="ace-icon fa fa-check bigger-110"></i>
-															图片上传
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">危化品证书： </label>
-										<div class="col-sm-4">
-											<div class="widget-box">
-												<div class="widget-header">
-													<h5 class="widget-title">危化品证书照片上传</h5>
-												</div>
-													
-													<ul class="ace-thumbnails file-space clearfix">
-														<li>
-															<a href="<%=imagePath %>${station.dcp_certif}" data-rel="colorbox">
-																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.dcp_certif}" />
-																<div class="text">
-																	<div class="inner">点击放大</div>
-																</div>
-															</a>
-														</li>
-													</ul>
-
-												<div class="widget-body">
-													<div class="widget-main">
-														<label for="dcp_certif_select">
-															<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
-														</label>
-														<input type="hidden" id="dcp_certif" name="dcp_certif"/> 
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
-															<i class="ace-icon fa fa-check bigger-110"></i>
-															图片上传
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 加注站状态： </label>
-
-										<div class="col-sm-4">
-											<select class="chosen-select " name="status" >
-												<s:option gcode="STATION_STATUS" form="station" field="status" />
-											</select>										
 										</div>
 									</div>
 									
@@ -379,8 +242,14 @@
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
-											
 											&nbsp; &nbsp; &nbsp;
+											
+											<button class="btn" type="button" onclick="init();">
+												<i class="ace-icon fa fa-repeat bigger-110"></i>
+												重置
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											
 											<button class="btn btn-success" type="buttom" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
@@ -402,32 +271,34 @@
 	</div>
 	</div>
 	</div>
-		<!-- inline scripts related to this page -->
+
 	<script type="text/javascript">
 	
-	var projectfileoptions = {
-	        showUpload : false,
-	        showRemove : false,
-	        language : 'zh',
-	        allowedPreviewTypes : [ 'image' ],
-	        allowedFileExtensions : [ 'jpg', 'png', 'gif', 'jepg' ],
-	        maxFileSize : 1000,
-	    }
-	// 文件上传框
-	$('input[class=projectfile]').each(function() {
-	    var imageurl = $(this).attr("value");
+			var projectfileoptions = {
+		        showUpload : false,
+		        showRemove : false,
+		        language : 'zh',
+		        allowedPreviewTypes : [ 'image' ],
+		        allowedFileExtensions : [ 'jpg', 'png', 'gif', 'jepg' ],
+		        maxFileSize : 1000,
+		    }
+		// 文件上传框
+		$('input[class=projectfile]').each(function() {
+		    var imageurl = $(this).attr("value");
+		
+		    if (imageurl) {
+		        var op = $.extend({
+		            initialPreview : [ // 预览图片的设置
+		            "<img src='" + imageurl + "' class='file-preview-image'>", ]
+		        }, projectfileoptions);
+		
+		        $(this).fileinput(op);
+		    } else {
+		        $(this).fileinput(projectfileoptions);
+		    }
+		});
 	
-	    if (imageurl) {
-	        var op = $.extend({
-	            initialPreview : [ // 预览图片的设置
-	            "<img src='" + imageurl + "' class='file-preview-image'>", ]
-	        }, projectfileoptions);
 	
-	        $(this).fileinput(op);
-	    } else {
-	        $(this).fileinput(projectfileoptions);
-	    }
-	});
 	
 		var china=new Object();
 		china['100']=new Array('北京市区','北京市辖区');
@@ -474,8 +345,9 @@
 	           success:function(data){
 	           		if(data != ""){
 			        	   var s = JSON.parse(data);
+			        	   $("#operations_id").append("<option value=''>请选择</option>");
 			        	   for(var i=0;i<s.length;i++){
-			        		   $("#operations_id").append("<option value='"+s[i].userName+"''>"+s[i].userName+" - "+s[i].realName+"</option>");
+			        		   $("#operations_id").append("<option value='"+s[i].userName+"'>"+s[i].userName+" - "+s[i].realName+"</option>");
 			        	   }
 	           		}
 	            }
@@ -513,7 +385,7 @@
 			if (typeof (china[pv]) == 'undefined'){
 				$("#city").find("option").remove();
 				return;
-			} 
+			}
 	
 			for (i = 0; i < china[pv].length; i++) { 
 				ii = i;
@@ -521,8 +393,8 @@
 				city.options[ii] = new Option();
 				city.options[ii].text = china[pv][i];
 				//city.options[ii].value = china[pv][i];
-				city.options[ii].value = parseInt(pv+i)
-				}
+				city.options[ii].value = parseInt(pv+i);
+			}
 		};
 	
 	//datepicker plugin
@@ -567,27 +439,9 @@
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加注站email不能超过30个字符'
+		                        message: '加注站email不能超过20个字符'
 		                    }
 		                }
-		            },
-		            expiry_date_frompage: {
-		                message: 'The cardno is not valid',
-		                validators: { 
-		                    notEmpty: {
-		                        message: '平台有效期不能为空'
-		                    },
-		                    callback: {
-		                    	message: '平台有效期必须大于当前日期',
-		                    	callback: function (value, validator, $field) {
-	                                 if(compareDate(new Date().toLocaleDateString(),value)){
-	                                	 return false;
-	                                 }
-	                                 return true;
-	                            }
-		                    }
-		                },
-		                trigger: 'change'
 		            },
 		            station_manager: {
 		                message: 'The cardno is not valid',
@@ -599,6 +453,60 @@
 		                        min: 1,
 		                        max: 20,
 		                        message: '加注站站长不能超过20个汉字'
+		                    }
+		                }
+		            },
+		            admin_username: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '管理员账号不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 6,
+		                        max: 20,
+		                        message: '管理员账号长度必须大于6位'
+		                    },
+		                    remote: {
+                                url: '../web/permi/user/info/isExist',
+                                type: "post",
+                                async: false,
+                                data: function(validator, $field, value) {
+                                	return{
+                                		userType:1
+                                	};
+                               	},
+                                message: '用户名已存在'
+                            }
+		                }
+		            },
+		            admin_userpassword: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '管理员密码不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 6,
+		                        max: 20,
+		                        message: '管理员密码长度必须大于6位'
+		                    }
+		                }
+		            },
+		            admin_userpassword_repert: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '管理员密码确认不能为空'
+		                    },
+		                    callback: {
+		                    	message: '管理员密码不一致',
+		                    	callback: function (value, validator, $field) {
+	                                 if($("[name=admin_userpassword]").val() != value){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
 		                }
 		            },
@@ -620,6 +528,23 @@
 		                        message: '销售负责人不能为空'
 		                    }
 		                }
+		            },
+		            expiry_date_frompage: {
+		                validators: {
+		                    notEmpty: {
+		                        message: '平台有效期不能为空'
+		                    },
+		                    callback: {
+		                    	message: '平台有效期必须大于当前日期',
+		                    	callback: function (value, validator, $field) {
+	                                 if(compareDate(new Date().toLocaleDateString(),value)){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
+		                    }
+		                },
+		                trigger: 'change'
 		            },
 		            operations_id: {
 		                validators: {
@@ -652,7 +577,7 @@
 		            longitude: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '注册地址经度'
+		                        message: '注册地址经度不能为空'
 		                    },
 		                    regexp: {
 		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
@@ -663,7 +588,7 @@
 		            latitude: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '注册地址经度'
+		                        message: '注册地址纬度不能为空'
 		                    },
 		                    regexp: {
 		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
@@ -671,25 +596,31 @@
 		                    }
 		                }
 		            },
-					indu_com_number: {
+		            indu_com_number: {
 		                message: 'The cardno is not valid',
 						validators: {
+							notEmpty: {
+								message: '工商注册号不能为空'
+							},
 							stringLength: {
 								max: 15,
 								message: '工商注册号不能超过15位'
 							}
 						}
-		                }
 		            },
 					tax_number: {
 		                message: 'The cardno is not valid',
 						validators: {
+							notEmpty: {
+								message: '税务注册号不能为空'
+							},
 							stringLength: {
 								max: 15,
 								message: '税务注册号不能超过15位'
 							}
 						}
 					}
+		         }
 		    });
 			    
 		function save(){
@@ -707,9 +638,20 @@
 		            dataType:'text',
 		            success:function(data){
 		            	$("#main").html(data);
-						$("#modal-table").modal("show");
+		            	if($("#retCode").val() != 100){
+		            		$("#modal-table").modal("show");
+		            		return;
+		            	}else{
+		            		var tmp = confirm("保存成功，是否上传许可证图片?");
+			            	if(tmp){
+			            		loadPage('#main', '../webpage/poms/gastation/gastation_upload.jsp?gastationid='+$("#retValue").val());
+			            	}else{
+			            		//$("#main").html(data);
+			            		loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
+			            	}
+		            	}
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+		            	
 		 	       }
 			}
 						
@@ -720,77 +662,11 @@
 			loadPage('#main', '<%=basePath%>/web/gastation/gastationList');
 		}
 		
-		function setSalesmenName(obj){
-			$("#salesmen_name").val($(obj).val());
-		}
-		
 		function setOperationName(obj){
 			$("#operations_name").val($(obj).val());
 		}
 		
-function save_photo(fileobj,obj,obj1){
-			
-			$(fileobj).parents("div").find("input[name=uploadfile]").each(function(){
-				$(this).attr("name","");
-			});
-			
-			$(fileobj).parent("div").find("input:first").attr("name","uploadfile");
-			
-			if($(obj).val()==null || $(obj).val()==""){
-				alert("请先上传文件");	
-				return;
-			}
-			
-			var multipartOptions ={   
-					url:'../crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),
-		            type:'post',                    
-		            dataType:'text',
-		            enctype:"multipart/form-data",
-		            success:function(data){
-		            	var s = JSON.parse(data);
-		            	if(s.success == true){
-		            		alert("上传成功");
-		            		$(obj1).val(s.obj);
-		            	}
-		            	
-		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
-		 	       }
-			}
-			$("#gastationform").ajaxSubmit(multipartOptions);
+		function init(){
+			loadPage('#main', '../webpage/poms/gastation/gastation_new.jsp');
 		}
-		
-		jQuery(function($) {
-			var $overflow = '';
-			var colorbox_params = {
-				rel: 'colorbox',
-				reposition:true,
-				scalePhotos:true,
-				scrolling:false,
-				previous:'<i class="ace-icon fa fa-arrow-left"></i>',
-				next:'<i class="ace-icon fa fa-arrow-right"></i>',
-				close:'&times;',
-				current:'{current} of {total}',
-				maxWidth:'100%',
-				maxHeight:'100%',
-				onOpen:function(){
-					$overflow = document.body.style.overflow;
-					document.body.style.overflow = 'hidden';
-				},
-				onClosed:function(){
-					document.body.style.overflow = $overflow;
-				},
-				onComplete:function(){
-					$.colorbox.resize();
-				}
-			};
-		
-			$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-			$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
-			
-			
-			$(document).one('ajaxloadstart.page', function(e) {
-				$('#colorbox, #cboxOverlay').remove();
-		   });
-		})
 		</script>

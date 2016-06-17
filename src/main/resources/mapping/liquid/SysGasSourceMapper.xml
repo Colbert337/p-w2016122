@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.liquid.dao.SysGasSourceMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.liquid.model.SysGasSource" >
+    <id column="sys_gas_source_id" property="sys_gas_source_id" jdbcType="VARCHAR" />
+    <result column="gas_factory_name" property="gas_factory_name" jdbcType="VARCHAR" />
+    <result column="technology_type" property="technology_type" jdbcType="VARCHAR" />
+    <result column="delivery_method" property="delivery_method" jdbcType="VARCHAR" />
+    <result column="market_price" property="market_price" jdbcType="DECIMAL" />
+    <result column="gas_factory_addr" property="gas_factory_addr" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updated_date" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sys_gas_source_id, gas_factory_name, technology_type, delivery_method, market_price, 
+    gas_factory_addr, status, remark, created_date, updated_date
+  </sql>
+  
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  select 
+    <include refid="Base_Column_List" />
+    from sys_gas_source
+    where 1=1
+  <trim>
+  	  <if test="sys_gas_source_id != null &amp;&amp; sys_gas_source_id != ''" >
+        and sys_gas_source_id = #{sys_gas_source_id,jdbcType=VARCHAR}
+      </if>
+      <if test="gas_factory_name != null &amp;&amp; gas_factory_name != ''" >
+        and gas_factory_name = #{gas_factory_name,jdbcType=VARCHAR}
+      </if>
+      <if test="status!= null &amp;&amp; status != ''" >
+        and status = #{status,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_gas_source
+    where sys_gas_source_id = #{sys_gas_source_id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_gas_source
+    where sys_gas_source_id = #{sys_gas_source_id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.sysongy.poms.liquid.model.SysGasSource" >
+    insert into sys_gas_source (sys_gas_source_id, gas_factory_name, technology_type, 
+      delivery_method, market_price, gas_factory_addr, 
+      status, remark, created_date, 
+      updated_date)
+    values (#{sys_gas_source_id,jdbcType=VARCHAR}, #{gas_factory_name,jdbcType=VARCHAR}, #{technology_type,jdbcType=VARCHAR}, 
+      #{delivery_method,jdbcType=VARCHAR}, #{market_price,jdbcType=DECIMAL}, #{gas_factory_addr,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{created_date,jdbcType=TIMESTAMP}, 
+      #{updated_date,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.liquid.model.SysGasSource" >
+    insert into sys_gas_source
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sys_gas_source_id != null" >
+        sys_gas_source_id,
+      </if>
+      <if test="gas_factory_name != null" >
+        gas_factory_name,
+      </if>
+      <if test="technology_type != null" >
+        technology_type,
+      </if>
+      <if test="delivery_method != null" >
+        delivery_method,
+      </if>
+      <if test="market_price != null" >
+        market_price,
+      </if>
+      <if test="gas_factory_addr != null" >
+        gas_factory_addr,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="created_date != null" >
+        created_date,
+      </if>
+      <if test="updated_date != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sys_gas_source_id != null" >
+        #{sys_gas_source_id,jdbcType=VARCHAR},
+      </if>
+      <if test="gas_factory_name != null" >
+        #{gas_factory_name,jdbcType=VARCHAR},
+      </if>
+      <if test="technology_type != null" >
+        #{technology_type,jdbcType=VARCHAR},
+      </if>
+      <if test="delivery_method != null" >
+        #{delivery_method,jdbcType=VARCHAR},
+      </if>
+      <if test="market_price != null" >
+        #{market_price,jdbcType=DECIMAL},
+      </if>
+      <if test="gas_factory_addr != null" >
+        #{gas_factory_addr,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="created_date != null" >
+        #{created_date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated_date != null" >
+        #{updated_date,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.liquid.model.SysGasSource" >
+    update sys_gas_source
+    <set >
+      <if test="gas_factory_name != null" >
+        gas_factory_name = #{gas_factory_name,jdbcType=VARCHAR},
+      </if>
+      <if test="technology_type != null" >
+        technology_type = #{technology_type,jdbcType=VARCHAR},
+      </if>
+      <if test="delivery_method != null" >
+        delivery_method = #{delivery_method,jdbcType=VARCHAR},
+      </if>
+      <if test="market_price != null" >
+        market_price = #{market_price,jdbcType=DECIMAL},
+      </if>
+      <if test="gas_factory_addr != null" >
+        gas_factory_addr = #{gas_factory_addr,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="created_date != null" >
+        created_date = #{created_date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated_date != null" >
+        updated_date = #{updated_date,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sys_gas_source_id = #{sys_gas_source_id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.liquid.model.SysGasSource" >
+    update sys_gas_source
+    set gas_factory_name = #{gas_factory_name,jdbcType=VARCHAR},
+      technology_type = #{technology_type,jdbcType=VARCHAR},
+      delivery_method = #{delivery_method,jdbcType=VARCHAR},
+      market_price = #{market_price,jdbcType=DECIMAL},
+      gas_factory_addr = #{gas_factory_addr,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      created_date = #{created_date,jdbcType=TIMESTAMP},
+      updated_date = #{updated_date,jdbcType=TIMESTAMP}
+    where sys_gas_source_id = #{sys_gas_source_id,jdbcType=VARCHAR}
+  </update>
+</mapper>
