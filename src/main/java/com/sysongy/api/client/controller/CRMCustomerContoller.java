@@ -300,9 +300,7 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getVehicleLice())){
                 orgSysDriver.setVehicleLice(sysDriver.getVehicleLice());
             }
-
             int renum = driverService.saveDriver(orgSysDriver, "update");
-
         } catch (Exception e) {
             throw e;
         }
