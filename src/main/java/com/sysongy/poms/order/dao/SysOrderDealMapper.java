@@ -13,5 +13,12 @@ public interface SysOrderDealMapper {
 
     int updateByPrimaryKeySelective(SysOrderDeal record);
 
-    int updateByPrimaryKey(SysOrderDeal record);
+    int updateSysOrderDeal(SysOrderDeal record);
+    
+    /**
+     * 创建流水单编码
+     * @param record
+     * @return
+     */
+    String createDealNumber(SysOrderDeal record);
 }

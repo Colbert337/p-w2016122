@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.sysongy.poms.order.dao.SysOrderMapper;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.util.GlobalConstant;
 
 /**
  * 
@@ -38,13 +39,38 @@ public class OrderServiceImpl implements OrderService {
 		return sysOrderMapper.updateByPrimaryKey(record);
 	}
 
+	
+	/**
+     * 给司机充值
+     * @param order
+     * @return
+     */
 	@Override
-	public int charge(SysOrder order){
+	public String chargeToDriver(SysOrder order){
 	   if (order ==null){
-		   return 0;
+		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
 	   }
 	   
 	   String orderType = order.getOrderType();
-	   return 1;	
+	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE))){
+		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_CHARGE;
+	   }
+	   String operatorType = order.getOperatorType();
+	   if(operatorType==null || (!operatorType.equalsIgnoreCase(GlobalConstant.OrderOperatorType.DRIVER))){
+		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER;
+	   }
+	   //TODO 
+	   
+	   return GlobalConstant.OrderProcessResult.SUCCESS;	
+	}
+    
+    /**
+     * 给加注站充值
+     * @param order
+     * @return
+     */
+	@Override
+	public String chargeToTransportion(SysOrder record){
+		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 }

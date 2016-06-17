@@ -16,10 +16,18 @@ public interface OrderService {
 
     int updateByPrimaryKey(SysOrder record);
     
+   
     /**
-     * 充值
-     * @param record
-     * @return 1--成功。 0 --失败
+     * 给司机充值
+     * @param order
+     * @return
      */
-    int charge(SysOrder record);
+    String chargeToDriver(SysOrder record) throws Exception;
+    
+    /**
+     * 给加注站充值
+     * @param order
+     * @return
+     */
+    String chargeToTransportion(SysOrder record) throws Exception;
 }

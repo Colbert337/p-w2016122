@@ -114,7 +114,7 @@
     </set>
     where deal_id = #{dealId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
+  <update id="updateSysOrderDeal" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
     update sys_order_deal
     set order_id = #{orderId,jdbcType=VARCHAR},
       deal_number = #{dealNumber,jdbcType=VARCHAR},

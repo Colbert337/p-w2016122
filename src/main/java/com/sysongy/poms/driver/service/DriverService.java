@@ -1,10 +1,8 @@
 package com.sysongy.poms.driver.service;
 
-import java.util.List;
-
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.order.model.SysOrder;
 
 public interface DriverService {
 	
@@ -15,5 +13,19 @@ public interface DriverService {
 	public Integer saveDriver(SysDriver obj,  String operation) throws Exception;
 	
 	public Integer delDriver(String sysDriverId) throws Exception;
+	
+	/**
+	 * 给司机充钱
+	 * @param order
+	 * @return
+	 */
+	public String chargeCashToDriver(SysOrder order) throws Exception;
+
+	/**
+	 * 给司机返现
+	 * @param order
+	 * @return
+	 */
+	public String cashBackToDriver(SysOrder order) throws Exception;
 
 }
