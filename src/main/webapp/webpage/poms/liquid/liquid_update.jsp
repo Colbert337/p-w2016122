@@ -567,7 +567,7 @@
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加注站email不能超过30个字符'
+		                        message: '加注站email不能超过20个字符'
 		                    }
 		                }
 		            },
@@ -674,6 +674,9 @@
 					indu_com_number: {
 		                message: 'The cardno is not valid',
 						validators: {
+							notEmpty: {
+								message: '工商注册号不能为空'
+							},
 							stringLength: {
 								max: 15,
 								message: '工商注册号不能超过15位'
@@ -684,6 +687,9 @@
 					tax_number: {
 		                message: 'The cardno is not valid',
 						validators: {
+							notEmpty: {
+								message: '税务注册号不能为空'
+							},
 							stringLength: {
 								max: 15,
 								message: '税务注册号不能超过15位'

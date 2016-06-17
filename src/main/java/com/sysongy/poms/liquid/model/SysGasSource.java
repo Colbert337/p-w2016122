@@ -4,103 +4,105 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class SysGasSource {
-    private String sysGasSourceId;
+	
+	private String sys_gas_source_id;
 
-    private String gasFactoryName;
+	private String gas_factory_name;
 
-    private String technologyType;
+	private String technology_type;
 
-    private String deliveryMethod;
+	private String delivery_method;
 
-    private BigDecimal marketPrice;
+	private BigDecimal market_price;
 
-    private String gasFactoryAddr;
+	private String gas_factory_addr;
 
-    private String status;
+	private String status;
 
-    private String remark;
+	private String remark;
 
-    private Date createdDate;
+	private Date created_date;
 
-    private Date updatedDate;
+	private Date updated_date;
 
-    public String getSysGasSourceId() {
-        return sysGasSourceId;
-    }
+	public String getSys_gas_source_id() {
+		return sys_gas_source_id;
+	}
 
-    public void setSysGasSourceId(String sysGasSourceId) {
-        this.sysGasSourceId = sysGasSourceId == null ? null : sysGasSourceId.trim();
-    }
+	public void setSys_gas_source_id(String sys_gas_source_id) {
+		this.sys_gas_source_id = sys_gas_source_id;
+	}
 
-    public String getGasFactoryName() {
-        return gasFactoryName;
-    }
+	public String getGas_factory_name() {
+		return gas_factory_name;
+	}
 
-    public void setGasFactoryName(String gasFactoryName) {
-        this.gasFactoryName = gasFactoryName == null ? null : gasFactoryName.trim();
-    }
+	public void setGas_factory_name(String gas_factory_name) {
+		this.gas_factory_name = gas_factory_name;
+	}
 
-    public String getTechnologyType() {
-        return technologyType;
-    }
+	public String getTechnology_type() {
+		return technology_type;
+	}
 
-    public void setTechnologyType(String technologyType) {
-        this.technologyType = technologyType == null ? null : technologyType.trim();
-    }
+	public void setTechnology_type(String technology_type) {
+		this.technology_type = technology_type;
+	}
 
-    public String getDeliveryMethod() {
-        return deliveryMethod;
-    }
+	public String getDelivery_method() {
+		return delivery_method;
+	}
 
-    public void setDeliveryMethod(String deliveryMethod) {
-        this.deliveryMethod = deliveryMethod == null ? null : deliveryMethod.trim();
-    }
+	public void setDelivery_method(String delivery_method) {
+		this.delivery_method = delivery_method;
+	}
 
-    public BigDecimal getMarketPrice() {
-        return marketPrice;
-    }
+	public BigDecimal getMarket_price() {
+		return market_price;
+	}
 
-    public void setMarketPrice(BigDecimal marketPrice) {
-        this.marketPrice = marketPrice;
-    }
+	public void setMarket_price(BigDecimal market_price) {
+		this.market_price = market_price;
+	}
 
-    public String getGasFactoryAddr() {
-        return gasFactoryAddr;
-    }
+	public String getGas_factory_addr() {
+		return gas_factory_addr;
+	}
 
-    public void setGasFactoryAddr(String gasFactoryAddr) {
-        this.gasFactoryAddr = gasFactoryAddr == null ? null : gasFactoryAddr.trim();
-    }
+	public void setGas_factory_addr(String gas_factory_addr) {
+		this.gas_factory_addr = gas_factory_addr;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public String getRemark() {
-        return remark;
-    }
+	public String getRemark() {
+		return remark;
+	}
 
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
-    public Date getCreatedDate() {
-        return createdDate;
-    }
+	public Date getCreated_date() {
+		return created_date;
+	}
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
 
-    public Date getUpdatedDate() {
-        return updatedDate;
-    }
+	public Date getUpdated_date() {
+		return updated_date;
+	}
 
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
-    }
+	public void setUpdated_date(Date updated_date) {
+		this.updated_date = updated_date;
+	}
+
 }

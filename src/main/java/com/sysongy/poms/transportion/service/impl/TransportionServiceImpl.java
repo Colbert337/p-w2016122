@@ -111,6 +111,10 @@ public class TransportionServiceImpl implements TransportionService {
 			usysparam.setGcode("TRANSTION");
 			usysparam.setMcode(record.getSys_transportion_id());
 			usysparam.setMname(record.getTransportion_name());
+			if(StringUtils.isEmpty(record.getTransportion_name())){
+				Transportion tmp = transportionMapper.selectByPrimaryKey(record.getSys_transportion_id());
+				usysparam.setMname(tmp.getTransportion_name());
+			}
 			usysparam.setScode("");
 			usysparamService.updateUsysparam(usysparam);
 			return record.getSys_transportion_id();
