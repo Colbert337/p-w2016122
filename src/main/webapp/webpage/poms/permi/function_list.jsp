@@ -105,6 +105,7 @@
 				$("#function_sort").val(data);
 			}
 		});
+		<%--alert("parentId:${parentId} +parentName:${parentName}");--%>
 		$("#parent_id").val('${parentId}');
 		$("#parent_name").val('${parentName}');
 		$("#functionModel").modal('show');

@@ -61,6 +61,7 @@
     <include refid="Base_Column_List" />
     from sys_role
     where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
+    and is_deleted = 1 and role_status = 0
   </select>
   <!--根据用户类型查询用户角色列表-->
   <select id="queryRoleListByUserType" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -68,6 +69,7 @@
     <include refid="Base_Column_List" />
     from sys_role
     where role_type = #{0}
+    and is_deleted = 1 and role_status = 0
   </select>
   <delete id="deleteRoleById" parameterType="java.lang.String" >
     delete from sys_role
