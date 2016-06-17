@@ -45,8 +45,6 @@ public class CRMCustomerContoller {
     @Autowired
     RedisClientInterface redisClientImpl;
 
-    @Autowired
-    SysUserService sysUserService;
 
     public DriverService getDriverService() {
         return driverService;
@@ -315,7 +313,7 @@ public class CRMCustomerContoller {
     //多文件上传
     @RequestMapping(value = "/web/upload")
     @ResponseBody
-    public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request,SysUser sysUser) {
+    public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request,SysDriver sysDriver) {
         AjaxJson ajaxJson = new AjaxJson();
 
         String imgTag = request.getParameter("imgTag");
@@ -326,27 +324,34 @@ public class CRMCustomerContoller {
             return ajaxJson;
         }
 
-        String sysDriverId = request.getParameter("sysDriverId");
-        if(!StringUtils.isNotEmpty(sysDriverId)){
+        String sysPathID = sysDriver.getSysDriverId();
+        if(!StringUtils.isNotEmpty(sysDriver.getSysDriverId())){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("sysDriverId 为空！！！");
+            ajaxJson.setMsg("sysUserId为空！！！");
             return ajaxJson;
         }
 
-        String realPath =  sysDriverId + "/" ;
+        String realPath =  sysPathID + "/" ;
         String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
         FileUtil.createIfNoExist(filePath);
         try {
-            sysUserService.updateCRMUser(sysUser);
+
             Map<String, Object> attributes = new HashMap<String, Object>();
             for (int i = 0; i < files.length; i++) {
                 String path = filePath + files[i].getOriginalFilename();
                 File destFile = new File(path);
                 String contextPath = request.getContextPath();
                 String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-                attributes.put(imgTag+i, basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
+                String httpPath = basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename();
+                attributes.put(imgTag+i, httpPath);
                 FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
+                if(imgTag.equalsIgnoreCase("driverURL")){
+                    sysDriver.setDrivingLice(httpPath);
+                }else{
+                    sysDriver.setVehicleLice(httpPath);
+                }
             }
+            driverService.saveDriver(sysDriver, "update");
             ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
