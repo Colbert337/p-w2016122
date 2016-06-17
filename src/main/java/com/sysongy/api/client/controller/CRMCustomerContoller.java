@@ -6,6 +6,8 @@ import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.apache.commons.io.FileUtils;
@@ -42,6 +44,9 @@ public class CRMCustomerContoller {
 
     @Autowired
     RedisClientInterface redisClientImpl;
+
+    @Autowired
+    SysUserService sysUserService;
 
     public DriverService getDriverService() {
         return driverService;
@@ -310,8 +315,9 @@ public class CRMCustomerContoller {
     //多文件上传
     @RequestMapping(value = "/web/upload")
     @ResponseBody
-    public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request) {
+    public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request,SysUser sysUser) {
         AjaxJson ajaxJson = new AjaxJson();
+
         String imgTag = request.getParameter("imgTag");
 
         if(files == null){
@@ -331,17 +337,18 @@ public class CRMCustomerContoller {
         String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
         FileUtil.createIfNoExist(filePath);
         try {
+            sysUserService.updateCRMUser(sysUser);
+            Map<String, Object> attributes = new HashMap<String, Object>();
             for (int i = 0; i < files.length; i++) {
-                Map<String, Object> attributes = new HashMap<String, Object>();
                 String path = filePath + files[i].getOriginalFilename();
                 File destFile = new File(path);
                 String contextPath = request.getContextPath();
                 String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-                attributes.put(imgTag, basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
-                ajaxJson.setAttributes(attributes);
+                attributes.put(imgTag+i, basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
                 FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
             }
-        } catch (IOException e) {
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("上传文件失败：" + e.getMessage());
             logger.error("uploadFileData Customer error： " + e);
