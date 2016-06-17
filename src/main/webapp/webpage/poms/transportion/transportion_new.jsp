@@ -91,6 +91,30 @@
 									</div>
 									
 									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">管理员账号（建议为11位手机号码）： </label>
+
+										<div class="col-sm-4">
+											<input class="form-control" name="admin_username"  type="text"  placeholder="输入管理员账号" maxlength="20" value="${station.admin_username}"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">管理员密码： </label>
+
+										<div class="col-sm-4">
+											<input class="form-control" name="admin_userpassword"  type="password"  placeholder="输入管理员密码" maxlength="20" value="${station.admin_userpassword}"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">确认管理员密码： </label>
+
+										<div class="col-sm-4">
+											<input class="form-control" name="admin_userpassword_repert"  type="password"  placeholder="输入管理员密码" maxlength="20" />
+										</div>
+									</div>
+									
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
 										<div class="col-sm-2 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
@@ -389,6 +413,50 @@
 		                    regexp: {
 		                        regexp: '^[0-9]*[1-9][0-9]*$',
 		                        message: '联系电话必须是数字'
+		                    }
+		                }
+		            },
+		            admin_username: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '管理员账号不能为空'
+		                    },
+		                    remote: {
+                                url: '../web/permi/user/info/isExist',
+                                type: "post",
+                                async: false,
+                                data: function(validator, $field, value) {
+                                	return{
+                                		userType:2
+                                	};
+                               	},
+                                message: '用户名已存在'
+                            }
+		                }
+		            },
+		            admin_userpassword: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '管理员密码不能为空'
+		                    }
+		                }
+		            },
+		            admin_userpassword_repert: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '管理员密码确认不能为空'
+		                    },
+		                    callback: {
+		                    	message: '管理员密码不一致',
+		                    	callback: function (value, validator, $field) {
+	                                 if($("[name=admin_userpassword]").val() != value){
+	                                	 return false;
+	                                 }
+	                                 return true;
+	                            }
 		                    }
 		                }
 		            },
