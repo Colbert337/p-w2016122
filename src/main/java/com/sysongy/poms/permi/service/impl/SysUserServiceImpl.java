@@ -139,6 +139,11 @@ public class SysUserServiceImpl implements SysUserService{
         sysUserRole.setSysUserId(user.getSysUserId());
         sysUserRole.setSysRoleId(user.getAvatarB());
         sysUserRoleMapper.addUserRole(sysUserRole);
+        if(user.getPassword() != null){
+            String passwordStr = user.getPassword();
+            passwordStr = Encoder.MD5Encode(passwordStr.getBytes());
+            user.setPassword(passwordStr);
+        }
         return sysUserMapper.addUser(user);
     }
     /**
