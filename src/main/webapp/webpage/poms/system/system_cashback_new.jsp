@@ -29,7 +29,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 配置对象： </label>
 										
-										<div class="col-sm-3">
+										<div class="col-sm-4">
 											<label class="control-label no-padding-right" > <s:Code2Name mcode="${param.sys_cash_back_no}" gcode="CASHBACK"></s:Code2Name> </label>
 											<input type="hidden" name="sys_cash_back_no" value="${param.sys_cash_back_no}"/>
 										</div>
@@ -38,7 +38,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 阈最小值： </label>
 										
-										<div class="col-sm-3">
+										<div class="col-sm-4">
 											<input type="text"  name="threshold_min_value" placeholder="输入该阈最小值" class="col-xs-10 col-sm-5" maxlength="6" value="${sysCashBack.threshold_min_value}"/>
 										</div>
 									</div>

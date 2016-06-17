@@ -134,7 +134,7 @@
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
