@@ -106,6 +106,10 @@ public class CRMUserContoller {
                 sysUserInfo.setPassword(sysUser.getPassword());
             }
 
+            if(StringUtils.isNotEmpty(sysUser.getRemark())){
+                sysUserInfo.setRemark(sysUser.getRemark());
+            }
+
             int nRet = sysUserService.updateUser(sysUserInfo);
             if(nRet < 1){
                 ajaxJson.setSuccess(false);
