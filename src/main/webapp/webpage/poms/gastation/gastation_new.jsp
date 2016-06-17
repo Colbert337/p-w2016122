@@ -169,7 +169,7 @@
 										<div class="col-sm-4">
 											<div class="row form-group">
 												<div class="col-sm-6">
-													<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
+													<select class="form-control" name="province_id" id="province_id" onchange="chinaChange(this,document.getElementById('city'));">
 															<option value ="请选择市区">请选择省份</option>
 															<option value ="100">北京市</option>
 															<option value ="220">天津市</option>
@@ -212,13 +212,13 @@
 													</select>
 												</div>
 											</div>
-											<input type="text"  id="detail" name="detail" class="form-control"  placeholder="输入详细地址" value="${station.detail}"/>
+											<input type="text" id="detail" name="detail" class="form-control" placeholder="输入详细地址" value="${station.detail}"/>
 											<input type="hidden"  id="address" name="address" class="col-sm-12"  value="${station.address}"/>
 										</div>
 									</div>
 									
 									<div class="row">
-										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
+										<label class="col-sm-3 control-label no-padding-right">地址坐标： </label>
 										<div class="col-sm-4">
 											<div class="row">
 												<div class="col-sm-6">
@@ -553,21 +553,21 @@
 		                    }
 		                }
 		            },
-		            province: {
+		            province_id: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '注册地址省不能为空'
 		                    }
 		                }
 		            },
-		            city : {
+		            city_id : {
 		                validators: {
 		                    notEmpty: {
 		                        message: '注册地址市不能为空'
 		                    }
 		                }
 		            },
-		            address: {
+		            detail: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '注册详细地址不能为空'
