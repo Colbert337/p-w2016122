@@ -106,6 +106,10 @@ public class CRMUserContoller {
                 sysUserInfo.setPassword(sysUser.getPassword());
             }
 
+            if(StringUtils.isNotEmpty(sysUser.getRealName())){
+                sysUserInfo.setRealName(sysUser.getRealName());
+            }
+
             if(StringUtils.isNotEmpty(sysUser.getRemark())){
                 sysUserInfo.setRemark(sysUser.getRemark());
             }
