@@ -25,12 +25,14 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 							var s = JSON.parse(data);
 							for(var i=0;i<s.length;i++){
 								$("#cashbackol").append("<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value='"+s[i].mcode+"'><div class='dd-handle dd2-handle'><i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i><i class='drag-icon ace-icon fa fa-arrows bigger-125'></i></div><div class='dd2-content'>"+s[i].mname+"</div></li>");
-								/*s[i]._index = i;
-								console.log(this._index);
-								if($("[name=sys_cash_back_no]").val()==this.mcode){
-									$('.dd-item.dd2-item').find('>div').addClass('btn-info');
-									console.log(s[i].mcode);
-								}*/
+
+								$('.dd-item.dd2-item').each(function(){
+									if($("[name=sys_cash_back_no]").val()==$(this).val()){
+										$(this).find('>div').addClass('btn-info');
+									}
+								});
+
+
 							}
 						}
 					}
