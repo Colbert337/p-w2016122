@@ -109,7 +109,12 @@ public class GastationServiceImpl implements GastationService {
 			Usysparam usysparam = new Usysparam();
 			usysparam.setGcode("WORKSTATION");
 			usysparam.setMcode(record.getSys_gas_station_id());
-			usysparam.setMname(record.getGas_station_name());
+			if(StringUtils.isEmpty(record.getGas_station_name())){
+				Gastation tmp = gasStationMapper.selectByPrimaryKey(record.getSys_gas_station_id());
+				usysparam.setMname(tmp.getGas_station_name());
+			}else{
+				usysparam.setMname(record.getGas_station_name());
+			}
 			usysparam.setScode("");
 			usysparamService.updateUsysparam(usysparam);
 			return record.getSys_gas_station_id();
