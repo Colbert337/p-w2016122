@@ -32,4 +32,6 @@ public interface SysUserMapper {
     int addUser(SysUser record);
 
     int updateUser(SysUser record);
+
+    int updateUserByName(SysUser record);
 }

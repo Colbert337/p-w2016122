@@ -109,4 +109,11 @@ public interface SysUserService {
      * @return
      */
     int addAdminUser(SysUser user) throws Exception;
+
+    /**
+     * 根据用户名和用户类型删除用户
+     * @param record
+     * @return
+     */
+    int updateUserByName(SysUser record) throws Exception;
 }

@@ -14,7 +14,11 @@ import com.sysongy.poms.gastation.dao.GastationMapper;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
@@ -25,6 +29,10 @@ public class GastationServiceImpl implements GastationService {
 	private GastationMapper gasStationMapper;
 	@Autowired
 	private SysUserAccountMapper sysUserAccountMapper;
+	@Autowired
+	private SysUserService sysUserService;
+	@Autowired
+	private UsysparamService usysparamService;
 	
 	@Override
 	public PageInfo<Gastation> queryGastation(Gastation record) throws Exception {
@@ -67,6 +75,19 @@ public class GastationServiceImpl implements GastationService {
 			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			record.setSys_gas_station_id(newid);
 			gasStationMapper.insert(record);
+			//创建管理员
+			SysUser user = new SysUser();
+			user.setUserName(record.getAdmin_username());
+			user.setPassword(record.getAdmin_userpassword());
+			user.setUserType(GlobalConstant.USER_TYPE_STATION);
+			sysUserService.addAdminUser(user);
+			//同步系统参数字典表
+			Usysparam usysparam = new Usysparam();
+			usysparam.setGcode("WORKSTATION");
+			usysparam.setMcode(record.getSys_gas_station_id());
+			usysparam.setMname(record.getGas_station_name());
+			usysparam.setScode("");
+			usysparamService.saveUsysparam(usysparam);
 			
 			return newid;
 		}else{
@@ -75,13 +96,34 @@ public class GastationServiceImpl implements GastationService {
 			}
 			record.setUpdated_time(new Date());
 			gasStationMapper.updateByPrimaryKeySelective(record);
+			//更新系统参数字典表
+			Usysparam usysparam = new Usysparam();
+			usysparam.setGcode("WORKSTATION");
+			usysparam.setMcode(record.getSys_gas_station_id());
+			usysparam.setMname(record.getGas_station_name());
+			usysparam.setScode("");
+			usysparamService.updateUsysparam(usysparam);
 			return record.getSys_gas_station_id();
 		}
 	}
 
 	@Override
-	public Integer delGastation(String gastation) throws Exception {
-		return gasStationMapper.deleteByPrimaryKey(gastation);
+	public Integer delGastation(String gastationid) throws Exception {
+		
+		Gastation gastation = gasStationMapper.selectByPrimaryKey(gastationid);
+		//删除对应的管理员用户
+		SysUser user = new SysUser();
+		user.setUserName(gastation.getAdmin_username());
+		user.setUserType(GlobalConstant.USER_TYPE_STATION);
+		user.setStatus(GlobalConstant.STATUS_DELETE);
+		sysUserService.updateStatus(user);
+		//删除对应的系统参数字典表
+		Usysparam usysparam = new Usysparam();
+		usysparam.setGcode("WORKSTATION");
+		usysparam.setMcode(gastation.getSys_gas_station_id());
+		usysparamService.deleteUsysparam(usysparam);
+		
+		return gasStationMapper.deleteByPrimaryKey(gastationid);
 	}
 
 	@Override

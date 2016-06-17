@@ -59,6 +59,12 @@ public interface SysFunctionService {
     SysFunction queryFunctionByFunctionId(String functionId);
 
     /**
+     * 获取当前排序序号
+     * @return
+     */
+    SysFunction queryFunctionSort();
+
+    /**
      * 添加功能
      * @param function 功能信息
      * @return

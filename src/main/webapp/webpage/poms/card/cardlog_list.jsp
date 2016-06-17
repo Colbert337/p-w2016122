@@ -86,7 +86,7 @@
 						
 						<div class="item">
 						    <label>操作员:</label>
-							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${gascardlog.operator}"/>
+							<input type="text" name="operator" placeholder="输入操作员"  maxlength="10" value="${gascardlog.operator}"/>
 						</div>
 						
 						<div class="item">
