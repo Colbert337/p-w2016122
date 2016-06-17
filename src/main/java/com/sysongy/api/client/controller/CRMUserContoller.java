@@ -153,11 +153,13 @@ public class CRMUserContoller {
                 File destFile = new File(path);
                 String contextPath = request.getContextPath();
                 String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-                attributes.put(imgTag+i, basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
+                String fileNum = String.valueOf(i);
+                attributes.put(imgTag + fileNum, basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
                 FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
                 sysUser.setAvatarS(basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
                 sysUserService.updateCRMUser(sysUser);
             }
+            attributes.put("UserInfo", sysUser);
             ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);

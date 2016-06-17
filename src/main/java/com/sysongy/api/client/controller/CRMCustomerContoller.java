@@ -343,7 +343,8 @@ public class CRMCustomerContoller {
                 String contextPath = request.getContextPath();
                 String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
                 String httpPath = basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename();
-                attributes.put(imgTag+i, httpPath);
+                String fileNum = String.valueOf(i);
+                attributes.put(imgTag + fileNum, httpPath);
                 FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
                 if(imgTag.equalsIgnoreCase("driverURL")){
                     sysDriver.setDrivingLice(httpPath);
@@ -352,6 +353,7 @@ public class CRMCustomerContoller {
                 }
             }
             driverService.saveDriver(sysDriver, "update");
+            attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
