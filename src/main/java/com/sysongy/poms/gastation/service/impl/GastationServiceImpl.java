@@ -116,7 +116,7 @@ public class GastationServiceImpl implements GastationService {
 		user.setUserName(gastation.getAdmin_username());
 		user.setUserType(GlobalConstant.USER_TYPE_STATION);
 		user.setStatus(GlobalConstant.STATUS_DELETE);
-		sysUserService.updateStatus(user);
+		sysUserService.updateUserByName(user);
 		//删除对应的系统参数字典表
 		Usysparam usysparam = new Usysparam();
 		usysparam.setGcode("WORKSTATION");

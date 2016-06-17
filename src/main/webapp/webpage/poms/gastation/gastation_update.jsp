@@ -151,7 +151,7 @@
 															<option value ="240">辽宁省</option>
 															<option value ="430">吉林省</option>
 															<option value ="450">黑龙江省</option>
-															<option value ="250"> 江苏省</option>
+															<option value ="250">江苏省</option>
 															<option value ="570">浙江省</option>
 															<option value ="550">安徽省</option>
 															<option value ="590">福建省</option>
@@ -170,9 +170,9 @@
 															<option value ="970">青海省</option>
 															<option value ="886">台湾省</option>
 															<option value ="770">广西壮族自治区</option>
-															<option value ="470"> 内蒙古自治区</option>
-															<option value ="890"> 西藏自治区</option>
-															<option value ="950"> 宁夏回族自治区 </option>
+															<option value ="470">内蒙古自治区</option>
+															<option value ="890">西藏自治区</option>
+															<option value ="950">宁夏回族自治区 </option>
 															<option value ="990">新疆维吾尔自治区</option>
 															<option value ="852">香港特别行政区</option>
 															<option value ="853">澳门特别行政区</option>

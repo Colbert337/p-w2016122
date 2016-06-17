@@ -444,6 +444,11 @@
 		                    notEmpty: {
 		                        message: '管理员账号不能为空'
 		                    },
+		                    stringLength: {
+		                        min: 6,
+		                        max: 20,
+		                        message: '管理员账号长度必须大于6位'
+		                    },
 		                    remote: {
                                 url: '../web/permi/user/info/isExist',
                                 type: "post",
@@ -462,6 +467,11 @@
 		                validators: {
 		                    notEmpty: {
 		                        message: '管理员密码不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 6,
+		                        max: 20,
+		                        message: '管理员密码长度必须大于6位'
 		                    }
 		                }
 		            },
