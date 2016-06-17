@@ -21,6 +21,10 @@ public class InterfaceConstants {
 
     public static final String QUERY_CARD_ERROR = "查询实体卡失败！";
 
+    public static final String DISTUBUTE_CARD_ERROR = "分发实体卡失败！";
+
+    public static final String PUT_CARD_STORAGE_ERROR = "实体卡入库失败！";
+
     public static final String QUERY_CRM_USER_ERROR = "查询用户失败！";
 
     public static final String UPDATE_CRM_SYSUSER_ERROR = "更新用户失败！";
@@ -34,4 +38,24 @@ public class InterfaceConstants {
     public static final String DELETE_CRM_USER_ERROR = "删除用户失败！";
 
     public static final String UPDATE_CRM_USER_ERROR = "更新用户失败！";
+
+    public static final String QUERY_CRM_GAS_PRICE_ERROR = "查询气品失败！";
+
+    public static final String QUERY_CRM_ADD_GAS_PRICE_ERROR = "添加气品失败！";
+
+    public static final String DELETE_CRM_GAS_PRICE_ERROR = "删除气品失败！";
+
+    public static final String UPDATE_CRM_GAS_PRICE_ERROR = "更新气品失败！";
+
+    public static final String CARD_STSTUS_LOCK = "0";  // 0:已冻结
+
+    public static final String CARD_STSTUS_STORAGE = "1";   //1：已入库
+
+    public static final String CARD_STSTUS_OUT_STORAGE = "2";    //2：已出库；
+
+    public static final String CARD_STSTUS_ALREADY_SEND = "3";   //3:已/未发放
+
+    public static final String CARD_STSTUS_IN_USE = "4";         //4:使用中
+
+    public static final String CARD_STSTUS_INVALID = "5";         //5:已失效
 }

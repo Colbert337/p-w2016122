@@ -81,7 +81,7 @@
         and is_deleted = #{isDeleted}
       </if>
     </trim>
-    order by created_date desc
+    order by function_sort asc
   </select>
   <!--查询功能列表-->
   <select id="queryFunctionAllList" resultMap="ResultMap" >
@@ -89,6 +89,7 @@
     <include refid="Base_Column_List" />
     from sys_function
     where is_deleted = #{0}
+    order by function_sort asc
     <!--and user_type = #{1}-->
   </select>
   <!--根据类型查询功能列表-->
@@ -98,6 +99,14 @@
     from sys_function
     where is_deleted = 1
     and function_type = #{0}
+  </select>
+
+  <!--获取当前排序序号-->
+  <select id="queryFunctionSort" resultMap="BaseResultMap" >
+    select
+    max(function_sort) function_sort
+    from sys_function
+    where is_deleted = 1
   </select>
   <!--根据当前用户ID查询功能列表-->
   <select id="queryFunctionListByUserId" resultMap="ResultMap" >
