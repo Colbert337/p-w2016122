@@ -158,51 +158,10 @@
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
-
-									<td>
-										<div class="hidden-sm hidden-xs action-buttons">
-											
-											<a class="green" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);" title="修改数据" data-rel="tooltip"></i>
-											</a> 
-											<!--
-											<a class="blue" href="javascript:void(0);"> 
-												<i class="ace-icon fa fa-search-plus bigger-130"></i>
-											</a> -->
-											<!-- <a class="red"  href="javascript:void(0);" onclick="del(this);"> 
-												<i class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a> -->
-										</div>
-
-										<div class="hidden-md hidden-lg">
-											<div class="inline pos-rel">
-												<button class="btn btn-minier btn-yellow dropdown-toggle"
-													data-toggle="dropdown" data-position="auto">
-													<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
-												</button>
-
-												<ul
-													class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-													<li>
-														<a href="#" class="tooltip-info" data-rel="tooltip" title="View"> 
-															<span class="blue">
-																	<i class="ace-icon fa fa-search-plus bigger-120"></i>
-															</span>
-														</a>
-													</li>
-
-													<li><a href="#" class="tooltip-success" data-rel="tooltip" title="Edit"> <span class="green">
-																<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-														</span>
-													</a></li>
-
-													<li><a href="#" class="tooltip-error" data-rel="tooltip" title="Delete"> <span class="red">
-																<i class="ace-icon fa fa-trash-o bigger-120"></i>
-														</span>
-													</a></li>
-												</ul>
-											</div>
-										</div>
+									<td class="text-center">
+										<a class="" href="javascript:void(0);" title="编辑" data-rel="tooltip">
+											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+										</a>
 									</td>
 								</tr>
 								</c:forEach>
@@ -241,23 +200,6 @@
 	</form>
 </div>
 <!-- /.page-content -->
-
-
-
-<!-- page specific plugin scripts -->
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/dataTables.buttons.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.flash.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.html5.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.print.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.colVis.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/select/dataTables.select.js"></script>
-
-<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">

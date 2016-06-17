@@ -319,12 +319,7 @@
 					</div><!-- /.page-content -->
 				</div>
 	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
+
 		<!-- inline scripts related to this page -->
 	<script type="text/javascript">
 	

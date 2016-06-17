@@ -81,7 +81,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运输公司名称： </label>
 
-										<div class="col-sm-3">
+										<div class="col-sm-4">
 											<input type="text" id="transportion_name"  name="transportion_name" placeholder="输入运输公司名称" class="col-xs-10 col-sm-5" maxlength="20"/>
 										</div>
 									</div>
@@ -89,7 +89,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" > E-mail： </label>
 
-										<div class="col-sm-3">
+										<div class="col-sm-4">
 											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
@@ -97,7 +97,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 公司管理员： </label>
 
-										<div class="col-sm-3">
+										<div class="col-sm-4">
 											<input type="text" id="station_manager"  name="station_manager" placeholder="输入公司管理员" class="col-xs-10 col-sm-5" maxlength="20"/>
 										</div>
 									</div>
@@ -105,7 +105,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 联系电话： </label>
 
-										<div class="col-sm-3">
+										<div class="col-sm-4">
 											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="col-xs-10 col-sm-5" maxlength="15"/>
 										</div>
 									</div>
@@ -135,8 +135,8 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 平台有效期： </label>
-										<div class="col-sm-2">
+										<label class="col-sm-3 control-label no-padding-right"> 平台有效期： </label>
+										<div class="col-sm-4">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
 														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" readonly="readonly"/>
@@ -149,14 +149,14 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 销售人员： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<input type="text" id="salesmen_name" name="salesmen_name" maxlength="20"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
 												<input type="hidden" id="operations_name" name="operations_name"/>
@@ -165,7 +165,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 											<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
 													<option value ="请选择市区">请选择省份</option>
 													<option value ="100">北京市</option>
@@ -253,12 +253,6 @@
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
 	</div>
 
 	<script type="text/javascript">

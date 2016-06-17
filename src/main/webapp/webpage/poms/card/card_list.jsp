@@ -172,7 +172,7 @@
 									<td><fmt:formatDate value="${list.release_time}" type="both"/></td>
 
 									<td class="text-center">
-										<a href="" class="logic-del" title="删除该卡" data-rel="tooltip">
+										<a href="" class="logic-del" title="删除" data-rel="tooltip">
 											<i class="ace-icon fa fa-trash-o bigger-130"></i>
 										</a>
 									</td>
