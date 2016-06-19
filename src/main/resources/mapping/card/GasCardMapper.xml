@@ -14,10 +14,10 @@
     <result column="workstation" property="workstation" jdbcType="VARCHAR" />
     <result column="workstation_resp" property="workstation_resp" jdbcType="VARCHAR" />
     <result column="batch_no" property="batch_no" jdbcType="VARCHAR" />
-    <result column="card_flag_id" property="batch_no" jdbcType="INTEGER" />
+    <result column="card_flag_id" property="card_flag_id" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    card_no, card_type, card_status, card_property, operator, storage_time, release_time, memo, workstation, workstation_resp, batch_no
+    card_no, card_type, card_status, card_property, operator, storage_time, release_time, memo, workstation, workstation_resp, batch_no, card_flag_id
   </sql>  
   
   <select id="queryForPage" resultMap="BaseResultList"  parameterType="com.sysongy.poms.card.model.GasCard" >

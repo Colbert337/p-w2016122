@@ -16,19 +16,23 @@
     <result column="vehicle_lice" property="vehicleLice" jdbcType="VARCHAR" />
     <result column="identity_card" property="identityCard" jdbcType="VARCHAR" />
     <result column="card_id" property="cardId" jdbcType="VARCHAR" />
-    <result column="wallet_id" property="walletId" jdbcType="VARCHAR" />
+    <result column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <association property="account" column="wallet_id"
+                 javaType="com.sysongy.poms.permi.model.SysUserAccount"
+                 select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, is_ident, 
     plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card, 
-    card_id, wallet_id, created_date, updated_date
+    card_id, wallet_id, created_date, updated_date, sys_gas_station_id
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
-    <include refid="Base_Column_List" />
+     *
     from sys_driver
     where 1=1
     <trim>
@@ -43,6 +47,9 @@
       </if>
       <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
         and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+      </if>
+      <if test="sys_gas_station_id!= null &amp;&amp; sys_gas_station_id != ''" >
+        and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
       </if>
     </trim>
   </select>
@@ -63,13 +70,13 @@
       is_ident, plate_number, expiry_date, 
       fuel_type, driving_lice, vehicle_lice, 
       identity_card, card_id, wallet_id, 
-      created_date, updated_date)
+      created_date, updated_date, sys_gas_station_id )
     values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR}, 
       #{isIdent,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR}, #{expiryDate,jdbcType=TIMESTAMP}, 
       #{fuelType,jdbcType=INTEGER}, #{drivingLice,jdbcType=VARCHAR}, #{vehicleLice,jdbcType=VARCHAR}, 
       #{identityCard,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR}, #{walletId,jdbcType=VARCHAR}, 
-      #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP})
+      #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}, #{sys_gas_station_id,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.driver.model.SysDriver" >
     insert into sys_driver
@@ -125,6 +132,9 @@
       <if test="updatedDate != null" >
         updated_date,
       </if>
+      <if test="sys_gas_station_id != null" >
+        sys_gas_station_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sysDriverId != null" >
@@ -177,6 +187,9 @@
       </if>
       <if test="updatedDate != null" >
         #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sys_gas_station_id != null" >
+        #{sys_gas_station_id,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -231,6 +244,9 @@
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="sys_gas_station_id != null" >
+        sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR},
+      </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
@@ -251,7 +267,28 @@
       card_id = #{cardId,jdbcType=VARCHAR},
       wallet_id = #{walletId,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP},
-      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
+
+  <select id="isExists" resultType="java.lang.Integer" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+      count(*)
+    from sys_driver
+    where 1=1
+    <trim>
+      <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
+        and mobile_phone = #{mobilePhone,jdbcType=VARCHAR} and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+
+  <select id="queryDriverByMobilePhone" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+    where mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+    and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+  </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.sysongy.poms.driver.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.permi.model.SysUserAccount;
 
 import java.util.Date;
 
@@ -38,6 +39,10 @@ public class SysDriver extends BaseModel {
     private Date createdDate;
 
     private Date updatedDate;
+
+    private SysUserAccount account;
+
+    private String sys_gas_station_id;
 
     public String getSysDriverId() {
         return sysDriverId;
@@ -173,5 +178,21 @@ public class SysDriver extends BaseModel {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public SysUserAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(SysUserAccount account) {
+        this.account = account;
+    }
+
+    public String getSys_gas_station_id() {
+        return sys_gas_station_id;
+    }
+
+    public void setSys_gas_station_id(String sys_gas_station_id) {
+        this.sys_gas_station_id = sys_gas_station_id;
     }
 }
