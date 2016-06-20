@@ -13,5 +13,5 @@ public interface SysUserAccountMapper {
 
     int updateByPrimaryKeySelective(SysUserAccount record);
 
-    int updateByPrimaryKey(SysUserAccount record);
+    int updateAccount(SysUserAccount record);
 }

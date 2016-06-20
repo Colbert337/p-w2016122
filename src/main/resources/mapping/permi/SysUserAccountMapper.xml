@@ -94,7 +94,7 @@
     </set>
     where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
+  <update id="updateAccount" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
     update sys_user_account
     set account_code = #{accountCode,jdbcType=VARCHAR},
       account_type = #{accountType,jdbcType=INTEGER},

@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.gastation.model.Gastation;
 
+
 public interface GastationService {
 	
 	public PageInfo<Gastation> queryGastation(Gastation obj) throws Exception;
