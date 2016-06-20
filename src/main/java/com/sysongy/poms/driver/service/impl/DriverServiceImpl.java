@@ -167,7 +167,7 @@ public class DriverServiceImpl implements DriverService {
 	public Integer review(String driverid, String type) throws Exception {
 		SysDriver record = new SysDriver();
 		record.setSysDriverId(driverid);
-		record.setCheckedStatus(Integer.valueOf(type));
+		record.setCheckedStatus(type);
 		record.setCheckedDate(new Date());
 		record.setUpdatedDate(new Date());
 		

@@ -83,7 +83,7 @@ public class DriverController extends BaseContoller{
 		driver.setUserName(null);
 		driver.setUserStatus("0");//0 使用中 1 已冻结
 		driver.setChecked_status("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
-		driver.setCheckedStatus(0);
+		driver.setCheckedStatus("0");
 
 		driver.setSysDriverId(UUIDGenerator.getUUID());
 		driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));

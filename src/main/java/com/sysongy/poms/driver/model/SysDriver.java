@@ -60,7 +60,7 @@ public class SysDriver extends BaseModel{
 
     private Integer isFirstCharge;
 
-    private Integer checkedStatus;
+    private String checkedStatus;
 
     private String checked_status;
 
@@ -272,11 +272,11 @@ public class SysDriver extends BaseModel{
         this.isFirstCharge = isFirstCharge;
     }
 
-    public Integer getCheckedStatus() {
+    public String getCheckedStatus() {
         return checkedStatus;
     }
 
-    public void setCheckedStatus(Integer checkedStatus) {
+    public void setCheckedStatus(String checkedStatus) {
         this.checkedStatus = checkedStatus;
     }
 
