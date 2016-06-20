@@ -54,8 +54,7 @@ public class DriverServiceImpl implements DriverService {
     public Integer saveDriver(SysDriver record, String operation) throws Exception {
         if("insert".equals(operation)){
             SysUserAccount sysUserAccount = initWalletForDriver();
-
-            record.setWalletId(sysUserAccount.getSysUserAccountId());
+            record.setSysUserAccountId(sysUserAccount.getSysUserAccountId());
             record.setCreatedDate(new Date());
             return sysDriverMapper.insert(record);
         }else{
