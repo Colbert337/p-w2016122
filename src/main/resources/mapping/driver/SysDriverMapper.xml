@@ -35,6 +35,10 @@
                  javaType="com.sysongy.poms.card.model.GasCard"
                  select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
     </association>
+    <association property="isIdentInfo" column="checked_status"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCheckStatusByMcode">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,

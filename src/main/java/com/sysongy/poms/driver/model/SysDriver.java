@@ -3,6 +3,7 @@ package com.sysongy.poms.driver.model;
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.util.Date;
 
@@ -22,6 +23,8 @@ public class SysDriver extends BaseModel{
     private String userStatus;
 
     private Integer isIdent;
+
+    private Usysparam isIdentInfo;
 
     private String plateNumber;
 
@@ -275,5 +278,13 @@ public class SysDriver extends BaseModel{
 
     public void setCardInfo(GasCard cardInfo) {
         this.cardInfo = cardInfo;
+    }
+
+    public Usysparam getIsIdentInfo() {
+        return isIdentInfo;
+    }
+
+    public void setIsIdentInfo(Usysparam isIdentInfo) {
+        this.isIdentInfo = isIdentInfo;
     }
 }

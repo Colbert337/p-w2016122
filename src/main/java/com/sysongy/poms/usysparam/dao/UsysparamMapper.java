@@ -24,4 +24,6 @@ public interface UsysparamMapper {
     public Usysparam queryCardTypeByMcode(String mcode);
 
     public Usysparam queryCardStatusByMcode(String mcode);
+
+    public Usysparam queryCheckStatusByMcode(String mcode);
 }
