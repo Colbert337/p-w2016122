@@ -15,10 +15,4 @@ public interface SysOrderDealMapper {
 
     int updateSysOrderDeal(SysOrderDeal record);
     
-    /**
-     * 创建流水单编码
-     * @param record
-     * @return
-     */
-    String createDealNumber(SysOrderDeal record);
-}
+ }

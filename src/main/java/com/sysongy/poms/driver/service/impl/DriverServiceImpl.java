@@ -13,6 +13,8 @@ import com.sysongy.poms.driver.dao.SysDriverMapper;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.util.GlobalConstant;
@@ -29,6 +31,9 @@ public class DriverServiceImpl implements DriverService {
     
     @Autowired
     private SysUserAccountMapper sysUserAccountMapper;
+    
+    @Autowired
+    private OrderDealService orderDealService;
 
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
@@ -91,7 +96,7 @@ public class DriverServiceImpl implements DriverService {
 		sysUserAccountMapper.updateAccount(sysUserAccount);
 		
 		//记录订单流水
-		
+		orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, GlobalConstant.OrderProcessResult.SUCCESS);
 		
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}

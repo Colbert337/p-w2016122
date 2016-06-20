@@ -159,6 +159,15 @@ public class GlobalConstant {
 	}
 	
 	/*
+	 * 订单处理流程中的类型
+	 */
+	public interface OrderDealType{
+		public static final String CHARGE_TO_DRIVER_CHARGE ="CHARGE_TO_DRIVER_CHARGE";
+		public static final String CHARGE_TO_DRIVER_CASHBACK ="CHARGE_TO_DRIVER_CASHBACK";
+		public static final String CHARGE_TO_DRIVER_FIRSTCASHBACK ="CHARGE_TO_DRIVER_FIRSTCASHBACK";
+	}
+	
+	/*
 	 * 	订单处理结果标记
 	 */
 	public interface OrderProcessResult{

@@ -3,6 +3,7 @@ package com.sysongy.poms.order.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.dao.SysOrderMapper;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
@@ -18,6 +19,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private SysOrderMapper sysOrderMapper;
+
+	@Autowired
+	private DriverService driverService;
 	
 	@Override
 	public int deleteByPrimaryKey(String orderId) {
@@ -60,7 +64,15 @@ public class OrderServiceImpl implements OrderService {
 		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER;
 	   }
 	   //TODO 
-	   
+	   try{
+		   //1.首先给司机充值
+		   driverService.chargeCashToDriver(order);
+		   //2.调用返现--在返现里面判断是否首次返现，则增加调用首次返现规则，然后再继续调用返现
+		   
+		   
+	   }catch(Exception e){
+		   
+	   }
 	   return GlobalConstant.OrderProcessResult.SUCCESS;	
 	}
     
