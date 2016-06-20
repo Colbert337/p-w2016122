@@ -48,17 +48,17 @@ public class SysDriver extends BaseModel{
 
     private Date updatedDate;
 
-<<<<<<< HEAD
     private Integer isFirstCharge;
 
     private Integer checkedStatus;
 
     private Date checkedDate;
-=======
+
     private SysUserAccount account;
 
     private String sys_gas_station_id;
->>>>>>> 30e1c85849192b7e407ce3f53c2073a32a2f2e30
+
+    private String walletId;
 
     public String getSysDriverId() {
         return sysDriverId;
@@ -228,7 +228,6 @@ public class SysDriver extends BaseModel{
         this.updatedDate = updatedDate;
     }
 
-<<<<<<< HEAD
     public Integer getIsFirstCharge() {
         return isFirstCharge;
     }
@@ -251,7 +250,8 @@ public class SysDriver extends BaseModel{
 
     public void setCheckedDate(Date checkedDate) {
         this.checkedDate = checkedDate;
-=======
+    }
+
     public SysUserAccount getAccount() {
         return account;
     }
@@ -266,6 +266,13 @@ public class SysDriver extends BaseModel{
 
     public void setSys_gas_station_id(String sys_gas_station_id) {
         this.sys_gas_station_id = sys_gas_station_id;
->>>>>>> 30e1c85849192b7e407ce3f53c2073a32a2f2e30
+    }
+
+    public String getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(String walletId) {
+        this.walletId = walletId;
     }
 }
