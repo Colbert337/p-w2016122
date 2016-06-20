@@ -16,4 +16,9 @@ public interface DriverService {
 	
 	public Integer delDriver(String sysDriverId) throws Exception;
 
+	public Integer isExists(SysDriver obj) throws Exception;
+
+	public Integer distributeCard(SysDriver record) throws Exception;
+
+	public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception;
 }

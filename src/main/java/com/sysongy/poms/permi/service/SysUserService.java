@@ -116,4 +116,6 @@ public interface SysUserService {
      * @return
      */
     int updateUserByName(SysUser record) throws Exception;
+
+    int updateCRMUser(SysUser user) throws Exception;
 }

@@ -313,4 +313,10 @@ public class SysUserServiceImpl implements SysUserService{
 
         return result;
     }
+
+
+    @Override
+    public int updateCRMUser(SysUser user) {
+        return sysUserMapper.updateUser(user);
+    }
 }
