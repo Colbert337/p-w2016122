@@ -55,4 +55,7 @@
     select * from usysparam where gcode = #{0}
   </select>
 
+  <select id="queryCardTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+    select * from usysparam where gcode = 'CARDTYPE' and mcode = #{mcode,jdbcType=VARCHAR}
+  </select>
 </mapper>

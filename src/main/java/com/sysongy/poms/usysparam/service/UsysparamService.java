@@ -20,4 +20,6 @@ public interface UsysparamService {
 	public Integer updateUsysparam(Usysparam recode);
 	
 	public Integer deleteUsysparam(Usysparam recode);
+
+	public List<Usysparam> queryUsysparamByGcode(String gcode);
 }

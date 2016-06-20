@@ -19,5 +19,7 @@ public interface UsysparamMapper {
     
     public int deleteByPrimaryKey(Usysparam recode);
 
-    public Usysparam queryUsysparamByGcode(String gcode);
+    public List<Usysparam> queryUsysparamByGcode(String gcode);
+
+    public Usysparam queryCardTypeByMcode(String mcode);
 }
