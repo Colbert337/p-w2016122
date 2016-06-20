@@ -219,12 +219,39 @@ sjny.admin.comm = {
 			}
 			setTimeout(isActive,10);
 		});
+	},
+	globalBootstrapValidator: function(){
+		//添加全局校验，方案来源http://www.jb51.net/article/75996.htm
+		/*var overwrite = $.fn.bootstrapValidator;
+		$.fn.bootstrapValidator = function(options){
+			$.fn.bootstrapValidator = overwrite;
+			var validtor = overwrite.apply(this,arguments);
+			if($.type(arguments[0]) == "object"){
+				var vtor = this.data("bootstrapValidator"),
+					fileds = this.find("input[name][type='hidden'],input[name][type='password'],input[name][type='text'],textarea[name]").not(":disabled,[type='hidden']");
+				fileds.each(function(){
+					if(!vtor.getOptions($(this).attr('name'),'regexp','regexp')){
+						vtor.addField($(this).attr('name'),
+						{
+							validators: {
+								regexp: {
+									regexp: /^[^&]*$/,
+									message: "不能包含&字符"
+								}
+							}
+						})
+					}
+				})
+			}
+			return validtor;
+		}*/
 	}
 };
 
 $(document).ready(function() {
 	sjny.admin.comm.clickShowModal();
 	sjny.admin.comm.selectedSubMenuItem();
+	sjny.admin.comm.globalBootstrapValidator();
 });
 
 function compareDate(d1,d2){
