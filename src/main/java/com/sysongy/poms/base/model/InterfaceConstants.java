@@ -39,6 +39,8 @@ public class InterfaceConstants {
 
     public static final String UPDATE_CRM_USER_ERROR = "更新用户失败！";
 
+    public static final String DISTRIBUTE_CRM_USER_CARD_ERROR = "给司机用户发卡失败！";
+
     public static final String QUERY_CRM_GAS_PRICE_ERROR = "查询气品失败！";
 
     public static final String QUERY_CRM_ADD_GAS_PRICE_ERROR = "添加气品失败！";

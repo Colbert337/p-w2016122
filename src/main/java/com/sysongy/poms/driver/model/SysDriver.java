@@ -1,6 +1,7 @@
 package com.sysongy.poms.driver.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.permi.model.SysUserAccount;
 
 import java.util.Date;
 
@@ -47,11 +48,17 @@ public class SysDriver extends BaseModel{
 
     private Date updatedDate;
 
+<<<<<<< HEAD
     private Integer isFirstCharge;
 
     private Integer checkedStatus;
 
     private Date checkedDate;
+=======
+    private SysUserAccount account;
+
+    private String sys_gas_station_id;
+>>>>>>> 30e1c85849192b7e407ce3f53c2073a32a2f2e30
 
     public String getSysDriverId() {
         return sysDriverId;
@@ -221,6 +228,7 @@ public class SysDriver extends BaseModel{
         this.updatedDate = updatedDate;
     }
 
+<<<<<<< HEAD
     public Integer getIsFirstCharge() {
         return isFirstCharge;
     }
@@ -243,5 +251,21 @@ public class SysDriver extends BaseModel{
 
     public void setCheckedDate(Date checkedDate) {
         this.checkedDate = checkedDate;
+=======
+    public SysUserAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(SysUserAccount account) {
+        this.account = account;
+    }
+
+    public String getSys_gas_station_id() {
+        return sys_gas_station_id;
+    }
+
+    public void setSys_gas_station_id(String sys_gas_station_id) {
+        this.sys_gas_station_id = sys_gas_station_id;
+>>>>>>> 30e1c85849192b7e407ce3f53c2073a32a2f2e30
     }
 }
