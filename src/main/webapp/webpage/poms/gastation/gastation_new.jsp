@@ -92,7 +92,7 @@
 										<label for="email" class="col-sm-3 control-label no-padding-right" > E-mail： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
+											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
 										</div>
 									</div>
 									
@@ -138,7 +138,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
-										<div class="col-sm-2 datepicker-noicon">
+										<div class="col-sm-4 datepicker-noicon">
 											<div class="input-group">
 												<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
 													<span class="input-group-addon">
