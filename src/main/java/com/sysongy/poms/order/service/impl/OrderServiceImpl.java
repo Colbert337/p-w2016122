@@ -1,5 +1,7 @@
 package com.sysongy.poms.order.service.impl;
 
+import com.sysongy.poms.permi.dao.SysRoleFunctionMapper;
+import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private DriverService driverService;
+
+	@Autowired
+	SysUserAccountMapper sysUserAccountMapper;
 	
 	@Override
 	public int deleteByPrimaryKey(String orderId) {
@@ -84,5 +89,22 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public String chargeToTransportion(SysOrder record){
 		return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
+
+	@Override
+	public String consumeMoney(SysOrder record){
+		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
+
+
+		return strRet;
+	}
+
+
+	private String validAccount(){
+		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
+
+
+
+		return strRet;
 	}
 }
