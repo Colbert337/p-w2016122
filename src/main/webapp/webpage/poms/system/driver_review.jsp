@@ -27,29 +27,29 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>个人用户编号:</label>
-							<input type="text" name="sys_gas_station_id" placeholder="输入个人用户编号"  maxlength="8" value="${gastation.sys_gas_station_id}"/>
+							<input type="text" name="sysDriverId" placeholder="输入个人用户编号"  maxlength="32" value="${driver.sysDriverId}"/>
 						</div>
 						
 						<div class="item">
 						    <label>认证姓名:</label>
-							<input type="text" name="gas_station_name" placeholder="输入个人用户名称"  maxlength="20" value="${gastation.gas_station_name}"/>
+							<input type="text" name="userName" placeholder="输入认证姓名"  maxlength="20" value="${driver.userName}"/>
 						</div>
 						
 						<div class="item">
-							<label>气站状态:</label>
-							<select class="chosen-select " name="status" >
-									<s:option flag="true" gcode="STATION_STATUS" form="gastation" field="status" />
+							<label>审核状态:</label>
+							<select class="chosen-select" name="checked_status" >
+								<s:option flag="true" gcode="CHECKED_STATUS" form="driver" field="checked_status"/>
 							</select>
 						</div>
 
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>平台有效期:</label>
-								<input type="text" class="" name="expiry_date_after" value="${gastation.expiry_date_after}" readonly="readonly"/>
+								<label>申请时间:</label>
+								<input type="text" name="createdDate_after" value="${driver.createdDate_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="expiry_date_before" value="${gastation.expiry_date_before}" readonly="readonly"/>
+								<input type="text" name="createdDate_before" value="${driver.createdDate_before}" readonly="readonly"/>
 							</div>
 						</div>
 
@@ -119,21 +119,19 @@
 									<td>${list.identityCard}</td>
 									<td>${list.fuelType}</td>
 									<td>${list.sysTransportId}</td>
-									<%-- <td><s:Code2Name mcode="${list.sysTransportId}" gcode="STATION_STATUS"></s:Code2Name></td> --%>
 									<td>${list.isIdent}</td> 
-									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
-									<td>${list.checkedStatus}</td>
+									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>
 
 									<td>
 										<div class="text-center">
-											<a class="green" href="javascript:void(0);" title="修改数据" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+											<a class="green" href="javascript:void(0);" title="审核通过" data-rel="tooltip"> 
+												<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="review(this,'2');"></i>
 											</a>
-											<!-- <a href="" class="red logic-del" title="删除该卡" data-rel="tooltip">
-												<i class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a> -->
+											<a class="green" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip"> 
+												<i class="ace-icon fa fa-ban bigger-130" onclick="review(this,'3');"></i>
+											</a>
 										</div>
 									</td>
 								</tr>

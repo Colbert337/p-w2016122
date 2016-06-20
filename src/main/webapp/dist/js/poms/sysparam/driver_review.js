@@ -1,5 +1,7 @@
-	var listOptions ={   
-            url:'<%=basePath%>/web/driver/driverList',
+$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
+	
+var listOptions ={   
+            url:'../web/driver/driverList',
             type:'post',                    
             dataType:'html',
             success:function(data){
@@ -25,11 +27,11 @@
 		$("#formdriver").ajaxSubmit(listOptions);
 	}
 	
-	function del(obj){
-		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
+	function review(obj,type){
+		var driverid = $(obj).parents('tr').find("td:first").find("input").val();
 		
 		var deloptions ={   
-	            url:'../web/driver/deleteGastation?gastationid='+cardid,   
+	            url:'../web/driver/review?driverid='+driverid+'&type='+type,   
 	            type:'post',                    
 	            dataType:'text',
 	            success:function(data){
@@ -45,5 +47,5 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/gastation/gastationList');
+		loadPage('#main', '../web/driver/driverList');
 	}

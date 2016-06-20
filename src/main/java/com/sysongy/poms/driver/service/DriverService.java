@@ -1,10 +1,7 @@
 package com.sysongy.poms.driver.service;
 
-import java.util.List;
-
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.gastation.model.Gastation;
 
 public interface DriverService {
 	
@@ -21,4 +18,6 @@ public interface DriverService {
 	public Integer distributeCard(SysDriver record) throws Exception;
 
 	public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception;
+	
+	public Integer review(String driverid, String type) throws Exception;
 }

@@ -312,7 +312,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'<%=basePath%>/web/permi/user/list/userType?userType=2',   
+			   url:'<%=basePath%>/web/permi/user/list/userType?userType=5',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
