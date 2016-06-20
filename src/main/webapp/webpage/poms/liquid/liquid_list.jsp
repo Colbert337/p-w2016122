@@ -7,46 +7,8 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<!-- page specific plugin styles -->
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-duallistbox.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/select2.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/daterangepicker.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
 
-<div class="breadcrumbs" id="breadcrumbs">
-	<script type="text/javascript">
-		try {
-			ace.settings.check('breadcrumbs', 'fixed')
-		} catch (e) {
-		}
-	</script>
-
-	<ul class="breadcrumb">
-		<li><i class="ace-icon fa fa-home home-icon"></i> <a href="javascript:void(0);">主页</a>
-		</li>
-
-		<li><a href="javascript:void(0);">加注站管理</a></li>
-		<li class="active">加注站信息管理</li>
-	</ul>
-	<!-- /.breadcrumb -->
-
-	<!-- #section:basics/content.searchbox -->
-	<div class="nav-search" id="nav-search">
-		<form class="form-search">
-			<span class="input-icon"> <input type="text"
-				placeholder="Search ..." class="nav-search-input"
-				id="nav-search-input" autocomplete="off" /> <i
-				class="ace-icon fa fa-search nav-search-icon"></i>
-			</span>
-		</form>
-	</div>
-	<!-- /.nav-search -->
-
-	<!-- /section:basics/content.searchbox -->
-</div>
-
-
+<script src="<%=basePath %>/assets/js/poms/liquid/liquid_list.js"></script>
 
 
 <!-- /section:basics/content.breadcrumbs -->
@@ -61,41 +23,30 @@
 
 					<div class="page-header">
 						<h1>
-							加注站管理
+							液源管理
 						</h1>
 					</div>
 
 					<div class="search-types">
 						<div class="item">
-						    <label>加注站编号:</label>
-							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号"  maxlength="8" value="${gastation.sys_gas_station_id}"/>
+						    <label>液厂编号:</label>
+							<input type="text" name="sys_gas_source_id" placeholder="输入液源编号"  maxlength="32" value="${gasource.sys_gas_source_id}"/>
 						</div>
 						
 						<div class="item">
-						    <label>加注站名称:</label>
-							<input type="text" name="gas_station_name" placeholder="输入加注站名称"  maxlength="20" value="${gastation.gas_station_name}"/>
+						    <label>液厂名称:</label>
+							<input type="text" name="gas_factory_name" placeholder="输入液源名称"  maxlength="20" value="${gasource.gas_factory_name}"/>
 						</div>
 						
 						<div class="item">
-							<label>气站状态:</label>
-							<select class="chosen-select " name="status" >
-									<s:option flag="true" gcode="STATION_STATUS" form="gastation" field="status" />
+							<label>液厂状态:</label>
+							<select class="chosen-select" name="status" >
+								<s:option flag="true" gcode="STATION_STATUS" form="gasource" field="status" />
 							</select>
 						</div>
 
 						<div class="item">
-							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>平台有效期:</label>
-								<input type="text" class="" name="expiry_date_after" value="${gastation.expiry_date_after}" readonly="readonly"/>
-								<span class="">
-									<i class="fa fa-exchange"></i>
-								</span>
-								<input type="text" class="" name="expiry_date_before" value="${gastation.expiry_date_before}" readonly="readonly"/>
-							</div>
-						</div>
-
-						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
+							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/liquid/liquid_new.jsp');">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								新建
 							</button>
@@ -114,7 +65,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">加注站详细信息列表</div>
+					<div class="table-header">液厂详细信息列表</div>
 
 					<!-- div.table-responsive -->
 
@@ -129,15 +80,16 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
-									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
-									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
-									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
-									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
-									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
-									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
-									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
-									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
+									<th onclick="orderBy(this,'sys_gas_source_id');commitForm();" id="sys_gas_source_id_order">液厂编号</th>
+									<th onclick="orderBy(this,'gas_factory_name');commitForm();" id="gas_factory_name_order">液厂名称</th>
+									<th onclick="orderBy(this,'technology_type');commitForm();" id="technology_type_order">工艺类型</th>
+									<th onclick="orderBy(this,'delivery_method');commitForm();" id="delivery_method_order">配送方式</th>
+									<th onclick="orderBy(this,'market_price');commitForm();" id="market_price_order">市场价格</th>
+									<th onclick="orderBy(this,'gas_factory_addr');commitForm();" id="gas_factory_addr_order">液厂地址</th>
+									<th onclick="orderBy(this,'status');commitForm();" id="status_order">液厂状态</th> 
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建日期</th>
+									<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新日期</th>
+									<th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th>
 									<th>更多操作</th>
 								</tr>
 							</thead>
@@ -148,30 +100,26 @@
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.sys_gas_station_id}"/> 
+											<input type="checkbox" class="ace" id="pks" value="${list.sys_gas_source_id}"/> 
 											<span class="lbl"></span>
 										</label>
 									</td>
 
-									<td>${list.sys_gas_station_id}</td>
-								 	<td>${list.gas_station_name}</td> 
-									<td>${list.salesmen_name}</td>
-									<td>${list.operations_name}</td>
-									<td>${list.indu_com_number}</td>
+									<td>${list.sys_gas_source_id}</td>
+								 	<td>${list.gas_factory_name}</td> 
+									<td>${list.technology_type}</td>
+									<td>${list.delivery_method}</td>
+									<td>${list.market_price}</td>
+									<td>${list.gas_factory_addr}</td>
 									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
-									<td>${list.address}</td> 
-									<%-- <td>${list.batch_no}</td>  --%>
-									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
-									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
-
+									<td><fmt:formatDate value="${list.created_date}" type="both"/></td>
+									<td><fmt:formatDate value="${list.updated_date}" type="both"/></td>
+									<td>${list.remark}</td>
 									<td>
 										<div class="text-center">
 											<a class="green" href="javascript:void(0);" title="修改数据" data-rel="tooltip"> 
 												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a>
-											<!-- <a href="" class="red logic-del" title="删除该卡" data-rel="tooltip">
-												<i class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a> -->
 										</div>
 									</td>
 								</tr>
@@ -212,80 +160,3 @@
 	</form>
 </div>
 <!-- /.page-content -->
-
-
-
-<!-- page specific plugin scripts -->
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/dataTables.buttons.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.flash.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.html5.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.print.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.colVis.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/select/dataTables.select.js"></script>
-
-<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
-
-<!-- inline scripts related to this page -->
-<script type="text/javascript">
-	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
-	
-	var listOptions ={   
-            url:'<%=basePath%>/web/gastation/gastationList',
-            type:'post',                    
-            dataType:'html',
-            success:function(data){
-	              $("#main").html(data);
-	              if($("#retCode").val() != "100"){
-		            	 //$("#modal-table").modal("show");
-		          }
-            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-            	alert("error");
-	       }
-	}
-	
-	window.onload = setCurrentPage();
-	
-	function preUpdate(obj){
-		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
-		loadPage('#main', '../web/gastation/preUpdate?gastationid='+stationid);
-	}
-	
-	function commitForm(obj){
-		//设置当前页的值
-		if(typeof obj == "undefined") {
-			$("#pageNum").val("1");
-		}else{
-			$("#pageNum").val($(obj).text());
-		}
-		
-		$("#formgastation").ajaxSubmit(listOptions);
-	}
-	
-	function del(obj){
-		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
-		
-		var deloptions ={   
-	            url:'../web/gastation/deleteGastation?gastationid='+cardid,   
-	            type:'post',                    
-	            dataType:'text',
-	            success:function(data){
-		             $("#main").html(data);
-		             $("#modal-table").modal("show");
-	            },
-	            error:function(XMLHttpRequest, textStatus, errorThrown) {
-	            	
-	            }
-		}
-		
-		$("#formgastation").ajaxSubmit(deloptions);
-	}
-	
-	function init(){
-		loadPage('#main', '../web/gastation/gastationList');
-	}
-	</script>

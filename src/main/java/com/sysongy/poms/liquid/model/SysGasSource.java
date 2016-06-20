@@ -3,7 +3,9 @@ package com.sysongy.poms.liquid.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SysGasSource {
+import com.sysongy.poms.base.model.BaseModel;
+
+public class SysGasSource extends BaseModel{
 	
 	private String sys_gas_source_id;
 

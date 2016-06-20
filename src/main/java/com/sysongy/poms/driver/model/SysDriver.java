@@ -4,7 +4,7 @@ import com.sysongy.poms.base.model.BaseModel;
 
 import java.util.Date;
 
-public class SysDriver extends BaseModel {
+public class SysDriver extends BaseModel{
     private String sysDriverId;
 
     private String userName;
@@ -16,6 +16,8 @@ public class SysDriver extends BaseModel {
     private String mobilePhone;
 
     private String payCode;
+
+    private String userStatus;
 
     private Integer isIdent;
 
@@ -33,11 +35,23 @@ public class SysDriver extends BaseModel {
 
     private String cardId;
 
-    private String walletId;
+    private String sysUserAccountId;
+
+    private String sysTransportId;
+
+    private String regisCompany;
+
+    private String regisSource;
 
     private Date createdDate;
 
     private Date updatedDate;
+
+    private Integer isFirstCharge;
+
+    private Integer checkedStatus;
+
+    private Date checkedDate;
 
     public String getSysDriverId() {
         return sysDriverId;
@@ -85,6 +99,14 @@ public class SysDriver extends BaseModel {
 
     public void setPayCode(String payCode) {
         this.payCode = payCode == null ? null : payCode.trim();
+    }
+
+    public String getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(String userStatus) {
+        this.userStatus = userStatus == null ? null : userStatus.trim();
     }
 
     public Integer getIsIdent() {
@@ -151,12 +173,36 @@ public class SysDriver extends BaseModel {
         this.cardId = cardId == null ? null : cardId.trim();
     }
 
-    public String getWalletId() {
-        return walletId;
+    public String getSysUserAccountId() {
+        return sysUserAccountId;
     }
 
-    public void setWalletId(String walletId) {
-        this.walletId = walletId == null ? null : walletId.trim();
+    public void setSysUserAccountId(String sysUserAccountId) {
+        this.sysUserAccountId = sysUserAccountId == null ? null : sysUserAccountId.trim();
+    }
+
+    public String getSysTransportId() {
+        return sysTransportId;
+    }
+
+    public void setSysTransportId(String sysTransportId) {
+        this.sysTransportId = sysTransportId == null ? null : sysTransportId.trim();
+    }
+
+    public String getRegisCompany() {
+        return regisCompany;
+    }
+
+    public void setRegisCompany(String regisCompany) {
+        this.regisCompany = regisCompany == null ? null : regisCompany.trim();
+    }
+
+    public String getRegisSource() {
+        return regisSource;
+    }
+
+    public void setRegisSource(String regisSource) {
+        this.regisSource = regisSource == null ? null : regisSource.trim();
     }
 
     public Date getCreatedDate() {
@@ -173,5 +219,29 @@ public class SysDriver extends BaseModel {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public Integer getIsFirstCharge() {
+        return isFirstCharge;
+    }
+
+    public void setIsFirstCharge(Integer isFirstCharge) {
+        this.isFirstCharge = isFirstCharge;
+    }
+
+    public Integer getCheckedStatus() {
+        return checkedStatus;
+    }
+
+    public void setCheckedStatus(Integer checkedStatus) {
+        this.checkedStatus = checkedStatus;
+    }
+
+    public Date getCheckedDate() {
+        return checkedDate;
+    }
+
+    public void setCheckedDate(Date checkedDate) {
+        this.checkedDate = checkedDate;
     }
 }

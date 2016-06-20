@@ -121,9 +121,7 @@ public class SysUserController extends BaseContoller{
 		}else if(user != null){//添加
 			user.setSysUserId(UUIDGenerator.getUUID());
 			user.setUserType(GlobalConstant.USER_TYPE_MANAGE);
-			String passwordStr = user.getPassword();
-			passwordStr = Encoder.MD5Encode(passwordStr.getBytes());
-			user.setPassword(passwordStr);
+
 			sysUserService.addUser(user);
 		}
 

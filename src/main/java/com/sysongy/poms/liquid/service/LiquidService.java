@@ -1,21 +1,16 @@
 package com.sysongy.poms.liquid.service;
 
-import java.util.List;
-
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.liquid.model.SysGasSource;
 
 public interface LiquidService {
 	
-	public PageInfo<Gastation> queryGastation(Gastation obj) throws Exception;
+	public PageInfo<SysGasSource> querySysGasSource(SysGasSource obj) throws Exception;
 	
-	public Gastation queryGastationByPK(String gastationid) throws Exception;
+	public SysGasSource queryGasSourceByPK(String sys_gas_source_id) throws Exception;
 	
-	public String saveGastation(Gastation obj,  String operation) throws Exception;
+	public String saveGasSource(SysGasSource obj,  String operation) throws Exception;
 	
-	public Integer delGastation(String gastation) throws Exception;
-	
-	public List<Gastation> getAllStationByArea(String areacode) throws Exception;
-
+	public Integer delGasSource(String sys_gas_source_id) throws Exception;
 
 }
