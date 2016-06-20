@@ -52,11 +52,17 @@ public class SysDriver extends BaseModel{
 
     private Date createdDate;
 
+    private String createdDate_before;
+
+    private String createdDate_after;
+
     private Date updatedDate;
 
     private Integer isFirstCharge;
 
-    private String checkedStatus;
+    private Integer checkedStatus;
+
+    private String checked_status;
 
     private Date checkedDate;
 
@@ -64,7 +70,33 @@ public class SysDriver extends BaseModel{
 
     private String sys_gas_station_id;
 
-    public String getSysDriverId() {
+    private String walletId;
+
+	public String getChecked_status() {
+		return checked_status;
+	}
+
+	public void setChecked_status(String checked_status) {
+		this.checked_status = checked_status;
+	}
+
+	public String getCreatedDate_before() {
+		return createdDate_before;
+	}
+
+	public void setCreatedDate_before(String createdDate_before) {
+		this.createdDate_before = createdDate_before;
+	}
+
+	public String getCreatedDate_after() {
+		return createdDate_after;
+	}
+
+	public void setCreatedDate_after(String createdDate_after) {
+		this.createdDate_after = createdDate_after;
+	}
+
+	public String getSysDriverId() {
         return sysDriverId;
     }
 
@@ -240,11 +272,11 @@ public class SysDriver extends BaseModel{
         this.isFirstCharge = isFirstCharge;
     }
 
-    public String getCheckedStatus() {
+    public Integer getCheckedStatus() {
         return checkedStatus;
     }
 
-    public void setCheckedStatus(String checkedStatus) {
+    public void setCheckedStatus(Integer checkedStatus) {
         this.checkedStatus = checkedStatus;
     }
 
