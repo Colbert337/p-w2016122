@@ -58,6 +58,8 @@ public class SysDriver extends BaseModel{
 
     private String sys_gas_station_id;
 
+    private String walletId;
+
     public String getSysDriverId() {
         return sysDriverId;
     }
@@ -264,5 +266,13 @@ public class SysDriver extends BaseModel{
 
     public void setSys_gas_station_id(String sys_gas_station_id) {
         this.sys_gas_station_id = sys_gas_station_id;
+    }
+
+    public String getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(String walletId) {
+        this.walletId = walletId;
     }
 }
