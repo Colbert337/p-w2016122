@@ -437,6 +437,10 @@ public class CRMCustomerContoller {
                 ajaxJson.setMsg("无卡分发！！！");
                 return ajaxJson;
             }
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            SysDriver orgSysDriverBack = driverService.queryDriverByMobilePhone(sysDriver);
+            attributes.put("driver", orgSysDriverBack);
+            ajaxJson.setAttributes(attributes);
         }catch (Exception e){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.DISTRIBUTE_CRM_USER_CARD_ERROR + e.getMessage());
