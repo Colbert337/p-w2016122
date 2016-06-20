@@ -22,6 +22,8 @@ public class GasCard extends BaseModel{
 
 	//用户卡状态  0:已冻结 1：已入库；2：已出库；3:已/未发放 4:使用中 5:已失效
 	private String card_status;
+
+	private Usysparam cardStatusInfo;
 	
 	private String card_property;//用户卡属性 0:车辆卡  1:个人卡
 
@@ -189,5 +191,13 @@ public class GasCard extends BaseModel{
 
 	public void setCard_type_info(Usysparam card_type_info) {
 		this.card_type_info = card_type_info;
+	}
+
+	public Usysparam getCardStatusInfo() {
+		return cardStatusInfo;
+	}
+
+	public void setCardStatusInfo(Usysparam cardStatusInfo) {
+		this.cardStatusInfo = cardStatusInfo;
 	}
 }
