@@ -241,6 +241,7 @@
 				dataType:'text',
 				success:function(data){
 					$("#main").html(data);
+					$('[data-rel="tooltip"]').tooltip();
 				}
 			}
 			$("#listForm").ajaxSubmit(deleteOptions);
