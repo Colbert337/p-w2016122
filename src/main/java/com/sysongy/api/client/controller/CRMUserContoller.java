@@ -4,25 +4,35 @@ import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.util.FileUtil;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 @Controller
 @RequestMapping("/crmUserService")
 public class CRMUserContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 
     @Autowired
     SysUserService sysUserService;
@@ -96,12 +106,21 @@ public class CRMUserContoller {
                 sysUserInfo.setPassword(sysUser.getPassword());
             }
 
+            if(StringUtils.isNotEmpty(sysUser.getRealName())){
+                sysUserInfo.setRealName(sysUser.getRealName());
+            }
+
+            if(StringUtils.isNotEmpty(sysUser.getRemark())){
+                sysUserInfo.setRemark(sysUser.getRemark());
+            }
+
             int nRet = sysUserService.updateUser(sysUserInfo);
             if(nRet < 1){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_SYSUSER_ERROR);
                 return ajaxJson;
             }
+            attributes.put("UserInfo", sysUserInfo);
 
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
@@ -109,6 +128,53 @@ public class CRMUserContoller {
             logger.error("updateCardInfo error： " + e);
         }
         ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
+    //多文件上传
+    @RequestMapping(value = "/web/upload")
+    @ResponseBody
+    public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request, SysUser sysUser) {
+        AjaxJson ajaxJson = new AjaxJson();
+
+        String imgTag = request.getParameter("imgTag");
+
+        if(files == null){
+            ajaxJson.setMsg("上传文件为空！！！");
+            ajaxJson.setSuccess(false);
+            return ajaxJson;
+        }
+
+        String sysPathID = sysUser.getSysUserId();
+        if(!StringUtils.isNotEmpty(sysUser.getSysUserId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("sysUserId为空！！！");
+            return ajaxJson;
+        }
+
+        String realPath =  sysPathID + "/" ;
+        String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
+        FileUtil.createIfNoExist(filePath);
+        try {
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            for (int i = 0; i < files.length; i++) {
+                String path = filePath + files[i].getOriginalFilename();
+                File destFile = new File(path);
+                String contextPath = request.getContextPath();
+                String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
+                String fileNum = String.valueOf(i);
+                attributes.put(imgTag + fileNum, basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
+                FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
+                sysUser.setAvatarS(basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
+                sysUserService.updateCRMUser(sysUser);
+            }
+            attributes.put("UserInfo", sysUser);
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("上传文件失败：" + e.getMessage());
+            logger.error("uploadFileData Customer error： " + e);
+        }
         return ajaxJson;
     }
 }

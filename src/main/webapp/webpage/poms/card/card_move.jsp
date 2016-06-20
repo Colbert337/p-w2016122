@@ -64,24 +64,24 @@
 									
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户卡起始编号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="card_no_1"> 用户卡起始编号： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="card_no_1"  name="card_no_start" placeholder="卡起始编号" class="col-xs-10 col-sm-5" maxlength="9"/>
+										<div class="col-sm-4">
+											<input type="text" id="card_no_1"  name="card_no_start" placeholder="卡起始编号" class="form-control" maxlength="9"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户卡结束编号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="card_no_2"> 用户卡结束编号： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="card_no_2"  name="card_no_end" placeholder="卡结束编号" class="col-xs-10 col-sm-5" maxlength="9"/>
+										<div class="col-sm-4">
+											<input type="text" id="card_no_2"  name="card_no_end" placeholder="卡结束编号" class="form-control" maxlength="9"/>
 											<input type="hidden" name="card_no_arr" id="card_no_arr"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 调拨工作站： </label>
+										<label class="col-sm-3 control-label no-padding-right" > 调拨工作站： </label>
 										<div class="col-sm-2">
 												<select class="form-control" id="workstation" name="workstation">
 														<s:option flag="true" gcode="WORKSTATION" />
@@ -90,23 +90,23 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 工作站领取人： </label>
+										<label class="col-sm-3 control-label no-padding-right" > 工作站领取人： </label>
 										<div class="col-sm-2">
-												<input type="text" name="workstation_resp" id="workstation_resp" maxlength="10"/>
+												<input type="text" name="workstation_resp" class="form-control" id="workstation_resp" maxlength="10"/>
 												<%-- <select class="form-control" id="workstation_resp" name="workstation_resp">
 												</select> --%>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人： </label>
-										<div class="col-sm-4">
-											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>										
+										<label class="col-sm-3 control-label no-padding-right" for="operator"> 操作人： </label>
+										<div class="col-sm-2">
+											<input type="text"  id="operator" name="operator" class="form-control"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
 										</div>
 									</div>
 						
 									<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="form-field-1" id="dynamic-table_after_handler"> 明细列表： </label>
+											<label class="col-sm-3 control-label no-padding-right" id="dynamic-table_after_handler"> 明细列表： </label>
 											<div class="col-sm-7" id="dynamic-table_div">
 											<div class="table-header">用户卡列表</div>
 												<table id="dynamic-table" class="table table-striped table-bordered table-hover">
@@ -488,9 +488,6 @@
 		}
 		
 		function init(){
-			//$("#dynamic-table_div").remove();
-			//$("#dynamic-table_after_handler").after("<div class='col-sm-7' id='dynamic-table_div'><div class='table-header'>用户卡列表</div><table id='dynamic-table' class='table table-striped table-bordered table-hover'><thead><tr><th class='center'><label class='pos-rel'><input type='checkbox' class='ace' onclick='checkedAllRows(this);'' /><span class='lbl'></span></label></th><th id='card_no_order'>用户卡号</th><th id='card_type_order'>调拨工作站</th><th id='card_name_order'>工作站领取人</th> <th id='card_status_order'>用户卡状态</th><th id='operator_order'>操作人工号</th></tr></thead><tbody></tbody></table></div>");
-			//$("#init_dynamic_data").removeAttr("disabled");
 			loadPage('#main', '../webpage/poms/card/card_move.jsp');
 		}
 		
