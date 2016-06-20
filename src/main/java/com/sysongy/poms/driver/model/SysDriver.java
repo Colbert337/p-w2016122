@@ -1,6 +1,7 @@
 package com.sysongy.poms.driver.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.permi.model.SysUserAccount;
 
 import java.util.Date;
@@ -35,6 +36,8 @@ public class SysDriver extends BaseModel{
     private String identityCard;
 
     private String cardId;
+
+    private GasCard cardInfo;
 
     private String sysUserAccountId;
 
@@ -274,5 +277,13 @@ public class SysDriver extends BaseModel{
 
     public void setWalletId(String walletId) {
         this.walletId = walletId;
+    }
+
+    public GasCard getCardInfo() {
+        return cardInfo;
+    }
+
+    public void setCardInfo(GasCard cardInfo) {
+        this.cardInfo = cardInfo;
     }
 }

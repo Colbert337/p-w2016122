@@ -15,6 +15,10 @@
     <result column="workstation_resp" property="workstation_resp" jdbcType="VARCHAR" />
     <result column="batch_no" property="batch_no" jdbcType="VARCHAR" />
     <result column="card_flag_id" property="card_flag_id" jdbcType="INTEGER" />
+    <association property="card_type_info" column="card_type"
+                 javaType="com.sysongy.poms.card.model.GasCard"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryUsysparamByGcode">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     card_no, card_type, card_status, card_property, operator, storage_time, release_time, memo, workstation, workstation_resp, batch_no, card_flag_id
