@@ -51,4 +51,8 @@
     delete usysparam where gcode = #{gcode,jdbcType=VARCHAR} and mcode = #{mcode,jdbcType=VARCHAR}
   </update>
 
+  <select id="queryUsysparamByGcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+    select * from usysparam where gcode = #{0}
+  </select>
+
 </mapper>

@@ -31,6 +31,10 @@
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
     </association>
+    <association property="cardInfo" column="card_id"
+                 javaType="com.sysongy.poms.card.model.GasCard"
+                 select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,
