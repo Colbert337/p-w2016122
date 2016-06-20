@@ -205,6 +205,7 @@ public class CRMCustomerContoller {
                 sysDriver.setIsIdent(0);
             }
             Map<String, Object> attributes = new HashMap<String, Object>();
+            sysDriver.setUserStatus("0");
             int renum = driverService.saveDriver(sysDriver, "insert");
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
