@@ -177,6 +177,7 @@
       </if>
       <if test="checkedDate != null" >
         checked_date,
+      </if>
       <if test="sys_gas_station_id != null" >
         sys_gas_station_id,
       </if>
@@ -253,6 +254,7 @@
       </if>
       <if test="checkedDate != null" >
         #{checkedDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="sys_gas_station_id != null" >
         #{sys_gas_station_id,jdbcType=VARCHAR},
       </if>
@@ -329,6 +331,7 @@
       </if>
       <if test="checkedDate != null" >
         checked_date = #{checkedDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="sys_gas_station_id != null" >
         sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR},
       </if>
