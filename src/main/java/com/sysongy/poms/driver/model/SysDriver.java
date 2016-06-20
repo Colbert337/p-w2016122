@@ -1,7 +1,9 @@
 package com.sysongy.poms.driver.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.util.Date;
 
@@ -22,6 +24,8 @@ public class SysDriver extends BaseModel{
 
     private Integer isIdent;
 
+    private Usysparam isIdentInfo;
+
     private String plateNumber;
 
     private Date expiryDate;
@@ -35,6 +39,8 @@ public class SysDriver extends BaseModel{
     private String identityCard;
 
     private String cardId;
+
+    private GasCard cardInfo;
 
     private String sysUserAccountId;
 
@@ -50,15 +56,13 @@ public class SysDriver extends BaseModel{
 
     private Integer isFirstCharge;
 
-    private Integer checkedStatus;
+    private String checkedStatus;
 
     private Date checkedDate;
 
     private SysUserAccount account;
 
     private String sys_gas_station_id;
-
-    private String walletId;
 
     public String getSysDriverId() {
         return sysDriverId;
@@ -236,11 +240,11 @@ public class SysDriver extends BaseModel{
         this.isFirstCharge = isFirstCharge;
     }
 
-    public Integer getCheckedStatus() {
+    public String getCheckedStatus() {
         return checkedStatus;
     }
 
-    public void setCheckedStatus(Integer checkedStatus) {
+    public void setCheckedStatus(String checkedStatus) {
         this.checkedStatus = checkedStatus;
     }
 
@@ -268,11 +272,19 @@ public class SysDriver extends BaseModel{
         this.sys_gas_station_id = sys_gas_station_id;
     }
 
-    public String getWalletId() {
-        return walletId;
+    public GasCard getCardInfo() {
+        return cardInfo;
     }
 
-    public void setWalletId(String walletId) {
-        this.walletId = walletId;
+    public void setCardInfo(GasCard cardInfo) {
+        this.cardInfo = cardInfo;
+    }
+
+    public Usysparam getIsIdentInfo() {
+        return isIdentInfo;
+    }
+
+    public void setIsIdentInfo(Usysparam isIdentInfo) {
+        this.isIdentInfo = isIdentInfo;
     }
 }

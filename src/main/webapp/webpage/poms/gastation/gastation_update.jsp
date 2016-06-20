@@ -86,7 +86,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="email"> E-mail： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control"  value="${station.email}"/>
+											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control"  value="${station.email}"/>
 										</div>
 									</div>
 									
@@ -108,7 +108,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期：</label>
-										<div class="col-sm-2 datepicker-noicon">
+										<div class="col-sm-4 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
 														<input class="form-control date-picker" name="expiry_date_frompage"  readonly="readonly" id="expiry_date" type="text" value="${station.expiry_date_frompage}" data-date-format="yyyy-mm-dd" />
@@ -381,7 +381,7 @@
 											</button>
 											
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>
@@ -396,12 +396,7 @@
 					</div><!-- /.page-content -->
 				</div>
 	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
+
 		<!-- inline scripts related to this page -->
 	<script type="text/javascript">
 	

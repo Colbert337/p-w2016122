@@ -24,12 +24,20 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
     <result column="is_first_charge" property="isFirstCharge" jdbcType="INTEGER" />
-    <result column="checked_status" property="checkedStatus" jdbcType="INTEGER" />
+    <result column="checked_status" property="checkedStatus" jdbcType="VARCHAR" />
     <result column="checked_date" property="checkedDate" jdbcType="TIMESTAMP" />
     <result column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
-    <association property="account" column="wallet_id"
+    <association property="account" column="sys_user_account_id"
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
+    </association>
+    <association property="cardInfo" column="card_id"
+                 javaType="com.sysongy.poms.card.model.GasCard"
+                 select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
+    </association>
+    <association property="isIdentInfo" column="checked_status"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCheckStatusByMcode">
     </association>
   </resultMap>
   <sql id="Base_Column_List" >

@@ -18,4 +18,12 @@ public interface UsysparamMapper {
     public int updateByPrimaryKey(Usysparam recode);
     
     public int deleteByPrimaryKey(Usysparam recode);
+
+    public List<Usysparam> queryUsysparamByGcode(String gcode);
+
+    public Usysparam queryCardTypeByMcode(String mcode);
+
+    public Usysparam queryCardStatusByMcode(String mcode);
+
+    public Usysparam queryCheckStatusByMcode(String mcode);
 }
