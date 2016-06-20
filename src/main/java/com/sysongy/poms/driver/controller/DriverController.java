@@ -1,17 +1,18 @@
-package com.sysongy.poms.driver;
+package com.sysongy.poms.driver.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.driver.service.DriverService;
-import com.sysongy.poms.permi.model.SysUser;
-import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.util.GlobalConstant;
 
 /**
  * @FileName: DriverController
@@ -23,8 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Version: V2.0 Copyright(c)陕西司集能源科技有限公司
  * @Description:
  */
-@Controller
+
 @RequestMapping("/web/driver")
+@Controller
 public class DriverController extends BaseContoller{
 
     @Autowired
@@ -52,5 +54,36 @@ public class DriverController extends BaseContoller{
         map.addAttribute("pageInfo",driverPageInfo);
 
         return "webpage/poms/driver/driver_list";
+    }
+    
+    @RequestMapping("/driverList")
+    public String queryDriverList(@ModelAttribute CurrUser currUser, SysDriver driver, ModelMap map)throws Exception{
+    	PageBean bean = new PageBean();
+		String ret = "webpage/poms/system/driver_review";
+
+		try {
+        PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
+  
+        pageinfo = driverService.queryDrivers(driver);
+        
+        bean.setRetCode(100);
+		bean.setRetMsg("查询成功");
+		bean.setPageInfo(ret);
+
+		map.addAttribute("ret", bean);
+		map.addAttribute("pageInfo", pageinfo);
+		map.addAttribute("current_module", "webpage/poms/system/driver_review");
+
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
     }
 }
