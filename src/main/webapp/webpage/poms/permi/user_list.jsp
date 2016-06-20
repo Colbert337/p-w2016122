@@ -18,6 +18,13 @@
 			binded:true,						//是否绑定即时验证
 			scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
 		});
+
+		$.extend($.validationEngineLanguage.allRules,{ "isUserExist": {
+			"url": "<%=basePath%>/web/permi/user/info/isUserName",
+			"extraData": "dt="+(new Date()).getTime(),
+			"alertText": "* 验证失败！",
+			"alertTextLoad": "* 验证中，请稍候..."}
+		});
 	});
 
 	/*分页相关方法 start*/
@@ -166,16 +173,18 @@
 	 * 删除用户
 	 */
 	function deleteUser(userId){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/user/delete',
-			data:{userId:userId},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
+		if(confirm("确定要删除该用户吗？")){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/user/delete',
+				data:{userId:userId},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
 			}
+			$("#listForm").ajaxSubmit(deleteOptions);
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
 	/**
@@ -183,16 +192,23 @@
 	 * @param userId
 	 */
 	function updateStatus(userId,status){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/user/update/staruts',
-			data:{sysUserId:userId,status:status},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
-			}
+		var alertStr = "确定要禁用该用户吗？";
+		if(status == 0){
+			alertStr = "确定要启用该用户吗？";
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
+		if(confirm(alertStr)){
+			 var deleteOptions ={
+			 url:'<%=basePath%>/web/permi/user/update/staruts',
+			 data:{sysUserId:userId,status:status},
+			 type:'post',
+			 dataType:'text',
+				 success:function(data){
+				 $("#main").html(data);
+				 }
+			 }
+			 $("#listForm").ajaxSubmit(deleteOptions);
+		}
+
 	}
 </script>
 <div class="page-header">
@@ -289,7 +305,7 @@
 			<%--分页start--%>
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
@@ -364,9 +380,9 @@
 								</div>
 								<h5 class="header smaller lighter blue">基本信息</h5>
 								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="real_name"> 姓名： </label>
+									<label class="col-sm-2 control-label no-padding-right" for="real_name">  <span class="red_star">*</span>姓名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[minSize[5]] col-xs-10 col-sm-12" />
+										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[required,maxSize[5]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right"> 性别： </label>
 									<div class="col-sm-4">
@@ -385,11 +401,11 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="email"> 邮箱： </label>
 									<div class="col-sm-4">
-										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[minSize[20],custom[email]] col-xs-10 col-sm-12" />
+										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[maxSize[20],custom[email]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="mobile_phone"> 手机： </label>
 									<div class="col-sm-4">
-										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[minSize[11],custom[phone]] col-xs-10 col-sm-12" />
+										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[maxSize[11],custom[phone]] col-xs-10 col-sm-12" />
 									</div>
 								</div>
 							</form>
@@ -409,3 +425,34 @@
 	</div><!-- /.modal -->
 </div>
 <!--添加用户弹层-结束-->
+
+<!--提示弹层-开始-->
+<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="alertModalLabel">警告提示</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+							sadfasdfasdf
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+				<!--底部按钮 -->
+				<div class="row">
+					<div class="space"></div>
+					<div class="col-xs-3"></div>
+					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
+					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+<!--提示弹层-结束-->

@@ -139,6 +139,11 @@ public class SysUserServiceImpl implements SysUserService{
         sysUserRole.setSysUserId(user.getSysUserId());
         sysUserRole.setSysRoleId(user.getAvatarB());
         sysUserRoleMapper.addUserRole(sysUserRole);
+        if(user.getPassword() != null){
+            String passwordStr = user.getPassword();
+            passwordStr = Encoder.MD5Encode(passwordStr.getBytes());
+            user.setPassword(passwordStr);
+        }
         return sysUserMapper.addUser(user);
     }
     /**
@@ -186,6 +191,16 @@ public class SysUserServiceImpl implements SysUserService{
     @Override
     public int addUserRole(List<SysUserRole> userRoleList) {
         return 0;
+    }
+
+    /**
+     * 根据用户名和用户类型删除用户
+     * @param record
+     * @return
+     */
+    @Override
+    public int updateUserByName(SysUser record)  throws Exception{
+        return sysUserMapper.updateUserByName(record);
     }
 
     /*************************************CRM客户端接口*************************************/
@@ -297,5 +312,11 @@ public class SysUserServiceImpl implements SysUserService{
         }
 
         return result;
+    }
+
+
+    @Override
+    public int updateCRMUser(SysUser user) {
+        return sysUserMapper.updateUser(user);
     }
 }

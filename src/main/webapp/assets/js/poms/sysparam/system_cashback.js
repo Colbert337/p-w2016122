@@ -1,30 +1,39 @@
+/*
+document.write("<script type='text/javascript' src='"+path+"/dist/js/bootstrapValidator.js'></script>");	
+document.write("<script type='text/javascript' src='"+path+"/assets/js/date-time/bootstrap-datepicker.js'></script>");
+*/
 
 $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 
-	$.ajax({
-	    type: "POST",
-	    url:'../web/usysparam/query?gcode=CASHBACK&scode=',   
-	    contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-	    dataType:'text',
-	    async:false,
-	    success:function(data){
-	    		if(data != ""){
-					var s = JSON.parse(data);
-		        	   for(var i=0;i<s.length;i++){
-		        		   $("#cashbackol").append("<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value='"+s[i].mcode+"'><div class='dd-handle dd2-handle'><i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i><i class='drag-icon ace-icon fa fa-arrows bigger-125'></i></div><div class='dd2-content'>"+s[i].mname+"</div></li>");
-		        	   }
-	    		}
-	     }
-	});
-
-			
 			jQuery(function($){
 				$('.dd').nestable();
 				$('.dd-handle a').on('mousedown', function(e){
 					e.stopPropagation();
 				});
 				
-				$('[data-rel="tooltip"]').tooltip();
+				$.ajax({
+					type: "POST",
+					url:'../web/usysparam/query?gcode=CASHBACK&scode=',
+					contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+					dataType:'text',
+					async:false,
+					success:function(data){
+						if(data != ""){
+							var s = JSON.parse(data);
+							for(var i=0;i<s.length;i++){
+								$("#cashbackol").append("<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value='"+s[i].mcode+"'><div class='dd-handle dd2-handle'><i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i><i class='drag-icon ace-icon fa fa-arrows bigger-125'></i></div><div class='dd2-content'>"+s[i].mname+"</div></li>");
+
+								$('.dd-item.dd2-item').each(function(){
+									if($("[name=sys_cash_back_no]").val()==$(this).val()){
+										$(this).find('>div').addClass('btn-info');
+									}
+								});
+
+
+							}
+						}
+					}
+				});
 			});
 			
 			function commitForm(){
@@ -58,7 +67,7 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
  */
 function choose(obj){
 	$("[name=sys_cash_back_no]").val($(obj).val());
-	//loadPage('#main', '../web/sysparam/cashbackList');
+
 	commitForm();
 }
 
@@ -96,7 +105,6 @@ function del(obj){
 $("#newbutton").on('click', function(){
 	loadPage('#main','../webpage/poms/system/system_cashback_new.jsp?sys_cash_back_no='+$("[name=sys_cash_back_no]").val());
 });
-
 
 
 window.onload = setCurrentPage();

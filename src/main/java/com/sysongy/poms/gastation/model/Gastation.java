@@ -16,6 +16,8 @@ public class Gastation extends BaseModel {
 	private String city_id;
 	private String detail;
 	private String address;
+	private String admin_username;
+	private String admin_userpassword;
 	private String salesmen_id;
 	private String salesmen_name;
 	private String operations_id;
@@ -40,6 +42,22 @@ public class Gastation extends BaseModel {
 	private Date updated_time;
 	private String sys_user_account_id;
 	private SysUserAccount account;
+
+	public String getAdmin_username() {
+		return admin_username;
+	}
+
+	public void setAdmin_username(String admin_username) {
+		this.admin_username = admin_username;
+	}
+
+	public String getAdmin_userpassword() {
+		return admin_userpassword;
+	}
+
+	public void setAdmin_userpassword(String admin_userpassword) {
+		this.admin_userpassword = admin_userpassword;
+	}
 
 	public SysUserAccount getAccount() {
 		return account;

@@ -12,6 +12,9 @@ import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
+
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -117,9 +121,7 @@ public class SysUserController extends BaseContoller{
 		}else if(user != null){//添加
 			user.setSysUserId(UUIDGenerator.getUUID());
 			user.setUserType(GlobalConstant.USER_TYPE_MANAGE);
-			String passwordStr = user.getPassword();
-			passwordStr = Encoder.MD5Encode(passwordStr.getBytes());
-			user.setPassword(passwordStr);
+
 			sysUserService.addUser(user);
 		}
 
@@ -153,6 +155,7 @@ public class SysUserController extends BaseContoller{
 
 		return roleList;
 	}
+
 	/**
 	 * 获取气站用户列表
 	 * @return
@@ -166,20 +169,59 @@ public class SysUserController extends BaseContoller{
 		return resultStr;
 	}
 
+	/**
+	 * 根据用户名称和用户类型判断用户名称是否存在
+	 * @param currUser
+	 * @param admin_username
+	 * @param userType
+	 * @param map
+     * @return
+     */
 	@RequestMapping("/info/isExist")
 	@ResponseBody
-	public AjaxJson queryUserByNameAndType(@ModelAttribute CurrUser currUser, @RequestParam String userName,
-										   @RequestParam int userType, ModelMap map){
-		AjaxJson result = new AjaxJson();
+	public JSONObject queryUserByNameAndType(@ModelAttribute CurrUser currUser, @RequestParam String admin_username,@RequestParam String userType, ModelMap map){
+		JSONObject json = new JSONObject();
+
+		SysUser sysUser = new SysUser();
+		sysUser.setUserName(admin_username);
+		sysUser.setUserType(Integer.valueOf(userType));
+		SysUser user = sysUserService.queryUser(sysUser);
+
+		if(user == null){
+			json.put("valid",true);
+		}else{
+			json.put("valid",false); 
+		}
+		
+		return json;
+	}
+
+	/**
+	 * 根据用户名称判断用户名称是否存在
+	 * @param currUser
+	 * @param userName
+	 * @param userType
+	 * @param map
+     * @return
+     */
+	@RequestMapping("/info/isUserName")
+	@ResponseBody
+	public JSONObject queryUserByName(HttpServletRequest request, @ModelAttribute CurrUser currUser, @RequestParam String userName, @RequestParam String userType, ModelMap map){
+		String validateId = request.getParameter("fieldId");
+		String validateValue = request.getParameter("fieldValue");
+
+		JSONObject json = new JSONObject();
 
 		SysUser sysUser = new SysUser();
 		sysUser.setUserName(userName);
-		sysUser.setUserType(userType);
 		SysUser user = sysUserService.queryUser(sysUser);
-		if(user != null){
-			result.setSuccess(true);
-			result.setMsg("获取成功！");
+
+		if(user == null){
+			json.put("valid",true);
+		}else{
+			json.put("valid",false);
 		}
-		return result;
+
+		return json;
 	}
 }

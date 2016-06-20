@@ -303,7 +303,7 @@
 								<img class="nav-user-photo" src="<%=basePath %>/assets/avatars/user.jpg" alt="Jason's Photo" />
 								<span class="user-info">
 									<small>欢迎登陆,</small>
-									司集
+									${sessionScope.currUser.user.userName}${sessionScope.currUser.user.userType}
 								</span>
 
 								<i class="ace-icon fa fa-caret-down"></i>

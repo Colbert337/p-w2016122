@@ -1,6 +1,8 @@
-package com.sysongy.poms.system.dao;
+package com.sysongy.poms.liquid.dao;
 
-import com.sysongy.poms.system.model.SysGasSource;
+import java.util.List;
+
+import com.sysongy.poms.liquid.model.SysGasSource;
 
 public interface SysGasSourceMapper {
     int deleteByPrimaryKey(String sysGasSourceId);
@@ -14,4 +16,6 @@ public interface SysGasSourceMapper {
     int updateByPrimaryKeySelective(SysGasSource record);
 
     int updateByPrimaryKey(SysGasSource record);
+    
+    List<SysGasSource> queryForPage(SysGasSource record);
 }

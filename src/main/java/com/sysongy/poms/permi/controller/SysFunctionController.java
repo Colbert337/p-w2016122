@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @FileName: SysFunctionController
@@ -139,6 +136,9 @@ public class SysFunctionController extends BaseContoller{
 		List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionListByType(userType);
 		List<Map<String,Object>> functionListTree = new ArrayList<>();
 		for (Map<String,Object> function:sysFunctionList) {
+			Date date = new Date();
+			String fomt = function.get("createdDate").toString();
+
 			Map<String,Object> functionTree = new HashMap<>();
 			functionTree.put("id",function.get("sysFunctionId"));
 			functionTree.put("pId",function.get("parentId"));
@@ -246,5 +246,21 @@ public class SysFunctionController extends BaseContoller{
 			parentId = sysFunction.getParentId();
 		}
 		return "redirect:/web/permi/function/list/page?parentIdTemp="+parentId;
+	}
+
+	/**
+	 * 获取当前排序序号
+	 * @return
+	 */
+	@RequestMapping("/info/sort")
+	@ResponseBody
+	public int queryFunctionSort(ModelMap map){
+		int sortIndex = 0;
+		SysFunction function = sysFunctionService.queryFunctionSort();
+		if(function != null){
+			sortIndex = function.getFunctionSort();
+			sortIndex ++;
+		}
+		return sortIndex;
 	}
 }

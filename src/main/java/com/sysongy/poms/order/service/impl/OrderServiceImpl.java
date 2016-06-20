@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorType==null || (!operatorType.equalsIgnoreCase(GlobalConstant.OrderOperatorType.DRIVER))){
 		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER;
 	   }
-	   //TODO 
+	   //TODO 充值流程：1.充值，2.返现
 	   try{
 		   //1.首先给司机充值
 		   driverService.chargeCashToDriver(order);

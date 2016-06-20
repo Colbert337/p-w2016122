@@ -19,4 +19,8 @@ public interface SysDriverMapper {
     int updateByPrimaryKey(SysDriver record);
 
     List<SysDriver> queryForPage(SysDriver record);
+
+    int isExists(SysDriver record);
+
+    SysDriver queryDriverByMobilePhone(SysDriver record);
 }

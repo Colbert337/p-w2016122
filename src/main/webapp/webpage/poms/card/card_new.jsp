@@ -60,24 +60,24 @@
 								<form class="form-horizontal"  id="newcardform">
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户卡起始编号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="card_no_1"> 用户卡起始编号： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="card_no_1"  name="card_no_start" placeholder="卡起始编号" class="col-xs-10 col-sm-5" maxlength="9"/>
+										<div class="col-sm-4">
+											<input type="text" id="card_no_1"  name="card_no_start" placeholder="卡起始编号" class="form-control" maxlength="9"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户卡结束编号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="card_no_2"> 用户卡结束编号： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="card_no_2"  name="card_no_end" placeholder="卡结束编号" class="col-xs-10 col-sm-5" maxlength="9"/>
+										<div class="col-sm-4">
+											<input type="text" id="card_no_2"  name="card_no_end" placeholder="卡结束编号" class="form-control" maxlength="9"/>
 											<input type="hidden" name="card_no_arr" id="card_no_arr"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 用户卡类型： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 用户卡类型： </label>
 										<div class="col-sm-2">
 												<select class="form-control" id="card_type" name="card_type">
 														<s:option flag="true" gcode="CARDTYPE" />
@@ -86,7 +86,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 用户卡属性： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 用户卡属性： </label>
 										<div class="col-sm-2">
 												<select class="form-control" id="card_property" name="card_property">
 														<s:option flag="true" gcode="CARDPROPERTY" />
@@ -95,15 +95,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 操作人： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="operator"> 操作人： </label>
 
-										<div class="col-sm-4">
-											<input type="text"  id="operator" name="operator" class="col-xs-10 col-sm-5" readonly="readonly" value=" ${sessionScope.currUser.user.userName}"/>
+										<div class="col-sm-2">
+											<input type="text"  id="operator" name="operator" class="form-control" readonly="readonly" value=" ${sessionScope.currUser.user.userName}"/>
 										</div>
 									</div>
 						
 									<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="form-field-1" id="dynamic-table_after_handler"> 明细列表： </label>
+											<label class="col-sm-3 control-label no-padding-right" id="dynamic-table_after_handler"> 明细列表： </label>
 											<div class="col-sm-7" id="dynamic-table_div">
 											<div class="table-header">用户卡列表</div>
 												<table id="dynamic-table" class="table table-striped table-bordered table-hover">

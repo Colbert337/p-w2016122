@@ -8,6 +8,7 @@
     <result column="full_name" property="fullName" jdbcType="VARCHAR" />
     <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
     <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
+    <result column="user_status" property="userStatus" jdbcType="VARCHAR" />
     <result column="is_ident" property="isIdent" jdbcType="INTEGER" />
     <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
     <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
@@ -16,19 +17,35 @@
     <result column="vehicle_lice" property="vehicleLice" jdbcType="VARCHAR" />
     <result column="identity_card" property="identityCard" jdbcType="VARCHAR" />
     <result column="card_id" property="cardId" jdbcType="VARCHAR" />
-    <result column="sys_user_account_id" property="sys_user_account_id" jdbcType="VARCHAR" />
+    <result column="sys_user_account_id" property="sysUserAccountId" jdbcType="VARCHAR" />
+    <result column="sys_transport_id" property="sysTransportId" jdbcType="VARCHAR" />
+    <result column="regis_company" property="regisCompany" jdbcType="VARCHAR" />
+    <result column="regis_source" property="regisSource" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="is_first_charge" property="isFirstCharge" jdbcType="INTEGER" />
+    <result column="checked_status" property="checkedStatus" jdbcType="INTEGER" />
+    <result column="checked_date" property="checkedDate" jdbcType="TIMESTAMP" />
+    <result column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
+    <association property="account" column="wallet_id"
+                 javaType="com.sysongy.poms.permi.model.SysUserAccount"
+                 select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
+    </association>
+    <association property="cardInfo" column="card_id"
+                 javaType="com.sysongy.poms.card.model.GasCard"
+                 select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
-    sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, is_ident, 
-    plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card, 
-    card_id, sys_user_account_id, created_date, updated_date
+    sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,
+    is_ident, plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card,
+    card_id, sys_user_account_id, sys_transport_id, regis_company, regis_source, created_date,
+    updated_date, is_first_charge, checked_status, checked_date, sys_gas_station_id
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
-    <include refid="Base_Column_List" />
+     *
     from sys_driver
     where 1=1
     <trim>
@@ -43,6 +60,9 @@
       </if>
       <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
         and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+      </if>
+      <if test="sys_gas_station_id!= null &amp;&amp; sys_gas_station_id != ''" >
+        and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
       </if>
     </trim>
   </select>
@@ -59,17 +79,24 @@
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.driver.model.SysDriver" >
     insert into sys_driver (sys_driver_id, user_name, password, 
-      full_name, mobile_phone, pay_code, 
-      is_ident, plate_number, expiry_date, 
-      fuel_type, driving_lice, vehicle_lice, 
-      identity_card, card_id, sys_user_account_id, 
-      created_date, updated_date)
-    values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR}, 
-      #{isIdent,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR}, #{expiryDate,jdbcType=TIMESTAMP}, 
-      #{fuelType,jdbcType=INTEGER}, #{drivingLice,jdbcType=VARCHAR}, #{vehicleLice,jdbcType=VARCHAR}, 
-      #{identityCard,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR}, #{sys_user_account_id,jdbcType=VARCHAR}, 
-      #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP})
+      full_name, mobile_phone, pay_code,
+      user_status, is_ident, plate_number,
+      expiry_date, fuel_type, driving_lice,
+      vehicle_lice, identity_card, card_id,
+      sys_user_account_id, sys_transport_id, regis_company,
+      regis_source, created_date, updated_date,
+      is_first_charge, checked_status, checked_date, sys_gas_station_id
+      )
+    values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR},
+      #{userStatus,jdbcType=VARCHAR}, #{isIdent,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR},
+      #{expiryDate,jdbcType=TIMESTAMP}, #{fuelType,jdbcType=INTEGER}, #{drivingLice,jdbcType=VARCHAR},
+      #{vehicleLice,jdbcType=VARCHAR}, #{identityCard,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR},
+      #{sysUserAccountId,jdbcType=VARCHAR}, #{sysTransportId,jdbcType=VARCHAR}, #{regisCompany,jdbcType=VARCHAR},
+      #{regisSource,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},
+      #{isFirstCharge,jdbcType=INTEGER}, #{checkedStatus,jdbcType=INTEGER}, #{checkedDate,jdbcType=TIMESTAMP},
+      #{sys_gas_station_id,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.driver.model.SysDriver" >
     insert into sys_driver
@@ -91,6 +118,9 @@
       </if>
       <if test="payCode != null" >
         pay_code,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
       </if>
       <if test="isIdent != null" >
         is_ident,
@@ -116,14 +146,35 @@
       <if test="cardId != null" >
         card_id,
       </if>
-      <if test="sys_user_account_id != null" >
+      <if test="sysUserAccountId != null" >
         sys_user_account_id,
+      </if>
+      <if test="sysTransportId != null" >
+        sys_transport_id,
+      </if>
+      <if test="regisCompany != null" >
+        regis_company,
+      </if>
+      <if test="regisSource != null" >
+        regis_source,
       </if>
       <if test="createdDate != null" >
         created_date,
       </if>
       <if test="updatedDate != null" >
         updated_date,
+      </if>
+      <if test="isFirstCharge != null" >
+        is_first_charge,
+      </if>
+      <if test="checkedStatus != null" >
+        checked_status,
+      </if>
+      <if test="checkedDate != null" >
+        checked_date,
+      </if>
+      <if test="sys_gas_station_id != null" >
+        sys_gas_station_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -144,6 +195,9 @@
       </if>
       <if test="payCode != null" >
         #{payCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=VARCHAR},
       </if>
       <if test="isIdent != null" >
         #{isIdent,jdbcType=INTEGER},
@@ -169,14 +223,35 @@
       <if test="cardId != null" >
         #{cardId,jdbcType=VARCHAR},
       </if>
-      <if test="sys_user_account_id != null" >
-        #{sys_user_account_id,jdbcType=VARCHAR},
+      <if test="sysUserAccountId != null" >
+        #{sysUserAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysTransportId != null" >
+        #{sysTransportId,jdbcType=VARCHAR},
+      </if>
+      <if test="regisCompany != null" >
+        #{regisCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="regisSource != null" >
+        #{regisSource,jdbcType=VARCHAR},
       </if>
       <if test="createdDate != null" >
         #{createdDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updatedDate != null" >
         #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isFirstCharge != null" >
+        #{isFirstCharge,jdbcType=INTEGER},
+      </if>
+      <if test="checkedStatus != null" >
+        #{checkedStatus,jdbcType=INTEGER},
+      </if>
+      <if test="checkedDate != null" >
+        #{checkedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sys_gas_station_id != null" >
+        #{sys_gas_station_id,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -197,6 +272,9 @@
       </if>
       <if test="payCode != null" >
         pay_code = #{payCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        user_status = #{userStatus,jdbcType=VARCHAR},
       </if>
       <if test="isIdent != null" >
         is_ident = #{isIdent,jdbcType=INTEGER},
@@ -222,14 +300,35 @@
       <if test="cardId != null" >
         card_id = #{cardId,jdbcType=VARCHAR},
       </if>
-      <if test="sys_user_account_id != null" >
-        sys_user_account_id = #{sys_user_account_id,jdbcType=VARCHAR},
+      <if test="sysUserAccountId != null" >
+        sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysTransportId != null" >
+        sys_transport_id = #{sysTransportId,jdbcType=VARCHAR},
+      </if>
+      <if test="regisCompany != null" >
+        regis_company = #{regisCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="regisSource != null" >
+        regis_source = #{regisSource,jdbcType=VARCHAR},
       </if>
       <if test="createdDate != null" >
         created_date = #{createdDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isFirstCharge != null" >
+        is_first_charge = #{isFirstCharge,jdbcType=INTEGER},
+      </if>
+      <if test="checkedStatus != null" >
+        checked_status = #{checkedStatus,jdbcType=INTEGER},
+      </if>
+      <if test="checkedDate != null" >
+        checked_date = #{checkedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sys_gas_station_id != null" >
+        sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR},
       </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
@@ -241,6 +340,7 @@
       full_name = #{fullName,jdbcType=VARCHAR},
       mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
       pay_code = #{payCode,jdbcType=VARCHAR},
+      user_status = #{userStatus,jdbcType=VARCHAR},
       is_ident = #{isIdent,jdbcType=INTEGER},
       plate_number = #{plateNumber,jdbcType=VARCHAR},
       expiry_date = #{expiryDate,jdbcType=TIMESTAMP},
@@ -249,9 +349,36 @@
       vehicle_lice = #{vehicleLice,jdbcType=VARCHAR},
       identity_card = #{identityCard,jdbcType=VARCHAR},
       card_id = #{cardId,jdbcType=VARCHAR},
-      sys_user_account_id = #{sys_user_account_id,jdbcType=VARCHAR},
+      sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR},
+      sys_transport_id = #{sysTransportId,jdbcType=VARCHAR},
+      regis_company = #{regisCompany,jdbcType=VARCHAR},
+      regis_source = #{regisSource,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP},
-      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      is_first_charge = #{isFirstCharge,jdbcType=INTEGER},
+      checked_status = #{checkedStatus,jdbcType=INTEGER},
+      checked_date = #{checkedDate,jdbcType=TIMESTAMP},
+      sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
+
+  <select id="isExists" resultType="java.lang.Integer" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+      count(*)
+    from sys_driver
+    where 1=1
+    <trim>
+      <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
+        and mobile_phone = #{mobilePhone,jdbcType=VARCHAR} and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+
+  <select id="queryDriverByMobilePhone" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+    where mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+    and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+  </select>
 </mapper>

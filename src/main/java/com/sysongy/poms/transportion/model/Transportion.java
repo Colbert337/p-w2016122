@@ -15,6 +15,10 @@ public class Transportion extends BaseModel{
     private String station_manager;
 
     private String contact_phone;
+    
+    private String admin_username;
+    
+	private String admin_userpassword;
 
     private String email;
 
@@ -65,6 +69,22 @@ public class Transportion extends BaseModel{
     private Date created_time;
 
     private Date updated_time;
+
+	public String getAdmin_username() {
+		return admin_username;
+	}
+
+	public void setAdmin_username(String admin_username) {
+		this.admin_username = admin_username;
+	}
+
+	public String getAdmin_userpassword() {
+		return admin_userpassword;
+	}
+
+	public void setAdmin_userpassword(String admin_userpassword) {
+		this.admin_userpassword = admin_userpassword;
+	}
 
 	public String getStation_manager() {
 		return station_manager;

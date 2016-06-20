@@ -36,4 +36,23 @@ public class UsysparamServiceImpl implements UsysparamService {
 	public Usysparam queryUsysparamByCode(String gcode,String mcode) {
 		return usysparamMapper.queryUsysparamByCode(gcode,mcode);
 	}
+	
+	@Override
+	public Integer saveUsysparam(Usysparam recode) {
+		return usysparamMapper.insert(recode);
+	}
+	
+	@Override
+	public Integer updateUsysparam(Usysparam recode) {
+		return usysparamMapper.updateByPrimaryKey(recode);
+	}
+	
+	@Override
+	public Integer deleteUsysparam(Usysparam recode) {
+		return usysparamMapper.deleteByPrimaryKey(recode);
+	}
+
+	public List<Usysparam> queryUsysparamByGcode(String gcode){
+		return usysparamMapper.queryUsysparamByGcode(gcode);
+	}
 }

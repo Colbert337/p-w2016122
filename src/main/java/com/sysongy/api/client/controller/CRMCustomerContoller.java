@@ -4,8 +4,13 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.ShortMessageInfoModel;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.apache.commons.io.FileUtils;
@@ -24,10 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("/crmCustomerService")
@@ -42,6 +45,7 @@ public class CRMCustomerContoller {
 
     @Autowired
     RedisClientInterface redisClientImpl;
+
 
     public DriverService getDriverService() {
         return driverService;
@@ -165,6 +169,13 @@ public class CRMCustomerContoller {
                 return ajaxJson;
             }
 
+            int isExistDriver = driverService.isExists(sysDriver);
+            if(isExistDriver > 0){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该用户手机号已被使用！！！");
+                return ajaxJson;
+            }
+
             SysDriver isAlreadyHaveDrivers = driverService.queryDriverByPK(sysDriver.getSysDriverId());
             if(isAlreadyHaveDrivers != null){
                 ajaxJson.setSuccess(false);
@@ -193,8 +204,11 @@ public class CRMCustomerContoller {
             if(sysDriver.getFuelType() == null){
                 sysDriver.setIsIdent(0);
             }
-
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            sysDriver.setUserStatus("0");
             int renum = driverService.saveDriver(sysDriver, "insert");
+            attributes.put("driver", sysDriver);
+            ajaxJson.setAttributes(attributes);
             if(renum < 1){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("无用户添加！！！");
@@ -237,21 +251,31 @@ public class CRMCustomerContoller {
             String msgType = request.getParameter("msgType");
             if(msgType.equalsIgnoreCase("changePassword")){
                 String checkCode = (String)redisClientImpl.getFromCache(sysDriver.getSysDriverId());
-                if(StringUtils.isNotEmpty(checkCode)){
+                if(!StringUtils.isNotEmpty(checkCode)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("验证码已失效，请重新输入！！！");
                     return ajaxJson;
                 }
 
                 String inputCode = request.getParameter("inputCode");
-                if(StringUtils.isNotEmpty(inputCode) || !inputCode.equalsIgnoreCase(checkCode)){
+                if(!StringUtils.isNotEmpty(inputCode) || !inputCode.equalsIgnoreCase(checkCode)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("验证码输入错误！！！");
                     return ajaxJson;
                 }
             }
+            SysDriver updateSysDriver = updateDriver(sysDriver);
+            if(updateSysDriver == null){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_USER_ERROR);
+                return ajaxJson;
+            }
 
-            updateDriver(sysDriver);
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            List<SysDriver> listDrivers = new ArrayList<SysDriver>();
+            listDrivers.add(updateSysDriver);
+            attributes.put("drivers", listDrivers);
+            ajaxJson.setAttributes(attributes);
         }catch (Exception e){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_USER_ERROR + e.getMessage());
@@ -261,10 +285,14 @@ public class CRMCustomerContoller {
         return ajaxJson;
     }
 
-    private boolean updateDriver(SysDriver sysDriver) throws Exception {
-        boolean bRet = false;
+    private SysDriver updateDriver(SysDriver sysDriver) throws Exception {
         try {
             SysDriver orgSysDriver = driverService.queryDriverByPK(sysDriver.getSysDriverId());
+            if(orgSysDriver == null){
+                logger.error("update customer error, can't find the driver:  " + sysDriver.getSysDriverId());
+                return null;
+            }
+
             if(StringUtils.isNotEmpty(sysDriver.getPassword())){
                 orgSysDriver.setPassword(sysDriver.getPassword());
             }
@@ -300,18 +328,36 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getVehicleLice())){
                 orgSysDriver.setVehicleLice(sysDriver.getVehicleLice());
             }
+
+            if(StringUtils.isNotEmpty(sysDriver.getPayCode())){
+                orgSysDriver.setPayCode(sysDriver.getPayCode());
+            }
+
+            if(StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
+                orgSysDriver.setMobilePhone(sysDriver.getMobilePhone());
+            }
+
+            if(StringUtils.isNotEmpty(sysDriver.getFullName())){
+                orgSysDriver.setFullName(sysDriver.getFullName());
+            }
+
             int renum = driverService.saveDriver(orgSysDriver, "update");
+            if(renum > 0){
+                return orgSysDriver;
+            }
         } catch (Exception e) {
-            throw e;
+            logger.error("update the customer get error： " + e);
+            e.printStackTrace();
         }
-        return bRet;
+        return null;
     }
 
     //多文件上传
     @RequestMapping(value = "/web/upload")
     @ResponseBody
-    public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request) {
+    public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request,SysDriver sysDriver) {
         AjaxJson ajaxJson = new AjaxJson();
+
         String imgTag = request.getParameter("imgTag");
 
         if(files == null){
@@ -320,31 +366,77 @@ public class CRMCustomerContoller {
             return ajaxJson;
         }
 
-        String sysDriverId = request.getParameter("sysDriverId");
-        if(!StringUtils.isNotEmpty(sysDriverId)){
+        String sysPathID = sysDriver.getSysDriverId();
+        if(!StringUtils.isNotEmpty(sysDriver.getSysDriverId())){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("sysDriverId 为空！！！");
+            ajaxJson.setMsg("sysUserId为空！！！");
             return ajaxJson;
         }
 
-        String realPath =  sysDriverId + "/" ;
+        String realPath =  sysPathID + "/" ;
         String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
         FileUtil.createIfNoExist(filePath);
         try {
+            Map<String, Object> attributes = new HashMap<String, Object>();
             for (int i = 0; i < files.length; i++) {
-                Map<String, Object> attributes = new HashMap<String, Object>();
                 String path = filePath + files[i].getOriginalFilename();
                 File destFile = new File(path);
                 String contextPath = request.getContextPath();
                 String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-                attributes.put(imgTag, basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
-                ajaxJson.setAttributes(attributes);
+                String httpPath = basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename();
+                String fileNum = String.valueOf(i);
+                attributes.put(imgTag + fileNum, httpPath);
                 FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
+                if(imgTag.equalsIgnoreCase("driverURL")){
+                    sysDriver.setDrivingLice(httpPath);
+                }else{
+                    sysDriver.setVehicleLice(httpPath);
+                }
             }
-        } catch (IOException e) {
+            driverService.saveDriver(sysDriver, "update");
+            attributes.put("driver", sysDriver);
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("上传文件失败：" + e.getMessage());
             logger.error("uploadFileData Customer error： " + e);
+        }
+        return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/distributeCardToCustomer"})
+    @ResponseBody
+    public AjaxJson distributeCardToCustomer(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver) {
+        AjaxJson ajaxJson = new AjaxJson();
+        try {
+            if(StringUtils.isEmpty(sysDriver.getMobilePhone()) || StringUtils.isEmpty(sysDriver.getCardId())
+                    || StringUtils.isEmpty(sysDriver.getSys_gas_station_id())){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("手机号或者卡号或者气站号为空！！！");
+                return ajaxJson;
+            }
+
+            SysDriver orgSysDriver = driverService.queryDriverByMobilePhone(sysDriver);
+            if(orgSysDriver == null){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该司机不存在！！！");
+                logger.error("update customer error, can't find the driver:  " + sysDriver.getMobilePhone());
+                return ajaxJson;
+            }
+
+            orgSysDriver.setCardId(sysDriver.getCardId());
+            orgSysDriver.setUpdatedDate(new Date());
+            int renum = driverService.distributeCard(orgSysDriver);
+            if(renum < 1){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("无卡分发！！！");
+                return ajaxJson;
+            }
+        }catch (Exception e){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.DISTRIBUTE_CRM_USER_CARD_ERROR + e.getMessage());
+            logger.error("update Customer error： " + e);
+            e.printStackTrace();
         }
         return ajaxJson;
     }

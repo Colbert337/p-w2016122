@@ -81,7 +81,7 @@
 						
 						<div class="item">
 						    <label>操作员:</label>
-							<input type="text" name="operator" placeholder="操作员工号"  maxlength="10" value="${gascard.operator}"/>
+							<input type="text" name="operator" placeholder="输入操作员"  maxlength="10" value="${gascard.operator}"/>
 						</div>
 						
 						<div class="item">
@@ -172,7 +172,7 @@
 									<td><fmt:formatDate value="${list.release_time}" type="both"/></td>
 
 									<td class="text-center">
-										<a href="" class="red logic-del" title="删除该卡" data-rel="tooltip">
+										<a href="" class="logic-del" title="删除" data-rel="tooltip">
 											<i class="ace-icon fa fa-trash-o bigger-130"></i>
 										</a>
 									</td>

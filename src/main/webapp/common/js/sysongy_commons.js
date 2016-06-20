@@ -2,7 +2,11 @@
  * 页面DIV布局加载
  */
 function loadPage(obj,url){
-	jQuery(obj).load(url);
+	jQuery(obj).load(url,
+		function(){
+			$('[data-rel="tooltip"]').tooltip();
+		}
+	)
 }
 
 /**

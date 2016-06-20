@@ -5,11 +5,21 @@ import java.util.List;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
 public interface UsysparamMapper {
-    List<Usysparam> selectDefault(Usysparam usysparam);
+	public List<Usysparam> selectDefault(Usysparam usysparam);
     /**
      * 根据gcode查询参数对象
      * @param gcode
      * @return
      */
-    Usysparam queryUsysparamByCode(String gcode,String mcode);
+    public Usysparam queryUsysparamByCode(String gcode,String mcode);
+    
+    public int insert(Usysparam recode);
+    
+    public int updateByPrimaryKey(Usysparam recode);
+    
+    public int deleteByPrimaryKey(Usysparam recode);
+
+    public List<Usysparam> queryUsysparamByGcode(String gcode);
+
+    public Usysparam queryCardTypeByMcode(String mcode);
 }

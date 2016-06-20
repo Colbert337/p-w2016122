@@ -1,23 +1,31 @@
 package com.sysongy.poms.driver.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.card.dao.GasCardMapper;
+import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.driver.dao.SysDriverMapper;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
-import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.UUIDGenerator;
+
 
 /**
  * Created by Administrator on 2016/6/7.
@@ -25,6 +33,8 @@ import com.sysongy.util.GlobalConstant;
 
 @Service
 public class DriverServiceImpl implements DriverService {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private SysDriverMapper sysDriverMapper;
@@ -34,6 +44,10 @@ public class DriverServiceImpl implements DriverService {
     
     @Autowired
     private OrderDealService orderDealService;
+
+
+    @Autowired
+    private GasCardMapper gasCardMapper;
 
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
@@ -46,11 +60,41 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public Integer saveDriver(SysDriver record, String operation) throws Exception {
         if("insert".equals(operation)){
+            SysUserAccount sysUserAccount = initWalletForDriver();
+
+            record.setWalletId(sysUserAccount.getSysUserAccountId());
             record.setCreatedDate(new Date());
             return sysDriverMapper.insert(record);
         }else{
             return sysDriverMapper.updateByPrimaryKeySelective(record);
         }
+    }
+
+    @Override
+    public Integer distributeCard(SysDriver record) throws Exception {
+        if(StringUtils.isNotEmpty(record.getCardId())){
+            GasCard gasCard = gasCardMapper.selectByPrimaryKey(record.getCardId());
+            if(!gasCard.getCard_status().equalsIgnoreCase(InterfaceConstants.CARD_STSTUS_ALREADY_SEND)){
+                logger.error("此卡状态异常，无法授权给新用户！！！！");
+                return 0;
+            }
+            gasCard.setCard_status(InterfaceConstants.CARD_STSTUS_IN_USE);
+            gasCardMapper.updateByPrimaryKeySelective(gasCard);
+        }
+        return sysDriverMapper.updateByPrimaryKeySelective(record);
+    }
+
+    private SysUserAccount initWalletForDriver(){
+        SysUserAccount sysUserAccount = new SysUserAccount();       //初始化钱袋信息
+        sysUserAccount.setSysUserAccountId(UUIDGenerator.getUUID());
+        sysUserAccount.setAccountCode("DR"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+        sysUserAccount.setAccountType(GlobalConstant.AccounType.DRIVER);
+        sysUserAccount.setAccountBalance("0.0");
+        sysUserAccount.setCreatedDate(new Date());
+        sysUserAccount.setUpdatedDate(new Date());
+        int ret = sysUserAccountMapper.insert(sysUserAccount);
+        return sysUserAccount;
+
     }
 
     @Override
@@ -65,7 +109,7 @@ public class DriverServiceImpl implements DriverService {
         return sysDriver;
     }
 
-    
+
     /**
 	 * 给司机充钱
 	 * @param order
@@ -84,7 +128,7 @@ public class DriverServiceImpl implements DriverService {
 		
 		//给账户充钱
 		SysDriver driver = this.queryDriverByPK(debit_account);
-		String driver_account = driver.getsysUserAccountId();
+		String driver_account = driver.getSysUserAccountId();
 		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(driver_account);
 		BigDecimal cash = order.getCash();
 		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance()) ;
@@ -111,31 +155,12 @@ public class DriverServiceImpl implements DriverService {
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 	
-	public static void main(String[] args) {
+    public Integer isExists(SysDriver obj) throws Exception {
+        return sysDriverMapper.isExists(obj);
+    }
 
-	      // create 3 BigDecimal objects
-	      BigDecimal bg1,bg2,bg3,result1,result2;
-
-	      // assign value to bg1 and bg2
-	      bg1 = new BigDecimal("40.55");
-	      bg2 = new BigDecimal("30.33");
-	      bg3 = new BigDecimal("-30.22");
-
-	      // print bg1 and bg2 value
-	      System.out.println("bg1 Value is " + bg1);
-	      System.out.println("bg2 value is " + bg2);
-	      System.out.println("bg3 value is " + bg3);
-
-	      // perform add operation on bg1 with augend bg2
-	      result1=bg1.add(bg2);
-	      result2=bg1.add(bg3);
-
-	      // print bg3 value
-	      System.out.println("Result1 is " + result1);
-	      System.out.println("result2 is " + result2);
-	      
-	      System.out.println("Result1 toPlainString " + result1.toPlainString());
-	      System.out.println("result2 toPlainString " + result2.toPlainString());
-	   }
-	
+    public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception {
+        SysDriver sysDriver =  sysDriverMapper.queryDriverByMobilePhone(record);
+        return sysDriver;
+    }
 }

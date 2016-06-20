@@ -34,7 +34,10 @@ public class SysCashBackController extends BaseContoller {
 			if(sysCashBack.getSys_cash_back_no() == null || sysCashBack.getSys_cash_back_no() == ""){
 				sysCashBack.setSys_cash_back_no("0");
 			}
-
+			if(StringUtils.isEmpty(sysCashBack.getOrderby())){
+				sysCashBack.setOrderby("created_date desc");
+			}
+			
 			PageInfo<SysCashBack> pageinfo = service.queryCashBack(sysCashBack);
 
 			bean.setRetCode(100);

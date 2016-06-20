@@ -3,6 +3,7 @@ package com.sysongy.poms.transportion.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,18 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.transportion.dao.TransportionMapper;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.UUIDGenerator;
 
 @Service
@@ -25,6 +32,10 @@ public class TransportionServiceImpl implements TransportionService {
 	private TransportionMapper transportionMapper;
 	@Autowired
 	private SysUserAccountMapper sysUserAccountMapper;
+	@Autowired
+	private SysUserService sysUserService;
+	@Autowired
+	private UsysparamService usysparamService;
 	
 	@Override
 	public PageInfo<Transportion> queryTransportion(Transportion record) throws Exception {
@@ -61,12 +72,32 @@ public class TransportionServiceImpl implements TransportionService {
 				throw new Exception("钱袋初始化失败");
 			}
 			
+			Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+			String show_path = (String) prop.get("default_img");
 			record.setSys_user_account_id(sysUserAccount.getSysUserAccountId());
 			record.setStatus(GlobalConstant.GastationStatus.USED);
 			record.setCreated_time(new Date());
 			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			record.setSys_transportion_id(newid);
+			record.setIndu_com_certif(show_path);
+			record.setTax_certif(show_path);
+			record.setLng_certif(show_path);
+			record.setDcp_certif(show_path);
+			
 			transportionMapper.insert(record);
+			//创建管理员
+			SysUser user = new SysUser();
+			user.setUserName(record.getAdmin_username());
+			user.setPassword(record.getAdmin_userpassword());
+			user.setUserType(GlobalConstant.USER_TYPE_TRANSPORT);
+			sysUserService.addAdminUser(user);
+			//同步系统参数字典表
+			Usysparam usysparam = new Usysparam();
+			usysparam.setGcode("TRANSTION");
+			usysparam.setMcode(record.getSys_transportion_id());
+			usysparam.setMname(record.getTransportion_name());
+			usysparam.setScode("");
+			usysparamService.saveUsysparam(usysparam);
 			
 			return newid;
 		}else{
@@ -74,13 +105,38 @@ public class TransportionServiceImpl implements TransportionService {
 				record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			}
 			record.setUpdated_time(new Date());
-			return String.valueOf(transportionMapper.updateByPrimaryKeySelective(record));
+			transportionMapper.updateByPrimaryKeySelective(record);
+			//更新系统参数字典表
+			Usysparam usysparam = new Usysparam();
+			usysparam.setGcode("TRANSTION");
+			usysparam.setMcode(record.getSys_transportion_id());
+			usysparam.setMname(record.getTransportion_name());
+			if(StringUtils.isEmpty(record.getTransportion_name())){
+				Transportion tmp = transportionMapper.selectByPrimaryKey(record.getSys_transportion_id());
+				usysparam.setMname(tmp.getTransportion_name());
+			}
+			usysparam.setScode("");
+			usysparamService.updateUsysparam(usysparam);
+			return record.getSys_transportion_id();
 		}
 	}
 
 	@Override
-	public Integer delTransportion(String transportion) throws Exception {
-		return transportionMapper.deleteByPrimaryKey(transportion);
+	public Integer delTransportion(String transportionid) throws Exception {
+		Transportion transportion = transportionMapper.selectByPrimaryKey(transportionid);
+		//删除对应的管理员用户
+		SysUser user = new SysUser();
+		user.setUserName(transportion.getAdmin_username());
+		user.setUserType(GlobalConstant.USER_TYPE_TRANSPORT);
+		user.setStatus(GlobalConstant.STATUS_DELETE);
+		sysUserService.updateUserByName(user);
+		//删除对应的系统参数字典表
+		Usysparam usysparam = new Usysparam();
+		usysparam.setGcode("WORKSTATION");
+		usysparam.setMcode(transportion.getTransportion_name());
+		usysparamService.deleteUsysparam(usysparam);
+		
+		return transportionMapper.deleteByPrimaryKey(transportionid);
 	}
 
 	@Override

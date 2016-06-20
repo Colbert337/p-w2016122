@@ -95,6 +95,17 @@
 		if(functionId != null && functionId != ""){
 			$("#parent_id").val(functionId);
 		}
+		//获取当前排序
+		$.ajax({
+			url:"<%=basePath%>/web/permi/function/info/sort",
+			data:{},
+			async:false,
+			type: "POST",
+			success: function(data){
+				$("#function_sort").val(data);
+			}
+		});
+		<%--alert("parentId:${parentId} +parentName:${parentName}");--%>
 		$("#parent_id").val('${parentId}');
 		$("#parent_name").val('${parentName}');
 		$("#functionModel").modal('show');
@@ -162,19 +173,21 @@
 	}
 
 	/**
-	 * 删除用户
+	 * 删除功能
 	 */
 	function deleteFunction(functionId,parentId){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/function/delete',
-			data:{functionId:functionId,parentId:parentId},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
+		if(confirm("确定删除该功能吗？")){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/function/delete',
+				data:{functionId:functionId,parentId:parentId},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
 			}
+			$("#listForm").ajaxSubmit(deleteOptions);
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
 	/**
@@ -182,16 +195,22 @@
 	 * @param userId
 	 */
 	function updateStatus(functionId,status){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/function/save',
-			data:{sysFunctionId:functionId,functionStatus:status},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
-			}
+		var alertStr = "确定禁用该功能吗？";
+		if(status == 0){
+			alertStr = "确定启用该功能吗？";
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
+		if(confirm(alertStr)){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/function/save',
+				data:{sysFunctionId:functionId,functionStatus:status},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
+			}
+			$("#listForm").ajaxSubmit(deleteOptions);
+		}
 
 	}
 
@@ -229,68 +248,37 @@
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
-							<%--<th class="center">
-								<label class="pos-rel">
-									<input type="checkbox" class="ace" />
-									<span class="lbl"></span>
-								</label>
-							</th>--%>
 							<th>菜单名称</th>
 							<th>路径</th>
 							<th class="hidden-480">图标</th>
 							<th>类型</th>
 							<th class="hidden-480">排序</th>
 							<th>创建时间</th>
-							<th>操作</th>
+							<th class="text-center">操作</th>
 						</tr>
 						</thead>
 						<tbody>
 						<c:forEach items="${functionList}" var="function">
 							<tr>
-								<%--<td class="center">
-									<label class="pos-rel">
-										<input type="checkbox" class="ace" />
-										<span class="lbl"></span>
-									</label>
-								</td>--%>
 								<td>${function.functionName}</td>
 								<td>${function.functionPath}</td>
 								<td>${function.functionIcon}</td>
 								<td><s:Code2Name mcode="${function.functionType}" gcode="PLF_TYPE"></s:Code2Name></td>
 								<td class="hidden-480">${function.functionSort}</td>
 								<td class="hidden-480"><fmt:formatDate value="${function.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td>
-									<a class="btn btn-sm btn-white btn-primary" href="javascript:editFunction('${function.sysFunctionId}');">修改</a>
-									<a class="btn btn-sm btn-white btn-danger" href="javascript:deleteFunction('${function.sysFunctionId}','${function.parentId}');">删除</a>
+								<td class="text-center">
+									<a class="option-btn-m" href="javascript:editFunction('${function.sysFunctionId}');" title="修改" data-rel="tooltip">
+										<span class="ace-icon fa fa-pencil bigger-130"></span>
+									</a>
+									<a href="javascript:deleteFunction('${function.sysFunctionId}','${function.parentId}');" title="删除" data-rel="tooltip">
+										<span class="ace-icon fa fa-trash-o bigger-130"></span>
+									</a>
 								</td>
 							</tr>
 						</c:forEach>
 						</tbody>
 					</table>
 				</div><!-- /.span -->
-				<%--分页start--%>
-				<%--<div class="row">
-					<div class="col-sm-6">
-						<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
-							<ul id="ulhandle" class="pagination">
-								<li id="previous" class="paginate_button previous" aria-controls="dynamic-table" tabindex="0">
-									<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#listForm');">
-										<span aria-hidden="true">上一页</span>
-									</a>
-								</li>
-								<li id="next" class="paginate_button next" aria-controls="dynamic-table" tabindex="0">
-									<a id="nexthandle" href="javascript:nextpage('#listForm');" aria-label="Next" >
-										<span aria-hidden="true">下一页</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>--%>
-				<%--分页 end--%>
 			</div><!-- /.row -->
 		</form>
 		<!-- PAGE CONTENT ENDS -->

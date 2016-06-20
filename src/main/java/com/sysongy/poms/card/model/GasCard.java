@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.usysparam.model.Usysparam;
 
 @JsonIgnoreProperties
 public class GasCard extends BaseModel{
@@ -15,7 +16,9 @@ public class GasCard extends BaseModel{
 	
 	private List<String> card_no_list;
 	
-	private String card_type; //用户卡类型 0:LNG  1:柴油  2:CNG
+	private String card_type; //用户卡类型 0:LNG  1:柴油  2:CNG  3:汽油 4: 煤油
+
+	private Usysparam card_type_info;
 
 	//用户卡状态  0:已冻结 1：已入库；2：已出库；3:已/未发放 4:使用中 5:已失效
 	private String card_status;
@@ -178,5 +181,13 @@ public class GasCard extends BaseModel{
 
 	public void setCard_flag_id(int card_flag_id) {
 		this.card_flag_id = card_flag_id;
+	}
+
+	public Usysparam getCard_type_info() {
+		return card_type_info;
+	}
+
+	public void setCard_type_info(Usysparam card_type_info) {
+		this.card_type_info = card_type_info;
 	}
 }

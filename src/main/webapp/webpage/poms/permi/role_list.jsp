@@ -176,7 +176,7 @@
 			type: "POST",
 			success: function(data){
 				$("#mname").text(data.mname);
-				$("#user_type").val(data.mcode);
+				$("#role_type").val(data.mcode);
 			}
 		})
 		$("#roleModel").modal('show');
@@ -210,16 +210,18 @@
 	 * 删除用户
 	 */
 	function deleteRole(roleId){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/role/delete',
-			data:{roleId:roleId},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
+		if(confirm("确定要删除该角色吗？")){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/role/delete',
+				data:{roleId:roleId},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
 			}
+			$("#listForm").ajaxSubmit(deleteOptions);
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
 
 	}
 	/**
@@ -227,16 +229,22 @@
 	 * @param userId
 	 */
 	function updateStatus(roleId,status){
-		var deleteOptions ={
-			url:'<%=basePath%>/web/permi/role/save',
-			data:{sysRoleId:roleId,roleStatus:status},
-			type:'post',
-			dataType:'text',
-			success:function(data){
-				$("#main").html(data);
-			}
+		var alertStr = "确定禁用该角色吗？";
+		if(status == 0){
+			alertStr = "确定启用该角色吗？";
 		}
-		$("#listForm").ajaxSubmit(deleteOptions);
+		if(confirm(alertStr)){
+			var deleteOptions ={
+				url:'<%=basePath%>/web/permi/role/save',
+				data:{sysRoleId:roleId,roleStatus:status},
+				type:'post',
+				dataType:'text',
+				success:function(data){
+					$("#main").html(data);
+				}
+			}
+			$("#listForm").ajaxSubmit(deleteOptions);
+		}
 
 	}
 </script>
@@ -292,23 +300,23 @@
 								<td>${role.roleDesc}</td>
 								<td><fmt:formatDate value="${role.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td class="text-center">
-									<a href="javascript:editRole('${role.sysRoleId}');" title="修改">
+									<a href="javascript:editRole('${role.sysRoleId}');" title="修改" data-rel="tooltip">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
 									</a>
 									<span class="span-state">
 										<c:if test="${role.roleStatus == 0}">
-											<a class="green" href="javascript:updateStatus('${role.sysRoleId}',1);" title="禁用">
+											<a class="green" href="javascript:updateStatus('${role.sysRoleId}',1);" title="禁用" data-rel="tooltip">
 												<span class="ace-icon fa fa-unlock bigger-130"></span>
 											</a>
 										</c:if>
 										<c:if test="${role.roleStatus == 1}">
-											<a class="red" href="javascript:updateStatus('${role.sysRoleId}',0);" title="启用">
+											<a class="red" href="javascript:updateStatus('${role.sysRoleId}',0);" title="启用" data-rel="tooltip">
 												<span class="ace-icon fa fa-lock bigger-130"></span>
 											</a>
 										</c:if>
 									</span>
-									<a class="" href="javascript:deleteRole('${role.sysRoleId}');">
-										<span class="ace-icon fa fa-trash-o bigger-130" title="删除"></span>
+									<a class="" href="javascript:deleteRole('${role.sysRoleId}');" title="修改" data-rel="tooltip">
+										<span class="ace-icon fa fa-trash-o bigger-130"></span>
 									</a>
 								</td>
 							</tr>
@@ -319,7 +327,7 @@
 			<%--分页start--%>
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info mar-left-15" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
@@ -370,10 +378,10 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="user_type"> <span class="red_star">*</span>角色类型： </label>
+									<label class="col-sm-4 control-label no-padding-right" for="role_type"> <span class="red_star">*</span>角色类型： </label>
 									<div class="col-sm-8">
 										<label class="col-xs-10 col-sm-12 pad-top-10" id="mname"></label>
-										<input type="hidden" id="user_type" name="userType"/>
+										<input type="hidden" id="role_type" name="roleType"/>
 									</div>
 								</div>
 								<div class="form-group">

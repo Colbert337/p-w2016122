@@ -39,7 +39,7 @@ public class TransportionController extends BaseContoller{
 				transportion.setPageSize(10);
 			}
 			if(StringUtils.isEmpty(transportion.getOrderby())){
-				transportion.setOrderby("created_time asc");
+				transportion.setOrderby("created_time desc");
 			}
 
 			if(!StringUtils.isEmpty(transportion.getExpiry_date_frompage())){
@@ -92,6 +92,7 @@ public class TransportionController extends BaseContoller{
 				bean.setRetMsg("["+transportionid+"]新增成功");
 				ret = "webpage/poms/transportion/transportion_upload";
 			}else{
+				ret = "webpage/poms/transportion/transportion_update";
 				transportionid = service.saveTransportion(transportion,"update");
 				bean.setRetMsg("["+transportionid+"]保存成功");
 				ret = this.queryAllTransportionList(map, new Transportion());
