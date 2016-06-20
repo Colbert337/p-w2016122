@@ -135,7 +135,7 @@
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="submit" onclick="save();">
+											<button class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
