@@ -139,4 +139,14 @@ public class GlobalConstant {
 		public static final String TRANSPORTION="2";
 		public static final String DRIVER="3";
 	}
+	
+	/*
+	 * 0 新注册 1 待审核 2 已通过 3 未通过
+	 */
+	public interface DriverStatus{
+		public static final String NEWBEE = "0";
+		public static final String PENDING = "1";
+		public static final String PASSED = "2";
+		public static final String NOPASS = "3";
+	}
 }

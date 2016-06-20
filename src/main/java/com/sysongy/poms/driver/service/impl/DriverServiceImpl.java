@@ -110,4 +110,15 @@ public class DriverServiceImpl implements DriverService {
         SysDriver sysDriver =  sysDriverMapper.queryDriverByMobilePhone(record);
         return sysDriver;
     }
+
+	@Override
+	public Integer review(String driverid, String type) throws Exception {
+		SysDriver record = new SysDriver();
+		record.setSysDriverId(driverid);
+		record.setCheckedStatus(Integer.valueOf(type));
+		record.setCheckedDate(new Date());
+		record.setUpdatedDate(new Date());
+		
+		return sysDriverMapper.updateByPrimaryKeySelective(record);
+	}
 }

@@ -65,7 +65,7 @@ public class SelectOptionTag extends BodyTagSupport {
 			} catch (Exception ex) {
 
 			}
-
+			
 			if (type == null) {
 				type = SYSPARAM;
 			}

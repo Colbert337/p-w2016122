@@ -1,10 +1,12 @@
 package com.sysongy.poms.driver.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
@@ -57,13 +59,16 @@ public class DriverController extends BaseContoller{
     }
     
     @RequestMapping("/driverList")
-    public String queryDriverList(@ModelAttribute CurrUser currUser, SysDriver driver, ModelMap map)throws Exception{
+    public String queryDriverList(SysDriver driver, ModelMap map)throws Exception{
     	PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/driver_review";
 
 		try {
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
   
+        if(!StringUtils.isEmpty(driver.getCreatedDate_after())){
+        	
+        }
         pageinfo = driverService.queryDrivers(driver);
         
         bean.setRetCode(100);
@@ -72,6 +77,7 @@ public class DriverController extends BaseContoller{
 
 		map.addAttribute("ret", bean);
 		map.addAttribute("pageInfo", pageinfo);
+		map.addAttribute("driver",driver);
 		map.addAttribute("current_module", "webpage/poms/system/driver_review");
 
 		} catch (Exception e) {
@@ -86,4 +92,41 @@ public class DriverController extends BaseContoller{
 			return ret;
 		}
     }
+    
+    @RequestMapping("/review")
+	public String review(ModelMap map, @RequestParam String driverid,@RequestParam String type){
+
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/system/driver_review";
+		Integer rowcount = null;
+
+		try {
+				if(driverid != null && !"".equals(driverid)){
+					rowcount = driverService.review(driverid, type);
+				}
+
+				ret = this.queryDriverList(new SysDriver(), map);
+
+				bean.setRetCode(100);
+				bean.setRetMsg("["+driverid+"]已审核");
+				bean.setRetValue(rowcount.toString());
+				bean.setPageInfo(ret);
+
+				map.addAttribute("ret", bean);
+
+
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			ret = this.queryDriverList(new SysDriver(), map);
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
 }
