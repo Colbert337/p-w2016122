@@ -54,7 +54,7 @@ public class OrderDealServiceImpl implements OrderDealService {
     * @param record
     * @return
     */
-   public String createOrderDeal(SysOrder order, String deal_type, String run_success){
+   public String createOrderDeal(SysOrder order, String deal_type, String remark, String run_success){
 	   SysOrderDeal orderDeal = new SysOrderDeal();
 	   String dealId = UUIDGenerator.getUUID();
 	   orderDeal.setDealId(dealId);
@@ -63,6 +63,7 @@ public class OrderDealServiceImpl implements OrderDealService {
 	   orderDeal.setDealNumber(dealNumber);
 	   orderDeal.setDealDate(new Date());
 	   orderDeal.setDealType(deal_type);
+	   orderDeal.setRemark(remark);
 	   orderDeal.setRunSuccess(run_success);
 	   this.insert(orderDeal);
 	   

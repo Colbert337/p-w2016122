@@ -19,8 +19,18 @@ public class SysOrderDeal {
     private BigDecimal cashBack;
 
     private String runSuccess;
+    
+    private String remark;
 
-    public String getDealId() {
+    public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public String getDealId() {
         return dealId;
     }
 
