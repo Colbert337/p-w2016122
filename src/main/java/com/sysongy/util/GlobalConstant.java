@@ -167,11 +167,14 @@ public class GlobalConstant {
 	
 	/*
 	 * 订单处理流程中的类型
+	 * Charge ---表示充值
+	 * discharge---表示充红
 	 */
 	public interface OrderDealType{
-		public static final String CHARGE_TO_DRIVER_CHARGE ="CHARGE_TO_DRIVER_CHARGE";
-		public static final String CHARGE_TO_DRIVER_CASHBACK ="CHARGE_TO_DRIVER_CASHBACK";
-		public static final String CHARGE_TO_DRIVER_FIRSTCASHBACK ="CHARGE_TO_DRIVER_FIRSTCASHBACK";
+		public static final String CHARGE_TO_DRIVER_CHARGE ="131";
+		public static final String CHARGE_TO_DRIVER_CASHBACK ="132";
+		public static final String DISCHARGE_TO_DRIVER_CHARGE ="133";
+		public static final String DISCHARGE_TO_DRIVER_CASHBACK ="134";
 	}
 	
 	/*

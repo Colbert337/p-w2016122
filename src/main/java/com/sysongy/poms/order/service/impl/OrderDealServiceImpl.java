@@ -1,5 +1,6 @@
 package com.sysongy.poms.order.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,20 @@ public class OrderDealServiceImpl implements OrderDealService {
      * @param record
      * @return
      */
-   public String createDealNumber(SysOrder order){
+   public String createDealNumber(String deal_type){
 	   //TODO
 	   return "";
+   }
+   
+   /**
+    * 创建订单流水单--调用createOrderDealWithCashBack，穿过去参数cash_back_per="", cash_back=0
+    * @param record
+    * @return
+    */
+   public String createOrderDeal(String order_id, String deal_type, String remark, String run_success){
+	   String cash_back_per ="";
+	   BigDecimal cash_back = new BigDecimal("0");
+	   return createOrderDealWithCashBack(order_id,deal_type,remark,cash_back_per,cash_back,run_success);
    }
    
    /**
@@ -54,16 +66,18 @@ public class OrderDealServiceImpl implements OrderDealService {
     * @param record
     * @return
     */
-   public String createOrderDeal(SysOrder order, String deal_type, String remark, String run_success){
+   public String createOrderDealWithCashBack(String order_id, String deal_type, String remark,String cash_back_per,BigDecimal cash_back, String run_success){
 	   SysOrderDeal orderDeal = new SysOrderDeal();
 	   String dealId = UUIDGenerator.getUUID();
 	   orderDeal.setDealId(dealId);
-	   orderDeal.setOrderId(order.getOrderId());
-	   String dealNumber = this.createDealNumber(order);
+	   orderDeal.setOrderId(order_id);
+	   String dealNumber = this.createDealNumber(deal_type);
 	   orderDeal.setDealNumber(dealNumber);
 	   orderDeal.setDealDate(new Date());
 	   orderDeal.setDealType(deal_type);
 	   orderDeal.setRemark(remark);
+	   orderDeal.setCashBackPer(cash_back_per);
+	   orderDeal.setCashBack(cash_back);
 	   orderDeal.setRunSuccess(run_success);
 	   this.insert(orderDeal);
 	   

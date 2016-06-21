@@ -28,8 +28,6 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	@Autowired
 	private SysCashBackMapper cashBackMapper;
 
-	@Autowired
-	private DriverService driverService;
 
 	@Autowired
 	private OrderDealService orderDealService;
@@ -122,18 +120,24 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	/**
 	 * 取出规则，计算返现值，然后操作对应账户的金额。
 	 * 如果是充红，cash是负数，---不调用返现规则，直接调用历史记录
-	 * 计算算法：
-	 * 1.计算是否启用，去掉不启用的
-	 * 2.计算是否在有效期
-	 * 3.计算当前阈值，是否在阈值里面
-	 * 4.在阈值里面的，根据优先级，确定启用哪条记录
+	 * 返现步骤：
+	 * 1.从传过来的某个充值类型的cashBackList中，计算过滤得到符合条件的一条返现规则：算法
+	 *   计算算法：
+	 *	  a.计算是否启用，去掉不启用的
+	 *	  b.计算是否在有效期
+	 *	  c.计算当前阈值，是否在阈值里面
+	 *	  d.在阈值里面的，根据优先级，确定启用哪条记录,冒泡法
+	 *   如果未找到符合条件的返现记录，则记录交易流水，返回正常success
+	 * 2.根据得到符合条件的一条返现规则：计算当前的返现金额
+	 * 3.给这个账户增加返现
+	 * 4.写入订单处理流程
 	 * 
-	 * 如果未找到符合条件的返现记录，则记录交易流水，返回正常success
 	 * @param order
 	 * @param cashBack
 	 * @return
 	 */
-	private String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountName){
+	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType){
+		//1.步骤一：从传过来的某个充值类型的cashBackList中，计算过滤得到符合条件的一条返现规则：
 		BigDecimal cash = order.getCash();
 		List<SysCashBack> eligible_list = new ArrayList<SysCashBack>();
 		for(SysCashBack cashback : cashBackList){
@@ -157,8 +161,8 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		SysCashBack eligible_cashback = null;
 		if(eligible_list.size()==0){
 			//记录订单流水，未找到有效记录
-			String remark ="给"+accountName+"返现"+cash.toPlainString()+",未找到符合条件的返现规则。";
-			orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, remark, GlobalConstant.OrderProcessResult.SUCCESS);
+			String remark ="给"+accountUserName+"返现"+cash.toPlainString()+",未找到符合条件的返现规则。";
+			orderDealService.createOrderDeal(order.getOrderId(),orderDealType, remark, GlobalConstant.OrderProcessResult.SUCCESS);
 			return GlobalConstant.OrderProcessResult.SUCCESS;
 		}else{
 			eligible_cashback = eligible_list.get(0);
@@ -174,35 +178,19 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 			}
 		}
 		
-		//计算当前的返现金额
+		//2.步骤二：根据得到符合条件的一条返现规则：计算当前的返现金额
 		String cash_per_str = eligible_cashback.getCash_per();
 		BigDecimal cash_per = new BigDecimal(cash_per_str);  
 		BigDecimal back_money = cash.multiply(cash_per) ;
 		
-		//给这个账户增加返现
-		//sysUserAccountService.addCashToAccount(order.getDebitAccount(), cash_per)
-		return "";
-	}
-	@Override
-	public String cashBackToDriver(SysOrder order) throws Exception{
-		//1.判断是否首次返现，是则调用首次返现规则
-		String accountId = order.getDebitAccount();
-		SysDriver driver = driverService.queryDriverByPK(accountId);
-        Integer is_first_charge = driver.getIsFirstCharge();
-        if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
-        	List<SysCashBack>  cashBackList = this.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
-        	String accountName = driver.getFullName();
-        	String cashTo_success = cashToAccount(order,cashBackList,accountName);
-        	//TODO
-        }
-		//2.根据当前订单类型，调用对应的返现规则
-		//TODO
-		return "";
+		//3.给这个账户增加返现
+		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money);
+		
+		//4.写入订单处理流程
+		String remark = "给"+ accountUserName+"的账户，返现"+back_money.toPlainString()+"。";
+		orderDealService.createOrderDealWithCashBack(order.getOrderId(), orderDealType, remark, cash_per_str, cash_per, addCash_success);
+		
+		return addCash_success;
 	}
 	
-	@Override
-	public String cashBackToTransportion(SysOrder order) throws Exception{
-		//TODO
-		return "";
-	}
 }

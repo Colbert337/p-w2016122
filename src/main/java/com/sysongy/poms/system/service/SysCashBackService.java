@@ -25,18 +25,13 @@ public interface SysCashBackService {
 	public List<SysCashBack> queryCashBackByNumber(String cashBackNumber) throws Exception ;
 	
 	/**
-	 * 向司机返现
+	 * 给指定账户返现
 	 * @param order
+	 * @param cashBackList
+	 * @param accountId
+	 * @param accountUserName
 	 * @return
-	 * @throws Exception
 	 */
-	public String cashBackToDriver(SysOrder order) throws Exception;
+	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType);
 	
-	/**
-	 * 向运输公司返现
-	 * @param order
-	 * @return
-	 * @throws Exception
-	 */
-	public String cashBackToTransportion(SysOrder order) throws Exception;
 }

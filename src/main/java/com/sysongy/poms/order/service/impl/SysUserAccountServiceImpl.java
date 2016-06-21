@@ -37,7 +37,7 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 
 	@Override
 	/**
-	 * 更新账户余额，实现乐观锁
+	 * 更新现金到此账户，实现乐观锁
 	 * Cash -- 正值 则是增加，负值则是减少
 	 */
 	public synchronized String addCashToAccount(String accountId, BigDecimal cash) {
