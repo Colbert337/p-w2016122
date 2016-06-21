@@ -453,6 +453,13 @@
 		                    }
 		                }
 		            },
+		            station_level: {
+		                validators: {
+		                    notEmpty: {
+		                        message: '加注站级别不能为空'
+		                    }
+		                }
+		            },
 		            station_manager: {
 		                message: 'The cardno is not valid',
 		                validators: {
