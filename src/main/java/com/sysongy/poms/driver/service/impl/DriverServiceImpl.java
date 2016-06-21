@@ -108,6 +108,14 @@ public class DriverServiceImpl implements DriverService {
         return sysDriver;
     }
 
+    @Override
+    public PageInfo<SysDriver> querySearchDriverList(SysDriver record) {
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        List<SysDriver> sysDriverList =  sysDriverMapper.querySearchDriverList(record);
+        PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(sysDriverList);
+
+        return pageInfo;
+    }
 
     /**
 	 * 给司机充钱
@@ -139,7 +147,8 @@ public class DriverServiceImpl implements DriverService {
 		sysUserAccountMapper.updateAccount(sysUserAccount);
 		
 		//记录订单流水
-		orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, GlobalConstant.OrderProcessResult.SUCCESS);
+		String remark = "给"+ driver.getFullName()+"的账户，充值"+cash.toPlainString()+"。";
+		String deal_success = orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, remark,GlobalConstant.OrderProcessResult.SUCCESS);
 		
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
@@ -173,4 +182,14 @@ public class DriverServiceImpl implements DriverService {
 		
 		return sysDriverMapper.updateByPrimaryKeySelective(record);
 	}
+
+    /**
+     * 批量离职司机
+     * @param idList
+     * @return
+     */
+    @Override
+    public int deleteDriverByIds(List<String> idList) {
+        return sysDriverMapper.deleteDriverByIds(idList);
+    }
 }

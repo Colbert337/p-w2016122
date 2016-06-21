@@ -29,7 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
-							<input type="text" name="gas_station_name" placeholder="司机姓名/手机号码"  maxlength="20" value="${gastation.gas_station_name}"/>
+							<input type="text" name="fullName" placeholder="司机姓名/手机号码"  maxlength="11" value="${driver.fullName}"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
@@ -61,7 +61,7 @@
 							<th>手机号码</th>
 							<th>实体卡号</th>
 							<th>状态</th>
-							<th>操作</th>
+							<%--<th>操作</th>--%>
 						</tr>
 						</thead>
 						<tbody>
@@ -69,7 +69,7 @@
 							<tr>
 								<td class="center">
 									<label class="pos-rel">
-										<input type="checkbox" class="ace" id="pks" value="${driver.sysDriverId}"/>
+										<input type="checkbox" class="ace" id="pks" name="pks" value="${driver.sysDriverId}"/>
 										<span class="lbl"></span>
 									</label>
 								</td>
@@ -79,17 +79,17 @@
 								<td>${driver.cardId}</td>
 								<td>
 									<c:if test="${driver.userStatus == 0}">
-										启用
+										使用中
 									</c:if>
 									<c:if test="${driver.userStatus == 1}">
-										禁用
+										已冻结
 									</c:if>
 								</td>
-								<td>
-									<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="离职">
-										<span class="ace-icon fa fa-unlock bigger-130"></span>
-									</a>
-								</td>
+								<%--<td>--%>
+									<%--<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="离职">--%>
+										<%--<span class="ace-icon fa fa-unlock bigger-130"></span>--%>
+									<%--</a>--%>
+								<%--</td>--%>
 							</tr>
 						</c:forEach>
 						</tbody>
@@ -140,37 +140,40 @@
 							<form class="form-horizontal" id="driverForm">
 								<!-- #section:elements.form -->
 								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 手机号码： </label>
-									<div class="col-sm-3">
-										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机号码" class="validate[required,minSize[11],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
-									</div>
-									<div class="col-sm-1">
-										<a class="btn btn-sm btn-primary" href="javascript:sendMessage();">
-											发送
-										</a>
-									</div>
-									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 验证码： </label>
-									<div class="col-sm-4">
-										<input type="text" id="user_name" placeholder="验证码" name="userName"/><%--临时存储验证码--%>
+									<label class="col-sm-4 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 手机号码： </label>
+									<div class="col-sm-7">
+										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机号码" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="full_name"><span class="red_star">*</span> 姓名： </label>
+									<label class="col-sm-4 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 验证码： </label>
 									<div class="col-sm-4">
+										<input type="text" id="user_name" placeholder="验证码" name="userName"/><%--临时存储验证码--%>
+									</div>
+									<div class="col-sm-1">
+										<a class="btn btn-sm btn-primary" href="javascript:sendMessage();">
+											发送验证码
+										</a>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="full_name"><span class="red_star">*</span> 姓名： </label>
+									<div class="col-sm-7">
 										<input type="text" name="fullName" id="full_name" placeholder="姓名" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
-									<div class="col-sm-4">
-										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" class="validate[required,minSize[6]] col-xs-10 col-sm-12" />
-									</div>
-									<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
-									<div class="col-sm-4">
-										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],equals[pay_code]] col-xs-10 col-sm-12" />
+									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
+									<div class="col-sm-7">
+										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
-
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
+									<div class="col-sm-7">
+										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->

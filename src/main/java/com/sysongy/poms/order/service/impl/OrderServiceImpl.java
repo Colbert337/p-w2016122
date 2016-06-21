@@ -1,5 +1,8 @@
 package com.sysongy.poms.order.service.impl;
 
+import com.sysongy.poms.permi.dao.SysRoleFunctionMapper;
+import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.model.SysUserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,7 +10,11 @@ import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.dao.SysOrderMapper;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.GlobalConstant.OrderOperatorType;
+
+import java.math.BigDecimal;
 
 /**
  * 
@@ -22,6 +29,12 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private DriverService driverService;
+
+	@Autowired
+	SysUserAccountMapper sysUserAccountMapper;
+	
+	@Autowired
+	private SysCashBackService sysCashBackService;
 	
 	@Override
 	public int deleteByPrimaryKey(String orderId) {
@@ -66,9 +79,9 @@ public class OrderServiceImpl implements OrderService {
 	   //TODO 充值流程：1.充值，2.返现
 	   try{
 		   //1.首先给司机充值
-		   driverService.chargeCashToDriver(order);
+		   String success_charge = driverService.chargeCashToDriver(order);
 		   //2.调用返现--在返现里面判断是否首次返现，则增加调用首次返现规则，然后再继续调用返现
-		   
+		   String success_cashback = sysCashBackService.cashBackToDriver(order);
 		   
 	   }catch(Exception e){
 		   
@@ -78,11 +91,31 @@ public class OrderServiceImpl implements OrderService {
     
     /**
      * 给加注站充值
-     * @param order
+     * @paramorder
      * @return
      */
 	@Override
 	public String chargeToTransportion(SysOrder record){
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
+
+	@Override
+	public String consumeMoney(SysOrder record){
+		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
+
+
+		return strRet;
+	}
+
+	@Override
+	public String validAccount(SysOrder record){
+		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
+		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
+		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance());
+		if(record.getCash().compareTo(balance) == 1)
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
+		return strRet;
+	}
+
+
 }

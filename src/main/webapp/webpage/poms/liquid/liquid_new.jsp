@@ -41,7 +41,7 @@
 										<label class="col-sm-3 control-label no-padding-right" >工艺类型： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="technology_type" placeholder="输入工艺类型" class="form-control" value="${gasource.technology_type}" maxlength="20"/>
+											<input type="text" name="technology_type" placeholder="输入工艺类型" class="form-control" value="${gasource.technology_type}"/>
 										</div>
 									</div>
 									
@@ -57,7 +57,7 @@
 										<label class="col-sm-3 control-label no-padding-right">价格：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="market_price" placeholder="输入价格" class="form-control" maxlength="8" value="${gasource.market_price}"/>
+											<input type="text" name="market_price" placeholder="输入价格" class="form-control" maxlength="15" value="${gasource.market_price}"/>
 										</div>
 									</div>
 	
@@ -100,6 +100,8 @@
 															<option value ="890">西藏自治区</option>
 															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
+															<option value ="851">香港特别行政区</option>
+															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
 												<div class="col-sm-6">
@@ -116,7 +118,7 @@
 										<label class="col-sm-3 control-label no-padding-right">备注： </label>
 
 										<div class="col-sm-4">
-											<textarea class="form-control" name="remark" rows="5" value="${gasource.remark}" maxlength="100"></textarea>
+											<textarea class="form-control" name="remark" rows="5" value="${gasource.remark}"></textarea>
 										</div>
 									</div>
 											

@@ -9,11 +9,12 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
+
+	<script src="<%=basePath %>/dist/js/poms/liquid/liquid_update.js"></script> 
+	
 	<script type="text/javascript">
 		var gas_factory_addr = "${gasource.gas_factory_addr}";
 	</script>
-	<script src="<%=basePath %>/dist/js/poms/liquid/liquid_update.js"></script> 
-	
 			<div class="main-content">
 				<div class="main-content-inner">
 
@@ -29,7 +30,7 @@
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								<form class="form-horizontal" id="gastationform">
+								<form class="form-horizontal"  id="gastationform">
 									<!-- #section:elements.form -->
 									<input type="hidden" id="sys_gas_source_id"  name="sys_gas_source_id" value="${gasource.sys_gas_source_id}" />
 							
@@ -61,7 +62,7 @@
 										<label class="col-sm-3 control-label no-padding-right">价格：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="market_price" placeholder="输入价格" class="form-control" maxlength="8" value="${gasource.market_price}"/>
+											<input type="text" name="market_price" placeholder="输入价格" class="form-control" maxlength="15" value="${gasource.market_price}"/>
 										</div>
 									</div>
 	
@@ -104,6 +105,8 @@
 															<option value ="890">西藏自治区</option>
 															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
+															<option value ="851">香港特别行政区</option>
+															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
 												<div class="col-sm-6">
@@ -120,7 +123,7 @@
 										<label class="col-sm-3 control-label no-padding-right">备注： </label>
 
 										<div class="col-sm-4">
-											<textarea class="form-control" name="remark" rows="5" maxlength="100">${gasource.remark}</textarea>
+											<textarea class="form-control" name="remark" rows="5">${gasource.remark}</textarea>
 										</div>
 									</div>
 									

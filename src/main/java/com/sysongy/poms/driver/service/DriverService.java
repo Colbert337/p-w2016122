@@ -38,4 +38,17 @@ public interface DriverService {
 	public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception;
 
 	public Integer review(String driverid, String type) throws Exception;
+	/**
+	 * 条件查询司机列表
+	 * @param record
+	 * @return
+	 */
+	PageInfo<SysDriver> querySearchDriverList(SysDriver record);
+
+	/**
+	 * 批量离职司机
+	 * @param idList
+	 * @return
+     */
+	int deleteDriverByIds(List<String> idList);
 }

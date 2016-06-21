@@ -15,6 +15,8 @@ public class SysUserAccount {
 
     private Date updatedDate;
 
+    private int version;
+
     public String getSysUserAccountId() {
         return sysUserAccountId;
     }
@@ -61,5 +63,13 @@ public class SysUserAccount {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

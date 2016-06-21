@@ -614,10 +614,6 @@
 		function returnpage(){
 			loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
 		}
-
-		function init(){
-			loadPage('#main', '../webpage/poms/transportion/transportion_new.jsp');
-		}
 		
 		function setOperationName(obj){
 			$("#operations_name").val($(obj).val());

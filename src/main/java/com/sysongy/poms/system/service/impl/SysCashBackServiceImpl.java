@@ -1,6 +1,8 @@
 package com.sysongy.poms.system.service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,10 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
 @Service
@@ -21,6 +27,12 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	@Autowired
 	private SysCashBackMapper cashBackMapper;
 
+	@Autowired
+	private DriverService driverService;
+
+	@Autowired
+	private OrderDealService orderDealService;
+	  
 	@Override
 	public PageInfo<SysCashBack> queryCashBack(SysCashBack obj) throws Exception {
 		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
@@ -90,4 +102,83 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		return cashBackMapper.deleteByPrimaryKey(sysCashBackId);
 	}
 	
+	/**
+	 * 通过cashBack的number得到对象
+	 * @param cashBackid
+	 * @return 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<SysCashBack> queryCashBackByNumber(String cashBackNumber) throws Exception {
+		return  cashBackMapper.queryCashBackByNumber(cashBackNumber);
+	}
+	
+	/**
+	 * 取出规则，计算返现值，然后操作对应账户的金额。
+	 * 如果是充红，cash是负数，---不调用返现规则，直接调用历史记录
+	 * 计算算法：
+	 * 1.计算是否启用，去掉不启用的
+	 * 2.计算是否在有效期
+	 * 3.计算当前阈值，是否在阈值里面
+	 * 4.在阈值里面的，根据优先级，确定启用哪条记录
+	 * 
+	 * 如果未找到符合条件的返现记录，则记录交易流水，返回正常success
+	 * @param order
+	 * @param cashBack
+	 * @return
+	 */
+	private String cashToAccount(SysOrder order, List<SysCashBack> cashBackList){
+		BigDecimal cash = order.getCash();
+		List<SysCashBack> eligible_list = new ArrayList<SysCashBack>();
+		for(SysCashBack cashback : cashBackList){
+			String status = cashback.getStatus();
+			if(GlobalConstant.CASHBACK_STATUS_ENABLE.equalsIgnoreCase(status)){
+				//如果启用，则执行
+				Date start_date = cashback.getStart_date();
+				Date end_date = cashback.getEnd_date();
+				Date now = new Date();
+				//大于等于0 则是当前日期大于等于start_date.
+				if((now.compareTo(start_date)>=0)&&(now.compareTo(end_date)<=0)){
+					//判断阈值是否在区间
+					BigDecimal min = new BigDecimal(cashback.getThreshold_min_value());
+					BigDecimal max = new BigDecimal(cashback.getThreshold_max_value());
+					if((cash.compareTo(min)>=0)&&(cash.compareTo(max)<0)){
+						eligible_list.add(cashback);	
+					}
+				}
+			}
+		}
+		SysCashBack eligible_cashback = null;
+		if(eligible_list.size()==0){
+			//记录订单流水，未找到有效记录
+			String remark ="";
+			orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, remark, GlobalConstant.OrderProcessResult.SUCCESS);
+		}
+		for(SysCashBack eligible : eligible_list){
+			String level = eligible.getLevel();
+			
+		}
+		return "";
+	}
+	@Override
+	public String cashBackToDriver(SysOrder order) throws Exception{
+		//1.判断是否首次返现，是则调用首次返现规则
+		String accountId = order.getDebitAccount();
+		SysDriver driver = driverService.queryDriverByPK(accountId);
+        Integer is_first_charge = driver.getIsFirstCharge();
+        if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
+        	List<SysCashBack>  cashBackList = this.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
+        	String cashTo_success = cashToAccount(order,cashBackList);
+        	//TODO
+        }
+		//2.根据当前订单类型，调用对应的返现规则
+		//TODO
+		return "";
+	}
+	
+	@Override
+	public String cashBackToTransportion(SysOrder order) throws Exception{
+		//TODO
+		return "";
+	}
 }

@@ -47,6 +47,21 @@
     updated_date, is_first_charge, checked_status, checked_date, sys_gas_station_id
   </sql>
 
+  <select id="querySearchDriverList" resultMap="BaseResultMap" >
+  select
+  <include refid="Base_Column_List" />
+  from sys_driver
+  where 1=1
+    <trim>
+      <if test="fullName != null &amp;&amp; fullName != ''" >
+        and full_name like CONCAT(#{fullName,jdbcType=VARCHAR},'%')
+        or  mobile_phone like CONCAT(#{fullName,jdbcType=VARCHAR},'%')
+      </if>
+    </trim>
+    and user_status &lt; 2
+    ORDER BY created_date DESC
+  </select>
+
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
      *
@@ -391,4 +406,13 @@
     where mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
     and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </select>
+
+  <!--司机离职-->
+  <update id="deleteDriverByIds" parameterType="java.util.List" >
+  update sys_driver  set user_status = 2
+  where sys_driver_id in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
 </mapper>

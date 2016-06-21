@@ -15,7 +15,7 @@ function commitForm(obj){
     $("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
-    url:'<%=basePath%>/web/permi/user/list/page',
+    url:'../web/driver/list/page',
     type:'post',
     dataType:'html',
     success:function(data){
@@ -37,7 +37,7 @@ function sendMessage(){
 //显示编辑用户弹出层
 function queryRoleList(roleId){
     $.ajax({
-        url:"<%=basePath%>/web/permi/user/list/role",
+        url:"../web/permi/user/list/role",
         data:{},
         async:false,
         type: "POST",
@@ -59,7 +59,7 @@ function queryRoleList(roleId){
 //显示编辑用户弹出层
 function queryUserTypeList(userType){
     $.ajax({
-        url:"<%=basePath%>/web/usysparam/info",
+        url:"../web/usysparam/info",
         data:{mcode:userType},
         async:false,
         type: "POST",
@@ -90,7 +90,11 @@ function clearDiv(){
  * 保存用户信息
  */
 function saveDriver(){
-    if(jQuery('#driverForm').validationEngine('validate')){
+        $('#driverForm').data('bootstrapValidator').validate();
+        if(!$('#driverForm').data('bootstrapValidator').isValid()){
+            return ;
+        }
+
         var saveOptions ={
             url:'../web/driver/save',
             type:'post',
@@ -103,17 +107,17 @@ function saveDriver(){
 
         $("#driverModel").modal('hide');
         $(".modal-backdrop").css("display","none");
-    }
+
 }
 
 /**
  * 删除用户
  */
-function leaveDriver(driverId){
+function leaveDriver(){
     if(confirm("确定要删除该用户吗？")){
         var deleteOptions ={
-            url:'<%=basePath%>/web/permi/user/delete',
-            data:{userId:userId},
+            url:'../web/driver/delete',
+            data:{},
             type:'post',
             dataType:'text',
             success:function(data){
@@ -125,3 +129,72 @@ function leaveDriver(driverId){
 
 }
 
+//bootstrap验证控件
+$('#driverForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        mobilePhone: {
+            validators: {
+                notEmpty: {
+                    message: '手机号码不能为空'
+                },
+                stringLength: {
+                    min: 11,
+                    max: 11,
+                    message: '手机号码为11位'
+                }
+            }
+        },
+        userName: {
+            validators: {
+                notEmpty: {
+                    message: '验证码不能为空'
+                },
+                stringLength: {
+                    min: 6,
+                    max: 6,
+                    message: '验证码必须为6位'
+                }
+            }
+        },
+        fullName: {
+            validators: {
+                notEmpty: {
+                    message: '姓名不能为空'
+                },
+                stringLength: {
+                    min: 2,
+                    max: 5,
+                    message: '姓名不得小于两个字'
+                }
+            }
+        },
+        payCode: {
+            validators: {
+                notEmpty: {
+                    message: '支付密码不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9a-zA-Z]+$',
+                    message: '密码只能包含数字和字母'
+                }
+            }
+        },
+        rePassword: {
+            validators: {
+                notEmpty: {
+                    message: '确认密码不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9a-zA-Z]+$',
+                    message: '密码只能包含数字和字母'
+                }
+            }
+        }
+    }
+});

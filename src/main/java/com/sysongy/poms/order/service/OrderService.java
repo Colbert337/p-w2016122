@@ -8,6 +8,7 @@ import com.sysongy.poms.order.model.SysOrder;
  *
  */
 public interface OrderService {
+
     int deleteByPrimaryKey(String orderId);
 
     int insert(SysOrder record);
@@ -15,8 +16,7 @@ public interface OrderService {
     SysOrder selectByPrimaryKey(String orderId);
 
     int updateByPrimaryKey(SysOrder record);
-    
-   
+
     /**
      * 给司机充值
      * @param order
@@ -30,4 +30,14 @@ public interface OrderService {
      * @return
      */
     String chargeToTransportion(SysOrder record) throws Exception;
+
+    /**
+     * 消费
+     */
+    String consumeMoney(SysOrder record) throws Exception;
+
+    /**
+     * 验证订单
+     */
+    String validAccount(SysOrder record) throws Exception;
 }

@@ -7,7 +7,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/poms/sysparam/driver_review.js"></script>
+<script src="<%=basePath %>/dist/js/sysparam/driver_review.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
