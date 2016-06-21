@@ -31,6 +31,6 @@ public interface OrderDealService {
      * @param record
      * @return
      */
-    String createOrderDeal(SysOrder order, String deal_type, String run_success);
+    String createOrderDeal(SysOrder order, String deal_type,String remark, String run_success);
 
 }

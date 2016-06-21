@@ -9,10 +9,11 @@
     <result column="deal_type" property="dealType" jdbcType="VARCHAR" />
     <result column="cash_back_per" property="cashBackPer" jdbcType="VARCHAR" />
     <result column="cash_back" property="cashBack" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="run_success" property="runSuccess" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    deal_id, order_id, deal_number, deal_date, deal_type, cash_back_per, cash_back, run_success
+    deal_id, order_id, deal_number, deal_date, deal_type, cash_back_per, cash_back, remark, run_success
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -27,10 +28,10 @@
   <insert id="insert" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
     insert into sys_order_deal (deal_id, order_id, deal_number, 
       deal_date, deal_type, cash_back_per, 
-      cash_back, run_success)
+      cash_back,remark, run_success)
     values (#{dealId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{dealNumber,jdbcType=VARCHAR}, 
       #{dealDate,jdbcType=TIMESTAMP}, #{dealType,jdbcType=VARCHAR}, #{cashBackPer,jdbcType=VARCHAR}, 
-      #{cashBack,jdbcType=DECIMAL}, #{runSuccess,jdbcType=VARCHAR})
+      #{cashBack,jdbcType=DECIMAL},#{remark,jdbcType=VARCHAR}, #{runSuccess,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
     insert into sys_order_deal
@@ -55,6 +56,9 @@
       </if>
       <if test="cashBack != null" >
         cash_back,
+      </if>
+      <if test="remark != null" >
+        remark,
       </if>
       <if test="runSuccess != null" >
         run_success,
@@ -82,6 +86,9 @@
       <if test="cashBack != null" >
         #{cashBack,jdbcType=DECIMAL},
       </if>
+       <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
       <if test="runSuccess != null" >
         #{runSuccess,jdbcType=VARCHAR},
       </if>
@@ -108,8 +115,11 @@
       <if test="cashBack != null" >
         cash_back = #{cashBack,jdbcType=DECIMAL},
       </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
       <if test="runSuccess != null" >
-        run_success = #{runSuccess,jdbcType=VARCHAR},
+        run_success = #{runSuccess,jdbcType=VARCHAR}
       </if>
     </set>
     where deal_id = #{dealId,jdbcType=VARCHAR}
@@ -122,6 +132,7 @@
       deal_type = #{dealType,jdbcType=VARCHAR},
       cash_back_per = #{cashBackPer,jdbcType=VARCHAR},
       cash_back = #{cashBack,jdbcType=DECIMAL},
+      remark =  #{remark,jdbcType=VARCHAR},
       run_success = #{runSuccess,jdbcType=VARCHAR}
     where deal_id = #{dealId,jdbcType=VARCHAR}
   </update>
