@@ -100,8 +100,6 @@
 															<option value ="890">西藏自治区</option>
 															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
-															<option value ="851">香港特别行政区</option>
-															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
 												<div class="col-sm-6">

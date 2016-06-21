@@ -89,6 +89,16 @@
 									</div>
 									
 									<div class="form-group">
+										<label for="email" class="col-sm-3 control-label no-padding-right" >加注站类别： </label>
+
+										<div class="col-sm-4">
+											<select class="form-control" id="station_level" name="station_level">
+												<s:option flag="true" gcode="STATION_LEVEL" />
+											</select>
+										</div>
+									</div>
+									
+									<div class="form-group">
 										<label for="email" class="col-sm-3 control-label no-padding-right" >注册邮箱： </label>
 
 										<div class="col-sm-4">

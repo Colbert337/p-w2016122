@@ -16,6 +16,8 @@ public class SysGasSource extends BaseModel{
 	private String delivery_method;
 
 	private BigDecimal market_price;
+	
+	private String province_id;
 
 	private String gas_factory_addr;
 
@@ -26,6 +28,14 @@ public class SysGasSource extends BaseModel{
 	private Date created_date;
 
 	private Date updated_date;
+
+	public String getprovince_id() {
+		return province_id;
+	}
+
+	public void setprovince_id(String province_id) {
+		this.province_id = province_id;
+	}
 
 	public String getSys_gas_source_id() {
 		return sys_gas_source_id;
