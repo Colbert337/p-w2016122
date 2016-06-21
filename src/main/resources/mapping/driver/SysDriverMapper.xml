@@ -50,7 +50,7 @@
   <select id="querySearchDriverList" resultMap="BaseResultMap" >
   select
   <include refid="Base_Column_List" />
-  from sys_user su left join sys_user_role sur on su.sys_user_id = sur.sys_user_id left join sys_role sr on sur.sys_role_id = sr.sys_role_id
+  from sys_driver
   where 1=1
     <trim>
       <if test="fullName != null &amp;&amp; fullName != ''" >
