@@ -35,4 +35,9 @@ public interface OrderService {
      * 消费
      */
     String consumeMoney(SysOrder record) throws Exception;
+
+    /**
+     * 验证订单
+     */
+    String validAccount(SysOrder record) throws Exception;
 }

@@ -104,4 +104,10 @@
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
   </update>
+
+  <update id="updateAccountBalance" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
+    update sys_user_account set account_balance = (cast(account_balance as decimal(38, 9)) - cast(#{accountBalance,jdbcType=VARCHAR} as decimal(38, 9)))
+      where  sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+      and version = #{version,jdbcType=INTEGER}
+  </update>
 </mapper>

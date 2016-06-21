@@ -322,8 +322,8 @@ public class CRMCustomerContoller {
                 orgSysDriver.setPlateNumber(sysDriver.getPlateNumber());
             }
 
-            if(sysDriver.getExpiryDate() != null){
-                orgSysDriver.setExpiryDate(sysDriver.getExpiryDate());
+            if(StringUtils.isNotEmpty(sysDriver.getExpireTimeForCRM())){
+                orgSysDriver.setExpiryDate(DateUtil.strToDate(sysDriver.getExpireTimeForCRM(), "yyyy-MM-dd"));
             }
 
             if(StringUtils.isNotEmpty(sysDriver.getDrivingLice())){
