@@ -71,7 +71,7 @@ public class SysDriver extends BaseModel{
     private String sys_gas_station_id;
 
     private String walletId;
-    
+
     private String expireTimeForCRM;
 
     public String getWalletId() {
