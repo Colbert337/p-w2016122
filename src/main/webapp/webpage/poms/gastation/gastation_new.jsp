@@ -89,10 +89,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="email" class="col-sm-3 control-label no-padding-right" > E-mail： </label>
+										<label for="email" class="col-sm-3 control-label no-padding-right" > 注册邮箱： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
+											<input type="text" id="email"  name="email" placeholder="输入注册邮箱" class="form-control" value="${station.email}" maxlength="50"/>
 										</div>
 									</div>
 									
@@ -203,8 +203,6 @@
 															<option value ="890">西藏自治区</option>
 															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
-															<option value ="851">香港特别行政区</option>
-															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
 												<div class="col-sm-6">
@@ -434,12 +432,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加注站email不能为空'
+		                        message: '加注站注册邮箱不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
-		                        max: 20,
-		                        message: '加注站email不能超过30个字符'
+		                        max: 50,
+		                        message: '加注站注册邮箱不能超过50个字符'
 		                    }
 		                }
 		            },
@@ -489,7 +487,7 @@
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
-		                        message: '管理员密码长度必须大于6位'
+		                        message: '管理员密码长度必须大于等于6位'
 		                    }
 		                }
 		            },
@@ -535,7 +533,7 @@
 		                        message: '平台有效期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '平台有效期必须大于当前日期',
+		                    	message: '平台有效期必须大于等于当前日期',
 		                    	callback: function (value, validator, $field) {
 	                                 if(compareDate(new Date().toLocaleDateString(),value)){
 	                                	 return false;
