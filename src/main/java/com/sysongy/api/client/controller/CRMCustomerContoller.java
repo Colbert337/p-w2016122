@@ -398,12 +398,16 @@ public class CRMCustomerContoller {
                     sysDriver.setVehicleLice(httpPath);
                 }
             }
+            if(StringUtils.isNotEmpty(sysDriver.getExpireTimeForCRM())){
+                sysDriver.setExpiryDate(DateUtil.strToDate(sysDriver.getExpireTimeForCRM(), "yyyy-MM-dd"));
+            }
             driverService.saveDriver(sysDriver, "update");
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("上传文件失败：" + e.getMessage());
+            e.printStackTrace();
             logger.error("uploadFileData Customer error： " + e);
         }
         return ajaxJson;
