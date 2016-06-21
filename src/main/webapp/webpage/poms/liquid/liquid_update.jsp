@@ -15,11 +15,8 @@
 	<script type="text/javascript">
 		var gas_factory_addr = "${gasource.gas_factory_addr}";
 	</script>
-			<div class="main-content">
-				<div class="main-content-inner">
 
-					<!-- /section:basics/content.breadcrumbs -->
-					<div class="page-content">
+					<div class="">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
@@ -35,34 +32,34 @@
 									<input type="hidden" id="sys_gas_source_id"  name="sys_gas_source_id" value="${gasource.sys_gas_source_id}" />
 							
 									<div class="form-group">
-										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 液厂名称： </label>
+										<label for="gas_factory_name" class="col-sm-3 control-label no-padding-right"> 液厂名称： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="gas_factory_name" placeholder="输入液厂名称" class="form-control" maxlength="20" value="${gasource.gas_factory_name}"/>
+											<input type="text" name="gas_factory_name" id="gas_factory_name" placeholder="输入液厂名称" class="form-control" maxlength="20" value="${gasource.gas_factory_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" >工艺类型： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="technology_type">工艺类型： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="technology_type" placeholder="输入工艺类型" class="form-control" value="${gasource.technology_type}"/>
+											<input type="text" name="technology_type" id="technology_type" placeholder="输入工艺类型" class="form-control" value="${gasource.technology_type}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">配送方式： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="delivery_method">配送方式： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="delivery_method" name="delivery_method" placeholder="输入配送方式" class="form-control" maxlength="20" value="${gasource.delivery_method}"/>
+											<input type="text" id="delivery_method" name="delivery_method" id="delivery_method" placeholder="输入配送方式" class="form-control" maxlength="20" value="${gasource.delivery_method}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">价格：</label>
+										<label class="col-sm-3 control-label no-padding-right" for="market_price">价格：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="market_price" placeholder="输入价格" class="form-control" maxlength="15" value="${gasource.market_price}"/>
+											<input type="text" name="market_price" id="market_price" placeholder="输入价格" class="form-control" maxlength="15" value="${gasource.market_price}"/>
 										</div>
 									</div>
 	
@@ -146,7 +143,7 @@
 											</button>
 											
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>
@@ -159,5 +156,3 @@
 							</div><!-- /.col -->
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
-				</div>
-	</div>

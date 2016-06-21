@@ -110,9 +110,6 @@
 		            success:function(data){
 		            	$("#main").html(data);
 		            	$("#modal-table").modal("show");
-						 if($("#retCode").val() != "100"){
-			            	 init();	
-			          }
 						
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
@@ -123,5 +120,9 @@
 		
 		function returnpage(){
 			loadPage('#main', '../web/sysparam/cashbackList');
+		}
+
+		function reset(){
+			loadPage('#main', sjny.basePath+'/webpage/poms/liquid/liquid_new.jsp');
 		}
 		
