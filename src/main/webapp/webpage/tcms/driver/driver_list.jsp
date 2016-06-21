@@ -61,7 +61,7 @@
 							<th>手机号码</th>
 							<th>实体卡号</th>
 							<th>状态</th>
-							<th>操作</th>
+							<%--<th>操作</th>--%>
 						</tr>
 						</thead>
 						<tbody>
@@ -69,7 +69,7 @@
 							<tr>
 								<td class="center">
 									<label class="pos-rel">
-										<input type="checkbox" class="ace" id="pks" value="${driver.sysDriverId}"/>
+										<input type="checkbox" class="ace" id="pks" name="pks" value="${driver.sysDriverId}"/>
 										<span class="lbl"></span>
 									</label>
 								</td>
@@ -79,17 +79,17 @@
 								<td>${driver.cardId}</td>
 								<td>
 									<c:if test="${driver.userStatus == 0}">
-										启用
+										使用中
 									</c:if>
 									<c:if test="${driver.userStatus == 1}">
-										禁用
+										已冻结
 									</c:if>
 								</td>
-								<td>
-									<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="离职">
-										<span class="ace-icon fa fa-unlock bigger-130"></span>
-									</a>
-								</td>
+								<%--<td>--%>
+									<%--<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="离职">--%>
+										<%--<span class="ace-icon fa fa-unlock bigger-130"></span>--%>
+									<%--</a>--%>
+								<%--</td>--%>
 							</tr>
 						</c:forEach>
 						</tbody>
