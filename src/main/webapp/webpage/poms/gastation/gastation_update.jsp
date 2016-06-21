@@ -83,10 +83,20 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="email"> E-mail： </label>
+										<label class="col-sm-3 control-label no-padding-right" >加注站类别： </label>
 
 										<div class="col-sm-4">
-											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control"  value="${station.email}"/>
+											<select class="form-control" id="station_level" name="station_level">
+												<s:option flag="true" gcode="STATION_LEVEL" form="station" field="station_level"/>
+											</select>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">注册邮箱： </label>
+
+										<div class="col-sm-4">
+											<input type="text" id="email" name="email" placeholder="输入注册邮箱" class="form-control"  value="${station.email}"/>
 										</div>
 									</div>
 									
@@ -697,7 +707,7 @@
 			}
 			
 			var options ={   
-		            url:'<%=basePath%>/web/gastation/saveGastation',   
+		            url:'../web/gastation/saveGastation',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){

@@ -69,10 +69,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="email"> E-mail： </label>
+										<label class="col-sm-3 control-label no-padding-right">注册邮箱：</label>
 
 										<div class="col-sm-4">
-											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control" />
+											<input type="email" id="email" name="email" placeholder="输入注册邮箱" maxlength="50" class="form-control" />
 										</div>
 									</div>
 									
@@ -184,8 +184,6 @@
 													<option value ="890">西藏自治区</option>
 													<option value ="950">宁夏回族自治区</option>
 													<option value ="990">新疆维吾尔自治区</option>
-													<option value ="851">香港特别行政区</option>
-													<option value ="853">澳门特别行政区</option>
 											</select>
 												</div>
 												<div class="col-sm-6">
@@ -403,10 +401,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站email不能为空'
+		                        message: '加气站注册邮箱不能为空'
 		                    },
-							emailAddress: {
-								message: '请输入正确的电子邮箱格式'
+		                    stringLength: {
+		                        min: 1,
+		                        max: 50,
+		                        message: '加注站注册邮箱不能超过50个字符'
 		                    }
 		                }
 		            },
@@ -455,7 +455,7 @@
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
-		                        message: '管理员密码长度必须大于6位'
+		                        message: '管理员密码长度必须大于等于6位'
 		                    }
 		                }
 		            },
@@ -483,7 +483,7 @@
 		                        message: '平台有效期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '平台有效期必须大于当前日期',
+		                    	message: '平台有效期必须大于等于当前日期',
 		                    	callback: function (value, validator, $field) {
 	                                 if(compareDate(new Date().toLocaleDateString(),value)){
 	                                	 return false;
