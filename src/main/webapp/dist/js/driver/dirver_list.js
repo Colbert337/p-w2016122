@@ -32,7 +32,21 @@ function addDriver(){
  * 发送验证码
  */
 function sendMessage(){
-
+    var mobilePhone = $("#mobile_phone").val();
+    alert("mobilePhone:"+mobilePhone);
+    $.ajax({
+        url:"../crmCustomerService/web/sendMsg",
+        data:{mobilePhone:mobilePhone},
+        async:false,
+        type: "POST",
+        success: function(data){
+            if(data.success){
+                alert("发送成功！");
+            }else{
+                alert("发送失败！");
+            }
+        }
+    })
 }
 //显示编辑用户弹出层
 function queryRoleList(roleId){

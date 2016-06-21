@@ -44,8 +44,6 @@ public class SysDriver extends BaseModel{
 
     private String sysUserAccountId;
 
-    private String sysTransportId;
-
     private String regisCompany;
 
     private String regisSource;
@@ -68,7 +66,7 @@ public class SysDriver extends BaseModel{
 
     private SysUserAccount account;
 
-    private String sys_gas_station_id;
+    private String stationId;
 
     private String walletId;
 
@@ -235,14 +233,6 @@ public class SysDriver extends BaseModel{
         this.sysUserAccountId = sysUserAccountId == null ? null : sysUserAccountId.trim();
     }
 
-    public String getSysTransportId() {
-        return sysTransportId;
-    }
-
-    public void setSysTransportId(String sysTransportId) {
-        this.sysTransportId = sysTransportId == null ? null : sysTransportId.trim();
-    }
-
     public String getRegisCompany() {
         return regisCompany;
     }
@@ -307,14 +297,6 @@ public class SysDriver extends BaseModel{
         this.account = account;
     }
 
-    public String getSys_gas_station_id() {
-        return sys_gas_station_id;
-    }
-
-    public void setSys_gas_station_id(String sys_gas_station_id) {
-        this.sys_gas_station_id = sys_gas_station_id;
-    }
-
     public GasCard getCardInfo() {
         return cardInfo;
     }
@@ -337,5 +319,13 @@ public class SysDriver extends BaseModel{
 
     public void setExpireTimeForCRM(String expireTimeForCRM) {
         this.expireTimeForCRM = expireTimeForCRM;
+    }
+
+    public String getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(String stationId) {
+        this.stationId = stationId;
     }
 }
