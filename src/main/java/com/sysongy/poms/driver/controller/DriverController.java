@@ -66,6 +66,7 @@ public class DriverController extends BaseContoller{
 
         map.addAttribute("driverList",driverPageInfo.getList());
         map.addAttribute("pageInfo",driverPageInfo);
+		map.addAttribute("driver",driver);
 
         return "webpage/tcms/driver/driver_list";
     }
