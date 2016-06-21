@@ -58,6 +58,7 @@
         or  mobile_phone like CONCAT(#{fullName,jdbcType=VARCHAR},'%')
       </if>
     </trim>
+    and user_status &lt; 2
     ORDER BY created_date DESC
   </select>
 
@@ -402,4 +403,13 @@
     where mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
     and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </select>
+
+  <!--司机离职-->
+  <update id="deleteDriverByIds" parameterType="java.util.List" >
+  update sys_driver  set user_status = 2
+  where sys_driver_id in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
 </mapper>

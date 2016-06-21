@@ -2,6 +2,7 @@ package com.sysongy.poms.driver.controller;
 
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.permi.model.SysRole;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
@@ -23,6 +24,8 @@ import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.util.GlobalConstant;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,6 +86,7 @@ public class DriverController extends BaseContoller{
 	public String saveDriver(@ModelAttribute("currUser") CurrUser currUser, SysDriver driver, ModelMap map){
 		int userType = currUser.getUser().getUserType();
 		int result = 0;
+
 		String operation = "insert";
 		String payCode = driver.getPayCode();
 		String verificationCode = driver.getUserName();
@@ -173,4 +177,23 @@ public class DriverController extends BaseContoller{
 			return ret;
 		}
 	}
+	/**
+	 * 司机离职
+	 * @return
+	 */
+	@RequestMapping("/delete")
+	public String deleteDriverByIds(HttpServletRequest request,ModelMap map){
+		SysDriver driver = new SysDriver();
+		String[] ids = request.getParameterValues("pks");
+		List<String> idList = new ArrayList<>();
+		if(ids != null && ids.length > 0){
+			for (int i = 0;i < ids.length;i++) {
+				idList.add(ids[i]);
+			}
+		}
+
+		driverService.deleteDriverByIds(idList);
+		return "redirect:/web/driver/list/page";
+	}
+
 }

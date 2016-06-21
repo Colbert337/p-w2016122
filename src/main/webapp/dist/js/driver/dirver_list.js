@@ -113,11 +113,11 @@ function saveDriver(){
 /**
  * 删除用户
  */
-function leaveDriver(driverId){
+function leaveDriver(){
     if(confirm("确定要删除该用户吗？")){
         var deleteOptions ={
-            url:'../web/permi/user/delete',
-            data:{userId:userId},
+            url:'../web/driver/delete',
+            data:{},
             type:'post',
             dataType:'text',
             success:function(data){

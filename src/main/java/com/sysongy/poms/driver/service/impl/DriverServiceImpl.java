@@ -182,4 +182,14 @@ public class DriverServiceImpl implements DriverService {
 		
 		return sysDriverMapper.updateByPrimaryKeySelective(record);
 	}
+
+    /**
+     * 批量离职司机
+     * @param idList
+     * @return
+     */
+    @Override
+    public int deleteDriverByIds(List<String> idList) {
+        return sysDriverMapper.deleteDriverByIds(idList);
+    }
 }
