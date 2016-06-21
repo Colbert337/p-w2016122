@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/poms/liquid/liquid_list.js"></script>
+<script src="<%=basePath %>/dist/js/liquid/liquid_list.js"></script>
 
 
 <!-- /section:basics/content.breadcrumbs -->
