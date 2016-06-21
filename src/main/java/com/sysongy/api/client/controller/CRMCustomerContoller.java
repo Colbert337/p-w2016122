@@ -7,6 +7,8 @@ import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -46,6 +48,8 @@ public class CRMCustomerContoller {
     @Autowired
     RedisClientInterface redisClientImpl;
 
+    @Autowired
+    GastationService gastationService;
 
     public DriverService getDriverService() {
         return driverService;
@@ -214,6 +218,19 @@ public class CRMCustomerContoller {
             sysDriver.setUpdatedDate(new Date());
             sysDriver.setCreatedDate(new Date() );
             sysDriver.setExpiryDate(new Date());
+
+
+            String sys_gas_station_id = request.getParameter("sys_gas_station_id");
+            if(!StringUtils.isNotEmpty(sys_gas_station_id)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("气站ID输入错误！！！");
+                return ajaxJson;
+            }
+
+            sysDriver.setStationId(sys_gas_station_id);
+            Gastation gastation = gastationService.queryGastationByPK(sys_gas_station_id);
+            sysDriver.setRegisSource(gastation.getGas_station_name());
+
             int renum = driverService.saveDriver(sysDriver, "insert");
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
