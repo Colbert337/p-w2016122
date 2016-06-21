@@ -94,7 +94,7 @@
 									<th onclick="orderBy(this,'identity_card');commitForm();" id="operations_name_order">身份证号</th>
 									<th onclick="orderBy(this,'fuel_type');commitForm();" id="indu_com_number_order">燃料类型</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="status_order">关联运输公司</th>
-									<th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否提供证件</th> 
+									<th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> 
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>

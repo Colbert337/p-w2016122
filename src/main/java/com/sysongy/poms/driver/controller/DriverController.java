@@ -108,10 +108,8 @@ public class DriverController extends BaseContoller{
 
 		try {
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
-  
-        if(!StringUtils.isEmpty(driver.getCreatedDate_after())){
-        	
-        }
+        driver.setIsIdent(0);
+
         pageinfo = driverService.queryDrivers(driver);
         
         bean.setRetCode(100);
