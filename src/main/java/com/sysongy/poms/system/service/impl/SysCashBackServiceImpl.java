@@ -121,7 +121,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 			String status = cashback.getStatus();
 			if(GlobalConstant.CASHBACK_STATUS_ENABLE.equalsIgnoreCase(status)){
 				//如果启用，则执行
-				String 
+
 			}
 		}
 		return "";
