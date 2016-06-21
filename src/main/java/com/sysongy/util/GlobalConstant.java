@@ -139,7 +139,52 @@ public class GlobalConstant {
 		public static final String TRANSPORTION="2";
 		public static final String DRIVER="3";
 	}
-	
+
+	/*
+	 * 	1充值 2 消费 3 转账
+	 */
+	public interface OrderType{
+		public static final String CHARGE ="1";
+		public static final String CONSUME="2";
+		public static final String TRANSFER="3";
+	}
+
+	/*
+	 * 	1司机 2加气站 3 运输公司
+	 */
+	public interface OrderOperatorType{
+		public static final String DRIVER ="1";
+		public static final String GASTATION="2";
+		public static final String TRANSPORTION="3";
+	}
+
+	/*
+	 * 订单处理流程中的类型
+	 */
+	public interface OrderDealType{
+		public static final String CHARGE_TO_DRIVER_CHARGE ="CHARGE_TO_DRIVER_CHARGE";
+		public static final String CHARGE_TO_DRIVER_CASHBACK ="CHARGE_TO_DRIVER_CASHBACK";
+		public static final String CHARGE_TO_DRIVER_FIRSTCASHBACK ="CHARGE_TO_DRIVER_FIRSTCASHBACK";
+	}
+
+	/*
+	 * 	订单处理结果标记
+	 */
+	public interface OrderProcessResult{
+		public static final String SUCCESS ="SUCCESS";
+		public static final String ORDER_IS_NULL="ORDER_IS_NULL";
+		public static final String ORDER_TYPE_IS_NOT_CHARGE="ORDER_TYPE_IS_NOT_CHARGE";
+		public static final String ORDER_TYPE_IS_NOT_CONSUME="ORDER_TYPE_IS_NOT_CONSUME";
+		public static final String ORDER_TYPE_IS_NOT_TRANSFER="ORDER_TYPE_IS_NOT_TRANSFER";
+		public static final String ORDER_TO_IS_NOT_DIRVER="ORDER_TO_IS_NOT_DIRVER";
+		public static final String ORDER_TO_IS_NOT_GAS_POSITION="ORDER_TO_IS_NOT_GAS_POSITION";
+		public static final String OPERATOR_TYPE_IS_NOT_DRIVER="OPERATOR_TYPE_IS_NOT_DRIVER";
+		public static final String OPERATOR_TYPE_IS_NOT_GASTATION="OPERATOR_TYPE_IS_NOT_GASTATION";
+		public static final String OPERATOR_TYPE_IS_NOT_TRANSPORTION="OPERATOR_TYPE_IS_NOT_TRANSPORTION";
+
+		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";
+	}
+
 	/*
 	 * 0 新注册 1 待审核 2 已通过 3 未通过
 	 */

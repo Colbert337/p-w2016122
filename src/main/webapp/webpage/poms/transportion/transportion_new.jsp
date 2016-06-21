@@ -118,7 +118,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
-										<div class="col-sm-2 datepicker-noicon">
+										<div class="col-sm-4 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
 														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" readonly="readonly"/>
@@ -217,7 +217,7 @@
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="submit" onclick="save();">
+											<button class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
@@ -227,7 +227,7 @@
 												重置
 											</button>
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>

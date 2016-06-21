@@ -89,7 +89,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="email" class="col-sm-3 control-label no-padding-right" > 注册邮箱： </label>
+										<label for="email" class="col-sm-3 control-label no-padding-right" >注册邮箱： </label>
 
 										<div class="col-sm-4">
 											<input type="text" id="email"  name="email" placeholder="输入注册邮箱" class="form-control" value="${station.email}" maxlength="50"/>
@@ -138,7 +138,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
-										<div class="col-sm-2 datepicker-noicon">
+										<div class="col-sm-4 datepicker-noicon">
 											<div class="input-group">
 												<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
 													<span class="input-group-addon">
@@ -203,6 +203,8 @@
 															<option value ="890">西藏自治区</option>
 															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
+															<option value ="851">香港特别行政区</option>
+															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
 												<div class="col-sm-6">
@@ -248,7 +250,7 @@
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>
@@ -432,12 +434,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加注站注册邮箱不能为空'
+		                        message: '加注站email不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
-		                        max: 50,
-		                        message: '加注站注册邮箱不能超过50个字符'
+		                        max: 20,
+		                        message: '加注站email不能超过30个字符'
 		                    }
 		                }
 		            },
@@ -487,7 +489,7 @@
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
-		                        message: '管理员密码长度必须大于等于6位'
+		                        message: '管理员密码长度必须大于6位'
 		                    }
 		                }
 		            },
@@ -533,7 +535,7 @@
 		                        message: '平台有效期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '平台有效期必须大于等于当前日期',
+		                    	message: '平台有效期必须大于当前日期',
 		                    	callback: function (value, validator, $field) {
 	                                 if(compareDate(new Date().toLocaleDateString(),value)){
 	                                	 return false;

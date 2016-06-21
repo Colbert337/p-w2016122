@@ -51,4 +51,8 @@ public class UsysparamServiceImpl implements UsysparamService {
 	public Integer deleteUsysparam(Usysparam recode) {
 		return usysparamMapper.deleteByPrimaryKey(recode);
 	}
+
+	public List<Usysparam> queryUsysparamByGcode(String gcode){
+		return usysparamMapper.queryUsysparamByGcode(gcode);
+	}
 }

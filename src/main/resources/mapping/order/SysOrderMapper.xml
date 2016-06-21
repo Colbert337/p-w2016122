@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.order.dao.SysOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.order.model.SysOrder" >
+    <id column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="order_date" property="orderDate" jdbcType="TIMESTAMP" />
+    <result column="cash" property="cash" jdbcType="DECIMAL" />
+    <result column="credit_account" property="creditAccount" jdbcType="VARCHAR" />
+    <result column="debit_account" property="debitAccount" jdbcType="VARCHAR" />
+    <result column="charge_type" property="chargeType" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="VARCHAR" />
+    <result column="channel_number" property="channelNumber" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operator_type" property="operatorType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
+    charge_type, channel, channel_number, operator, operator_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    insert into sys_order (order_id, order_number, order_type, 
+      order_date, cash, credit_account, 
+      debit_account, charge_type, channel, 
+      channel_number, operator, operator_type
+      )
+    values (#{orderId,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
+      #{orderDate,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL}, #{creditAccount,jdbcType=VARCHAR}, 
+      #{debitAccount,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, 
+      #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{operatorType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    insert into sys_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="orderDate != null" >
+        order_date,
+      </if>
+      <if test="cash != null" >
+        cash,
+      </if>
+      <if test="creditAccount != null" >
+        credit_account,
+      </if>
+      <if test="debitAccount != null" >
+        debit_account,
+      </if>
+      <if test="chargeType != null" >
+        charge_type,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+      <if test="channelNumber != null" >
+        channel_number,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="operatorType != null" >
+        operator_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDate != null" >
+        #{orderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cash != null" >
+        #{cash,jdbcType=DECIMAL},
+      </if>
+      <if test="creditAccount != null" >
+        #{creditAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="debitAccount != null" >
+        #{debitAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeType != null" >
+        #{chargeType,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="channelNumber != null" >
+        #{channelNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorType != null" >
+        #{operatorType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    update sys_order
+    <set >
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDate != null" >
+        order_date = #{orderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cash != null" >
+        cash = #{cash,jdbcType=DECIMAL},
+      </if>
+      <if test="creditAccount != null" >
+        credit_account = #{creditAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="debitAccount != null" >
+        debit_account = #{debitAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeType != null" >
+        charge_type = #{chargeType,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null" >
+        channel = #{channel,jdbcType=VARCHAR},
+      </if>
+      <if test="channelNumber != null" >
+        channel_number = #{channelNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorType != null" >
+        operator_type = #{operatorType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    update sys_order
+    set order_number = #{orderNumber,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      order_date = #{orderDate,jdbcType=TIMESTAMP},
+      cash = #{cash,jdbcType=DECIMAL},
+      credit_account = #{creditAccount,jdbcType=VARCHAR},
+      debit_account = #{debitAccount,jdbcType=VARCHAR},
+      charge_type = #{chargeType,jdbcType=VARCHAR},
+      channel = #{channel,jdbcType=VARCHAR},
+      channel_number = #{channelNumber,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      operator_type = #{operatorType,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+</mapper>

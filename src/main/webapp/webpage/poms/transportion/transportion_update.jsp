@@ -64,6 +64,7 @@
 									<!-- #section:elements.form -->
 									<input type="hidden" id="sys_transportion_id"  name="sys_transportion_id" value="${station.sys_transportion_id}" />
 							
+							
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="transportion_name"> 运输公司名称： </label>
 
@@ -106,7 +107,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期：</label>
-										<div class="col-sm-2 datepicker-noicon">
+										<div class="col-sm-4 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
 														<input class="form-control date-picker" name="expiry_date_frompage" readonly="readonly" id="expiry_date" type="text" value="${station.expiry_date_frompage}" data-date-format="yyyy-mm-dd" />
@@ -307,7 +308,7 @@
 											</button>
 											
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>

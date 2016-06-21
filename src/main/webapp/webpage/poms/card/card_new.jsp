@@ -78,7 +78,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 用户卡类型： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<select class="form-control" id="card_type" name="card_type">
 														<s:option flag="true" gcode="CARDTYPE" />
 												</select>
@@ -87,7 +87,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 用户卡属性： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<select class="form-control" id="card_property" name="card_property">
 														<s:option flag="true" gcode="CARDPROPERTY" />
 												</select>
@@ -97,7 +97,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="operator"> 操作人： </label>
 
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 											<input type="text"  id="operator" name="operator" class="form-control" readonly="readonly" value=" ${sessionScope.currUser.user.userName}"/>
 										</div>
 									</div>
@@ -147,7 +147,7 @@
 											</button>
 											
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>

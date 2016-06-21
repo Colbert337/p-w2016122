@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.system.dao.SysOperationLogMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.system.model.SysOperationLog" >
+    <id column="sys_operation_log_id" property="sysOperationLogId" jdbcType="VARCHAR" />
+    <result column="log_platform" property="logPlatform" jdbcType="VARCHAR" />
+    <result column="system_module" property="systemModule" jdbcType="VARCHAR" />
+    <result column="log_content" property="logContent" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_ip" property="userIp" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sys_operation_log_id, log_platform, system_module, log_content, operator, role_name, 
+    user_name, user_ip, created_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_operation_log
+    where sys_operation_log_id = #{sysOperationLogId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_operation_log
+    where sys_operation_log_id = #{sysOperationLogId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.system.model.SysOperationLog" >
+    insert into sys_operation_log (sys_operation_log_id, log_platform, system_module, 
+      log_content, operator, role_name, 
+      user_name, user_ip, created_date
+      )
+    values (#{sysOperationLogId,jdbcType=VARCHAR}, #{logPlatform,jdbcType=VARCHAR}, #{systemModule,jdbcType=VARCHAR}, 
+      #{logContent,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{userIp,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.system.model.SysOperationLog" >
+    insert into sys_operation_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysOperationLogId != null" >
+        sys_operation_log_id,
+      </if>
+      <if test="logPlatform != null" >
+        log_platform,
+      </if>
+      <if test="systemModule != null" >
+        system_module,
+      </if>
+      <if test="logContent != null" >
+        log_content,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userIp != null" >
+        user_ip,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysOperationLogId != null" >
+        #{sysOperationLogId,jdbcType=VARCHAR},
+      </if>
+      <if test="logPlatform != null" >
+        #{logPlatform,jdbcType=VARCHAR},
+      </if>
+      <if test="systemModule != null" >
+        #{systemModule,jdbcType=VARCHAR},
+      </if>
+      <if test="logContent != null" >
+        #{logContent,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userIp != null" >
+        #{userIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.system.model.SysOperationLog" >
+    update sys_operation_log
+    <set >
+      <if test="logPlatform != null" >
+        log_platform = #{logPlatform,jdbcType=VARCHAR},
+      </if>
+      <if test="systemModule != null" >
+        system_module = #{systemModule,jdbcType=VARCHAR},
+      </if>
+      <if test="logContent != null" >
+        log_content = #{logContent,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userIp != null" >
+        user_ip = #{userIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sys_operation_log_id = #{sysOperationLogId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.system.model.SysOperationLog" >
+    update sys_operation_log
+    set log_platform = #{logPlatform,jdbcType=VARCHAR},
+      system_module = #{systemModule,jdbcType=VARCHAR},
+      log_content = #{logContent,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      role_name = #{roleName,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_ip = #{userIp,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP}
+    where sys_operation_log_id = #{sysOperationLogId,jdbcType=VARCHAR}
+  </update>
+</mapper>
