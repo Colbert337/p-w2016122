@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Administrator on 2016/5/26.
  */
-@Service
 public class RedisClientImpl implements RedisClientInterface{
 
     private static Logger logger = LoggerFactory.getLogger(RedisClientImpl.class);
