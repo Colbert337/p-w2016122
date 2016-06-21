@@ -362,9 +362,7 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request,SysDriver sysDriver) {
         AjaxJson ajaxJson = new AjaxJson();
-
         String imgTag = request.getParameter("imgTag");
-
         if(files == null){
             ajaxJson.setMsg("上传文件为空！！！");
             ajaxJson.setSuccess(false);
@@ -401,8 +399,10 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getExpireTimeForCRM())){
                 sysDriver.setExpiryDate(DateUtil.strToDate(sysDriver.getExpireTimeForCRM(), "yyyy-MM-dd"));
             }
+            sysDriver.setChecked_status("1");
             driverService.saveDriver(sysDriver, "update");
-            attributes.put("driver", sysDriver);
+            SysDriver sysDriverNew = driverService.queryDriverByPK(sysDriver.getSysDriverId());
+            attributes.put("driver", sysDriverNew);
             ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
