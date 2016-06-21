@@ -55,7 +55,7 @@
     <trim>
       <if test="fullName != null &amp;&amp; fullName != ''" >
         and full_name like CONCAT(#{fullName,jdbcType=VARCHAR},'%')
-        or  mobile_phone like CONCAT(#{mobilePhone,jdbcType=VARCHAR},'%')
+        or  mobile_phone like CONCAT(#{fullName,jdbcType=VARCHAR},'%')
       </if>
     </trim>
     ORDER BY created_date DESC
