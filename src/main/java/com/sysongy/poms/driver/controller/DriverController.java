@@ -54,10 +54,12 @@ public class DriverController extends BaseContoller{
      */
     @RequestMapping("/list/page")
     public String queryDriverListPage(@ModelAttribute CurrUser currUser, SysDriver driver, ModelMap map){
-        if(driver.getPageNum() == null){
+		String stationId = currUser.getStationId();
+		if(driver.getPageNum() == null){
             driver.setPageNum(GlobalConstant.PAGE_NUM);
             driver.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+		driver.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
         PageInfo<SysDriver> driverPageInfo = new PageInfo<SysDriver>();
@@ -87,6 +89,7 @@ public class DriverController extends BaseContoller{
 		int userType = currUser.getUser().getUserType();
 		int result = 0;
 
+		String stationId = currUser.getStationId();
 		String operation = "insert";
 		String payCode = driver.getPayCode();
 		String verificationCode = driver.getUserName();
@@ -94,6 +97,8 @@ public class DriverController extends BaseContoller{
 		driver.setUserStatus("0");//0 使用中 1 已冻结
 		driver.setChecked_status("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
 		driver.setCheckedStatus("0");
+		driver.setStationId(stationId);//站点编号
+
 
 		driver.setSysDriverId(UUIDGenerator.getUUID());
 		driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
@@ -194,4 +199,15 @@ public class DriverController extends BaseContoller{
 		return "redirect:/web/driver/list/page";
 	}
 
+	/**
+	 * 发送验证码
+	 * @return
+	 */
+	@RequestMapping("/list/role")
+	@ResponseBody
+	public String queryRoleList(HttpServletRequest request, ModelMap map){
+		String codeStr = "";
+
+		return codeStr;
+	}
 }
