@@ -72,7 +72,17 @@ public class SysDriver extends BaseModel{
 
     private String walletId;
 
-	public String getChecked_status() {
+    private String expireTimeForCRM;
+
+    public String getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(String walletId) {
+        this.walletId = walletId;
+    }
+
+    public String getChecked_status() {
 		return checked_status;
 	}
 
@@ -96,7 +106,8 @@ public class SysDriver extends BaseModel{
 		this.createdDate_after = createdDate_after;
 	}
 
-	public String getSysDriverId() {
+
+    public String getSysDriverId() {
         return sysDriverId;
     }
 
@@ -318,5 +329,13 @@ public class SysDriver extends BaseModel{
 
     public void setIsIdentInfo(Usysparam isIdentInfo) {
         this.isIdentInfo = isIdentInfo;
+    }
+
+    public String getExpireTimeForCRM() {
+        return expireTimeForCRM;
+    }
+
+    public void setExpireTimeForCRM(String expireTimeForCRM) {
+        this.expireTimeForCRM = expireTimeForCRM;
     }
 }
