@@ -59,7 +59,7 @@ public class DriverController extends BaseContoller{
         //封装分页参数，用于查询分页内容
         PageInfo<SysDriver> driverPageInfo = new PageInfo<SysDriver>();
         try {
-            driverPageInfo = driverService.queryDrivers(driver);
+            driverPageInfo = driverService.querySearchDriverList(driver);
         }catch (Exception e){
             e.printStackTrace();
         }

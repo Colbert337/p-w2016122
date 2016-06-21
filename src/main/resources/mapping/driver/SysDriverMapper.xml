@@ -47,6 +47,20 @@
     updated_date, is_first_charge, checked_status, checked_date, sys_gas_station_id
   </sql>
 
+  <select id="querySearchDriverList" resultMap="BaseResultMap" >
+  select
+  <include refid="Base_Column_List" />
+  from sys_user su left join sys_user_role sur on su.sys_user_id = sur.sys_user_id left join sys_role sr on sur.sys_role_id = sr.sys_role_id
+  where 1=1
+    <trim>
+      <if test="fullName != null &amp;&amp; fullName != ''" >
+        and full_name like CONCAT(#{fullName,jdbcType=VARCHAR},'%')
+        or  mobile_phone like CONCAT(#{mobilePhone,jdbcType=VARCHAR},'%')
+      </if>
+    </trim>
+    ORDER BY created_date DESC
+  </select>
+
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
      *

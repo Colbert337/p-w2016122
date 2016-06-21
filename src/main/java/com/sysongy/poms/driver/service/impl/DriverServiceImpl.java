@@ -108,6 +108,14 @@ public class DriverServiceImpl implements DriverService {
         return sysDriver;
     }
 
+    @Override
+    public PageInfo<SysDriver> querySearchDriverList(SysDriver record) {
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        List<SysDriver> sysDriverList =  sysDriverMapper.querySearchDriverList(record);
+        PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(sysDriverList);
+
+        return pageInfo;
+    }
 
     /**
 	 * 给司机充钱
