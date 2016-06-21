@@ -21,6 +21,7 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
+import com.sysongy.poms.order.service.SysUserAccountService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.util.GlobalConstant;
@@ -44,6 +45,10 @@ public class DriverServiceImpl implements DriverService {
     
     @Autowired
     private OrderDealService orderDealService;
+    
+    @Autowired
+    private SysUserAccountService sysUserAccountService;
+    
 
 
     @Autowired
@@ -128,16 +133,8 @@ public class DriverServiceImpl implements DriverService {
 		//给账户充钱
 		SysDriver driver = this.queryDriverByPK(debit_account);
 		String driver_account = driver.getSysUserAccountId();
-		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(driver_account);
 		BigDecimal cash = order.getCash();
-		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance()) ;
-		//在此增加金额，如果是负值则是充红,仍然用add。
-		BigDecimal balance_result = balance.add(cash);
-		sysUserAccount.setAccountBalance(balance_result.toPlainString());
-		sysUserAccount.setUpdatedDate(new Date());
-		//更新此account对象则保存到db中
-		sysUserAccountMapper.updateAccount(sysUserAccount);
-		
+		sysUserAccountService.addCashToAccount(driver_account,cash);
 		//记录订单流水
 		String remark = "给"+ driver.getFullName()+"的账户，充值"+cash.toPlainString()+"。";
 		String deal_success = orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, remark,GlobalConstant.OrderProcessResult.SUCCESS);

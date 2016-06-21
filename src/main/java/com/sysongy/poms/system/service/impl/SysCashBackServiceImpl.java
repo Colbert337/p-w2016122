@@ -15,6 +15,7 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
+import com.sysongy.poms.order.service.SysUserAccountService;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
@@ -32,6 +33,11 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 
 	@Autowired
 	private OrderDealService orderDealService;
+	
+	@Autowired
+	private SysUserAccountService sysUserAccountService;
+	
+	
 	  
 	@Override
 	public PageInfo<SysCashBack> queryCashBack(SysCashBack obj) throws Exception {
@@ -127,7 +133,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	 * @param cashBack
 	 * @return
 	 */
-	private String cashToAccount(SysOrder order, List<SysCashBack> cashBackList){
+	private String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountName){
 		BigDecimal cash = order.getCash();
 		List<SysCashBack> eligible_list = new ArrayList<SysCashBack>();
 		for(SysCashBack cashback : cashBackList){
@@ -151,13 +157,30 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		SysCashBack eligible_cashback = null;
 		if(eligible_list.size()==0){
 			//记录订单流水，未找到有效记录
-			String remark ="";
+			String remark ="给"+accountName+"返现"+cash.toPlainString()+",未找到符合条件的返现规则。";
 			orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, remark, GlobalConstant.OrderProcessResult.SUCCESS);
+			return GlobalConstant.OrderProcessResult.SUCCESS;
+		}else{
+			eligible_cashback = eligible_list.get(0);
 		}
+		//冒泡法得到最高级别的level对应记录
+		int select_level = Integer.parseInt(eligible_cashback.getLevel());
 		for(SysCashBack eligible : eligible_list){
 			String level = eligible.getLevel();
-			
+			int lev = Integer.parseInt(level);
+			if(lev > select_level){
+				select_level = lev;
+				eligible_cashback = eligible;
+			}
 		}
+		
+		//计算当前的返现金额
+		String cash_per_str = eligible_cashback.getCash_per();
+		BigDecimal cash_per = new BigDecimal(cash_per_str);  
+		BigDecimal back_money = cash.multiply(cash_per) ;
+		
+		//给这个账户增加返现
+		//sysUserAccountService.addCashToAccount(order.getDebitAccount(), cash_per)
 		return "";
 	}
 	@Override
@@ -168,7 +191,8 @@ public class SysCashBackServiceImpl implements SysCashBackService {
         Integer is_first_charge = driver.getIsFirstCharge();
         if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
         	List<SysCashBack>  cashBackList = this.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
-        	String cashTo_success = cashToAccount(order,cashBackList);
+        	String accountName = driver.getFullName();
+        	String cashTo_success = cashToAccount(order,cashBackList,accountName);
         	//TODO
         }
 		//2.根据当前订单类型，调用对应的返现规则
