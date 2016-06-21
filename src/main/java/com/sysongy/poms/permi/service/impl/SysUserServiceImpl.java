@@ -268,6 +268,11 @@ public class SysUserServiceImpl implements SysUserService{
         user.setSysUserId(userId);
         user.setMobilePhone(user.getUserName());
         user.setIsAdmin(GlobalConstant.ADMIN_YES);
+        String password = user.getPassword();
+        String userName = user.getUserName();
+        password = Encoder.MD5Encode(password.getBytes());
+        user.setPassword(password);
+
         result = sysUserMapper.addUser(user);
 
         //创建管理员角色

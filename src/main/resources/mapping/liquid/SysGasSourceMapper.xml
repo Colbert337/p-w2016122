@@ -7,6 +7,7 @@
     <result column="technology_type" property="technology_type" jdbcType="VARCHAR" />
     <result column="delivery_method" property="delivery_method" jdbcType="VARCHAR" />
     <result column="market_price" property="market_price" jdbcType="DECIMAL" />
+    <result column="province_id_id" property="province_id_id" jdbcType="VARCHAR" />
     <result column="gas_factory_addr" property="gas_factory_addr" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
@@ -14,7 +15,7 @@
     <result column="updated_date" property="updated_date" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    sys_gas_source_id, gas_factory_name, technology_type, delivery_method, market_price, 
+    sys_gas_source_id, gas_factory_name, technology_type, delivery_method, market_price, province_id,
     gas_factory_addr, status, remark, created_date, updated_date
   </sql>
   
@@ -36,6 +37,10 @@
     </trim>
   </select>
   
+  <select id="findgasourceid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select sys_gas_source_id from sys_gas_source where sys_gas_source_id like CONCAT(#{province_id,jdbcType=VARCHAR},'%') order by sys_gas_source_id desc limit 1  
+  </select>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -50,11 +55,11 @@
   
   <insert id="insert" parameterType="com.sysongy.poms.liquid.model.SysGasSource" >
     insert into sys_gas_source (sys_gas_source_id, gas_factory_name, technology_type, 
-      delivery_method, market_price, gas_factory_addr, 
+      delivery_method, market_price, province_id, gas_factory_addr, 
       status, remark, created_date, 
       updated_date)
     values (#{sys_gas_source_id,jdbcType=VARCHAR}, #{gas_factory_name,jdbcType=VARCHAR}, #{technology_type,jdbcType=VARCHAR}, 
-      #{delivery_method,jdbcType=VARCHAR}, #{market_price,jdbcType=DECIMAL}, #{gas_factory_addr,jdbcType=VARCHAR}, 
+      #{delivery_method,jdbcType=VARCHAR}, #{market_price,jdbcType=DECIMAL}, #{province_id,jdbcType=VARCHAR}, #{gas_factory_addr,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{created_date,jdbcType=TIMESTAMP}, 
       #{updated_date,jdbcType=TIMESTAMP})
   </insert>
@@ -148,6 +153,9 @@
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="province_id != null" >
+        province_id = #{province_id,jdbcType=VARCHAR},
       </if>
       <if test="created_date != null" >
         created_date = #{created_date,jdbcType=TIMESTAMP},

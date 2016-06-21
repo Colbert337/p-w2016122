@@ -24,12 +24,20 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
     <result column="is_first_charge" property="isFirstCharge" jdbcType="INTEGER" />
-    <result column="checked_status" property="checkedStatus" jdbcType="INTEGER" />
+    <result column="checked_status" property="checkedStatus" jdbcType="VARCHAR" />
     <result column="checked_date" property="checkedDate" jdbcType="TIMESTAMP" />
     <result column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
-    <association property="account" column="wallet_id"
+    <association property="account" column="sys_user_account_id"
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
+    </association>
+    <association property="cardInfo" column="card_id"
+                 javaType="com.sysongy.poms.card.model.GasCard"
+                 select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
+    </association>
+    <association property="isIdentInfo" column="checked_status"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCheckStatusByMcode">
     </association>
   </resultMap>
   <sql id="Base_Column_List" >
@@ -38,6 +46,20 @@
     card_id, sys_user_account_id, sys_transport_id, regis_company, regis_source, created_date,
     updated_date, is_first_charge, checked_status, checked_date, sys_gas_station_id
   </sql>
+
+  <select id="querySearchDriverList" resultMap="BaseResultMap" >
+  select
+  <include refid="Base_Column_List" />
+  from sys_user su left join sys_user_role sur on su.sys_user_id = sur.sys_user_id left join sys_role sr on sur.sys_role_id = sr.sys_role_id
+  where 1=1
+    <trim>
+      <if test="fullName != null &amp;&amp; fullName != ''" >
+        and full_name like CONCAT(#{fullName,jdbcType=VARCHAR},'%')
+        or  mobile_phone like CONCAT(#{mobilePhone,jdbcType=VARCHAR},'%')
+      </if>
+    </trim>
+    ORDER BY created_date DESC
+  </select>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
@@ -57,8 +79,11 @@
       <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
         and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
       </if>
-      <if test="sys_gas_station_id!= null &amp;&amp; sys_gas_station_id != ''" >
-        and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+      <if test="checked_status != null &amp;&amp; checked_status != ''" >
+        and checked_status = #{checked_status,jdbcType=VARCHAR}
+      </if>
+      <if test="createdDate_after != null &amp;&amp; createdDate_after != ''">
+        and created_date between CONCAT(#{createdDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{createdDate_before,jdbcType=VARCHAR},' 23:59:59')
       </if>
     </trim>
   </select>

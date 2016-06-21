@@ -10,10 +10,7 @@
 %>
 	<script type="text/javascript" src="<%=basePath %>/assets/js/poms/sysparam/system_cashback_new.js"></script>
 
-			<!-- /section:basics/sidebar -->
-			<div class="main-content">
-				<div class="main-content-inner">
-					<div class="page-content">
+					<div class="">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
@@ -39,30 +36,30 @@
 										<label class="col-sm-3 control-label no-padding-right"> 阈最小值： </label>
 										
 										<div class="col-sm-4">
-											<input type="text"  name="threshold_min_value" placeholder="输入该阈最小值" class="col-xs-10 col-sm-5" maxlength="6" value="${sysCashBack.threshold_min_value}"/>
+											<input type="text"  name="threshold_min_value" placeholder="输入该阈最小值" class="form-control" maxlength="6" value="${sysCashBack.threshold_min_value}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">阈最大值（包含）： </label>
 
-										<div class="col-sm-3">
-											<input type="text"   name="threshold_max_value" placeholder="输入该阈最大值" class="col-xs-10 col-sm-5" maxlength="6" value="${sysCashBack.threshold_max_value}"/>
+										<div class="col-sm-4">
+											<input type="text"   name="threshold_max_value" placeholder="输入该阈最大值" class="form-control" maxlength="6" value="${sysCashBack.threshold_max_value}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">返现系数： </label>
 
-										<div class="col-sm-3">
-											<input type="text"  name="cash_per" placeholder="输入返现系数" class="col-xs-10 col-sm-5" maxlength="5" value="${sysCashBack.threshold_max_value}"/>
+										<div class="col-sm-4">
+											<input type="text"  name="cash_per" placeholder="输入返现系数" class="form-control" maxlength="5" value="${sysCashBack.threshold_max_value}"/>
 											<p class="text-error">（返现金额=充值金额 X 返现系数）</p>
 										</div>
 									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 状态： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<select class="form-control" name="status">
 														<s:option flag="true" gcode="CASHBACKSTATUS" form="sysCashBack" field="status"  />
 												</select>
@@ -71,7 +68,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 优先级： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<select class="form-control"  name="level">
 														<s:option flag="true" gcode="CASHBACKLEVEL" form="sysCashBack" field="level"  />
 												</select>
@@ -80,7 +77,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 生效日期： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<div class="input-group">
 														<input class="form-control date-picker" name="start_date_after" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${param.start_date_after}"/>
 														<span class="input-group-addon">
@@ -92,7 +89,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 失效日期： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<div class="input-group">
 														<input class="form-control date-picker" name="start_date_before"  type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${param.start_date_before}"/>
 														<span class="input-group-addon">
@@ -116,7 +113,7 @@
 											</button>
 											
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>
@@ -129,4 +126,4 @@
 							</div><!-- /.col -->
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
-				</div>
+

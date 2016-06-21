@@ -1,5 +1,6 @@
 package com.sysongy.poms.system.service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -9,10 +10,13 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
 @Service
@@ -20,6 +24,9 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	
 	@Autowired
 	private SysCashBackMapper cashBackMapper;
+
+	@Autowired
+	private DriverService driverService;
 
 	@Override
 	public PageInfo<SysCashBack> queryCashBack(SysCashBack obj) throws Exception {
@@ -41,7 +48,8 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	@Override
 	public String saveCashBack(SysCashBack record, String operation) throws Exception {
 		record.setStart_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getStart_date_after()));
-		record.setEnd_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getStart_date_before()));
+		record.setEnd_date(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(record.getStart_date_before()+" 23:59:59"));
+		record.setSys_cash_back_id(UUIDGenerator.getUUID());
 		
 		SysCashBack check = new SysCashBack();
 		
@@ -73,7 +81,6 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		}
 				
 		if("insert".equals(operation)){
-			record.setSys_cash_back_id(UUIDGenerator.getUUID());
 			record.setCreated_date(new Date());
 			
 			cashBackMapper.insert(record);
@@ -90,4 +97,54 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		return cashBackMapper.deleteByPrimaryKey(sysCashBackId);
 	}
 	
+	/**
+	 * 通过cashBack的number得到对象
+	 * @param cashBackid
+	 * @return 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<SysCashBack> queryCashBackByNumber(String cashBackNumber) throws Exception {
+		return  cashBackMapper.queryCashBackByNumber(cashBackNumber);
+	}
+	
+	/**
+	 * 取出规则，计算返现值，然后操作对应账户的金额。
+	 * 如果是充红，cash是负数，---不调用返现规则，直接调用历史记录
+	 * @param order
+	 * @param cashBack
+	 * @return
+	 */
+	private String cashToAccount(SysOrder order, List<SysCashBack> cashBackList){
+		BigDecimal cash = order.getCash();
+		for(SysCashBack cashback : cashBackList){
+			String status = cashback.getStatus();
+			if(GlobalConstant.CASHBACK_STATUS_ENABLE.equalsIgnoreCase(status)){
+				//如果启用，则执行
+				String 
+			}
+		}
+		return "";
+	}
+	@Override
+	public String cashBackToDriver(SysOrder order) throws Exception{
+		//1.判断是否首次返现，是则调用首次返现规则
+		String accountId = order.getDebitAccount();
+		SysDriver driver = driverService.queryDriverByPK(accountId);
+        Integer is_first_charge = driver.getIsFirstCharge();
+        if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
+        	List<SysCashBack>  cashBackList = this.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
+        	String cashTo_success = cashToAccount(order,cashBackList);
+        	//TODO
+        }
+		//2.根据当前订单类型，调用对应的返现规则
+		//TODO
+		return "";
+	}
+	
+	@Override
+	public String cashBackToTransportion(SysOrder order) throws Exception{
+		//TODO
+		return "";
+	}
 }

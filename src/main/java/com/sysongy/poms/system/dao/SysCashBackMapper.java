@@ -21,4 +21,6 @@ public interface SysCashBackMapper {
     List<SysCashBack> queryForPage(SysCashBack record);
     
     List<SysCashBack> checkvalid(SysCashBack record);
+    
+    List<SysCashBack> queryCashBackByNumber(String sysCashBackNumber);
 }

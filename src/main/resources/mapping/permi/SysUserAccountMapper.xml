@@ -8,9 +8,10 @@
     <result column="account_balance" property="accountBalance" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date
+    sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date, version +6+
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -94,7 +95,7 @@
     </set>
     where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
+  <update id="updateAccount" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
     update sys_user_account
     set account_code = #{accountCode,jdbcType=VARCHAR},
       account_type = #{accountType,jdbcType=INTEGER},

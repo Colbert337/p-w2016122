@@ -69,10 +69,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="email"> E-mail： </label>
+										<label class="col-sm-3 control-label no-padding-right">注册邮箱：</label>
 
 										<div class="col-sm-4">
-											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control" />
+											<input type="email" id="email" name="email" placeholder="输入注册邮箱" maxlength="50" class="form-control" />
 										</div>
 									</div>
 									
@@ -118,7 +118,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
-										<div class="col-sm-2 datepicker-noicon">
+										<div class="col-sm-4 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
 														<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" data-date-format="yyyy-mm-dd" readonly="readonly"/>
@@ -184,8 +184,6 @@
 													<option value ="890">西藏自治区</option>
 													<option value ="950">宁夏回族自治区</option>
 													<option value ="990">新疆维吾尔自治区</option>
-													<option value ="851">香港特别行政区</option>
-													<option value ="853">澳门特别行政区</option>
 											</select>
 												</div>
 												<div class="col-sm-6">
@@ -219,7 +217,7 @@
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="submit" onclick="save();">
+											<button class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
@@ -229,7 +227,7 @@
 												重置
 											</button>
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>
@@ -312,7 +310,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'<%=basePath%>/web/permi/user/list/userType?userType=2',   
+			   url:'<%=basePath%>/web/permi/user/list/userType?userType=5',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
@@ -403,10 +401,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站email不能为空'
+		                        message: '加气站注册邮箱不能为空'
 		                    },
-							emailAddress: {
-								message: '请输入正确的电子邮箱格式'
+		                    stringLength: {
+		                        min: 1,
+		                        max: 50,
+		                        message: '加注站注册邮箱不能超过50个字符'
 		                    }
 		                }
 		            },
@@ -455,7 +455,7 @@
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
-		                        message: '管理员密码长度必须大于6位'
+		                        message: '管理员密码长度必须大于等于6位'
 		                    }
 		                }
 		            },
@@ -483,7 +483,7 @@
 		                        message: '平台有效期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '平台有效期必须大于当前日期',
+		                    	message: '平台有效期必须大于等于当前日期',
 		                    	callback: function (value, validator, $field) {
 	                                 if(compareDate(new Date().toLocaleDateString(),value)){
 	                                	 return false;
@@ -613,10 +613,6 @@
 		
 		function returnpage(){
 			loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
-		}
-
-		function init(){
-			loadPage('#main', '../webpage/poms/transportion/transportion_new.jsp');
 		}
 		
 		function setOperationName(obj){

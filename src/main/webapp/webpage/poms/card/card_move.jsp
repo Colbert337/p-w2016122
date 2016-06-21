@@ -82,7 +82,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" > 调拨工作站： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<select class="form-control" id="workstation" name="workstation">
 														<s:option flag="true" gcode="WORKSTATION" />
 												</select>
@@ -91,7 +91,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" > 工作站领取人： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 												<input type="text" name="workstation_resp" class="form-control" id="workstation_resp" maxlength="10"/>
 												<%-- <select class="form-control" id="workstation_resp" name="workstation_resp">
 												</select> --%>
@@ -100,7 +100,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="operator"> 操作人： </label>
-										<div class="col-sm-2">
+										<div class="col-sm-4">
 											<input type="text"  id="operator" name="operator" class="form-control"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
 										</div>
 									</div>
@@ -150,7 +150,7 @@
 											</button>
 											
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>

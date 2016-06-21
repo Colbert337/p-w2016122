@@ -1,7 +1,9 @@
 package com.sysongy.poms.driver.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.util.Date;
 
@@ -22,6 +24,8 @@ public class SysDriver extends BaseModel{
 
     private Integer isIdent;
 
+    private Usysparam isIdentInfo;
+
     private String plateNumber;
 
     private Date expiryDate;
@@ -36,6 +40,8 @@ public class SysDriver extends BaseModel{
 
     private String cardId;
 
+    private GasCard cardInfo;
+
     private String sysUserAccountId;
 
     private String sysTransportId;
@@ -46,11 +52,17 @@ public class SysDriver extends BaseModel{
 
     private Date createdDate;
 
+    private String createdDate_before;
+
+    private String createdDate_after;
+
     private Date updatedDate;
 
     private Integer isFirstCharge;
 
-    private Integer checkedStatus;
+    private String checkedStatus;
+
+    private String checked_status;
 
     private Date checkedDate;
 
@@ -60,7 +72,31 @@ public class SysDriver extends BaseModel{
 
     private String walletId;
 
-    public String getSysDriverId() {
+	public String getChecked_status() {
+		return checked_status;
+	}
+
+	public void setChecked_status(String checked_status) {
+		this.checked_status = checked_status;
+	}
+
+	public String getCreatedDate_before() {
+		return createdDate_before;
+	}
+
+	public void setCreatedDate_before(String createdDate_before) {
+		this.createdDate_before = createdDate_before;
+	}
+
+	public String getCreatedDate_after() {
+		return createdDate_after;
+	}
+
+	public void setCreatedDate_after(String createdDate_after) {
+		this.createdDate_after = createdDate_after;
+	}
+
+	public String getSysDriverId() {
         return sysDriverId;
     }
 
@@ -236,11 +272,11 @@ public class SysDriver extends BaseModel{
         this.isFirstCharge = isFirstCharge;
     }
 
-    public Integer getCheckedStatus() {
+    public String getCheckedStatus() {
         return checkedStatus;
     }
 
-    public void setCheckedStatus(Integer checkedStatus) {
+    public void setCheckedStatus(String checkedStatus) {
         this.checkedStatus = checkedStatus;
     }
 
@@ -268,11 +304,19 @@ public class SysDriver extends BaseModel{
         this.sys_gas_station_id = sys_gas_station_id;
     }
 
-    public String getWalletId() {
-        return walletId;
+    public GasCard getCardInfo() {
+        return cardInfo;
     }
 
-    public void setWalletId(String walletId) {
-        this.walletId = walletId;
+    public void setCardInfo(GasCard cardInfo) {
+        this.cardInfo = cardInfo;
+    }
+
+    public Usysparam getIsIdentInfo() {
+        return isIdentInfo;
+    }
+
+    public void setIsIdentInfo(Usysparam isIdentInfo) {
+        this.isIdentInfo = isIdentInfo;
     }
 }

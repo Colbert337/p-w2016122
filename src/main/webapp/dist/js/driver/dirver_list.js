@@ -15,7 +15,7 @@ function commitForm(obj){
     $("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
-    url:'<%=basePath%>/web/permi/user/list/page',
+    url:'../web/driver/list/page',
     type:'post',
     dataType:'html',
     success:function(data){
@@ -24,18 +24,20 @@ var listOptions ={
 }
 /*分页相关方法 end*/
 //显示添加用户弹出层
-function addUser(){
-    /*$("#userModel").modal('show');*/
-    queryRoleList();
-    queryUserTypeList("");
-    /*密码输入框改为可编辑*/
-    $("#password").removeAttr("readonly");
-    $("#re_password").removeAttr("readonly");
+function addDriver(){
+    $("#driverModel").modal('show');
+}
+
+/**
+ * 发送验证码
+ */
+function sendMessage(){
+
 }
 //显示编辑用户弹出层
 function queryRoleList(roleId){
     $.ajax({
-        url:"<%=basePath%>/web/permi/user/list/role",
+        url:"../web/permi/user/list/role",
         data:{},
         async:false,
         type: "POST",
@@ -51,13 +53,13 @@ function queryRoleList(roleId){
             })
         }
     })
-    $("#userModel").modal('show');
+    $("#driverModel").modal('show');
 }
 
 //显示编辑用户弹出层
 function queryUserTypeList(userType){
     $.ajax({
-        url:"<%=basePath%>/web/usysparam/info",
+        url:"../web/usysparam/info",
         data:{mcode:userType},
         async:false,
         type: "POST",
@@ -66,7 +68,7 @@ function queryUserTypeList(userType){
             $("#user_type").val(data.mcode);
         }
     })
-    $("#userModel").modal('show');
+    $("#driverModel").modal('show');
 }
 
 /*取消弹层方法*/
@@ -87,70 +89,34 @@ function clearDiv(){
 /**
  * 保存用户信息
  */
-function saveUser(){
-    if(jQuery('#userForm').validationEngine('validate')){
+function saveDriver(){
+        $('#driverForm').data('bootstrapValidator').validate();
+        if(!$('#driverForm').data('bootstrapValidator').isValid()){
+            return ;
+        }
+
         var saveOptions ={
-            url:'<%=basePath%>/web/permi/user/save',
+            url:'../web/driver/save',
             type:'post',
             dataType:'html',
             success:function(data){
                 $("#main").html(data);
             }
         }
-        $("#userForm").ajaxSubmit(saveOptions);
+        $("#driverForm").ajaxSubmit(saveOptions);
 
-        $("#userModel").modal('hide');
+        $("#driverModel").modal('hide');
         $(".modal-backdrop").css("display","none");
-    }
-}
-
-/**
- * 回显用户信息
- */
-function editUser(userId){
-    $.ajax({
-        url:"<%=basePath%>/web/permi/user/update",
-        data:{sysUserId:userId},
-        async:false,
-        type: "POST",
-        success: function(data){
-            $("#sys_user_id").val(data.sysUserId);
-            $("#user_name").val(data.userName);
-            $("#remark").val(data.remark);
-            $("#real_name").val(data.realName);
-            $("#user_type").val(data.userType);
-
-            if(data.gender == 0){
-                $("#gender_b").attr("checked","checked");
-                $("#gender_g").removeAttr("checked");
-            }else if(data.gender == 1){
-                $("#gender_g").attr("checked","checked");
-                $("#gender_b").removeAttr("checked");
-            }
-
-            $("#email").val(data.email);
-            $("#mobile_phone").val(data.mobilePhone);
-            /*密码输入框改为只读*/
-            $("#password").val(data.password);
-            $("#re_password").val(data.password);
-            /*密码输入框改为可编辑*/
-            $("#password").attr("readonly","readonly");
-            $("#re_password").attr("readonly","readonly");
-
-            queryRoleList(data.sysRoleId);
-            queryUserTypeList(data.userType);
-        }
-    });
 
 }
 
 /**
  * 删除用户
  */
-function deleteUser(userId){
+function leaveDriver(driverId){
     if(confirm("确定要删除该用户吗？")){
         var deleteOptions ={
-            url:'<%=basePath%>/web/permi/user/delete',
+            url:'../web/permi/user/delete',
             data:{userId:userId},
             type:'post',
             dataType:'text',
@@ -162,26 +128,73 @@ function deleteUser(userId){
     }
 
 }
-/**
- * 修改用户状态 0 启用 1 禁用
- * @param userId
- */
-function updateStatus(userId,status){
-    var alertStr = "确定要禁用该用户吗？";
-    if(status == 0){
-        alertStr = "确定要启用该用户吗？";
-    }
-    if(confirm(alertStr)){
-        var deleteOptions ={
-            url:'<%=basePath%>/web/permi/user/update/staruts',
-            data:{sysUserId:userId,status:status},
-            type:'post',
-            dataType:'text',
-            success:function(data){
-                $("#main").html(data);
+
+//bootstrap验证控件
+$('#driverForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        mobilePhone: {
+            validators: {
+                notEmpty: {
+                    message: '手机号码不能为空'
+                },
+                stringLength: {
+                    min: 11,
+                    max: 11,
+                    message: '手机号码为11位'
+                }
+            }
+        },
+        userName: {
+            validators: {
+                notEmpty: {
+                    message: '验证码不能为空'
+                },
+                stringLength: {
+                    min: 6,
+                    max: 6,
+                    message: '验证码必须为6位'
+                }
+            }
+        },
+        fullName: {
+            validators: {
+                notEmpty: {
+                    message: '姓名不能为空'
+                },
+                stringLength: {
+                    min: 2,
+                    max: 5,
+                    message: '姓名不得小于两个字'
+                }
+            }
+        },
+        payCode: {
+            validators: {
+                notEmpty: {
+                    message: '支付密码不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9a-zA-Z]+$',
+                    message: '密码只能包含数字和字母'
+                }
+            }
+        },
+        rePassword: {
+            validators: {
+                notEmpty: {
+                    message: '确认密码不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9a-zA-Z]+$',
+                    message: '密码只能包含数字和字母'
+                }
             }
         }
-        $("#listForm").ajaxSubmit(deleteOptions);
     }
-
-}
+});

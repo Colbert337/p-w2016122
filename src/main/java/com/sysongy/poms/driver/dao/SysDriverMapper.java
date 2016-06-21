@@ -23,4 +23,11 @@ public interface SysDriverMapper {
     int isExists(SysDriver record);
 
     SysDriver queryDriverByMobilePhone(SysDriver record);
+
+    /**
+     * 条件查询司机列表
+     * @param record
+     * @return
+     */
+    List<SysDriver> querySearchDriverList(SysDriver record);
 }

@@ -37,7 +37,7 @@ h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
     line-height: 1.38;
 }
 .datepicker-noicon .glyphicon-ok:before {
-    content: "";
+    /*content: "";*/
 }
 .span-state {
     display: inline-block;
@@ -45,4 +45,10 @@ h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
 }
 .option-btn-m{
     margin-right: 6px;
+}
+.form-horizontal .has-feedback .form-control-feedback {
+    right: -16px;
+}
+.form-horizontal .has-feedback.nospace .form-control-feedback {
+    right: -27px;
 }

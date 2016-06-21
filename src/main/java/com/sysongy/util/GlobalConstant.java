@@ -139,4 +139,87 @@ public class GlobalConstant {
 		public static final String TRANSPORTION="2";
 		public static final String DRIVER="3";
 	}
+
+	/*
+	 * 	1充值 2 消费 3 转账
+	 */
+	public interface OrderType{
+		public static final String CHARGE ="1";
+		public static final String CONSUME="2";
+		public static final String TRANSFER="3";
+	}
+
+	/*
+	 * 	1司机 2加气站 3 运输公司
+	 */
+	public interface OrderOperatorType{
+		public static final String DRIVER ="1";
+		public static final String GASTATION="2";
+		public static final String TRANSPORTION="3";
+	}
+
+	/*
+	 * 是否首次充值 
+	 */
+	public static int FIRST_CHAGRE_YES = 1;
+	public static int FIRST_CHAGRE_NO = 0;
+	
+	
+	/*
+	 * 订单处理流程中的类型
+	 */
+	public interface OrderDealType{
+		public static final String CHARGE_TO_DRIVER_CHARGE ="CHARGE_TO_DRIVER_CHARGE";
+		public static final String CHARGE_TO_DRIVER_CASHBACK ="CHARGE_TO_DRIVER_CASHBACK";
+		public static final String CHARGE_TO_DRIVER_FIRSTCASHBACK ="CHARGE_TO_DRIVER_FIRSTCASHBACK";
+	}
+
+	/*
+	 * 返现规则是否启用 
+	 */
+	public static String CASHBACK_STATUS_ENABLE = "1";
+	public static String CASHBACK_STATUS_DISABLE = "2";
+	
+	/*
+	 * 返现规则类型的编号
+	 */
+	public interface CashBackNumber{
+		public static final String CASHBACK_GAS_STATION_CHARGE ="0";
+		public static final String CASHBACK_REGISTER ="1";
+		public static final String CASHBACK_FIRST_CHARGE ="2";
+		public static final String CASHBACK_INVITE ="3";
+		public static final String CASHBACK_WEICHAT_CHARGE ="4";
+		public static final String CASHBACK_ALIPAY_CHARGE ="5";
+		public static final String CASHBACK_UNIONPAY_CHARGE ="6";
+		public static final String CASHBACK_CARD_CHARGE ="7";
+		public static final String CASHBACK_POS_CHARGE ="8";
+	}
+	
+	/*
+	 * 	订单处理结果标记
+	 */
+	public interface OrderProcessResult{
+		public static final String SUCCESS ="SUCCESS";
+		public static final String ORDER_IS_NULL="ORDER_IS_NULL";
+		public static final String ORDER_TYPE_IS_NOT_CHARGE="ORDER_TYPE_IS_NOT_CHARGE";
+		public static final String ORDER_TYPE_IS_NOT_CONSUME="ORDER_TYPE_IS_NOT_CONSUME";
+		public static final String ORDER_TYPE_IS_NOT_TRANSFER="ORDER_TYPE_IS_NOT_TRANSFER";
+		public static final String ORDER_TO_IS_NOT_DIRVER="ORDER_TO_IS_NOT_DIRVER";
+		public static final String ORDER_TO_IS_NOT_GAS_POSITION="ORDER_TO_IS_NOT_GAS_POSITION";
+		public static final String OPERATOR_TYPE_IS_NOT_DRIVER="OPERATOR_TYPE_IS_NOT_DRIVER";
+		public static final String OPERATOR_TYPE_IS_NOT_GASTATION="OPERATOR_TYPE_IS_NOT_GASTATION";
+		public static final String OPERATOR_TYPE_IS_NOT_TRANSPORTION="OPERATOR_TYPE_IS_NOT_TRANSPORTION";
+
+		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";
+	}
+
+	/*
+	 * 0 新注册 1 待审核 2 已通过 3 未通过
+	 */
+	public interface DriverStatus{
+		public static final String NEWBEE = "0";
+		public static final String PENDING = "1";
+		public static final String PASSED = "2";
+		public static final String NOPASS = "3";
+	}
 }
