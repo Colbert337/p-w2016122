@@ -147,7 +147,8 @@ public class DriverServiceImpl implements DriverService {
 		sysUserAccountMapper.updateAccount(sysUserAccount);
 		
 		//记录订单流水
-		orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, GlobalConstant.OrderProcessResult.SUCCESS);
+		String remark = "给"+ driver.getFullName()+"的账户，充值"+cash.toPlainString()+"。";
+		String deal_success = orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, remark,GlobalConstant.OrderProcessResult.SUCCESS);
 		
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
