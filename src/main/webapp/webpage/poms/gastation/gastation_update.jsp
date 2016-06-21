@@ -83,10 +83,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="email"> E-mail： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="email">注册邮箱： </label>
 
 										<div class="col-sm-4">
-											<input type="email" id="email"  name="email" placeholder="输入E-mail" class="form-control"  value="${station.email}"/>
+											<input type="email" id="email" name="email" placeholder="输入注册邮箱" class="form-control"  value="${station.email}"/>
 										</div>
 									</div>
 									

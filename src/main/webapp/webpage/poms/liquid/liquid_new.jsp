@@ -41,7 +41,7 @@
 										<label class="col-sm-3 control-label no-padding-right" >工艺类型： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="technology_type" placeholder="输入工艺类型" class="form-control" value="${gasource.technology_type}"/>
+											<input type="text" name="technology_type" placeholder="输入工艺类型" class="form-control" value="${gasource.technology_type}" maxlength="20"/>
 										</div>
 									</div>
 									
@@ -57,7 +57,7 @@
 										<label class="col-sm-3 control-label no-padding-right">价格：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="market_price" placeholder="输入价格" class="form-control" maxlength="15" value="${gasource.market_price}"/>
+											<input type="text" name="market_price" placeholder="输入价格" class="form-control" maxlength="8" value="${gasource.market_price}"/>
 										</div>
 									</div>
 	
@@ -118,7 +118,7 @@
 										<label class="col-sm-3 control-label no-padding-right">备注： </label>
 
 										<div class="col-sm-4">
-											<textarea class="form-control" name="remark" rows="5" value="${gasource.remark}"></textarea>
+											<textarea class="form-control" name="remark" rows="5" value="${gasource.remark}" maxlength="100"></textarea>
 										</div>
 									</div>
 											

@@ -111,9 +111,8 @@
 		            	$("#main").html(data);
 		            	$("#modal-table").modal("show");
 						 if($("#retCode").val() != "100"){
-			            	 init();	
+			            	// init();	
 			          }
-						
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
 		 	       }

@@ -121,6 +121,10 @@
 	                validators: {
 	                    notEmpty: {
 	                        message: '价格不能为空'
+	                    },
+	                    regexp: {
+	                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
+	                        message: '价格必须是数字'
 	                    }
 	                }
 	            },
