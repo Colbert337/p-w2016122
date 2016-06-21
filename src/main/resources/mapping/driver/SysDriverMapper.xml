@@ -24,7 +24,7 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
     <result column="is_first_charge" property="isFirstCharge" jdbcType="INTEGER" />
-    <result column="checked_status" property="checkedStatus" jdbcType="VARCHAR" />
+    <result column="checked_status" property="checked_status" jdbcType="VARCHAR" />
     <result column="checked_date" property="checkedDate" jdbcType="TIMESTAMP" />
     <result column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
     <association property="account" column="sys_user_account_id"
@@ -119,7 +119,7 @@
       #{vehicleLice,jdbcType=VARCHAR}, #{identityCard,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR},
       #{sysUserAccountId,jdbcType=VARCHAR}, #{sysTransportId,jdbcType=VARCHAR}, #{regisCompany,jdbcType=VARCHAR},
       #{regisSource,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},
-      #{isFirstCharge,jdbcType=INTEGER}, #{checkedStatus,jdbcType=INTEGER}, #{checkedDate,jdbcType=TIMESTAMP},
+      #{isFirstCharge,jdbcType=INTEGER}, #{checked_status,jdbcType=INTEGER}, #{checkedDate,jdbcType=TIMESTAMP},
       #{sys_gas_station_id,jdbcType=VARCHAR}
       )
   </insert>
@@ -192,7 +192,7 @@
       <if test="isFirstCharge != null" >
         is_first_charge,
       </if>
-      <if test="checkedStatus != null" >
+      <if test="checked_status != null" >
         checked_status,
       </if>
       <if test="checkedDate != null" >
@@ -269,8 +269,8 @@
       <if test="isFirstCharge != null" >
         #{isFirstCharge,jdbcType=INTEGER},
       </if>
-      <if test="checkedStatus != null" >
-        #{checkedStatus,jdbcType=INTEGER},
+      <if test="checked_status != null" >
+        #{checked_status,jdbcType=INTEGER},
       </if>
       <if test="checkedDate != null" >
         #{checkedDate,jdbcType=TIMESTAMP},
@@ -346,8 +346,8 @@
       <if test="isFirstCharge != null" >
         is_first_charge = #{isFirstCharge,jdbcType=INTEGER},
       </if>
-      <if test="checkedStatus != null" >
-        checked_status = #{checkedStatus,jdbcType=INTEGER},
+      <if test="checked_status != null" >
+        checked_status = #{checked_status,jdbcType=INTEGER},
       </if>
       <if test="checkedDate != null" >
         checked_date = #{checkedDate,jdbcType=TIMESTAMP},
@@ -381,7 +381,7 @@
       created_date = #{createdDate,jdbcType=TIMESTAMP},
       updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       is_first_charge = #{isFirstCharge,jdbcType=INTEGER},
-      checked_status = #{checkedStatus,jdbcType=INTEGER},
+      checked_status = #{checked_status,jdbcType=INTEGER},
       checked_date = #{checkedDate,jdbcType=TIMESTAMP},
       sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}

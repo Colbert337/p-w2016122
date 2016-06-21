@@ -60,8 +60,6 @@ public class SysDriver extends BaseModel{
 
     private Integer isFirstCharge;
 
-    private String checkedStatus;
-
     private String checked_status;
 
     private Date checkedDate;
@@ -81,14 +79,6 @@ public class SysDriver extends BaseModel{
     public void setWalletId(String walletId) {
         this.walletId = walletId;
     }
-
-    public String getChecked_status() {
-		return checked_status;
-	}
-
-	public void setChecked_status(String checked_status) {
-		this.checked_status = checked_status;
-	}
 
 	public String getCreatedDate_before() {
 		return createdDate_before;
@@ -282,16 +272,16 @@ public class SysDriver extends BaseModel{
     public void setIsFirstCharge(Integer isFirstCharge) {
         this.isFirstCharge = isFirstCharge;
     }
+    
+    public String getChecked_status() {
+		return checked_status;
+	}
 
-    public String getCheckedStatus() {
-        return checkedStatus;
-    }
+	public void setChecked_status(String checked_status) {
+		this.checked_status = checked_status;
+	}
 
-    public void setCheckedStatus(String checkedStatus) {
-        this.checkedStatus = checkedStatus;
-    }
-
-    public Date getCheckedDate() {
+	public Date getCheckedDate() {
         return checkedDate;
     }
 

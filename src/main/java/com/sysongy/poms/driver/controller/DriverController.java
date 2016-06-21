@@ -93,7 +93,6 @@ public class DriverController extends BaseContoller{
 		driver.setUserName(null);
 		driver.setUserStatus("0");//0 使用中 1 已冻结
 		driver.setChecked_status("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
-		driver.setCheckedStatus("0");
 
 		driver.setSysDriverId(UUIDGenerator.getUUID());
 		driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
@@ -113,8 +112,11 @@ public class DriverController extends BaseContoller{
 
 		try {
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
-        driver.setIsIdent(0);
-
+        driver.setIsIdent(1);
+        
+        if(StringUtils.isEmpty(driver.getOrderby())){
+        	driver.setOrderby("updated_date desc");
+        }
         pageinfo = driverService.queryDrivers(driver);
         
         bean.setRetCode(100);
@@ -125,6 +127,42 @@ public class DriverController extends BaseContoller{
 		map.addAttribute("pageInfo", pageinfo);
 		map.addAttribute("driver",driver);
 		map.addAttribute("current_module", "webpage/poms/system/driver_review");
+
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+    }
+    
+    @RequestMapping("/driverInfoList")
+    public String queryDriverInfoList(SysDriver driver, ModelMap map)throws Exception{
+    	PageBean bean = new PageBean();
+		String ret = "webpage/poms/system/driver_info";
+
+		try {
+	        PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
+	        
+	        if(StringUtils.isEmpty(driver.getOrderby())){
+	        	driver.setOrderby("updated_date desc");
+	        }
+	
+	        pageinfo = driverService.queryDrivers(driver);
+	        
+	        bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+	
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("driver",driver);
+			map.addAttribute("current_module", "webpage/poms/system/driver_info");
 
 		} catch (Exception e) {
 			bean.setRetCode(5000);
