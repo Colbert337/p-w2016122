@@ -10,7 +10,7 @@
 	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
 
-	<script src="<%=basePath %>/dist/js/poms/liquid/liquid_update.js"></script> 
+	<script src="<%=basePath %>/dist/js/liquid/liquid_update.js"></script>
 	
 	<script type="text/javascript">
 		var gas_factory_addr = "${gasource.gas_factory_addr}";

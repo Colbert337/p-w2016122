@@ -9,7 +9,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-	<script src="<%=basePath %>/dist/js/poms/liquid/liquid_new.js"></script>
+	<script src="<%=basePath %>/dist/js/liquid/liquid_new.js"></script>
 
 					<div class="">
 						<!-- /section:settings.box -->
