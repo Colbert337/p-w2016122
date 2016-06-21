@@ -61,6 +61,8 @@ public class SysDriver extends BaseModel{
 
     private String sys_gas_station_id;
 
+    private String expireTimeForCRM;
+
     public String getSysDriverId() {
         return sysDriverId;
     }
@@ -275,5 +277,13 @@ public class SysDriver extends BaseModel{
 
     public void setCardInfo(GasCard cardInfo) {
         this.cardInfo = cardInfo;
+    }
+
+    public String getExpireTimeForCRM() {
+        return expireTimeForCRM;
+    }
+
+    public void setExpireTimeForCRM(String expireTimeForCRM) {
+        this.expireTimeForCRM = expireTimeForCRM;
     }
 }

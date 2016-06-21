@@ -2,6 +2,7 @@ package com.sysongy.poms.order.service.impl;
 
 import com.sysongy.poms.permi.dao.SysRoleFunctionMapper;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.model.SysUserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,8 @@ import com.sysongy.poms.order.dao.SysOrderMapper;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.util.GlobalConstant;
+
+import java.math.BigDecimal;
 
 /**
  * 
@@ -83,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
     
     /**
      * 给加注站充值
-     * @param order
+     * @paramorder
      * @return
      */
 	@Override
@@ -99,12 +102,15 @@ public class OrderServiceImpl implements OrderService {
 		return strRet;
 	}
 
-
-	private String validAccount(){
+	@Override
+	public String validAccount(SysOrder record){
 		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
-
-
-
+		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
+		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance());
+		if(record.getCash().compareTo(balance) == 1)
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
 		return strRet;
 	}
+
+
 }
