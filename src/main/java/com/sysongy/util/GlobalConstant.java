@@ -159,6 +159,13 @@ public class GlobalConstant {
 	}
 
 	/*
+	 * 是否首次充值 
+	 */
+	public static int FIRST_CHAGRE_YES = 1;
+	public static int FIRST_CHAGRE_NO = 0;
+	
+	
+	/*
 	 * 订单处理流程中的类型
 	 */
 	public interface OrderDealType{
@@ -167,6 +174,27 @@ public class GlobalConstant {
 		public static final String CHARGE_TO_DRIVER_FIRSTCASHBACK ="CHARGE_TO_DRIVER_FIRSTCASHBACK";
 	}
 
+	/*
+	 * 返现规则是否启用 
+	 */
+	public static String CASHBACK_STATUS_ENABLE = "1";
+	public static String CASHBACK_STATUS_DISABLE = "2";
+	
+	/*
+	 * 返现规则类型的编号
+	 */
+	public interface CashBackNumber{
+		public static final String CASHBACK_GAS_STATION_CHARGE ="0";
+		public static final String CASHBACK_REGISTER ="1";
+		public static final String CASHBACK_FIRST_CHARGE ="2";
+		public static final String CASHBACK_INVITE ="3";
+		public static final String CASHBACK_WEICHAT_CHARGE ="4";
+		public static final String CASHBACK_ALIPAY_CHARGE ="5";
+		public static final String CASHBACK_UNIONPAY_CHARGE ="6";
+		public static final String CASHBACK_CARD_CHARGE ="7";
+		public static final String CASHBACK_POS_CHARGE ="8";
+	}
+	
 	/*
 	 * 	订单处理结果标记
 	 */
