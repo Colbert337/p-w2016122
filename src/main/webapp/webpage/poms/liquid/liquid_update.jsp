@@ -9,12 +9,11 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
-
-	<script src="<%=basePath %>/dist/js/poms/liquid/liquid_update.js"></script> 
-	
 	<script type="text/javascript">
 		var gas_factory_addr = "${gasource.gas_factory_addr}";
 	</script>
+	<script src="<%=basePath %>/dist/js/poms/liquid/liquid_update.js"></script> 
+	
 			<div class="main-content">
 				<div class="main-content-inner">
 
@@ -30,7 +29,7 @@
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								<form class="form-horizontal"  id="gastationform">
+								<form class="form-horizontal" id="gastationform">
 									<!-- #section:elements.form -->
 									<input type="hidden" id="sys_gas_source_id"  name="sys_gas_source_id" value="${gasource.sys_gas_source_id}" />
 							
@@ -105,8 +104,6 @@
 															<option value ="890">西藏自治区</option>
 															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
-															<option value ="851">香港特别行政区</option>
-															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
 												<div class="col-sm-6">

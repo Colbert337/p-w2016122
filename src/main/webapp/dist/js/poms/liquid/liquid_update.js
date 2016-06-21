@@ -36,14 +36,14 @@
 		china['852']=new Array('台北市','高雄市','基隆市','台中市','台南市','新竹市','嘉义市');
 		
 		//下拉框默认选中当前对象的值
-			$("#province_id").find("option").each(function(){
-			if($(this).text() == gas_factory_addr.value.split(" ")[0]){
+		$("#province_id").find("option").each(function(){
+			if($(this).text() == gas_factory_addr.split(" ")[0]){
 				$(this).attr("selected",true);
 			}
 		});  
 		$("#province_id").trigger("change");
-		$("#city_id").find("option[value="+gas_factory_addr.value.split(" ")[1]+"]").attr("selected",true);			
-		$("#detail").val(gas_factory_addr.value.split(" ")[2]);
+		$("#city_id").find("option[value="+gas_factory_addr.split(" ")[1]+"]").attr("selected",true);			
+		$("#detail").val(gas_factory_addr.split(" ")[2]);
 		
 		function chinaChange(province, city) {
 			var pv, cv;
