@@ -3,6 +3,7 @@ package com.sysongy.poms.driver.controller;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.util.Encoder;
+import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.weaver.loadtime.Aj;
@@ -41,7 +42,10 @@ public class DriverController extends BaseContoller{
 
     @Autowired
     DriverService driverService;
-    /**
+	@Autowired
+	RedisClientInterface redisClientImpl;
+
+	/**
      * 查询司机列表
      * @return
      */
@@ -65,6 +69,7 @@ public class DriverController extends BaseContoller{
 
         return "webpage/tcms/driver/driver_list";
     }
+
 
 	/**
 	 * 添加司机
