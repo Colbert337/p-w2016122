@@ -126,12 +126,12 @@ public class DriverServiceImpl implements DriverService {
     }
 
     /**
-	 * 给司机充钱
+	 * 给司机充值/充红
 	 * @param order
 	 * @return
      * @throws Exception 
 	 */
-	public String chargeCashToDriver(SysOrder order) throws Exception{
+	public String chargeCashToDriver(SysOrder order, String is_discharge) throws Exception{
 		if (order ==null){
 			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
 		}
@@ -145,10 +145,22 @@ public class DriverServiceImpl implements DriverService {
 		SysDriver driver = this.queryDriverByPK(debit_account);
 		String driver_account = driver.getSysUserAccountId();
 		BigDecimal cash = order.getCash();
+		//如果是负值，但是is_discharge却不是充红，则返回错误
+		if(cash.compareTo(new BigDecimal("0")) < 0 ){
+			if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
+				   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE;
+			 }
+		}
 		String cash_success = sysUserAccountService.addCashToAccount(driver_account,cash);
 		//记录订单流水
-		String remark = "给"+ driver.getFullName()+"的账户，充值"+cash.toPlainString()+"。";
-		orderDealService.createOrderDeal(order.getOrderId(), GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, remark,cash_success);
+		String chong = "充值";
+		String orderDealType = GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE;
+		if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
+			chong ="充红";
+			orderDealType = GlobalConstant.OrderDealType.DISCHARGE_TO_DRIVER_CHARGE;
+		}
+		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toPlainString()+"。";
+		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
 		
 		return cash_success;
 	}

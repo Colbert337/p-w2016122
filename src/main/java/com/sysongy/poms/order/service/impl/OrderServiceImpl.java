@@ -1,20 +1,21 @@
 package com.sysongy.poms.order.service.impl;
 
-import com.sysongy.poms.permi.dao.SysRoleFunctionMapper;
-import com.sysongy.poms.permi.dao.SysUserAccountMapper;
-import com.sysongy.poms.permi.model.SysUserAccount;
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.dao.SysOrderMapper;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.GlobalConstant.OrderOperatorType;
-
-import java.math.BigDecimal;
 
 /**
  * 
@@ -35,6 +36,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private SysCashBackService sysCashBackService;
+	
+	@Autowired
+	private OrderDealService orderDealService;
 	
 	@Override
 	public int deleteByPrimaryKey(String orderId) {
@@ -93,6 +97,63 @@ public class OrderServiceImpl implements OrderService {
 	   return GlobalConstant.OrderProcessResult.SUCCESS;	
 	}
     
+	/**
+     * 判断订单能否充红
+     * 取得订单的创建时间，然后从订单对应的账户debit_account中找到对应的司机或者车队，如果此司机或者车队没有在订单创建时间后消费，则可以充值。
+     * @param order
+     * @return
+     * @throws Exception
+     */
+    public String checkCanDischarge(SysOrder order) throws Exception{
+    	//TODO
+    	return "";
+    }
+    
+	/**
+	 * 充红订单
+	 * 1.从查询原始订单的订单处理流程
+	 * 2.针对每个处理过程，进行反向操作
+	 * @param order 充红的订单对象，其中属性discharge_order_id存的是对冲的订单ID
+	 */
+    public String dischargeOrder(SysOrder order) throws Exception{
+	   if (order ==null){
+		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+	   }
+	   
+	   String is_discharge = order.getIs_discharge();
+	   if(is_discharge==null || (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
+		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE;
+	   }
+	   
+	   String discharge_order_id = order.getDischarge_order_id();
+	   if(discharge_order_id==null){
+		   return GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_ID_IS_NULL;
+	   }
+	   
+	   BigDecimal cash = order.getCash();
+	   if(cash.compareTo(new BigDecimal("0")) > 0 ){
+		   return GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE;
+	   }
+	   //1.查询原始订单的订单处理流程：
+	   List<SysOrderDeal> sysOrdelDeal_list = orderDealService.queryOrderDealByOrderId(discharge_order_id);
+	   if(sysOrdelDeal_list==null|| sysOrdelDeal_list.size()==0){
+		   return GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_ORDERDEAL_IS_EMPTY;
+	   }
+	   //2.取得每个订单流水，根据类型做相应处理
+	   for(SysOrderDeal sysOrderDeal: sysOrdelDeal_list){
+		   String orderDealType = sysOrderDeal.getDealType();
+		   if(orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE)){
+			  String dischargeCashToDriver_success =  driverService.chargeCashToDriver(order, is_discharge);
+			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(dischargeCashToDriver_success)){
+		    		//如果出错，直接退出
+		    		return dischargeCashToDriver_success;
+		      }
+		   }
+		   //TODO 针对返现进行操作
+	   }
+	   //TODO
+	   return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
     /**
      * 给加注站充值
      * @paramorder

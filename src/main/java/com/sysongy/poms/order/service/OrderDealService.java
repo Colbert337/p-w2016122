@@ -1,8 +1,8 @@
 package com.sysongy.poms.order.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 
 /**
@@ -27,6 +27,13 @@ public interface OrderDealService {
      * @return
      */
     String createDealNumber(String deal_type);
+
+    /**
+     * 根据订单来查询订单操作流水
+     * @param record
+     * @return
+     */
+    List<SysOrderDeal> queryOrderDealByOrderId(String orderId);
 
     /**
      * 创建订单流水

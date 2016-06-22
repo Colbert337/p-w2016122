@@ -30,6 +30,23 @@ public interface OrderService {
      * @return
      */
     String chargeToTransportion(SysOrder record) throws Exception;
+    
+
+    /**
+     * 判断订单能否充红
+     * @param order
+     * @return
+     * @throws Exception
+     */
+    String checkCanDischarge(SysOrder order) throws Exception;
+
+    /**
+     * 充红订单
+     * @param order
+     * @return
+     * @throws Exception
+     */
+    String dischargeOrder(SysOrder order) throws Exception;
 
     /**
      * 消费
