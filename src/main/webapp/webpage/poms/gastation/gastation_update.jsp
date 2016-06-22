@@ -96,7 +96,7 @@
 										<label class="col-sm-3 control-label no-padding-right">注册邮箱： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="email" name="email" placeholder="输入注册邮箱" class="form-control"  value="${station.email}"/>
+											<input type="text" id="email" name="email" placeholder="输入注册邮箱" class="form-control"  value="${station.email}" maxlength="50"/>
 										</div>
 									</div>
 									
@@ -374,7 +374,7 @@
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 加注站状态： </label>
+										<label class="col-sm-3 control-label no-padding-right">加注站状态：</label>
 
 										<div class="col-sm-4">
 											<select class="chosen-select " name="status" >
@@ -574,15 +574,14 @@
 		                }
 		            },
 		            email: {
-		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加注站email不能为空'
+		                        message: '加注站注册邮箱不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
-		                        max: 20,
-		                        message: '加注站email不能超过30个字符'
+		                        max: 50,
+		                        message: '加注站注册邮箱不能超过50个字符'
 		                    }
 		                }
 		            },
@@ -593,7 +592,7 @@
 		                        message: '平台有效期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '平台有效期必须大于当前日期',
+		                    	message: '平台有效期必须大于等于当前日期',
 		                    	callback: function (value, validator, $field) {
 	                                 if(compareDate(new Date().toLocaleDateString(),value)){
 	                                	 return false;

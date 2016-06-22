@@ -76,7 +76,7 @@ public class TransportionServiceImpl implements TransportionService {
 			Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 			String show_path = (String) prop.get("default_img");
 			record.setSys_user_account_id(sysUserAccount.getSysUserAccountId());
-			record.setStatus(GlobalConstant.GastationStatus.USED);
+			record.setStatus(GlobalConstant.StationStatus.USED);
 			record.setCreated_time(new Date());
 			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			record.setSys_transportion_id(newid);
@@ -122,6 +122,16 @@ public class TransportionServiceImpl implements TransportionService {
 			}
 			usysparam.setScode("");
 			usysparamService.updateUsysparam(usysparam);
+			
+			//维护系统参数表
+			if(GlobalConstant.StationStatus.PAUSE.equals(record.getStatus())){
+				usysparamService.deleteUsysparam(usysparam);
+			}else{
+				Usysparam tmp = usysparamService.queryUsysparamByCode("TRANSTION", record.getSys_transportion_id());
+				if(tmp == null){
+					usysparamService.saveUsysparam(usysparam);
+				}
+			}
 			return record.getSys_transportion_id();
 		}
 	}

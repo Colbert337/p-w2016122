@@ -398,7 +398,6 @@
 		                }
 		            },
 		            email: {
-		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
 		                        message: '加气站注册邮箱不能为空'
@@ -431,7 +430,7 @@
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
-		                        message: '管理员账号长度必须大于6位'
+		                        message: '管理员账号长度必须大于等于6位'
 		                    },
 		                    remote: {
                                 url: '../web/permi/user/info/isExist',
