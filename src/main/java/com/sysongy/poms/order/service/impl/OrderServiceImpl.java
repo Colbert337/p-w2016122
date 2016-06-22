@@ -80,9 +80,9 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorType==null || (!operatorType.equalsIgnoreCase(GlobalConstant.OrderOperatorType.DRIVER))){
 		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER;
 	   }
-	   
+	   String is_discharge = order.getIs_discharge();
 	   //1.首先给司机充值
-	   String success_charge = driverService.chargeCashToDriver(order);
+	   String success_charge = driverService.chargeCashToDriver(order,is_discharge);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_charge)){
 		   //如果出错直接返回错误代码退出
 		   return success_charge;
