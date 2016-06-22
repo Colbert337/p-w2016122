@@ -6,6 +6,7 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.tcms.advance.model.TcVehicle;
+import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.RedisClientInterface;
@@ -32,9 +33,7 @@ public class TcVehicleController extends BaseContoller {
 
 
     @Autowired
-    DriverService driverService;
-    @Autowired
-    RedisClientInterface redisClientImpl;
+    TcVehicleService tcVehicleService;
 
     /**
      * 查询车辆列表
@@ -50,18 +49,17 @@ public class TcVehicleController extends BaseContoller {
         vehicle.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
-        PageInfo<SysDriver> driverPageInfo = new PageInfo<SysDriver>();
+        PageInfo<TcVehicle> vehiclePageInfo = new PageInfo<TcVehicle>();
         try {
-//            driverPageInfo = driverService.querySearchDriverList(driver);
+            vehiclePageInfo = tcVehicleService.queryVehicleList(vehicle);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        map.addAttribute("driverList",driverPageInfo.getList());
-        map.addAttribute("pageInfo",driverPageInfo);
-//        map.addAttribute("driver",driver);
+        map.addAttribute("vehicleList",vehiclePageInfo.getList());
+        map.addAttribute("pageInfo",vehiclePageInfo);
 
-        return "webpage/tcms/driver/driver_list";
+        return "webpage/tcms/advance/vehicle_list";
     }
 
 
@@ -92,7 +90,7 @@ public class TcVehicleController extends BaseContoller {
         driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
 
         try {
-            result = driverService.saveDriver(driver,operation);
+//            result = driverService.saveDriver(driver,operation);
         }catch (Exception e){
             e.printStackTrace();
         }

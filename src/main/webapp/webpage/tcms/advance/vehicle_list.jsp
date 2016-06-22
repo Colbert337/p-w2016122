@@ -29,19 +29,25 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
-							<input type="text" name="fullName" placeholder="司机姓名/手机号码"  maxlength="11" value="${driver.fullName}"/>
+							<input type="text" name="fullName" placeholder="车牌号"  maxlength="11" value="${driver.fullName}"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
 							</button>
-							<div class="item"></div>
-							<button class="btn btn-sm btn-primary" type="button" onclick="addDriver();">
-								添加司机
+							<button class="btn btn-sm" type="button" onclick="init();">
+								重置
 							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="leaveDriver();">
-								离职
+							<div class="item"></div>
+							<button class="btn btn-sm btn-primary" type="button" onclick="addVehicle();">
+								添加车辆
+							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="importVehicle();">
+								批量导入
+							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="downLoadModel();">
+								下载模板
 							</button>
 						</div>
 					</div>
@@ -50,46 +56,32 @@
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
-							<th class="center">
-								<label class="pos-rel">
-									<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
-									<span class="lbl"></span>
-								</label>
-							</th>
-							<th>姓名</th>
-							<th>入职时间</th>
-							<th>手机号码</th>
+							<th>车队名称</th>
+							<th>车牌号</th>
 							<th>实体卡号</th>
-							<th>状态</th>
-							<%--<th>操作</th>--%>
+							<th>通知手机</th>
+							<th>创建时间</th>
+							<th>卡状态</th>
+							<th>操作</th>
 						</tr>
 						</thead>
 						<tbody>
-						<c:forEach items="${driverList}" var="driver">
+						<c:forEach items="${vehicleList}" var="vehicle">
 							<tr>
-								<td class="center">
-									<label class="pos-rel">
-										<input type="checkbox" class="ace" id="pks" name="pks" value="${driver.sysDriverId}"/>
-										<span class="lbl"></span>
-									</label>
-								</td>
-								<td>${driver.fullName}</td>
-								<td><fmt:formatDate value="${driver.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td>${driver.mobilePhone}</td>
-								<td>${driver.cardId}</td>
+								<td>${vehicle.fullName}</td>
+								<td>${vehicle.fullName}</td>
+								<td>${vehicle.mobilePhone}</td>
+								<td>${vehicle.cardId}</td>
+								<td><fmt:formatDate value="${vehicle.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
-									<c:if test="${driver.userStatus == 0}">
+									<c:if test="${vehicle.userStatus == 0}">
 										使用中
 									</c:if>
-									<c:if test="${driver.userStatus == 1}">
+									<c:if test="${vehicle.userStatus == 1}">
 										已冻结
 									</c:if>
 								</td>
-								<%--<td>--%>
-									<%--<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="离职">--%>
-										<%--<span class="ace-icon fa fa-unlock bigger-130"></span>--%>
-									<%--</a>--%>
-								<%--</td>--%>
+								<td></td>
 							</tr>
 						</c:forEach>
 						</tbody>

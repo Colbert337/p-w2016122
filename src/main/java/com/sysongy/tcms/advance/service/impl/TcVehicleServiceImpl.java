@@ -1,8 +1,18 @@
 package com.sysongy.tcms.advance.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.tcms.advance.dao.TcVehicleMapper;
+import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.tcms.advance.service.TcVehicleService;
+import com.sysongy.util.GlobalConstant;
+import org.omg.CORBA.Object;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @FileName: TcFleetServiceImpl
@@ -16,5 +26,69 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TcVehicleServiceImpl implements TcVehicleService{
+    @Autowired
+    TcVehicleMapper tcVehicleMapper;
 
+    @Override
+    public TcVehicle queryVehicle(TcVehicle tcVehicle) {
+        if(tcVehicle != null){
+            return tcVehicleMapper.queryVehicle(tcVehicle);
+        }else{
+            return null;
+        }
+
+    }
+
+    @Override
+    public PageInfo<TcVehicle> queryVehicleList(TcVehicle tcVehicle) {
+        if(tcVehicle != null){
+            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+
+            List<TcVehicle> vehicleList = tcVehicleMapper.queryVehicleList(tcVehicle);
+            PageInfo<TcVehicle> vehiclePageInfo = new PageInfo<>(vehicleList);
+            return vehiclePageInfo;
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public PageInfo<Map<String, Object>> queryVehicleMapList(TcVehicle tcVehicle) {
+        if(tcVehicle != null){
+            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+
+            List<Map<String, Object>> vehicleList = tcVehicleMapper.queryVehicleMapList(tcVehicle);
+            PageInfo<Map<String, Object>> vehiclePageInfo = new PageInfo<>(vehicleList);
+            return vehiclePageInfo;
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public int addVehicle(TcVehicle tcVehicle) {
+        if(tcVehicle != null){
+            return tcVehicleMapper.addVehicle(tcVehicle);
+        }else{
+            return 0;
+        }
+    }
+
+    @Override
+    public int deleteVehicle(TcVehicle tcVehicle) {
+        if(tcVehicle != null){
+            return tcVehicleMapper.deleteVehicle(tcVehicle);
+        }else{
+            return 0;
+        }
+    }
+
+    @Override
+    public int updateVehicle(TcVehicle tcVehicle) {
+        if(tcVehicle != null){
+            return tcVehicleMapper.updateVehicle(tcVehicle);
+        }else{
+            return 0;
+        }
+    }
 }

@@ -15,7 +15,7 @@ function commitForm(obj){
     $("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
-    url:'../web/driver/list/page',
+    url:'../web/tcms/vehicle/list/page',
     type:'post',
     dataType:'html',
     success:function(data){
@@ -23,9 +23,9 @@ var listOptions ={
     }
 }
 /*分页相关方法 end*/
-//显示添加用户弹出层
+//显示添加用户弹出层add
 function addDriver(){
-    $("#driverModel").modal('show');
+    $("#editModel").modal('show');
 }
 
 /**
@@ -47,7 +47,7 @@ function sendMessage(){
 //显示编辑用户弹出层
 function queryRoleList(roleId){
     $.ajax({
-        url:"../web/permi/user/list/role",
+        url:"../web/tcms/vehicle/list/role",
         data:{},
         async:false,
         type: "POST",
@@ -63,7 +63,7 @@ function queryRoleList(roleId){
             })
         }
     })
-    $("#driverModel").modal('show');
+    $("#editModel").modal('show');
 }
 
 //显示编辑用户弹出层
@@ -78,7 +78,7 @@ function queryUserTypeList(userType){
             $("#user_type").val(data.mcode);
         }
     })
-    $("#driverModel").modal('show');
+    $("#editModel").modal('show');
 }
 
 /*取消弹层方法*/
@@ -100,8 +100,8 @@ function clearDiv(){
  * 保存用户信息
  */
 function saveDriver(){
-        $('#driverForm').data('bootstrapValidator').validate();
-        if(!$('#driverForm').data('bootstrapValidator').isValid()){
+        $('#editForm').data('bootstrapValidator').validate();
+        if(!$('#editForm').data('bootstrapValidator').isValid()){
             return ;
         }
 
@@ -113,16 +113,16 @@ function saveDriver(){
                 $("#main").html(data);
             }
         }
-        $("#driverForm").ajaxSubmit(saveOptions);
+        $("#editForm").ajaxSubmit(saveOptions);
 
-        $("#driverModel").modal('hide');
+        $("#editModel").modal('hide');
         $(".modal-backdrop").css("display","none");
 
 }
 
 //重置
 function init(){
-    loadPage('#main', '../web/driver/list/page');
+    loadPage('#main', '../web/tcms/vehicle/list/page');
 }
 /**
  * 删除用户
@@ -144,7 +144,7 @@ function leaveDriver(){
 }
 
 //bootstrap验证控件
-$('#driverForm').bootstrapValidator({
+$('#editForm').bootstrapValidator({
     message: 'This value is not valid',
     feedbackIcons: {
         valid: 'glyphicon glyphicon-ok',

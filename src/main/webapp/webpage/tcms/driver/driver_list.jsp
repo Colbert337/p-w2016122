@@ -36,6 +36,9 @@
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
 							</button>
+							<button class="btn btn-sm" type="button" onclick="init();">
+								重置
+							</button>
 							<div class="item"></div>
 							<button class="btn btn-sm btn-primary" type="button" onclick="addDriver();">
 								添加司机
