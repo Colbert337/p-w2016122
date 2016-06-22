@@ -134,8 +134,9 @@
 			}
 			$("#functionForm").ajaxSubmit(saveOptions);
 
-			$("#functionModel").modal('hide');
-			$(".modal-backdrop").css("display","none");
+			$("#userModel").modal('hide').removeClass('in');
+			$("body").removeClass('modal-open').removeAttr('style');
+			$(".modal-backdrop").remove();
 		}
 	}
 
