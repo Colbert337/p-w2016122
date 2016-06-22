@@ -18,6 +18,7 @@
   <resultMap id="MapResultMap" type="java.util.Map" >
     <id column="tc_vehicle_id" property="tcVehicleId" jdbcType="VARCHAR" />
     <result column="fleet_name" property="fleetName" jdbcType="VARCHAR" />
+    <result column="card_status" property="cardStatus" jdbcType="VARCHAR" />
     <result column="plates_number" property="platesNumber" jdbcType="VARCHAR" />
     <result column="tc_fleet_id" property="tcFleetId" jdbcType="VARCHAR" />
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
@@ -50,7 +51,7 @@
       and tc_vehicle_id = #{tcVehicleId}
     </if>
     <if test="platesNumber != null &amp;&amp; platesNumber !=''" >
-      and plates_number = #{platesNumber}
+      plates_number like CONCAT(#{platesNumber,jdbcType=VARCHAR},'%')
     </if>
     <if test="tcFleetId != null &amp;&amp; tcFleetId !=''" >
       and tc_fleet_id = #{tcFleetId}
@@ -72,8 +73,9 @@
     </if>
     order by created_date desc
   </select>
-  <select id="queryVehicleMapList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
-    select tv.*,tf.fleet_name from tc_vehicle tv left join tc_fleet_vehicle tfv on tv.tc_vehicle_id = tfv.tc_vehicle_id left join tc_fleet tf on tfv.tc_fleet_id = tf.tc_fleet_id
+  <select id="queryVehicleMapList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
+    select tv.*,tf.fleet_name,gc.card_status from tc_vehicle tv left join tc_fleet_vehicle tfv on tv.tc_vehicle_id = tfv.tc_vehicle_id
+    left join tc_fleet tf on tfv.tc_fleet_id = tf.tc_fleet_id left join gas_card gc on tv.card_no = gc.card_no
     where tv.is_deleted = 1
     <if test="tcVehicleId != null &amp;&amp; tcVehicleId !=''">
       and tv.tc_vehicle_id = #{tcVehicleId}

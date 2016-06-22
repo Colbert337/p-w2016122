@@ -2,7 +2,6 @@ package com.sysongy.tcms.advance.service;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.tcms.advance.model.TcVehicle;
-import org.omg.CORBA.Object;
 
 import java.util.List;
 import java.util.Map;

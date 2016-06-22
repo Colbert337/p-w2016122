@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/driver/dirver_list.js"/>
+<script src="<%=basePath %>/dist/js/advance/vehicle_list.js"/>
 <div class="page-header">
 	<h1>
 		车辆管理
@@ -29,7 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
-							<input type="text" name="fullName" placeholder="车牌号"  maxlength="11" value="${driver.fullName}"/>
+							<input type="text" name="platesNumber" placeholder="车牌号"  maxlength="11" value="${vehicle.platesNumber}"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
@@ -68,20 +68,27 @@
 						<tbody>
 						<c:forEach items="${vehicleList}" var="vehicle">
 							<tr>
-								<td>${vehicle.fullName}</td>
-								<td>${vehicle.fullName}</td>
-								<td>${vehicle.mobilePhone}</td>
-								<td>${vehicle.cardId}</td>
+								<td>${vehicle.fleetName}</td>
+								<td>${vehicle.platesNumber}</td>
+								<td>${vehicle.cardNo}</td>
+								<td>${vehicle.noticePhone}</td>
 								<td><fmt:formatDate value="${vehicle.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
-									<c:if test="${vehicle.userStatus == 0}">
-										使用中
-									</c:if>
-									<c:if test="${vehicle.userStatus == 1}">
+									<c:if test="${vehicle.cardStatus == 0}">
 										已冻结
 									</c:if>
+									<c:if test="${vehicle.cardStatus == 1}">
+										未使用
+									</c:if>
+									<c:if test="${vehicle.cardStatus == 2}">
+										使用中
+									</c:if>
 								</td>
-								<td></td>
+								<td>
+									<a class="" href="javascript:editVehicle('${vehicle.tcVehicleId}');" title="修改" data-rel="tooltip">
+										<span class="ace-icon fa fa-pencil bigger-130"></span>
+									</a>
+								</td>
 							</tr>
 						</c:forEach>
 						</tbody>
@@ -115,13 +122,13 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
-<!--添加司机弹层-开始-->
-<div id="driverModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<!--添加车辆弹层-开始-->
+<div id="editModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel">添加司机</h4>
+				<h4 class="modal-title" id="gridSystemModalLabel">添加车辆</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
@@ -129,29 +136,14 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<!-- PAGE CONTENT BEGINS -->
-							<form class="form-horizontal" id="driverForm">
+							<form class="form-horizontal" id="editForm">
 								<!-- #section:elements.form -->
+								<h5 class="header smaller lighter blue">基本信息</h5>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 手机号码： </label>
+									<label class="col-sm-4 control-label no-padding-right" for="plates_number"><span class="red_star">*</span> 车牌号： </label>
 									<div class="col-sm-7">
-										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机号码" class="col-xs-10 col-sm-12" />
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 验证码： </label>
-									<div class="col-sm-4">
-										<input type="text" id="user_name" placeholder="验证码" name="userName"/><%--临时存储验证码--%>
-									</div>
-									<div class="col-sm-1">
-										<a class="btn btn-sm btn-primary" href="javascript:sendMessage();">
-											发送验证码
-										</a>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="full_name"><span class="red_star">*</span> 姓名： </label>
-									<div class="col-sm-7">
-										<input type="text" name="fullName" id="full_name" placeholder="姓名" class="col-xs-10 col-sm-12" />
+										<input type="text" name="platesNumber" id="plates_number" placeholder="车牌号" class="col-xs-10 col-sm-12" />
+										<input type="hidden" name="tcVehicleId" id="tc_vehicle_id" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -166,6 +158,39 @@
 										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="notice_phone"><span class="red_star">*</span> 通知手机： </label>
+									<div class="col-sm-7">
+										<input type="text" id="notice_phone" placeholder="通知手机" name="noticePhone" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="copy_phone"> 抄送手机： </label>
+									<div class="col-sm-7">
+										<input type="text" name="copyPhone" id="copy_phone" placeholder="抄送手机" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+								<div id="cardInfoDiv">
+									<h5 class="header smaller lighter blue">实体卡信息</h5>
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right"> 实体卡： </label>
+										<div class="col-sm-8">
+											<label class="pad-top-10" id="card_no"></label>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right"> 卡类型： </label>
+										<div class="col-sm-8">
+											<label class="pad-top-10" id="card_type"></label>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right"> 卡状态： </label>
+										<div class="col-sm-8">
+											<label class="pad-top-10" id="card_status"></label>
+										</div>
+									</div>
+								</div>
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
@@ -175,14 +200,14 @@
 				<div class="row">
 					<div class="space"></div>
 					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveDriver()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('driverModel')">取   消 </button></div>
+					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveVehicle()">确   定</button></div>
+					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('editModel')">取   消 </button></div>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
-<!--添加用户弹层-结束-->
+<!--添加车辆弹层-结束-->
 
 <!--提示弹层-开始-->
 <div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">

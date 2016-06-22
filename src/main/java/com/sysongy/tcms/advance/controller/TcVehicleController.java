@@ -3,6 +3,8 @@ package com.sysongy.tcms.advance.controller;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.tcms.advance.model.TcVehicle;
@@ -16,6 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @FileName: TcVehicleController
@@ -34,6 +40,8 @@ public class TcVehicleController extends BaseContoller {
 
     @Autowired
     TcVehicleService tcVehicleService;
+    @Autowired
+    GasCardService gasCardService;
 
     /**
      * 查询车辆列表
@@ -49,52 +57,77 @@ public class TcVehicleController extends BaseContoller {
         vehicle.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
-        PageInfo<TcVehicle> vehiclePageInfo = new PageInfo<TcVehicle>();
+        PageInfo<Map<String, Object>> vehiclePageInfo = new PageInfo<Map<String, Object>>();
         try {
-            vehiclePageInfo = tcVehicleService.queryVehicleList(vehicle);
+            vehiclePageInfo = tcVehicleService.queryVehicleMapList(vehicle);
         }catch (Exception e){
             e.printStackTrace();
         }
 
         map.addAttribute("vehicleList",vehiclePageInfo.getList());
         map.addAttribute("pageInfo",vehiclePageInfo);
+        map.addAttribute("vehicle",vehicle);
 
         return "webpage/tcms/advance/vehicle_list";
     }
 
+    /**
+     * 查询车辆信息
+     * @param vehicle
+     * @param map
+     * @return
+     */
+    @RequestMapping("/info")
+    @ResponseBody
+    public Map<String, Object> queryVehicle(TcVehicle vehicle, ModelMap map){
+        Map<String, Object> vehicleMap = new HashMap<>();
+        GasCard gasCard = new GasCard();
+        TcVehicle tcVehicle = tcVehicleService.queryVehicle(vehicle);
+        vehicleMap.put("vehicle",tcVehicle);
+        if(tcVehicle != null && tcVehicle.getCardNo() != null){
+            try {
+                gasCard = gasCardService.queryGasCardInfo(tcVehicle.getCardNo());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+        vehicleMap.put("gasCard",gasCard);
+        return vehicleMap;
+    }
 
     /**
      * 添加车辆
      * @param currUser 当前用户
-     * @param driver 司机
+     * @param vehicle 车辆
      * @param map
      * @return
      */
     @RequestMapping("/save")
-    public String saveDriver(@ModelAttribute("currUser") CurrUser currUser, SysDriver driver, ModelMap map){
+    public String saveVehicle(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map){
         int userType = currUser.getUser().getUserType();
         int result = 0;
 
-        String stationId = currUser.getStationId();
-        String operation = "insert";
-        String payCode = driver.getPayCode();
-        String verificationCode = driver.getUserName();
-        driver.setUserName(null);
-        driver.setUserStatus("0");//0 使用中 1 已冻结
-        driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
-        driver.setCheckedStatus("0");
-        driver.setStationId(stationId);//站点编号
+        if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
+            vehicle.setPayCode(null);
+            tcVehicleService.updateVehicle(vehicle);
+        }else{
+            String stationId = currUser.getStationId();
+            vehicle.setStationId(stationId);
+            vehicle.setTcVehicleId(UUIDGenerator.getUUID());
+            String payCode = vehicle.getPayCode();
+            vehicle.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
+            vehicle.setIsDeleted(GlobalConstant.STATUS_NOTDELETE+"");
 
-
-        driver.setSysDriverId(UUIDGenerator.getUUID());
-        driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
-
-        try {
-//            result = driverService.saveDriver(driver,operation);
-        }catch (Exception e){
-            e.printStackTrace();
+            try {
+                tcVehicleService.addVehicle(vehicle);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
-        return "redirect:/web/driver/list/page";
+
+
+        return "redirect:/web/tcms/vehicle/list/page";
     }
 
 }

@@ -24,74 +24,88 @@ var listOptions ={
 }
 /*分页相关方法 end*/
 //显示添加用户弹出层add
-function addDriver(){
+function addVehicle(){
+    clearDiv();
+    /*密码输入框改为可编辑*/
+    $("#pay_code").removeAttr("readonly");
+    $("#re_password").removeAttr("readonly");
+
+    $("#cardInfoDiv").hide();
     $("#editModel").modal('show');
 }
 
-/**
- * 发送验证码
- */
-function sendMessage(){
-    var mobilePhone = $("#mobile_phone").val();
-
-    $.ajax({
-        url:"../crmCustomerService/web/sendMsg/api",
-        data:{mobilePhone:mobilePhone,msgType:'register'},
-        async:false,
-        type: "POST",
-        success: function(data){
-            alert(data.msg);
-        }
-    })
-}
 //显示编辑用户弹出层
-function queryRoleList(roleId){
+function editVehicle(vehicleId){
     $.ajax({
-        url:"../web/tcms/vehicle/list/role",
-        data:{},
+        url:"../web/tcms/vehicle/info",
+        data:{tcVehicleId:vehicleId},
         async:false,
         type: "POST",
         success: function(data){
+            $("#plates_number").val(data.vehicle.platesNumber);
+            $("#tc_vehicle_id").val(data.vehicle.tcVehicleId);
+            $("#pay_code").val(data.vehicle.payCode);
+            $("#re_password").val(data.vehicle.payCode);
+            $("#notice_phone").val(data.vehicle.noticePhone);
+            $("#copy_phone").val(data.vehicle.copyPhone);
 
-            $("#avatar_b").append("<option value='0'>--选择角色--</option>");
-            $.each(data,function(i,val){
-                if(val.sysRoleId == roleId){
-                    $("#avatar_b").append("<option value='"+val.sysRoleId+"' selected='selected'>"+val.roleName+"</option>");
-                }else{
-                    $("#avatar_b").append("<option value='"+val.sysRoleId+"'>"+val.roleName+"</option>");
+            if(data.gasCard != null && data.gasCard.card_no != null){
+                var cardType,cardStatus;
+                //卡类型
+                switch(data.gasCard.card_type)
+                {
+                    case '0':
+                        cardType = "LNG"
+                        break;
+                    case '1':
+                        cardType = "柴油"
+                        break;
+                    case '2':
+                        cardType = "LNG"
+                        break;
+                    default:
+                        cardType = "CNG"
                 }
-            })
-        }
-    })
-    $("#editModel").modal('show');
-}
+                //卡状态
+                switch(data.gasCard.card_status)
+                {
+                    case '0':
+                        cardStatus = "已冻结"
+                        break;
+                    case '1':
+                        cardStatus = "未使用"
+                        break;
+                    case '2':
+                        cardStatus = "使用中"
+                        break;
+                    default:
+                        cardStatus = "未使用"
+                }
+                $("#card_no").text(data.gasCard.card_no);
+                $("#card_type").text(cardType);
+                $("#card_status").text(cardStatus);
+            }
 
-//显示编辑用户弹出层
-function queryUserTypeList(userType){
-    $.ajax({
-        url:"../web/usysparam/info",
-        data:{mcode:userType},
-        async:false,
-        type: "POST",
-        success: function(data){
-            $("#mname").text(data.mname);
-            $("#user_type").val(data.mcode);
+            /*密码输入框改为可编辑*/
+            $("#pay_code").attr("readonly","readonly");
+            $("#re_password").attr("readonly","readonly");
         }
     })
+    $("#cardInfoDiv").show();
     $("#editModel").modal('show');
 }
 
 /*取消弹层方法*/
 function closeDialog(divId){
-    jQuery('#userForm').validationEngine('hide');//隐藏验证弹窗
-    $("#userForm :input").each(function () {
+    jQuery('#editForm').validationEngine('hide');//隐藏验证弹窗
+    $("#editForm :input").each(function () {
         $(this).val("");
     });
     $("#avatar_b").empty();
     $("#"+divId).modal('hide');
 }
 function clearDiv(){
-    $("#roleForm :input").each(function () {
+    $("#editForm :input").each(function () {
         $(this).val("");
     });
     $("#avatar_b").empty();
@@ -99,14 +113,14 @@ function clearDiv(){
 /**
  * 保存用户信息
  */
-function saveDriver(){
+function saveVehicle(){
         $('#editForm').data('bootstrapValidator').validate();
         if(!$('#editForm').data('bootstrapValidator').isValid()){
             return ;
         }
 
         var saveOptions ={
-            url:'../web/driver/save',
+            url:'../web/tcms/vehicle/save',
             type:'post',
             dataType:'html',
             success:function(data){
@@ -152,62 +166,10 @@ $('#editForm').bootstrapValidator({
         validating: 'glyphicon glyphicon-refresh'
     },
     fields: {
-        mobilePhone: {
+        platesNumber: {
             validators: {
                 notEmpty: {
                     message: '手机号码不能为空'
-                },
-                stringLength: {
-                    min: 11,
-                    max: 11,
-                    message: '手机号码为11位'
-                },
-                remote: {
-                    url: '../web/driver/info/isExist',
-                    type: "post",
-                    async: false,
-                    data: function(validator, $field, value) {
-                        return{
-                            mobilePhone:$("#mobile_phone").val()
-                        };
-                    },
-                    message: '手机号已存在'
-                }
-            }
-        },
-        userName: {
-            validators: {
-                notEmpty: {
-                    message: '验证码不能为空'
-                },
-                stringLength: {
-                    min: 6,
-                    max: 6,
-                    message: '验证码必须为6位'
-                },
-                remote: {
-                    url: '../crmCustomerService/web/isMsg',
-                    type: "post",
-                    async: false,
-                    data: function(validator, $field, value) {
-                        return{
-                            mobilePhone:$("#mobile_phone").val(),
-                            msgCode:$("#user_name").val()
-                        };
-                    },
-                    message: '验证码错误，请稍后重新发送'
-                }
-            }
-        },
-        fullName: {
-            validators: {
-                notEmpty: {
-                    message: '姓名不能为空'
-                },
-                stringLength: {
-                    min: 2,
-                    max: 5,
-                    message: '姓名不得小于两个字'
                 }
             }
         },
@@ -239,6 +201,38 @@ $('#editForm').bootstrapValidator({
                         }
                         return true;
                     }
+                }
+            }
+        },
+        noticePhone: {
+            validators: {
+                notEmpty: {
+                    message: '手机号不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9]+$',
+                    message: '手机号只能包含数字'
+                },
+                stringLength: {
+                    min: 11,
+                    max: 11,
+                    message: '手机号码为11位'
+                }
+            }
+        },
+        copyPhone: {
+            validators: {
+                notEmpty: {
+                    message: '手机号不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9]+$',
+                    message: '手机号只能包含数字'
+                },
+                stringLength: {
+                    min: 11,
+                    max: 11,
+                    message: '手机号码为11位'
                 }
             }
         }
