@@ -39,7 +39,7 @@
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCheckStatusByMcode">
     </association>
 
-    <association property="fuelTypeInfo" column="fuelType"
+    <association property="fuelTypeInfo" column="fuel_type"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryFuelTypeByMcode">
     </association>
