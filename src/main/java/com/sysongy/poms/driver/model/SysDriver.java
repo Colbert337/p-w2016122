@@ -33,6 +33,8 @@ public class SysDriver extends BaseModel{
 
     private Integer fuelType;
 
+    private Usysparam fuelTypeInfo;
+
     private String drivingLice;
 
     private String vehicleLice;
@@ -318,5 +320,13 @@ public class SysDriver extends BaseModel{
 
     public void setStationId(String stationId) {
         this.stationId = stationId;
+    }
+
+    public Usysparam getFuelTypeInfo() {
+        return fuelTypeInfo;
+    }
+
+    public void setFuelTypeInfo(Usysparam fuelTypeInfo) {
+        this.fuelTypeInfo = fuelTypeInfo;
     }
 }
