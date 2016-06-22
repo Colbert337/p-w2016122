@@ -5,7 +5,7 @@
     <id column="tc_vehicle_id" property="tcVehicleId" jdbcType="VARCHAR" />
     <result column="plates_number" property="platesNumber" jdbcType="VARCHAR" />
     <result column="tc_fleet_id" property="tcFleetId" jdbcType="VARCHAR" />
-    <result column="sys_transport_id" property="sysTransportId" jdbcType="VARCHAR" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
     <result column="notice_phone" property="noticePhone" jdbcType="VARCHAR" />
     <result column="copy_phone" property="copyPhone" jdbcType="VARCHAR" />
     <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
@@ -14,7 +14,7 @@
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    tc_vehicle_id, plates_number, tc_fleet_id, sys_transport_id, notice_phone, copy_phone, 
+    tc_vehicle_id, plates_number, tc_fleet_id, station_id, notice_phone, copy_phone, 
     card_no, user_name, created_date, updated_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -29,11 +29,11 @@
   </delete>
   <insert id="insert" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     insert into tc_vehicle (tc_vehicle_id, plates_number, tc_fleet_id, 
-      sys_transport_id, notice_phone, copy_phone, 
+      station_id, notice_phone, copy_phone, 
       card_no, user_name, created_date, 
       updated_date)
     values (#{tcVehicleId,jdbcType=VARCHAR}, #{platesNumber,jdbcType=VARCHAR}, #{tcFleetId,jdbcType=VARCHAR}, 
-      #{sysTransportId,jdbcType=VARCHAR}, #{noticePhone,jdbcType=VARCHAR}, #{copyPhone,jdbcType=VARCHAR}, 
+      #{stationId,jdbcType=VARCHAR}, #{noticePhone,jdbcType=VARCHAR}, #{copyPhone,jdbcType=VARCHAR}, 
       #{cardNo,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, 
       #{updatedDate,jdbcType=TIMESTAMP})
   </insert>
@@ -49,8 +49,8 @@
       <if test="tcFleetId != null" >
         tc_fleet_id,
       </if>
-      <if test="sysTransportId != null" >
-        sys_transport_id,
+      <if test="stationId != null" >
+        station_id,
       </if>
       <if test="noticePhone != null" >
         notice_phone,
@@ -81,8 +81,8 @@
       <if test="tcFleetId != null" >
         #{tcFleetId,jdbcType=VARCHAR},
       </if>
-      <if test="sysTransportId != null" >
-        #{sysTransportId,jdbcType=VARCHAR},
+      <if test="stationId != null" >
+        #{stationId,jdbcType=VARCHAR},
       </if>
       <if test="noticePhone != null" >
         #{noticePhone,jdbcType=VARCHAR},
@@ -113,8 +113,8 @@
       <if test="tcFleetId != null" >
         tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR},
       </if>
-      <if test="sysTransportId != null" >
-        sys_transport_id = #{sysTransportId,jdbcType=VARCHAR},
+      <if test="stationId != null" >
+        station_id = #{stationId,jdbcType=VARCHAR},
       </if>
       <if test="noticePhone != null" >
         notice_phone = #{noticePhone,jdbcType=VARCHAR},
@@ -141,7 +141,7 @@
     update tc_vehicle
     set plates_number = #{platesNumber,jdbcType=VARCHAR},
       tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR},
-      sys_transport_id = #{sysTransportId,jdbcType=VARCHAR},
+      station_id = #{stationId,jdbcType=VARCHAR},
       notice_phone = #{noticePhone,jdbcType=VARCHAR},
       copy_phone = #{copyPhone,jdbcType=VARCHAR},
       card_no = #{cardNo,jdbcType=VARCHAR},

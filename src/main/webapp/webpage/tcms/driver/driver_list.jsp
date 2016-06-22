@@ -141,19 +141,19 @@
 								<!-- #section:elements.form -->
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 手机号码： </label>
-									<div class="col-sm-7">
+									<div class="col-sm-4">
 										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机号码" class="col-xs-10 col-sm-12" />
+									</div>
+									<div class="col-sm-2">
+										<a class="btn btn-sm btn-primary" href="javascript:sendMessage();">
+											发送验证码
+										</a>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 验证码： </label>
-									<div class="col-sm-4">
-										<input type="text" id="user_name" placeholder="验证码" name="userName"/><%--临时存储验证码--%>
-									</div>
-									<div class="col-sm-1">
-										<a class="btn btn-sm btn-primary" href="javascript:sendMessage();">
-											发送验证码
-										</a>
+									<div class="col-sm-7">
+										<input type="text" id="user_name" placeholder="验证码" name="userName" class="col-xs-10 col-sm-12" /><%--临时存储验证码--%>
 									</div>
 								</div>
 								<div class="form-group">

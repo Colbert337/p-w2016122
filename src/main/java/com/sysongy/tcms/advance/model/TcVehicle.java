@@ -1,15 +1,17 @@
 package com.sysongy.tcms.advance.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.util.Date;
 
-public class TcVehicle {
+public class TcVehicle extends BaseModel{
     private String tcVehicleId;
 
     private String platesNumber;
 
     private String tcFleetId;
 
-    private String sysTransportId;
+    private String stationId;
 
     private String noticePhone;
 
@@ -47,12 +49,12 @@ public class TcVehicle {
         this.tcFleetId = tcFleetId == null ? null : tcFleetId.trim();
     }
 
-    public String getSysTransportId() {
-        return sysTransportId;
+    public String getStationId() {
+        return stationId;
     }
 
-    public void setSysTransportId(String sysTransportId) {
-        this.sysTransportId = sysTransportId == null ? null : sysTransportId.trim();
+    public void setStationId(String stationId) {
+        this.stationId = stationId == null ? null : stationId.trim();
     }
 
     public String getNoticePhone() {

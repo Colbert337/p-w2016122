@@ -33,18 +33,14 @@ function addDriver(){
  */
 function sendMessage(){
     var mobilePhone = $("#mobile_phone").val();
-    alert("mobilePhone:"+mobilePhone);
+
     $.ajax({
-        url:"../crmCustomerService/web/sendMsg",
-        data:{mobilePhone:mobilePhone},
+        url:"../crmCustomerService/web/sendMsg/api",
+        data:{mobilePhone:mobilePhone,msgType:'register'},
         async:false,
         type: "POST",
         success: function(data){
-            if(data.success){
-                alert("发送成功！");
-            }else{
-                alert("发送失败！");
-            }
+            alert(data.msg);
         }
     })
 }
@@ -161,6 +157,17 @@ $('#driverForm').bootstrapValidator({
                     min: 11,
                     max: 11,
                     message: '手机号码为11位'
+                },
+                remote: {
+                    url: '../web/driver/info/isExist',
+                    type: "post",
+                    async: false,
+                    data: function(validator, $field, value) {
+                        return{
+                            mobilePhone:$("#mobile_phone").val()
+                        };
+                    },
+                    message: '手机号已存在'
                 }
             }
         },
@@ -173,6 +180,18 @@ $('#driverForm').bootstrapValidator({
                     min: 6,
                     max: 6,
                     message: '验证码必须为6位'
+                },
+                remote: {
+                    url: '../crmCustomerService/web/isMsg',
+                    type: "post",
+                    async: false,
+                    data: function(validator, $field, value) {
+                        return{
+                            mobilePhone:$("#mobile_phone").val(),
+                            msgCode:$("#user_name").val()
+                        };
+                    },
+                    message: '验证码错误，请稍后重新发送'
                 }
             }
         },
@@ -207,6 +226,15 @@ $('#driverForm').bootstrapValidator({
                 regexp: {
                     regexp: '^[0-9a-zA-Z]+$',
                     message: '密码只能包含数字和字母'
+                },
+                callback: {
+                    message: '支付密码不一致',
+                    callback: function (value, validator, $field) {
+                        if($("[name=payCode]").val() != value){
+                            return false;
+                        }
+                        return true;
+                    }
                 }
             }
         }

@@ -59,7 +59,7 @@ public class SysDriver extends BaseModel{
 
     private Integer isFirstCharge;
 
-    private String checked_status;
+    private String checkedStatus;
 
     private Date checkedDate;
 
@@ -263,16 +263,16 @@ public class SysDriver extends BaseModel{
     public void setIsFirstCharge(Integer isFirstCharge) {
         this.isFirstCharge = isFirstCharge;
     }
-    
-    public String getChecked_status() {
-		return checked_status;
-	}
 
-	public void setChecked_status(String checked_status) {
-		this.checked_status = checked_status;
-	}
+    public String getCheckedStatus() {
+        return checkedStatus;
+    }
 
-	public Date getCheckedDate() {
+    public void setCheckedStatus(String checkedStatus) {
+        this.checkedStatus = checkedStatus;
+    }
+
+    public Date getCheckedDate() {
         return checkedDate;
     }
 

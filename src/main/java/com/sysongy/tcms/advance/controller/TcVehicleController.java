@@ -5,6 +5,7 @@ import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.RedisClientInterface;
@@ -40,25 +41,25 @@ public class TcVehicleController extends BaseContoller {
      * @return
      */
     @RequestMapping("/list/page")
-    public String queryVehicleListPage(@ModelAttribute CurrUser currUser, SysDriver driver, ModelMap map){
+    public String queryVehicleListPage(@ModelAttribute CurrUser currUser, TcVehicle vehicle, ModelMap map){
         String stationId = currUser.getStationId();
-        if(driver.getPageNum() == null){
-            driver.setPageNum(GlobalConstant.PAGE_NUM);
-            driver.setPageSize(GlobalConstant.PAGE_SIZE);
+        if(vehicle.getPageNum() == null){
+            vehicle.setPageNum(GlobalConstant.PAGE_NUM);
+            vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
         }
-        driver.setStationId(stationId);
+        vehicle.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
         PageInfo<SysDriver> driverPageInfo = new PageInfo<SysDriver>();
         try {
-            driverPageInfo = driverService.querySearchDriverList(driver);
+//            driverPageInfo = driverService.querySearchDriverList(driver);
         }catch (Exception e){
             e.printStackTrace();
         }
 
         map.addAttribute("driverList",driverPageInfo.getList());
         map.addAttribute("pageInfo",driverPageInfo);
-        map.addAttribute("driver",driver);
+//        map.addAttribute("driver",driver);
 
         return "webpage/tcms/driver/driver_list";
     }
@@ -82,7 +83,8 @@ public class TcVehicleController extends BaseContoller {
         String verificationCode = driver.getUserName();
         driver.setUserName(null);
         driver.setUserStatus("0");//0 使用中 1 已冻结
-        driver.setChecked_status("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
+        driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
+        driver.setCheckedStatus("0");
         driver.setStationId(stationId);//站点编号
 
 
