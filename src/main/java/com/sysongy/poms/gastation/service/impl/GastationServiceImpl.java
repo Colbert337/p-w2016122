@@ -49,14 +49,14 @@ public class GastationServiceImpl implements GastationService {
 	@Override
 	public String saveGastation(Gastation record, String operation) throws Exception {
 		if("insert".equals(operation)){
-			Gastation station = gasStationMapper.findGastationid("s"+record.getProvince_id());
+			Gastation station = gasStationMapper.findGastationid("GS"+record.getStation_level()+record.getProvince_id());
 			String newid;
 			
 			if(station == null || StringUtils.isEmpty(station.getSys_gas_station_id())){
-				newid = "s"+record.getProvince_id() + "0001";
+				newid = "GS"+record.getStation_level()+record.getProvince_id() + "0001";
 			}else{
-				Integer tmp = Integer.valueOf(station.getSys_gas_station_id().substring(4, 8)) + 1;
-				newid = "s"+record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
+				Integer tmp = Integer.valueOf(station.getSys_gas_station_id().substring(6, 10)) + 1;
+				newid = "GS"+record.getStation_level()+record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
 			}
 			//初始化钱袋信息
 			SysUserAccount sysUserAccount = new SysUserAccount();
@@ -66,6 +66,7 @@ public class GastationServiceImpl implements GastationService {
 			sysUserAccount.setAccountBalance("0.0");
 			sysUserAccount.setCreatedDate(new Date());
 			sysUserAccount.setUpdatedDate(new Date());
+			sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
 			int ret = sysUserAccountMapper.insert(sysUserAccount);
 			if(ret != 1){
 				throw new Exception("钱袋初始化失败");

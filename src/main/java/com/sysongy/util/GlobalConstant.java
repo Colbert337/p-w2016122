@@ -224,4 +224,10 @@ public class GlobalConstant {
 		public static final String PASSED = "2";
 		public static final String NOPASS = "3";
 	}
+	
+	public interface AccountStatus{
+		public static final String USER_SUSPEND = "0";
+		public static final String CARD_SUSPEND = "1";
+		public static final String NORMAL = "2";
+	}
 }

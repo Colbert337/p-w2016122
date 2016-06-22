@@ -7,7 +7,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/sysparam/driver_review.js"></script>
+<script src="<%=basePath %>/dist/js/sysparam/driver_info.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -20,11 +20,11 @@
 
 					<div class="page-header">
 						<h1>
-							个人用户管理
+							会员信息
 						</h1>
 					</div>
 
-					<div class="search-types">
+					<div class="search-types">	
 						<div class="item">
 						    <label>个人用户编号:</label>
 							<input type="text" name="sysDriverId" placeholder="输入个人用户编号"  maxlength="32" value="${driver.sysDriverId}"/>
@@ -33,13 +33,6 @@
 						<div class="item">
 						    <label>认证姓名:</label>
 							<input type="text" name="userName" placeholder="输入认证姓名"  maxlength="20" value="${driver.userName}"/>
-						</div>
-						
-						<div class="item">
-							<label>审核状态:</label>
-							<select class="chosen-select" name="checked_status" >
-								<s:option flag="true" gcode="CHECKED_STATUS" form="driver" field="checked_status"/>
-							</select>
 						</div>
 
 						<div class="item">
@@ -73,7 +66,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">个人用户详细信息列表</div>
+					<div class="table-header">会员信息详细信息列表</div>
 
 					<!-- div.table-responsive -->
 
@@ -88,16 +81,16 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'sys_driver_id');commitForm();" id="sys_gas_station_id_order">个人用户编号</th>
-									<th onclick="orderBy(this,'user_name');commitForm();" id="gas_station_name_order">认证姓名</th>
-									<th onclick="orderBy(this,'plate_number');commitForm();" id="salesmen_name_order">车牌号</th>
-									<th onclick="orderBy(this,'identity_card');commitForm();" id="operations_name_order">身份证号</th>
-									<th onclick="orderBy(this,'fuel_type');commitForm();" id="indu_com_number_order">燃料类型</th>
-									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="status_order">关联运输公司</th>
-									<th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> 
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th>
-									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
-									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
+									<th onclick="orderBy(this,'sys_driver_id');commitForm();" id="sys_driver_id_order">个人用户编号</th>
+									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
+									<th onclick="orderBy(this,'card_id');commitForm();" id="card_id_order">实体卡号</th>
+									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册来源</th>
+									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册公司</th>
+									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="sys_transport_id_order">关联运输公司</th>
+									<th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">可用余额</th> 
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
+									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">实体卡状态</th> 
+									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">用户状态</th> 
 									<th>更多操作</th>
 								</tr>
 							</thead>
@@ -115,24 +108,47 @@
 
 									<td>${list.sysDriverId}</td>
 								 	<td>${list.userName}</td> 
-									<td>${list.plateNumber}</td>
-									<td>${list.identityCard}</td>
-									<td>${list.fuelType}</td>
+								 	<td id="sysUserAccountId" style="display: none;">${list.sysUserAccountId}</td>
+									<td>${list.cardId}</td>
+									<c:choose>
+										<c:when test="${fn:contains(list.stationId, 'GS')}">
+											<td>加注站</td>
+										</c:when>
+										<c:when test="${fn:contains(list.stationId, 'T')}">
+											<td>运输公司</td>
+										</c:when>
+										<c:otherwise>
+											<td></td>
+										</c:otherwise>
+									</c:choose>
+									<td>${list.regisSource}</td>
 									<td>${list.stationId}</td>
-									<td>${list.isIdent == '0'?'否':'是'}</td> 
+									<td>${list.account.accountBalance}</td> 
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
-									<td><s:Code2Name mcode="${list.checked_status}" gcode="CHECKED_STATUS"></s:Code2Name></td>
-									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>
-
+									<td><s:Code2Name mcode="${list.cardInfo.card_status}" gcode="CARDSTATUS"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.account.account_status}" gcode="ACCOUNT_STATUS"></s:Code2Name></td>
 									<td>
-										<div class="text-center">
-											<a class="green" href="javascript:void(0);" title="审核通过" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="review(this,'2');"></i>
-											</a>
-											<a class="green" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-ban bigger-130" onclick="review(this,'3');"></i>
-											</a>
-										</div>
+										<div class="btn-toolbar">
+											<div class="btn-group">
+												<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
+													状态修改
+													<span class="ace-icon fa fa-caret-down icon-on-right"></span>
+												</button>
+
+												<ul class="dropdown-menu dropdown-info dropdown-menu-right">
+													<li>
+														<a href="javascript:void(0);" onclick="change(this,0);">冻结用户</a>
+													</li>
+													
+													<li>
+														<a href="javascript:void(0);" onclick="change(this,1);">冻结卡</a>
+													</li>
+
+													<li>
+														<a href="javascript:void(0);" onclick="change(this,2);">解冻</a>
+													</li>
+												</ul>
+											</div>
 									</td>
 								</tr>
 								</c:forEach>

@@ -201,30 +201,23 @@
 		        },
 		        fields: {
 		            indu_com_number: {
-		                message: 'The cardno is not valid',
 						validators: {
-							notEmpty: {
-								message: '工商注册号不能为空'
-							},
 		                    stringLength: {
 		                        max: 15,
 		                        message: '工商注册号不能超过15位'
 							}
-		                    }
 		                }
-		            },
-		            tax_number: {
-		                message: 'The cardno is not valid',
-					validators: {
-						notEmpty: {
-							message: '税务注册号不能为空'
-						},
-		                    stringLength: {
-		                        max: 15,
-		                        message: '税务注册号不能超过15位'
-						}
-		                    }
-		                }
+		             },
+		             tax_number: {
+			                message: 'The cardno is not valid',
+							validators: {
+				                    stringLength: {
+				                        max: 15,
+				                        message: '税务注册号不能超过15位'
+								}
+				            }
+			         }   
+		        }
 		    });
 			    
 		function save(){

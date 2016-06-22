@@ -122,7 +122,7 @@
       #{sysUserAccountId,jdbcType=VARCHAR},  #{regisCompany,jdbcType=VARCHAR},
       #{regisSource,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},
       #{isFirstCharge,jdbcType=INTEGER}, #{checkedStatus,jdbcType=INTEGER}, #{checkedDate,jdbcType=TIMESTAMP},
-      #{stationId,jdbcType=VARCHAR}
+      #{station_id,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.driver.model.SysDriver" >
@@ -272,7 +272,7 @@
         #{checkedDate,jdbcType=TIMESTAMP},
       </if>
       <if test="stationId != null" >
-        #{stationId,jdbcType=VARCHAR},
+        #{station_id,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

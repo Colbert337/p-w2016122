@@ -16,8 +16,18 @@ public class SysUserAccount {
     private Date updatedDate;
 
     private int version;
+    
+    private String account_status;
 
-    public String getSysUserAccountId() {
+    public String getAccount_status() {
+		return account_status;
+	}
+
+	public void setAccount_status(String account_status) {
+		this.account_status = account_status;
+	}
+
+	public String getSysUserAccountId() {
         return sysUserAccountId;
     }
 

@@ -50,14 +50,14 @@ public class TransportionServiceImpl implements TransportionService {
 	@Override
 	public String saveTransportion(Transportion record, String operation) throws Exception {
 		if("insert".equals(operation)){
-			Transportion station = transportionMapper.findTransportationid("t"+record.getProvince_id());
+			Transportion station = transportionMapper.findTransportationid("TC"+record.getProvince_id());
 			String newid;
 			
 			if(station == null || StringUtils.isEmpty(station.getSys_transportion_id())){
-				newid = "t"+record.getProvince_id() + "0001";
+				newid = "TC"+record.getProvince_id() + "00001";
 			}else{
-				Integer tmp = Integer.valueOf(station.getSys_transportion_id().substring(4, 8)) + 1;
-				newid = "t"+record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
+				Integer tmp = Integer.valueOf(station.getSys_transportion_id().substring(5, 10)) + 1;
+				newid = "TC"+record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 5, "0");
 			}
 			//初始化钱袋信息
 			SysUserAccount sysUserAccount = new SysUserAccount();
@@ -67,6 +67,7 @@ public class TransportionServiceImpl implements TransportionService {
 			sysUserAccount.setAccountBalance("0.0");
 			sysUserAccount.setCreatedDate(new Date());
 			sysUserAccount.setUpdatedDate(new Date());
+			sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
 			int ret = sysUserAccountMapper.insert(sysUserAccount);
 			if(ret != 1){
 				throw new Exception("钱袋初始化失败");
