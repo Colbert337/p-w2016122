@@ -61,8 +61,6 @@ public class SysDriver extends BaseModel{
 
     private String checkedStatus;
 
-    private String checked_status;
-
     private Date checkedDate;
 
     private SysUserAccount account;
@@ -80,14 +78,6 @@ public class SysDriver extends BaseModel{
     public void setWalletId(String walletId) {
         this.walletId = walletId;
     }
-
-    public String getChecked_status() {
-		return checked_status;
-	}
-
-	public void setChecked_status(String checked_status) {
-		this.checked_status = checked_status;
-	}
 
 	public String getCreatedDate_before() {
 		return createdDate_before;

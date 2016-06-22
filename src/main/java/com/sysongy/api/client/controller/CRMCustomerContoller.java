@@ -366,7 +366,7 @@ public class CRMCustomerContoller {
                 orgSysDriver.setFullName(sysDriver.getFullName());
             }
 
-            orgSysDriver.setChecked_status("1");
+            orgSysDriver.setCheckedStatus("1");
             int renum = driverService.saveDriver(orgSysDriver, "update");
             if(renum > 0){
                 return orgSysDriver;
@@ -420,7 +420,7 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getExpireTimeForCRM())){
                 sysDriver.setExpiryDate(DateUtil.strToDate(sysDriver.getExpireTimeForCRM(), "yyyy-MM-dd"));
             }
-            sysDriver.setChecked_status("1");
+
             driverService.saveDriver(sysDriver, "update");
             SysDriver sysDriverNew = driverService.queryDriverByPK(sysDriver.getSysDriverId());
             attributes.put("driver", sysDriverNew);
