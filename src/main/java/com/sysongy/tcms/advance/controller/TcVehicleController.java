@@ -5,6 +5,7 @@ import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.RedisClientInterface;
@@ -39,7 +40,7 @@ public class TcVehicleController extends BaseContoller {
      * 查询车辆列表
      * @return
      */
-   /* @RequestMapping("/list/page")
+    @RequestMapping("/list/page")
     public String queryVehicleListPage(@ModelAttribute CurrUser currUser, TcVehicle vehicle, ModelMap map){
         String stationId = currUser.getStationId();
         if(vehicle.getPageNum() == null){
@@ -51,17 +52,17 @@ public class TcVehicleController extends BaseContoller {
         //封装分页参数，用于查询分页内容
         PageInfo<SysDriver> driverPageInfo = new PageInfo<SysDriver>();
         try {
-            driverPageInfo = driverService.querySearchDriverList(driver);
+//            driverPageInfo = driverService.querySearchDriverList(driver);
         }catch (Exception e){
             e.printStackTrace();
         }
 
         map.addAttribute("driverList",driverPageInfo.getList());
         map.addAttribute("pageInfo",driverPageInfo);
-        map.addAttribute("driver",driver);
+//        map.addAttribute("driver",driver);
 
         return "webpage/tcms/driver/driver_list";
-    }*/
+    }
 
 
     /**

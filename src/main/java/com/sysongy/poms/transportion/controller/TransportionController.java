@@ -1,9 +1,11 @@
 package com.sysongy.poms.transportion.controller;
 
+import com.sysongy.poms.base.model.CurrUser;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -147,6 +149,27 @@ public class TransportionController extends BaseContoller{
 		finally {
 			return ret;
 		}
+	}
+
+	/**
+	 * 根据主键查询运输公司信息
+	 * @param map
+	 * @param currUser
+     * @return
+     */
+	@RequestMapping("/info")
+	public String queryTransportInfo(ModelMap map, @ModelAttribute CurrUser currUser){
+
+		String transportionId = currUser.getStationId();
+		Transportion transportion = new Transportion();
+		try {
+			transportion = service.queryTransportionByPK(transportionId);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		map.addAttribute("transportion",transportion);
+		return "webpage/poms/transportion/transport_info";
 	}
 
 }

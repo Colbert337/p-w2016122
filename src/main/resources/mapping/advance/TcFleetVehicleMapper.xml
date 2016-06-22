@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.tcms.advance.dao.TcFleetVehicleMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.tcms.advance.model.TcFleetVehicle" >
+    <id column="tc_fleet_vehicle_id" property="tcFleetVehicleId" jdbcType="VARCHAR" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="fleet_name" property="fleetName" jdbcType="VARCHAR" />
+    <result column="sys_user_id" property="sysUserId" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tc_fleet_vehicle_id, station_id, fleet_name, sys_user_id, created_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tc_fleet_vehicle
+    where tc_fleet_vehicle_id = #{tcFleetVehicleId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tc_fleet_vehicle
+    where tc_fleet_vehicle_id = #{tcFleetVehicleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
+    insert into tc_fleet_vehicle (tc_fleet_vehicle_id, station_id, fleet_name, 
+      sys_user_id, created_date)
+    values (#{tcFleetVehicleId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{fleetName,jdbcType=VARCHAR}, 
+      #{sysUserId,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
+    insert into tc_fleet_vehicle
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tcFleetVehicleId != null" >
+        tc_fleet_vehicle_id,
+      </if>
+      <if test="stationId != null" >
+        station_id,
+      </if>
+      <if test="fleetName != null" >
+        fleet_name,
+      </if>
+      <if test="sysUserId != null" >
+        sys_user_id,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tcFleetVehicleId != null" >
+        #{tcFleetVehicleId,jdbcType=VARCHAR},
+      </if>
+      <if test="stationId != null" >
+        #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="fleetName != null" >
+        #{fleetName,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUserId != null" >
+        #{sysUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
+    update tc_fleet_vehicle
+    <set >
+      <if test="stationId != null" >
+        station_id = #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="fleetName != null" >
+        fleet_name = #{fleetName,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUserId != null" >
+        sys_user_id = #{sysUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where tc_fleet_vehicle_id = #{tcFleetVehicleId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
+    update tc_fleet_vehicle
+    set station_id = #{stationId,jdbcType=VARCHAR},
+      fleet_name = #{fleetName,jdbcType=VARCHAR},
+      sys_user_id = #{sysUserId,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP}
+    where tc_fleet_vehicle_id = #{tcFleetVehicleId,jdbcType=VARCHAR}
+  </update>
+</mapper>
