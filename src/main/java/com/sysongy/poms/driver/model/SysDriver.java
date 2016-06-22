@@ -8,6 +8,7 @@ import com.sysongy.poms.usysparam.model.Usysparam;
 import java.util.Date;
 
 public class SysDriver extends BaseModel{
+
     private String sysDriverId;
 
     private String userName;
