@@ -6,6 +6,7 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,14 +93,12 @@ public class DriverController extends BaseContoller{
 		String stationId = currUser.getStationId();
 		String operation = "insert";
 		String payCode = driver.getPayCode();
-		String verificationCode = driver.getUserName();
+
 		driver.setUserName(null);
 		driver.setUserStatus("0");//0 使用中 1 已冻结
 		driver.setChecked_status("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
 		driver.setCheckedStatus("0");
 		driver.setStationId(stationId);//站点编号
-
-
 		driver.setSysDriverId(UUIDGenerator.getUUID());
 		driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
 
@@ -199,15 +198,23 @@ public class DriverController extends BaseContoller{
 		return "redirect:/web/driver/list/page";
 	}
 
-	/**
-	 * 发送验证码
-	 * @return
-	 */
-	@RequestMapping("/list/role")
+	@RequestMapping("/info/isExist")
 	@ResponseBody
-	public String queryRoleList(HttpServletRequest request, ModelMap map){
-		String codeStr = "";
+	public JSONObject queryRoleList(HttpServletRequest request, @RequestParam String mobilePhone, ModelMap map){
+		JSONObject json = new JSONObject();
+		SysDriver sysDriver = new SysDriver();
+		sysDriver.setMobilePhone(mobilePhone);
+		try {
+			SysDriver driver = driverService.queryDriverByMobilePhone(sysDriver);
+			if (driver != null){
+				json.put("valid",false);
+			}else{
+				json.put("valid",true);
+			}
 
-		return codeStr;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return json;
 	}
 }

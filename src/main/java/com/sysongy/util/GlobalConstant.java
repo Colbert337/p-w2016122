@@ -90,7 +90,7 @@ public class GlobalConstant {
 	public static final String MENU_PATH = "/upload/menuImage/";
 
 	/********************************** 字典类型 ************************************************/
-
+	public static final String MSG_PREFIX = "msg_";
 	/********************************** 分页参数 ************************************************/
 	/**
 	 * 上一页

@@ -1,5 +1,6 @@
 package com.sysongy.api.client.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.ShortMessageInfoModel;
 import com.sysongy.poms.base.model.AjaxJson;
@@ -13,12 +14,14 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
+import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -126,6 +129,9 @@ public class CRMCustomerContoller {
         }
         return ajaxJson;
     }
+
+
+
 
     private boolean checkIfFrequent(HttpServletRequest request, SysDriver sysDriver){
         boolean bRet = false;
@@ -455,5 +461,88 @@ public class CRMCustomerContoller {
             e.printStackTrace();
         }
         return ajaxJson;
+    }
+
+    /**
+     * 发送短信接口  add by wdq 20160622
+     * @param request
+     * @param response
+     * @param sysDriver
+     * @param mobilePhone
+     * @return
+     */
+    @RequestMapping(value = {"/web/sendMsg/api"})
+    @ResponseBody
+    public AjaxJson sendMsgApi(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver,@RequestParam(required = false) String mobilePhone){
+        AjaxJson ajaxJson = new AjaxJson();
+        if(sysDriver == null || sysDriver.getMobilePhone() == null || "".equals(sysDriver.getMobilePhone())){
+            sysDriver.setMobilePhone(mobilePhone);
+        }
+
+        if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("手机号为空！！！");
+            return ajaxJson;
+        }
+
+        if(checkIfFrequent(request, sysDriver)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("您发送短信的次数过于频繁，请稍后再试！！！");
+            return ajaxJson;
+        }
+
+        try
+        {
+            Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
+            AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+            aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
+            aliShortMessageBean.setCode(checkCode.toString());
+            aliShortMessageBean.setProduct("司集能源科技平台");
+            String key = GlobalConstant.MSG_PREFIX + sysDriver.getMobilePhone();
+            redisClientImpl.addToCache(key, checkCode.toString(), 60);
+
+            String msgType = request.getParameter("msgType");
+            if(msgType.equalsIgnoreCase("changePassword")){
+                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
+            } else {
+                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
+            }
+
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+        }
+        return ajaxJson;
+    }
+
+    /**
+     * 验证码验证
+     * @return
+     */
+    @RequestMapping("/web/isMsg")
+    @ResponseBody
+    public JSONObject queryRoleList(HttpServletRequest request, @RequestParam String msgCode, @RequestParam String mobilePhone, ModelMap map){
+        JSONObject json = new JSONObject();
+        String key = GlobalConstant.MSG_PREFIX + mobilePhone;
+        String code = "";
+        if(redisClientImpl.getFromCache(key) == null){
+            json.put("valid",false);
+            return json;
+        }else{
+            code = redisClientImpl.getFromCache(key).toString();
+        }
+
+        if(msgCode == null){
+            json.put("valid",false);
+        }else if(mobilePhone == null){
+            json.put("valid",false);
+        }else if(msgCode.equals(code)){
+            json.put("valid",true);
+        }else{
+            json.put("valid",false);
+        }
+
+        return json;
     }
 }
