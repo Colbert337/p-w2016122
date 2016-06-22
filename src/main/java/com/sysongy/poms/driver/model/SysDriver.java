@@ -3,10 +3,12 @@ package com.sysongy.poms.driver.model;
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.util.Date;
 
 public class SysDriver extends BaseModel{
+
     private String sysDriverId;
 
     private String userName;
@@ -23,11 +25,15 @@ public class SysDriver extends BaseModel{
 
     private Integer isIdent;
 
+    private Usysparam isIdentInfo;
+
     private String plateNumber;
 
     private Date expiryDate;
 
-    private Integer fuelType;
+    private String fuelType;
+
+    private Usysparam fuelTypeInfo;
 
     private String drivingLice;
 
@@ -41,27 +47,56 @@ public class SysDriver extends BaseModel{
 
     private String sysUserAccountId;
 
-    private String sysTransportId;
-
     private String regisCompany;
 
     private String regisSource;
 
     private Date createdDate;
 
+    private String createdDate_before;
+
+    private String createdDate_after;
+
     private Date updatedDate;
 
     private Integer isFirstCharge;
 
-    private Integer checkedStatus;
+    private String checkedStatus;
 
     private Date checkedDate;
 
     private SysUserAccount account;
 
-    private String sys_gas_station_id;
+    private String stationId;
+
+    private String walletId;
 
     private String expireTimeForCRM;
+
+    public String getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(String walletId) {
+        this.walletId = walletId;
+    }
+
+	public String getCreatedDate_before() {
+		return createdDate_before;
+	}
+
+	public void setCreatedDate_before(String createdDate_before) {
+		this.createdDate_before = createdDate_before;
+	}
+
+	public String getCreatedDate_after() {
+		return createdDate_after;
+	}
+
+	public void setCreatedDate_after(String createdDate_after) {
+		this.createdDate_after = createdDate_after;
+	}
+
 
     public String getSysDriverId() {
         return sysDriverId;
@@ -143,11 +178,11 @@ public class SysDriver extends BaseModel{
         this.expiryDate = expiryDate;
     }
 
-    public Integer getFuelType() {
+    public String getFuelType() {
         return fuelType;
     }
 
-    public void setFuelType(Integer fuelType) {
+    public void setFuelType(String fuelType) {
         this.fuelType = fuelType;
     }
 
@@ -191,14 +226,6 @@ public class SysDriver extends BaseModel{
         this.sysUserAccountId = sysUserAccountId == null ? null : sysUserAccountId.trim();
     }
 
-    public String getSysTransportId() {
-        return sysTransportId;
-    }
-
-    public void setSysTransportId(String sysTransportId) {
-        this.sysTransportId = sysTransportId == null ? null : sysTransportId.trim();
-    }
-
     public String getRegisCompany() {
         return regisCompany;
     }
@@ -239,11 +266,11 @@ public class SysDriver extends BaseModel{
         this.isFirstCharge = isFirstCharge;
     }
 
-    public Integer getCheckedStatus() {
+    public String getCheckedStatus() {
         return checkedStatus;
     }
 
-    public void setCheckedStatus(Integer checkedStatus) {
+    public void setCheckedStatus(String checkedStatus) {
         this.checkedStatus = checkedStatus;
     }
 
@@ -263,14 +290,6 @@ public class SysDriver extends BaseModel{
         this.account = account;
     }
 
-    public String getSys_gas_station_id() {
-        return sys_gas_station_id;
-    }
-
-    public void setSys_gas_station_id(String sys_gas_station_id) {
-        this.sys_gas_station_id = sys_gas_station_id;
-    }
-
     public GasCard getCardInfo() {
         return cardInfo;
     }
@@ -279,11 +298,35 @@ public class SysDriver extends BaseModel{
         this.cardInfo = cardInfo;
     }
 
+    public Usysparam getIsIdentInfo() {
+        return isIdentInfo;
+    }
+
+    public void setIsIdentInfo(Usysparam isIdentInfo) {
+        this.isIdentInfo = isIdentInfo;
+    }
+
     public String getExpireTimeForCRM() {
         return expireTimeForCRM;
     }
 
     public void setExpireTimeForCRM(String expireTimeForCRM) {
         this.expireTimeForCRM = expireTimeForCRM;
+    }
+
+    public String getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(String stationId) {
+        this.stationId = stationId;
+    }
+
+    public Usysparam getFuelTypeInfo() {
+        return fuelTypeInfo;
+    }
+
+    public void setFuelTypeInfo(Usysparam fuelTypeInfo) {
+        this.fuelTypeInfo = fuelTypeInfo;
     }
 }

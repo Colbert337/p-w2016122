@@ -89,10 +89,20 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="email" class="col-sm-3 control-label no-padding-right" > E-mail： </label>
+										<label for="email" class="col-sm-3 control-label no-padding-right" >加注站类别： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="email"  name="email" placeholder="输入E-mail" class="form-control" value="${station.email}"/>
+											<select class="form-control" id="station_level" name="station_level">
+												<s:option flag="true" gcode="STATION_LEVEL" />
+											</select>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label for="email" class="col-sm-3 control-label no-padding-right" >注册邮箱： </label>
+
+										<div class="col-sm-4">
+											<input type="text" id="email"  name="email" placeholder="输入注册邮箱" class="form-control" value="${station.email}" maxlength="50"/>
 										</div>
 									</div>
 									
@@ -138,7 +148,7 @@
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期： </label>
-										<div class="col-sm-2 datepicker-noicon">
+										<div class="col-sm-4 datepicker-noicon">
 											<div class="input-group">
 												<input class="form-control date-picker" name="expiry_date_frompage" id="expiry_date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${station.expiry_date_frompage}"/>
 													<span class="input-group-addon">
@@ -250,7 +260,7 @@
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>
@@ -440,6 +450,13 @@
 		                        min: 1,
 		                        max: 20,
 		                        message: '加注站email不能超过30个字符'
+		                    }
+		                }
+		            },
+		            station_level: {
+		                validators: {
+		                    notEmpty: {
+		                        message: '加注站级别不能为空'
 		                    }
 		                }
 		            },

@@ -1,7 +1,10 @@
 package com.sysongy.poms.driver.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.order.model.SysOrder;
 
 public interface DriverService {
@@ -13,7 +16,7 @@ public interface DriverService {
 	public Integer saveDriver(SysDriver obj,  String operation) throws Exception;
 	
 	public Integer delDriver(String sysDriverId) throws Exception;
-	
+
 	/**
 	 * 给司机充钱
 	 * @param order
@@ -33,4 +36,19 @@ public interface DriverService {
 	public Integer distributeCard(SysDriver record) throws Exception;
 
 	public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception;
+
+	public Integer review(String driverid, String type) throws Exception;
+	/**
+	 * 条件查询司机列表
+	 * @param record
+	 * @return
+	 */
+	PageInfo<SysDriver> querySearchDriverList(SysDriver record);
+
+	/**
+	 * 批量离职司机
+	 * @param idList
+	 * @return
+     */
+	int deleteDriverByIds(List<String> idList);
 }

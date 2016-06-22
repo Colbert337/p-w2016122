@@ -1,5 +1,6 @@
 package com.sysongy.poms.gastation.dao;
 
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
 
@@ -19,4 +20,6 @@ public interface GsGasPriceMapper {
     int updateByPrimaryKey(GsGasPrice record);
 
     List<GsGasPrice> queryForPage(GsGasPrice record);
+
+    int isExists(GsGasPrice record);
 }

@@ -56,4 +56,38 @@ public class CRMBaseContoller {
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
+    
+    //单文件上传
+    @RequestMapping(value = "/web/upload")
+    @ResponseBody
+    public AjaxJson queryFileData(@RequestParam("uploadfile") CommonsMultipartFile file, HttpServletRequest request){
+        AjaxJson ajaxJson = new AjaxJson();
+        String stationid = request.getParameter("stationid");
+        //MultipartFile是对当前上传的文件的封装，当要同时上传多个文件时，可以给定多个MultipartFile参数(数组)
+        if (file.isEmpty()) {
+            ajaxJson.setMsg("上传文件为空！！！");
+            ajaxJson.setSuccess(false);
+            return ajaxJson;
+        }
+        String type = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));// 取文件格式后缀名
+        String filename = System.currentTimeMillis() + type;// 取当前时间戳作为文件名
+//        String path = request.getSession().getServletContext().getRealPath("/upload/" + filename);// 存放位置
+//        path = request.getContextPath()+"/upload/"+ filename;
+        String path = (String) prop.get("images_upload_path");
+        String show_path = (String) prop.get("show_images_path");
+        if(!StringUtils.isEmpty(stationid)){
+        	path = path + "/"+stationid+"/";
+        	show_path = show_path + "/"+stationid+"/";
+        }
+        path+= filename;
+        show_path+= filename;
+        File destFile = new File(path);
+        try {
+            FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ajaxJson.setObj(show_path);
+        return ajaxJson;
+    }
 }

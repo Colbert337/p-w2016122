@@ -84,8 +84,8 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right"> 加注站编号： </label>
 
-										<div class="col-sm-3">
-											<input type="text" id="sys_gas_station_id"  name="sys_gas_station_id" value="${param.gastationid}" readonly="readonly"/>
+										<div class="col-sm-4">
+											<input type="text" id="sys_gas_station_id" class="form-control"  name="sys_gas_station_id" value="${param.gastationid}" readonly="readonly"/>
 										</div>
 									</div>
 									
@@ -93,7 +93,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="indu_com_number" name="indu_com_number" class="col-xs-10 col-sm-5" maxlength="15" placeholder="输入工商注册号"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" maxlength="15" placeholder="输入工商注册号"/>
 										</div>
 									</div>
 									
@@ -110,7 +110,7 @@
 														<!-- <input type="file" id="id-input-file-3"/>-->
 														<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
 														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -141,7 +141,7 @@
 														<!-- <input type="file" id="id-input-file-31"/> -->
 														<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
 														<input type="hidden" id="tax_certif" name="tax_certif"/>
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -164,7 +164,7 @@
 														<!-- <input type="file" id="id-input-file-32" /> -->
 														<input type="file" name="image" class="projectfile"  id="lng_certif_select" />
 														<input type="hidden" id="lng_certif" name="lng_certif"/>
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#lng_certif_select','#lng_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -188,7 +188,7 @@
 														<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
 														
 														<input type="hidden" name="dcp_certif" id="dcp_certif"/>
-														<button class="btn btn-info" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -214,7 +214,7 @@
 											</button>
 											
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>

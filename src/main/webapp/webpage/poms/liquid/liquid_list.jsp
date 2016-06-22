@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/assets/js/poms/liquid/liquid_list.js"></script>
+<script src="<%=basePath %>/dist/js/liquid/liquid_list.js"></script>
 
 
 <!-- /section:basics/content.breadcrumbs -->
@@ -117,7 +117,7 @@
 									<td>${list.remark}</td>
 									<td>
 										<div class="text-center">
-											<a class="green" href="javascript:void(0);" title="修改数据" data-rel="tooltip"> 
+											<a href="javascript:void(0);" title="修改" data-rel="tooltip">
 												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a>
 										</div>

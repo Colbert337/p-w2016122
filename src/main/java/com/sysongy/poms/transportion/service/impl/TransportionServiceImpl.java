@@ -90,6 +90,10 @@ public class TransportionServiceImpl implements TransportionService {
 			user.setUserName(record.getAdmin_username());
 			user.setPassword(record.getAdmin_userpassword());
 			user.setUserType(GlobalConstant.USER_TYPE_TRANSPORT);
+
+			// 给用户关联运输公司编号
+			user.setStationId(newid);
+			user.setIsAdmin(0);//管理员
 			sysUserService.addAdminUser(user);
 			//同步系统参数字典表
 			Usysparam usysparam = new Usysparam();

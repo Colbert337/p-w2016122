@@ -119,6 +119,14 @@ public class DriverServiceImpl implements DriverService {
         return sysDriver;
     }
 
+    @Override
+    public PageInfo<SysDriver> querySearchDriverList(SysDriver record) {
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        List<SysDriver> sysDriverList =  sysDriverMapper.querySearchDriverList(record);
+        PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(sysDriverList);
+
+        return pageInfo;
+    }
 
     /**
 	 * 给司机充钱
@@ -186,5 +194,26 @@ public class DriverServiceImpl implements DriverService {
     public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception {
         SysDriver sysDriver =  sysDriverMapper.queryDriverByMobilePhone(record);
         return sysDriver;
+    }
+
+	@Override
+	public Integer review(String driverid, String type) throws Exception {
+		SysDriver record = new SysDriver();
+		record.setSysDriverId(driverid);
+		record.setCheckedStatus(type);
+		record.setCheckedDate(new Date());
+		record.setUpdatedDate(new Date());
+		
+		return sysDriverMapper.updateByPrimaryKeySelective(record);
+	}
+
+    /**
+     * 批量离职司机
+     * @param idList
+     * @return
+     */
+    @Override
+    public int deleteDriverByIds(List<String> idList) {
+        return sysDriverMapper.deleteDriverByIds(idList);
     }
 }

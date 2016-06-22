@@ -14,7 +14,7 @@
 		                    },
 		                    regexp: {
 		                        regexp: '^[0-9]*$',
-		                        message: '用户卡号格式必须是整数'
+		                        message: '阈最小值必须是整数'
 		                    }
 		                }
 		            },
@@ -25,7 +25,7 @@
 		                    },
 		                    regexp: {
 		                        regexp: '^[0-9]*$',
-		                        message: '用户卡号格式必须是整数'
+		                        message: '阈最大值必须是整数'
 		                    },
 		                    callback: {
 		                    	message: '阈最大值必须大于最小值',
@@ -80,7 +80,7 @@
 		                    	message: '失效日期必须大于生效日期',
 		                    	callback: function (value, validator, $field) {
 		                    		return compareDate(value, $('[name=start_date_after]').val());
-	                            }
+		                    	}
 		                    }
 		                },
 		                trigger: 'change'
@@ -109,11 +109,11 @@
 		            dataType:'text',
 		            success:function(data){
 		            	$("#main").html(data);
-		            	$("#modal-table").modal("show");
+						$("#modal-table").modal("show");
 						 if($("#retCode").val() != "100"){
-			            	 init();	
+			            	 //$("#modal-table").modal("show");
+			            	 //init();	
 			          }
-						
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
 		 	       }
@@ -125,3 +125,6 @@
 			loadPage('#main', '../web/sysparam/cashbackList');
 		}
 		
+			function init(){
+				loadPage('#main', '../webpage/poms/system/system_cashback_update.jsp');
+			}

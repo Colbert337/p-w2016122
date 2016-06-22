@@ -21,6 +21,7 @@
     <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="MapResultMap" type="java.util.Map" >
     <id column="sys_user_id" property="sysUserId" jdbcType="VARCHAR" />
@@ -95,7 +96,7 @@
   </select>
   <select id="queryUserByAccount" resultMap="BaseResultMap" >
     select
-    <include refid="Base_Column_List" />
+    *
     from sys_user
     where user_name = #{0} and password = #{1}
     and status = 0 and is_deleted = 1

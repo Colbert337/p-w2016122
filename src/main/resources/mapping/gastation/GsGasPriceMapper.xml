@@ -11,6 +11,11 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+
+    <association property="gasNumInfo" column="gas_num"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     gs_gas_price_id, sys_gas_station_id, gas_num, gas_name, price, unit, remark, created_date, 
@@ -153,4 +158,17 @@
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
   </update>
+
+  <select id="isExists" resultType="java.lang.Integer" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
+    select
+    count(*)
+    from sys_driver
+    where 1=1
+    <trim>
+      <if test="gsGasPriceId!= null &amp;&amp; gsGasPriceId != ''" >
+        and gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+
 </mapper>

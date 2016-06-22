@@ -62,4 +62,8 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 		return gsGasPriceMapper.deleteByPrimaryKey(gsPriceID);
 	}
 
+	public Integer isExists(GsGasPrice obj) throws Exception {
+		return gsGasPriceMapper.isExists(obj);
+	}
+
 }

@@ -14,7 +14,7 @@
 		                    },
 		                    regexp: {
 		                        regexp: '^[0-9]*$',
-		                        message: '用户卡号格式必须是整数'
+		                        message: '阈最小值必须是整数'
 		                    }
 		                }
 		            },
@@ -25,7 +25,7 @@
 		                    },
 		                    regexp: {
 		                        regexp: '^[0-9]*$',
-		                        message: '用户卡号格式必须是整数'
+		                        message: '阈最大值必须是整数'
 		                    },
 		                    callback: {
 		                    	message: '阈最大值必须大于最小值',
@@ -111,9 +111,8 @@
 		            	$("#main").html(data);
 		            	$("#modal-table").modal("show");
 						 if($("#retCode").val() != "100"){
-			            	 init();	
+			            	// init();	
 			          }
-						
 		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
 		 	       }

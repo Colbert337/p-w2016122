@@ -3,6 +3,7 @@ package com.sysongy.poms.liquid.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.liquid.dao.SysGasSourceMapper;
 import com.sysongy.poms.liquid.model.SysGasSource;
 import com.sysongy.poms.liquid.service.LiquidService;
+import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
@@ -37,7 +39,17 @@ public class LiquidServiceImpl implements LiquidService {
 	@Override
 	public String saveGasSource(SysGasSource record, String operation) throws Exception {
 		if("insert".equals(operation)){
-			record.setSys_gas_source_id(UUIDGenerator.getUUID());
+			SysGasSource gassource = gasSourceMapper.findgasourceid("g"+record.getprovince_id());
+			String newid;
+			
+			if(gassource == null || StringUtils.isEmpty(gassource.getSys_gas_source_id())){
+				newid = "g"+record.getprovince_id() + "0001";
+			}else{
+				Integer tmp = Integer.valueOf(gassource.getSys_gas_source_id().substring(4, 8)) + 1;
+				newid = "g"+record.getprovince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
+			}
+			
+			record.setSys_gas_source_id(newid);
 			record.setStatus("1");
 			gasSourceMapper.insert(record);
 			return record.getSys_gas_source_id();

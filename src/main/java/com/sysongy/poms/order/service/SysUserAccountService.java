@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import com.sysongy.poms.permi.model.SysUserAccount;
 
 public interface SysUserAccountService {
+
 	int deleteByPrimaryKey(String sysUserAccountId);
 
     int insert(SysUserAccount record);

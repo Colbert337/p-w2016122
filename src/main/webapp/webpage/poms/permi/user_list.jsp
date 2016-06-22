@@ -124,8 +124,9 @@
 			}
 			$("#userForm").ajaxSubmit(saveOptions);
 
-			$("#userModel").modal('hide');
-			$(".modal-backdrop").css("display","none");
+			$("#userModel").modal('hide').removeClass('in');
+			$("body").removeClass('modal-open').removeAttr('style');
+			$(".modal-backdrop").remove();
 		}
 	}
 
@@ -203,7 +204,8 @@
 			 type:'post',
 			 dataType:'text',
 				 success:function(data){
-				 $("#main").html(data);
+					 $("#main").html(data);
+					 $('[data-rel="tooltip"]').tooltip();
 				 }
 			 }
 			 $("#listForm").ajaxSubmit(deleteOptions);
@@ -277,23 +279,23 @@
 								</td>
 								<td class="hidden-480"><fmt:formatDate value="${user.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td class="text-center">
-									<a class="" href="javascript:editUser('${user.sysUserId}');" title="修改">
+									<a class="" href="javascript:editUser('${user.sysUserId}');" title="修改" data-rel="tooltip">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
 									</a>
 									<span class="span-state">
 										<c:if test="${user.status == 0}">
-											<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="禁用">
+											<a class="green" href="javascript:updateStatus('${user.sysUserId}',1);" title="禁用" data-rel="tooltip">
 												<span class="ace-icon fa fa-unlock bigger-130"></span>
 											</a>
 										</c:if>
 										<c:if test="${user.status == 1}">
-											<a class="red" href="javascript:updateStatus('${user.sysUserId}',0);" title="启用">
+											<a class="red" href="javascript:updateStatus('${user.sysUserId}',0);" title="启用" data-rel="tooltip">
 												<span class="ace-icon fa fa-lock bigger-130"></span>
 											</a>
 										</c:if>
 									</span>
-									<a class="" href="javascript:deleteUser('${user.sysUserId}');">
-										<span class="ace-icon fa fa-trash-o bigger-130" title="删除"></span>
+									<a class="" href="javascript:deleteUser('${user.sysUserId}');" title="删除" data-rel="tooltip">
+										<span class="ace-icon fa fa-trash-o bigger-130"></span>
 									</a>
 								</td>
 							</tr>
