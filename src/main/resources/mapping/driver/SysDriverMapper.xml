@@ -12,7 +12,7 @@
     <result column="is_ident" property="isIdent" jdbcType="INTEGER" />
     <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
     <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
-    <result column="fuel_type" property="fuelType" jdbcType="INTEGER" />
+    <result column="fuel_type" property="fuelType" jdbcType="VARCHAR" />
     <result column="driving_lice" property="drivingLice" jdbcType="VARCHAR" />
     <result column="vehicle_lice" property="vehicleLice" jdbcType="VARCHAR" />
     <result column="identity_card" property="identityCard" jdbcType="VARCHAR" />
@@ -122,7 +122,7 @@
     values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR},
       #{userStatus,jdbcType=VARCHAR}, #{isIdent,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR},
-      #{expiryDate,jdbcType=TIMESTAMP}, #{fuelType,jdbcType=INTEGER}, #{drivingLice,jdbcType=VARCHAR},
+      #{expiryDate,jdbcType=TIMESTAMP}, #{fuelType,jdbcType=VARCHAR}, #{drivingLice,jdbcType=VARCHAR},
       #{vehicleLice,jdbcType=VARCHAR}, #{identityCard,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR},
       #{sysUserAccountId,jdbcType=VARCHAR},  #{regisCompany,jdbcType=VARCHAR},
       #{regisSource,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},
@@ -238,7 +238,7 @@
         #{expiryDate,jdbcType=TIMESTAMP},
       </if>
       <if test="fuelType != null" >
-        #{fuelType,jdbcType=INTEGER},
+        #{fuelType,jdbcType=VARCHAR},
       </if>
       <if test="drivingLice != null" >
         #{drivingLice,jdbcType=VARCHAR},
@@ -312,7 +312,7 @@
         expiry_date = #{expiryDate,jdbcType=TIMESTAMP},
       </if>
       <if test="fuelType != null" >
-        fuel_type = #{fuelType,jdbcType=INTEGER},
+        fuel_type = #{fuelType,jdbcType=VARCHAR},
       </if>
       <if test="drivingLice != null" >
         driving_lice = #{drivingLice,jdbcType=VARCHAR},
@@ -367,7 +367,7 @@
       is_ident = #{isIdent,jdbcType=INTEGER},
       plate_number = #{plateNumber,jdbcType=VARCHAR},
       expiry_date = #{expiryDate,jdbcType=TIMESTAMP},
-      fuel_type = #{fuelType,jdbcType=INTEGER},
+      fuel_type = #{fuelType,jdbcType=VARCHAR},
       driving_lice = #{drivingLice,jdbcType=VARCHAR},
       vehicle_lice = #{vehicleLice,jdbcType=VARCHAR},
       identity_card = #{identityCard,jdbcType=VARCHAR},

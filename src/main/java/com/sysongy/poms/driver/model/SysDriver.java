@@ -31,7 +31,7 @@ public class SysDriver extends BaseModel{
 
     private Date expiryDate;
 
-    private Integer fuelType;
+    private String fuelType;
 
     private Usysparam fuelTypeInfo;
 
@@ -178,11 +178,11 @@ public class SysDriver extends BaseModel{
         this.expiryDate = expiryDate;
     }
 
-    public Integer getFuelType() {
+    public String getFuelType() {
         return fuelType;
     }
 
-    public void setFuelType(Integer fuelType) {
+    public void setFuelType(String fuelType) {
         this.fuelType = fuelType;
     }
 
