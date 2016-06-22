@@ -366,6 +366,7 @@ public class CRMCustomerContoller {
                 orgSysDriver.setFullName(sysDriver.getFullName());
             }
 
+            orgSysDriver.setChecked_status("1");
             int renum = driverService.saveDriver(orgSysDriver, "update");
             if(renum > 0){
                 return orgSysDriver;
