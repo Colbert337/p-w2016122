@@ -224,7 +224,7 @@ public class CardController extends BaseContoller{
 
 		try {
 			if(StringUtils.isEmpty(gascardlog.getOrderby())){
-				gascardlog.setOrderby("storage_time desc");
+				gascardlog.setOrderby("optime desc");
 			}
 
 			PageInfo<GasCardLog> pageinfo = service.queryGasCardLog(gascardlog);

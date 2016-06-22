@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.sysongy.poms.gastation.model.Gastation" >
     <id column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
     <result column="gas_station_name" property="gas_station_name" jdbcType="VARCHAR" />
+    <result column="station_level" property="station_level" jdbcType="VARCHAR" />
     <result column="contact_phone" property="contact_phone" jdbcType="VARCHAR" />
     <result column="admin_username" property="admin_username" jdbcType="VARCHAR" />
     <result column="admin_userpassword" property="admin_userpassword" jdbcType="VARCHAR" />
@@ -33,7 +34,7 @@
   </resultMap>
   
   <sql id="Base_Column_List" >
-    sys_gas_station_id, gas_station_name, contact_phone, admin_username, admin_username, email,station_manager,
+    sys_gas_station_id, gas_station_name, station_level, contact_phone, admin_username, admin_username, email,station_manager,
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
@@ -83,7 +84,7 @@
   </delete>
   
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.Gastation" >
-    insert into sys_gas_station (sys_gas_station_id, gas_station_name, contact_phone,admin_username, admin_userpassword, email,station_manager,
+    insert into sys_gas_station (sys_gas_station_id, gas_station_name, station_level, contact_phone,admin_username, admin_userpassword, email,station_manager,
       area_id, province_id, 
       city_id, address, longitude, 
       latitude, expiry_date, salesmen_id, 
@@ -94,6 +95,7 @@
       updated_time,sys_user_account_id)
     values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
       #{gas_station_name,jdbcType=VARCHAR}, 
+      #{station_level,jdbcType=VARCHAR}, 
       #{contact_phone,jdbcType=VARCHAR}, 
       #{admin_username,jdbcType=VARCHAR}, 
       #{admin_userpassword,jdbcType=VARCHAR}, 
@@ -275,9 +277,12 @@
   
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
     update sys_gas_station
-    <set >
+    <set>
       <if test="gas_station_name != null &amp;&amp; gas_station_name != ''">
         gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
+      </if>
+      <if test="station_level != null &amp;&amp; station_level != ''">
+        station_level = #{station_level,jdbcType=VARCHAR},
       </if>
       <if test="station_manager != null &amp;&amp; station_manager != ''" >
         station_manager = #{station_manager,jdbcType=VARCHAR},

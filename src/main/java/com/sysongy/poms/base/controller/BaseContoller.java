@@ -102,7 +102,8 @@ public class BaseContoller {
             int userType = user.getUserType();
             currUser.setUserId(user.getSysUserId());
             currUser.setUser(user);
-            currUser.setUserType(userType);
+            currUser.setUserType(userType);//当前用户类型
+            currUser.setStationId(user.getStationId());//当前用户站点信息
 
             //封装用户菜单信息
             List<Map<String, Object>> functionList = sysFunctionService.queryFunctionListByUserId(user.getSysUserId(),user.getUserType());

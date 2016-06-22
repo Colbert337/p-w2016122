@@ -67,7 +67,8 @@ public class SysCashBackController extends BaseContoller {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/system_cashback_new";
 		String sysCashBackid = null;
-
+		SysCashBack cashback = new SysCashBack();
+		
 		try {
 			if(StringUtils.isEmpty(sysCashBack.getSys_cash_back_id())){
 				sysCashBackid = service.saveCashBack(sysCashBack,"insert");
@@ -77,7 +78,9 @@ public class SysCashBackController extends BaseContoller {
 				bean.setRetMsg("["+sysCashBackid+"]保存成功");
 			}
 			
-			ret = this.queryAllCashBackList(map, new SysCashBack());
+			
+			cashback.setSys_cash_back_no(sysCashBack.getSys_cash_back_no());
+			ret = this.queryAllCashBackList(map, cashback);
 
 			bean.setRetCode(100);
 			

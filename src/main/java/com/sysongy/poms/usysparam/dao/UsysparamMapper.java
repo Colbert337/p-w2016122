@@ -22,4 +22,10 @@ public interface UsysparamMapper {
     public List<Usysparam> queryUsysparamByGcode(String gcode);
 
     public Usysparam queryCardTypeByMcode(String mcode);
+
+    public Usysparam queryCardStatusByMcode(String mcode);
+
+    public Usysparam queryCheckStatusByMcode(String mcode);
+
+    public Usysparam queryFuelTypeByMcode(String mcode);
 }

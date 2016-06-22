@@ -57,7 +57,8 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	@Override
 	public String saveCashBack(SysCashBack record, String operation) throws Exception {
 		record.setStart_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getStart_date_after()));
-		record.setEnd_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getStart_date_before()));
+		record.setEnd_date(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(record.getStart_date_before()+" 23:59:59"));
+		record.setSys_cash_back_id(UUIDGenerator.getUUID());
 		
 		SysCashBack check = new SysCashBack();
 		
@@ -89,7 +90,6 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		}
 				
 		if("insert".equals(operation)){
-			record.setSys_cash_back_id(UUIDGenerator.getUUID());
 			record.setCreated_date(new Date());
 			
 			cashBackMapper.insert(record);

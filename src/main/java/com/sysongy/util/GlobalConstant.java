@@ -139,7 +139,7 @@ public class GlobalConstant {
 		public static final String TRANSPORTION="2";
 		public static final String DRIVER="3";
 	}
-	
+
 	/*
 	 * 	1充值 2 消费 3 转账
 	 */
@@ -148,7 +148,7 @@ public class GlobalConstant {
 		public static final String CONSUME="2";
 		public static final String TRANSFER="3";
 	}
-	
+
 	/*
 	 * 	1司机 2加气站 3 运输公司
 	 */
@@ -157,7 +157,7 @@ public class GlobalConstant {
 		public static final String GASTATION="2";
 		public static final String TRANSPORTION="3";
 	}
-	
+
 	/*
 	 * 是否首次充值 
 	 */
@@ -176,7 +176,7 @@ public class GlobalConstant {
 		public static final String DISCHARGE_TO_DRIVER_CHARGE ="133";
 		public static final String DISCHARGE_TO_DRIVER_CASHBACK ="134";
 	}
-	
+
 	/*
 	 * 返现规则是否启用 
 	 */
@@ -212,9 +212,19 @@ public class GlobalConstant {
 		public static final String OPERATOR_TYPE_IS_NOT_DRIVER="OPERATOR_TYPE_IS_NOT_DRIVER";
 		public static final String OPERATOR_TYPE_IS_NOT_GASTATION="OPERATOR_TYPE_IS_NOT_GASTATION";
 		public static final String OPERATOR_TYPE_IS_NOT_TRANSPORTION="OPERATOR_TYPE_IS_NOT_TRANSPORTION";
-		
+
 		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";
 
 		public static final String ORDER_ERROR_BALANCE_IS_NOT_ENOUGH = "BALANCE_IS_NOT_ENOUGH";
+	}
+
+	/*
+	 * 0 新注册 1 待审核 2 已通过 3 未通过
+	 */
+	public interface DriverStatus{
+		public static final String NEWBEE = "0";
+		public static final String PENDING = "1";
+		public static final String PASSED = "2";
+		public static final String NOPASS = "3";
 	}
 }

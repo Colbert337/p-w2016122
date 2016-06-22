@@ -58,4 +58,17 @@
   <select id="queryCardTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
     select * from usysparam where gcode = 'CARDTYPE' and mcode = #{mcode,jdbcType=VARCHAR}
   </select>
+
+    <select id="queryCardStatusByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'CARDSTATUS' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryCheckStatusByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'CHECKED_STATUS' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryFuelTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'FUEL_TYPE' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
+    
 </mapper>

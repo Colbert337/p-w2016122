@@ -7,6 +7,8 @@ import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -46,6 +48,8 @@ public class CRMCustomerContoller {
     @Autowired
     RedisClientInterface redisClientImpl;
 
+    @Autowired
+    GastationService gastationService;
 
     public DriverService getDriverService() {
         return driverService;
@@ -85,8 +89,11 @@ public class CRMCustomerContoller {
 
     @RequestMapping(value = {"/web/sendMsg"})
     @ResponseBody
-    public AjaxJson sendMsg(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
+    public AjaxJson sendMsg(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver,@RequestParam(required = false) String mobilePhone){
         AjaxJson ajaxJson = new AjaxJson();
+        if(sysDriver == null || sysDriver.getMobilePhone() == null || "".equals(sysDriver.getMobilePhone())){
+            sysDriver.setMobilePhone(mobilePhone);
+        }
 
         if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
             ajaxJson.setSuccess(false);
@@ -207,10 +214,23 @@ public class CRMCustomerContoller {
             Map<String, Object> attributes = new HashMap<String, Object>();
             sysDriver.setUserStatus("0");
             sysDriver.setIsFirstCharge(1);
-            sysDriver.setCheckedStatus(0);
+            sysDriver.setCheckedStatus("0");
             sysDriver.setUpdatedDate(new Date());
             sysDriver.setCreatedDate(new Date() );
             sysDriver.setExpiryDate(new Date());
+
+
+            String sys_gas_station_id = request.getParameter("sys_gas_station_id");
+            if(!StringUtils.isNotEmpty(sys_gas_station_id)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("气站ID输入错误！！！");
+                return ajaxJson;
+            }
+
+            sysDriver.setStationId(sys_gas_station_id);
+            Gastation gastation = gastationService.queryGastationByPK(sys_gas_station_id);
+            sysDriver.setRegisSource(gastation.getGas_station_name());
+
             int renum = driverService.saveDriver(sysDriver, "insert");
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
@@ -346,6 +366,7 @@ public class CRMCustomerContoller {
                 orgSysDriver.setFullName(sysDriver.getFullName());
             }
 
+            orgSysDriver.setCheckedStatus("1");
             int renum = driverService.saveDriver(orgSysDriver, "update");
             if(renum > 0){
                 return orgSysDriver;
@@ -362,9 +383,7 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson uploadFileData(@RequestParam("filename")CommonsMultipartFile[] files, HttpServletRequest request,SysDriver sysDriver) {
         AjaxJson ajaxJson = new AjaxJson();
-
         String imgTag = request.getParameter("imgTag");
-
         if(files == null){
             ajaxJson.setMsg("上传文件为空！！！");
             ajaxJson.setSuccess(false);
@@ -398,12 +417,18 @@ public class CRMCustomerContoller {
                     sysDriver.setVehicleLice(httpPath);
                 }
             }
+            if(StringUtils.isNotEmpty(sysDriver.getExpireTimeForCRM())){
+                sysDriver.setExpiryDate(DateUtil.strToDate(sysDriver.getExpireTimeForCRM(), "yyyy-MM-dd"));
+            }
+
             driverService.saveDriver(sysDriver, "update");
-            attributes.put("driver", sysDriver);
+            SysDriver sysDriverNew = driverService.queryDriverByPK(sysDriver.getSysDriverId());
+            attributes.put("driver", sysDriverNew);
             ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("上传文件失败：" + e.getMessage());
+            e.printStackTrace();
             logger.error("uploadFileData Customer error： " + e);
         }
         return ajaxJson;
@@ -415,7 +440,7 @@ public class CRMCustomerContoller {
         AjaxJson ajaxJson = new AjaxJson();
         try {
             if(StringUtils.isEmpty(sysDriver.getMobilePhone()) || StringUtils.isEmpty(sysDriver.getCardId())
-                    || StringUtils.isEmpty(sysDriver.getSys_gas_station_id())){
+                    || StringUtils.isEmpty(sysDriver.getStationId())){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("手机号或者卡号或者气站号为空！！！");
                 return ajaxJson;
@@ -437,6 +462,10 @@ public class CRMCustomerContoller {
                 ajaxJson.setMsg("无卡分发！！！");
                 return ajaxJson;
             }
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            SysDriver orgSysDriverBack = driverService.queryDriverByMobilePhone(sysDriver);
+            attributes.put("driver", orgSysDriverBack);
+            ajaxJson.setAttributes(attributes);
         }catch (Exception e){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.DISTRIBUTE_CRM_USER_CARD_ERROR + e.getMessage());

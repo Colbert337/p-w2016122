@@ -18,4 +18,6 @@ public interface SysGasSourceMapper {
     int updateByPrimaryKey(SysGasSource record);
     
     List<SysGasSource> queryForPage(SysGasSource record);
+    
+    SysGasSource findgasourceid(String province_id);
 }
