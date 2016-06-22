@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-			<script src="<%=basePath %>/assets/js/poms/sysparam/system_cashback.js"></script>
+			<script src="<%=basePath %>/dist/js/sysparam/system_cashback.js"></script>
 			
 			<div class="">
 				<form id="formcashback">
