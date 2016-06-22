@@ -9,7 +9,9 @@ import com.sysongy.poms.order.service.SysUserAccountService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.util.GlobalConstant;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SysUserAccountServiceImpl implements SysUserAccountService {
 
 	@Autowired

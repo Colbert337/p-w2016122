@@ -28,4 +28,7 @@ public interface UsysparamMapper {
     public Usysparam queryCheckStatusByMcode(String mcode);
 
     public Usysparam queryFuelTypeByMcode(String mcode);
+
+    public List<Usysparam> queryChildRenCardTypeByMcode(String mcode);
+
 }

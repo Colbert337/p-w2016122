@@ -50,9 +50,6 @@ public class DriverServiceImpl implements DriverService {
     
     @Autowired
     private SysUserAccountService sysUserAccountService;
-    
-	@Autowired
-	private DriverService driverService;
 
 	@Autowired
 	private SysCashBackService sysCashBackService;
@@ -165,7 +162,7 @@ public class DriverServiceImpl implements DriverService {
 	public String cashBackToDriver(SysOrder order) throws Exception{
 		//1.判断是否首次返现，是则调用首次返现规则
 		String accountId = order.getDebitAccount();
-		SysDriver driver = driverService.queryDriverByPK(accountId);
+		SysDriver driver = sysDriverMapper.selectByPrimaryKey(accountId);
         Integer is_first_charge = driver.getIsFirstCharge();
         if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
         	List<SysCashBack>  cashBackList = sysCashBackService.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
