@@ -38,6 +38,11 @@
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCheckStatusByMcode">
     </association>
+
+    <association property="fuelTypeInfo" column="fuelType"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryFuelTypeByMcode">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,
