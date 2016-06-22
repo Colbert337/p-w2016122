@@ -1,17 +1,64 @@
 package com.sysongy.tcms.advance.dao;
 
 import com.sysongy.tcms.advance.model.TcFleet;
+import com.sysongy.tcms.advance.model.TcFleet;
+
+import java.util.List;
+import java.util.Map;
 
 public interface TcFleetMapper {
-    int deleteByPrimaryKey(String tcFleetId);
 
-    int insert(TcFleet record);
+    /*********************************基础方法 start*************************************/
 
-    int insertSelective(TcFleet record);
+    /**
+     * 查询车队信息
+     *
+     * @param tcFleet
+     * @return
+     */
+    TcFleet queryFleet(TcFleet tcFleet);
 
-    TcFleet selectByPrimaryKey(String tcFleetId);
+    /**
+     * 查询车队信息列表
+     *
+     * @param tcFleet
+     * @return
+     */
+    List<TcFleet> queryFleetList(TcFleet tcFleet);
 
-    int updateByPrimaryKeySelective(TcFleet record);
+    /**
+     * 查询车队信息列表
+     *
+     * @param tcFleet
+     * @return
+     */
+    List<Map<String, Object>> queryFleetMapList(TcFleet tcFleet);
 
-    int updateByPrimaryKey(TcFleet record);
+    /**
+     * 添加车队
+     *
+     * @param tcFleet
+     * @return
+     */
+    int addFleet(TcFleet tcFleet);
+
+    /**
+     * 删除车队
+     *
+     * @param tcFleet
+     * @return
+     */
+    int deleteFleet(TcFleet tcFleet);
+
+
+    /**
+     * 修改车队信息
+     *
+     * @param tcFleet
+     * @return
+     */
+    int updateFleet(TcFleet tcFleet);
+
+/*********************************基础方法 end*************************************/
+
 }
