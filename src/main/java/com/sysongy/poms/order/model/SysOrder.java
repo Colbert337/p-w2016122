@@ -28,7 +28,27 @@ public class SysOrder {
 
     private String operatorType;
 
-    public String getOrderId() {
+    private String is_discharge;
+
+    private String discharge_order_id;
+    
+    public String getIs_discharge() {
+		return is_discharge;
+	}
+
+	public void setIs_discharge(String is_discharge) {
+		this.is_discharge = is_discharge;
+	}
+
+	public String getDischarge_order_id() {
+		return discharge_order_id;
+	}
+
+	public void setDischarge_order_id(String discharge_order_id) {
+		this.discharge_order_id = discharge_order_id;
+	}
+
+	public String getOrderId() {
         return orderId;
     }
 

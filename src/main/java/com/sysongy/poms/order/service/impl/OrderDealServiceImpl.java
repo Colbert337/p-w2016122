@@ -1,13 +1,13 @@
 package com.sysongy.poms.order.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sysongy.poms.order.dao.SysOrderDealMapper;
-import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.util.GlobalConstant;
@@ -41,13 +41,15 @@ public class OrderDealServiceImpl implements OrderDealService {
     }
     
     /**
-     * 创建流水单编码
+     * 创建流水单编码 deal_type+YYMMDD+hhmmss+3位毫秒
      * @param record
      * @return
      */
    public String createDealNumber(String deal_type){
-	   //TODO
-	   return "";
+	   SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+	   long times = System.currentTimeMillis();  
+	   Date date = new Date(times);  
+	   return deal_type+sdf.format(date); 
    }
    
    /**
@@ -83,4 +85,6 @@ public class OrderDealServiceImpl implements OrderDealService {
 	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
    }
+   
+  
 }
