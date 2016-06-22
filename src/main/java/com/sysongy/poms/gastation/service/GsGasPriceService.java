@@ -1,6 +1,7 @@
 package com.sysongy.poms.gastation.service;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
 
@@ -16,4 +17,5 @@ public interface GsGasPriceService {
 
     public Integer delGsPrice(String gsPriceID) throws Exception;
 
+    public Integer isExists(GsGasPrice obj) throws Exception;
 }

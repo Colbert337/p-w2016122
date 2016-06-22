@@ -43,6 +43,12 @@ public class CRMGasPriceController {
         {
             PageInfo<GsGasPrice> gsGasPrices = gsGasPriceService.queryGsPrice(gsGasPrice);
             attributes.put("gsGasPricePageInfo", gsGasPrices);
+
+            if((gsGasPrices == null) || (gsGasPrices.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("没有查询到对应的数据！");
+                return ajaxJson;
+            }
             attributes.put("gsGasPrices", gsGasPrices.getList());
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
@@ -58,12 +64,27 @@ public class CRMGasPriceController {
     @ResponseBody
     public AjaxJson addGsGasPrice(HttpServletRequest request, HttpServletResponse response, GsGasPrice gsGasPrice) {
         AjaxJson ajaxJson = new AjaxJson();
-        if(gsGasPrice == null){
+        if((gsGasPrice == null) || !StringUtils.isNotEmpty(gsGasPrice.getGsGasPriceId())){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("录入数据为空！！！");
+            ajaxJson.setMsg("录入数据为空或ID为空！！！");
             return ajaxJson;
         }
-        try {
+
+        if(!StringUtils.isNotEmpty(gsGasPrice.getGsGasPriceId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
+            return ajaxJson;
+        }
+
+        try
+        {
+            int isExistDriver = gsGasPriceService.isExists(gsGasPrice);
+            if(isExistDriver > 0){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该气品已被创建，不能重复添加！！！");
+                return ajaxJson;
+            }
+
             int renum = gsGasPriceService.saveGsPrice(gsGasPrice, "insert");
             if(renum < 1){
                 ajaxJson.setSuccess(false);
@@ -85,6 +106,12 @@ public class CRMGasPriceController {
         if(!StringUtils.isNotEmpty(gsGasPrice.getGsGasPriceId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("未输入要更新的数据！！！");
+            return ajaxJson;
+        }
+
+        if(!StringUtils.isNotEmpty(gsGasPrice.getGsGasPriceId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
             return ajaxJson;
         }
 

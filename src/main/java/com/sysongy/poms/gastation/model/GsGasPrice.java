@@ -1,6 +1,7 @@
 package com.sysongy.poms.gastation.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.util.Date;
 
@@ -10,6 +11,8 @@ public class GsGasPrice  extends BaseModel {
     private String sysGasStationId;
 
     private String gasNum;
+
+    private Usysparam gasNumInfo;
 
     private String gasName;
 
@@ -93,5 +96,13 @@ public class GsGasPrice  extends BaseModel {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public Usysparam getGasNumInfo() {
+        return gasNumInfo;
+    }
+
+    public void setGasNumInfo(Usysparam gasNumInfo) {
+        this.gasNumInfo = gasNumInfo;
     }
 }
