@@ -124,7 +124,7 @@ function saveDriver(){
  * 删除用户
  */
 function leaveDriver(){
-    if(confirm("确定要删除该用户吗？")){
+    if(confirm("确定要离职该司机吗？")){
         var deleteOptions ={
             url:'../web/driver/delete',
             data:{},

@@ -396,7 +396,9 @@
     <include refid="Base_Column_List" />
     from sys_driver
     where mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
-    and station_id = #{stationId,jdbcType=VARCHAR}
+    <if test="stationId!= null &amp;&amp; stationId != ''" >
+      and station_id = #{stationId,jdbcType=VARCHAR}
+    </if>
   </select>
 
   <!--司机离职-->
