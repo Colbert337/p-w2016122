@@ -150,7 +150,8 @@
 										<div class="col-sm-4">
 											<div class="row form-group">
 												<div class="col-sm-6">
-													<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
+													<input class="form-control" type="text" id="showprovince" readonly="readonly"/>
+													<select style="visibility:hidden" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
 															<option value ="请选择市区">请选择省份</option>
 															<option value ="100">北京市</option>
 															<option value ="220">天津市</option>
@@ -497,6 +498,8 @@
 			$("#province").trigger("change");
 			$("#city").find("option[value="+city_id+"]").attr("selected",true);
 			$("#detail").val(detail.split(" ")[2]);
+			
+			$("#showprovince").val($("#province").find("option:selected").text());
 		}
 
 		if(operations_id!=null){

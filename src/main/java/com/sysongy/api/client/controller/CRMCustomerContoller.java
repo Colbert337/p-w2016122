@@ -85,8 +85,11 @@ public class CRMCustomerContoller {
 
     @RequestMapping(value = {"/web/sendMsg"})
     @ResponseBody
-    public AjaxJson sendMsg(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
+    public AjaxJson sendMsg(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver,@RequestParam(required = false) String mobilePhone){
         AjaxJson ajaxJson = new AjaxJson();
+        if(sysDriver == null || sysDriver.getMobilePhone() == null || "".equals(sysDriver.getMobilePhone())){
+            sysDriver.setMobilePhone(mobilePhone);
+        }
 
         if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
             ajaxJson.setSuccess(false);
@@ -419,7 +422,7 @@ public class CRMCustomerContoller {
         AjaxJson ajaxJson = new AjaxJson();
         try {
             if(StringUtils.isEmpty(sysDriver.getMobilePhone()) || StringUtils.isEmpty(sysDriver.getCardId())
-                    || StringUtils.isEmpty(sysDriver.getSys_gas_station_id())){
+                    || StringUtils.isEmpty(sysDriver.getStationId())){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("手机号或者卡号或者气站号为空！！！");
                 return ajaxJson;

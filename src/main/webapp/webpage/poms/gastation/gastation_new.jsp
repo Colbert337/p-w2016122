@@ -126,7 +126,7 @@
 										<label class="col-sm-3 control-label no-padding-right">管理员账号（建议为11位手机号码）： </label>
 
 										<div class="col-sm-4">
-											<input class="form-control" name="admin_username"  type="text"  placeholder="输入管理员账号" maxlength="20" value="${station.admin_username}"/>
+											<input class="form-control" name="admin_username" type="text"  placeholder="输入管理员账号" maxlength="11" value="${station.admin_username}"/>
 										</div>
 									</div>
 									

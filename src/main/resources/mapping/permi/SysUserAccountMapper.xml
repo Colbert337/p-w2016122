@@ -9,9 +9,10 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
     <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="account_status" property="account_status" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date, version
+    sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date, version, account_status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -25,10 +26,10 @@
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
     insert into sys_user_account (sys_user_account_id, account_code, account_type, 
-      account_balance, created_date, updated_date
+      account_balance, created_date, updated_date, account_status
       )
     values (#{sysUserAccountId,jdbcType=VARCHAR}, #{accountCode,jdbcType=VARCHAR}, #{accountType,jdbcType=INTEGER}, 
-      #{accountBalance,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      #{accountBalance,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}, #{account_status,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
@@ -52,6 +53,9 @@
       <if test="updatedDate != null" >
         updated_date,
       </if>
+      <if test="account_status != null" >
+        account_status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sysUserAccountId != null" >
@@ -71,6 +75,9 @@
       </if>
       <if test="updatedDate != null" >
         #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="account_status != null" >
+        #{account_status,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -92,6 +99,9 @@
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="account_status != null" >
+        account_status = #{account_status,jdbcType=VARCHAR},
+      </if>
     </set>
     where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
   </update>
@@ -101,7 +111,8 @@
       account_type = #{accountType,jdbcType=INTEGER},
       account_balance = #{accountBalance,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP},
-      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      account_status = #{account_status,jdbcType=VARCHAR},
     where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
   </update>
 

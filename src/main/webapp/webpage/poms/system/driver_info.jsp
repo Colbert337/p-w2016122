@@ -7,7 +7,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/sysparam/driver_review.js"></script>
+<script src="<%=basePath %>/dist/js/sysparam/driver_info.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -33,13 +33,6 @@
 						<div class="item">
 						    <label>认证姓名:</label>
 							<input type="text" name="userName" placeholder="输入认证姓名"  maxlength="20" value="${driver.userName}"/>
-						</div>
-						
-						<div class="item">
-							<label>审核状态:</label>
-							<select class="chosen-select" name="checked_status" >
-								<s:option flag="true" gcode="CHECKED_STATUS" form="driver" field="checked_status"/>
-							</select>
 						</div>
 
 						<div class="item">
@@ -95,7 +88,7 @@
 									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册公司</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="sys_transport_id_order">关联运输公司</th>
 									<th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">可用余额</th> 
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th>
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">实体卡状态</th> 
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">用户状态</th> 
 									<th>更多操作</th>
@@ -115,23 +108,47 @@
 
 									<td>${list.sysDriverId}</td>
 								 	<td>${list.userName}</td> 
+								 	<td id="sysUserAccountId" style="display: none;">${list.sysUserAccountId}</td>
 									<td>${list.cardId}</td>
+									<c:choose>
+										<c:when test="${fn:contains(list.stationId, 'GS')}">
+											<td>加注站</td>
+										</c:when>
+										<c:when test="${fn:contains(list.stationId, 'T')}">
+											<td>运输公司</td>
+										</c:when>
+										<c:otherwise>
+											<td></td>
+										</c:otherwise>
+									</c:choose>
 									<td>${list.regisSource}</td>
-									<td>${list.regisSource}</td>
-									<td>${list.sysTransportId}</td>
+									<td>${list.stationId}</td>
 									<td>${list.account.accountBalance}</td> 
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
 									<td><s:Code2Name mcode="${list.cardInfo.card_status}" gcode="CARDSTATUS"></s:Code2Name></td>
-									<td><s:Code2Name mcode="${list.checked_status}" gcode="CHECKED_STATUS"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.account.account_status}" gcode="ACCOUNT_STATUS"></s:Code2Name></td>
 									<td>
-										<div class="text-center">
-											<a class="green" href="javascript:void(0);" title="审核通过" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="review(this,'2');"></i>
-											</a>
-											<a class="green" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-ban bigger-130" onclick="review(this,'3');"></i>
-											</a>
-										</div>
+										<div class="btn-toolbar">
+											<div class="btn-group">
+												<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
+													状态修改
+													<span class="ace-icon fa fa-caret-down icon-on-right"></span>
+												</button>
+
+												<ul class="dropdown-menu dropdown-info dropdown-menu-right">
+													<li>
+														<a href="javascript:void(0);" onclick="change(this,0);">冻结用户</a>
+													</li>
+													
+													<li>
+														<a href="javascript:void(0);" onclick="change(this,1);">冻结卡</a>
+													</li>
+
+													<li>
+														<a href="javascript:void(0);" onclick="change(this,2);">解冻</a>
+													</li>
+												</ul>
+											</div>
 									</td>
 								</tr>
 								</c:forEach>
