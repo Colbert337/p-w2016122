@@ -63,36 +63,33 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
 	@Override
-	public String chargeToDriver(SysOrder order){
+	public String chargeToDriver(SysOrder order) throws Exception{
 	   if (order ==null){
 		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
 	   }
 	   
 	   String orderType = order.getOrderType();
-	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE))){
+	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_DRIVER))){
 		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_CHARGE;
 	   }
 	   String operatorType = order.getOperatorType();
 	   if(operatorType==null || (!operatorType.equalsIgnoreCase(GlobalConstant.OrderOperatorType.DRIVER))){
 		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER;
 	   }
-	   //TODO 充值流程：1.充值; 2.返现
-	   try{
-		   //1.首先给司机充值
-		   String success_charge = driverService.chargeCashToDriver(order);
-		   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_charge)){
-			   //如果出错直接返回错误代码退出
-			   return success_charge;
-		   }
-		   //2.调用返现--在返现里面判断是否首次返现，是则增加调用首次返现规则，然后再继续调用返现
-		   String success_cashback = driverService.cashBackToDriver(order);
-		   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_cashback)){
-			   //如果出错直接返回错误代码退出
-			   return success_cashback;
-		   }
-	   }catch(Exception e){
-		   //TODO 
+	   
+	   //1.首先给司机充值
+	   String success_charge = driverService.chargeCashToDriver(order);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_charge)){
+		   //如果出错直接返回错误代码退出
+		   return success_charge;
 	   }
+	   //2.调用返现--在返现里面判断是否首次返现，是则增加调用首次返现规则，然后再继续调用返现
+	   String success_cashback = driverService.cashBackToDriver(order);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_cashback)){
+		   //如果出错直接返回错误代码退出
+		   return success_cashback;
+	   }
+	  
 	   return GlobalConstant.OrderProcessResult.SUCCESS;	
 	}
     
@@ -102,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
 	@Override
-	public String chargeToTransportion(SysOrder record){
+	public String chargeToTransportion(SysOrder record) throws Exception{
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 

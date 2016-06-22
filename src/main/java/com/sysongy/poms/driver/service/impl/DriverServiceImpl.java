@@ -163,19 +163,25 @@ public class DriverServiceImpl implements DriverService {
 		//1.判断是否首次返现，是则调用首次返现规则
 		String accountId = order.getDebitAccount();
 		SysDriver driver = sysDriverMapper.selectByPrimaryKey(accountId);
+		String accountUserName = driver.getFullName();
         Integer is_first_charge = driver.getIsFirstCharge();
         if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
         	List<SysCashBack>  cashBackList = sysCashBackService.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
-        	String accountUserName = driver.getFullName();
-        	String cashTo_success = sysCashBackService.cashToAccount(order, cashBackList, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CASHBACK);
+        	String cashTo_success = sysCashBackService.cashToAccount(order, cashBackList, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);
         	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success)){
         		//如果出错，直接退出
         		return cashTo_success;
         	}
         }
-		//2.根据当前订单类型，调用对应的返现规则
-		//TODO
-		return "";
+		//2.根据当前充值类型，调用对应的返现规则
+        String charge_type = order.getChargeType();
+    	List<SysCashBack>  cashBackList_specific_type = sysCashBackService.queryCashBackByNumber(charge_type);
+    	String cashTo_success_specific_type = sysCashBackService.cashToAccount(order, cashBackList_specific_type, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CASHBACK);
+    	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success_specific_type)){
+    		//如果出错，直接退出
+    		return cashTo_success_specific_type;
+    	}
+		return cashTo_success_specific_type;
 	}
 	
     public Integer isExists(SysDriver obj) throws Exception {
