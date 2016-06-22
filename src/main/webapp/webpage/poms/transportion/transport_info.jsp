@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -9,10 +10,10 @@
 <div class="page-header">
 	<h1>
 		公司信息
-		<small>
+		<%--<small>
 			<i class="ace-icon fa fa-angle-double-right"></i>
 			信息详情 &amp; 页面
-		</small>
+		</small>--%>
 	</h1>
 </div><!-- /.page-header -->
 <%--单行表单 开始--%>
@@ -24,7 +25,7 @@
 			<div class="form-group">
 				<label class="col-sm-4 control-label no-padding-right"> 公司名称： </label>
 				<div class="col-sm-8">
-					<label class="pad-top-10">${transportion.transportionName}</label>
+					<label class="pad-top-10">${transportion.transportion_name}</label>
 				</div>
 			</div>
 			<div class="form-group">
@@ -36,19 +37,19 @@
 			<div class="form-group">
 				<label class="col-sm-4 control-label no-padding-right"> 联系人： </label>
 				<div class="col-sm-8">
-					<label class="pad-top-10">${transportion.adminUsername}</label>
+					<label class="pad-top-10">${transportion.admin_username}</label>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-4 control-label no-padding-right"> 联系电话： </label>
 				<div class="col-sm-8">
-					<label class="pad-top-10">${transportion.contactPhone}</label>
+					<label class="pad-top-10">${transportion.contact_phone}</label>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-4 control-label no-padding-right"> 平台有效期： </label>
 				<div class="col-sm-8">
-					<label class="pad-top-10">${transportion.expiryDate}</label>
+					<label class="pad-top-10"><fmt:formatDate value="${transportion.expiry_date}" type="both" pattern="yyyy-MM-dd HH:mm"/></label>
 				</div>
 			</div>
 			<%--<div class="form-group">
