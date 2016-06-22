@@ -39,14 +39,14 @@ public class TcVehicleController extends BaseContoller {
      * 查询车辆列表
      * @return
      */
-    @RequestMapping("/list/page")
-    public String queryVehicleListPage(@ModelAttribute CurrUser currUser, SysDriver driver, ModelMap map){
+   /* @RequestMapping("/list/page")
+    public String queryVehicleListPage(@ModelAttribute CurrUser currUser, TcVehicle vehicle, ModelMap map){
         String stationId = currUser.getStationId();
-        if(driver.getPageNum() == null){
-            driver.setPageNum(GlobalConstant.PAGE_NUM);
-            driver.setPageSize(GlobalConstant.PAGE_SIZE);
+        if(vehicle.getPageNum() == null){
+            vehicle.setPageNum(GlobalConstant.PAGE_NUM);
+            vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
         }
-        driver.setStationId(stationId);
+        vehicle.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
         PageInfo<SysDriver> driverPageInfo = new PageInfo<SysDriver>();
@@ -61,7 +61,7 @@ public class TcVehicleController extends BaseContoller {
         map.addAttribute("driver",driver);
 
         return "webpage/tcms/driver/driver_list";
-    }
+    }*/
 
 
     /**
