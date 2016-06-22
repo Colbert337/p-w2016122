@@ -6,6 +6,7 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class DriverController extends BaseContoller{
 	RedisClientInterface redisClientImpl;
 	@Autowired
 	SysUserAccountService sysUserAccountService;
+
 
 	/**
      * 查询司机列表
