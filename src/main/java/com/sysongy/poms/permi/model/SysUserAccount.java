@@ -1,5 +1,6 @@
 package com.sysongy.poms.permi.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class SysUserAccount {
@@ -18,8 +19,18 @@ public class SysUserAccount {
     private int version;
     
     private String account_status;
+    
+    private BigDecimal deposit;
 
-    public String getAccount_status() {
+    public BigDecimal getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(BigDecimal deposit) {
+		this.deposit = deposit;
+	}
+
+	public String getAccount_status() {
 		return account_status;
 	}
 

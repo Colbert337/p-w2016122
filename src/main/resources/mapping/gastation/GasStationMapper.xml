@@ -30,6 +30,9 @@
     <result column="created_time" property="created_time" jdbcType="TIMESTAMP" />
     <result column="updated_time" property="updated_time" jdbcType="TIMESTAMP" />
     <result column="sys_user_account_id" property="sys_user_account_id" jdbcType="VARCHAR" />
+    <association column="sys_user_account_id" property="account" javaType="com.sysongy.poms.permi.model.SysUserAccount"
+                 select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
   
   <sql id="Base_Column_List" >
