@@ -22,7 +22,7 @@ public interface DriverService {
 	 * @param order
 	 * @return
 	 */
-	public String chargeCashToDriver(SysOrder order) throws Exception;
+	public String chargeCashToDriver(SysOrder order,String is_discharge) throws Exception;
 
 	/**
 	 * 给司机返现

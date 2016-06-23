@@ -3,6 +3,7 @@ package com.sysongy.poms.order.service.impl;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,15 @@ public class OrderDealServiceImpl implements OrderDealService {
 	   long times = System.currentTimeMillis();  
 	   Date date = new Date(times);  
 	   return deal_type+sdf.format(date); 
+   }
+   
+   /**
+    * 根据订单来查询订单操作流水
+    * @param record
+    * @return
+    */
+   public List<SysOrderDeal> queryOrderDealByOrderId(String orderId){
+	   return sysOrderDealMapper.queryOrderDealByOrderId(orderId);
    }
    
    /**
