@@ -25,6 +25,10 @@ public class TcVehicle extends BaseModel{
 
     private Date updatedDate;
 
+    private String isDeleted;
+
+    private String payCode;
+
     public String getTcVehicleId() {
         return tcVehicleId;
     }
@@ -103,5 +107,21 @@ public class TcVehicle extends BaseModel{
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(String isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public String getPayCode() {
+        return payCode;
+    }
+
+    public void setPayCode(String payCode) {
+        this.payCode = payCode;
     }
 }

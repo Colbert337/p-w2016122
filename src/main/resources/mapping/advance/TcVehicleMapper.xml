@@ -8,36 +8,106 @@
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
     <result column="notice_phone" property="noticePhone" jdbcType="VARCHAR" />
     <result column="copy_phone" property="copyPhone" jdbcType="VARCHAR" />
+    <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
     <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="MapResultMap" type="java.util.Map" >
+    <id column="tc_vehicle_id" property="tcVehicleId" jdbcType="VARCHAR" />
+    <result column="fleet_name" property="fleetName" jdbcType="VARCHAR" />
+    <result column="card_status" property="cardStatus" jdbcType="VARCHAR" />
+    <result column="plates_number" property="platesNumber" jdbcType="VARCHAR" />
+    <result column="tc_fleet_id" property="tcFleetId" jdbcType="VARCHAR" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="notice_phone" property="noticePhone" jdbcType="VARCHAR" />
+    <result column="copy_phone" property="copyPhone" jdbcType="VARCHAR" />
+    <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
+    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     tc_vehicle_id, plates_number, tc_fleet_id, station_id, notice_phone, copy_phone, 
-    card_no, user_name, created_date, updated_date
+    card_no, user_name, created_date, updated_date, is_deleted, pay_code
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="queryVehicle" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     select 
     <include refid="Base_Column_List" />
     from tc_vehicle
     where tc_vehicle_id = #{tcVehicleId,jdbcType=VARCHAR}
+    and is_deleted = 1
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <select id="queryVehicleList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
+    select
+    <include refid="Base_Column_List" />
+    from tc_vehicle
+    where is_deleted = 1
+    <if test="tcVehicleId != null &amp;&amp; tcVehicleId !=''">
+      and tc_vehicle_id = #{tcVehicleId}
+    </if>
+    <if test="platesNumber != null &amp;&amp; platesNumber !=''" >
+      plates_number like CONCAT(#{platesNumber,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="tcFleetId != null &amp;&amp; tcFleetId !=''" >
+      and tc_fleet_id = #{tcFleetId}
+    </if>
+    <if test="stationId != null &amp;&amp; stationId !=''" >
+      and station_id = #{stationId}
+    </if>
+    <if test="noticePhone != null &amp;&amp; noticePhone !=''" >
+      and notice_phone = #{noticePhone}
+    </if>
+    <if test="copyPhone != null &amp;&amp; copyPhone !=''" >
+      and copy_phone = #{copyPhone}
+    </if>
+    <if test="cardNo != null &amp;&amp; cardNo !=''" >
+      and card_no = #{cardNo}
+    </if>
+    <if test="userName != null &amp;&amp; userName !=''" >
+      and user_name = #{userName}
+    </if>
+    order by created_date desc
+  </select>
+  <select id="queryVehicleMapList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
+    select tv.*,tf.fleet_name,gc.card_status from tc_vehicle tv left join tc_fleet_vehicle tfv on tv.tc_vehicle_id = tfv.tc_vehicle_id
+    left join tc_fleet tf on tfv.tc_fleet_id = tf.tc_fleet_id left join gas_card gc on tv.card_no = gc.card_no
+    where tv.is_deleted = 1
+    <if test="tcVehicleId != null &amp;&amp; tcVehicleId !=''">
+      and tv.tc_vehicle_id = #{tcVehicleId}
+    </if>
+    <if test="platesNumber != null &amp;&amp; platesNumber !=''" >
+      and tv.plates_number = #{platesNumber}
+    </if>
+    <if test="tcFleetId != null &amp;&amp; tcFleetId !=''" >
+      and tv.tc_fleet_id = #{tcFleetId}
+    </if>
+    <if test="stationId != null &amp;&amp; stationId !=''" >
+      and tv.station_id = #{stationId}
+    </if>
+    <if test="noticePhone != null &amp;&amp; noticePhone !=''" >
+      and tv.notice_phone = #{noticePhone}
+    </if>
+    <if test="copyPhone != null &amp;&amp; copyPhone !=''" >
+      and tv.copy_phone = #{copyPhone}
+    </if>
+    <if test="cardNo != null &amp;&amp; cardNo !=''" >
+      and tv.card_no = #{cardNo}
+    </if>
+    <if test="userName != null &amp;&amp; userName !=''" >
+      and tv.user_name = #{userName}
+    </if>
+    order by tv.created_date desc
+  </select>
+  <delete id="deleteVehicle" parameterType="java.lang.String" >
     delete from tc_vehicle
     where tc_vehicle_id = #{tcVehicleId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
-    insert into tc_vehicle (tc_vehicle_id, plates_number, tc_fleet_id, 
-      station_id, notice_phone, copy_phone, 
-      card_no, user_name, created_date, 
-      updated_date)
-    values (#{tcVehicleId,jdbcType=VARCHAR}, #{platesNumber,jdbcType=VARCHAR}, #{tcFleetId,jdbcType=VARCHAR}, 
-      #{stationId,jdbcType=VARCHAR}, #{noticePhone,jdbcType=VARCHAR}, #{copyPhone,jdbcType=VARCHAR}, 
-      #{cardNo,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, 
-      #{updatedDate,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
+  <insert id="addVehicle" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     insert into tc_vehicle
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tcVehicleId != null" >
@@ -61,6 +131,9 @@
       <if test="cardNo != null" >
         card_no,
       </if>
+      <if test="payCode != null" >
+        pay_code,
+      </if>
       <if test="userName != null" >
         user_name,
       </if>
@@ -69,6 +142,9 @@
       </if>
       <if test="updatedDate != null" >
         updated_date,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -93,6 +169,9 @@
       <if test="cardNo != null" >
         #{cardNo,jdbcType=VARCHAR},
       </if>
+      <if test="payCode != null" >
+        #{payCode,jdbcType=VARCHAR},
+      </if>
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
       </if>
@@ -102,9 +181,12 @@
       <if test="updatedDate != null" >
         #{updatedDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
+  <update id="updateVehicle" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     update tc_vehicle
     <set >
       <if test="platesNumber != null" >
@@ -125,6 +207,9 @@
       <if test="cardNo != null" >
         card_no = #{cardNo,jdbcType=VARCHAR},
       </if>
+      <if test="payCode != null" >
+        pay_code = #{payCode,jdbcType=VARCHAR},
+      </if>
       <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
@@ -134,20 +219,10 @@
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=TIMESTAMP},
+      </if>
     </set>
-    where tc_vehicle_id = #{tcVehicleId,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
-    update tc_vehicle
-    set plates_number = #{platesNumber,jdbcType=VARCHAR},
-      tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR},
-      station_id = #{stationId,jdbcType=VARCHAR},
-      notice_phone = #{noticePhone,jdbcType=VARCHAR},
-      copy_phone = #{copyPhone,jdbcType=VARCHAR},
-      card_no = #{cardNo,jdbcType=VARCHAR},
-      user_name = #{userName,jdbcType=VARCHAR},
-      created_date = #{createdDate,jdbcType=TIMESTAMP},
-      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where tc_vehicle_id = #{tcVehicleId,jdbcType=VARCHAR}
   </update>
 </mapper>

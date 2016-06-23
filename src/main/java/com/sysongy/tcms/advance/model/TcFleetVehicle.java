@@ -1,17 +1,15 @@
 package com.sysongy.tcms.advance.model;
 
-import com.sysongy.poms.base.model.BaseModel;
-
 import java.util.Date;
 
-public class TcFleetVehicle extends BaseModel{
+public class TcFleetVehicle {
     private String tcFleetVehicleId;
 
     private String stationId;
 
-    private String fleetName;
+    private String tcFleetId;
 
-    private String sysUserId;
+    private String tcVehicleId;
 
     private Date createdDate;
 
@@ -31,20 +29,20 @@ public class TcFleetVehicle extends BaseModel{
         this.stationId = stationId == null ? null : stationId.trim();
     }
 
-    public String getFleetName() {
-        return fleetName;
+    public String getTcFleetId() {
+        return tcFleetId;
     }
 
-    public void setFleetName(String fleetName) {
-        this.fleetName = fleetName == null ? null : fleetName.trim();
+    public void setTcFleetId(String tcFleetId) {
+        this.tcFleetId = tcFleetId == null ? null : tcFleetId.trim();
     }
 
-    public String getSysUserId() {
-        return sysUserId;
+    public String getTcVehicleId() {
+        return tcVehicleId;
     }
 
-    public void setSysUserId(String sysUserId) {
-        this.sysUserId = sysUserId == null ? null : sysUserId.trim();
+    public void setTcVehicleId(String tcVehicleId) {
+        this.tcVehicleId = tcVehicleId == null ? null : tcVehicleId.trim();
     }
 
     public Date getCreatedDate() {

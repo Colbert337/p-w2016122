@@ -17,6 +17,8 @@ public class TcFleet extends BaseModel{
 
     private Date updatedDate;
 
+    private String isDeleted;
+
     public String getTcFleetId() {
         return tcFleetId;
     }
@@ -63,5 +65,13 @@ public class TcFleet extends BaseModel{
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(String isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
