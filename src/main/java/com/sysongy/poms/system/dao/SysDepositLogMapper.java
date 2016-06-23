@@ -1,5 +1,7 @@
 package com.sysongy.poms.system.dao;
 
+import java.util.List;
+
 import com.sysongy.poms.system.model.SysDepositLog;
 
 public interface SysDepositLogMapper {
@@ -14,4 +16,6 @@ public interface SysDepositLogMapper {
     int updateByPrimaryKeySelective(SysDepositLog record);
 
     int updateByPrimaryKey(SysDepositLog record);
+    
+    List<SysDepositLog> queryForPage(SysDepositLog record);
 }

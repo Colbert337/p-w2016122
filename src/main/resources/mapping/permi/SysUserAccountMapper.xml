@@ -89,7 +89,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.gastation.model.Deposit" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
     update sys_user_account
     <set>
       <if test="accountCode != null" >

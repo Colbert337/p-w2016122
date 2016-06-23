@@ -34,13 +34,6 @@
 						    <label>认证姓名:</label>
 							<input type="text" name="userName" placeholder="输入认证姓名"  maxlength="20" value="${driver.userName}"/>
 						</div>
-						
-						<div class="item">
-							<label>审核状态:</label>
-							<select class="chosen-select" name="checked_status" >
-								<s:option flag="true" gcode="CHECKED_STATUS" form="driver" field="checked_status"/>
-							</select>
-						</div>
 
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
@@ -54,10 +47,6 @@
 						</div>
 
 						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
-								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								新建
-							</button>
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
@@ -114,10 +103,10 @@
 									</td>
 
 									<td>${list.sysDriverId}</td>
-								 	<td>${list.userName}</td> 
+								 	<td>${list.fullName}</td> 
 									<td>${list.plateNumber}</td>
 									<td>${list.identityCard}</td>
-									<td>${list.fuelType}</td>
+									<td><s:Code2Name mcode="${list.fuelType}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td>${list.stationId}</td>
 									<td>${list.isIdent == '0'?'否':'是'}</td> 
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>

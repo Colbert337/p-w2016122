@@ -124,7 +124,7 @@ public class DriverController extends BaseContoller{
 
 		try {
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
-        driver.setIsIdent(0);
+        driver.setCheckedStatus("1");
 
         pageinfo = driverService.queryDrivers(driver);
         

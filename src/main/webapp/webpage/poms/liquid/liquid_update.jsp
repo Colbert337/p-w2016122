@@ -43,7 +43,7 @@
 										<label class="col-sm-3 control-label no-padding-right" >工艺类型： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="technology_type" placeholder="输入工艺类型" class="form-control" value="${gasource.technology_type}"/>
+											<input type="text" name="technology_type" placeholder="输入工艺类型" class="form-control" maxlength="20" value="${gasource.technology_type}"/>
 										</div>
 									</div>
 									

@@ -3,10 +3,11 @@ package com.sysongy.poms.system.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SysDepositLog {
-    private String sysDepositLogId;
+import com.sysongy.poms.base.model.BaseModel;
 
-    private String depositId;
+public class SysDepositLog extends BaseModel{
+	
+    private String sysDepositLogId;
 
     private String stationId;
 
@@ -15,31 +16,53 @@ public class SysDepositLog {
     private String company;
 
     private Date depositTime;
+    
+    private String depositTime_page;
 
     private String depositType;
 
     private String operator;
 
     private Date optime;
+    
+    private String optime_after;
+    
+    private String optime_before;
 
     private BigDecimal deposit;
 
     private String memo;
 
-    public String getSysDepositLogId() {
+    public String getOptime_after() {
+		return optime_after;
+	}
+
+	public void setOptime_after(String optime_after) {
+		this.optime_after = optime_after;
+	}
+
+	public String getOptime_before() {
+		return optime_before;
+	}
+
+	public void setOptime_before(String optime_before) {
+		this.optime_before = optime_before;
+	}
+
+	public String getDepositTime_page() {
+		return depositTime_page;
+	}
+
+	public void setDepositTime_page(String depositTime_page) {
+		this.depositTime_page = depositTime_page;
+	}
+
+	public String getSysDepositLogId() {
         return sysDepositLogId;
     }
 
     public void setSysDepositLogId(String sysDepositLogId) {
         this.sysDepositLogId = sysDepositLogId == null ? null : sysDepositLogId.trim();
-    }
-
-    public String getDepositId() {
-        return depositId;
-    }
-
-    public void setDepositId(String depositId) {
-        this.depositId = depositId == null ? null : depositId.trim();
     }
 
     public String getStationId() {
