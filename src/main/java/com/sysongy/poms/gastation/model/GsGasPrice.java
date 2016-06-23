@@ -22,6 +22,8 @@ public class GsGasPrice  extends BaseModel {
 
     private String unit;
 
+    private String unitInfo;
+
     private String remark;
 
     private Date createdDate;
@@ -124,5 +126,13 @@ public class GsGasPrice  extends BaseModel {
 
     public void setProductPriceInfo(ProductPrice productPriceInfo) {
         this.productPriceInfo = productPriceInfo;
+    }
+
+    public String getUnitInfo() {
+        return unitInfo;
+    }
+
+    public void setUnitInfo(String unitInfo) {
+        this.unitInfo = unitInfo;
     }
 }
