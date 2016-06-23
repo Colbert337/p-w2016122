@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.gastation.model.Deposit;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 
@@ -182,15 +183,15 @@ public class GastationController extends BaseContoller{
 	}
 
 	@RequestMapping("/depositGastation")
-	public String depositGastation(ModelMap map, @RequestParam String acconutid, @RequestParam String stationdeposit){
+	public String depositGastation(ModelMap map, Deposit deposit){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_list";
 		Integer rowcount = null;
 
 		try {
-				if(acconutid != null && !"".equals(acconutid)){
-					rowcount = service.depositGastation(acconutid, stationdeposit);
+				if(deposit.getAccount_id() != null && !"".equals(deposit.getAccount_id())){
+					rowcount = service.updatedepositGastation(deposit.getAccount_id(), deposit.getDeposit());
 				}
 
 				ret = this.queryAllGastationList(map, new Gastation());

@@ -89,9 +89,9 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.gastation.model.Deposit" >
     update sys_user_account
-    <set >
+    <set>
       <if test="accountCode != null" >
         account_code = #{accountCode,jdbcType=VARCHAR},
       </if>
@@ -111,11 +111,12 @@
         account_status = #{account_status,jdbcType=VARCHAR},
       </if>
       <if test="deposit != null" >
-        deposit = #{deposit,jdbcType=DECIMAL}
+        deposit = #{deposit,jdbcType=DECIMAL},
       </if>
     </set>
     where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
   </update>
+  
   <update id="updateAccount" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
     update sys_user_account
     set account_code = #{accountCode,jdbcType=VARCHAR},
