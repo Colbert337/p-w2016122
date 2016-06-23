@@ -1,9 +1,12 @@
 package com.sysongy.api.client.controller.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.card.model.GasCard;
+
 /**
  * Created by Administrator on 2016/6/16.
  */
-public class CRMCardUpdateInfo {
+public class CRMCardUpdateInfo extends GasCard {
 
     private String sys_gas_station_id;
 

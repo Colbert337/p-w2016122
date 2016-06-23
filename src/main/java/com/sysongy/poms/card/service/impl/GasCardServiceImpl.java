@@ -186,4 +186,11 @@ public class GasCardServiceImpl implements GasCardService{
 		int nRet = gasCardMapper.updateCardStatus(crmCardUpdateInfo);
 		return nRet;
 	}
+
+	public PageInfo<GasCard> queryGasCardForUpdate(CRMCardUpdateInfo obj) throws Exception{
+		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
+		List<GasCard> list = gasCardMapper.queryForPageUpdate(obj);
+		PageInfo<GasCard> pageInfo = new PageInfo<GasCard>(list);
+		return pageInfo;
+	}
 }
