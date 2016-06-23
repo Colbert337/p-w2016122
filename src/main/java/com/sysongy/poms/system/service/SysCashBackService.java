@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.system.model.SysCashBack;
 
 public interface SysCashBackService {
@@ -34,4 +35,15 @@ public interface SysCashBackService {
 	 */
 	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType);
 	
+	/**
+	 * 充红返现给账户
+	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则充红，否则不执行。
+	 * @param order 充红订单对象
+	 * @param cashBackRecord 订单处理流程对象
+	 * @param accountId
+	 * @param accountUserName
+	 * @param orderDealType 订单处理类型
+	 * @return
+	 */
+	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType);
 }

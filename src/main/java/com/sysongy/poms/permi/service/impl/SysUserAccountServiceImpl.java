@@ -57,7 +57,7 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance()) ;
 		//在此增加金额，如果是负值则是充红或者消费,仍然用add。
 		BigDecimal balance_result = balance.add(cash);
-		sysUserAccount.setAccountBalance(balance_result.toPlainString());
+		sysUserAccount.setAccountBalance(balance_result.toString());
 		sysUserAccount.setUpdatedDate(new Date());
 		//更新此account对象则保存到db中
 		sysUserAccountMapper.updateAccount(sysUserAccount);

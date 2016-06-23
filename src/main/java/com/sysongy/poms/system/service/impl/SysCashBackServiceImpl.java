@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
@@ -172,7 +173,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		SysCashBack eligible_cashback = null;
 		if(eligible_list.size()==0){
 			//记录订单流水，未找到有效记录
-			String remark ="给"+accountUserName+"返现"+cash.toPlainString()+",未找到符合条件的返现规则。";
+			String remark ="给"+accountUserName+"返现"+cash.toString()+",未找到符合条件的返现规则。";
 			orderDealService.createOrderDeal(order.getOrderId(),orderDealType, remark, GlobalConstant.OrderProcessResult.SUCCESS);
 			return GlobalConstant.OrderProcessResult.SUCCESS;
 		}else{
@@ -198,9 +199,44 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money);
 		
 		//4.写入订单处理流程
-		String remark = "给"+ accountUserName+"的账户，返现"+back_money.toPlainString()+"。";
-		orderDealService.createOrderDealWithCashBack(order.getOrderId(), orderDealType, remark, cash_per_str, cash_per, addCash_success);
+		String remark = "给"+ accountUserName+"的账户，返现"+back_money.toString()+"。";
+		orderDealService.createOrderDealWithCashBack(order.getOrderId(), orderDealType, remark, cash_per_str, back_money, addCash_success);
 		
+		return addCash_success;
+	}
+	
+	/**
+	 * 充红返现给账户
+	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则充红，否则不执行。
+	 * @param order 充红订单对象
+	 * @param cashBackRecord 订单处理流程对象
+	 * @param accountId
+	 * @param accountUserName
+	 * @param orderDealType 订单处理类型
+	 * @return
+	 */
+	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType){
+		String run_success = orderDealRecord.getRunSuccess();
+		if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(run_success)){
+			return GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS;
+		}
+		BigDecimal cash_back = orderDealRecord.getCashBack();
+		if(cash_back==null){
+			return GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_CASHBACK_IS_NULL;
+		}
+		
+		BigDecimal back_money = new BigDecimal(cash_back.toString());
+		//如果cash_back是正值，则back_money取它的负值
+		if(cash_back.compareTo(new BigDecimal(0)) > 0){
+			back_money = cash_back.multiply(new BigDecimal(-1));
+		}
+		//给这个账户把返现充红
+		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money);
+		//写入订单处理流程
+		String remark = "给"+ accountUserName+"的账户，充红返现"+back_money.toString()+"。";
+		String cash_per_str = orderDealRecord.getCashBackPer();
+		orderDealService.createOrderDealWithCashBack(order.getOrderId(), orderDealType, remark, cash_per_str, back_money, addCash_success);
+				
 		return addCash_success;
 	}
 	

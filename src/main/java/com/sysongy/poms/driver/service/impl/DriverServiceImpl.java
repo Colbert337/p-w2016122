@@ -159,7 +159,7 @@ public class DriverServiceImpl implements DriverService {
 			chong ="充红";
 			orderDealType = GlobalConstant.OrderDealType.DISCHARGE_TO_DRIVER_CHARGE;
 		}
-		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toPlainString()+"。";
+		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
 		
 		return cash_success;

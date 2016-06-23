@@ -229,6 +229,7 @@ public class GlobalConstant {
 	public interface OrderProcessResult{
 		public static final String SUCCESS ="SUCCESS";
 		public static final String ORDER_IS_NULL="ORDER_IS_NULL";
+		public static final String ORDER_TYPE_IS_NOT_MATCH="ORDER_TYPE_IS_NOT_MATCH";
 		public static final String ORDER_TYPE_IS_NOT_DISCHARGE="ORDER_TYPE_IS_NOT_DISCHARGE";
 		public static final String ORDER_TYPE_IS_NOT_CHARGE="ORDER_TYPE_IS_NOT_CHARGE";
 		public static final String ORDER_TYPE_IS_NOT_CONSUME="ORDER_TYPE_IS_NOT_CONSUME";
@@ -242,6 +243,8 @@ public class GlobalConstant {
 		public static final String DISCHARGE_ORDER_ID_IS_NULL="DISCHARGE_ORDER_ID_IS_NULL";
 		public static final String DISCHARGE_ORDER_ORDERDEAL_IS_EMPTY="DISCHARGE_ORDER_ORDERDEAL_IS_EMPTY";
 		public static final String DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE="DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE";
+		public static final String DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS="DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS";
+		public static final String DISCHARGE_ORDER_CASHBACK_IS_NULL = "DISCHARGE_ORDER_CASHBACK_IS_NULL";
 		
 		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";
 
