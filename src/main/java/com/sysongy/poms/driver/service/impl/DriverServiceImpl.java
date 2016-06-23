@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,6 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
-import com.sysongy.poms.order.service.SysUserAccountService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.system.model.SysCashBack;
@@ -71,7 +71,7 @@ public class DriverServiceImpl implements DriverService {
             SysUserAccount sysUserAccount = initWalletForDriver();
             record.setSysUserAccountId(sysUserAccount.getSysUserAccountId());
             record.setCreatedDate(new Date());
-            return sysDriverMapper.insert(record);
+            return sysDriverMapper.insertSelective(record);
         }else{
             return sysDriverMapper.updateByPrimaryKeySelective(record);
         }

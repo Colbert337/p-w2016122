@@ -230,18 +230,6 @@
 		                        message: '操作员工号不能为空'
 		                    }
 		                }
-		            },
-		            memo: {
-		                validators: {
-		                    notEmpty: {
-		                        message: 'The email operator is required and can\'t be empty'
-		                    },
-		                    stringLength: {
-		                        min: 6,
-		                        max: 30,
-		                        message: 'The operator must be more than 6 and less than 30 characters long'
-		                    }
-		                }
 		            }
 		        }
 		    });
@@ -305,6 +293,9 @@
 			           type:'post',                    
 			           dataType:'text',
 			           async:false,
+						beforeSend: function () {
+							$("#dynamic-table").append('<tfoot><tr><td colspan="6" class="text-center">入库中...</td></tr></tfoot>');
+						},
 			           success:function(data){
 			           		if(data == "0"){
 			           			contral = "1";
@@ -313,7 +304,10 @@
 			           		}else{
 								$("#dynamic-table").find("tbody").append("<tr class='danger'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#card_type').find("option:selected").text()+"</td><td>"+$('#card_property').find("option:selected").text()+"</td><td>已入库</td><td>"+$('#operator').val()+"</td></tr>");
 			           		}
-			            }
+			            },
+						complete: function () {
+							$("#dynamic-table").find("tfoot").remove();
+						}
 					});
 			}
 			

@@ -32,7 +32,7 @@ public class SysCashBackController extends BaseContoller {
 				sysCashBack.setPageSize(10);
 			}
 			if(sysCashBack.getSys_cash_back_no() == null || sysCashBack.getSys_cash_back_no() == ""){
-				sysCashBack.setSys_cash_back_no("0");
+				sysCashBack.setSys_cash_back_no("101");
 			}
 			if(StringUtils.isEmpty(sysCashBack.getOrderby())){
 				sysCashBack.setOrderby("created_date desc");

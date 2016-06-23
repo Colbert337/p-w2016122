@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.sysongy.poms.permi.service.SysUserAccountService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +16,10 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
-import com.sysongy.poms.order.service.SysUserAccountService;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.UUIDGenerator;
 
 @Service
 public class SysCashBackServiceImpl implements SysCashBackService {
@@ -57,7 +57,20 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	public String saveCashBack(SysCashBack record, String operation) throws Exception {
 		record.setStart_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getStart_date_after()));
 		record.setEnd_date(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(record.getStart_date_before()+" 23:59:59"));
-		record.setSys_cash_back_id(UUIDGenerator.getUUID());
+		
+		if(StringUtils.isEmpty(record.getSys_cash_back_id())){
+			SysCashBack cashback = cashBackMapper.findCashBackid(record.getSys_cash_back_no());
+			String newid;
+			
+			if(cashback == null || StringUtils.isEmpty(cashback.getSys_cash_back_id())){
+				newid = record.getSys_cash_back_no()+ "001";
+			}else{
+				Integer tmp = Integer.valueOf(cashback.getSys_cash_back_id().substring(3, 6)) + 1;
+				newid = record.getSys_cash_back_no()+StringUtils.leftPad(tmp.toString() , 3, "0");
+			}
+			
+			record.setSys_cash_back_id(newid);
+		}
 		
 		SysCashBack check = new SysCashBack();
 		

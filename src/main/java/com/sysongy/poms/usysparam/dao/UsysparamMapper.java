@@ -17,7 +17,7 @@ public interface UsysparamMapper {
     
     public int updateByPrimaryKey(Usysparam recode);
     
-    public int deleteByPrimaryKey(Usysparam recode);
+    public int delete(Usysparam recode);
 
     public List<Usysparam> queryUsysparamByGcode(String gcode);
 

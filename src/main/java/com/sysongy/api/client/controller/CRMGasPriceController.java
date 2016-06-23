@@ -39,6 +39,13 @@ public class CRMGasPriceController {
     public AjaxJson queryGsPriceInfo(HttpServletRequest request, HttpServletResponse response, GsGasPrice gsGasPrice) {
         AjaxJson ajaxJson = new AjaxJson();
         Map<String, Object> attributes = new HashMap<String, Object>();
+
+        if(StringUtils.isEmpty(gsGasPrice.getSysGasStationId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
+            return ajaxJson;
+        }
+
         try
         {
             PageInfo<GsGasPrice> gsGasPrices = gsGasPriceService.queryGsPrice(gsGasPrice);
@@ -70,7 +77,7 @@ public class CRMGasPriceController {
             return ajaxJson;
         }
 
-        if(!StringUtils.isNotEmpty(gsGasPrice.getGsGasPriceId())){
+        if(StringUtils.isEmpty(gsGasPrice.getSysGasStationId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("气站ID为空！！！");
             return ajaxJson;

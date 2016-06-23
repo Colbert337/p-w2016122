@@ -9,6 +9,7 @@ import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysRoleService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
@@ -224,4 +225,21 @@ public class SysUserController extends BaseContoller{
 
 		return json;
 	}
+
+
+	/**
+	 * 根据用户类型查询用户列表
+	 * @param currUser
+	 * @param map
+     * @return
+     */
+	@RequestMapping("/list/info")
+	@ResponseBody
+	public List<SysUser> queryUserList(@ModelAttribute CurrUser currUser, ModelMap map){
+		int userType = currUser.getUserType();
+		List<SysUser> userList = sysUserService.queryUserListByUserType(userType);
+
+		return userList;
+	}
+
 }

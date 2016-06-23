@@ -1,8 +1,12 @@
 package com.sysongy.poms.permi.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class SysUserAccount {
+import com.sysongy.poms.base.model.BaseModel;
+
+public class SysUserAccount extends BaseModel{
+	
     private String sysUserAccountId;
 
     private String accountCode;
@@ -16,8 +20,28 @@ public class SysUserAccount {
     private Date updatedDate;
 
     private int version;
+    
+    private String account_status;
+    
+    private BigDecimal deposit;
 
-    public String getSysUserAccountId() {
+    public BigDecimal getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(BigDecimal deposit) {
+		this.deposit = deposit;
+	}
+
+	public String getAccount_status() {
+		return account_status;
+	}
+
+	public void setAccount_status(String account_status) {
+		this.account_status = account_status;
+	}
+
+	public String getSysUserAccountId() {
         return sysUserAccountId;
     }
 

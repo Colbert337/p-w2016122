@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.gastation.model.Deposit;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 
@@ -144,12 +145,6 @@ public class GastationController extends BaseContoller{
 		}
 	}
 
-	/**
-	 * 用户卡删除
-	 * @param map
-	 * @param cardid
-	 * @return
-	 */
 	@RequestMapping("/deleteCard")
 	public String deleteCard(ModelMap map, @RequestParam String gastationid){
 
@@ -187,4 +182,41 @@ public class GastationController extends BaseContoller{
 		}
 	}
 
+	@RequestMapping("/depositGastation")
+	public String depositGastation(ModelMap map, Deposit deposit){
+
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_list";
+		Integer rowcount = null;
+
+		try {
+				if(deposit.getAccount_id() != null && !"".equals(deposit.getAccount_id())){
+					rowcount = service.updatedepositGastation(deposit.getAccount_id(), deposit.getDeposit());
+				}
+
+				ret = this.queryAllGastationList(map, new Gastation());
+
+				bean.setRetCode(100);
+				bean.setRetMsg("保证金设置成功");
+				bean.setRetValue(rowcount.toString());
+				bean.setPageInfo(ret);
+
+				map.addAttribute("ret", bean);
+
+
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			ret = this.queryAllGastationList(map, new Gastation());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
 }

@@ -118,8 +118,8 @@
 									<td>${list.plateNumber}</td>
 									<td>${list.identityCard}</td>
 									<td>${list.fuelType}</td>
-									<td>${list.sysTransportId}</td>
-									<td>${list.isIdent}</td> 
+									<td>${list.stationId}</td>
+									<td>${list.isIdent == '0'?'否':'是'}</td> 
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>

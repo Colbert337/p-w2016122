@@ -49,7 +49,7 @@ public class UsysparamServiceImpl implements UsysparamService {
 	
 	@Override
 	public Integer deleteUsysparam(Usysparam recode) {
-		return usysparamMapper.deleteByPrimaryKey(recode);
+		return usysparamMapper.delete(recode);
 	}
 
 	public List<Usysparam> queryUsysparamByGcode(String gcode){

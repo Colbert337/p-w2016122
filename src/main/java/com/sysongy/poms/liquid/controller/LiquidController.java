@@ -76,13 +76,12 @@ public class LiquidController extends BaseContoller{
 			if(StringUtils.isEmpty(gasource.getSys_gas_source_id())){
 				gastationid = service.saveGasSource(gasource,"insert");
 				bean.setRetMsg("["+gastationid+"]新增成功");
-				ret = "webpage/poms/liquid/liquid_new";
 			}else{
 				gastationid = service.saveGasSource(gasource,"update");
 				bean.setRetMsg("["+gastationid+"]保存成功");
-				ret = this.queryAllGasSourceList(map, new SysGasSource());
 			}
-
+			
+			ret = this.queryAllGasSourceList(map, new SysGasSource());
 			bean.setRetCode(100);
 			
 			bean.setRetValue(gastationid);

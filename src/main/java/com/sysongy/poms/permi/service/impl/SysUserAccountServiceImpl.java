@@ -1,22 +1,32 @@
-package com.sysongy.poms.order.service.impl;
+package com.sysongy.poms.permi.service.impl;
+
+import com.sysongy.util.GlobalConstant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserAccountService;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.sysongy.poms.order.service.SysUserAccountService;
-import com.sysongy.poms.permi.dao.SysUserAccountMapper;
-import com.sysongy.poms.permi.model.SysUserAccount;
-import com.sysongy.util.GlobalConstant;
-import org.springframework.stereotype.Service;
-
 @Service
 public class SysUserAccountServiceImpl implements SysUserAccountService {
-
+	
 	@Autowired
 	private SysUserAccountMapper sysUserAccountMapper;
-	 
+	
+	@Override
+	public int changeStatus(String accountid,String status) {
+		
+		SysUserAccount record = new SysUserAccount();
+		record.setSysUserAccountId(accountid);
+		record.setAccount_status(status);
+		
+		return sysUserAccountMapper.updateByPrimaryKeySelective(record);
+	}
+
 	@Override
 	public int deleteByPrimaryKey(String sysUserAccountId) {
 		return sysUserAccountMapper.deleteByPrimaryKey(sysUserAccountId);
@@ -26,7 +36,7 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	public int insert(SysUserAccount record) {
 		return sysUserAccountMapper.insert(record);
 	}
-	
+
 	@Override
 	public SysUserAccount selectByPrimaryKey(String sysUserAccountId) {
 		return sysUserAccountMapper.selectByPrimaryKey(sysUserAccountId);
@@ -37,11 +47,11 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		return sysUserAccountMapper.updateAccount(record);
 	}
 
-	@Override
 	/**
 	 * 更新现金到此账户，实现乐观锁
 	 * Cash -- 正值 则是增加，负值则是减少
 	 */
+	@Override
 	public synchronized String addCashToAccount(String accountId, BigDecimal cash) {
 		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(accountId);
 		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance()) ;
@@ -53,5 +63,4 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		sysUserAccountMapper.updateAccount(sysUserAccount);
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
-
 }
