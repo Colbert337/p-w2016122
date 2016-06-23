@@ -47,10 +47,6 @@
 						</div>
 
 						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
-								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								新建
-							</button>
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
