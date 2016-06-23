@@ -10,7 +10,7 @@ public class ProductPrice extends BaseModel {
 
     private String productPriceId;
 
-    private Long productPrice;
+    private double productPrice;
 
     private String productUnit;
 
@@ -44,11 +44,11 @@ public class ProductPrice extends BaseModel {
         this.productPriceId = productPriceId == null ? null : productPriceId.trim();
     }
 
-    public Long getProductPrice() {
+    public double getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Long productPrice) {
+    public void setProductPrice(double productPrice) {
         this.productPrice = productPrice;
     }
 

@@ -106,7 +106,7 @@ public class CRMGasPriceController {
                 ajaxJson.setMsg("输入价格为空！！！");
                 return ajaxJson;
             }
-            long lPrice = Long.valueOf(strPrice);
+            double lPrice = Double.valueOf(strPrice);
             gsGasPrice = createProductPrice(gsGasPrice, lPrice);
 
             Map<String, Object> attributes = new HashMap<String, Object>();
@@ -130,11 +130,12 @@ public class CRMGasPriceController {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_GAS_PRICE_ERROR + e.getMessage());
             logger.error("addGsGasPrice error： " + e);
+            e.printStackTrace();
         }
         return ajaxJson;
     }
 
-    private GsGasPrice createProductPrice(GsGasPrice gsGasPrice, long lPrice){
+    private GsGasPrice createProductPrice(GsGasPrice gsGasPrice, double lPrice){
         ProductPrice productPrice = new ProductPrice();
         productPrice.setId(UUIDGenerator.getUUID());
         productPrice.setProductPriceStatus("1");
