@@ -41,7 +41,7 @@
 						<div class="item">
 							<label>液厂状态:</label>
 							<select class="chosen-select" name="status" >
-								<s:option flag="true" gcode="STATION_STATUS" form="gasource" field="status" />
+								<s:option flag="true" gcode="LIQUID_STATUS" form="gasource" field="status" />
 							</select>
 						</div>
 
@@ -111,7 +111,7 @@
 									<td>${list.delivery_method}</td>
 									<td>${list.market_price}</td>
 									<td>${list.gas_factory_addr}</td>
-									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.status}" gcode="LIQUID_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.created_date}" type="both"/></td>
 									<td><fmt:formatDate value="${list.updated_date}" type="both"/></td>
 									<td>${list.remark}</td>

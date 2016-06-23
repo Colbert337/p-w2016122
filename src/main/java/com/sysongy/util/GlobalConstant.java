@@ -126,7 +126,7 @@ public class GlobalConstant {
 		public static final String DELETE="2";
 	}
 	
-	public interface GastationStatus{
+	public interface StationStatus{
 		public static final String PAUSE ="0";
 		public static final String USED="1";
 	}

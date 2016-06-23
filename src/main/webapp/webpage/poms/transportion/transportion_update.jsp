@@ -74,7 +74,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="email">注册邮箱： </label>
+										<label class="col-sm-3 control-label no-padding-right">注册邮箱： </label>
 
 										<div class="col-sm-4">
 											<input type="text" id="email"  name="email" placeholder="输入注册邮箱" class="form-control" maxlength="50" value="${station.email}"/>
@@ -540,10 +540,9 @@
 		                }
 		            },
 		            email: {
-		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站email不能为空'
+		                        message: '加气站注册邮箱不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,

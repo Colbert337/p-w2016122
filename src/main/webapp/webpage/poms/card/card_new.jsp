@@ -230,18 +230,6 @@
 		                        message: '操作员工号不能为空'
 		                    }
 		                }
-		            },
-		            memo: {
-		                validators: {
-		                    notEmpty: {
-		                        message: 'The email operator is required and can\'t be empty'
-		                    },
-		                    stringLength: {
-		                        min: 6,
-		                        max: 30,
-		                        message: 'The operator must be more than 6 and less than 30 characters long'
-		                    }
-		                }
 		            }
 		        }
 		    });

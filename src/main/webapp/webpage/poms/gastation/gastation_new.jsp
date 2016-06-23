@@ -370,8 +370,8 @@
 		var operations_id = '${station.operations_id}';
 		
 		if(province_id!=null && province_id!=""){
-			$("#province").find("option[value="+province_id+"]").attr("selected",true);
-			$("#province").trigger("change");
+			$("#province_id").find("option[value="+province_id+"]").attr("selected",true);
+			$("#province_id").trigger("change");
 			$("#city").find("option[value="+city_id+"]").attr("selected",true);
 			$("#detail").val(detail.split(" ")[2]);
 		}
@@ -444,12 +444,12 @@
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加注站email不能为空'
+		                        message: '加注站注册邮箱不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
 		                        max: 20,
-		                        message: '加注站email不能超过30个字符'
+		                        message: '加注站注册邮箱不能超过30个字符'
 		                    }
 		                }
 		            },
@@ -482,7 +482,7 @@
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
-		                        message: '管理员账号长度必须大于6位'
+		                        message: '管理员账号长度必须大于等于6位'
 		                    },
 		                    remote: {
                                 url: '../web/permi/user/info/isExist',
@@ -506,7 +506,7 @@
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
-		                        message: '管理员密码长度必须大于6位'
+		                        message: '管理员密码长度必须大于等于6位'
 		                    }
 		                }
 		            },
@@ -552,7 +552,7 @@
 		                        message: '平台有效期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '平台有效期必须大于当前日期',
+		                    	message: '平台有效期必须大于等于当前日期',
 		                    	callback: function (value, validator, $field) {
 	                                 if(compareDate(new Date().toLocaleDateString(),value)){
 	                                	 return false;
@@ -635,7 +635,7 @@
 		    });
 			    
 		function save(){
-			$("#address").val($("#province").find("option:selected").text()+" "+$("#city").find("option:selected").text()+" "+$("#detail").val());
+			$("#address").val($("#province_id").find("option:selected").text()+" "+$("#city").find("option:selected").text()+" "+$("#detail").val());
 			
 			/*手动验证表单，当是普通按钮时。*/
 			$('#gastationform').data('bootstrapValidator').validate();
