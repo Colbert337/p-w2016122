@@ -2,6 +2,16 @@
  * Created by Administrator on 2016/6/20.
  * Author: wdq
  */
+var setlectItem;
+jQuery(function($){
+    var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox(
+        {infoTextFiltered: '<span class="label label-purple label-lg">Filtered</span>'}
+    );
+    setlectItem = demo1;
+    var container1 = demo1.bootstrapDualListbox('getContainer');
+    container1.find('.btn').addClass('btn-white btn-info btn-bold');
+});
+
 /*分页相关方法 start*/
 window.onload = setCurrentPage();
 function commitForm(obj){
@@ -23,18 +33,19 @@ var listOptions ={
     }
 }
 /*分页相关方法 end*/
-//显示添加用户弹出层add
+//显示添加车队弹出层add
 function addFleet(){
     clearDiv();
     $.ajax({
-        url:"<%=basePath%>/web/permi/user/list/info",
+        url:"../web/permi/user/list/info",
         data:{},
         async:false,
         type: "POST",
         success: function(data){
+            $("#sys_user_id").empty();
             $("#sys_user_id").append("<option value='0'>--选择队长--</option>");
             $.each(data,function(i,val){
-                $("#sys_user_id").append("<option value='"+val.sysUserId+"'>"+val.realName+"</option>");
+                $("#sys_user_id").append("<option value='"+val.sysUserId+"'>"+val.userName+"-"+val.realName+"</option>");
             })
         }
     })
@@ -47,8 +58,9 @@ function addFleet(){
     $("#editModel").modal('show');
 }
 
-//显示编辑用户弹出层
+//显示编辑车队弹出层
 function editFleet(fleetId){
+    var userId;
     $.ajax({
         url:"../web/tcms/fleet/info",
         data:{tcFleetId:fleetId},
@@ -58,7 +70,7 @@ function editFleet(fleetId){
             $("#fleet_name").val(data.fleetName);
             $("#tc_fleet_id").val(data.tcFleetId);
             $("#sys_user_id").val(data.sysUserId);
-
+            userId = data.sysUserId;
             if(data.gasCard != null && data.gasCard.card_no != null){
                 var cardType,cardStatus;
                 //卡类型
@@ -97,18 +109,18 @@ function editFleet(fleetId){
             }
 
             $.ajax({
-                url:"<%=basePath%>/web/permi/user/list/role",
+                url:"../web/permi/user/list/info",
                 data:{},
                 async:false,
                 type: "POST",
                 success: function(data){
-
-                    $("#sys_user_id").append("<option value='0'>--选择角色--</option>");
+                    $("#sys_user_id").empty();
+                    $("#sys_user_id").append("<option value='0'>--选择队长--</option>");
                     $.each(data,function(i,val){
-                        if(val.sysRoleId == roleId){
-                            $("#sys_user_id").append("<option value='"+val.sysRoleId+"' selected='selected'>"+val.roleName+"</option>");
+                        if(val.sysUserId == userId){
+                            $("#sys_user_id").append("<option value='"+val.sysUserId+"' selected='selected'>"+val.userName+"-"+val.realName+"</option>");
                         }else{
-                            $("#sys_user_id").append("<option value='"+val.sysRoleId+"'>"+val.roleName+"</option>");
+                            $("#sys_user_id").append("<option value='"+val.sysUserId+"'>"+val.userName+"-"+val.realName+"</option>");
                         }
                     })
                 }
@@ -139,7 +151,7 @@ function clearDiv(){
     $("#avatar_b").empty();
 }
 /**
- * 保存用户信息
+ * 保存车队信息
  */
 function saveFleet(){
         $('#editForm').data('bootstrapValidator').validate();
@@ -167,7 +179,7 @@ function init(){
     loadPage('#main', '../web/tcms/fleet/list/page');
 }
 /**
- * 删除用户
+ * 删除车队
  */
 function leaveDriver(){
     if(confirm("确定要离职该司机吗？")){
@@ -185,6 +197,58 @@ function leaveDriver(){
 
 }
 
+/**
+ * 管理车队车辆
+ */
+function mangFleet(fleetId){
+    $("#fleet_id").val(fleetId);
+    $.ajax({
+        url:"../web/tcms/fleet/list/fv",
+        data:{tcFleetId:fleetId},
+        async:false,
+        type: "POST",
+        success: function(data){
+            /*$("#duallist").empty();*/
+            setlectItem.empty();
+            $.each(data,function(i,val){
+                if(val.selected == "true"){
+                    setlectItem.append("<option value='"+val.tcVehicleId+"' selected='selected'>"+val.platesNumber+"</option>");
+                }else{
+                    setlectItem.append("<option value='"+val.tcVehicleId+"'>"+val.platesNumber+"</option>");
+                }
+            })
+            setlectItem.bootstrapDualListbox('refresh');
+        }
+    })
+
+    $("#manageModel").modal('show');
+}
+
+/**
+ * 保存车队车辆分配
+ */
+function saveManage(){
+    /*$('#manageForm').data('bootstrapValidator').validate();
+    if(!$('#manageForm').data('bootstrapValidator').isValid()){
+        return ;
+    }*/
+    var vehicleStr = $('[name="duallistbox_demo1[]"]').val();
+    $("#sysUserId").val(vehicleStr);
+    var saveOptions ={
+        url:'../web/tcms/fleet/save/fv',
+        type:'post',
+        dataType:'html',
+        success:function(data){
+            $("#main").html(data);
+        }
+    }
+    $("#manageForm").ajaxSubmit(saveOptions);
+
+    $("#manageModel").modal('hide');
+    $(".modal-backdrop").css("display","none");
+    setlectItem.empty();
+
+}
 //bootstrap验证控件
 $('#editForm').bootstrapValidator({
     message: 'This value is not valid',
@@ -266,3 +330,5 @@ $('#editForm').bootstrapValidator({
         }
     }
 });
+
+

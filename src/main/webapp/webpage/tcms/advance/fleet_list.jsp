@@ -29,7 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
-							<input type="text" name="platesNumber" placeholder="车牌号"  maxlength="11" value="${vehicle.platesNumber}"/>
+							<input type="text" name="fleetName" placeholder="车队名称/队长姓名"  value="${fleet.fleetName}"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
@@ -42,9 +42,6 @@
 							<div class="item"></div>
 							<button class="btn btn-sm btn-primary" type="button" onclick="addFleet();">
 								添加车队
-							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="mangFleet();">
-								管理车辆
 							</button>
 
 						</div>
@@ -66,13 +63,16 @@
 						<c:forEach items="${fleetList}" var="fleet">
 							<tr>
 								<td>${fleet.fleetName}</td>
-								<td>${fleet.platesNumber}</td>
-								<td>${fleet.cardNo}</td>
-								<td>${fleet.noticePhone}</td>
+								<td>${fleet.real_name}</td>
+								<td>${fleet.mobile_phone}</td>
+								<td>${fleet.vCount}</td>
 								<td><fmt:formatDate value="${fleet.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
 									<a class="" href="javascript:editFleet('${fleet.tcFleetId}');" title="修改" data-rel="tooltip">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
+									</a>
+									<a class="" href="javascript:mangFleet('${fleet.tcFleetId}');" title="管理车辆" data-rel="tooltip">
+										<span class="ace-icon fa fa-car bigger-130"></span>
 									</a>
 								</td>
 							</tr>
@@ -134,7 +134,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="sys_user_id"><span class="red_star">*</span> 车队队长： </label>
 									<div class="col-sm-7">
-										<select class="chosen-select col-xs-10 col-sm-12" placeholder="车队队长" id="sys_user_id" name="sysUserId"></select>
+										<select class="form-control col-xs-10 col-sm-12" placeholder="车队队长" id="sys_user_id" name="sysUserId"></select>
 									</div>
 								</div>
 							</form>
@@ -154,6 +154,48 @@
 	</div><!-- /.modal -->
 </div>
 <!--添加车队弹层-结束-->
+
+<!--添加车辆管理弹层-开始-->
+<div id="manageModel" class="modal fade" role="dialog" aria-labelledby="manageModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="manageModalLabel">管理车辆</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<form class="form-horizontal" id="manageForm">
+								<div class="form-group">
+									<div class="col-sm-12">
+										<!-- #section:plugins/input.duallist -->
+										<select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallist" style="display: none;height: 270px;"></select>
+										<input type="hidden" id="fleet_id" name="tcFleetId" />
+										<input type="hidden" id="sysUserId" name="sysUserId" />
+										<div class="hr hr-16 hr-dotted"></div>
+									</div>
+								</div>
+							</form>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+				<!--底部按钮 -->
+				<div class="row">
+					<div class="space"></div>
+					<div class="col-xs-3"></div>
+					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveManage()">确   定</button></div>
+					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('manageModel')">取   消 </button></div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+<!--添加车辆管理弹层-结束-->
 
 <!--提示弹层-开始-->
 <div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">

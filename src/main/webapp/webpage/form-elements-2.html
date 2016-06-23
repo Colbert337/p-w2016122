@@ -1400,6 +1400,23 @@
 				});
 			
 			});
+
+			$.ajax({
+				url:"../web/tcms/fleet/list/fv",
+				data:{tcFleetId:fleetId},
+				async:false,
+				type: "POST",
+				success: function(data){
+					$("#duallist").empty();
+					$.each(data,function(i,val){
+						if(val.selected == "true"){
+							$("#duallist").append("<option value='"+val.tcVehicleId+"' selected='selected'>"+val.platesNumber+"</option>");
+						}else{
+							$("#duallist").append("<option value='"+val.tcVehicleId+"'>"+val.platesNumber+"</option>");
+						}
+					})
+				}
+			})
 		</script>
 
 		<!-- the following scripts are used in demo only for onpage help and you don't need them -->

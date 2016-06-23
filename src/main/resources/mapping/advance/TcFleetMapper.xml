@@ -52,12 +52,29 @@
       and tf.station_id = #{stationId}
     </if>
     <if test="fleetName != null &amp;&amp; fleetName !=''" >
-      and tf.fleet_name = #{fleetName}
+      and (tf.fleet_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%')
+      or  su.real_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%'))
     </if>
     <if test="sysUserId != null &amp;&amp; sysUserId !=''" >
       and tf.sys_user_id = #{sysUserId}
     </if>
     order by tf.created_date desc
+  </select>
+  <select id="queryFleetListByType" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
+    <!--select tv.*,tf.fleet_name
+    from tc_fleet_vehicle tfv left join tc_vehicle tv on tfv.tc_vehicle_id = tv.tc_vehicle_id
+    left join tc_fleet tf on tfv.tc_fleet_id= tf.tc_fleet_id
+    where tv.is_deleted = 1
+    <if test="tcFleetId != null &amp;&amp; tcFleetId !=''" >
+      and tv.tc_fleet_id = #{tcFleetId}
+    </if>
+    <if test="stationId != null &amp;&amp; stationId !=''" >
+      and tv.station_id = #{stationId}
+    </if>
+    order by tv.created_date desc-->
+    select tc_fleet_id from tc_fleet_vehicle
+    where  tc_fleet_id = #{tcFleetId}
+    and station_id = #{stationId}
   </select>
   <select id="queryFleet" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
     select

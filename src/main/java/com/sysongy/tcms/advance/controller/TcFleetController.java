@@ -3,13 +3,10 @@ package com.sysongy.tcms.advance.controller;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.card.model.GasCard;
-import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.tcms.advance.model.TcFleet;
-import com.sysongy.tcms.advance.model.TcFleet;
+import com.sysongy.tcms.advance.model.TcFleetVehicle;
 import com.sysongy.tcms.advance.service.TcFleetService;
-import com.sysongy.tcms.advance.service.TcFleetService;
-import com.sysongy.util.Encoder;
+import com.sysongy.tcms.advance.service.TcFleetVehicleService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +38,8 @@ public class TcFleetController extends BaseContoller {
 
     @Autowired
     TcFleetService tcFleetService;
+    @Autowired
+    TcFleetVehicleService tcFleetVehicleService;
 
     /**
      * 查询车队列表
@@ -112,4 +113,54 @@ public class TcFleetController extends BaseContoller {
         return "redirect:/web/tcms/fleet/list/page";
     }
 
+
+    /**
+     * 查询车队下车辆列表
+     * @param
+     * @param map
+     * @return
+     */
+    @RequestMapping("/list/fv")
+    @ResponseBody
+    public List<Map<String, Object>> queryFleetVehicleList(@ModelAttribute("currUser") CurrUser currUser,TcFleetVehicle tcFleetVehicle, ModelMap map){
+        String stationId = currUser.getStationId();
+        tcFleetVehicle.setStationId(stationId);
+        List<Map<String, Object>> fleetVehicleMapList = tcFleetVehicleService.queryFleetVehicleMapList(tcFleetVehicle);
+        return fleetVehicleMapList;
+    }
+
+    /**
+     * 分配车队车辆
+     * @param currUser 当前用户
+     * @param fleet 车队
+     * @param map
+     * @return
+     */
+    @RequestMapping("/save/fv")
+    public String saveFleetVehicle(HttpServletRequest request, @ModelAttribute("currUser") CurrUser currUser, TcFleet fleet, ModelMap map){
+        String selectedVeh = fleet.getSysUserId();
+        String fleetId = "";
+        String stationId = currUser.getStationId();
+        if(fleet != null ){
+            fleetId = fleet.getTcFleetId();
+        }
+        List<TcFleetVehicle> fleetVehicleList = new ArrayList<>();
+        if (selectedVeh != null && !"".equals(selectedVeh)){
+            String[] vehicleArray = selectedVeh.split(",");
+            for (String vehicleId:vehicleArray){
+                TcFleetVehicle fleetVehicle = new TcFleetVehicle();
+
+                fleetVehicle.setTcFleetVehicleId(UUIDGenerator.getUUID());
+                fleetVehicle.setStationId(stationId);
+                fleetVehicle.setTcFleetId(fleetId);
+                fleetVehicle.setTcVehicleId(vehicleId);
+
+                fleetVehicleList.add(fleetVehicle);
+            }
+
+            tcFleetVehicleService.addFleetVehicleList(fleetVehicleList,fleetId);
+        }
+
+        return "redirect:/web/tcms/fleet/list/page";
+    }
 }
