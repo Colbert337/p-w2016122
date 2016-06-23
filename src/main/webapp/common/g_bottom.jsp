@@ -62,7 +62,7 @@
 	</div>
 
 		<script type="text/javascript">
-			if('ontouchstart' in document.documentElement) document.write("<script src='<%=basePath %>/assets/js/jquery.mobile.custom.js'>"+"<"+"/script>");
+			//if('ontouchstart' in document.documentElement) document.write("<script src='<%=basePath %>/assets/js/jquery.mobile.custom.js'>"+"<"+"/script>");
 			var sjny = sjny || {};
 			sjny.basePath = '<%=basePath %>';
 		</script>

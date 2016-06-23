@@ -176,6 +176,10 @@
 		$("#gastationform").ajaxSubmit(options);
 	}
 	
+	function resetform(){
+		loadPage('#main', '../webpage/poms/liquid/liquid_new.jsp');
+	}
+
 	function returnpage(){
 		loadPage('#main', '../web/liquid/liquidList');
 	}

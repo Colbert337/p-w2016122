@@ -11,8 +11,6 @@
 
 	<script src="<%=basePath %>/dist/js/liquid/liquid_new.js"></script>
 
-			<div class="main-content">
-				<div class="main-content-inner">
 
 					<div class="">
 						<!-- /section:settings.box -->
@@ -30,7 +28,7 @@
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 									<div class="form-group">
-										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 液厂名称： </label>
+										<label  class="col-sm-3 control-label no-padding-right"> 液厂名称： </label>
 
 										<div class="col-sm-4">
 											<input type="text" name="gas_factory_name" placeholder="输入液厂名称" class="form-control" maxlength="20" value="${gasource.gas_factory_name}"/>
@@ -131,13 +129,13 @@
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											
-											<button class="btn" type="reset">
+											<button class="btn" type="reset" onclick="resetform();">
 												<i class="ace-icon fa fa-repeat bigger-110"></i>
 												重置
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>
@@ -150,5 +148,3 @@
 							</div><!-- /.col -->
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
-				</div>
-	</div>

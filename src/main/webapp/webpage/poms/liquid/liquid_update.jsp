@@ -12,14 +12,11 @@
 	<script type="text/javascript">
 		var gas_factory_addr = "${gasource.gas_factory_addr}";
 	</script>
-	
-	<script src="<%=basePath %>/dist/js/liquid/liquid_update.js"></script> 
-	
-			<div class="main-content">
-				<div class="main-content-inner">
+
+	<script src="<%=basePath %>/dist/js/liquid/liquid_update.js"></script>
 
 					<!-- /section:basics/content.breadcrumbs -->
-					<div class="page-content">
+					<div class="">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
@@ -144,7 +141,7 @@
 											</button>
 											
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-success" type="buttom" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>
@@ -157,5 +154,4 @@
 							</div><!-- /.col -->
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
-				</div>
-	</div>
+

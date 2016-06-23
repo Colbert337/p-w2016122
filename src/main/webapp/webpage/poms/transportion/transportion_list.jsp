@@ -161,7 +161,7 @@
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 									<td>${list.account.deposit}</td> 
 									<td class="text-center">
-										<a class="" href="javascript:void(0);" title="编辑" data-rel="tooltip">
+										<a class="" href="javascript:void(0);" title="修改" data-rel="tooltip">
 											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 										</a>
 										<a class="option-btn-m" href="javascript:void(0);" title="保证金" data-rel="tooltip">
