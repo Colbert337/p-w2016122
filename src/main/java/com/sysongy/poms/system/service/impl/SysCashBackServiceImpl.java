@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,20 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	public String saveCashBack(SysCashBack record, String operation) throws Exception {
 		record.setStart_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getStart_date_after()));
 		record.setEnd_date(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(record.getStart_date_before()+" 23:59:59"));
-		record.setSys_cash_back_id(UUIDGenerator.getUUID());
+		
+		if(StringUtils.isEmpty(record.getSys_cash_back_id())){
+			SysCashBack cashback = cashBackMapper.findCashBackid(record.getSys_cash_back_no());
+			String newid;
+			
+			if(cashback == null || StringUtils.isEmpty(cashback.getSys_cash_back_id())){
+				newid = record.getSys_cash_back_no()+ "001";
+			}else{
+				Integer tmp = Integer.valueOf(cashback.getSys_cash_back_id().substring(3, 6)) + 1;
+				newid = record.getSys_cash_back_no()+StringUtils.leftPad(tmp.toString() , 3, "0");
+			}
+			
+			record.setSys_cash_back_id(newid);
+		}
 		
 		SysCashBack check = new SysCashBack();
 		

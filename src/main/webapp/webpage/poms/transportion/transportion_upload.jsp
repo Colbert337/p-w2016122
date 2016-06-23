@@ -74,7 +74,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="form-control"   placeholder="输入工商注册号"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" maxlength="15" placeholder="输入工商注册号"/>
 										</div>
 									</div>
 									
@@ -105,7 +105,7 @@
 										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_number" name="tax_number" class="form-control"  placeholder="输入税务注册号"/>
+											<input type="text"  id="tax_number" name="tax_number" class="form-control" maxlength="15" placeholder="输入税务注册号"/>
 										</div>
 									</div>
 									
@@ -201,30 +201,23 @@
 		        },
 		        fields: {
 		            indu_com_number: {
-		                message: 'The cardno is not valid',
 						validators: {
-							notEmpty: {
-								message: '工商注册号不能为空'
-							},
 		                    stringLength: {
 		                        max: 15,
 		                        message: '工商注册号不能超过15位'
 							}
-		                    }
 		                }
-		            },
-		            tax_number: {
-		                message: 'The cardno is not valid',
-					validators: {
-						notEmpty: {
-							message: '税务注册号不能为空'
-						},
-		                    stringLength: {
-		                        max: 15,
-		                        message: '税务注册号不能超过15位'
-						}
-		                    }
-		                }
+		             },
+		             tax_number: {
+			                message: 'The cardno is not valid',
+							validators: {
+				                    stringLength: {
+				                        max: 15,
+				                        message: '税务注册号不能超过15位'
+								}
+				            }
+			         }   
+		        }
 		    });
 			    
 		function save(){

@@ -1,5 +1,6 @@
 package com.sysongy.poms.gastation.service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -49,14 +50,14 @@ public class GastationServiceImpl implements GastationService {
 	@Override
 	public String saveGastation(Gastation record, String operation) throws Exception {
 		if("insert".equals(operation)){
-			Gastation station = gasStationMapper.findGastationid("s"+record.getProvince_id());
+			Gastation station = gasStationMapper.findGastationid("GS"+record.getStation_level()+record.getProvince_id());
 			String newid;
 			
 			if(station == null || StringUtils.isEmpty(station.getSys_gas_station_id())){
-				newid = "s"+record.getProvince_id() + "0001";
+				newid = "GS"+record.getStation_level()+record.getProvince_id() + "0001";
 			}else{
-				Integer tmp = Integer.valueOf(station.getSys_gas_station_id().substring(4, 8)) + 1;
-				newid = "s"+record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
+				Integer tmp = Integer.valueOf(station.getSys_gas_station_id().substring(6, 10)) + 1;
+				newid = "GS"+record.getStation_level()+record.getProvince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
 			}
 			//初始化钱袋信息
 			SysUserAccount sysUserAccount = new SysUserAccount();
@@ -66,6 +67,7 @@ public class GastationServiceImpl implements GastationService {
 			sysUserAccount.setAccountBalance("0.0");
 			sysUserAccount.setCreatedDate(new Date());
 			sysUserAccount.setUpdatedDate(new Date());
+			sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
 			int ret = sysUserAccountMapper.insert(sysUserAccount);
 			if(ret != 1){
 				throw new Exception("钱袋初始化失败");
@@ -74,7 +76,7 @@ public class GastationServiceImpl implements GastationService {
 			Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 			String show_path = (String) prop.get("default_img");
 			record.setSys_user_account_id(sysUserAccount.getSysUserAccountId());
-			record.setStatus(GlobalConstant.GastationStatus.USED);
+			record.setStatus(GlobalConstant.StationStatus.USED);
 			record.setCreated_time(new Date());
 			record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			record.setSys_gas_station_id(newid);
@@ -119,8 +121,20 @@ public class GastationServiceImpl implements GastationService {
 			}else{
 				usysparam.setMname(record.getGas_station_name());
 			}
+		
 			usysparam.setScode("");
 			usysparamService.updateUsysparam(usysparam);
+			
+			//维护系统参数表
+			if(GlobalConstant.StationStatus.PAUSE.equals(record.getStatus())){
+				usysparamService.deleteUsysparam(usysparam);
+			}else{
+				Usysparam tmp = usysparamService.queryUsysparamByCode("WORKSTATION", record.getSys_gas_station_id());
+				if(tmp == null){
+					usysparamService.saveUsysparam(usysparam);
+				}
+			}
+			
 			return record.getSys_gas_station_id();
 		}
 	}
@@ -156,6 +170,14 @@ public class GastationServiceImpl implements GastationService {
 		 SysUserAccount account = sysUserAccountMapper.selectByPrimaryKey(station.getSys_user_account_id());
 		 station.setAccount(account);
 		 return station;
+	}
+
+	@Override
+	public int depositGastation(String acconutid, String stationdeposit) throws Exception {
+		SysUserAccount account = new SysUserAccount();
+		account.setSysUserAccountId(acconutid);
+		account.setDeposit(BigDecimal.valueOf(Double.valueOf(stationdeposit)));
+		return sysUserAccountMapper.updateByPrimaryKeySelective(account);
 	}
 
 }

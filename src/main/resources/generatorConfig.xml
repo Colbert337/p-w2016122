@@ -80,7 +80,7 @@
             <!--enableSelectByExample="false"-->
             <!--enableUpdateByExample="false">-->
        <!--</table>-->
-        <table schema="${jdbc.database}" tableName="tc_fleet" domainObjectName="TcFleet"
+        <!--<table schema="${jdbc.database}" tableName="tc_fleet" domainObjectName="TcFleet"
                enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
@@ -91,7 +91,7 @@
                enableDeleteByExample="false"
                enableSelectByExample="false"
                enableUpdateByExample="false">
-        </table>
+        </table>-->
         <table schema="${jdbc.database}" tableName="tc_fleet_vehicle" domainObjectName="TcFleetVehicle"
                enableCountByExample="false"
                enableDeleteByExample="false"

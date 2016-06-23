@@ -81,16 +81,24 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" > 调拨工作站： </label>
+										<label class="col-sm-3 control-label no-padding-right" >调拨对象类型：</label>
 										<div class="col-sm-4">
-												<select class="form-control" id="workstation" name="workstation">
-														<s:option flag="true" gcode="WORKSTATION" />
+												<select class="form-control" id="workstation_type" name="workstation_type" onchange="init_workstation(this);">
+													<s:option flag="true" gcode="STATION_TYPE" />
 												</select>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" > 工作站领取人： </label>
+										<label class="col-sm-3 control-label no-padding-right" >调拨工作站：</label>
+										<div class="col-sm-4">
+												<select class="form-control" id="workstation" name="workstation">
+												</select>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" >工作站领取人：</label>
 										<div class="col-sm-4">
 												<input type="text" name="workstation_resp" class="form-control" id="workstation_resp" maxlength="10"/>
 												<%-- <select class="form-control" id="workstation_resp" name="workstation_resp">
@@ -99,14 +107,14 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="operator"> 操作人： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="operator">操作人：</label>
 										<div class="col-sm-4">
 											<input type="text"  id="operator" name="operator" class="form-control"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
 										</div>
 									</div>
 						
 									<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" id="dynamic-table_after_handler"> 明细列表： </label>
+											<label class="col-sm-3 control-label no-padding-right" id="dynamic-table_after_handler">明细列表：</label>
 											<div class="col-sm-7" id="dynamic-table_div">
 											<div class="table-header">用户卡列表</div>
 												<table id="dynamic-table" class="table table-striped table-bordered table-hover">
@@ -218,10 +226,10 @@
 		                    }
 		                }
 		            },
-		            workstation_resp: {
+		            workstation_type: {
 		                validators: {
 		                    notEmpty: {
-		                        message: '工作站领取人不能为空'
+		                        message: '工作站类型不能为空'
 		                    }
 		                }
 		            },
@@ -229,18 +237,6 @@
 		                validators: {
 		                    notEmpty: {
 		                        message: '操作员工号不能为空'
-		                    }
-		                }
-		            },
-		            memo: {
-		                validators: {
-		                    notEmpty: {
-		                        message: 'The email operator is required and can\'t be empty'
-		                    },
-		                    stringLength: {
-		                        min: 6,
-		                        max: 30,
-		                        message: 'The operator must be more than 6 and less than 30 characters long'
 		                    }
 		                }
 		            }
@@ -491,21 +487,21 @@
 			loadPage('#main', '../webpage/poms/card/card_move.jsp');
 		}
 		
-	/* 	function initworkstation_resp(obj){
+	 	function init_workstation(obj){
 			$.ajax({
 				   type: "POST",
-				   url:'<%=basePath%>/web/usysparam/query?gcode=WORKSTATION_RESP&scode='+$(obj).val(),   
+				   url:'<%=basePath%>/web/usysparam/query?gcode='+$(obj).val(),  
 		           dataType:'text',
 		           async:false,
 		           success:function(data){
 		           		if(data != ""){
-				        	   $("#workstation_resp").empty();
+				        	   $("#workstation").empty();
 				        	   var s = JSON.parse(data);
 				        	   for(var i=0;i<s.length;i++){
-				        		   $("#workstation_resp").append("<option value='"+s[i].mcode+"''>"+s[i].mname+"</option>");
+				        		   $("#workstation").append("<option value='"+s[i].mcode+"''>"+s[i].mname+"</option>");
 				        	   }
 		           		}
 		            }
 				});
-		} */
+		} 
 		</script>

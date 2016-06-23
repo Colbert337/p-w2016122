@@ -3,6 +3,7 @@ package com.sysongy.poms.transportion.model;
 import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.permi.model.SysUserAccount;
 
 public class Transportion extends BaseModel{
 	
@@ -69,6 +70,16 @@ public class Transportion extends BaseModel{
     private Date created_time;
 
     private Date updated_time;
+        
+	private SysUserAccount account;
+
+	public SysUserAccount getAccount() {
+		return account;
+	}
+
+	public void setAccount(SysUserAccount account) {
+		this.account = account;
+	}
 
 	public String getAdmin_username() {
 		return admin_username;
