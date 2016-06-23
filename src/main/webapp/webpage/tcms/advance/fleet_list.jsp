@@ -134,7 +134,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="sys_user_id"><span class="red_star">*</span> 车队队长： </label>
 									<div class="col-sm-7">
-										<input type="text" id="sys_user_id" placeholder="车队队长" name="sysUserId" class="col-xs-10 col-sm-12" />
+										<select class="chosen-select col-xs-10 col-sm-12" placeholder="车队队长" id="sys_user_id" name="sysUserId"></select>
 									</div>
 								</div>
 							</form>

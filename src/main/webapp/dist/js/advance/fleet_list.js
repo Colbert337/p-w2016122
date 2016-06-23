@@ -26,6 +26,19 @@ var listOptions ={
 //显示添加用户弹出层add
 function addFleet(){
     clearDiv();
+    $.ajax({
+        url:"<%=basePath%>/web/permi/user/list/info",
+        data:{},
+        async:false,
+        type: "POST",
+        success: function(data){
+            $("#sys_user_id").append("<option value='0'>--选择队长--</option>");
+            $.each(data,function(i,val){
+                $("#sys_user_id").append("<option value='"+val.sysUserId+"'>"+val.realName+"</option>");
+            })
+        }
+    })
+
     /*密码输入框改为可编辑*/
     $("#pay_code").removeAttr("readonly");
     $("#re_password").removeAttr("readonly");
@@ -82,6 +95,24 @@ function editFleet(fleetId){
                 $("#card_type").text(cardType);
                 $("#card_status").text(cardStatus);
             }
+
+            $.ajax({
+                url:"<%=basePath%>/web/permi/user/list/role",
+                data:{},
+                async:false,
+                type: "POST",
+                success: function(data){
+
+                    $("#sys_user_id").append("<option value='0'>--选择角色--</option>");
+                    $.each(data,function(i,val){
+                        if(val.sysRoleId == roleId){
+                            $("#sys_user_id").append("<option value='"+val.sysRoleId+"' selected='selected'>"+val.roleName+"</option>");
+                        }else{
+                            $("#sys_user_id").append("<option value='"+val.sysRoleId+"'>"+val.roleName+"</option>");
+                        }
+                    })
+                }
+            })
 
             /*密码输入框改为可编辑*/
             $("#pay_code").attr("readonly","readonly");
