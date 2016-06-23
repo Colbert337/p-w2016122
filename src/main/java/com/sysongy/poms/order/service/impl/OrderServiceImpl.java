@@ -233,15 +233,25 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public String validAccount(SysOrder record){
 		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
-		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
+		SysUserAccount creditAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
+		boolean isCreditFrozen = creditAccount.getAccount_status().equalsIgnoreCase("0");
+		if(isCreditFrozen)
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN;
 
-		boolean isFrozen = sysUserAccount.getAccount_status().equalsIgnoreCase("2");
+		boolean isCreditAccountCardFrozen = creditAccount.getAccount_status().equalsIgnoreCase("1") &&
+				(record.getOrderType().equalsIgnoreCase("CARD"));
+		if(isCreditAccountCardFrozen)
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN;
 
-		if(isFrozen){
-			sysUserAccount.getAccount_status();
-		}
+		SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(record.getDebitAccount());
+		boolean isDebitFrozen = debitAccount.getAccount_status().equalsIgnoreCase("0");
+		if(isDebitFrozen)
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN;
 
-		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance());
+
+
+
+		BigDecimal balance = new BigDecimal(debitAccount.getAccountBalance());
 		if(record.getCash().compareTo(balance) == 1)
 			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
 		return strRet;

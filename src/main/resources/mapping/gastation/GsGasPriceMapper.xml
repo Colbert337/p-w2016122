@@ -135,7 +135,7 @@
         #{updatedDate,jdbcType=TIMESTAMP},
       </if>
       <if test="gs_gas_source_id != null" >
-        #{gs_gas_source_id,jdbcType=TIMESTAMP},
+        #{gs_gas_source_id,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
