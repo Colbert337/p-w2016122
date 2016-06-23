@@ -234,6 +234,13 @@ public class OrderServiceImpl implements OrderService {
 	public String validAccount(SysOrder record){
 		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
 		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
+
+		boolean isFrozen = sysUserAccount.getAccount_status().equalsIgnoreCase("2");
+
+		if(isFrozen){
+			sysUserAccount.getAccount_status();
+		}
+
 		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance());
 		if(record.getCash().compareTo(balance) == 1)
 			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;

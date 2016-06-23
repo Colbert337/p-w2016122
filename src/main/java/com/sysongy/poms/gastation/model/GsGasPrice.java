@@ -37,6 +37,8 @@ public class GsGasPrice  extends BaseModel {
 
     private SysGasSource gs_gas_source_info;
 
+    private int is_deleted;
+
     public String getGsGasPriceId() {
         return gsGasPriceId;
     }
@@ -155,5 +157,13 @@ public class GsGasPrice  extends BaseModel {
 
     public void setGs_gas_source_info(SysGasSource gs_gas_source_info) {
         this.gs_gas_source_info = gs_gas_source_info;
+    }
+
+    public int getIs_deleted() {
+        return is_deleted;
+    }
+
+    public void setIs_deleted(int is_deleted) {
+        this.is_deleted = is_deleted;
     }
 }

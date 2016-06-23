@@ -12,6 +12,7 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
     <result column="gs_gas_source_id" property="gs_gas_source_id" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="is_deleted" jdbcType="INTEGER" />
     <association property="gasNumInfo" column="gas_num"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
@@ -46,6 +47,7 @@
         and gas_name = #{gasName,jdbcType=VARCHAR}
       </if>
     </trim>
+     and is_deleted=0
   </select>
 
 
@@ -56,18 +58,18 @@
     where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from gs_gas_price
+    update  gs_gas_price set is_deleted=0
     where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
     insert into gs_gas_price (gs_gas_price_id, sys_gas_station_id, gas_num, 
       gas_name, price_id, unit,
-      remark, created_date, updated_date, gs_gas_source_id
+      remark, created_date, updated_date, gs_gas_source_id, is_deleted
       )
     values (#{gsGasPriceId,jdbcType=VARCHAR}, #{sysGasStationId,jdbcType=VARCHAR}, #{gasNum,jdbcType=VARCHAR}, 
       #{gasName,jdbcType=VARCHAR}, #{price_id,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},
-      #{gs_gas_source_id,jdbcType=VARCHAR}
+      #{gs_gas_source_id,jdbcType=VARCHAR, 0}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
