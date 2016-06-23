@@ -173,7 +173,7 @@ public class GastationServiceImpl implements GastationService {
 	}
 
 	@Override
-	public int depositGastation(String acconutid, String stationdeposit) throws Exception {
+	public int updatedepositGastation(String acconutid, String stationdeposit) throws Exception {
 		SysUserAccount account = new SysUserAccount();
 		account.setSysUserAccountId(acconutid);
 		account.setDeposit(BigDecimal.valueOf(Double.valueOf(stationdeposit)));

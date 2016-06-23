@@ -3,6 +3,7 @@ package com.sysongy.poms.permi.dao;
 import com.sysongy.poms.permi.model.SysUserAccount;
 
 public interface SysUserAccountMapper {
+	
     int deleteByPrimaryKey(String sysUserAccountId);
 
     int insert(SysUserAccount record);
@@ -15,5 +16,5 @@ public interface SysUserAccountMapper {
 
     int updateAccount(SysUserAccount record);
 
-    int updateAccountBalance(SysUserAccount record);
+    int updateAccountBalance(SysUserAccount record);    
 }
