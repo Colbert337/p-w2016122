@@ -1,5 +1,7 @@
 package com.sysongy.poms.usysparam.model;
 
+import java.util.List;
+
 public class Usysparam {
 	
 	private String gcode;
@@ -7,6 +9,7 @@ public class Usysparam {
 	private String mname;
 	private String data;
 	private String scode;
+	private List<Usysparam> usysparams;
 	
 	public String getGcode() {
 		return gcode;
@@ -38,5 +41,12 @@ public class Usysparam {
 	public void setScode(String scode) {
 		this.scode = scode;
 	}
-	
+
+	public List<Usysparam> getUsysparams() {
+		return usysparams;
+	}
+
+	public void setUsysparams(List<Usysparam> usysparams) {
+		this.usysparams = usysparams;
+	}
 }

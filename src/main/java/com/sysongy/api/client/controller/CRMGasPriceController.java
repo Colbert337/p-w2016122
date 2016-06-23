@@ -78,6 +78,7 @@ public class CRMGasPriceController {
 
         try
         {
+            Map<String, Object> attributes = new HashMap<String, Object>();
             int isExistDriver = gsGasPriceService.isExists(gsGasPrice);
             if(isExistDriver > 0){
                 ajaxJson.setSuccess(false);
@@ -91,6 +92,9 @@ public class CRMGasPriceController {
                 ajaxJson.setMsg("无用户添加！！！");
                 return ajaxJson;
             }
+            GsGasPrice gsGasPriceInfo = gsGasPriceService.queryGsPriceByPK(gsGasPrice.getGsGasPriceId());
+            attributes.put("gsGasPrice", gsGasPriceInfo);
+            ajaxJson.setAttributes(attributes);
         } catch (Exception e){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_GAS_PRICE_ERROR + e.getMessage());
@@ -116,12 +120,16 @@ public class CRMGasPriceController {
         }
 
         try {
+            Map<String, Object> attributes = new HashMap<String, Object>();
             int renum = gsGasPriceService.saveGsPrice(gsGasPrice, "update");
             if(renum < 1){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("无气品更新 ！！！");
                 return ajaxJson;
             }
+            GsGasPrice gsGasPriceInfo = gsGasPriceService.queryGsPriceByPK(gsGasPrice.getGsGasPriceId());
+            attributes.put("gsGasPrice", gsGasPriceInfo);
+            ajaxJson.setAttributes(attributes);
         }catch (Exception e){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_GAS_PRICE_ERROR + e.getMessage());

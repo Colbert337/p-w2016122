@@ -136,4 +136,11 @@
       run_success = #{runSuccess,jdbcType=VARCHAR}
     where deal_id = #{dealId,jdbcType=VARCHAR}
   </update>
+  
+  <select id="queryOrderDealByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+     <include refid="Base_Column_List" />
+    from sys_order_deal
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
 </mapper>
