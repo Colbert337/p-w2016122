@@ -1,6 +1,7 @@
 package com.sysongy.poms.gastation.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.liquid.model.SysGasSource;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.util.Date;
@@ -31,6 +32,10 @@ public class GsGasPrice  extends BaseModel {
     private Date updatedDate;
 
     private ProductPrice productPriceInfo;
+
+    private String gs_gas_source_id;
+
+    private SysGasSource gs_gas_source_info;
 
     public String getGsGasPriceId() {
         return gsGasPriceId;
@@ -134,5 +139,21 @@ public class GsGasPrice  extends BaseModel {
 
     public void setUnitInfo(String unitInfo) {
         this.unitInfo = unitInfo;
+    }
+
+    public String getGs_gas_source_id() {
+        return gs_gas_source_id;
+    }
+
+    public void setGs_gas_source_id(String gs_gas_source_id) {
+        this.gs_gas_source_id = gs_gas_source_id;
+    }
+
+    public SysGasSource getGs_gas_source_info() {
+        return gs_gas_source_info;
+    }
+
+    public void setGs_gas_source_info(SysGasSource gs_gas_source_info) {
+        this.gs_gas_source_info = gs_gas_source_info;
     }
 }

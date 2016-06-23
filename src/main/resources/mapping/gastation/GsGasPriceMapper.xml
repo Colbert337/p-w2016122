@@ -11,6 +11,7 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="gs_gas_source_id" property="gs_gas_source_id" jdbcType="VARCHAR" />
     <association property="gasNumInfo" column="gas_num"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
@@ -23,11 +24,16 @@
                  javaType="com.sysongy.poms.gastation.model.ProductPrice"
                  select="com.sysongy.poms.gastation.dao.GastationMapper.selectByPrimaryKey">
     </association>
+
+    <association property="gs_gas_source_info" column="gs_gas_source_id"
+                 javaType="com.sysongy.poms.liquid.model.SysGasSource"
+                 select="com.sysongy.poms.liquid.dao.SysGasSourceMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
 
   <sql id="Base_Column_List" >
     gs_gas_price_id, sys_gas_station_id, gas_num, gas_name, price_id, unit, remark, created_date,
-    updated_date
+    updated_date, gs_gas_source_id
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -56,11 +62,12 @@
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
     insert into gs_gas_price (gs_gas_price_id, sys_gas_station_id, gas_num, 
       gas_name, price_id, unit,
-      remark, created_date, updated_date
+      remark, created_date, updated_date, gs_gas_source_id
       )
     values (#{gsGasPriceId,jdbcType=VARCHAR}, #{sysGasStationId,jdbcType=VARCHAR}, #{gasNum,jdbcType=VARCHAR}, 
       #{gasName,jdbcType=VARCHAR}, #{price_id,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR},
-      #{remark,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      #{remark,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},
+      #{gs_gas_source_id,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
@@ -93,6 +100,9 @@
       <if test="updatedDate != null" >
         updated_date,
       </if>
+      <if test="gs_gas_source_id != null" >
+        gs_gas_source_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="gsGasPriceId != null" >
@@ -121,6 +131,9 @@
       </if>
       <if test="updatedDate != null" >
         #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gs_gas_source_id != null" >
+        #{gs_gas_source_id,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -151,6 +164,9 @@
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="gs_gas_source_id != null" >
+        gs_gas_source_id = #{gs_gas_source_id,jdbcType=VARCHAR},
+      </if>
     </set>
     where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
   </update>
@@ -161,6 +177,7 @@
       gas_name = #{gasName,jdbcType=VARCHAR},
       price_id = #{price_id,jdbcType=VARCHAR},
       unit = #{unit,jdbcType=VARCHAR},
+      gs_gas_source_id = #{gs_gas_source_id,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP},
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
