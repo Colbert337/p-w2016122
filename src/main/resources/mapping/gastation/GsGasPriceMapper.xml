@@ -58,7 +58,7 @@
     where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    update  gs_gas_price set is_deleted=0
+    update  gs_gas_price set is_deleted=1
     where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
