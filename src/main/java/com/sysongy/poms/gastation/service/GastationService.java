@@ -18,5 +18,5 @@ public interface GastationService {
 	
 	public List<Gastation> getAllStationByArea(String areacode) throws Exception;
 
-
+	public int depositGastation(String acconutid, String stationdeposit) throws Exception;
 }

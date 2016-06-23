@@ -1,5 +1,6 @@
 package com.sysongy.poms.gastation.service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -169,6 +170,14 @@ public class GastationServiceImpl implements GastationService {
 		 SysUserAccount account = sysUserAccountMapper.selectByPrimaryKey(station.getSys_user_account_id());
 		 station.setAccount(account);
 		 return station;
+	}
+
+	@Override
+	public int depositGastation(String acconutid, String stationdeposit) throws Exception {
+		SysUserAccount account = new SysUserAccount();
+		account.setSysUserAccountId(acconutid);
+		account.setDeposit(BigDecimal.valueOf(Double.valueOf(stationdeposit)));
+		return sysUserAccountMapper.updateByPrimaryKeySelective(account);
 	}
 
 }
