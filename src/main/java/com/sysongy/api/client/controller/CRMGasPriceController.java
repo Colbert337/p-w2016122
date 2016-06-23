@@ -106,7 +106,7 @@ public class CRMGasPriceController {
                 ajaxJson.setMsg("输入价格为空！！！");
                 return ajaxJson;
             }
-            long lPrice = Long.valueOf("strPrice");
+            long lPrice = Long.valueOf(strPrice);
             gsGasPrice = createProductPrice(gsGasPrice, lPrice);
 
             Map<String, Object> attributes = new HashMap<String, Object>();
