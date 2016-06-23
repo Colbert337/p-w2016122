@@ -6,22 +6,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
-import com.sysongy.poms.order.service.SysUserAccountService;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.UUIDGenerator;
 
 @Service
 public class SysCashBackServiceImpl implements SysCashBackService {
