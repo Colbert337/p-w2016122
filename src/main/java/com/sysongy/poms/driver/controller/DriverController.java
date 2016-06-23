@@ -194,7 +194,10 @@ public class DriverController extends BaseContoller{
 		try {
 			sysUserAccountService.changeStatus(accountid, status);
 
-			ret = this.queryDriverInfoList(new SysDriver(), map);
+			SysDriver driver = new SysDriver();
+			driver.setSysUserAccountId(accountid);
+			
+			ret = this.queryDriverInfoList(driver, map);
 
 			bean.setRetCode(100);
 			bean.setRetMsg("状态修改成功");

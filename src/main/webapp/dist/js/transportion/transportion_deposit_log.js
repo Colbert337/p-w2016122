@@ -29,5 +29,5 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/gastation/depositList');
+		loadPage('#main', '../web/transportion/depositList');
 	}

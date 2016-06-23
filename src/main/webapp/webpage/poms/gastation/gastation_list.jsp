@@ -37,9 +37,9 @@
 						</div>
 						
 						<div class="item">
-							<label>气站状态:</label>
+							<label>加注站状态:</label>
 							<select class="chosen-select " name="status" >
-									<s:option flag="true" gcode="STATION_STATUS" form="gastation" field="status" />
+								<s:option flag="true" gcode="STATION_STATUS" form="gastation" field="status" />
 							</select>
 						</div>
 

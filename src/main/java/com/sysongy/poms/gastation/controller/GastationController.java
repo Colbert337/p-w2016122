@@ -14,6 +14,7 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
+import com.sysongy.util.GlobalConstant;
 
 
 @RequestMapping("/web/gastation")
@@ -84,7 +85,7 @@ public class GastationController extends BaseContoller{
 			if(StringUtils.isEmpty(deposit.getOrderby())){
 				deposit.setOrderby("optime desc");
 			}
-
+			deposit.setStation_type(GlobalConstant.OrderOperatorType.GASTATION);
 			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
 
 			bean.setRetCode(100);

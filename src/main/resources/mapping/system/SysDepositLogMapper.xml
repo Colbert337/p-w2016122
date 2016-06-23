@@ -5,6 +5,7 @@
     <id column="sys_deposit_log_id" property="sysDepositLogId" jdbcType="VARCHAR" />
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="station_type" property="station_type" jdbcType="VARCHAR" />
     <result column="company" property="company" jdbcType="VARCHAR" />
     <result column="deposit_time" property="depositTime" jdbcType="TIMESTAMP" />
     <result column="deposit_type" property="depositType" jdbcType="VARCHAR" />
@@ -15,7 +16,7 @@
   </resultMap>
   
   <sql id="Base_Column_List" >
-    sys_deposit_log_id, station_id, account_id, company, deposit_time, deposit_type, 
+    sys_deposit_log_id, station_id, account_id, station_type, company, deposit_time, deposit_type, 
     operator, optime, deposit, memo
   </sql>
   
@@ -23,6 +24,9 @@
   	 select <include refid="Base_Column_List" />
     from sys_deposit_log where 1=1
     <trim>
+      <if test="station_type != null &amp;&amp; station_type != ''" >
+        and station_type = #{station_type,jdbcType=VARCHAR}
+      </if>
       <if test="stationId != null &amp;&amp; stationId != ''" >
         and station_id = #{stationId,jdbcType=VARCHAR}
       </if>
@@ -46,11 +50,11 @@
     where sys_deposit_log_id = #{sysDepositLogId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
-    insert into sys_deposit_log (sys_deposit_log_id, station_id, 
+    insert into sys_deposit_log (sys_deposit_log_id, station_id, station_type,
       account_id, company, deposit_time, 
       deposit_type, operator, optime, 
       deposit, memo)
-    values (#{sysDepositLogId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, 
+    values (#{sysDepositLogId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{station_type,jdbcType=VARCHAR}, 
       #{accountId,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{depositTime,jdbcType=TIMESTAMP}, 
       #{depositType,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{optime,jdbcType=TIMESTAMP}, 
       #{deposit,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR})

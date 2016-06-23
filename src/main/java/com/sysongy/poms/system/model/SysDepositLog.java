@@ -12,6 +12,8 @@ public class SysDepositLog extends BaseModel{
     private String stationId;
 
     private String accountId;
+    
+    private String station_type;
 
     private String company;
 
@@ -33,7 +35,15 @@ public class SysDepositLog extends BaseModel{
 
     private String memo;
 
-    public String getOptime_after() {
+    public String getStation_type() {
+		return station_type;
+	}
+
+	public void setStation_type(String station_type) {
+		this.station_type = station_type;
+	}
+
+	public String getOptime_after() {
 		return optime_after;
 	}
 

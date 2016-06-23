@@ -31,8 +31,8 @@
 						</div>
 						
 						<div class="item">
-						    <label>认证姓名:</label>
-							<input type="text" name="userName" placeholder="输入认证姓名"  maxlength="20" value="${driver.userName}"/>
+						    <label>会员账号:</label>
+							<input type="text" name="userName" placeholder="输入会员账号" maxlength="20" value="${driver.userName}"/>
 						</div>
 
 						<div class="item">
