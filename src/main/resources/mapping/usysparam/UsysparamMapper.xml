@@ -47,9 +47,9 @@
     where gcode = #{gcode,jdbcType=VARCHAR} and mcode = #{mcode,jdbcType=VARCHAR}
   </update>
   
-  <update id="deleteByPrimaryKey" parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
-    delete usysparam where gcode = #{gcode,jdbcType=VARCHAR} and mcode = #{mcode,jdbcType=VARCHAR}
-  </update>
+  <delete id="delete" parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+    delete from usysparam where gcode = #{gcode,jdbcType=VARCHAR} and mcode = #{mcode,jdbcType=VARCHAR}
+  </delete>
 
   <select id="queryUsysparamByGcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
     select * from usysparam where gcode = #{0}

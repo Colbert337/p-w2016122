@@ -74,10 +74,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="email">注册邮箱： </label>
+										<label class="col-sm-3 control-label no-padding-right">注册邮箱： </label>
 
 										<div class="col-sm-4">
-											<input type="email" id="email"  name="email" placeholder="输入注册邮箱" class="form-control" maxlength="50" value="${station.email}"/>
+											<input type="text" id="email"  name="email" placeholder="输入注册邮箱" class="form-control" maxlength="50" value="${station.email}"/>
 										</div>
 									</div>
 									
@@ -139,41 +139,42 @@
 										<div class="col-sm-4">
 											<div class="row form-group">
 												<div class="col-sm-6">
-											<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
-													<option value ="请选择市区">请选择省份</option>
-													<option value ="100">北京市 </option>
-													<option value ="220">天津市 </option>
-													<option value ="210">上海市 </option>
-													<option value ="230">重庆市 </option>
-													<option value ="310">河北省 </option>
-													<option value ="350">山西省 </option>
-													<option value ="240">辽宁省 </option>
-													<option value ="430">吉林省 </option>
-													<option value ="450">黑龙江省</option>
-													<option value ="250">江苏省 </option>
-													<option value ="570">浙江省 </option>
-													<option value ="550">安徽省 </option>
-													<option value ="590">福建省 </option>
-													<option value ="790">江西省 </option>
-													<option value ="530">山东省 </option>
-													<option value ="370">河南省 </option>
-													<option value ="270">湖北省 </option>
-													<option value ="730">湖南省 </option>
-													<option value ="200">广东省 </option>
-													<option value ="891">海南省 </option>
-													<option value ="810">四川省 </option>
-													<option value ="850">贵州省 </option>
-													<option value ="870">云南省 </option>
-													<option value ="290">陕西省 </option>
-													<option value ="930">甘肃省 </option>
-													<option value ="970">青海省 </option>
-													<option value ="852">台湾省 </option>
-													<option value ="770">广西壮族自治区</option>
-													<option value ="470">内蒙古自治区</option>
-													<option value ="890">西藏自治区</option>
-													<option value ="950">宁夏回族自治区 </option>
-													<option value ="990">新疆维吾尔自治区</option>
-											</select>
+												<input class="form-control" type="text" id="showprovince" readonly="readonly"/>
+												<select style="visibility:hidden" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
+														<option value ="请选择市区">请选择省份</option>
+														<option value ="100">北京市 </option>
+														<option value ="220">天津市 </option>
+														<option value ="210">上海市 </option>
+														<option value ="230">重庆市 </option>
+														<option value ="310">河北省 </option>
+														<option value ="350">山西省 </option>
+														<option value ="240">辽宁省 </option>
+														<option value ="430">吉林省 </option>
+														<option value ="450">黑龙江省</option>
+														<option value ="250">江苏省 </option>
+														<option value ="570">浙江省 </option>
+														<option value ="550">安徽省 </option>
+														<option value ="590">福建省 </option>
+														<option value ="790">江西省 </option>
+														<option value ="530">山东省 </option>
+														<option value ="370">河南省 </option>
+														<option value ="270">湖北省 </option>
+														<option value ="730">湖南省 </option>
+														<option value ="200">广东省 </option>
+														<option value ="891">海南省 </option>
+														<option value ="810">四川省 </option>
+														<option value ="850">贵州省 </option>
+														<option value ="870">云南省 </option>
+														<option value ="290">陕西省 </option>
+														<option value ="930">甘肃省 </option>
+														<option value ="970">青海省 </option>
+														<option value ="852">台湾省 </option>
+														<option value ="770">广西壮族自治区</option>
+														<option value ="470">内蒙古自治区</option>
+														<option value ="890">西藏自治区</option>
+														<option value ="950">宁夏回族自治区 </option>
+														<option value ="990">新疆维吾尔自治区</option>
+												</select>
 												</div>
 												<div class="col-sm-6">
 											<select class="form-control" id="city" name="city_id">
@@ -186,7 +187,7 @@
 									</div>
 									
 									<div class="row">
-										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
+										<label class="col-sm-3 control-label no-padding-right" >地址坐标： </label>
 										<div class="col-sm-4">
 											<div class="row">
 												<div class="col-sm-6">
@@ -204,15 +205,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number"> 工商注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number">工商注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}" maxlength="15"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 工商注册证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">工商注册证书： </label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -247,15 +248,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="tax_number"> 税务注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right">税务注册号：</label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_number" name="tax_number" class="form-control" value=" ${station.tax_number}"/>
+											<input type="text" id="tax_number" name="tax_number" class="form-control" value="${station.tax_number}" maxlength="15"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 税务注册证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">税务注册证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -390,7 +391,7 @@
 		//初始化销售（运管）负责人下拉框
 		$.ajax({
 			   type: "POST",
-			   url:'../web/permi/user/list/userType?userType=1',   
+			   url:'../web/permi/user/list/userType?userType=5',   
 	           dataType:'text',
 	           async:false,
 	           success:function(data){
@@ -416,6 +417,8 @@
 			$("#province").trigger("change");
 			$("#city").find("option[value="+city_id+"]").attr("selected",true);
 			$("#detail").val(detail.split(" ")[2]);
+			
+			$("#showprovince").val($("#province").find("option:selected").text());
 		}
 		
 		if(salesmen_id!=null && salesmen_id!=""){
@@ -537,10 +540,9 @@
 		                }
 		            },
 		            email: {
-		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
-		                        message: '加气站email不能为空'
+		                        message: '加气站注册邮箱不能为空'
 		                    },
 		                    stringLength: {
 		                        min: 1,
@@ -600,30 +602,22 @@
 		                }
 		            },
 		            indu_com_number: {
-		                message: 'The cardno is not valid',
 						validators: {
-							notEmpty: {
-								message: '工商注册号不能为空'
-							},
 							stringLength: {
 								max: 15,
 								message: '工商注册号不能超过15位'
 							}
 		                    }
-		                }
 		            },
 		            tax_number: {
-		                message: 'The cardno is not valid',
 						validators: {
-							notEmpty: {
-								message: '税务注册号不能为空'
-							},
 		                    stringLength: {
 		                        max: 15,
 		                        message: '税务注册号不能超过15位'
 							}
-		                    }
-		                }
+						}
+		           	}
+		        }
 		    });
 			    
 		function save(){

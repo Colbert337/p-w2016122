@@ -43,10 +43,10 @@ public class LiquidServiceImpl implements LiquidService {
 			String newid;
 			
 			if(gassource == null || StringUtils.isEmpty(gassource.getSys_gas_source_id())){
-				newid = "g"+record.getprovince_id() + "0001";
+				newid = "L"+record.getprovince_id() + "0001";
 			}else{
 				Integer tmp = Integer.valueOf(gassource.getSys_gas_source_id().substring(4, 8)) + 1;
-				newid = "g"+record.getprovince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
+				newid = "L"+record.getprovince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
 			}
 			
 			record.setSys_gas_source_id(newid);

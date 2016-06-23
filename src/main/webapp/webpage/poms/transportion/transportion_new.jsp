@@ -72,7 +72,7 @@
 										<label class="col-sm-3 control-label no-padding-right">注册邮箱：</label>
 
 										<div class="col-sm-4">
-											<input type="email" id="email" name="email" placeholder="输入注册邮箱" maxlength="50" class="form-control" />
+											<input type="text" id="email" name="email" placeholder="输入注册邮箱" maxlength="50" class="form-control" />
 										</div>
 									</div>
 									
@@ -80,7 +80,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="station_manager"> 公司管理员： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="station_manager"  name="station_manager" placeholder="输入公司管理员" class="form-control" maxlength="20"/>
+											<input type="text" id="station_manager" name="station_manager" placeholder="输入公司管理员" class="form-control" maxlength="20"/>
 										</div>
 									</div>
 									
@@ -88,7 +88,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="contact_phone"> 联系电话： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15"/>
+											<input type="text" id="contact_phone" name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15"/>
 										</div>
 									</div>
 									
@@ -96,7 +96,7 @@
 										<label class="col-sm-3 control-label no-padding-right">管理员账号（建议为11位手机号码）： </label>
 
 										<div class="col-sm-4">
-											<input class="form-control" name="admin_username"  type="text"  placeholder="输入管理员账号" maxlength="20" value="${station.admin_username}"/>
+											<input class="form-control" name="admin_username" type="text" placeholder="输入管理员账号" maxlength="11" value="${station.admin_username}"/>
 										</div>
 									</div>
 									
@@ -398,7 +398,6 @@
 		                }
 		            },
 		            email: {
-		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
 		                        message: '加气站注册邮箱不能为空'
@@ -431,7 +430,7 @@
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
-		                        message: '管理员账号长度必须大于6位'
+		                        message: '管理员账号长度必须大于等于6位'
 		                    },
 		                    remote: {
                                 url: '../web/permi/user/info/isExist',

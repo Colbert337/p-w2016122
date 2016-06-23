@@ -90,7 +90,7 @@ public class GlobalConstant {
 	public static final String MENU_PATH = "/upload/menuImage/";
 
 	/********************************** 字典类型 ************************************************/
-
+	public static final String MSG_PREFIX = "msg_";
 	/********************************** 分页参数 ************************************************/
 	/**
 	 * 上一页
@@ -126,7 +126,7 @@ public class GlobalConstant {
 		public static final String DELETE="2";
 	}
 	
-	public interface GastationStatus{
+	public interface StationStatus{
 		public static final String PAUSE ="0";
 		public static final String USED="1";
 	}
@@ -223,5 +223,11 @@ public class GlobalConstant {
 		public static final String PENDING = "1";
 		public static final String PASSED = "2";
 		public static final String NOPASS = "3";
+	}
+	
+	public interface AccountStatus{
+		public static final String USER_SUSPEND = "0";
+		public static final String CARD_SUSPEND = "1";
+		public static final String NORMAL = "2";
 	}
 }

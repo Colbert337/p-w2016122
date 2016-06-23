@@ -274,20 +274,18 @@
 		        },
 		        fields: {
 		            indu_com_number: {
-		                message: 'The cardno is not valid',
 		                    stringLength: {
 		                        max: 15,
 		                        message: '工商注册号不能超过15位'
 		                    }
-		                }
-		            },
-		            tax_number: {
-		                message: 'The cardno is not valid',
-		                    stringLength: {
-		                        max: 15,
-		                        message: '税务注册号不能超过15位'
-		                    }
-		                }
+		                },
+		                tax_number: {
+			                    stringLength: {
+			                        max: 15,
+			                        message: '税务注册号不能超过15位'
+			                    }
+			            }
+		            }
 		    });
 			    
 		function save(){

@@ -63,7 +63,7 @@ public class DriverServiceImpl implements DriverService {
             SysUserAccount sysUserAccount = initWalletForDriver();
             record.setSysUserAccountId(sysUserAccount.getSysUserAccountId());
             record.setCreatedDate(new Date());
-            return sysDriverMapper.insert(record);
+            return sysDriverMapper.insertSelective(record);
         }else{
             return sysDriverMapper.updateByPrimaryKeySelective(record);
         }

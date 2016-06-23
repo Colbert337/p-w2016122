@@ -23,4 +23,6 @@ public interface SysCashBackMapper {
     List<SysCashBack> checkvalid(SysCashBack record);
     
     List<SysCashBack> queryCashBackByNumber(String sysCashBackNumber);
+    
+    SysCashBack findCashBackid(String cashBackNo);
 }

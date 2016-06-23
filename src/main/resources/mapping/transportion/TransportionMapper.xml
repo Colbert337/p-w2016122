@@ -8,7 +8,6 @@
     <result column="station_manager" property="station_manager" jdbcType="VARCHAR" />
     <result column="contact_phone" property="contact_phone" jdbcType="VARCHAR" />
     <result column="admin_username" property="admin_username" jdbcType="VARCHAR" />
-    <result column="admin_userpassword" property="admin_userpassword" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="area_id" property="area_id" jdbcType="VARCHAR" />
     <result column="province_id" property="province_id" jdbcType="VARCHAR" />
@@ -33,7 +32,7 @@
     <result column="updated_time" property="updated_time" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    sys_transportion_id, sys_user_account_id, transportion_name, station_manager, contact_phone, admin_username, admin_userpassword, email, 
+    sys_transportion_id, sys_user_account_id, transportion_name, station_manager, contact_phone, admin_username, email, 
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, salesmen_id, 
     salesmen_name, operations_id, operations_name, indu_com_number, tax_number, indu_com_certif, 
     tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, updated_time
@@ -77,7 +76,7 @@
   
   <insert id="insert" parameterType="com.sysongy.poms.transportion.model.Transportion" >
     insert into sys_transportion (sys_transportion_id, sys_user_account_id, 
-      transportion_name, station_manager, contact_phone, admin_username, admin_userpassword, email, 
+      transportion_name, station_manager, contact_phone, admin_username, email, 
       area_id, province_id, city_id, 
       address, longitude, latitude, 
       expiry_date, salesmen_id, salesmen_name, 
@@ -88,7 +87,7 @@
       )
     values (#{sys_transportion_id,jdbcType=VARCHAR}, #{sys_user_account_id,jdbcType=VARCHAR}, 
       #{transportion_name,jdbcType=VARCHAR}, #{station_manager,jdbcType=VARCHAR}, #{contact_phone,jdbcType=VARCHAR},
-      #{admin_username,jdbcType=VARCHAR}, #{admin_userpassword,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR}, 
+      #{admin_username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{area_id,jdbcType=VARCHAR}, #{province_id,jdbcType=VARCHAR}, #{city_id,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, 
       #{expiry_date,jdbcType=TIMESTAMP}, #{salesmen_id,jdbcType=VARCHAR}, #{salesmen_name,jdbcType=VARCHAR}, 

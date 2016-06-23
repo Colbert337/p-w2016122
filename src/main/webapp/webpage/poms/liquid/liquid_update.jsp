@@ -9,13 +9,14 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
-
 	<script type="text/javascript">
 		var gas_factory_addr = "${gasource.gas_factory_addr}";
 	</script>
+
 	<script src="<%=basePath %>/dist/js/liquid/liquid_update.js"></script>
 
-					<div class="page-content">
+					<!-- /section:basics/content.breadcrumbs -->
+					<div class="">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
@@ -31,7 +32,7 @@
 									<input type="hidden" id="sys_gas_source_id"  name="sys_gas_source_id" value="${gasource.sys_gas_source_id}" />
 							
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 液厂名称： </label>
+										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 液厂名称： </label>
 
 										<div class="col-sm-4">
 											<input type="text" name="gas_factory_name" placeholder="输入液厂名称" class="form-control" maxlength="20" value="${gasource.gas_factory_name}"/>
@@ -58,7 +59,7 @@
 										<label class="col-sm-3 control-label no-padding-right">价格：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="market_price" placeholder="输入价格" class="form-control" maxlength="15" value="${gasource.market_price}"/>
+											<input type="text" name="market_price" placeholder="输入价格" class="form-control" maxlength="8" value="${gasource.market_price}"/>
 										</div>
 									</div>
 	
@@ -101,8 +102,6 @@
 															<option value ="890">西藏自治区</option>
 															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
-															<option value ="851">香港特别行政区</option>
-															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
 												<div class="col-sm-6">
@@ -119,7 +118,7 @@
 										<label class="col-sm-3 control-label no-padding-right">备注： </label>
 
 										<div class="col-sm-4">
-											<textarea class="form-control" name="remark" rows="5">${gasource.remark}</textarea>
+											<textarea class="form-control" name="remark" rows="5" maxlength="100">${gasource.remark}</textarea>
 										</div>
 									</div>
 									
@@ -128,7 +127,7 @@
 
 										<div class="col-sm-4">
 											<select class="chosen-select" name="status" >
-												<s:option flag="true" gcode="STATION_STATUS" form="gasource" field="status" />
+												<s:option flag="true" gcode="LIQUID_STATUS" form="gasource" field="status" />
 											</select>										
 										</div>
 									</div>
