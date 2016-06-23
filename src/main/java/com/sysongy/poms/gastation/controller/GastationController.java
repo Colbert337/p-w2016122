@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.gastation.model.Deposit;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.system.model.SysDepositLog;
+import com.sysongy.poms.system.service.SysDepositLogService;
+import com.sysongy.util.GlobalConstant;
 
 
 @RequestMapping("/web/gastation")
@@ -21,7 +23,9 @@ public class GastationController extends BaseContoller{
 
 	@Autowired
 	private GastationService service;
-
+	@Autowired
+	private SysDepositLogService depositLogService;
+	
 	/**
 	 * 加气站查询
 	 * @param map
@@ -66,7 +70,43 @@ public class GastationController extends BaseContoller{
 			return ret;
 		}
 	}
+	
+	@RequestMapping("/depositList")
+	public String querydepositList(ModelMap map, SysDepositLog deposit) throws Exception{
 
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_deposit_log";
+
+		try {
+			if(deposit.getPageNum() == null){
+				deposit.setPageNum(1);
+				deposit.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(deposit.getOrderby())){
+				deposit.setOrderby("optime desc");
+			}
+			deposit.setStation_type(GlobalConstant.OrderOperatorType.GASTATION);
+			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("deposit",deposit);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
 	/**
 	 * 用户卡入库
 	 * @param map
@@ -183,15 +223,15 @@ public class GastationController extends BaseContoller{
 	}
 
 	@RequestMapping("/depositGastation")
-	public String depositGastation(ModelMap map, Deposit deposit){
+	public String depositGastation(ModelMap map, SysDepositLog deposit){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_list";
 		Integer rowcount = null;
 
 		try {
-				if(deposit.getAccount_id() != null && !"".equals(deposit.getAccount_id())){
-					rowcount = service.updatedepositGastation(deposit.getAccount_id(), deposit.getDeposit());
+				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
+					rowcount = service.updatedepositGastation(deposit);
 				}
 
 				ret = this.queryAllGastationList(map, new Gastation());

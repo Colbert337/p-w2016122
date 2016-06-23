@@ -3,6 +3,7 @@ package com.sysongy.poms.transportion.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.transportion.model.Transportion;
 
 public interface TransportionService {
@@ -16,4 +17,6 @@ public interface TransportionService {
 	public Integer delTransportion(String transportionid) throws Exception;
 	
 	public List<Transportion> getAllTransportionByArea(String areacode) throws Exception;
+	
+	public int updatedeposiTransportion(SysDepositLog log) throws Exception;
 }

@@ -89,7 +89,7 @@
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">液厂状态</th> 
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建日期</th>
 									<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新日期</th>
-									<th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th>
+									<!-- <th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th> -->
 									<th>更多操作</th>
 								</tr>
 							</thead>
@@ -114,7 +114,7 @@
 									<td><s:Code2Name mcode="${list.status}" gcode="LIQUID_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.created_date}" type="both"/></td>
 									<td><fmt:formatDate value="${list.updated_date}" type="both"/></td>
-									<td>${list.remark}</td>
+									<%-- <td>${list.remark}</td> --%>
 									<td>
 										<div class="text-center">
 											<a href="javascript:void(0);" title="修改" data-rel="tooltip">

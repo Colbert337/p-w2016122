@@ -3,9 +3,9 @@
 <mapper namespace="com.sysongy.poms.system.dao.SysDepositLogMapper" >
   <resultMap id="BaseResultMap" type="com.sysongy.poms.system.model.SysDepositLog" >
     <id column="sys_deposit_log_id" property="sysDepositLogId" jdbcType="VARCHAR" />
-    <result column="deposit_id" property="depositId" jdbcType="VARCHAR" />
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="station_type" property="station_type" jdbcType="VARCHAR" />
     <result column="company" property="company" jdbcType="VARCHAR" />
     <result column="deposit_time" property="depositTime" jdbcType="TIMESTAMP" />
     <result column="deposit_type" property="depositType" jdbcType="VARCHAR" />
@@ -14,10 +14,31 @@
     <result column="deposit" property="deposit" jdbcType="DECIMAL" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
   </resultMap>
+  
   <sql id="Base_Column_List" >
-    sys_deposit_log_id, deposit_id, station_id, account_id, company, deposit_time, deposit_type, 
+    sys_deposit_log_id, station_id, account_id, station_type, company, deposit_time, deposit_type, 
     operator, optime, deposit, memo
   </sql>
+  
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
+  	 select <include refid="Base_Column_List" />
+    from sys_deposit_log where 1=1
+    <trim>
+      <if test="station_type != null &amp;&amp; station_type != ''" >
+        and station_type = #{station_type,jdbcType=VARCHAR}
+      </if>
+      <if test="stationId != null &amp;&amp; stationId != ''" >
+        and station_id = #{stationId,jdbcType=VARCHAR}
+      </if>
+      <if test="operator != null &amp;&amp; operator != ''" >
+        and operator = #{operator,jdbcType=VARCHAR}
+      </if>
+      <if test="optime_after != null &amp;&amp; optime_after != ''">
+        and optime between CONCAT(#{optime_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{optime_before,jdbcType=VARCHAR},' 23:59:59') 
+      </if>
+    </trim>
+  </select>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -29,11 +50,11 @@
     where sys_deposit_log_id = #{sysDepositLogId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
-    insert into sys_deposit_log (sys_deposit_log_id, deposit_id, station_id, 
+    insert into sys_deposit_log (sys_deposit_log_id, station_id, station_type,
       account_id, company, deposit_time, 
       deposit_type, operator, optime, 
       deposit, memo)
-    values (#{sysDepositLogId,jdbcType=VARCHAR}, #{depositId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, 
+    values (#{sysDepositLogId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{station_type,jdbcType=VARCHAR}, 
       #{accountId,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{depositTime,jdbcType=TIMESTAMP}, 
       #{depositType,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{optime,jdbcType=TIMESTAMP}, 
       #{deposit,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR})

@@ -107,7 +107,7 @@
 <!-- 													<th onclick="orderBy(this,'sys_cash_back_no');commitForm();" id="sys_cash_back_no_order">触发条件</th>-->
 														<th onclick="orderBy(this,'threshold_min_value');commitForm();" id="threshold_min_value_order">返现阈值</th>
 														<th onclick="orderBy(this,'threshold_max_value');commitForm();" id="threshold_max_value_order">返现阈值</th>
-														<th onclick="orderBy(this,'cash_per');commitForm();" id="cash_per_order">返点比例</th>
+														<th onclick="orderBy(this,'cash_per');commitForm();" id="cash_per_order">返点系数</th>
 														<th onclick="orderBy(this,'status');commitForm();" id="status">状态</th>
 														<th onclick="orderBy(this,'level');commitForm();" id="level">优先级</th>
 														<th onclick="orderBy(this,'start_date');commitForm();" id="start_date_order"><i id="start_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>生效时间</th>
