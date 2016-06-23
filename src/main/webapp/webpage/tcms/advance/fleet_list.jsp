@@ -55,11 +55,10 @@
 						<thead>
 						<tr>
 							<th>车队名称</th>
-							<th>车牌号</th>
-							<th>实体卡号</th>
-							<th>通知手机</th>
+							<th>队长名称</th>
+							<th>手机号</th>
+							<th>车辆数</th>
 							<th>创建时间</th>
-							<th>卡状态</th>
 							<th>操作</th>
 						</tr>
 						</thead>
@@ -71,17 +70,6 @@
 								<td>${fleet.cardNo}</td>
 								<td>${fleet.noticePhone}</td>
 								<td><fmt:formatDate value="${fleet.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td>
-									<c:if test="${fleet.cardStatus == 0}">
-										已冻结
-									</c:if>
-									<c:if test="${fleet.cardStatus == 1}">
-										未使用
-									</c:if>
-									<c:if test="${fleet.cardStatus == 2}">
-										使用中
-									</c:if>
-								</td>
 								<td>
 									<a class="" href="javascript:editFleet('${fleet.tcFleetId}');" title="修改" data-rel="tooltip">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
@@ -137,9 +125,9 @@
 							<form class="form-horizontal" id="editForm">
 								<!-- #section:elements.form -->
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="fleetName"><span class="red_star">*</span> 车队名称： </label>
+									<label class="col-sm-4 control-label no-padding-right" for="fleet_name"><span class="red_star">*</span> 车队名称： </label>
 									<div class="col-sm-7">
-										<input type="text" name="fleet_name" id="fleetName" placeholder="车队名称" class="col-xs-10 col-sm-12" />
+										<input type="text" name="fleetName" id="fleet_name" placeholder="车队名称" class="col-xs-10 col-sm-12" />
 										<input type="hidden" name="tcFleetId" id="tc_fleet_id" />
 									</div>
 								</div>

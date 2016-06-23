@@ -9,6 +9,7 @@ import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysRoleService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
@@ -224,4 +225,14 @@ public class SysUserController extends BaseContoller{
 
 		return json;
 	}
+
+
+	@RequestMapping("/list/info")
+	@ResponseBody
+	public TcFleet queryUserList(@ModelAttribute CurrUser currUser, ModelMap map){
+//		List<SysUser> userList = new
+
+		return null;
+	}
+
 }

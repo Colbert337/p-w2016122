@@ -121,7 +121,7 @@
 									<td>${list.stationId}</td>
 									<td>${list.isIdent == '0'?'否':'是'}</td> 
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
-									<td><s:Code2Name mcode="${list.checked_status}" gcode="CHECKED_STATUS"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>
 
 									<td>
