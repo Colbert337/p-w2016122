@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.dao.SysOrderMapper;
 import com.sysongy.poms.order.model.SysOrder;
@@ -74,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
 	   
 	   String orderType = order.getOrderType();
 	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_DRIVER))){
-		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_CHARGE;
+		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH;
 	   }
 	   String operatorType = order.getOperatorType();
 	   if(operatorType==null || (!operatorType.equalsIgnoreCase(GlobalConstant.OrderOperatorType.DRIVER))){
@@ -113,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
 	 * 充红订单
 	 * 1.从查询原始订单的订单处理流程
 	 * 2.针对每个处理过程，进行反向操作
-	 * @param order 充红的订单对象，其中属性discharge_order_id存的是对冲的订单ID
+	 * @param order 充红的订单对象，其中属性discharge_order_id存的是对冲的订单ID,其他信息是初始化原始订单的信息，尤其是cash字段
 	 */
     public String dischargeOrder(SysOrder order) throws Exception{
 	   if (order ==null){
@@ -149,19 +150,76 @@ public class OrderServiceImpl implements OrderService {
 		    		return dischargeCashToDriver_success;
 		      }
 		   }
-		   //TODO 针对返现进行操作
+		   
+		   if(orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK)){
+			  String newOrderDealType = GlobalConstant.OrderDealType.DISCHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK;
+			  String disChargecashback_success = disCashBack(order,sysOrderDeal,newOrderDealType);
+			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargecashback_success)){
+		    		//如果出错，直接退出
+		    		return disChargecashback_success;
+		      }
+		   }
+		   if(orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CASHBACK)){
+			  String newOrderDealType = GlobalConstant.OrderDealType.DISCHARGE_TO_DRIVER_CASHBACK;
+			  String disChargecashback_success = disCashBack(order,sysOrderDeal,newOrderDealType);
+			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargecashback_success)){
+		    		//如果出错，直接退出
+		    		return disChargecashback_success;
+		      }
+		   }
+		   
+		 //TODO 针对其他类型进行操作
 	   }
 	   //TODO
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
+    
+    private String disCashBack(SysOrder order, SysOrderDeal sysOrderDeal, String newOrderDealType) throws Exception{
+    	  //判断是给哪个类型操作
+		  String operatorType = order.getOperatorType();
+		  String accountId = "",accountUserName="";
+		  if(GlobalConstant.OrderOperatorType.DRIVER.equalsIgnoreCase(operatorType)){
+			  SysDriver driver = driverService.queryDriverByPK(order.getDebitAccount());
+			  accountId = driver.getSysUserAccountId();
+			  accountUserName = driver.getFullName(); 
+		  }
+		  //TODO if()其他类型判断
+		  String disChargecashback_success =  sysCashBackService.disCashBackToAccount(order, sysOrderDeal, accountId, accountUserName, newOrderDealType);
+		  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargecashback_success)){
+	    		//如果出错，直接退出
+	    		return disChargecashback_success;
+	      }
+		  return disChargecashback_success;
+    } 
+    
     /**
-     * 给加注站充值
+     * 给运输公司充值
+     * 1.充值
+     * 2.不返现
      * @paramorder
      * @return
      */
 	@Override
-	public String chargeToTransportion(SysOrder record) throws Exception{
-		return GlobalConstant.OrderProcessResult.SUCCESS;
+	public String chargeToTransportion(SysOrder order) throws Exception{
+	   if (order ==null){
+		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+	   }
+	   
+	   String orderType = order.getOrderType();
+	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION))){
+		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH;
+	   }
+	   String operatorType = order.getOperatorType();
+	   if(operatorType==null || (!operatorType.equalsIgnoreCase(GlobalConstant.OrderOperatorType.TRANSPORTION))){
+		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_TRANSPORTION;
+	   }
+	   //给运输公司充值
+//	   String success_charge = driverService.chargeCashToDriver(order);
+//	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_charge)){
+//		   //如果出错直接返回错误代码退出
+//		   return success_charge;
+//	   }
+	   return GlobalConstant.OrderProcessResult.SUCCESS;	
 	}
 
 	@Override
