@@ -47,7 +47,15 @@ public class InterfaceConstants {
 
     public static final String DELETE_CRM_GAS_PRICE_ERROR = "删除气品失败！";
 
+    public static final String DELETE_CRM_PRODUCT_PRICE_ERROR = "删除商品失败！";
+
     public static final String UPDATE_CRM_GAS_PRICE_ERROR = "更新气品失败！";
+
+    public static final String UPDATE_CRM_PRODUCT_PRICE_ERROR = "更新商品失败！";
+
+    public static final String QUERY_CRM_PRODUCT_PRICE_ERROR = "查询价格失败！";
+
+    public static final String QUERY_CRM_ADD_PRODUCT_PRICE_ERROR = "添加价格失败！";
 
     public static final String CARD_STSTUS_LOCK = "0";  // 0:已冻结
 

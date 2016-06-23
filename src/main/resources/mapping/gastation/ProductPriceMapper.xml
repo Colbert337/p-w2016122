@@ -11,11 +11,24 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="strat_time" property="stratTime" jdbcType="TIMESTAMP" />
     <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+    <result column="product_price_type" property="product_price_type" jdbcType="VARCHAR" />
+    <association property="product_price_type_info" column="product_price_type"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryProductPriceTypeByMcode">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     id, product_price_id, product_price, product_unit, version, product_price_status, 
     create_time, strat_time, finish_time
   </sql>
+
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from product_price
+    where 1=1  order by product_price_status desc
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -138,5 +151,23 @@
       strat_time = #{stratTime,jdbcType=TIMESTAMP},
       finish_time = #{finishTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="isExists" resultType="java.lang.Integer" parameterType="com.sysongy.poms.gastation.model.ProductPrice" >
+    select
+    count(*)
+    from product_price
+    where 1=1
+    <trim>
+      <if test="id!= null &amp;&amp; id != ''" >
+        and id = #{id,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+
+  <update id="updatePriceStatus" parameterType="com.sysongy.poms.gastation.model.ProductPrice" >
+    update product_price
+    set product_price_status = #{productPriceStatus,jdbcType=VARCHAR}
+    where product_price_id = #{productPriceId,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -16,7 +16,9 @@ public class GsGasPrice  extends BaseModel {
 
     private String gasName;
 
-    private String price;
+    private Usysparam gasNameInfo;
+
+    private String price_id;
 
     private String unit;
 
@@ -25,6 +27,8 @@ public class GsGasPrice  extends BaseModel {
     private Date createdDate;
 
     private Date updatedDate;
+
+    private ProductPrice productPriceInfo;
 
     public String getGsGasPriceId() {
         return gsGasPriceId;
@@ -58,12 +62,20 @@ public class GsGasPrice  extends BaseModel {
         this.gasName = gasName == null ? null : gasName.trim();
     }
 
-    public String getPrice() {
-        return price;
+    public Usysparam getGasNameInfo() {
+        return gasNameInfo;
     }
 
-    public void setPrice(String price) {
-        this.price = price == null ? null : price.trim();
+    public void setGasNameInfo(Usysparam gasNameInfo) {
+        this.gasNameInfo = gasNameInfo;
+    }
+
+    public String getPrice_id() {
+        return price_id;
+    }
+
+    public void setPrice_id(String price_id) {
+        this.price_id = price_id;
     }
 
     public String getUnit() {
@@ -104,5 +116,13 @@ public class GsGasPrice  extends BaseModel {
 
     public void setGasNumInfo(Usysparam gasNumInfo) {
         this.gasNumInfo = gasNumInfo;
+    }
+
+    public ProductPrice getProductPriceInfo() {
+        return productPriceInfo;
+    }
+
+    public void setProductPriceInfo(ProductPrice productPriceInfo) {
+        this.productPriceInfo = productPriceInfo;
     }
 }

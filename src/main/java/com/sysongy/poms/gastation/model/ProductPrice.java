@@ -1,8 +1,11 @@
 package com.sysongy.poms.gastation.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.usysparam.model.Usysparam;
+
 import java.util.Date;
 
-public class ProductPrice {
+public class ProductPrice extends BaseModel {
     private String id;
 
     private String productPriceId;
@@ -20,6 +23,10 @@ public class ProductPrice {
     private Date stratTime;
 
     private Date finishTime;
+
+    private String product_price_type;
+
+    private Usysparam product_price_type_info;
 
     public String getId() {
         return id;
@@ -91,5 +98,21 @@ public class ProductPrice {
 
     public void setFinishTime(Date finishTime) {
         this.finishTime = finishTime;
+    }
+
+    public String getProduct_price_type() {
+        return product_price_type;
+    }
+
+    public void setProduct_price_type(String product_price_type) {
+        this.product_price_type = product_price_type;
+    }
+
+    public Usysparam getProduct_price_type_info() {
+        return product_price_type_info;
+    }
+
+    public void setProduct_price_type_info(Usysparam product_price_type_info) {
+        this.product_price_type_info = product_price_type_info;
     }
 }

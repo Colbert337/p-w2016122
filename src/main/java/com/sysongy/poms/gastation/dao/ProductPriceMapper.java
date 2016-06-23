@@ -1,6 +1,9 @@
 package com.sysongy.poms.gastation.dao;
 
+import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.model.ProductPrice;
+
+import java.util.List;
 
 public interface ProductPriceMapper {
 
@@ -15,4 +18,12 @@ public interface ProductPriceMapper {
     int updateByPrimaryKeySelective(ProductPrice record);
 
     int updateByPrimaryKey(ProductPrice record);
+
+    List<ProductPrice> queryForPage(ProductPrice record);
+
+    int isExists(ProductPrice record);
+
+    int compareStartTime(ProductPrice obj);
+
+    int updatePriceStatus(ProductPrice obj);
 }

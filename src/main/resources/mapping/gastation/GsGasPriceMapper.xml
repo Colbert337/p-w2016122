@@ -6,19 +6,27 @@
     <result column="sys_gas_station_id" property="sysGasStationId" jdbcType="VARCHAR" />
     <result column="gas_num" property="gasNum" jdbcType="VARCHAR" />
     <result column="gas_name" property="gasName" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="VARCHAR" />
+    <result column="price_id" property="price_id" jdbcType="VARCHAR" />
     <result column="unit" property="unit" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
-
     <association property="gasNumInfo" column="gas_num"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
     </association>
+    <association property="gasNameInfo" column="gas_name"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
+    </association>
+    <association property="productPriceInfo" column="price_id"
+                 javaType="com.sysongy.poms.gastation.model.ProductPrice"
+                 select="com.sysongy.poms.gastation.dao.GastationMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
+
   <sql id="Base_Column_List" >
-    gs_gas_price_id, sys_gas_station_id, gas_num, gas_name, price, unit, remark, created_date, 
+    gs_gas_price_id, sys_gas_station_id, gas_num, gas_name, price_id, unit, remark, created_date,
     updated_date
   </sql>
 
@@ -47,11 +55,11 @@
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
     insert into gs_gas_price (gs_gas_price_id, sys_gas_station_id, gas_num, 
-      gas_name, price, unit, 
+      gas_name, price_id, unit,
       remark, created_date, updated_date
       )
     values (#{gsGasPriceId,jdbcType=VARCHAR}, #{sysGasStationId,jdbcType=VARCHAR}, #{gasNum,jdbcType=VARCHAR}, 
-      #{gasName,jdbcType=VARCHAR}, #{price,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{gasName,jdbcType=VARCHAR}, #{price_id,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -70,8 +78,8 @@
       <if test="gasName != null" >
         gas_name,
       </if>
-      <if test="price != null" >
-        price,
+      <if test="price_id != null" >
+        price_id,
       </if>
       <if test="unit != null" >
         unit,
@@ -99,8 +107,8 @@
       <if test="gasName != null" >
         #{gasName,jdbcType=VARCHAR},
       </if>
-      <if test="price != null" >
-        #{price,jdbcType=VARCHAR},
+      <if test="price_id != null" >
+        #{price_id,jdbcType=VARCHAR},
       </if>
       <if test="unit != null" >
         #{unit,jdbcType=VARCHAR},
@@ -128,8 +136,8 @@
       <if test="gasName != null" >
         gas_name = #{gasName,jdbcType=VARCHAR},
       </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=VARCHAR},
+      <if test="price_id != null" >
+        price = #{price_id,jdbcType=VARCHAR},
       </if>
       <if test="unit != null" >
         unit = #{unit,jdbcType=VARCHAR},
@@ -151,7 +159,7 @@
     set sys_gas_station_id = #{sysGasStationId,jdbcType=VARCHAR},
       gas_num = #{gasNum,jdbcType=VARCHAR},
       gas_name = #{gasName,jdbcType=VARCHAR},
-      price = #{price,jdbcType=VARCHAR},
+      price_id = #{price_id,jdbcType=VARCHAR},
       unit = #{unit,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP},

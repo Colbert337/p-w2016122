@@ -28,10 +28,8 @@
       <if test="data != null &amp;&amp; data != ''">
         and data = #{data,jdbcType=VARCHAR}
       </if>
-      <if test="scode != null &amp;&amp; scode != ''">
-         and scode = #{scode,jdbcType=VARCHAR}
-      </if>
     </trim>
+      and (scode is null or scode='')
   </select>
   
   <insert id="insert" parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
@@ -76,4 +74,9 @@
     <select id="queryChildRenCardTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
         select * from usysparam where gcode = 'CARDTYPE' and scode = #{mcode,jdbcType=VARCHAR}
     </select>
+
+    <select id="queryProductPriceTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'PRODUCTPRICETYPE' and scode = #{mcode,jdbcType=VARCHAR}
+    </select>
+
 </mapper>
