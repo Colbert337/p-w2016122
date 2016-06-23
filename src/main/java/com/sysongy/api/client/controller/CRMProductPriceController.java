@@ -36,7 +36,7 @@ public class CRMProductPriceController {
     @Autowired
     GsGasPriceService gsGasPriceService;
 
-    @RequestMapping(value = {"/web/queryGsPriceInfo"})
+        @RequestMapping(value = {"/web/queryProductPriceInfo"})
     @ResponseBody
     public AjaxJson queryProductPriceInfo(HttpServletRequest request, HttpServletResponse response, ProductPrice productPrice) {
         AjaxJson ajaxJson = new AjaxJson();
@@ -68,7 +68,7 @@ public class CRMProductPriceController {
         return ajaxJson;
     }
 
-    @RequestMapping(value = {"/web/addGsGasPrice"})
+    @RequestMapping(value = {"/web/addProductPrice"})
     @ResponseBody
     public AjaxJson addProductPrice(HttpServletRequest request, HttpServletResponse response, ProductPrice productPrice) {
         AjaxJson ajaxJson = new AjaxJson();
@@ -132,9 +132,9 @@ public class CRMProductPriceController {
         return ajaxJson;
     }
 
-    @RequestMapping(value = {"/web/updateGsGasPrice"})
+    @RequestMapping(value = {"/web/updateProductPrice"})
     @ResponseBody
-    public AjaxJson updateGsGasPrice(HttpServletRequest request, HttpServletResponse response, ProductPrice productPrice) {
+    public AjaxJson updateProductPrice(HttpServletRequest request, HttpServletResponse response, ProductPrice productPrice) {
         AjaxJson ajaxJson = new AjaxJson();
         if(!StringUtils.isNotEmpty(productPrice.getId())){
             ajaxJson.setSuccess(false);
@@ -167,9 +167,9 @@ public class CRMProductPriceController {
         return ajaxJson;
     }
 
-    @RequestMapping(value = {"/web/delGsGasPrice"})
+    @RequestMapping(value = {"/web/delProductPrice"})
     @ResponseBody
-    public AjaxJson delGsGasPrice(HttpServletRequest request, HttpServletResponse response, ProductPrice productPrice){
+    public AjaxJson delProductPrice(HttpServletRequest request, HttpServletResponse response, ProductPrice productPrice){
         AjaxJson ajaxJson = new AjaxJson();
         if(!StringUtils.isNotEmpty(productPrice.getId())){
             ajaxJson.setSuccess(false);
