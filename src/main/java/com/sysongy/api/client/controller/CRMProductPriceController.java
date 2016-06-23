@@ -33,6 +33,9 @@ public class CRMProductPriceController {
     @Autowired
     ProductPriceService productPriceService;
 
+    @Autowired
+    GsGasPriceService gsGasPriceService;
+
     @RequestMapping(value = {"/web/queryGsPriceInfo"})
     @ResponseBody
     public AjaxJson queryProductPriceInfo(HttpServletRequest request, HttpServletResponse response, ProductPrice productPrice) {
@@ -89,6 +92,7 @@ public class CRMProductPriceController {
 
         try
         {
+            Map<String, Object> attributes = new HashMap<String, Object>();
             int isExistPrice = productPriceService.isExists(productPrice);
             if(isExistPrice > 0){
                 ajaxJson.setSuccess(false);
@@ -108,6 +112,18 @@ public class CRMProductPriceController {
                 ajaxJson.setMsg("无价格添加！！！");
                 return ajaxJson;
             }
+
+            GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByPK(productPrice.getProductPriceId());
+            gsGasPrice.setPrice_id(productPrice.getId());
+            renum = gsGasPriceService.saveGsPrice(gsGasPrice, "update");
+            if(renum < 1){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("无商品价格变动！！！");
+                return ajaxJson;
+            }
+
+            attributes.put("productPrice", productPrice);
+            ajaxJson.setAttributes(attributes);
         } catch (Exception e){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_PRODUCT_PRICE_ERROR + e.getMessage());
@@ -134,12 +150,15 @@ public class CRMProductPriceController {
 
         try
         {
+            Map<String, Object> attributes = new HashMap<String, Object>();
             int renum = productPriceService.saveProductPrice(productPrice, "update");
             if(renum < 1){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("无商品更新 ！！！");
                 return ajaxJson;
             }
+            attributes.put("productPrice", productPrice);
+            ajaxJson.setAttributes(attributes);
         }catch (Exception e){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_PRODUCT_PRICE_ERROR + e.getMessage());
