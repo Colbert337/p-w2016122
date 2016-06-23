@@ -181,6 +181,9 @@ public class GlobalConstant {
 		public static final String DISCHARGE_TO_DRIVER_CHARGE ="134";
 		public static final String DISCHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="135";
 		public static final String DISCHARGE_TO_DRIVER_CASHBACK ="136";
+		
+		public static final String CHARGE_TO_TRANSPORTION_CHARGE ="111";
+		public static final String CHARGE_TO_GASTATION_CHARGE ="121";
 	}
 
 	/*

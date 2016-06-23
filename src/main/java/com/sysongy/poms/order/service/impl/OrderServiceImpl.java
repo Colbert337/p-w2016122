@@ -16,6 +16,7 @@ import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.util.GlobalConstant;
 
 /**
@@ -40,6 +41,10 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private OrderDealService orderDealService;
+	
+
+	@Autowired
+	private TransportionService transportionService;
 	
 	@Override
 	public int deleteByPrimaryKey(String orderId) {
@@ -214,11 +219,37 @@ public class OrderServiceImpl implements OrderService {
 		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_TRANSPORTION;
 	   }
 	   //给运输公司充值
-//	   String success_charge = driverService.chargeCashToDriver(order);
-//	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_charge)){
-//		   //如果出错直接返回错误代码退出
-//		   return success_charge;
-//	   }
+	   String success_charge = transportionService.chargeCashToTransportion(order);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_charge)){
+		   //如果出错直接返回错误代码退出
+		   return success_charge;
+	   }
+	   return GlobalConstant.OrderProcessResult.SUCCESS;	
+	}
+	
+	/**
+     * 给加注站充值
+     * 1.如果现金充值，不能超过预付款
+     * 2.充值
+     * 3.不返现
+     * @paramorder
+     * @return
+     */
+	@Override
+	public String chargeToGasStation(SysOrder order) throws Exception{
+	   if (order ==null){
+		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+	   }
+	   
+	   String orderType = order.getOrderType();
+	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_GASTATION))){
+		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH;
+	   }
+	   String operatorType = order.getOperatorType();
+	   if(operatorType==null || (!operatorType.equalsIgnoreCase(GlobalConstant.OrderOperatorType.GASTATION))){
+		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_GASTATION;
+	   }
+	   //TODO
 	   return GlobalConstant.OrderProcessResult.SUCCESS;	
 	}
 

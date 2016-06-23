@@ -3,6 +3,7 @@ package com.sysongy.poms.transportion.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.transportion.model.Transportion;
 
 public interface TransportionService {
@@ -16,4 +17,12 @@ public interface TransportionService {
 	public Integer delTransportion(String transportionid) throws Exception;
 	
 	public List<Transportion> getAllTransportionByArea(String areacode) throws Exception;
+	
+	/**
+	 * 给运输公司充值(无充红,不返现)
+	 * @param order
+	 * @return
+     * @throws Exception 
+	 */
+	public String chargeCashToTransportion(SysOrder order) throws Exception;
 }

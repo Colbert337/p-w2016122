@@ -1,5 +1,6 @@
 package com.sysongy.poms.transportion.service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.transportion.dao.TransportionMapper;
 import com.sysongy.poms.transportion.model.Transportion;
@@ -36,6 +39,14 @@ public class TransportionServiceImpl implements TransportionService {
 	private SysUserService sysUserService;
 	@Autowired
 	private UsysparamService usysparamService;
+	
+	@Autowired
+	private SysUserAccountService sysUserAccountService;
+	
+	@Autowired
+	private OrderDealService orderDealService;
+	
+	
 	
 	@Override
 	public PageInfo<Transportion> queryTransportion(Transportion record) throws Exception {
@@ -166,5 +177,38 @@ public class TransportionServiceImpl implements TransportionService {
 		 station.setExpiry_date_frompage(new SimpleDateFormat("yyyy-MM-dd").format(station.getExpiry_date()));
 		 return station;
 	}
+	
+	
+	 /**
+	 * 给运输公司充值(无充红,不返现)
+	 * @param order
+	 * @return
+     * @throws Exception 
+	 */
+	public String chargeCashToTransportion(SysOrder order) throws Exception{
+		if (order ==null){
+			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+		}
+		
+		String debit_account = order.getDebitAccount();
+		if(debit_account==null ||debit_account.equalsIgnoreCase("")){
+			return GlobalConstant.OrderProcessResult.DEBIT_ACCOUNT_IS_NULL;
+		}
+		
+		//给账户充钱
+		Transportion tran = this.queryTransportionByPK(debit_account);
+		String tran_account = tran.getSys_user_account_id();
+		BigDecimal cash = order.getCash();
+		String cash_success = sysUserAccountService.addCashToAccount(tran_account,cash);
+		//记录订单流水
+		String chong = "充值";
+		String orderDealType = GlobalConstant.OrderDealType.CHARGE_TO_TRANSPORTION_CHARGE;
+
+		String remark = "给"+ tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。";
+		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
+		
+		return cash_success;
+	}
+
 
 }

@@ -1,5 +1,6 @@
 package com.sysongy.poms.gastation.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
@@ -43,6 +44,15 @@ public class Gastation extends BaseModel {
 	private Date updated_time;
 	private String sys_user_account_id;
 	private SysUserAccount account;
+	private BigDecimal prepay_balance;
+
+	public BigDecimal getPrepay_balance() {
+		return prepay_balance;
+	}
+
+	public void setPrepay_balance(BigDecimal prepay_balance) {
+		this.prepay_balance = prepay_balance;
+	}
 
 	public String getStation_level() {
 		return station_level;
