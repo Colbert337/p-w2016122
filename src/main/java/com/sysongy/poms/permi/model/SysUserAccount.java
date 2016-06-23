@@ -3,7 +3,10 @@ package com.sysongy.poms.permi.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SysUserAccount {
+import com.sysongy.poms.base.model.BaseModel;
+
+public class SysUserAccount extends BaseModel{
+	
     private String sysUserAccountId;
 
     private String accountCode;

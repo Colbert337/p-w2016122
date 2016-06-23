@@ -82,8 +82,8 @@
       <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
         and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
       </if>
-      <if test="checked_status != null &amp;&amp; checked_status != ''" >
-        and checked_status = #{checked_status,jdbcType=VARCHAR}
+      <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
+        and checked_status = #{checkedStatus,jdbcType=VARCHAR}
       </if>
       <if test="isIdent != null" >
         and is_ident = #{isIdent,jdbcType=INTEGER}

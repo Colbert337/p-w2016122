@@ -85,7 +85,7 @@
 
 										<div class="col-sm-4">
 											<label class="control-label no-padding-right" >${param.gastationame}</label>
-											<input type="text" name="acconutid" value="${param.acconutid}"/>
+											<input type="text" name="account_id" value="${param.acconutid}"/>
 										</div>
 									</div>
 									
@@ -228,7 +228,7 @@
 			}
 			
 			var options ={   
-		            url:'../web/gastation/depositGastation?acconutid='+$("[name=acconutid]").val()+'&stationdeposit='+$("[name=deposit]").val(),   
+		            url:'../web/gastation/depositGastation',   
 		            type:'post',                    
 		            dataType:'text',
 		            success:function(data){
@@ -241,7 +241,7 @@
 		            	
 		 	       }
 			}
-						
+		
 			$("#gastationform").ajaxSubmit(options);
 		}
 		
