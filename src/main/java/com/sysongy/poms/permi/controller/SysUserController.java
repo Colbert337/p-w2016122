@@ -227,12 +227,19 @@ public class SysUserController extends BaseContoller{
 	}
 
 
+	/**
+	 * 根据用户类型查询用户列表
+	 * @param currUser
+	 * @param map
+     * @return
+     */
 	@RequestMapping("/list/info")
 	@ResponseBody
-	public TcFleet queryUserList(@ModelAttribute CurrUser currUser, ModelMap map){
-//		List<SysUser> userList = new
+	public List<SysUser> queryUserList(@ModelAttribute CurrUser currUser, ModelMap map){
+		int userType = currUser.getUserType();
+		List<SysUser> userList = sysUserService.queryUserListByUserType(userType);
 
-		return null;
+		return userList;
 	}
 
 }
