@@ -16,5 +16,12 @@ public interface SysUserAccountMapper {
 
     int updateAccount(SysUserAccount record);
 
-    int updateAccountBalance(SysUserAccount record);    
+    int updateAccountBalance(SysUserAccount record);
+
+    /**
+     * 根据站点ID查询站点账户信息
+     * @param sysTransportionId 运输公司ID
+     * @return
+     */
+    SysUserAccount queryUserAccountByStationId(String sysTransportionId);
 }

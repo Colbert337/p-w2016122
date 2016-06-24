@@ -3,6 +3,7 @@ package com.sysongy.tcms.advance.service;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +37,7 @@ public interface TcFleetQuotaService {
      * @param tcFleetQuota
      * @return
      */
-    PageInfo<Map<String,Object>> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota);
+    List<Map<String,Object>> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota);
 
     /**
      * 添加车队额度

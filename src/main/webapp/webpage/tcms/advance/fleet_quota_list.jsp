@@ -11,7 +11,7 @@
 <script src="<%=basePath %>/dist/js/advance/fleet_quota_list.js"/>
 <div class="page-header">
 	<h1>
-		车辆管理
+		财务管理
 		<%--<small>
 			<i class="ace-icon fa fa-angle-double-right"></i>
 			用户列表
@@ -29,7 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
-							<input type="text" name="platesNumber" placeholder="车牌号"  maxlength="11" value="${fleetQuota.platesNumber}"/>
+							<input type="text" name="quota" placeholder="车队名称/队长姓名"  maxlength="11" value="${fleetQuota.quota}"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
@@ -40,55 +40,46 @@
 								重置
 							</button>
 							<div class="item"></div>
-							<button class="btn btn-sm btn-primary" type="button" onclick="addFleetQuota();">
-								添加车辆
+							<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
+								充值
 							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="importFleetQuota();">
-								批量导入
+							<button class="btn btn-sm btn-primary" type="button" onclick="addFenpei();">
+								资金分配
 							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="downLoadModel();">
-								下载模板
+							<button class="btn btn-sm btn-primary" type="button" onclick="addZhuan();">
+								个人转账
+							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="addPassword();">
+								支付密码修改
 							</button>
 						</div>
 					</div>
 					<%--</h4>--%>
+					<div class="table-header">
+						<label style="font-size: 18px;">账户余额：56325元</label>&nbsp;&nbsp;&nbsp;&nbsp;
+						<label style="font-size: 18px;">未分配资金：26535元</label>
+					</div>
 					<%--<table id="simple-table" class="table table-striped table-bordered table-hover">--%>
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
 							<th>车队名称</th>
-							<th>车牌号</th>
-							<th>实体卡号</th>
-							<th>通知手机</th>
-							<th>创建时间</th>
-							<th>卡状态</th>
-							<th>操作</th>
+							<th>队长姓名</th>
+							<th>手机号</th>
+							<th>是否分配资金</th>
+							<th>可用资金</th>
+							<th>上次分配时间</th>
 						</tr>
 						</thead>
 						<tbody>
 						<c:forEach items="${fleetQuotaList}" var="fleetQuota">
 							<tr>
 								<td>${fleetQuota.fleetName}</td>
-								<td>${fleetQuota.platesNumber}</td>
-								<td>${fleetQuota.cardNo}</td>
-								<td>${fleetQuota.noticePhone}</td>
-								<td><fmt:formatDate value="${fleetQuota.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td>
-									<c:if test="${fleetQuota.cardStatus == 0}">
-										已冻结
-									</c:if>
-									<c:if test="${fleetQuota.cardStatus == 1}">
-										未使用
-									</c:if>
-									<c:if test="${fleetQuota.cardStatus == 2}">
-										使用中
-									</c:if>
-								</td>
-								<td>
-									<a class="" href="javascript:editFleetQuota('${fleetQuota.tcfleetQuotaId}');" title="修改" data-rel="tooltip">
-										<span class="ace-icon fa fa-pencil bigger-130"></span>
-									</a>
-								</td>
+								<td>${fleetQuota.realName}</td>
+								<td>${fleetQuota.mobilePhone}</td>
+								<td>${fleetQuota.isAllot}</td>
+								<td>${fleetQuota.quota}</td>
+								<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 							</tr>
 						</c:forEach>
 						</tbody>
@@ -96,7 +87,7 @@
 				</div><!-- /.col-xs-12 -->
 			</div><!-- /.row -->
 			<%--分页start--%>
-			<div class="row">
+			<%--<div class="row">
 				<div class="col-sm-6">
 					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
 				</div>
@@ -116,19 +107,79 @@
 						</ul>
 					</div>
 				</div>
-			</div>
+			</div>--%>
 			<%--分页 end--%>
 		</form>
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
-<!--添加车辆弹层-开始-->
-<div id="editModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+
+<!--充值弹层-开始-->
+<div id="chongzhiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel">添加车辆</h4>
+				<h4 class="modal-title" id="chongzhiModalLabel">充值</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<label class="col-sm-4 control-label no-padding-right" ><span class="red_star">*</span> 充值方式： </label>
+								<div class="col-sm-7" style="padding-bottom: 18px;">
+									<div class="radio">
+										<label>
+											<input name="gender" id="zhifubao" type="radio" class="ace" checked="checked" value="0">
+											<span class="lbl"> 支付宝</span>
+										</label>
+										<label>
+											<input name="gender" id="weixin" type="radio" class="ace" value="1">
+											<span class="lbl"> 微信</span>
+										</label>
+										<label>
+											<input name="gender" id="yinlian" type="radio" class="ace" value="1">
+											<span class="lbl"> 银联</span>
+										</label>
+										<label>
+											<input name="gender" id="chongzhi" type="radio" class="ace" value="1">
+											<span class="lbl"> 充值卡</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label no-padding-right" for="account_balance"><span class="red_star">*</span> 充值金额： </label>
+								<div class="col-sm-7">
+									<input type="text" id="account_balance" name="accountBalance" placeholder="充值金额" class="col-xs-10 col-sm-11" />元
+								</div>
+							</div>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+				<!--底部按钮 -->
+				<div class="row">
+					<div class="space"></div>
+					<div class="col-xs-3"></div>
+					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveChongzhi()">确   定</button></div>
+					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('chongzhiModel')">取   消 </button></div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+<!--充值弹层-结束-->
+
+<!--添加资金分配弹层-开始-->
+<div id="fenpeiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+	<div class="modal-dialog" style="width: 900px;" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="fenpeiModalLabel">资金分配</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
@@ -136,61 +187,38 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<!-- PAGE CONTENT BEGINS -->
-							<form class="form-horizontal" id="editForm">
+							<form class="form-horizontal" id="fenpeiForm">
 								<!-- #section:elements.form -->
-								<h5 class="header smaller lighter blue">基本信息</h5>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="plates_number"><span class="red_star">*</span> 车牌号： </label>
-									<div class="col-sm-7">
-										<input type="text" name="platesNumber" id="plates_number" placeholder="车牌号" class="col-xs-10 col-sm-12" />
-										<input type="hidden" name="tcFleetQuotaId" id="tc_fleet_quota_id" />
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
-									<div class="col-sm-7">
-										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" class="col-xs-10 col-sm-12" />
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
-									<div class="col-sm-7">
-										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" class="col-xs-10 col-sm-12" />
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="notice_phone"><span class="red_star">*</span> 通知手机： </label>
-									<div class="col-sm-7">
-										<input type="text" id="notice_phone" placeholder="通知手机" name="noticePhone" class="col-xs-10 col-sm-12" />
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="copy_phone"> 抄送手机： </label>
-									<div class="col-sm-7">
-										<input type="text" name="copyPhone" id="copy_phone" placeholder="抄送手机" class="col-xs-10 col-sm-12" />
-									</div>
-								</div>
-								<div id="cardInfoDiv">
-									<h5 class="header smaller lighter blue">实体卡信息</h5>
-									<div class="form-group">
-										<label class="col-sm-4 control-label no-padding-right"> 实体卡： </label>
-										<div class="col-sm-8">
-											<label class="pad-top-10" id="card_no"></label>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-4 control-label no-padding-right"> 卡类型： </label>
-										<div class="col-sm-8">
-											<label class="pad-top-10" id="card_type"></label>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-4 control-label no-padding-right"> 卡状态： </label>
-										<div class="col-sm-8">
-											<label class="pad-top-10" id="card_status"></label>
-										</div>
-									</div>
-								</div>
+								<table id="fenpei" class="table table-striped table-bordered table-hover" width="700">
+									<thead>
+									<tr>
+										<th width="15%">车队名称</th>
+										<th width="10%">队长姓名</th>
+										<th width="15%">手机号</th>
+										<th width="20%">是否分配资金</th>
+										<th width="20%">可用资金(元)</th>
+										<th width="20%">上次分配时间</th>
+									</tr>
+									</thead>
+									<tbody>
+										<c:forEach items="${fleetQuotaList}" var="fleetQuota">
+											<tr>
+												<td>${fleetQuota.fleetName}</td>
+												<td>${fleetQuota.realName}</td>
+												<td>${fleetQuota.mobilePhone}</td>
+												<td>
+													<div class="switch switch-small ">
+														<input type="checkbox" checked />
+													</div>
+												</td>
+												<td>
+													<input type="text" id="" name="" class="col-xs-8 col-sm-8"/>
+												</td>
+												<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
@@ -200,29 +228,61 @@
 				<div class="row">
 					<div class="space"></div>
 					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveFleetQuota()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('editModel')">取   消 </button></div>
+					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveFenpei()">确   定</button></div>
+					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('fenpeiModel')">取   消 </button></div>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
-<!--添加车辆弹层-结束-->
+<!--添加资金分配弹层-结束-->
 
-<!--提示弹层-开始-->
-<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
-	<div class="modal-dialog" role="document">
+<!--添加个人转账弹层-开始-->
+<div id="zhuanModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+	<div class="modal-dialog" style="width: 700px;" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="alertModalLabel">警告提示</h4>
+				<h4 class="modal-title" id="zhuanModalLabel">个人转账</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
 					<%--两行表单 开始--%>
 					<div class="row">
 						<div class="col-xs-12">
-							sadfasdfasdf
+							<!-- PAGE CONTENT BEGINS -->
+							<form class="form-horizontal" id="zhuanForm">
+								<!-- #section:elements.form -->
+								<table id="zhuan" class="table table-striped table-bordered table-hover">
+									<thead>
+									<tr>
+										<th width="20%">手机号码</th>
+										<th width="10%">对方姓名</th>
+										<th width="15%">转账金额</th>
+										<th width="25%">用途</th>
+									</tr>
+									</thead>
+									<tbody>
+										<c:forEach items="${fleetQuotaList}" var="fleetQuota">
+											<tr>
+												<td>
+													<input type="text" id="1" name="" class="col-sm-12"/>
+												</td>
+												<td>
+													<input type="text" id="2" name="" class="col-sm-12"/>
+												</td>
+												<td>
+													<input type="text" id="3" name="" class="col-sm-12"/>
+												</td>
+												<td>
+													<input type="text" id="4" name="" class="col-sm-12"/>
+												</td>
+											</tr>
+											<tr><td colspan="4" align="right"><a href="javascript:alert('成功！');">添加</a></td></tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
@@ -231,11 +291,79 @@
 				<div class="row">
 					<div class="space"></div>
 					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
+					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveZhuan()">确   定</button></div>
+					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('zhuanModel')">取   消 </button></div>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
-<!--提示弹层-结束-->
+<!--添加个人转账弹层-结束-->
+
+<!--添加修改密码弹层-开始-->
+<div id="passwordModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="passwordModalLabel">支付密码修改</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<form class="form-horizontal" id="passwordForm">
+								<!-- #section:elements.form -->
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" ><span class="red_star">*</span> 充值方式： </label>
+									<div class="col-sm-7" style="padding-bottom: 18px;">
+										<div class="radio">
+											<label>
+												<input name="gender" id="passwordUpdate" type="radio" class="ace" checked="checked" value="0">
+												<span class="lbl"> 密码修改</span>
+											</label>
+											<label>
+												<input name="gender" id="passwordLoss" type="radio" class="ace" value="1">
+												<span class="lbl"> 密码遗失</span>
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="old_password"><span class="red_star">*</span> 原支付密码： </label>
+									<div class="col-sm-7">
+										<input type="password" id="old_password" name="oldPassword" placeholder="原支付密码" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="new_password"><span class="red_star">*</span> 新支付密码： </label>
+									<div class="col-sm-7">
+										<input type="password" id="new_password" name="newPassword" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="rep_password"><span class="red_star">*</span> 确认新支付密码： </label>
+									<div class="col-sm-7">
+										<input type="password" id="rep_password" name="repPassword" placeholder="确认新支付密码" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+
+							</form>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+				<!--底部按钮 -->
+				<div class="row">
+					<div class="space"></div>
+					<div class="col-xs-3"></div>
+					<div class="col-xs-3"><button class="btn btn-primary" onclick="savePassword()">确   定</button></div>
+					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('passwordModel')">取   消 </button></div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+<!--添加修改密码弹层-结束-->

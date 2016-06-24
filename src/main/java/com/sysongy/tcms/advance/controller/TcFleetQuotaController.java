@@ -7,7 +7,6 @@ import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
-import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,25 +48,18 @@ public class TcFleetQuotaController extends BaseContoller {
     @RequestMapping("/list/page")
     public String queryFleetQuotaListPage(@ModelAttribute CurrUser currUser, TcFleetQuota fleetQuota, ModelMap map){
         String stationId = currUser.getStationId();
-        if(fleetQuota.getPageNum() == null){
-            fleetQuota.setPageNum(GlobalConstant.PAGE_NUM);
-            fleetQuota.setPageSize(GlobalConstant.PAGE_SIZE);
-        }
+        List<Map<String, Object>> fleetQuotaList = new ArrayList<>();
         fleetQuota.setStationId(stationId);
-
-        //封装分页参数，用于查询分页内容
-        PageInfo<Map<String, Object>> fleetQuotaPageInfo = new PageInfo<Map<String, Object>>();
         try {
-            fleetQuotaPageInfo = tcFleetQuotaService.queryFleetQuotaMapList(fleetQuota);
+            fleetQuotaList = tcFleetQuotaService.queryFleetQuotaMapList(fleetQuota);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        map.addAttribute("fleetQuotaList",fleetQuotaPageInfo.getList());
-        map.addAttribute("pageInfo",fleetQuotaPageInfo);
+        map.addAttribute("fleetQuotaList",fleetQuotaList);
         map.addAttribute("fleetQuota",fleetQuota);
 
-        return "webpage/tcms/advance/FleetQuota_list";
+        return "webpage/tcms/advance/fleet_quota_list";
     }
 
     /**

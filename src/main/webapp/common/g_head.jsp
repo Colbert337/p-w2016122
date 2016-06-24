@@ -42,6 +42,7 @@
 
 		<!-- page specific plugin styles -->
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-duallistbox.css" />
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-switch.min.css" />
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-multiselect.css" />
 
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorbox.css" />

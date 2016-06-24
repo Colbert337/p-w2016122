@@ -31,13 +31,6 @@ public interface TcFleetQuotaMapper {
     List<Map<String,Object>> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota);
 
     /**
-     * 查询车队额度信息列表
-     * @param tcFleetQuota
-     * @return
-     */
-    List<Map<String,Object>> queryFleetQuotaMapArray(TcFleetQuota tcFleetQuota);
-
-    /**
      * 添加车队额度
      * @param tcFleetQuota
      * @return

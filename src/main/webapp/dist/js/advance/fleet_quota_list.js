@@ -2,7 +2,7 @@
  * Created by Administrator on 2016/6/20.
  * Author: wdq
  */
-/*分页相关方法 start*/
+/*/!*分页相关方法 start*!/
 window.onload = setCurrentPage();
 function commitForm(obj){
     //设置当前页的值
@@ -15,39 +15,57 @@ function commitForm(obj){
     $("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
-    url:'../web/tcms/vehicle/list/page',
+    url:'../web/tcms/FleetQuota/list/page',
     type:'post',
     dataType:'html',
     success:function(data){
         $("#main").html(data);
     }
 }
-/*分页相关方法 end*/
-//显示添加车队额度弹出层add
-function addVehicle(){
-    clearDiv();
-    /*密码输入框改为可编辑*/
-    $("#pay_code").removeAttr("readonly");
-    $("#re_password").removeAttr("readonly");
+/!*分页相关方法 end*!/*/
 
-    $("#cardInfoDiv").hide();
-    $("#editModel").modal('show');
+//显示充值弹出层add
+function addChongzhi(){
+    clearDiv();
+    $("#chongzhiModel").modal('show');
 }
 
+//显示添加资金分配弹出层add
+function addFenpei(){
+    clearDiv();
+
+    $("#fenpeiModel").modal('show');
+}
+
+
+//显示添加个人转账弹出层add
+function addZhuan(){
+    clearDiv();
+    $("#zhuanModel").modal('show');
+}
+
+//显示添加修改密码弹出层add
+function addPassword(){
+    clearDiv();
+
+    $("#passwordModel").modal('show');
+}
+
+
 //显示编辑车队额度弹出层
-function editVehicle(vehicleId){
+function editFleetQuota(fleetQuotaId){
     $.ajax({
-        url:"../web/tcms/vehicle/info",
-        data:{tcVehicleId:vehicleId},
+        url:"../web/tcms/fleetQuota/info",
+        data:{tcFleetQuotaId:fleetQuotaId},
         async:false,
         type: "POST",
         success: function(data){
-            $("#plates_number").val(data.vehicle.platesNumber);
-            $("#tc_vehicle_id").val(data.vehicle.tcVehicleId);
-            $("#pay_code").val(data.vehicle.payCode);
-            $("#re_password").val(data.vehicle.payCode);
-            $("#notice_phone").val(data.vehicle.noticePhone);
-            $("#copy_phone").val(data.vehicle.copyPhone);
+            $("#plates_number").val(data.fleetQuota.platesNumber);
+            $("#tc_FleetQuota_id").val(data.fleetQuota.tcFleetQuotaId);
+            $("#pay_code").val(data.fleetQuota.payCode);
+            $("#re_password").val(data.fleetQuota.payCode);
+            $("#notice_phone").val(data.fleetQuota.noticePhone);
+            $("#copy_phone").val(data.fleetQuota.copyPhone);
 
             if(data.gasCard != null && data.gasCard.card_no != null){
                 var cardType,cardStatus;
@@ -113,14 +131,14 @@ function clearDiv(){
 /**
  * 保存车队额度信息
  */
-function saveVehicle(){
+function saveFleetQuota(){
         $('#editForm').data('bootstrapValidator').validate();
         if(!$('#editForm').data('bootstrapValidator').isValid()){
             return ;
         }
 
         var saveOptions ={
-            url:'../web/tcms/vehicle/save',
+            url:'../web/tcms/FleetQuota/save',
             type:'post',
             dataType:'html',
             success:function(data){
@@ -136,7 +154,7 @@ function saveVehicle(){
 
 //重置
 function init(){
-    loadPage('#main', '../web/tcms/vehicle/list/page');
+    loadPage('#main', '../web/tcms/FleetQuota/list/page');
 }
 /**
  * 删除车队额度

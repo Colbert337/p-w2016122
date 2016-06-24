@@ -51,13 +51,10 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     }
 
     @Override
-    public PageInfo<Map<String, Object>> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota) {
+    public List<Map<String, Object>> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota) {
         if(tcFleetQuota != null){
-            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
-
-            List<Map<String, Object>> FleetQuotaList = tcFleetQuotaMapper.queryFleetQuotaMapList(tcFleetQuota);
-            PageInfo<Map<String, Object>> FleetQuotaPageInfo = new PageInfo<>(FleetQuotaList);
-            return FleetQuotaPageInfo;
+            List<Map<String, Object>> fleetQuotaList = tcFleetQuotaMapper.queryFleetQuotaMapList(tcFleetQuota);
+            return fleetQuotaList;
         }else{
             return null;
         }
