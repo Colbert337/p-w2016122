@@ -1,6 +1,7 @@
 package com.sysongy.poms.gastation.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.liquid.model.SysGasSource;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.util.Date;
@@ -16,15 +17,27 @@ public class GsGasPrice  extends BaseModel {
 
     private String gasName;
 
-    private String price;
+    private Usysparam gasNameInfo;
+
+    private String price_id;
 
     private String unit;
+
+    private String unitInfo;
 
     private String remark;
 
     private Date createdDate;
 
     private Date updatedDate;
+
+    private ProductPrice productPriceInfo;
+
+    private String gs_gas_source_id;
+
+    private SysGasSource gs_gas_source_info;
+
+    private int is_deleted;
 
     public String getGsGasPriceId() {
         return gsGasPriceId;
@@ -58,12 +71,20 @@ public class GsGasPrice  extends BaseModel {
         this.gasName = gasName == null ? null : gasName.trim();
     }
 
-    public String getPrice() {
-        return price;
+    public Usysparam getGasNameInfo() {
+        return gasNameInfo;
     }
 
-    public void setPrice(String price) {
-        this.price = price == null ? null : price.trim();
+    public void setGasNameInfo(Usysparam gasNameInfo) {
+        this.gasNameInfo = gasNameInfo;
+    }
+
+    public String getPrice_id() {
+        return price_id;
+    }
+
+    public void setPrice_id(String price_id) {
+        this.price_id = price_id;
     }
 
     public String getUnit() {
@@ -104,5 +125,45 @@ public class GsGasPrice  extends BaseModel {
 
     public void setGasNumInfo(Usysparam gasNumInfo) {
         this.gasNumInfo = gasNumInfo;
+    }
+
+    public ProductPrice getProductPriceInfo() {
+        return productPriceInfo;
+    }
+
+    public void setProductPriceInfo(ProductPrice productPriceInfo) {
+        this.productPriceInfo = productPriceInfo;
+    }
+
+    public String getUnitInfo() {
+        return unitInfo;
+    }
+
+    public void setUnitInfo(String unitInfo) {
+        this.unitInfo = unitInfo;
+    }
+
+    public String getGs_gas_source_id() {
+        return gs_gas_source_id;
+    }
+
+    public void setGs_gas_source_id(String gs_gas_source_id) {
+        this.gs_gas_source_id = gs_gas_source_id;
+    }
+
+    public SysGasSource getGs_gas_source_info() {
+        return gs_gas_source_info;
+    }
+
+    public void setGs_gas_source_info(SysGasSource gs_gas_source_info) {
+        this.gs_gas_source_info = gs_gas_source_info;
+    }
+
+    public int getIs_deleted() {
+        return is_deleted;
+    }
+
+    public void setIs_deleted(int is_deleted) {
+        this.is_deleted = is_deleted;
     }
 }

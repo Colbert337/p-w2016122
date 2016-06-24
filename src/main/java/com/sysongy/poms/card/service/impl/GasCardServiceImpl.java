@@ -74,6 +74,7 @@ public class GasCardServiceImpl implements GasCardService{
 					card.setCard_no(tmp[i]);
 					card.setStorage_time(new Date());
 					card.setBatch_no(new SimpleDateFormat("YYYYMMddHHmmss").format(new Date()));
+					
 					recordlist.add(card);
 					//写日志表
 					GasCardLog gascardlog = new GasCardLog();
@@ -185,5 +186,12 @@ public class GasCardServiceImpl implements GasCardService{
 		crmCardUpdateInfo.setEndID(crmCardUpdateInfo.getEndID() + 1);
 		int nRet = gasCardMapper.updateCardStatus(crmCardUpdateInfo);
 		return nRet;
+	}
+
+	public PageInfo<GasCard> queryGasCardForUpdate(CRMCardUpdateInfo obj) throws Exception{
+		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
+		List<GasCard> list = gasCardMapper.queryForPageUpdate(obj);
+		PageInfo<GasCard> pageInfo = new PageInfo<GasCard>(list);
+		return pageInfo;
 	}
 }

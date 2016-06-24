@@ -141,12 +141,16 @@ public class GlobalConstant {
 	}
 
 	/*
-	 * 	1充值 2 消费 3 转账
+	 * 	110车队预付款充值  120 加油站预付款充值 130个人充值....
 	 */
 	public interface OrderType{
-		public static final String CHARGE ="1";
-		public static final String CONSUME="2";
-		public static final String TRANSFER="3";
+		public static final String CHARGE_TO_TRANSPORTION ="110";
+		public static final String CHARGE_TO_GASTATION ="120";
+		public static final String CHARGE_TO_DRIVER ="130";
+		public static final String CONSUME_BY_TRANSPORTION ="210";
+		public static final String CONSUME_BY_DRIVER ="220";
+		public static final String TRANSFER_TRANSPORTION_TO_DRIVER ="310";
+		public static final String TRANSFER_DRIVER_TO_DRIVER ="320";
 	}
 
 	/*
@@ -161,27 +165,32 @@ public class GlobalConstant {
 	/*
 	 * 是否首次充值 
 	 */
-	public static int FIRST_CHAGRE_YES = 1;
-	public static int FIRST_CHAGRE_NO = 0;
+	public static final int FIRST_CHAGRE_YES = 1;
+	public static final int FIRST_CHAGRE_NO = 0;
 	
 	
 	/*
 	 * 订单处理流程中的类型
+	 * Charge ---表示充值
+	 * discharge---表示充红
 	 */
 	public interface OrderDealType{
-		public static final String CHARGE_TO_DRIVER_CHARGE ="CHARGE_TO_DRIVER_CHARGE";
-		public static final String CHARGE_TO_DRIVER_CASHBACK ="CHARGE_TO_DRIVER_CASHBACK";
-		public static final String CHARGE_TO_DRIVER_FIRSTCASHBACK ="CHARGE_TO_DRIVER_FIRSTCASHBACK";
+		public static final String CHARGE_TO_DRIVER_CHARGE ="131";
+		public static final String CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="132";
+		public static final String CHARGE_TO_DRIVER_CASHBACK ="133";
+		public static final String DISCHARGE_TO_DRIVER_CHARGE ="134";
+		public static final String DISCHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="135";
+		public static final String DISCHARGE_TO_DRIVER_CASHBACK ="136";
 	}
 
 	/*
 	 * 返现规则是否启用 
 	 */
-	public static String CASHBACK_STATUS_ENABLE = "1";
-	public static String CASHBACK_STATUS_DISABLE = "2";
+	public static final String CASHBACK_STATUS_ENABLE = "1";
+	public static final String CASHBACK_STATUS_DISABLE = "2";
 	
 	/*
-	 * 返现规则类型的编号
+	 * 返现类型的编号
 	 */
 	public interface CashBackNumber{
 		public static final String CASHBACK_GAS_STATION_CHARGE ="0";
@@ -196,11 +205,32 @@ public class GlobalConstant {
 	}
 	
 	/*
+	 * 订单充值类型,与返现类型里面的充值编码的保持一致，但是不能用一个，因为逻辑上不一样，后面有可能增加
+	 * 
+	 */
+	public interface OrderChargeType{
+		public static final String CHARGETYPE_GAS_STATION = GlobalConstant.CashBackNumber.CASHBACK_GAS_STATION_CHARGE;
+		public static final String CHARGETYPE_WEICHAT_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_WEICHAT_CHARGE;
+		public static final String CHARGETYPE_ALIPAY_CHARGE = GlobalConstant.CashBackNumber.CASHBACK_ALIPAY_CHARGE;
+		public static final String CHARGETYPE_UNIONPAY_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_UNIONPAY_CHARGE;
+		public static final String CHARGETYPE_CARD_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_CARD_CHARGE;
+		public static final String CHARGETYPE_POS_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_POS_CHARGE;
+	}
+	
+	/*
+	 * 是否充红 
+	 */
+	public static final String ORDER_ISCHARGE_YES = "1";
+	public static final String ORDER_ISCHARGE_NO = "0";
+	
+	/*
 	 * 	订单处理结果标记
 	 */
 	public interface OrderProcessResult{
 		public static final String SUCCESS ="SUCCESS";
 		public static final String ORDER_IS_NULL="ORDER_IS_NULL";
+		public static final String ORDER_TYPE_IS_NOT_MATCH="ORDER_TYPE_IS_NOT_MATCH";
+		public static final String ORDER_TYPE_IS_NOT_DISCHARGE="ORDER_TYPE_IS_NOT_DISCHARGE";
 		public static final String ORDER_TYPE_IS_NOT_CHARGE="ORDER_TYPE_IS_NOT_CHARGE";
 		public static final String ORDER_TYPE_IS_NOT_CONSUME="ORDER_TYPE_IS_NOT_CONSUME";
 		public static final String ORDER_TYPE_IS_NOT_TRANSFER="ORDER_TYPE_IS_NOT_TRANSFER";
@@ -210,9 +240,19 @@ public class GlobalConstant {
 		public static final String OPERATOR_TYPE_IS_NOT_GASTATION="OPERATOR_TYPE_IS_NOT_GASTATION";
 		public static final String OPERATOR_TYPE_IS_NOT_TRANSPORTION="OPERATOR_TYPE_IS_NOT_TRANSPORTION";
 
+		public static final String DISCHARGE_ORDER_ID_IS_NULL="DISCHARGE_ORDER_ID_IS_NULL";
+		public static final String DISCHARGE_ORDER_ORDERDEAL_IS_EMPTY="DISCHARGE_ORDER_ORDERDEAL_IS_EMPTY";
+		public static final String DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE="DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE";
+		public static final String DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS="DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS";
+		public static final String DISCHARGE_ORDER_CASHBACK_IS_NULL = "DISCHARGE_ORDER_CASHBACK_IS_NULL";
+		
 		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";
 
 		public static final String ORDER_ERROR_BALANCE_IS_NOT_ENOUGH = "BALANCE_IS_NOT_ENOUGH";
+
+		public static final String ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN = "ACCOUNT_IS_FROEN";
+		public static final String ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN = "DEBIT_ACCOUNT_IS_FROEN";
+		public static final String ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN = "ACCOUNT_CARD_IS_FROEN";
 	}
 
 	/*

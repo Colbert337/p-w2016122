@@ -43,6 +43,13 @@ public class CRMCardContoller {
     public AjaxJson queryCardInfo(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
         AjaxJson ajaxJson = new AjaxJson();
         Map<String, Object> attributes = new HashMap<String, Object>();
+
+        if(StringUtils.isEmpty(gascard.getWorkstation())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
+            return ajaxJson;
+        }
+
         try
         {
             if(!StringUtils.isEmpty(gascard.getStorage_time_range())){
@@ -63,6 +70,7 @@ public class CRMCardContoller {
         }
     	return ajaxJson;
     }
+
 
     @RequestMapping(value = {"/web/distributeCard"})
     @ResponseBody
@@ -106,8 +114,14 @@ public class CRMCardContoller {
             ajaxJson.setMsg("要入库卡片为空！！！");
             return ajaxJson;
         }
+        if(StringUtils.isEmpty(crmCardUpdateInfo.getSys_gas_station_id())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
+            return ajaxJson;
+        }
         try
         {
+            Map<String, Object> attributes = new HashMap<String, Object>();
             crmCardUpdateInfo.setStatusType(InterfaceConstants.CARD_STSTUS_ALREADY_SEND);
             Integer nRet = gasCardService.updateGasCardStatus(crmCardUpdateInfo);
             if(nRet < 1){
@@ -115,12 +129,21 @@ public class CRMCardContoller {
                 ajaxJson.setMsg("无卡信息修改！！！");
                 return ajaxJson;
             }
+            CRMCardUpdateInfo gascard = new CRMCardUpdateInfo();
+            gascard.setPageNum(crmCardUpdateInfo.getPageNum());
+            gascard.setPageSize(crmCardUpdateInfo.getPageSize());
+            gascard.setStartID(crmCardUpdateInfo.getStartID());
+            gascard.setEndID(crmCardUpdateInfo.getEndID());
+            gascard.setStatusType(crmCardUpdateInfo.getStatusType());
+            PageInfo<GasCard> pageinfo = gasCardService.queryGasCardForUpdate(gascard);
+            attributes.put("pageInfo", pageinfo);
+            attributes.put("gascard",pageinfo.getList());
+            ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.PUT_CARD_STORAGE_ERROR);
             logger.error("putCardToCRMStore error： " + e);
         }
-
         return ajaxJson;
     }
 }

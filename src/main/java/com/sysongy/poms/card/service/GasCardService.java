@@ -27,4 +27,6 @@ public interface GasCardService {
 	public Integer updateGasCardInfo(GasCard cascard) throws Exception;
 
 	public Integer updateGasCardStatus(CRMCardUpdateInfo crmCardUpdateInfo) throws Exception;
+
+	public PageInfo<GasCard> queryGasCardForUpdate(CRMCardUpdateInfo obj) throws Exception;
 }

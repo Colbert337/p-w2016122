@@ -7,46 +7,9 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<!-- page specific plugin styles -->
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-duallistbox.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/select2.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/daterangepicker.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
 
-<div class="breadcrumbs" id="breadcrumbs">
-	<script type="text/javascript">
-		try {
-			ace.settings.check('breadcrumbs', 'fixed')
-		} catch (e) {
-		}
-	</script>
+<script src="<%=basePath %>/dist/js/transportion/transportion_list.js"></script>
 
-	<ul class="breadcrumb">
-		<li><i class="ace-icon fa fa-home home-icon"></i> <a href="javascript:void(0);">主页</a>
-		</li>
-
-		<li><a href="javascript:void(0);">运输公司管理</a></li>
-		<li class="active">运输公司信息管理</li>
-	</ul>
-	<!-- /.breadcrumb -->
-
-	<!-- #section:basics/content.searchbox -->
-	<div class="nav-search" id="nav-search">
-		<form class="form-search">
-			<span class="input-icon"> <input type="text"
-				placeholder="Search ..." class="nav-search-input"
-				id="nav-search-input" autocomplete="off" /> <i
-				class="ace-icon fa fa-search nav-search-icon"></i>
-			</span>
-		</form>
-	</div>
-	<!-- /.nav-search -->
-
-	<!-- /section:basics/content.searchbox -->
-</div>
-
-<!-- /section:basics/content.breadcrumbs -->
 <div class="">
 	<!-- /.page-header -->
 	<form id="formtransportion">
@@ -135,6 +98,7 @@
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">保证金余额</th>
+									<th style="display: none">钱袋编号</th>
 									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
@@ -160,13 +124,14 @@
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 									<td>${list.account.deposit}</td> 
+									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">
 										<a class="" href="javascript:void(0);" title="修改" data-rel="tooltip">
 											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 										</a>
 										<a class="option-btn-m" href="javascript:void(0);" title="保证金" data-rel="tooltip">
-											<i class="ace-icon fa fa-paw bigger-130" onclick="preUpdate(this);"></i>
-										</a>
+												<i class="ace-icon fa fa-paw bigger-130" onclick="preDeposit(this);"></i>
+											</a>
 									</td>
 								</tr>
 								</c:forEach>
@@ -204,66 +169,3 @@
 	<!-- /.row -->
 	</form>
 </div>
-<!-- /.page-content -->
-
-<!-- inline scripts related to this page -->
-<script type="text/javascript">
-	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
-
-	var listOptions ={   
-            url:'<%=basePath%>/web/transportion/transportionList',
-            type:'post',                    
-            dataType:'html',
-            success:function(data){
-	              $("#main").html(data);
-	              if($("#retCode").val() != "100"){
-		            	 //$("#modal-table").modal("show");
-		          }
-            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-            	alert("error");
-	       }
-	}
-	
-	window.onload = setCurrentPage();
-	
-	function preUpdate(obj){
-		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
-		loadPage('#main', '<%=basePath%>/web/transportion/preUpdate?transportionid='+stationid);
-	}
-	
-	function commitForm(obj){
-		//设置当前页的值
-		if(typeof obj == "undefined") {
-			$("#pageNum").val("1");
-		}else{
-			$("#pageNum").val($(obj).text());
-		}
-		
-		$("#formtransportion").ajaxSubmit(listOptions);
-	}
-	
-	function del(obj){
-		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
-		
-		var deloptions ={   
-	            url:'<%=basePath%>/web/transportion/deletetransportion?transportionid='+cardid,   
-	            type:'post',                    
-	            dataType:'text',
-	            success:function(data){
-		             $("#main").html(data);
-		             if($("#retCode").val() != "100"){
-		            	 $("#modal-table").modal("show");
-		             }
-	            },
-	            error:function(XMLHttpRequest, textStatus, errorThrown) {
-					
-	            }
-		}
-		
-		$("#formtransportion").ajaxSubmit(deloptions);
-	}
-	
-	function init(){
-		loadPage('#main', '<%=basePath%>/web/transportion/transportionList');
-	}
-	</script>

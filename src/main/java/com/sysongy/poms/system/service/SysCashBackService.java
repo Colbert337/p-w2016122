@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.system.model.SysCashBack;
 
 public interface SysCashBackService {
@@ -25,18 +26,24 @@ public interface SysCashBackService {
 	public List<SysCashBack> queryCashBackByNumber(String cashBackNumber) throws Exception ;
 	
 	/**
-	 * 向司机返现
+	 * 给指定账户返现
 	 * @param order
+	 * @param cashBackList
+	 * @param accountId
+	 * @param accountUserName
 	 * @return
-	 * @throws Exception
 	 */
-	public String cashBackToDriver(SysOrder order) throws Exception;
+	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType);
 	
 	/**
-	 * 向运输公司返现
-	 * @param order
+	 * 充红返现给账户
+	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则充红，否则不执行。
+	 * @param order 充红订单对象
+	 * @param cashBackRecord 订单处理流程对象
+	 * @param accountId
+	 * @param accountUserName
+	 * @param orderDealType 订单处理类型
 	 * @return
-	 * @throws Exception
 	 */
-	public String cashBackToTransportion(SysOrder order) throws Exception;
+	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType);
 }

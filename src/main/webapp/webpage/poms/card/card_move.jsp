@@ -294,12 +294,18 @@
 			           contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 			           dataType:'text',
 			           async:false,
+						beforeSend: function () {
+							$("#dynamic-table").append('<tfoot><tr><td colspan="6" class="text-center">出库中...</td></tr></tfoot>');
+						},
 			           success:function(data){
 			           		if(data != ""){
 								$("#dynamic-table").find("tbody").append("<tr class='success'><td class='center'><label class='pos-rel'><input type='checkbox' class='ace' id='pks'/><span class='lbl'></span></label></td><td>"+i+"</td><td>"+$('#workstation').find("option:selected").text()+"</td><td>"+$('#workstation_resp').val()+"</td><td>"+data+"</td><td>"+$("#operator").val()+"</td></tr>");
 			           			$("#card_no_arr").val($("#card_no_arr").val()+i+",");
 			           		}
-			            }
+			            },
+						complete: function () {
+							$("#dynamic-table").find("tfoot").remove();
+						}
 					});
 			}
 			

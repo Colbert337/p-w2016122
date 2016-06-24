@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
@@ -44,8 +47,13 @@ public class DriverServiceImpl implements DriverService {
     
     @Autowired
     private OrderDealService orderDealService;
+    
+    @Autowired
+    private SysUserAccountService sysUserAccountService;
 
-
+	@Autowired
+	private SysCashBackService sysCashBackService;
+	
     @Autowired
     private GasCardMapper gasCardMapper;
 
@@ -62,6 +70,7 @@ public class DriverServiceImpl implements DriverService {
         if("insert".equals(operation)){
             SysUserAccount sysUserAccount = initWalletForDriver();
             record.setSysUserAccountId(sysUserAccount.getSysUserAccountId());
+            sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
             record.setCreatedDate(new Date());
             return sysDriverMapper.insertSelective(record);
         }else{
@@ -118,12 +127,12 @@ public class DriverServiceImpl implements DriverService {
     }
 
     /**
-	 * 给司机充钱
+	 * 给司机充值/充红
 	 * @param order
 	 * @return
      * @throws Exception 
 	 */
-	public String chargeCashToDriver(SysOrder order) throws Exception{
+	public String chargeCashToDriver(SysOrder order, String is_discharge) throws Exception{
 		if (order ==null){
 			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
 		}
@@ -136,21 +145,25 @@ public class DriverServiceImpl implements DriverService {
 		//给账户充钱
 		SysDriver driver = this.queryDriverByPK(debit_account);
 		String driver_account = driver.getSysUserAccountId();
-		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(driver_account);
 		BigDecimal cash = order.getCash();
-		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance()) ;
-		//在此增加金额，如果是负值则是充红,仍然用add。
-		BigDecimal balance_result = balance.add(cash);
-		sysUserAccount.setAccountBalance(balance_result.toPlainString());
-		sysUserAccount.setUpdatedDate(new Date());
-		//更新此account对象则保存到db中
-		sysUserAccountMapper.updateAccount(sysUserAccount);
-		
+		//如果是负值，但是is_discharge却不是充红，则返回错误
+		if(cash.compareTo(new BigDecimal("0")) < 0 ){
+			if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
+				   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE;
+			 }
+		}
+		String cash_success = sysUserAccountService.addCashToAccount(driver_account,cash);
 		//记录订单流水
-		String remark = "给"+ driver.getFullName()+"的账户，充值"+cash.toPlainString()+"。";
-		String deal_success = orderDealService.createOrderDeal(order, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE, remark,GlobalConstant.OrderProcessResult.SUCCESS);
+		String chong = "充值";
+		String orderDealType = GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE;
+		if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
+			chong ="充红";
+			orderDealType = GlobalConstant.OrderDealType.DISCHARGE_TO_DRIVER_CHARGE;
+		}
+		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
 		
-		return GlobalConstant.OrderProcessResult.SUCCESS;
+		return cash_success;
 	}
 
 	/**
@@ -158,9 +171,30 @@ public class DriverServiceImpl implements DriverService {
 	 * @param order
 	 * @return
 	 */
+	@Override
 	public String cashBackToDriver(SysOrder order) throws Exception{
-		//TODO
-		return GlobalConstant.OrderProcessResult.SUCCESS;
+		//1.判断是否首次返现，是则调用首次返现规则
+		String accountId = order.getDebitAccount();
+		SysDriver driver = sysDriverMapper.selectByPrimaryKey(accountId);
+		String accountUserName = driver.getFullName();
+        Integer is_first_charge = driver.getIsFirstCharge();
+        if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
+        	List<SysCashBack>  cashBackList = sysCashBackService.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
+        	String cashTo_success = sysCashBackService.cashToAccount(order, cashBackList, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);
+        	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success)){
+        		//如果出错，直接退出
+        		return cashTo_success;
+        	}
+        }
+		//2.根据当前充值类型，调用对应的返现规则
+        String charge_type = order.getChargeType();
+    	List<SysCashBack>  cashBackList_specific_type = sysCashBackService.queryCashBackByNumber(charge_type);
+    	String cashTo_success_specific_type = sysCashBackService.cashToAccount(order, cashBackList_specific_type, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CASHBACK);
+    	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success_specific_type)){
+    		//如果出错，直接退出
+    		return cashTo_success_specific_type;
+    	}
+		return cashTo_success_specific_type;
 	}
 	
     public Integer isExists(SysDriver obj) throws Exception {
