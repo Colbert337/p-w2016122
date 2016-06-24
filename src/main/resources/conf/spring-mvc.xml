@@ -93,18 +93,6 @@
 		</property>
 	</bean>
 
-	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-		<property name="cacheSeconds" value="0" />
-		<property name="messageConverters">
-			<list>
-				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
-			</list>
-		</property>
-		<property name="webBindingInitializer">
-			<bean class="com.sysongy.core.interceptors.DateWebBinding" />
-		</property>
-	</bean>
-
 	<context:property-placeholder location="classpath:conf/applicationContext-redis.properties" />
 
 	<!-- Jedis 连接池配置-->

@@ -2,6 +2,7 @@ package com.sysongy.poms.gastation.model;
 
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.usysparam.model.Usysparam;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
