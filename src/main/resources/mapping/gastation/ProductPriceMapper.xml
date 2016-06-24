@@ -29,6 +29,10 @@
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryGasUnitTypeByMcode">
     </association>
+    <association property="productPriceStatusInfo" column="product_price_status"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryProductStatusByMcode">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     id, product_price_id, product_price, product_unit, version, product_price_status, 

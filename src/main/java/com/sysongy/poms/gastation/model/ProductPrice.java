@@ -20,6 +20,8 @@ public class ProductPrice extends BaseModel {
 
     private Integer version;
 
+    private Usysparam productPriceStatusInfo;
+
     private String productPriceStatus;
 
     private Date createTime;
@@ -154,5 +156,13 @@ public class ProductPrice extends BaseModel {
 
     public void setProduct_info(GsGasPrice product_info) {
         this.product_info = product_info;
+    }
+
+    public Usysparam getProductPriceStatusInfo() {
+        return productPriceStatusInfo;
+    }
+
+    public void setProductPriceStatusInfo(Usysparam productPriceStatusInfo) {
+        this.productPriceStatusInfo = productPriceStatusInfo;
     }
 }
