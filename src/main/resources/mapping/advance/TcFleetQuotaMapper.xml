@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.tcms.advance.dao.TcFleetQuotaMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.tcms.advance.model.TcFleetQuota" >
+    <id column="tc_fleet_quota_id" property="tcFleetQuotaId" jdbcType="VARCHAR" />
+    <result column="tc_fleet_id" property="tcFleetId" jdbcType="VARCHAR" />
+    <result column="quota" property="quota" jdbcType="VARCHAR" />
+    <result column="is_allot" property="isAllot" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tc_fleet_quota_id, tc_fleet_id, quota, is_allot, created_date, updated_date, station_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tc_fleet_quota
+    where tc_fleet_quota_id = #{tcFleetQuotaId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tc_fleet_quota
+    where tc_fleet_quota_id = #{tcFleetQuotaId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.sysongy.tcms.advance.model.TcFleetQuota" >
+    insert into tc_fleet_quota
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tcFleetQuotaId != null" >
+        tc_fleet_quota_id,
+      </if>
+      <if test="tcFleetId != null" >
+        tc_fleet_id,
+      </if>
+      <if test="quota != null" >
+        quota,
+      </if>
+      <if test="isAllot != null" >
+        is_allot,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+      <if test="stationId != null" >
+        station_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tcFleetQuotaId != null" >
+        #{tcFleetQuotaId,jdbcType=VARCHAR},
+      </if>
+      <if test="tcFleetId != null" >
+        #{tcFleetId,jdbcType=VARCHAR},
+      </if>
+      <if test="quota != null" >
+        #{quota,jdbcType=VARCHAR},
+      </if>
+      <if test="isAllot != null" >
+        #{isAllot,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stationId != null" >
+        #{stationId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.tcms.advance.model.TcFleetQuota" >
+    update tc_fleet_quota
+    <set >
+      <if test="tcFleetId != null" >
+        tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR},
+      </if>
+      <if test="quota != null" >
+        quota = #{quota,jdbcType=VARCHAR},
+      </if>
+      <if test="isAllot != null" >
+        is_allot = #{isAllot,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stationId != null" >
+        station_id = #{stationId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tc_fleet_quota_id = #{tcFleetQuotaId,jdbcType=VARCHAR}
+  </update>
+</mapper>
