@@ -146,7 +146,7 @@ public class CRMGasPriceController {
         productPrice.setFinishTime(finishTime);
         productPrice.setProductPrice(lPrice);
         productPrice.setProduct_price_type("1");
-        productPrice.setProduct_id(gsGasPrice.getGs_gas_source_id());
+        productPrice.setProduct_id(gsGasPrice.getGsGasPriceId());
         productPrice.setProductPriceId(gsGasPrice.getGasName());
         productPrice.setProductUnit(gsGasPrice.getUnit());
         try
