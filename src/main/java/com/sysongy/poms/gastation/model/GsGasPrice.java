@@ -23,7 +23,7 @@ public class GsGasPrice  extends BaseModel {
 
     private String unit;
 
-    private String unitInfo;
+    private Usysparam unitInfo;
 
     private String remark;
 

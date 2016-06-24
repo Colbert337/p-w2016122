@@ -33,4 +33,7 @@ public interface UsysparamMapper {
 
     public List<Usysparam> queryProductPriceTypeByMcode(String mcode);
 
+    public Usysparam queryGasUnitTypeByMcode(String mcode);
+
+
 }

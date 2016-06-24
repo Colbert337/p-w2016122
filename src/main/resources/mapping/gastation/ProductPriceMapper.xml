@@ -27,7 +27,7 @@
     </association>
     <association property="productUnitInfo" column="product_unit"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
-                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryGasUnitTypeByMcode">
     </association>
   </resultMap>
   <sql id="Base_Column_List" >

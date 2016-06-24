@@ -30,6 +30,11 @@
                  javaType="com.sysongy.poms.liquid.model.SysGasSource"
                  select="com.sysongy.poms.liquid.dao.SysGasSourceMapper.selectByPrimaryKey">
     </association>
+
+    <association property="unitInfo" column="unit"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryGasUnitTypeByMcode">
+    </association>
   </resultMap>
 
   <sql id="Base_Column_List" >
