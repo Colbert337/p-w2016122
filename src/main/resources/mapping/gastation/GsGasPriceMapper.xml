@@ -44,8 +44,8 @@
     where 1=1
     <trim>
       <if test="gasName != null &amp;&amp; gasName != ''" >
-        and gas_name = #{gasName,jdbcType=VARCHAR}
-      </if>
+      and gas_name = #{gasName,jdbcType=VARCHAR} or gas_num = #{gasName,jdbcType=VARCHAR}
+    </if>
     </trim>
      and is_deleted=0
   </select>

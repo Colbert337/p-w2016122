@@ -12,14 +12,23 @@
     <result column="strat_time" property="stratTime" jdbcType="TIMESTAMP" />
     <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
     <result column="product_price_type" property="product_price_type" jdbcType="VARCHAR" />
+    <result column="product_id" property="product_id" jdbcType="VARCHAR" />
     <association property="product_price_type_info" column="product_price_type"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryProductPriceTypeByMcode">
     </association>
+    <association property="productPriceIdInfo" column="product_price_id"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
+    </association>
+    <association property="product_info" column="product_id"
+                 javaType="com.sysongy.poms.gastation.model.ProductPrice"
+                 select="com.sysongy.poms.gastation.dao.ProductPriceMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     id, product_price_id, product_price, product_unit, version, product_price_status, 
-    create_time, strat_time, finish_time
+    create_time, strat_time, finish_time, product_id
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >

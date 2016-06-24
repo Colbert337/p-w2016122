@@ -146,6 +146,8 @@ public class CRMGasPriceController {
         productPrice.setFinishTime(finishTime);
         productPrice.setProductPrice(lPrice);
         productPrice.setProduct_price_type("1");
+        productPrice.setProduct_id(gsGasPrice.getGs_gas_source_id());
+        productPrice.setProductPriceId(gsGasPrice.getGasName());
         try
         {
             productPriceService.saveProductPrice(productPrice, "insert");
