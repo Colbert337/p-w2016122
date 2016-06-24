@@ -78,7 +78,7 @@ public class CRMProductPriceController {
             return ajaxJson;
         }
 
-        if(!StringUtils.isNotEmpty(productPrice.getProductPriceId())){
+        if(!StringUtils.isNotEmpty(productPrice.getProduct_id())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("关联商品ID为空！！！");
             return ajaxJson;

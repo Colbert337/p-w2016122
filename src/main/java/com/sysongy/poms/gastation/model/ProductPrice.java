@@ -14,6 +14,8 @@ public class ProductPrice extends BaseModel {
 
     private double productPrice;
 
+    private Usysparam productUnitInfo;
+
     private String productUnit;
 
     private Integer version;
@@ -128,5 +130,29 @@ public class ProductPrice extends BaseModel {
 
     public void setProduct_id(String product_id) {
         this.product_id = product_id;
+    }
+
+    public Usysparam getProductPriceIdInfo() {
+        return productPriceIdInfo;
+    }
+
+    public void setProductPriceIdInfo(Usysparam productPriceIdInfo) {
+        this.productPriceIdInfo = productPriceIdInfo;
+    }
+
+    public Usysparam getProductUnitInfo() {
+        return productUnitInfo;
+    }
+
+    public void setProductUnitInfo(Usysparam productUnitInfo) {
+        this.productUnitInfo = productUnitInfo;
+    }
+
+    public GsGasPrice getProduct_info() {
+        return product_info;
+    }
+
+    public void setProduct_info(GsGasPrice product_info) {
+        this.product_info = product_info;
     }
 }

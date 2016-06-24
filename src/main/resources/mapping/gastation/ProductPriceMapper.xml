@@ -25,6 +25,10 @@
                  javaType="com.sysongy.poms.gastation.model.ProductPrice"
                  select="com.sysongy.poms.gastation.dao.ProductPriceMapper.selectByPrimaryKey">
     </association>
+    <association property="productUnitInfo" column="product_unit"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     id, product_price_id, product_price, product_unit, version, product_price_status, 
@@ -49,7 +53,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.ProductPrice" >
-    insert into product_price (id, product_price_id, product_price, 
+    insert into product_price (id, product_price_id, product_price,
       product_unit, version, product_price_status, 
       create_time, strat_time, finish_time
       )
@@ -177,6 +181,6 @@
   <update id="updatePriceStatus" parameterType="com.sysongy.poms.gastation.model.ProductPrice" >
     update product_price
     set product_price_status = #{productPriceStatus,jdbcType=VARCHAR}
-    where product_price_id = #{productPriceId,jdbcType=VARCHAR}
+    where product_id = #{product_id,jdbcType=VARCHAR}
   </update>
 </mapper>
