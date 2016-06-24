@@ -74,6 +74,7 @@ public class GasCardServiceImpl implements GasCardService{
 					card.setCard_no(tmp[i]);
 					card.setStorage_time(new Date());
 					card.setBatch_no(new SimpleDateFormat("YYYYMMddHHmmss").format(new Date()));
+					
 					recordlist.add(card);
 					//写日志表
 					GasCardLog gascardlog = new GasCardLog();

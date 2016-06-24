@@ -76,7 +76,7 @@
   <select id="queryVehicleMapList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     select tv.*,tf.fleet_name,gc.card_status from tc_vehicle tv left join tc_fleet_vehicle tfv on tv.tc_vehicle_id = tfv.tc_vehicle_id
     left join tc_fleet tf on tfv.tc_fleet_id = tf.tc_fleet_id left join gas_card gc on tv.card_no = gc.card_no
-    where tv.is_deleted = 1
+    where tv.is_deleted = 1 and tv.station_id = #{stationId}
     <if test="tcVehicleId != null &amp;&amp; tcVehicleId !=''">
       and tv.tc_vehicle_id = #{tcVehicleId}
     </if>
@@ -101,6 +101,11 @@
     <if test="userName != null &amp;&amp; userName !=''" >
       and tv.user_name = #{userName}
     </if>
+    order by tv.created_date desc
+  </select>
+  <select id="queryVehicleMapArray" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
+    select tv.* from tc_vehicle tv
+    where tv.is_deleted = 1 and tv.station_id = #{stationId}
     order by tv.created_date desc
   </select>
   <delete id="deleteVehicle" parameterType="java.lang.String" >

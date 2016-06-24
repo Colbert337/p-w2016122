@@ -39,14 +39,14 @@ public class LiquidServiceImpl implements LiquidService {
 	@Override
 	public String saveGasSource(SysGasSource record, String operation) throws Exception {
 		if("insert".equals(operation)){
-			SysGasSource gassource = gasSourceMapper.findgasourceid("g"+record.getprovince_id());
+			SysGasSource gassource = gasSourceMapper.findgasourceid("L"+record.getprovince_id());
 			String newid;
 			
 			if(gassource == null || StringUtils.isEmpty(gassource.getSys_gas_source_id())){
-				newid = "L"+record.getprovince_id() + "0001";
+				newid = "L"+record.getprovince_id() + "001";
 			}else{
-				Integer tmp = Integer.valueOf(gassource.getSys_gas_source_id().substring(4, 8)) + 1;
-				newid = "L"+record.getprovince_id() +StringUtils.leftPad(tmp.toString() , 4, "0");
+				Integer tmp = Integer.valueOf(gassource.getSys_gas_source_id().substring(3, 7)) + 1;
+				newid = "L"+record.getprovince_id() +StringUtils.leftPad(tmp.toString() , 3, "0");
 			}
 			
 			record.setSys_gas_source_id(newid);

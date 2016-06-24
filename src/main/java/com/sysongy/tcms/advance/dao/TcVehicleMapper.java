@@ -32,6 +32,13 @@ public interface TcVehicleMapper {
     List<Map<String,Object>> queryVehicleMapList(TcVehicle tcVehicle);
 
     /**
+     * 查询车辆信息列表
+     * @param tcVehicle
+     * @return
+     */
+    List<Map<String,Object>> queryVehicleMapArray(TcVehicle tcVehicle);
+
+    /**
      * 添加车辆
      * @param tcVehicle
      * @return

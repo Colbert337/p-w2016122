@@ -8,26 +8,41 @@
     <result column="tc_vehicle_id" property="tcVehicleId" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
   </resultMap>
+  <resultMap id="MapResultMap" type="java.util.Map" >
+    <id column="tc_fleet_vehicle_id" property="tcFleetVehicleId" jdbcType="VARCHAR" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="tc_fleet_id" property="tcFleetId" jdbcType="VARCHAR" />
+    <result column="tc_vehicle_id" property="tcVehicleId" jdbcType="VARCHAR" />
+    <result column="plates_number" property="platesNumber" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+  </resultMap>
   <sql id="Base_Column_List" >
     tc_fleet_vehicle_id, station_id, tc_fleet_id, tc_vehicle_id, created_date
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="queryFleetVehicleList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
     select 
     <include refid="Base_Column_List" />
     from tc_fleet_vehicle
     where tc_fleet_vehicle_id = #{tcFleetVehicleId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <select id="queryFleetVehicleMapList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
+    select tfv.*,tv.plates_number
+    from tc_fleet_vehicle tfv
+    left join tc_vehicle tv on tfv.tc_vehicle_id = tv.tc_vehicle_id
+    where tfv.station_id = #{stationId} and tfv.tc_fleet_id = #{tcFleetId}
+  </select>
+  <delete id="deleteFleetVehicle" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
     delete from tc_fleet_vehicle
-    where tc_fleet_vehicle_id = #{tcFleetVehicleId,jdbcType=VARCHAR}
+    where tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
-    insert into tc_fleet_vehicle (tc_fleet_vehicle_id, station_id, tc_fleet_id, 
-      tc_vehicle_id, created_date)
-    values (#{tcFleetVehicleId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{tcFleetId,jdbcType=VARCHAR}, 
-      #{tcVehicleId,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP})
+  <insert id="addFleetVehicleList" parameterType="java.util.List" >
+  insert into tc_fleet_vehicle (tc_fleet_vehicle_id, station_id, tc_fleet_id, tc_vehicle_id)
+  values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.tcFleetVehicleId},#{item.stationId},#{item.tcFleetId},#{item.tcVehicleId})
+    </foreach>
   </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
+  <insert id="addFleetVehicle" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
     insert into tc_fleet_vehicle
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tcFleetVehicleId != null" >

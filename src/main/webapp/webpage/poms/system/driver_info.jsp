@@ -31,8 +31,8 @@
 						</div>
 						
 						<div class="item">
-						    <label>认证姓名:</label>
-							<input type="text" name="userName" placeholder="输入认证姓名"  maxlength="20" value="${driver.userName}"/>
+						    <label>会员账号:</label>
+							<input type="text" name="userName" placeholder="输入会员账号" maxlength="20" value="${driver.userName}"/>
 						</div>
 
 						<div class="item">
@@ -47,10 +47,6 @@
 						</div>
 
 						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
-								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								新建
-							</button>
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
@@ -89,7 +85,8 @@
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="sys_transport_id_order">关联运输公司</th>
 									<th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">可用余额</th> 
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
-									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">实体卡状态</th> 
+									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">实体卡状态</th>
+									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">用户状态</th> 
 									<th>更多操作</th>
 								</tr>
@@ -126,6 +123,7 @@
 									<td>${list.account.accountBalance}</td> 
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
 									<td><s:Code2Name mcode="${list.cardInfo.card_status}" gcode="CARDSTATUS"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.account.account_status}" gcode="ACCOUNT_STATUS"></s:Code2Name></td>
 									<td>
 										<div class="btn-toolbar">

@@ -9,7 +9,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/gastation/gastation_deposit.js"></script>
+<script src="<%=basePath %>/dist/js/transportion/transportion_deposit.js"></script>
 
 
 			<div class="main-content">
@@ -20,32 +20,32 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								加注站保证金设置
+								运输公司保证金设置
 							</h1>
 						</div><!-- /.page-header -->
 
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								<form class="form-horizontal" id="gastationform">
+								<form class="form-horizontal" id="transportionform">
 								
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 									<div class="form-group">
-										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 加注站名称： </label>
+										<label class="col-sm-3 control-label no-padding-right"> 运输公司名称： </label>
 
 										<div class="col-sm-4">
-											<label class="control-label no-padding-right" id="gastationame">${param.gastationame}</label>
-											<input type="hidden" name="stationId" value="${param.stationid}"/>
-											<input type="hidden" name="accountId" value="${param.acconutid}"/>
+											<label class="control-label no-padding-right" id="stationame">${param.stationame}</label>
+											<input type="text" name="stationId" value="${param.stationid}"/>
+											<input type="text" name="accountId" value="${param.acconutid}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label for="email" class="col-sm-3 control-label no-padding-right" >加注站保证金： </label>
+										<label for="email" class="col-sm-3 control-label no-padding-right" >运输公司保证金： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" value="${param.gastationdeposit}" maxlength="8"/>
+											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" value="${param.stationdeposit}" maxlength="8"/>
 										</div>
 									</div>
 									
@@ -70,7 +70,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right">转账方式：</label>
+										<label class="col-sm-3 control-label no-padding-right">转账方式：</label>
 
 										<div class="col-sm-4">
 											<input type="text" name="depositType" placeholder="输入转账方式" class="form-control" maxlength="20"/>
@@ -78,7 +78,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="station_manager" class="col-sm-3 control-label no-padding-right">操作人员：</label>
+										<label class="col-sm-3 control-label no-padding-right">操作人员：</label>
 
 										<div class="col-sm-4">
 											<input type="text" id="operator" name="operator" class="form-control"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
