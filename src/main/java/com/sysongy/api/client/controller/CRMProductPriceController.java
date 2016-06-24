@@ -43,7 +43,7 @@ public class CRMProductPriceController {
         Map<String, Object> attributes = new HashMap<String, Object>();
         try
         {
-            if((productPrice == null) || !StringUtils.isNotEmpty(productPrice.getProductPriceId())){
+            if((productPrice == null) || !StringUtils.isNotEmpty(productPrice.getProduct_id())){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("录入数据为空或ID为空！！！");
                 return ajaxJson;
