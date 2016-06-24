@@ -80,6 +80,6 @@
     </select>
 
     <select id="queryGasUnitTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
-        select * from usysparam where gcode = 'GAS_UNIT' and scode = #{mcode,jdbcType=VARCHAR}
+        select * from usysparam where gcode = 'GAS_UNIT' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>
 </mapper>
