@@ -56,8 +56,8 @@
 					</div>
 					<%--</h4>--%>
 					<div class="table-header">
-						<label style="font-size: 18px;">账户余额：56325元</label>&nbsp;&nbsp;&nbsp;&nbsp;
-						<label style="font-size: 18px;">未分配资金：26535元</label>
+						<label style="font-size: 18px;">账户余额：${fleetQuotaMap.userAccount.accountBalance}元</label>&nbsp;&nbsp;&nbsp;&nbsp;
+						<label style="font-size: 18px;">未分配资金：${fleetQuotaMap.userAccount.accountBalance}元</label>
 					</div>
 					<%--<table id="simple-table" class="table table-striped table-bordered table-hover">--%>
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
@@ -72,7 +72,7 @@
 						</tr>
 						</thead>
 						<tbody>
-						<c:forEach items="${fleetQuotaList}" var="fleetQuota">
+						<c:forEach items="${fleetQuotaMap.fleetQuotaList}" var="fleetQuota">
 							<tr>
 								<td>${fleetQuota.fleetName}</td>
 								<td>${fleetQuota.realName}</td>
@@ -201,14 +201,14 @@
 									</tr>
 									</thead>
 									<tbody>
-										<c:forEach items="${fleetQuotaList}" var="fleetQuota">
+										<c:forEach items="${fleetQuotaMap.fleetQuotaList}" var="fleetQuota">
 											<tr>
 												<td>${fleetQuota.fleetName}</td>
 												<td>${fleetQuota.realName}</td>
 												<td>${fleetQuota.mobilePhone}</td>
 												<td>
 													<div class="switch switch-small ">
-														<input type="checkbox" checked />
+														<input type="checkbox" />
 													</div>
 												</td>
 												<td>
@@ -263,7 +263,7 @@
 									</tr>
 									</thead>
 									<tbody>
-										<c:forEach items="${fleetQuotaList}" var="fleetQuota">
+										<c:forEach items="${fleetQuotaMap.fleetQuotaList}" var="fleetQuota">
 											<tr>
 												<td>
 													<input type="text" id="1" name="" class="col-sm-12"/>

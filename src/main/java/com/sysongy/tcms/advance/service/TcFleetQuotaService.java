@@ -37,7 +37,7 @@ public interface TcFleetQuotaService {
      * @param tcFleetQuota
      * @return
      */
-    List<Map<String,Object>> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota);
+    Map<String,Object> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota);
 
     /**
      * 添加车队额度

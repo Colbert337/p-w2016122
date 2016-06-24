@@ -2,13 +2,19 @@ package com.sysongy.tcms.advance.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.tcms.advance.dao.TcFleetQuotaMapper;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
+import com.sysongy.util.BigDecimalArith;
 import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +32,8 @@ import java.util.Map;
 public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     @Autowired
     TcFleetQuotaMapper tcFleetQuotaMapper;
+    @Autowired
+    SysUserAccountService sysUserAccountService;
 
     @Override
     public TcFleetQuota queryFleetQuota(TcFleetQuota tcFleetQuota) {
@@ -51,10 +59,44 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     }
 
     @Override
-    public List<Map<String, Object>> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota) {
+    public Map<String, Object> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota) {
         if(tcFleetQuota != null){
+            Map<String, Object> fleetQuotaMap = new HashMap<>();
             List<Map<String, Object>> fleetQuotaList = tcFleetQuotaMapper.queryFleetQuotaMapList(tcFleetQuota);
-            return fleetQuotaList;
+            String stationId = tcFleetQuota.getStationId();
+            SysUserAccount userAccount = sysUserAccountService.queryUserAccountByStationId(stationId);
+            fleetQuotaMap.put("userAccount",userAccount);
+            fleetQuotaMap.put("fleetQuotaList",fleetQuotaList);
+
+            //已分配金额
+            BigDecimal yifenpei = BigDecimal.ZERO;
+            List<Map<String, Object>> allList = new ArrayList<>();
+            if(fleetQuotaList != null && fleetQuotaList.size() > 0){
+                List<Map<String, Object>> weifenpeiList = new ArrayList<>();
+                List<Map<String, Object>> yifenpeiList = new ArrayList<>();
+                for (Map<String, Object> fleetQuota:fleetQuotaList){
+                    if(fleetQuota.get("isAllot").equals("1")){
+                        BigDecimal quota = new BigDecimal(fleetQuota.get("quota").toString());
+                        yifenpei = BigDecimalArith.add(yifenpei,quota);
+                        yifenpeiList.add(fleetQuota);
+                    }else{
+                        weifenpeiList.add(fleetQuota);
+                    }
+                }
+
+                //未分配金额
+                BigDecimal weifenpeiVal = BigDecimal.ZERO;
+                weifenpeiVal = BigDecimalArith.sub(new BigDecimal(userAccount.getAccountBalance()),yifenpei);
+                if(weifenpeiList != null && weifenpeiList.size() > 0){
+                    for(Map<String, Object> weifenpei:weifenpeiList){
+                        weifenpei.put("weifenpeiVal",weifenpeiVal.toString());
+                    }
+                }
+                allList.addAll(weifenpeiList);
+                allList.addAll(yifenpeiList);
+            }
+            fleetQuotaMap.put("fleetQuotaList",allList);
+            return fleetQuotaMap;
         }else{
             return null;
         }

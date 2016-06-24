@@ -49,14 +49,15 @@ public class TcFleetQuotaController extends BaseContoller {
     public String queryFleetQuotaListPage(@ModelAttribute CurrUser currUser, TcFleetQuota fleetQuota, ModelMap map){
         String stationId = currUser.getStationId();
         List<Map<String, Object>> fleetQuotaList = new ArrayList<>();
+        Map<String, Object> fleetQuotaMap = new HashMap<>();
         fleetQuota.setStationId(stationId);
         try {
-            fleetQuotaList = tcFleetQuotaService.queryFleetQuotaMapList(fleetQuota);
+            fleetQuotaMap = tcFleetQuotaService.queryFleetQuotaMapList(fleetQuota);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        map.addAttribute("fleetQuotaList",fleetQuotaList);
+        map.addAttribute("fleetQuotaMap",fleetQuotaMap);
         map.addAttribute("fleetQuota",fleetQuota);
 
         return "webpage/tcms/advance/fleet_quota_list";
