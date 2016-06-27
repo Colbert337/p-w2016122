@@ -1,9 +1,8 @@
 package com.sysongy.poms.driver.dao;
 
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.gastation.model.Gastation;
-
 import java.util.List;
+
+import com.sysongy.poms.driver.model.SysDriver;
 
 public interface SysDriverMapper {
     int deleteByPrimaryKey(String sysDriverId);

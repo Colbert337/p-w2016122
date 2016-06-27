@@ -2,7 +2,10 @@ package com.sysongy.poms.driver.model;
 
 import java.util.Date;
 
-public class SysDriverReviewStr {
+import com.sysongy.poms.base.model.BaseModel;
+
+public class SysDriverReviewStr extends BaseModel{
+	
     private String sysDriverId;
 
     private String userName;
@@ -54,8 +57,28 @@ public class SysDriverReviewStr {
     private String stationId;
 
     private String memo;
+    
+    private String createdDate_before;
 
-    public String getSysDriverId() {
+    private String createdDate_after;
+
+    public String getCreatedDate_before() {
+		return createdDate_before;
+	}
+
+	public void setCreatedDate_before(String createdDate_before) {
+		this.createdDate_before = createdDate_before;
+	}
+
+	public String getCreatedDate_after() {
+		return createdDate_after;
+	}
+
+	public void setCreatedDate_after(String createdDate_after) {
+		this.createdDate_after = createdDate_after;
+	}
+
+	public String getSysDriverId() {
         return sysDriverId;
     }
 

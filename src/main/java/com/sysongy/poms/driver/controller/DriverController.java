@@ -22,6 +22,7 @@ import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.model.SysDriverReviewStr;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.util.Encoder;
@@ -83,6 +84,29 @@ public class DriverController extends BaseContoller{
         return "webpage/tcms/driver/driver_list";
     }
 
+    @RequestMapping("/driverListStr")
+    public String queryDriverReviewStr(@ModelAttribute CurrUser currUser, SysDriverReviewStr driver, ModelMap map){
+		String stationId = currUser.getStationId();
+		if(driver.getPageNum() == null){
+            driver.setPageNum(GlobalConstant.PAGE_NUM);
+            driver.setPageSize(GlobalConstant.PAGE_SIZE);
+        }
+		driver.setStationId(stationId);
+
+        //封装分页参数，用于查询分页内容
+        PageInfo<SysDriverReviewStr> driverPageInfo = new PageInfo<SysDriverReviewStr>();
+        try {
+            driverPageInfo = driverService.queryDriversLog(driver);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        map.addAttribute("driverList",driverPageInfo.getList());
+        map.addAttribute("pageInfo",driverPageInfo);
+		map.addAttribute("driver",driver);
+
+        return "webpage/poms/system/driver_review_log";
+    }
 
 	/**
 	 * 添加司机
@@ -114,7 +138,7 @@ public class DriverController extends BaseContoller{
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/driver/list/page";
+		return "webpage/poms/system/driver_review_log";
 	}
 
     @RequestMapping("/driverList")
@@ -226,7 +250,7 @@ public class DriverController extends BaseContoller{
 
 		try {
 				if(driverid != null && !"".equals(driverid)){
-					rowcount = driverService.review(driverid, type, memo);
+					rowcount = driverService.updateAndReview(driverid, type, memo);
 				}
 
 				ret = this.queryDriverList(new SysDriver(), map);

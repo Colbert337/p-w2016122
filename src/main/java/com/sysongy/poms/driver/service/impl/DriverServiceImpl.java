@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.sysongy.poms.permi.service.SysUserAccountService;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +20,9 @@ import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.dao.GasCardMapper;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.driver.dao.SysDriverMapper;
+import com.sysongy.poms.driver.dao.SysDriverReviewStrMapper;
 import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.model.SysDriverReviewStr;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
@@ -56,12 +60,23 @@ public class DriverServiceImpl implements DriverService {
 	
     @Autowired
     private GasCardMapper gasCardMapper;
+    
+    @Autowired
+    private SysDriverReviewStrMapper sysDriverReviewStrMapper;
 
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
         PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
         List<SysDriver> list = sysDriverMapper.queryForPage(record);
         PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
+        return pageInfo;
+    }
+    
+    @Override
+    public PageInfo<SysDriverReviewStr> queryDriversLog(SysDriverReviewStr record) throws Exception {
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        List<SysDriverReviewStr> list = sysDriverReviewStrMapper.queryForPage(record);
+        PageInfo<SysDriverReviewStr> pageInfo = new PageInfo<SysDriverReviewStr>(list);
         return pageInfo;
     }
 
@@ -207,15 +222,20 @@ public class DriverServiceImpl implements DriverService {
     }
 
 	@Override
-	public Integer review(String driverid, String type,String memo) throws Exception {
+	public Integer updateAndReview(String driverid, String type,String memo) throws Exception {
 		SysDriver record = new SysDriver();
 		record.setSysDriverId(driverid);
+		record = sysDriverMapper.selectByPrimaryKey(driverid);
+		
 		record.setCheckedStatus(type);
 		record.setCheckedDate(new Date());
 		record.setUpdatedDate(new Date());
 		record.setMemo(memo);
-		
-		return sysDriverMapper.updateByPrimaryKeySelective(record);
+		sysDriverMapper.updateByPrimaryKeySelective(record);
+			
+		SysDriverReviewStr log = new SysDriverReviewStr();
+		BeanUtils.copyProperties(log, record);
+		return sysDriverReviewStrMapper.insert(log);
 	}
 
     /**

@@ -7,7 +7,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/sysparam/driver_review.js"></script>
+<script src="<%=basePath %>/dist/js/sysparam/driver_review_log.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -62,7 +62,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">个人用户详细信息列表</div>
+					<div class="table-header">审核日志详细信息列表</div>
 
 					<!-- div.table-responsive -->
 

@@ -1,5 +1,8 @@
 package com.sysongy.poms.driver.dao;
 
+import java.util.List;
+
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.model.SysDriverReviewStr;
 
 public interface SysDriverReviewStrMapper {
@@ -14,4 +17,6 @@ public interface SysDriverReviewStrMapper {
     int updateByPrimaryKeySelective(SysDriverReviewStr record);
 
     int updateByPrimaryKey(SysDriverReviewStr record);
+    
+    List<SysDriverReviewStr> queryForPage(SysDriverReviewStr record);
 }
