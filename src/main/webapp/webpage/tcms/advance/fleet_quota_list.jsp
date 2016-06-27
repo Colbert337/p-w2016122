@@ -212,7 +212,7 @@
 													</div>
 												</td>
 												<td>
-													<input type="text" id="" name="" class="col-xs-8 col-sm-8"/>
+													<input type="text" id="" name="" value="${fleetQuota.quota}" class="col-xs-8 col-sm-8"/>
 												</td>
 												<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 											</tr>

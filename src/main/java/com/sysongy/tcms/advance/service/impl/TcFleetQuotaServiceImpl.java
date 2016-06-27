@@ -75,7 +75,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                 List<Map<String, Object>> weifenpeiList = new ArrayList<>();
                 List<Map<String, Object>> yifenpeiList = new ArrayList<>();
                 for (Map<String, Object> fleetQuota:fleetQuotaList){
-                    if(fleetQuota.get("isAllot").equals("1")){
+                    if(fleetQuota.get("isAllot") != null && fleetQuota.get("isAllot").equals("1")){
                         BigDecimal quota = new BigDecimal(fleetQuota.get("quota").toString());
                         yifenpei = BigDecimalArith.add(yifenpei,quota);
                         yifenpeiList.add(fleetQuota);
@@ -89,7 +89,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                 weifenpeiVal = BigDecimalArith.sub(new BigDecimal(userAccount.getAccountBalance()),yifenpei);
                 if(weifenpeiList != null && weifenpeiList.size() > 0){
                     for(Map<String, Object> weifenpei:weifenpeiList){
-                        weifenpei.put("weifenpeiVal",weifenpeiVal.toString());
+                        weifenpei.put("quota",weifenpeiVal.toString());
                     }
                 }
                 allList.addAll(weifenpeiList);
