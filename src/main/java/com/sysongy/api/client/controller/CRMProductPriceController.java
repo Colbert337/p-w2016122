@@ -45,13 +45,6 @@ public class CRMProductPriceController {
     @InitBinder
     public void InitBinder(HttpServletRequest request,
                            ServletRequestDataBinder binder) {
-        // 不要删除下行注释!!! 将来"yyyy-MM-dd"将配置到properties文件中
-        // SimpleDateFormat dateFormat = new
-        // SimpleDateFormat(getText("date.format", request.getLocale()));
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss");
-        dateFormat.setLenient(false);
-
         binder.registerCustomEditor(Date.class, new DateConvertEditor());
     }
 
