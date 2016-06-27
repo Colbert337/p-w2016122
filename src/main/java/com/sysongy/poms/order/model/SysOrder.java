@@ -1,5 +1,7 @@
 package com.sysongy.poms.order.model;
 
+import com.sysongy.poms.card.model.GasCard;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -31,6 +33,10 @@ public class SysOrder {
     private String is_discharge;
 
     private String discharge_order_id;
+
+    private String consume_card;
+
+    private GasCard consume_cardInfo;
     
     public String getIs_discharge() {
 		return is_discharge;
@@ -142,5 +148,21 @@ public class SysOrder {
 
     public void setOperatorType(String operatorType) {
         this.operatorType = operatorType == null ? null : operatorType.trim();
+    }
+
+    public String getConsume_card() {
+        return consume_card;
+    }
+
+    public void setConsume_card(String consume_card) {
+        this.consume_card = consume_card;
+    }
+
+    public GasCard getConsume_cardInfo() {
+        return consume_cardInfo;
+    }
+
+    public void setConsume_cardInfo(GasCard consume_cardInfo) {
+        this.consume_cardInfo = consume_cardInfo;
     }
 }

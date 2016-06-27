@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -146,6 +147,9 @@ public class CRMGasPriceController {
         productPrice.setFinishTime(finishTime);
         productPrice.setProductPrice(lPrice);
         productPrice.setProduct_price_type("1");
+        productPrice.setProduct_id(gsGasPrice.getGsGasPriceId());
+        productPrice.setProductPriceId(gsGasPrice.getGasName());
+        productPrice.setProductUnit(gsGasPrice.getUnit());
         try
         {
             productPriceService.saveProductPrice(productPrice, "insert");

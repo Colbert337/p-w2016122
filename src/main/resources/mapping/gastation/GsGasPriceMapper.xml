@@ -23,12 +23,17 @@
     </association>
     <association property="productPriceInfo" column="price_id"
                  javaType="com.sysongy.poms.gastation.model.ProductPrice"
-                 select="com.sysongy.poms.gastation.dao.GastationMapper.selectByPrimaryKey">
+                 select="com.sysongy.poms.gastation.dao.ProductPriceMapper.selectByPrimaryKey">
     </association>
 
     <association property="gs_gas_source_info" column="gs_gas_source_id"
                  javaType="com.sysongy.poms.liquid.model.SysGasSource"
                  select="com.sysongy.poms.liquid.dao.SysGasSourceMapper.selectByPrimaryKey">
+    </association>
+
+    <association property="unitInfo" column="unit"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryGasUnitTypeByMcode">
     </association>
   </resultMap>
 
@@ -44,8 +49,8 @@
     where 1=1
     <trim>
       <if test="gasName != null &amp;&amp; gasName != ''" >
-        and gas_name = #{gasName,jdbcType=VARCHAR}
-      </if>
+      and gas_name = #{gasName,jdbcType=VARCHAR} or gas_num = #{gasName,jdbcType=VARCHAR}
+    </if>
     </trim>
      and is_deleted=0
   </select>

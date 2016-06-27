@@ -1,6 +1,7 @@
 package com.sysongy.api.client.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.core.interceptors.DateConvertEditor;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.gastation.model.GsGasPrice;
@@ -11,12 +12,17 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,14 +42,21 @@ public class CRMProductPriceController {
     @Autowired
     GsGasPriceService gsGasPriceService;
 
-        @RequestMapping(value = {"/web/queryProductPriceInfo"})
+    @InitBinder
+    public void InitBinder(HttpServletRequest request,
+                           ServletRequestDataBinder binder) {
+        binder.registerCustomEditor(Date.class, new DateConvertEditor());
+    }
+
+
+    @RequestMapping(value = {"/web/queryProductPriceInfo"})
     @ResponseBody
     public AjaxJson queryProductPriceInfo(HttpServletRequest request, HttpServletResponse response, ProductPrice productPrice) {
         AjaxJson ajaxJson = new AjaxJson();
         Map<String, Object> attributes = new HashMap<String, Object>();
         try
         {
-            if((productPrice == null) || !StringUtils.isNotEmpty(productPrice.getProductPriceId())){
+            if((productPrice == null) || !StringUtils.isNotEmpty(productPrice.getProduct_id())){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("录入数据为空或ID为空！！！");
                 return ajaxJson;
@@ -78,13 +91,13 @@ public class CRMProductPriceController {
             return ajaxJson;
         }
 
-        if(!StringUtils.isNotEmpty(productPrice.getProductPriceId())){
+        if(!StringUtils.isNotEmpty(productPrice.getProduct_id())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("关联商品ID为空！！！");
             return ajaxJson;
         }
 
-        if(productPrice.getStratTime() != null){
+        if(productPrice.getStratTime() == null){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("生效时间为空！！！");
             return ajaxJson;
