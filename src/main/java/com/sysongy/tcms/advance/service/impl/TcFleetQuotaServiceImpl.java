@@ -70,12 +70,15 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
 
             //已分配金额
             BigDecimal yifenpei = BigDecimal.ZERO;
+            //未分配金额
+            BigDecimal weifenpeiVal = BigDecimal.ZERO;
+
             List<Map<String, Object>> allList = new ArrayList<>();
             if(fleetQuotaList != null && fleetQuotaList.size() > 0){
                 List<Map<String, Object>> weifenpeiList = new ArrayList<>();
                 List<Map<String, Object>> yifenpeiList = new ArrayList<>();
                 for (Map<String, Object> fleetQuota:fleetQuotaList){
-                    if(fleetQuota.get("isAllot") != null && fleetQuota.get("isAllot").equals("1")){
+                    if(fleetQuota.get("isAllot") != null && fleetQuota.get("isAllot").toString().equals("1")){
                         BigDecimal quota = new BigDecimal(fleetQuota.get("quota").toString());
                         yifenpei = BigDecimalArith.add(yifenpei,quota);
                         yifenpeiList.add(fleetQuota);
@@ -84,8 +87,6 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                     }
                 }
 
-                //未分配金额
-                BigDecimal weifenpeiVal = BigDecimal.ZERO;
                 weifenpeiVal = BigDecimalArith.sub(new BigDecimal(userAccount.getAccountBalance()),yifenpei);
                 if(weifenpeiList != null && weifenpeiList.size() > 0){
                     for(Map<String, Object> weifenpei:weifenpeiList){
@@ -96,6 +97,9 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                 allList.addAll(yifenpeiList);
             }
             fleetQuotaMap.put("fleetQuotaList",allList);
+            fleetQuotaMap.put("yifenpei",yifenpei);
+            fleetQuotaMap.put("weifenpeiVal",weifenpeiVal);
+
             return fleetQuotaMap;
         }else{
             return null;
@@ -109,6 +113,12 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
         }else{
             return 0;
         }
+    }
+
+
+    @Override
+    public int addFleetQuotaList(List<Map<String, Object>> tcFleetQuotaList) {
+        return tcFleetQuotaMapper.addFleetQuotaList(tcFleetQuotaList);
     }
 
     @Override

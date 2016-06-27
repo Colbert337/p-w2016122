@@ -59,9 +59,11 @@ function addPassword(){
 function allocation(obj,index){
     if ($(obj).attr('checked')) {
         $(obj).attr("checked",false);
+        $("#is_allot_"+index).val(0);
         $("#quota_"+index).attr("readonly","readonly");
     }else{
         $(obj).attr("checked","checked");
+        $("#is_allot_"+index).val(1);
         $("#quota_"+index).removeAttr("readonly");
     }
 
@@ -74,7 +76,22 @@ function saveFenpei(){
     var data = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
     data = decodeURIComponent(data,true);
     console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"+data);
+    $.ajax({
+        type: "POST",
+        data:{data:data},
+        async:false,
+        url: "../web/tcms/fleetQuota/save/fenpei",
+        success: function(data){
+            sucDialog("批量保存成功!")//保存成功弹窗
+            if(data.success()){
+                //暂时不需要跳转
+                window.location = '../web/tcms/fleetQuota/list/page' ;
+            }else{
+                alert("请求失败！");
+            }
 
+        }
+    });
 
 }
 

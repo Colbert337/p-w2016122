@@ -57,7 +57,7 @@
 					<%--</h4>--%>
 					<div class="table-header">
 						<label style="font-size: 18px;">账户余额：${fleetQuotaMap.userAccount.accountBalance}元</label>&nbsp;&nbsp;&nbsp;&nbsp;
-						<label style="font-size: 18px;">未分配资金：${fleetQuotaMap.userAccount.accountBalance}元</label>
+						<label style="font-size: 18px;">未分配资金：${fleetQuotaMap.weifenpeiVal}元</label>
 					</div>
 					<%--<table id="simple-table" class="table table-striped table-bordered table-hover">--%>
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
@@ -77,7 +77,17 @@
 								<td>${fleetQuota.fleetName}</td>
 								<td>${fleetQuota.realName}</td>
 								<td>${fleetQuota.mobilePhone}</td>
-								<td>${fleetQuota.isAllot}</td>
+								<td>
+									<c:choose>
+										<c:when test="${fleetQuota.isAllot == 0}">
+											未分配
+										</c:when>
+										<c:when test="${fleetQuota.isAllot == 1}">
+											已分配
+										</c:when>
+										<c:otherwise>未分配</c:otherwise>
+									</c:choose>
+								</td>
 								<td>${fleetQuota.quota}</td>
 								<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 							</tr>
@@ -198,7 +208,7 @@
 										<th width="15%">手机号</th>
 										<th width="20%">是否分配资金</th>
 										<th width="20%">可用资金(元)</th>
-										<th width="20%">上次分配时间</th>
+										<%--<th width="20%">上次分配时间</th>--%>
 									</tr>
 									</thead>
 									<tbody>
@@ -209,7 +219,8 @@
 												<td>${fleetQuota.mobilePhone}</td>
 												<td>
 													<input type="hidden" id="tc_fleet_id" name="tcFleetId" value="${fleetQuota.tcFleetId}"/>
-													<input id="allot_${suffix.index}" name="isAllot"
+													<input type="hidden" id="is_allot_${suffix.index}" name="isAllot" value="${fleetQuota.isAllot}"/>
+													<input id="allot_${suffix.index}"
 													   <c:if test="${fleetQuota.isAllot != null && fleetQuota.isAllot == 1}"> checked="checked" </c:if>
 													   type="checkbox" class="ace ace-switch ace-switch-5 zh" onclick="allocation(this,'${suffix.index}');">
 													<span class="lbl middle"></span>
@@ -218,7 +229,7 @@
 													<input type="text" id="quota_${suffix.index}" name="quota" value="${fleetQuota.quota}"
 													<c:if test="${fleetQuota.isAllot == null || fleetQuota.isAllot == 0}"> readonly="readonly" </c:if> class="col-xs-8 col-sm-8"/>
 												</td>
-												<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
+												<%--<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>--%>
 											</tr>
 										</c:forEach>
 									</tbody>

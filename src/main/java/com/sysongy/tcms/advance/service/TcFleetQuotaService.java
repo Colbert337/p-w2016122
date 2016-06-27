@@ -47,6 +47,13 @@ public interface TcFleetQuotaService {
     int addFleetQuota(TcFleetQuota tcFleetQuota);
 
     /**
+     * 批量添加车队额度
+     * @param tcFleetQuotaList
+     * @return
+     */
+    int addFleetQuotaList(List<Map<String, Object>> tcFleetQuotaList);
+
+    /**
      * 删除车队额度
      * @param tcFleetQuota
      * @return
