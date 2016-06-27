@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.driver.dao.SysDriverReviewStrMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.driver.model.SysDriverReviewStr" >
+    <id column="sys_driver_id" property="sysDriverId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="full_name" property="fullName" jdbcType="VARCHAR" />
+    <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
+    <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
+    <result column="user_status" property="userStatus" jdbcType="VARCHAR" />
+    <result column="is_ident" property="isIdent" jdbcType="INTEGER" />
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+    <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
+    <result column="fuel_type" property="fuelType" jdbcType="VARCHAR" />
+    <result column="driving_lice" property="drivingLice" jdbcType="VARCHAR" />
+    <result column="vehicle_lice" property="vehicleLice" jdbcType="VARCHAR" />
+    <result column="identity_card" property="identityCard" jdbcType="VARCHAR" />
+    <result column="card_id" property="cardId" jdbcType="VARCHAR" />
+    <result column="sys_user_account_id" property="sysUserAccountId" jdbcType="VARCHAR" />
+    <result column="sys_transport_id" property="sysTransportId" jdbcType="VARCHAR" />
+    <result column="regis_company" property="regisCompany" jdbcType="VARCHAR" />
+    <result column="regis_source" property="regisSource" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="is_first_charge" property="isFirstCharge" jdbcType="INTEGER" />
+    <result column="checked_status" property="checkedStatus" jdbcType="VARCHAR" />
+    <result column="checked_date" property="checkedDate" jdbcType="TIMESTAMP" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status, 
+    is_ident, plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card, 
+    card_id, sys_user_account_id, sys_transport_id, regis_company, regis_source, created_date, 
+    updated_date, is_first_charge, checked_status, checked_date, station_id, memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_driver_review_str
+    where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_driver_review_str
+    where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.driver.model.SysDriverReviewStr" >
+    insert into sys_driver_review_str (sys_driver_id, user_name, password, 
+      full_name, mobile_phone, pay_code, 
+      user_status, is_ident, plate_number, 
+      expiry_date, fuel_type, driving_lice, 
+      vehicle_lice, identity_card, card_id, 
+      sys_user_account_id, sys_transport_id, regis_company, 
+      regis_source, created_date, updated_date, 
+      is_first_charge, checked_status, checked_date, 
+      station_id, memo)
+    values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR}, 
+      #{userStatus,jdbcType=VARCHAR}, #{isIdent,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR}, 
+      #{expiryDate,jdbcType=TIMESTAMP}, #{fuelType,jdbcType=VARCHAR}, #{drivingLice,jdbcType=VARCHAR}, 
+      #{vehicleLice,jdbcType=VARCHAR}, #{identityCard,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR}, 
+      #{sysUserAccountId,jdbcType=VARCHAR}, #{sysTransportId,jdbcType=VARCHAR}, #{regisCompany,jdbcType=VARCHAR}, 
+      #{regisSource,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}, 
+      #{isFirstCharge,jdbcType=INTEGER}, #{checkedStatus,jdbcType=VARCHAR}, #{checkedDate,jdbcType=TIMESTAMP}, 
+      #{stationId,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.driver.model.SysDriverReviewStr" >
+    insert into sys_driver_review_str
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysDriverId != null" >
+        sys_driver_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="fullName != null" >
+        full_name,
+      </if>
+      <if test="mobilePhone != null" >
+        mobile_phone,
+      </if>
+      <if test="payCode != null" >
+        pay_code,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
+      </if>
+      <if test="isIdent != null" >
+        is_ident,
+      </if>
+      <if test="plateNumber != null" >
+        plate_number,
+      </if>
+      <if test="expiryDate != null" >
+        expiry_date,
+      </if>
+      <if test="fuelType != null" >
+        fuel_type,
+      </if>
+      <if test="drivingLice != null" >
+        driving_lice,
+      </if>
+      <if test="vehicleLice != null" >
+        vehicle_lice,
+      </if>
+      <if test="identityCard != null" >
+        identity_card,
+      </if>
+      <if test="cardId != null" >
+        card_id,
+      </if>
+      <if test="sysUserAccountId != null" >
+        sys_user_account_id,
+      </if>
+      <if test="sysTransportId != null" >
+        sys_transport_id,
+      </if>
+      <if test="regisCompany != null" >
+        regis_company,
+      </if>
+      <if test="regisSource != null" >
+        regis_source,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+      <if test="isFirstCharge != null" >
+        is_first_charge,
+      </if>
+      <if test="checkedStatus != null" >
+        checked_status,
+      </if>
+      <if test="checkedDate != null" >
+        checked_date,
+      </if>
+      <if test="stationId != null" >
+        station_id,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysDriverId != null" >
+        #{sysDriverId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="fullName != null" >
+        #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="payCode != null" >
+        #{payCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isIdent != null" >
+        #{isIdent,jdbcType=INTEGER},
+      </if>
+      <if test="plateNumber != null" >
+        #{plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryDate != null" >
+        #{expiryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fuelType != null" >
+        #{fuelType,jdbcType=VARCHAR},
+      </if>
+      <if test="drivingLice != null" >
+        #{drivingLice,jdbcType=VARCHAR},
+      </if>
+      <if test="vehicleLice != null" >
+        #{vehicleLice,jdbcType=VARCHAR},
+      </if>
+      <if test="identityCard != null" >
+        #{identityCard,jdbcType=VARCHAR},
+      </if>
+      <if test="cardId != null" >
+        #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUserAccountId != null" >
+        #{sysUserAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysTransportId != null" >
+        #{sysTransportId,jdbcType=VARCHAR},
+      </if>
+      <if test="regisCompany != null" >
+        #{regisCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="regisSource != null" >
+        #{regisSource,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isFirstCharge != null" >
+        #{isFirstCharge,jdbcType=INTEGER},
+      </if>
+      <if test="checkedStatus != null" >
+        #{checkedStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedDate != null" >
+        #{checkedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stationId != null" >
+        #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.driver.model.SysDriverReviewStr" >
+    update sys_driver_review_str
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="fullName != null" >
+        full_name = #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="payCode != null" >
+        pay_code = #{payCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        user_status = #{userStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isIdent != null" >
+        is_ident = #{isIdent,jdbcType=INTEGER},
+      </if>
+      <if test="plateNumber != null" >
+        plate_number = #{plateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryDate != null" >
+        expiry_date = #{expiryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fuelType != null" >
+        fuel_type = #{fuelType,jdbcType=VARCHAR},
+      </if>
+      <if test="drivingLice != null" >
+        driving_lice = #{drivingLice,jdbcType=VARCHAR},
+      </if>
+      <if test="vehicleLice != null" >
+        vehicle_lice = #{vehicleLice,jdbcType=VARCHAR},
+      </if>
+      <if test="identityCard != null" >
+        identity_card = #{identityCard,jdbcType=VARCHAR},
+      </if>
+      <if test="cardId != null" >
+        card_id = #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUserAccountId != null" >
+        sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysTransportId != null" >
+        sys_transport_id = #{sysTransportId,jdbcType=VARCHAR},
+      </if>
+      <if test="regisCompany != null" >
+        regis_company = #{regisCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="regisSource != null" >
+        regis_source = #{regisSource,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isFirstCharge != null" >
+        is_first_charge = #{isFirstCharge,jdbcType=INTEGER},
+      </if>
+      <if test="checkedStatus != null" >
+        checked_status = #{checkedStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedDate != null" >
+        checked_date = #{checkedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stationId != null" >
+        station_id = #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.driver.model.SysDriverReviewStr" >
+    update sys_driver_review_str
+    set user_name = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      full_name = #{fullName,jdbcType=VARCHAR},
+      mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      pay_code = #{payCode,jdbcType=VARCHAR},
+      user_status = #{userStatus,jdbcType=VARCHAR},
+      is_ident = #{isIdent,jdbcType=INTEGER},
+      plate_number = #{plateNumber,jdbcType=VARCHAR},
+      expiry_date = #{expiryDate,jdbcType=TIMESTAMP},
+      fuel_type = #{fuelType,jdbcType=VARCHAR},
+      driving_lice = #{drivingLice,jdbcType=VARCHAR},
+      vehicle_lice = #{vehicleLice,jdbcType=VARCHAR},
+      identity_card = #{identityCard,jdbcType=VARCHAR},
+      card_id = #{cardId,jdbcType=VARCHAR},
+      sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR},
+      sys_transport_id = #{sysTransportId,jdbcType=VARCHAR},
+      regis_company = #{regisCompany,jdbcType=VARCHAR},
+      regis_source = #{regisSource,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      is_first_charge = #{isFirstCharge,jdbcType=INTEGER},
+      checked_status = #{checkedStatus,jdbcType=VARCHAR},
+      checked_date = #{checkedDate,jdbcType=TIMESTAMP},
+      station_id = #{stationId,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR}
+    where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+  </update>
+</mapper>

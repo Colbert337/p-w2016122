@@ -23,7 +23,7 @@ public class GsGasPrice  extends BaseModel {
 
     private String unit;
 
-    private String unitInfo;
+    private Usysparam unitInfo;
 
     private String remark;
 
@@ -135,14 +135,6 @@ public class GsGasPrice  extends BaseModel {
         this.productPriceInfo = productPriceInfo;
     }
 
-    public String getUnitInfo() {
-        return unitInfo;
-    }
-
-    public void setUnitInfo(String unitInfo) {
-        this.unitInfo = unitInfo;
-    }
-
     public String getGs_gas_source_id() {
         return gs_gas_source_id;
     }
@@ -165,5 +157,13 @@ public class GsGasPrice  extends BaseModel {
 
     public void setIs_deleted(int is_deleted) {
         this.is_deleted = is_deleted;
+    }
+
+    public Usysparam getUnitInfo() {
+        return unitInfo;
+    }
+
+    public void setUnitInfo(Usysparam unitInfo) {
+        this.unitInfo = unitInfo;
     }
 }
