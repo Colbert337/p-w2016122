@@ -193,7 +193,7 @@ public class TransportionController extends BaseContoller{
 				deposit.setOrderby("optime desc");
 			}
 			
-			deposit.setStation_type(GlobalConstant.OrderOperatorType.TRANSPORTION);
+			deposit.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
 
 			bean.setRetCode(100);

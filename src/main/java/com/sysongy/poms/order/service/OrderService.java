@@ -30,8 +30,17 @@ public interface OrderService {
      * @return
      */
     String chargeToTransportion(SysOrder record) throws Exception;
+	
+    /**
+     * 给加注站充值
+     * 1.如果现金充值，不能超过预付款
+     * 2.充值
+     * 3.不返现
+     * @paramorder
+     * @return
+     */
+    String chargeToGasStation(SysOrder order) throws Exception;  	
     
-
     /**
      * 判断订单能否充红
      * @param order

@@ -13,9 +13,12 @@
     <result column="channel" property="channel" jdbcType="VARCHAR" />
     <result column="channel_number" property="channelNumber" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
-    <result column="operator_type" property="operatorType" jdbcType="VARCHAR" />
-    <result column="is_discharge" property="operator" jdbcType="VARCHAR" />
-    <result column="discharge_order_id" property="operatorType" jdbcType="VARCHAR" />
+    <result column="operator_target_type" property="operatorTargetType" jdbcType="VARCHAR" />
+    <result column="operator_source_type" property="operatorSourceType" jdbcType="VARCHAR" />
+    <result column="operator_source_id" property="operatorSourceId" jdbcType="VARCHAR" />
+    <result column="is_discharge" property="is_discharge" jdbcType="VARCHAR" />
+    <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
+    
     <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
     <association property="consume_cardInfo" column="consume_card"
                  javaType="com.sysongy.poms.card.model.GasCard"
@@ -24,7 +27,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
-    charge_type, channel, channel_number, operator, is_discharge, discharge_order_id,operator_type, consume_card
+    charge_type, channel, channel_number, operator, is_discharge, discharge_order_id,operator_source_type, operator_target_type,consume_card
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -40,13 +43,13 @@
     insert into sys_order (order_id, order_number, order_type, 
       order_date, cash, credit_account, 
       debit_account, charge_type, channel, 
-      channel_number, operator, is_discharge, discharge_order_id,operator_type, consume_card
+      channel_number, operator, is_discharge, discharge_order_id,operator_target_type,operator_source_id,operator_source_type, consume_card
       )
     values (#{orderId,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
       #{orderDate,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL}, #{creditAccount,jdbcType=VARCHAR}, 
       #{debitAccount,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, 
       #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{discharge_order_id,jdbcType=VARCHAR},
-      #{operatorType,jdbcType=VARCHAR},#{consume_card,jdbcType=VARCHAR}
+      #{operatorTargetType,jdbcType=VARCHAR},#{operatorSourceId,jdbcType=VARCHAR}, #{operatorSourceType,jdbcType=VARCHAR},#{consume_card,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysOrder" >
@@ -88,11 +91,14 @@
       <if test="is_discharge != null" >
         is_discharge,
       </if>
-      <if test="discharge_order_id != null" >
+      <if test="dischargeOrderId != null" >
         discharge_order_id,
       </if>
-      <if test="operatorType != null" >
-        operator_type,
+      <if test="operatorSourceId != null" >
+        operator_source_id,
+      </if>
+      <if test="operatorTargetType != null" >
+        operator_target_type,
       </if>
       <if test="consume_card != null" >
         consume_card,
@@ -135,11 +141,14 @@
       <if test="is_discharge != null" >
         #{is_discharge,jdbcType=VARCHAR},
       </if>
-      <if test="discharge_order_id != null" >
+      <if test="operatorSourceId != null" >
+         #{operator_source_id,jdbcType=VARCHAR},
+      </if>
+      <if test="dischargeOrderId != null" >
         #{discharge_order_id,jdbcType=VARCHAR},
       </if>
-      <if test="operatorType != null" >
-        #{operatorType,jdbcType=VARCHAR},
+      <if test="operatorTargetType != null" >
+        #{operator_target_type,jdbcType=VARCHAR},
       </if>
       <if test="consume_card != null" >
         #{consume_card,jdbcType=VARCHAR},
@@ -182,11 +191,14 @@
       <if test="is_discharge != null" >
         is_discharge = #{is_discharge,jdbcType=VARCHAR},
       </if>
-      <if test="discharge_order_id != null" >
-        discharge_order_id = #{discharge_order_id,jdbcType=VARCHAR},
+       <if test="operatorSourceId != null" >
+        operator_source_id = #{operatorSourceId,jdbcType=VARCHAR},
       </if>
-      <if test="operatorType != null" >
-        operator_type = #{operatorType,jdbcType=VARCHAR},
+      <if test="dischargeOrderId != null" >
+        discharge_order_id = #{dischargeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorTargetType != null" >
+        operator_target_type = #{operatorTargetType,jdbcType=VARCHAR},
       </if>
       <if test="consume_card != null" >
         consume_card = #{consume_card,jdbcType=VARCHAR},
@@ -208,7 +220,9 @@
       operator = #{operator,jdbcType=VARCHAR},
       is_discharge = #{is_discharge,jdbcType=VARCHAR},
       discharge_order_id = #{discharge_order_id,jdbcType=VARCHAR},
-      operator_type = #{operatorType,jdbcType=VARCHAR},
+      operator_source_id = #{operatorSourceId,jdbcType=VARCHAR},
+      operator_target_type = #{operatorTargetType,jdbcType=VARCHAR}
+      operator_source_type = #{operatorSourceType,jdbcType=VARCHAR}
       consume_card = #{consume_card,jdbcType=VARCHAR}
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>

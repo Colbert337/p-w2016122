@@ -18,6 +18,8 @@ public interface GastationMapper {
 
 	int updateByPrimaryKey(Gastation record);
 	
+	int updatePrepayBalance(Gastation record);
+	
 	List<Gastation> queryForPage(Gastation record);
 	
 	Gastation findGastationid(String province_id);
