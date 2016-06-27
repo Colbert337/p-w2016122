@@ -50,6 +50,15 @@ public interface OrderService {
 	 */
 	String transferTransportionToDriver(SysOrder order) throws Exception;
 	
+	/**
+	 * 个人给个人转账
+	 * 1.扣除个人账户credit_account
+	 * 2.增加个人账户debit_account
+	 * 3.不返现
+	 * @return
+	 */
+	public String transferDriverToDriver(SysOrder order) throws Exception;
+	
 		
     /**
      * 判断订单能否充红

@@ -23,6 +23,14 @@ public interface DriverService {
 	 * @return
 	 */
 	public String chargeCashToDriver(SysOrder order,String is_discharge) throws Exception;
+	
+	/**
+	 * 给司机转账的时候扣除司机账户
+	 * @param order
+	 * @return
+     * @throws Exception 
+	 */
+	public String deductCashToDriver(SysOrder order, String is_discharge) throws Exception;
 
 	/**
 	 * 给司机返现
