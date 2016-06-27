@@ -218,7 +218,7 @@ public class DriverController extends BaseContoller{
     }
 
     @RequestMapping("/review")
-	public String review(ModelMap map, @RequestParam String driverid,@RequestParam String type){
+	public String review(ModelMap map, @RequestParam String driverid,@RequestParam String type,@RequestParam String memo){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/driver_review";
@@ -226,7 +226,7 @@ public class DriverController extends BaseContoller{
 
 		try {
 				if(driverid != null && !"".equals(driverid)){
-					rowcount = driverService.review(driverid, type);
+					rowcount = driverService.review(driverid, type, memo);
 				}
 
 				ret = this.queryDriverList(new SysDriver(), map);

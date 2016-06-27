@@ -37,7 +37,7 @@ public interface DriverService {
 
 	public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception;
 
-	public Integer review(String driverid, String type) throws Exception;
+	public Integer review(String driverid, String type, String memo) throws Exception;
 	/**
 	 * 条件查询司机列表
 	 * @param record

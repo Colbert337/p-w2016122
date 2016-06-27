@@ -207,12 +207,13 @@ public class DriverServiceImpl implements DriverService {
     }
 
 	@Override
-	public Integer review(String driverid, String type) throws Exception {
+	public Integer review(String driverid, String type,String memo) throws Exception {
 		SysDriver record = new SysDriver();
 		record.setSysDriverId(driverid);
 		record.setCheckedStatus(type);
 		record.setCheckedDate(new Date());
 		record.setUpdatedDate(new Date());
+		record.setMemo(memo);
 		
 		return sysDriverMapper.updateByPrimaryKeySelective(record);
 	}

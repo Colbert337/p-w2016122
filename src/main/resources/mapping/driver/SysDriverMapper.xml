@@ -26,6 +26,7 @@
     <result column="checked_status" property="checkedStatus" jdbcType="VARCHAR" />
     <result column="checked_date" property="checkedDate" jdbcType="TIMESTAMP" />
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
     <association property="account" column="sys_user_account_id"
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -357,6 +358,9 @@
       </if>
       <if test="stationId != null" >
         station_id = #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
       </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
