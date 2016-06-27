@@ -29,10 +29,10 @@
 								<!-- PAGE CONTENT BEGINS -->
 								<form class="form-horizontal"  id="gastationform">
 									<!-- #section:elements.form -->
-									<input type="hidden" id="sys_gas_source_id"  name="sys_gas_source_id" value="${gasource.sys_gas_source_id}" />
+									<input type="hidden" id="sys_gas_source_id"  name="sys_gas_source_id" value="${gasource.sys_gas_source_id}"/>
 							
 									<div class="form-group">
-										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 液厂名称： </label>
+										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right">液厂名称：</label>
 
 										<div class="col-sm-4">
 											<input type="text" name="gas_factory_name" placeholder="输入液厂名称" class="form-control" maxlength="20" value="${gasource.gas_factory_name}"/>
@@ -40,7 +40,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" >工艺类型： </label>
+										<label class="col-sm-3 control-label no-padding-right">工艺类型：</label>
 
 										<div class="col-sm-4">
 											<input type="text" name="technology_type" placeholder="输入工艺类型" class="form-control" maxlength="20" value="${gasource.technology_type}"/>
@@ -48,7 +48,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">配送方式： </label>
+										<label class="col-sm-3 control-label no-padding-right">配送方式：</label>
 
 										<div class="col-sm-4">
 											<input type="text" id="delivery_method" name="delivery_method" placeholder="输入配送方式" class="form-control" maxlength="20" value="${gasource.delivery_method}"/>
@@ -109,16 +109,8 @@
 													</select>
 												</div>
 											</div>
-											<input type="text" id="detail" name="detail" class="form-control" placeholder="输入详细地址"/>
+											<input type="text" id="detail" name="detail" class="form-control" placeholder="输入详细地址" maxlength="30"/>
 											<input type="hidden" id="gas_factory_addr" name="gas_factory_addr" class="col-sm-12" value="${gasource.gas_factory_addr}"/>
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">备注： </label>
-
-										<div class="col-sm-4">
-											<textarea class="form-control" name="remark" rows="5" maxlength="100">${gasource.remark}</textarea>
 										</div>
 									</div>
 									
@@ -129,6 +121,14 @@
 											<select class="chosen-select" name="status" >
 												<s:option flag="true" gcode="LIQUID_STATUS" form="gasource" field="status" />
 											</select>										
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">备注： </label>
+
+										<div class="col-sm-4">
+											<textarea class="form-control" name="remark" rows="5" maxlength="100">${gasource.remark}</textarea>
 										</div>
 									</div>
 									

@@ -370,7 +370,7 @@
    <update id="updatePrepayBalance" parameterType="com.sysongy.poms.gastation.model.Gastation" >
     update sys_gas_station set prepay_balance = cast(#{prepay_balance,jdbcType=DECIMAL} as decimal(10, 2)),
            prepay_version = #{prepay_version,jdbcType=INTEGER} 
-      where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+      where sys_user_account_id = #{sys_user_account_id,jdbcType=VARCHAR}
       and prepay_version &lt; #{prepay_version,jdbcType=INTEGER}
   </update>
   

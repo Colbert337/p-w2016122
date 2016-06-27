@@ -222,7 +222,7 @@
 													</select>
 												</div>
 											</div>
-											<input type="text" id="detail" name="detail" class="form-control" placeholder="输入详细地址" value="${station.detail}"/>
+											<input type="text" id="detail" name="detail" class="form-control" placeholder="输入详细地址" value="${station.detail}" maxlength="30"/>
 											<input type="hidden"  id="address" name="address" class="col-sm-12"  value="${station.address}"/>
 										</div>
 									</div>

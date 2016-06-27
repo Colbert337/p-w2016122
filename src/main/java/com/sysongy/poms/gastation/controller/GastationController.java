@@ -4,11 +4,13 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
@@ -58,6 +60,43 @@ public class GastationController extends BaseContoller{
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("gascard",gastation);
 			map.addAttribute("current_module", "webpage/poms/gastation/gastation_list");
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/gastationList2")
+	public String queryAllGastationList2(ModelMap map, Gastation gastation) throws Exception{
+
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_list2";
+
+		try {
+			if(gastation.getPageNum() == null){
+				gastation.setPageNum(1);
+				gastation.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(gastation.getOrderby())){
+				gastation.setOrderby("created_time desc");
+			}
+
+			PageInfo<Gastation> pageinfo = service.queryGastation(gastation);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("gascard",gastation);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -129,7 +168,7 @@ public class GastationController extends BaseContoller{
 				ret = "webpage/poms/gastation/gastation_update";
 				gastationid = service.saveGastation(gastation,"update");
 				bean.setRetMsg("["+gastationid+"]保存成功");
-				ret = this.queryAllGastationList(map, new Gastation());
+				ret = this.queryAllGastationList(map, gastation);
 			}
 
 			bean.setRetCode(100);
@@ -223,7 +262,7 @@ public class GastationController extends BaseContoller{
 	}
 
 	@RequestMapping("/depositGastation")
-	public String depositGastation(ModelMap map, SysDepositLog deposit){
+	public String depositGastation(ModelMap map, SysDepositLog deposit, @ModelAttribute CurrUser currUser){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_list";
@@ -231,7 +270,7 @@ public class GastationController extends BaseContoller{
 
 		try {
 				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
-					rowcount = service.updatedepositGastation(deposit);
+					rowcount = service.updatedepositGastation(deposit, currUser.getUserId());
 				}
 
 				ret = this.queryAllGastationList(map, new Gastation());

@@ -63,4 +63,9 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		sysUserAccountMapper.updateAccount(sysUserAccount);
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
+
+	@Override
+	public SysUserAccount queryUserAccountByStationId(String sysTransportionId) {
+		return sysUserAccountMapper.queryUserAccountByStationId(sysTransportionId);
+	}
 }

@@ -24,7 +24,7 @@
 		                        message: '加注站保证金不能为空'
 		                    },
 		                    regexp: {
-		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
+		                        regexp: '^[-+]?[0-9]+(\.[0-9]+)?$',
 		                        message: '加注站保证必须是数字'
 		                    }
 		                }
@@ -61,7 +61,7 @@
 		 	       }
 			}
 			
-			if(confirm("是否确认将 ["+$("#gastationame").text()+"] 保证金额度修改为"+$("[name=deposit]").val()+"元")){
+			if(confirm("是否确认将 ["+$("#gastationame").text()+"] 预付款额度调整"+$("[name=deposit]").val()+"元")){
 				$("#gastationform").ajaxSubmit(options);
 			}
 			

@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.sysongy.poms.order.dao.SysPrepayMapper;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysPrepay;
 import com.sysongy.poms.order.service.OrderDealService;
+import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -48,11 +50,14 @@ public class GastationServiceImpl implements GastationService {
 	
 	@Autowired
 	private SysPrepayMapper sysPrepayMapper;
-	
+
 	@Autowired
 	private OrderDealService orderDealService;
 	
-	
+	@Autowired
+	private OrderService orderService;
+
+
 	@Override
 	public PageInfo<Gastation> queryGastation(Gastation record) throws Exception {
 		
@@ -100,6 +105,8 @@ public class GastationServiceImpl implements GastationService {
 			record.setTax_certif(show_path);
 			record.setLng_certif(show_path);
 			record.setDcp_certif(show_path);
+			record.setPrepay_balance(new BigDecimal(0));
+			record.setPrepay_version(1);
 			
 			gasStationMapper.insert(record);
 			//创建管理员
@@ -189,20 +196,30 @@ public class GastationServiceImpl implements GastationService {
 	}
 
 	@Override
-	public int updatedepositGastation(SysDepositLog log) throws Exception {
+	public int updatedepositGastation(SysDepositLog log, String operation) throws Exception {
 		SysUserAccount account = new SysUserAccount();
 		account.setSysUserAccountId(log.getAccountId());
 		account.setDeposit(log.getDeposit());
-		int retbnum = sysUserAccountMapper.updateByPrimaryKeySelective(account);
+//		int retbnum = sysUserAccountMapper.updateByPrimaryKeySelective(account);
+		
+		SysOrder order = new SysOrder();
+		order.setOrderId(UUIDGenerator.getUUID());
+		order.setDebitAccount(log.getStationId());
+		order.setCash(log.getDeposit());
+		order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
+		order.setOperator(operation);
+		order.setOrderDate(new Date());
+		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_GASTATION);
+		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.GASTATION);
+		orderService.chargeToGasStation(order);
 		
 		//写日志
 		log.setOptime(new Date());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.GASTATION);
-		sysDepositLogMapper.insert(log);
-		return retbnum;
+		return sysDepositLogMapper.insert(log);
 	}
-	
+
 	/**
 	 * 更新气站的预付款余额。
 	 * addCash如果是负值，则是消费的时候减少预付款， 如果是正值则是增加预付款
@@ -215,6 +232,7 @@ public class GastationServiceImpl implements GastationService {
 		}
 		Integer prepay_version =  obj.getPrepay_version();
 		obj.setPrepay_version(prepay_version.intValue()+1);
+		obj.setPrepay_balance(new_prepay_balance);
 	    int ret_int = gasStationMapper.updatePrepayBalance(obj);
 	    if(ret_int<1){
 	    	return  GlobalConstant.OrderProcessResult.ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR;
@@ -263,7 +281,7 @@ public class GastationServiceImpl implements GastationService {
 			   if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
 				   sysPrepay.setOperateType(GlobalConstant.SysPrepayOperate.DISCHARGE_TO_DRIVER_DEDUCT);
 			   }else{
-				   sysPrepay.setOperateType(GlobalConstant.SysPrepayOperate.CHARGE_TO_DRIVER_DEDUCT);   
+				   sysPrepay.setOperateType(GlobalConstant.SysPrepayOperate.CHARGE_TO_DRIVER_DEDUCT);
 			   }
 			   if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
 				  remark = "因司机现金充红，增加"+ gastation.getGas_station_name()+"的预付款"+addCash.toString()+"。";

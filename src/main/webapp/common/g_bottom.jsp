@@ -93,6 +93,7 @@
 
 		<!-- page specific plugin scripts -->
 		<script src="<%=basePath %>/assets/js/jquery.bootstrap-duallistbox.js"></script>
+		<script src="<%=basePath %>/assets/js/bootstrap-switch.min.js"></script>
 		<script src="<%=basePath %>/assets/js/jquery.raty.js"></script>
 		<script src="<%=basePath %>/assets/js/bootstrap-multiselect.js"></script>
 		<script src="<%=basePath %>/assets/js/select2.js"></script>

@@ -107,8 +107,18 @@
 													</select>
 												</div>
 											</div>
-											<input type="text" id="detail" name="detail" class="form-control" placeholder="输入详细地址" value="${gasource.detail}"/>
+											<input type="text" id="detail" name="detail" class="form-control" placeholder="输入详细地址" value="${gasource.detail}" maxlength="30"/>
 											<input type="hidden" id="gas_factory_addr" name="gas_factory_addr" class="col-sm-12"  value="${gasource.address}"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">液厂状态： </label>
+
+										<div class="col-sm-4">
+											<select class="chosen-select" name="status" >
+												<s:option flag="true" gcode="LIQUID_STATUS" form="gasource" field="status" />
+											</select>										
 										</div>
 									</div>
 									

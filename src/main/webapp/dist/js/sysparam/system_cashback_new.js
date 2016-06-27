@@ -69,7 +69,7 @@
 		                        message: '生效日期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '生效日期必须大于当前日期',
+		                    	message: '生效日期必须大于等于当前日期',
 		                    	callback: function (value, validator, $field) {
 		                    		return compareDate(value ,new Date().toLocaleDateString());
 	                            }

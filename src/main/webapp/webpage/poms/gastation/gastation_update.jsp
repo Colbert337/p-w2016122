@@ -202,23 +202,23 @@
 													</select>
 												</div>
 											</div>
-											<input type="text"  id="detail" name="detail" class="form-control" />
-											<input type="hidden"  id="address" name="address" />
+											<input type="text" id="detail" name="detail" class="form-control" maxlength="30"/>
+											<input type="hidden" id="address" name="address" />
 										</div>
 									</div>
 									
 									<div class="row">
-										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
+										<label class="col-sm-3 control-label no-padding-right">地址坐标：</label>
 										<div class="col-sm-4">
 											<div class="row">
 												<div class="col-sm-6">
 													<div class="form-group nospace">
-														<input type="text"  id="longitude" name="longitude" class="form-control" maxlength="20" value="${station.longitude}"/>
+														<input type="text" id="longitude" name="longitude" class="form-control" maxlength="20" value="${station.longitude}"/>
 													</div>
 												</div>
 												<div class="col-sm-6">
 													<div class="form-group nospace">
-														<input type="text"  id="latitude" name="latitude" class="form-control" maxlength="20" value="${station.latitude}"/>
+														<input type="text" id="latitude" name="latitude" class="form-control" maxlength="20" value="${station.latitude}"/>
 													</div>
 												</div>
 											</div>
@@ -226,7 +226,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number"> 工商注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number">工商注册号： </label>
 
 										<div class="col-sm-4">
 											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}" maxlength="15"/>
@@ -357,7 +357,7 @@
 													<ul class="ace-thumbnails file-space clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.dcp_certif}" data-rel="colorbox">
-																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.dcp_certif}" />
+																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.dcp_certif}"/>
 																<div class="text">
 																	<div class="inner">点击放大</div>
 																</div>
@@ -368,7 +368,7 @@
 												<div class="widget-body">
 													<div class="widget-main">
 														<label for="dcp_certif_select">
-															<input type="file" name="image" class="projectfile"  id="dcp_certif_select" />
+															<input type="file" name="image" class="projectfile" id="dcp_certif_select"/>
 														</label>
 														<input type="hidden" id="dcp_certif" name="dcp_certif"/> 
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#dcp_certif_select','#dcp_certif');">

@@ -73,14 +73,14 @@
 						<div class="item">
 						    <label>用户卡类型:</label>
 							<select class="chosen-select " name="card_type" >
-									<s:option flag="true" gcode="CARDTYPE" form="gascardlog" field="card_type" link="true" />
+									<s:option flag="true" gcode="CARDTYPE" form="gascardlog" field="card_type"/>
 							</select>
 						</div>
 
 						<div class="item">
 							<label>用户卡状态:</label>
 							<select class="chosen-select " name="card_status" >
-									 <s:option flag="true" gcode="CARDSTATUS" form="gascardlog" field="card_status" link="true" />
+									 <s:option flag="true" gcode="CARDSTATUS" form="gascardlog" field="card_status"/>
 							</select>
 						</div>
 						

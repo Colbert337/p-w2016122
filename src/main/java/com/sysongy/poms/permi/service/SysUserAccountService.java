@@ -25,4 +25,11 @@ public interface SysUserAccountService {
 	 * @return
 	 */
 	String addCashToAccount(String accountId, BigDecimal cash);
+
+	/**
+	 * 根据站点ID查询站点账户信息
+	 * @param sysTransportionId 运输公司ID
+	 * @return
+     */
+	SysUserAccount queryUserAccountByStationId(String sysTransportionId);
 }
