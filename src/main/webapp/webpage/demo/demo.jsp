@@ -107,3 +107,7 @@ function test4(){
 	</div>
 </div>
 <!--弹层-结束-->
+
+<%--汉化切换按钮--%>
+<input id="" checked="checked" type="checkbox" class="ace ace-switch ace-switch-5 zh">
+<span class="lbl middle"></span>
