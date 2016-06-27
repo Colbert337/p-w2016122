@@ -118,7 +118,7 @@ public class CRMProductPriceController {
 
             GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByPK(productPrice.getProduct_id());
             productPrice.setProductPriceStatus("1");
-            productPrice.setProductPriceId(gsGasPrice.getGasNum());
+            productPrice.setProductPriceId(gsGasPrice.getGasName());
             int renum = productPriceService.saveProductPrice(productPrice, "insert");
             if(renum < 1){
                 ajaxJson.setSuccess(false);
