@@ -2,7 +2,8 @@ package com.sysongy.poms.gastation.model;
 
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.usysparam.model.Usysparam;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.sysongy.util.CustomDateSerializer;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.Date;
 
@@ -27,7 +28,7 @@ public class ProductPrice extends BaseModel {
 
     private Date createTime;
 
-    private Date stratTime;
+    private Date startTime;
 
     private Date finishTime;
 
@@ -95,14 +96,16 @@ public class ProductPrice extends BaseModel {
         this.createTime = createTime;
     }
 
-    public Date getStratTime() {
-        return stratTime;
+    @JsonSerialize(using = CustomDateSerializer.class)
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setStratTime(Date stratTime) {
-        this.stratTime = stratTime;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
+    @JsonSerialize(using = CustomDateSerializer.class)
     public Date getFinishTime() {
         return finishTime;
     }

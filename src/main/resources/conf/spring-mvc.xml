@@ -19,7 +19,18 @@
 						<value>text/html;charset=UTF-8</value>   
 					</list>   
 				</property>   
-			</bean>    
+			</bean>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper">
+					<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+						<property name="dateFormat">
+							<bean class="java.text.SimpleDateFormat">
+								<constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
 		</mvc:message-converters>   
 	</mvc:annotation-driven>   
 	<!-- 自动扫描controller包下的所有类，如果@Controller注入为bean -->
@@ -37,6 +48,7 @@
 			 </props>
 		</property>
 	 </bean>
+
 
 	<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
 	<bean id="mappingJacksonHttpMessageConverter"
