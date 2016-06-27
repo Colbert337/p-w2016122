@@ -41,6 +41,37 @@
     from sys_driver_review_str
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </select>
+  
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+     *
+    from sys_driver_review_str
+    where 1=1
+    <trim>
+      <if test="sysDriverId != null &amp;&amp; sysDriverId != ''" >
+        and sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+      </if>
+      <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
+        and plate_number = #{plateNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="fullName!= null &amp;&amp; fullName != ''" >
+        and full_name = #{fullName,jdbcType=VARCHAR}
+      </if>
+      <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
+        and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+      </if>
+      <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
+        and checked_status = #{checkedStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">
+        and sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+      </if>
+      <if test="createdDate_after != null &amp;&amp; createdDate_after != ''">
+        and created_date between CONCAT(#{createdDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{createdDate_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_driver_review_str
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}

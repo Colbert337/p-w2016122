@@ -191,23 +191,23 @@
 													</select>
 												</div>
 											</div>
-											<input type="text"  id="detail" name="detail" class="form-control"  placeholder="输入详细地址"/>
-											<input type="hidden"  id="address" name="address" class="col-sm-12" />
+											<input type="text" id="detail" name="detail" class="form-control"  placeholder="输入详细地址" maxlength="30"/>
+											<input type="hidden" id="address" name="address" class="col-sm-12" />
 										</div>
 									</div>
 									
 									<div class="row">
-										<label class="col-sm-3 control-label no-padding-right" > 地址坐标： </label>
+										<label class="col-sm-3 control-label no-padding-right">地址坐标：</label>
 										<div class="col-sm-4">
 											<div class="row">
 												<div class="col-sm-6">
 													<div class="form-group nospace">
-														<input type="text"  id="longitude" name="longitude" class="form-control" placeholder="经度" maxlength="20" />
+														<input type="text" id="longitude" name="longitude" class="form-control" placeholder="经度" maxlength="20" />
 													</div>
 												</div>
 												<div class="col-sm-6">
 													<div class="form-group nospace">
-														<input type="text"  id="latitude" name="latitude" class="form-control" placeholder="纬度" maxlength="20" />
+														<input type="text" id="latitude" name="latitude" class="form-control" placeholder="纬度" maxlength="20" />
 													</div>
 												</div>
 											</div>

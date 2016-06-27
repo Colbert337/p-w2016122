@@ -1,7 +1,7 @@
 $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 	
 var listOptions ={   
-            url:'../web/driver/driverList',
+            url:'../web/driver/driverListStr',
             type:'post',                    
             dataType:'html',
             success:function(data){
@@ -46,7 +46,7 @@ var listOptions ={
 	}
 	
 	function init(){
-		loadPage('#main', '../web/driver/driverList');
+		loadPage('#main', '../web/driver/driverListStr');
 	}
 	
 	function showInnerModel(obj,type){

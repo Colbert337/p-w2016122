@@ -26,6 +26,7 @@
     <result column="checked_status" property="checkedStatus" jdbcType="VARCHAR" />
     <result column="checked_date" property="checkedDate" jdbcType="TIMESTAMP" />
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
     <association property="account" column="sys_user_account_id"
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -80,8 +81,8 @@
       <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
         and plate_number = #{plateNumber,jdbcType=VARCHAR}
       </if>
-      <if test="userName!= null &amp;&amp; userName != ''" >
-        and user_name = #{userName,jdbcType=VARCHAR}
+      <if test="fullName!= null &amp;&amp; fullName != ''" >
+        and full_name = #{fullName,jdbcType=VARCHAR}
       </if>
       <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
         and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
@@ -97,6 +98,9 @@
       </if>
       <if test="createdDate_after != null &amp;&amp; createdDate_after != ''">
         and created_date between CONCAT(#{createdDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{createdDate_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+      <if test="notin_checked_status != null" >
+        and checked_status &lt;&gt; #{notin_checked_status,jdbcType=VARCHAR}
       </if>
     </trim>
   </select>
@@ -354,6 +358,9 @@
       </if>
       <if test="stationId != null" >
         station_id = #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
       </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}

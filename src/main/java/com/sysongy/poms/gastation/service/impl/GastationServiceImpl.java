@@ -15,6 +15,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.gastation.dao.GastationMapper;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -40,6 +41,8 @@ public class GastationServiceImpl implements GastationService {
 	private UsysparamService usysparamService;
 	@Autowired
 	private SysDepositLogMapper sysDepositLogMapper;
+	@Autowired
+	private OrderService orderService;
 	
 	
 	@Override
@@ -182,6 +185,7 @@ public class GastationServiceImpl implements GastationService {
 		SysUserAccount account = new SysUserAccount();
 		account.setSysUserAccountId(log.getAccountId());
 		account.setDeposit(log.getDeposit());
+//		orderService.c
 		int retbnum = sysUserAccountMapper.updateByPrimaryKeySelective(account);
 		
 		//写日志
