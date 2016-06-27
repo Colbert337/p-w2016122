@@ -163,7 +163,7 @@ public class SysUserController extends BaseContoller{
 	 */
 	@RequestMapping("/list/userType")
 	@ResponseBody
-	public String queryStationList(@RequestParam int userType, ModelMap map){
+	public String queryStationList(@RequestParam int userType){
 		List<SysUser> sysUserList = new ArrayList<>();
 		sysUserList = sysUserService.queryUserListByUserType(userType);
 		String resultStr = JSON.toJSONString(sysUserList);
@@ -180,7 +180,7 @@ public class SysUserController extends BaseContoller{
      */
 	@RequestMapping("/info/isExist")
 	@ResponseBody
-	public JSONObject queryUserByNameAndType(@ModelAttribute CurrUser currUser, @RequestParam String admin_username,@RequestParam String userType, ModelMap map){
+	public JSONObject queryUserByNameAndType(@RequestParam String admin_username,@RequestParam String userType){
 		JSONObject json = new JSONObject();
 
 		SysUser sysUser = new SysUser();
