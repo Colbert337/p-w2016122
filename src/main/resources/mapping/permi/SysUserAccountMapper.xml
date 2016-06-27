@@ -11,6 +11,10 @@
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="account_status" property="account_status" jdbcType="VARCHAR" />
     <result column="deposit" property="deposit" jdbcType="DECIMAL" />
+    <association property="account_statusInfo" column="account_status"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryAccountStatus">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date, version, account_status, deposit

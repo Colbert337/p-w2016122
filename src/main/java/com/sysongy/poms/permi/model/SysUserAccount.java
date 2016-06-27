@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.usysparam.model.Usysparam;
 
 public class SysUserAccount extends BaseModel{
 	
@@ -22,7 +23,9 @@ public class SysUserAccount extends BaseModel{
     private int version;
     
     private String account_status;
-    
+
+    private Usysparam account_statusInfo;
+
     private BigDecimal deposit;
 
     public BigDecimal getDeposit() {
@@ -95,5 +98,13 @@ public class SysUserAccount extends BaseModel{
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public Usysparam getAccount_statusInfo() {
+        return account_statusInfo;
+    }
+
+    public void setAccount_statusInfo(Usysparam account_statusInfo) {
+        this.account_statusInfo = account_statusInfo;
     }
 }

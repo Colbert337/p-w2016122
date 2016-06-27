@@ -86,4 +86,8 @@
     <select id="queryProductStatusByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
         select * from usysparam where gcode = 'PRODUCT_PRICE_STATUS' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>
+
+    <select id="queryAccountStatus" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'ACCOUNT_STATUS' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
 </mapper>

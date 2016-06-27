@@ -36,4 +36,6 @@ public interface UsysparamMapper {
     public Usysparam queryGasUnitTypeByMcode(String mcode);
 
     public Usysparam queryProductStatusByMcode(String mcode);
+
+    public Usysparam queryAccountStatus(String mcode);
 }
