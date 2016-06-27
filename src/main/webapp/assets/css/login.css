@@ -47,12 +47,15 @@ body{background: #b5dfeb url(../images/login/login_bg.png) center center no-repe
 .login{ background-color: #777877; opacity: 0.85; filter:alpha(opacity=85); width: 550px; min-height: 270px; padding: 20px 0; margin: 0 auto; box-shadow: 0 1px 2px #ddd;}
 .login ul{background: url(../images/login/login_logo.png) center top no-repeat; padding: 90px 0 0 0; margin: 0;}
 .login ul li{list-style: none;}
-.form-control{width: 240px; height: 36px; outline:none; background: #fff url(../images/login/login_icon_bg.png) 0 0 no-repeat; padding-left: 52px; border: 1px solid #fff;}
+.form-control-pw,
+.form-control-user{position: relative;}
+.form-control-pw .icon,
+.form-control-user .icon{background: #fff url(../images/login/login_icon_bg.png) 0px -126px no-repeat; display: block; width: 49px; height: 37px; position: absolute; left: 1px; top: 1px; z-index: 2;}
+.form-control-user .icon {background-position: 0 -165px;}
+.form-control{width: 240px; height: 36px; outline:none; background: #fff; padding-left: 52px; border: 1px solid #fff;}
 .form-control:hover{border-color: #6f9b3c;}
 .form-control.error,
 .form-control.error:hover{border-color: #f00;}
-.user{background-position: 0 -165px;}
-.pw{background-position: 0 -126px;}
 .form-item:before,
 .form-item:after{display: table; content: "";}
 .form-item:after{clear: both;}
