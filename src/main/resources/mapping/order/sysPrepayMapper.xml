@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sysongy.poms.order.dao.sysPrepayMapper" >
-  <resultMap id="BaseResultMap" type="com.sysongy.poms.order.model.sysPrepay" >
+<mapper namespace="com.sysongy.poms.order.dao.SysPrepayMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.order.model.SysPrepay" >
     <id column="prepay_id" property="prepayId" jdbcType="VARCHAR" />
     <result column="payer_id" property="payerId" jdbcType="VARCHAR" />
     <result column="cash" property="cash" jdbcType="DECIMAL" />
@@ -22,7 +22,7 @@
     delete from sys_prepay
     where prepay_id = #{prepayId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.poms.order.model.sysPrepay" >
+  <insert id="insert" parameterType="com.sysongy.poms.order.model.SysPrepay" >
     insert into sys_prepay (prepay_id, payer_id, cash, 
       pay_date, operate_type, remark
       )
@@ -30,7 +30,7 @@
       #{payDate,jdbcType=TIMESTAMP}, #{operateType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.sysPrepay" >
+  <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysPrepay" >
     insert into sys_prepay
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="prepayId != null" >
@@ -73,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.order.model.sysPrepay" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.order.model.SysPrepay" >
     update sys_prepay
     <set >
       <if test="payerId != null" >
@@ -94,7 +94,7 @@
     </set>
     where prepay_id = #{prepayId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.order.model.sysPrepay" >
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.order.model.SysPrepay" >
     update sys_prepay
     set payer_id = #{payerId,jdbcType=VARCHAR},
       cash = #{cash,jdbcType=DECIMAL},
