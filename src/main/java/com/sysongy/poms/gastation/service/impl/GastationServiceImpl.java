@@ -15,7 +15,10 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.gastation.dao.GastationMapper;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
-import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.order.dao.SysPrepayMapper;
+import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysPrepay;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -41,10 +44,15 @@ public class GastationServiceImpl implements GastationService {
 	private UsysparamService usysparamService;
 	@Autowired
 	private SysDepositLogMapper sysDepositLogMapper;
+	
+	
 	@Autowired
-	private OrderService orderService;
-	
-	
+	private SysPrepayMapper sysPrepayMapper;
+
+	@Autowired
+	private OrderDealService orderDealService;
+
+
 	@Override
 	public PageInfo<Gastation> queryGastation(Gastation record) throws Exception {
 		
@@ -185,15 +193,86 @@ public class GastationServiceImpl implements GastationService {
 		SysUserAccount account = new SysUserAccount();
 		account.setSysUserAccountId(log.getAccountId());
 		account.setDeposit(log.getDeposit());
-//		orderService.c
 		int retbnum = sysUserAccountMapper.updateByPrimaryKeySelective(account);
 		
 		//写日志
 		log.setOptime(new Date());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
-		log.setStation_type(GlobalConstant.OrderOperatorType.GASTATION);
+		log.setStation_type(GlobalConstant.OrderOperatorTargetType.GASTATION);
 		sysDepositLogMapper.insert(log);
 		return retbnum;
 	}
 
+	/**
+	 * 更新气站的预付款余额。
+	 * addCash如果是负值，则是消费的时候减少预付款， 如果是正值则是增加预付款
+	 */
+	public synchronized String updatePrepayBalance(Gastation obj, BigDecimal addCash) throws Exception{
+		BigDecimal prepay_balance = obj.getPrepay_balance();
+		BigDecimal new_prepay_balance = prepay_balance.add(addCash);
+		if (new_prepay_balance.compareTo(new BigDecimal(0)) <0 ){
+			return  GlobalConstant.OrderProcessResult.ORDER_ERROR_PREPAY_IS_NOT_ENOUGH;
+		}
+		Integer prepay_version =  obj.getPrepay_version();
+		obj.setPrepay_version(prepay_version.intValue()+1);
+	    int ret_int = gasStationMapper.updatePrepayBalance(obj);
+	    if(ret_int<1){
+	    	return  GlobalConstant.OrderProcessResult.ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR;
+	    }
+		return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
+
+	/**
+	 * 向司机充值的时候，更新加注站预付款余额：分为充值和充红
+	 * @return
+	 */
+	public String chargeToDriverUpdateGastationPrepay(SysOrder order, String is_discharge) throws Exception{
+		   String operator_source_type = order.getOperatorSourceType();
+		   if(GlobalConstant.OrderOperatorSourceType.GASTATION.equalsIgnoreCase(operator_source_type)){
+			   String gasId = order.getOperatorSourceId();
+			   if(gasId==null || gasId.equalsIgnoreCase("")){
+				   return GlobalConstant.OrderProcessResult.CHARGE_TO_DRIVER_BY_CASH_OPERATOR_SOURCE_TYPE_IS_NULL;
+			   }
+			   Gastation gastation = queryGastationByPK(order.getOperatorSourceId());
+			   BigDecimal prepay = gastation.getPrepay_balance();
+			   BigDecimal cash = order.getCash();
+			   if(cash.compareTo(prepay) > 0){
+				   return GlobalConstant.OrderProcessResult.ORDER_ERROR_PREPAY_IS_NOT_ENOUGH;
+			   }
+			   //减少预付款，并增加预付款操作记录。将订单中的金额cash修改为负数，因为是要减少预付款---如果是充红，则刚好进行了相反操作，变成正值。正确
+		 	   BigDecimal addCash = cash.multiply(new BigDecimal(-1));
+		 	   String updateBalance_success =  updatePrepayBalance(gastation, addCash);
+		 	   //增加订单操作流程：
+			 	String orderDealType = GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY;
+				String remark = "因司机充值，修改"+ gastation.getGas_station_name()+"的预付款，减少金额"+cash.toString()+"。";
+			    if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
+			 		orderDealType = GlobalConstant.OrderDealType.DISCHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY;
+			 		remark = "因司机充红，修改"+ gastation.getGas_station_name()+"的预付款，增加金额"+addCash.toString()+"。";
+			 	}
+			   orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,updateBalance_success);
+		 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(updateBalance_success)){
+		 		   //如果出错直接返回错误代码退出
+		 		   return updateBalance_success;
+		 	   }
+		 	   //增加预付款操作历史流程：
+		 	   SysPrepay sysPrepay = new SysPrepay();
+			   sysPrepay.setPrepayId(UUIDGenerator.getUUID());
+			   sysPrepay.setPayerId(order.getDebitAccount());
+			   sysPrepay.setCash(addCash);
+			   sysPrepay.setPayDate(new Date());
+			   if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
+				   sysPrepay.setOperateType(GlobalConstant.SysPrepayOperate.DISCHARGE_TO_DRIVER_DEDUCT);
+			   }else{
+				   sysPrepay.setOperateType(GlobalConstant.SysPrepayOperate.CHARGE_TO_DRIVER_DEDUCT);
+			   }
+			   if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
+				  remark = "因司机现金充红，增加"+ gastation.getGas_station_name()+"的预付款"+addCash.toString()+"。";
+			   }else{
+			      remark = "因司机现金充值，抵扣"+ gastation.getGas_station_name()+"的预付款"+cash.toString()+"。";
+			   }
+			   sysPrepay.setRemark(remark);
+			   sysPrepayMapper.insert(sysPrepay);
+		   }
+		   return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
 }

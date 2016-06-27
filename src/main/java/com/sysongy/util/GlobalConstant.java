@@ -154,9 +154,18 @@ public class GlobalConstant {
 	}
 
 	/*
-	 * 	1司机 2加气站 3 运输公司
+	 * 	订单操作对象类型： 1司机 2加气站 3 运输公司
 	 */
-	public interface OrderOperatorType{
+	public interface OrderOperatorTargetType{
+		public static final String DRIVER ="1";
+		public static final String GASTATION="2";
+		public static final String TRANSPORTION="3";
+	}
+	
+	/*
+	 * 	订单操作发起者类型： 1司机 2加气站 3 运输公司
+	 */
+	public interface OrderOperatorSourceType{
 		public static final String DRIVER ="1";
 		public static final String GASTATION="2";
 		public static final String TRANSPORTION="3";
@@ -181,8 +190,24 @@ public class GlobalConstant {
 		public static final String DISCHARGE_TO_DRIVER_CHARGE ="134";
 		public static final String DISCHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="135";
 		public static final String DISCHARGE_TO_DRIVER_CASHBACK ="136";
+		public static final String CHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY ="137";
+		public static final String DISCHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY ="138";
+		
+		public static final String CHARGE_TO_TRANSPORTION_CHARGE ="111";
+		public static final String CHARGE_TO_GASTATION_CHARGE ="121";
+		
 	}
 
+	/*
+	 * 加注站预付款操作历史表中的操作类型
+	 */
+	public interface SysPrepayOperate{
+		public static final String CHARGE ="1";
+		public static final String CHARGE_TO_DRIVER_DEDUCT ="2";
+		public static final String DISCHARGE_TO_DRIVER_DEDUCT ="3";
+		
+	}
+	
 	/*
 	 * 返现规则是否启用 
 	 */
@@ -193,15 +218,16 @@ public class GlobalConstant {
 	 * 返现类型的编号
 	 */
 	public interface CashBackNumber{
-		public static final String CASHBACK_GAS_STATION_CHARGE ="0";
-		public static final String CASHBACK_REGISTER ="1";
-		public static final String CASHBACK_FIRST_CHARGE ="2";
-		public static final String CASHBACK_INVITE ="3";
-		public static final String CASHBACK_WEICHAT_CHARGE ="4";
-		public static final String CASHBACK_ALIPAY_CHARGE ="5";
-		public static final String CASHBACK_UNIONPAY_CHARGE ="6";
-		public static final String CASHBACK_CARD_CHARGE ="7";
-		public static final String CASHBACK_POS_CHARGE ="8";
+		public static final String CASHBACK_TRANSFER_CHARGE ="101";
+		public static final String CASHBACK_CASH_CHARGE ="102";
+		public static final String CASHBACK_REGISTER ="201";
+		public static final String CASHBACK_FIRST_CHARGE ="202";
+		public static final String CASHBACK_INVITE ="203";
+		public static final String CASHBACK_WEICHAT_CHARGE ="103";
+		public static final String CASHBACK_ALIPAY_CHARGE ="104";
+		public static final String CASHBACK_UNIONPAY_CHARGE ="105";
+		public static final String CASHBACK_CARD_CHARGE ="106";
+		public static final String CASHBACK_POS_CHARGE ="107";
 	}
 	
 	/*
@@ -209,7 +235,8 @@ public class GlobalConstant {
 	 * 
 	 */
 	public interface OrderChargeType{
-		public static final String CHARGETYPE_GAS_STATION = GlobalConstant.CashBackNumber.CASHBACK_GAS_STATION_CHARGE;
+		public static final String CHARGETYPE_TRANSFER_CHARGE = GlobalConstant.CashBackNumber.CASHBACK_TRANSFER_CHARGE;
+		public static final String CHARGETYPE_CASH_CHARGE = GlobalConstant.CashBackNumber.CASHBACK_CASH_CHARGE;
 		public static final String CHARGETYPE_WEICHAT_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_WEICHAT_CHARGE;
 		public static final String CHARGETYPE_ALIPAY_CHARGE = GlobalConstant.CashBackNumber.CASHBACK_ALIPAY_CHARGE;
 		public static final String CHARGETYPE_UNIONPAY_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_UNIONPAY_CHARGE;
@@ -239,12 +266,17 @@ public class GlobalConstant {
 		public static final String OPERATOR_TYPE_IS_NOT_DRIVER="OPERATOR_TYPE_IS_NOT_DRIVER";
 		public static final String OPERATOR_TYPE_IS_NOT_GASTATION="OPERATOR_TYPE_IS_NOT_GASTATION";
 		public static final String OPERATOR_TYPE_IS_NOT_TRANSPORTION="OPERATOR_TYPE_IS_NOT_TRANSPORTION";
+		
+		public static final String CHARGE_TO_DRIVER_BY_CASH_OPERATOR_SOURCE_TYPE_IS_NULL="CHARGE_TO_DRIVER_BY_CASH_OPERATOR_SOURCE_TYPE_IS_NULL";
 
 		public static final String DISCHARGE_ORDER_ID_IS_NULL="DISCHARGE_ORDER_ID_IS_NULL";
 		public static final String DISCHARGE_ORDER_ORDERDEAL_IS_EMPTY="DISCHARGE_ORDER_ORDERDEAL_IS_EMPTY";
 		public static final String DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE="DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE";
 		public static final String DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS="DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS";
 		public static final String DISCHARGE_ORDER_CASHBACK_IS_NULL = "DISCHARGE_ORDER_CASHBACK_IS_NULL";
+		
+		public static final String ORDER_ERROR_PREPAY_IS_NOT_ENOUGH = "PREPAY_IS_NOT_ENOUGH";
+		public static final String ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR = "ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR";
 		
 		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";
 

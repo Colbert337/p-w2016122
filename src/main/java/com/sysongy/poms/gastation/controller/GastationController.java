@@ -85,7 +85,7 @@ public class GastationController extends BaseContoller{
 			if(StringUtils.isEmpty(deposit.getOrderby())){
 				deposit.setOrderby("optime desc");
 			}
-			deposit.setStation_type(GlobalConstant.OrderOperatorType.GASTATION);
+			deposit.setStation_type(GlobalConstant.OrderOperatorTargetType.GASTATION);
 			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
 
 			bean.setRetCode(100);

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.order.dao.SysPrepayMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.order.model.SysPrepay" >
+    <id column="prepay_id" property="prepayId" jdbcType="VARCHAR" />
+    <result column="payer_id" property="payerId" jdbcType="VARCHAR" />
+    <result column="cash" property="cash" jdbcType="DECIMAL" />
+    <result column="pay_date" property="payDate" jdbcType="TIMESTAMP" />
+    <result column="operate_type" property="operateType" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    prepay_id, payer_id, cash, pay_date, operate_type, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_prepay
+    where prepay_id = #{prepayId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_prepay
+    where prepay_id = #{prepayId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.order.model.SysPrepay" >
+    insert into sys_prepay (prepay_id, payer_id, cash, 
+      pay_date, operate_type, remark
+      )
+    values (#{prepayId,jdbcType=VARCHAR}, #{payerId,jdbcType=VARCHAR}, #{cash,jdbcType=DECIMAL}, 
+      #{payDate,jdbcType=TIMESTAMP}, #{operateType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysPrepay" >
+    insert into sys_prepay
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prepayId != null" >
+        prepay_id,
+      </if>
+      <if test="payerId != null" >
+        payer_id,
+      </if>
+      <if test="cash != null" >
+        cash,
+      </if>
+      <if test="payDate != null" >
+        pay_date,
+      </if>
+      <if test="operateType != null" >
+        operate_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prepayId != null" >
+        #{prepayId,jdbcType=VARCHAR},
+      </if>
+      <if test="payerId != null" >
+        #{payerId,jdbcType=VARCHAR},
+      </if>
+      <if test="cash != null" >
+        #{cash,jdbcType=DECIMAL},
+      </if>
+      <if test="payDate != null" >
+        #{payDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateType != null" >
+        #{operateType,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.order.model.SysPrepay" >
+    update sys_prepay
+    <set >
+      <if test="payerId != null" >
+        payer_id = #{payerId,jdbcType=VARCHAR},
+      </if>
+      <if test="cash != null" >
+        cash = #{cash,jdbcType=DECIMAL},
+      </if>
+      <if test="payDate != null" >
+        pay_date = #{payDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateType != null" >
+        operate_type = #{operateType,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where prepay_id = #{prepayId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.order.model.SysPrepay" >
+    update sys_prepay
+    set payer_id = #{payerId,jdbcType=VARCHAR},
+      cash = #{cash,jdbcType=DECIMAL},
+      pay_date = #{payDate,jdbcType=TIMESTAMP},
+      operate_type = #{operateType,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where prepay_id = #{prepayId,jdbcType=VARCHAR}
+  </update>
+</mapper>
