@@ -140,6 +140,7 @@ public class CRMProductPriceController {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_PRODUCT_PRICE_ERROR + e.getMessage());
             logger.error("addproductPrice error： " + e);
+            e.printStackTrace();
         }
         return ajaxJson;
     }
