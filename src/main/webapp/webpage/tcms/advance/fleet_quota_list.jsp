@@ -208,7 +208,6 @@
 										<th width="15%">手机号</th>
 										<th width="20%">是否分配资金</th>
 										<th width="20%">可用资金(元)</th>
-										<%--<th width="20%">上次分配时间</th>--%>
 									</tr>
 									</thead>
 									<tbody>
@@ -229,7 +228,6 @@
 													<input type="text" id="quota_${suffix.index}" name="quota" value="${fleetQuota.quota}"
 													<c:if test="${fleetQuota.isAllot == null || fleetQuota.isAllot == 0}"> readonly="readonly" </c:if> class="col-xs-8 col-sm-8"/>
 												</td>
-												<%--<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>--%>
 											</tr>
 										</c:forEach>
 									</tbody>
