@@ -115,19 +115,25 @@
 
 									<td>
 										<div class="text-center">
-											<a class="green" href="javascript:void(0);" title="审核通过" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="review(this,'2');"></i>
-											</a>
-											<a class="green" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-ban bigger-130" onclick="review(this,'3');"></i>
-											</a>
+												<a class="blue" href="javascript:void(0);" title="查看备注" data-rel="tooltip">
+													<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel();"></i>
+												</a>
+											<c:if test="${list.checkedStatus == 1}">
+											
+												<a class="green" href="javascript:void(0);" title="审核通过" data-rel="tooltip"> 
+													<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="review(this,'2');"></i>
+												</a>
+												<a class="green" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip"> 
+													<i class="ace-icon fa fa-ban bigger-130" onclick="review(this,'3');"></i>
+												</a>
+											</c:if>
 										</div>
 									</td>
 								</tr>
 								</c:forEach>
 							</tbody>
 						</table>
-					</div>
+					</div> 
 			
 
 			<label>共 ${pageInfo.total} 条</label>
@@ -151,12 +157,9 @@
 			</nav>
 
 			<jsp:include page="/common/message.jsp"></jsp:include>
-
-
-			<!-- PAGE CONTENT ENDS -->
+			<jsp:include page="inner_model.jsp"></jsp:include>
+0
 		</div>
-		<!-- /.col -->
 	</div>
-	<!-- /.row -->
 	</form>
 </div>

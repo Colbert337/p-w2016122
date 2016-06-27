@@ -119,14 +119,14 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="salesmen_name"> 销售人员： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="salesmen_name">销售人员：</label>
 										<div class="col-sm-4">
 												<input class="form-control" type="text" id="salesmen_name" name="salesmen_name" maxlength="20" value="${station.salesmen_name}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 运管人员： </label>
+										<label class="col-sm-3 control-label no-padding-right">运管人员：</label>
 										<div class="col-sm-4">
 												<select class="form-control" id="operations_id" name="operations_id" onchange="setOperationName(this);">
 												</select>
@@ -135,7 +135,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
+										<label class="col-sm-3 control-label no-padding-right">注册地址：</label>
 										<div class="col-sm-4">
 											<div class="row form-group">
 												<div class="col-sm-6">
@@ -181,23 +181,23 @@
 											</select>
 												</div>
 											</div>
-											<input type="text"  id="detail" name="detail" class="form-control" />
-											<input type="hidden"  id="address" name="address" class="col-sm-12" />
+											<input type="text" id="detail" name="detail" class="form-control" maxlength="30"/>
+											<input type="hidden" id="address" name="address" class="col-sm-12" />
 										</div>
 									</div>
 									
 									<div class="row">
-										<label class="col-sm-3 control-label no-padding-right" >地址坐标： </label>
+										<label class="col-sm-3 control-label no-padding-right">地址坐标：</label>
 										<div class="col-sm-4">
 											<div class="row">
 												<div class="col-sm-6">
 													<div class="form-group nospace">
-														<input type="text"  id="longitude" name="longitude" class="form-control" maxlength="20" value="${station.longitude}"/>
+														<input type="text" id="longitude" name="longitude" class="form-control" maxlength="20" value="${station.longitude}"/>
 													</div>
 												</div>
 												<div class="col-sm-6">
 													<div class="form-group nospace">
-														<input type="text"  id="latitude" name="latitude" class="form-control" maxlength="20" value="${station.latitude}"/>
+														<input type="text" id="latitude" name="latitude" class="form-control" maxlength="20" value="${station.latitude}"/>
 													</div>
 												</div>
 											</div>
@@ -205,7 +205,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number">工商注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right">工商注册号：</label>
 
 										<div class="col-sm-4">
 											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}" maxlength="15"/>
@@ -213,7 +213,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">工商注册证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">工商注册证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">

@@ -67,7 +67,6 @@ public class TransportionController extends BaseContoller{
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("transportion",transportion);
-			map.addAttribute("current_module", "webpage/poms/transportion/transportion_list");
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -103,7 +102,7 @@ public class TransportionController extends BaseContoller{
 				ret = "webpage/poms/transportion/transportion_update";
 				transportionid = service.saveTransportion(transportion,"update");
 				bean.setRetMsg("["+transportionid+"]保存成功");
-				ret = this.queryAllTransportionList(map, new Transportion());
+				ret = this.queryAllTransportionList(map, transportion);
 			}
 
 			bean.setRetCode(100);

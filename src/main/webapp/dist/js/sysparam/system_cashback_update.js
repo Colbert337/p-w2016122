@@ -67,12 +67,6 @@
 		                validators: {
 		                    notEmpty: {
 		                        message: '生效日期不能为空'
-		                    },
-		                    callback: {
-		                    	message: '生效日期必须大于当前日期',
-		                    	callback: function (value, validator, $field) {
-		                    		return compareDate(value ,new Date().toLocaleDateString());
-	                            }
 		                    }
 		                },
 		                trigger: 'change'

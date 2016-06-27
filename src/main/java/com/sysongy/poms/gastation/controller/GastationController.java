@@ -129,7 +129,7 @@ public class GastationController extends BaseContoller{
 				ret = "webpage/poms/gastation/gastation_update";
 				gastationid = service.saveGastation(gastation,"update");
 				bean.setRetMsg("["+gastationid+"]保存成功");
-				ret = this.queryAllGastationList(map, new Gastation());
+				ret = this.queryAllGastationList(map, gastation);
 			}
 
 			bean.setRetCode(100);

@@ -49,3 +49,12 @@ var listOptions ={
 	function init(){
 		loadPage('#main', '../web/driver/driverList');
 	}
+	
+	function showInnerModel(){
+		$("#innerModel").modal('show');
+	}
+	
+	function hideInnerModel(){
+		$("#innerModel").modal('hide');
+		alert("123");
+	}

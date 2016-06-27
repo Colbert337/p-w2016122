@@ -50,7 +50,6 @@ public class LiquidServiceImpl implements LiquidService {
 			}
 			
 			record.setSys_gas_source_id(newid);
-			record.setStatus("1");
 			gasSourceMapper.insert(record);
 			return record.getSys_gas_source_id();
 		}else{

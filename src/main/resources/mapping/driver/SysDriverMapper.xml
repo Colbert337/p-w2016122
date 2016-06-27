@@ -98,6 +98,9 @@
       <if test="createdDate_after != null &amp;&amp; createdDate_after != ''">
         and created_date between CONCAT(#{createdDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{createdDate_before,jdbcType=VARCHAR},' 23:59:59')
       </if>
+      <if test="notin_checked_status != null" >
+        and checked_status &lt;&gt; #{notin_checked_status,jdbcType=VARCHAR}
+      </if>
     </trim>
   </select>
 

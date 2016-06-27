@@ -2,7 +2,10 @@ package com.sysongy.poms.system.model;
 
 import java.util.Date;
 
-public class SysOperationLog {
+import com.sysongy.poms.base.model.BaseModel;
+
+public class SysOperationLog extends BaseModel{
+	
     private String sysOperationLogId;
 
     private String logPlatform;
@@ -20,8 +23,28 @@ public class SysOperationLog {
     private String userIp;
 
     private Date createdDate;
+    
+    private String created_date_after;
+    
+    private String created_date_before;
+    
+    public String getCreated_date_after() {
+		return created_date_after;
+	}
 
-    public String getSysOperationLogId() {
+	public void setCreated_date_after(String created_date_after) {
+		this.created_date_after = created_date_after;
+	}
+
+	public String getCreated_date_before() {
+		return created_date_before;
+	}
+
+	public void setCreated_date_before(String created_date_before) {
+		this.created_date_before = created_date_before;
+	}
+
+	public String getSysOperationLogId() {
         return sysOperationLogId;
     }
 

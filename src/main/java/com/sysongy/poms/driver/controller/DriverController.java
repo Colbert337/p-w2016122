@@ -124,18 +124,18 @@ public class DriverController extends BaseContoller{
 
 		try {
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
-        driver.setCheckedStatus("1");
+        
+        driver.setNotin_checked_status("0");
 
         pageinfo = driverService.queryDrivers(driver);
         
         bean.setRetCode(100);
 		bean.setRetMsg("查询成功");
 		bean.setPageInfo(ret);
-
+		
 		map.addAttribute("ret", bean);
 		map.addAttribute("pageInfo", pageinfo);
 		map.addAttribute("driver",driver);
-		map.addAttribute("current_module", "webpage/poms/system/driver_review");
 
 		} catch (Exception e) {
 			bean.setRetCode(5000);
