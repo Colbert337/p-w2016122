@@ -24,7 +24,7 @@
 		                        message: '运输公司保证金不能为空'
 		                    },
 		                    regexp: {
-		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
+		                        regexp: '^[-+]?[0-9]+(\.[0-9]+)?$',
 		                        message: '运输公司保证必须是数字'
 		                    }
 		                }
@@ -61,7 +61,7 @@
 		 	       }
 			}
 			
-			if(confirm("是否确认将 ["+$("#stationame").text()+"] 保证金额度修改为"+$("[name=deposit]").val()+"元")){
+			if(confirm("是否确认将 ["+$("#stationame").text()+"] 账户余额更新"+$("[name=deposit]").val()+"元")){
 				$("#transportionform").ajaxSubmit(options);
 			}
 			

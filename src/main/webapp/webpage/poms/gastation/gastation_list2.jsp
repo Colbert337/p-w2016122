@@ -128,12 +128,12 @@
 									<td>${list.prepay_balance}</td>
 									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">
-											<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
+											<!-- <a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
-											</a>
-											<!-- <a class="option-btn-m" href="javascript:void(0);" title="预付款额度" data-rel="tooltip">
-												<i class="ace-icon fa fa-paw bigger-130" onclick="preDeposit(this);"></i>
 											</a> -->
+											<a class="option-btn-m" href="javascript:void(0);" title="预付款额度" data-rel="tooltip">
+												<i class="ace-icon fa fa-paw bigger-130" onclick="preDeposit(this);"></i>
+											</a>
 											<!-- <a href="" class="logic-del" title="删除" data-rel="tooltip">
 											<i class="ace-icon fa fa-trash-o bigger-130"></i> -->
 										</a>

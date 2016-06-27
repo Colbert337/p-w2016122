@@ -14,6 +14,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
+import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -43,13 +44,12 @@ public class TransportionServiceImpl implements TransportionService {
 	private UsysparamService usysparamService;
 	@Autowired
 	private SysDepositLogMapper sysDepositLogMapper;
-	
 	@Autowired
 	private SysUserAccountService sysUserAccountService;
-	
 	@Autowired
 	private OrderDealService orderDealService;
-	
+	@Autowired
+	private OrderService orderService;
 	
 	
 	@Override
@@ -216,18 +216,28 @@ public class TransportionServiceImpl implements TransportionService {
 
 
 	@Override
-	public int updatedeposiTransportion(SysDepositLog log) throws Exception {
+	public int updatedeposiTransportion(SysDepositLog log, String operation) throws Exception {
 		SysUserAccount account = new SysUserAccount();
 		account.setSysUserAccountId(log.getAccountId());
 		account.setDeposit(log.getDeposit());
-		int retbnum = sysUserAccountMapper.updateByPrimaryKeySelective(account);
+//		int retbnum = sysUserAccountMapper.updateByPrimaryKeySelective(account);
+		
+		SysOrder order = new SysOrder();
+		order.setOrderId(UUIDGenerator.getUUID());
+		order.setDebitAccount(log.getStationId());
+		order.setCash(log.getDeposit());
+		order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
+		order.setOperator(operation);
+		order.setOrderDate(new Date());
+		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
+		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+		orderService.chargeToTransportion(order);
 		
 		//写日志
 		log.setOptime(new Date());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
-		sysDepositLogMapper.insert(log);
-		return retbnum;
+		return sysDepositLogMapper.insert(log);
 	}
 
 }
