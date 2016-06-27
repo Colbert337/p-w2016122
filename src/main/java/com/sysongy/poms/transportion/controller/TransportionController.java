@@ -78,6 +78,51 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
+	
+	@RequestMapping("/transportionList2")
+	public String queryAllTransportionList2(ModelMap map, Transportion transportion) throws Exception{
+
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transportion_list2";
+
+		try {
+			if(transportion.getPageNum() == null){
+				transportion.setPageNum(1);
+				transportion.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(transportion.getOrderby())){
+				transportion.setOrderby("created_time desc");
+			}
+
+			if(!StringUtils.isEmpty(transportion.getExpiry_date_frompage())){
+				String []tmpRange = transportion.getExpiry_date_frompage().split("-");
+				if(tmpRange.length==2){
+					transportion.setExpiry_date_after(tmpRange[0].trim()+" 00:00:00");
+					transportion.setExpiry_date_before(tmpRange[1]+" 23:59:59");
+				}
+			}
+
+			PageInfo<Transportion> pageinfo = service.queryTransportion(transportion);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("transportion",transportion);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
 
 	/**
 	 * 用户卡入库
@@ -215,7 +260,7 @@ public class TransportionController extends BaseContoller{
 	}
 	
 	@RequestMapping("/deposiTransportion")
-	public String deposiTransportion(ModelMap map, SysDepositLog deposit){
+	public String deposiTransportion(ModelMap map, SysDepositLog deposit, @ModelAttribute CurrUser currUser){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_list";
@@ -223,7 +268,7 @@ public class TransportionController extends BaseContoller{
 
 		try {
 				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
-					rowcount = service.updatedeposiTransportion(deposit);
+					rowcount = service.updatedeposiTransportion(deposit, currUser.getUserId());
 				}
 
 				ret = this.queryAllTransportionList(map, new Transportion());

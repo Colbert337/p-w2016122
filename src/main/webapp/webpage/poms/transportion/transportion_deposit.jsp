@@ -36,8 +36,8 @@
 
 										<div class="col-sm-4">
 											<label class="control-label no-padding-right" id="stationame">${param.stationame}</label>
-											<input type="text" name="stationId" value="${param.stationid}"/>
-											<input type="text" name="accountId" value="${param.acconutid}"/>
+											<input type="hidden" name="stationId" value="${param.stationid}"/>
+											<input type="hidden" name="accountId" value="${param.acconutid}"/>
 										</div>
 									</div>
 									
@@ -45,7 +45,7 @@
 										<label for="email" class="col-sm-3 control-label no-padding-right" >运输公司保证金： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" value="${param.stationdeposit}" maxlength="8"/>
+											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" maxlength="8"/>
 										</div>
 									</div>
 									
