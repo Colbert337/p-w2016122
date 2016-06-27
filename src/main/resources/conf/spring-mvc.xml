@@ -46,16 +46,6 @@
 				<value>text/html;charset=UTF-8</value>
 			</list>
 		</property>
-
-		<property name="objectMapper">
-			<bean class="org.codehaus.jackson.map.ObjectMapper">
-				<property name="dateFormat">
-					<bean class="java.text.SimpleDateFormat">
-						<constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"></constructor-arg>
-					</bean>
-				</property>
-			</bean>
-		</property>
 	</bean>
 
 	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
