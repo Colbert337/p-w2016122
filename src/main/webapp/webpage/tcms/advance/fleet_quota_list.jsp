@@ -189,6 +189,7 @@
 							<!-- PAGE CONTENT BEGINS -->
 							<form class="form-horizontal" id="fenpeiForm">
 								<!-- #section:elements.form -->
+								<input type="hidden" id="station_id" name="stationId" value="${stationId}"/>
 								<table id="fenpei" class="table table-striped table-bordered table-hover" width="700">
 									<thead>
 									<tr>
@@ -201,18 +202,21 @@
 									</tr>
 									</thead>
 									<tbody>
-										<c:forEach items="${fleetQuotaMap.fleetQuotaList}" var="fleetQuota">
+										<c:forEach items="${fleetQuotaMap.fleetQuotaList}" var="fleetQuota" varStatus="suffix">
 											<tr>
 												<td>${fleetQuota.fleetName}</td>
 												<td>${fleetQuota.realName}</td>
 												<td>${fleetQuota.mobilePhone}</td>
 												<td>
-													<div class="switch switch-small ">
-														<input type="checkbox" />
-													</div>
+													<input type="hidden" id="tc_fleet_id" name="tcFleetId" value="${fleetQuota.tcFleetId}"/>
+													<input id="allot_${suffix.index}" name="isAllot"
+													   <c:if test="${fleetQuota.isAllot != null && fleetQuota.isAllot == 1}"> checked="checked" </c:if>
+													   type="checkbox" class="ace ace-switch ace-switch-5 zh" onclick="allocation(this,'${suffix.index}');">
+													<span class="lbl middle"></span>
 												</td>
 												<td>
-													<input type="text" id="" name="" value="${fleetQuota.quota}" class="col-xs-8 col-sm-8"/>
+													<input type="text" id="quota_${suffix.index}" name="quota" value="${fleetQuota.quota}"
+													<c:if test="${fleetQuota.isAllot == null || fleetQuota.isAllot == 0}"> readonly="readonly" </c:if> class="col-xs-8 col-sm-8"/>
 												</td>
 												<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 											</tr>

@@ -59,6 +59,7 @@ public class TcFleetQuotaController extends BaseContoller {
 
         map.addAttribute("fleetQuotaMap",fleetQuotaMap);
         map.addAttribute("fleetQuota",fleetQuota);
+        map.addAttribute("stationId",stationId);
 
         return "webpage/tcms/advance/fleet_quota_list";
     }

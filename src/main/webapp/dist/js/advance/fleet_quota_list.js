@@ -51,6 +51,32 @@ function addPassword(){
     $("#passwordModel").modal('show');
 }
 
+/**
+ * 资金分配状态修改
+ * @param obj
+ * @param index
+ */
+function allocation(obj,index){
+    if ($(obj).attr('checked')) {
+        $(obj).attr("checked",false);
+        $("#quota_"+index).attr("readonly","readonly");
+    }else{
+        $(obj).attr("checked","checked");
+        $("#quota_"+index).removeAttr("readonly");
+    }
+
+}
+
+/**
+ * 保存配置
+ */
+function saveFenpei(){
+    var data = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
+    data = decodeURIComponent(data,true);
+    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"+data);
+
+
+}
 
 //显示编辑车队额度弹出层
 function editFleetQuota(fleetQuotaId){
