@@ -1,6 +1,7 @@
 package com.sysongy.poms.gastation.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.liquid.model.SysGasSource;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.util.Date;
@@ -22,6 +23,8 @@ public class GsGasPrice  extends BaseModel {
 
     private String unit;
 
+    private Usysparam unitInfo;
+
     private String remark;
 
     private Date createdDate;
@@ -29,6 +32,12 @@ public class GsGasPrice  extends BaseModel {
     private Date updatedDate;
 
     private ProductPrice productPriceInfo;
+
+    private String gs_gas_source_id;
+
+    private SysGasSource gs_gas_source_info;
+
+    private int is_deleted;
 
     public String getGsGasPriceId() {
         return gsGasPriceId;
@@ -124,5 +133,37 @@ public class GsGasPrice  extends BaseModel {
 
     public void setProductPriceInfo(ProductPrice productPriceInfo) {
         this.productPriceInfo = productPriceInfo;
+    }
+
+    public String getGs_gas_source_id() {
+        return gs_gas_source_id;
+    }
+
+    public void setGs_gas_source_id(String gs_gas_source_id) {
+        this.gs_gas_source_id = gs_gas_source_id;
+    }
+
+    public SysGasSource getGs_gas_source_info() {
+        return gs_gas_source_info;
+    }
+
+    public void setGs_gas_source_info(SysGasSource gs_gas_source_info) {
+        this.gs_gas_source_info = gs_gas_source_info;
+    }
+
+    public int getIs_deleted() {
+        return is_deleted;
+    }
+
+    public void setIs_deleted(int is_deleted) {
+        this.is_deleted = is_deleted;
+    }
+
+    public Usysparam getUnitInfo() {
+        return unitInfo;
+    }
+
+    public void setUnitInfo(Usysparam unitInfo) {
+        this.unitInfo = unitInfo;
     }
 }

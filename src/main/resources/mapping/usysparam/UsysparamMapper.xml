@@ -52,7 +52,7 @@
   </delete>
 
   <select id="queryUsysparamByGcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
-    select * from usysparam where gcode = #{0}
+    select * from usysparam where gcode = #{0} and (scode is null or scode='')
   </select>
 
   <select id="queryCardTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
@@ -79,4 +79,11 @@
         select * from usysparam where gcode = 'PRODUCTPRICETYPE' and scode = #{mcode,jdbcType=VARCHAR}
     </select>
 
+    <select id="queryGasUnitTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'GAS_UNIT' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryProductStatusByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'PRODUCT_PRICE_STATUS' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
 </mapper>

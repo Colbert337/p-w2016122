@@ -21,6 +21,8 @@ public class InterfaceConstants {
 
     public static final String QUERY_CARD_ERROR = "查询实体卡失败！";
 
+    public static final String PUT_STORE_CARD_ERROR = "入库实体卡失败！";
+
     public static final String DISTUBUTE_CARD_ERROR = "分发实体卡失败！";
 
     public static final String PUT_CARD_STORAGE_ERROR = "实体卡入库失败！";

@@ -23,6 +23,8 @@ import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.dao.SysDepositLogMapper;
+import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
@@ -40,6 +42,9 @@ public class GastationServiceImpl implements GastationService {
 	private SysUserService sysUserService;
 	@Autowired
 	private UsysparamService usysparamService;
+	@Autowired
+	private SysDepositLogMapper sysDepositLogMapper;
+	
 	
 	@Autowired
 	private SysPrepayMapper sysPrepayMapper;
@@ -184,11 +189,18 @@ public class GastationServiceImpl implements GastationService {
 	}
 
 	@Override
-	public int updatedepositGastation(String acconutid, String stationdeposit) throws Exception {
+	public int updatedepositGastation(SysDepositLog log) throws Exception {
 		SysUserAccount account = new SysUserAccount();
-		account.setSysUserAccountId(acconutid);
-		account.setDeposit(BigDecimal.valueOf(Double.valueOf(stationdeposit)));
-		return sysUserAccountMapper.updateByPrimaryKeySelective(account);
+		account.setSysUserAccountId(log.getAccountId());
+		account.setDeposit(log.getDeposit());
+		int retbnum = sysUserAccountMapper.updateByPrimaryKeySelective(account);
+		
+		//写日志
+		log.setOptime(new Date());
+		log.setSysDepositLogId(UUIDGenerator.getUUID());
+		log.setStation_type(GlobalConstant.OrderOperatorTargetType.GASTATION);
+		sysDepositLogMapper.insert(log);
+		return retbnum;
 	}
 	
 	/**

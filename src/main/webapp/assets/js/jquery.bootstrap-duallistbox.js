@@ -11,12 +11,12 @@
   var pluginName = 'bootstrapDualListbox',
     defaults = {
       bootstrap2Compatible: false,
-      filterTextClear: 'show all',
-      filterPlaceHolder: 'Filter',
-      moveSelectedLabel: 'Move selected',
-      moveAllLabel: 'Move all',
-      removeSelectedLabel: 'Remove selected',
-      removeAllLabel: 'Remove all',
+      filterTextClear: '显示所有',
+      filterPlaceHolder: '过滤',
+      moveSelectedLabel: '移动选中项',
+      moveAllLabel: '移动所有',
+      removeSelectedLabel: '移除选中项',
+      removeAllLabel: '移除所有',
       moveOnSelect: true,                                                                 // true/false (forced true on androids, see the comment later)
       preserveSelectionOnMove: false,                                                     // 'all' / 'moved' / false
       selectedListLabel: false,                                                           // 'string', false
@@ -26,9 +26,9 @@
       showFilterInputs: true,                                                             // whether to show filter inputs
       nonSelectedFilter: '',                                                              // string, filter the non selected options
       selectedFilter: '',                                                                 // string, filter the selected options
-      infoText: 'Showing all {0}',                                                        // text when all options are visible / false for no info text
+      infoText: '选项共 {0}',                                                        // text when all options are visible / false for no info text
       infoTextFiltered: '<span class="label label-warning">Filtered</span> {0} from {1}', // when not all of the options are visible due to the filter
-      infoTextEmpty: 'Empty list',                                                        // when there are no options present in the list
+      infoTextEmpty: '空列表',                                                        // when there are no options present in the list
       filterOnValues: false                                                               // filter by selector's values, boolean
 	  , buttonClass: 'btn-white btn-bold'//ACE
     },

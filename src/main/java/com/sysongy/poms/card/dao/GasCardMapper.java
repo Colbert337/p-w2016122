@@ -26,4 +26,6 @@ public interface GasCardMapper {
     List<GasCard> queryForPage(GasCard record);
 
     int updateCardStatus(CRMCardUpdateInfo crmCardUpdateInfo);
+
+    List<GasCard> queryForPageUpdate(CRMCardUpdateInfo record);
 }

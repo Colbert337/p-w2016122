@@ -7,16 +7,16 @@ import org.springframework.util.StringUtils;
 
 public class DateConvertEditor extends PropertyEditorSupport {
 	private SimpleDateFormat datetimeFormat = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss");
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");	
+			"yyyyMMdd HH:mm:ss");
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 	public void setAsText(String text) throws IllegalArgumentException {
 		if (StringUtils.hasText(text)) {
 			try {
-				if (text.indexOf(":") == -1 && text.length() == 10) {
+				if (text.indexOf(":") == -1 && text.length() == 8) {
 					setValue(this.dateFormat.parse(text));
-				} else if (text.indexOf(":") > 0 && text.length() == 19) {
+				} else if (text.indexOf(":") > 0 && text.length() == 17) {
 					setValue(this.datetimeFormat.parse(text));
-				} else if (text.indexOf(":") > 0 && text.length() == 21) {
+				} else if (text.indexOf(":") > 0 && text.length() == 19) {
 					text = text.replace(".0", "");
 					setValue(this.datetimeFormat.parse(text));
 				} else {

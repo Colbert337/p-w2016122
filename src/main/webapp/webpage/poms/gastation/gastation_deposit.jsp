@@ -9,60 +9,11 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/json2.js"></script>
+<script src="<%=basePath %>/dist/js/gastation/gastation_deposit.js"></script>
 
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
-	
-	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
 
-			<!-- /section:basics/sidebar -->
 			<div class="main-content">
 				<div class="main-content-inner">
-					<!-- #section:basics/content.breadcrumbs -->
-					<div class="breadcrumbs" id="breadcrumbs">
-						<script type="text/javascript">
-							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
-						</script>
-
-						<ul class="breadcrumb">
-							<li>
-								<i class="ace-icon fa fa-home home-icon"></i>
-								<a href="#">主页</a>
-							</li>
-
-							<li>
-								<a href="#">加注站管理</a>
-							</li>
-							<li class="active">加注站信息管理</li>
-						</ul><!-- /.breadcrumb -->
-
-						<!-- #section:basics/content.searchbox -->
-						<div class="nav-search" id="nav-search">
-							<form class="form-search" >
-							
-								<input id="retCode" type="hidden" value=" ${ret.retCode}" />
-								<input id="retMsg" type="hidden" value=" ${ret.retMsg}" />
-								
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- /.nav-search -->
-
-						<!-- /section:basics/content.searchbox -->
-					</div>
 
 					<!-- /section:basics/content.breadcrumbs -->
 					<div class="">
@@ -84,8 +35,9 @@
 										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 加注站名称： </label>
 
 										<div class="col-sm-4">
-											<label class="control-label no-padding-right" >${param.gastationame}</label>
-											<input type="text" name="account_id" value="${param.acconutid}"/>
+											<label class="control-label no-padding-right" id="gastationame">${param.gastationame}</label>
+											<input type="hidden" name="stationId" value="${param.stationid}"/>
+											<input type="hidden" name="accountId" value="${param.acconutid}"/>
 										</div>
 									</div>
 									
@@ -109,7 +61,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date">转账时间： </label>
 										<div class="col-sm-4 datepicker-noicon">
 											<div class="input-group">
-												<input class="form-control date-picker" name="transfer_time_frompage" id="transfer_time_frompage" type="text" readonly="readonly" data-date-format="yyyy-mm-dd"/>
+												<input class="form-control date-picker" name="depositTime_page" id="depositTime_page" type="text" readonly="readonly" data-date-format="yyyy-mm-dd"/>
 													<span class="input-group-addon">
 														<i class="fa fa-calendar bigger-110"></i>
 													</span>
@@ -121,7 +73,7 @@
 										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right">转账方式：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="transfer_type" placeholder="输入转账方式" class="form-control" maxlength="20"/>
+											<input type="text" name="depositType" placeholder="输入转账方式" class="form-control" maxlength="20"/>
 										</div>
 									</div>
 									
@@ -137,7 +89,7 @@
 										<label class="col-sm-3 control-label no-padding-right">备注： </label>
 
 										<div class="col-sm-4">
-											<textarea class="form-control" name="remark" rows="5" maxlength="100"></textarea>
+											<textarea class="form-control" name="memo" rows="5" maxlength="100"></textarea>
 										</div>
 									</div>
 									
@@ -147,12 +99,6 @@
 											<button class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
-											</button>
-											&nbsp; &nbsp; &nbsp;
-											
-											<button class="btn" type="reset">
-												<i class="ace-icon fa fa-repeat bigger-110"></i>
-												重置
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											
@@ -171,81 +117,3 @@
 					</div><!-- /.page-content -->
 				</div>
 	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-
-	<script type="text/javascript">
-	
-	//datepicker plugin
-	$('.date-picker').datepicker({
-		autoclose: true,
-		todayHighlight: true,
-		language: 'cn'
-	}).next().on(ace.click_event, function(){
-		$(this).prev().focus();
-	});
-	
-		
-			//bootstrap验证控件		
-		    $('#gastationform').bootstrapValidator({
-		        message: 'This value is not valid',
-		        feedbackIcons: {
-		            valid: 'glyphicon glyphicon-ok',
-		            invalid: 'glyphicon glyphicon-remove',
-		            validating: 'glyphicon glyphicon-refresh'
-		        },
-		        fields: {
-		        	deposit: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '加注站保证金不能为空'
-		                    },
-		                    regexp: {
-		                        regexp: '^[0-9]+([.]{1}[0-9]+){0,1}$',
-		                        message: '加注站保证必须是数字'
-		                    }
-		                }
-		            },
-		            company: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '企业名称不能为空'
-		                    }
-		                }
-		            }
-		         }
-		    });
-			    
-		function save(){			
-			/*手动验证表单，当是普通按钮时。*/
-			$('#gastationform').data('bootstrapValidator').validate();
-			if(!$('#gastationform').data('bootstrapValidator').isValid()){
-				return ;
-			}
-			
-			var options ={   
-		            url:'../web/gastation/depositGastation',   
-		            type:'post',                    
-		            dataType:'text',
-		            success:function(data){
-		            	$("#main").html(data);
-		            	$("#modal-table").modal("show");
-		            	if($("#retCode").val() != 100){
-		            		
-		            	}
-		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-		            	
-		 	       }
-			}
-		
-			$("#gastationform").ajaxSubmit(options);
-		}
-		
-		function init(){
-			loadPage('#main', '../webpage/poms/gastation/gastation_deposit.jsp');
-		}
-		</script>

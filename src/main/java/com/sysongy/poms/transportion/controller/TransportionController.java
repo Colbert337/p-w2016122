@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.system.model.SysDepositLog;
+import com.sysongy.poms.system.service.SysDepositLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.util.GlobalConstant;
 
 
 @RequestMapping("/web/transportion")
@@ -22,6 +26,8 @@ public class TransportionController extends BaseContoller{
 	
 	@Autowired
 	private TransportionService service;
+	@Autowired
+	private SysDepositLogService depositLogService;
 	/**
 	 * 运输公司查询
 	 * @param map
@@ -170,6 +176,81 @@ public class TransportionController extends BaseContoller{
 
 		map.addAttribute("transportion",transportion);
 		return "webpage/poms/transportion/transport_info";
+	}
+	
+	@RequestMapping("/depositList")
+	public String querydepositList(ModelMap map, SysDepositLog deposit) throws Exception{
+
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transportion_deposit_log";
+
+		try {
+			if(deposit.getPageNum() == null){
+				deposit.setPageNum(1);
+				deposit.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(deposit.getOrderby())){
+				deposit.setOrderby("optime desc");
+			}
+			
+			deposit.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("deposit",deposit);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/deposiTransportion")
+	public String deposiTransportion(ModelMap map, SysDepositLog deposit){
+
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transportion_list";
+		Integer rowcount = null;
+
+		try {
+				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
+					rowcount = service.updatedeposiTransportion(deposit);
+				}
+
+				ret = this.queryAllTransportionList(map, new Transportion());
+
+				bean.setRetCode(100);
+				bean.setRetMsg("保证金设置成功");
+				bean.setRetValue(rowcount.toString());
+				bean.setPageInfo(ret);
+
+				map.addAttribute("ret", bean);
+
+
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			ret = this.queryAllTransportionList(map, new Transportion());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
 	}
 
 }

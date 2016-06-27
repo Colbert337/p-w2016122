@@ -52,3 +52,11 @@ h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
 .form-horizontal .has-feedback.nospace .form-control-feedback {
     right: -27px;
 }
+input[type=checkbox].ace.ace-switch.zh + .lbl::before {
+    content: "是\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0否";
+    text-indent: -16px;
+}
+input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
+    content: "是\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0否";
+    text-indent: 13px;
+}

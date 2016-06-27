@@ -56,9 +56,19 @@ public class TcFleetServiceImpl implements TcFleetService{
         if(tcFleet != null){
             PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
 
-            List<Map<String, Object>> FleetList = tcFleetMapper.queryFleetMapList(tcFleet);
-            PageInfo<Map<String, Object>> FleetPageInfo = new PageInfo<>(FleetList);
-            return FleetPageInfo;
+            List<Map<String, Object>> fleetList = tcFleetMapper.queryFleetMapList(tcFleet);
+            if(fleetList != null && fleetList.size() > 0){
+                for (Map<String, Object> fleetMap:fleetList) {
+                    TcFleet fleetTemp = new TcFleet();
+                    fleetTemp.setStationId(tcFleet.getStationId());
+                    fleetTemp.setTcFleetId(fleetMap.get("tcFleetId").toString());
+                    List<Map<String, Object>> vehicleList = tcFleetMapper.queryFleetListByType(fleetTemp);
+
+                    fleetMap.put("vCount",vehicleList.size());
+                }
+            }
+            PageInfo<Map<String, Object>> fleetPageInfo = new PageInfo<>(fleetList);
+            return fleetPageInfo;
         }else{
             return null;
         }

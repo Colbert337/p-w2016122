@@ -2,6 +2,8 @@ package com.sysongy.poms.gastation.model;
 
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.util.CustomDateSerializer;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.Date;
 
@@ -10,23 +12,33 @@ public class ProductPrice extends BaseModel {
 
     private String productPriceId;
 
-    private Long productPrice;
+    private Usysparam productPriceIdInfo;
+
+    private double productPrice;
+
+    private Usysparam productUnitInfo;
 
     private String productUnit;
 
     private Integer version;
 
+    private Usysparam productPriceStatusInfo;
+
     private String productPriceStatus;
 
     private Date createTime;
 
-    private Date stratTime;
+    private Date startTime;
 
     private Date finishTime;
 
     private String product_price_type;
 
     private Usysparam product_price_type_info;
+
+    private String product_id;
+
+    private GsGasPrice product_info;
 
     public String getId() {
         return id;
@@ -44,11 +56,11 @@ public class ProductPrice extends BaseModel {
         this.productPriceId = productPriceId == null ? null : productPriceId.trim();
     }
 
-    public Long getProductPrice() {
+    public double getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Long productPrice) {
+    public void setProductPrice(double productPrice) {
         this.productPrice = productPrice;
     }
 
@@ -84,14 +96,16 @@ public class ProductPrice extends BaseModel {
         this.createTime = createTime;
     }
 
-    public Date getStratTime() {
-        return stratTime;
+    @JsonSerialize(using = CustomDateSerializer.class)
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setStratTime(Date stratTime) {
-        this.stratTime = stratTime;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
+    @JsonSerialize(using = CustomDateSerializer.class)
     public Date getFinishTime() {
         return finishTime;
     }
@@ -114,5 +128,45 @@ public class ProductPrice extends BaseModel {
 
     public void setProduct_price_type_info(Usysparam product_price_type_info) {
         this.product_price_type_info = product_price_type_info;
+    }
+
+    public String getProduct_id() {
+        return product_id;
+    }
+
+    public void setProduct_id(String product_id) {
+        this.product_id = product_id;
+    }
+
+    public Usysparam getProductPriceIdInfo() {
+        return productPriceIdInfo;
+    }
+
+    public void setProductPriceIdInfo(Usysparam productPriceIdInfo) {
+        this.productPriceIdInfo = productPriceIdInfo;
+    }
+
+    public Usysparam getProductUnitInfo() {
+        return productUnitInfo;
+    }
+
+    public void setProductUnitInfo(Usysparam productUnitInfo) {
+        this.productUnitInfo = productUnitInfo;
+    }
+
+    public GsGasPrice getProduct_info() {
+        return product_info;
+    }
+
+    public void setProduct_info(GsGasPrice product_info) {
+        this.product_info = product_info;
+    }
+
+    public Usysparam getProductPriceStatusInfo() {
+        return productPriceStatusInfo;
+    }
+
+    public void setProductPriceStatusInfo(Usysparam productPriceStatusInfo) {
+        this.productPriceStatusInfo = productPriceStatusInfo;
     }
 }

@@ -92,9 +92,16 @@
 		<script src="<%=basePath %>/assets/js/bootstrap.js"></script>
 
 		<!-- page specific plugin scripts -->
+		<script src="<%=basePath %>/assets/js/jquery.bootstrap-duallistbox.js"></script>
+		<script src="<%=basePath %>/assets/js/jquery.raty.js"></script>
+		<script src="<%=basePath %>/assets/js/bootstrap-multiselect.js"></script>
+		<script src="<%=basePath %>/assets/js/select2.js"></script>
+		<script src="<%=basePath %>/assets/js/typeahead.jquery.js"></script>
 
-		<!--[if lte IE 8]>
-		  <script src="<%=basePath %>/assets/js/excanvas.js"></script>
+
+
+<!--[if lte IE 8]>
+	    <script src="<%=basePath %>/assets/js/excanvas.js"></script>
 		<![endif]-->
 		<script src="<%=basePath %>/assets/js/jquery-ui.custom.js"></script>
 		<script src="<%=basePath %>/assets/js/jquery.ui.touch-punch.js"></script>
@@ -341,6 +348,8 @@
 			
 			})
 		</script>
+
+
 
 		<!-- the following scripts are used in demo only for onpage help and you don't need them -->
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.onpage-help.css" />

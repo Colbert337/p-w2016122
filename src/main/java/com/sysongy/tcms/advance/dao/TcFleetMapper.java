@@ -60,5 +60,10 @@ public interface TcFleetMapper {
     int updateFleet(TcFleet tcFleet);
 
 /*********************************基础方法 end*************************************/
-
+    /**
+     * 根据车队查询车辆列表
+     * @param fleet
+     * @return
+     */
+    List<Map<String, Object>> queryFleetListByType(TcFleet fleet);
 }

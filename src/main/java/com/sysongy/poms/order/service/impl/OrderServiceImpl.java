@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -335,10 +336,26 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public String validAccount(SysOrder record){
 		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
-		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
-		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance());
+		SysUserAccount creditAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
+		boolean isCreditFrozen = creditAccount.getAccount_status().equalsIgnoreCase("0");
+		if(isCreditFrozen)
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN;
+
+		boolean isCreditAccountCardFrozen = false;
+		if(StringUtils.isNotEmpty(record.getConsume_card())){
+			isCreditAccountCardFrozen = creditAccount.getAccount_status().equalsIgnoreCase("1");
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN;
+		}
+
+		SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(record.getDebitAccount());
+		boolean isDebitFrozen = debitAccount.getAccount_status().equalsIgnoreCase("0");
+		if(isDebitFrozen)
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN;
+
+		BigDecimal balance = new BigDecimal(debitAccount.getAccountBalance());
 		if(record.getCash().compareTo(balance) == 1)
 			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
+
 		return strRet;
 	}
 	

@@ -18,10 +18,16 @@
     <result column="operator_source_id" property="operatorSourceId" jdbcType="VARCHAR" />
     <result column="is_discharge" property="is_discharge" jdbcType="VARCHAR" />
     <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
+    
+    <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
+    <association property="consume_cardInfo" column="consume_card"
+                 javaType="com.sysongy.poms.card.model.GasCard"
+                 select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
-    charge_type, channel, channel_number, operator, is_discharge, discharge_order_id,operator_target_type
+    charge_type, channel, channel_number, operator, is_discharge, discharge_order_id,operator_source_type, operator_target_type,consume_card
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -37,12 +43,13 @@
     insert into sys_order (order_id, order_number, order_type, 
       order_date, cash, credit_account, 
       debit_account, charge_type, channel, 
-      channel_number, operator, is_discharge, discharge_order_id,operator_target_type,operator_source_id,operator_source_type
+      channel_number, operator, is_discharge, discharge_order_id,operator_target_type,operator_source_id,operator_source_type, consume_card
       )
     values (#{orderId,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
       #{orderDate,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL}, #{creditAccount,jdbcType=VARCHAR}, 
       #{debitAccount,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, 
-      #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{discharge_order_id,jdbcType=VARCHAR}, #{operatorTargetType,jdbcType=VARCHAR},#{operatorSourceId,jdbcType=VARCHAR}, #{operatorSourceType,jdbcType=VARCHAR}
+      #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{discharge_order_id,jdbcType=VARCHAR},
+      #{operatorTargetType,jdbcType=VARCHAR},#{operatorSourceId,jdbcType=VARCHAR}, #{operatorSourceType,jdbcType=VARCHAR},#{consume_card,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysOrder" >
@@ -93,6 +100,9 @@
       <if test="operatorTargetType != null" >
         operator_target_type,
       </if>
+      <if test="consume_card != null" >
+        consume_card,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="orderId != null" >
@@ -139,6 +149,9 @@
       </if>
       <if test="operatorTargetType != null" >
         #{operator_target_type,jdbcType=VARCHAR},
+      </if>
+      <if test="consume_card != null" >
+        #{consume_card,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -187,6 +200,9 @@
       <if test="operatorTargetType != null" >
         operator_target_type = #{operatorTargetType,jdbcType=VARCHAR},
       </if>
+      <if test="consume_card != null" >
+        consume_card = #{consume_card,jdbcType=VARCHAR},
+      </if>
     </set>
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
@@ -203,9 +219,11 @@
       channel_number = #{channelNumber,jdbcType=VARCHAR},
       operator = #{operator,jdbcType=VARCHAR},
       is_discharge = #{is_discharge,jdbcType=VARCHAR},
-      discharge_order_id = #{dischargeOrderId,jdbcType=VARCHAR},
+      discharge_order_id = #{discharge_order_id,jdbcType=VARCHAR},
       operator_source_id = #{operatorSourceId,jdbcType=VARCHAR},
       operator_target_type = #{operatorTargetType,jdbcType=VARCHAR}
+      operator_source_type = #{operatorSourceType,jdbcType=VARCHAR}
+      consume_card = #{consume_card,jdbcType=VARCHAR}
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
 </mapper>

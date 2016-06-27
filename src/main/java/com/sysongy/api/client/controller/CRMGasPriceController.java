@@ -3,21 +3,31 @@ package com.sysongy.api.client.controller;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.GsGasPrice;
+import com.sysongy.poms.gastation.model.ProductPrice;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.gastation.service.ProductPriceService;
+import com.sysongy.poms.liquid.model.SysGasSource;
+import com.sysongy.poms.liquid.service.LiquidService;
 import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.util.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +43,12 @@ public class CRMGasPriceController {
 
     @Autowired
     GsGasPriceService gsGasPriceService;
+
+    @Autowired
+    private LiquidService service;
+
+    @Autowired
+    ProductPriceService productPriceService;
 
     @RequestMapping(value = {"/web/queryGsPriceInfo"})
     @ResponseBody
@@ -85,6 +101,15 @@ public class CRMGasPriceController {
 
         try
         {
+            String strPrice = request.getParameter("price");
+            if(StringUtils.isEmpty(strPrice)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("输入价格为空！！！");
+                return ajaxJson;
+            }
+            double lPrice = Double.valueOf(strPrice);
+            gsGasPrice = createProductPrice(gsGasPrice, lPrice);
+
             Map<String, Object> attributes = new HashMap<String, Object>();
             int isExistDriver = gsGasPriceService.isExists(gsGasPrice);
             if(isExistDriver > 0){
@@ -106,8 +131,33 @@ public class CRMGasPriceController {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_GAS_PRICE_ERROR + e.getMessage());
             logger.error("addGsGasPrice error： " + e);
+            e.printStackTrace();
         }
         return ajaxJson;
+    }
+
+    private GsGasPrice createProductPrice(GsGasPrice gsGasPrice, double lPrice){
+        ProductPrice productPrice = new ProductPrice();
+        productPrice.setId(UUIDGenerator.getUUID());
+        productPrice.setProductPriceStatus("1");
+        productPrice.setCreateTime(new Date());
+        Calendar curr = Calendar.getInstance();
+        curr.set(Calendar.YEAR, curr.get(Calendar.YEAR) + 20);
+        Date finishTime = curr.getTime();
+        productPrice.setFinishTime(finishTime);
+        productPrice.setProductPrice(lPrice);
+        productPrice.setProduct_price_type("1");
+        productPrice.setProduct_id(gsGasPrice.getGsGasPriceId());
+        productPrice.setProductPriceId(gsGasPrice.getGasName());
+        productPrice.setProductUnit(gsGasPrice.getUnit());
+        try
+        {
+            productPriceService.saveProductPrice(productPrice, "insert");
+        }catch (Exception e){
+            logger.error("createProductPrice error： " + e);
+        }
+        gsGasPrice.setPrice_id(productPrice.getId());
+        return gsGasPrice;
     }
 
     @RequestMapping(value = {"/web/updateGsGasPrice"})
@@ -166,6 +216,32 @@ public class CRMGasPriceController {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.DELETE_CRM_GAS_PRICE_ERROR + e.getMessage());
             logger.error("delGsGasPrice error： " + e);
+            e.printStackTrace();
+        }
+        return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/queryAllGasSourceList"})
+    @ResponseBody
+    public AjaxJson queryAllGasSourceList(ModelMap map, SysGasSource gasource) throws Exception{
+        AjaxJson ajaxJson = new AjaxJson();
+        try {
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            if(StringUtils.isEmpty(gasource.getOrderby())){
+                gasource.setOrderby("created_date desc");
+            }
+            PageInfo<SysGasSource> pageinfo = service.querySysGasSource(gasource);
+            if((pageinfo == null) || (pageinfo.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("无气品来源 ！！！");
+                return ajaxJson;
+            }
+            attributes.put("liquidSource", pageinfo.getList());
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.DELETE_CRM_GAS_PRICE_ERROR + e.getMessage());
+            logger.error("queryAllGasSourceList error： " + e);
             e.printStackTrace();
         }
         return ajaxJson;
