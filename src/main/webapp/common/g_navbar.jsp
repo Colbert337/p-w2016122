@@ -28,7 +28,7 @@
 					<!-- #section:basics/navbar.layout.brand -->
 					<a href="#" class="navbar-brand">
 						<small>
-							<i class="fa fa-leaf"></i>
+							<!-- <i class="fa fa-leaf"></i> -->
 							<c:if test="${sessionScope.currUser.user.userType == 1}">
 								气站管理平台
 							</c:if>
