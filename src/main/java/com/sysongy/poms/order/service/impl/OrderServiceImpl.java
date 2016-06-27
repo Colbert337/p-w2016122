@@ -342,10 +342,26 @@ public class OrderServiceImpl implements OrderService {
 		return strRet;
 	}
 	
+	/**
+	 * 运输公司给个人转账
+	 * 1.扣除运输公司账户
+	 * 2.个人账户增加金额
+	 * 3.给运输公司返现。
+	 * @return
+	 */
+	public String transferTransportionToDriver(SysOrder order) throws Exception{
 	
-	/*public String transferTransportionToDriver(){
-		
-	}*/
+	   if (order ==null){
+		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+	   }
+	   
+	   String orderType = order.getOrderType();
+	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER))){
+		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH;
+	   }
+	   //TODO
+		return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
 
 
 }
