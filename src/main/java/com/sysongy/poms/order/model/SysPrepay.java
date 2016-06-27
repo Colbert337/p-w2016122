@@ -3,7 +3,7 @@ package com.sysongy.poms.order.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class sysPrepay {
+public class SysPrepay {
     private String prepayId;
 
     private String payerId;

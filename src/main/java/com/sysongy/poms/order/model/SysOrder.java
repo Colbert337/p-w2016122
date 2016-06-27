@@ -26,11 +26,50 @@ public class SysOrder {
 
     private String operator;
 
-    private String operatorType;
+    private String operatorTargetType;
+    
+    private String operatorSourceType;
 
-    private String is_discharge;
+    private String dischargeOrderId;
+    
+	private String is_discharge;
+	
+	private String operatorSourceId;
+    
+    public String getOperatorSourceId() {
+		return operatorSourceId;
+	}
 
-    private String discharge_order_id;
+	public void setOperatorSourceId(String operatorSourceId) {
+		this.operatorSourceId = operatorSourceId;
+	}
+
+	public String getDischargeOrderId() {
+		return dischargeOrderId;
+	}
+
+	public void setDischargeOrderId(String dischargeOrderId) {
+		this.dischargeOrderId = dischargeOrderId;
+	}
+
+	public String getOperatorTargetType() {
+		return operatorTargetType;
+	}
+
+	public void setOperatorTargetType(String operatorTargetType) {
+		this.operatorTargetType = operatorTargetType;
+	}
+
+	public String getOperatorSourceType() {
+		return operatorSourceType;
+	}
+
+	public void setOperatorSourceType(String operatorSourceType) {
+		this.operatorSourceType = operatorSourceType;
+	}
+
+
+
     
     public String getIs_discharge() {
 		return is_discharge;
@@ -38,14 +77,6 @@ public class SysOrder {
 
 	public void setIs_discharge(String is_discharge) {
 		this.is_discharge = is_discharge;
-	}
-
-	public String getDischarge_order_id() {
-		return discharge_order_id;
-	}
-
-	public void setDischarge_order_id(String discharge_order_id) {
-		this.discharge_order_id = discharge_order_id;
 	}
 
 	public String getOrderId() {
@@ -136,11 +167,5 @@ public class SysOrder {
         this.operator = operator == null ? null : operator.trim();
     }
 
-    public String getOperatorType() {
-        return operatorType;
-    }
-
-    public void setOperatorType(String operatorType) {
-        this.operatorType = operatorType == null ? null : operatorType.trim();
-    }
+    
 }

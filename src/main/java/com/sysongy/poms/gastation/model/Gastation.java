@@ -45,6 +45,15 @@ public class Gastation extends BaseModel {
 	private String sys_user_account_id;
 	private SysUserAccount account;
 	private BigDecimal prepay_balance;
+	private Integer prepay_version;
+
+	public Integer getPrepay_version() {
+		return prepay_version;
+	}
+
+	public void setPrepay_version(Integer prepay_version) {
+		this.prepay_version = prepay_version;
+	}
 
 	public BigDecimal getPrepay_balance() {
 		return prepay_balance;
