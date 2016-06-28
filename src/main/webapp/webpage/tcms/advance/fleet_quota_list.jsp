@@ -40,9 +40,9 @@
 								重置
 							</button>
 							<div class="item"></div>
-							<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
+							<%--<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
 								充值
-							</button>
+							</button>--%>
 							<button class="btn btn-sm btn-primary" type="button" onclick="addFenpei();">
 								资金分配
 							</button>
@@ -57,7 +57,7 @@
 					<%--</h4>--%>
 					<div class="table-header">
 						<label style="font-size: 18px;">账户余额：${fleetQuotaMap.userAccount.accountBalance}元</label>&nbsp;&nbsp;&nbsp;&nbsp;
-						<label style="font-size: 18px;">未分配资金：${fleetQuotaMap.userAccount.accountBalance}元</label>
+						<label style="font-size: 18px;">未分配资金：${fleetQuotaMap.weifenpeiVal}元</label>
 					</div>
 					<%--<table id="simple-table" class="table table-striped table-bordered table-hover">--%>
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
@@ -77,7 +77,17 @@
 								<td>${fleetQuota.fleetName}</td>
 								<td>${fleetQuota.realName}</td>
 								<td>${fleetQuota.mobilePhone}</td>
-								<td>${fleetQuota.isAllot}</td>
+								<td>
+									<c:choose>
+										<c:when test="${fleetQuota.isAllot == 0}">
+											未分配
+										</c:when>
+										<c:when test="${fleetQuota.isAllot == 1}">
+											已分配
+										</c:when>
+										<c:otherwise>未分配</c:otherwise>
+									</c:choose>
+								</td>
 								<td>${fleetQuota.quota}</td>
 								<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 							</tr>
@@ -198,7 +208,6 @@
 										<th width="15%">手机号</th>
 										<th width="20%">是否分配资金</th>
 										<th width="20%">可用资金(元)</th>
-										<th width="20%">上次分配时间</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -209,7 +218,8 @@
 												<td>${fleetQuota.mobilePhone}</td>
 												<td>
 													<input type="hidden" id="tc_fleet_id" name="tcFleetId" value="${fleetQuota.tcFleetId}"/>
-													<input id="allot_${suffix.index}" name="isAllot"
+													<input type="hidden" id="is_allot_${suffix.index}" name="isAllot" value="${fleetQuota.isAllot}"/>
+													<input id="allot_${suffix.index}"
 													   <c:if test="${fleetQuota.isAllot != null && fleetQuota.isAllot == 1}"> checked="checked" </c:if>
 													   type="checkbox" class="ace ace-switch ace-switch-5 zh" onclick="allocation(this,'${suffix.index}');">
 													<span class="lbl middle"></span>
@@ -218,7 +228,6 @@
 													<input type="text" id="quota_${suffix.index}" name="quota" value="${fleetQuota.quota}"
 													<c:if test="${fleetQuota.isAllot == null || fleetQuota.isAllot == 0}"> readonly="readonly" </c:if> class="col-xs-8 col-sm-8"/>
 												</td>
-												<td><fmt:formatDate value="${fleetQuota.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 											</tr>
 										</c:forEach>
 									</tbody>
@@ -264,28 +273,29 @@
 										<th width="10%">对方姓名</th>
 										<th width="15%">转账金额</th>
 										<th width="25%">用途</th>
+										<th width="10%">操作</th>
 									</tr>
 									</thead>
 									<tbody>
-										<c:forEach items="${fleetQuotaMap.fleetQuotaList}" var="fleetQuota">
-											<tr>
-												<td>
-													<input type="text" id="1" name="" class="col-sm-12"/>
-												</td>
-												<td>
-													<input type="text" id="2" name="" class="col-sm-12"/>
-												</td>
-												<td>
-													<input type="text" id="3" name="" class="col-sm-12"/>
-												</td>
-												<td>
-													<input type="text" id="4" name="" class="col-sm-12"/>
-												</td>
-											</tr>
-											<tr><td colspan="4" align="right"><a href="javascript:alert('成功！');">添加</a></td></tr>
-										</c:forEach>
+										<tr>
+											<td id="tr_1">
+												<input type="text"  id="mobile_phone_1" name="mobilePhone" class="col-sm-12" onblur="queryDriverInfo(1);"/>
+											</td>
+											<td>
+												<input type="text"  id="full_name_1" name="fullName" class="col-sm-12" readonly="readonly"/>
+												<input type="hidden" id="sys_driver_id_1" name="sysDriverId" class="col-sm-12"/>
+											</td>
+											<td>
+												<input type="text" id="amount_1" name="amount" class="col-sm-12"/>
+											</td>
+											<td>
+												<input type="text" id="remark_1" name="remark" class="col-sm-12"/>
+											</td>
+											<td></td>
+										</tr>
 									</tbody>
 								</table>
+								<tr><td colspan="4" align="right"><a href="javascript:addRow();">添加</a></td></tr>
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->

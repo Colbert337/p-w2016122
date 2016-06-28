@@ -1,25 +1,29 @@
 package com.sysongy.tcms.advance.controller;
 
-import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @FileName: TcFleetQuotaController
@@ -40,6 +44,10 @@ public class TcFleetQuotaController extends BaseContoller {
     TcFleetQuotaService tcFleetQuotaService;
     @Autowired
     GasCardService gasCardService;
+    @Autowired
+    DriverService driverService;
+    @Autowired
+    OrderService orderService;
 
     /**
      * 查询车辆列表
@@ -65,28 +73,136 @@ public class TcFleetQuotaController extends BaseContoller {
     }
 
     /**
-     * 查询车辆信息
-     * @param FleetQuota
+     * 保存分配资金
+     * @param data
      * @param map
      * @return
      */
-    @RequestMapping("/info")
+    @RequestMapping("/save/fenpei")
     @ResponseBody
-    public Map<String, Object> queryFleetQuota(TcFleetQuota FleetQuota, ModelMap map){
-        Map<String, Object> FleetQuotaMap = new HashMap<>();
-        GasCard gasCard = new GasCard();
-        TcFleetQuota tcFleetQuota = tcFleetQuotaService.queryFleetQuota(FleetQuota);
-        FleetQuotaMap.put("FleetQuota",tcFleetQuota);
+    public AjaxJson saveFenpei(@RequestParam String data, ModelMap map){
+        AjaxJson ajaxJson = new AjaxJson();
         try {
-            /*gasCard = gasCardService.queryGasCardInfo(tcFleetQuota.getCardNo());*/
+            if(data != null && !"".equals(data)) {
+                String datas[] = data.split("&");
+                List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();//将值分开存在list中
+                Map<String, Object> mapObj = new HashMap();
+                String dataTemp[];
+                String stationId = "";
+                if(datas != null && datas.length > 0){
+                    for (int i = 0; i < datas.length; i++) {
+                        dataTemp = datas[i].split("=");
+                        if(i == 0 && dataTemp.length > 1){//将第一位赋值给站点编号
+                            stationId = dataTemp[1];
+                        }else{
+                            if (dataTemp.length > 1) {
+                                mapObj.put(dataTemp[0], dataTemp[1]);
+                            } else {
+                                mapObj.put(dataTemp[0], "0");
+                            }
+                            if (i % 3 == 0) {   //数字12 为  提交过来每一行  需要修改数据的数量
+                                mapObj.put("tcFleetQuotaId",UUIDGenerator.getUUID());
+                                mapObj.put("stationId",stationId);
+                                list.add(mapObj);
+                                mapObj = new HashMap<>();
+                            }
+                        }
+
+                    }
+                }
+
+                tcFleetQuotaService.addFleetQuotaList(list);
+            }
+            ajaxJson.setSuccess(true);
+        }catch (Exception e){
+            ajaxJson.setSuccess(false);
+            e.printStackTrace();
+        }
+            return ajaxJson;
+    }
+
+    /**
+     * 个人转账
+     * @param data
+     * @param map
+     * @return
+     */
+    @RequestMapping("/save/zhuan")
+    @ResponseBody
+    public AjaxJson saveZhuan(@ModelAttribute CurrUser currUser,@RequestParam String data, ModelMap map){
+        AjaxJson ajaxJson = new AjaxJson();
+        String stationId = currUser.getStationId();
+        String userName = currUser.getUser().getUserName();
+        try {
+            if(data != null && !"".equals(data)) {
+                String datas[] = data.split("&");
+                List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();//将值分开存在list中
+                Map<String, Object> mapObj = new HashMap();
+                String dataTemp[];
+                if(datas != null && datas.length > 0){
+                    for (int i = 0; i < datas.length; i++) {
+                        dataTemp = datas[i].split("=");
+                        if (dataTemp.length > 1) {
+                            mapObj.put(dataTemp[0], dataTemp[1]);
+                        } else {
+                            mapObj.put(dataTemp[0], "0");
+                        }
+                        if ((i+1) % 5 == 0 ) {   //数字5 为  提交过来每一行  需要修改数据的数量
+                            list.add(mapObj);
+                            mapObj = new HashMap<>();
+                        }
+
+                    }
+                }
+
+                if(list != null && list.size() > 0){
+                    for (Map<String, Object> mapDriver:list){
+                        SysOrder order = new SysOrder();
+                        order.setOrderId(UUIDGenerator.getUUID());
+
+                        order.setOrderType(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
+                        order.setOrderDate(new Date());
+                        BigDecimal cash = new BigDecimal(mapDriver.get("amount").toString());
+                        order.setCash(cash);
+                        order.setCreditAccount(stationId);
+                        order.setDebitAccount(mapDriver.get("sysDriverId").toString());
+                        order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_TRANSFER_CHARGE);
+                        order.setOperator(userName);
+                        order.setOperatorSourceId(stationId);
+                        order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.TRANSPORTION);
+                        order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);
+
+                        //添加订单
+                        orderService.insert(order);
+                        //运输公司往个人转账
+                        orderService.transferTransportionToDriver(order);
+                    }
+                }
+
+            }
+            ajaxJson.setSuccess(true);
+        }catch (Exception e){
+            ajaxJson.setSuccess(false);
+            e.printStackTrace();
+        }
+        return ajaxJson;
+    }
+
+    @RequestMapping("/info/driver")
+    @ResponseBody
+    public SysDriver queryDriverInfo(@RequestParam String mobilePhone, ModelMap map){
+        AjaxJson ajaxJson = new AjaxJson();
+        SysDriver driver = new SysDriver();
+        driver.setMobilePhone(mobilePhone);
+
+        try {
+            driver = driverService.queryDriverByMobilePhone(driver);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        FleetQuotaMap.put("gasCard",gasCard);
-        return FleetQuotaMap;
+        return driver;
     }
-
     /**
      * 添加车辆
      * @param currUser 当前用户

@@ -126,7 +126,7 @@
 											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 										</a> -->
 										<a class="option-btn-m" href="javascript:void(0);" title="账户余额" data-rel="tooltip">
-											<i class="ace-icon fa fa-paw bigger-130" onclick="preDeposit(this);"></i>
+											<i class="ace-icon fa fa-credit-card bigger-130" onclick="preDeposit(this);"></i>
 										</a>
 									</td>
 								</tr>

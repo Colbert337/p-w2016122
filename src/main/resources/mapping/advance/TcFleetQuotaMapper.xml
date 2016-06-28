@@ -86,6 +86,13 @@
     delete from tc_fleet_quota
     where tc_fleet_quota_id = #{tcFleetQuotaId,jdbcType=VARCHAR}
   </delete>
+  <insert id="addFleetQuotaList" parameterType="java.util.List" >
+  insert into tc_fleet_quota (tc_fleet_quota_id,tc_fleet_id,station_id,quota,is_allot)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.tcFleetQuotaId},#{item.tcFleetId},#{item.stationId},#{item.quota},#{item.isAllot})
+    </foreach>
+  </insert>
   <insert id="addFleetQuota" parameterType="com.sysongy.tcms.advance.model.TcFleetQuota" >
     insert into tc_fleet_quota
     <trim prefix="(" suffix=")" suffixOverrides="," >

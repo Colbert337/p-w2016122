@@ -213,6 +213,33 @@ public class TransportionServiceImpl implements TransportionService {
 		
 		return cash_success;
 	}
+	
+	/**
+	 * 转账的时候，扣除运输公司账户金额
+	 * @param order
+	 * @return
+	 * @throws Exception
+	 */
+	public String transferTransportionToDriverDeductCash(SysOrder order,Transportion tran) throws Exception{
+		if (order ==null){
+			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+		}
+		if (tran ==null){
+			   return GlobalConstant.OrderProcessResult.TRANSPORTION_IS_NULL;
+		}
+		//从账户减钱
+		String tran_account = tran.getSys_user_account_id();
+		BigDecimal cash = order.getCash();
+		//乘以-1，讲订单里面的cash变为负值，则就是减钱
+		BigDecimal add_cash = cash.multiply(new BigDecimal(-1));
+		String cash_success = sysUserAccountService.addCashToAccount(tran_account,add_cash);
+		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION;
+
+		String remark = "从"+ tran.getTransportion_name()+"的账户，扣款"+cash.toString()+"。";
+		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
+		
+		return cash_success;
+	}
 
 
 	@Override

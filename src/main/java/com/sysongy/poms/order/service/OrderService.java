@@ -42,6 +42,25 @@ public interface OrderService {
     String chargeToGasStation(SysOrder order) throws Exception;  	
     
     /**
+	 * 运输公司给个人转账
+	 * 1.扣除运输公司账户
+	 * 2.个人账户增加金额
+	 * 3.给运输公司返现。
+	 * @return
+	 */
+	String transferTransportionToDriver(SysOrder order) throws Exception;
+	
+	/**
+	 * 个人给个人转账
+	 * 1.扣除个人账户credit_account
+	 * 2.增加个人账户debit_account
+	 * 3.不返现
+	 * @return
+	 */
+	public String transferDriverToDriver(SysOrder order) throws Exception;
+	
+		
+    /**
      * 判断订单能否充红
      * @param order
      * @return

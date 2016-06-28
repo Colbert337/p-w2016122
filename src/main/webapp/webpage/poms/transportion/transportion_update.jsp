@@ -140,7 +140,7 @@
 											<div class="row form-group">
 												<div class="col-sm-6">
 												<input class="form-control" type="text" id="showprovince" readonly="readonly"/>
-												<select style="visibility:hidden" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
+												<select class="hidden" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
 														<option value ="请选择市区">请选择省份</option>
 														<option value ="100">北京市 </option>
 														<option value ="220">天津市 </option>

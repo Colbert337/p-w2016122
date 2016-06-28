@@ -73,6 +73,7 @@
 										<div class="col-sm-4">
 											<input type="text" id="card_no_2"  name="card_no_end" placeholder="卡结束编号" class="form-control" maxlength="9"/>
 											<input type="hidden" name="card_no_arr" id="card_no_arr"/>
+											<input type="hidden" name="card_no_isOK" id="card_no_isOK"/>
 										</div>
 									</div>
 									
@@ -278,6 +279,7 @@
 			
 			var start = parseFloat($("#card_no_1").val());
 			var end = parseFloat($("#card_no_2").val());
+			var num = end - start;
 			
 			if(end - start >=2000){
 				alert("单批次操作卡数量最大值为2000");
@@ -292,7 +294,7 @@
 					   url:'<%=basePath%>/web/card/checkCard?cardid='+i,   
 			           type:'post',                    
 			           dataType:'text',
-			           async:false,
+			           //async:false,
 						beforeSend: function () {
 							$("#dynamic-table").append('<tfoot><tr><td colspan="6" class="text-center">入库中...</td></tr></tfoot>');
 						},
@@ -307,10 +309,13 @@
 			            },
 						complete: function () {
 							$("#dynamic-table").find("tfoot").remove();
+							$("#card_no_isOK").val(end-start);
 						}
 					});
 			}
-			
+			setTimout(function(){
+				console.log(num+' , ' + $("#card_no_isOK").val())
+			},1000);
 			if(contral == "0"){
 				alert("该批次中没有需要入库的卡");
 				return;

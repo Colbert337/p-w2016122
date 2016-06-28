@@ -211,6 +211,7 @@ public class GastationServiceImpl implements GastationService {
 		order.setOrderDate(new Date());
 		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_GASTATION);
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.GASTATION);
+		orderService.insert(order);
 		orderService.chargeToGasStation(order);
 		
 		//写日志

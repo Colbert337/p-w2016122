@@ -172,7 +172,7 @@
         gas_name = #{gasName,jdbcType=VARCHAR},
       </if>
       <if test="price_id != null" >
-        price = #{price_id,jdbcType=VARCHAR},
+        price_id = #{price_id,jdbcType=VARCHAR},
       </if>
       <if test="unit != null" >
         unit = #{unit,jdbcType=VARCHAR},
