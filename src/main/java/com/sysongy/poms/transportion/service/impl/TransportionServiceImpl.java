@@ -241,6 +241,10 @@ public class TransportionServiceImpl implements TransportionService {
 		return cash_success;
 	}
 
+	@Override
+	public int updatedeposiTransport(Transportion transportion) throws Exception {
+		return transportionMapper.updateByPrimaryKey(transportion);
+	}
 
 	@Override
 	public int updatedeposiTransportion(SysDepositLog log, String operation) throws Exception {

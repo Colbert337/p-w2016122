@@ -22,6 +22,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -139,19 +140,20 @@ public class MailEngine {
             logger.info("********************send the mail end!*******************");
         } catch (MessagingException ex) {
             logger.error(ex.getMessage(), ex);
+            ex.printStackTrace();
         }
     }
 
     //注入mailEngine 和 mailMessage，调用以下方法发送HTML邮件
     public static void main(String[] args){
-        /**
+        /*
         mailMessage.setTo("chendong<dong.chen@sysongy.com>");
         mailMessage.setSubject("我想吃饭的邮件服务器");
         Map<String, String> model = new HashMap<String, String>();
         model.put("user", "12345");
         model.put("password", "432123");
-        mailEngine.send(mailMessage, "loginMail.ftl", model);
-         **/
+        mailEngine.send(mailMessage, "loginMail.ftl", model);*/
+
     }
 }
 

@@ -79,9 +79,7 @@ public class TcFleetQuotaController extends BaseContoller {
      * @return
      */
     @RequestMapping("/save/fenpei")
-    @ResponseBody
-    public AjaxJson saveFenpei(@RequestParam String data, ModelMap map){
-        AjaxJson ajaxJson = new AjaxJson();
+    public String saveFenpei(@RequestParam String data, ModelMap map){
         try {
             if(data != null && !"".equals(data)) {
                 String datas[] = data.split("&");
@@ -113,12 +111,10 @@ public class TcFleetQuotaController extends BaseContoller {
 
                 tcFleetQuotaService.addFleetQuotaList(list);
             }
-            ajaxJson.setSuccess(true);
         }catch (Exception e){
-            ajaxJson.setSuccess(false);
             e.printStackTrace();
         }
-            return ajaxJson;
+            return "redirect:/web/tcms/fleetQuota/list/page";
     }
 
     /**
@@ -128,9 +124,7 @@ public class TcFleetQuotaController extends BaseContoller {
      * @return
      */
     @RequestMapping("/save/zhuan")
-    @ResponseBody
-    public AjaxJson saveZhuan(@ModelAttribute CurrUser currUser,@RequestParam String data, ModelMap map){
-        AjaxJson ajaxJson = new AjaxJson();
+    public String saveZhuan(@ModelAttribute CurrUser currUser,@RequestParam String data, ModelMap map){
         String stationId = currUser.getStationId();
         String userName = currUser.getUser().getUserName();
         try {
@@ -178,23 +172,24 @@ public class TcFleetQuotaController extends BaseContoller {
                         orderService.transferTransportionToDriver(order);
                     }
                 }
-
             }
-            ajaxJson.setSuccess(true);
         }catch (Exception e){
-            ajaxJson.setSuccess(false);
             e.printStackTrace();
         }
-        return ajaxJson;
+        return "redirect:/web/tcms/fleetQuota/list/page";
     }
 
+    /**
+     * 根据手机号码查询司机信息
+     * @param sysDriver
+     * @param map
+     * @return
+     */
     @RequestMapping("/info/driver")
     @ResponseBody
-    public SysDriver queryDriverInfo(@RequestParam String mobilePhone, ModelMap map){
-        AjaxJson ajaxJson = new AjaxJson();
+    public SysDriver queryDriverInfo(SysDriver sysDriver, ModelMap map){
         SysDriver driver = new SysDriver();
-        driver.setMobilePhone(mobilePhone);
-
+        driver = sysDriver;
         try {
             driver = driverService.queryDriverByMobilePhone(driver);
         }catch (Exception e){
@@ -202,39 +197,6 @@ public class TcFleetQuotaController extends BaseContoller {
         }
 
         return driver;
-    }
-    /**
-     * 添加车辆
-     * @param currUser 当前用户
-     * @param FleetQuota 车辆
-     * @param map
-     * @return
-     */
-    @RequestMapping("/save")
-    public String saveFleetQuota(@ModelAttribute("currUser") CurrUser currUser, TcFleetQuota FleetQuota, ModelMap map){
-        int userType = currUser.getUser().getUserType();
-        int result = 0;
-
-        if(FleetQuota.getTcFleetQuotaId() != null && FleetQuota.getTcFleetQuotaId() != ""){
-            /*FleetQuota.setPayCode(null);*/
-            tcFleetQuotaService.updateFleetQuota(FleetQuota);
-        }else{
-            String stationId = currUser.getStationId();
-            FleetQuota.setStationId(stationId);
-            FleetQuota.setTcFleetQuotaId(UUIDGenerator.getUUID());
-           /* String payCode = FleetQuota.getPayCode();
-            FleetQuota.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
-            FleetQuota.setIsDeleted(GlobalConstant.STATUS_NOTDELETE+"");*/
-
-            try {
-                tcFleetQuotaService.addFleetQuota(FleetQuota);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-
-        return "redirect:/web/tcms/FleetQuota/list/page";
     }
 
 }

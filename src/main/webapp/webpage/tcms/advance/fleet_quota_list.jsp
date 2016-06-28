@@ -58,6 +58,7 @@
 					<div class="table-header">
 						<label style="font-size: 18px;">账户余额：${fleetQuotaMap.userAccount.accountBalance}元</label>&nbsp;&nbsp;&nbsp;&nbsp;
 						<label style="font-size: 18px;">未分配资金：${fleetQuotaMap.weifenpeiVal}元</label>
+						<input type="hidden" id="sysTransportId" name="sysTransportId" value="${stationId}"/>
 					</div>
 					<%--<table id="simple-table" class="table table-striped table-bordered table-hover">--%>
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
@@ -266,7 +267,7 @@
 							<!-- PAGE CONTENT BEGINS -->
 							<form class="form-horizontal" id="zhuanForm">
 								<!-- #section:elements.form -->
-								<table id="zhuan" class="table table-striped table-bordered table-hover">
+								<table id="zhuanTable" class="table table-striped table-bordered table-hover">
 									<thead>
 									<tr>
 										<th width="20%">手机号码</th>
@@ -326,8 +327,11 @@
 				<div class="container-fluid">
 					<%--两行表单 开始--%>
 					<div class="row">
-						<div class="col-xs-12">
-							<!-- PAGE CONTENT BEGINS -->
+						<div id="firstDiv" class="col-xs-12" style="display: none;">
+							<!-- 首次设置 -->
+							您的支付密码还未设置，点击提交按钮后，我们会向您注册账号时的邮箱发送验证邮件，请您及时进行后续操作。
+						</div>
+						<div id="paswordDiv" class="col-xs-12">
 							<form class="form-horizontal" id="passwordForm">
 								<!-- #section:elements.form -->
 								<div class="form-group">
@@ -335,35 +339,41 @@
 									<div class="col-sm-7" style="padding-bottom: 18px;">
 										<div class="radio">
 											<label>
-												<input name="gender" id="passwordUpdate" type="radio" class="ace" checked="checked" value="0">
+												<input name="gender" id="passwordUpdate" type="radio" class="ace" checked="checked" value="0" onclick="changePassDiv('updatePsDiv','lossPsDiv')">
 												<span class="lbl"> 密码修改</span>
 											</label>
 											<label>
-												<input name="gender" id="passwordLoss" type="radio" class="ace" value="1">
+												<input name="gender" id="passwordLoss" type="radio" class="ace" value="1" onclick="changePassDiv('lossPsDiv','updatePsDiv')">
 												<span class="lbl"> 密码遗失</span>
 											</label>
 										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="old_password"><span class="red_star">*</span> 原支付密码： </label>
-									<div class="col-sm-7">
-										<input type="password" id="old_password" name="oldPassword" placeholder="原支付密码" class="col-xs-10 col-sm-12" />
+								<div id="updatePsDiv" style="display: block;">
+									<!-- 修改密码 -->
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right" for="old_password"><span class="red_star">*</span> 原支付密码： </label>
+										<div class="col-sm-7">
+											<input type="password" id="old_password" name="oldPassword" placeholder="原支付密码" class="col-xs-10 col-sm-12" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right" for="new_password"><span class="red_star">*</span> 新支付密码： </label>
+										<div class="col-sm-7">
+											<input type="password" id="new_password" name="payCode" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right" for="rep_password"><span class="red_star">*</span> 确认新支付密码： </label>
+										<div class="col-sm-7">
+											<input type="password" id="rep_password" name="rePassword" placeholder="确认新支付密码" class="col-xs-10 col-sm-12" />
+										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="new_password"><span class="red_star">*</span> 新支付密码： </label>
-									<div class="col-sm-7">
-										<input type="password" id="new_password" name="newPassword" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
-									</div>
+								<div id="lossPsDiv" class="col-xs-12" style="display: none;">
+									<!-- 遗失密码 -->
+									如果支付密码遗失，我们会向您注册账号时的邮箱发送验证邮件，请您及时进行后续操作。
 								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="rep_password"><span class="red_star">*</span> 确认新支付密码： </label>
-									<div class="col-sm-7">
-										<input type="password" id="rep_password" name="repPassword" placeholder="确认新支付密码" class="col-xs-10 col-sm-12" />
-									</div>
-								</div>
-
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
