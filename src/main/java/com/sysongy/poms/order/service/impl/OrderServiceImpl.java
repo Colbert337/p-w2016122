@@ -1,6 +1,7 @@
 package com.sysongy.poms.order.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -85,7 +86,18 @@ public class OrderServiceImpl implements OrderService {
 		return sysOrderMapper.updateByPrimaryKey(record);
 	}
 
-	
+    /**
+     * 创建流水单编码
+     * @param record
+     * @return
+     */
+    public String createOrderNumber(String order_type){
+       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+  	   long times = System.currentTimeMillis();  
+  	   Date date = new Date(times);  
+  	   return order_type+sdf.format(date); 
+    }
+    
 	/**
      * 给司机充值
      * 1.如果现金充值，取操作源operator_source_type，如果是加注站，则判断加注站预付款不能超过充值金额,
@@ -337,9 +349,29 @@ public class OrderServiceImpl implements OrderService {
 	 * 2.扣除账户金额--乐观锁操作
 	 */
 	@Override
-	public String consumeByDriver(SysOrder record){
-		
-		return GlobalConstant.OrderProcessResult.SUCCESS;
+	public String consumeByDriver(SysOrder order) throws Exception{
+	   if (order ==null){
+		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+	   }
+	   
+	   String orderType = order.getOrderType();
+	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_DRIVER))){
+		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH;
+	   }
+	   
+	   String credit_account = order.getCreditAccount();
+	   if(credit_account==null || credit_account.equalsIgnoreCase("")){
+		   return GlobalConstant.OrderProcessResult.CREDIT_ACCOUNT_IS_NULL;
+	   }
+
+	   String operatorTargetType = order.getOperatorTargetType();
+	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER))){
+		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER;
+	   }
+	   
+	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
+   
+	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
 	@Override
@@ -462,7 +494,6 @@ public class OrderServiceImpl implements OrderService {
   		   //如果出错直接返回错误代码退出
   		   return success_chong;
   	   }
-	   //TODO
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 	
@@ -470,7 +501,24 @@ public class OrderServiceImpl implements OrderService {
     	OrderServiceImpl orderServiceImpl = new OrderServiceImpl();
     	//测试充值：
     	SysOrder order = new SysOrder();
+    	order.setOrderId(UUIDGenerator.getUUID());
+    	String order_type = GlobalConstant.OrderType.CHARGE_TO_DRIVER;
+    	String order_number = orderServiceImpl.createOrderNumber(order_type);
+    	order.setOrderNumber(order_number);
+    	order.setOrderType(order_type);
+    	order.setOrderDate(new Date());
+    	order.setCash(new BigDecimal("16.88"));
+    	order.setDebitAccount("748f08a4e31545c2b6de454d3deb0979");
+    	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
+    	order.setChannel("亭口加注站");
+    	order.setChannelNumber("GS12000003");
+    	order.setOperator("14e9ef72ce5c424dbcc36859d6618a6b");
+    	order.setOperatorSourceId("GS12000003");
+    	order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
+    	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+    	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
     	try{
+    		orderServiceImpl.insert(order);
     		orderServiceImpl.chargeToDriver(order);
     	}catch(Exception e){
     		System.out.println("Found exception:"+e.getMessage());
