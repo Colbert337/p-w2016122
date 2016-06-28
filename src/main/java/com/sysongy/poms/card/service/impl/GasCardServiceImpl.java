@@ -196,7 +196,7 @@ public class GasCardServiceImpl implements GasCardService{
 
 	@Override
 	public Integer updateGasCardStatus(CRMCardUpdateInfo crmCardUpdateInfo) throws Exception{
-		crmCardUpdateInfo.setStartID(crmCardUpdateInfo.getStartID() + 1);
+		crmCardUpdateInfo.setStartID(crmCardUpdateInfo.getStartID() - 1);
 		crmCardUpdateInfo.setEndID(crmCardUpdateInfo.getEndID() + 1);
 		int nRet = gasCardMapper.updateCardStatus(crmCardUpdateInfo);
 		int nLRet =gasCardLogMapper.batchInsertFromCRM(crmCardUpdateInfo);
