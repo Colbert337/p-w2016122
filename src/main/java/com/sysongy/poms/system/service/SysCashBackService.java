@@ -33,7 +33,7 @@ public interface SysCashBackService {
 	 * @param accountUserName
 	 * @return
 	 */
-	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType);
+	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType) throws Exception;
 	
 	/**
 	 * 充红返现给账户
@@ -45,5 +45,5 @@ public interface SysCashBackService {
 	 * @param orderDealType 订单处理类型
 	 * @return
 	 */
-	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType);
+	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType) throws Exception;
 }

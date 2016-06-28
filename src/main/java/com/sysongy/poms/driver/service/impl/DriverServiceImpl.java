@@ -142,7 +142,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     /**
-	 * 给司机充值/充红
+	 * 给司机充值/充红/转账，增加钱
 	 * @param order
 	 * @return
      * @throws Exception 
@@ -177,6 +177,7 @@ public class DriverServiceImpl implements DriverService {
 		}
 		if(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER.equalsIgnoreCase(order.getOrderType())){
 			chong = "转账";
+			orderDealType = GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_INCREASE_DRIVER;
 		}
 		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);

@@ -66,7 +66,7 @@ public interface OrderService {
      * @return
      * @throws Exception
      */
-    String checkCanDischarge(SysOrder order) throws Exception;
+    boolean checkCanDischarge(SysOrder order) throws Exception;
 
     /**
      * 充红订单
@@ -77,9 +77,9 @@ public interface OrderService {
     String dischargeOrder(SysOrder order) throws Exception;
 
     /**
-     * 消费
+     * 个人消费
      */
-    String consumeMoney(SysOrder record) throws Exception;
+    String consumeByDriver(SysOrder record) throws Exception;
 
     /**
      * 验证订单
