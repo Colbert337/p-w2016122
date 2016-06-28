@@ -243,7 +243,7 @@ public class TransportionServiceImpl implements TransportionService {
 
 	@Override
 	public int updatedeposiTransport(Transportion transportion) throws Exception {
-		return transportionMapper.updateByPrimaryKey(transportion);
+		return transportionMapper.updateByPrimaryKeySelective(transportion);
 	}
 
 	@Override

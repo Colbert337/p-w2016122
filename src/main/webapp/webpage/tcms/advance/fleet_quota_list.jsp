@@ -360,7 +360,7 @@
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="new_password"><span class="red_star">*</span> 新支付密码： </label>
 										<div class="col-sm-7">
-											<input type="password" id="new_password" name="payCode" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
+											<input type="password" id="new_password" name="pay_code" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
 										</div>
 									</div>
 									<div class="form-group">
