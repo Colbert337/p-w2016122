@@ -262,6 +262,7 @@ public class TransportionServiceImpl implements TransportionService {
 		order.setOrderDate(new Date());
 		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+		orderService.insert(order);
 		orderService.chargeToTransportion(order);
 		
 		//写日志
