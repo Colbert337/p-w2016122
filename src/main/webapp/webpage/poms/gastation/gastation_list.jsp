@@ -28,7 +28,7 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>加注站编号:</label>
-							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号"  maxlength="8" value="${gastation.sys_gas_station_id}"/>
+							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号"  maxlength="10" value="${gastation.sys_gas_station_id}"/>
 						</div>
 						
 						<div class="item">

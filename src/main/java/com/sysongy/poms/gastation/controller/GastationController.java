@@ -59,7 +59,6 @@ public class GastationController extends BaseContoller{
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("gascard",gastation);
-			map.addAttribute("current_module", "webpage/poms/gastation/gastation_list");
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -273,7 +272,7 @@ public class GastationController extends BaseContoller{
 					rowcount = service.updatedepositGastation(deposit, currUser.getUserId());
 				}
 
-				ret = this.queryAllGastationList(map, new Gastation());
+				ret = this.queryAllGastationList2(map, new Gastation());
 
 				bean.setRetCode(100);
 				bean.setRetMsg("保证金设置成功");
@@ -287,7 +286,7 @@ public class GastationController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllGastationList(map, new Gastation());
+			ret = this.queryAllGastationList2(map, new Gastation());
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

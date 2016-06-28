@@ -216,6 +216,8 @@ public class GastationServiceImpl implements GastationService {
 		
 		//写日志
 		log.setOptime(new Date());
+		Gastation gastation = gasStationMapper.selectByPrimaryKey(log.getStationId());
+		log.setStationName(gastation.getGas_station_name());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.GASTATION);
 		return sysDepositLogMapper.insert(log);

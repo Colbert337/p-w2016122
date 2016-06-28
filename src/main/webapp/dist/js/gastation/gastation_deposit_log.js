@@ -5,7 +5,7 @@
 	function commitForm(obj){
 		
 		var listOptions ={   
-	            url:'../web/transportion/depositList',   
+	            url:'../web/gastation/depositList',   
 	            type:'post',                    
 	            dataType:'html',
 	            success:function(data){

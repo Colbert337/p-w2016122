@@ -27,12 +27,12 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>运输公司编号:</label>
-							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号"  maxlength="8" value="${transportion.sys_transportion_id}"/>
+							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号" maxlength="10" value="${transportion.sys_transportion_id}"/>
 						</div>
 						
 						<div class="item">
 						    <label>运输公司名称:</label>
-							<input type="text" name="transportion_name" placeholder="输入运输公司名称"  maxlength="20" value="${transportion.transportion_name}"/>
+							<input type="text" name="transportion_name" placeholder="输入运输公司名称" maxlength="20" value="${transportion.transportion_name}"/>
 						</div>
 						
 						<div class="item">

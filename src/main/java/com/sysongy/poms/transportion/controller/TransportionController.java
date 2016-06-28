@@ -300,7 +300,7 @@ public class TransportionController extends BaseContoller{
 					rowcount = service.updatedeposiTransportion(deposit, currUser.getUserId());
 				}
 
-				ret = this.queryAllTransportionList(map, new Transportion());
+				ret = this.queryAllTransportionList2(map, new Transportion());
 
 				bean.setRetCode(100);
 				bean.setRetMsg("保证金设置成功");
@@ -314,7 +314,7 @@ public class TransportionController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllTransportionList(map, new Transportion());
+			ret = this.queryAllTransportionList2(map, new Transportion());
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

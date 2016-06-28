@@ -21,18 +21,18 @@
 
 					<div class="page-header">
 						<h1>
-							运输公司管理
+							充值信息管理
 						</h1>
 					</div>
 					<div class="search-types">
 						<div class="item">
 						    <label>运输公司编号:</label>
-							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号"  maxlength="8" value="${transportion.sys_transportion_id}"/>
+							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号" maxlength="10" value="${transportion.sys_transportion_id}"/>
 						</div>
 						
 						<div class="item">
 						    <label>运输公司名称:</label>
-							<input type="text" name="transportion_name" placeholder="输入运输公司名称"  maxlength="20" value="${transportion.transportion_name}"/>
+							<input type="text" name="transportion_name" placeholder="输入运输公司名称" maxlength="20" value="${transportion.transportion_name}"/>
 						</div>
 						
 						<div class="item">
@@ -54,10 +54,6 @@
 						</div>
 
 						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/transportion/transportion_new.jsp');">
-								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								新建
-							</button>
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
@@ -73,7 +69,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 			
-					<div class="table-header">运输公司详细信息列表</div>
+					<div class="table-header">充值信息列表</div>
 
 					<!-- div.table-responsive -->
 

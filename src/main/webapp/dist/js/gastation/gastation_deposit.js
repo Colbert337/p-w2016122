@@ -35,6 +35,13 @@
 		                        message: '企业名称不能为空'
 		                    }
 		                }
+		            },
+		            depositType: {
+		                validators: {
+		                    notEmpty: {
+		                        message: '转账方式不能为空'
+		                    }
+		                }
 		            }
 		         }
 		    });
@@ -69,4 +76,8 @@
 		
 		function returnpage(){
 			loadPage('#main', '../web/gastation/gastationList');
+		}
+		
+		function returnpage2(){
+			loadPage('#main', '../web/gastation/gastationList2');
 		}

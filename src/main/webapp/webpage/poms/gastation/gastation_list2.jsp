@@ -21,19 +21,19 @@
 
 					<div class="page-header">
 						<h1>
-							加注站管理
+							预存款管理
 						</h1>
 					</div>
 
 					<div class="search-types">
 						<div class="item">
 						    <label>加注站编号:</label>
-							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号"  maxlength="8" value="${gastation.sys_gas_station_id}"/>
+							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号" maxlength="10" value="${gastation.sys_gas_station_id}"/>
 						</div>
 						
 						<div class="item">
 						    <label>加注站名称:</label>
-							<input type="text" name="gas_station_name" placeholder="输入加注站名称"  maxlength="20" value="${gastation.gas_station_name}"/>
+							<input type="text" name="gas_station_name" placeholder="输入加注站名称" maxlength="20" value="${gastation.gas_station_name}"/>
 						</div>
 						
 						<div class="item">
@@ -55,10 +55,6 @@
 						</div>
 
 						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/gastation/gastation_new.jsp');">
-								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								新建
-							</button>
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
@@ -74,7 +70,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">加注站详细信息列表</div>
+					<div class="table-header">预存款信息列表</div>
 
 					<!-- div.table-responsive -->
 

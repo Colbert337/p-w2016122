@@ -6,7 +6,8 @@ import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.util.Date;
 
-public class GsGasPrice  extends BaseModel {
+public class GsGasPrice extends BaseModel {
+	
     private String gsGasPriceId;
 
     private String sysGasStationId;
@@ -30,16 +31,46 @@ public class GsGasPrice  extends BaseModel {
     private Date createdDate;
 
     private Date updatedDate;
+    
+    private String created_date_before;
+	
+	private String created_date_after;
 
     private ProductPrice productPriceInfo;
 
     private String gs_gas_source_id;
+    
+    private Gastation gas_station;
 
     private SysGasSource gs_gas_source_info;
 
     private int is_deleted;
 
-    public String getGsGasPriceId() {
+    public String getCreated_date_before() {
+		return created_date_before;
+	}
+
+	public void setCreated_date_before(String created_date_before) {
+		this.created_date_before = created_date_before;
+	}
+
+	public String getCreated_date_after() {
+		return created_date_after;
+	}
+
+	public void setCreated_date_after(String created_date_after) {
+		this.created_date_after = created_date_after;
+	}
+
+	public Gastation getGas_station() {
+		return gas_station;
+	}
+
+	public void setGas_station(Gastation gas_station) {
+		this.gas_station = gas_station;
+	}
+
+	public String getGsGasPriceId() {
         return gsGasPriceId;
     }
 
