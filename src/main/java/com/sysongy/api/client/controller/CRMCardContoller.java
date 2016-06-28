@@ -157,8 +157,10 @@ public class CRMCardContoller {
             return ajaxJson;
         }
 
-        if((crmCardUpdateInfo.getStartID().toString().length())){
-
+        if((crmCardUpdateInfo.getStartID().toString().length() != 9) || (crmCardUpdateInfo.getEndID().toString().length() != 9)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("输入起始ID或终止ID不是9位！！！");
+            return ajaxJson;
         }
 
         if(StringUtils.isEmpty(crmCardUpdateInfo.getSys_gas_station_id())){
