@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.sysongy.poms.card.dao.GasCardLogMapper;
+import com.sysongy.poms.card.model.GasCardLog;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -64,6 +66,9 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     private SysDriverReviewStrMapper sysDriverReviewStrMapper;
 
+    @Autowired
+    private GasCardLogMapper gasCardLogMapper;
+
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
         PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
@@ -103,6 +108,15 @@ public class DriverServiceImpl implements DriverService {
             }
             gasCard.setCard_status(InterfaceConstants.CARD_STSTUS_IN_USE);
             gasCardMapper.updateByPrimaryKeySelective(gasCard);
+
+            GasCardLog gascardlog = new GasCardLog();
+            org.springframework.beans.BeanUtils.copyProperties(gasCard, gascardlog);
+            gascardlog.setAction(GlobalConstant.CardAction.ADD);
+            gascardlog.setOptime(new Date());
+            int nRet = gasCardLogMapper.insert(gascardlog);
+            if(nRet < 1){
+                logger.error("记录卡轨迹出错， ID：" + gasCard.getCard_no());
+            }
         }
         return sysDriverMapper.updateByPrimaryKeySelective(record);
     }

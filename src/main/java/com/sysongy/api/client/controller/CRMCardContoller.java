@@ -7,6 +7,8 @@ import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import org.apache.commons.io.FileUtils;
@@ -38,12 +40,14 @@ public class CRMCardContoller {
     @Autowired
     private GasCardService gasCardService;
 
+    @Autowired
+    DriverService driverService;
+
     @RequestMapping(value = {"/web/queryCardInfo"})
     @ResponseBody
     public AjaxJson queryCardInfo(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
         AjaxJson ajaxJson = new AjaxJson();
         Map<String, Object> attributes = new HashMap<String, Object>();
-
         if(StringUtils.isEmpty(gascard.getWorkstation())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("气站ID为空！！！");
@@ -52,13 +56,8 @@ public class CRMCardContoller {
 
         try
         {
-            if(!StringUtils.isEmpty(gascard.getStorage_time_range())){
-                String []tmpRange = gascard.getStorage_time_range().split("-");
-                if(tmpRange.length == 2){
-                    gascard.setStorage_time_after(tmpRange[0].trim()+" 00:00:00");
-                    gascard.setStorage_time_before(tmpRange[1]+" 23:59:59");
-                }
-            }
+            gascard.setStorage_time_after(gascard.getStorage_time_after() +" 00:00:00");
+            gascard.setStorage_time_before(gascard.getStorage_time_before() +" 23:59:59");
             PageInfo<GasCard> pageinfo = gasCardService.queryGasCard(gascard);
             attributes.put("pageInfo", pageinfo);
             attributes.put("gascard",pageinfo.getList());
@@ -70,7 +69,6 @@ public class CRMCardContoller {
         }
     	return ajaxJson;
     }
-
 
     @RequestMapping(value = {"/web/distributeCard"})
     @ResponseBody

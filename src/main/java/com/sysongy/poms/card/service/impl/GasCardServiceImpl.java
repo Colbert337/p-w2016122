@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.sysongy.api.client.controller.model.CRMCardUpdateInfo;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,9 @@ import com.sysongy.util.GlobalConstant;
 
 @Service
 public class GasCardServiceImpl implements GasCardService{
-	
+
+	protected Logger logger = LoggerFactory.getLogger(GasCardServiceImpl.class);
+
 	@Autowired
 	private GasCardMapper gasCardMapper;
 	@Autowired
@@ -48,6 +52,11 @@ public class GasCardServiceImpl implements GasCardService{
 
 	@Override
 	public Integer updateGasCardInfo(GasCard cascard) throws Exception{
+		GasCardLog gascardlog = new GasCardLog();
+		BeanUtils.copyProperties(cascard, gascardlog);
+		gascardlog.setAction(GlobalConstant.CardAction.ADD);
+		gascardlog.setOptime(new Date());
+		gasCardLogMapper.insert(gascardlog);
 		int nRet = gasCardMapper.updateByPrimaryKeySelective(cascard);
 		return nRet;
 	}
@@ -185,6 +194,10 @@ public class GasCardServiceImpl implements GasCardService{
 		crmCardUpdateInfo.setStartID(crmCardUpdateInfo.getStartID() + 1);
 		crmCardUpdateInfo.setEndID(crmCardUpdateInfo.getEndID() + 1);
 		int nRet = gasCardMapper.updateCardStatus(crmCardUpdateInfo);
+		int nLRet =gasCardLogMapper.batchInsertFromCRM(crmCardUpdateInfo);
+		if(nLRet < 1){
+			logger.error("卡日志生成失败, from: " + crmCardUpdateInfo.getStartID() + "to: " + crmCardUpdateInfo.getEndID());
+		}
 		return nRet;
 	}
 
