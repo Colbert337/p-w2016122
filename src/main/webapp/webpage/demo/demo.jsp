@@ -111,3 +111,24 @@ function test4(){
 <%--汉化切换按钮--%>
 <input id="" checked="checked" type="checkbox" class="ace ace-switch ace-switch-5 zh">
 <span class="lbl middle"></span>
+
+<%--确认按钮--%>
+<a id="complexConfirm">点击弹出 trigger modal</a>
+<script>
+	if($('#complexConfirm').length) {
+		$("#complexConfirm").confirm({
+			title: "Delete confirmation",
+			text: "This is very dangerous, you shouldn't do it! Are you really really sure?",
+			confirm: function (button) {
+				button.fadeOut(2000).fadeIn(2000);
+				alert("You just confirmed.");
+			},
+			cancel: function (button) {
+				button.fadeOut(2000).fadeIn(2000);
+				alert("You aborted the operation.");
+			},
+			confirmButton: "Yes I am",
+			cancelButton: "No"
+		});
+	}
+</script>

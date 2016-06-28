@@ -286,11 +286,11 @@
   <update id="updateCardStatus" parameterType="com.sysongy.api.client.controller.model.CRMCardUpdateInfo" >
     update gas_card
     <set >
-      <if test="card_status != null" >
-        card_status = #{card_status,jdbcType=VARCHAR},
+      <if test="statusType != null" >
+        card_status = #{statusType,jdbcType=VARCHAR},
       </if>
     </set>
-    where CAST(card_no as unsigned) &gt; #{startID,jdbcType=INTEGER} and CAST(card_no as unsigned) &lt; #{endID,jdbcType=INTEGER}
+     where CAST(card_no as unsigned) &gt; #{startID,jdbcType=INTEGER} and CAST(card_no as unsigned) &lt; #{endID,jdbcType=INTEGER}
   </update>
 
 </mapper>
