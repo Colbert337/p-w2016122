@@ -10,6 +10,8 @@ public interface SysDriverMapper {
     int insert(SysDriver record);
 
     int insertSelective(SysDriver record);
+    
+    int updateFirstCharge(SysDriver record);
 
     SysDriver selectByPrimaryKey(String sysDriverId);
 

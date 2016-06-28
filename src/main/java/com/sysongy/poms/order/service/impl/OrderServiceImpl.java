@@ -368,9 +368,12 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER))){
 		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER;
 	   }
-	   
+	   //消费的时候传过去的cash是正值
 	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
-   
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
+  		   //如果出错直接返回错误代码退出
+  		   return consume_success;
+  	   }
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
@@ -497,32 +500,5 @@ public class OrderServiceImpl implements OrderService {
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 	
-    public static void main(String[] args){
-    	OrderServiceImpl orderServiceImpl = new OrderServiceImpl();
-    	//测试充值：
-    	SysOrder order = new SysOrder();
-    	order.setOrderId(UUIDGenerator.getUUID());
-    	String order_type = GlobalConstant.OrderType.CHARGE_TO_DRIVER;
-    	String order_number = orderServiceImpl.createOrderNumber(order_type);
-    	order.setOrderNumber(order_number);
-    	order.setOrderType(order_type);
-    	order.setOrderDate(new Date());
-    	order.setCash(new BigDecimal("16.88"));
-    	order.setDebitAccount("748f08a4e31545c2b6de454d3deb0979");
-    	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
-    	order.setChannel("亭口加注站");
-    	order.setChannelNumber("GS12000003");
-    	order.setOperator("14e9ef72ce5c424dbcc36859d6618a6b");
-    	order.setOperatorSourceId("GS12000003");
-    	order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
-    	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
-    	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
-    	try{
-    		orderServiceImpl.insert(order);
-    		orderServiceImpl.chargeToDriver(order);
-    	}catch(Exception e){
-    		System.out.println("Found exception:"+e.getMessage());
-    		e.printStackTrace();
-    	}
-    }
+   
 }

@@ -143,6 +143,6 @@
       set account_balance = (cast(account_balance as decimal(38, 9)) - cast(#{accountBalance,jdbcType=VARCHAR} as decimal(38, 9))),
       version = #{version,jdbcType=INTEGER}
       where  sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
-      and #{version,jdbcType=INTEGER} > version  
+      and version  &lt; #{version,jdbcType=INTEGER}    
   </update>
 </mapper>

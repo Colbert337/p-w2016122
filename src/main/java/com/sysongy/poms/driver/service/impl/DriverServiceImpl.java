@@ -205,7 +205,7 @@ public class DriverServiceImpl implements DriverService {
 		SysDriver driver = this.queryDriverByPK(credit_account);
 		String driver_account = driver.getSysUserAccountId();
 		BigDecimal cash = order.getCash();
-		//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
+		//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
 		BigDecimal addcash = cash.multiply(new BigDecimal(-1));
 		//如果是负值，但是is_discharge却不是充红，则返回错误
 		if(cash.compareTo(new BigDecimal("0")) < 0 ){
@@ -217,11 +217,18 @@ public class DriverServiceImpl implements DriverService {
 		//记录订单流水
 		String chong = "转账扣钱";
 		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_DRIVER_TO_DRIVER_DEDUCT_DRIVER;
-		if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
+		
+		String orderType = order.getOrderType();
+		if(GlobalConstant.OrderType.CONSUME_BY_DRIVER.equalsIgnoreCase(orderType)){
+			chong ="消费";
+			orderDealType = GlobalConstant.OrderDealType.CONSUME_DRIVER_DEDUCT;
+		}
+		if(GlobalConstant.OrderType.CONSUME_BY_DRIVER.equalsIgnoreCase(orderType) && GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
 			chong ="消费充红";
 			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_DRIVER_DEDUCT;
 		}
-		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+		
+		String remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
 		
 		return cash_success;
@@ -245,6 +252,10 @@ public class DriverServiceImpl implements DriverService {
         	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success)){
         		//如果出错，直接退出
         		return cashTo_success;
+        	}else{
+        		//首次充值返现成功后，将driver的is_first_charge字段修改为NO
+        		driver.setIsFirstCharge(GlobalConstant.FIRST_CHAGRE_NO);
+        		sysDriverMapper.updateFirstCharge(driver);        		
         	}
         }
 		//2.根据当前充值类型，调用对应的返现规则
