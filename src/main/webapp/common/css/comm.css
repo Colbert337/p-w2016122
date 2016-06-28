@@ -60,8 +60,10 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
     content: "是\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0否";
     text-indent: 13px;
 }
-
-.navbar-header {
+.table-header {
+    display: none;
+}
+.logo {
     background: url(../images/syongy.png) 0 4px no-repeat;
     padding-left: 25px;
 }

@@ -196,6 +196,14 @@ public class GlobalConstant {
 		public static final String CHARGE_TO_TRANSPORTION_CHARGE ="111";
 		public static final String CHARGE_TO_GASTATION_CHARGE ="121";
 		
+		public static final String CONSUME_DRIVER_DEDUCT ="221";
+		public static final String DISCONSUME_DRIVER_DEDUCT ="222";
+		
+		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION ="311";
+		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION ="312";
+		public static final String TRANSFER_DRIVER_TO_DRIVER_DEDUCT_DRIVER ="321";
+		public static final String TRANSFER_DRIVER_TO_DRIVER_INCREASE_DRIVER ="322";
+		
 	}
 
 	/*
@@ -256,6 +264,7 @@ public class GlobalConstant {
 	public interface OrderProcessResult{
 		public static final String SUCCESS ="SUCCESS";
 		public static final String ORDER_IS_NULL="ORDER_IS_NULL";
+		public static final String TRANSPORTION_IS_NULL="TRANSPORTION_IS_NULL";
 		public static final String ORDER_TYPE_IS_NOT_MATCH="ORDER_TYPE_IS_NOT_MATCH";
 		public static final String ORDER_TYPE_IS_NOT_DISCHARGE="ORDER_TYPE_IS_NOT_DISCHARGE";
 		public static final String ORDER_TYPE_IS_NOT_CHARGE="ORDER_TYPE_IS_NOT_CHARGE";
@@ -274,6 +283,9 @@ public class GlobalConstant {
 		public static final String DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE="DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE";
 		public static final String DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS="DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS";
 		public static final String DISCHARGE_ORDER_CASHBACK_IS_NULL = "DISCHARGE_ORDER_CASHBACK_IS_NULL";
+		
+		public static final String TRANSFER_CREDIT_ACCOUNT_IS_NULL ="TRANSFER_CREDIT_ACCOUNT_IS_NULL";
+		public static final String TRANSFER_DEBIT_ACCOUNT_IS_NULL ="TRANSFER_DEBIT_ACCOUNT_IS_NULL";
 		
 		public static final String ORDER_ERROR_PREPAY_IS_NOT_ENOUGH = "PREPAY_IS_NOT_ENOUGH";
 		public static final String ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR = "ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR";

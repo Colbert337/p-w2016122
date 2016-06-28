@@ -175,6 +175,51 @@ public class DriverServiceImpl implements DriverService {
 			chong ="充红";
 			orderDealType = GlobalConstant.OrderDealType.DISCHARGE_TO_DRIVER_CHARGE;
 		}
+		if(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER.equalsIgnoreCase(order.getOrderType())){
+			chong = "转账";
+		}
+		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
+		
+		return cash_success;
+	}
+	
+	/**
+	 * 给司机转账的时候扣除司机账户
+	 * @param order
+	 * @return
+     * @throws Exception 
+	 */
+	public String deductCashToDriver(SysOrder order, String is_discharge) throws Exception{
+		if (order ==null){
+			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+		}
+		
+		String credit_account = order.getCreditAccount();
+		if(credit_account==null || credit_account.equalsIgnoreCase("")){
+			   return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN;
+		}
+		
+		//给账户减去
+		SysDriver driver = this.queryDriverByPK(credit_account);
+		String driver_account = driver.getSysUserAccountId();
+		BigDecimal cash = order.getCash();
+		//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
+		BigDecimal addcash = cash.multiply(new BigDecimal(-1));
+		//如果是负值，但是is_discharge却不是充红，则返回错误
+		if(cash.compareTo(new BigDecimal("0")) < 0 ){
+			if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
+				   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE;
+			 }
+		}
+		String cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash);
+		//记录订单流水
+		String chong = "转账扣钱";
+		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_DRIVER_TO_DRIVER_DEDUCT_DRIVER;
+		if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
+			chong ="消费充红";
+			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_DRIVER_DEDUCT;
+		}
 		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
 		
