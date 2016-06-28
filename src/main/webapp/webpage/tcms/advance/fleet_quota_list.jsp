@@ -40,9 +40,9 @@
 								重置
 							</button>
 							<div class="item"></div>
-							<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
+							<%--<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
 								充值
-							</button>
+							</button>--%>
 							<button class="btn btn-sm btn-primary" type="button" onclick="addFenpei();">
 								资金分配
 							</button>
@@ -273,28 +273,29 @@
 										<th width="10%">对方姓名</th>
 										<th width="15%">转账金额</th>
 										<th width="25%">用途</th>
+										<th width="10%">操作</th>
 									</tr>
 									</thead>
 									<tbody>
-										<c:forEach items="${fleetQuotaMap.fleetQuotaList}" var="fleetQuota">
-											<tr>
-												<td>
-													<input type="text" id="1" name="" class="col-sm-12"/>
-												</td>
-												<td>
-													<input type="text" id="2" name="" class="col-sm-12"/>
-												</td>
-												<td>
-													<input type="text" id="3" name="" class="col-sm-12"/>
-												</td>
-												<td>
-													<input type="text" id="4" name="" class="col-sm-12"/>
-												</td>
-											</tr>
-											<tr><td colspan="4" align="right"><a href="javascript:alert('成功！');">添加</a></td></tr>
-										</c:forEach>
+										<tr>
+											<td id="tr_1">
+												<input type="text"  id="mobile_phone_1" name="mobilePhone" class="col-sm-12" onblur="queryDriverInfo(1);"/>
+											</td>
+											<td>
+												<input type="text"  id="full_name_1" name="fullName" class="col-sm-12" readonly="readonly"/>
+												<input type="hidden" id="sys_driver_id_1" name="sysDriverId" class="col-sm-12"/>
+											</td>
+											<td>
+												<input type="text" id="amount_1" name="amount" class="col-sm-12"/>
+											</td>
+											<td>
+												<input type="text" id="remark_1" name="remark" class="col-sm-12"/>
+											</td>
+											<td></td>
+										</tr>
 									</tbody>
 								</table>
+								<tr><td colspan="4" align="right"><a href="javascript:addRow();">添加</a></td></tr>
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
