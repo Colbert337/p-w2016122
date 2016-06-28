@@ -63,7 +63,7 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 .table-header {
     display: none;
 }
-.navbar-header {
+.logo {
     background: url(../images/syongy.png) 0 4px no-repeat;
     padding-left: 25px;
 }
