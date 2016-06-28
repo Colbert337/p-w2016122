@@ -278,11 +278,12 @@
 									</thead>
 									<tbody>
 										<tr>
-											<td>
-												<input type="text"  id="mobile_phone_1" name="mobile_phone" class="col-sm-12" onblur="queryDriver(this);"/>
+											<td id="tr_1">
+												<input type="text"  id="mobile_phone_1" name="mobilePhone" class="col-sm-12" onblur="queryDriverInfo(1);"/>
 											</td>
 											<td>
 												<input type="text"  id="full_name_1" name="fullName" class="col-sm-12" readonly="readonly"/>
+												<input type="hidden" id="sys_driver_id_1" name="sysDriverId" class="col-sm-12"/>
 											</td>
 											<td>
 												<input type="text" id="amount_1" name="amount" class="col-sm-12"/>

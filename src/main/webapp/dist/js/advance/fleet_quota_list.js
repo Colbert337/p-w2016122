@@ -97,20 +97,48 @@ function saveFenpei(){
 /**
  * 添加列
  */
-var zhuanIndex = 1;
+var zhuanIndex = 2;
 function addRow(){
 
     var objIndex = zhuanIndex++;
+    alert("objIndex:"+objIndex);
     var zhuan = [];
     zhuan.push("<tr id='tr_"+objIndex+"'>");
-    zhuan.push("<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobile_phone' class='col-sm-12' onblur='queryDriver(1);'/></td>");
-    zhuan.push("<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly'/></td>");
+    zhuan.push("<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' onblur='queryDriverInfo("+objIndex+");'/></td>");
+    zhuan.push("<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly'>");
+    zhuan.push("<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>");
     zhuan.push("<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' /></td>");
     zhuan.push("<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td>");
     zhuan.push("<td><a href='javascript:deleteRow("+objIndex+");'>删除</a></td>");
     zhuan.push("</tr>");
 
     $("#zhuan").append(zhuan.join());
+}
+
+/**
+ * 根据下标查找司机信息
+ * @param index
+ */
+function queryDriverInfo(index){
+    var mobilePhone = $("#mobile_phone_"+index).val();
+    $.ajax({
+        type: "POST",
+        data:{mobilePhone:mobilePhone},
+        async:false,
+        url: "../web/tcms/fleetQuota/info/driver",
+        success: function(data){
+            sucDialog("批量保存成功!")//保存成功弹窗
+            if(data != null){
+                $("#full_name_"+index).val(data.fullName);
+                $("#sys_driver_id_"+index).val(data.sysDriverId);
+
+            }else{
+                alert("请求失败！");
+            }
+
+        }
+    });
+
 }
 
 /**
@@ -127,11 +155,12 @@ function deleteRow(index){
 function saveZhuan(){
     var data = $("#zhuanForm").serialize(); //序列化表单 获取到数据
     data = decodeURIComponent(data,true);
+    console.log(data);
     $.ajax({
         type: "POST",
         data:{data:data},
         async:false,
-        url: "../web/tcms/fleetQuota/save/fenpei",
+        url: "../web/tcms/fleetQuota/save/zhuan",
         success: function(data){
             sucDialog("批量保存成功!")//保存成功弹窗
             if(data.success()){
