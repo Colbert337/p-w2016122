@@ -43,6 +43,21 @@
 		zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
 		zTreeObj.expandAll(true);//展开所有节点
 
+		function zHeight() {
+			var ztreeHeight = $(window).height()-160;
+			var tableHeight = $("#simple-table").height();
+			if(tableHeight>ztreeHeight) {
+				var h = tableHeight;
+			} else {
+				var h = ztreeHeight;
+			}
+			$("#treeDemo").height(h);
+		}
+		zHeight();
+		$(window).resize(function(){
+			zHeight();
+		});
+
 		/**
 		 * 获取当前节点下菜单
 		 */

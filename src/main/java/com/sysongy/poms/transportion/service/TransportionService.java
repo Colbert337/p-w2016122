@@ -27,5 +27,13 @@ public interface TransportionService {
      * @throws Exception 
 	 */
 	public String chargeCashToTransportion(SysOrder order) throws Exception;
+	
+	/**
+	 * 转账的时候，扣除运输公司账户金额
+	 * @param order
+	 * @return
+	 * @throws Exception
+	 */
+	public String transferTransportionToDriverDeductCash(SysOrder order,Transportion tran) throws Exception;
 
 }

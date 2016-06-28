@@ -22,7 +22,9 @@ import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
@@ -359,10 +361,103 @@ public class OrderServiceImpl implements OrderService {
 		return strRet;
 	}
 	
+	/**
+	 * 运输公司给个人转账
+	 * 1.扣除运输公司账户
+	 * 2.个人账户增加金额
+	 * 3.给运输公司返现。
+	 * @return
+	 */
+	public String transferTransportionToDriver(SysOrder order) throws Exception{
 	
-	/*public String transferTransportionToDriver(){
+	   if (order ==null){
+		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+	   }
+	   
+	   String orderType = order.getOrderType();
+	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER))){
+		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH;
+	   }
+	   String credit_account = order.getCreditAccount();
+	   if(credit_account==null || credit_account.equalsIgnoreCase("")){
+		   return GlobalConstant.OrderProcessResult.TRANSFER_CREDIT_ACCOUNT_IS_NULL;
+	   }
+	   String debit_account = order.getDebitAccount();
+	   if(debit_account==null || debit_account.equalsIgnoreCase("")){
+		   return GlobalConstant.OrderProcessResult.TRANSFER_DEBIT_ACCOUNT_IS_NULL;
+	   }
+	   
+	   Transportion tran = transportionService.queryTransportionByPK(credit_account);
+	   String tran_account = tran.getSys_user_account_id();
 		
-	}*/
+	   //1.扣除运输公司账户
+	   String success_deduct = transportionService.transferTransportionToDriverDeductCash(order,tran);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_deduct)){
+  		   //如果出错直接返回错误代码退出
+  		   return success_deduct;
+  	   }
+	   //2.个人账户增加金额
+	   String is_discharge = GlobalConstant.ORDER_ISCHARGE_NO;
+	   String success_chong = driverService.chargeCashToDriver(order, is_discharge);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_chong)){
+  		   //如果出错直接返回错误代码退出
+  		   return success_chong;
+  	   }
+	   //3.给运输公司返现：
+	   String cashbackNumber = GlobalConstant.CashBackNumber.CASHBACK_TRANSFER_CHARGE;
+	   List<SysCashBack> cashBackList = sysCashBackService.queryCashBackByNumber(cashbackNumber);
+	   String accountId = new String(tran_account);
+	   String accountUserName = tran.getTransportion_name();
+	   String orderDealType = GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION;
+	   String success_cashBack = sysCashBackService.cashToAccount(order, cashBackList, accountId, accountUserName, orderDealType);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_cashBack)){
+  		   //如果出错直接返回错误代码退出
+  		   return success_cashBack;
+  	   }
+		return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
 
+	/**
+	 * 个人给个人转账
+	 * 1.扣除个人账户credit_account
+	 * 2.增加个人账户debit_account
+	 * 3.不返现
+	 * @return
+	 */
+	public String transferDriverToDriver(SysOrder order) throws Exception{
+	   if (order ==null){
+		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+	   }
+	   
+	   String orderType = order.getOrderType();
+	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.TRANSFER_DRIVER_TO_DRIVER))){
+		   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH;
+	   }
+	   String credit_account = order.getCreditAccount();
+	   if(credit_account==null || credit_account.equalsIgnoreCase("")){
+		   return GlobalConstant.OrderProcessResult.TRANSFER_CREDIT_ACCOUNT_IS_NULL;
+	   }
+	   String debit_account = order.getDebitAccount();
+	   if(debit_account==null || debit_account.equalsIgnoreCase("")){
+		   return GlobalConstant.OrderProcessResult.TRANSFER_DEBIT_ACCOUNT_IS_NULL;
+	   }
+	   //1.扣除credit_account账户钱
+	   String is_discharge = GlobalConstant.ORDER_ISCHARGE_NO;
+	   String success_deduct = driverService.deductCashToDriver(order, is_discharge);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_deduct)){
+  		   //如果出错直接返回错误代码退出
+  		   return success_deduct;
+  	   }
+	   //2.个人账户增加金额
+	   is_discharge = GlobalConstant.ORDER_ISCHARGE_NO;
+	   String success_chong = driverService.chargeCashToDriver(order, is_discharge);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_chong)){
+  		   //如果出错直接返回错误代码退出
+  		   return success_chong;
+  	   }
+	   //TODO
+	   return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
+	
 
 }
