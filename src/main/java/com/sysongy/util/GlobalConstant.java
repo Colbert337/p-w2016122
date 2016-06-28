@@ -293,6 +293,7 @@ public class GlobalConstant {
 		public static final String ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR = "ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR";
 		
 		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";
+		public static final String CREDIT_ACCOUNT_IS_NULL="CREDIT_ACCOUNT_IS_NULL";
 
 		public static final String ORDER_ERROR_BALANCE_IS_NOT_ENOUGH = "BALANCE_IS_NOT_ENOUGH";
 
