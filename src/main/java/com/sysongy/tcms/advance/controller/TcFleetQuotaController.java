@@ -1,7 +1,6 @@
 package com.sysongy.tcms.advance.controller;
 
 import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
@@ -12,9 +11,7 @@ import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;

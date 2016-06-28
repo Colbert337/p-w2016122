@@ -20,6 +20,10 @@ public class TcFleetQuota extends BaseModel{
 
     private Date updatedDate;
 
+    private String fleetName;
+
+    private String realName;
+
     public String getTcFleetQuotaId() {
         return tcFleetQuotaId;
     }
@@ -74,5 +78,21 @@ public class TcFleetQuota extends BaseModel{
 
     public void setStationId(String stationId) {
         this.stationId = stationId;
+    }
+
+    public String getFleetName() {
+        return fleetName;
+    }
+
+    public void setFleetName(String fleetName) {
+        this.fleetName = fleetName;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 }

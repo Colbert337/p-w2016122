@@ -2,27 +2,27 @@
  * Created by Administrator on 2016/6/20.
  * Author: wdq
  */
-/*/!*分页相关方法 start*!/
+/*分页相关方法 start*/
 window.onload = setCurrentPage();
 function commitForm(obj){
     //设置当前页的值
-    if(typeof obj == "undefined") {
+   /* if(typeof obj == "undefined") {
         $("#pageNum").val("1");
     }else{
         $("#pageNum").val($(obj).text());
-    }
+    }*/
 
     $("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
-    url:'../web/tcms/FleetQuota/list/page',
+    url:'../web/tcms/fleetQuota/list/page',
     type:'post',
     dataType:'html',
     success:function(data){
         $("#main").html(data);
     }
 }
-/!*分页相关方法 end*!/*/
+/*分页相关方法 end*/
 
 //显示充值弹出层add
 function addChongzhi(){
@@ -98,7 +98,9 @@ function savePassword(){
         }
     }
     $("#passwordForm").ajaxSubmit(saveOptions);
-    /*$("#passwordModel").modal('hide')*/
+    $("#passwordModel").modal('hide')
+    $("body").removeClass('modal-open').removeAttr('style');
+    $(".modal-backdrop").remove();
 
 }
 /**
@@ -259,7 +261,7 @@ function saveFleetQuota(){
 
 //重置
 function init(){
-    loadPage('#main', '../web/tcms/FleetQuota/list/page');
+    loadPage('#main', '../web/tcms/fleetQuota/list/page');
 }
 /**
  * 删除车队额度
