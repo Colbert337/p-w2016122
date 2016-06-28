@@ -1,5 +1,6 @@
 package com.sysongy.poms.card.controller;
 
+import com.sysongy.util.GlobalConstant;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -211,6 +212,14 @@ public class CardController extends BaseContoller{
 		}
 	}
 
+	@RequestMapping("/update/freeze")
+	@ResponseBody
+	public String updateCardFreeze(ModelMap map, GasCard gascard) throws Exception{
+		String result = "succ";
+		gascard.setCard_status(GlobalConstant.CardStatus.PAUSED);
+		service.updateGasCardInfo(gascard);
+		return result;
+	}
 	/**
 	 * 用户卡轨迹查询
 	 * @param map

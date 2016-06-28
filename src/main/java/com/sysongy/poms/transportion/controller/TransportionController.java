@@ -364,7 +364,7 @@ public class TransportionController extends BaseContoller{
 			mailMessage.setSubject("用户设置密码邮件通知");
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("userName",userName);
-			model.put("url",url+"/");
+			model.put("url",url+"/web/transportion/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
 		}catch (Exception e){
 			e.printStackTrace();
@@ -384,13 +384,10 @@ public class TransportionController extends BaseContoller{
 		String userName = currUser.getUser().getUserName();
 		String stationId = currUser.getStationId();
 
-		try {
-			transportion = service.queryTransportionByPK(stationId);
+		map.addAttribute("userName",userName);
+		map.addAttribute("stationId",stationId);
 
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "webpage/poms/transportion/ps_set";
 	}
 
 	/**
@@ -417,7 +414,7 @@ public class TransportionController extends BaseContoller{
 			mailMessage.setSubject("用户修改密码邮件通知");
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("userName",userName);
-			model.put("url",url+"/");
+			model.put("url",url+"/web/transportion/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
 		}catch (Exception e){
 			e.printStackTrace();
