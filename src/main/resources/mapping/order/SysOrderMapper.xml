@@ -48,7 +48,7 @@
     values (#{orderId,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
       #{orderDate,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL}, #{creditAccount,jdbcType=VARCHAR}, 
       #{debitAccount,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, 
-      #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{discharge_order_id,jdbcType=VARCHAR},
+      #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{dischargeOrderId,jdbcType=VARCHAR},
       #{operatorTargetType,jdbcType=VARCHAR},#{operatorSourceId,jdbcType=VARCHAR}, #{operatorSourceType,jdbcType=VARCHAR},#{consume_card,jdbcType=VARCHAR}
       )
   </insert>
@@ -142,13 +142,13 @@
         #{is_discharge,jdbcType=VARCHAR},
       </if>
       <if test="operatorSourceId != null" >
-         #{operator_source_id,jdbcType=VARCHAR},
+         #{operatorSourceId,jdbcType=VARCHAR},
       </if>
       <if test="dischargeOrderId != null" >
-        #{discharge_order_id,jdbcType=VARCHAR},
+        #{dischargeOrderId,jdbcType=VARCHAR},
       </if>
       <if test="operatorTargetType != null" >
-        #{operator_target_type,jdbcType=VARCHAR},
+        #{operatorTargetType,jdbcType=VARCHAR},
       </if>
       <if test="consume_card != null" >
         #{consume_card,jdbcType=VARCHAR},
@@ -219,7 +219,7 @@
       channel_number = #{channelNumber,jdbcType=VARCHAR},
       operator = #{operator,jdbcType=VARCHAR},
       is_discharge = #{is_discharge,jdbcType=VARCHAR},
-      discharge_order_id = #{discharge_order_id,jdbcType=VARCHAR},
+      discharge_order_id = #{dischargeOrderId,jdbcType=VARCHAR},
       operator_source_id = #{operatorSourceId,jdbcType=VARCHAR},
       operator_target_type = #{operatorTargetType,jdbcType=VARCHAR}
       operator_source_type = #{operatorSourceType,jdbcType=VARCHAR}

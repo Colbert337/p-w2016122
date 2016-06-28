@@ -145,9 +145,9 @@ public class OrderServiceImpl implements OrderService {
      * @return
      * @throws Exception
      */
-    public String checkCanDischarge(SysOrder order) throws Exception{
+    public boolean checkCanDischarge(SysOrder order) throws Exception{
     	//TODO
-    	return "";
+    	return true;
     }
     
 	/**
@@ -159,6 +159,10 @@ public class OrderServiceImpl implements OrderService {
     public String dischargeOrder(SysOrder order) throws Exception{
 	   if (order ==null){
 		   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+	   }
+	   
+	   if(!checkCanDischarge(order)){
+		   return GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_CAN_NOT_BE_DISCHARGE;
 	   }
 	   
 	   String is_discharge = order.getIs_discharge();
@@ -326,13 +330,16 @@ public class OrderServiceImpl implements OrderService {
 	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;	
 	}
-
+    
+	/**
+	 * 个人消费：
+	 * 1.判断账户余额
+	 * 2.扣除账户金额--乐观锁操作
+	 */
 	@Override
-	public String consumeMoney(SysOrder record){
-		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
-
-
-		return strRet;
+	public String consumeByDriver(SysOrder record){
+		
+		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
 	@Override
@@ -459,5 +466,15 @@ public class OrderServiceImpl implements OrderService {
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 	
-
+    public static void main(String[] args){
+    	OrderServiceImpl orderServiceImpl = new OrderServiceImpl();
+    	//测试充值：
+    	SysOrder order = new SysOrder();
+    	try{
+    		orderServiceImpl.chargeToDriver(order);
+    	}catch(Exception e){
+    		System.out.println("Found exception:"+e.getMessage());
+    		e.printStackTrace();
+    	}
+    }
 }

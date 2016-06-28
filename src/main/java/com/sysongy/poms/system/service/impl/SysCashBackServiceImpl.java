@@ -148,7 +148,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	 * @param cashBack
 	 * @return
 	 */
-	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType){
+	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType) throws Exception{
 		//1.步骤一：从传过来的某个充值类型的cashBackList中，计算过滤得到符合条件的一条返现规则：
 		BigDecimal cash = order.getCash();
 		List<SysCashBack> eligible_list = new ArrayList<SysCashBack>();
@@ -215,7 +215,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	 * @param orderDealType 订单处理类型
 	 * @return
 	 */
-	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType){
+	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType) throws Exception{
 		String run_success = orderDealRecord.getRunSuccess();
 		if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(run_success)){
 			return GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS;
