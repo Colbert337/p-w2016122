@@ -52,16 +52,28 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	 * Cash -- 正值 则是增加，负值则是减少
 	 */
 	@Override
-	public synchronized String addCashToAccount(String accountId, BigDecimal cash) {
+	public synchronized String addCashToAccount(String accountId, BigDecimal cash) throws Exception {
 		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(accountId);
 		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance()) ;
 		//在此增加金额，如果是负值则是充红或者消费,仍然用add。
 		BigDecimal balance_result = balance.add(cash);
+		//如果余额变成负值，则抛出错误:余额不足
+		if(balance_result.compareTo(new BigDecimal(0))<0){
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
+		}
 		sysUserAccount.setAccountBalance(balance_result.toString());
 		sysUserAccount.setUpdatedDate(new Date());
+		//对version加1
+		int ver = sysUserAccount.getVersion();
+		sysUserAccount.setVersion(ver+1);
 		//更新此account对象则保存到db中
-		sysUserAccountMapper.updateAccount(sysUserAccount);
-		return GlobalConstant.OrderProcessResult.SUCCESS;
+		int upRow = sysUserAccountMapper.updateAccount(sysUserAccount);
+		if(upRow==1){
+			return GlobalConstant.OrderProcessResult.SUCCESS;	
+		}else{
+			//upRow不是1就是0,0条的原因是version已经改变
+			return GlobalConstant.OrderProcessResult.ORDER_ACCOUNT_VERSION_HAVE_CHANGED;
+		}
 	}
 
 	@Override

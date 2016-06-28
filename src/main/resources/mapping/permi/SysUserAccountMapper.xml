@@ -139,8 +139,10 @@
   </update>
 
   <update id="updateAccountBalance" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
-    update sys_user_account set account_balance = (cast(account_balance as decimal(38, 9)) - cast(#{accountBalance,jdbcType=VARCHAR} as decimal(38, 9)))
+    update sys_user_account 
+      set account_balance = (cast(account_balance as decimal(38, 9)) - cast(#{accountBalance,jdbcType=VARCHAR} as decimal(38, 9))),
+      version = #{version,jdbcType=INTEGER}
       where  sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
-      and version = #{version,jdbcType=INTEGER}
+      and #{version,jdbcType=INTEGER} > version  
   </update>
 </mapper>

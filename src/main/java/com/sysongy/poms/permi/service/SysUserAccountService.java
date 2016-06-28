@@ -24,7 +24,7 @@ public interface SysUserAccountService {
 	 * 更新最新余额到账户
 	 * @return
 	 */
-	String addCashToAccount(String accountId, BigDecimal cash);
+	String addCashToAccount(String accountId, BigDecimal cash) throws Exception;
 
 	/**
 	 * 根据站点ID查询站点账户信息
