@@ -20,7 +20,7 @@
 
 					<div class="page-header">
 						<h1>
-							个人用户管理
+							审核日志查询
 						</h1>
 					</div>
 
@@ -37,7 +37,7 @@
 
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>申请时间:</label>
+								<label>审核时间:</label>
 								<input type="text" name="createdDate_after" value="${driver.createdDate_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>

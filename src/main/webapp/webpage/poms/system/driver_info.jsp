@@ -37,7 +37,7 @@
 
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>申请时间:</label>
+								<label>创建时间:</label>
 								<input type="text" name="createdDate_after" value="${driver.createdDate_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
@@ -84,7 +84,7 @@
 									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册公司</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="sys_transport_id_order">关联运输公司</th>
 									<th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">可用余额</th> 
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">实体卡状态</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">用户状态</th> 

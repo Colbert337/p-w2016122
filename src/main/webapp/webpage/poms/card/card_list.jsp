@@ -164,7 +164,7 @@
 								 	<td><s:Code2Name mcode="${list.card_type}" gcode="CARDTYPE"></s:Code2Name> </td> 
 									<td><s:Code2Name mcode="${list.card_status}" gcode="CARDSTATUS"></s:Code2Name> </td>
 									<td><s:Code2Name mcode="${list.card_property}" gcode="CARDPROPERTY"></s:Code2Name> </td>
-									<td><s:Code2Name mcode="${list.workstation}" gcode="WORKSTATION"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.workstation}" gcode="WORKSTATION"></s:Code2Name><s:Code2Name mcode="${list.workstation}" gcode="TRANSTION"></s:Code2Name></td>
 									<td>${list.workstation_resp}</td>
 									<td>${list.operator}</td> 
 									<td>${list.batch_no}</td> 

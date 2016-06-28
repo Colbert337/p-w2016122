@@ -234,6 +234,8 @@ public class TransportionServiceImpl implements TransportionService {
 		orderService.chargeToTransportion(order);
 		
 		//写日志
+		Transportion transportion = transportionMapper.selectByPrimaryKey(log.getStationId());
+		log.setStationName(transportion.getTransportion_name());
 		log.setOptime(new Date());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);

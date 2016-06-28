@@ -42,10 +42,19 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="email" class="col-sm-3 control-label no-padding-right" >运输公司保证金： </label>
+										<label for="email" class="col-sm-3 control-label no-padding-right" >充值金额： </label>
 
 										<div class="col-sm-4">
 											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" maxlength="8"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" >转账方式： </label>
+										<div class="col-sm-4">
+											<select class="form-control" name="depositType" >
+												<s:option flag="true" gcode="RECHARGE_TYPE"/>
+											</select>
 										</div>
 									</div>
 									
@@ -68,15 +77,7 @@
 												</div>
 										</div>
 									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">转账方式：</label>
 
-										<div class="col-sm-4">
-											<input type="text" name="depositType" placeholder="输入转账方式" class="form-control" maxlength="20"/>
-										</div>
-									</div>
-									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">操作人员：</label>
 
@@ -102,7 +103,7 @@
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											
-											<button class="btn btn-success" type="button" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage2();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>

@@ -13,6 +13,7 @@
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
     <result column="gs_gas_source_id" property="gs_gas_source_id" jdbcType="VARCHAR" />
     <result column="is_deleted" property="is_deleted" jdbcType="INTEGER" />
+    
     <association property="gasNumInfo" column="gas_num"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
@@ -25,15 +26,17 @@
                  javaType="com.sysongy.poms.gastation.model.ProductPrice"
                  select="com.sysongy.poms.gastation.dao.ProductPriceMapper.selectByPrimaryKey">
     </association>
-
     <association property="gs_gas_source_info" column="gs_gas_source_id"
                  javaType="com.sysongy.poms.liquid.model.SysGasSource"
                  select="com.sysongy.poms.liquid.dao.SysGasSourceMapper.selectByPrimaryKey">
     </association>
-
+    <association property="gas_station" column="sys_gas_station_id"
+                 javaType="com.sysongy.poms.gastation.model.Gastation"
+                 select="com.sysongy.poms.gastation.dao.GastationMapper.selectByPrimaryKey">
+    </association>
     <association property="unitInfo" column="unit"
-                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
-                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryGasUnitTypeByMcode">
+                 javaType="com.sysongy.poms.gastation.model.Gastation"
+                 select="com.sysongy.poms.gastation.dao.GastationMapper.selectByPrimaryKey">
     </association>
   </resultMap>
 
@@ -48,8 +51,20 @@
     from gs_gas_price
     where 1=1
     <trim>
-      <if test="gasName != null &amp;&amp; gasName != ''" >
+     <if test="gasName != null &amp;&amp; gasName != ''" >
       and gas_name = #{gasName,jdbcType=VARCHAR} or gas_num = #{gasName,jdbcType=VARCHAR}
+    </if>
+    <if test="gasNum != null &amp;&amp; gasNum != ''" >
+      and gas_num = #{gasNum,jdbcType=VARCHAR}
+    </if>
+    <if test="sysGasStationId != null &amp;&amp; sysGasStationId != ''" >
+      and sys_gas_station_id = #{sysGasStationId,jdbcType=VARCHAR}
+    </if>
+    <if test="gasNum != null &amp;&amp; gasNum != ''" >
+      and gas_num = #{gasNum,jdbcType=VARCHAR}
+    </if>
+    <if test="created_date_before != null &amp;&amp; created_date_before != ''" >
+      and created_date between CONCAT(#{created_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{created_date_before,jdbcType=VARCHAR},' 23:59:59')
     </if>
     </trim>
      and is_deleted=0

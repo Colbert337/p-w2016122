@@ -20,7 +20,7 @@
 
 					<div class="page-header">
 						<h1>
-							个人用户管理
+							实名审核
 						</h1>
 					</div>
 
@@ -62,7 +62,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">个人用户详细信息列表</div>
+					<div class="table-header">实名审核信息列表</div>
 
 					<!-- div.table-responsive -->
 
