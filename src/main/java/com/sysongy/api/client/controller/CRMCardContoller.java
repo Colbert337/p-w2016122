@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -53,11 +54,13 @@ public class CRMCardContoller {
             ajaxJson.setMsg("气站ID为空！！！");
             return ajaxJson;
         }
-
         try
         {
-            gascard.setStorage_time_after(gascard.getStorage_time_after() +" 00:00:00");
-            gascard.setStorage_time_before(gascard.getStorage_time_before() +" 23:59:59");
+            gascard.setCard_status("2");
+            String startTime = gascard.getStorage_time_before();
+            String endTime = gascard.getStorage_time_after();
+            gascard.setStorage_time_after(startTime);
+            gascard.setStorage_time_before(endTime);
             PageInfo<GasCard> pageinfo = gasCardService.queryGasCard(gascard);
             attributes.put("pageInfo", pageinfo);
             attributes.put("gascard",pageinfo.getList());
@@ -121,6 +124,7 @@ public class CRMCardContoller {
         {
             Map<String, Object> attributes = new HashMap<String, Object>();
             crmCardUpdateInfo.setStatusType(InterfaceConstants.CARD_STSTUS_ALREADY_SEND);
+            crmCardUpdateInfo.setStation_receive_time(new Date());
             Integer nRet = gasCardService.updateGasCardStatus(crmCardUpdateInfo);
             if(nRet < 1){
                 ajaxJson.setSuccess(false);
