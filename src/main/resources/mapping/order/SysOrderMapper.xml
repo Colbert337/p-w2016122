@@ -18,7 +18,6 @@
     <result column="operator_source_id" property="operatorSourceId" jdbcType="VARCHAR" />
     <result column="is_discharge" property="is_discharge" jdbcType="VARCHAR" />
     <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
-    
     <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
     <association property="consume_cardInfo" column="consume_card"
                  javaType="com.sysongy.poms.card.model.GasCard"

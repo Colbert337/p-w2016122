@@ -205,5 +205,18 @@
       memo = #{memo,jdbcType=VARCHAR}
     where card_log_id = #{cardLogId,jdbcType=VARCHAR}
   </update>
-  
+
+  <insert id="batchInsertFromCRM" parameterType="com.sysongy.api.client.controller.model.CRMCardUpdateInfo" >
+      INSERT INTO `gas_card_log`
+      (`card_no`,`card_type`,`card_status`,`workstation`,`workstation_resp`,
+      `batch_no`,`operator`,`storage_time`,`release_time`,`memo`,`card_property`)
+       select
+      `card_no`,`card_type`,`card_status`,`workstation`,`workstation_resp`,
+      `batch_no`,`operator`,`storage_time`,`release_time`,`memo`,
+      `card_property` from gas_card
+      where card_flag_id &gt; #{startID,jdbcType=INTEGER} and card_flag_id &lt; #{endID,jdbcType=INTEGER}
+  </insert>
+
+
+
 </mapper>

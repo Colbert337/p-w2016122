@@ -69,6 +69,13 @@ public interface OrderService {
     boolean checkCanDischarge(SysOrder order) throws Exception;
 
     /**
+     * 生成订单编码 
+     * @param order
+     * @return
+     */
+    String createOrderNumber(String order_type) throws Exception;
+    
+    /**
      * 充红订单
      * @param order
      * @return

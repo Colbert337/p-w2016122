@@ -49,6 +49,10 @@ public class GasCard extends BaseModel{
 
 	private int card_flag_id;
 
+	private String dName;
+
+	private String mPhone;
+
 	public String getCard_property() {
 		return card_property;
 	}
@@ -199,5 +203,21 @@ public class GasCard extends BaseModel{
 
 	public void setCardStatusInfo(Usysparam cardStatusInfo) {
 		this.cardStatusInfo = cardStatusInfo;
+	}
+
+	public String getdName() {
+		return dName;
+	}
+
+	public void setdName(String dName) {
+		this.dName = dName;
+	}
+
+	public String getmPhone() {
+		return mPhone;
+	}
+
+	public void setmPhone(String mPhone) {
+		this.mPhone = mPhone;
 	}
 }
