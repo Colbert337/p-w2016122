@@ -73,7 +73,6 @@
 										<div class="col-sm-4">
 											<input type="text" id="card_no_2"  name="card_no_end" placeholder="卡结束编号" class="form-control" maxlength="9"/>
 											<input type="hidden" name="card_no_arr" id="card_no_arr"/>
-											<input type="hidden" name="card_no_isOK" id="card_no_isOK"/>
 										</div>
 									</div>
 									
@@ -105,27 +104,31 @@
 						
 									<div class="form-group">
 											<label class="col-sm-3 control-label no-padding-right" id="dynamic-table_after_handler"> 明细列表： </label>
-											<div class="col-sm-7" id="dynamic-table_div">
-											<div class="table-header">用户卡列表</div>
-												<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-													<thead>
-														<tr>
-															<th class="center">
-																<label class="pos-rel"> 
-																	<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
-																	<span class="lbl"></span>
-																</label>
-															</th>
-															<th id="card_no_order">用户卡号</th>
-															<th id="card_type_order">用户卡类型</th>
-															<th id="card_name_order">用户卡属性</th> 
-															<th id="card_status_order">库存状态</th>
-															<th id="operator_order">操作人</th> 
-														</tr>
-													</thead>
-													<tbody>
-													</tbody>
-												</table>
+											<div class="col-sm-7">
+												<div id="dynamic-table_div" class="table-loading">
+													<div class="table-header">用户卡列表</div>
+													<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+														<thead>
+															<tr>
+																<th class="center">
+																	<label class="pos-rel">
+																		<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
+																		<span class="lbl"></span>
+																	</label>
+																</th>
+																<th id="card_no_order">用户卡号</th>
+																<th id="card_type_order">用户卡类型</th>
+																<th id="card_name_order">用户卡属性</th>
+																<th id="card_status_order">库存状态</th>
+																<th id="operator_order">操作人</th>
+															</tr>
+														</thead>
+														<tbody>
+														</tbody>
+														<tfoot><tr><td colspan="6" class="text-center hidden">加载中...</td></tr></tfoot>
+													</table>
+													<div class="loading hidden">加载中...</div>
+												</div>
 										</div>
 									</div>
 									
@@ -294,9 +297,9 @@
 					   url:'<%=basePath%>/web/card/checkCard?cardid='+i,   
 			           type:'post',                    
 			           dataType:'text',
-			           //async:false,
+			           async:false,
 						beforeSend: function () {
-							$("#dynamic-table").append('<tfoot><tr><td colspan="6" class="text-center">入库中...</td></tr></tfoot>');
+							$(".table-loading .loading").removeClass('hidden');
 						},
 			           success:function(data){
 			           		if(data == "0"){
@@ -308,18 +311,14 @@
 			           		}
 			            },
 						complete: function () {
-							$("#dynamic-table").find("tfoot").remove();
-							$("#card_no_isOK").val(end-start);
+							$(".table-loading .loading").addClass("hidden");
 						}
 					});
 			}
-			setTimout(function(){
-				console.log(num+' , ' + $("#card_no_isOK").val())
-			},1000);
 			if(contral == "0"){
-				alert("该批次中没有需要入库的卡");
-				return;
-			}
+			 alert("该批次中没有需要入库的卡");
+			 return;
+			 }
 			
 			$("#init_dynamic_data").attr("disabled","disabled");
 				
