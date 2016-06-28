@@ -356,7 +356,7 @@
 </div><!-- /.row -->
 
 <!--添加用户弹层-开始-->
-<div id="roleModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="roleModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">

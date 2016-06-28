@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.model.SysDriverReviewStr;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.order.model.SysOrder;
 
@@ -45,7 +46,7 @@ public interface DriverService {
 
 	public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception;
 
-	public Integer review(String driverid, String type) throws Exception;
+	public Integer updateAndReview(String driverid, String type, String memo) throws Exception;
 	/**
 	 * 条件查询司机列表
 	 * @param record
@@ -59,4 +60,6 @@ public interface DriverService {
 	 * @return
      */
 	int deleteDriverByIds(List<String> idList);
+	
+	PageInfo<SysDriverReviewStr> queryDriversLog(SysDriverReviewStr record) throws Exception;
 }

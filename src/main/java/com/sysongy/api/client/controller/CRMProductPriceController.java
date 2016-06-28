@@ -116,7 +116,9 @@ public class CRMProductPriceController {
                 logger.warn("更新商品价格信息异常，更新记录数："  + updatePrice + ", 商品id为：" + productPrice.getProductPriceId());
             }
 
+            GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByPK(productPrice.getProduct_id());
             productPrice.setProductPriceStatus("1");
+            productPrice.setProductPriceId(gsGasPrice.getGasName());
             int renum = productPriceService.saveProductPrice(productPrice, "insert");
             if(renum < 1){
                 ajaxJson.setSuccess(false);
@@ -124,7 +126,6 @@ public class CRMProductPriceController {
                 return ajaxJson;
             }
 
-            GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByPK(productPrice.getProductPriceId());
             gsGasPrice.setPrice_id(productPrice.getId());
             renum = gsGasPriceService.saveGsPrice(gsGasPrice, "update");
             if(renum < 1){
@@ -139,6 +140,7 @@ public class CRMProductPriceController {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_PRODUCT_PRICE_ERROR + e.getMessage());
             logger.error("addproductPrice error： " + e);
+            e.printStackTrace();
         }
         return ajaxJson;
     }
@@ -147,6 +149,7 @@ public class CRMProductPriceController {
     @ResponseBody
     public AjaxJson updateProductPrice(HttpServletRequest request, HttpServletResponse response, ProductPrice productPrice) {
         AjaxJson ajaxJson = new AjaxJson();
+
         if(!StringUtils.isNotEmpty(productPrice.getId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("未输入要更新的数据！！！");

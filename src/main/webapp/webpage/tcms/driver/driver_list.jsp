@@ -127,7 +127,7 @@
 	</div><!-- /.col -->
 </div><!-- /.row -->
 <!--添加司机弹层-开始-->
-<div id="driverModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="driverModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -196,7 +196,7 @@
 <!--添加用户弹层-结束-->
 
 <!--提示弹层-开始-->
-<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">

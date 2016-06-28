@@ -62,6 +62,8 @@ public class SysDriver extends BaseModel{
     private Integer isFirstCharge;
 
     private String checkedStatus;
+    
+    private String notin_checked_status;
 
     private Date checkedDate;
 
@@ -72,8 +74,26 @@ public class SysDriver extends BaseModel{
     private String walletId;
 
     private String expireTimeForCRM;
+    
+    private String memo;
 
-    public String getWalletId() {
+    public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+
+	public String getNotin_checked_status() {
+		return notin_checked_status;
+	}
+
+	public void setNotin_checked_status(String notin_checked_status) {
+		this.notin_checked_status = notin_checked_status;
+	}
+
+	public String getWalletId() {
         return walletId;
     }
 

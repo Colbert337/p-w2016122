@@ -32,7 +32,7 @@
 						
 						<div class="item">
 						    <label>认证姓名:</label>
-							<input type="text" name="userName" placeholder="输入认证姓名"  maxlength="20" value="${driver.userName}"/>
+							<input type="text" name="fullName" placeholder="输入认证姓名"  maxlength="20" value="${driver.fullName}"/>
 						</div>
 
 						<div class="item">
@@ -83,10 +83,11 @@
 									<th onclick="orderBy(this,'identity_card');commitForm();" id="operations_name_order">身份证号</th>
 									<th onclick="orderBy(this,'fuel_type');commitForm();" id="indu_com_number_order">燃料类型</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="status_order">关联运输公司</th>
-									<th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> 
+									<!--  <th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> -->
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
+									<th id="memoth" style="display:none">备注</th>
 									<th>更多操作</th>
 								</tr>
 							</thead>
@@ -108,26 +109,32 @@
 									<td>${list.identityCard}</td>
 									<td><s:Code2Name mcode="${list.fuelType}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td>${list.stationId}</td>
-									<td>${list.isIdent == '0'?'否':'是'}</td> 
+									<%-- <td>${list.isIdent == '0'?'否':'是'}</td>  --%>
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>
-
+									<td style="display:none">${list.memo}</td>
 									<td>
 										<div class="text-center">
-											<a class="green" href="javascript:void(0);" title="审核通过" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="review(this,'2');"></i>
-											</a>
-											<a class="green" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip"> 
-												<i class="ace-icon fa fa-ban bigger-130" onclick="review(this,'3');"></i>
-											</a>
+												<a class="blue" href="javascript:void(0);" title="查看备注" data-rel="tooltip">
+													<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel(this);"></i>
+												</a>
+											<c:if test="${list.checkedStatus == 1}">
+											
+												<a class="green" href="javascript:void(0);" title="审核通过" data-rel="tooltip"> 
+													<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="showInnerModel(this,'2');"></i>
+												</a>
+												<a class="green" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip"> 
+													<i class="ace-icon fa fa-ban bigger-130" onclick="showInnerModel(this,'3');"></i>
+												</a>
+											</c:if>
 										</div>
 									</td>
 								</tr>
 								</c:forEach>
 							</tbody>
 						</table>
-					</div>
+					</div> 
 			
 
 			<label>共 ${pageInfo.total} 条</label>
@@ -151,12 +158,46 @@
 			</nav>
 
 			<jsp:include page="/common/message.jsp"></jsp:include>
-
-
-			<!-- PAGE CONTENT ENDS -->
+			<%-- <jsp:include page="inner_model.jsp"></jsp:include> --%>
 		</div>
-		<!-- /.col -->
 	</div>
-	<!-- /.row -->
 	</form>
+</div>
+
+
+<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<label class="control-label no-padding-right">审核备注：</label>
+								<input type="hidden" id="objid"/>
+								<input type="hidden" id="objval"/>
+								<div>
+									<textarea class="form-control" name="remark" rows="5" maxlength="100"></textarea>
+								</div>
+							</div>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+				<!--底部按钮 -->
+					<div class="row" id="optionbutton">
+						<div class="space"></div>
+						<div class="col-xs-3"></div>
+						<div class="col-xs-3"><button class="btn btn-primary" onclick="addMemo();">确定</button></div>
+						<div class="col-xs-6"><button class="btn" onclick="hideInnerModel();">取消 </button></div>
+					</div>
+				
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 </div>

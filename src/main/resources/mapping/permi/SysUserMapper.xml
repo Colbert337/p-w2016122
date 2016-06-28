@@ -223,6 +223,9 @@
       <if test="updatedDate != null" >
         updated_date,
       </if>
+      <if test="stationId != null" >
+        station_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sysUserId != null" >
@@ -281,6 +284,9 @@
       </if>
       <if test="updatedDate != null" >
         #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stationId != null" >
+        #{stationId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

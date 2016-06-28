@@ -11,15 +11,24 @@
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="account_status" property="account_status" jdbcType="VARCHAR" />
     <result column="deposit" property="deposit" jdbcType="DECIMAL" />
+    <association property="account_statusInfo" column="account_status"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryAccountStatus">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date, version, account_status, deposit
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from sys_user_account
     where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+  </select>
+  <!--根据站点ID查询运输公司编号信息-->
+  <select id="queryUserAccountByStationId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select sua.* from sys_user_account sua left join sys_transportion st on sua.sys_user_account_id = st.sys_user_account_id
+    where st.sys_transportion_id = #{sysTransportionId}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_user_account

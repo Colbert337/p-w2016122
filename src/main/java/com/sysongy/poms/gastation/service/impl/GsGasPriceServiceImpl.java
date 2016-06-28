@@ -47,7 +47,6 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 	public Integer saveGsPrice(GsGasPrice record, String operation) throws Exception {
 		int ret = 0;
 		if("insert".equals(operation)){
-			record.setGsGasPriceId(UUIDGenerator.getUUID());
 			record.setCreatedDate(new Date());
 			record.setUpdatedDate(new Date());
 			ret = gsGasPriceMapper.insert(record);

@@ -107,8 +107,6 @@ public class CRMGasPriceController {
                 ajaxJson.setMsg("输入价格为空！！！");
                 return ajaxJson;
             }
-            double lPrice = Double.valueOf(strPrice);
-            gsGasPrice = createProductPrice(gsGasPrice, lPrice);
 
             Map<String, Object> attributes = new HashMap<String, Object>();
             int isExistDriver = gsGasPriceService.isExists(gsGasPrice);
@@ -117,6 +115,9 @@ public class CRMGasPriceController {
                 ajaxJson.setMsg("该气品已被创建，不能重复添加！！！");
                 return ajaxJson;
             }
+
+            double lPrice = Double.valueOf(strPrice);
+            gsGasPrice = createProductPrice(gsGasPrice, lPrice);
 
             int renum = gsGasPriceService.saveGsPrice(gsGasPrice, "insert");
             if(renum < 1){
@@ -150,6 +151,7 @@ public class CRMGasPriceController {
         productPrice.setProduct_id(gsGasPrice.getGsGasPriceId());
         productPrice.setProductPriceId(gsGasPrice.getGasName());
         productPrice.setProductUnit(gsGasPrice.getUnit());
+
         try
         {
             productPriceService.saveProductPrice(productPrice, "insert");

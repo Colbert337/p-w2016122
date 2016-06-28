@@ -22,6 +22,20 @@
     from sys_operation_log
     where sys_operation_log_id = #{sysOperationLogId,jdbcType=VARCHAR}
   </select>
+  
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.system.model.SysOperationLog" >
+  	 select <include refid="Base_Column_List" />
+    from sys_operation_log where 1=1
+    <trim>
+      <if test="logPlatform != null &amp;&amp; logPlatform != ''" >
+        and log_platform = #{logPlatform,jdbcType=VARCHAR}
+      </if>
+      <if test="created_date_after != null &amp;&amp; created_date_after != ''">
+        and created_date between CONCAT(#{created_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{created_date_before,jdbcType=VARCHAR},' 23:59:59') 
+      </if>
+    </trim>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_operation_log
     where sys_operation_log_id = #{sysOperationLogId,jdbcType=VARCHAR}

@@ -97,7 +97,7 @@
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
-									<th onclick="orderBy(this,'address');commitForm();" id="address_order">保证金余额</th>
+									<th onclick="orderBy(this,'address');commitForm();" id="address_order">账户余额</th>
 									<th style="display: none">钱袋编号</th>
 									<th class="text-center">更多操作</th>
 								</tr>
@@ -123,15 +123,15 @@
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
-									<td>${list.account.deposit}</td> 
+									<td>${list.account.accountBalance}</td> 
 									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">
 										<a class="" href="javascript:void(0);" title="修改" data-rel="tooltip">
 											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 										</a>
-										<a class="option-btn-m" href="javascript:void(0);" title="保证金" data-rel="tooltip">
-												<i class="ace-icon fa fa-paw bigger-130" onclick="preDeposit(this);"></i>
-											</a>
+										<!-- <a class="option-btn-m" href="javascript:void(0);" title="账户余额" data-rel="tooltip">
+											<i class="ace-icon fa fa-credit-card bigger-130" onclick="preDeposit(this);"></i>
+										</a> -->
 									</td>
 								</tr>
 								</c:forEach>

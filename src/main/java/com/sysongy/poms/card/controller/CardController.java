@@ -108,7 +108,7 @@ public class CardController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/deleteCard")
-	public String deleteCard(ModelMap map, @RequestParam String cardid, @ModelAttribute("currUser") CurrUser currUser){
+	public String deleteCard(GasCard gascard, ModelMap map, @RequestParam String cardid, @ModelAttribute("currUser") CurrUser currUser){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/card/card_list";
@@ -119,11 +119,12 @@ public class CardController extends BaseContoller{
 					rowcount = service.deleteGasCard(cardid, currUser);
 				}
 
-				ret = this.queryAllCardList(map, new GasCard());
+				ret = this.queryAllCardList(map, gascard);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+cardid+"]删除成功");
 				bean.setRetValue(rowcount.toString());
+				map.addAttribute("gascard",gascard);
 				bean.setPageInfo(ret);
 
 				map.addAttribute("ret", bean);
@@ -133,7 +134,7 @@ public class CardController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllCardList(map, new GasCard());
+			ret = this.queryAllCardList(map, gascard);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

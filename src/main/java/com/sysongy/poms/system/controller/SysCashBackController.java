@@ -138,7 +138,7 @@ public class SysCashBackController extends BaseContoller {
 	}
 	
 	@RequestMapping("/deleteCashBack")
-	public String deleteCashBack(ModelMap map, @RequestParam String sysCashBackid){
+	public String deleteCashBack(ModelMap map, SysCashBack sysCashBack, @RequestParam String sysCashBackid){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/system_cashback";
@@ -149,7 +149,7 @@ public class SysCashBackController extends BaseContoller {
 					rowcount = service.delCashBack(sysCashBackid);
 				}
 
-				ret = this.queryAllCashBackList(map, new SysCashBack());
+				ret = this.queryAllCashBackList(map, sysCashBack);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("删除成功");
@@ -162,7 +162,7 @@ public class SysCashBackController extends BaseContoller {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllCashBackList(map, new SysCashBack());
+			ret = this.queryAllCashBackList(map, sysCashBack);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
