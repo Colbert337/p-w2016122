@@ -105,7 +105,7 @@ public class CRMCardContoller {
 
     @RequestMapping(value = {"/web/putCardToCRMStore"})
     @ResponseBody
-    public AjaxJson putCardToCRMStore(HttpServletRequest request, HttpServletResponse response, CRMCardUpdateInfo crmCardUpdateInfo) {
+    public AjaxJson putCardToCRMStore(HttpServletRequest request, HttpServletResponse response,CRMCardUpdateInfo crmCardUpdateInfo) {
         AjaxJson ajaxJson = new AjaxJson();
         if((crmCardUpdateInfo == null) || (crmCardUpdateInfo.getEndID() != null)){
             ajaxJson.setSuccess(false);
@@ -141,6 +141,36 @@ public class CRMCardContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.PUT_CARD_STORAGE_ERROR);
             logger.error("putCardToCRMStore error： " + e);
+        }
+        return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/queryCardInfoByCardNo"})
+    @ResponseBody
+    public AjaxJson queryCardInfoByCardNo(HttpServletRequest request, HttpServletResponse response,
+                                          CRMCardUpdateInfo crmCardUpdateInfo){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        if((crmCardUpdateInfo.getStartID() == null) || (crmCardUpdateInfo.getEndID() == null)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("输入起始ID及终止ID为空！！！");
+            return ajaxJson;
+        }
+        if(StringUtils.isEmpty(crmCardUpdateInfo.getSys_gas_station_id())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
+            return ajaxJson;
+        }
+        try
+        {
+            PageInfo<GasCard> pageinfo = gasCardService.queryGasCardForCRM(crmCardUpdateInfo);
+            attributes.put("pageInfo", pageinfo);
+            attributes.put("gascard",pageinfo.getList());
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CARD_PERIOD_ERROR);
+            logger.error("queryCardInfo error： " + e);
         }
         return ajaxJson;
     }
