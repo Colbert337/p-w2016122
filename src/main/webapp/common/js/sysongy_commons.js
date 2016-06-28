@@ -198,14 +198,6 @@ function warnDialog(cont){
 var sjny = sjny || {};
 sjny.admin = sjny.admin || {};
 sjny.admin.comm = {
-	clickShowModal: function() {
-		$('#testModal').on('click', function(){
-			$('#myModal').modal({
-				backdrop: 'static',
-				keyboard: false
-			});
-		});
-	},
 	selectedSubMenuItem: function() {
 		$('.nav-list > li').on('click', '.submenu > li', function(){
 			var $this = $(this),
@@ -249,7 +241,6 @@ sjny.admin.comm = {
 };
 
 $(document).ready(function() {
-	sjny.admin.comm.clickShowModal();
 	sjny.admin.comm.selectedSubMenuItem();
 	sjny.admin.comm.globalBootstrapValidator();
 });

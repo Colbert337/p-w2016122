@@ -107,7 +107,7 @@ public class CRMCardContoller {
     @ResponseBody
     public AjaxJson putCardToCRMStore(HttpServletRequest request, HttpServletResponse response,CRMCardUpdateInfo crmCardUpdateInfo) {
         AjaxJson ajaxJson = new AjaxJson();
-        if((crmCardUpdateInfo == null) || (crmCardUpdateInfo.getEndID() != null)){
+        if((crmCardUpdateInfo == null) || (crmCardUpdateInfo.getEndID() == null)){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("要入库卡片为空！！！");
             return ajaxJson;
@@ -156,6 +156,13 @@ public class CRMCardContoller {
             ajaxJson.setMsg("输入起始ID及终止ID为空！！！");
             return ajaxJson;
         }
+
+        if((crmCardUpdateInfo.getStartID().toString().length() != 9) || (crmCardUpdateInfo.getEndID().toString().length() != 9)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("输入起始ID或终止ID不是9位！！！");
+            return ajaxJson;
+        }
+
         if(StringUtils.isEmpty(crmCardUpdateInfo.getSys_gas_station_id())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("气站ID为空！！！");
@@ -164,6 +171,11 @@ public class CRMCardContoller {
         try
         {
             PageInfo<GasCard> pageinfo = gasCardService.queryGasCardForCRM(crmCardUpdateInfo);
+            if(pageinfo.getList().size() == 0){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("查询数据为空！！！");
+                return ajaxJson;
+            }
             attributes.put("pageInfo", pageinfo);
             attributes.put("gascard",pageinfo.getList());
             ajaxJson.setAttributes(attributes);

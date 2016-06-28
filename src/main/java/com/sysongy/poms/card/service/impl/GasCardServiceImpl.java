@@ -196,7 +196,7 @@ public class GasCardServiceImpl implements GasCardService{
 
 	@Override
 	public Integer updateGasCardStatus(CRMCardUpdateInfo crmCardUpdateInfo) throws Exception{
-		crmCardUpdateInfo.setStartID(crmCardUpdateInfo.getStartID() + 1);
+		crmCardUpdateInfo.setStartID(crmCardUpdateInfo.getStartID() - 1);
 		crmCardUpdateInfo.setEndID(crmCardUpdateInfo.getEndID() + 1);
 		int nRet = gasCardMapper.updateCardStatus(crmCardUpdateInfo);
 		int nLRet =gasCardLogMapper.batchInsertFromCRM(crmCardUpdateInfo);
@@ -207,6 +207,8 @@ public class GasCardServiceImpl implements GasCardService{
 	}
 
 	public PageInfo<GasCard> queryGasCardForUpdate(CRMCardUpdateInfo obj) throws Exception{
+		obj.setStartID(obj.getStartID() - 1);
+		obj.setEndID(obj.getEndID() + 1);
 		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
 		List<GasCard> list = gasCardMapper.queryForPageUpdate(obj);
 		PageInfo<GasCard> pageInfo = new PageInfo<GasCard>(list);

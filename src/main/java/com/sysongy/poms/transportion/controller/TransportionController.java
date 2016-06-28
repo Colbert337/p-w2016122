@@ -1,30 +1,28 @@
 package com.sysongy.poms.transportion.controller;
 
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.UUIDGenerator;
-import net.sf.json.JSONObject;
-import org.springframework.mail.SimpleMailMessage;
-import com.sysongy.util.mail.MailEngine;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.mail.MailEngine;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -341,7 +339,7 @@ public class TransportionController extends BaseContoller{
 			e.printStackTrace();
 		}
 
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "redirect:/web/transportion/transportionList";
 	}
 
 	/**
@@ -371,7 +369,7 @@ public class TransportionController extends BaseContoller{
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "redirect:/web/transportion/transportionList";
 	}
 
 	/**
@@ -392,7 +390,7 @@ public class TransportionController extends BaseContoller{
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "redirect:/web/transportion/transportionList";
 	}
 
 	/**
@@ -424,7 +422,7 @@ public class TransportionController extends BaseContoller{
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "redirect:/web/transportion/transportionList";
 	}
 
 	/**
@@ -445,7 +443,7 @@ public class TransportionController extends BaseContoller{
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "redirect:/web/transportion/transportionList";
 	}
 
 	/**
@@ -461,12 +459,13 @@ public class TransportionController extends BaseContoller{
 		String stationId = currUser.getStationId();
 		transportion.setSys_transportion_id(stationId);
 		try {
+			transportion.setPay_code(Encoder.MD5Encode(transportion.getPay_code().getBytes()));
 			service.updatedeposiTransport(transportion);
 
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "redirect:/web/transportion/transportionList";
 	}
 
 	/**
