@@ -51,7 +51,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     @Override
     public PageInfo<TcFleetQuota> queryFleetQuotaList(TcFleetQuota tcFleetQuota) {
         if(tcFleetQuota != null){
-            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+            PageHelper.startPage(tcFleetQuota.getPageNum(),tcFleetQuota.getPageSize());
 
             List<TcFleetQuota> FleetQuotaList = tcFleetQuotaMapper.queryFleetQuotaList(tcFleetQuota);
             PageInfo<TcFleetQuota> FleetQuotaPageInfo = new PageInfo<>(FleetQuotaList);

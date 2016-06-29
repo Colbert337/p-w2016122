@@ -7,16 +7,12 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
-import javafx.scene.Parent;
 import jxl.Sheet;
 import jxl.Workbook;
-import jxl.read.biff.BiffException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,9 +27,6 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,8 +152,9 @@ public class TcVehicleController extends BaseContoller {
     }
 
     @RequestMapping("/info/file")
-    public String importFile(@RequestParam(value = "fileImport") MultipartFile file ,HttpServletRequest request, HttpServletResponse response, ModelMap map){
+    public String importFile(@RequestParam(value = "fileImport") MultipartFile file ,HttpServletRequest request,@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+        String stationId = currUser.getStationId();
         //获取参数   参数有 schoolId   gradeId   classId
         MultipartResolver resolver = new CommonsMultipartResolver(request.getSession().getServletContext());
         List<TcVehicle> vehicleList = new ArrayList<>();
@@ -182,24 +176,32 @@ public class TcVehicleController extends BaseContoller {
 
                     //第一个是列数，第二个是行数
                     Integer gender = 0;
-                    String platesNumber = sheet.getCell(0, i).getContents().replaceAll(" ", "");//默认最左边编号也算一列 所以这里得
-                    if(platesNumber != null && !"".equals(platesNumber)){
-                        String cardNo =  sheet.getCell(1, i).getContents();
-                        String payCode = sheet.getCell(1, i).getContents();
-                        String noticePhone = sheet.getCell(1, i).getContents();
-                        String copyPhone = sheet.getCell(1, i).getContents();
-
+                    String platesNumber = "";//默认最左边编号也算一列 所以这里得
+                    String cardNo = "";
+                    String payCode = "";
+                    String noticePhone = "";
+                    String copyPhone = "";
+                    if(sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i))){
                         TcVehicle tcVehicle = new TcVehicle();
                         tcVehicle.setTcVehicleId(UUIDGenerator.getUUID());
                         tcVehicle.setPayCode(Encoder.MD5Encode("111111".getBytes()));
+                        tcVehicle.setStationId(stationId);
+
+                        platesNumber = sheet.getCell(0, i).getContents().replaceAll(" ", "");
                         tcVehicle.setPlatesNumber(platesNumber);
-                        tcVehicle.setCardNo(cardNo);
-                        tcVehicle.setPayCode(payCode);
-                        tcVehicle.setNoticePhone(noticePhone);
-                        tcVehicle.setCopyPhone(copyPhone);
-
+                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
+                            cardNo =  sheet.getCell(1, i).getContents().replaceAll(" ", "");
+                            tcVehicle.setCardNo(cardNo);
+                        }
+                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
+                            noticePhone = sheet.getCell(3, i).getContents().replaceAll(" ", "");
+                            tcVehicle.setNoticePhone(noticePhone);
+                        }
+                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
+                            copyPhone = sheet.getCell(4, i).getContents().replaceAll(" ", "");
+                            tcVehicle.setCopyPhone(copyPhone);
+                        }
                         vehicleList.add(tcVehicle);
-
                         System.out.println("正在导入幼儿数据》》》》》》》》》》》》》");
                     }
 
@@ -209,9 +211,7 @@ public class TcVehicleController extends BaseContoller {
                 }
 
             }
-        } catch (BiffException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

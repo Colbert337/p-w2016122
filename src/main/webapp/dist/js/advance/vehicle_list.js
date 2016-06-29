@@ -106,7 +106,9 @@ function freeze(){
         async:false,
         type: "POST",
         success: function(data){
-
+            sucDialog("操作成功！");
+        },error: function(XMLHttpRequest, textStatus, errorThrown) {
+            failDialog("操作失败！");
         }
     })
 }
@@ -140,7 +142,10 @@ function saveVehicle(){
             type:'post',
             dataType:'html',
             success:function(data){
+                sucDialog("操作成功！");
                 $("#main").html(data);
+            },error: function(XMLHttpRequest, textStatus, errorThrown) {
+                failDialog("操作失败！");
             }
         }
         $("#editForm").ajaxSubmit(saveOptions);
@@ -165,7 +170,10 @@ function leaveDriver(){
             type:'post',
             dataType:'text',
             success:function(data){
+                sucDialog("操作成功!");//保存成功弹窗
                 $("#main").html(data);
+            },error: function(XMLHttpRequest, textStatus, errorThrown) {
+                failDialog("操作失败！");
             }
         }
         $("#listForm").ajaxSubmit(deleteOptions);
@@ -314,13 +322,9 @@ function saveTemplate(){
         dataType:'text',
         enctype:"multipart/form-data",
         success:function(data){
-            var s = JSON.parse(data);
-            if(s.success == true){
-
-            }
-
+            sucDialog("操作成功！");
         },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+            failDialog("操作失败！");
         }
     }
     $("#importForm").ajaxSubmit(multipartOptions);
