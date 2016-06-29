@@ -55,11 +55,11 @@
 						</div>
 
 						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm2();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
 							</button>
-							<button class="btn btn-sm" type="button" onclick="init();">
+							<button class="btn btn-sm" type="button" onclick="init2();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
 							</button>

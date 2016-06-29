@@ -87,12 +87,6 @@
 		                    	callback: function (value, validator, $field) {
 		                    		return compareDate(value, $('[name=start_date_after]').val());
 	                            }
-		                    },
-		                    callback: {
-		                    	message: '失效日期必须大于当前日期',
-		                    	callback: function (value, validator, $field) {
-		                    		return compareDate(value, new Date().toLocaleDateString());
-	                            }
 		                    }
 		                },
 		                trigger: 'change'

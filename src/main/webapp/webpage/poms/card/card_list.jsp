@@ -86,7 +86,7 @@
 						
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>操作时间:</label>
+								<label>入库时间:</label>
 								<input type="text" class="" name="storage_time_after"  value="${gascard.storage_time_after}"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>

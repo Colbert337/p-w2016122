@@ -36,6 +36,16 @@ public class SysDepositLog extends BaseModel{
     private BigDecimal deposit;
 
     private String memo;
+    
+    private String order_number;
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
+	}
 
 	public String getStationName() {
 		return stationName;

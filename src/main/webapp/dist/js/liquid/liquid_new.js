@@ -74,6 +74,13 @@
 	                        message: '详细地址不能为空'
 	                    }
 	                }
+	            },
+	            status: {
+	                validators: {
+	                    notEmpty: {
+	                        message: '液厂状态不能为空'
+	                    }
+	                }
 	            }
 	         }
 	    });
