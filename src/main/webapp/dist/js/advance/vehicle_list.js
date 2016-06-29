@@ -304,3 +304,25 @@ $('#importForm').bootstrapValidator({
         }
     }
 });
+
+/**
+ *导入文件
+ */
+function saveTemplate(){
+    var multipartOptions ={
+        url:'../web/tcms/vehicle/info/file',
+        type:'post',
+        dataType:'text',
+        enctype:"multipart/form-data",
+        success:function(data){
+            var s = JSON.parse(data);
+            if(s.success == true){
+
+            }
+
+        },error:function(XMLHttpRequest, textStatus, errorThrown) {
+
+        }
+    }
+    $("#importForm").ajaxSubmit(multipartOptions);
+}
