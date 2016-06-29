@@ -84,9 +84,9 @@ function savePassword(){
     if(fistDiv){
         url = "../web/transportion/update/setPasswordMail"
     }else if(updatePsDiv){
-        url = "../web/transportion/update/setPasswordMail"
-    }else if(lossPsDiv){
         url = "../web/transportion/update/password"
+    }else if(lossPsDiv){
+        url = "../web/transportion/update/setPasswordMail"
     }
     alert("url:"+url);
     var saveOptions ={
