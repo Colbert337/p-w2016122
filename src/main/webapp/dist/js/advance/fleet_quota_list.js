@@ -2,27 +2,17 @@
  * Created by Administrator on 2016/6/20.
  * Author: wdq
  */
-/*/!*分页相关方法 start*!/
-window.onload = setCurrentPage();
 function commitForm(obj){
-    //设置当前页的值
-    if(typeof obj == "undefined") {
-        $("#pageNum").val("1");
-    }else{
-        $("#pageNum").val($(obj).text());
-    }
-
     $("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
-    url:'../web/tcms/FleetQuota/list/page',
+    url:'../web/tcms/fleetQuota/list/page',
     type:'post',
     dataType:'html',
     success:function(data){
         $("#main").html(data);
     }
 }
-/!*分页相关方法 end*!/*/
 
 //显示充值弹出层add
 function addChongzhi(){
@@ -157,17 +147,17 @@ var zhuanIndex = 2;
 function addRow(){
 
     var objIndex = zhuanIndex++;
-    var zhuan = [];
-    zhuan.push("<tr id='tr_"+objIndex+"'>");
-    zhuan.push("<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' onblur='queryDriverInfo("+objIndex+");'/></td>");
-    zhuan.push("<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly'>");
-    zhuan.push("<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>");
-    zhuan.push("<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' /></td>");
-    zhuan.push("<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td>");
-    zhuan.push("<a href='javascript:deleteRow("+objIndex+");'>删除</a>");
-    zhuan.push("</td></tr>");
+    var zhuan = "";
+    zhuan += "<tr id='tr_"+objIndex+"'>";
+    zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' onblur='queryDriverInfo("+objIndex+");'/></td>";
+    zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly'>";
+    zhuan += "<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>";
+    zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' /></td>";
+    zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td>";
+    zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除</a>";
+    zhuan += "</td></tr>";
 
-    $("#zhuanTable").append(zhuan.join());
+    $("#zhuanTable").append(zhuan);
 }
 
 /**
@@ -182,7 +172,7 @@ function queryDriverInfo(index){
         async:false,
         url: "../web/tcms/fleetQuota/info/driver",
         success: function(data){
-            sucDialog("批量保存成功!")//保存成功弹窗
+            //sucDialog("批量保存成功!")//保存成功弹窗
             if(data != null){
                 $("#full_name_"+index).val(data.fullName);
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
