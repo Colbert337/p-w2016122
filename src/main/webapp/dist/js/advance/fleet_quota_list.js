@@ -84,11 +84,15 @@ function savePassword(){
     if(fistDiv){
         url = "../web/transportion/update/setPasswordMail"
     }else if(updatePsDiv){
+        $('#passwordForm').data('bootstrapValidator').validate();
+        if(!$('#passwordForm').data('bootstrapValidator').isValid()){
+            return ;
+        }
+
         url = "../web/transportion/update/password"
     }else if(lossPsDiv){
         url = "../web/transportion/update/setPasswordMail"
     }
-    alert("url:"+url);
     var saveOptions ={
         url:url,
         type:'post',
@@ -99,7 +103,9 @@ function savePassword(){
         }
     }
     $("#passwordForm").ajaxSubmit(saveOptions);
-    $("#passwordModel").modal('hide')
+    $("#passwordModel").modal('hide').removeClass('in');
+    $("body").removeClass('modal-open').removeAttr('style');
+    $(".modal-backdrop").remove();
 }
 /**
  * 资金分配状态修改
@@ -292,7 +298,7 @@ $('#passwordForm').bootstrapValidator({
         oldPassword: {
             validators: {
                 notEmpty: {
-                    message: '支付密码不能为空'
+                    message: '原支付密码不能为空'
                 },
                 regexp: {
                     regexp: '^[0-9a-zA-Z]+$',
@@ -311,7 +317,7 @@ $('#passwordForm').bootstrapValidator({
                 }
             }
         },
-        payCode: {
+        pay_code: {
             validators: {
                 notEmpty: {
                     message: '支付密码不能为空'
@@ -334,7 +340,7 @@ $('#passwordForm').bootstrapValidator({
                 callback: {
                     message: '支付密码不一致',
                     callback: function (value, validator, $field) {
-                        if($("[name=payCode]").val() != value){
+                        if($("[name=pay_code]").val() != value){
                             return false;
                         }
                         return true;
