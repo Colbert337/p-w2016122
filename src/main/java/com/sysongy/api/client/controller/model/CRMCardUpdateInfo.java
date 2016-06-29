@@ -3,6 +3,8 @@ package com.sysongy.api.client.controller.model;
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.card.model.GasCard;
 
+import java.util.Date;
+
 /**
  * Created by Administrator on 2016/6/16.
  */
@@ -47,4 +49,5 @@ public class CRMCardUpdateInfo extends GasCard {
     public void setStatusType(String statusType) {
         this.statusType = statusType;
     }
+
 }

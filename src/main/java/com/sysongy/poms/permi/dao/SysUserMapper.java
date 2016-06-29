@@ -34,4 +34,6 @@ public interface SysUserMapper {
     int updateUser(SysUser record);
 
     int updateUserByName(SysUser record);
+
+    SysUser queryUserForCRM(SysUser user);
 }

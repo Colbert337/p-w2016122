@@ -15,6 +15,8 @@
     <result column="workstation_resp" property="workstation_resp" jdbcType="VARCHAR" />
     <result column="batch_no" property="batch_no" jdbcType="VARCHAR" />
     <result column="card_flag_id" property="card_flag_id" jdbcType="INTEGER" />
+    <result column="station_receive_time" property="station_receive_time" jdbcType="TIMESTAMP" />
+    <result column="sysUserId" property="sysUserId" jdbcType="VARCHAR" />
     <association property="card_type_info" column="card_type"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
@@ -22,6 +24,10 @@
     <association property="cardStatusInfo" column="card_status"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardStatusByMcode">
+    </association>
+    <association property="sysUserIdInfo" column="sysUserId"
+                 javaType="com.sysongy.poms.permi.model.SysUser"
+                 select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserForCRM">
     </association>
   </resultMap>
   <sql id="Base_Column_List" >
@@ -60,7 +66,7 @@
          batch_no = #{batch_no,jdbcType=VARCHAR}
       </if>
       <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
-        and storage_time between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59') 
+        and storage_time between CONCAT(#{storage_time_after,jdbcType=VARCHAR},'00:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
       </if>
     </trim>
   </select>
@@ -77,7 +83,11 @@
       <if test="endID != null &amp;&amp; endID != ''" >
         and CAST(card_no as unsigned) &lt; #{endID,jdbcType=INTEGER}
       </if>
+      <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''">
+        and workstation = #{sys_gas_station_id, jdbcType=VARCHAR}
+      </if>
     </trim>
+      and card_status=2
   </select>
 
   <select id="queryForCRMPage" resultMap="BaseResultList"  parameterType="com.sysongy.poms.card.model.GasCard" >
@@ -287,7 +297,13 @@
     update gas_card
     <set >
       <if test="statusType != null" >
-        card_status = #{statusType,jdbcType=VARCHAR},
+        card_status = #{statusType, jdbcType=VARCHAR},
+      </if>
+      <if test="station_receive_time != null" >
+        station_receive_time = #{station_receive_time, jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUserId != null" >
+        sysUserId = #{sysUserId, jdbcType=VARCHAR},
       </if>
     </set>
      where CAST(card_no as unsigned) &gt; #{startID,jdbcType=INTEGER} and CAST(card_no as unsigned) &lt; #{endID,jdbcType=INTEGER}
