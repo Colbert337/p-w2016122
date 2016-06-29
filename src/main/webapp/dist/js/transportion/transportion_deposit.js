@@ -8,7 +8,7 @@
 		$(this).prev().focus();
 	});
 	
-		
+	
 			//bootstrap验证控件		
 		    $('#transportionform').bootstrapValidator({
 		        message: 'This value is not valid',
@@ -53,24 +53,33 @@
 				return ;
 			}
 			
-			var options ={   
-		            url:'../web/transportion/deposiTransportion',   
-		            type:'post',                    
-		            dataType:'text',
-		            success:function(data){
-		            	$("#main").html(data);
-		            	$("#modal-table").modal("show");
-		            	if($("#retCode").val() != 100){
-		            		
-		            	}
-		            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-		            	
-		 	       }
-			}
-			
-			if(confirm("是否确认将 ["+$("#stationame").text()+"] 账户余额更新"+$("[name=deposit]").val()+"元")){
-				$("#transportionform").ajaxSubmit(options);
-			}
+			$("#sub").confirm({
+				title: "运输公司充值确认",
+				text: "是否确认将 ["+$("#stationame").text()+"] 账户余额更新"+$("[name=deposit]").val()+"元",
+				confirm: function (button) {
+					var options ={   
+				            url:'../web/transportion/deposiTransportion',   
+				            type:'post',                    
+				            dataType:'text',
+				            success:function(data){
+				            	$("#main").html(data);
+				            	$("#modal-table").modal("show");
+				            	if($("#retCode").val() != 100){
+				            		
+				            	}
+				            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+				            	
+				 	       }
+					}
+
+					$("#transportionform").ajaxSubmit(options);
+				},
+				cancel: function (button) {
+
+				},
+				confirmButton: "确认",
+				cancelButton: "取消"
+			});
 			
 		}
 		

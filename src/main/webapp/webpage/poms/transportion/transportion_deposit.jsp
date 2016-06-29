@@ -20,7 +20,7 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								运输公司保证金设置
+								运输公司充值
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -97,7 +97,7 @@
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="button" onclick="save();">
+											<button id="sub"  class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>

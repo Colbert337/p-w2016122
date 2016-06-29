@@ -46,7 +46,7 @@ public interface DriverService {
 
 	public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception;
 
-	public Integer updateAndReview(String driverid, String type, String memo) throws Exception;
+	public Integer updateAndReview(String driverid, String type, String memo, String operator) throws Exception;
 	/**
 	 * 条件查询司机列表
 	 * @param record
