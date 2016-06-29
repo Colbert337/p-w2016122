@@ -2,27 +2,27 @@
  * Created by Administrator on 2016/6/20.
  * Author: wdq
  */
-/*分页相关方法 start*/
+/*/!*分页相关方法 start*!/
 window.onload = setCurrentPage();
 function commitForm(obj){
     //设置当前页的值
-   /* if(typeof obj == "undefined") {
+    if(typeof obj == "undefined") {
         $("#pageNum").val("1");
     }else{
         $("#pageNum").val($(obj).text());
-    }*/
+    }
 
     $("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
-    url:'../web/tcms/fleetQuota/list/page',
+    url:'../web/tcms/FleetQuota/list/page',
     type:'post',
     dataType:'html',
     success:function(data){
         $("#main").html(data);
     }
 }
-/*分页相关方法 end*/
+/!*分页相关方法 end*!/*/
 
 //显示充值弹出层add
 function addChongzhi(){
@@ -84,24 +84,22 @@ function savePassword(){
     if(fistDiv){
         url = "../web/transportion/update/setPasswordMail"
     }else if(updatePsDiv){
-        url = "../web/transportion/update/password"
+        url = "../web/transportion/update/setPasswordMail"
     }else if(lossPsDiv){
-        url = "../web/transportion/update/passwordMail"
+        url = "../web/transportion/update/password"
     }
-
+    alert("url:"+url);
     var saveOptions ={
         url:url,
         type:'post',
         dataType:'html',
         success:function(data){
+
             $("#main").html(data);
         }
     }
     $("#passwordForm").ajaxSubmit(saveOptions);
     $("#passwordModel").modal('hide')
-    $("body").removeClass('modal-open').removeAttr('style');
-    $(".modal-backdrop").remove();
-
 }
 /**
  * 资金分配状态修改
@@ -261,7 +259,7 @@ function saveFleetQuota(){
 
 //重置
 function init(){
-    loadPage('#main', '../web/tcms/fleetQuota/list/page');
+    loadPage('#main', '../web/tcms/FleetQuota/list/page');
 }
 /**
  * 删除车队额度
@@ -313,7 +311,7 @@ $('#passwordForm').bootstrapValidator({
                 }
             }
         },
-        pay_code: {
+        payCode: {
             validators: {
                 notEmpty: {
                     message: '支付密码不能为空'
@@ -336,7 +334,7 @@ $('#passwordForm').bootstrapValidator({
                 callback: {
                     message: '支付密码不一致',
                     callback: function (value, validator, $field) {
-                        if($("[name=pay_code]").val() != value){
+                        if($("[name=payCode]").val() != value){
                             return false;
                         }
                         return true;
