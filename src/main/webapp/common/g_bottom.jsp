@@ -136,7 +136,7 @@
 		<script src="<%=basePath %>/assets/js/jquery.nestable.js"></script>
 
 		<script src="<%=basePath %>/common/js/fileinput.js"></script>
-		<script src="<%=basePath %>/common/js/jquery.confirm.js"></script>
+		<script src="<%=basePath %>/assets/js/bootbox.js"></script>
 		<script src="<%=basePath %>/assets/js/jquery.colorbox.js"></script>
 		<script src="<%=basePath %>/common/js/zh.js"></script>
 	</body>

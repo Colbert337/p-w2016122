@@ -45,49 +45,35 @@
 		            }
 		         }
 		    });
-			    
 		    
-		    
-		    
-		function save(){			
+		function save() {
 			/*手动验证表单，当是普通按钮时。*/
 			$('#gastationform').data('bootstrapValidator').validate();
-			if(!$('#gastationform').data('bootstrapValidator').isValid()){
-				return ;
-			} else {
-				$("#sub").confirm({
-					title: "运输公司充值确认",
-					text: "是否确认将 ["+$("#gastationame").text()+"] 预付款额度调整"+$("[name=deposit]").val()+"元",
-					confirm: function (button) {
-						var options ={   
-					            url:'../web/gastation/depositGastation',   
-					            type:'post',                    
-					            dataType:'text',
-					            success:function(data){
-					            	$("#main").html(data);
-					            	$("#modal-table").modal("show");
-					            	if($("#retCode").val() != 100){
-					            		
-					            	}
-					            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-					            	
-					 	       }
-						}
-						
-						$("#gastationform").ajaxSubmit(options);
-					},
-					cancel: function (button) {
-
-					},
-					confirmButton: "确认",
-					cancelButton: "取消"
-				});
+			if (!$('#gastationform').data('bootstrapValidator').isValid()) {
+				return;
 			}
-			
-			
-			
+
+			bootbox.setLocale("zh_CN");
+			bootbox.confirm("是否确认将 [" + $("#gastationame").text() + "] 预付款额度调整" + $("[name=deposit]").val() + "元", function (result) {
+				if (result) {
+					var options = {
+						url: '../web/gastation/depositGastation',
+						type: 'post',
+						dataType: 'text',
+						success: function (data) {
+							$("#main").html(data);
+							$("#modal-table").modal("show");
+							if ($("#retCode").val() != 100) {
+							}
+						}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+						}
+					}
+					$("#gastationform").ajaxSubmit(options);
+				}
+			})
 		}
-		
+
 		function returnpage(){
 			loadPage('#main', '../web/gastation/gastationList');
 		}
