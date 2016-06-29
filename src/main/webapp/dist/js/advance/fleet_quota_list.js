@@ -111,6 +111,7 @@ function allocation(obj,index){
         $(obj).attr("checked","checked");
         $("#is_allot_"+index).val(1);
         $("#quota_"+index).removeAttr("readonly");
+        $("#quota_"+index).val(0.00);
     }
 
 }
@@ -121,22 +122,6 @@ function allocation(obj,index){
 function saveFenpei(){
     var dataForm = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
     dataForm = decodeURIComponent(dataForm,true);
-    /*$.ajax({
-        type: "POST",
-        data:{data:data},
-        async:false,
-        url: "../web/tcms/fleetQuota/save/fenpei",
-        success: function(data){
-            if(data.success()){
-                //暂时不需要跳转
-                sucDialog("操作成功!")//保存成功弹窗
-                window.location = '../web/tcms/fleetQuota/list/page' ;
-            }else{
-                alert("请求失败！");
-            }
-
-        }
-    });*/
     var saveOptions ={
         url:"../web/tcms/fleetQuota/save/fenpei",
         type:'post',
