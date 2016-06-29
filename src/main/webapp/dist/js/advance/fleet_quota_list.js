@@ -255,7 +255,7 @@ function saveFleetQuota(){
 
 //重置
 function init(){
-    loadPage('#main', '../web/tcms/FleetQuota/list/page');
+    loadPage('#main', '../web/tcms/fleetQuota/list/page');
 }
 /**
  * 删除车队额度
