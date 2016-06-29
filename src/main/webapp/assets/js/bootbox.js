@@ -175,9 +175,9 @@
       if (!button.className) {
         if (total <= 2 && index === total-1) {
           // always add a primary to the main option in a two-button dialog
-          button.className = "btn-primary";
+          button.className = "btn-primary btn-sm";
         } else {
-          button.className = "btn-default";
+          button.className = "btn-default btn-sm";
         }
       }
     });
