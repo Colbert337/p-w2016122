@@ -46,6 +46,13 @@ public interface TcVehicleMapper {
     int addVehicle(TcVehicle tcVehicle);
 
     /**
+     * 批量添加车辆
+     * @param tcVehicleList
+     * @return
+     */
+    int addVehicleList(List<TcVehicle> tcVehicleList);
+
+    /**
      * 删除车辆
      * @param tcVehicle
      * @return

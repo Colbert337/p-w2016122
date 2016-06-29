@@ -54,7 +54,7 @@
 			}
 
 			bootbox.setLocale("zh_CN");
-			bootbox.confirm("是否确认将 [" + $("#gastationame").text() + "] 预付款额度调整" + $("[name=deposit]").val() + "元", function (result) {
+			bootbox.confirm("是否确认将 [" + $("#gastationame").text() + "] 预付款额度增加" + $("[name=deposit]").val() + "元", function (result) {
 				if (result) {
 					var options = {
 						url: '../web/gastation/depositGastation',

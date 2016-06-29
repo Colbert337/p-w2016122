@@ -14,11 +14,12 @@
     <result column="optime" property="optime" jdbcType="TIMESTAMP" />
     <result column="deposit" property="deposit" jdbcType="DECIMAL" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="order_number" property="order_number" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
     sys_deposit_log_id, station_id, station_name, account_id, station_type, company, deposit_time, deposit_type, 
-    operator, optime, deposit, memo
+    operator, optime, deposit, memo, order_number
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
@@ -52,11 +53,11 @@
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
     insert into sys_deposit_log (sys_deposit_log_id, station_id, station_name, station_type,
-      account_id, company, deposit_time,
+      account_id, company, deposit_time, order_number,
       deposit_type, operator, optime, 
       deposit, memo)
     values (#{sysDepositLogId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{stationName,jdbcType=VARCHAR}, #{station_type,jdbcType=VARCHAR}, 
-      #{accountId,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{depositTime,jdbcType=TIMESTAMP},
+      #{accountId,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{depositTime,jdbcType=TIMESTAMP}, #{order_number,jdbcType=VARCHAR},
       #{depositType,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{optime,jdbcType=TIMESTAMP}, 
       #{deposit,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR})
   </insert>

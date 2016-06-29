@@ -84,10 +84,12 @@
 									<th onclick="orderBy(this,'fuel_type');commitForm();" id="indu_com_number_order">燃料类型</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="status_order">关联运输公司</th>
 									<!--  <th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> -->
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th>
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
 									<th id="memoth" style="display:none">备注</th>
+									<th id="memoth" style="display:none">驾驶证</th>
+									<th id="memoth" style="display:none">行驶证</th>
 									<th>更多操作</th>
 								</tr>
 							</thead>
@@ -114,9 +116,11 @@
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>
 									<td style="display:none">${list.memo}</td>
+									<td style="display:none">${list.drivingLice}</td>
+									<td style="display:none">${list.vehicleLice}</td>
 									<td>
 										<div class="text-center">
-												<a class="blue" href="javascript:void(0);" title="查看备注" data-rel="tooltip">
+												<a class="blue" href="javascript:void(0);" title="更多信息" data-rel="tooltip">
 													<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel(this);"></i>
 												</a>
 											<c:if test="${list.checkedStatus == 1}">
@@ -177,6 +181,34 @@
 					<%--两行表单 开始--%>
 					<div class="row">
 						<div class="col-xs-12">
+							<div class="form-group">
+								<div class="col-xs-6">
+									<label class="control-label no-padding-right">驾驶证：</label>
+									<ul class="ace-thumbnails file-space clearfix">
+										<li>
+											<a href="" data-rel="colorbox">
+												<img width="150" height="150" alt="150x150" src="" id="driving_lice"/>
+												<div class="text">
+													<div class="inner">点击放大</div>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div class="col-xs-6">
+									<label class="control-label no-padding-right">行驶证：</label>
+									<ul class="ace-thumbnails file-space clearfix">
+										<li>
+											<a href="" data-rel="colorbox">
+												<img width="150" height="150" alt="150x150" src="" id="vehicle_lice"/>
+												<div class="text">
+													<div class="inner">点击放大</div>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
 							<div class="form-group">
 								<label class="control-label no-padding-right">审核备注：</label>
 								<input type="hidden" id="objid"/>

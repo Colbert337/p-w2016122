@@ -421,11 +421,7 @@
 			$("#showprovince").val($("#province").find("option:selected").text());
 		}
 		
-		if(salesmen_id!=null && salesmen_id!=""){
-			$("#salesmen_id").find("option[value="+salesmen_id+"]").attr("selected",true);
-		}
-		
-		if(operations_id!=null && salesmen_id!=""){
+		if(operations_id!=null){
 			$("#operations_id").find("option[value="+operations_id+"]").attr("selected",true);
 		}
 		

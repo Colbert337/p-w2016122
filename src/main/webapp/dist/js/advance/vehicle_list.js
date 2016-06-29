@@ -184,7 +184,6 @@ function openImportDiv(){
 function fileFormat(){
     var fileName= $("#file_import").val();
     var suffix = fileName.substr(fileName.indexOf("."));
-    alert("suffix:"+suffix);
     if(suffix != '.xls' && suffix !=".xlsx"){
         alert("导入文件格式错误，必须是excle格式！");
         return false;
@@ -326,3 +325,20 @@ function saveTemplate(){
     }
     $("#importForm").ajaxSubmit(multipartOptions);
 }
+
+
+$(function(){
+    //美化上传框
+    $('#file_import').ace_file_input({
+        no_file:'请选择需要导入的文件',
+        btn_choose:'选择文件',
+        btn_change:'重新选择',
+        droppable:false,
+        onchange:null,
+        thumbnail:false //| true | large
+        //whitelist:'gif|png|jpg|jpeg'
+        //blacklist:'exe|php'
+        //onchange:''
+        //
+    });
+})
