@@ -111,13 +111,14 @@ public class GlobalConstant {
 	/* 配置文件路径 */
 	public static final String CONF_PATH = "conf/system-conf.properties";
 	
+	//用户卡状态  0:已冻结 1：已入库；2：已出库；3:已/未发放 4:使用中 5:已失效
 	public interface CardStatus{
-		public static final String STORAGED ="0";
-		public static final String MOVED ="1";
-		public static final String PROVIDE="2";
-		public static final String USED="3";
-		public static final String PAUSED="4";
-		public static final String INVALID="5";
+		public static final String PAUSED ="0";
+		public static final String STORAGED ="1";
+		public static final String MOVED ="2";
+		public static final String PROVIDE ="3";
+		public static final String USED ="4";
+		public static final String INVALID ="5";
 	}
 	
 	public interface CardAction{
