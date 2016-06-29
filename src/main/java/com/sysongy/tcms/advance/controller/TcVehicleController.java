@@ -141,6 +141,18 @@ public class TcVehicleController extends BaseContoller {
 
         if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
             vehicle.setPayCode(null);
+            TcVehicle tcVehicle = new TcVehicle();
+            tcVehicle = tcVehicleService.queryVehicle(vehicle);
+            if(tcVehicle != null){
+                //新密码
+                String password = vehicle.getPayCode();
+                password = Encoder.MD5Encode(password.getBytes());
+                //新密码何原始密码不一致，则修改密码
+                if(!password.equals(tcVehicle.getPayCode())){
+                    vehicle.setPayCode(password);
+                }
+            }
+
             tcVehicleService.updateVehicle(vehicle);
         }else{
             String stationId = currUser.getStationId();

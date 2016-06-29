@@ -91,8 +91,8 @@ function editVehicle(vehicleId){
             }
 
             /*密码输入框改为可编辑*/
-            $("#pay_code").attr("readonly","readonly");
-            $("#re_password").attr("readonly","readonly");
+            /*$("#pay_code").attr("readonly","readonly");
+            $("#re_password").attr("readonly","readonly");*/
         }
     })
     $("#cardInfoDiv").show();
