@@ -173,6 +173,24 @@ function leaveDriver(){
 
 }
 
+//弹出导入模板弹层
+function openImportDiv(){
+    $("#importDivModel").modal("show");
+}
+
+/**
+ * 判断文件格式
+ */
+function fileFormat(){
+    var fileName= $("#file_import").val();
+    var suffix = fileName.substr(fileName.indexOf("."));
+    alert("suffix:"+suffix);
+    if(suffix != '.xls' && suffix !=".xlsx"){
+        alert("导入文件格式错误，必须是excle格式！");
+        return false;
+    }
+}
+
 //bootstrap验证控件
 $('#editForm').bootstrapValidator({
     message: 'This value is not valid',
@@ -251,6 +269,38 @@ $('#editForm').bootstrapValidator({
                     message: '手机号码为11位'
                 }
             }
+        }
+    }
+});
+
+/**
+ * 文件上传验证
+ */
+$('#importForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        fileImport: {
+            validators: {
+                notEmpty: {
+                    message: '请选择要导入的文件'
+                }
+            }
+        },
+        remote: {
+            url: '../web/tcms/vehicle/info/fileFormat',
+            type: "post",
+            async: false,
+            data: function(validator, $field, value) {
+                return{
+                    fileImport:$("#file_import").val()
+                };
+            },
+            message: '支付密码错误'
         }
     }
 });

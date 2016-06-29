@@ -43,12 +43,12 @@
 							<button class="btn btn-sm btn-primary" type="button" onclick="addVehicle();">
 								添加车辆
 							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="importVehicle();">
+							<button class="btn btn-sm btn-primary" type="button" onclick="openImportDiv();">
 								批量导入
 							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="downLoadModel();">
+							<a class="btn btn-sm btn-primary" href="<%=basePath %>/docs/template/vehicle_info_temp.xls">
 								下载模板
-							</button>
+							</a>
 						</div>
 					</div>
 					<%--</h4>--%>
@@ -68,10 +68,10 @@
 						<tbody>
 						<c:forEach items="${vehicleList}" var="vehicle">
 							<tr>
+
 								<td>${vehicle.platesNumber}</td>
 								<td>${vehicle.cardNo}</td>
 								<td>${vehicle.noticePhone}</td>
-								<td>${vehicle.fleetName}</td>
 								<td><fmt:formatDate value="${vehicle.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
 									<c:if test="${vehicle.cardStatus == 0}">
@@ -211,19 +211,34 @@
 <!--添加车辆弹层-结束-->
 
 <!--提示弹层-开始-->
-<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
+<div id="importDivModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="alertModalLabel">警告提示</h4>
+				<h4 class="modal-title" id="alertModalLabel">批量导入</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
 					<%--两行表单 开始--%>
 					<div class="row">
 						<div class="col-xs-12">
-							sadfasdfasdf
+							<form class="form-horizontal" id="importForm" >
+								<div class="form-group">
+										<!-- #section:custom/file-input -->
+										<label class="ace-file-input">
+											<input type="file" id="file_import" name="fileImport" onchange="fileFormat()">
+											<span class="ace-file-container projectfile" data-title="选择文件">
+												<span class="ace-file-name" data-title="选择要导入的文件">
+													<i class=" ace-icon fa fa-upload"></i>
+												</span>
+											</span>
+											<a class="remove" href="#">
+												<i class=" ace-icon fa fa-times"></i>
+											</a>
+										</label>
+								</div>
+							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
@@ -232,8 +247,8 @@
 				<div class="row">
 					<div class="space"></div>
 					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
+					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveTemplate()">确   定</button></div>
+					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('importDivModel')">取   消 </button></div>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
