@@ -36,6 +36,8 @@ public class CRMCashBackContoller {
 
     @Autowired
     private SysCashBackMapper cashBackMapper;
+    @Autowired
+    private UsysparamService service;
 
     @ResponseBody
     @RequestMapping("/web/dictInfo")
