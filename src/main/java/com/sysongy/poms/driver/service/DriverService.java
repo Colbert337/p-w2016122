@@ -11,6 +11,8 @@ import com.sysongy.poms.order.model.SysOrder;
 public interface DriverService {
 	
 	public PageInfo<SysDriver> queryDrivers(SysDriver obj) throws Exception;
+
+	public PageInfo<SysDriver> queryForPageSingleList(SysDriver obj) throws Exception;
 	
 	public SysDriver queryDriverByPK(String sysDriverId) throws Exception;
 	

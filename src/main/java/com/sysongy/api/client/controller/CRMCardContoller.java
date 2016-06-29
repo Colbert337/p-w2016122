@@ -56,7 +56,6 @@ public class CRMCardContoller {
         }
         try
         {
-            gascard.setCard_status("2");
             String startTime = gascard.getStorage_time_before();
             String endTime = gascard.getStorage_time_after();
             gascard.setStorage_time_after(startTime);

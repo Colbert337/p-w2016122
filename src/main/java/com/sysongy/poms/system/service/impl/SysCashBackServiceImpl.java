@@ -120,7 +120,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	
 	/**
 	 * 通过cashBack的number得到对象
-	 * @param cashBackid
+	 * @paramcashBackid
 	 * @return 
 	 * @return
 	 * @throws Exception
@@ -148,7 +148,8 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	 * @param cashBack
 	 * @return
 	 */
-	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType) throws Exception{
+	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,
+								String accountId, String accountUserName, String orderDealType) throws Exception{
 		//1.步骤一：从传过来的某个充值类型的cashBackList中，计算过滤得到符合条件的一条返现规则：
 		BigDecimal cash = order.getCash();
 		List<SysCashBack> eligible_list = new ArrayList<SysCashBack>();
