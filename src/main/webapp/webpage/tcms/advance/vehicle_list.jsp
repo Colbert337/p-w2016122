@@ -174,9 +174,10 @@
 									<h5 class="header smaller lighter blue">实体卡信息</h5>
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right"> 实体卡： </label>
-										<div class="col-sm-8">
+										<div class="col-sm-6">
 											<label class="pad-top-10" id="card_no"></label>
 										</div>
+										<div class="col-sm-2"><button onclick="freeze()">冻结</button></div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right"> 卡类型： </label>

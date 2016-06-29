@@ -20,7 +20,7 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								加注站保证金设置
+								加注站预存款设置
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -42,10 +42,19 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="email" class="col-sm-3 control-label no-padding-right" >加注站保证金： </label>
+										<label for="email" class="col-sm-3 control-label no-padding-right" >加注站预存款： </label>
 
 										<div class="col-sm-4">
 											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" maxlength="8"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" >转账方式： </label>
+										<div class="col-sm-4">
+											<select class="form-control" name="depositType" >
+												<s:option flag="true" gcode="RECHARGE_TYPE"/>
+											</select>
 										</div>
 									</div>
 									
@@ -70,14 +79,6 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right">转账方式：</label>
-
-										<div class="col-sm-4">
-											<input type="text" name="depositType" placeholder="输入转账方式" class="form-control" maxlength="20"/>
-										</div>
-									</div>
-									
-									<div class="form-group">
 										<label for="station_manager" class="col-sm-3 control-label no-padding-right">操作人员：</label>
 
 										<div class="col-sm-4">
@@ -96,13 +97,13 @@
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="button" onclick="save();">
+											<button class="btn btn-info" type="button" id="sub" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											
-											<button class="btn btn-success" type="button" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage2();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>

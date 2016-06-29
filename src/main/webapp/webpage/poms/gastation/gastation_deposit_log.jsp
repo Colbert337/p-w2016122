@@ -22,7 +22,7 @@
 				<div class="col-xs-12">
 					<div class="page-header">
 						<h1>
-							加注站保证金轨迹信息
+							预存款轨迹信息
 						</h1>
 					</div>
 					<div class="search-types">
@@ -64,7 +64,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">用户卡详细信息列表</div>
+					<div class="table-header">预存款轨迹信息列表</div>
 
 					<!-- div.table-responsive -->
 
@@ -80,13 +80,13 @@
 										</label>
 									</th>
 									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">工作站编号</th>
-									<th onclick="orderBy(this,'account_id');commitForm();" id="account_id_order">账户编号</th>
+									<th onclick="orderBy(this,'station_name');commitForm();" id="station_name_order">工作站名称</th>
 									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
 									<th onclick="orderBy(this,'deposit_time');commitForm();" id="deposit_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>转账时间</th>
 									<th onclick="orderBy(this,'deposit_type');commitForm();" id="deposit_type_order">转账方式</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th> 
 									<th onclick="orderBy(this,'optime');commitForm();" id="optime_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th> 
-									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">保证金额度(元)</th>
+									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">预存款金额(元)</th>
 								</tr>
 							</thead>
 
@@ -102,10 +102,10 @@
 									</td>
 
 									<td>${list.stationId}</td>
-								 	<td>${list.accountId}</td> 
+								 	<td>${list.stationName}</td> 
 									<td>${list.company}</td>
 									<td><fmt:formatDate value="${list.depositTime}" type="both"/></td>
-									<td>${list.depositType}</td>
+									<td><s:Code2Name mcode="${list.depositType}" gcode="RECHARGE_TYPE"></s:Code2Name></td>
 									<td>${list.operator}</td>
 					                <td><fmt:formatDate value="${list.optime}" type="both"/></td>
 									<td>${list.deposit}</td>

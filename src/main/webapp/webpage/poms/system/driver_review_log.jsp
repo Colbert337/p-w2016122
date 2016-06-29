@@ -20,7 +20,7 @@
 
 					<div class="page-header">
 						<h1>
-							个人用户管理
+							审核日志查询
 						</h1>
 					</div>
 
@@ -37,7 +37,7 @@
 
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>申请时间:</label>
+								<label>审核时间:</label>
 								<input type="text" name="createdDate_after" value="${driver.createdDate_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
@@ -84,7 +84,8 @@
 									<th onclick="orderBy(this,'fuel_type');commitForm();" id="indu_com_number_order">燃料类型</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="status_order">关联运输公司</th>
 									<!--  <th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> -->
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th>
+									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">审核人员</th>
+									<!-- <th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th> -->
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
 									<th id="memoth" style="display:none">备注</th>
@@ -110,7 +111,8 @@
 									<td><s:Code2Name mcode="${list.fuelType}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td>${list.stationId}</td>
 									<%-- <td>${list.isIdent == '0'?'否':'是'}</td>  --%>
-									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
+									<td>${list.operator}</td>
+									<%-- <td><fmt:formatDate value="${list.createdDate}" type="both"/></td> --%>
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>
 									<td style="display:none">${list.memo}</td>

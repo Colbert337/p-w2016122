@@ -290,7 +290,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
 	@Override
-	public Integer updateAndReview(String driverid, String type,String memo) throws Exception {
+	public Integer updateAndReview(String driverid, String type,String memo, String operator) throws Exception {
 		SysDriver record = new SysDriver();
 		record.setSysDriverId(driverid);
 		record = sysDriverMapper.selectByPrimaryKey(driverid);
@@ -303,6 +303,8 @@ public class DriverServiceImpl implements DriverService {
 			
 		SysDriverReviewStr log = new SysDriverReviewStr();
 		BeanUtils.copyProperties(log, record);
+		log.setOperator(operator);
+		
 		return sysDriverReviewStrMapper.insert(log);
 	}
 

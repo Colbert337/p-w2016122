@@ -1,30 +1,28 @@
 package com.sysongy.poms.transportion.controller;
 
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.UUIDGenerator;
-import net.sf.json.JSONObject;
-import org.springframework.mail.SimpleMailMessage;
-import com.sysongy.util.mail.MailEngine;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.mail.MailEngine;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -33,7 +31,7 @@ import java.util.Properties;
 @RequestMapping("/web/transportion")
 @Controller
 public class TransportionController extends BaseContoller{
-	
+
 	@Autowired
 	private TransportionService service;
 	@Autowired
@@ -93,7 +91,7 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
-	
+
 	@RequestMapping("/transportionList2")
 	public String queryAllTransportionList2(ModelMap map, Transportion transportion) throws Exception{
 
@@ -180,31 +178,31 @@ public class TransportionController extends BaseContoller{
 			return  ret;
 		}
 	}
-	
+
 	@RequestMapping("/preUpdate")
 	public String preUpdate(ModelMap map, @RequestParam String transportionid){
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_update";
 		Transportion station = new Transportion();
-		
+
 			try {
 				if(transportionid != null && !"".equals(transportionid)){
 					station = service.queryTransportionByPK(transportionid);
 				}
-		
+
 				bean.setRetCode(100);
 				bean.setRetMsg("根据["+transportionid+"]查询Transportion成功");
 				bean.setPageInfo(ret);
-	
+
 				map.addAttribute("ret", bean);
 				map.addAttribute("station", station);
-	
+
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
-	
+
 			ret = this.queryAllTransportionList(map, new Transportion());
-	
+
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
@@ -249,7 +247,7 @@ public class TransportionController extends BaseContoller{
 
 		return transportion;
 	}
-	
+
 	@RequestMapping("/depositList")
 	public String querydepositList(ModelMap map, SysDepositLog deposit) throws Exception{
 
@@ -264,7 +262,7 @@ public class TransportionController extends BaseContoller{
 			if(StringUtils.isEmpty(deposit.getOrderby())){
 				deposit.setOrderby("optime desc");
 			}
-			
+
 			deposit.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
 
@@ -287,7 +285,7 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
-	
+
 	@RequestMapping("/deposiTransportion")
 	public String deposiTransportion(ModelMap map, SysDepositLog deposit, @ModelAttribute CurrUser currUser){
 
@@ -300,7 +298,7 @@ public class TransportionController extends BaseContoller{
 					rowcount = service.updatedeposiTransportion(deposit, currUser.getUserId());
 				}
 
-				ret = this.queryAllTransportionList(map, new Transportion());
+				ret = this.queryAllTransportionList2(map, new Transportion());
 
 				bean.setRetCode(100);
 				bean.setRetMsg("保证金设置成功");
@@ -314,7 +312,7 @@ public class TransportionController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllTransportionList(map, new Transportion());
+			ret = this.queryAllTransportionList2(map, new Transportion());
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -366,7 +364,7 @@ public class TransportionController extends BaseContoller{
 			mailMessage.setSubject("用户设置密码邮件通知");
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("userName",userName);
-			model.put("url",url+"/");
+			model.put("url",url+"/web/transportion/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
 		}catch (Exception e){
 			e.printStackTrace();
@@ -386,13 +384,10 @@ public class TransportionController extends BaseContoller{
 		String userName = currUser.getUser().getUserName();
 		String stationId = currUser.getStationId();
 
-		try {
-			transportion = service.queryTransportionByPK(stationId);
+		map.addAttribute("userName",userName);
+		map.addAttribute("stationId",stationId);
 
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "webpage/poms/transportion/ps_set";
 	}
 
 	/**
@@ -419,7 +414,7 @@ public class TransportionController extends BaseContoller{
 			mailMessage.setSubject("用户修改密码邮件通知");
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("userName",userName);
-			model.put("url",url+"/");
+			model.put("url",url+"/web/transportion/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
 		}catch (Exception e){
 			e.printStackTrace();
@@ -461,6 +456,7 @@ public class TransportionController extends BaseContoller{
 		String stationId = currUser.getStationId();
 		transportion.setSys_transportion_id(stationId);
 		try {
+			transportion.setPay_code(Encoder.MD5Encode(transportion.getPay_code().getBytes()));
 			service.updatedeposiTransport(transportion);
 
 		}catch (Exception e){

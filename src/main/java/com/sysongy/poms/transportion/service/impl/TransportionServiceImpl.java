@@ -243,7 +243,7 @@ public class TransportionServiceImpl implements TransportionService {
 
 	@Override
 	public int updatedeposiTransport(Transportion transportion) throws Exception {
-		return transportionMapper.updateByPrimaryKey(transportion);
+		return transportionMapper.updateByPrimaryKeySelective(transportion);
 	}
 
 	@Override
@@ -262,9 +262,12 @@ public class TransportionServiceImpl implements TransportionService {
 		order.setOrderDate(new Date());
 		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+		orderService.insert(order);
 		orderService.chargeToTransportion(order);
 		
 		//写日志
+		Transportion transportion = transportionMapper.selectByPrimaryKey(log.getStationId());
+		log.setStationName(transportion.getTransportion_name());
 		log.setOptime(new Date());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);

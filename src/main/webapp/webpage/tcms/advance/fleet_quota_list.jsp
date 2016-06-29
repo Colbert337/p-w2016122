@@ -29,7 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
-							<input type="text" name="quota" placeholder="车队名称/队长姓名"  maxlength="11" value="${fleetQuota.quota}"/>
+							<input type="text" name="fleetName" placeholder="车队名称/队长姓名"  maxlength="11" value="${fleetQuota.fleetName}"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
@@ -360,7 +360,7 @@
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="new_password"><span class="red_star">*</span> 新支付密码： </label>
 										<div class="col-sm-7">
-											<input type="password" id="new_password" name="payCode" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
+											<input type="password" id="new_password" name="pay_code" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
 										</div>
 									</div>
 									<div class="form-group">

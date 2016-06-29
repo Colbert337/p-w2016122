@@ -50,7 +50,7 @@ public class Translate {
 		UsysparamVO vo = sqlMapper.selectOne(excuteSQL, UsysparamVO.class);
 		session.close();
 		
-		return vo.getMname();
+		return vo == null ?"":vo.getMname();
 	}
 	
 //	
@@ -140,7 +140,7 @@ public class Translate {
 		SqlSessionFactory sessionFactory = (SqlSessionFactory) wac.getBean("sqlSessionFactory");
 		SqlSession session = sessionFactory.openSession();
 		SqlMapper sqlMapper = new SqlMapper(session);
-		String excuteSQL = "SELECT * FROM USYSPARAM WHERE GCODE ='"+gcode+"'";
+		String excuteSQL = "SELECT * FROM USYSPARAM WHERE GCODE ='"+gcode+"' AND SCODE is NULL";
 		List<UsysparamVO> list = sqlMapper.selectList(excuteSQL, UsysparamVO.class);
 		
 		session.close();
