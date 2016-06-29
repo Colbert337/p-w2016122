@@ -74,6 +74,15 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     }
 
     @Override
+    public int addVehicleList(List<TcVehicle> tcVehicleList) {
+        if(tcVehicleList != null && tcVehicleList.size() > 0){
+            return tcVehicleMapper.addVehicleList(tcVehicleList);
+        }else{
+            return 0;
+        }
+    }
+
+    @Override
     public int deleteVehicle(TcVehicle tcVehicle) {
         if(tcVehicle != null){
             return tcVehicleMapper.deleteVehicle(tcVehicle);
