@@ -66,6 +66,10 @@ public class SysDriver extends BaseModel{
     private String notin_checked_status;
 
     private Date checkedDate;
+    
+    private String checkedDate_before;
+
+    private String checkedDate_after;
 
     private SysUserAccount account;
 
@@ -79,6 +83,22 @@ public class SysDriver extends BaseModel{
 
     public String getMemo() {
 		return memo;
+	}
+
+	public String getCheckedDate_before() {
+		return checkedDate_before;
+	}
+
+	public void setCheckedDate_before(String checkedDate_before) {
+		this.checkedDate_before = checkedDate_before;
+	}
+
+	public String getCheckedDate_after() {
+		return checkedDate_after;
+	}
+
+	public void setCheckedDate_after(String checkedDate_after) {
+		this.checkedDate_after = checkedDate_after;
 	}
 
 	public void setMemo(String memo) {

@@ -66,7 +66,7 @@
          batch_no = #{batch_no,jdbcType=VARCHAR}
       </if>
       <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
-        and storage_time between CONCAT(#{storage_time_after,jdbcType=VARCHAR},'00:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
+        and storage_time between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
       </if>
     </trim>
   </select>
