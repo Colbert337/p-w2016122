@@ -50,6 +50,10 @@ function editVehicle(vehicleId){
             $("#copy_phone").val(data.vehicle.copyPhone);
 
             if(data.gasCard != null && data.gasCard.card_no != null){
+                if(data.gasCard.card_no != ""){
+                    var str = "<button onclick='freeze("+data.gasCard.card_no+")'>冻结</button>";
+                    $("#dongjie").append(str);
+                }
                 var cardType,cardStatus;
                 //卡类型
                 switch(data.gasCard.card_type)
@@ -98,19 +102,23 @@ function editVehicle(vehicleId){
 /**
  * 冻结卡
  */
-function freeze(){
-    var card_no = $("#card_no").val();
-    $.ajax({
+function freeze(cardNo){
+    var saveOptions ={
         url:"../web/tcms/vehicle/update/freeze",
-        data:{card_no:card_no},
-        async:false,
-        type: "POST",
-        success: function(data){
+        data:{card_no:cardNo},
+        type:'post',
+        dataType:'html',
+        success:function(data){
             sucDialog("操作成功！");
+            $("#main").html(data);
         },error: function(XMLHttpRequest, textStatus, errorThrown) {
             failDialog("操作失败！");
         }
-    })
+    }
+    $("#editForm").ajaxSubmit(saveOptions);
+
+    $("#editModel").modal('hide');
+    $(".modal-backdrop").css("display","none");
 }
 
 /*取消弹层方法*/

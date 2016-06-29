@@ -54,6 +54,8 @@ public class TcVehicleController extends BaseContoller {
     GasCardService gasCardService;
     @Autowired
     RedisClientInterface redisClientImpl;
+    @Autowired
+    GasCardService cardService;
 
     /**
      * 查询车辆列表
@@ -109,6 +111,23 @@ public class TcVehicleController extends BaseContoller {
     }
 
     /**
+     * 冻结卡
+     * @param currUser
+     * @param vehicle
+     * @param map
+     * @return
+     */
+    @RequestMapping("/update/freeze")
+    public String updateFreeze(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map)throws Exception{
+        GasCard gasCard = new GasCard();
+        gasCard.setCard_status(GlobalConstant.CardStatus.PAUSED);
+        gasCard.setCard_no(vehicle.getCardNo());
+        cardService.updateGasCardInfo(gasCard);
+
+        return "redirect:/web/tcms/vehicle/list/page";
+    }
+
+    /**
      * 添加车辆
      * @param currUser 当前用户
      * @param vehicle 车辆
@@ -151,6 +170,14 @@ public class TcVehicleController extends BaseContoller {
         return "redirect:/web/tcms/vehicle/list/page";
     }
 
+    /**
+     * 导入车辆信息
+     * @param file
+     * @param request
+     * @param currUser
+     * @param map
+     * @return
+     */
     @RequestMapping("/info/file")
     public String importFile(@RequestParam(value = "fileImport") MultipartFile file ,HttpServletRequest request,@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
@@ -245,7 +272,6 @@ public class TcVehicleController extends BaseContoller {
             String key = GlobalConstant.MSG_PREFIX + mobilePhone;
             redisClientImpl.addToCache(key, checkCode.toString(), 60);
 
-//            String msgType = request.getParameter("msgType");
             if(msgType.equalsIgnoreCase("changePassword")){
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
             } else {
