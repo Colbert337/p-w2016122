@@ -61,34 +61,34 @@
     from sys_user su left join sys_user_role sur on su.sys_user_id = sur.sys_user_id left join sys_role sr on sur.sys_role_id = sr.sys_role_id
     where 1=1
     <trim>
-      <if test="sysUserId != null" >
+      <if test="sysUserId != null &amp;&amp; sysUserId !=''" >
         and su.sys_user_id = #{sysUserId}
       </if>
-      <if test="userName != null" >
+      <if test="userName != null &amp;&amp; userName !=''" >
         and su.user_name = #{userName}
       </if>
-      <if test="userType != null" >
+      <if test="userType != null &amp;&amp; userType !=''" >
         and  su.user_type = #{userType}
       </if>
-      <if test="realName != null" >
+      <if test="realName != null &amp;&amp; realName !=''" >
         and  su.real_name = #{realName}
       </if>
-      <if test="gender != null" >
+      <if test="gender != null &amp;&amp; gender !=''" >
         and  su.gender = #{gender}
       </if>
-      <if test="mobilePhone != null" >
+      <if test="mobilePhone != null &amp;&amp; mobilePhone !=''" >
         and  su.mobile_phone = #{mobilePhone}
       </if>
-      <if test="email != null" >
+      <if test="email != null &amp;&amp; email !=''" >
         and  su.email = #{email}
       </if>
-      <if test="status != null" >
+      <if test="status != null &amp;&amp; status !=''" >
         and  su.status = #{status}
       </if>
-      <if test="isAdmin != null" >
+      <if test="isAdmin != null &amp;&amp; isAdmin !=''" >
         and  su.is_admin = #{isAdmin}
       </if>
-      <if test="isDeleted != null" >
+      <if test="isDeleted != null &amp;&amp; isDeleted !=''" >
         and  su.is_deleted = #{isDeleted}
       </if>
     </trim>
@@ -140,6 +140,46 @@
     </trim>
     and status = 0 and is_deleted = 1
   </select>
+
+  <select id="queryUserForCRM" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where 1 = 1
+    <trim>
+      <if test="sysUserId != null" >
+        and sys_user_id = #{sysUserId}
+      </if>
+      <if test="userName != null" >
+        and user_name = #{userName}
+      </if>
+      <if test="userType != null" >
+        and  user_type = #{userType}
+      </if>
+      <if test="realName != null" >
+        and  real_name = #{realName}
+      </if>
+      <if test="gender != null" >
+        and  gender = #{gender}
+      </if>
+      <if test="mobilePhone != null" >
+        and  mobile_phone = #{mobilePhone}
+      </if>
+      <if test="email != null" >
+        and  email = #{email}
+      </if>
+      <if test="status != null" >
+        and  status = #{status}
+      </if>
+      <if test="isAdmin != null" >
+        and  is_admin = #{isAdmin}
+      </if>
+      <if test="isDeleted != null" >
+        and  is_deleted = #{isDeleted}
+      </if>
+    </trim>
+  </select>
+
   <select id="queryUserMapByAccount" resultMap="MapResultMap" >
     select
     <include refid="Base_Column_List" />

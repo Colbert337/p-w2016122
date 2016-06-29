@@ -29,7 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
-							<input type="text" name="quota" placeholder="车队名称/队长姓名"  maxlength="11" value="${fleetQuota.quota}"/>
+							<input type="text" name="fleetName" placeholder="车队名称/队长姓名"  maxlength="11" value="${fleetQuota.fleetName}"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">

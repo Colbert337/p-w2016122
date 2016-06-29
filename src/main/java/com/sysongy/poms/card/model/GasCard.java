@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
 @JsonIgnoreProperties
@@ -52,6 +53,12 @@ public class GasCard extends BaseModel{
 	private String dName;
 
 	private String mPhone;
+
+	private Date station_receive_time;
+
+	private String sysUserId;
+
+	private SysUser sysUserIdInfo;
 
 	public String getCard_property() {
 		return card_property;
@@ -219,5 +226,29 @@ public class GasCard extends BaseModel{
 
 	public void setmPhone(String mPhone) {
 		this.mPhone = mPhone;
+	}
+
+	public Date getStation_receive_time() {
+		return station_receive_time;
+	}
+
+	public void setStation_receive_time(Date station_receive_time) {
+		this.station_receive_time = station_receive_time;
+	}
+
+	public String getSysUserId() {
+		return sysUserId;
+	}
+
+	public void setSysUserId(String sysUserId) {
+		this.sysUserId = sysUserId;
+	}
+
+	public SysUser getSysUserIdInfo() {
+		return sysUserIdInfo;
+	}
+
+	public void setSysUserIdInfo(SysUser sysUserIdInfo) {
+		this.sysUserIdInfo = sysUserIdInfo;
 	}
 }

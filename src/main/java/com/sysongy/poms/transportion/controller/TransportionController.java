@@ -31,7 +31,7 @@ import java.util.Properties;
 @RequestMapping("/web/transportion")
 @Controller
 public class TransportionController extends BaseContoller{
-	
+
 	@Autowired
 	private TransportionService service;
 	@Autowired
@@ -91,7 +91,7 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
-	
+
 	@RequestMapping("/transportionList2")
 	public String queryAllTransportionList2(ModelMap map, Transportion transportion) throws Exception{
 
@@ -178,31 +178,31 @@ public class TransportionController extends BaseContoller{
 			return  ret;
 		}
 	}
-	
+
 	@RequestMapping("/preUpdate")
 	public String preUpdate(ModelMap map, @RequestParam String transportionid){
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_update";
 		Transportion station = new Transportion();
-		
+
 			try {
 				if(transportionid != null && !"".equals(transportionid)){
 					station = service.queryTransportionByPK(transportionid);
 				}
-		
+
 				bean.setRetCode(100);
 				bean.setRetMsg("根据["+transportionid+"]查询Transportion成功");
 				bean.setPageInfo(ret);
-	
+
 				map.addAttribute("ret", bean);
 				map.addAttribute("station", station);
-	
+
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
-	
+
 			ret = this.queryAllTransportionList(map, new Transportion());
-	
+
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
@@ -247,7 +247,7 @@ public class TransportionController extends BaseContoller{
 
 		return transportion;
 	}
-	
+
 	@RequestMapping("/depositList")
 	public String querydepositList(ModelMap map, SysDepositLog deposit) throws Exception{
 
@@ -262,7 +262,7 @@ public class TransportionController extends BaseContoller{
 			if(StringUtils.isEmpty(deposit.getOrderby())){
 				deposit.setOrderby("optime desc");
 			}
-			
+
 			deposit.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
 
@@ -285,7 +285,7 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
-	
+
 	@RequestMapping("/deposiTransportion")
 	public String deposiTransportion(ModelMap map, SysDepositLog deposit, @ModelAttribute CurrUser currUser){
 
@@ -339,7 +339,7 @@ public class TransportionController extends BaseContoller{
 			e.printStackTrace();
 		}
 
-		return "redirect:/web/transportion/transportionList";
+		return "redirect:/web/tcms/fleetQuota/list/page";
 	}
 
 	/**
@@ -364,12 +364,12 @@ public class TransportionController extends BaseContoller{
 			mailMessage.setSubject("用户设置密码邮件通知");
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("userName",userName);
-			model.put("url",url+"/");
+			model.put("url",url+"/web/transportion/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/transportion/transportionList";
+		return "redirect:/web/tcms/fleetQuota/list/page";
 	}
 
 	/**
@@ -384,13 +384,10 @@ public class TransportionController extends BaseContoller{
 		String userName = currUser.getUser().getUserName();
 		String stationId = currUser.getStationId();
 
-		try {
-			transportion = service.queryTransportionByPK(stationId);
+		map.addAttribute("userName",userName);
+		map.addAttribute("stationId",stationId);
 
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return "redirect:/web/transportion/transportionList";
+		return "webpage/poms/transportion/ps_set";
 	}
 
 	/**
@@ -417,12 +414,12 @@ public class TransportionController extends BaseContoller{
 			mailMessage.setSubject("用户修改密码邮件通知");
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("userName",userName);
-			model.put("url",url+"/");
+			model.put("url",url+"/web/transportion/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/transportion/transportionList";
+		return "redirect:/web/tcms/fleetQuota/list/page";
 	}
 
 	/**
@@ -443,7 +440,7 @@ public class TransportionController extends BaseContoller{
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/transportion/transportionList";
+		return "redirect:/web/tcms/fleetQuota/list/page";
 	}
 
 	/**
@@ -465,7 +462,7 @@ public class TransportionController extends BaseContoller{
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/transportion/transportionList";
+		return "redirect:/web/tcms/fleetQuota/list/page";
 	}
 
 	/**

@@ -95,6 +95,22 @@ function editVehicle(vehicleId){
     $("#editModel").modal('show');
 }
 
+/**
+ * 冻结卡
+ */
+function freeze(){
+    var card_no = $("#card_no").val();
+    $.ajax({
+        url:"../web/tcms/vehicle/update/freeze",
+        data:{card_no:card_no},
+        async:false,
+        type: "POST",
+        success: function(data){
+
+        }
+    })
+}
+
 /*取消弹层方法*/
 function closeDialog(divId){
     jQuery('#editForm').validationEngine('hide');//隐藏验证弹窗

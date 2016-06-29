@@ -65,20 +65,24 @@
     left join tc_fleet_quota tfq on tf.tc_fleet_id = tfq.tc_fleet_id
     where tf.is_deleted = 1
     and tf.station_id = #{stationId}
-    <if test="tcFleetId != null" >
+    <if test="tcFleetId != null  &amp;&amp; tcFleetId !=''" >
       and  tf.tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
     </if>
-    <if test="quota != null" >
+    <if test="quota != null &amp;&amp; quota !=''" >
       and  tf.quota = #{quota,jdbcType=DECIMAL}
     </if>
-    <if test="isAllot != null" >
+    <if test="isAllot != null &amp;&amp; isAllot !=''" >
       and  tf.is_allot = #{isAllot,jdbcType=INTEGER}
     </if>
-    <if test="createdDate != null" >
+    <if test="createdDate != null &amp;&amp; createdDate !=''" >
       and  tf.created_date = #{createdDate,jdbcType=TIMESTAMP}
     </if>
-    <if test="updatedDate != null" >
+    <if test="updatedDate != null &amp;&amp; updatedDate !=''" >
       and  tf.updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="fleetName != null &amp;&amp; fleetName !=''" >
+      and (tf.fleet_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%')
+      or  sr.real_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%'))
     </if>
     order by tf.created_date desc
   </select>
