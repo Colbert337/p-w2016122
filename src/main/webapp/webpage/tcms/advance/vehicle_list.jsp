@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/advance/vehicle_list.js"/>
+<script src="<%=basePath %>/dist/js/advance/vehicle_list.js"></script>
 <div class="page-header">
 	<h1>
 		车辆管理
@@ -223,20 +223,11 @@
 					<%--两行表单 开始--%>
 					<div class="row">
 						<div class="col-xs-12">
-							<form class="form-horizontal" id="importForm" >
+							<form class="form-horizontal" id="importForm" enctype="multipart/form-data">
 								<div class="form-group">
-										<!-- #section:custom/file-input -->
-										<label class="ace-file-input">
-											<input type="file" id="file_import" name="fileImport" onchange="fileFormat()">
-											<span class="ace-file-container projectfile" data-title="选择文件">
-												<span class="ace-file-name" data-title="选择要导入的文件">
-													<i class=" ace-icon fa fa-upload"></i>
-												</span>
-											</span>
-											<a class="remove" href="#">
-												<i class=" ace-icon fa fa-times"></i>
-											</a>
-										</label>
+									<div class="col-xs-12">
+										<input type="file" id="file_import" name="fileImport" onchange="fileFormat()"/>
+									</div>
 								</div>
 							</form>
 						</div><!-- /.col -->

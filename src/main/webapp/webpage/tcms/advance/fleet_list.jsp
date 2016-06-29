@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/advance/fleet_list.js"/>
+<script src="<%=basePath %>/dist/js/advance/fleet_list.js"></script>
 <div class="page-header">
 	<h1>
 		车队管理
