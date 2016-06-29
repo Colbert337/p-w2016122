@@ -56,12 +56,16 @@ public class CRMCardContoller {
         }
         try
         {
-            gascard.setCard_status("2");
             String startTime = gascard.getStorage_time_before();
             String endTime = gascard.getStorage_time_after();
             gascard.setStorage_time_after(startTime);
             gascard.setStorage_time_before(endTime);
             PageInfo<GasCard> pageinfo = gasCardService.queryGasCard(gascard);
+            if((pageinfo == null) || (pageinfo.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("查询数据为空！！！");
+                return ajaxJson;
+            }
             attributes.put("pageInfo", pageinfo);
             attributes.put("gascard",pageinfo.getList());
             ajaxJson.setAttributes(attributes);

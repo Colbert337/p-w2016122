@@ -90,6 +90,31 @@ public class CRMCustomerContoller {
     	return ajaxJson;
     }
 
+    @RequestMapping(value = {"/web/queryForPageSingleList"})
+    @ResponseBody
+    public AjaxJson queryForPageSingleList(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            PageInfo<SysDriver> drivers = driverService.queryDrivers(sysDriver);
+            attributes.put("PageInfo", drivers);
+            attributes.put("drivers", drivers.getList());
+            if((drivers == null) || (drivers.getList().size() > 1)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该账户异常！！！");
+                return ajaxJson;
+            }
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SINGLE_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
     @RequestMapping(value = {"/web/sendMsg"})
     @ResponseBody
     public AjaxJson sendMsg(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver,@RequestParam(required = false) String mobilePhone){
