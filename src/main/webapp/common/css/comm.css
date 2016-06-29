@@ -89,9 +89,12 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
     max-width: 1000px;
     margin: 2% auto 0 auto;
 }
-.gastation-infomation .form-horizontal{
-    margin-top: 3%;
+.gastation-infomation .title {
+    background-color: #eee;
+    text-align: center;
+    padding: 5px 0;
 }
-.gastation-infomation .form-actions{
-    margin-top: 5%;
+.gastation-infomation-items .item {
+    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
 }
