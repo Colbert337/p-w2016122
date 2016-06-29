@@ -60,7 +60,7 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<div class="col-md-offset-5 col-md-8">
+										<div class="col-sm-offset-4 col-sm-8">
 											<button class="btn btn-info" type="button" onclick="savePsSet()">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
