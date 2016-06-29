@@ -134,7 +134,7 @@ public class DriverController extends BaseContoller{
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "webpage/poms/system/driver_review_log";
+		return "redirect:/web/driver/list/page";
 	}
 
     @RequestMapping("/driverList")

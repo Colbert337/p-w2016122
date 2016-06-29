@@ -137,6 +137,8 @@ public class DriverServiceImpl implements DriverService {
         sysUserAccount.setAccountBalance("0.0");
         sysUserAccount.setCreatedDate(new Date());
         sysUserAccount.setUpdatedDate(new Date());
+        sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
+        sysUserAccount.setVersion(0);
         int ret = sysUserAccountMapper.insert(sysUserAccount);
         return sysUserAccount;
 
