@@ -2,24 +2,28 @@ package com.sysongy.tcms.advance.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.RedisClientInterface;
-import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.*;
+import com.sysongy.util.pojo.AliShortMessageBean;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +46,8 @@ public class TcVehicleController extends BaseContoller {
     TcVehicleService tcVehicleService;
     @Autowired
     GasCardService gasCardService;
+    @Autowired
+    RedisClientInterface redisClientImpl;
 
     /**
      * 查询车辆列表
@@ -125,9 +131,60 @@ public class TcVehicleController extends BaseContoller {
                 e.printStackTrace();
             }
         }
+        String msgType = "user_register";
+        //给通知手机发送短信
+        if(vehicle != null && vehicle.getNoticePhone() != null && !vehicle.getNoticePhone().equals("")){
+            sendMsgApi(vehicle.getNoticePhone(),msgType);
+        }
 
+        //给抄送手机发送短信
+        if(vehicle != null && vehicle.getCopyPhone() != null && !vehicle.getCopyPhone().equals("")){
+            sendMsgApi(vehicle.getCopyPhone(),msgType);
+        }
 
         return "redirect:/web/tcms/vehicle/list/page";
+    }
+
+
+    /**
+     * 发送短信
+     * @param mobilePhone
+     * @param msgType
+     * @return
+     */
+    public AjaxJson sendMsgApi(@RequestParam(required = false) String mobilePhone, @RequestParam(required = false) String msgType){
+        AjaxJson ajaxJson = new AjaxJson();
+
+        if(!StringUtils.isNotEmpty(mobilePhone)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("手机号为空！！！");
+            return ajaxJson;
+        }
+
+        try
+        {
+            Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
+            AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+            aliShortMessageBean.setSendNumber(mobilePhone);
+            aliShortMessageBean.setCode(checkCode.toString());
+            aliShortMessageBean.setProduct("司集能源科技平台");
+            String key = GlobalConstant.MSG_PREFIX + mobilePhone;
+            redisClientImpl.addToCache(key, checkCode.toString(), 60);
+
+//            String msgType = request.getParameter("msgType");
+            if(msgType.equalsIgnoreCase("changePassword")){
+                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
+            } else {
+                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
+            }
+
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        return ajaxJson;
     }
 
 }

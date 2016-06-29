@@ -56,10 +56,10 @@
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
-							<th>车队名称</th>
 							<th>车牌号</th>
 							<th>实体卡号</th>
 							<th>通知手机</th>
+							<th>车队名称</th>
 							<th>创建时间</th>
 							<th>卡状态</th>
 							<th>操作</th>
@@ -68,10 +68,10 @@
 						<tbody>
 						<c:forEach items="${vehicleList}" var="vehicle">
 							<tr>
-								<td>${vehicle.fleetName}</td>
 								<td>${vehicle.platesNumber}</td>
 								<td>${vehicle.cardNo}</td>
 								<td>${vehicle.noticePhone}</td>
+								<td>${vehicle.fleetName}</td>
 								<td><fmt:formatDate value="${vehicle.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
 									<c:if test="${vehicle.cardStatus == 0}">
