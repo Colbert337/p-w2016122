@@ -1,22 +1,13 @@
 package com.sysongy.tcms.advance.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.base.model.AjaxJson;
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.base.model.InterfaceConstants;
-import com.sysongy.poms.card.model.GasCard;
-import com.sysongy.poms.card.service.GasCardService;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.driver.service.DriverService;
-import com.sysongy.tcms.advance.model.TcVehicle;
-import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.*;
-import com.sysongy.util.pojo.AliShortMessageBean;
-import javafx.scene.Parent;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,13 +21,25 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.tcms.advance.model.TcVehicle;
+import com.sysongy.tcms.advance.service.TcVehicleService;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
+
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
 
 /**
  * @FileName: TcVehicleController
