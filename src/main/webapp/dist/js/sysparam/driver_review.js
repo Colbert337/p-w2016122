@@ -43,6 +43,7 @@ var listOptions ={
 	              if($("#retCode").val() != "100"){
 		            	 //$("#modal-table").modal("show");
 		          }
+				$('[data-rel="tooltip"]').tooltip();
             },error:function(XMLHttpRequest, textStatus, errorThrown) {
             
 	       }

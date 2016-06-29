@@ -72,6 +72,7 @@
 								<td>${vehicle.platesNumber}</td>
 								<td>${vehicle.cardNo}</td>
 								<td>${vehicle.noticePhone}</td>
+								<td>${vehicle.fleetName}</td>
 								<td><fmt:formatDate value="${vehicle.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>
 									<c:if test="${vehicle.cardStatus == 0}">
