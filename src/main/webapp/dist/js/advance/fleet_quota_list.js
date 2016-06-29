@@ -73,6 +73,10 @@ function addPassword(){
 function changePassDiv(objOpen,objClose){
     $("#"+objOpen).show();
     $("#"+objClose).hide();
+
+    var fistDiv = $("#firstDiv").is(":visible");
+    var updatePsDiv =  $("#updatePsDiv").is(":visible");
+    var lossPsDiv =  $("#lossPsDiv").is(":visible");
 }
 
 function savePassword(){
@@ -84,10 +88,11 @@ function savePassword(){
     if(fistDiv){
         url = "../web/transportion/update/setPasswordMail"
     }else if(updatePsDiv){
-        url = "../web/transportion/update/setPasswordMail"
-    }else if(lossPsDiv){
         url = "../web/transportion/update/password"
+    }else if(lossPsDiv){
+        url = "../web/transportion/update/setPasswordMail"
     }
+    alert("url:"+url);
     var saveOptions ={
         url:url,
         type:'post',
