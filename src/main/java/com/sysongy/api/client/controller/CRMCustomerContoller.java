@@ -106,18 +106,25 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson querySingleCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
         AjaxJson ajaxJson = new AjaxJson();
-        if(!StringUtils.isNotEmpty(sysDriver.getSysDriverId())){
+        if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone()) ||
+                !StringUtils.isNotEmpty(sysDriver.getCardId())){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("司机ID为空！！！");
+            ajaxJson.setMsg("输入手机号或卡号为空！！！");
             return ajaxJson;
         }
         Map<String, Object> attributes = new HashMap<String, Object>();
         try
         {
-            PageInfo<SysDriver> drivers = driverService.queryDrivers(sysDriver);
+            PageInfo<SysDriver> drivers = driverService.querySingleDriver(sysDriver);
             if((drivers == null) || (drivers.getList().size() == 0)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("没有查询到所需内容！！！");
+                return ajaxJson;
+            }
+
+            if(drivers.getList().size() > 1){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该用户数据异常！！！");
                 return ajaxJson;
             }
             attributes.put("PageInfo", drivers);

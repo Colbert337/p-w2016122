@@ -108,6 +108,47 @@
     </trim>
   </select>
 
+  <select id="querySingleDriver" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    *
+    from sys_driver
+    where 1=1
+    <trim>
+      <if test="sysDriverId != null &amp;&amp; sysDriverId != ''" >
+        and sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+      </if>
+      <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
+        and plate_number = #{plateNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="fullName!= null &amp;&amp; fullName != ''" >
+        and full_name = #{fullName,jdbcType=VARCHAR}
+      </if>
+      <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
+        and (mobile_phone = #{mobilePhone,jdbcType=VARCHAR}) or (card_id = #{mobilePhone,jdbcType=VARCHAR)
+      </if>
+      <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
+        and checked_status = #{checkedStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="isIdent != null" >
+        and is_ident = #{isIdent,jdbcType=INTEGER}
+      </if>
+      <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">
+        and sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+      </if>
+      <if test="createdDate_after != null &amp;&amp; createdDate_after != ''">
+        and created_date between CONCAT(#{createdDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{createdDate_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+      <if test="notin_checked_status != null" >
+        and checked_status &lt;&gt; #{notin_checked_status,jdbcType=VARCHAR}
+      </if>
+      <if test="stationId!= null &amp;&amp; stationId != ''" >
+        and station_id = #{stationId,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+
+
+
   <select id="queryForPageSingleList" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     *
@@ -146,7 +187,6 @@
       </if>
     </trim>
   </select>
-
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

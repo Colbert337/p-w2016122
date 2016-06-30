@@ -78,6 +78,14 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
+    public PageInfo<SysDriver> querySingleDriver(SysDriver record) throws Exception {
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        List<SysDriver> list = sysDriverMapper.querySingleDriver(record);
+        PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
+        return pageInfo;
+    }
+
+    @Override
     public PageInfo<SysDriver> queryForPageSingleList(SysDriver record) throws Exception {
         PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
         List<SysDriver> list = sysDriverMapper.queryForPage(record);
