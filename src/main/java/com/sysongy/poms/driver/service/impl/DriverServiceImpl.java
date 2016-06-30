@@ -124,6 +124,7 @@ public class DriverServiceImpl implements DriverService {
             }
             gasCard.setCard_status(InterfaceConstants.CARD_STSTUS_IN_USE);
             gasCard.setStation_receive_time(new Date());
+
             gasCardMapper.updateByPrimaryKeySelective(gasCard);
 
             GasCardLog gascardlog = new GasCardLog();
