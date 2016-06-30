@@ -50,6 +50,10 @@ function editVehicle(vehicleId){
             $("#copy_phone").val(data.vehicle.copyPhone);
 
             if(data.gasCard != null && data.gasCard.card_no != null){
+                if(data.gasCard.card_no != ""){
+                    var str = "<button onclick='freeze("+data.gasCard.card_no+")'>冻结</button>";
+                    $("#dongjie").append(str);
+                }
                 var cardType,cardStatus;
                 //卡类型
                 switch(data.gasCard.card_type)
@@ -87,8 +91,8 @@ function editVehicle(vehicleId){
             }
 
             /*密码输入框改为可编辑*/
-            $("#pay_code").attr("readonly","readonly");
-            $("#re_password").attr("readonly","readonly");
+            /*$("#pay_code").attr("readonly","readonly");
+            $("#re_password").attr("readonly","readonly");*/
         }
     })
     $("#cardInfoDiv").show();
@@ -98,17 +102,23 @@ function editVehicle(vehicleId){
 /**
  * 冻结卡
  */
-function freeze(){
-    var card_no = $("#card_no").val();
-    $.ajax({
+function freeze(cardNo){
+    var saveOptions ={
         url:"../web/tcms/vehicle/update/freeze",
-        data:{card_no:card_no},
-        async:false,
-        type: "POST",
-        success: function(data){
-
+        data:{card_no:cardNo},
+        type:'post',
+        dataType:'html',
+        success:function(data){
+            sucDialog("操作成功！");
+            $("#main").html(data);
+        },error: function(XMLHttpRequest, textStatus, errorThrown) {
+            failDialog("操作失败！");
         }
-    })
+    }
+    $("#editForm").ajaxSubmit(saveOptions);
+
+    $("#editModel").modal('hide');
+    $(".modal-backdrop").css("display","none");
 }
 
 /*取消弹层方法*/
@@ -140,7 +150,10 @@ function saveVehicle(){
             type:'post',
             dataType:'html',
             success:function(data){
+                sucDialog("操作成功！");
                 $("#main").html(data);
+            },error: function(XMLHttpRequest, textStatus, errorThrown) {
+                failDialog("操作失败！");
             }
         }
         $("#editForm").ajaxSubmit(saveOptions);
@@ -165,7 +178,10 @@ function leaveDriver(){
             type:'post',
             dataType:'text',
             success:function(data){
+                sucDialog("操作成功!");//保存成功弹窗
                 $("#main").html(data);
+            },error: function(XMLHttpRequest, textStatus, errorThrown) {
+                failDialog("操作失败！");
             }
         }
         $("#listForm").ajaxSubmit(deleteOptions);
@@ -202,7 +218,7 @@ $('#editForm').bootstrapValidator({
         platesNumber: {
             validators: {
                 notEmpty: {
-                    message: '手机号码不能为空'
+                    message: '车牌号不能为空'
                 }
             }
         },
@@ -255,9 +271,6 @@ $('#editForm').bootstrapValidator({
         },
         copyPhone: {
             validators: {
-                notEmpty: {
-                    message: '手机号不能为空'
-                },
                 regexp: {
                     regexp: '^[0-9]+$',
                     message: '手机号只能包含数字'
@@ -314,13 +327,9 @@ function saveTemplate(){
         dataType:'text',
         enctype:"multipart/form-data",
         success:function(data){
-            var s = JSON.parse(data);
-            if(s.success == true){
-
-            }
-
+            sucDialog("操作成功！");
         },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+            failDialog("操作失败！");
         }
     }
     $("#importForm").ajaxSubmit(multipartOptions);

@@ -43,7 +43,7 @@ function addFleet(){
         type: "POST",
         success: function(data){
             $("#sys_user_id").empty();
-            $("#sys_user_id").append("<option value='0'>--选择队长--</option>");
+            $("#sys_user_id").append("<option value=''>--选择队长--</option>");
             $.each(data,function(i,val){
                 $("#sys_user_id").append("<option value='"+val.sysUserId+"'>"+val.userName+"-"+val.realName+"</option>");
             })
@@ -115,7 +115,7 @@ function editFleet(fleetId){
                 type: "POST",
                 success: function(data){
                     $("#sys_user_id").empty();
-                    $("#sys_user_id").append("<option value='0'>--选择队长--</option>");
+                    $("#sys_user_id").append("<option value=''>--选择队长--</option>");
                     $.each(data,function(i,val){
                         if(val.sysUserId == userId){
                             $("#sys_user_id").append("<option value='"+val.sysUserId+"' selected='selected'>"+val.userName+"-"+val.realName+"</option>");
@@ -258,73 +258,17 @@ $('#editForm').bootstrapValidator({
         validating: 'glyphicon glyphicon-refresh'
     },
     fields: {
-        platesNumber: {
+        fleetName: {
             validators: {
                 notEmpty: {
-                    message: '手机号码不能为空'
+                    message: '车队名称不能为空'
                 }
             }
         },
-        payCode: {
+        sysUserId: {
             validators: {
                 notEmpty: {
-                    message: '支付密码不能为空'
-                },
-                regexp: {
-                    regexp: '^[0-9a-zA-Z]+$',
-                    message: '密码只能包含数字和字母'
-                }
-            }
-        },
-        rePassword: {
-            validators: {
-                notEmpty: {
-                    message: '确认密码不能为空'
-                },
-                regexp: {
-                    regexp: '^[0-9a-zA-Z]+$',
-                    message: '密码只能包含数字和字母'
-                },
-                callback: {
-                    message: '支付密码不一致',
-                    callback: function (value, validator, $field) {
-                        if($("[name=payCode]").val() != value){
-                            return false;
-                        }
-                        return true;
-                    }
-                }
-            }
-        },
-        noticePhone: {
-            validators: {
-                notEmpty: {
-                    message: '手机号不能为空'
-                },
-                regexp: {
-                    regexp: '^[0-9]+$',
-                    message: '手机号只能包含数字'
-                },
-                stringLength: {
-                    min: 11,
-                    max: 11,
-                    message: '手机号码为11位'
-                }
-            }
-        },
-        copyPhone: {
-            validators: {
-                notEmpty: {
-                    message: '手机号不能为空'
-                },
-                regexp: {
-                    regexp: '^[0-9]+$',
-                    message: '手机号只能包含数字'
-                },
-                stringLength: {
-                    min: 11,
-                    max: 11,
-                    message: '手机号码为11位'
+                    message: '车队队长不能为空'
                 }
             }
         }

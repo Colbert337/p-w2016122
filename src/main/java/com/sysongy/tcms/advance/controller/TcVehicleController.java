@@ -7,16 +7,12 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
-import javafx.scene.Parent;
 import jxl.Sheet;
 import jxl.Workbook;
-import jxl.read.biff.BiffException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,9 +27,6 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +54,8 @@ public class TcVehicleController extends BaseContoller {
     GasCardService gasCardService;
     @Autowired
     RedisClientInterface redisClientImpl;
+    @Autowired
+    GasCardService cardService;
 
     /**
      * 查询车辆列表
@@ -116,6 +111,23 @@ public class TcVehicleController extends BaseContoller {
     }
 
     /**
+     * 冻结卡
+     * @param currUser
+     * @param vehicle
+     * @param map
+     * @return
+     */
+    @RequestMapping("/update/freeze")
+    public String updateFreeze(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map)throws Exception{
+        GasCard gasCard = new GasCard();
+        gasCard.setCard_status(GlobalConstant.CardStatus.PAUSED);
+        gasCard.setCard_no(vehicle.getCardNo());
+        cardService.updateGasCardInfo(gasCard);
+
+        return "redirect:/web/tcms/vehicle/list/page";
+    }
+
+    /**
      * 添加车辆
      * @param currUser 当前用户
      * @param vehicle 车辆
@@ -124,11 +136,21 @@ public class TcVehicleController extends BaseContoller {
      */
     @RequestMapping("/save")
     public String saveVehicle(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map){
-        int userType = currUser.getUser().getUserType();
-        int result = 0;
 
         if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
             vehicle.setPayCode(null);
+            TcVehicle tcVehicle = new TcVehicle();
+            tcVehicle = tcVehicleService.queryVehicle(vehicle);
+            if(tcVehicle != null){
+                //新密码
+                String password = vehicle.getPayCode();
+                password = Encoder.MD5Encode(password.getBytes());
+                //新密码何原始密码不一致，则修改密码
+                if(!password.equals(tcVehicle.getPayCode())){
+                    vehicle.setPayCode(password);
+                }
+            }
+
             tcVehicleService.updateVehicle(vehicle);
         }else{
             String stationId = currUser.getStationId();
@@ -158,9 +180,18 @@ public class TcVehicleController extends BaseContoller {
         return "redirect:/web/tcms/vehicle/list/page";
     }
 
+    /**
+     * 导入车辆信息
+     * @param file
+     * @param request
+     * @param currUser
+     * @param map
+     * @return
+     */
     @RequestMapping("/info/file")
-    public String importFile(@RequestParam(value = "fileImport") MultipartFile file ,HttpServletRequest request, HttpServletResponse response, ModelMap map){
+    public String importFile(@RequestParam(value = "fileImport") MultipartFile file ,HttpServletRequest request,@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+        String stationId = currUser.getStationId();
         //获取参数   参数有 schoolId   gradeId   classId
         MultipartResolver resolver = new CommonsMultipartResolver(request.getSession().getServletContext());
         List<TcVehicle> vehicleList = new ArrayList<>();
@@ -182,24 +213,32 @@ public class TcVehicleController extends BaseContoller {
 
                     //第一个是列数，第二个是行数
                     Integer gender = 0;
-                    String platesNumber = sheet.getCell(0, i).getContents().replaceAll(" ", "");//默认最左边编号也算一列 所以这里得
-                    if(platesNumber != null && !"".equals(platesNumber)){
-                        String cardNo =  sheet.getCell(1, i).getContents();
-                        String payCode = sheet.getCell(1, i).getContents();
-                        String noticePhone = sheet.getCell(1, i).getContents();
-                        String copyPhone = sheet.getCell(1, i).getContents();
-
+                    String platesNumber = "";//默认最左边编号也算一列 所以这里得
+                    String cardNo = "";
+                    String payCode = "";
+                    String noticePhone = "";
+                    String copyPhone = "";
+                    if(sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i))){
                         TcVehicle tcVehicle = new TcVehicle();
                         tcVehicle.setTcVehicleId(UUIDGenerator.getUUID());
                         tcVehicle.setPayCode(Encoder.MD5Encode("111111".getBytes()));
+                        tcVehicle.setStationId(stationId);
+
+                        platesNumber = sheet.getCell(0, i).getContents().replaceAll(" ", "");
                         tcVehicle.setPlatesNumber(platesNumber);
-                        tcVehicle.setCardNo(cardNo);
-                        tcVehicle.setPayCode(payCode);
-                        tcVehicle.setNoticePhone(noticePhone);
-                        tcVehicle.setCopyPhone(copyPhone);
-
+                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
+                            cardNo =  sheet.getCell(1, i).getContents().replaceAll(" ", "");
+                            tcVehicle.setCardNo(cardNo);
+                        }
+                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
+                            noticePhone = sheet.getCell(3, i).getContents().replaceAll(" ", "");
+                            tcVehicle.setNoticePhone(noticePhone);
+                        }
+                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
+                            copyPhone = sheet.getCell(4, i).getContents().replaceAll(" ", "");
+                            tcVehicle.setCopyPhone(copyPhone);
+                        }
                         vehicleList.add(tcVehicle);
-
                         System.out.println("正在导入幼儿数据》》》》》》》》》》》》》");
                     }
 
@@ -209,9 +248,7 @@ public class TcVehicleController extends BaseContoller {
                 }
 
             }
-        } catch (BiffException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -245,7 +282,6 @@ public class TcVehicleController extends BaseContoller {
             String key = GlobalConstant.MSG_PREFIX + mobilePhone;
             redisClientImpl.addToCache(key, checkCode.toString(), 60);
 
-//            String msgType = request.getParameter("msgType");
             if(msgType.equalsIgnoreCase("changePassword")){
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
             } else {
