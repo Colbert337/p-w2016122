@@ -133,7 +133,7 @@ public class GasCardServiceImpl implements GasCardService{
 	@Override
 	public String checkMoveCard(String cardno) throws Exception {
 		GasCard card = gasCardMapper.selectByCardNo(cardno);
-		String cardstatus="";
+		String cardstatus="1";
 		
 		//未查到卡信息或者已经出库了的卡
 		if(card == null || !StringUtils.isEmpty(card.getWorkstation())){
@@ -142,7 +142,7 @@ public class GasCardServiceImpl implements GasCardService{
 				
 		switch (card.getCard_status()) {
 		case GlobalConstant.CardStatus.STORAGED:
-			cardstatus = "已入库";
+			cardstatus = "0";
 			break;
 		default:
 			break;
