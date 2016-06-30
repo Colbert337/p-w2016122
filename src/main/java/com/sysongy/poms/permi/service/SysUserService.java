@@ -36,6 +36,12 @@ public interface SysUserService {
     List<SysUser> queryUserListByUserType(int userType);
 
     /**
+     * 完全匹配
+     * @param sysUser
+     * @return
+     */
+    List<SysUser> queryUserListByUserName(SysUser sysUser);
+    /**
      * 根据用户ID查询用户信息
      * @param userId 用户编号
      * @return

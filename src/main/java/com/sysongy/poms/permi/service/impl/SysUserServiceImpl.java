@@ -66,6 +66,11 @@ public class SysUserServiceImpl implements SysUserService{
         return sysUserMapper.queryUserList(sysUser);
     }
 
+    @Override
+    public List<SysUser> queryUserListByUserName(SysUser sysUser) {
+        return sysUserMapper.queryUserListByUserName(sysUser);
+    }
+
     /**
      * 查询用户列表
      * @param userType

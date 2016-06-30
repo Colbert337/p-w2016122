@@ -36,4 +36,10 @@ public interface SysUserMapper {
     int updateUserByName(SysUser record);
 
     SysUser queryUserForCRM(SysUser user);
+    /**
+     * 完全匹配
+     * @param sysUser
+     * @return
+     */
+    List<SysUser> queryUserListByUserName(SysUser sysUser);
 }

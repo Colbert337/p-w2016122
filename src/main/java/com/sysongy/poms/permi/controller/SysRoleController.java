@@ -45,7 +45,7 @@ public class SysRoleController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryRoleListPage(@ModelAttribute CurrUser currUser, SysRole role, ModelMap map){
+	public String queryRoleListPage(@ModelAttribute CurrUser currUser, SysRole role, @RequestParam(required = false) Integer resultInt, ModelMap map){
 		if(role.getPageNum() == null){
 			role.setPageNum(GlobalConstant.PAGE_NUM);
 			role.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -59,6 +59,17 @@ public class SysRoleController extends BaseContoller{
 		rolePageInfo = sysRoleService.queryRoleListPage(role);
 		map.addAttribute("roleList",rolePageInfo.getList());
 		map.addAttribute("pageInfo",rolePageInfo);
+
+		if(resultInt != null && resultInt > 0){
+			Map<String, Object> resultMap = new HashMap<>();
+
+			if(resultInt == 1){
+				resultMap.put("retMsg","新建角色成功！");
+			}else if(resultInt == 2){
+				resultMap.put("retMsg","修改角色成功！");
+			}
+			map.addAttribute("ret",resultMap);
+		}
 	    return "webpage/poms/permi/role_list";
 	}
 
@@ -101,18 +112,21 @@ public class SysRoleController extends BaseContoller{
 	 */
 	@RequestMapping("/save")
 	public String saveRole(SysRole role, ModelMap map){
+		int resultInt = 0;
 		if(role != null && role.getSysRoleId() != null && !"".equals(role.getSysRoleId())){
 			//修改角色
 			sysRoleService.updateRole(role);
+			resultInt = 2;
 		}else if(role != null){//添加
 			role.setSysRoleId(UUIDGenerator.getUUID());
 			role.setIsAdmin(GlobalConstant.ADMIN_NO);
 			role.setRoleStatus(GlobalConstant.STATUS_ENABLE);
 			role.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
 			sysRoleService.addRole(role);
+			resultInt = 1;
 		}
 
-		return "redirect:/web/permi/role/list/page";
+		return "redirect:/web/permi/role/list/page?resultInt="+resultInt;
 	}
 
 	/**

@@ -23,10 +23,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @FileName: SystemUserController
@@ -65,6 +62,7 @@ public class SysUserController extends BaseContoller{
 		userPageInfo = sysUserService.queryUserListPage(sysUser);
 		map.addAttribute("userList",userPageInfo.getList());
 		map.addAttribute("pageInfo",userPageInfo);
+		map.addAttribute("sysUser",sysUser);
 
 		if(resultInt != null && resultInt > 0){
 			Map<String, Object> resultMap = new HashMap<>();
@@ -130,6 +128,7 @@ public class SysUserController extends BaseContoller{
 		if(user != null && user.getSysUserId() != null && !"".equals(user.getSysUserId())){
 			//修改用户
 			user.setPassword(null);//不修改用户密码
+			user.setUpdatedDate(new Date());
 			sysUserService.updateUser(user);
 			resultInt = 2;
 		}else if(user != null){//添加
@@ -219,17 +218,21 @@ public class SysUserController extends BaseContoller{
      */
 	@RequestMapping("/info/isUserName")
 	@ResponseBody
-	public JSONObject queryUserByName(HttpServletRequest request, @ModelAttribute CurrUser currUser, @RequestParam String userName, @RequestParam String userType, ModelMap map){
+	public JSONObject queryUserByName(HttpServletRequest request, @ModelAttribute CurrUser currUser, @RequestParam String userName, @RequestParam(required = false) String userType, ModelMap map){
 		String validateId = request.getParameter("fieldId");
 		String validateValue = request.getParameter("fieldValue");
 
 		JSONObject json = new JSONObject();
 
-		SysUser sysUser = new SysUser();
-		sysUser.setUserName(userName);
-		SysUser user = sysUserService.queryUser(sysUser);
 
-		if(user == null){
+		List<SysUser> userList = new ArrayList<>();
+		if(userName != null && !"".equals(userName)){
+			SysUser sysUser = new SysUser();
+			sysUser.setUserName(userName.trim());
+			userList = sysUserService.queryUserListByUserName(sysUser);
+		}
+
+		if(userList != null && userList.size() > 0){
 			json.put("valid",true);
 		}else{
 			json.put("valid",false);

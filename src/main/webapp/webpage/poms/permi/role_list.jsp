@@ -158,6 +158,9 @@
 				dataType:'html',
 				success:function(data){
 					$("#main").html(data);
+					$("#modal-table").modal("show");
+				}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
 				}
 			}
 			$("#roleForm").ajaxSubmit(saveOptions);
@@ -208,21 +211,24 @@
 	}
 
 	/**
-	 * 删除用户
+	 * 删除角色
 	 */
 	function deleteRole(roleId){
-		if(confirm("确定要删除该角色吗？")){
-			var deleteOptions ={
-				url:'<%=basePath%>/web/permi/role/delete',
-				data:{roleId:roleId},
-				type:'post',
-				dataType:'text',
-				success:function(data){
-					$("#main").html(data);
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("确认要删除角色吗？", function (result) {
+			if (result) {
+				var deleteOptions ={
+					url:'<%=basePath%>/web/permi/role/delete',
+					data:{roleId:roleId},
+					type:'post',
+					dataType:'text',
+					success:function(data){
+						$("#main").html(data);
+					}
 				}
+				$("#listForm").ajaxSubmit(deleteOptions);
 			}
-			$("#listForm").ajaxSubmit(deleteOptions);
-		}
+		})
 
 	}
 	/**
@@ -234,19 +240,22 @@
 		if(status == 0){
 			alertStr = "确定启用该角色吗？";
 		}
-		if(confirm(alertStr)){
-			var deleteOptions ={
-				url:'<%=basePath%>/web/permi/role/save',
-				data:{sysRoleId:roleId,roleStatus:status},
-				type:'post',
-				dataType:'text',
-				success:function(data){
-					$("#main").html(data);
-					$('[data-rel="tooltip"]').tooltip();
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm(alertStr, function (result) {
+			if (result) {
+				var deleteOptions ={
+					url:'<%=basePath%>/web/permi/role/save',
+					data:{sysRoleId:roleId,roleStatus:status},
+					type:'post',
+					dataType:'text',
+					success:function(data){
+						$("#main").html(data);
+						$('[data-rel="tooltip"]').tooltip();
+					}
 				}
+				$("#listForm").ajaxSubmit(deleteOptions);
 			}
-			$("#listForm").ajaxSubmit(deleteOptions);
-		}
+		})
 
 	}
 </script>
@@ -269,7 +278,7 @@
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
 						<a class="btn btn-sm btn-primary" href="javascript:addRole();">
-							添加
+							新建
 						</a>
 					</div>
 				</div>
@@ -354,6 +363,8 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
 
 <!--添加用户弹层-开始-->
 <div id="roleModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">

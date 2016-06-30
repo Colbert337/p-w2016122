@@ -164,6 +164,7 @@
 				$("#re_password").val(data.password);
 				/*密码输入框改为可编辑*/
 				$("#password").attr("readonly","readonly");
+				$("#user_name").attr("readonly","readonly");
 				$("#re_password").attr("readonly","readonly");
 				queryRoleList(data.sys_role_id);
 				queryUserTypeList(data.userType);
@@ -176,18 +177,22 @@
 	 * 删除用户
 	 */
 	function deleteUser(userId){
-		if(confirm("确定要删除该用户吗？")){
-			var deleteOptions ={
-				url:'<%=basePath%>/web/permi/user/delete',
-				data:{userId:userId},
-				type:'post',
-				dataType:'text',
-				success:function(data){
-					$("#main").html(data);
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("确认要删除用户吗？", function (result) {
+			if (result) {
+				var deleteOptions ={
+					url:'<%=basePath%>/web/permi/user/delete',
+					data:{userId:userId},
+					type:'post',
+					dataType:'text',
+					success:function(data){
+						$("#main").html(data);
+						$('[data-rel="tooltip"]').tooltip();
+					}
 				}
-			}
-			$("#listForm").ajaxSubmit(deleteOptions);
+				$("#listForm").ajaxSubmit(deleteOptions);
 		}
+	})
 
 	}
 	/**
@@ -199,7 +204,9 @@
 		if(status == 0){
 			alertStr = "确定要启用该用户吗？";
 		}
-		if(confirm(alertStr)){
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm(alertStr, function (result) {
+			if (result) {
 			 var deleteOptions ={
 			 url:'<%=basePath%>/web/permi/user/update/staruts',
 			 data:{sysUserId:userId,status:status},
@@ -211,8 +218,31 @@
 				 }
 			 }
 			 $("#listForm").ajaxSubmit(deleteOptions);
-		}
+			}
+		})
 
+	}
+
+	/**
+	 * 判断用户名是否存在
+	 */
+	function isUserExit(){
+		var userName = $("#user_name").val();
+		$.ajax({
+			url:"<%=basePath%>/web/permi/user/info/isUserName",
+			data:{userName:userName},
+			async:false,
+			type: "POST",
+			success: function(data){
+				console.log(data);
+				if(data.valid){
+					alert("用户名已存在!");
+					$("#user_name").focus();
+				}
+			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		})
 	}
 </script>
 <div class="page-header">
@@ -232,12 +262,32 @@
 			<!-- PAGE CONTENT BEGINS -->
 			<div class="row">
 				<div class="col-xs-12">
+					<%--顶部条件搜索及按钮--%>
+					<div class="search-types">
+						<div class="item">
+							<input type="text" name="userName" placeholder="账号/姓名/联系电话"  maxlength="15" value="${sysUser.userName}"/>
+						</div>
+						<div class="item">
+							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								查询
+							</button>
+							<button class="btn btn-sm" type="button" onclick="init();">
+								重置
+							</button>
+							<div class="item"></div>
+							<button class="btn btn-sm btn-primary" type="button" onclick="addUser();">
+								新建
+							</button>
+						</div>
+					</div>
+					<%--</h4>--%>
 					<%--顶部按钮--%>
-					<div class="pull-right btn-botton">
+					<%--<div class="pull-right btn-botton">
 						<a class="btn btn-sm btn-primary" href="javascript:addUser();">
 							新建
 						</a>
-					</div>
+					</div>--%>
 					<%--</h4>--%>
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
@@ -356,7 +406,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="userName" id="user_name" placeholder="用户名" class="validate[required,minSize[3],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
+										<input type="text" name="userName" id="user_name" placeholder="用户名" onblur="isUserExit()" class="validate[required,minSize[3],maxSize[20],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
 										<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户类型： </label>
@@ -368,11 +418,11 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码： </label>
 									<div class="col-sm-4">
-										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6]] col-xs-10 col-sm-12" />
+										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[20]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-4">
-										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],equals[password]] col-xs-10 col-sm-12" />
+										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],maxSize[20],equals[password]] col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -389,7 +439,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="real_name">  <span class="red_star">*</span>姓名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[required,maxSize[5]] col-xs-10 col-sm-12" />
+										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[required,minSize[2],maxSize[10]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right"> 性别： </label>
 									<div class="col-sm-4">
@@ -408,11 +458,11 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="email"> 邮箱： </label>
 									<div class="col-sm-4">
-										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[maxSize[20],custom[email]] col-xs-10 col-sm-12" />
+										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[minSize[6],maxSize[20],custom[email]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="mobile_phone"> 手机： </label>
 									<div class="col-sm-4">
-										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[maxSize[11],custom[phone]] col-xs-10 col-sm-12" />
+										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[minSize[11],maxSize[11],custom[phone]] col-xs-10 col-sm-12" />
 									</div>
 								</div>
 							</form>
