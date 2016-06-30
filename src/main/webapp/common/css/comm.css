@@ -102,3 +102,6 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
     border-width: 1px;
     border-color: #ddd;
 }
+.modal-header .close {
+    margin-top: -8px;
+}

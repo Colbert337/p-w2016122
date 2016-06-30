@@ -90,7 +90,7 @@
 									<th id="memoth" style="display:none">备注</th>
 									<th id="memoth" style="display:none">驾驶证</th>
 									<th id="memoth" style="display:none">行驶证</th>
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
@@ -118,21 +118,19 @@
 									<td style="display:none">${list.memo}</td>
 									<td style="display:none">${list.drivingLice}</td>
 									<td style="display:none">${list.vehicleLice}</td>
-									<td>
-										<div class="text-center">
-												<a class="blue" href="javascript:void(0);" title="更多信息" data-rel="tooltip">
-													<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel(this);"></i>
-												</a>
-											<c:if test="${list.checkedStatus == 1}">
-											
-												<a class="green" href="javascript:void(0);" title="审核通过" data-rel="tooltip"> 
-													<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="showInnerModel(this,'2');"></i>
-												</a>
-												<a class="green" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip"> 
-													<i class="ace-icon fa fa-ban bigger-130" onclick="showInnerModel(this,'3');"></i>
-												</a>
-											</c:if>
-										</div>
+									<td class="text-center">
+										<a class="option-btn-m" href="javascript:void(0);" title="更多信息" data-rel="tooltip">
+											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel(this);"></i>
+										</a>
+										<c:if test="${list.checkedStatus == 1}">
+
+											<a class="option-btn-m green" href="javascript:void(0);" title="审核通过" data-rel="tooltip">
+												<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="showInnerModel(this,'2');"></i>
+											</a>
+											<a class="option-btn-m red" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip">
+												<i class="ace-icon fa fa-ban bigger-130" onclick="showInnerModel(this,'3');"></i>
+											</a>
+										</c:if>
 									</td>
 								</tr>
 								</c:forEach>
