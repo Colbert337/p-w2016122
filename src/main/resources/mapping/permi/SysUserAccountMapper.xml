@@ -36,11 +36,11 @@
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
     insert into sys_user_account (sys_user_account_id, account_code, account_type, 
-      account_balance, created_date, updated_date, account_status, deposit
+      account_balance, created_date, updated_date,version, account_status, deposit
       )
     values (#{sysUserAccountId,jdbcType=VARCHAR}, #{accountCode,jdbcType=VARCHAR}, #{accountType,jdbcType=INTEGER}, 
       #{accountBalance,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}, 
-      #{account_status,jdbcType=VARCHAR}, #{deposit,jdbcType=DECIMAL}
+      #{version,jdbcType=VARCHAR},#{account_status,jdbcType=VARCHAR}, #{deposit,jdbcType=DECIMAL}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >

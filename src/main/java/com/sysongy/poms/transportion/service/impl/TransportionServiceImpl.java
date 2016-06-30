@@ -262,6 +262,8 @@ public class TransportionServiceImpl implements TransportionService {
 		order.setOrderDate(new Date());
 		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+		String orderNumber = orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
+		order.setOrderNumber(orderNumber);
 		orderService.insert(order);
 		orderService.chargeToTransportion(order);
 		
@@ -271,6 +273,7 @@ public class TransportionServiceImpl implements TransportionService {
 		log.setOptime(new Date());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+		log.setOrder_number(orderNumber);
 		return sysDepositLogMapper.insert(log);
 	}
 

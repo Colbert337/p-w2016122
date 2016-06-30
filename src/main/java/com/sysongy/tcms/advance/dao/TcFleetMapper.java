@@ -59,6 +59,13 @@ public interface TcFleetMapper {
      */
     int updateFleet(TcFleet tcFleet);
 
+    /**
+     * 修改分配资金信息
+     * @param fleetMap
+     * @return
+     */
+    int updateFleetMap(Map<String, Object> fleetMap);
+
 /*********************************基础方法 end*************************************/
     /**
      * 根据车队查询车辆列表

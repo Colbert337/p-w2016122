@@ -67,8 +67,8 @@
       <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">
         and sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
       </if>
-      <if test="createdDate_after != null &amp;&amp; createdDate_after != ''">
-        and created_date between CONCAT(#{createdDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{createdDate_before,jdbcType=VARCHAR},' 23:59:59')
+      <if test="checkedDate_before != null &amp;&amp; checkedDate_before != ''">
+        and checked_date between CONCAT(#{checkedDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{checkedDate_before,jdbcType=VARCHAR},' 23:59:59')
       </if>
     </trim>
   </select>

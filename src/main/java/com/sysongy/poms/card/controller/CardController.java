@@ -1,6 +1,9 @@
 package com.sysongy.poms.card.controller;
 
 import com.sysongy.util.GlobalConstant;
+
+import net.sf.json.JSONArray;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,7 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.model.GasCardLog;
+import com.sysongy.poms.card.model.GasCardReturn;
 import com.sysongy.poms.card.service.GasCardService;
 
 
@@ -101,6 +105,34 @@ public class CardController extends BaseContoller{
 			return  ret;
 		}
 	}
+	
+	@RequestMapping("/saveCardMultiple")
+	public String saveCardMultiple(ModelMap map, GasCard gascard) throws Exception{
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/card/card_new";
+		Integer rowcount = null;
+
+		try {
+			rowcount = service.saveGasCard(gascard);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("入库成功");
+			bean.setRetValue(rowcount.toString());
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return  ret;
+		}
+	}
 
 	/**
 	 * 用户卡删除
@@ -146,6 +178,26 @@ public class CardController extends BaseContoller{
 		}
 	}
 
+	
+	@ResponseBody
+	@RequestMapping("/checkCardMultiple")
+	public JSONArray checkCardMultiple(ModelMap map, @RequestParam String cardidStart, @RequestParam String cardidEnd) throws Exception{
+		
+		Integer start = Integer.valueOf(cardidStart);
+		Integer end = Integer.valueOf(cardidEnd);
+		JSONArray arr = new JSONArray();
+		
+		for(int i=start;i<=end;i++){
+			Boolean exist = service.checkCardExist(String.valueOf(i));
+			GasCardReturn tmp = new GasCardReturn();
+			tmp.setExist(exist?"1":"0");
+			tmp.setCard_no(String.valueOf(i));
+			arr.add(tmp);
+		}
+		
+		return arr;
+	}
+	
 	/**
 	 * 检查用户卡是否存在于资源库
 	 * @param map
@@ -162,6 +214,24 @@ public class CardController extends BaseContoller{
 		return  exist?"1":"0";
 	}
 
+	@ResponseBody
+	@RequestMapping("/checkMoveCardMultiple")
+	public JSONArray checkMoveCardMultiple(ModelMap map, @RequestParam String cardidStart, @RequestParam String cardidEnd) throws Exception{
+
+		Integer start = Integer.valueOf(cardidStart);
+		Integer end = Integer.valueOf(cardidEnd);
+		JSONArray arr = new JSONArray();
+		
+		for(int i=start;i<=end;i++){
+			String exist = service.checkMoveCard(String.valueOf(i));
+			GasCardReturn tmp = new GasCardReturn();
+			tmp.setExist(exist);
+			tmp.setCard_no(String.valueOf(i));
+			arr.add(tmp);
+		}
+		
+		return arr;
+	}
 	/**
 	 * 用户卡出库前检验卡状态
 	 * @param map

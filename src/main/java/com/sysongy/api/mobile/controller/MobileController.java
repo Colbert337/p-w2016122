@@ -16,4 +16,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/mobile/user/")
 @Controller
 public class MobileController {
+
 }

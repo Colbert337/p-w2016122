@@ -20,10 +20,13 @@ public class LiquidController extends BaseContoller{
 
 	@Autowired
 	private LiquidService service;
-
+	
+	SysGasSource gasource;
+	
 	@RequestMapping("/liquidList")
 	public String queryAllGasSourceList(ModelMap map, SysGasSource gasource) throws Exception{
-
+		
+		this.gasource = gasource;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/liquid/liquid_list";
 
@@ -81,7 +84,7 @@ public class LiquidController extends BaseContoller{
 				bean.setRetMsg("["+gastationid+"]保存成功");
 			}
 			
-			ret = this.queryAllGasSourceList(map, gasource);
+			ret = this.queryAllGasSourceList(map, this.gasource);
 			bean.setRetCode(100);
 			
 			bean.setRetValue(gastationid);
@@ -124,7 +127,7 @@ public class LiquidController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 	
-			ret = this.queryAllGasSourceList(map, new SysGasSource());
+			ret = this.queryAllGasSourceList(map, this.gasource);
 	
 			map.addAttribute("ret", bean);
 			logger.error("", e);

@@ -60,9 +60,11 @@
   order by created_date desc
   </select>
   <select id="queryFleetQuotaMapList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleetQuota" >
-    select tf.fleet_name,tf.station_id,tf.tc_fleet_id,sr.real_name,sr.alias_name,sr.user_name,sr.mobile_phone,tfq.is_allot,tfq.quota,tfq.updated_date
+    /*select tf.fleet_name,tf.station_id,tf.tc_fleet_id,sr.real_name,sr.alias_name,sr.user_name,sr.mobile_phone,tfq.is_allot,tfq.quota,tfq.updated_date
     from tc_fleet tf left join sys_user sr on tf.sys_user_id = sr.sys_user_id
-    left join tc_fleet_quota tfq on tf.tc_fleet_id = tfq.tc_fleet_id
+    left join tc_fleet_quota tfq on tf.tc_fleet_id = tfq.tc_fleet_id*/
+    select tf.fleet_name,tf.station_id,tf.tc_fleet_id,sr.real_name,sr.alias_name,sr.user_name,sr.mobile_phone,tf.is_allot,tf.quota,tf.updated_date
+    from tc_fleet tf left join sys_user sr on tf.sys_user_id = sr.sys_user_id
     where tf.is_deleted = 1
     and tf.station_id = #{stationId}
     <if test="tcFleetId != null  &amp;&amp; tcFleetId !=''" >

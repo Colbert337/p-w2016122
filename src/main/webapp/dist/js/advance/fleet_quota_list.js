@@ -2,27 +2,17 @@
  * Created by Administrator on 2016/6/20.
  * Author: wdq
  */
-/*/!*分页相关方法 start*!/
-window.onload = setCurrentPage();
 function commitForm(obj){
-    //设置当前页的值
-    if(typeof obj == "undefined") {
-        $("#pageNum").val("1");
-    }else{
-        $("#pageNum").val($(obj).text());
-    }
-
     $("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
-    url:'../web/tcms/FleetQuota/list/page',
+    url:'../web/tcms/fleetQuota/list/page',
     type:'post',
     dataType:'html',
     success:function(data){
         $("#main").html(data);
     }
 }
-/!*分页相关方法 end*!/*/
 
 //显示充值弹出层add
 function addChongzhi(){
@@ -98,7 +88,7 @@ function savePassword(){
         type:'post',
         dataType:'html',
         success:function(data){
-
+            sucDialog("操作成功!")//保存成功弹窗
             $("#main").html(data);
         }
     }
@@ -121,6 +111,7 @@ function allocation(obj,index){
         $(obj).attr("checked","checked");
         $("#is_allot_"+index).val(1);
         $("#quota_"+index).removeAttr("readonly");
+        $("#quota_"+index).val(0.00);
     }
 
 }
@@ -129,24 +120,22 @@ function allocation(obj,index){
  * 保存配置
  */
 function saveFenpei(){
-    var data = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
-    data = decodeURIComponent(data,true);
-    $.ajax({
-        type: "POST",
-        data:{data:data},
-        async:false,
-        url: "../web/tcms/fleetQuota/save/fenpei",
-        success: function(data){
-            sucDialog("批量保存成功!")//保存成功弹窗
-            if(data.success()){
-                //暂时不需要跳转
-                window.location = '../web/tcms/fleetQuota/list/page' ;
-            }else{
-                alert("请求失败！");
-            }
-
+    var dataForm = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
+    dataForm = decodeURIComponent(dataForm,true);
+    var saveOptions ={
+        url:"../web/tcms/fleetQuota/save/fenpei",
+        type:'post',
+        data:{data:dataForm},
+        dataType:'html',
+        success:function(data){
+            sucDialog("操作成功!")//保存成功弹窗
+            $("#main").html(data);
         }
-    });
+    }
+    $("#fenpeiForm").ajaxSubmit(saveOptions);
+    $("#fenpeiModel").modal('hide').removeClass('in');
+    $("body").removeClass('modal-open').removeAttr('style');
+    $(".modal-backdrop").remove();
 
 }
 
@@ -157,17 +146,17 @@ var zhuanIndex = 2;
 function addRow(){
 
     var objIndex = zhuanIndex++;
-    var zhuan = [];
-    zhuan.push("<tr id='tr_"+objIndex+"'>");
-    zhuan.push("<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' onblur='queryDriverInfo("+objIndex+");'/></td>");
-    zhuan.push("<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly'>");
-    zhuan.push("<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>");
-    zhuan.push("<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' /></td>");
-    zhuan.push("<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td>");
-    zhuan.push("<a href='javascript:deleteRow("+objIndex+");'>删除</a>");
-    zhuan.push("</td></tr>");
+    var zhuan = "";
+    zhuan += "<tr id='tr_"+objIndex+"'>";
+    zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' onblur='queryDriverInfo("+objIndex+");'/></td>";
+    zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly'>";
+    zhuan += "<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>";
+    zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' /></td>";
+    zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td>";
+    zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除</a>";
+    zhuan += "</td></tr>";
 
-    $("#zhuanTable").append(zhuan.join());
+    $("#zhuanTable").append(zhuan);
 }
 
 /**
@@ -182,7 +171,6 @@ function queryDriverInfo(index){
         async:false,
         url: "../web/tcms/fleetQuota/info/driver",
         success: function(data){
-            sucDialog("批量保存成功!")//保存成功弹窗
             if(data != null){
                 $("#full_name_"+index).val(data.fullName);
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
@@ -216,6 +204,7 @@ function saveZhuan(){
         type:'post',
         dataType:'html',
         success:function(data){
+            sucDialog("操作成功!")//保存成功弹窗
             $("#main").html(data);
         }
     }
@@ -265,7 +254,7 @@ function saveFleetQuota(){
 
 //重置
 function init(){
-    loadPage('#main', '../web/tcms/FleetQuota/list/page');
+    loadPage('#main', '../web/tcms/fleetQuota/list/page');
 }
 /**
  * 删除车队额度

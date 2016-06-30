@@ -48,19 +48,19 @@
 									<!-- #section:elements.form -->
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="pay_code"> <span class="red_star">*</span>支付密码： </label>
-										<div class="col-sm-8">
-											<input type="password" id="pay_code" name="pay_code" placeholder="支付密码" class="col-xs-10 col-sm-5" />
+										<div class="col-sm-4">
+											<input type="password" id="pay_code" name="pay_code" placeholder="支付密码" class="col-xs-10 col-sm-12" />
 											<input type="hidden" id="stationId" name="sys_transportion_id" value="${stationId}"/>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="re_password"> <span class="red_star">*</span>确认密码： </label>
-										<div class="col-sm-8">
-											<input type="password" id="re_password" name="rePassword" placeholder="确认密码" class="col-xs-10 col-sm-5" />
+										<div class="col-sm-4">
+											<input type="password" id="re_password" name="rePassword" placeholder="确认密码" class="col-xs-10 col-sm-12" />
 										</div>
 									</div>
 									<div class="form-group">
-										<div class="col-md-offset-5 col-md-8">
+										<div class="col-sm-offset-4 col-sm-8">
 											<button class="btn btn-info" type="button" onclick="savePsSet()">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
@@ -83,5 +83,5 @@
 			</div><!-- /main-content-inner -->
 		</div><!-- /.main-content -->
 		<jsp:include page="../../../common/g_bottom.jsp"/>
-		<script src="<%=basePath %>/dist/js/transportion/ps_set.js"/>
+		<script src="<%=basePath %>/dist/js/transportion/ps_set.js"></script>
 	</div><!-- /.main-content -->

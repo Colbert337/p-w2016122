@@ -7,44 +7,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<!-- page specific plugin styles -->
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-duallistbox.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-multiselect.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/select2.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/daterangepicker.css" />
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
-
-<div class="breadcrumbs" id="breadcrumbs">
-	<script type="text/javascript">
-		try {
-			ace.settings.check('breadcrumbs', 'fixed')
-		} catch (e) {
-		}
-	</script>
-
-	<ul class="breadcrumb">
-		<li><i class="ace-icon fa fa-home home-icon"></i> <a href="javascript:void(0);">主页</a>
-		</li>
-
-		<li><a href="javascript:void(0);">资源管理</a></li>
-		<li class="active">用户卡管理</li>
-	</ul>
-	<!-- /.breadcrumb -->
-
-	<!-- #section:basics/content.searchbox -->
-	<div class="nav-search" id="nav-search">
-		<form class="form-search">
-			<span class="input-icon"> <input type="text"
-				placeholder="Search ..." class="nav-search-input"
-				id="nav-search-input" autocomplete="off" /> <i
-				class="ace-icon fa fa-search nav-search-icon"></i>
-			</span>
-		</form>
-	</div>
-	<!-- /.nav-search -->
-
-	<!-- /section:basics/content.searchbox -->
-</div>
+<script src="<%=basePath %>/dist/js/card/cardlog_list.js"></script>
 
 <!-- /section:basics/content.breadcrumbs -->
 <div class="">
@@ -210,56 +173,3 @@
 	<!-- /.row -->
 	</form>
 </div>
-<!-- /.page-content -->
-
-
-
-<!-- page specific plugin scripts -->
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/jquery.dataTables.bootstrap.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/dataTables.buttons.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.flash.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.html5.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.print.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/buttons/buttons.colVis.js"></script>
-<script src="<%=basePath%>/assets/js/dataTables/extensions/select/dataTables.select.js"></script>
-
-<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/daterangepicker.js"></script>
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
-
-<!-- inline scripts related to this page -->
-<script type="text/javascript">
-	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
-	
-	var listOptions ={   
-            url:'<%=basePath%>/web/card/cardLogList',   
-            type:'post',                    
-            dataType:'html',
-            success:function(data){
-	              $("#main").html(data);
-	              if($("#retCode").val() != "100"){
-		            	 //$("#modal-table").modal("show");
-		          }
-            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-            	alert("error");
-	       }
-	}
-	
-	window.onload = setCurrentPage();
-	
-	function commitForm(obj){
-		//设置当前页的值
-		if(typeof obj == "undefined") {
-			$("#pageNum").val("1");
-		}else{
-			$("#pageNum").val($(obj).text());
-		}
-		
-		$("#formcard").ajaxSubmit(listOptions);
-	}
-	
-	function init(){
-		loadPage('#main', '<%=basePath%>/web/card/cardLogList');
-	}
-	</script>

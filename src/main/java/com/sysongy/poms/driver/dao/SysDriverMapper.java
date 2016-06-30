@@ -36,4 +36,6 @@ public interface SysDriverMapper {
      * @return
      */
     int deleteDriverByIds(List<String> idList);
+
+    List<SysDriver> queryForPageSingleList(SysDriver record);
 }

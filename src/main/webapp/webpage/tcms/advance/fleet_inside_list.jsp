@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/driver/dirver_list.js"/>
+<script src="<%=basePath %>/dist/js/driver/dirver_list.js"></script>
 <div class="page-header">
 	<h1>
 		对内管理
@@ -99,7 +99,7 @@
 			<%--分页start--%>
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">

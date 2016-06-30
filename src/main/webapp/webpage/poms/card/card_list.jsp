@@ -7,40 +7,8 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<!-- page specific plugin styles -->
-<div class="breadcrumbs" id="breadcrumbs">
-	<script type="text/javascript">
-		try {
-			ace.settings.check('breadcrumbs', 'fixed')
-		} catch (e) {
-		}
-	</script>
 
-	<ul class="breadcrumb">
-		<li><i class="ace-icon fa fa-home home-icon"></i> <a href="javascript:void(0);">主页</a>
-		</li>
 
-		<li><a href="javascript:void(0);">资源管理</a></li>
-		<li class="active">用户卡管理</li>
-	</ul>
-	<!-- /.breadcrumb -->
-
-	<!-- #section:basics/content.searchbox -->
-	<div class="nav-search" id="nav-search">
-		<form class="form-search">
-			<span class="input-icon"> <input type="text"
-				placeholder="Search ..." class="nav-search-input"
-				id="nav-search-input" autocomplete="off" /> <i
-				class="ace-icon fa fa-search nav-search-icon"></i>
-			</span>
-		</form>
-	</div>
-	<!-- /.nav-search -->
-
-	<!-- /section:basics/content.searchbox -->
-</div>
-
-<!-- /section:basics/content.breadcrumbs -->
 <div class="">
 
 	<!-- /.page-header -->
@@ -86,7 +54,7 @@
 						
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>操作时间:</label>
+								<label>入库时间:</label>
 								<input type="text" class="" name="storage_time_after"  value="${gascard.storage_time_after}"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>

@@ -28,6 +28,7 @@ public class GastationController extends BaseContoller{
 	@Autowired
 	private SysDepositLogService depositLogService;
 	
+	private Gastation gastation;
 	/**
 	 * 加气站查询
 	 * @param map
@@ -37,7 +38,8 @@ public class GastationController extends BaseContoller{
 	 */
 	@RequestMapping("/gastationList")
 	public String queryAllGastationList(ModelMap map, Gastation gastation) throws Exception{
-
+		
+		this.gastation = gastation;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_list";
 
@@ -58,7 +60,7 @@ public class GastationController extends BaseContoller{
 
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
-			map.addAttribute("gascard",gastation);
+			map.addAttribute("gastation",gastation);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -75,6 +77,7 @@ public class GastationController extends BaseContoller{
 	@RequestMapping("/gastationList2")
 	public String queryAllGastationList2(ModelMap map, Gastation gastation) throws Exception{
 
+		this.gastation = gastation;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_list2";
 
@@ -95,7 +98,7 @@ public class GastationController extends BaseContoller{
 
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
-			map.addAttribute("gascard",gastation);
+			map.addAttribute("gastation",gastation);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -167,7 +170,7 @@ public class GastationController extends BaseContoller{
 				ret = "webpage/poms/gastation/gastation_update";
 				gastationid = service.saveGastation(gastation,"update");
 				bean.setRetMsg("["+gastationid+"]保存成功");
-				ret = this.queryAllGastationList(map, gastation);
+				ret = this.queryAllGastationList(map, this.gastation);
 			}
 
 			bean.setRetCode(100);
@@ -212,7 +215,7 @@ public class GastationController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 	
-			ret = this.queryAllGastationList(map, new Gastation());
+			ret = this.queryAllGastationList(map, this.gastation);
 	
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -235,7 +238,7 @@ public class GastationController extends BaseContoller{
 					rowcount = service.delGastation(gastationid);
 				}
 
-				ret = this.queryAllGastationList(map, new Gastation());
+				ret = this.queryAllGastationList(map, this.gastation);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+gastationid+"]删除成功");
@@ -249,7 +252,7 @@ public class GastationController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllGastationList(map, new Gastation());
+			ret = this.queryAllGastationList(map, this.gastation);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -272,10 +275,10 @@ public class GastationController extends BaseContoller{
 					rowcount = service.updatedepositGastation(deposit, currUser.getUserId());
 				}
 
-				ret = this.queryAllGastationList2(map, new Gastation());
+				ret = this.queryAllGastationList2(map, this.gastation);
 
 				bean.setRetCode(100);
-				bean.setRetMsg("保证金设置成功");
+				bean.setRetMsg("["+deposit.getStationName()+"]充值成功");
 				bean.setRetValue(rowcount.toString());
 				bean.setPageInfo(ret);
 
@@ -286,7 +289,7 @@ public class GastationController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllGastationList2(map, new Gastation());
+			ret = this.queryAllGastationList2(map, this.gastation);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

@@ -28,7 +28,7 @@ function savePsSet(){
 }
 
 //bootstrap验证控件
-$('#editForm').bootstrapValidator({
+$('#passwordForm').bootstrapValidator({
     message: 'This value is not valid',
     feedbackIcons: {
         valid: 'glyphicon glyphicon-ok',
