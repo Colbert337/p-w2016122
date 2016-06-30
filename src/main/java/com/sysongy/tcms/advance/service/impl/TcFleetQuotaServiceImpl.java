@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.tcms.advance.dao.TcFleetMapper;
 import com.sysongy.tcms.advance.dao.TcFleetQuotaMapper;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
@@ -34,6 +35,8 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     TcFleetQuotaMapper tcFleetQuotaMapper;
     @Autowired
     SysUserAccountService sysUserAccountService;
+    @Autowired
+    TcFleetMapper fleetMapper;
 
     @Override
     public TcFleetQuota queryFleetQuota(TcFleetQuota tcFleetQuota) {
@@ -48,7 +51,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     @Override
     public PageInfo<TcFleetQuota> queryFleetQuotaList(TcFleetQuota tcFleetQuota) {
         if(tcFleetQuota != null){
-            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+            PageHelper.startPage(tcFleetQuota.getPageNum(),tcFleetQuota.getPageSize());
 
             List<TcFleetQuota> FleetQuotaList = tcFleetQuotaMapper.queryFleetQuotaList(tcFleetQuota);
             PageInfo<TcFleetQuota> FleetQuotaPageInfo = new PageInfo<>(FleetQuotaList);
@@ -116,8 +119,20 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     }
 
 
+    /**
+     * 保存资金分配
+     * @param tcFleetQuotaList
+     * @return
+     */
     @Override
     public int addFleetQuotaList(List<Map<String, Object>> tcFleetQuotaList) {
+        //更新车队资金分配信息
+        if(tcFleetQuotaList != null &&  tcFleetQuotaList.size() > 0){
+            for (Map<String, Object> fleetQuota:tcFleetQuotaList) {
+                fleetMapper.updateFleetMap(fleetQuota);
+            }
+        }
+        //添加资金分配记录
         return tcFleetQuotaMapper.addFleetQuotaList(tcFleetQuotaList);
     }
 

@@ -41,7 +41,7 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     @Override
     public PageInfo<TcVehicle> queryVehicleList(TcVehicle tcVehicle) {
         if(tcVehicle != null){
-            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+            PageHelper.startPage(tcVehicle.getPageNum(),tcVehicle.getPageSize());
 
             List<TcVehicle> vehicleList = tcVehicleMapper.queryVehicleList(tcVehicle);
             PageInfo<TcVehicle> vehiclePageInfo = new PageInfo<>(vehicleList);
@@ -54,7 +54,7 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     @Override
     public PageInfo<Map<String, Object>> queryVehicleMapList(TcVehicle tcVehicle) {
         if(tcVehicle != null){
-            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+            PageHelper.startPage(tcVehicle.getPageNum(),tcVehicle.getPageSize());
 
             List<Map<String, Object>> vehicleList = tcVehicleMapper.queryVehicleMapList(tcVehicle);
             PageInfo<Map<String, Object>> vehiclePageInfo = new PageInfo<>(vehicleList);
@@ -68,6 +68,15 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     public int addVehicle(TcVehicle tcVehicle) {
         if(tcVehicle != null){
             return tcVehicleMapper.addVehicle(tcVehicle);
+        }else{
+            return 0;
+        }
+    }
+
+    @Override
+    public int addVehicleList(List<TcVehicle> tcVehicleList) {
+        if(tcVehicleList != null && tcVehicleList.size() > 0){
+            return tcVehicleMapper.addVehicleList(tcVehicleList);
         }else{
             return 0;
         }

@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,6 +210,8 @@ public class GastationServiceImpl implements GastationService {
 		order.setOrderDate(new Date());
 		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_GASTATION);
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.GASTATION);
+		String orderNumber = orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_GASTATION);
+		order.setOrderNumber(orderNumber);
 		orderService.insert(order);
 		orderService.chargeToGasStation(order);
 		
@@ -220,6 +221,7 @@ public class GastationServiceImpl implements GastationService {
 		log.setStationName(gastation.getGas_station_name());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.GASTATION);
+		log.setOrder_number(orderNumber);
 		return sysDepositLogMapper.insert(log);
 	}
 

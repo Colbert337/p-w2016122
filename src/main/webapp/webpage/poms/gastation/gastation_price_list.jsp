@@ -40,7 +40,7 @@
 
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>平台有效期:</label>
+								<label>创建时间:</label>
 								<input type="text" class="" name="created_date_after" value="${gsGasPrice.created_date_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
@@ -204,7 +204,7 @@
 						</div>
 				
 	
-						<label>共 ${pageInfo.total} 条</label>
+						<label>共 ${pageInfo2.total} 条</label>
 						
 						<nav>
 							  <ul id="ulhandle" class="pagination pull-right no-margin">

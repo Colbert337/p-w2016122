@@ -38,11 +38,11 @@
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>审核时间:</label>
-								<input type="text" name="createdDate_after" value="${driver.createdDate_after}" readonly="readonly"/>
+								<input type="text" name="checkedDate_after" value="${driver.checkedDate_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" name="createdDate_before" value="${driver.createdDate_before}" readonly="readonly"/>
+								<input type="text" name="checkedDate_before" value="${driver.checkedDate_before}" readonly="readonly"/>
 							</div>
 						</div>
 
@@ -87,7 +87,7 @@
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">审核人员</th>
 									<!-- <th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th> -->
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
-									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
+									<th onclick="orderBy(this,'checked_date');commitForm();" id="checked_date_order"><i id="checked_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
 									<th id="memoth" style="display:none">备注</th>
 									<th>更多操作</th>
 								</tr>

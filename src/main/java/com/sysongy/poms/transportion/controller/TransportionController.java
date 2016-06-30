@@ -41,6 +41,7 @@ public class TransportionController extends BaseContoller{
 	@Autowired
 	private SimpleMailMessage mailMessage;
 
+	private Transportion transportion;
 	/**
 	 * 运输公司查询
 	 * @param map
@@ -49,7 +50,8 @@ public class TransportionController extends BaseContoller{
 	 */
 	@RequestMapping("/transportionList")
 	public String queryAllTransportionList(ModelMap map, Transportion transportion) throws Exception{
-
+		
+		this.transportion = transportion;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_list";
 
@@ -94,7 +96,8 @@ public class TransportionController extends BaseContoller{
 
 	@RequestMapping("/transportionList2")
 	public String queryAllTransportionList2(ModelMap map, Transportion transportion) throws Exception{
-
+		
+		this.transportion = transportion;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_list2";
 
@@ -158,7 +161,7 @@ public class TransportionController extends BaseContoller{
 				ret = "webpage/poms/transportion/transportion_update";
 				transportionid = service.saveTransportion(transportion,"update");
 				bean.setRetMsg("["+transportionid+"]保存成功");
-				ret = this.queryAllTransportionList(map, transportion);
+				ret = this.queryAllTransportionList(map, this.transportion);
 			}
 
 			bean.setRetCode(100);
@@ -201,7 +204,7 @@ public class TransportionController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllTransportionList(map, new Transportion());
+			ret = this.queryAllTransportionList(map, this.transportion);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -290,7 +293,7 @@ public class TransportionController extends BaseContoller{
 	public String deposiTransportion(ModelMap map, SysDepositLog deposit, @ModelAttribute CurrUser currUser){
 
 		PageBean bean = new PageBean();
-		String ret = "webpage/poms/transportion/transportion_list";
+		String ret = "webpage/poms/transportion/transportion_list2";
 		Integer rowcount = null;
 
 		try {
@@ -298,10 +301,10 @@ public class TransportionController extends BaseContoller{
 					rowcount = service.updatedeposiTransportion(deposit, currUser.getUserId());
 				}
 
-				ret = this.queryAllTransportionList2(map, new Transportion());
+				ret = this.queryAllTransportionList2(map, this.transportion);
 
 				bean.setRetCode(100);
-				bean.setRetMsg("保证金设置成功");
+				bean.setRetMsg("["+deposit.getStationName()+"]充值成功");
 				bean.setRetValue(rowcount.toString());
 				bean.setPageInfo(ret);
 
@@ -312,7 +315,7 @@ public class TransportionController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllTransportionList2(map, new Transportion());
+			ret = this.queryAllTransportionList2(map, this.transportion);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

@@ -53,10 +53,9 @@
 				return ;
 			}
 			
-			$("#sub").confirm({
-				title: "运输公司充值确认",
-				text: "是否确认将 ["+$("#stationame").text()+"] 账户余额更新"+$("[name=deposit]").val()+"元",
-				confirm: function (button) {
+			bootbox.setLocale("zh_CN");
+			bootbox.confirm("是否确认对 [" + $("#stationame").text() + "] 充值" + $("[name=deposit]").val() + "元", function (result) {
+				if (result) {
 					var options ={   
 				            url:'../web/transportion/deposiTransportion',   
 				            type:'post',                    
@@ -73,15 +72,10 @@
 					}
 
 					$("#transportionform").ajaxSubmit(options);
-				},
-				cancel: function (button) {
-
-				},
-				confirmButton: "确认",
-				cancelButton: "取消"
-			});
-			
+				}
+			})
 		}
+
 		
 		function returnpage(){
 			loadPage('#main', '../web/transportion/transportionList');

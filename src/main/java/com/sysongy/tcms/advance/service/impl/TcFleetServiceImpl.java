@@ -41,7 +41,7 @@ public class TcFleetServiceImpl implements TcFleetService{
     @Override
     public PageInfo<TcFleet> queryFleetList(TcFleet tcFleet) {
         if(tcFleet != null){
-            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+            PageHelper.startPage(tcFleet.getPageNum(),tcFleet.getPageSize());
 
             List<TcFleet> FleetList = tcFleetMapper.queryFleetList(tcFleet);
             PageInfo<TcFleet> FleetPageInfo = new PageInfo<>(FleetList);
@@ -54,7 +54,7 @@ public class TcFleetServiceImpl implements TcFleetService{
     @Override
     public PageInfo<Map<String, Object>> queryFleetMapList(TcFleet tcFleet) {
         if(tcFleet != null){
-            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+            PageHelper.startPage(tcFleet.getPageNum(),tcFleet.getPageSize());
 
             List<Map<String, Object>> fleetList = tcFleetMapper.queryFleetMapList(tcFleet);
             if(fleetList != null && fleetList.size() > 0){

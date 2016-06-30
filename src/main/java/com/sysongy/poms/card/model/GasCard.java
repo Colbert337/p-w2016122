@@ -59,6 +59,26 @@ public class GasCard extends BaseModel{
 	private String sysUserId;
 
 	private SysUser sysUserIdInfo;
+	
+	private String card_no_start;
+	
+	private String card_no_end;
+
+	public String getCard_no_start() {
+		return card_no_start;
+	}
+
+	public void setCard_no_start(String card_no_start) {
+		this.card_no_start = card_no_start;
+	}
+
+	public String getCard_no_end() {
+		return card_no_end;
+	}
+
+	public void setCard_no_end(String card_no_end) {
+		this.card_no_end = card_no_end;
+	}
 
 	public String getCard_property() {
 		return card_property;

@@ -32,6 +32,31 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 		$("#formtransportion").ajaxSubmit(listOptions);
 	}
 	
+	function commitForm2(obj){
+		//设置当前页的值
+		if(typeof obj == "undefined") {
+			$("#pageNum").val("1");
+		}else{
+			$("#pageNum").val($(obj).text());
+		}
+		
+		var options ={   
+	            url:'../web/transportion/transportionList2',
+	            type:'post',                    
+	            dataType:'html',
+	            success:function(data){
+		              $("#main").html(data);
+		              if($("#retCode").val() != "100"){
+			            	 //$("#modal-table").modal("show");
+			          }
+	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+	           
+		       }
+		}
+		
+		$("#formtransportion").ajaxSubmit(options);
+	}
+	
 	function del(obj){
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
@@ -64,4 +89,8 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 	
 	function init(){
 		loadPage('#main', '../web/transportion/transportionList');
+	}
+	
+	function init2(){
+		loadPage('#main', '../web/transportion/transportionList2');
 	}

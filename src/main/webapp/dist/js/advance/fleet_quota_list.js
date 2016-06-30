@@ -88,7 +88,7 @@ function savePassword(){
         type:'post',
         dataType:'html',
         success:function(data){
-
+            sucDialog("操作成功!")//保存成功弹窗
             $("#main").html(data);
         }
     }
@@ -111,6 +111,7 @@ function allocation(obj,index){
         $(obj).attr("checked","checked");
         $("#is_allot_"+index).val(1);
         $("#quota_"+index).removeAttr("readonly");
+        $("#quota_"+index).val(0.00);
     }
 
 }
@@ -119,24 +120,22 @@ function allocation(obj,index){
  * 保存配置
  */
 function saveFenpei(){
-    var data = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
-    data = decodeURIComponent(data,true);
-    $.ajax({
-        type: "POST",
-        data:{data:data},
-        async:false,
-        url: "../web/tcms/fleetQuota/save/fenpei",
-        success: function(data){
-            sucDialog("批量保存成功!")//保存成功弹窗
-            if(data.success()){
-                //暂时不需要跳转
-                window.location = '../web/tcms/fleetQuota/list/page' ;
-            }else{
-                alert("请求失败！");
-            }
-
+    var dataForm = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
+    dataForm = decodeURIComponent(dataForm,true);
+    var saveOptions ={
+        url:"../web/tcms/fleetQuota/save/fenpei",
+        type:'post',
+        data:{data:dataForm},
+        dataType:'html',
+        success:function(data){
+            sucDialog("操作成功!")//保存成功弹窗
+            $("#main").html(data);
         }
-    });
+    }
+    $("#fenpeiForm").ajaxSubmit(saveOptions);
+    $("#fenpeiModel").modal('hide').removeClass('in');
+    $("body").removeClass('modal-open').removeAttr('style');
+    $(".modal-backdrop").remove();
 
 }
 
@@ -172,7 +171,6 @@ function queryDriverInfo(index){
         async:false,
         url: "../web/tcms/fleetQuota/info/driver",
         success: function(data){
-            //sucDialog("批量保存成功!")//保存成功弹窗
             if(data != null){
                 $("#full_name_"+index).val(data.fullName);
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
@@ -206,6 +204,7 @@ function saveZhuan(){
         type:'post',
         dataType:'html',
         success:function(data){
+            sucDialog("操作成功!")//保存成功弹窗
             $("#main").html(data);
         }
     }
