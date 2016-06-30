@@ -126,7 +126,7 @@
 </div><!-- /.row -->
 
 <!--充值弹层-开始-->
-<div id="chongzhiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="chongzhiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -185,7 +185,7 @@
 <!--充值弹层-结束-->
 
 <!--添加资金分配弹层-开始-->
-<div id="fenpeiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="fenpeiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" style="width: 900px;" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -252,7 +252,7 @@
 <!--添加资金分配弹层-结束-->
 
 <!--添加个人转账弹层-开始-->
-<div id="zhuanModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="zhuanModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" style="width: 700px;" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -316,7 +316,7 @@
 <!--添加个人转账弹层-结束-->
 
 <!--添加修改密码弹层-开始-->
-<div id="passwordModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="passwordModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">

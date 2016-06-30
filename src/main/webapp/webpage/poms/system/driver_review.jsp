@@ -90,7 +90,7 @@
 									<th id="memoth" style="display:none">备注</th>
 									<th id="memoth" style="display:none">驾驶证</th>
 									<th id="memoth" style="display:none">行驶证</th>
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
@@ -118,21 +118,19 @@
 									<td style="display:none">${list.memo}</td>
 									<td style="display:none">${list.drivingLice}</td>
 									<td style="display:none">${list.vehicleLice}</td>
-									<td>
-										<div class="text-center">
-												<a class="blue" href="javascript:void(0);" title="更多信息" data-rel="tooltip">
-													<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel(this);"></i>
-												</a>
-											<c:if test="${list.checkedStatus == 1}">
-											
-												<a class="green" href="javascript:void(0);" title="审核通过" data-rel="tooltip"> 
-													<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="showInnerModel(this,'2');"></i>
-												</a>
-												<a class="green" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip"> 
-													<i class="ace-icon fa fa-ban bigger-130" onclick="showInnerModel(this,'3');"></i>
-												</a>
-											</c:if>
-										</div>
+									<td class="text-center">
+										<a class="option-btn-m" href="javascript:void(0);" title="更多信息" data-rel="tooltip">
+											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel(this);"></i>
+										</a>
+										<c:if test="${list.checkedStatus == 1}">
+
+											<a class="option-btn-m green" href="javascript:void(0);" title="审核通过" data-rel="tooltip">
+												<i class="ace-icon fa fa-pencil-square-o bigger-130" onclick="showInnerModel(this,'2');"></i>
+											</a>
+											<a class="option-btn-m red" href="javascript:void(0);" title="审核拒绝" data-rel="tooltip">
+												<i class="ace-icon fa fa-ban bigger-130" onclick="showInnerModel(this,'3');"></i>
+											</a>
+										</c:if>
 									</td>
 								</tr>
 								</c:forEach>
@@ -169,7 +167,7 @@
 </div>
 
 
-<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -179,46 +177,42 @@
 			<div class="modal-body">
 				<div class="container-fluid">
 					<%--两行表单 开始--%>
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="form-group">
-								<div class="col-xs-6">
-									<label class="control-label no-padding-right">驾驶证：</label>
-									<ul class="ace-thumbnails file-space clearfix">
-										<li>
-											<a href="" data-rel="colorbox">
-												<img width="150" height="150" alt="150x150" src="" id="driving_lice"/>
-												<div class="text">
-													<div class="inner">点击放大</div>
-												</div>
-											</a>
-										</li>
-									</ul>
-								</div>
-								<div class="col-xs-6">
-									<label class="control-label no-padding-right">行驶证：</label>
-									<ul class="ace-thumbnails file-space clearfix">
-										<li>
-											<a href="" data-rel="colorbox">
-												<img width="150" height="150" alt="150x150" src="" id="vehicle_lice"/>
-												<div class="text">
-													<div class="inner">点击放大</div>
-												</div>
-											</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="control-label no-padding-right">审核备注：</label>
-								<input type="hidden" id="objid"/>
-								<input type="hidden" id="objval"/>
-								<div>
-									<textarea class="form-control" name="remark" rows="5" maxlength="100"></textarea>
-								</div>
-							</div>
-						</div><!-- /.col -->
-					</div><!-- /.row -->
+					<div class="row form-group">
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">驾驶证：</label>
+							<ul class="ace-thumbnails clearfix">
+								<li>
+									<a href="" data-rel="colorbox">
+										<img width="150" height="150" alt="150x150" src="" id="driving_lice"/>
+										<div class="text">
+											<div class="inner">点击放大</div>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">行驶证：</label>
+							<ul class="ace-thumbnails clearfix">
+								<li>
+									<a href="" data-rel="colorbox">
+										<img width="150" height="150" alt="150x150" src="" id="vehicle_lice"/>
+										<div class="text">
+											<div class="inner">点击放大</div>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label">审核备注：</label>
+						<input type="hidden" id="objid"/>
+						<input type="hidden" id="objval"/>
+						<div>
+							<textarea class="form-control" name="remark" rows="5" maxlength="100"></textarea>
+						</div>
+					</div>
 					<%--两行表单 结束--%>
 				</div>
 				<!--底部按钮 -->

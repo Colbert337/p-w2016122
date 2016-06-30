@@ -23,6 +23,7 @@
 		              if($("#retCode").val() != "100"){
 		            	  
 			          }
+					$('[data-rel="tooltip"]').tooltip();
 	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
 	            }
