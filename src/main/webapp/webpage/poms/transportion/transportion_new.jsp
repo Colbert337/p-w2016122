@@ -77,7 +77,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="station_manager"> 公司管理员： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="station_manager">联系人姓名： </label>
 
 										<div class="col-sm-4">
 											<input type="text" id="station_manager" name="station_manager" placeholder="输入公司管理员" class="form-control" maxlength="20"/>

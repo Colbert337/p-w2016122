@@ -77,9 +77,9 @@
 		                        message: '失效日期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '失效日期必须大于生效日期',
+		                    	message: '失效日期必须大于等于生效日期',
 		                    	callback: function (value, validator, $field) {
-		                    		return compareDate(value, $('[name=start_date_after]').val());
+		                    		return !compareDate($('[name=start_date_after]').val(), value);
 		                    	}
 		                    }
 		                },

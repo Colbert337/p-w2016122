@@ -38,6 +38,16 @@ public class SysDepositLog extends BaseModel{
     private String memo;
     
     private String order_number;
+    
+    private String transfer_photo;
+
+	public String getTransfer_photo() {
+		return transfer_photo;
+	}
+
+	public void setTransfer_photo(String transfer_photo) {
+		this.transfer_photo = transfer_photo;
+	}
 
 	public String getOrder_number() {
 		return order_number;

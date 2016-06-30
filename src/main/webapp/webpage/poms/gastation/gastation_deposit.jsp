@@ -32,7 +32,7 @@
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 									<div class="form-group">
-										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 加注站名称： </label>
+										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right">加注站名称： </label>
 
 										<div class="col-sm-4">
 											<label class="control-label no-padding-right" id="gastationame">${param.gastationame}</label>
@@ -83,6 +83,28 @@
 
 										<div class="col-sm-4">
 											<input type="text" id="operator" name="operator" class="form-control"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">截图上传： </label>
+										<div class="col-sm-4">
+											<div class="widget-box">
+												<div class="widget-header">
+													<h4 class="widget-title">转账截图照片上传</h4>
+												</div>
+
+												<div class="widget-body">
+													<div class="widget-main">
+														<input type="file" name="image" class="projectfile" id="transfer_select" />
+														<input type="hidden" id="transfer_photo" name="transfer_photo"/> 
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#transfer_select','#transfer_photo');">
+															<i class="ace-icon fa fa-check bigger-110"></i>
+															图片上传
+														</button>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 									
