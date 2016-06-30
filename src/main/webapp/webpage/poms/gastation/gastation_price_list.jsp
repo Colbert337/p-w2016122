@@ -151,7 +151,7 @@
 </div>
 
 
-<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">

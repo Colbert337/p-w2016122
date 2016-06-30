@@ -70,20 +70,13 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 #treeDemo {
     overflow-y: scroll;
 }
-.table-loading {
-    position: relative;
-}
-.table-loading .loading {
+
+.loading {
     position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    width: 100%;
-    background-color: #999;
-    text-align: center;
-    opacity: 0.9;
-    color: #fff;
-    padding: 10px 0;
+    left: 50%;
+    top: 50%;
+    z-index: 99999;
+    font-size: 36px;
 }
 .gastation-infomation {
     max-width: 1000px;
@@ -97,4 +90,15 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 .gastation-infomation-items .item {
     border-bottom: 1px solid #ddd;
     padding: 8px 0;
+}
+.modal-header {
+    border-bottom-width: 0;
+}
+.modal-header .close {
+    position: relative;
+    z-index: 2;
+}
+.modal .ace-thumbnails > li {
+    border-width: 1px;
+    border-color: #ddd;
 }
