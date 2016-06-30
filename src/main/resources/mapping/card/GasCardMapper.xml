@@ -170,9 +170,6 @@
       <if test="card_type != null &amp;&amp; card_type != ''" >
         and card_type = #{card_type,jdbcType=VARCHAR}
       </if>
-      <if test="card_status != null &amp;&amp; card_status != ''" >
-        and card_status = #{card_status,jdbcType=VARCHAR}
-      </if>
       <if test="operator != null &amp;&amp; operator != ''">
         and operator = #{operator,jdbcType=VARCHAR}
       </if>
@@ -189,8 +186,8 @@
         and storage_time between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
       </if>
     </trim>
-      and CAST(card_no as unsigned) &gt; #{startID,jdbcType=INTEGER} and CAST(card_no as unsigned)  &lt; #{endID,jdbcType=INTEGER}
-      order by CAST(card_no as unsigned)
+       and CAST(card_no as unsigned) &gt; #{startID,jdbcType=INTEGER} and CAST(card_no as unsigned)  &lt; #{endID,jdbcType=INTEGER}
+       order by CAST(card_no as unsigned) and (card_status = 3 or card_status = 4)
   </select>
 
   <select id="selectByCardNo" resultMap="BaseResultList" parameterType="java.lang.String" >
