@@ -36,6 +36,7 @@ var listOptions ={
 //显示添加车队弹出层add
 function addFleet(){
     clearDiv();
+    $("#editFleetDiv").text("添加车队");
     $.ajax({
         url:"../web/permi/user/list/info",
         data:{},
@@ -71,6 +72,7 @@ function editFleet(fleetId){
             $("#tc_fleet_id").val(data.tcFleetId);
             $("#sys_user_id").val(data.sysUserId);
             userId = data.sysUserId;
+            $("#editFleetDiv").text("修改车队");
             if(data.gasCard != null && data.gasCard.card_no != null){
                 var cardType,cardStatus;
                 //卡类型

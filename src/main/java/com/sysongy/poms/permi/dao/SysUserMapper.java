@@ -12,7 +12,7 @@ public interface SysUserMapper {
      * @return
      */
     List<SysUser> queryUserList(SysUser sysUser);
-
+    List<SysUser> queryUserListByUserType(SysUser sysUser);
     SysUser queryUserById(String userId);
 
     Map<String, Object> queryUserMapByAccount(SysUser user);

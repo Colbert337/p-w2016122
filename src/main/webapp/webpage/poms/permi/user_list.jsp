@@ -51,6 +51,7 @@
 	//显示添加用户弹出层
 	function addUser(){
 		/*$("#userModel").modal('show');*/
+		$("#editUserDiv").text("添加用户");
 		queryRoleList();
 		queryUserTypeList("");
 		/*密码输入框改为可编辑*/
@@ -148,6 +149,7 @@
 				$("#remark").val(data.remark);
 				$("#real_name").val(data.realName);
 				$("#user_type").val(data.userType);
+				$("#editUserDiv").text("修改用户");
 
 				if(data.gender == 0){
 					$("#gender_b").attr("checked","checked");
@@ -392,7 +394,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel">编辑用户</h4>
+				<h4 class="modal-title" id="editUserDiv">编辑用户</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">

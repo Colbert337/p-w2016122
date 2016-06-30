@@ -26,6 +26,7 @@ var listOptions ={
 //显示添加用户弹出层add
 function addVehicle(){
     clearDiv();
+    $("#editVehicle").text("添加车辆");
     /*密码输入框改为可编辑*/
     $("#pay_code").removeAttr("readonly");
     $("#re_password").removeAttr("readonly");
@@ -48,7 +49,7 @@ function editVehicle(vehicleId){
             $("#re_password").val(data.vehicle.payCode);
             $("#notice_phone").val(data.vehicle.noticePhone);
             $("#copy_phone").val(data.vehicle.copyPhone);
-
+            $("#editVehicle").text("修改车辆");
             if(data.gasCard != null && data.gasCard.card_no != null){
                 if(data.gasCard.card_no != ""){
                     var str = "<button onclick='freeze("+data.gasCard.card_no+")'>冻结</button>";

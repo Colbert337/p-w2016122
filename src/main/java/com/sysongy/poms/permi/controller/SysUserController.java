@@ -177,9 +177,14 @@ public class SysUserController extends BaseContoller{
 	 */
 	@RequestMapping("/list/userType")
 	@ResponseBody
-	public String queryStationList(@RequestParam int userType){
+	public String queryStationList(@ModelAttribute CurrUser currUser,@RequestParam int userType){
 		List<SysUser> sysUserList = new ArrayList<>();
-		sysUserList = sysUserService.queryUserListByUserType(userType);
+		SysUser sysUser = new SysUser();
+		String stationId = currUser.getStationId();
+		sysUser.setStationId(stationId);
+		sysUser.setUserType(userType);
+
+		sysUserList = sysUserService.queryUserListByUserType(sysUser);
 		String resultStr = JSON.toJSONString(sysUserList);
 		return resultStr;
 	}
@@ -252,8 +257,13 @@ public class SysUserController extends BaseContoller{
 	@RequestMapping("/list/info")
 	@ResponseBody
 	public List<SysUser> queryUserList(@ModelAttribute CurrUser currUser, ModelMap map){
+		SysUser sysUser = new SysUser();
 		int userType = currUser.getUserType();
-		List<SysUser> userList = sysUserService.queryUserListByUserType(userType);
+		String stationId = currUser.getStationId();
+		sysUser.setStationId(stationId);
+		sysUser.setUserType(userType);
+
+		List<SysUser> userList = sysUserService.queryUserListByUserType(sysUser);
 
 		return userList;
 	}
