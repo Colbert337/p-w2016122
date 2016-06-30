@@ -50,7 +50,8 @@ public class SysUserController extends BaseContoller{
 	 */
 	@RequestMapping("/list/page")
 	public String queryUserListPage(@ModelAttribute CurrUser currUser, SysUser sysUser, @RequestParam(required = false) Integer resultInt, ModelMap map){
-
+		String stationId = currUser.getStationId();
+		sysUser.setStationId(stationId);
 		if(sysUser.getPageNum() == null){
 			sysUser.setPageNum(GlobalConstant.PAGE_NUM);
 			sysUser.setPageSize(GlobalConstant.PAGE_SIZE);

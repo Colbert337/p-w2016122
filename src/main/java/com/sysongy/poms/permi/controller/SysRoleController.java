@@ -46,6 +46,8 @@ public class SysRoleController extends BaseContoller{
 	 */
 	@RequestMapping("/list/page")
 	public String queryRoleListPage(@ModelAttribute CurrUser currUser, SysRole role, @RequestParam(required = false) Integer resultInt, ModelMap map){
+		String stationId = currUser.getStationId();
+		role.setStationId(stationId);
 		if(role.getPageNum() == null){
 			role.setPageNum(GlobalConstant.PAGE_NUM);
 			role.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -111,7 +113,9 @@ public class SysRoleController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/save")
-	public String saveRole(SysRole role, ModelMap map){
+	public String saveRole(@ModelAttribute CurrUser currUser,SysRole role, ModelMap map){
+		String stationId = currUser.getStationId();
+		role.setStationId(stationId);
 		int resultInt = 0;
 		if(role != null && role.getSysRoleId() != null && !"".equals(role.getSysRoleId())){
 			//修改角色

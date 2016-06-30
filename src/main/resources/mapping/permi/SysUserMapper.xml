@@ -90,9 +90,9 @@
       <if test="isAdmin != null &amp;&amp; isAdmin !=''" >
         and  su.is_admin = #{isAdmin}
       </if>
-      <!--<if test="isDeleted != null &amp;&amp; isDeleted !=''" >
-        and  su.is_deleted = #{isDeleted}
-      </if>-->
+      <if test="stationId != null &amp;&amp; stationId !=''" >
+        and  su.station_id = #{stationId}
+      </if>
     </trim>
     order by su.created_date desc
   </select>
