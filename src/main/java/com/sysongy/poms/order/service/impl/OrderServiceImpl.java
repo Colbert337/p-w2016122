@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +66,15 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private SysPrepayMapper sysPrepayMapper;
-	
+
+
+	@Override
+	public PageInfo<SysOrder> queryOrders(SysOrder record) throws Exception {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<SysOrder> list = sysOrderMapper.queryForPage(record);
+		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
+		return pageInfo;
+	}
 	
 	@Override
 	public int deleteByPrimaryKey(String orderId) {

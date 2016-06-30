@@ -77,6 +77,39 @@ public class CRMCardContoller {
     	return ajaxJson;
     }
 
+    @RequestMapping(value = {"/web/queryCardFor2StatusInfo"})
+    @ResponseBody
+    public AjaxJson queryCardFor2StatusInfo(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        if(StringUtils.isEmpty(gascard.getWorkstation())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
+            return ajaxJson;
+        }
+        try
+        {
+            String startTime = gascard.getStorage_time_before();
+            String endTime = gascard.getStorage_time_after();
+            gascard.setStorage_time_after(startTime);
+            gascard.setStorage_time_before(endTime);
+            PageInfo<GasCard> pageinfo = gasCardService.queryCardFor2StatusInfo(gascard);
+            if((pageinfo == null) || (pageinfo.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("查询数据为空！！！");
+                return ajaxJson;
+            }
+            attributes.put("pageInfo", pageinfo);
+            attributes.put("gascard",pageinfo.getList());
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CARD_ERROR);
+            logger.error("queryCardInfo error： " + e);
+        }
+        return ajaxJson;
+    }
+
     @RequestMapping(value = {"/web/distributeCard"})
     @ResponseBody
     public AjaxJson distributeCard(HttpServletRequest request, HttpServletResponse response, GasCard gascard){

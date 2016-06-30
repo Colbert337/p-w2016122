@@ -66,9 +66,40 @@
          batch_no = #{batch_no,jdbcType=VARCHAR}
       </if>
       <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
-        and storage_time between CONCAT(#{storage_time_after,jdbcType=VARCHAR},'00:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
+        and storage_time between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 00:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
       </if>
     </trim>
+  </select>
+
+  <select id="queryCardFor2StatusInfo" resultMap="BaseResultList"  parameterType="com.sysongy.poms.card.model.GasCard" >
+    select <include refid="Base_Column_List1" />
+    from gas_card gc
+    left outer join sys_driver driver on gc.card_no = driver.card_id
+    where 1=1
+    <trim>
+      <if test="card_no != null &amp;&amp; card_no != ''" >
+        and card_no = #{card_no,jdbcType=VARCHAR}
+      </if>
+      <if test="card_type != null &amp;&amp; card_type != ''" >
+        and card_type = #{card_type,jdbcType=VARCHAR}
+      </if>
+      <if test="operator != null &amp;&amp; operator != ''">
+        and operator = #{operator,jdbcType=VARCHAR}
+      </if>
+      <if test="workstation != null &amp;&amp; workstation != ''">
+        and workstation = #{workstation,jdbcType=VARCHAR}
+      </if>
+      <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
+        workstation_resp = #{workstation_resp,jdbcType=VARCHAR}
+      </if>
+      <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
+        batch_no = #{batch_no,jdbcType=VARCHAR}
+      </if>
+      <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
+        and storage_time between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 00:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+     and (card_status = 3) or (card_status = 4)
   </select>
 
   <select id="queryGasCardForCRM" resultMap="BaseResultList"

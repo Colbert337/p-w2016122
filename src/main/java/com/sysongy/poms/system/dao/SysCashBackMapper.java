@@ -25,4 +25,6 @@ public interface SysCashBackMapper {
     List<SysCashBack> queryCashBackByNumber(String sysCashBackNumber);
     
     SysCashBack findCashBackid(String cashBackNo);
+
+    List<SysCashBack> queryForCRMPage(SysCashBack record);
 }

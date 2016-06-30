@@ -38,4 +38,6 @@ public interface UsysparamMapper {
     public Usysparam queryProductStatusByMcode(String mcode);
 
     public Usysparam queryAccountStatus(String mcode);
+
+    public Usysparam queryCashBackByMcode(String mcode);
 }

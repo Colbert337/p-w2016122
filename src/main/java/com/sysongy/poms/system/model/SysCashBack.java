@@ -10,6 +10,8 @@ public class SysCashBack extends BaseModel{
 	
 	private String sys_cash_back_no;
 
+	private String sys_cash_back_noInfo;
+
 	private String threshold_min_value;
 
 	private String threshold_max_value;
@@ -136,4 +138,11 @@ public class SysCashBack extends BaseModel{
 		this.updated_date = updated_date;
 	}
 
+	public String getSys_cash_back_noInfo() {
+		return sys_cash_back_noInfo;
+	}
+
+	public void setSys_cash_back_noInfo(String sys_cash_back_noInfo) {
+		this.sys_cash_back_noInfo = sys_cash_back_noInfo;
+	}
 }

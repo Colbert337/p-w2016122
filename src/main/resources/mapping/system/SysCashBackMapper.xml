@@ -13,6 +13,10 @@
     <result column="end_date" property="end_date" jdbcType="TIMESTAMP" />
     <result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updated_date" jdbcType="TIMESTAMP" />
+    <association property="sys_cash_back_noInfo" column="sys_cash_back_no"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCashBackByMcode">
+    </association>
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -41,6 +45,23 @@
         and start_date between CONCAT(#{start_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{start_date_before,jdbcType=VARCHAR},' 23:59:59') 
       </if>
     </trim>
+  </select>
+
+  <select id="queryForCRMPage" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCard" >
+    select <include refid="Base_Column_List" />
+    from sys_cash_back gc where 1=1
+    <trim>
+      <if test="level != null &amp;&amp; level != ''" >
+        and level = #{level,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null &amp;&amp; status != ''" >
+        and status = #{status, jdbcType=VARCHAR}
+      </if>
+      <if test="start_date_after != null &amp;&amp; start_date_after != ''">
+        and start_date between CONCAT(#{start_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{start_date_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+      and (sys_cash_back_no = 102) or (sys_cash_back_no = 106) or (sys_cash_back_no = 107)
   </select>
   
   <select id="checkvalid" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCard" >

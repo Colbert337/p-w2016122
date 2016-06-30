@@ -194,7 +194,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		//2.步骤二：根据得到符合条件的一条返现规则：计算当前的返现金额
 		String cash_per_str = eligible_cashback.getCash_per();
 		BigDecimal cash_per = new BigDecimal(cash_per_str);  
-		BigDecimal back_money = cash.multiply(cash_per) ;
+		BigDecimal back_money = cash.multiply(cash_per);
 		
 		//3.给这个账户增加返现
 		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money);
