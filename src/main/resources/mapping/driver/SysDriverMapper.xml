@@ -102,6 +102,9 @@
       <if test="notin_checked_status != null" >
         and checked_status &lt;&gt; #{notin_checked_status,jdbcType=VARCHAR}
       </if>
+      <if test="stationId!= null &amp;&amp; stationId != ''" >
+        and station_id = #{stationId,jdbcType=VARCHAR}
+      </if>
     </trim>
   </select>
 
@@ -137,6 +140,9 @@
       </if>
       <if test="notin_checked_status != null" >
         and checked_status &lt;&gt; #{notin_checked_status,jdbcType=VARCHAR}
+      </if>
+      <if test="stationId!= null &amp;&amp; stationId != ''" >
+        and station_id = #{stationId,jdbcType=VARCHAR}
       </if>
     </trim>
   </select>
