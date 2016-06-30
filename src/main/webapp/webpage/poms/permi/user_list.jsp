@@ -66,7 +66,7 @@
 			type: "POST",
 			success: function(data){
 
-				$("#avatar_b").append("<option value='0'>--选择角色--</option>");
+				$("#avatar_b").append("<option value=''>--选择角色--</option>");
 				$.each(data,function(i,val){
 					if(val.sysRoleId == roleId){
 						$("#avatar_b").append("<option value='"+val.sysRoleId+"' selected='selected'>"+val.roleName+"</option>");
@@ -114,12 +114,16 @@
 	 */
 	function saveUser(){
 		if(jQuery('#userForm').validationEngine('validate')){
-			var saveOptions ={
-				url:'<%=basePath%>/web/permi/user/save',
-				type:'post',
-				dataType:'html',
-				success:function(data){
+
+			var saveOptions = {
+				url: '<%=basePath%>/web/permi/user/save',
+				type: 'post',
+				dataType: 'html',
+				success: function (data) {
 					$("#main").html(data);
+					$("#modal-table").modal("show");
+				}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
 				}
 			}
 			$("#userForm").ajaxSubmit(saveOptions);
@@ -331,6 +335,9 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
+
 <!--添加用户弹层-开始-->
 <div id="userModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
@@ -458,3 +465,4 @@
 	</div><!-- /.modal -->
 </div>
 <!--提示弹层-结束-->
+

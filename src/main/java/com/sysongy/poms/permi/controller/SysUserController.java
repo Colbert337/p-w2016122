@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysRoleService;
@@ -19,13 +20,11 @@ import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +52,8 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryUserListPage(@ModelAttribute CurrUser currUser,SysUser sysUser, ModelMap map){
+	public String queryUserListPage(@ModelAttribute CurrUser currUser, SysUser sysUser, @RequestParam(required = false) Integer resultInt, ModelMap map){
+
 		if(sysUser.getPageNum() == null){
 			sysUser.setPageNum(GlobalConstant.PAGE_NUM);
 			sysUser.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -65,6 +65,17 @@ public class SysUserController extends BaseContoller{
 		userPageInfo = sysUserService.queryUserListPage(sysUser);
 		map.addAttribute("userList",userPageInfo.getList());
 		map.addAttribute("pageInfo",userPageInfo);
+
+		if(resultInt != null && resultInt > 0){
+			Map<String, Object> resultMap = new HashMap<>();
+
+			if(resultInt == 1){
+				resultMap.put("retMsg","新建成功！");
+			}else if(resultInt == 2){
+				resultMap.put("retMsg","修改成功！");
+			}
+			map.addAttribute("ret",resultMap);
+		}
 
 	    return "webpage/poms/permi/user_list";
 	}
@@ -115,18 +126,21 @@ public class SysUserController extends BaseContoller{
 	 */
 	@RequestMapping("/save")
 	public String saveUser(SysUser user, ModelMap map){
+		int resultInt = 0;
 		if(user != null && user.getSysUserId() != null && !"".equals(user.getSysUserId())){
 			//修改用户
 			user.setPassword(null);//不修改用户密码
 			sysUserService.updateUser(user);
+			resultInt = 2;
 		}else if(user != null){//添加
 			user.setSysUserId(UUIDGenerator.getUUID());
 			user.setUserType(GlobalConstant.USER_TYPE_MANAGE);
 
 			sysUserService.addUser(user);
+			resultInt = 1;
 		}
 
-		return "redirect:/web/permi/user/list/page";
+		return "redirect:/web/permi/user/list/page?resultInt="+resultInt;
 	}
 
 	/**
@@ -172,10 +186,8 @@ public class SysUserController extends BaseContoller{
 
 	/**
 	 * 根据用户名称和用户类型判断用户名称是否存在
-	 * @param currUser
 	 * @param admin_username
 	 * @param userType
-	 * @param map
      * @return
      */
 	@RequestMapping("/info/isExist")
