@@ -93,6 +93,7 @@
 									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
+									<th onclick="orderBy(this,'admin_username');commitForm();" id="admin_username_order">管理员账号</th>
 									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
@@ -119,6 +120,7 @@
 								 	<td>${list.gas_station_name}</td> 
 									<td>${list.salesmen_name}</td>
 									<td>${list.operations_name}</td>
+									<td>${list.admin_username}</td>
 									<td>${list.indu_com_number}</td>
 									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
 									<td>${list.address}</td> 
