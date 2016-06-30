@@ -88,13 +88,13 @@
 		        }
 		    });
 			
-		    $('.date-picker').datepicker({
+/*		    $('.date-picker').datepicker({
 				autoclose: true,
 				todayHighlight: true,
 				language: 'cn'
 			}).next().on(ace.click_event, function(){
 				$(this).prev().focus();
-			});
+			});*/
 		    
 		function save(){
 			/*手动验证表单，当是普通按钮时。*/

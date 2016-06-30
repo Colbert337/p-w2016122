@@ -130,3 +130,23 @@
 			loadPage('#main', '../web/sysparam/cashbackList');
 		}
 		
+		function gainProp(obj){
+			$.ajax({
+				   type: "POST",
+				   url:'../web/sysparam/gainProp?sys_cash_back_no='+$("[name=sys_cash_back_no]").val()+'&level='+$(obj).val(),   
+		           dataType:'text',
+		           success:function(data){ 
+		        	   var s = JSON.parse(data);
+		        	   if(s.length == 1){
+			        	   $("[name=threshold_min_value]").val(s[0].threshold_max_value);
+			        	   $("[name=start_date_after]").val(s[0].start_date.substr(0,10));
+			        	   $("[name=start_date_before]").val(s[0].end_date.substr(0,10));
+			        	   $("[name=start_date_after]").removeClass("date-picker").off();
+			        	   $("[name=start_date_before]").removeClass("date-picker").off();
+		        	   }else{
+		        		   $("[name=threshold_min_value]").val("0");
+		        	   }
+		            }
+				});
+		}
+		

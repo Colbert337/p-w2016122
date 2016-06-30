@@ -25,4 +25,8 @@ public interface SysCashBackMapper {
     List<SysCashBack> queryCashBackByNumber(String sysCashBackNumber);
     
     SysCashBack findCashBackid(String cashBackNo);
+    
+    List<SysCashBack> gainProp(String cashBackNo, String level);
+    
+    Integer deleteByLevel(String sysCashBackNo, String level);
 }
