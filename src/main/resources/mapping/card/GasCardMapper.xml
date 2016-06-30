@@ -27,15 +27,16 @@
     </association>
     <association property="sysUserIdInfo" column="sysUserId"
                  javaType="com.sysongy.poms.permi.model.SysUser"
-                 select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserForCRM">
+                 select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
     </association>
   </resultMap>
+
   <sql id="Base_Column_List" >
     card_no, card_type, card_status, card_property, operator, storage_time, release_time, memo, workstation, workstation_resp, batch_no, card_flag_id, sysUserId
   </sql>
 
   <sql id="Base_Column_List1" >
-    driver.full_name as dName, driver.mobile_phone as mPhone, card_no, card_type, card_status, card_property, operator, storage_time, release_time, gc.memo as memo, workstation, workstation_resp, batch_no, card_flag_id, sysUserId 
+    driver.full_name as dName, driver.mobile_phone as mPhone, card_no, card_type, card_status, card_property, operator, storage_time, release_time, gc.memo as memo, workstation, workstation_resp, batch_no, card_flag_id, sysUserId
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultList"  parameterType="com.sysongy.poms.card.model.GasCard" >

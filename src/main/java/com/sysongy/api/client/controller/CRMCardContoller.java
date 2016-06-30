@@ -73,6 +73,7 @@ public class CRMCardContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CARD_ERROR);
             logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
         }
     	return ajaxJson;
     }
@@ -135,6 +136,7 @@ public class CRMCardContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CARD_ERROR);
             logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
         }
         return ajaxJson;
     }
