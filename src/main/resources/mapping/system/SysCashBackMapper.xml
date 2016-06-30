@@ -13,11 +13,21 @@
     <result column="end_date" property="end_date" jdbcType="TIMESTAMP" />
     <result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updated_date" jdbcType="TIMESTAMP" />
+    <association property="sys_cash_back_noInfo" column="sys_cash_back_no"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCashBackByMcode">
+    </association>
   </resultMap>
   
   <sql id="Base_Column_List" >
     sys_cash_back_id, sys_cash_back_no, threshold_min_value, threshold_max_value, cash_per, status, 
     level, start_date, end_date, created_date, updated_date
+  </sql>
+
+  <sql id="Base_Column_List1" >
+    a.sys_cash_back_id, a.sys_cash_back_no as sys_cash_back_no,
+    concat(a.threshold_min_value, '&lt;金额≤', a.threshold_max_value) as threshold_min_value, a.threshold_max_value, a.cash_per, a.status,
+    a.level, a.start_date, a.end_date, a.created_date, a.updated_date
   </sql>
   
   <select id="findCashBackid" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -46,6 +56,45 @@
         and start_date between CONCAT(#{start_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{start_date_before,jdbcType=VARCHAR},' 23:59:59') 
       </if>
     </trim>
+  </select>
+
+  <select id="queryCashBackForCRM" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCard" >
+    select <include refid="Base_Column_List1" />
+    from sys_cash_back a left outer join sys_cash_back b on a.sys_cash_back_no = b.sys_cash_back_no
+    and a.level &lt; b.level
+     where 1=1
+    <trim>
+      <if test="level != null &amp;&amp; level != ''" >
+        and a.level = #{level,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null &amp;&amp; status != ''" >
+        and a.status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="sys_cash_back_no != null &amp;&amp; sys_cash_back_no != ''" >
+        and a.sys_cash_back_no = #{sys_cash_back_no,jdbcType=VARCHAR}
+      </if>
+      <if test="start_date_after != null &amp;&amp; start_date_after != ''">
+        and a.start_date between CONCAT(#{start_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{start_date_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+     and (b.sys_cash_back_id is null or b.sys_cash_back_no='') and a.status='0' order by a.threshold_min_value
+  </select>
+
+  <select id="queryForCRMPage" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCard" >
+    select <include refid="Base_Column_List" />
+    from sys_cash_back gc where 1=1
+    <trim>
+      <if test="level != null &amp;&amp; level != ''" >
+        and level = #{level,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null &amp;&amp; status != ''" >
+        and status = #{status, jdbcType=VARCHAR}
+      </if>
+      <if test="start_date_after != null &amp;&amp; start_date_after != ''">
+        and start_date between CONCAT(#{start_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{start_date_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+      and (sys_cash_back_no = 102) or (sys_cash_back_no = 106) or (sys_cash_back_no = 107)
   </select>
   
   <select id="checkvalid" resultMap="BaseResultMap" parameterType="com.sysongy.poms.card.model.GasCard" >

@@ -42,6 +42,14 @@ public class GasCardServiceImpl implements GasCardService{
 	}
 
 	@Override
+	public PageInfo<GasCard> queryCardFor2StatusInfo(GasCard cascard) throws Exception{
+		PageHelper.startPage(cascard.getPageNum(), cascard.getPageSize(), cascard.getOrderby());
+		List<GasCard> list = gasCardMapper.queryCardFor2StatusInfo(cascard);
+		PageInfo<GasCard> pageInfo = new PageInfo<GasCard>(list);
+		return pageInfo;
+	}
+
+	@Override
 	public PageInfo<GasCard> queryGasCardForCRM(CRMCardUpdateInfo crmCardUpdateInfo) throws Exception{
 		PageHelper.startPage(crmCardUpdateInfo.getPageNum(), crmCardUpdateInfo.getPageSize(), crmCardUpdateInfo.getOrderby());
 		List<GasCard> list = gasCardMapper.queryGasCardForCRM(crmCardUpdateInfo);

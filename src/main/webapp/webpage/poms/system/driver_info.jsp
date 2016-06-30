@@ -88,7 +88,7 @@
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">实体卡状态</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">用户状态</th> 
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
@@ -126,9 +126,9 @@
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.account.account_status}" gcode="ACCOUNT_STATUS"></s:Code2Name></td>
 									<td>
-										<div class="btn-toolbar">
+										<div class="text-center">
 											<div class="btn-group">
-												<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
+												<button data-toggle="dropdown" class="btn btn-info btn-xs dropdown-toggle">
 													状态修改
 													<span class="ace-icon fa fa-caret-down icon-on-right"></span>
 												</button>

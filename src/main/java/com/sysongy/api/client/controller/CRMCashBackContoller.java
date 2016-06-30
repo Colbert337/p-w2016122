@@ -1,7 +1,12 @@
 package com.sysongy.api.client.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
+import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.model.SysCashBackCRM;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
@@ -21,10 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @Controller
 @RequestMapping("/crmCashBackContoller")
@@ -35,24 +37,57 @@ public class CRMCashBackContoller {
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 
     @Autowired
-    private SysCashBackMapper cashBackMapper;
-    @Autowired
-    private UsysparamService service;
+    private SysCashBackService service;
 
     @ResponseBody
-    @RequestMapping("/web/dictInfo")
-    public AjaxJson queryParamList(HttpServletRequest request, HttpServletResponse response, Usysparam usysparam) throws Exception{
+    @RequestMapping("/web/queryCashBackList")
+    public AjaxJson queryCashBackList(HttpServletRequest request, HttpServletResponse response, SysCashBack record) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
-        if((usysparam == null) || (!StringUtils.isNotEmpty(usysparam.getGcode()))){
+        Map<String, Object> attributes = getSysCashBack(record);
+        if(attributes == null){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("Gcode为空！！！");
+            ajaxJson.setMsg("无法查询到对应数据！！！");
             return ajaxJson;
         }
-        List<Usysparam> usysparamInfo = service.queryUsysparamByGcode(usysparam.getGcode());
-        Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("usysparamInfos", usysparamInfo);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
+    }
+
+    /**
+     * 分拣List
+     * @paramcashBacks
+     * @return
+     */
+    private Map<String, Object> getSysCashBack(SysCashBack record){
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        List<SysCashBack> sysCashBacksForPos = null;
+        List<SysCashBack> sysCashBacksForCard = null;
+        List<SysCashBack> sysCashBacksForCash = null;
+        SysCashBackCRM sysCashBackCRM = new SysCashBackCRM();
+        try {
+            record.setStart_date(new Date());
+            record.setSys_cash_back_no(InterfaceConstants.RECHARGE_TYPE_POS);
+            PageInfo<SysCashBack> sysCashBacksForPosPage = service.queryCashBackForCRM(record);
+            if((sysCashBacksForPosPage != null) && (sysCashBacksForPosPage.getList().size() > 0)){
+                sysCashBackCRM.setSysCashBackForPOS(sysCashBacksForPosPage.getList());
+            }
+            record.setSys_cash_back_no(InterfaceConstants.RECHARGE_TYPE_CARD);
+            PageInfo<SysCashBack> sysCashBacksForCardPage = service.queryCashBackForCRM(record);
+            if((sysCashBacksForCardPage != null) && (sysCashBacksForCardPage.getList().size() > 0)){
+                sysCashBackCRM.setSysCashBackForCard(sysCashBacksForCardPage.getList());
+            }
+            record.setSys_cash_back_no(InterfaceConstants.RECHARGE_TYPE_CASH);
+            PageInfo<SysCashBack> sysCashBacksForCashPage = service.queryCashBackForCRM(record);
+            if((sysCashBacksForCashPage != null) && (sysCashBacksForCashPage.getList().size() > 0)){
+                sysCashBackCRM.setSysCashBackForCash(sysCashBacksForCashPage.getList());
+            }
+            attributes.put("sysCashBackCRM", sysCashBackCRM);
+            return attributes;
+        } catch (Exception e) {
+            logger.error("getSysCashBack error:" + e + "orderid:" + record.getStart_date());
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

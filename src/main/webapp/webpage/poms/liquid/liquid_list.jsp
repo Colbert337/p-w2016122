@@ -90,7 +90,7 @@
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建日期</th>
 									<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新日期</th>
 									<!-- <th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th> -->
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 

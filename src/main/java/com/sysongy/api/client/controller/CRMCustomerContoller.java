@@ -74,10 +74,22 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson queryCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
         AjaxJson ajaxJson = new AjaxJson();
+
+        if(!StringUtils.isNotEmpty(sysDriver.getStationId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
+            return ajaxJson;
+        }
+
         Map<String, Object> attributes = new HashMap<String, Object>();
         try
         {
             PageInfo<SysDriver> drivers = driverService.queryDrivers(sysDriver);
+            if((drivers == null) || (drivers.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("没有查询到所需内容！！！");
+                return ajaxJson;
+            }
             attributes.put("PageInfo", drivers);
             attributes.put("drivers", drivers.getList());
         } catch (Exception e) {
@@ -88,6 +100,42 @@ public class CRMCustomerContoller {
         }
         ajaxJson.setAttributes(attributes);
     	return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/querySingleCustomerInfo"})
+    @ResponseBody
+    public AjaxJson querySingleCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
+        AjaxJson ajaxJson = new AjaxJson();
+        if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("输入手机号为空！！！");
+            return ajaxJson;
+        }
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            PageInfo<SysDriver> drivers = driverService.querySingleDriver(sysDriver);
+            if((drivers == null) || (drivers.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("没有查询到所需内容！！！");
+                return ajaxJson;
+            }
+
+            if(drivers.getList().size() > 1){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该用户数据异常！！！");
+                return ajaxJson;
+            }
+            attributes.put("PageInfo", drivers);
+            attributes.put("drivers", drivers.getList());
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
     }
 
     @RequestMapping(value = {"/web/queryForPageSingleList"})

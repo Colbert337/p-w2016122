@@ -1,11 +1,13 @@
 package com.sysongy.poms.order.model;
 
+import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.card.model.GasCard;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SysOrder {
+public class SysOrder extends BaseModel{
+
     private String orderId;
 
     private String orderNumber;

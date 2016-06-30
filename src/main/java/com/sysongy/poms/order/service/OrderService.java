@@ -1,5 +1,7 @@
 package com.sysongy.poms.order.service;
 
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.order.model.SysOrder;
 
 /**
@@ -8,6 +10,8 @@ import com.sysongy.poms.order.model.SysOrder;
  *
  */
 public interface OrderService {
+
+    PageInfo<SysOrder> queryOrders(SysOrder obj) throws Exception;
 
     int deleteByPrimaryKey(String orderId);
 

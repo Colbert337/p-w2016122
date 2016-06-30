@@ -19,14 +19,18 @@ public interface SysCashBackMapper {
     int updateByPrimaryKey(SysCashBack record);
     
     List<SysCashBack> queryForPage(SysCashBack record);
-    
+
+    List<SysCashBack> queryCashBackForCRM(SysCashBack record);
+
     List<SysCashBack> checkvalid(SysCashBack record);
     
     List<SysCashBack> queryCashBackByNumber(String sysCashBackNumber);
     
     SysCashBack findCashBackid(String cashBackNo);
-    
+
     List<SysCashBack> gainProp(String cashBackNo, String level);
-    
+
     Integer deleteByLevel(String sysCashBackNo, String level);
+
+    List<SysCashBack> queryForCRMPage(SysCashBack record);
 }

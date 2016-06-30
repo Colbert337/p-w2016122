@@ -86,7 +86,7 @@
 									<th onclick="orderBy(this,'gas_num');commitForm();" id="gas_num_order">气品类型</th>
 									<th onclick="orderBy(this,'gas_name');commitForm();" id="gas_name_order">气品子类型</th>
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="createdDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
@@ -153,7 +153,7 @@
 </div>
 
 
-<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
