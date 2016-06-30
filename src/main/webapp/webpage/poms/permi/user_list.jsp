@@ -65,7 +65,6 @@
 			async:false,
 			type: "POST",
 			success: function(data){
-
 				$("#avatar_b").append("<option value=''>--选择角色--</option>");
 				$.each(data,function(i,val){
 					if(val.sysRoleId == roleId){
@@ -166,8 +165,7 @@
 				/*密码输入框改为可编辑*/
 				$("#password").attr("readonly","readonly");
 				$("#re_password").attr("readonly","readonly");
-
-				queryRoleList(data.sysRoleId);
+				queryRoleList(data.sys_role_id);
 				queryUserTypeList(data.userType);
 			}
 		});
