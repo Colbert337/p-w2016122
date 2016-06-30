@@ -218,7 +218,7 @@ $('#editForm').bootstrapValidator({
         platesNumber: {
             validators: {
                 notEmpty: {
-                    message: '手机号码不能为空'
+                    message: '车牌号不能为空'
                 }
             }
         },
@@ -271,9 +271,6 @@ $('#editForm').bootstrapValidator({
         },
         copyPhone: {
             validators: {
-                notEmpty: {
-                    message: '手机号不能为空'
-                },
                 regexp: {
                     regexp: '^[0-9]+$',
                     message: '手机号只能包含数字'
