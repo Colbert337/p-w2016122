@@ -106,10 +106,9 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson querySingleCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
         AjaxJson ajaxJson = new AjaxJson();
-        if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone()) ||
-                !StringUtils.isNotEmpty(sysDriver.getCardId())){
+        if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("输入手机号或卡号为空！！！");
+            ajaxJson.setMsg("输入手机号为空！！！");
             return ajaxJson;
         }
         Map<String, Object> attributes = new HashMap<String, Object>();

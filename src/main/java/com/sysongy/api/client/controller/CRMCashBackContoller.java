@@ -39,7 +39,7 @@ public class CRMCashBackContoller {
     private SysCashBackService service;
 
     @ResponseBody
-    @RequestMapping("/web/dictInfo")
+    @RequestMapping("/web/crmCashBackContoller")
     public AjaxJson queryCashBackList(HttpServletRequest request, HttpServletResponse response, SysCashBack record) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
         if((record == null) || (record.getStart_date() != null)){
