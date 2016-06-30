@@ -124,7 +124,7 @@
         and full_name = #{fullName,jdbcType=VARCHAR}
       </if>
       <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
-        and (mobile_phone = #{mobilePhone,jdbcType=VARCHAR}) or (card_id = #{mobilePhone,jdbcType=VARCHAR)
+        and (mobile_phone = #{mobilePhone,jdbcType=VARCHAR} or card_id = #{mobilePhone,jdbcType=VARCHAR})
       </if>
       <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
         and checked_status = #{checkedStatus,jdbcType=VARCHAR}
@@ -165,7 +165,7 @@
         and full_name = #{fullName,jdbcType=VARCHAR}
       </if>
       <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
-        and (mobile_phone = #{mobilePhone,jdbcType=VARCHAR}) or (card_id = #{mobilePhone,jdbcType=VARCHAR})
+        and (mobile_phone = #{mobilePhone,jdbcType=VARCHAR} or card_id = #{mobilePhone,jdbcType=VARCHAR})
       </if>
       <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
         and checked_status = #{checkedStatus,jdbcType=VARCHAR}
