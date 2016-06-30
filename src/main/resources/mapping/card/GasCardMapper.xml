@@ -159,8 +159,10 @@
   </select>
 
   <select id="queryForPageUpdate" resultMap="BaseResultList"  parameterType="com.sysongy.api.client.controller.model.CRMCardUpdateInfo" >
-    select <include refid="Base_Column_List" />
-    from gas_card gc where 1=1
+    select <include refid="Base_Column_List1" />
+    from gas_card gc
+     left outer join sys_driver driver on gc.card_no = driver.card_id
+     where 1=1
     <trim>
       <if test="card_no != null &amp;&amp; card_no != ''" >
         and card_no = #{card_no,jdbcType=VARCHAR}
