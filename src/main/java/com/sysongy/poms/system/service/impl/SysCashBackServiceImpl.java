@@ -46,6 +46,14 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	}
 
 	@Override
+	public PageInfo<SysCashBack> queryCashBackForCRM(SysCashBack obj) throws Exception {
+		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
+		List<SysCashBack> list = cashBackMapper.queryCashBackForCRM(obj);
+		PageInfo<SysCashBack> pageInfo = new PageInfo<SysCashBack>(list);
+		return pageInfo;
+	}
+
+	@Override
 	public SysCashBack queryCashBackByPK(String cashBackid) throws Exception {
 		SysCashBack cashback = cashBackMapper.selectByPrimaryKey(cashBackid);
 		cashback.setStart_date_after(new SimpleDateFormat("yyyy-MM-dd").format(cashback.getStart_date()));

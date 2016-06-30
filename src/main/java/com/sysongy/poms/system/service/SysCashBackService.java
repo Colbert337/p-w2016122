@@ -10,6 +10,8 @@ import com.sysongy.poms.system.model.SysCashBack;
 public interface SysCashBackService {
 	
 	public PageInfo<SysCashBack> queryCashBack(SysCashBack obj) throws Exception;
+
+	public PageInfo<SysCashBack> queryCashBackForCRM(SysCashBack obj) throws Exception;
 	
 	public SysCashBack queryCashBackByPK(String cashBackid) throws Exception;
 	

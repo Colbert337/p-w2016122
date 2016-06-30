@@ -5,6 +5,7 @@ import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.model.SysCashBackCRM;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
@@ -39,68 +40,54 @@ public class CRMCashBackContoller {
     private SysCashBackService service;
 
     @ResponseBody
-    @RequestMapping("/web/crmCashBackContoller")
+    @RequestMapping("/web/queryCashBackList")
     public AjaxJson queryCashBackList(HttpServletRequest request, HttpServletResponse response, SysCashBack record) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
-        if((record == null) || (record.getStart_date() != null)){
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("当天日期为空！！！");
-            return ajaxJson;
-        }
-
-        PageInfo<SysCashBack> sysCashBacks = service.queryCashBack(record);
-        if((sysCashBacks == null) || (sysCashBacks.getList().size() == 0)){
+        Map<String, Object> attributes = getSysCashBack(record);
+        if(attributes == null){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("无法查询到对应数据！！！");
             return ajaxJson;
         }
-
-        Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("sysCashBacks", sysCashBacks);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
 
     /**
      * 分拣List
-     * @param cashBacks
+     * @paramcashBacks
      * @return
      */
-    private Map<String, Object> getSysCashBack(List<SysCashBack> cashBacks){
-
+    private Map<String, Object> getSysCashBack(SysCashBack record){
         Map<String, Object> attributes = new HashMap<String, Object>();
-        List<SysCashBack> sysCashBacksForPos = new ArrayList<SysCashBack>();
-        List<SysCashBack> sysCashBacksForCard = new ArrayList<SysCashBack>();
-        List<SysCashBack> sysCashBacksForCash = new ArrayList<SysCashBack>();
-
-        for(SysCashBack sysCashBack : cashBacks){
-            if(sysCashBack.getSys_cash_back_no().equalsIgnoreCase
-                    (InterfaceConstants.RECHARGE_TYPE_CARD)){
-                sysCashBacksForCard.add(sysCashBack);
-                continue;
+        List<SysCashBack> sysCashBacksForPos = null;
+        List<SysCashBack> sysCashBacksForCard = null;
+        List<SysCashBack> sysCashBacksForCash = null;
+        SysCashBackCRM sysCashBackCRM = new SysCashBackCRM();
+        try {
+            record.setStart_date(new Date());
+            record.setSys_cash_back_no(InterfaceConstants.RECHARGE_TYPE_POS);
+            PageInfo<SysCashBack> sysCashBacksForPosPage = service.queryCashBackForCRM(record);
+            if((sysCashBacksForPosPage != null) && (sysCashBacksForPosPage.getList().size() > 0)){
+                sysCashBackCRM.setSysCashBackForPOS(sysCashBacksForPosPage.getList());
             }
-            if(sysCashBack.getSys_cash_back_no().equalsIgnoreCase
-                    (InterfaceConstants.RECHARGE_TYPE_POS)){
-                sysCashBacksForPos.add(sysCashBack);
-                continue;
+            record.setSys_cash_back_no(InterfaceConstants.RECHARGE_TYPE_CARD);
+            PageInfo<SysCashBack> sysCashBacksForCardPage = service.queryCashBackForCRM(record);
+            if((sysCashBacksForCardPage != null) && (sysCashBacksForCardPage.getList().size() > 0)){
+                sysCashBackCRM.setSysCashBackForCard(sysCashBacksForCardPage.getList());
             }
-            if(sysCashBack.getSys_cash_back_no().equalsIgnoreCase
-                    (InterfaceConstants.RECHARGE_TYPE_CASH)){
-                sysCashBacksForCash.add(sysCashBack);
-                continue;
+            record.setSys_cash_back_no(InterfaceConstants.RECHARGE_TYPE_CASH);
+            PageInfo<SysCashBack> sysCashBacksForCashPage = service.queryCashBackForCRM(record);
+            if((sysCashBacksForCashPage != null) && (sysCashBacksForCashPage.getList().size() > 0)){
+                sysCashBackCRM.setSysCashBackForCash(sysCashBacksForCashPage.getList());
             }
+            attributes.put("sysCashBackCRM", sysCashBackCRM);
+            return attributes;
+        } catch (Exception e) {
+            logger.error("getSysCashBack error:" + e + "orderid:" + record.getStart_date());
+            e.printStackTrace();
         }
-        return attributes;
-    }
-
-    /**
-     * 将传入的List过滤优选生效的一条
-     * @param cashBacks
-     * @return
-     */
-    private List<SysCashBack> reFilter(List<SysCashBack> cashBacks){
-
-        return cashBacks;
+        return null;
     }
 
 }

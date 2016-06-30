@@ -19,6 +19,8 @@ public interface SysCashBackMapper {
     int updateByPrimaryKey(SysCashBack record);
     
     List<SysCashBack> queryForPage(SysCashBack record);
+
+    List<SysCashBack> queryCashBackForCRM(SysCashBack record);
     
     List<SysCashBack> checkvalid(SysCashBack record);
     
