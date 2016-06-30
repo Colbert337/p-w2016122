@@ -30,13 +30,13 @@
 						<small>
 							<!-- <i class="fa fa-leaf"></i> -->
 							<c:if test="${sessionScope.currUser.user.userType == 1}">
-								气站管理平台
+								气站管理系统
 							</c:if>
 							<c:if test="${sessionScope.currUser.user.userType == 2}">
-								运输公司管理平台
+								运输公司管理系统
 							</c:if>
 							<c:if test="${sessionScope.currUser.user.userType == 4}">
-								气站集团管理平台
+								气站集团管理系统
 							</c:if>
 							<c:if test="${sessionScope.currUser.user.userType == 5}">
 								司集能源运维管理平台
@@ -54,7 +54,7 @@
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 					<ul class="nav ace-nav">
-						<li class="grey">
+						<%--<li class="grey">
 							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 								<i class="ace-icon fa fa-tasks"></i>
 								<span class="badge badge-grey">4</span>
@@ -307,7 +307,7 @@
 									</a>
 								</li>
 							</ul>
-						</li>
+						</li>--%>
 
 						<!-- #section:basics/navbar.user_menu -->
 						<li class="light-blue">

@@ -12,7 +12,7 @@ public interface SysUserMapper {
      * @return
      */
     List<SysUser> queryUserList(SysUser sysUser);
-
+    List<SysUser> queryUserListByUserType(SysUser sysUser);
     SysUser queryUserById(String userId);
 
     Map<String, Object> queryUserMapByAccount(SysUser user);
@@ -36,4 +36,10 @@ public interface SysUserMapper {
     int updateUserByName(SysUser record);
 
     SysUser queryUserForCRM(SysUser user);
+    /**
+     * 完全匹配
+     * @param sysUser
+     * @return
+     */
+    List<SysUser> queryUserListByUserName(SysUser sysUser);
 }

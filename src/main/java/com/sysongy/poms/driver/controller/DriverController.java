@@ -1,7 +1,9 @@
 package com.sysongy.poms.driver.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,7 +59,7 @@ public class DriverController extends BaseContoller{
      * @return
      */
     @RequestMapping("/list/page")
-    public String queryDriverListPage(@ModelAttribute CurrUser currUser, SysDriver driver, ModelMap map){
+    public String queryDriverListPage(@ModelAttribute CurrUser currUser, SysDriver driver, @RequestParam(required = false) Integer resultInt, ModelMap map){
 		String stationId = currUser.getStationId();
 		if(driver.getPageNum() == null){
             driver.setPageNum(GlobalConstant.PAGE_NUM);
@@ -76,6 +78,17 @@ public class DriverController extends BaseContoller{
         map.addAttribute("driverList",driverPageInfo.getList());
         map.addAttribute("pageInfo",driverPageInfo);
 		map.addAttribute("driver",driver);
+
+		if(resultInt != null && resultInt > 0){
+			Map<String, Object> resultMap = new HashMap<>();
+
+			if(resultInt == 1){
+				resultMap.put("retMsg","新建司机成功！");
+			}else if(resultInt == 2){
+				resultMap.put("retMsg","修改司机成功！");
+			}
+			map.addAttribute("ret",resultMap);
+		}
 
         return "webpage/tcms/driver/driver_list";
     }
@@ -115,6 +128,7 @@ public class DriverController extends BaseContoller{
 	public String saveDriver(@ModelAttribute("currUser") CurrUser currUser, SysDriver driver, ModelMap map){
 		int userType = currUser.getUser().getUserType();
 		int result = 0;
+		int resultInt = 0;
 
 		String stationId = currUser.getStationId();
 		String operation = "insert";
@@ -131,10 +145,11 @@ public class DriverController extends BaseContoller{
 
 		try {
 			result = driverService.saveDriver(driver,operation);
+			resultInt = 1;
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "redirect:/web/driver/list/page";
+		return "redirect:/web/driver/list/page?resultInt="+resultInt;
 	}
 
     @RequestMapping("/driverList")

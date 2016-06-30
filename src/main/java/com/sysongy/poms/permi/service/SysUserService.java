@@ -30,11 +30,17 @@ public interface SysUserService {
 
     /**
      * 查询用户列表
-     * @param userType
+     * @param sysUser
      * @return
      */
-    List<SysUser> queryUserListByUserType(int userType);
+    List<SysUser> queryUserListByUserType(SysUser sysUser);
 
+    /**
+     * 完全匹配
+     * @param sysUser
+     * @return
+     */
+    List<SysUser> queryUserListByUserName(SysUser sysUser);
     /**
      * 根据用户ID查询用户信息
      * @param userId 用户编号

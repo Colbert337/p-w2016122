@@ -12,10 +12,11 @@
     <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     sys_role_id, role_name, role_code, role_type, role_desc, is_admin, role_status, is_deleted, 
-    created_date, updated_date
+    created_date, updated_date,station_id
   </sql>
   <select id="queryRoleList" resultMap="BaseResultMap" >
     select
@@ -23,35 +24,38 @@
     from sys_role
     where 1=1
     <trim>
-      <if test="sysRoleId != null" >
+      <if test="sysRoleId != null &amp;&amp; sysRoleId !=''" >
         and sys_role_id = #{sysRoleId}
       </if>
-      <if test="roleName != null" >
+      <if test="roleName != null &amp;&amp; roleName !=''" >
         and role_name = #{roleName}
       </if>
-      <if test="roleCode != null" >
+      <if test="roleCode != null &amp;&amp; roleCode !=''" >
         and role_code = #{roleCode}
       </if>
-      <if test="roleType != null" >
+      <if test="roleType != null &amp;&amp; roleType !=''" >
       and role_type = #{roleType}
       </if>
-      <if test="roleDesc != null" >
+      <if test="roleDesc != null &amp;&amp; roleDesc !=''" >
         and role_desc = #{roleDesc}
       </if>
-      <if test="isAdmin != null" >
+      <if test="isAdmin != null &amp;&amp; isAdmin !=''" >
         and is_admin = #{isAdmin}
       </if>
-      <if test="roleStatus != null" >
+      <if test="roleStatus != null &amp;&amp; roleStatus !=''" >
         and role_status = #{roleStatus}
       </if>
-      <if test="isDeleted != null" >
+      <if test="isDeleted != null &amp;&amp; isDeleted !=''" >
         and is_deleted = #{isDeleted}
       </if>
-      <if test="createdDate != null" >
+      <if test="createdDate != null &amp;&amp; createdDate !=''" >
         and created_date = #{createdDate}
       </if>
-      <if test="updatedDate != null" >
+      <if test="updatedDate != null &amp;&amp; updatedDate !=''" >
         and updated_date = #{updatedDate}
+      </if>
+      <if test="stationId != null &amp;&amp; stationId !=''" >
+        and  station_id = #{stationId}
       </if>
     </trim>
     order by created_date desc
@@ -108,6 +112,9 @@
       <if test="updatedDate != null" >
         updated_date,
       </if>
+      <if test="stationId != null" >
+        station_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sysRoleId != null" >
@@ -140,6 +147,9 @@
       <if test="updatedDate != null" >
         #{updatedDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="stationId != null" >
+        #{stationId,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateRole" parameterType="com.sysongy.poms.permi.model.SysRole" >
@@ -171,6 +181,9 @@
       </if>
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stationId != null" >
+        station_id = #{stationId,jdbcType=VARCHAR},
       </if>
     </set>
     where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
