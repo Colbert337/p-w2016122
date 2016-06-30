@@ -77,6 +77,35 @@ public class CRMCardContoller {
     	return ajaxJson;
     }
 
+    @RequestMapping(value = {"/web/querySingleCardInfo"})
+    @ResponseBody
+    public AjaxJson querySingleCardInfo(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        if((gascard == null) || (StringUtils.isEmpty(gascard.getCard_no()))){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("卡号不能为空！！！");
+            return ajaxJson;
+        }
+        try
+        {
+            PageInfo<GasCard> pageinfo = gasCardService.queryGasCard(gascard);
+            if((pageinfo == null) || (pageinfo.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("查询数据为空！！！");
+                return ajaxJson;
+            }
+            attributes.put("pageInfo", pageinfo);
+            attributes.put("gascard",pageinfo.getList());
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CARD_ERROR);
+            logger.error("queryCardInfo error： " + e);
+        }
+        return ajaxJson;
+    }
+
     @RequestMapping(value = {"/web/queryCardFor2StatusInfo"})
     @ResponseBody
     public AjaxJson queryCardFor2StatusInfo(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
