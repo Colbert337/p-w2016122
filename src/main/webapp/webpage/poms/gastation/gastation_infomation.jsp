@@ -48,7 +48,7 @@
                                                  加注站名称
                 </div>
                 <div class="col-sm-9">
-                    ${gastation.gas_station_name}
+                    <span class="value">${gastation.gas_station_name}</span>
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
                   	  站长姓名
                 </div>
                 <div class="col-sm-9">
-                    ${gastation.station_manager}
+                    <span class="value">${gastation.station_manager}</span>
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@
                   	  联系电话
                 </div>
                 <div class="col-sm-9">
-                    ${gastation.contact_phone}
+                    <span class="value">${gastation.contact_phone}</span>
                 </div>
             </div>
         </div>
@@ -78,7 +78,7 @@
                                                     加注站地址
                 </div>
                 <div class="col-sm-9">
-                    ${gastation.address}
+                    <span class="value">${gastation.address}</span>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
                                                     加注站地址坐标
                 </div>
                 <div class="col-sm-9">
-                    ${gastation.longitude}，${gastation.latitude}
+                    <span class="value">${gastation.longitude}，${gastation.latitude}</span>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@
                                                     账户余额
                 </div>
                 <div class="col-sm-9">
-                    ${gastation.prepay_balance}元
+                    <span class="value">${gastation.prepay_balance} 元</span>
                 </div>
             </div>
         </div>
