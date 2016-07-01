@@ -194,6 +194,14 @@
     from sys_driver
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+    where sys_user_account_id = #{sysUserAccount,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_driver
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}

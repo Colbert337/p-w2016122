@@ -40,4 +40,6 @@ public interface SysDriverMapper {
     int deleteDriverByIds(List<String> idList);
 
     List<SysDriver> queryForPageSingleList(SysDriver record);
+
+    SysDriver selectByAccount(String sysUserAccount);
 }

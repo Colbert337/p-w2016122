@@ -3,29 +3,21 @@ package com.sysongy.api.client.controller;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
-import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.model.SysCashBackCRM;
 import com.sysongy.poms.system.service.SysCashBackService;
-import com.sysongy.poms.usysparam.model.Usysparam;
-import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+
 import java.util.*;
 
 @Controller
@@ -60,9 +52,6 @@ public class CRMCashBackContoller {
      */
     private Map<String, Object> getSysCashBack(SysCashBack record){
         Map<String, Object> attributes = new HashMap<String, Object>();
-        List<SysCashBack> sysCashBacksForPos = null;
-        List<SysCashBack> sysCashBacksForCard = null;
-        List<SysCashBack> sysCashBacksForCash = null;
         SysCashBackCRM sysCashBackCRM = new SysCashBackCRM();
         try {
             record.setStart_date(new Date());
@@ -89,5 +78,4 @@ public class CRMCashBackContoller {
         }
         return null;
     }
-
 }

@@ -46,6 +46,8 @@ public class GsGasPrice extends BaseModel {
 
     private int is_deleted;
 
+    private String productType = "1";
+
     public String getCreated_date_before() {
 		return created_date_before;
 	}
@@ -196,5 +198,13 @@ public class GsGasPrice extends BaseModel {
 
     public void setUnitInfo(Usysparam unitInfo) {
         this.unitInfo = unitInfo;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 }

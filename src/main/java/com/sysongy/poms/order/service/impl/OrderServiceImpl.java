@@ -379,8 +379,7 @@ public class OrderServiceImpl implements OrderService {
 		   return GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER;
 	   }
 	   
-	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
-   
+	   String consume_success = driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
@@ -388,28 +387,51 @@ public class OrderServiceImpl implements OrderService {
 	public String validAccount(SysOrder record){
 		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
 		SysUserAccount creditAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
+		SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(record.getDebitAccount());
+		String strFrozen = validateAccountIfFroen(creditAccount, debitAccount, record);
+		if(strFrozen.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+			return strFrozen;
+		String strLackMoney = validateAccountBalance(creditAccount, record);
+		if(strLackMoney.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+			return strLackMoney;
+		return strRet;
+	}
+
+	/**
+	 * 查看消费账户冻结
+	 * @param creditAccount
+	 * @param debitAccount
+	 * @param record
+     * @return
+     */
+	private String validateAccountIfFroen(SysUserAccount creditAccount, SysUserAccount debitAccount, SysOrder record){
+		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
 		boolean isCreditFrozen = creditAccount.getAccount_status().equalsIgnoreCase("0");
 		if(isCreditFrozen)
 			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN;
 
-		boolean isCreditAccountCardFrozen = false;
-		if(StringUtils.isNotEmpty(record.getConsume_card())){
-			isCreditAccountCardFrozen = creditAccount.getAccount_status().equalsIgnoreCase("1");
+		boolean isCreditAccountCardFrozen = (StringUtils.isNotEmpty(record.getConsume_card())
+				&& (creditAccount.getAccount_status().equalsIgnoreCase("1")));
+		if(isCreditAccountCardFrozen){
 			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN;
 		}
-
-		SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(record.getDebitAccount());
-		boolean isDebitFrozen = debitAccount.getAccount_status().equalsIgnoreCase("0");
-		if(isDebitFrozen)
-			return GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN;
-
-		BigDecimal balance = new BigDecimal(debitAccount.getAccountBalance());
-		if(record.getCash().compareTo(balance) == 1)
-			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
-
 		return strRet;
 	}
-	
+
+	/**
+	 * 查看消费账户余额
+	 * @param creditAccount
+	 * @param record
+     * @return
+     */
+	private String validateAccountBalance(SysUserAccount creditAccount, SysOrder record){
+		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
+		BigDecimal balance = new BigDecimal(creditAccount.getAccountBalance());
+		if(record.getCash().compareTo(balance) == 1)
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
+		return strRet;
+	}
+
 	/**
 	 * 运输公司给个人转账
 	 * 1.扣除运输公司账户

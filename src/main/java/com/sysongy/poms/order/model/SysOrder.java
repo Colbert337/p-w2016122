@@ -2,9 +2,11 @@ package com.sysongy.poms.order.model;
 
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class SysOrder extends BaseModel{
 
@@ -44,6 +46,8 @@ public class SysOrder extends BaseModel{
 
     private GasCard consume_cardInfo;
 
+    private List<SysOrderGoods> sysOrderGoods;
+
     public String getOperatorSourceId() {
 		return operatorSourceId;
 	}
@@ -76,8 +80,6 @@ public class SysOrder extends BaseModel{
 		this.operatorSourceType = operatorSourceType;
 	}
 
-
-    
     public String getIs_discharge() {
 		return is_discharge;
 	}
@@ -188,5 +190,13 @@ public class SysOrder extends BaseModel{
 
     public void setConsume_cardInfo(GasCard consume_cardInfo) {
         this.consume_cardInfo = consume_cardInfo;
+    }
+
+    public List<SysOrderGoods> getSysOrderGoods() {
+        return sysOrderGoods;
+    }
+
+    public void setSysOrderGoods(List<SysOrderGoods> sysOrderGoods) {
+        this.sysOrderGoods = sysOrderGoods;
     }
 }
