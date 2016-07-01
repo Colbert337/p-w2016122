@@ -6,6 +6,7 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
 
 <script src="<%=basePath %>/dist/js/transportion/transportion_deposit_log.js"></script>
@@ -88,6 +89,7 @@
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th> 
 									<th onclick="orderBy(this,'optime');commitForm();" id="optime_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th> 
 									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">充值金额(元)</th>
+									<th>更多操作</th>
 								</tr>
 							</thead>
 
@@ -111,6 +113,11 @@
 									<td>${list.operator}</td>
 					                <td><fmt:formatDate value="${list.optime}" type="both"/></td>
 									<td>${list.deposit}</td>
+									<td class="text-center">
+										<a class="gastation-log-colorbox" href="<%=imagePath %>${list.transfer_photo}" title="查看图片" data-rel="colorbox">
+											<i class="ace-icon fa fa-camera bigger-130"></i>
+										</a>
+									</td>
 								</tr>
 								</c:forEach>
 							</tbody>

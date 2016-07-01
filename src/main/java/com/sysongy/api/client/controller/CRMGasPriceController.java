@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -252,7 +253,7 @@ public class CRMGasPriceController {
     }
     
     @RequestMapping("/queryAllGasPriceList")
-	public String queryAllGasPriceList(ModelMap map, GsGasPrice gsGasPrice, @RequestParam String product_id) throws Exception{
+	public String queryAllGasPriceList(ModelMap map, @ModelAttribute GsGasPrice gsGasPrice) throws Exception{
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_price_list";
@@ -265,12 +266,16 @@ public class CRMGasPriceController {
 			if(StringUtils.isEmpty(gsGasPrice.getOrderby())){
 				gsGasPrice.setOrderby("created_date desc");
 			}
+/*			if(productPrice.getPageNum() == null){
+				productPrice.setPageNum(1);
+				productPrice.setPageSize(10);
+			}
+			
+			productPrice.setOrderby("create_time desc");*/
 
 			PageInfo<GsGasPrice> pageinfo = gsGasPriceService.queryGsPrice(gsGasPrice);
 			
-			ProductPrice productPrice = new ProductPrice();
-			productPrice.setProduct_id(product_id);
-			PageInfo<ProductPrice> pageinfo2 = productPriceService.queryProductPrice(productPrice);
+//			PageInfo<ProductPrice> pageinfo2 = productPriceService.queryProductPrice(productPrice);
 
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");
@@ -278,7 +283,7 @@ public class CRMGasPriceController {
 
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
-			map.addAttribute("pageInfo2", pageinfo2);
+//			map.addAttribute("pageInfo2", pageinfo2);
 			map.addAttribute("gsGasPrice",gsGasPrice);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
@@ -292,4 +297,39 @@ public class CRMGasPriceController {
 			return ret;
 		}
 	}
+    
+    @RequestMapping("/queryProductPriceList")
+   	public String queryProductPriceList(ModelMap map, ProductPrice productPrice) throws Exception{
+
+   		PageBean bean = new PageBean();
+   		String ret = "webpage/poms/gastation/gastation_product_price_list";
+
+   		try {
+   			if(productPrice.getPageNum() == null){
+   				productPrice.setOrderby("create_time desc");
+   				productPrice.setPageNum(1);
+   				productPrice.setPageSize(10);
+   			}
+   			
+   			PageInfo<ProductPrice> pageinfo = productPriceService.queryProductPrice(productPrice);
+
+   			bean.setRetCode(100);
+   			bean.setRetMsg("查询成功");
+   			bean.setPageInfo(ret);
+
+   			map.addAttribute("ret", bean);
+   			map.addAttribute("pageInfo", pageinfo);
+   			map.addAttribute("productPrice",productPrice);
+   		} catch (Exception e) {
+   			bean.setRetCode(5000);
+   			bean.setRetMsg(e.getMessage());
+
+   			map.addAttribute("ret", bean);
+   			logger.error("", e);
+   			throw e;
+   		}
+   		finally {
+   			return ret;
+   		}
+   	}
 }

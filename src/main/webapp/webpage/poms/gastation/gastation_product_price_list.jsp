@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/gastation/gastation_price_list.js"></script>
+<script src="<%=basePath %>/dist/js/gastation/gastation_product_price_list.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -24,28 +24,28 @@
 							油气品价格管理
 						</h1>
 					</div>
-
+					
+					<input type="hidden" class="" name="product_id" value="${productPrice.product_id}" readonly="readonly"/>
+					
 					<div class="search-types">
-						<div class="item">
+						<%-- <div class="item">
 						    <label>加注站编号:</label>
-							<input type="text" id="gsGasPrice.sysGasStationId" name="gsGasPrice.sysGasStationId" placeholder="输入加注站编号" maxlength="10" value="${gsGasPrice.sysGasStationId}"/>
+							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号"  maxlength="10" value="${productPrice.sys_gas_station_id}"/>
 						</div>
 						
 						<div class="item">
-							<label>气品类型:</label>
-							<select class="chosen-select" name="gsGasPrice.gasNum" >
-								<s:option flag="true" gcode="CARDTYPE" form="gsGasPrice" field="gasNum" />
-							</select>
-						</div>
-
+						    <label>加注站名称:</label>
+							<input type="text" name="gas_station_name" placeholder="输入加注站名称"  maxlength="20" value="${productPrice.gas_station_name}"/>
+						</div> --%>
+						
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>创建时间:</label>
-								<input type="text" class="" name="gsGasPrice.created_date_after" value="${gsGasPrice.created_date_after}" readonly="readonly"/>
+								<label>平台有效期:</label>
+								<input type="text" class="" name="created_time_after" value="${productPrice.created_time_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="gsGasPrice.created_date_before" value="${gsGasPrice.created_date_before}" readonly="readonly"/>
+								<input type="text" class="" name="created_time_before" value="${productPrice.created_time_before}" readonly="readonly"/>
 							</div>
 						</div>
 
@@ -57,6 +57,10 @@
 							<button class="btn btn-sm" type="button" onclick="init();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
+							</button>
+							<button class="btn btn-sm" type="button" onclick="returnpage();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								返回
 							</button>
 						</div>
 					</div>
@@ -80,13 +84,11 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
-									<th>加注站名称</th>
-									<th>当前单价</th>
-									<th onclick="orderBy(this,'gas_num');commitForm();" id="gas_num_order">气品类型</th>
-									<th onclick="orderBy(this,'gas_name');commitForm();" id="gas_name_order">气品子类型</th>
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="createdDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
-									<th class="text-center">更多操作</th>
+									<th onclick="orderBy(this,'id');commitForm();" id="id_order">价格编号</th>
+									<th onclick="orderBy(this,'product_price_id');commitForm();" id="product_price_id_order">气品子类型</th>
+									<th onclick="orderBy(this,'product_price');commitForm();" id="product_price_order">气品单价</th>
+									<th onclick="orderBy(this,'product_unit');commitForm();" id="product_unit_order">气品单位</th>
+									<th onclick="orderBy(this,'create_time');commitForm();" id="create_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新时间</th>
 								</tr>
 							</thead>
 
@@ -96,24 +98,18 @@
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.gsGasPriceId}"/> 
+											<input type="checkbox" class="ace" id="pks" value="${list.id}"/> 
 											<span class="lbl"></span>
 										</label>
 									</td>
 
-									<td>${list.sysGasStationId}</td>
-								 	<td>${list.gas_station.gas_station_name}</td> 
-									<td>${list.gs_gas_source_info.market_price}</td>
-									<td><s:Code2Name mcode="${list.gasNum}" gcode="CARDTYPE"></s:Code2Name></td>
-									<td><s:Code2Name mcode="${list.gasName}" gcode="CARDTYPE"></s:Code2Name></td>
-									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
-									<td class="text-center">
-										<a class="option-btn-m" href="javascript:void(0);" title="查看历史价格" data-rel="tooltip">
-											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showPriceLog(this);"></i>
-										</a>
-									</td>
+									<td>${list.id}</td>
+								 	<td><s:Code2Name mcode="${list.productPriceId}" gcode="CARDTYPE"></s:Code2Name></td> 
+									<td>${list.productPrice}</td>
+									<td><s:Code2Name mcode="${list.productUnit}" gcode="GAS_UNIT"></s:Code2Name></td>
+									<td><fmt:formatDate value="${list.createTime}" type="both"/></td>
 								</tr>
-								</c:forEach>
+							</c:forEach>
 							</tbody>
 						</table>
 					</div>
@@ -150,21 +146,4 @@
 	</div>
 	<!-- /.row -->
 	</form>
-</div>
-
-
-<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
-			</div>
-			<div class="modal-body">
-				<div class="container-fluid" id="tt">
-					
-				</div>
-			</div>
-		</div>
-	</div>
 </div>

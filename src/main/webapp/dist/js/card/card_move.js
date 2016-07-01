@@ -55,6 +55,13 @@
 		                    }
 		                }
 		            },
+		            workstation_resp: {
+		                validators: {
+		                    notEmpty: {
+		                        message: '工作站领取人不能为空'
+		                    }
+		                }
+		            },
 		            operator: {
 		                validators: {
 		                    notEmpty: {
