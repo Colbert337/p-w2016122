@@ -56,7 +56,7 @@
 							<th>手机号</th>
 							<th>车辆数</th>
 							<th>创建时间</th>
-							<th>操作</th>
+							<th class="text-center">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -67,12 +67,12 @@
 								<td>${fleet.mobile_phone}</td>
 								<td>${fleet.vCount}</td>
 								<td><fmt:formatDate value="${fleet.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td>
-									<a class="" href="javascript:editFleet('${fleet.tcFleetId}');" title="修改" data-rel="tooltip">
+								<td class="text-center">
+									<a class="option-btn-m" href="javascript:editFleet('${fleet.tcFleetId}');" title="修改" data-rel="tooltip">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
 									</a>
 									<a class="" href="javascript:mangFleet('${fleet.tcFleetId}');" title="管理车辆" data-rel="tooltip">
-										<span class="ace-icon fa fa-car bigger-130"></span>
+										<span class="ace-icon fa fa-car bigger-120"></span>
 									</a>
 								</td>
 							</tr>

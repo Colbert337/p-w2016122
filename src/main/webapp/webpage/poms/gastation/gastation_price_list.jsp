@@ -28,12 +28,12 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>加注站编号:</label>
-							<input type="text" name="sysGasStationId" placeholder="输入加注站编号" maxlength="10" value="${gsGasPrice.sysGasStationId}"/>
+							<input type="text" id="gsGasPrice.sysGasStationId" name="gsGasPrice.sysGasStationId" placeholder="输入加注站编号" maxlength="10" value="${gsGasPrice.sysGasStationId}"/>
 						</div>
 						
 						<div class="item">
 							<label>气品类型:</label>
-							<select class="chosen-select" name="gasNum" >
+							<select class="chosen-select" name="gsGasPrice.gasNum" >
 								<s:option flag="true" gcode="CARDTYPE" form="gsGasPrice" field="gasNum" />
 							</select>
 						</div>
@@ -41,11 +41,11 @@
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>创建时间:</label>
-								<input type="text" class="" name="created_date_after" value="${gsGasPrice.created_date_after}" readonly="readonly"/>
+								<input type="text" class="" name="gsGasPrice.created_date_after" value="${gsGasPrice.created_date_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="created_date_before" value="${gsGasPrice.created_date_before}" readonly="readonly"/>
+								<input type="text" class="" name="gsGasPrice.created_date_before" value="${gsGasPrice.created_date_before}" readonly="readonly"/>
 							</div>
 						</div>
 
@@ -70,11 +70,11 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center td-w1">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -85,8 +85,8 @@
 									<th>当前单价</th>
 									<th onclick="orderBy(this,'gas_num');commitForm();" id="gas_num_order">气品类型</th>
 									<th onclick="orderBy(this,'gas_name');commitForm();" id="gas_name_order">气品子类型</th>
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="createdDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
-									<th class="text-center">更多操作</th>
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="createdDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
+									<th class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
 
@@ -161,74 +161,10 @@
 				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
 			</div>
 			<div class="modal-body">
-				<div class="container-fluid">
-					<%--两行表单 开始--%>
-					<div class="row">
-						<div class="table-header">油气品价格详细信息列表</div>
-						<div>
-							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-								<thead>
-									<tr>
-										<th class="center">
-											<label class="pos-rel"> 
-												<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
-												<span class="lbl"></span>
-											</label>
-										</th>
-										<th>价格编号</th>
-										<th>气品子类型</th>
-										<th>气品单价</th>
-										<th>气品单位</th>
-										<th><i id="create_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新时间</th>
-									</tr>
-								</thead>
-	
-								<tbody>
-									
-								<c:forEach items="${pageInfo2.list}" var="list" varStatus="s">
-									<tr id="listobj">
-										<td class="center">
-											<label class="pos-rel"> 
-												<input type="checkbox" class="ace" id="pks" value="${list.product_id}"/> 
-												<span class="lbl"></span>
-											</label>
-										</td>
-	
-										<td>${list.product_id}</td>
-									 	<td><s:Code2Name mcode="${list.productPriceId}" gcode="CARDTYPE"></s:Code2Name></td> 
-										<td>${list.productPrice}</td>
-										<td><s:Code2Name mcode="${list.productUnit}" gcode="GAS_UNIT"></s:Code2Name></td>
-										<td><fmt:formatDate value="${list.createTime}" type="both"/></td>
-									</tr>
-									</c:forEach>
-								</tbody>
-							</table>
-						</div>
-				
-	
-						<label>共 ${pageInfo2.total} 条</label>
-						
-						<nav>
-							  <ul id="ulhandle" class="pagination pull-right no-margin">
-							  
-							    <li id="previous">
-								      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formgastation');">
-								        <span aria-hidden="true">&laquo;</span>
-								      </a>
-							    </li>
-							    
-							    <li id="next">
-								      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
-								        <span aria-hidden="true">&raquo;</span>
-								      </a>
-							    </li>
-							    
-							  </ul>
-						</nav>
-					</div><!-- /.row -->
-					<%--两行表单 结束--%>
+				<div class="container-fluid" id="tt">
+					
 				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+			</div>
+		</div>
+	</div>
 </div>

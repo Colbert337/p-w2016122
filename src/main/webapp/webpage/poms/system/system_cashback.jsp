@@ -93,11 +93,11 @@
 										<!-- div.table-responsive -->
 					
 										<!-- div.dataTables_borderWrap -->
-										<div>
+										<div class="sjny-table-responsive">
 											<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 												<thead>
 													<tr>
-														<th class="center">
+														<th class="center td-w1">
 															<label class="pos-rel"> 
 																<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 																<span class="lbl"></span>
@@ -110,11 +110,11 @@
 														<th onclick="orderBy(this,'cash_per');commitForm();" id="cash_per_order">返点系数</th>
 														<th onclick="orderBy(this,'status');commitForm();" id="status">状态</th>
 														<th onclick="orderBy(this,'level');commitForm();" id="level">优先级</th>
-														<th onclick="orderBy(this,'start_date');commitForm();" id="start_date_order"><i id="start_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>生效时间</th>
-														<th onclick="orderBy(this,'end_date');commitForm();" id="end_date_order"><i id="end_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>失效时间</th>
-														<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
-														<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th>
-														<th class="text-center">更多操作</th>
+														<th onclick="orderBy(this,'start_date');commitForm();" id="start_date_order" class="td-w2"><i id="start_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>生效时间</th>
+														<th onclick="orderBy(this,'end_date');commitForm();" id="end_date_order" class="td-w2"><i id="end_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>失效时间</th>
+														<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
+														<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order" class="td-w2"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th>
+														<th class="text-center td-w3">更多操作</th>
 													</tr>
 												</thead>
 					

@@ -46,6 +46,9 @@ h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
 .option-btn-m{
     margin-right: 6px;
 }
+.alert-mt {
+    margin-top: 10px;
+}
 .form-horizontal .has-feedback .form-control-feedback {
     right: -16px;
 }
@@ -82,14 +85,29 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
     max-width: 1000px;
     margin: 2% auto 0 auto;
 }
-.gastation-infomation .title {
-    background-color: #eee;
+.gastation-infomation a {
+	display: block;
+    background-color: #ddd;
     text-align: center;
+}
+.gastation-infomation img{
+	height:160px;
+	margin: 0 auto;
+	padding: 5px;
+}
+.gastation-infomation .title {
+    border-top: 1px solid #eee;
     padding: 5px 0;
+}
+.gastation-infomation-items {
+	margin-top: 2%;
 }
 .gastation-infomation-items .item {
     border-bottom: 1px solid #ddd;
     padding: 8px 0;
+}
+.gastation-infomation-items .value {
+    color:#666;
 }
 .modal-header {
     border-bottom-width: 0;
@@ -104,4 +122,39 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 }
 .modal-header .close {
     margin-top: -8px;
+}
+.modal-title {
+    font-size: 16px;
+    padding-left: 10px;
+}
+.bootbox-close-button {
+    font-size: 32px;
+}
+.bootbox-body {
+    padding: 20px;
+}
+.td-w1 {
+    width: 40px;
+}
+.td-w2 {
+    width: 150px;
+}
+.td-w3 {
+    width: 70px;
+}
+.sjny-table-responsive {
+    overflow-y: hidden;
+    box-shadow: 1px 0 1px #ddd;
+    margin-bottom: 20px;
+}
+.sjny-table-responsive > .table {
+    margin-bottom: 0;
+}
+.sjny-table-responsive > .table > thead > tr > th,
+.sjny-table-responsive > .table > tbody > tr > th,
+.sjny-table-responsive > .table > tfoot > tr > th,
+.sjny-table-responsive > .table > thead > tr > td,
+.sjny-table-responsive > .table > tbody > tr > td,
+.sjny-table-responsive > .table > tfoot > tr > td {
+    white-space: nowrap;
 }

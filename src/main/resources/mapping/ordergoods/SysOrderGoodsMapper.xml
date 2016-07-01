@@ -105,4 +105,11 @@
       goods_type = #{goodsType,jdbcType=INTEGER}
     where order_goods_id = #{orderGoodsId,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectByOrderID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+     from sys_order_goods
+     where order_id = #{orderID,jdbcType=VARCHAR}
+  </select>
 </mapper>

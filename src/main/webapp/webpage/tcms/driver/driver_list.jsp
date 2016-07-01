@@ -53,7 +53,7 @@
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
-							<th class="center">
+							<th class="center td-w1">
 								<label class="pos-rel">
 									<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
 									<span class="lbl"></span>
@@ -81,11 +81,17 @@
 								<td>${driver.mobilePhone}</td>
 								<td>${driver.cardId}</td>
 								<td>
-									<c:if test="${driver.userStatus == 0}">
-										使用中
+									<c:if test="${driver.checkedStatus == 0}">
+										新注册
 									</c:if>
-									<c:if test="${driver.userStatus == 1}">
-										已冻结
+									<c:if test="${driver.checkedStatus == 1}">
+										待审核
+									</c:if>
+									<c:if test="${driver.checkedStatus == 2}">
+										已通过
+									</c:if>
+									<c:if test="${driver.checkedStatus == 3}">
+										未通过
 									</c:if>
 								</td>
 								<%--<td>--%>
@@ -151,7 +157,7 @@
 										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机号码" class="col-xs-10 col-sm-12" />
 									</div>
 									<div class="col-sm-2">
-										<a class="btn btn-sm btn-primary" href="javascript:sendMessage();">
+										<a id="sendMsgA" class="btn btn-sm btn-primary" href="javascript:sendMessage()">
 											发送验证码
 										</a>
 									</div>

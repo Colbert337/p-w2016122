@@ -283,7 +283,7 @@
 					</div>
 				</div>
 			</div><!-- /.row -->
-
+			<div class="sjny-table-responsive">
 			<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
@@ -291,7 +291,7 @@
 							<th>角色类型</th>
 							<th>角色状态</th>
 							<th class="hidden-480">角色描述</th>
-							<th>添加时间</th>
+							<th class="td-w2">添加时间</th>
 							<th class="text-center">操作</th>
 						</tr>
 						</thead>
@@ -334,7 +334,7 @@
 						</c:forEach>
 						</tbody>
 					</table>
-
+			</div>
 			<%--分页start--%>
 			<div class="row">
 				<div class="col-sm-6">

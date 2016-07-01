@@ -62,7 +62,7 @@
 		 * 获取当前节点下菜单
 		 */
 		function queryMenuClick(event, treeId, treeNode){
-			/*alert(treeNode.id + ", " + treeNode.name);*/
+			/*bootbox.alert(treeNode.id + ", " + treeNode.name);*/
 			var queryMenuOptions ={
 				url:'<%=basePath%>/web/permi/function/list/page',
 				data:{parentId:treeNode.id},
@@ -120,7 +120,7 @@
 				$("#function_sort").val(data);
 			}
 		});
-		<%--alert("parentId:${parentId} +parentName:${parentName}");--%>
+		<%--bootbox.alert("parentId:${parentId} +parentName:${parentName}");--%>
 		$("#parent_id").val('${parentId}');
 		$("#parent_name").val('${parentName}');
 		$("#functionModel").modal('show');
@@ -259,14 +259,16 @@
 			<!-- PAGE CONTENT BEGINS -->
 			<div class="row">
 				<div class="col-xs-12">
-					<div class="pull-left">当前选择菜单：<span id="currMenu" style="color: #2679b5;font-size: 18px">${parentName}</span></div>
-					<%--顶部按钮--%>
-					<div class="pull-right btn-botton">
-						<a class="btn btn-sm btn-primary" href="javascript:addFunction();">
-							新建
-						</a>
+					<div class="clearfix">
+						<div class="pull-left">当前选择菜单：<span id="currMenu" style="color: #2679b5;font-size: 18px">${parentName}</span></div>
+						<%--顶部按钮--%>
+						<div class="pull-right btn-botton">
+							<a class="btn btn-sm btn-primary" href="javascript:addFunction();">
+								新建
+							</a>
+						</div>
 					</div>
-					<%--</h4>--%>
+					<div class="sjny-table-responsive">
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
@@ -275,8 +277,8 @@
 							<th class="hidden-480">图标</th>
 							<th>类型</th>
 							<th class="hidden-480">排序</th>
-							<th>创建时间</th>
-							<th class="text-center">操作</th>
+							<th class="td-w2">创建时间</th>
+							<th class="text-center td-w3">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -300,6 +302,7 @@
 						</c:forEach>
 						</tbody>
 					</table>
+					</div>
 				</div><!-- /.span -->
 			</div><!-- /.row -->
 		</form>

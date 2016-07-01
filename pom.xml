@@ -333,6 +333,18 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/taobao-sdk-java-auto_1455552377940-20160503.jar</systemPath>
 		</dependency>
+		<!--tomcat项目检测依赖包-->
+		<dependency>
+			<groupId>net.bull.javamelody</groupId>
+			<artifactId>javamelody-core</artifactId>
+			<version>1.50.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jrobin</groupId>
+			<artifactId>jrobin</artifactId>
+			<version>1.5.9</version>
+		</dependency>
 	</dependencies>
 	
 	<build>

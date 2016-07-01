@@ -70,7 +70,7 @@
 
   var defaults = {
     // default language
-    locale: "en",
+    locale: "zh_CN",
     // show backdrop or not. Default to static so user has to interact with dialog
     backdrop: "static",
     // animate the modal in/out
@@ -940,7 +940,7 @@
       CONFIRM : "Onayla"
     },
     zh_CN : {
-      OK      : "OK",
+      OK      : "确定",
       CANCEL  : "取消",
       CONFIRM : "确认"
     },

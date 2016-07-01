@@ -2,6 +2,8 @@ package com.sysongy.poms.ordergoods.dao;
 
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 
+import java.util.List;
+
 public interface SysOrderGoodsMapper {
 
     int deleteByPrimaryKey(String orderGoodsId);
@@ -15,4 +17,6 @@ public interface SysOrderGoodsMapper {
     int updateByPrimaryKeySelective(SysOrderGoods record);
 
     int updateByPrimaryKey(SysOrderGoods record);
+
+    List<SysOrderGoods> selectByOrderID(String orderID);
 }

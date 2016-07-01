@@ -10,6 +10,8 @@ public interface SysDriverMapper {
     int insert(SysDriver record);
 
     int insertSelective(SysDriver record);
+    
+    int updateFirstCharge(SysDriver record);
 
     SysDriver selectByPrimaryKey(String sysDriverId);
 
@@ -40,4 +42,6 @@ public interface SysDriverMapper {
     int deleteDriverByIds(List<String> idList);
 
     List<SysDriver> queryForPageSingleList(SysDriver record);
+
+    SysDriver selectByAccount(String sysUserAccount);
 }

@@ -238,7 +238,7 @@
 			success: function(data){
 				console.log(data);
 				if(data.valid){
-					alert("用户名已存在!");
+					bootbox.alert("用户名已存在!");
 					$("#user_name").focus();
 				}
 			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -283,14 +283,7 @@
 							</button>
 						</div>
 					</div>
-					<%--</h4>--%>
-					<%--顶部按钮--%>
-					<%--<div class="pull-right btn-botton">
-						<a class="btn btn-sm btn-primary" href="javascript:addUser();">
-							新建
-						</a>
-					</div>--%>
-					<%--</h4>--%>
+					<div class="sjny-table-responsive">
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
@@ -302,7 +295,7 @@
 							<th>用户角色</th>
 							<th>用户类型</th>
 							<th>用户状态</th>
-							<th>创建时间</th>
+							<th class="td-w2">创建时间</th>
 							<th class="text-center">操作</th>
 						</tr>
 						</thead>
@@ -356,6 +349,7 @@
 						</c:forEach>
 						</tbody>
 					</table>
+					</div>
 				</div><!-- /.col-xs-12 -->
 			</div><!-- /.row -->
 			<%--分页start--%>
@@ -420,11 +414,11 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码： </label>
 									<div class="col-sm-4">
-										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[20]] col-xs-10 col-sm-12" />
+										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[33]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-4">
-										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],maxSize[20],equals[password]] col-xs-10 col-sm-12" />
+										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],maxSize[33],equals[password]] col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">

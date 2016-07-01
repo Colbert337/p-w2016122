@@ -142,33 +142,33 @@
 												<input class="form-control" type="text" id="showprovince" readonly="readonly"/>
 												<select class="hidden" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
 														<option value ="请选择市区">请选择省份</option>
-														<option value ="100">北京市 </option>
-														<option value ="220">天津市 </option>
-														<option value ="210">上海市 </option>
-														<option value ="230">重庆市 </option>
-														<option value ="310">河北省 </option>
-														<option value ="350">山西省 </option>
-														<option value ="240">辽宁省 </option>
-														<option value ="430">吉林省 </option>
+														<option value ="100">北京市</option>
+														<option value ="220">天津市</option>
+														<option value ="210">上海市</option>
+														<option value ="230">重庆市</option>
+														<option value ="310">河北省</option>
+														<option value ="350">山西省</option>
+														<option value ="240">辽宁省</option>
+														<option value ="430">吉林省</option>
 														<option value ="450">黑龙江省</option>
-														<option value ="250">江苏省 </option>
-														<option value ="570">浙江省 </option>
-														<option value ="550">安徽省 </option>
-														<option value ="590">福建省 </option>
-														<option value ="790">江西省 </option>
-														<option value ="530">山东省 </option>
-														<option value ="370">河南省 </option>
-														<option value ="270">湖北省 </option>
-														<option value ="730">湖南省 </option>
-														<option value ="200">广东省 </option>
-														<option value ="891">海南省 </option>
-														<option value ="810">四川省 </option>
-														<option value ="850">贵州省 </option>
-														<option value ="870">云南省 </option>
-														<option value ="290">陕西省 </option>
-														<option value ="930">甘肃省 </option>
-														<option value ="970">青海省 </option>
-														<option value ="852">台湾省 </option>
+														<option value ="250">江苏省</option>
+														<option value ="570">浙江省</option>
+														<option value ="550">安徽省</option>
+														<option value ="590">福建省</option>
+														<option value ="790">江西省</option>
+														<option value ="530">山东省</option>
+														<option value ="370">河南省</option>
+														<option value ="270">湖北省</option>
+														<option value ="730">湖南省</option>
+														<option value ="200">广东省</option>
+														<option value ="891">海南省</option>
+														<option value ="810">四川省</option>
+														<option value ="850">贵州省</option>
+														<option value ="870">云南省</option>
+														<option value ="290">陕西省</option>
+														<option value ="930">甘肃省</option>
+														<option value ="970">青海省</option>
+														<option value ="852">台湾省</option>
 														<option value ="770">广西壮族自治区</option>
 														<option value ="470">内蒙古自治区</option>
 														<option value ="890">西藏自治区</option>
@@ -416,6 +416,7 @@
 			$("#province").find("option[value="+province_id+"]").attr("selected",true);
 			$("#province").trigger("change");
 			$("#city").find("option[value="+city_id+"]").attr("selected",true);
+			
 			$("#detail").val(detail.split(" ")[2]);
 			
 			$("#showprovince").val($("#province").find("option:selected").text());
@@ -618,7 +619,6 @@
 			    
 		function save(){
 			$("#address").val($("#province").find("option:selected").text()+" "+$("#city").find("option:selected").text()+" "+$("#detail").val());
-			
 			/*手动验证表单，当是普通按钮时。*/
 			$('#transportionform').data('bootstrapValidator').validate();
 			if(!$('#transportionform').data('bootstrapValidator').isValid()){
@@ -661,7 +661,7 @@ function save_photo(fileobj,obj,obj1){
 			$(fileobj).parent("div").find("input:first").attr("name","uploadfile");
 			
 			if($(obj).val()==null || $(obj).val()==""){
-				alert("请先上传文件");	
+				bootbox.alert("请先上传文件");
 				return;
 			}
 			
@@ -673,7 +673,7 @@ function save_photo(fileobj,obj,obj1){
 		            success:function(data){
 		            	var s = JSON.parse(data);
 		            	if(s.success == true){
-		            		alert("上传成功");
+		            		bootbox.alert("上传成功");
 		            		$(obj1).val(s.obj);
 		            	}
 		            	

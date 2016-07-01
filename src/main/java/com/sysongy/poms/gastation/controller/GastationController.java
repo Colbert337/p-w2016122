@@ -112,6 +112,34 @@ public class GastationController extends BaseContoller{
 		}
 	}
 	
+	@RequestMapping("/queryGastationInfo")
+	public String queryGastationInfo(ModelMap map, @ModelAttribute CurrUser currUser) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_infomation";
+
+		try {
+			Gastation gastation = service.queryGastationByPK(currUser.getStationId());
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("gastation",gastation);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
 	@RequestMapping("/depositList")
 	public String querydepositList(ModelMap map, SysDepositLog deposit) throws Exception{
 

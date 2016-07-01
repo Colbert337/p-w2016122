@@ -198,7 +198,6 @@ public class CRMCustomerContoller {
             } else {
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
             }
-
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());
@@ -206,8 +205,6 @@ public class CRMCustomerContoller {
         }
         return ajaxJson;
     }
-
-
 
 
     private boolean checkIfFrequent(HttpServletRequest request, SysDriver sysDriver){

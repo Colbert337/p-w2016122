@@ -74,11 +74,11 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center td-w1">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -91,11 +91,11 @@
 									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
-									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
-									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
+									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
+									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order" class="td-w2"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">账户余额</th>
 									<th style="display: none">钱袋编号</th>
-									<th class="text-center">更多操作</th>
+									<th class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
 

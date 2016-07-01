@@ -17,16 +17,21 @@
     <result column="operator_source_type" property="operatorSourceType" jdbcType="VARCHAR" />
     <result column="operator_source_id" property="operatorSourceId" jdbcType="VARCHAR" />
     <result column="is_discharge" property="is_discharge" jdbcType="VARCHAR" />
+    <result column="been_discharged" property="been_discharged" jdbcType="VARCHAR" />
+    <result column="discharge_reason" property="discharge_reason" jdbcType="VARCHAR" />
     <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
     <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
     <association property="consume_cardInfo" column="consume_card"
                  javaType="com.sysongy.poms.card.model.GasCard"
                  select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
     </association>
+    <collection property="sysOrderGoods" ofType="com.sysongy.poms.ordergoods.model.SysOrderGoods"
+                column="order_id"
+                select="com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper.selectByOrderID" />
   </resultMap>
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
-    charge_type, channel, channel_number, operator, is_discharge, discharge_order_id,operator_source_type, operator_target_type,consume_card
+    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id,operator_source_type, operator_target_type,consume_card
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -57,12 +62,12 @@
     insert into sys_order (order_id, order_number, order_type, 
       order_date, cash, credit_account, 
       debit_account, charge_type, channel, 
-      channel_number, operator, is_discharge, discharge_order_id,operator_target_type,operator_source_id,operator_source_type, consume_card
+      channel_number, operator, is_discharge,discharge_reason,discharge_order_id,operator_target_type,operator_source_id,operator_source_type, consume_card
       )
     values (#{orderId,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
       #{orderDate,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL}, #{creditAccount,jdbcType=VARCHAR}, 
       #{debitAccount,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, 
-      #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{dischargeOrderId,jdbcType=VARCHAR},
+      #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{discharge_reason,jdbcType=VARCHAR},#{dischargeOrderId,jdbcType=VARCHAR},
       #{operatorTargetType,jdbcType=VARCHAR},#{operatorSourceId,jdbcType=VARCHAR}, #{operatorSourceType,jdbcType=VARCHAR},#{consume_card,jdbcType=VARCHAR}
       )
   </insert>
@@ -104,6 +109,9 @@
       </if>
       <if test="is_discharge != null" >
         is_discharge,
+      </if>
+      <if test="discharge_reason != null" >
+        discharge_reason,
       </if>
       <if test="dischargeOrderId != null" >
         discharge_order_id,
@@ -155,6 +163,9 @@
       <if test="is_discharge != null" >
         #{is_discharge,jdbcType=VARCHAR},
       </if>
+      <if test="discharge_reason != null" >
+        #{discharge_reason,jdbcType=VARCHAR},
+      </if>
       <if test="operatorSourceId != null" >
          #{operatorSourceId,jdbcType=VARCHAR},
       </if>
@@ -205,6 +216,12 @@
       <if test="is_discharge != null" >
         is_discharge = #{is_discharge,jdbcType=VARCHAR},
       </if>
+      <if test="been_discharged != null" >
+        been_discharged = #{been_discharged,jdbcType=VARCHAR},
+      </if>
+      <if test="discharge_reason != null" >
+        discharge_reason = #{discharge_reason,jdbcType=VARCHAR},
+      </if>
        <if test="operatorSourceId != null" >
         operator_source_id = #{operatorSourceId,jdbcType=VARCHAR},
       </if>
@@ -233,6 +250,8 @@
       channel_number = #{channelNumber,jdbcType=VARCHAR},
       operator = #{operator,jdbcType=VARCHAR},
       is_discharge = #{is_discharge,jdbcType=VARCHAR},
+      been_discharged = #{been_discharged,jdbcType=VARCHAR},
+      discharge_reason = #{discharge_reason,jdbcType=VARCHAR},      
       discharge_order_id = #{dischargeOrderId,jdbcType=VARCHAR},
       operator_source_id = #{operatorSourceId,jdbcType=VARCHAR},
       operator_target_type = #{operatorTargetType,jdbcType=VARCHAR}
