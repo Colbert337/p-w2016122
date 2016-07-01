@@ -274,6 +274,11 @@ public class TransportionServiceImpl implements TransportionService {
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 		log.setOrder_number(orderNumber);
+		if(StringUtils.isEmpty(log.getTransfer_photo())){
+			Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+			String show_path = (String) prop.get("default_img");
+			log.setTransfer_photo(show_path);
+		}
 		return sysDepositLogMapper.insert(log);
 	}
 

@@ -127,8 +127,8 @@ public class SysRoleServiceImpl implements SysRoleService{
      * @return
      */
     @Override
-    public List<SysRole> queryRoleListByUserType(String userType) {
-        return sysRoleMapper.queryRoleListByUserType(userType);
+    public List<SysRole> queryRoleListByUserType(String userType,String stationId) {
+        return sysRoleMapper.queryRoleListByUserType(userType,stationId);
     }
 
     /**
