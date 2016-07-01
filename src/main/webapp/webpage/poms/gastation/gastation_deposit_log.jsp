@@ -6,6 +6,7 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
 
 <script src="<%=basePath %>/dist/js/gastation/gastation_deposit_log.js"></script>
@@ -79,15 +80,16 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
+									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单流水号</th>
 									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">工作站编号</th>
 									<th onclick="orderBy(this,'station_name');commitForm();" id="station_name_order">工作站名称</th>
 									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
-									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单流水号</th>
 									<th onclick="orderBy(this,'deposit_time');commitForm();" id="deposit_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>转账时间</th>
 									<th onclick="orderBy(this,'deposit_type');commitForm();" id="deposit_type_order">转账方式</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th> 
 									<th onclick="orderBy(this,'optime');commitForm();" id="optime_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th> 
 									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">预存款金额(元)</th>
+									<th>更多操作</th>
 								</tr>
 							</thead>
 
@@ -102,15 +104,20 @@
 										</label>
 									</td>
 
+									<td>${list.order_number}</td>
 									<td>${list.stationId}</td>
 								 	<td>${list.stationName}</td> 
 									<td>${list.company}</td>
-									<td>${list.order_number}</td>
 									<td><fmt:formatDate value="${list.depositTime}" type="both"/></td>
 									<td><s:Code2Name mcode="${list.depositType}" gcode="RECHARGE_TYPE"></s:Code2Name></td>
 									<td>${list.operator}</td>
 					                <td><fmt:formatDate value="${list.optime}" type="both"/></td>
 									<td>${list.deposit}</td>
+									<td class="text-center">
+										<a class="gastation-log-colorbox" href="<%=imagePath %>${list.transfer_photo}" title="查看图片" data-rel="colorbox">
+											<i class="ace-icon fa fa-camera bigger-130"></i>
+										</a>
+									</td>
 								</tr>
 								</c:forEach>
 							</tbody>
@@ -119,26 +126,27 @@
 				</div>
 			</div>
 			
-
-			<label>共 ${pageInfo.total} 条</label>
-			
-			<nav>
-				  <ul id="ulhandle" class="pagination pull-right no-margin">
-				  
-				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
-					        <span aria-hidden="true">&laquo;</span>
-					      </a>
-				    </li>
-				    
-				    <li id="next">
-					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
-					        <span aria-hidden="true">&raquo;</span>
-					      </a>
-				    </li>
-				    
-				  </ul>
-			</nav>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
+				</div>
+				<div class="col-sm-6">
+					<nav>
+						<ul id="ulhandle" class="pagination pull-right no-margin">
+							<li id="previous">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li id="next">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>  
+						</ul>
+					</nav>
+				</div>
+			</div>
 
 
 			<jsp:include page="/common/message.jsp"></jsp:include>

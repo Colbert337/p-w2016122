@@ -248,5 +248,15 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 				
 		return addCash_success;
 	}
+
+	@Override
+	public List<SysCashBack> gainProp(String cashBackNo, String level) {
+		return cashBackMapper.gainProp(cashBackNo, level);
+	}
+
+	@Override
+	public Integer delCashBack(String sysCashBackNo, String level) throws Exception {
+		return cashBackMapper.deleteByLevel(sysCashBackNo, level);
+	}
 	
 }

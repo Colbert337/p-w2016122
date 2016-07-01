@@ -8,7 +8,7 @@
 				<h5 class="modal-title">温馨提示</h5>
 			</div>
 			<div class="modal-body">
-				<p>${ret.retMsg}</p>
+				<p class="text-center">${ret.retMsg}</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">关闭</button>

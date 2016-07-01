@@ -563,6 +563,7 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson sendMsgApi(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver,@RequestParam(required = false) String mobilePhone){
         AjaxJson ajaxJson = new AjaxJson();
+
         if(sysDriver == null || sysDriver.getMobilePhone() == null || "".equals(sysDriver.getMobilePhone())){
             sysDriver.setMobilePhone(mobilePhone);
         }
@@ -578,7 +579,7 @@ public class CRMCustomerContoller {
             ajaxJson.setMsg("您发送短信的次数过于频繁，请稍后再试！！！");
             return ajaxJson;
         }
-
+        ajaxJson.setMsg("验证码发送成功！");
         try
         {
             Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);

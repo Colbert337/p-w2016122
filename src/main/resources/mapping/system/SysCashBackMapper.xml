@@ -34,7 +34,12 @@
     select sys_cash_back_id from sys_cash_back where sys_cash_back_id like CONCAT(#{sys_cash_back_no,jdbcType=VARCHAR},'%') order by sys_cash_back_id desc limit 1  
   </select>
   
-  <select id="queryForPage" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCard" >
+  <select id="gainProp" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select <include refid="Base_Column_List" />
+     from sys_cash_back where sys_cash_back_no = #{0} and level = #{1} order by sys_cash_back_id desc limit 1
+  </select>
+  
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.card.model.GasCard" >
   	 select <include refid="Base_Column_List" />
     from sys_cash_back gc where 1=1
     <trim>
@@ -92,7 +97,7 @@
       and (sys_cash_back_no = 102) or (sys_cash_back_no = 106) or (sys_cash_back_no = 107)
   </select>
   
-  <select id="checkvalid" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCard" >
+  <select id="checkvalid" resultMap="BaseResultMap" parameterType="com.sysongy.poms.card.model.GasCard" >
   	 select <include refid="Base_Column_List" />
     from sys_cash_back gc where 1=1
     <trim>
@@ -119,6 +124,12 @@
     delete from sys_cash_back
     where sys_cash_back_id = #{sys_cash_back_id,jdbcType=VARCHAR}
   </delete>
+  
+  <delete id="deleteByLevel" parameterType="java.lang.String" >
+    delete from sys_cash_back
+    where sys_cash_back_no = #{0} and level = #{1}
+  </delete>
+  
   <insert id="insert" parameterType="com.sysongy.poms.system.model.SysCashBack" >
     insert into sys_cash_back (sys_cash_back_id, sys_cash_back_no, threshold_min_value, 
       threshold_max_value, cash_per, status, 

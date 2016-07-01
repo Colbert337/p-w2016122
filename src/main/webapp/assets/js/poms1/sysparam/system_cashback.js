@@ -79,12 +79,15 @@ function preUpdate(obj){
 function del(obj){
 	
 	var sys_cash_back_id = $(obj).parents('tr').find("td:first").find("input").val();
-	var tmp = confirm("是否删除该配置?");
+	//var tmp = confirm("将删除该级别的所有配置项，是否删除?");
 	
-	if(!tmp){
-		$('[data-rel=tooltip]').tooltip('hide');
-		return;
-	}
+	bootbox.setLocale("zh_CN");
+	bootbox.confirm("将删除该级别的所有配置项，是否删除?", function (result) {
+		if (!result) {
+			$('[data-rel=tooltip]').tooltip('hide');
+			return;
+		}
+	})
 	
 	var deloptions ={   
             url:'../web/sysparam/deleteCashBack?sysCashBackid='+sys_cash_back_id,   

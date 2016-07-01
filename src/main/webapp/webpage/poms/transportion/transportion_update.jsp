@@ -661,7 +661,7 @@ function save_photo(fileobj,obj,obj1){
 			$(fileobj).parent("div").find("input:first").attr("name","uploadfile");
 			
 			if($(obj).val()==null || $(obj).val()==""){
-				alert("请先上传文件");	
+				bootbox.alert("请先上传文件");
 				return;
 			}
 			
@@ -673,7 +673,7 @@ function save_photo(fileobj,obj,obj1){
 		            success:function(data){
 		            	var s = JSON.parse(data);
 		            	if(s.success == true){
-		            		alert("上传成功");
+		            		bootbox.alert("上传成功");
 		            		$(obj1).val(s.obj);
 		            	}
 		            	

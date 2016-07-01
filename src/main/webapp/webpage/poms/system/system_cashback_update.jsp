@@ -24,7 +24,7 @@
 								<form class="form-horizontal"  id="cashbackform">
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 配置对象： </label>
+										<label class="col-sm-3 control-label no-padding-right">配置对象： </label>
 										
 										<div class="col-sm-4">
 											<label class="control-label no-padding-right" > <s:Code2Name mcode="${sysCashBack.sys_cash_back_no}" gcode="CASHBACK"></s:Code2Name> </label>
@@ -34,10 +34,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 阈最小值： </label>
+										<label class="col-sm-3 control-label no-padding-right">阈最小值： </label>
 										
 										<div class="col-sm-4">
-											<input type="text"  name="threshold_min_value" placeholder="输入该阈最小值" class="form-control" maxlength="6" value="${sysCashBack.threshold_min_value}"/>
+											<input type="text" readonly="readonly" name="threshold_min_value" placeholder="输入该阈最小值" class="form-control" maxlength="6" value="${sysCashBack.threshold_min_value}"/>
 										</div>
 									</div>
 									
@@ -45,7 +45,7 @@
 										<label class="col-sm-3 control-label no-padding-right">阈最大值（包含）： </label>
 
 										<div class="col-sm-4">
-											<input type="text"   name="threshold_max_value" placeholder="输入该阈最大值" class="form-control" maxlength="6" value="${sysCashBack.threshold_max_value}"/>
+											<input type="text" readonly="readonly" name="threshold_max_value" placeholder="输入该阈最大值" class="form-control" maxlength="6" value="${sysCashBack.threshold_max_value}"/>
 										</div>
 									</div>
 									
@@ -59,42 +59,41 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 状态： </label>
+										<label class="col-sm-3 control-label no-padding-right">状态： </label>
 										<div class="col-sm-4">
 												<select class="form-control" name="status">
-														<s:option flag="true" gcode="CASHBACKSTATUS" form="sysCashBack" field="status" />
+													<s:option flag="true" gcode="CASHBACKSTATUS" form="sysCashBack" field="status" />
 												</select>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 优先级： </label>
+										<label class="col-sm-3 control-label no-padding-right">优先级： </label>
 										<div class="col-sm-4">
-												<select class="form-control"  name="level">
-														<s:option flag="true" gcode="CASHBACKLEVEL" form="sysCashBack" field="level"  />
-												</select>
+											<label class="control-label no-padding-right" > <s:Code2Name mcode="${sysCashBack.level}" gcode="CASHBACKLEVEL"></s:Code2Name> </label>
+											<input type="hidden" name="level" value="${sysCashBack.level}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 生效日期： </label>
+										<label class="col-sm-3 control-label no-padding-right">生效日期： </label>
 										<div class="col-sm-4">
 												<div class="input-group">
 														<input class="form-control date-picker" name="start_date_after" type="text" readonly="readonly" data-date-format="yyyy-mm-dd"  value="${sysCashBack.start_date_after}"/>
 														<span class="input-group-addon">
-																<i class="fa fa-calendar bigger-110"></i>
+															<i class="fa fa-calendar bigger-110"></i>
 														</span>
 												</div>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 失效日期： </label>
+										<label class="col-sm-3 control-label no-padding-right">失效日期： </label>
 										<div class="col-sm-4">
 												<div class="input-group">
 														<input class="form-control date-picker" name="start_date_before"  type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value="${sysCashBack.start_date_before}"/>
 														<span class="input-group-addon">
-																<i class="fa fa-calendar bigger-110"></i>
+															<i class="fa fa-calendar bigger-110"></i>
 														</span>
 												</div>
 										</div>

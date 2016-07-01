@@ -62,7 +62,7 @@
 							<th>车队名称</th>
 							<th>创建时间</th>
 							<th>卡状态</th>
-							<th>操作</th>
+							<th class="text-center">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -84,7 +84,7 @@
 										使用中
 									</c:if>
 								</td>
-								<td>
+								<td class="text-center">
 									<a class="" href="javascript:editVehicle('${vehicle.tcVehicleId}');" title="修改" data-rel="tooltip">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
 									</a>
@@ -128,7 +128,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel">添加车辆</h4>
+				<h4 class="modal-title" id="editVehicle">添加车辆</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
@@ -138,7 +138,7 @@
 							<!-- PAGE CONTENT BEGINS -->
 							<form class="form-horizontal" id="editForm">
 								<!-- #section:elements.form -->
-								<h5 class="header smaller lighter blue">基本信息</h5>
+								<%--<h5 class="header smaller lighter blue">基本信息</h5>--%>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="plates_number"><span class="red_star">*</span> 车牌号： </label>
 									<div class="col-sm-7">

@@ -66,17 +66,20 @@ public class SysUserServiceImpl implements SysUserService{
         return sysUserMapper.queryUserList(sysUser);
     }
 
+    @Override
+    public List<SysUser> queryUserListByUserName(SysUser sysUser) {
+        return sysUserMapper.queryUserListByUserName(sysUser);
+    }
+
     /**
      * 查询用户列表
-     * @param userType
+     * @param sysUser
      * @return
      */
     @Override
-    public List<SysUser> queryUserListByUserType(int userType) {
-        SysUser sysUser = new SysUser();
-        sysUser.setUserType(userType);
+    public List<SysUser> queryUserListByUserType(SysUser sysUser) {
         sysUser.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-        List<SysUser> userList = sysUserMapper.queryUserList(sysUser);
+        List<SysUser> userList = sysUserMapper.queryUserListByUserType(sysUser);
         return userList;
     }
 
@@ -272,7 +275,7 @@ public class SysUserServiceImpl implements SysUserService{
         String userId = UUIDGenerator.getUUID();
         int userType = user.getUserType();
         user.setSysUserId(userId);
-        user.setMobilePhone(user.getUserName());
+        /*user.setMobilePhone(user.getUserName());*/
         user.setIsAdmin(GlobalConstant.ADMIN_YES);
         String password = user.getPassword();
         String userName = user.getUserName();

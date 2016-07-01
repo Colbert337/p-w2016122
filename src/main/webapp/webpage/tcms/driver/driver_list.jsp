@@ -63,7 +63,7 @@
 							<th>入职时间</th>
 							<th>手机号码</th>
 							<th>实体卡号</th>
-							<th>状态</th>
+							<th>实名认证状态</th>
 							<%--<th>操作</th>--%>
 						</tr>
 						</thead>
@@ -126,6 +126,9 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
+
 <!--添加司机弹层-开始-->
 <div id="driverModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">

@@ -55,9 +55,9 @@
 						</div>
 					</div>
 					<%--</h4>--%>
-					<div class="alert alert-info">
-						<label style="font-size: 18px;">账户余额：${fleetQuotaMap.userAccount.accountBalance}元</label>&nbsp;&nbsp;&nbsp;&nbsp;
-						<label style="font-size: 18px;">未分配资金：${fleetQuotaMap.weifenpeiVal}元</label>
+					<div class="alert alert-info alert-mt">
+						<span class="bigger-120">账户余额：${fleetQuotaMap.userAccount.accountBalance}元</span>&nbsp;&nbsp;&nbsp;&nbsp;
+						<span class="bigger-120">未分配资金：${fleetQuotaMap.weifenpeiVal}元</span>
 						<input type="hidden" id="sysTransportId" name="sysTransportId" value="${stationId}"/>
 					</div>
 					<%--<table id="simple-table" class="table table-striped table-bordered table-hover">--%>
