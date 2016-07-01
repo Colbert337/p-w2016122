@@ -238,7 +238,7 @@
 			success: function(data){
 				console.log(data);
 				if(data.valid){
-					alert("用户名已存在!");
+					bootbox.alert("用户名已存在!");
 					$("#user_name").focus();
 				}
 			}, error: function (XMLHttpRequest, textStatus, errorThrown) {

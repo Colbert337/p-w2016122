@@ -130,7 +130,7 @@ function init(){
 function leaveDriver(){
     var chLength = $("input[type='checkbox']:checked").length;
     if(chLength <= 0){
-        alert("请勾选要离职的员工！");
+        bootbox.alert("请勾选要离职的员工！");
         return false;
     }else{
         bootbox.setLocale("zh_CN");

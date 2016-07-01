@@ -62,7 +62,7 @@
 		 * 获取当前节点下菜单
 		 */
 		function queryMenuClick(event, treeId, treeNode){
-			/*alert(treeNode.id + ", " + treeNode.name);*/
+			/*bootbox.alert(treeNode.id + ", " + treeNode.name);*/
 			var queryMenuOptions ={
 				url:'<%=basePath%>/web/permi/function/list/page',
 				data:{parentId:treeNode.id},
@@ -120,7 +120,7 @@
 				$("#function_sort").val(data);
 			}
 		});
-		<%--alert("parentId:${parentId} +parentName:${parentName}");--%>
+		<%--bootbox.alert("parentId:${parentId} +parentName:${parentName}");--%>
 		$("#parent_id").val('${parentId}');
 		$("#parent_name").val('${parentName}');
 		$("#functionModel").modal('show');
