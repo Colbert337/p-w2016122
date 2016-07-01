@@ -69,11 +69,11 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center td-w1">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);"/> 
 											<span class="lbl"></span>
@@ -83,10 +83,10 @@
 									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">工作站编号</th>
 									<th onclick="orderBy(this,'station_name');commitForm();" id="station_name_order">工作站名称</th>
 									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
-									<th onclick="orderBy(this,'deposit_time');commitForm();" id="deposit_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>转账时间</th>
+									<th onclick="orderBy(this,'deposit_time');commitForm();" id="deposit_time_order" class="td-w2"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>转账时间</th>
 									<th onclick="orderBy(this,'deposit_type');commitForm();" id="deposit_type_order">转账方式</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th> 
-									<th onclick="orderBy(this,'optime');commitForm();" id="optime_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th> 
+									<th onclick="orderBy(this,'optime');commitForm();" id="optime_order" class="td-w2"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th>
 									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">充值金额(元)</th>
 								</tr>
 							</thead>

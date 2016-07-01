@@ -118,3 +118,28 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 .bootbox-body {
     padding: 20px;
 }
+.td-w1 {
+    width: 40px;
+}
+.td-w2 {
+    width: 150px;
+}
+.td-w3 {
+    width: 70px;
+}
+.sjny-table-responsive {
+    overflow-y: hidden;
+    box-shadow: 1px 0 1px #ddd;
+    margin-bottom: 20px;
+}
+.sjny-table-responsive > .table {
+    margin-bottom: 0;
+}
+.sjny-table-responsive > .table > thead > tr > th,
+.sjny-table-responsive > .table > tbody > tr > th,
+.sjny-table-responsive > .table > tfoot > tr > th,
+.sjny-table-responsive > .table > thead > tr > td,
+.sjny-table-responsive > .table > tbody > tr > td,
+.sjny-table-responsive > .table > tfoot > tr > td {
+    white-space: nowrap;
+}

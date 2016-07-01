@@ -93,11 +93,11 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center td-w1">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -111,8 +111,8 @@
 									<th onclick="orderBy(this,'workstation_resp');" id="workstation_resp_order">工作站领取人</th>
 									<th onclick="orderBy(this,'operator');" id="operator_order">操作员</th>
 									<th onclick="orderBy(this,'batch_no');" id="batch_no_order">入库批次号</th>
-									<th onclick="orderBy(this,'storage_time');" id="storage_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
-									<th onclick="orderBy(this,'release_time');" id="release_time_order"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
+									<th onclick="orderBy(this,'storage_time');" id="storage_time_order" class="td-w2"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>入库时间</th>
+									<th onclick="orderBy(this,'release_time');" id="release_time_order" class="td-w2"><i id="release_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>出库时间</th>
 									<th class="text-center">操作</th>
 								</tr>
 							</thead>

@@ -283,14 +283,7 @@
 							</button>
 						</div>
 					</div>
-					<%--</h4>--%>
-					<%--顶部按钮--%>
-					<%--<div class="pull-right btn-botton">
-						<a class="btn btn-sm btn-primary" href="javascript:addUser();">
-							新建
-						</a>
-					</div>--%>
-					<%--</h4>--%>
+					<div class="sjny-table-responsive">
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
@@ -302,7 +295,7 @@
 							<th>用户角色</th>
 							<th>用户类型</th>
 							<th>用户状态</th>
-							<th>创建时间</th>
+							<th class="td-w2">创建时间</th>
 							<th class="text-center">操作</th>
 						</tr>
 						</thead>
@@ -356,6 +349,7 @@
 						</c:forEach>
 						</tbody>
 					</table>
+					</div>
 				</div><!-- /.col-xs-12 -->
 			</div><!-- /.row -->
 			<%--分页start--%>
