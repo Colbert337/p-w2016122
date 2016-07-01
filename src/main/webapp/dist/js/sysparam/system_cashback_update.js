@@ -122,7 +122,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/sysparam/cashbackList');
+			loadPage('#main', '../web/sysparam/cashbackList?sys_cash_back_no='+$("[name=sys_cash_back_no]").val());
 		}
 		
 			function init(){
