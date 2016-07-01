@@ -191,12 +191,12 @@ public class TransportionServiceImpl implements TransportionService {
 	 */
 	public String chargeCashToTransportion(SysOrder order) throws Exception{
 		if (order ==null){
-			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
 		}
 		
 		String debit_account = order.getDebitAccount();
 		if(debit_account==null ||debit_account.equalsIgnoreCase("")){
-			return GlobalConstant.OrderProcessResult.DEBIT_ACCOUNT_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.DEBIT_ACCOUNT_IS_NULL);
 		}
 		
 		//给账户充钱
@@ -222,10 +222,10 @@ public class TransportionServiceImpl implements TransportionService {
 	 */
 	public String transferTransportionToDriverDeductCash(SysOrder order,Transportion tran) throws Exception{
 		if (order ==null){
-			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
 		}
 		if (tran ==null){
-			   return GlobalConstant.OrderProcessResult.TRANSPORTION_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.TRANSPORTION_IS_NULL);
 		}
 		//从账户减钱
 		String tran_account = tran.getSys_user_account_id();

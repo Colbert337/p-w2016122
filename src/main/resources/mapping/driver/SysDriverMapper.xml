@@ -456,6 +456,14 @@
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
+  
+  <update id="updateFirstCharge" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    update sys_driver
+    set 
+      is_first_charge = #{isFirstCharge,jdbcType=INTEGER}      
+    where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+  </update>
+  
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.driver.model.SysDriver" >
     update sys_driver
     set user_name = #{userName,jdbcType=VARCHAR},

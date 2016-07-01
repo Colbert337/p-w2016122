@@ -219,10 +219,10 @@ public class GlobalConstant {
 	}
 	
 	/*
-	 * 返现规则是否启用 
+	 * 返现规则是否启用 ----对应 usysparm表的 CASHBACKSTATUS 记录
 	 */
-	public static final String CASHBACK_STATUS_ENABLE = "1";
-	public static final String CASHBACK_STATUS_DISABLE = "2";
+	public static final String CASHBACK_STATUS_ENABLE = "0";
+	public static final String CASHBACK_STATUS_DISABLE = "1";
 	
 	/*
 	 * 返现类型的编号
@@ -255,11 +255,16 @@ public class GlobalConstant {
 	}
 	
 	/*
-	 * 是否充红 
+	 * 是否充红订单 
 	 */
 	public static final String ORDER_ISCHARGE_YES = "1";
 	public static final String ORDER_ISCHARGE_NO = "0";
 	
+	/*
+	 * 订单是否已经被充红 
+	 */
+	public static final String ORDER_BEEN_DISCHARGED_YES = "1";
+	public static final String ORDER_BEEN_DISCHARGED_NO = "0";
 	/*
 	 * 	订单处理结果标记
 	 */

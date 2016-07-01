@@ -227,11 +227,11 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType) throws Exception{
 		String run_success = orderDealRecord.getRunSuccess();
 		if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(run_success)){
-			return GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS;
+			throw new Exception( GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_ORDERDEAL_NOT_RUNSUCCESS);
 		}
 		BigDecimal cash_back = orderDealRecord.getCashBack();
 		if(cash_back==null){
-			return GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_CASHBACK_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_CASHBACK_IS_NULL);
 		}
 		
 		BigDecimal back_money = new BigDecimal(cash_back.toString());
