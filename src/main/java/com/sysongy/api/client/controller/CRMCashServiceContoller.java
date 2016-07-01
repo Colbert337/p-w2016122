@@ -1,5 +1,6 @@
 package com.sysongy.api.client.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
@@ -48,8 +49,9 @@ public class CRMCashServiceContoller {
 
     @ResponseBody
     @RequestMapping("/web/customerGasPay")
-    public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
+    public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
+        SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
         if((record == null) || StringUtils.isEmpty(record.getOrderId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单ID为空！！！");
@@ -142,6 +144,14 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        SysUser sysUserAdmin = new SysUser();
+        sysUserAdmin.setMobilePhone(adminUserName);
+        SysUser sysUserOperator = sysUserService.queryUser(sysUserAdmin);
+
+        String strReason = request.getParameter("hedgeReason");
+        SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(record,
+                sysUserOperator.getSysUserId(), strReason);
+        hedgeRecord.getConsume_card();
         //orderService.dischargeOrder();
 
         Map<String, Object> attributes = new HashMap<String, Object>();
@@ -149,6 +159,4 @@ public class CRMCashServiceContoller {
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
-
-
 }
