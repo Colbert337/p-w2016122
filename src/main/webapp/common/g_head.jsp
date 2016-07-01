@@ -9,7 +9,20 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>陕西司集能源运维管理平台</title>
+		<title>
+			<c:if test="${sessionScope.currUser.user.userType == 1}">
+				陕西司集能源气站管理系统
+			</c:if>
+			<c:if test="${sessionScope.currUser.user.userType == 2}">
+				陕西司集能源运输公司管理系统
+			</c:if>
+			<c:if test="${sessionScope.currUser.user.userType == 4}">
+				陕西司集能源气站集团管理系统
+			</c:if>
+			<c:if test="${sessionScope.currUser.user.userType == 5}">
+				陕西司集能源运维管理平台
+			</c:if>
+		</title>
 
 		<meta name="description" content="overview &amp; stats" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
