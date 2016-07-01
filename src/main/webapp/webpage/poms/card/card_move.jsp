@@ -115,27 +115,23 @@
 						
 									<div class="form-group">
 											<label class="col-sm-3 control-label no-padding-right" id="dynamic-table_after_handler">明细列表：</label>
-											<div class="col-sm-7" id="dynamic-table_div">
-											<div class="table-header">用户卡列表</div>
-												<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-													<thead>
-														<tr>
-															<th class="center">
-																<label class="pos-rel"> 
-																	<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
-																	<span class="lbl"></span>
-																</label>
-															</th>
-															<th id="card_no_order">用户卡号</th>
-															<th id="card_type_order">调拨工作站</th>
-															<th id="card_name_order">工作站领取人</th> 
-															<th id="card_status_order">用户卡状态</th>
-															<th id="operator_order">操作人</th> 
-														</tr>
-													</thead>
-													<tbody>
-													</tbody>
-												</table>
+											<div class="col-sm-7">
+												<div id="dynamic-table_div">
+													<div class="table-header">用户卡列表</div>
+													<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+														<thead>
+															<tr>
+																<th id="card_no_order">用户卡号</th>
+																<th id="card_type_order">调拨工作站</th>
+																<th id="card_name_order">工作站领取人</th>
+																<th id="card_status_order">用户卡状态</th>
+																<th id="operator_order">操作人</th>
+															</tr>
+														</thead>
+														<tbody>
+														</tbody>
+													</table>
+												</div>
 										</div>
 									</div>
 									

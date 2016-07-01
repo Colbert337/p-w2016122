@@ -88,7 +88,7 @@
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">实体卡状态</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">用户状态</th> 
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
@@ -126,9 +126,9 @@
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.account.account_status}" gcode="ACCOUNT_STATUS"></s:Code2Name></td>
 									<td>
-										<div class="btn-toolbar">
+										<div class="text-center">
 											<div class="btn-group">
-												<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
+												<button data-toggle="dropdown" class="btn btn-info btn-xs dropdown-toggle">
 													状态修改
 													<span class="ace-icon fa fa-caret-down icon-on-right"></span>
 												</button>
@@ -155,25 +155,27 @@
 					</div>
 			
 
-			<label>共 ${pageInfo.total} 条</label>
-			
-			<nav>
-				  <ul id="ulhandle" class="pagination pull-right no-margin">
-				  
-				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formdriver');">
-					        <span aria-hidden="true">&laquo;</span>
-					      </a>
-				    </li>
-				    
-				    <li id="next">
-					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formdriver');">
-					        <span aria-hidden="true">&raquo;</span>
-					      </a>
-				    </li>
-				    
-				  </ul>
-			</nav>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
+				</div>
+				<div class="col-sm-6">
+					<nav>
+						<ul id="ulhandle" class="pagination pull-right no-margin">
+							<li id="previous">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li id="next">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>  
+						</ul>
+					</nav>
+				</div>
+			</div>
 
 			<jsp:include page="/common/message.jsp"></jsp:include>
 

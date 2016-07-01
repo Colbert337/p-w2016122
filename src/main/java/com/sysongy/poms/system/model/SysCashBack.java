@@ -3,12 +3,15 @@ package com.sysongy.poms.system.model;
 import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.usysparam.model.Usysparam;
 
 public class SysCashBack extends BaseModel{
 
 	private String sys_cash_back_id;
 	
 	private String sys_cash_back_no;
+
+	private Usysparam sys_cash_back_noInfo;
 
 	private String threshold_min_value;
 
@@ -136,4 +139,11 @@ public class SysCashBack extends BaseModel{
 		this.updated_date = updated_date;
 	}
 
+	public Usysparam getSys_cash_back_noInfo() {
+		return sys_cash_back_noInfo;
+	}
+
+	public void setSys_cash_back_noInfo(Usysparam sys_cash_back_noInfo) {
+		this.sys_cash_back_noInfo = sys_cash_back_noInfo;
+	}
 }

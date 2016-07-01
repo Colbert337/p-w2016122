@@ -83,9 +83,9 @@
 		                        message: '失效日期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '失效日期必须大于生效日期',
+		                    	message: '失效日期必须大于等于生效日期',
 		                    	callback: function (value, validator, $field) {
-		                    		return compareDate(value, $('[name=start_date_after]').val());
+		                    		return !compareDate($('[name=start_date_after]').val(), value);
 	                            }
 		                    }
 		                },
@@ -128,5 +128,25 @@
 		
 		function returnpage(){
 			loadPage('#main', '../web/sysparam/cashbackList');
+		}
+		
+		function gainProp(obj){
+			$.ajax({
+				   type: "POST",
+				   url:'../web/sysparam/gainProp?sys_cash_back_no='+$("[name=sys_cash_back_no]").val()+'&level='+$(obj).val(),   
+		           dataType:'text',
+		           success:function(data){ 
+		        	   var s = JSON.parse(data);
+		        	   if(s.length == 1){
+			        	   $("[name=threshold_min_value]").val(s[0].threshold_max_value);
+			        	   $("[name=start_date_after]").val(s[0].start_date.substr(0,10));
+			        	   $("[name=start_date_before]").val(s[0].end_date.substr(0,10));
+			        	   $("[name=start_date_after]").removeClass("date-picker").off();
+			        	   $("[name=start_date_before]").removeClass("date-picker").off();
+		        	   }else{
+		        		   $("[name=threshold_min_value]").val("0");
+		        	   }
+		            }
+				});
 		}
 		

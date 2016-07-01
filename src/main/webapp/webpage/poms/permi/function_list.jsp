@@ -145,6 +145,9 @@
 				dataType:'html',
 				success:function(data){
 					$("#main").html(data);
+					$("#modal-table").modal("show");
+				}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
 				}
 			}
 			$("#functionForm").ajaxSubmit(saveOptions);
@@ -192,18 +195,21 @@
 	 * 删除功能
 	 */
 	function deleteFunction(functionId,parentId){
-		if(confirm("确定删除该功能吗？")){
-			var deleteOptions ={
-				url:'<%=basePath%>/web/permi/function/delete',
-				data:{functionId:functionId,parentId:parentId},
-				type:'post',
-				dataType:'text',
-				success:function(data){
-					$("#main").html(data);
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("确认要删除功能吗？", function (result) {
+			if (result) {
+				var deleteOptions ={
+					url:'<%=basePath%>/web/permi/function/delete',
+					data:{functionId:functionId,parentId:parentId},
+					type:'post',
+					dataType:'text',
+					success:function(data){
+						$("#main").html(data);
+					}
 				}
+				$("#listForm").ajaxSubmit(deleteOptions);
 			}
-			$("#listForm").ajaxSubmit(deleteOptions);
-		}
+		})
 
 	}
 	/**
@@ -257,7 +263,7 @@
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
 						<a class="btn btn-sm btn-primary" href="javascript:addFunction();">
-							添加
+							新建
 						</a>
 					</div>
 					<%--</h4>--%>
@@ -300,6 +306,8 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
 
 <!--添加用户弹层-开始-->
 <div id="functionModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
@@ -320,14 +328,14 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_name"> <span class="red_star">*</span>功能名称： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_name" name="functionName" placeholder="功能名称" class="validate[required] col-xs-10 col-sm-10" />
+										<input type="text" id="function_name" name="functionName" placeholder="功能名称" class="validate[required,maxSize[20]] col-xs-10 col-sm-10" />
 										<input type="hidden" id="sys_function_id" name="sysFunctionId" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_path"> <span class="red_star">*</span>功能路径： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_path" name="functionPath" placeholder="功能路径" class="validate[required] col-xs-10 col-sm-10" />
+										<input type="text" id="function_path" name="functionPath" placeholder="功能路径" class="validate[required,maxSize[50]] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -348,13 +356,13 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_icon">功能图标： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="col-xs-10 col-sm-10" />
+										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="validate[required,maxSize[10]] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_sort">功能排序： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_sort" name="functionSort" placeholder="功能排序" class="col-xs-10 col-sm-10" />
+										<input type="text" id="function_sort" name="functionSort" placeholder="功能排序" class="validate[required,maxSize[3]] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -375,7 +383,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_desc"> 描述： </label>
 									<div class="col-sm-8">
-										<textarea class="limited col-xs-10 col-sm-10" id="function_desc" name="roleDesc" maxlength="50"></textarea>
+										<textarea class="limited col-xs-10 col-sm-10" id="function_desc" name="roleDesc" maxlength="50" style="resize: none;"></textarea>
 									</div>
 								</div>
 							</form>

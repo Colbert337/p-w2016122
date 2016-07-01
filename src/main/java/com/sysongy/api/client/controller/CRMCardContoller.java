@@ -73,8 +73,72 @@ public class CRMCardContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CARD_ERROR);
             logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
         }
     	return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/querySingleCardInfo"})
+    @ResponseBody
+    public AjaxJson querySingleCardInfo(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        if((gascard == null) || (StringUtils.isEmpty(gascard.getCard_no()))){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("卡号不能为空！！！");
+            return ajaxJson;
+        }
+        try
+        {
+            PageInfo<GasCard> pageinfo = gasCardService.queryGasCard(gascard);
+            if((pageinfo == null) || (pageinfo.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("查询数据为空！！！");
+                return ajaxJson;
+            }
+            attributes.put("pageInfo", pageinfo);
+            attributes.put("gascard",pageinfo.getList());
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CARD_ERROR);
+            logger.error("queryCardInfo error： " + e);
+        }
+        return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/queryCardFor2StatusInfo"})
+    @ResponseBody
+    public AjaxJson queryCardFor2StatusInfo(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        if(StringUtils.isEmpty(gascard.getWorkstation())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
+            return ajaxJson;
+        }
+        try
+        {
+            String startTime = gascard.getStorage_time_before();
+            String endTime = gascard.getStorage_time_after();
+            gascard.setStorage_time_after(startTime);
+            gascard.setStorage_time_before(endTime);
+            PageInfo<GasCard> pageinfo = gasCardService.queryCardFor2StatusInfo(gascard);
+            if((pageinfo == null) || (pageinfo.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("查询数据为空！！！");
+                return ajaxJson;
+            }
+            attributes.put("pageInfo", pageinfo);
+            attributes.put("gascard",pageinfo.getList());
+            ajaxJson.setAttributes(attributes);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CARD_ERROR);
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        return ajaxJson;
     }
 
     @RequestMapping(value = {"/web/distributeCard"})
@@ -89,14 +153,25 @@ public class CRMCardContoller {
         Map<String, Object> attributes = new HashMap<String, Object>();
         try
         {
-            GasCard gasCard = gasCardService.queryGasCardInfo(gascard.getCard_no());
-            if(!gasCard.getCard_status().equalsIgnoreCase(InterfaceConstants.CARD_STSTUS_ALREADY_SEND)){
+            GasCard gasCardNew = gasCardService.queryGasCardInfo(gascard.getCard_no());
+            if(!gasCardNew.getWorkstation().equalsIgnoreCase(gascard.getWorkstation())){
                 ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("当前卡状态无法使用，错误号：" + gasCard.getCard_status());
+                ajaxJson.setMsg("该卡不属于当前气站，无法发放给司机！");
                 return ajaxJson;
             }
-            gasCard.setCard_status(InterfaceConstants.CARD_STSTUS_IN_USE);
-            Integer nRet = gasCardService.updateGasCardInfo(gasCard);
+
+            if(!gasCardNew.getCard_status().equalsIgnoreCase(InterfaceConstants.CARD_STSTUS_ALREADY_SEND)){
+                ajaxJson.setSuccess(false);
+                if(gasCardNew.getCard_status().equalsIgnoreCase(InterfaceConstants.CARD_STSTUS_IN_USE)){
+                    ajaxJson.setMsg("当前卡已被别人使用！");
+                }else if(gasCardNew.getCard_status().equalsIgnoreCase(InterfaceConstants.CARD_STSTUS_LOCK)){
+                    ajaxJson.setMsg("当前卡已冻结！");
+                }
+                ajaxJson.setMsg("当前卡状态无法使用，错误号：" + gasCardNew.getCard_status());
+                return ajaxJson;
+            }
+            gasCardNew.setCard_status(InterfaceConstants.CARD_STSTUS_IN_USE);
+            Integer nRet = gasCardService.updateGasCardInfo(gasCardNew);
             if(nRet < 1){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("无卡信息修改！！！");

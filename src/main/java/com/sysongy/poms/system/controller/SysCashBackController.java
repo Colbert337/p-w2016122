@@ -1,12 +1,16 @@
 package com.sysongy.poms.system.controller;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
@@ -138,15 +142,15 @@ public class SysCashBackController extends BaseContoller {
 	}
 	
 	@RequestMapping("/deleteCashBack")
-	public String deleteCashBack(ModelMap map, SysCashBack sysCashBack, @RequestParam String sysCashBackid){
+	public String deleteCashBack(ModelMap map, SysCashBack sysCashBack, @RequestParam String sysCashBackNo, @RequestParam String leveltmp){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/system_cashback";
 		Integer rowcount = null;
 
 		try {
-				if(sysCashBackid != null && !"".equals(sysCashBackid)){
-					rowcount = service.delCashBack(sysCashBackid);
+				if(sysCashBackNo != null && !"".equals(sysCashBackNo)){
+					rowcount = service.delCashBack(sysCashBackNo, leveltmp);
 				}
 
 				ret = this.queryAllCashBackList(map, sysCashBack);
@@ -173,4 +177,15 @@ public class SysCashBackController extends BaseContoller {
 		}
 	}
 	
+	@ResponseBody
+	@RequestMapping("/gainProp")
+	public JSONArray gainProp(@RequestParam String sys_cash_back_no, @RequestParam String level){
+
+		List<SysCashBack> list = service.gainProp(sys_cash_back_no, level);
+		JSONArray arr = new JSONArray();
+		for (SysCashBack cashback : list) {
+			arr.add(cashback);
+		}
+		return arr;
+	}
 }

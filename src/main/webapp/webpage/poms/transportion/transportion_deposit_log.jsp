@@ -79,10 +79,10 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
+									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单流水号</th>
 									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">工作站编号</th>
 									<th onclick="orderBy(this,'station_name');commitForm();" id="station_name_order">工作站名称</th>
 									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
-									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单流水号</th>
 									<th onclick="orderBy(this,'deposit_time');commitForm();" id="deposit_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>转账时间</th>
 									<th onclick="orderBy(this,'deposit_type');commitForm();" id="deposit_type_order">转账方式</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th> 
@@ -101,11 +101,11 @@
 											<span class="lbl"></span>
 										</label>
 									</td>
-
+									
+									<td>${list.order_number}</td>
 									<td>${list.stationId}</td>
 								 	<td>${list.stationName}</td> 
 									<td>${list.company}</td>
-									<td>${list.order_number}</td>
 									<td><fmt:formatDate value="${list.depositTime}" type="both"/></td>
 									<td><s:Code2Name mcode="${list.depositType}" gcode="RECHARGE_TYPE"></s:Code2Name></td>
 									<td>${list.operator}</td>
@@ -119,27 +119,27 @@
 				</div>
 			</div>
 			
-
-			<label>共 ${pageInfo.total} 条</label>
-			
-			<nav>
-				  <ul id="ulhandle" class="pagination pull-right no-margin">
-				  
-				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
-					        <span aria-hidden="true">&laquo;</span>
-					      </a>
-				    </li>
-				    
-				    <li id="next">
-					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
-					        <span aria-hidden="true">&raquo;</span>
-					      </a>
-				    </li>
-				    
-				  </ul>
-			</nav>
-
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
+				</div>
+				<div class="col-sm-6">
+					<nav>
+						<ul id="ulhandle" class="pagination pull-right no-margin">
+							<li id="previous">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li id="next">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>  
+						</ul>
+					</nav>
+				</div>
+			</div>
 
 			<jsp:include page="/common/message.jsp"></jsp:include>
 			

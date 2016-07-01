@@ -25,6 +25,8 @@ public class SysRole extends BaseModel{
 
     private Date updatedDate;
 
+    private String stationId;
+
     public String getSysRoleId() {
         return sysRoleId;
     }
@@ -103,5 +105,13 @@ public class SysRole extends BaseModel{
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(String stationId) {
+        this.stationId = stationId;
     }
 }

@@ -28,6 +28,21 @@
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
     charge_type, channel, channel_number, operator, is_discharge, discharge_order_id,operator_source_type, operator_target_type,consume_card
   </sql>
+
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_order
+    where 1=1
+    <if test="orderId != null &amp;&amp; orderId != ''" >
+      and order_id = #{orderId,jdbcType=VARCHAR}
+    </if>
+    <if test="orderType != null &amp;&amp; orderType != ''" >
+      and order_type = #{orderType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
