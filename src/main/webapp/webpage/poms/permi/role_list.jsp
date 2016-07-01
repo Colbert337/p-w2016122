@@ -292,7 +292,7 @@
 							<th>角色状态</th>
 							<th class="hidden-480">角色描述</th>
 							<th class="td-w2">添加时间</th>
-							<th class="text-center">操作</th>
+							<th class="text-center td-w2">操作</th>
 						</tr>
 						</thead>
 						<tbody>
