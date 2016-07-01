@@ -25,7 +25,7 @@
 					<div class="form-item">
 						<div class="form-control-user">
 							<span class="icon"></span>
-							<input id="userName" name="userName" class="form-control required user" type="text" tabIndex="1" value="wdq">
+							<input id="userName" name="userName" class="form-control required user" type="text" tabIndex="1" value="">
 							<div class="form-item-error"></div>
 						</div>
 					</div>
@@ -34,8 +34,9 @@
 					<div class="form-item">
 						<div class="form-control-pw">
 							<span class="icon"></span>
-							<input id="password" name="password" class="form-control required" type="password" tabIndex="2" value="111111">
+							<input id="password" name="password" class="form-control required" type="password" tabIndex="2" value="">
 							<div class="form-item-error"></div>
+							<label id="errorNotice" style="color: #FF0000;height: 14px;font-size: 12px;">${erroMsg}</label>
 						</div>
 					</div>
 				</li>

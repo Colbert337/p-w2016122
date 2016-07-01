@@ -28,12 +28,32 @@ function addDriver(){
     $("#driverModel").modal('show');
 }
 
+var countdown=60;
+function settime() {
+    var obj = $("#sendMsgA");
+    if (countdown == 0) {
+        obj.removeAttr("disabled");
+        obj.attr("href","javascript:sendMessage()");
+        obj.text("发送验证码");
+        countdown = 60;
+        return true
+    } else {
+        obj.removeAttr("href");
+        obj.attr("disabled",true);
+        obj.text("重新发送(" + countdown + ")");
+        countdown--;
+    }
+    setTimeout(function() {
+            settime()
+    },1000)
+}
+
 /**
  * 发送验证码
  */
 function sendMessage(){
+    settime();
     var mobilePhone = $("#mobile_phone").val();
-
     $.ajax({
         url:"../crmCustomerService/web/sendMsg/api",
         data:{mobilePhone:mobilePhone,msgType:'register'},

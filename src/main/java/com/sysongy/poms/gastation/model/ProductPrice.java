@@ -39,8 +39,28 @@ public class ProductPrice extends BaseModel {
     private String product_id;
 
     private GsGasPrice product_info;
+    
+    private String created_time_after;
+    
+    private String created_time_before;
 
-    public String getId() {
+    public String getCreated_time_after() {
+		return created_time_after;
+	}
+
+	public void setCreated_time_after(String created_time_after) {
+		this.created_time_after = created_time_after;
+	}
+
+	public String getCreated_time_before() {
+		return created_time_before;
+	}
+
+	public void setCreated_time_before(String created_time_before) {
+		this.created_time_before = created_time_before;
+	}
+
+	public String getId() {
         return id;
     }
 
