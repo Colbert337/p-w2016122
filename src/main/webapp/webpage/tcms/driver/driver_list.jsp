@@ -53,7 +53,7 @@
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
-							<th class="center">
+							<th class="center td-w1">
 								<label class="pos-rel">
 									<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
 									<span class="lbl"></span>

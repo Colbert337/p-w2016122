@@ -67,11 +67,11 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center td-w1">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -84,9 +84,9 @@
 									<th onclick="orderBy(this,'fuel_type');commitForm();" id="indu_com_number_order">燃料类型</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="status_order">关联运输公司</th>
 									<!--  <th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> -->
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
-									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
+									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order" class="td-w2"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
 									<th id="memoth" style="display:none">备注</th>
 									<th id="memoth" style="display:none">驾驶证</th>
 									<th id="memoth" style="display:none">行驶证</th>

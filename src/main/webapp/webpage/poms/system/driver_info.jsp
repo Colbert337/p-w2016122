@@ -67,11 +67,11 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center td-w1">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -84,7 +84,7 @@
 									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册公司</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="sys_transport_id_order">关联运输公司</th>
 									<th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">可用余额</th> 
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">实体卡状态</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">用户状态</th> 

@@ -70,11 +70,11 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center td-w1">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -85,8 +85,8 @@
 									<th>当前单价</th>
 									<th onclick="orderBy(this,'gas_num');commitForm();" id="gas_num_order">气品类型</th>
 									<th onclick="orderBy(this,'gas_name');commitForm();" id="gas_name_order">气品子类型</th>
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="createdDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
-									<th class="text-center">更多操作</th>
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="createdDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
+									<th class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
 
