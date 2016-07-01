@@ -46,6 +46,9 @@ h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
 .option-btn-m{
     margin-right: 6px;
 }
+.alert-mt {
+    margin-top: 10px;
+}
 .form-horizontal .has-feedback .form-control-feedback {
     right: -16px;
 }
