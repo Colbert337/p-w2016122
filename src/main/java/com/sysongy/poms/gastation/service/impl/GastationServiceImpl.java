@@ -229,14 +229,14 @@ public class GastationServiceImpl implements GastationService {
 		BigDecimal prepay_balance = obj.getPrepay_balance();
 		BigDecimal new_prepay_balance = prepay_balance.add(addCash);
 		if (new_prepay_balance.compareTo(new BigDecimal(0)) <0 ){
-			return  GlobalConstant.OrderProcessResult.ORDER_ERROR_PREPAY_IS_NOT_ENOUGH;
+			throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_PREPAY_IS_NOT_ENOUGH);
 		}
 		Integer prepay_version =  obj.getPrepay_version();
 		obj.setPrepay_version(prepay_version.intValue()+1);
 		obj.setPrepay_balance(new_prepay_balance);
 	    int ret_int = gasStationMapper.updatePrepayBalance(obj);
 	    if(ret_int<1){
-	    	return  GlobalConstant.OrderProcessResult.ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR;
+	    	throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR);
 	    }
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
@@ -250,13 +250,13 @@ public class GastationServiceImpl implements GastationService {
 		   if(GlobalConstant.OrderOperatorSourceType.GASTATION.equalsIgnoreCase(operator_source_type)){
 			   String gasId = order.getOperatorSourceId();
 			   if(gasId==null || gasId.equalsIgnoreCase("")){
-				   return GlobalConstant.OrderProcessResult.CHARGE_TO_DRIVER_BY_CASH_OPERATOR_SOURCE_TYPE_IS_NULL;
+				   throw new Exception( GlobalConstant.OrderProcessResult.CHARGE_TO_DRIVER_BY_CASH_OPERATOR_SOURCE_TYPE_IS_NULL);
 			   }
 			   Gastation gastation = queryGastationByPK(order.getOperatorSourceId());
 			   BigDecimal prepay = gastation.getPrepay_balance();
 			   BigDecimal cash = order.getCash();
 			   if(cash.compareTo(prepay) > 0){
-				   return GlobalConstant.OrderProcessResult.ORDER_ERROR_PREPAY_IS_NOT_ENOUGH;
+				   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_ERROR_PREPAY_IS_NOT_ENOUGH);
 			   }
 			   //减少预付款，并增加预付款操作记录。将订单中的金额cash修改为负数，因为是要减少预付款---如果是充红，则刚好进行了相反操作，变成正值。正确
 		 	   BigDecimal addCash = cash.multiply(new BigDecimal(-1));
@@ -271,7 +271,7 @@ public class GastationServiceImpl implements GastationService {
 			   orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,updateBalance_success);
 		 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(updateBalance_success)){
 		 		   //如果出错直接返回错误代码退出
-		 		   return updateBalance_success;
+		 		  throw new Exception( updateBalance_success);
 		 	   }
 		 	   //增加预付款操作历史流程：
 		 	   SysPrepay sysPrepay = new SysPrepay();

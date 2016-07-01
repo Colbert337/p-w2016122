@@ -149,12 +149,12 @@ public class DriverServiceImpl implements DriverService {
 	 */
 	public String chargeCashToDriver(SysOrder order, String is_discharge) throws Exception{
 		if (order ==null){
-			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+			throw new Exception(GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
 		}
 		
 		String debit_account = order.getDebitAccount();
 		if(debit_account==null ||debit_account.equalsIgnoreCase("")){
-			return GlobalConstant.OrderProcessResult.DEBIT_ACCOUNT_IS_NULL;
+			throw new Exception(GlobalConstant.OrderProcessResult.DEBIT_ACCOUNT_IS_NULL);
 		}
 		
 		//给账户充钱
@@ -164,9 +164,10 @@ public class DriverServiceImpl implements DriverService {
 		//如果是负值，但是is_discharge却不是充红，则返回错误
 		if(cash.compareTo(new BigDecimal("0")) < 0 ){
 			if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
-				   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE;
+				throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
 			 }
 		}
+		//driver_account="abcd";		
 		String cash_success = sysUserAccountService.addCashToAccount(driver_account,cash);
 		//记录订单流水
 		String chong = "充值";
@@ -186,19 +187,22 @@ public class DriverServiceImpl implements DriverService {
 	}
 	
 	/**
-	 * 给司机转账的时候扣除司机账户
+	 * 扣除司机账户金额
+	 * 转账：扣除A司机
+	 * 消费：扣除
+	 *     消费充红：is_discharge是yes，则
 	 * @param order
 	 * @return
      * @throws Exception 
 	 */
 	public String deductCashToDriver(SysOrder order, String is_discharge) throws Exception{
 		if (order ==null){
-			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
 		}
 		
 		String credit_account = order.getCreditAccount();
 		if(credit_account==null || credit_account.equalsIgnoreCase("")){
-			   return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN;
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
 		}
 		
 		//给账户减去
@@ -210,7 +214,7 @@ public class DriverServiceImpl implements DriverService {
 		//如果是负值，但是is_discharge却不是充红，则返回错误
 		if(cash.compareTo(new BigDecimal("0")) < 0 ){
 			if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
-				   return GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE;
+				throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
 			 }
 		}
 		String cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash);
@@ -251,7 +255,7 @@ public class DriverServiceImpl implements DriverService {
         	String cashTo_success = sysCashBackService.cashToAccount(order, cashBackList, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);
         	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success)){
         		//如果出错，直接退出
-        		return cashTo_success;
+        		throw new Exception( cashTo_success);
         	}else{
         		//首次充值返现成功后，将driver的is_first_charge字段修改为NO
         		driver.setIsFirstCharge(GlobalConstant.FIRST_CHAGRE_NO);
@@ -261,10 +265,11 @@ public class DriverServiceImpl implements DriverService {
 		//2.根据当前充值类型，调用对应的返现规则
         String charge_type = order.getChargeType();
     	List<SysCashBack>  cashBackList_specific_type = sysCashBackService.queryCashBackByNumber(charge_type);
-    	String cashTo_success_specific_type = sysCashBackService.cashToAccount(order, cashBackList_specific_type, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CASHBACK);
+    	String driver_accountId = driver.getSysUserAccountId();
+    	String cashTo_success_specific_type = sysCashBackService.cashToAccount(order, cashBackList_specific_type, driver_accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CASHBACK);
     	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success_specific_type)){
     		//如果出错，直接退出
-    		return cashTo_success_specific_type;
+    		throw new Exception( cashTo_success_specific_type);
     	}
 		return cashTo_success_specific_type;
 	}

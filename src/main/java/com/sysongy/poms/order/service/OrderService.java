@@ -67,6 +67,14 @@ public interface OrderService {
      * @throws Exception
      */
     boolean checkCanDischarge(SysOrder order) throws Exception;
+    
+    /**
+     * 根据原订单，创建充红订单
+     * @param order
+     * @return
+     * @throws Exception
+     */
+    SysOrder createDischargeOrderByOriginalOrder(SysOrder originalOrder, String operatorId,String discharge_reason) throws Exception;
 
     /**
      * 生成订单编码 
@@ -81,7 +89,7 @@ public interface OrderService {
      * @return
      * @throws Exception
      */
-    String dischargeOrder(SysOrder order) throws Exception;
+    String dischargeOrder(SysOrder originalOrder, SysOrder dischargeOrder) throws Exception;
 
     /**
      * 个人消费

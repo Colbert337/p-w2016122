@@ -36,11 +36,32 @@ public class SysOrder {
     
 	private String is_discharge;
 	
+	private String been_discharged;
+	
+	public String getBeen_discharged() {
+		return been_discharged;
+	}
+
+	public void setBeen_discharged(String been_discharged) {
+		this.been_discharged = been_discharged;
+	}
+
+	private String discharge_reason;
+	
 	private String operatorSourceId;
 
     private String consume_card;
 
     private GasCard consume_cardInfo;
+    
+    
+    public String getDischarge_reason() {
+		return discharge_reason;
+	}
+
+	public void setDischarge_reason(String discharge_reason) {
+		this.discharge_reason = discharge_reason;
+	}
 
     public String getOperatorSourceId() {
 		return operatorSourceId;
