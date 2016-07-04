@@ -296,7 +296,7 @@
 							<th>用户类型</th>
 							<th>用户状态</th>
 							<th class="td-w2">创建时间</th>
-							<th class="text-center">操作</th>
+							<th class="text-center td-w2">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -398,7 +398,7 @@
 							<!-- PAGE CONTENT BEGINS -->
 							<form class="form-horizontal" id="userForm">
 								<!-- #section:elements.form -->
-								<h5 class="header smaller lighter blue">账户信息</h5>
+								<h5 class="header smaller lighter blue no-margin-top">账户信息</h5>
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
 									<div class="col-sm-4">
