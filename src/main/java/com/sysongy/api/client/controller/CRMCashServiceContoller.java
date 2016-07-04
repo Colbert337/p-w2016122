@@ -51,63 +51,13 @@ public class CRMCashServiceContoller {
     @RequestMapping("/web/customerGasPay")
     public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
-        SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
+        //SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
+        SysOrder record = orderService.selectByPrimaryKey(strRecord);
         if((record == null) || StringUtils.isEmpty(record.getOrderId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单ID为空！！！");
             return ajaxJson;
         }
-
-        PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
-        if((sysOrders == null) || (sysOrders.getList().size() > 0)){
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("该订单已存在，请勿提交重复订单！！！");
-            return ajaxJson;
-        }
-
-        String payCode = request.getParameter("payCode");
-        if(StringUtils.isEmpty(payCode)){
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("支付密码为空！！！");
-            return ajaxJson;
-        }
-
-        SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(record.getCreditAccount());
-        if((creditAccount != null) || (creditAccount.getSys_drive_info() != null)
-                || !(creditAccount.getSys_drive_info().getPayCode().equalsIgnoreCase(payCode))){
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("支付密码错误！！！");
-            return ajaxJson;
-        }
-
-        if(!StringUtils.isEmpty(record.getConsume_card())){
-            String checkCode = request.getParameter("checkCode");
-            String checkCodeFromRedis = (String)redisClientImpl.getFromCache
-                    (creditAccount.getSys_drive_info().getMobilePhone());
-            if(StringUtils.isEmpty(checkCodeFromRedis)){
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("验证码已失效，请重新生成验证码！！！");
-                return ajaxJson;
-            }
-            if(StringUtils.isEmpty(checkCode)){
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("短信验证码为空！！！");
-                return ajaxJson;
-            }
-            if(!checkCode.equalsIgnoreCase(checkCodeFromRedis)){
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("短信验证码错误！！！");
-                return ajaxJson;
-            }
-        }
-
-        String orderConsume = orderService.consumeByDriver(record);
-        if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("订单消费错误：" + orderConsume);
-            return ajaxJson;
-        }
-
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", record);
         ajaxJson.setAttributes(attributes);
