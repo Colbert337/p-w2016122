@@ -191,12 +191,12 @@ public class TransportionServiceImpl implements TransportionService {
 	 */
 	public String chargeCashToTransportion(SysOrder order) throws Exception{
 		if (order ==null){
-			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
 		}
 		
 		String debit_account = order.getDebitAccount();
 		if(debit_account==null ||debit_account.equalsIgnoreCase("")){
-			return GlobalConstant.OrderProcessResult.DEBIT_ACCOUNT_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.DEBIT_ACCOUNT_IS_NULL);
 		}
 		
 		//给账户充钱
@@ -222,10 +222,10 @@ public class TransportionServiceImpl implements TransportionService {
 	 */
 	public String transferTransportionToDriverDeductCash(SysOrder order,Transportion tran) throws Exception{
 		if (order ==null){
-			   return GlobalConstant.OrderProcessResult.ORDER_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
 		}
 		if (tran ==null){
-			   return GlobalConstant.OrderProcessResult.TRANSPORTION_IS_NULL;
+			throw new Exception( GlobalConstant.OrderProcessResult.TRANSPORTION_IS_NULL);
 		}
 		//从账户减钱
 		String tran_account = tran.getSys_user_account_id();
@@ -274,6 +274,11 @@ public class TransportionServiceImpl implements TransportionService {
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 		log.setOrder_number(orderNumber);
+		if(StringUtils.isEmpty(log.getTransfer_photo())){
+			Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+			String show_path = (String) prop.get("default_img");
+			log.setTransfer_photo(show_path);
+		}
 		return sysDepositLogMapper.insert(log);
 	}
 

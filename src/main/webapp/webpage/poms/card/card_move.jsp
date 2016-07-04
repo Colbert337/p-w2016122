@@ -64,7 +64,7 @@
 									
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="card_no_1"> 用户卡起始编号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="card_no_1">用户卡起始编号： </label>
 
 										<div class="col-sm-4">
 											<input type="text" id="card_no_1"  name="card_no_start" placeholder="卡起始编号" class="form-control" maxlength="9"/>
@@ -72,7 +72,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="card_no_2"> 用户卡结束编号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="card_no_2">用户卡结束编号： </label>
 
 										<div class="col-sm-4">
 											<input type="text" id="card_no_2"  name="card_no_end" placeholder="卡结束编号" class="form-control" maxlength="9"/>
@@ -81,7 +81,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" >调拨对象类型：</label>
+										<label class="col-sm-3 control-label no-padding-right">调拨对象类型：</label>
 										<div class="col-sm-4">
 												<select class="form-control" id="workstation_type" name="workstation_type" onchange="init_workstation(this);">
 													<s:option flag="true" gcode="STATION_TYPE" />
@@ -90,7 +90,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" >调拨工作站：</label>
+										<label class="col-sm-3 control-label no-padding-right">调拨工作站：</label>
 										<div class="col-sm-4">
 												<select class="form-control" id="workstation" name="workstation">
 												</select>
@@ -98,7 +98,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" >工作站领取人：</label>
+										<label class="col-sm-3 control-label no-padding-right">工作站领取人：</label>
 										<div class="col-sm-4">
 												<input type="text" name="workstation_resp" class="form-control" id="workstation_resp" maxlength="10"/>
 												<%-- <select class="form-control" id="workstation_resp" name="workstation_resp">
@@ -107,9 +107,9 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="operator">操作人：</label>
+										<label class="col-sm-3 control-label no-padding-right">操作人：</label>
 										<div class="col-sm-4">
-											<input type="text"  id="operator" name="operator" class="form-control"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
+											<input type="text" id="operator" name="operator" class="form-control" maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
 										</div>
 									</div>
 						

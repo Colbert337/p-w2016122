@@ -59,7 +59,7 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		BigDecimal balance_result = balance.add(cash);
 		//如果余额变成负值，则抛出错误:余额不足
 		if(balance_result.compareTo(new BigDecimal(0))<0){
-			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH);
 		}
 		sysUserAccount.setAccountBalance(balance_result.toString());
 		sysUserAccount.setUpdatedDate(new Date());
@@ -67,12 +67,13 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		int ver = sysUserAccount.getVersion();
 		sysUserAccount.setVersion(ver+1);
 		//更新此account对象则保存到db中
-		int upRow = sysUserAccountMapper.updateAccount(sysUserAccount);
+		int upRow = sysUserAccountMapper.updateAccountBalance(sysUserAccount);
 		if(upRow==1){
 			return GlobalConstant.OrderProcessResult.SUCCESS;	
 		}else{
 			//upRow不是1就是0,0条的原因是version已经改变
-			return GlobalConstant.OrderProcessResult.ORDER_ACCOUNT_VERSION_HAVE_CHANGED;
+			//TODO 乐观所处理
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_ACCOUNT_VERSION_HAVE_CHANGED);
 		}
 	}
 

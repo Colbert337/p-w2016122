@@ -22,7 +22,7 @@
     select
     <include refid="Base_Column_List" />
     from sys_role
-    where 1=1
+    where is_deleted = 1 and role_status = 0 and is_admin > 0
     <trim>
       <if test="sysRoleId != null &amp;&amp; sysRoleId !=''" >
         and sys_role_id = #{sysRoleId}
@@ -73,7 +73,8 @@
     <include refid="Base_Column_List" />
     from sys_role
     where role_type = #{0}
-    and is_deleted = 1 and role_status = 0
+    and station_id = #{1}
+    and is_deleted = 1 and role_status = 0 and is_admin > 0
   </select>
   <delete id="deleteRoleById" parameterType="java.lang.String" >
     delete from sys_role

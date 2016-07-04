@@ -86,14 +86,29 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
     max-width: 1000px;
     margin: 2% auto 0 auto;
 }
-.gastation-infomation .title {
-    background-color: #eee;
+.gastation-infomation a {
+	display: block;
+    background-color: #ddd;
     text-align: center;
+}
+.gastation-infomation img{
+	height:160px;
+	margin: 0 auto;
+	padding: 5px;
+}
+.gastation-infomation .title {
+    border-top: 1px solid #eee;
     padding: 5px 0;
+}
+.gastation-infomation-items {
+	margin-top: 2%;
 }
 .gastation-infomation-items .item {
     border-bottom: 1px solid #ddd;
     padding: 8px 0;
+}
+.gastation-infomation-items .value {
+    color:#666;
 }
 .modal-header {
     border-bottom-width: 0;

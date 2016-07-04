@@ -414,11 +414,11 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码： </label>
 									<div class="col-sm-4">
-										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[20]] col-xs-10 col-sm-12" />
+										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[33]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-4">
-										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],maxSize[20],equals[password]] col-xs-10 col-sm-12" />
+										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],maxSize[33],equals[password]] col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">

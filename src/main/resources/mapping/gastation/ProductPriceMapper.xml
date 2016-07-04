@@ -47,6 +47,9 @@
     <if test="product_id != null &amp;&amp; product_id != ''" >
       and product_id = #{product_id,jdbcType=VARCHAR}
     </if>
+    <if test="created_time_after != null &amp;&amp; created_time_after != ''">
+        and create_time between CONCAT(#{created_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{created_time_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
      order by product_price_status desc
   </select>
 

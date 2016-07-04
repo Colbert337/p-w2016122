@@ -1,14 +1,20 @@
 package com.sysongy.api.client.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,28 +38,75 @@ public class CRMCashServiceContoller {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private SysUserAccountService sysUserAccountService;
+
+    @Autowired
+    SysUserService sysUserService;
+
+    @Autowired
+    RedisClientInterface redisClientImpl;
+
     @ResponseBody
     @RequestMapping("/web/customerGasPay")
-    public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
+    public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
+        //SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
+        SysOrder record = orderService.selectByPrimaryKey(strRecord);
+        if((record == null) || StringUtils.isEmpty(record.getOrderId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单ID为空！！！");
+            return ajaxJson;
+        }
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("sysOrder", record);
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
 
+    @ResponseBody
+    @RequestMapping("/web/hedgeFund")
+    public AjaxJson hedgeFund(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
+        AjaxJson ajaxJson = new AjaxJson();
         if((record == null) || StringUtils.isEmpty(record.getOrderId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单ID为空！！！");
             return ajaxJson;
         }
 
-        PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
-        if((sysOrders == null) || (sysOrders.getList().size() > 0)){
+        String curUserName = request.getParameter("userName");
+        String curPassword = request.getParameter("password");
+        SysUser sysUser = new SysUser();
+        sysUser.setMobilePhone(curUserName);
+        sysUser.setPassword(curPassword);
+        SysUser user = sysUserService.queryUserMapByAccount(sysUser);
+        if(user == null){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("该订单已存在，请勿提交重复订单！！！");
+            ajaxJson.setMsg("用户名或密码错误，请重新登录！");
             return ajaxJson;
         }
 
+        String adminUserName = request.getParameter("adminUserName");
+        String adminPassword = request.getParameter("adminPassword");
+        if((StringUtils.isEmpty(adminUserName)) || (StringUtils.isEmpty(adminPassword))){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("管理员用户名或密码为空！！！");
+            return ajaxJson;
+        }
+
+        SysUser sysUserAdmin = new SysUser();
+        sysUserAdmin.setMobilePhone(adminUserName);
+        SysUser sysUserOperator = sysUserService.queryUser(sysUserAdmin);
+
+        String strReason = request.getParameter("hedgeReason");
+        SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(record,
+                sysUserOperator.getSysUserId(), strReason);
+        hedgeRecord.getConsume_card();
+        //orderService.dischargeOrder();
+
         Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("sysOrder", sysOrders);
+        attributes.put("sysOrder", record);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
-
 }

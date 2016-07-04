@@ -165,8 +165,9 @@ public class SysUserController extends BaseContoller{
 	@RequestMapping("/list/role")
 	@ResponseBody
 	public List<SysRole> queryRoleList(@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
+		String stationId = currUser.getStationId();
 		int userType = currUser.getUser().getUserType();
-		List<SysRole> roleList = sysRoleService.queryRoleListByUserType(userType+"");
+		List<SysRole> roleList = sysRoleService.queryRoleListByUserType(userType+"",stationId);
 
 		return roleList;
 	}
