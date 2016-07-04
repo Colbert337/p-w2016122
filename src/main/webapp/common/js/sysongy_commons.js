@@ -22,7 +22,7 @@ function ajaxQueryData(obj,url,datatype){
 			$(obj).html(msg);
 		},
 		error:function(){
-			alert('加载页面' + url + '时出错！');
+			bootbox.alert('加载页面' + url + '时出错！');
 		}
 	});
 }

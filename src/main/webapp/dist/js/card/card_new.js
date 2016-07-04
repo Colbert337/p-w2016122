@@ -71,7 +71,7 @@
 		    
 		function save(){
 			if(contral == "0"){
-				alert("列表中没有需要入库的卡");
+				bootbox.alert("列表中没有需要入库的卡");
 				return;
 			}
 			/*手动验证表单，当是普通按钮时。*/
@@ -114,7 +114,7 @@
 			var num = end - start;
 			
 			if(end - start >=2000){
-				alert("单批次操作卡数量最大值为2000");
+				bootbox.alert("单批次操作卡数量最大值为2000");
 				return;
 			}
 			
@@ -151,7 +151,7 @@
 
 			function tableList() {
 				if(contral == "0"){
-					alert("该批次中没有需要入库的卡");
+					bootbox.alert("该批次中没有需要入库的卡");
 				}
 				$("#init_dynamic_data").attr("disabled","disabled");
 				initTable();

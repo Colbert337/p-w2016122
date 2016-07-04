@@ -6,6 +6,7 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
 
 <script src="<%=basePath %>/dist/js/gastation/gastation_list.js"></script>
@@ -130,14 +131,11 @@
 									<td>${list.prepay_balance}</td>
 									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">
-											<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
-												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
-											</a>
-											<!-- <a class="option-btn-m" href="javascript:void(0);" title="预付款额度" data-rel="tooltip">
-												<i class="ace-icon fa fa-credit-card bigger-130" onclick="preDeposit(this);"></i>
-											</a> -->
-											<!-- <a href="" class="logic-del" title="删除" data-rel="tooltip">
-											<i class="ace-icon fa fa-trash-o bigger-130"></i> -->
+										<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
+											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+										</a>
+										<a class="" href="javascript:void(0);" title="查看图片">
+											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel('${list.indu_com_certif}','${list.tax_certif}','${list.lng_certif}','${list.dcp_certif}');"></i>
 										</a>
 									</td>
 								</tr>
@@ -178,4 +176,53 @@
 	</div>
 	<!-- /.row -->
 	</form>
+</div>
+
+
+<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid" id="tt">
+					<div class="gastation-infomation">
+
+					    <div class="row">
+					        <div class="col-sm-3">
+					            <a class="gastation-log-colorbox" href="" data-rel="colorbox">
+									<img class="img-responsive" src="" alt="" id="innerimg1">
+									<div class="title">工商注册证</div>
+								</a>
+					        </div>
+					        <div class="col-sm-3">
+					        	<a class="gastation-log-colorbox" href="" data-rel="colorbox">
+									<img class="img-responsive" src="" alt="" id="innerimg2">
+									<div class="title">税务注册证</div>
+								</a>
+					        </div>
+					        <div class="col-sm-3">
+					        	<a class="gastation-log-colorbox" href="" data-rel="colorbox">
+									<img class="img-responsive" src="" alt="" id="innerimg3">
+									<div class="title">LNG储装证</div>
+								</a>
+					        </div>
+					        <div class="col-sm-3">
+					        	<a class="gastation-log-colorbox" href="" data-rel="colorbox">
+									<img class="img-responsive" src="" alt="" id="innerimg4">
+									<div class="title">危化品证</div>
+								</a>
+					        </div>
+					    </div>
+					
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-sm"  data-dismiss="modal">确 定</button>
+			</div>
+		</div>
+	</div>
 </div>

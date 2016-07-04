@@ -40,7 +40,7 @@
 						
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>平台有效期:</label>
+								<label>更新时间:</label>
 								<input type="text" class="" name="created_time_after" value="${productPrice.created_time_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>

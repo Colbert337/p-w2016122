@@ -112,7 +112,7 @@
 			var end = parseFloat($("#card_no_2").val());
 			
 			if(end - start >=2000){
-				alert("单批次操作卡数量最大值为2000");
+				bootbox.alert("单批次操作卡数量最大值为2000");
 				return;
 			}
 			
@@ -145,7 +145,8 @@
 			function tableList() {
 				var tr = $("#dynamic-table").find("tbody").find("tr");
 				if(tr.length==0){
-					alert("此号段没有可出库的用户卡");
+					bootbox.alert("此号段没有可出库的用户卡");
+					return;
 				}
 				$("#init_dynamic_data").attr("disabled","disabled");
 				initTable();
