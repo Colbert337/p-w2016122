@@ -217,15 +217,11 @@
 					</div>
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-					<div class="row" id="optionbutton">
-						<div class="space"></div>
-						<div class="col-xs-3"></div>
-						<div class="col-xs-3"><button class="btn btn-primary" onclick="addMemo();">确定</button></div>
-						<div class="col-xs-6"><button class="btn" onclick="hideInnerModel();">取消 </button></div>
-					</div>
-				
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="addMemo()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="hideInnerModel();">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
