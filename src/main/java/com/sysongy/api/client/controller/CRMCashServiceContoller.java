@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUser;
@@ -12,9 +14,11 @@ import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.util.AliShortMessage;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.pojo.AliShortMessageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +51,112 @@ public class CRMCashServiceContoller {
     @Autowired
     RedisClientInterface redisClientImpl;
 
+    @Autowired
+    DriverService driverService;
+
     @ResponseBody
-    @RequestMapping("/web/customerGasPay")
-    public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
+    @RequestMapping("/web/customerGasCharge")
+    public AjaxJson customerGasCharge(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
-        //SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
-        SysOrder record = orderService.selectByPrimaryKey(strRecord);
-        if((record == null) || StringUtils.isEmpty(record.getOrderId())){
+        if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
+                StringUtils.isEmpty(record.getOperatorSourceId()) ){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("订单ID为空！！！");
+            ajaxJson.setMsg("订单ID或者气站ID为空！！！");
             return ajaxJson;
         }
+
+        PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
+        if((sysOrders == null) || (sysOrders.getList().size() > 0)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("该订单已存在，请勿提交重复订单！！！");
+            return ajaxJson;
+        }
+
+        String orderCharge = orderService.chargeToDriver(record);
+        if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单充值错误：" + orderCharge);
+            return ajaxJson;
+        }
+
+        SysDriver sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
+        if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
+            AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+            aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
+            aliShortMessageBean.setProduct("司集能源科技平台");
+            AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
+        } else {
+            logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
+        }
+
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("sysOrder", record);
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
+    @ResponseBody
+    @RequestMapping("/web/customerGasPay")
+    public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
+        AjaxJson ajaxJson = new AjaxJson();
+        if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
+                StringUtils.isEmpty(record.getOperatorSourceId()) ){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单ID或者气站ID为空！！！");
+            return ajaxJson;
+        }
+
+
+        PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
+        if((sysOrders == null) || (sysOrders.getList().size() > 0)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("该订单已存在，请勿提交重复订单！！！");
+            return ajaxJson;
+        }
+
+        String payCode = request.getParameter("payCode");
+        if(StringUtils.isEmpty(payCode)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("支付密码为空！！！");
+            return ajaxJson;
+        }
+
+        SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(record.getCreditAccount());
+        if((creditAccount != null) || (creditAccount.getSys_drive_info() != null)
+                || !(creditAccount.getSys_drive_info().getPayCode().equalsIgnoreCase(payCode))){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("支付密码错误！！！");
+            return ajaxJson;
+        }
+
+        if(!StringUtils.isEmpty(record.getConsume_card())){
+            String checkCode = request.getParameter("checkCode");
+            String checkCodeFromRedis = (String)redisClientImpl.getFromCache
+                    (creditAccount.getSys_drive_info().getMobilePhone());
+            if(StringUtils.isEmpty(checkCodeFromRedis)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("验证码已失效，请重新生成验证码！！！");
+                return ajaxJson;
+            }
+            if(StringUtils.isEmpty(checkCode)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("短信验证码为空！！！");
+                return ajaxJson;
+            }
+            if(!checkCode.equalsIgnoreCase(checkCodeFromRedis)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("短信验证码错误！！！");
+                return ajaxJson;
+            }
+        }
+
+        String orderConsume = orderService.consumeByDriver(record);
+        if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单消费错误：" + orderConsume);
+            return ajaxJson;
+        }
+
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", record);
         ajaxJson.setAttributes(attributes);
