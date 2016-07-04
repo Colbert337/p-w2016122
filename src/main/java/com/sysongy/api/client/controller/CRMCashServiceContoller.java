@@ -4,9 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -54,10 +59,20 @@ public class CRMCashServiceContoller {
     @Autowired
     DriverService driverService;
 
+    @Autowired
+    OrderDealService orderDealService;
+
+    @Autowired
+    private GasCardService gasCardService;
+
+    @Autowired
+    private GastationService gastationService;
+
     @ResponseBody
     @RequestMapping("/web/customerGasCharge")
-    public AjaxJson customerGasCharge(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
+    public AjaxJson customerGasCharge(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
+        SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
         if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
                 StringUtils.isEmpty(record.getOperatorSourceId()) ){
             ajaxJson.setSuccess(false);
@@ -79,8 +94,19 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-        SysDriver sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
+        int cashBack = orderDealService.selectCashBackByOrderID(record.getOrderId());
+        record.setCashBack(cashBack);
+        SysDriver sysDriver = driverService.queryDriverByPK(record.getDebitAccount());
+        Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
+        if(gastation != null){
+            record.setGastation(gastation);
+        }
         if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
+            record.setSysDriver(sysDriver);
+            GasCard gasCard = gasCardService.queryGasCardInfo(sysDriver.getCardId());
+            if(gasCard != null){
+                record.setGasCard(gasCard);
+            }
             AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
             aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
             aliShortMessageBean.setProduct("司集能源科技平台");

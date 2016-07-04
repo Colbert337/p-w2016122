@@ -18,5 +18,6 @@ public interface SysOrderDealMapper {
     int updateSysOrderDeal(SysOrderDeal record);
     
     List<SysOrderDeal> queryOrderDealByOrderId(String orderId);
-    
+
+    int selectCashBackByOrderID(String orderId);
  }

@@ -8,6 +8,8 @@ import java.util.List;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,8 @@ import com.sysongy.util.UUIDGenerator;
  */
 @Service
 public class OrderServiceImpl implements OrderService {
+
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private SysOrderMapper sysOrderMapper;
@@ -124,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
 	   }
 	   
 	   String orderType = order.getOrderType();
-	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_DRIVER))){
+	   if(orderType == null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_DRIVER))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH);
 	   }
 	   String operatorTargetType = order.getOperatorTargetType();
@@ -585,5 +589,14 @@ public class OrderServiceImpl implements OrderService {
 		   throw new Exception( success_chong);
   	   }
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
+
+	public Integer selectCashBackByOrderID(String orderId){
+		if(StringUtils.isEmpty(orderId)){
+			logger.error("The order id is null!!!");
+			return null;
+		}
+
+		return orderDealService.selectCashBackByOrderID(orderId);
 	}
 }
