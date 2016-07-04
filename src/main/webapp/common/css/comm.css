@@ -159,3 +159,7 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 .sjny-table-responsive > .table > tfoot > tr > td {
     white-space: nowrap;
 }
+.form-group-tree {
+    border: 1px solid #eee;
+    border-width: 1px 0;
+}

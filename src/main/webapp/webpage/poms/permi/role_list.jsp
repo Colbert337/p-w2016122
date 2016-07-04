@@ -403,9 +403,8 @@
 										<textarea class="limited col-xs-10 col-sm-10" id="role_desc" name="roleDesc" maxlength="50" style="resize: none;"></textarea>
 									</div>
 								</div>
-								<hr/>
-								<div class="form-group">
-									<div class="col-sm-4"></div>
+								<div class="form-group form-group-tree">
+									<label class="col-sm-4 control-label no-padding-right" for=""> 功能选择： </label>
 									<div class="col-sm-3">
 										<ul id="treeDiv" class="ztree"></ul>
 									</div>
@@ -417,7 +416,6 @@
 				</div>
 				<!--底部按钮 -->
 				<div class="row">
-					<div class="space"></div>
 					<div class="col-xs-3"></div>
 					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveRole()">确   定</button></div>
 					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('roleModel')">取   消 </button></div>

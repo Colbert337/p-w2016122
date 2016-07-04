@@ -176,7 +176,6 @@
 										<select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallist" style="display: none;height: 270px;"></select>
 										<input type="hidden" id="fleet_id" name="tcFleetId" />
 										<input type="hidden" id="sysUserId" name="sysUserId" />
-										<div class="hr hr-16 hr-dotted"></div>
 									</div>
 								</div>
 							</form>

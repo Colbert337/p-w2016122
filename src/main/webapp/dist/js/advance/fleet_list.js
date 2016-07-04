@@ -5,7 +5,7 @@
 var setlectItem;
 jQuery(function($){
     var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox(
-        {infoTextFiltered: '<span class="label label-purple label-lg">Filtered</span>'}
+        {infoTextFiltered: ''}
     );
     setlectItem = demo1;
     var container1 = demo1.bootstrapDualListbox('getContainer');
