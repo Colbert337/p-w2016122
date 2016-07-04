@@ -145,6 +145,7 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 .bootbox-alert .bootbox-body {
     text-align: center;
 }
+.modal-alert .modal-footer,
 .bootbox-alert .modal-footer {
     text-align: right;
 }
