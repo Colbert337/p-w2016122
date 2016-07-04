@@ -41,14 +41,6 @@ public class SysOrder extends BaseModel{
 	private String is_discharge;
 	
 	private String been_discharged;
-	
-	public String getBeen_discharged() {
-		return been_discharged;
-	}
-
-	public void setBeen_discharged(String been_discharged) {
-		this.been_discharged = been_discharged;
-	}
 
 	private String discharge_reason;
 	
@@ -57,17 +49,24 @@ public class SysOrder extends BaseModel{
     private String consume_card;
 
     private GasCard consume_cardInfo;
-    
-    
+
+    private List<SysOrderGoods> sysOrderGoods;
+
     public String getDischarge_reason() {
 		return discharge_reason;
 	}
 
+    public String getBeen_discharged() {
+        return been_discharged;
+    }
+
+    public void setBeen_discharged(String been_discharged) {
+        this.been_discharged = been_discharged;
+    }
+
 	public void setDischarge_reason(String discharge_reason) {
 		this.discharge_reason = discharge_reason;
 	}
-
-    private List<SysOrderGoods> sysOrderGoods;
 
     public String getOperatorSourceId() {
 		return operatorSourceId;

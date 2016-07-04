@@ -106,7 +106,6 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-
         PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
         if((sysOrders == null) || (sysOrders.getList().size() > 0)){
             ajaxJson.setSuccess(false);
@@ -121,9 +120,10 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        SysDriver sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
         SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(record.getCreditAccount());
-        if((creditAccount != null) || (creditAccount.getSys_drive_info() != null)
-                || !(creditAccount.getSys_drive_info().getPayCode().equalsIgnoreCase(payCode))){
+        if((creditAccount != null) || (sysDriver != null)
+                || !(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("支付密码错误！！！");
             return ajaxJson;
@@ -132,7 +132,7 @@ public class CRMCashServiceContoller {
         if(!StringUtils.isEmpty(record.getConsume_card())){
             String checkCode = request.getParameter("checkCode");
             String checkCodeFromRedis = (String)redisClientImpl.getFromCache
-                    (creditAccount.getSys_drive_info().getMobilePhone());
+                    (sysDriver.getMobilePhone());
             if(StringUtils.isEmpty(checkCodeFromRedis)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("验证码已失效，请重新生成验证码！！！");
