@@ -4,14 +4,14 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h5 class="modal-title">温馨提示</h5>
+				<%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h5 class="modal-title">温馨提示</h5>--%>
 			</div>
-			<div class="modal-body">
-				<p class="text-center">${ret.retMsg}</p>
+			<div class="modal-body modal-body-msg">
+				${ret.retMsg}
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-sm btn-default" data-dismiss="modal">确定</button>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->

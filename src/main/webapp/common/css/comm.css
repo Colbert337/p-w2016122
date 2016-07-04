@@ -123,16 +123,34 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 }
 .modal-header .close {
     margin-top: -8px;
+    display: none;
 }
 .modal-title {
     font-size: 16px;
     padding-left: 10px;
 }
+.modal-footer {
+    text-align: center;
+}
+.modal-footer .btn + .btn {
+    margin-left:30px;
+}
 .bootbox-close-button {
     font-size: 32px;
+    display: none;
 }
 .bootbox-body {
     padding: 20px;
+}
+.bootbox-alert .bootbox-body {
+    text-align: center;
+}
+.bootbox-alert .modal-footer {
+    text-align: right;
+}
+.modal-body-msg {
+    padding: 5px 35px 35px;
+    text-align: center;
 }
 .td-w1 {
     width: 40px;
@@ -158,8 +176,4 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 .sjny-table-responsive > .table > tbody > tr > td,
 .sjny-table-responsive > .table > tfoot > tr > td {
     white-space: nowrap;
-}
-.form-group-tree {
-    border: 1px solid #eee;
-    border-width: 1px 0;
 }
