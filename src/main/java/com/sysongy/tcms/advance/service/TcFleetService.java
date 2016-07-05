@@ -74,4 +74,11 @@ public interface TcFleetService {
      * @return
      */
     int updateFleetMap(Map<String, Object> fleetMap);
+    /**
+     * 根据用户名称查询车队信息
+     *
+     * @param fleetName
+     * @return
+     */
+    TcFleet queryFleetByName(String fleetName);
 }

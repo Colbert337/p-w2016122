@@ -110,7 +110,13 @@ public class GlobalConstant {
 
 	/* 配置文件路径 */
 	public static final String CONF_PATH = "conf/system-conf.properties";
-	
+
+	/********************************** 司机类型 ************************************************/
+	public interface DriverType{
+		public static final int TRANSPORT = 0;//运输公司关联司机
+		public static final int GAS_STATION = 1;//气站关联司机
+	}
+
 	//用户卡状态  0:已冻结 1：已入库；2：已出库；3:已/未发放 4:使用中 5:已失效
 	public interface CardStatus{
 		public static final String PAUSED ="0";

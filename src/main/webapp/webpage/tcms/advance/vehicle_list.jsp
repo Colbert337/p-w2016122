@@ -149,25 +149,25 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
 									<div class="col-sm-7">
-										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" class="col-xs-10 col-sm-12" />
+										<input type="password" name="payCode" id="pay_code" maxlength="6" placeholder="支付密码" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-7">
-										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" class="col-xs-10 col-sm-12" />
+										<input type="password" id="re_password" name="rePassword" maxlength="6" placeholder="确认密码" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="notice_phone"><span class="red_star">*</span> 通知手机： </label>
 									<div class="col-sm-7">
-										<input type="text" id="notice_phone" placeholder="通知手机" name="noticePhone" class="col-xs-10 col-sm-12" />
+										<input type="text" id="notice_phone" placeholder="通知手机" maxlength="11" name="noticePhone" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="copy_phone"> 抄送手机： </label>
 									<div class="col-sm-7">
-										<input type="text" name="copyPhone" id="copy_phone" placeholder="抄送手机" class="col-xs-10 col-sm-12" />
+										<input type="text" name="copyPhone" id="copy_phone" maxlength="11" placeholder="抄送手机" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div id="cardInfoDiv">

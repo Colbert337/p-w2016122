@@ -81,6 +81,8 @@ public class SysDriver extends BaseModel{
     
     private String memo;
 
+    private int driverType;
+
     public String getMemo() {
 		return memo;
 	}
@@ -368,5 +370,13 @@ public class SysDriver extends BaseModel{
 
     public void setFuelTypeInfo(Usysparam fuelTypeInfo) {
         this.fuelTypeInfo = fuelTypeInfo;
+    }
+
+    public int getDriverType() {
+        return driverType;
+    }
+
+    public void setDriverType(int driverType) {
+        this.driverType = driverType;
     }
 }

@@ -85,6 +85,24 @@ public class TcFleetController extends BaseContoller {
     }
 
     /**
+     * 根据用户名称查询车队信息
+     * @param fleet
+     * @param map
+     * @return
+     */
+    @RequestMapping("/info/name")
+    @ResponseBody
+    public TcFleet queryFleetByName(TcFleet fleet, ModelMap map){
+        String fleetName = "";
+        if(fleet != null && fleet.getFleetName() != null && !"".equals(fleet.getFleetName())){
+            fleetName = fleet.getFleetName().trim();
+        }
+        TcFleet tcFleet = tcFleetService.queryFleetByName(fleetName);
+
+        return tcFleet;
+    }
+
+    /**
      * 添加车队
      * @param currUser 当前用户
      * @param fleet 车队
