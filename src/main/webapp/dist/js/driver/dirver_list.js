@@ -52,17 +52,22 @@ function settime() {
  * 发送验证码
  */
 function sendMessage(){
-    settime();
     var mobilePhone = $("#mobile_phone").val();
-    $.ajax({
-        url:"../crmCustomerService/web/sendMsg/api",
-        data:{mobilePhone:mobilePhone,msgType:'register'},
-        async:false,
-        type: "POST",
-        success: function(data){
-            alert(data.msg);
-        }
-    })
+    if(mobilePhone == ""){
+        return false;
+    }else{
+        settime();
+        $.ajax({
+            url:"../crmCustomerService/web/sendMsg/api",
+            data:{mobilePhone:mobilePhone,msgType:'register'},
+            async:false,
+            type: "POST",
+            success: function(data){
+                alert(data.msg);
+            }
+        })
+    }
+
 }
 //显示编辑用户弹出层
 function queryRoleList(roleId){
