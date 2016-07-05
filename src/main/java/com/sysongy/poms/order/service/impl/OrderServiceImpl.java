@@ -29,6 +29,8 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.tcms.advance.model.TcFleet;
+import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
@@ -67,6 +69,8 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private SysPrepayMapper sysPrepayMapper;
 	
+	@Autowired
+	private TcFleetService tcFleetService;
 	
 	@Override
 	public int deleteByPrimaryKey(String orderId) {
@@ -477,7 +481,7 @@ public class OrderServiceImpl implements OrderService {
 	 * 2.扣除运输公司账户金额--和消费一样
 	 */
 	@Override
-	public String consumeByTransportion(SysOrder order) throws Exception{
+	public String consumeByTransportion(SysOrder order,Transportion tran, TcFleet tcfleet) throws Exception{
 	   if (order ==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
 	   }
@@ -497,6 +501,9 @@ public class OrderServiceImpl implements OrderService {
 		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_TRANSPORTION);
 	   }
 		//TODO
+	   //1.判断此车队是否分配额度
+	   
+	   
 	   //2.扣除运输公司账户金额
 	   //消费的时候传过去的cash是正值,充红的时候传过去的是负值
 	   String consume_success =transportionService.consumeTransportion(order);
