@@ -30,7 +30,7 @@ h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
 .page-header h1{font-weight: normal; font-size: 21px;}
 .form-horizontal .form-group.nospace{margin-left: 0; margin-right: 0;}
 .file-space{padding: 12px 12px 0 12px;}
-.btn-file-space{margin-top: 12px;}
+/*.btn-file-space{margin-top: 12px;}*/
 .file-input .btn-file{
     border-width: 4px;
     font-size: 13px;
