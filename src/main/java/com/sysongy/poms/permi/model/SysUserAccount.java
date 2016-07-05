@@ -25,7 +25,17 @@ public class SysUserAccount extends BaseModel{
     
     private String account_status;
 
-    private Usysparam account_statusInfo;
+    private String have_consume;
+    
+    public String getHave_consume() {
+		return have_consume;
+	}
+
+	public void setHave_consume(String have_consume) {
+		this.have_consume = have_consume;
+	}
+
+	private Usysparam account_statusInfo;
 
     private BigDecimal deposit;
 

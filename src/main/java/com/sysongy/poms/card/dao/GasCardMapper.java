@@ -19,6 +19,8 @@ public interface GasCardMapper {
     
     GasCard selectByCardNo(String cardNo);
 
+    GasCard selectByCardNoForCRM(String cardNo);
+
     int updateByPrimaryKeySelective(GasCard record);
 
     int updateByPrimaryKey(GasCard record);

@@ -49,5 +49,5 @@ public interface OrderDealService {
      */
     public String createOrderDealWithCashBack(String orderId, String deal_type, String remark,String cash_back_per,BigDecimal cash_back, String run_success);
 
-    int selectCashBackByOrderID(String orderId);
+    Integer selectCashBackByOrderID(String orderId);
 }
