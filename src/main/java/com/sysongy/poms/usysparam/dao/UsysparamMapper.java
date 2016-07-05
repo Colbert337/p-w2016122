@@ -42,4 +42,6 @@ public interface UsysparamMapper {
     public Usysparam queryCashBackByMcode(String mcode);
 
     public Usysparam queryOrderTypeByMcode(String mcode);
+
+    public Usysparam queryOrderPropertyByMcode(String mcode);
 }

@@ -29,6 +29,10 @@
                  javaType="com.sysongy.poms.permi.model.SysUser"
                  select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
     </association>
+    <association property="card_property_info" column="card_property"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderPropertyByMcode">
+    </association>
   </resultMap>
 
   <sql id="Base_Column_List" >
