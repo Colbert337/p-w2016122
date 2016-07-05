@@ -33,7 +33,11 @@ public class AliShortMessage {
         USER_LOGIN_ERROR,             //登陆异常
         USER_CHANGE_PASSWORD,         //用户修改密码
         USER_CHANGE_PROFILE,          //用户修改信息
-        ACCOUNT_RECEIVE_MONEY         //系统到账通知
+        ACCOUNT_RECEIVE_MONEY,         //系统到账通知
+        DRIVER_CONSUME,                //司机消费
+        DRIVER_CHARGE,                 //司机充值
+        DRIVER_HEDGE,                  //司机转账
+        DRIVER_CONSUME_SUCCESSFUL
     }
 
     /**
@@ -104,6 +108,32 @@ public class AliShortMessage {
                 req.setSmsParamString("{\"code\":\"" + aliShortMessageBean.getCode() + "\",\"product\":\""
                         + aliShortMessageBean.getProduct() + "\"}");
                 break;
+            case DRIVER_CONSUME:
+                req.setSmsTemplateCode("SMS_11560787");
+                req.setSmsFreeSignName("消费通知");
+                req.setSmsParamString("{\"code\":\"" + aliShortMessageBean.getCode() + "\"}");
+                break;
+            case DRIVER_CONSUME_SUCCESSFUL:
+                req.setSmsTemplateCode("SMS_3100513");
+                req.setSmsFreeSignName("消费通知");
+                req.setSmsParamString("{\"account\":\"" + aliShortMessageBean.getAccountNumber() + "\",\"time\":\""
+                        + aliShortMessageBean.getCreateTime() + "\",\"out_money\":\"" + aliShortMessageBean.getSpentMoney()
+                        + "\",\"balance\":\"" + aliShortMessageBean.getBalance()
+                        + "\"}");
+                break;
+            case DRIVER_CHARGE:
+                req.setSmsTemplateCode("SMS_4421119");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"account\":\"" + aliShortMessageBean.getAccountNumber() + "\",\"time\":\""
+                        + aliShortMessageBean.getCreateTime() + "\",\"money\":\"" + aliShortMessageBean.getSpentMoney()
+                        + "\"}");
+                break;
+            case DRIVER_HEDGE:
+                req.setSmsTemplateCode("SMS_3030408");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"code\":\"" + aliShortMessageBean.getCode() + "\",\"product\":\""
+                        + aliShortMessageBean.getProduct() + "\"}");
+                break;
             case ACCOUNT_RECEIVE_MONEY:
                 req.setSmsTemplateCode("SMS_4415951");
                 req.setSmsFreeSignName("司集科技");
@@ -118,7 +148,7 @@ public class AliShortMessage {
     }
 
     /**
-     * @param rec_num
+     * @paramrec_num
      * 短信接收号码。支持单个或多个手机号码，传入号码为11位手机号码，不能加0或+86。群发短信需传入多个号码，以英文逗号分隔，一次调用最多传入200个号码。示例：18600000000,13911111111,13322222222
      */
     public static void main(String[] args){

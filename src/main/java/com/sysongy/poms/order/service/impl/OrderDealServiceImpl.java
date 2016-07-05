@@ -98,7 +98,7 @@ public class OrderDealServiceImpl implements OrderDealService {
    }
 
 	@Override
-	public Integer selectCashBackByOrderID(String orderId) {
+	public String selectCashBackByOrderID(String orderId) {
 		if(StringUtils.isEmpty(orderId)){
 			return null;
 		}

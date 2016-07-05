@@ -56,7 +56,7 @@ public class SysOrder extends BaseModel{
 
     private List<SysOrderGoods> sysOrderGoods;
 
-    private Integer cashBack;
+    private String cashBack;
 
     private SysDriver sysDriver;
 
@@ -236,13 +236,6 @@ public class SysOrder extends BaseModel{
         this.sysOrderGoods = sysOrderGoods;
     }
 
-    public Integer getCashBack() {
-        return cashBack;
-    }
-
-    public void setCashBack(Integer cashBack) {
-        this.cashBack = cashBack;
-    }
 
     public SysDriver getSysDriver() {
         return sysDriver;
@@ -282,5 +275,13 @@ public class SysOrder extends BaseModel{
 
     public void setGastation(Gastation gastation) {
         this.gastation = gastation;
+    }
+
+    public String getCashBack() {
+        return cashBack;
+    }
+
+    public void setCashBack(String cashBack) {
+        this.cashBack = cashBack;
     }
 }

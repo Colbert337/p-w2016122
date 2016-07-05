@@ -669,12 +669,11 @@ public class OrderServiceImpl implements OrderService {
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
-	public Integer selectCashBackByOrderID(String orderId){
+	public String selectCashBackByOrderID(String orderId){
 		if(StringUtils.isEmpty(orderId)){
 			logger.error("The order id is null!!!");
 			return null;
 		}
-
 		return orderDealService.selectCashBackByOrderID(orderId);
 	}
 }
