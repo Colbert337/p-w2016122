@@ -128,10 +128,7 @@
 	}
 	
 	function showInnerModel(obj1,obj2,obj3,obj4){
-		console.debug(obj1);
-		console.debug(obj2);
-		console.debug(obj3);
-		console.debug(obj4);
+
 		$("#innerimg1").attr("src",obj1);
 		$("#innerimg1").parent("a").attr("href",obj1);
 		$("#innerimg2").attr("src",obj2);
