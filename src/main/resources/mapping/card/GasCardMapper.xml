@@ -197,7 +197,14 @@
   <select id="selectByCardNo" resultMap="BaseResultList" parameterType="java.lang.String" >
     select card_status,workstation from gas_card where card_no = #{cardNo,jdbcType=VARCHAR}
   </select>
-  
+
+  <select id="selectByCardNoForCRM" resultMap="BaseResultList" parameterType="java.lang.String" >
+    select
+     <include refid="Base_Column_List" />
+       from gas_card
+      where card_no = #{cardNo,jdbcType=VARCHAR}
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultList" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

@@ -21,7 +21,7 @@
     <result column="discharge_reason" property="discharge_reason" jdbcType="VARCHAR" />
     <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
     <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
-    <association property="operatorInfo" column="operator_source_id"
+    <association property="operatorInfo" column="operator"
                  javaType="com.sysongy.poms.permi.model.SysUser"
                  select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
     </association>

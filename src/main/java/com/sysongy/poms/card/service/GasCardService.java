@@ -28,6 +28,8 @@ public interface GasCardService {
 
 	public GasCard queryGasCardInfo(String cardNo) throws Exception;
 
+	public GasCard selectByCardNoForCRM(String cardNo) throws Exception;
+
 	public Integer updateGasCardInfo(GasCard cascard) throws Exception;
 
 	public Integer updateGasCardStatus(CRMCardUpdateInfo crmCardUpdateInfo) throws Exception;
