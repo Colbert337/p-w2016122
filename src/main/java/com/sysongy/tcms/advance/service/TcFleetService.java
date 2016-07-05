@@ -3,6 +3,7 @@ package com.sysongy.tcms.advance.service;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.tcms.advance.model.TcFleet;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -58,4 +59,19 @@ public interface TcFleetService {
      * @return
      */
     int updateFleet(TcFleet tcFleet);
+
+    /**
+     * 修改车队额度
+     * @param transportionId 运输公司ID
+     * @param fleetId 车队ID
+     * @param cash 修改金额
+     * @return
+     */
+    int updateFleetQuota(String transportionId, String fleetId, BigDecimal cash);
+    /**
+     * 修改分配资金信息
+     * @param fleetMap
+     * @return
+     */
+    int updateFleetMap(Map<String, Object> fleetMap);
 }

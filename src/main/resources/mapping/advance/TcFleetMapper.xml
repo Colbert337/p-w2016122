@@ -211,4 +211,12 @@
     </set>
     where tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
   </update>
+  <!--修改车队额度-->
+  <update id="updateFleetQuota" >
+    update tc_fleet
+    <set >
+        quota = #{2},
+    </set>
+    where tc_fleet_id = #{1} and station_id = #{0}
+  </update>
 </mapper>

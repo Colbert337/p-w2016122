@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.tcms.advance.model.TcFleet;
+import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.model.TcFleetVehicle;
 import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.tcms.advance.service.TcFleetVehicleService;
@@ -97,6 +98,7 @@ public class TcFleetController extends BaseContoller {
 
         if(fleet.getTcFleetId() != null && fleet.getTcFleetId() != ""){
             tcFleetService.updateFleet(fleet);
+            TcFleetQuota fleetQuota = new TcFleetQuota();
         }else{
             String stationId = currUser.getStationId();
             fleet.setStationId(stationId);

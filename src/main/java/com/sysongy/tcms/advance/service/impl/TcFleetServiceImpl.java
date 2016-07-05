@@ -9,6 +9,7 @@ import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -99,5 +100,26 @@ public class TcFleetServiceImpl implements TcFleetService{
         }else{
             return 0;
         }
+    }
+
+    @Override
+    public int updateFleetMap(Map<String, Object> fleetMap) {
+        return tcFleetMapper.updateFleetMap(fleetMap);
+    }
+
+    /**
+     * 修改车队额度
+     * @param transportionId 运输公司ID
+     * @param fleetId 车队ID
+     * @param cash 金额（正负）
+     * @return
+     */
+    @Override
+    public int updateFleetQuota(String transportionId, String fleetId, BigDecimal cash) {
+        int result = 0;
+        if(transportionId != null && !"".equals(transportionId) && fleetId != null && !"".equals(fleetId)){
+            result = tcFleetMapper.updateFleetQuota(transportionId,fleetId,cash);
+        }
+        return result;
     }
 }
