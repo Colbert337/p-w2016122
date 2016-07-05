@@ -13,6 +13,7 @@ import com.sysongy.poms.gastation.service.ProductPriceService;
 import com.sysongy.poms.liquid.model.SysGasSource;
 import com.sysongy.poms.liquid.service.LiquidService;
 import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.util.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -21,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -248,4 +251,85 @@ public class CRMGasPriceController {
         }
         return ajaxJson;
     }
+    
+    @RequestMapping("/queryAllGasPriceList")
+	public String queryAllGasPriceList(ModelMap map, @ModelAttribute GsGasPrice gsGasPrice) throws Exception{
+
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_price_list";
+
+		try {
+			if(gsGasPrice.getPageNum() == null){
+				gsGasPrice.setPageNum(1);
+				gsGasPrice.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(gsGasPrice.getOrderby())){
+				gsGasPrice.setOrderby("created_date desc");
+			}
+/*			if(productPrice.getPageNum() == null){
+				productPrice.setPageNum(1);
+				productPrice.setPageSize(10);
+			}
+			
+			productPrice.setOrderby("create_time desc");*/
+
+			PageInfo<GsGasPrice> pageinfo = gsGasPriceService.queryGsPrice(gsGasPrice);
+			
+//			PageInfo<ProductPrice> pageinfo2 = productPriceService.queryProductPrice(productPrice);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+//			map.addAttribute("pageInfo2", pageinfo2);
+			map.addAttribute("gsGasPrice",gsGasPrice);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+    
+    @RequestMapping("/queryProductPriceList")
+   	public String queryProductPriceList(ModelMap map, ProductPrice productPrice) throws Exception{
+
+   		PageBean bean = new PageBean();
+   		String ret = "webpage/poms/gastation/gastation_product_price_list";
+
+   		try {
+   			if(productPrice.getPageNum() == null){
+   				productPrice.setOrderby("create_time desc");
+   				productPrice.setPageNum(1);
+   				productPrice.setPageSize(10);
+   			}
+   			
+   			PageInfo<ProductPrice> pageinfo = productPriceService.queryProductPrice(productPrice);
+
+   			bean.setRetCode(100);
+   			bean.setRetMsg("查询成功");
+   			bean.setPageInfo(ret);
+
+   			map.addAttribute("ret", bean);
+   			map.addAttribute("pageInfo", pageinfo);
+   			map.addAttribute("productPrice",productPrice);
+   		} catch (Exception e) {
+   			bean.setRetCode(5000);
+   			bean.setRetMsg(e.getMessage());
+
+   			map.addAttribute("ret", bean);
+   			logger.error("", e);
+   			throw e;
+   		}
+   		finally {
+   			return ret;
+   		}
+   	}
 }

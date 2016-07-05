@@ -111,13 +111,14 @@ public class GlobalConstant {
 	/* 配置文件路径 */
 	public static final String CONF_PATH = "conf/system-conf.properties";
 	
+	//用户卡状态  0:已冻结 1：已入库；2：已出库；3:已/未发放 4:使用中 5:已失效
 	public interface CardStatus{
-		public static final String STORAGED ="0";
-		public static final String MOVED ="1";
-		public static final String PROVIDE="2";
-		public static final String USED="3";
-		public static final String PAUSED="4";
-		public static final String INVALID="5";
+		public static final String PAUSED ="0";
+		public static final String STORAGED ="1";
+		public static final String MOVED ="2";
+		public static final String PROVIDE ="3";
+		public static final String USED ="4";
+		public static final String INVALID ="5";
 	}
 	
 	public interface CardAction{
@@ -308,11 +309,11 @@ public class GlobalConstant {
 		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";
 		public static final String CREDIT_ACCOUNT_IS_NULL="CREDIT_ACCOUNT_IS_NULL";
 
-		public static final String ORDER_ERROR_BALANCE_IS_NOT_ENOUGH = "BALANCE_IS_NOT_ENOUGH";
+		public static final String ORDER_ERROR_BALANCE_IS_NOT_ENOUGH = "余额不足！";
 
-		public static final String ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN = "ACCOUNT_IS_FROEN";
+		public static final String ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN = "账号已冻结！";
 		public static final String ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN = "DEBIT_ACCOUNT_IS_FROEN";
-		public static final String ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN = "ACCOUNT_CARD_IS_FROEN";
+		public static final String ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN = "该卡已冻结！";
 		
 		public static final String ORDER_ACCOUNT_VERSION_HAVE_CHANGED = "ORDER_ACCOUNT_VERSION_HAVE_CHANGED";
 	}

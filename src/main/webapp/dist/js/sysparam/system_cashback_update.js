@@ -77,16 +77,10 @@
 		                        message: '失效日期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '失效日期必须大于生效日期',
+		                    	message: '失效日期必须大于等于生效日期',
 		                    	callback: function (value, validator, $field) {
-		                    		return compareDate(value, $('[name=start_date_after]').val());
+		                    		return !compareDate($('[name=start_date_after]').val(), value);
 		                    	}
-		                    },
-		                    callback: {
-		                    	message: '失效日期必须大于当前日期',
-		                    	callback: function (value, validator, $field) {
-		                    		return compareDate(value, new Date().toLocaleDateString());
-	                            }
 		                    }
 		                },
 		                trigger: 'change'
@@ -94,13 +88,13 @@
 		        }
 		    });
 			
-		    $('.date-picker').datepicker({
+/*		    $('.date-picker').datepicker({
 				autoclose: true,
 				todayHighlight: true,
 				language: 'cn'
 			}).next().on(ace.click_event, function(){
 				$(this).prev().focus();
-			});
+			});*/
 		    
 		function save(){
 			/*手动验证表单，当是普通按钮时。*/
@@ -128,7 +122,7 @@
 		}
 		
 		function returnpage(){
-			loadPage('#main', '../web/sysparam/cashbackList');
+			loadPage('#main', '../web/sysparam/cashbackList?sys_cash_back_no='+$("[name=sys_cash_back_no]").val());
 		}
 		
 			function init(){

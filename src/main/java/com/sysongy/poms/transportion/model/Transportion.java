@@ -73,6 +73,8 @@ public class Transportion extends BaseModel{
         
 	private SysUserAccount account;
 
+	private String pay_code;
+
 	public SysUserAccount getAccount() {
 		return account;
 	}
@@ -337,5 +339,11 @@ public class Transportion extends BaseModel{
 		this.updated_time = updated_time;
 	}
 
-	
+	public String getPay_code() {
+		return pay_code;
+	}
+
+	public void setPay_code(String pay_code) {
+		this.pay_code = pay_code;
+	}
 }

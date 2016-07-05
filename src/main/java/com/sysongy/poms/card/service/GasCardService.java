@@ -9,6 +9,10 @@ import com.sysongy.poms.card.model.GasCardLog;
 public interface GasCardService {
 	
 	public PageInfo<GasCard> queryGasCard(GasCard obj) throws Exception;
+
+	public PageInfo<GasCard> queryCardFor2StatusInfo(GasCard obj) throws Exception;
+
+	public PageInfo<GasCard> queryGasCardForCRM(CRMCardUpdateInfo crmCardUpdateInfo) throws Exception;
 	
 	public Integer saveGasCard(GasCard obj) throws Exception;
 	
@@ -23,6 +27,8 @@ public interface GasCardService {
 	public PageInfo<GasCardLog> queryGasCardLog(GasCardLog obj) throws Exception;
 
 	public GasCard queryGasCardInfo(String cardNo) throws Exception;
+
+	public GasCard selectByCardNoForCRM(String cardNo) throws Exception;
 
 	public Integer updateGasCardInfo(GasCard cascard) throws Exception;
 

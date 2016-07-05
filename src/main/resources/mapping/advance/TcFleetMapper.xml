@@ -6,6 +6,8 @@
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
     <result column="fleet_name" property="fleetName" jdbcType="VARCHAR" />
     <result column="sys_user_id" property="sysUserId" jdbcType="VARCHAR" />
+    <result column="quota" property="quota" jdbcType="VARCHAR" />
+    <result column="is_allot" property="isAllot" jdbcType="INTEGER" />
     <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
@@ -15,12 +17,14 @@
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
     <result column="fleet_name" property="fleetName" jdbcType="VARCHAR" />
     <result column="sys_user_id" property="sysUserId" jdbcType="VARCHAR" />
+    <result column="quota" property="quota" jdbcType="VARCHAR" />
+    <result column="is_allot" property="isAllot" jdbcType="INTEGER" />
     <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    tc_fleet_id, station_id, fleet_name, sys_user_id, created_date, updated_date
+    tc_fleet_id, station_id, fleet_name, sys_user_id, quota, is_allot, created_date, updated_date
   </sql>
   <select id="queryFleetList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
     select 
@@ -101,6 +105,12 @@
       <if test="sysUserId != null" >
         sys_user_id,
       </if>
+      <if test="quota != null" >
+        quota,
+      </if>
+      <if test="isAllot != null" >
+        is_allot,
+      </if>
       <if test="isDeleted != null" >
         is_deleted,
       </if>
@@ -123,6 +133,12 @@
       </if>
       <if test="sysUserId != null" >
         #{sysUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="quota != null" >
+        #{quota,jdbcType=DECIMAL},
+      </if>
+      <if test="isAllot != null" >
+        #{isAllot,jdbcType=INTEGER},
       </if>
       <if test="isDeleted != null" >
         #{isDeleted,jdbcType=VARCHAR},
@@ -147,6 +163,12 @@
       <if test="sysUserId != null" >
         sys_user_id = #{sysUserId,jdbcType=VARCHAR},
       </if>
+      <if test="quota != null" >
+        quota = #{quota,jdbcType=DECIMAL},
+      </if>
+      <if test="isAllot != null" >
+        is_allot = #{isAllot,jdbcType=INTEGER},
+      </if>
       <if test="isDeleted != null" >
         is_deleted = #{isDeleted,jdbcType=VARCHAR},
       </if>
@@ -158,5 +180,43 @@
       </if>
     </set>
     where tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateFleetMap" parameterType="java.util.Map" >
+    update tc_fleet
+    <set >
+      <if test="stationId != null" >
+        station_id = #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="fleetName != null" >
+        fleet_name = #{fleetName,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUserId != null" >
+        sys_user_id = #{sysUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="quota != null" >
+        quota = #{quota,jdbcType=DECIMAL},
+      </if>
+      <if test="isAllot != null" >
+        is_allot = #{isAllot,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
+  </update>
+  <!--修改车队额度-->
+  <update id="updateFleetQuota" >
+    update tc_fleet
+    <set >
+        quota = #{2},
+    </set>
+    where tc_fleet_id = #{1} and station_id = #{0}
   </update>
 </mapper>

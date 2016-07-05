@@ -35,6 +35,8 @@ public class SysDriverReviewStr extends BaseModel{
     private String identityCard;
 
     private String cardId;
+    
+    private String operator;
 
     private String sysUserAccountId;
 
@@ -61,8 +63,36 @@ public class SysDriverReviewStr extends BaseModel{
     private String createdDate_before;
 
     private String createdDate_after;
+    
+    private String checkedDate_before;
 
-    public String getCreatedDate_before() {
+    private String checkedDate_after;
+
+    public String getCheckedDate_before() {
+		return checkedDate_before;
+	}
+
+	public void setCheckedDate_before(String checkedDate_before) {
+		this.checkedDate_before = checkedDate_before;
+	}
+
+	public String getCheckedDate_after() {
+		return checkedDate_after;
+	}
+
+	public void setCheckedDate_after(String checkedDate_after) {
+		this.checkedDate_after = checkedDate_after;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	public String getCreatedDate_before() {
 		return createdDate_before;
 	}
 

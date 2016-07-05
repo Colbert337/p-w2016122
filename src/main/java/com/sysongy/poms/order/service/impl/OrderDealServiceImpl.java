@@ -13,6 +13,7 @@ import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
+import org.springframework.util.StringUtils;
 
 /**
  * 
@@ -95,6 +96,12 @@ public class OrderDealServiceImpl implements OrderDealService {
 	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
    }
-   
-  
+
+	@Override
+	public Integer selectCashBackByOrderID(String orderId) {
+		if(StringUtils.isEmpty(orderId)){
+			return null;
+		}
+		return sysOrderDealMapper.selectCashBackByOrderID(orderId);
+	}
 }

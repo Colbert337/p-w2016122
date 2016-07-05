@@ -51,6 +51,7 @@
 	//显示添加用户弹出层
 	function addUser(){
 		/*$("#userModel").modal('show');*/
+		$("#editUserDiv").text("添加用户");
 		queryRoleList();
 		queryUserTypeList("");
 		/*密码输入框改为可编辑*/
@@ -65,8 +66,7 @@
 			async:false,
 			type: "POST",
 			success: function(data){
-
-				$("#avatar_b").append("<option value='0'>--选择角色--</option>");
+				$("#avatar_b").append("<option value=''>--选择角色--</option>");
 				$.each(data,function(i,val){
 					if(val.sysRoleId == roleId){
 						$("#avatar_b").append("<option value='"+val.sysRoleId+"' selected='selected'>"+val.roleName+"</option>");
@@ -114,12 +114,16 @@
 	 */
 	function saveUser(){
 		if(jQuery('#userForm').validationEngine('validate')){
-			var saveOptions ={
-				url:'<%=basePath%>/web/permi/user/save',
-				type:'post',
-				dataType:'html',
-				success:function(data){
+
+			var saveOptions = {
+				url: '<%=basePath%>/web/permi/user/save',
+				type: 'post',
+				dataType: 'html',
+				success: function (data) {
 					$("#main").html(data);
+					$("#modal-table").modal("show");
+				}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
 				}
 			}
 			$("#userForm").ajaxSubmit(saveOptions);
@@ -145,6 +149,7 @@
 				$("#remark").val(data.remark);
 				$("#real_name").val(data.realName);
 				$("#user_type").val(data.userType);
+				$("#editUserDiv").text("修改用户");
 
 				if(data.gender == 0){
 					$("#gender_b").attr("checked","checked");
@@ -161,9 +166,9 @@
 				$("#re_password").val(data.password);
 				/*密码输入框改为可编辑*/
 				$("#password").attr("readonly","readonly");
+				$("#user_name").attr("readonly","readonly");
 				$("#re_password").attr("readonly","readonly");
-
-				queryRoleList(data.sysRoleId);
+				queryRoleList(data.sys_role_id);
 				queryUserTypeList(data.userType);
 			}
 		});
@@ -174,18 +179,22 @@
 	 * 删除用户
 	 */
 	function deleteUser(userId){
-		if(confirm("确定要删除该用户吗？")){
-			var deleteOptions ={
-				url:'<%=basePath%>/web/permi/user/delete',
-				data:{userId:userId},
-				type:'post',
-				dataType:'text',
-				success:function(data){
-					$("#main").html(data);
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("确认要删除用户吗？", function (result) {
+			if (result) {
+				var deleteOptions ={
+					url:'<%=basePath%>/web/permi/user/delete',
+					data:{userId:userId},
+					type:'post',
+					dataType:'text',
+					success:function(data){
+						$("#main").html(data);
+						$('[data-rel="tooltip"]').tooltip();
+					}
 				}
-			}
-			$("#listForm").ajaxSubmit(deleteOptions);
+				$("#listForm").ajaxSubmit(deleteOptions);
 		}
+	})
 
 	}
 	/**
@@ -197,7 +206,9 @@
 		if(status == 0){
 			alertStr = "确定要启用该用户吗？";
 		}
-		if(confirm(alertStr)){
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm(alertStr, function (result) {
+			if (result) {
 			 var deleteOptions ={
 			 url:'<%=basePath%>/web/permi/user/update/staruts',
 			 data:{sysUserId:userId,status:status},
@@ -209,8 +220,31 @@
 				 }
 			 }
 			 $("#listForm").ajaxSubmit(deleteOptions);
-		}
+			}
+		})
 
+	}
+
+	/**
+	 * 判断用户名是否存在
+	 */
+	function isUserExit(){
+		var userName = $("#user_name").val();
+		$.ajax({
+			url:"<%=basePath%>/web/permi/user/info/isUserName",
+			data:{userName:userName},
+			async:false,
+			type: "POST",
+			success: function(data){
+				console.log(data);
+				if(data.valid){
+					bootbox.alert("用户名已存在!");
+					$("#user_name").focus();
+				}
+			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		})
 	}
 </script>
 <div class="page-header">
@@ -230,13 +264,26 @@
 			<!-- PAGE CONTENT BEGINS -->
 			<div class="row">
 				<div class="col-xs-12">
-					<%--顶部按钮--%>
-					<div class="pull-right btn-botton">
-						<a class="btn btn-sm btn-primary" href="javascript:addUser();">
-							新建
-						</a>
+					<%--顶部条件搜索及按钮--%>
+					<div class="search-types">
+						<div class="item">
+							<input type="text" name="userName" placeholder="账号/姓名/联系电话"  maxlength="15" value="${sysUser.userName}"/>
+						</div>
+						<div class="item">
+							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								查询
+							</button>
+							<button class="btn btn-sm" type="button" onclick="init();">
+								重置
+							</button>
+							<div class="item"></div>
+							<button class="btn btn-sm btn-primary" type="button" onclick="addUser();">
+								新建
+							</button>
+						</div>
 					</div>
-					<%--</h4>--%>
+					<div class="sjny-table-responsive">
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
@@ -248,8 +295,8 @@
 							<th>用户角色</th>
 							<th>用户类型</th>
 							<th>用户状态</th>
-							<th>创建时间</th>
-							<th class="text-center">操作</th>
+							<th class="td-w2">创建时间</th>
+							<th class="text-center td-w2">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -302,12 +349,13 @@
 						</c:forEach>
 						</tbody>
 					</table>
+					</div>
 				</div><!-- /.col-xs-12 -->
 			</div><!-- /.row -->
 			<%--分页start--%>
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
@@ -331,13 +379,16 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
+
 <!--添加用户弹层-开始-->
 <div id="userModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel">编辑用户</h4>
+				<h4 class="modal-title" id="editUserDiv">编辑用户</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
@@ -347,11 +398,11 @@
 							<!-- PAGE CONTENT BEGINS -->
 							<form class="form-horizontal" id="userForm">
 								<!-- #section:elements.form -->
-								<h5 class="header smaller lighter blue">账户信息</h5>
+								<h5 class="header smaller lighter blue no-margin-top">账户信息</h5>
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="userName" id="user_name" placeholder="用户名" class="validate[required,minSize[3],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
+										<input type="text" name="userName" id="user_name" placeholder="用户名" onblur="isUserExit()" class="validate[required,minSize[3],maxSize[20],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
 										<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户类型： </label>
@@ -363,11 +414,11 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码： </label>
 									<div class="col-sm-4">
-										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6]] col-xs-10 col-sm-12" />
+										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[33]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-4">
-										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],equals[password]] col-xs-10 col-sm-12" />
+										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],maxSize[33],equals[password]] col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -384,7 +435,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="real_name">  <span class="red_star">*</span>姓名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[required,maxSize[5]] col-xs-10 col-sm-12" />
+										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[required,minSize[2],maxSize[10]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right"> 性别： </label>
 									<div class="col-sm-4">
@@ -403,11 +454,11 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="email"> 邮箱： </label>
 									<div class="col-sm-4">
-										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[maxSize[20],custom[email]] col-xs-10 col-sm-12" />
+										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[minSize[6],maxSize[20],custom[email]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="mobile_phone"> 手机： </label>
 									<div class="col-sm-4">
-										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[maxSize[11],custom[phone]] col-xs-10 col-sm-12" />
+										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[minSize[11],maxSize[11],custom[phone]] col-xs-10 col-sm-12" />
 									</div>
 								</div>
 							</form>
@@ -415,46 +466,13 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('userModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveUser()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('userModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
 <!--添加用户弹层-结束-->
 
-<!--提示弹层-开始-->
-<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="alertModalLabel">警告提示</h4>
-			</div>
-			<div class="modal-body">
-				<div class="container-fluid">
-					<%--两行表单 开始--%>
-					<div class="row">
-						<div class="col-xs-12">
-							sadfasdfasdf
-						</div><!-- /.col -->
-					</div><!-- /.row -->
-					<%--两行表单 结束--%>
-				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-</div>
-<!--提示弹层-结束-->

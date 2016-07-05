@@ -27,12 +27,12 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>运输公司编号:</label>
-							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号"  maxlength="8" value="${transportion.sys_transportion_id}"/>
+							<input type="text" name="sys_transportion_id" placeholder="输入运输公司编号" maxlength="10" value="${transportion.sys_transportion_id}"/>
 						</div>
 						
 						<div class="item">
 						    <label>运输公司名称:</label>
-							<input type="text" name="transportion_name" placeholder="输入运输公司名称"  maxlength="20" value="${transportion.transportion_name}"/>
+							<input type="text" name="transportion_name" placeholder="输入运输公司名称" maxlength="20" value="${transportion.transportion_name}"/>
 						</div>
 						
 						<div class="item">
@@ -78,11 +78,11 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center td-w1">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -92,14 +92,15 @@
 									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
+									<th onclick="orderBy(this,'admin_username');commitForm();" id="admin_username_order">管理员账号</th>
 									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
-									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
-									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
+									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
+									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order" class="td-w2"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">账户余额</th>
 									<th style="display: none">钱袋编号</th>
-									<th class="text-center">更多操作</th>
+									<th class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
 
@@ -117,6 +118,7 @@
 								 	<td>${list.transportion_name}</td> 
 									<td>${list.salesmen_name}</td>
 									<td>${list.operations_id}</td>
+									<td>${list.admin_username}</td>
 									<td>${list.indu_com_number}</td>
 									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
 									<td>${list.address}</td> 
@@ -139,25 +141,27 @@
 						</table>
 					</div>
 
-			<label>共 ${pageInfo.total} 条</label>
-			
-			<nav>
-				  <ul id="ulhandle" class="pagination pull-right no-margin">
-				  
-				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formtransportion');">
-					        <span aria-hidden="true">&laquo;</span>
-					      </a>
-				    </li>
-				    
-				    <li id="next">
-					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formtransportion');">
-					        <span aria-hidden="true">&raquo;</span>
-					      </a>
-				    </li>
-				    
-				  </ul>
-			</nav>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
+				</div>
+				<div class="col-sm-6">
+					<nav>
+						<ul id="ulhandle" class="pagination pull-right no-margin">
+							<li id="previous">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li id="next">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>  
+						</ul>
+					</nav>
+				</div>
+			</div>
 
 			<jsp:include page="/common/message.jsp"></jsp:include>
 

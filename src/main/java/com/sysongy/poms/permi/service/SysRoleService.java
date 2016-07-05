@@ -36,7 +36,7 @@ public interface SysRoleService {
      * @param userType 用户类型
      * @return
      */
-    List<SysRole> queryRoleListByUserType(String userType);
+    List<SysRole> queryRoleListByUserType(String userType,String stationId);
     /**
      * 添加角色
      * @param role

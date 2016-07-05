@@ -27,13 +27,14 @@
     <result column="checked_status" property="checkedStatus" jdbcType="VARCHAR" />
     <result column="checked_date" property="checkedDate" jdbcType="TIMESTAMP" />
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status, 
     is_ident, plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card, 
     card_id, sys_user_account_id, sys_transport_id, regis_company, regis_source, created_date, 
-    updated_date, is_first_charge, checked_status, checked_date, station_id, memo
+    updated_date, is_first_charge, checked_status, checked_date, station_id, memo, operator
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -66,8 +67,8 @@
       <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">
         and sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
       </if>
-      <if test="createdDate_after != null &amp;&amp; createdDate_after != ''">
-        and created_date between CONCAT(#{createdDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{createdDate_before,jdbcType=VARCHAR},' 23:59:59')
+      <if test="checkedDate_before != null &amp;&amp; checkedDate_before != ''">
+        and checked_date between CONCAT(#{checkedDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{checkedDate_before,jdbcType=VARCHAR},' 23:59:59')
       </if>
     </trim>
   </select>
@@ -85,7 +86,7 @@
       sys_user_account_id, sys_transport_id, regis_company, 
       regis_source, created_date, updated_date, 
       is_first_charge, checked_status, checked_date, 
-      station_id, memo)
+      station_id, memo, operator)
     values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR}, 
       #{userStatus,jdbcType=VARCHAR}, #{isIdent,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR}, 
@@ -94,7 +95,7 @@
       #{sysUserAccountId,jdbcType=VARCHAR}, #{sysTransportId,jdbcType=VARCHAR}, #{regisCompany,jdbcType=VARCHAR}, 
       #{regisSource,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}, 
       #{isFirstCharge,jdbcType=INTEGER}, #{checkedStatus,jdbcType=VARCHAR}, #{checkedDate,jdbcType=TIMESTAMP}, 
-      #{stationId,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR})
+      #{stationId,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.driver.model.SysDriverReviewStr" >
     insert into sys_driver_review_str

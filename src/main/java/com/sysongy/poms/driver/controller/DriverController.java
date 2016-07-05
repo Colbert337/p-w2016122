@@ -1,14 +1,13 @@
 package com.sysongy.poms.driver.controller;
 
-import com.sysongy.poms.base.model.AjaxJson;
-import com.sysongy.poms.permi.model.SysRole;
-import com.sysongy.poms.permi.model.SysUser;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.RedisClientInterface;
-import com.sysongy.util.UUIDGenerator;
-import net.sf.json.JSONObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,11 +26,10 @@ import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
-import org.springframework.web.bind.annotation.ResponseBody;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.UUIDGenerator;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import net.sf.json.JSONObject;
 
 /**
  * @FileName: DriverController
@@ -55,13 +53,13 @@ public class DriverController extends BaseContoller{
 	@Autowired
 	SysUserAccountService sysUserAccountService;
 
-
+	SysDriver driver;
 	/**
      * 查询司机列表
      * @return
      */
     @RequestMapping("/list/page")
-    public String queryDriverListPage(@ModelAttribute CurrUser currUser, SysDriver driver, ModelMap map){
+    public String queryDriverListPage(@ModelAttribute CurrUser currUser, SysDriver driver, @RequestParam(required = false) Integer resultInt, ModelMap map){
 		String stationId = currUser.getStationId();
 		if(driver.getPageNum() == null){
             driver.setPageNum(GlobalConstant.PAGE_NUM);
@@ -80,6 +78,17 @@ public class DriverController extends BaseContoller{
         map.addAttribute("driverList",driverPageInfo.getList());
         map.addAttribute("pageInfo",driverPageInfo);
 		map.addAttribute("driver",driver);
+
+		if(resultInt != null && resultInt > 0){
+			Map<String, Object> resultMap = new HashMap<>();
+
+			if(resultInt == 1){
+				resultMap.put("retMsg","新建司机成功！");
+			}else if(resultInt == 2){
+				resultMap.put("retMsg","修改司机成功！");
+			}
+			map.addAttribute("ret",resultMap);
+		}
 
         return "webpage/tcms/driver/driver_list";
     }
@@ -119,6 +128,7 @@ public class DriverController extends BaseContoller{
 	public String saveDriver(@ModelAttribute("currUser") CurrUser currUser, SysDriver driver, ModelMap map){
 		int userType = currUser.getUser().getUserType();
 		int result = 0;
+		int resultInt = 0;
 
 		String stationId = currUser.getStationId();
 		String operation = "insert";
@@ -135,10 +145,11 @@ public class DriverController extends BaseContoller{
 
 		try {
 			result = driverService.saveDriver(driver,operation);
+			resultInt = 1;
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return "webpage/poms/system/driver_review_log";
+		return "redirect:/web/driver/list/page?resultInt="+resultInt;
 	}
 
     @RequestMapping("/driverList")
@@ -176,6 +187,7 @@ public class DriverController extends BaseContoller{
 
     @RequestMapping("/driverInfoList")
     public String queryDriverInfoList(SysDriver driver, ModelMap map)throws Exception{
+    	this.driver = driver;
     	PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/driver_info";
 
@@ -221,7 +233,7 @@ public class DriverController extends BaseContoller{
 			SysDriver driver = new SysDriver();
 			driver.setSysUserAccountId(accountid);
 			
-			ret = this.queryDriverInfoList(driver, map);
+			ret = this.queryDriverInfoList(this.driver, map);
 
 			bean.setRetCode(100);
 			bean.setRetMsg("状态修改成功");
@@ -242,7 +254,7 @@ public class DriverController extends BaseContoller{
     }
 
     @RequestMapping("/review")
-	public String review(ModelMap map, @RequestParam String driverid,@RequestParam String type,@RequestParam String memo){
+	public String review(ModelMap map, @RequestParam String driverid,@RequestParam String type,@RequestParam String memo, @ModelAttribute("currUser") CurrUser currUser){
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/driver_review";
@@ -250,10 +262,10 @@ public class DriverController extends BaseContoller{
 
 		try {
 				if(driverid != null && !"".equals(driverid)){
-					rowcount = driverService.updateAndReview(driverid, type, memo);
+					rowcount = driverService.updateAndReview(driverid, type, memo, currUser.getUser().getUserName());
 				}
 
-				ret = this.queryDriverList(new SysDriver(), map);
+				ret = this.queryDriverList(this.driver, map);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+driverid+"]已审核");

@@ -70,11 +70,11 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center td-w1">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -87,10 +87,10 @@
 									<th onclick="orderBy(this,'market_price');commitForm();" id="market_price_order">市场价格</th>
 									<th onclick="orderBy(this,'gas_factory_addr');commitForm();" id="gas_factory_addr_order">液厂地址</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">液厂状态</th> 
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建日期</th>
-									<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新日期</th>
+									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建日期</th>
+									<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order" class="td-w2"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新日期</th>
 									<!-- <th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th> -->
-									<th>更多操作</th>
+									<th class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
 
@@ -129,25 +129,27 @@
 					</div>
 			
 
-			<label>共 ${pageInfo.total} 条</label>
-			
-			<nav>
-				  <ul id="ulhandle" class="pagination pull-right no-margin">
-				  
-				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formgastation');">
-					        <span aria-hidden="true">&laquo;</span>
-					      </a>
-				    </li>
-				    
-				    <li id="next">
-					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
-					        <span aria-hidden="true">&raquo;</span>
-					      </a>
-				    </li>
-				    
-				  </ul>
-			</nav>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
+				</div>
+				<div class="col-sm-6">
+					<nav>
+						<ul id="ulhandle" class="pagination pull-right no-margin">
+							<li id="previous">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li id="next">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>  
+						</ul>
+					</nav>
+				</div>
+			</div>
 
 			<jsp:include page="/common/message.jsp"></jsp:include>
 

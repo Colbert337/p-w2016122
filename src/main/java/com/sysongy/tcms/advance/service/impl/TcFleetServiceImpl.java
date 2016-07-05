@@ -9,6 +9,7 @@ import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class TcFleetServiceImpl implements TcFleetService{
     @Override
     public PageInfo<TcFleet> queryFleetList(TcFleet tcFleet) {
         if(tcFleet != null){
-            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+            PageHelper.startPage(tcFleet.getPageNum(),tcFleet.getPageSize());
 
             List<TcFleet> FleetList = tcFleetMapper.queryFleetList(tcFleet);
             PageInfo<TcFleet> FleetPageInfo = new PageInfo<>(FleetList);
@@ -54,7 +55,7 @@ public class TcFleetServiceImpl implements TcFleetService{
     @Override
     public PageInfo<Map<String, Object>> queryFleetMapList(TcFleet tcFleet) {
         if(tcFleet != null){
-            PageHelper.startPage(GlobalConstant.PAGE_NUM,GlobalConstant.PAGE_SIZE);
+            PageHelper.startPage(tcFleet.getPageNum(),tcFleet.getPageSize());
 
             List<Map<String, Object>> fleetList = tcFleetMapper.queryFleetMapList(tcFleet);
             if(fleetList != null && fleetList.size() > 0){
@@ -99,5 +100,26 @@ public class TcFleetServiceImpl implements TcFleetService{
         }else{
             return 0;
         }
+    }
+
+    @Override
+    public int updateFleetMap(Map<String, Object> fleetMap) {
+        return tcFleetMapper.updateFleetMap(fleetMap);
+    }
+
+    /**
+     * 修改车队额度
+     * @param transportionId 运输公司ID
+     * @param fleetId 车队ID
+     * @param cash 金额（正负）
+     * @return
+     */
+    @Override
+    public int updateFleetQuota(String transportionId, String fleetId, BigDecimal cash) {
+        int result = 0;
+        if(transportionId != null && !"".equals(transportionId) && fleetId != null && !"".equals(fleetId)){
+            result = tcFleetMapper.updateFleetQuota(transportionId,fleetId,cash);
+        }
+        return result;
     }
 }

@@ -28,12 +28,32 @@ function addDriver(){
     $("#driverModel").modal('show');
 }
 
+var countdown=60;
+function settime() {
+    var obj = $("#sendMsgA");
+    if (countdown == 0) {
+        obj.removeAttr("disabled");
+        obj.attr("href","javascript:sendMessage()");
+        obj.text("发送验证码");
+        countdown = 60;
+        return true
+    } else {
+        obj.removeAttr("href");
+        obj.attr("disabled",true);
+        obj.text("重新发送(" + countdown + ")");
+        countdown--;
+    }
+    setTimeout(function() {
+            settime()
+    },1000)
+}
+
 /**
  * 发送验证码
  */
 function sendMessage(){
+    settime();
     var mobilePhone = $("#mobile_phone").val();
-
     $.ajax({
         url:"../crmCustomerService/web/sendMsg/api",
         data:{mobilePhone:mobilePhone,msgType:'register'},
@@ -53,7 +73,7 @@ function queryRoleList(roleId){
         type: "POST",
         success: function(data){
 
-            $("#avatar_b").append("<option value='0'>--选择角色--</option>");
+            $("#avatar_b").append("<option value=''>--选择角色--</option>");
             $.each(data,function(i,val){
                 if(val.sysRoleId == roleId){
                     $("#avatar_b").append("<option value='"+val.sysRoleId+"' selected='selected'>"+val.roleName+"</option>");
@@ -128,17 +148,26 @@ function init(){
  * 删除用户
  */
 function leaveDriver(){
-    if(confirm("确定要离职该司机吗？")){
-        var deleteOptions ={
-            url:'../web/driver/delete',
-            data:{},
-            type:'post',
-            dataType:'text',
-            success:function(data){
-                $("#main").html(data);
+    var chLength = $("input[type='checkbox']:checked").length;
+    if(chLength <= 0){
+        bootbox.alert("请勾选要离职的员工！");
+        return false;
+    }else{
+        bootbox.setLocale("zh_CN");
+        bootbox.confirm("确定要离职当前勾选员工？", function (result) {
+            if (result) {
+                var deleteOptions ={
+                    url:'../web/driver/delete',
+                    data:{},
+                    type:'post',
+                    dataType:'text',
+                    success:function(data){
+                        $("#main").html(data);
+                    }
+                }
+                $("#listForm").ajaxSubmit(deleteOptions);
             }
-        }
-        $("#listForm").ajaxSubmit(deleteOptions);
+        })
     }
 
 }
@@ -206,8 +235,8 @@ $('#driverForm').bootstrapValidator({
                 },
                 stringLength: {
                     min: 2,
-                    max: 5,
-                    message: '姓名不得小于两个字'
+                    max: 20,
+                    message: '姓名不能小于2个字，不能大于20个字'
                 }
             }
         },
@@ -219,6 +248,11 @@ $('#driverForm').bootstrapValidator({
                 regexp: {
                     regexp: '^[0-9a-zA-Z]+$',
                     message: '密码只能包含数字和字母'
+                },
+                stringLength: {
+                    min: 6,
+                    max: 10,
+                    message: '支付面膜不能小于6个字符，不能大于10个字符'
                 }
             }
         },

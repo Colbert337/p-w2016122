@@ -20,7 +20,7 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								运输公司保证金设置
+								运输公司充值
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -42,10 +42,19 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="email" class="col-sm-3 control-label no-padding-right" >运输公司保证金： </label>
+										<label for="email" class="col-sm-3 control-label no-padding-right" >充值金额： </label>
 
 										<div class="col-sm-4">
 											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" maxlength="8"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" >转账方式： </label>
+										<div class="col-sm-4">
+											<select class="form-control" name="depositType" >
+												<s:option flag="true" gcode="RECHARGE_TYPE"/>
+											</select>
 										</div>
 									</div>
 									
@@ -68,20 +77,34 @@
 												</div>
 										</div>
 									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">转账方式：</label>
 
-										<div class="col-sm-4">
-											<input type="text" name="depositType" placeholder="输入转账方式" class="form-control" maxlength="20"/>
-										</div>
-									</div>
-									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">操作人员：</label>
 
 										<div class="col-sm-4">
 											<input type="text" id="operator" name="operator" class="form-control"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">截图上传： </label>
+										<div class="col-sm-4">
+											<div class="widget-box">
+												<div class="widget-header">
+													<h4 class="widget-title">转账截图照片上传</h4>
+												</div>
+
+												<div class="widget-body">
+													<div class="widget-main">
+														<input type="file" name="image" class="projectfile" id="transfer_select" />
+														<input type="hidden" id="transfer_photo" name="transfer_photo"/> 
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#transfer_select','#transfer_photo');">
+															<i class="ace-icon fa fa-check bigger-110"></i>
+															图片上传
+														</button>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 									
@@ -96,13 +119,13 @@
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
-											<button class="btn btn-info" type="button" onclick="save();">
+											<button id="sub"  class="btn btn-info" type="button" onclick="save();">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											
-											<button class="btn btn-success" type="button" onclick="returnpage();">
+											<button class="btn btn-success" type="button" onclick="returnpage2();">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
 												返回
 											</button>

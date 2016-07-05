@@ -22,7 +22,7 @@ function ajaxQueryData(obj,url,datatype){
 			$(obj).html(msg);
 		},
 		error:function(){
-			alert('加载页面' + url + '时出错！');
+			bootbox.alert('加载页面' + url + '时出错！');
 		}
 	});
 }
@@ -136,76 +136,10 @@ function nextpage(formid){
 	$(formid).ajaxSubmit(listOptions);
 }
 
-//成功提示
-function sucDialog(cont){
-	if(cont != ""){
-		$("#suc-content").text(cont)
-	}
-	var d = dialog({
-		width:470,
-		height:90,
-//			top:'20%',
-		content: $("#suc-hint"),
-		fixed: false,
-		drag: true
-	});
-	d.show();
-	setTimeout(function () {
-		d.close().remove();
-	}, 1000);
-}
-
-//失败提示
-function failDialog(cont){
-	if(cont != ""){
-		$("#fail-content").text(cont)
-	}
-	var d = dialog({
-		width:470,
-		height:90,
-		top:'20%',
-		content: $("#fail-hint"),
-		fixed: false,
-		drag: true
-	});
-	d.show();
-	setTimeout(function () {
-		d.close().remove();
-	}, 1000);
-}
-
-//警告提示
-function warnDialog(cont){
-	if(cont != ""){
-		$("#warn-content").text(cont)
-	}
-	var d = dialog({
-		width:470,
-		height:90,
-		top:'20%',
-		content: $("#warn-hint"),
-		fixed: false,
-		drag: true
-	});
-	d.show();
-	setTimeout(function () {
-		d.close().remove();
-	}, 1000);
-}
-
-
 //Add by xiukun
 var sjny = sjny || {};
 sjny.admin = sjny.admin || {};
 sjny.admin.comm = {
-	clickShowModal: function() {
-		$('#testModal').on('click', function(){
-			$('#myModal').modal({
-				backdrop: 'static',
-				keyboard: false
-			});
-		});
-	},
 	selectedSubMenuItem: function() {
 		$('.nav-list > li').on('click', '.submenu > li', function(){
 			var $this = $(this),
@@ -249,7 +183,6 @@ sjny.admin.comm = {
 };
 
 $(document).ready(function() {
-	sjny.admin.comm.clickShowModal();
 	sjny.admin.comm.selectedSubMenuItem();
 	sjny.admin.comm.globalBootstrapValidator();
 });

@@ -58,6 +58,7 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 	}
 
 	public Integer updatePriceStatus(ProductPrice obj) throws Exception {
+		obj.setProductPriceStatus("0");
 		return productPriceMapper.updatePriceStatus(obj);
 	}
 

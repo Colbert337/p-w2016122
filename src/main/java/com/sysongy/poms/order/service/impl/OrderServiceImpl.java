@@ -7,7 +7,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +46,8 @@ import com.sysongy.util.UUIDGenerator;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private SysOrderMapper sysOrderMapper;
 
@@ -71,6 +77,15 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private TcFleetService tcFleetService;
+
+
+	@Override
+	public PageInfo<SysOrder> queryOrders(SysOrder record) throws Exception {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<SysOrder> list = sysOrderMapper.queryForPage(record);
+		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
+		return pageInfo;
+	}
 	
 	@Override
 	public int deleteByPrimaryKey(String orderId) {
@@ -94,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 创建流水单编码
-     * @param record
+     * @paramrecord
      * @return
      */
     public String createOrderNumber(String order_type){
@@ -120,7 +135,7 @@ public class OrderServiceImpl implements OrderService {
 	   }
 	   
 	   String orderType = order.getOrderType();
-	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_DRIVER))){
+	   if(orderType == null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_DRIVER))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH);
 	   }
 	   String operatorTargetType = order.getOperatorTargetType();
@@ -158,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
     
 	/**
      * 根据原订单，创建充红订单
-     * @param order
+     * @paramorder
      * @return
      * @throws Exception
      */
@@ -248,7 +263,7 @@ public class OrderServiceImpl implements OrderService {
 	 * 充红订单--包括充值充红、消费充红
 	 * 1.从查询原始订单的订单处理流程
 	 * 2.针对每个处理过程，进行反向操作
-	 * @param order 充红的订单对象，其中属性discharge_order_id存的是对冲的订单ID,其他信息是初始化原始订单的信息，尤其是cash字段
+	 * @paramorder 充红的订单对象，其中属性discharge_order_id存的是对冲的订单ID,其他信息是初始化原始订单的信息，尤其是cash字段
 	 */
     @Override
     public String dischargeOrder(SysOrder originalOrder, SysOrder dischargeOrder) throws Exception{
@@ -465,6 +480,7 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER);
 	   }
+
 	   //消费的时候传过去的cash是正值
 	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
@@ -519,28 +535,51 @@ public class OrderServiceImpl implements OrderService {
 	public String validAccount(SysOrder record){
 		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
 		SysUserAccount creditAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
+		SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(record.getDebitAccount());
+		String strFrozen = validateAccountIfFroen(creditAccount, debitAccount, record);
+		if(strFrozen.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+			return strFrozen;
+		String strLackMoney = validateAccountBalance(creditAccount, record);
+		if(strLackMoney.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+			return strLackMoney;
+		return strRet;
+	}
+
+	/**
+	 * 查看消费账户冻结
+	 * @param creditAccount
+	 * @param debitAccount
+	 * @param record
+     * @return
+     */
+	private String validateAccountIfFroen(SysUserAccount creditAccount, SysUserAccount debitAccount, SysOrder record){
+		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
 		boolean isCreditFrozen = creditAccount.getAccount_status().equalsIgnoreCase("0");
 		if(isCreditFrozen)
 			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN;
 
-		boolean isCreditAccountCardFrozen = false;
-		if(StringUtils.isNotEmpty(record.getConsume_card())){
-			isCreditAccountCardFrozen = creditAccount.getAccount_status().equalsIgnoreCase("1");
+		boolean isCreditAccountCardFrozen = (StringUtils.isNotEmpty(record.getConsume_card())
+				&& (creditAccount.getAccount_status().equalsIgnoreCase("1")));
+		if(isCreditAccountCardFrozen){
 			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN;
 		}
-
-		SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(record.getDebitAccount());
-		boolean isDebitFrozen = debitAccount.getAccount_status().equalsIgnoreCase("0");
-		if(isDebitFrozen)
-			return GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN;
-
-		BigDecimal balance = new BigDecimal(debitAccount.getAccountBalance());
-		if(record.getCash().compareTo(balance) == 1)
-			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
-
 		return strRet;
 	}
-	
+
+	/**
+	 * 查看消费账户余额
+	 * @param creditAccount
+	 * @param record
+     * @return
+     */
+	private String validateAccountBalance(SysUserAccount creditAccount, SysOrder record){
+		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
+		BigDecimal balance = new BigDecimal(creditAccount.getAccountBalance());
+		if(record.getCash().compareTo(balance) == 1)
+			return GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH;
+		return strRet;
+	}
+
 	/**
 	 * 运输公司给个人转账
 	 * 1.扣除运输公司账户
@@ -637,6 +676,13 @@ public class OrderServiceImpl implements OrderService {
   	   }
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
-	
-   
+
+	public Integer selectCashBackByOrderID(String orderId){
+		if(StringUtils.isEmpty(orderId)){
+			logger.error("The order id is null!!!");
+			return null;
+		}
+
+		return orderDealService.selectCashBackByOrderID(orderId);
+	}
 }

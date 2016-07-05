@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/advance/fleet_list.js"/>
+<script src="<%=basePath %>/dist/js/advance/fleet_list.js"></script>
 <div class="page-header">
 	<h1>
 		车队管理
@@ -56,7 +56,7 @@
 							<th>手机号</th>
 							<th>车辆数</th>
 							<th>创建时间</th>
-							<th>操作</th>
+							<th class="text-center">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -67,12 +67,12 @@
 								<td>${fleet.mobile_phone}</td>
 								<td>${fleet.vCount}</td>
 								<td><fmt:formatDate value="${fleet.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>
-								<td>
-									<a class="" href="javascript:editFleet('${fleet.tcFleetId}');" title="修改" data-rel="tooltip">
+								<td class="text-center">
+									<a class="option-btn-m" href="javascript:editFleet('${fleet.tcFleetId}');" title="修改" data-rel="tooltip">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
 									</a>
 									<a class="" href="javascript:mangFleet('${fleet.tcFleetId}');" title="管理车辆" data-rel="tooltip">
-										<span class="ace-icon fa fa-car bigger-130"></span>
+										<span class="ace-icon fa fa-car bigger-120"></span>
 									</a>
 								</td>
 							</tr>
@@ -84,7 +84,7 @@
 			<%--分页start--%>
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
@@ -114,7 +114,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel">添加车队</h4>
+				<h4 class="modal-title" id="editFleetDiv">添加车队</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
@@ -142,14 +142,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveFleet()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('editModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveFleet()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('editModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
@@ -176,7 +173,6 @@
 										<select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallist" style="display: none;height: 270px;"></select>
 										<input type="hidden" id="fleet_id" name="tcFleetId" />
 										<input type="hidden" id="sysUserId" name="sysUserId" />
-										<div class="hr hr-16 hr-dotted"></div>
 									</div>
 								</div>
 							</form>
@@ -184,46 +180,12 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveManage()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('manageModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveManage()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('manageModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
 <!--添加车辆管理弹层-结束-->
-
-<!--提示弹层-开始-->
-<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="alertModalLabel">警告提示</h4>
-			</div>
-			<div class="modal-body">
-				<div class="container-fluid">
-					<%--两行表单 开始--%>
-					<div class="row">
-						<div class="col-xs-12">
-							sadfasdfasdf
-						</div><!-- /.col -->
-					</div><!-- /.row -->
-					<%--两行表单 结束--%>
-				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-</div>
-<!--提示弹层-结束-->

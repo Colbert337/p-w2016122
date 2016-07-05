@@ -40,7 +40,8 @@ public class SysFunctionController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryFunctionListPage(SysFunction function,@RequestParam(required = false) String parentIdTemp, ModelMap map){
+	public String queryFunctionListPage(SysFunction function,@RequestParam(required = false) String parentIdTemp,
+										@RequestParam(required = false) Integer resultInt, ModelMap map){
 		function.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
 		SysFunction sysFunction = new SysFunction();
 		String parentId = "1";//根节点父ID
@@ -65,6 +66,17 @@ public class SysFunctionController extends BaseContoller{
 		map.addAttribute("functionList",functionList);
 		map.addAttribute("parentId",parentId);
 		map.addAttribute("parentName",currName);
+
+		if(resultInt != null && resultInt > 0){
+			Map<String, Object> resultMap = new HashMap<>();
+
+			if(resultInt == 1){
+				resultMap.put("retMsg","新建功能成功！");
+			}else if(resultInt == 2){
+				resultMap.put("retMsg","修改功能成功！");
+			}
+			map.addAttribute("ret",resultMap);
+		}
 		return "webpage/poms/permi/function_list";
 	}
 
@@ -216,17 +228,20 @@ public class SysFunctionController extends BaseContoller{
 	 */
 	@RequestMapping("/save")
 	public String saveFunction(SysFunction function, ModelMap map){
+		int resultInt = 0;
 		if(function != null && function.getSysFunctionId() != null && !"".equals(function.getSysFunctionId())){
 			//修改功能
 			sysFunctionService.updateFunction(function);
+			resultInt = 2;
 		}else if(function != null){//添加
 			function.setSysFunctionId(UUIDGenerator.getUUID());
 			function.setFunctionStatus(GlobalConstant.STATUS_ENABLE);
 			function.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
 			sysFunctionService.addFunction(function);
+			resultInt = 1;
 		}
 
-		return "redirect:/web/permi/function/list/page?parentIdTemp="+function.getParentId();
+		return "redirect:/web/permi/function/list/page?parentIdTemp="+function.getParentId()+"&resultInt="+resultInt;
 	}
 
 	/**

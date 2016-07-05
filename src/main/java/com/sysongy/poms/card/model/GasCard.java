@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
 @JsonIgnoreProperties
@@ -27,6 +28,8 @@ public class GasCard extends BaseModel{
 	
 	private String card_property;//用户卡属性 0:车辆卡  1:个人卡
 
+	private Usysparam card_property_info;
+
 	private String workstation; //用户卡所在地
 	
 	private String workstation_resp; //出入地责任人
@@ -48,6 +51,38 @@ public class GasCard extends BaseModel{
 	private String memo;
 
 	private int card_flag_id;
+
+	private String dName;
+
+	private String mPhone;
+
+	private String driverID;
+
+	private Date station_receive_time;
+
+	private String sysUserId;
+
+	private SysUser sysUserIdInfo;
+	
+	private String card_no_start;
+	
+	private String card_no_end;
+
+	public String getCard_no_start() {
+		return card_no_start;
+	}
+
+	public void setCard_no_start(String card_no_start) {
+		this.card_no_start = card_no_start;
+	}
+
+	public String getCard_no_end() {
+		return card_no_end;
+	}
+
+	public void setCard_no_end(String card_no_end) {
+		this.card_no_end = card_no_end;
+	}
 
 	public String getCard_property() {
 		return card_property;
@@ -199,5 +234,61 @@ public class GasCard extends BaseModel{
 
 	public void setCardStatusInfo(Usysparam cardStatusInfo) {
 		this.cardStatusInfo = cardStatusInfo;
+	}
+
+	public String getdName() {
+		return dName;
+	}
+
+	public void setdName(String dName) {
+		this.dName = dName;
+	}
+
+	public String getmPhone() {
+		return mPhone;
+	}
+
+	public void setmPhone(String mPhone) {
+		this.mPhone = mPhone;
+	}
+
+	public Date getStation_receive_time() {
+		return station_receive_time;
+	}
+
+	public void setStation_receive_time(Date station_receive_time) {
+		this.station_receive_time = station_receive_time;
+	}
+
+	public String getSysUserId() {
+		return sysUserId;
+	}
+
+	public void setSysUserId(String sysUserId) {
+		this.sysUserId = sysUserId;
+	}
+
+	public SysUser getSysUserIdInfo() {
+		return sysUserIdInfo;
+	}
+
+	public void setSysUserIdInfo(SysUser sysUserIdInfo) {
+		this.sysUserIdInfo = sysUserIdInfo;
+	}
+
+	public String getDriverID() {
+		return driverID;
+	}
+
+	public void setDriverID(String driverID) {
+		this.driverID = driverID;
+	}
+
+	public Usysparam getCard_property_info() {
+		return card_property_info;
+	}
+
+	public void setCard_property_info(Usysparam card_property_info) {
+		this.card_property_info = card_property_info;
 	}
 }

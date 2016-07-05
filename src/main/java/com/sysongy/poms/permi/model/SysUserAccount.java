@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
 public class SysUserAccount extends BaseModel{
@@ -37,6 +38,8 @@ public class SysUserAccount extends BaseModel{
 	private Usysparam account_statusInfo;
 
     private BigDecimal deposit;
+
+    private SysDriver sys_drive_info;
 
     public BigDecimal getDeposit() {
 		return deposit;
@@ -117,4 +120,5 @@ public class SysUserAccount extends BaseModel{
     public void setAccount_statusInfo(Usysparam account_statusInfo) {
         this.account_statusInfo = account_statusInfo;
     }
+
 }

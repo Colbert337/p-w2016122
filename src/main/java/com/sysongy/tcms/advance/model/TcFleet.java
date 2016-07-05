@@ -2,6 +2,7 @@ package com.sysongy.tcms.advance.model;
 
 import com.sysongy.poms.base.model.BaseModel;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class TcFleet extends BaseModel{
@@ -12,6 +13,10 @@ public class TcFleet extends BaseModel{
     private String fleetName;
 
     private String sysUserId;
+
+    private BigDecimal quota;
+
+    private Integer isAllot;
 
     private Date createdDate;
 
@@ -73,5 +78,21 @@ public class TcFleet extends BaseModel{
 
     public void setIsDeleted(String isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public BigDecimal getQuota() {
+        return quota;
+    }
+
+    public void setQuota(BigDecimal quota) {
+        this.quota = quota;
+    }
+
+    public Integer getIsAllot() {
+        return isAllot;
+    }
+
+    public void setIsAllot(Integer isAllot) {
+        this.isAllot = isAllot;
     }
 }

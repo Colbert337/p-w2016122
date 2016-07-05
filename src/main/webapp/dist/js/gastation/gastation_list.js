@@ -10,11 +10,45 @@
 		            	 //$("#modal-table").modal("show");
 		          }
             },error:function(XMLHttpRequest, textStatus, errorThrown) {
-            	alert("error");
+
 	       }
 	}
 	
 	window.onload = setCurrentPage();
+	
+	jQuery(function($) {
+		var $overflow = '';
+		var colorbox_params = {
+			rel: 'colorbox',
+			reposition:true,
+			scalePhotos:true,
+			scrolling:false,
+			previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+			next:'<i class="ace-icon fa fa-arrow-right"></i>',
+			close:'&times;',
+			current:'{current} of {total}',
+			maxWidth:'100%',
+			maxHeight:'100%',
+			onOpen:function(){
+				$overflow = document.body.style.overflow;
+				document.body.style.overflow = 'hidden';
+			},
+			onClosed:function(){
+				document.body.style.overflow = $overflow;
+			},
+			onComplete:function(){
+				$.colorbox.resize();
+			}
+		};
+	
+		$('.gastation-log-colorbox').colorbox(colorbox_params);
+		$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
+		
+		
+		$(document).one('ajaxloadstart.page', function(e) {
+			$('#colorbox, #cboxOverlay').remove();
+	   });
+	})
 	
 	function preUpdate(obj){
 		var stationid = $(obj).parents("tr").find("td:first").find("input").val();
@@ -41,6 +75,31 @@
 		$("#formgastation").ajaxSubmit(listOptions);
 	}
 	
+	function commitForm2(obj){
+		//设置当前页的值
+		if(typeof obj == "undefined") {
+			$("#pageNum").val("1");
+		}else{
+			$("#pageNum").val($(obj).text());
+		}
+		
+		var options ={   
+	            url:'../web/gastation/gastationList2',
+	            type:'post',                    
+	            dataType:'html',
+	            success:function(data){
+		              $("#main").html(data);
+		              if($("#retCode").val() != "100"){
+			            	 //$("#modal-table").modal("show");
+			          }
+	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+
+		       }
+		}
+		
+		$("#formgastation").ajaxSubmit(options);
+	}
+	
 	function del(obj){
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
@@ -62,4 +121,25 @@
 	
 	function init(){
 		loadPage('#main', '../web/gastation/gastationList');
+	}
+	
+	function init2(){
+		loadPage('#main', '../web/gastation/gastationList2');
+	}
+	
+	function showInnerModel(obj1,obj2,obj3,obj4){
+		console.debug(obj1);
+		console.debug(obj2);
+		console.debug(obj3);
+		console.debug(obj4);
+		$("#innerimg1").attr("src",obj1);
+		$("#innerimg1").parent("a").attr("href",obj1);
+		$("#innerimg2").attr("src",obj2);
+		$("#innerimg2").parent("a").attr("href",obj2);
+		$("#innerimg3").attr("src",obj3);
+		$("#innerimg3").parent("a").attr("href",obj3);
+		$("#innerimg4").attr("src",obj4);
+		$("#innerimg4").parent("a").attr("href",obj4);
+		
+		$("#innerModel").modal('show');
 	}

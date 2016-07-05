@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,11 +187,16 @@ public class GastationServiceImpl implements GastationService {
 
 	@Override
 	public Gastation queryGastationByPK(String gastationid) throws Exception {
-		 Gastation station =  gasStationMapper.selectByPrimaryKey(gastationid);
-		 station.setExpiry_date_frompage(new SimpleDateFormat("yyyy-MM-dd").format(station.getExpiry_date()));
-		 SysUserAccount account = sysUserAccountMapper.selectByPrimaryKey(station.getSys_user_account_id());
-		 station.setAccount(account);
-		 return station;
+		 
+		Gastation station =  gasStationMapper.selectByPrimaryKey(gastationid);
+		 
+		if(station != null){
+			station.setExpiry_date_frompage(new SimpleDateFormat("yyyy-MM-dd").format(station.getExpiry_date()));
+			SysUserAccount account = sysUserAccountMapper.selectByPrimaryKey(station.getSys_user_account_id());
+			station.setAccount(account);
+		}
+
+		return station;
 	}
 
 	@Override
@@ -211,13 +215,23 @@ public class GastationServiceImpl implements GastationService {
 		order.setOrderDate(new Date());
 		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_GASTATION);
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.GASTATION);
+		String orderNumber = orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_GASTATION);
+		order.setOrderNumber(orderNumber);
 		orderService.insert(order);
 		orderService.chargeToGasStation(order);
 		
 		//写日志
 		log.setOptime(new Date());
+		Gastation gastation = gasStationMapper.selectByPrimaryKey(log.getStationId());
+		log.setStationName(gastation.getGas_station_name());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.GASTATION);
+		log.setOrder_number(orderNumber);
+		if(StringUtils.isEmpty(log.getTransfer_photo())){
+			Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+			String show_path = (String) prop.get("default_img");
+			log.setTransfer_photo(show_path);
+		}
 		return sysDepositLogMapper.insert(log);
 	}
 

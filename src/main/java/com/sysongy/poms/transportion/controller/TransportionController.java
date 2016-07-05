@@ -1,42 +1,57 @@
 package com.sysongy.poms.transportion.controller;
 
-import com.sysongy.poms.base.model.CurrUser;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.mail.MailEngine;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 
 @RequestMapping("/web/transportion")
 @Controller
 public class TransportionController extends BaseContoller{
-	
+
 	@Autowired
 	private TransportionService service;
 	@Autowired
 	private SysDepositLogService depositLogService;
+	@Autowired
+	private MailEngine mailEngine;
+	@Autowired
+	private SimpleMailMessage mailMessage;
+
+	private Transportion transportion;
 	/**
 	 * 运输公司查询
 	 * @param map
-	 * @param gascard
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/transportionList")
 	public String queryAllTransportionList(ModelMap map, Transportion transportion) throws Exception{
-
+		
+		this.transportion = transportion;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_list";
 
@@ -78,10 +93,11 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
-	
+
 	@RequestMapping("/transportionList2")
 	public String queryAllTransportionList2(ModelMap map, Transportion transportion) throws Exception{
-
+		
+		this.transportion = transportion;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_list2";
 
@@ -127,7 +143,6 @@ public class TransportionController extends BaseContoller{
 	/**
 	 * 用户卡入库
 	 * @param map
-	 * @param gascard
 	 * @return
 	 * @throws Exception
 	 */
@@ -146,7 +161,7 @@ public class TransportionController extends BaseContoller{
 				ret = "webpage/poms/transportion/transportion_update";
 				transportionid = service.saveTransportion(transportion,"update");
 				bean.setRetMsg("["+transportionid+"]保存成功");
-				ret = this.queryAllTransportionList(map, transportion);
+				ret = this.queryAllTransportionList(map, this.transportion);
 			}
 
 			bean.setRetCode(100);
@@ -166,31 +181,31 @@ public class TransportionController extends BaseContoller{
 			return  ret;
 		}
 	}
-	
+
 	@RequestMapping("/preUpdate")
 	public String preUpdate(ModelMap map, @RequestParam String transportionid){
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_update";
 		Transportion station = new Transportion();
-		
+
 			try {
 				if(transportionid != null && !"".equals(transportionid)){
 					station = service.queryTransportionByPK(transportionid);
 				}
-		
+
 				bean.setRetCode(100);
 				bean.setRetMsg("根据["+transportionid+"]查询Transportion成功");
 				bean.setPageInfo(ret);
-	
+
 				map.addAttribute("ret", bean);
 				map.addAttribute("station", station);
-	
+
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
-	
-			ret = this.queryAllTransportionList(map, new Transportion());
-	
+
+			ret = this.queryAllTransportionList(map, this.transportion);
+
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
@@ -220,7 +235,22 @@ public class TransportionController extends BaseContoller{
 		map.addAttribute("transportion",transportion);
 		return "webpage/poms/transportion/transport_info";
 	}
-	
+
+	@RequestMapping("/info/tc")
+	@ResponseBody
+	public Transportion queryTransport(ModelMap map, @ModelAttribute CurrUser currUser){
+
+		String transportionId = currUser.getStationId();
+		Transportion transportion = new Transportion();
+		try {
+			transportion = service.queryTransportionByPK(transportionId);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return transportion;
+	}
+
 	@RequestMapping("/depositList")
 	public String querydepositList(ModelMap map, SysDepositLog deposit) throws Exception{
 
@@ -235,7 +265,7 @@ public class TransportionController extends BaseContoller{
 			if(StringUtils.isEmpty(deposit.getOrderby())){
 				deposit.setOrderby("optime desc");
 			}
-			
+
 			deposit.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
 
@@ -258,12 +288,12 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
-	
+
 	@RequestMapping("/deposiTransportion")
 	public String deposiTransportion(ModelMap map, SysDepositLog deposit, @ModelAttribute CurrUser currUser){
 
 		PageBean bean = new PageBean();
-		String ret = "webpage/poms/transportion/transportion_list";
+		String ret = "webpage/poms/transportion/transportion_list2";
 		Integer rowcount = null;
 
 		try {
@@ -271,10 +301,10 @@ public class TransportionController extends BaseContoller{
 					rowcount = service.updatedeposiTransportion(deposit, currUser.getUserId());
 				}
 
-				ret = this.queryAllTransportionList(map, new Transportion());
+				ret = this.queryAllTransportionList2(map, this.transportion);
 
 				bean.setRetCode(100);
-				bean.setRetMsg("保证金设置成功");
+				bean.setRetMsg("["+deposit.getStationName()+"]充值成功");
 				bean.setRetValue(rowcount.toString());
 				bean.setPageInfo(ret);
 
@@ -285,7 +315,7 @@ public class TransportionController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllTransportionList(map, new Transportion());
+			ret = this.queryAllTransportionList2(map, this.transportion);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -294,6 +324,178 @@ public class TransportionController extends BaseContoller{
 		finally {
 			return ret;
 		}
+	}
+
+	/**
+	 * 添加运输公司支付密码
+	 * @param currUser 当前用户
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/save/password")
+	public String saveTcPassword(@ModelAttribute("currUser") CurrUser currUser,Transportion transportion, ModelMap map){
+		String stationId = currUser.getStationId();
+		transportion.setSys_transportion_id(stationId);
+		try {
+			service.updatedeposiTransport(transportion);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return "redirect:/web/tcms/fleetQuota/list/page";
+	}
+
+	/**
+	 * 发送设置密码邮件
+	 * @param currUser
+	 * @param transportion
+	 * @param map
+     * @return
+     */
+	@RequestMapping("/update/setPasswordMail")
+	public String sendSetPassword(@ModelAttribute("currUser") CurrUser currUser,Transportion transportion, ModelMap map){
+		String userName = currUser.getUser().getUserName();
+		String stationId = currUser.getStationId();
+		Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+		String http_poms_path = (String) prop.get("http_poms_path");
+
+		try {
+			transportion = service.queryTransportionByPK(stationId);
+			String email = transportion.getEmail();
+			String url = http_poms_path;
+			mailMessage.setTo(email);
+			mailMessage.setSubject("用户设置密码邮件通知");
+			Map<String, Object> model = new HashMap<String, Object>();
+			model.put("userName",userName);
+			model.put("url",url+"/web/transportion/info/setPassword");
+			mailEngine.send(mailMessage, "password.ftl", model);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return "redirect:/web/tcms/fleetQuota/list/page";
+	}
+
+	/**
+	 * 进入设置密码页面
+	 * @param currUser
+	 * @param transportion
+	 * @param map
+     * @return
+     */
+	@RequestMapping("/info/setPassword")
+	public String querySetPassword(@ModelAttribute("currUser") CurrUser currUser,Transportion transportion, ModelMap map){
+		String userName = currUser.getUser().getUserName();
+		String stationId = currUser.getStationId();
+
+		map.addAttribute("userName",userName);
+		map.addAttribute("stationId",stationId);
+
+		return "webpage/poms/transportion/ps_set";
+	}
+
+	/**
+	 * 发送修改密码邮件
+	 * @param currUser
+	 * @param transportion
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/update/passwordMail")
+	public String sendUpdatePassword(@ModelAttribute("currUser") CurrUser currUser,Transportion transportion, ModelMap map){
+
+		String userName = currUser.getUser().getUserName();
+		String stationId = currUser.getStationId();
+		Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+		String http_poms_path = (String) prop.get("http_poms_path");
+
+		try {
+			transportion = service.queryTransportionByPK(stationId);
+			String email = transportion.getEmail();
+			String url = http_poms_path;
+
+			mailMessage.setTo(email);
+			mailMessage.setSubject("用户修改密码邮件通知");
+			Map<String, Object> model = new HashMap<String, Object>();
+			model.put("userName",userName);
+			model.put("url",url+"/web/transportion/info/setPassword");
+			mailEngine.send(mailMessage, "password.ftl", model);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return "redirect:/web/tcms/fleetQuota/list/page";
+	}
+
+	/**
+	 * 进入修改密码页面
+	 * @param currUser
+	 * @param transportion
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/info/updatePassword")
+	public String queryUpdatePassword(@ModelAttribute("currUser") CurrUser currUser,Transportion transportion, ModelMap map){
+		String userName = currUser.getUser().getUserName();
+		String stationId = currUser.getStationId();
+
+		try {
+			transportion = service.queryTransportionByPK(stationId);
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return "redirect:/web/tcms/fleetQuota/list/page";
+	}
+
+	/**
+	 * 更新运输公司密码
+	 * @param currUser
+	 * @param transportion
+	 * @param map
+     * @return
+     */
+	@RequestMapping("/update/password")
+	public String updatePassword(@ModelAttribute("currUser") CurrUser currUser,Transportion transportion, ModelMap map){
+		String userName = currUser.getUser().getUserName();
+		String stationId = currUser.getStationId();
+		transportion.setSys_transportion_id(stationId);
+		try {
+			transportion.setPay_code(Encoder.MD5Encode(transportion.getPay_code().getBytes()));
+			service.updatedeposiTransport(transportion);
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return "redirect:/web/tcms/fleetQuota/list/page";
+	}
+
+	/**
+	 * 判断密码是否正确
+	 * @param currUser
+	 * @param password
+	 * @param map
+     * @return
+     */
+	@RequestMapping("/info/isExist")
+	@ResponseBody
+	public JSONObject queryRoleList(@ModelAttribute("currUser") CurrUser currUser, @RequestParam String password, ModelMap map){
+		JSONObject json = new JSONObject();
+		String userName = currUser.getUser().getUserName();
+		String stationId = currUser.getStationId();
+		Transportion transportion = new Transportion();
+		String passwordTemp = "";
+		try {
+			transportion = service.queryTransportionByPK(stationId);
+			password = Encoder.MD5Encode(password.getBytes());
+
+			if (transportion != null && transportion.getPay_code().equals(password)){
+				json.put("valid",true);
+			}else{
+				json.put("valid",false);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return json;
 	}
 
 }

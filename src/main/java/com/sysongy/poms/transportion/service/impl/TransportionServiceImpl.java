@@ -280,6 +280,10 @@ public class TransportionServiceImpl implements TransportionService {
 		return cash_success;
 	}
 
+	@Override
+	public int updatedeposiTransport(Transportion transportion) throws Exception {
+		return transportionMapper.updateByPrimaryKeySelective(transportion);
+	}
 
 	@Override
 	public int updatedeposiTransportion(SysDepositLog log, String operation) throws Exception {
@@ -297,12 +301,23 @@ public class TransportionServiceImpl implements TransportionService {
 		order.setOrderDate(new Date());
 		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+		String orderNumber = orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
+		order.setOrderNumber(orderNumber);
+		orderService.insert(order);
 		orderService.chargeToTransportion(order);
 		
 		//写日志
+		Transportion transportion = transportionMapper.selectByPrimaryKey(log.getStationId());
+		log.setStationName(transportion.getTransportion_name());
 		log.setOptime(new Date());
 		log.setSysDepositLogId(UUIDGenerator.getUUID());
 		log.setStation_type(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+		log.setOrder_number(orderNumber);
+		if(StringUtils.isEmpty(log.getTransfer_photo())){
+			Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+			String show_path = (String) prop.get("default_img");
+			log.setTransfer_photo(show_path);
+		}
 		return sysDepositLogMapper.insert(log);
 	}
 

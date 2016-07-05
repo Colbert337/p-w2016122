@@ -2,27 +2,17 @@
  * Created by Administrator on 2016/6/20.
  * Author: wdq
  */
-/*/!*分页相关方法 start*!/
-window.onload = setCurrentPage();
 function commitForm(obj){
-    //设置当前页的值
-    if(typeof obj == "undefined") {
-        $("#pageNum").val("1");
-    }else{
-        $("#pageNum").val($(obj).text());
-    }
-
     $("#listForm").ajaxSubmit(listOptions);
 }
 var listOptions ={
-    url:'../web/tcms/FleetQuota/list/page',
+    url:'../web/tcms/fleetQuota/list/page',
     type:'post',
     dataType:'html',
     success:function(data){
         $("#main").html(data);
     }
 }
-/!*分页相关方法 end*!/*/
 
 //显示充值弹出层add
 function addChongzhi(){
@@ -47,10 +37,66 @@ function addZhuan(){
 //显示添加修改密码弹出层add
 function addPassword(){
     clearDiv();
+    $.ajax({
+        type: "POST",
+        async:false,
+        url: "../web/transportion/info/tc",
+        success: function(data){
+            if(data != null && data.pay_code != null && data.pay_code !=""){
+                $("#paswordDiv").show();
+                $("#firstDiv").hide();
+            }else{
+                $("#firstDiv").show();
+                $("#paswordDiv").hide();
+            }
 
+        }
+    });
     $("#passwordModel").modal('show');
 }
 
+/**
+ * 切换支付密码弹层
+ * @param objOpen 选中浮层
+ * @param objClose 不选中浮层
+ */
+function changePassDiv(objOpen,objClose){
+    $("#"+objOpen).show();
+    $("#"+objClose).hide();
+}
+
+function savePassword(){
+    var url = "";
+    var fistDiv = $("#firstDiv").is(":visible");
+    var updatePsDiv =  $("#updatePsDiv").is(":visible");
+    var lossPsDiv =  $("#lossPsDiv").is(":visible");
+
+    if(fistDiv){
+        url = "../web/transportion/update/setPasswordMail"
+    }else if(updatePsDiv){
+        $('#passwordForm').data('bootstrapValidator').validate();
+        if(!$('#passwordForm').data('bootstrapValidator').isValid()){
+            return ;
+        }
+
+        url = "../web/transportion/update/password"
+    }else if(lossPsDiv){
+        url = "../web/transportion/update/setPasswordMail"
+    }
+    var saveOptions ={
+        url:url,
+        type:'post',
+        dataType:'html',
+        success:function(data){
+            bootbox.alert("操作成功!")//保存成功弹窗
+            $("#main").html(data);
+        }
+    }
+    $("#passwordForm").ajaxSubmit(saveOptions);
+    $("#passwordModel").modal('hide').removeClass('in');
+    $("body").removeClass('modal-open').removeAttr('style');
+    $(".modal-backdrop").remove();
+}
 /**
  * 资金分配状态修改
  * @param obj
@@ -65,6 +111,7 @@ function allocation(obj,index){
         $(obj).attr("checked","checked");
         $("#is_allot_"+index).val(1);
         $("#quota_"+index).removeAttr("readonly");
+        $("#quota_"+index).val(0.00);
     }
 
 }
@@ -73,19 +120,61 @@ function allocation(obj,index){
  * 保存配置
  */
 function saveFenpei(){
-    var data = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
-    data = decodeURIComponent(data,true);
-    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"+data);
+    var dataForm = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
+    dataForm = decodeURIComponent(dataForm,true);
+    var saveOptions ={
+        url:"../web/tcms/fleetQuota/save/fenpei",
+        type:'post',
+        data:{data:dataForm},
+        dataType:'html',
+        success:function(data){
+            bootbox.alert("操作成功!")//保存成功弹窗
+            $("#main").html(data);
+        }
+    }
+    $("#fenpeiForm").ajaxSubmit(saveOptions);
+    $("#fenpeiModel").modal('hide').removeClass('in');
+    $("body").removeClass('modal-open').removeAttr('style');
+    $(".modal-backdrop").remove();
+
+}
+
+/**
+ * 添加列
+ */
+var zhuanIndex = 2;
+function addRow(){
+
+    var objIndex = zhuanIndex++;
+    var zhuan = "";
+    zhuan += "<tr id='tr_"+objIndex+"'>";
+    zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' onblur='queryDriverInfo("+objIndex+");'/></td>";
+    zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly'>";
+    zhuan += "<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>";
+    zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' /></td>";
+    zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td>";
+    zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除</a>";
+    zhuan += "</td></tr>";
+
+    $("#zhuanTable").append(zhuan);
+}
+
+/**
+ * 根据下标查找司机信息
+ * @param index
+ */
+function queryDriverInfo(index){
+    var mobilePhone = $("#mobile_phone_"+index).val();
     $.ajax({
         type: "POST",
-        data:{data:data},
+        data:{mobilePhone:mobilePhone},
         async:false,
-        url: "../web/tcms/fleetQuota/save/fenpei",
+        url: "../web/tcms/fleetQuota/info/driver",
         success: function(data){
-            sucDialog("批量保存成功!")//保存成功弹窗
-            if(data.success()){
-                //暂时不需要跳转
-                window.location = '../web/tcms/fleetQuota/list/page' ;
+            if(data != null){
+                $("#full_name_"+index).val(data.fullName);
+                $("#sys_driver_id_"+index).val(data.sysDriverId);
+
             }else{
                 alert("请求失败！");
             }
@@ -95,65 +184,33 @@ function saveFenpei(){
 
 }
 
-//显示编辑车队额度弹出层
-function editFleetQuota(fleetQuotaId){
-    $.ajax({
-        url:"../web/tcms/fleetQuota/info",
-        data:{tcFleetQuotaId:fleetQuotaId},
-        async:false,
-        type: "POST",
-        success: function(data){
-            $("#plates_number").val(data.fleetQuota.platesNumber);
-            $("#tc_FleetQuota_id").val(data.fleetQuota.tcFleetQuotaId);
-            $("#pay_code").val(data.fleetQuota.payCode);
-            $("#re_password").val(data.fleetQuota.payCode);
-            $("#notice_phone").val(data.fleetQuota.noticePhone);
-            $("#copy_phone").val(data.fleetQuota.copyPhone);
-
-            if(data.gasCard != null && data.gasCard.card_no != null){
-                var cardType,cardStatus;
-                //卡类型
-                switch(data.gasCard.card_type)
-                {
-                    case '0':
-                        cardType = "LNG"
-                        break;
-                    case '1':
-                        cardType = "柴油"
-                        break;
-                    case '2':
-                        cardType = "LNG"
-                        break;
-                    default:
-                        cardType = "CNG"
-                }
-                //卡状态
-                switch(data.gasCard.card_status)
-                {
-                    case '0':
-                        cardStatus = "已冻结"
-                        break;
-                    case '1':
-                        cardStatus = "未使用"
-                        break;
-                    case '2':
-                        cardStatus = "使用中"
-                        break;
-                    default:
-                        cardStatus = "未使用"
-                }
-                $("#card_no").text(data.gasCard.card_no);
-                $("#card_type").text(cardType);
-                $("#card_status").text(cardStatus);
-            }
-
-            /*密码输入框改为可编辑*/
-            $("#pay_code").attr("readonly","readonly");
-            $("#re_password").attr("readonly","readonly");
+/**
+ * 删除列
+ * @param obj
+ */
+function deleteRow(index){
+    console.log( $("#tr_"+index));
+    $("#tr_"+index).remove();
+}
+/**
+ * 提交个人转账
+ */
+function saveZhuan(){
+    var data = $("#zhuanForm").serialize(); //序列化表单 获取到数据
+    data = decodeURIComponent(data,true);
+    var saveOptions ={
+        url: "../web/tcms/fleetQuota/save/zhuan",
+        data:{data:data},
+        type:'post',
+        dataType:'html',
+        success:function(data){
+            bootbox.alert("操作成功!")//保存成功弹窗
+            $("#main").html(data);
         }
-    })
-    $("#cardInfoDiv").show();
-    $("#editModel").modal('show');
+    }
+    $("#zhuanForm").ajaxSubmit(saveOptions);
+    $("#zhuanModel").modal('hide');
+    $("#zhuanTable").empty();
 }
 
 /*取消弹层方法*/
@@ -197,7 +254,7 @@ function saveFleetQuota(){
 
 //重置
 function init(){
-    loadPage('#main', '../web/tcms/FleetQuota/list/page');
+    loadPage('#main', '../web/tcms/fleetQuota/list/page');
 }
 /**
  * 删除车队额度
@@ -219,7 +276,7 @@ function leaveDriver(){
 }
 
 //bootstrap验证控件
-$('#editForm').bootstrapValidator({
+$('#passwordForm').bootstrapValidator({
     message: 'This value is not valid',
     feedbackIcons: {
         valid: 'glyphicon glyphicon-ok',
@@ -227,14 +284,29 @@ $('#editForm').bootstrapValidator({
         validating: 'glyphicon glyphicon-refresh'
     },
     fields: {
-        platesNumber: {
+        oldPassword: {
             validators: {
                 notEmpty: {
-                    message: '手机号码不能为空'
+                    message: '原支付密码不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9a-zA-Z]+$',
+                    message: '密码只能包含数字和字母'
+                },
+                remote: {
+                    url: '../web/transportion/info/isExist',
+                    type: "post",
+                    async: false,
+                    data: function(validator, $field, value) {
+                        return{
+                            password:$("#old_password").val()
+                        };
+                    },
+                    message: '支付密码错误'
                 }
             }
         },
-        payCode: {
+        pay_code: {
             validators: {
                 notEmpty: {
                     message: '支付密码不能为空'
@@ -257,43 +329,11 @@ $('#editForm').bootstrapValidator({
                 callback: {
                     message: '支付密码不一致',
                     callback: function (value, validator, $field) {
-                        if($("[name=payCode]").val() != value){
+                        if($("[name=pay_code]").val() != value){
                             return false;
                         }
                         return true;
                     }
-                }
-            }
-        },
-        noticePhone: {
-            validators: {
-                notEmpty: {
-                    message: '手机号不能为空'
-                },
-                regexp: {
-                    regexp: '^[0-9]+$',
-                    message: '手机号只能包含数字'
-                },
-                stringLength: {
-                    min: 11,
-                    max: 11,
-                    message: '手机号码为11位'
-                }
-            }
-        },
-        copyPhone: {
-            validators: {
-                notEmpty: {
-                    message: '手机号不能为空'
-                },
-                regexp: {
-                    regexp: '^[0-9]+$',
-                    message: '手机号只能包含数字'
-                },
-                stringLength: {
-                    min: 11,
-                    max: 11,
-                    message: '手机号码为11位'
                 }
             }
         }

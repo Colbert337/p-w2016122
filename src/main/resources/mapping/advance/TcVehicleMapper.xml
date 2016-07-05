@@ -191,6 +191,14 @@
       </if>
     </trim>
   </insert>
+  <insert id="addVehicleList" parameterType="java.util.List" >
+  insert into tc_vehicle (tc_vehicle_id, plates_number, station_id, notice_phone, copy_phone,
+    card_no, pay_code)
+  VALUES
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.tcVehicleId},#{item.platesNumber},#{item.stationId},#{item.noticePhone},#{item.copyPhone},#{item.cardNo},#{item.payCode})
+    </foreach>
+  </insert>
   <update id="updateVehicle" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     update tc_vehicle
     <set >

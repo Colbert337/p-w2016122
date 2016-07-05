@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.sysongy.poms.card.dao.GasCardLogMapper;
+import com.sysongy.poms.card.model.GasCardLog;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -64,8 +66,27 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     private SysDriverReviewStrMapper sysDriverReviewStrMapper;
 
+    @Autowired
+    private GasCardLogMapper gasCardLogMapper;
+
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        List<SysDriver> list = sysDriverMapper.queryForPage(record);
+        PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
+        return pageInfo;
+    }
+
+    @Override
+    public PageInfo<SysDriver> querySingleDriver(SysDriver record) throws Exception {
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        List<SysDriver> list = sysDriverMapper.querySingleDriver(record);
+        PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
+        return pageInfo;
+    }
+
+    @Override
+    public PageInfo<SysDriver> queryForPageSingleList(SysDriver record) throws Exception {
         PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
         List<SysDriver> list = sysDriverMapper.queryForPage(record);
         PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
@@ -102,7 +123,18 @@ public class DriverServiceImpl implements DriverService {
                 return 0;
             }
             gasCard.setCard_status(InterfaceConstants.CARD_STSTUS_IN_USE);
+            gasCard.setStation_receive_time(new Date());
+
             gasCardMapper.updateByPrimaryKeySelective(gasCard);
+
+            GasCardLog gascardlog = new GasCardLog();
+            org.springframework.beans.BeanUtils.copyProperties(gasCard, gascardlog);
+            gascardlog.setAction(GlobalConstant.CardAction.ADD);
+            gascardlog.setOptime(new Date());
+            int nRet = gasCardLogMapper.insert(gascardlog);
+            if(nRet < 1){
+                logger.error("记录卡轨迹出错， ID：" + gasCard.getCard_no());
+            }
         }
         return sysDriverMapper.updateByPrimaryKeySelective(record);
     }
@@ -115,6 +147,7 @@ public class DriverServiceImpl implements DriverService {
         sysUserAccount.setAccountBalance("0.0");
         sysUserAccount.setCreatedDate(new Date());
         sysUserAccount.setUpdatedDate(new Date());
+        sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
         int ret = sysUserAccountMapper.insert(sysUserAccount);
         return sysUserAccount;
 
@@ -284,7 +317,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
 	@Override
-	public Integer updateAndReview(String driverid, String type,String memo) throws Exception {
+	public Integer updateAndReview(String driverid, String type,String memo, String operator) throws Exception {
 		SysDriver record = new SysDriver();
 		record.setSysDriverId(driverid);
 		record = sysDriverMapper.selectByPrimaryKey(driverid);
@@ -297,6 +330,8 @@ public class DriverServiceImpl implements DriverService {
 			
 		SysDriverReviewStr log = new SysDriverReviewStr();
 		BeanUtils.copyProperties(log, record);
+		log.setOperator(operator);
+		
 		return sysDriverReviewStrMapper.insert(log);
 	}
 

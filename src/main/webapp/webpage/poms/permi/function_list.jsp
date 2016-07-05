@@ -43,11 +43,26 @@
 		zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
 		zTreeObj.expandAll(true);//展开所有节点
 
+		function zHeight() {
+			var ztreeHeight = $(window).height()-160;
+			var tableHeight = $("#simple-table").height();
+			if(tableHeight>ztreeHeight) {
+				var h = tableHeight;
+			} else {
+				var h = ztreeHeight;
+			}
+			$("#treeDemo").height(h);
+		}
+		zHeight();
+		$(window).resize(function(){
+			zHeight();
+		});
+
 		/**
 		 * 获取当前节点下菜单
 		 */
 		function queryMenuClick(event, treeId, treeNode){
-			/*alert(treeNode.id + ", " + treeNode.name);*/
+			/*bootbox.alert(treeNode.id + ", " + treeNode.name);*/
 			var queryMenuOptions ={
 				url:'<%=basePath%>/web/permi/function/list/page',
 				data:{parentId:treeNode.id},
@@ -105,7 +120,7 @@
 				$("#function_sort").val(data);
 			}
 		});
-		<%--alert("parentId:${parentId} +parentName:${parentName}");--%>
+		<%--bootbox.alert("parentId:${parentId} +parentName:${parentName}");--%>
 		$("#parent_id").val('${parentId}');
 		$("#parent_name").val('${parentName}');
 		$("#functionModel").modal('show');
@@ -130,6 +145,9 @@
 				dataType:'html',
 				success:function(data){
 					$("#main").html(data);
+					$("#modal-table").modal("show");
+				}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
 				}
 			}
 			$("#functionForm").ajaxSubmit(saveOptions);
@@ -177,18 +195,21 @@
 	 * 删除功能
 	 */
 	function deleteFunction(functionId,parentId){
-		if(confirm("确定删除该功能吗？")){
-			var deleteOptions ={
-				url:'<%=basePath%>/web/permi/function/delete',
-				data:{functionId:functionId,parentId:parentId},
-				type:'post',
-				dataType:'text',
-				success:function(data){
-					$("#main").html(data);
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("确认要删除功能吗？", function (result) {
+			if (result) {
+				var deleteOptions ={
+					url:'<%=basePath%>/web/permi/function/delete',
+					data:{functionId:functionId,parentId:parentId},
+					type:'post',
+					dataType:'text',
+					success:function(data){
+						$("#main").html(data);
+					}
 				}
+				$("#listForm").ajaxSubmit(deleteOptions);
 			}
-			$("#listForm").ajaxSubmit(deleteOptions);
-		}
+		})
 
 	}
 	/**
@@ -238,14 +259,16 @@
 			<!-- PAGE CONTENT BEGINS -->
 			<div class="row">
 				<div class="col-xs-12">
-					<div class="pull-left">当前选择菜单：<span id="currMenu" style="color: #2679b5;font-size: 18px">${parentName}</span></div>
-					<%--顶部按钮--%>
-					<div class="pull-right btn-botton">
-						<a class="btn btn-sm btn-primary" href="javascript:addFunction();">
-							添加
-						</a>
+					<div class="clearfix">
+						<div class="pull-left">当前选择菜单：<span id="currMenu" style="color: #2679b5;font-size: 18px">${parentName}</span></div>
+						<%--顶部按钮--%>
+						<div class="pull-right btn-botton">
+							<a class="btn btn-sm btn-primary" href="javascript:addFunction();">
+								新建
+							</a>
+						</div>
 					</div>
-					<%--</h4>--%>
+					<div class="sjny-table-responsive">
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
@@ -254,8 +277,8 @@
 							<th class="hidden-480">图标</th>
 							<th>类型</th>
 							<th class="hidden-480">排序</th>
-							<th>创建时间</th>
-							<th class="text-center">操作</th>
+							<th class="td-w2">创建时间</th>
+							<th class="text-center td-w3">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -279,12 +302,15 @@
 						</c:forEach>
 						</tbody>
 					</table>
+					</div>
 				</div><!-- /.span -->
 			</div><!-- /.row -->
 		</form>
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
 
 <!--添加用户弹层-开始-->
 <div id="functionModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
@@ -305,14 +331,14 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_name"> <span class="red_star">*</span>功能名称： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_name" name="functionName" placeholder="功能名称" class="validate[required] col-xs-10 col-sm-10" />
+										<input type="text" id="function_name" name="functionName" placeholder="功能名称" class="validate[required,maxSize[20]] col-xs-10 col-sm-10" />
 										<input type="hidden" id="sys_function_id" name="sysFunctionId" class="col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_path"> <span class="red_star">*</span>功能路径： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_path" name="functionPath" placeholder="功能路径" class="validate[required] col-xs-10 col-sm-10" />
+										<input type="text" id="function_path" name="functionPath" placeholder="功能路径" class="validate[required,maxSize[50]] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -333,13 +359,13 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_icon">功能图标： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="col-xs-10 col-sm-10" />
+										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="validate[required,maxSize[10]] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_sort">功能排序： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_sort" name="functionSort" placeholder="功能排序" class="col-xs-10 col-sm-10" />
+										<input type="text" id="function_sort" name="functionSort" placeholder="功能排序" class="validate[required,maxSize[3]] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -360,7 +386,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_desc"> 描述： </label>
 									<div class="col-sm-8">
-										<textarea class="limited col-xs-10 col-sm-10" id="function_desc" name="roleDesc" maxlength="50"></textarea>
+										<textarea class="limited col-xs-10 col-sm-10" id="function_desc" name="roleDesc" maxlength="50" style="resize: none;"></textarea>
 									</div>
 								</div>
 							</form>
@@ -368,14 +394,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveFunction()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('functionModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveFunction()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('functionModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>

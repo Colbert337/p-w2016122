@@ -2,6 +2,8 @@ package com.sysongy.poms.system.service;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
@@ -10,12 +12,16 @@ import com.sysongy.poms.system.model.SysCashBack;
 public interface SysCashBackService {
 	
 	public PageInfo<SysCashBack> queryCashBack(SysCashBack obj) throws Exception;
+
+	public PageInfo<SysCashBack> queryCashBackForCRM(SysCashBack obj) throws Exception;
 	
 	public SysCashBack queryCashBackByPK(String cashBackid) throws Exception;
 	
 	public String saveCashBack(SysCashBack obj,  String operation) throws Exception;
 	
 	public Integer delCashBack(String sysCashBackId) throws Exception;
+	
+	public Integer delCashBack(String sysCashBackNo, String level) throws Exception;
 	
 	/**
 	 * 通过cashBack的number得到对象
@@ -46,4 +52,6 @@ public interface SysCashBackService {
 	 * @return
 	 */
 	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType) throws Exception;
+	
+	public List<SysCashBack> gainProp(@RequestParam String sys_cash_back_no, @RequestParam String level);
 }

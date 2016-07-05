@@ -158,6 +158,9 @@
 				dataType:'html',
 				success:function(data){
 					$("#main").html(data);
+					$("#modal-table").modal("show");
+				}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
 				}
 			}
 			$("#roleForm").ajaxSubmit(saveOptions);
@@ -208,21 +211,24 @@
 	}
 
 	/**
-	 * 删除用户
+	 * 删除角色
 	 */
 	function deleteRole(roleId){
-		if(confirm("确定要删除该角色吗？")){
-			var deleteOptions ={
-				url:'<%=basePath%>/web/permi/role/delete',
-				data:{roleId:roleId},
-				type:'post',
-				dataType:'text',
-				success:function(data){
-					$("#main").html(data);
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("确认要删除角色吗？", function (result) {
+			if (result) {
+				var deleteOptions ={
+					url:'<%=basePath%>/web/permi/role/delete',
+					data:{roleId:roleId},
+					type:'post',
+					dataType:'text',
+					success:function(data){
+						$("#main").html(data);
+					}
 				}
+				$("#listForm").ajaxSubmit(deleteOptions);
 			}
-			$("#listForm").ajaxSubmit(deleteOptions);
-		}
+		})
 
 	}
 	/**
@@ -234,19 +240,22 @@
 		if(status == 0){
 			alertStr = "确定启用该角色吗？";
 		}
-		if(confirm(alertStr)){
-			var deleteOptions ={
-				url:'<%=basePath%>/web/permi/role/save',
-				data:{sysRoleId:roleId,roleStatus:status},
-				type:'post',
-				dataType:'text',
-				success:function(data){
-					$("#main").html(data);
-					$('[data-rel="tooltip"]').tooltip();
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm(alertStr, function (result) {
+			if (result) {
+				var deleteOptions ={
+					url:'<%=basePath%>/web/permi/role/save',
+					data:{sysRoleId:roleId,roleStatus:status},
+					type:'post',
+					dataType:'text',
+					success:function(data){
+						$("#main").html(data);
+						$('[data-rel="tooltip"]').tooltip();
+					}
 				}
+				$("#listForm").ajaxSubmit(deleteOptions);
 			}
-			$("#listForm").ajaxSubmit(deleteOptions);
-		}
+		})
 
 	}
 </script>
@@ -269,12 +278,12 @@
 					<%--顶部按钮--%>
 					<div class="pull-right btn-botton">
 						<a class="btn btn-sm btn-primary" href="javascript:addRole();">
-							添加
+							新建
 						</a>
 					</div>
 				</div>
 			</div><!-- /.row -->
-
+			<div class="sjny-table-responsive">
 			<table id="simple-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
@@ -282,8 +291,8 @@
 							<th>角色类型</th>
 							<th>角色状态</th>
 							<th class="hidden-480">角色描述</th>
-							<th>添加时间</th>
-							<th class="text-center">操作</th>
+							<th class="td-w2">添加时间</th>
+							<th class="text-center td-w2">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -325,11 +334,11 @@
 						</c:forEach>
 						</tbody>
 					</table>
-
+			</div>
 			<%--分页start--%>
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
@@ -354,6 +363,8 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
 
 <!--添加用户弹层-开始-->
 <div id="roleModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
@@ -392,9 +403,8 @@
 										<textarea class="limited col-xs-10 col-sm-10" id="role_desc" name="roleDesc" maxlength="50" style="resize: none;"></textarea>
 									</div>
 								</div>
-								<hr/>
 								<div class="form-group">
-									<div class="col-sm-4"></div>
+									<label class="col-sm-4 control-label no-padding-right" for=""> 功能选择： </label>
 									<div class="col-sm-3">
 										<ul id="treeDiv" class="ztree"></ul>
 									</div>
@@ -404,14 +414,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveRole()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('roleModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveRole()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('roleModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>

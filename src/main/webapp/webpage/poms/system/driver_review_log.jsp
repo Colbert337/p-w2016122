@@ -20,7 +20,7 @@
 
 					<div class="page-header">
 						<h1>
-							个人用户管理
+							审核日志查询
 						</h1>
 					</div>
 
@@ -37,12 +37,12 @@
 
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>申请时间:</label>
-								<input type="text" name="createdDate_after" value="${driver.createdDate_after}" readonly="readonly"/>
+								<label>审核时间:</label>
+								<input type="text" name="checkedDate_after" value="${driver.checkedDate_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" name="createdDate_before" value="${driver.createdDate_before}" readonly="readonly"/>
+								<input type="text" name="checkedDate_before" value="${driver.checkedDate_before}" readonly="readonly"/>
 							</div>
 						</div>
 
@@ -67,7 +67,7 @@
 					<!-- div.table-responsive -->
 
 					<!-- div.dataTables_borderWrap -->
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
@@ -84,11 +84,12 @@
 									<th onclick="orderBy(this,'fuel_type');commitForm();" id="indu_com_number_order">燃料类型</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="status_order">关联运输公司</th>
 									<!--  <th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> -->
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th>
+									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">审核人员</th>
+									<!-- <th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>认证时间</th> -->
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
-									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
+									<th onclick="orderBy(this,'checked_date');commitForm();" id="checked_date_order"><i id="checked_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
 									<th id="memoth" style="display:none">备注</th>
-									<th>更多操作</th>
+									<th class="text-center">更多操作</th>
 								</tr>
 							</thead>
 
@@ -110,7 +111,8 @@
 									<td><s:Code2Name mcode="${list.fuelType}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td>${list.stationId}</td>
 									<%-- <td>${list.isIdent == '0'?'否':'是'}</td>  --%>
-									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
+									<td>${list.operator}</td>
+									<%-- <td><fmt:formatDate value="${list.createdDate}" type="both"/></td> --%>
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>
 									<td style="display:none">${list.memo}</td>
@@ -137,25 +139,27 @@
 					</div> 
 			
 
-			<label>共 ${pageInfo.total} 条</label>
-			
-			<nav>
-				  <ul id="ulhandle" class="pagination pull-right no-margin">
-				  
-				    <li id="previous">
-					      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formdriver');">
-					        <span aria-hidden="true">&laquo;</span>
-					      </a>
-				    </li>
-				    
-				    <li id="next">
-					      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formdriver');">
-					        <span aria-hidden="true">&raquo;</span>
-					      </a>
-				    </li>
-				    
-				  </ul>
-			</nav>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
+				</div>
+				<div class="col-sm-6">
+					<nav>
+						<ul id="ulhandle" class="pagination pull-right no-margin">
+							<li id="previous">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li id="next">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>  
+						</ul>
+					</nav>
+				</div>
+			</div>
 
 			<jsp:include page="/common/message.jsp"></jsp:include>
 			<%-- <jsp:include page="inner_model.jsp"></jsp:include> --%>
@@ -165,7 +169,7 @@
 </div>
 
 
-<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -189,15 +193,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-					<div class="row" id="optionbutton">
-						<div class="space"></div>
-						<div class="col-xs-3"></div>
-						<div class="col-xs-3"><button class="btn btn-primary" onclick="addMemo();">确定</button></div>
-						<div class="col-xs-6"><button class="btn" onclick="hideInnerModel();">取消 </button></div>
-					</div>
-				
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="addMemo()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="hideInnerModel();">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>

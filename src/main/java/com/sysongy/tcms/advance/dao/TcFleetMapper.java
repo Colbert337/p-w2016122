@@ -3,6 +3,7 @@ package com.sysongy.tcms.advance.dao;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleet;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,13 @@ public interface TcFleetMapper {
      */
     int updateFleet(TcFleet tcFleet);
 
+    /**
+     * 修改分配资金信息
+     * @param fleetMap
+     * @return
+     */
+    int updateFleetMap(Map<String, Object> fleetMap);
+
 /*********************************基础方法 end*************************************/
     /**
      * 根据车队查询车辆列表
@@ -66,4 +74,9 @@ public interface TcFleetMapper {
      * @return
      */
     List<Map<String, Object>> queryFleetListByType(TcFleet fleet);
+    /**
+     * 修改车队额度
+     * @return
+     */
+    int updateFleetQuota(String transportionId, String fleet, BigDecimal cash);
 }

@@ -10,6 +10,8 @@ public class SysDepositLog extends BaseModel{
     private String sysDepositLogId;
 
     private String stationId;
+    
+    private String stationName;
 
     private String accountId;
     
@@ -22,7 +24,7 @@ public class SysDepositLog extends BaseModel{
     private String depositTime_page;
 
     private String depositType;
-
+    
     private String operator;
 
     private Date optime;
@@ -34,8 +36,36 @@ public class SysDepositLog extends BaseModel{
     private BigDecimal deposit;
 
     private String memo;
+    
+    private String order_number;
+    
+    private String transfer_photo;
 
-    public String getStation_type() {
+	public String getTransfer_photo() {
+		return transfer_photo;
+	}
+
+	public void setTransfer_photo(String transfer_photo) {
+		this.transfer_photo = transfer_photo;
+	}
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
+	}
+
+	public String getStationName() {
+		return stationName;
+	}
+
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
+	}
+
+	public String getStation_type() {
 		return station_type;
 	}
 

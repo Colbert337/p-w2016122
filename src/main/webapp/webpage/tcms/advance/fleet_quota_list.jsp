@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/advance/fleet_quota_list.js"/>
+<script src="<%=basePath %>/dist/js/advance/fleet_quota_list.js"></script>
 <div class="page-header">
 	<h1>
 		财务管理
@@ -29,7 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
-							<input type="text" name="quota" placeholder="车队名称/队长姓名"  maxlength="11" value="${fleetQuota.quota}"/>
+							<input type="text" name="fleetName" placeholder="车队名称/队长姓名"  maxlength="11" value="${fleetQuota.fleetName}"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
@@ -40,9 +40,9 @@
 								重置
 							</button>
 							<div class="item"></div>
-							<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
+							<%--<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
 								充值
-							</button>
+							</button>--%>
 							<button class="btn btn-sm btn-primary" type="button" onclick="addFenpei();">
 								资金分配
 							</button>
@@ -55,9 +55,10 @@
 						</div>
 					</div>
 					<%--</h4>--%>
-					<div class="table-header">
-						<label style="font-size: 18px;">账户余额：${fleetQuotaMap.userAccount.accountBalance}元</label>&nbsp;&nbsp;&nbsp;&nbsp;
-						<label style="font-size: 18px;">未分配资金：${fleetQuotaMap.weifenpeiVal}元</label>
+					<div class="alert alert-info alert-mt">
+						<span class="bigger-120">账户余额：${fleetQuotaMap.userAccount.accountBalance}元</span>&nbsp;&nbsp;&nbsp;&nbsp;
+						<span class="bigger-120">未分配资金：${fleetQuotaMap.weifenpeiVal}元</span>
+						<input type="hidden" id="sysTransportId" name="sysTransportId" value="${stationId}"/>
 					</div>
 					<%--<table id="simple-table" class="table table-striped table-bordered table-hover">--%>
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
@@ -125,7 +126,7 @@
 </div><!-- /.row -->
 
 <!--充值弹层-开始-->
-<div id="chongzhiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="chongzhiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -170,21 +171,18 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveChongzhi()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('chongzhiModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveChongzhi()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('chongzhiModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
 <!--充值弹层-结束-->
 
 <!--添加资金分配弹层-开始-->
-<div id="fenpeiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="fenpeiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" style="width: 900px;" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -237,21 +235,18 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveFenpei()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('fenpeiModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveFenpei()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('fenpeiModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
 <!--添加资金分配弹层-结束-->
 
 <!--添加个人转账弹层-开始-->
-<div id="zhuanModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="zhuanModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" style="width: 700px;" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -266,55 +261,53 @@
 							<!-- PAGE CONTENT BEGINS -->
 							<form class="form-horizontal" id="zhuanForm">
 								<!-- #section:elements.form -->
-								<table id="zhuan" class="table table-striped table-bordered table-hover">
+								<table id="zhuanTable" class="table table-striped table-bordered table-hover">
 									<thead>
 									<tr>
 										<th width="20%">手机号码</th>
 										<th width="10%">对方姓名</th>
 										<th width="15%">转账金额</th>
 										<th width="25%">用途</th>
+										<th width="10%">操作</th>
 									</tr>
 									</thead>
 									<tbody>
-										<c:forEach items="${fleetQuotaMap.fleetQuotaList}" var="fleetQuota">
-											<tr>
-												<td>
-													<input type="text" id="1" name="" class="col-sm-12"/>
-												</td>
-												<td>
-													<input type="text" id="2" name="" class="col-sm-12"/>
-												</td>
-												<td>
-													<input type="text" id="3" name="" class="col-sm-12"/>
-												</td>
-												<td>
-													<input type="text" id="4" name="" class="col-sm-12"/>
-												</td>
-											</tr>
-											<tr><td colspan="4" align="right"><a href="javascript:alert('成功！');">添加</a></td></tr>
-										</c:forEach>
+										<tr>
+											<td id="tr_1">
+												<input type="text"  id="mobile_phone_1" name="mobilePhone" class="col-sm-12" onblur="queryDriverInfo(1);"/>
+											</td>
+											<td>
+												<input type="text"  id="full_name_1" name="fullName" class="col-sm-12" readonly="readonly"/>
+												<input type="hidden" id="sys_driver_id_1" name="sysDriverId" class="col-sm-12"/>
+											</td>
+											<td>
+												<input type="text" id="amount_1" name="amount" class="col-sm-12"/>
+											</td>
+											<td>
+												<input type="text" id="remark_1" name="remark" class="col-sm-12"/>
+											</td>
+											<td></td>
+										</tr>
 									</tbody>
 								</table>
+								<tr><td colspan="4" align="right"><a href="javascript:addRow();">添加</a></td></tr>
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveZhuan()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('zhuanModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveZhuan()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('zhuanModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
 <!--添加个人转账弹层-结束-->
 
 <!--添加修改密码弹层-开始-->
-<div id="passwordModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel">
+<div id="passwordModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -325,8 +318,11 @@
 				<div class="container-fluid">
 					<%--两行表单 开始--%>
 					<div class="row">
-						<div class="col-xs-12">
-							<!-- PAGE CONTENT BEGINS -->
+						<div id="firstDiv" class="col-xs-12" style="display: none;">
+							<!-- 首次设置 -->
+							您的支付密码还未设置，点击提交按钮后，我们会向您注册账号时的邮箱发送验证邮件，请您及时进行后续操作。
+						</div>
+						<div id="paswordDiv" class="col-xs-12">
 							<form class="form-horizontal" id="passwordForm">
 								<!-- #section:elements.form -->
 								<div class="form-group">
@@ -334,48 +330,51 @@
 									<div class="col-sm-7" style="padding-bottom: 18px;">
 										<div class="radio">
 											<label>
-												<input name="gender" id="passwordUpdate" type="radio" class="ace" checked="checked" value="0">
+												<input name="gender" id="passwordUpdate" type="radio" class="ace" checked="checked" value="0" onclick="changePassDiv('updatePsDiv','lossPsDiv')">
 												<span class="lbl"> 密码修改</span>
 											</label>
 											<label>
-												<input name="gender" id="passwordLoss" type="radio" class="ace" value="1">
+												<input name="gender" id="passwordLoss" type="radio" class="ace" value="1" onclick="changePassDiv('lossPsDiv','updatePsDiv')">
 												<span class="lbl"> 密码遗失</span>
 											</label>
 										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="old_password"><span class="red_star">*</span> 原支付密码： </label>
-									<div class="col-sm-7">
-										<input type="password" id="old_password" name="oldPassword" placeholder="原支付密码" class="col-xs-10 col-sm-12" />
+								<div id="updatePsDiv" style="display: block;">
+									<!-- 修改密码 -->
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right" for="old_password"><span class="red_star">*</span> 原支付密码： </label>
+										<div class="col-sm-7">
+											<input type="password" id="old_password" name="oldPassword" placeholder="原支付密码" class="col-xs-10 col-sm-12" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right" for="new_password"><span class="red_star">*</span> 新支付密码： </label>
+										<div class="col-sm-7">
+											<input type="password" id="new_password" name="pay_code" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right" for="rep_password"><span class="red_star">*</span> 确认新支付密码： </label>
+										<div class="col-sm-7">
+											<input type="password" id="rep_password" name="rePassword" placeholder="确认新支付密码" class="col-xs-10 col-sm-12" />
+										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="new_password"><span class="red_star">*</span> 新支付密码： </label>
-									<div class="col-sm-7">
-										<input type="password" id="new_password" name="newPassword" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
-									</div>
+								<div id="lossPsDiv" class="col-xs-12" style="display: none;">
+									<!-- 遗失密码 -->
+									如果支付密码遗失，我们会向您注册账号时的邮箱发送验证邮件，请您及时进行后续操作。
 								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="rep_password"><span class="red_star">*</span> 确认新支付密码： </label>
-									<div class="col-sm-7">
-										<input type="password" id="rep_password" name="repPassword" placeholder="确认新支付密码" class="col-xs-10 col-sm-12" />
-									</div>
-								</div>
-
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="savePassword()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('passwordModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="savePassword()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('passwordModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>

@@ -91,31 +91,37 @@ public class BaseContoller {
         CurrUser currUser = new CurrUser();
 
         SysUser user = new SysUser();
+
         user.setUserName(userName);
         user.setPassword(password);
+        try {
+            user = sysUserService.queryUserByAccount(user);
 
-        user = sysUserService.queryUserByAccount(user);
+            //判断登录是否成功
+            if(user != null && user.getUserName() != null && user.getPassword() != null){
+                //封装用户信息
+                int userType = user.getUserType();
+                currUser.setUserId(user.getSysUserId());
+                currUser.setUser(user);
+                currUser.setUserType(userType);//当前用户类型
+                currUser.setStationId(user.getStationId());//当前用户站点信息
 
-        //判断登录是否成功
-    	if(user != null && user.getUserName() != null && user.getPassword() != null){
-            //封装用户信息
-            int userType = user.getUserType();
-            currUser.setUserId(user.getSysUserId());
-            currUser.setUser(user);
-            currUser.setUserType(userType);//当前用户类型
-            currUser.setStationId(user.getStationId());//当前用户站点信息
+                //封装用户菜单信息
+                List<Map<String, Object>> functionList = sysFunctionService.queryFunctionListByUserId(user.getSysUserId(),user.getUserType());
+                currUser.setUserFunctionList(functionList);
 
-            //封装用户菜单信息
-            List<Map<String, Object>> functionList = sysFunctionService.queryFunctionListByUserId(user.getSysUserId(),user.getUserType());
-            currUser.setUserFunctionList(functionList);
-
-    		map.addAttribute("current_module", "webpage/demo/demo");
-            map.addAttribute("currUser",currUser);
-    		returnPath = "common/g_main";
-    	}else{
-            returnPath = "login";
+                map.addAttribute("current_module", "webpage/demo/demo");
+                map.addAttribute("currUser",currUser);
+                returnPath = "common/g_main";
+            }else{
+                returnPath = "login";
+                map.addAttribute("erroMsg","账户名或密码错误！");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            map.addAttribute("erroMsg","账户名或密码错误！");
+            return returnPath;
         }
-
     	return returnPath;
     }
 

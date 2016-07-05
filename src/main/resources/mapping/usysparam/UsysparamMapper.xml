@@ -7,6 +7,14 @@
     <result column="mname" property="mname" jdbcType="VARCHAR" />
     <result column="data" property="data" jdbcType="VARCHAR" />
     <result column="scode" property="scode" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="BaseResultMapForCard" type="com.sysongy.poms.usysparam.model.Usysparam" >
+    <result column="gcode" property="gcode" jdbcType="VARCHAR" />
+    <result column="mcode" property="mcode" jdbcType="VARCHAR" />
+    <result column="mname" property="mname" jdbcType="VARCHAR" />
+    <result column="data" property="data" jdbcType="VARCHAR" />
+    <result column="scode" property="scode" jdbcType="VARCHAR" />
     <collection property="usysparams" ofType="com.sysongy.poms.usysparam.model.Usysparam"
                 column="mcode" select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryChildRenCardTypeByMcode" />
   </resultMap>
@@ -55,7 +63,7 @@
     select * from usysparam where gcode = #{0} and (scode is null or scode='')
   </select>
 
-  <select id="queryCardTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+  <select id="queryCardTypeByMcode" resultMap="BaseResultMapForCard"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
     select * from usysparam where gcode = 'CARDTYPE' and mcode = #{mcode,jdbcType=VARCHAR}
   </select>
 
@@ -71,7 +79,7 @@
         select * from usysparam where gcode = 'FUEL_TYPE' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>
 
-    <select id="queryChildRenCardTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+    <select id="queryChildRenCardTypeByMcode" resultMap="BaseResultMapForCard"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
         select * from usysparam where gcode = 'CARDTYPE' and scode = #{mcode,jdbcType=VARCHAR}
     </select>
 
@@ -89,5 +97,17 @@
 
     <select id="queryAccountStatus" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
         select * from usysparam where gcode = 'ACCOUNT_STATUS' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryCashBackByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'CASHBACK' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryOrderTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'ORDER_TYPE' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryOrderPropertyByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+      select * from usysparam where gcode = 'CARDPROPERTY' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>
 </mapper>

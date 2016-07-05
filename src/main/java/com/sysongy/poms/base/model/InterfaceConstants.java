@@ -15,11 +15,19 @@ public class InterfaceConstants {
 
     public static final Integer USER_TYPE_SYSTEM_USER = 5;  //后台用户
 
+    public static final String RECHARGE_TYPE_CASH = "102";  //CASH
+
+    public static final String RECHARGE_TYPE_CARD = "106";  //CARD
+
+    public static final String RECHARGE_TYPE_POS = "107";   //POS
+
     public static final String ERROR_AUTHORITY = "请求认证失败！";
 
     public static final String WRONG_USERNAME_PASSWORD = "用户名或密码错误！";
 
     public static final String QUERY_CARD_ERROR = "查询实体卡失败！";
+
+    public static final String QUERY_CARD_PERIOD_ERROR = "查询实体卡号段失败！";
 
     public static final String PUT_STORE_CARD_ERROR = "入库实体卡失败！";
 
@@ -28,6 +36,8 @@ public class InterfaceConstants {
     public static final String PUT_CARD_STORAGE_ERROR = "实体卡入库失败！";
 
     public static final String QUERY_CRM_USER_ERROR = "查询用户失败！";
+
+    public static final String QUERY_CRM_SINGLE_USER_ERROR = "查询单个用户失败！";
 
     public static final String UPDATE_CRM_SYSUSER_ERROR = "更新用户失败！";
 

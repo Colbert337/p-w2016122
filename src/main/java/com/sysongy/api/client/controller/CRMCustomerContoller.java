@@ -74,10 +74,21 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson queryCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
         AjaxJson ajaxJson = new AjaxJson();
+        if(!StringUtils.isNotEmpty(sysDriver.getStationId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！");
+            return ajaxJson;
+        }
+
         Map<String, Object> attributes = new HashMap<String, Object>();
         try
         {
             PageInfo<SysDriver> drivers = driverService.queryDrivers(sysDriver);
+            if((drivers == null) || (drivers.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("没有查询到所需内容！！！");
+                return ajaxJson;
+            }
             attributes.put("PageInfo", drivers);
             attributes.put("drivers", drivers.getList());
         } catch (Exception e) {
@@ -88,6 +99,67 @@ public class CRMCustomerContoller {
         }
         ajaxJson.setAttributes(attributes);
     	return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/querySingleCustomerInfo"})
+    @ResponseBody
+    public AjaxJson querySingleCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
+        AjaxJson ajaxJson = new AjaxJson();
+        if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("输入手机号为空！！！");
+            return ajaxJson;
+        }
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            PageInfo<SysDriver> drivers = driverService.querySingleDriver(sysDriver);
+            if((drivers == null) || (drivers.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("没有查询到所需内容！！！");
+                return ajaxJson;
+            }
+
+            if(drivers.getList().size() > 1){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该用户数据异常！！！");
+                return ajaxJson;
+            }
+            attributes.put("PageInfo", drivers);
+            attributes.put("drivers", drivers.getList());
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/queryForPageSingleList"})
+    @ResponseBody
+    public AjaxJson queryForPageSingleList(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            PageInfo<SysDriver> drivers = driverService.queryDrivers(sysDriver);
+            attributes.put("PageInfo", drivers);
+            attributes.put("drivers", drivers.getList());
+            if((drivers == null) || (drivers.getList().size() > 1)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该账户异常！！！");
+                return ajaxJson;
+            }
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SINGLE_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
     }
 
     @RequestMapping(value = {"/web/sendMsg"})
@@ -125,7 +197,6 @@ public class CRMCustomerContoller {
             } else {
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
             }
-
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());
@@ -133,9 +204,6 @@ public class CRMCustomerContoller {
         }
         return ajaxJson;
     }
-
-
-
 
     private boolean checkIfFrequent(HttpServletRequest request, SysDriver sysDriver){
         boolean bRet = false;
@@ -493,6 +561,7 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson sendMsgApi(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver,@RequestParam(required = false) String mobilePhone){
         AjaxJson ajaxJson = new AjaxJson();
+
         if(sysDriver == null || sysDriver.getMobilePhone() == null || "".equals(sysDriver.getMobilePhone())){
             sysDriver.setMobilePhone(mobilePhone);
         }
@@ -508,7 +577,7 @@ public class CRMCustomerContoller {
             ajaxJson.setMsg("您发送短信的次数过于频繁，请稍后再试！！！");
             return ajaxJson;
         }
-
+        ajaxJson.setMsg("验证码发送成功！");
         try
         {
             Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);

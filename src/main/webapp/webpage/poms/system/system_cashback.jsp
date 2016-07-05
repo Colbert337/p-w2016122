@@ -44,8 +44,8 @@
 											<input type="hidden" name="sys_cash_back_no" value="${sysCashBack.sys_cash_back_no}"/>
 											<div class="item">
 											    <label>优先级:</label>
-												<select class="chosen-select " name="level" >
-														<s:option flag="true" gcode="CASHBACKLEVEL" form="sysCashBack" field="level"/>
+												<select class="chosen-select" name="level" >
+													<s:option flag="true" gcode="CASHBACKLEVEL" form="sysCashBack" field="level"/>
 												</select>
 											</div>
 					
@@ -93,11 +93,11 @@
 										<!-- div.table-responsive -->
 					
 										<!-- div.dataTables_borderWrap -->
-										<div>
+										<div class="sjny-table-responsive">
 											<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 												<thead>
 													<tr>
-														<th class="center">
+														<th class="center td-w1">
 															<label class="pos-rel"> 
 																<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 																<span class="lbl"></span>
@@ -110,11 +110,11 @@
 														<th onclick="orderBy(this,'cash_per');commitForm();" id="cash_per_order">返点系数</th>
 														<th onclick="orderBy(this,'status');commitForm();" id="status">状态</th>
 														<th onclick="orderBy(this,'level');commitForm();" id="level">优先级</th>
-														<th onclick="orderBy(this,'start_date');commitForm();" id="start_date_order"><i id="start_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>生效时间</th>
-														<th onclick="orderBy(this,'end_date');commitForm();" id="end_date_order"><i id="end_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>失效时间</th>
-														<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
-														<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th>
-														<th class="text-center">更多操作</th>
+														<th onclick="orderBy(this,'start_date');commitForm();" id="start_date_order" class="td-w2"><i id="start_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>生效时间</th>
+														<th onclick="orderBy(this,'end_date');commitForm();" id="end_date_order" class="td-w2"><i id="end_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>失效时间</th>
+														<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
+														<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order" class="td-w2"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th>
+														<th class="text-center td-w3">更多操作</th>
 													</tr>
 												</thead>
 					
@@ -129,12 +129,12 @@
 															</label>
 														</td>
 														<td>${list.sys_cash_back_id}</td>
-												<%--<td>${list.sys_cash_back_no}</td>--%>
+													<%--<td>${list.sys_cash_back_no}</td>--%>
  													 	<td>${list.threshold_min_value}</td> 
 														<td>${list.threshold_max_value}</td>
 														<td>${list.cash_per} </td>
 														<td><s:Code2Name mcode="${list.status}" gcode="CASHBACKSTATUS"></s:Code2Name></td>
-														<td><s:Code2Name mcode="${list.level}" gcode="CASHBACKLEVEL"></s:Code2Name></td>
+														<td><s:Code2Name mcode="${list.level}" gcode="CASHBACKLEVEL"></s:Code2Name><input type="hidden" value="${list.level}"/></td>
 														<td><fmt:formatDate value="${list.start_date}" type="both"/></td> 
 														<td><fmt:formatDate value="${list.end_date}" type="both"/></td> 
 														<td><fmt:formatDate value="${list.created_date}" type="both"/></td>
@@ -144,7 +144,7 @@
 															<a class="option-btn-m" href="javascript:void(0);"  title="修改" data-rel="tooltip">
 																<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 															</a>
-															<a class=""  href="javascript:void(0);" onclick="del(this);" title="删除" data-rel="tooltip">
+															<a class="" href="javascript:void(0);" onclick="del(this);" title="删除" data-rel="tooltip">
 																<i class="ace-icon fa fa-trash-o bigger-130"></i>
 															</a>
 														</td>
@@ -154,25 +154,27 @@
 											</table>
 										</div>
 										
-										<label>共 ${pageInfo.total} 条</label>
-			
-										<nav>
-											  <ul id="ulhandle" class="pagination pull-right no-margin">
-											  
-											    <li id="previous">
-												      <a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formgastation');">
-												        <span aria-hidden="true">&laquo;</span>
-												      </a>
-											    </li>
-											    
-											    <li id="next">
-												      <a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
-												        <span aria-hidden="true">&raquo;</span>
-												      </a>
-											    </li>
-											    
-											  </ul>
-										</nav>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
+											</div>
+											<div class="col-sm-6">
+												<nav>
+													<ul id="ulhandle" class="pagination pull-right no-margin">
+														<li id="previous">
+															<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+																<span aria-hidden="true">&laquo;</span>
+															</a>
+														</li>
+														<li id="next">
+															<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+																<span aria-hidden="true">&raquo;</span>
+															</a>
+														</li>  
+													</ul>
+												</nav>
+											</div>
+										</div>
 										
 									</div>
 								</div><!-- PAGE CONTENT ENDS -->

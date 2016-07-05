@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/driver/dirver_list.js"/>
+<script src="<%=basePath %>/dist/js/driver/dirver_list.js"></script>
 <div class="page-header">
 	<h1>
 		司机管理
@@ -53,7 +53,7 @@
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
-							<th class="center">
+							<th class="center td-w1">
 								<label class="pos-rel">
 									<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
 									<span class="lbl"></span>
@@ -63,7 +63,7 @@
 							<th>入职时间</th>
 							<th>手机号码</th>
 							<th>实体卡号</th>
-							<th>状态</th>
+							<th>实名认证状态</th>
 							<%--<th>操作</th>--%>
 						</tr>
 						</thead>
@@ -81,11 +81,17 @@
 								<td>${driver.mobilePhone}</td>
 								<td>${driver.cardId}</td>
 								<td>
-									<c:if test="${driver.userStatus == 0}">
-										使用中
+									<c:if test="${driver.checkedStatus == 0}">
+										新注册
 									</c:if>
-									<c:if test="${driver.userStatus == 1}">
-										已冻结
+									<c:if test="${driver.checkedStatus == 1}">
+										待审核
+									</c:if>
+									<c:if test="${driver.checkedStatus == 2}">
+										已通过
+									</c:if>
+									<c:if test="${driver.checkedStatus == 3}">
+										未通过
 									</c:if>
 								</td>
 								<%--<td>--%>
@@ -102,7 +108,7 @@
 			<%--分页start--%>
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">共 ${pageInfo.total} 条</div>
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
@@ -126,6 +132,9 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
+
 <!--添加司机弹层-开始-->
 <div id="driverModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
@@ -148,7 +157,7 @@
 										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机号码" class="col-xs-10 col-sm-12" />
 									</div>
 									<div class="col-sm-2">
-										<a class="btn btn-sm btn-primary" href="javascript:sendMessage();">
+										<a id="sendMsgA" class="btn btn-sm btn-primary" href="javascript:sendMessage()">
 											发送验证码
 										</a>
 									</div>
@@ -182,14 +191,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveDriver()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('driverModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveDriver()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('driverModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
@@ -213,14 +219,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveUser()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('alertModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>

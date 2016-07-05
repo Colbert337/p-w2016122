@@ -21,6 +21,8 @@ public interface SysDriverMapper {
 
     List<SysDriver> queryForPage(SysDriver record);
 
+    List<SysDriver> querySingleDriver(SysDriver record);
+
     int isExists(SysDriver record);
 
     SysDriver queryDriverByMobilePhone(SysDriver record);
@@ -38,4 +40,8 @@ public interface SysDriverMapper {
      * @return
      */
     int deleteDriverByIds(List<String> idList);
+
+    List<SysDriver> queryForPageSingleList(SysDriver record);
+
+    SysDriver selectByAccount(String sysUserAccount);
 }

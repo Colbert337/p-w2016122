@@ -6,6 +6,9 @@ import java.util.Map;
 import com.sysongy.poms.order.model.SysOrder;
 
 public interface SysOrderMapper {
+
+    List<SysOrder> queryForPage(SysOrder record);
+
     int deleteByPrimaryKey(String orderId);
 
     int insert(SysOrder record);

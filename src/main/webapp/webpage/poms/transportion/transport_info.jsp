@@ -37,7 +37,7 @@
 			<div class="form-group">
 				<label class="col-sm-4 control-label no-padding-right"> 联系人： </label>
 				<div class="col-sm-8">
-					<label class="pad-top-10">${transportion.admin_username}</label>
+					<label class="pad-top-10">${transportion.station_manager}</label>
 				</div>
 			</div>
 			<div class="form-group">

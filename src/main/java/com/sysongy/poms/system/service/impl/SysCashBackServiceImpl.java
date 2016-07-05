@@ -46,6 +46,14 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	}
 
 	@Override
+	public PageInfo<SysCashBack> queryCashBackForCRM(SysCashBack obj) throws Exception {
+		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
+		List<SysCashBack> list = cashBackMapper.queryCashBackForCRM(obj);
+		PageInfo<SysCashBack> pageInfo = new PageInfo<SysCashBack>(list);
+		return pageInfo;
+	}
+
+	@Override
 	public SysCashBack queryCashBackByPK(String cashBackid) throws Exception {
 		SysCashBack cashback = cashBackMapper.selectByPrimaryKey(cashBackid);
 		cashback.setStart_date_after(new SimpleDateFormat("yyyy-MM-dd").format(cashback.getStart_date()));
@@ -120,7 +128,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	
 	/**
 	 * 通过cashBack的number得到对象
-	 * @param cashBackid
+	 * @paramcashBackid
 	 * @return 
 	 * @return
 	 * @throws Exception
@@ -148,7 +156,8 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	 * @param cashBack
 	 * @return
 	 */
-	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType) throws Exception{
+	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,
+								String accountId, String accountUserName, String orderDealType) throws Exception{
 		//1.步骤一：从传过来的某个充值类型的cashBackList中，计算过滤得到符合条件的一条返现规则：
 		BigDecimal cash = order.getCash();
 		List<SysCashBack> eligible_list = new ArrayList<SysCashBack>();
@@ -193,7 +202,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		//2.步骤二：根据得到符合条件的一条返现规则：计算当前的返现金额
 		String cash_per_str = eligible_cashback.getCash_per();
 		BigDecimal cash_per = new BigDecimal(cash_per_str);  
-		BigDecimal back_money = cash.multiply(cash_per) ;
+		BigDecimal back_money = cash.multiply(cash_per);
 		
 		//3.给这个账户增加返现
 		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money,order.getOrderType());
@@ -238,6 +247,16 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		orderDealService.createOrderDealWithCashBack(order.getOrderId(), orderDealType, remark, cash_per_str, back_money, addCash_success);
 				
 		return addCash_success;
+	}
+
+	@Override
+	public List<SysCashBack> gainProp(String cashBackNo, String level) {
+		return cashBackMapper.gainProp(cashBackNo, level);
+	}
+
+	@Override
+	public Integer delCashBack(String sysCashBackNo, String level) throws Exception {
+		return cashBackMapper.deleteByLevel(sysCashBackNo, level);
 	}
 	
 }

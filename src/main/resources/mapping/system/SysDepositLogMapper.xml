@@ -6,6 +6,7 @@
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="VARCHAR" />
     <result column="station_type" property="station_type" jdbcType="VARCHAR" />
+    <result column="station_name" property="stationName" jdbcType="VARCHAR" />
     <result column="company" property="company" jdbcType="VARCHAR" />
     <result column="deposit_time" property="depositTime" jdbcType="TIMESTAMP" />
     <result column="deposit_type" property="depositType" jdbcType="VARCHAR" />
@@ -13,11 +14,13 @@
     <result column="optime" property="optime" jdbcType="TIMESTAMP" />
     <result column="deposit" property="deposit" jdbcType="DECIMAL" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="order_number" property="order_number" jdbcType="VARCHAR" />
+    <result column="transfer_photo" property="transfer_photo" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
-    sys_deposit_log_id, station_id, account_id, station_type, company, deposit_time, deposit_type, 
-    operator, optime, deposit, memo
+    sys_deposit_log_id, station_id, station_name, account_id, station_type, company, deposit_time, deposit_type, 
+    operator, optime, deposit, memo, order_number, transfer_photo
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
@@ -50,13 +53,13 @@
     where sys_deposit_log_id = #{sysDepositLogId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
-    insert into sys_deposit_log (sys_deposit_log_id, station_id, station_type,
-      account_id, company, deposit_time, 
-      deposit_type, operator, optime, 
+    insert into sys_deposit_log (sys_deposit_log_id, station_id, station_name, station_type,
+      account_id, company, deposit_time, order_number,
+      deposit_type, operator, optime, transfer_photo,
       deposit, memo)
-    values (#{sysDepositLogId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{station_type,jdbcType=VARCHAR}, 
-      #{accountId,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{depositTime,jdbcType=TIMESTAMP}, 
-      #{depositType,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{optime,jdbcType=TIMESTAMP}, 
+    values (#{sysDepositLogId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{stationName,jdbcType=VARCHAR}, #{station_type,jdbcType=VARCHAR}, 
+      #{accountId,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{depositTime,jdbcType=TIMESTAMP}, #{order_number,jdbcType=VARCHAR},
+      #{depositType,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{optime,jdbcType=TIMESTAMP}, #{transfer_photo,jdbcType=VARCHAR},
       #{deposit,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
@@ -164,6 +167,9 @@
       </if>
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="transfer_photo != null" >
+        memo = #{transfer_photo,jdbcType=VARCHAR},
       </if>
     </set>
     where sys_deposit_log_id = #{sysDepositLogId,jdbcType=VARCHAR}
