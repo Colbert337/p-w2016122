@@ -42,6 +42,13 @@
     where tc_vehicle_id = #{tcVehicleId,jdbcType=VARCHAR}
     and is_deleted = 1
   </select>
+  <select id="queryVehicleByNumber" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
+    select
+    <include refid="Base_Column_List" />
+    from tc_vehicle
+    where plates_number = #{platesNumber,jdbcType=VARCHAR}
+    and is_deleted = 1
+  </select>
   <select id="queryVehicleList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     select
     <include refid="Base_Column_List" />

@@ -85,5 +85,5 @@ public interface TcFleetMapper {
      * @param fleetName
      * @return
      */
-    TcFleet queryFleetByName(String fleetName);
+    TcFleet queryFleetByName(String stationId, String fleetName);
 }

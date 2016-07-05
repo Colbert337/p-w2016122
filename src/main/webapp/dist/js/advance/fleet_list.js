@@ -137,6 +137,7 @@ function editFleet(fleetId){
     $("#editModel").modal('show');
 }
 
+
 /*取消弹层方法*/
 function closeDialog(divId){
     jQuery('#editForm').validationEngine('hide');//隐藏验证弹窗
@@ -264,6 +265,17 @@ $('#editForm').bootstrapValidator({
             validators: {
                 notEmpty: {
                     message: '车队名称不能为空'
+                },
+                remote: {
+                    url: '../web/tcms/fleet/info/name',
+                    type: "post",
+                    async: false,
+                    data: function(validator, $field, value) {
+                        return{
+                            fleetName:$("#fleet_name").val()
+                        };
+                    },
+                    message: '车队名称已经存在'
                 }
             }
         },

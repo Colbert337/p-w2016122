@@ -127,7 +127,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="fleet_name"><span class="red_star">*</span> 车队名称： </label>
 									<div class="col-sm-7">
-										<input type="text" name="fleetName" id="fleet_name" placeholder="车队名称" class="col-xs-10 col-sm-12" />
+										<input type="text" name="fleetName" id="fleet_name" placeholder="车队名称" class="col-xs-10 col-sm-12"/>
 										<input type="hidden" name="tcFleetId" id="tc_fleet_id" />
 									</div>
 								</div>

@@ -67,7 +67,7 @@ public interface TcFleetService {
      * @param cash 修改金额
      * @return
      */
-    int updateFleetQuota(String transportionId, String fleetId, BigDecimal cash);
+    int updateFleetQuota(String transportionId, String fleetId, BigDecimal cash) throws  Exception;
     /**
      * 修改分配资金信息
      * @param fleetMap
@@ -80,5 +80,5 @@ public interface TcFleetService {
      * @param fleetName
      * @return
      */
-    TcFleet queryFleetByName(String fleetName);
+    TcFleet queryFleetByName(String stationId, String fleetName);
 }
