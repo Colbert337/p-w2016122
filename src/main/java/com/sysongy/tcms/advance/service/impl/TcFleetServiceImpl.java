@@ -5,10 +5,13 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.tcms.advance.dao.TcFleetMapper;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.service.TcFleetService;
+import com.sysongy.util.BigDecimalArith;
 import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -99,5 +102,51 @@ public class TcFleetServiceImpl implements TcFleetService{
         }else{
             return 0;
         }
+    }
+
+    @Override
+    public int updateFleetMap(Map<String, Object> fleetMap) {
+        return tcFleetMapper.updateFleetMap(fleetMap);
+    }
+
+    /**
+     * 修改车队额度
+     * @param transportionId 运输公司ID
+     * @param fleetId 车队ID
+     * @param cash 金额（正负）
+     * @return
+     */
+    @Override
+    public synchronized int updateFleetQuota(String transportionId, String fleetId, BigDecimal cash) throws Exception{
+        int result = 0;
+        if(transportionId != null && !"".equals(transportionId) && fleetId != null && !"".equals(fleetId)){
+            TcFleet tcFleetTemp = new TcFleet();
+            tcFleetTemp.setTcFleetId(fleetId);
+            try {
+                TcFleet tcFleet = tcFleetMapper.queryFleet(tcFleetTemp);
+                BigDecimal quota = new BigDecimal(BigInteger.ZERO);
+                if(tcFleet != null){
+                    quota = tcFleet.getQuota();
+                    BigDecimal newQuota = BigDecimalArith.add(quota,cash);
+                    int resultVal = newQuota.compareTo(BigDecimal.ZERO);
+                    if(resultVal >= 0){
+                        result = tcFleetMapper.updateFleetQuota(transportionId,fleetId,newQuota);
+                    }else{
+                        throw new Exception("计算额度结果为负数！");
+                    }
+
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+        return result;
+    }
+
+    @Override
+    public TcFleet queryFleetByName(String stationId, String fleetName) {
+        return tcFleetMapper.queryFleetByName(stationId,fleetName);
     }
 }

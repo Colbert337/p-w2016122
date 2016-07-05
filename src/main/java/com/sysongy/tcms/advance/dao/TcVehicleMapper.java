@@ -18,6 +18,12 @@ public interface TcVehicleMapper {
     TcVehicle queryVehicle(TcVehicle tcVehicle);
 
     /**
+     * 根据车牌号查询车辆信息
+     * @param tcVehicle
+     * @return
+     */
+    TcVehicle queryVehicleByNumber(TcVehicle tcVehicle);
+    /**
      * 查询车辆信息列表
      * @param tcVehicle
      * @return

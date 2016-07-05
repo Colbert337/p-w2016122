@@ -74,7 +74,32 @@
 		
 		$("#formgastation").ajaxSubmit(listOptions);
 	}
+	
+	function commitForm2(obj){
+		//设置当前页的值
+		if(typeof obj == "undefined") {
+			$("#pageNum").val("1");
+		}else{
+			$("#pageNum").val($(obj).text());
+		}
+		
+		var options ={   
+	            url:'../web/gastation/gastationList2',
+	            type:'post',                    
+	            dataType:'html',
+	            success:function(data){
+		              $("#main").html(data);
+		              if($("#retCode").val() != "100"){
+			            	 //$("#modal-table").modal("show");
+			          }
+	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
+		       }
+		}
+		
+		$("#formgastation").ajaxSubmit(options);
+	}
+	
 	function del(obj){
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
@@ -98,7 +123,12 @@
 		loadPage('#main', '../web/gastation/gastationList');
 	}
 	
+	function init2(){
+		loadPage('#main', '../web/gastation/gastationList2');
+	}
+	
 	function showInnerModel(obj1,obj2,obj3,obj4){
+
 		$("#innerimg1").attr("src",obj1);
 		$("#innerimg1").parent("a").attr("href",obj1);
 		$("#innerimg2").attr("src",obj2);

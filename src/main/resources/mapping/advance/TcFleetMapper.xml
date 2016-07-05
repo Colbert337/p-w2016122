@@ -86,6 +86,12 @@
     from tc_fleet
     where tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
   </select>
+  <select id="queryFleetByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tc_fleet
+    where station_id = #{0} and fleet_name = #{1}
+  </select>
   <delete id="deleteFleet" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
     delete from tc_fleet
     where tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
@@ -210,5 +216,13 @@
       </if>
     </set>
     where tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
+  </update>
+  <!--修改车队额度-->
+  <update id="updateFleetQuota" >
+    update tc_fleet
+    <set >
+        quota = #{2},
+    </set>
+    where tc_fleet_id = #{1} and station_id = #{0}
   </update>
 </mapper>

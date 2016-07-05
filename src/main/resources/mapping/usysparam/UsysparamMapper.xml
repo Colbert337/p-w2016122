@@ -106,4 +106,8 @@
     <select id="queryOrderTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
         select * from usysparam where gcode = 'ORDER_TYPE' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>
+
+    <select id="queryOrderPropertyByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+      select * from usysparam where gcode = 'CARDPROPERTY' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
 </mapper>

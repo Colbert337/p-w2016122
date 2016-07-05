@@ -74,7 +74,6 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson queryCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
         AjaxJson ajaxJson = new AjaxJson();
-
         if(!StringUtils.isNotEmpty(sysDriver.getStationId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("气站ID为空！！！");
@@ -205,7 +204,6 @@ public class CRMCustomerContoller {
         }
         return ajaxJson;
     }
-
 
     private boolean checkIfFrequent(HttpServletRequest request, SysDriver sysDriver){
         boolean bRet = false;

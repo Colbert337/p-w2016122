@@ -103,7 +103,7 @@ public class CRMCashServiceContoller {
         }
         if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
             record.setSysDriver(sysDriver);
-            GasCard gasCard = gasCardService.queryGasCardInfo(sysDriver.getCardId());
+            GasCard gasCard = gasCardService.selectByCardNoForCRM(sysDriver.getCardId());
             if(gasCard != null){
                 record.setGasCard(gasCard);
             }
