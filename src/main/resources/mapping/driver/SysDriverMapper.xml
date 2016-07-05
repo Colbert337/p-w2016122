@@ -27,6 +27,7 @@
     <result column="checked_date" property="checkedDate" jdbcType="TIMESTAMP" />
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="driver_type" property="driverType" jdbcType="INTEGER" />
     <association property="account" column="sys_user_account_id"
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -48,7 +49,7 @@
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,
     is_ident, plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card,
     card_id, sys_user_account_id, regis_company, regis_source, created_date,
-    updated_date, is_first_charge, checked_status, checked_date, station_id
+    updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type
   </sql>
 
   <select id="querySearchDriverList" resultMap="BaseResultMap" >
@@ -105,6 +106,9 @@
       <if test="stationId!= null &amp;&amp; stationId != ''" >
         and station_id = #{stationId,jdbcType=VARCHAR}
       </if>
+      <if test="driverType!= null &amp;&amp; driverType != ''" >
+        and driver_type = #{driverType,jdbcType=INTEGER}
+      </if>
     </trim>
   </select>
 
@@ -143,6 +147,9 @@
       </if>
       <if test="stationId!= null &amp;&amp; stationId != ''" >
         and station_id = #{stationId,jdbcType=VARCHAR}
+      </if>
+      <if test="driverType!= null &amp;&amp; driverType != ''" >
+        and driver_type = #{driverType,jdbcType=INTEGER}
       </if>
     </trim>
   </select>
@@ -185,6 +192,9 @@
       <if test="stationId!= null &amp;&amp; stationId != ''" >
         and station_id = #{stationId,jdbcType=VARCHAR}
       </if>
+      <if test="driverType!= null &amp;&amp; driverType != ''" >
+        and driver_type = #{driverType,jdbcType=INTEGER}
+      </if>
     </trim>
   </select>
 
@@ -214,7 +224,7 @@
       vehicle_lice, identity_card, card_id,
       sys_user_account_id, regis_company,
       regis_source, created_date, updated_date,
-      is_first_charge, checked_status, checked_date, station_id
+      is_first_charge, checked_status, checked_date, station_id, driver_type
       )
     values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR},
@@ -224,7 +234,7 @@
       #{sysUserAccountId,jdbcType=VARCHAR},  #{regisCompany,jdbcType=VARCHAR},
       #{regisSource,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},
       #{isFirstCharge,jdbcType=INTEGER}, #{checkedStatus,jdbcType=INTEGER}, #{checkedDate,jdbcType=TIMESTAMP},
-      #{stationId,jdbcType=VARCHAR}
+      #{stationId,jdbcType=VARCHAR},#{driverType,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.driver.model.SysDriver" >
@@ -302,6 +312,9 @@
       <if test="stationId != null" >
         station_id,
       </if>
+      <if test="driverType!= null" >
+        driver_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sysDriverId != null" >
@@ -375,6 +388,9 @@
       </if>
       <if test="stationId != null" >
         #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="driverType != null" >
+        #{driverType,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -453,6 +469,9 @@
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
       </if>
+      <if test="driverType != null" >
+        driver_type = #{driverType,jdbcType=INTEGER},
+      </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
@@ -488,7 +507,8 @@
       is_first_charge = #{isFirstCharge,jdbcType=INTEGER},
       checked_status = #{checkedStatus,jdbcType=INTEGER},
       checked_date = #{checkedDate,jdbcType=TIMESTAMP},
-      station_id = #{stationId,jdbcType=VARCHAR}
+      station_id = #{stationId,jdbcType=VARCHAR},
+      driver_type = #{driverType,jdbcType=INTEGER}
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
 

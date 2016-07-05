@@ -274,7 +274,7 @@
 									<tbody>
 										<tr>
 											<td id="tr_1">
-												<input type="text"  id="mobile_phone_1" name="mobilePhone" class="col-sm-12" onblur="queryDriverInfo(1);"/>
+												<input type="text"  id="mobile_phone_1" name="mobilePhone" maxlength="11" class="col-sm-12" onblur="queryDriverInfo(1);"/>
 											</td>
 											<td>
 												<input type="text"  id="full_name_1" name="fullName" class="col-sm-12" readonly="readonly"/>
@@ -326,7 +326,7 @@
 							<form class="form-horizontal" id="passwordForm">
 								<!-- #section:elements.form -->
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" ><span class="red_star">*</span> 充值方式： </label>
+									<label class="col-sm-4 control-label no-padding-right" ><span class="red_star">*</span> 修改方式： </label>
 									<div class="col-sm-7" style="padding-bottom: 18px;">
 										<div class="radio">
 											<label>
@@ -345,19 +345,19 @@
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="old_password"><span class="red_star">*</span> 原支付密码： </label>
 										<div class="col-sm-7">
-											<input type="password" id="old_password" name="oldPassword" placeholder="原支付密码" class="col-xs-10 col-sm-12" />
+											<input type="password" id="old_password" name="oldPassword" maxlength="6" placeholder="原支付密码" class="col-xs-10 col-sm-12" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="new_password"><span class="red_star">*</span> 新支付密码： </label>
 										<div class="col-sm-7">
-											<input type="password" id="new_password" name="pay_code" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
+											<input type="password" id="new_password" name="pay_code" maxlength="6" placeholder="新支付密码" class="col-xs-10 col-sm-12" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="rep_password"><span class="red_star">*</span> 确认新支付密码： </label>
 										<div class="col-sm-7">
-											<input type="password" id="rep_password" name="rePassword" placeholder="确认新支付密码" class="col-xs-10 col-sm-12" />
+											<input type="password" id="rep_password" name="rePassword" maxlength="6" placeholder="确认新支付密码" class="col-xs-10 col-sm-12" />
 										</div>
 									</div>
 								</div>

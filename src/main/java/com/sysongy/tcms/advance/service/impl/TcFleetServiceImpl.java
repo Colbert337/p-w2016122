@@ -122,4 +122,9 @@ public class TcFleetServiceImpl implements TcFleetService{
         }
         return result;
     }
+
+    @Override
+    public TcFleet queryFleetByName(String fleetName) {
+        return tcFleetMapper.queryFleetByName(fleetName);
+    }
 }
