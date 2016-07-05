@@ -54,6 +54,8 @@ public class GasCard extends BaseModel{
 
 	private String mPhone;
 
+	private String driverID;
+
 	private Date station_receive_time;
 
 	private String sysUserId;
@@ -270,5 +272,13 @@ public class GasCard extends BaseModel{
 
 	public void setSysUserIdInfo(SysUser sysUserIdInfo) {
 		this.sysUserIdInfo = sysUserIdInfo;
+	}
+
+	public String getDriverID() {
+		return driverID;
+	}
+
+	public void setDriverID(String driverID) {
+		this.driverID = driverID;
 	}
 }

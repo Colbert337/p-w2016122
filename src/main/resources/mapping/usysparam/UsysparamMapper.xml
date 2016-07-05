@@ -102,4 +102,8 @@
     <select id="queryCashBackByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
         select * from usysparam where gcode = 'CASHBACK' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>
+
+    <select id="queryOrderTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = 'ORDER_TYPE' and mcode = #{mcode,jdbcType=VARCHAR}
+    </select>
 </mapper>

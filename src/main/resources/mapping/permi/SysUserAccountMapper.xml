@@ -15,10 +15,6 @@
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryAccountStatus">
     </association>
-    <association property="sys_drive_info" column="sys_user_account_id"
-                 javaType="com.sysongy.poms.driver.model.SysDriver"
-                 select="com.sysongy.poms.driver.dao.SysDriverMapper.selectByAccount">
-    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date, version, account_status, deposit

@@ -23,7 +23,8 @@
 /*Add by xiukun*/
 body,
 h1,h2,h3,h4,h5,h6{font-family: 'Microsoft YaHei';}
-.breadcrumbs{display:none;}
+.breadcrumbs,
+.ace-settings-container{display:none;}
 .search-types .item {padding-right:20px; display: inline-block; margin-bottom:8px;}
 .input-daterange.top input{width:100px;}
 .page-header h1{font-weight: normal; font-size: 21px;}
@@ -122,16 +123,35 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 }
 .modal-header .close {
     margin-top: -8px;
+    display: none;
 }
 .modal-title {
     font-size: 16px;
     padding-left: 10px;
 }
+.modal-footer {
+    text-align: center;
+}
+.modal-footer .btn + .btn {
+    margin-left:30px;
+}
 .bootbox-close-button {
     font-size: 32px;
+    display: none;
 }
 .bootbox-body {
     padding: 20px;
+}
+.bootbox-alert .bootbox-body {
+    text-align: center;
+}
+.modal-alert .modal-footer,
+.bootbox-alert .modal-footer {
+    text-align: right;
+}
+.modal-body-msg {
+    padding: 5px 35px 35px;
+    text-align: center;
 }
 .td-w1 {
     width: 40px;

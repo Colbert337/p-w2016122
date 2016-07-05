@@ -111,11 +111,4 @@ public class SysUserAccount extends BaseModel{
         this.account_statusInfo = account_statusInfo;
     }
 
-    public SysDriver getSys_drive_info() {
-        return sys_drive_info;
-    }
-
-    public void setSys_drive_info(SysDriver sys_drive_info) {
-        this.sys_drive_info = sys_drive_info;
-    }
 }

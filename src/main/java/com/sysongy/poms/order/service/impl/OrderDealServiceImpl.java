@@ -95,6 +95,9 @@ public class OrderDealServiceImpl implements OrderDealService {
 	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
    }
-   
-  
+
+	@Override
+	public int selectCashBackByOrderID(String orderId) {
+		return 0;
+	}
 }

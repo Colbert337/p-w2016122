@@ -7,7 +7,11 @@
     <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="number" property="number" jdbcType="INTEGER" />
     <result column="sum_price" property="sumPrice" jdbcType="DECIMAL" />
-    <result column="goods_type" property="goodsType" jdbcType="INTEGER" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <association property="goods_type_info" column="goods_type"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
+    </association>
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -28,7 +32,7 @@
       number, sum_price, goods_type
       )
     values (#{orderGoodsId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
-      #{number,jdbcType=INTEGER}, #{sumPrice,jdbcType=DECIMAL}, #{goodsType,jdbcType=INTEGER}
+      #{number,jdbcType=INTEGER}, #{sumPrice,jdbcType=DECIMAL}, #{goodsType,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.ordergoods.model.SysOrderGoods" >
@@ -70,7 +74,7 @@
         #{sumPrice,jdbcType=DECIMAL},
       </if>
       <if test="goodsType != null" >
-        #{goodsType,jdbcType=INTEGER},
+        #{goodsType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -91,7 +95,7 @@
         sum_price = #{sumPrice,jdbcType=DECIMAL},
       </if>
       <if test="goodsType != null" >
-        goods_type = #{goodsType,jdbcType=INTEGER},
+        goods_type = #{goodsType,jdbcType=VARCHAR},
       </if>
     </set>
     where order_goods_id = #{orderGoodsId,jdbcType=VARCHAR}
@@ -102,7 +106,7 @@
       price = #{price,jdbcType=DECIMAL},
       number = #{number,jdbcType=INTEGER},
       sum_price = #{sumPrice,jdbcType=DECIMAL},
-      goods_type = #{goodsType,jdbcType=INTEGER}
+      goods_type = #{goodsType,jdbcType=VARCHAR}
     where order_goods_id = #{orderGoodsId,jdbcType=VARCHAR}
   </update>
 

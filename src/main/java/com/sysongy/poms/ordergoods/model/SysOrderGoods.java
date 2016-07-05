@@ -1,5 +1,7 @@
 package com.sysongy.poms.ordergoods.model;
 
+import com.sysongy.poms.usysparam.model.Usysparam;
+
 import java.math.BigDecimal;
 
 public class SysOrderGoods {
@@ -13,7 +15,9 @@ public class SysOrderGoods {
 
     private BigDecimal sumPrice;
 
-    private Integer goodsType;
+    private String goodsType;
+
+    private Usysparam goods_type_info;
 
     public String getOrderGoodsId() {
         return orderGoodsId;
@@ -55,11 +59,19 @@ public class SysOrderGoods {
         this.sumPrice = sumPrice;
     }
 
-    public Integer getGoodsType() {
+    public Usysparam getGoods_type_info() {
+        return goods_type_info;
+    }
+
+    public void setGoods_type_info(Usysparam goods_type_info) {
+        this.goods_type_info = goods_type_info;
+    }
+
+    public String getGoodsType() {
         return goodsType;
     }
 
-    public void setGoodsType(Integer goodsType) {
+    public void setGoodsType(String goodsType) {
         this.goodsType = goodsType;
     }
 }
