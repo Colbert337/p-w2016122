@@ -144,10 +144,10 @@
     where order_id = #{orderId,jdbcType=VARCHAR}
   </select>
 
-  <select id="selectCashBackByOrderID" resultMap="java.lang.Integer" parameterType="java.lang.String" >
-     SELECT sum(cash_back)
-      FROM sys_order_deal
-     where order_id=#{orderId,jdbcType=VARCHAR}
-      and (deal_type='133' or deal_type='134')
-  </select>
+    <select id="selectCashBackByOrderID"  resultType="java.lang.Integer" parameterType="java.lang.String" >
+       SELECT sum(cash_back)
+        FROM sys_order_deal
+       where order_id=#{orderId,jdbcType=VARCHAR}
+        and (deal_type='133' or deal_type='134')
+    </select>
 </mapper>
