@@ -180,6 +180,12 @@ public class GlobalConstant {
 	
 	
 	/*
+	 * 充值后是否产生消费 
+	 */
+	public static final String HAVE_CONSUME_YES = "1";
+	public static final String HAVE_CONSUME_NO = "0";
+	
+	/*
 	 * 订单处理流程中的类型
 	 * Charge ---表示充值
 	 * discharge---表示充红
@@ -199,6 +205,8 @@ public class GlobalConstant {
 		
 		public static final String CONSUME_DRIVER_DEDUCT ="221";
 		public static final String DISCONSUME_DRIVER_DEDUCT ="222";
+		public static final String CONSUME_TRANSPORTION_DEDUCT ="211";
+		public static final String DISCONSUME_TRANSPORTION_DEDUCT ="212";
 		
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION ="311";
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION ="312";

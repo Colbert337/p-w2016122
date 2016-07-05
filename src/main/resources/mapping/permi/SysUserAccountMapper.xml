@@ -10,6 +10,7 @@
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="account_status" property="account_status" jdbcType="VARCHAR" />
+    <result column="have_consume" property="have_consume" jdbcType="VARCHAR" />
     <result column="deposit" property="deposit" jdbcType="DECIMAL" />
     <association property="account_statusInfo" column="account_status"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
@@ -17,7 +18,7 @@
     </association>
   </resultMap>
   <sql id="Base_Column_List" >
-    sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date, version, account_status, deposit
+    sys_user_account_id, account_code, account_type, account_balance, created_date, updated_date, version, account_status,have_consume, deposit
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
@@ -36,12 +37,12 @@
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
     insert into sys_user_account (sys_user_account_id, account_code, account_type, 
-      account_balance, created_date, updated_date,version, account_status, deposit
+      account_balance, created_date, updated_date, version,account_status, have_consume,deposit
       )
     values (#{sysUserAccountId,jdbcType=VARCHAR}, #{accountCode,jdbcType=VARCHAR}, #{accountType,jdbcType=INTEGER}, 
       #{accountBalance,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}, 
-      #{version,jdbcType=VARCHAR},#{account_status,jdbcType=VARCHAR}, #{deposit,jdbcType=DECIMAL}
-      )
+      #{version,jdbcType=VARCHAR},#{account_status,jdbcType=VARCHAR},#{have_consume,jdbcType=VARCHAR}, #{deposit,jdbcType=DECIMAL}
+     )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysUserAccount" >
     insert into sys_user_account
@@ -66,6 +67,9 @@
       </if>
       <if test="account_status != null" >
         account_status,
+      </if>
+      <if test="have_consume != null" >
+        have_consume,
       </if>
       <if test="deposit != null" >
         deposit
@@ -93,6 +97,9 @@
       <if test="account_status != null" >
         #{account_status,jdbcType=VARCHAR},
       </if>
+       <if test="have_consume != null" >
+        #{have_consume,jdbcType=VARCHAR},
+      </if>
       <if test="deposit != null" >
         #{deposit,jdbcType=DECIMAL}
       </if>
@@ -119,6 +126,9 @@
       <if test="account_status != null" >
         account_status = #{account_status,jdbcType=VARCHAR},
       </if>
+       <if test="have_consume != null" >
+        have_consume = #{have_consume,jdbcType=VARCHAR},
+      </if>
       <if test="deposit != null" >
         deposit = #{deposit,jdbcType=DECIMAL},
       </if>
@@ -134,6 +144,7 @@
       created_date = #{createdDate,jdbcType=TIMESTAMP},
       updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       account_status = #{account_status,jdbcType=VARCHAR},
+      have_consume = #{have_consume,jdbcType=VARCHAR},
       deposit = #{deposit,jdbcType=DECIMAL}
     where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
   </update>
@@ -142,6 +153,7 @@
     update sys_user_account 
       set account_balance = #{accountBalance,jdbcType=INTEGER},
       version = #{version,jdbcType=INTEGER},
+      have_consume = #{have_consume,jdbcType=INTEGER},
       updated_date = now()
       where  sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
       and version  &lt; #{version,jdbcType=INTEGER}    

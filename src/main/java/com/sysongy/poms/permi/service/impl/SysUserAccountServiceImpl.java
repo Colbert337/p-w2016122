@@ -4,6 +4,7 @@ import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -47,12 +48,26 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		return sysUserAccountMapper.updateAccount(record);
 	}
 
+	private String getHaveConsumeFromOrder(String order_type,SysUserAccount sysUserAccount) throws Exception{
+		if(GlobalConstant.OrderType.CHARGE_TO_DRIVER.equalsIgnoreCase(order_type)
+		   ||GlobalConstant.OrderType.CHARGE_TO_GASTATION.equalsIgnoreCase(order_type)		
+		   ||GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION.equalsIgnoreCase(order_type)){
+			return GlobalConstant.HAVE_CONSUME_NO;
+		}
+		
+		if(GlobalConstant.OrderType.CONSUME_BY_DRIVER.equalsIgnoreCase(order_type)
+		   ||GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION.equalsIgnoreCase(order_type) ){
+					return GlobalConstant.HAVE_CONSUME_YES;
+		}
+		return sysUserAccount.getHave_consume();
+	}
+	
 	/**
 	 * 更新现金到此账户，实现乐观锁
 	 * Cash -- 正值 则是增加，负值则是减少
 	 */
 	@Override
-	public synchronized String addCashToAccount(String accountId, BigDecimal cash) throws Exception {
+	public synchronized String addCashToAccount(String accountId, BigDecimal cash, String order_type) throws Exception {
 		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(accountId);
 		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance()) ;
 		//在此增加金额，如果是负值则是充红或者消费,仍然用add。
@@ -63,6 +78,8 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		}
 		sysUserAccount.setAccountBalance(balance_result.toString());
 		sysUserAccount.setUpdatedDate(new Date());
+		String have_consume = getHaveConsumeFromOrder(order_type,sysUserAccount);
+		sysUserAccount.setHave_consume(have_consume);
 		//对version加1
 		int ver = sysUserAccount.getVersion();
 		sysUserAccount.setVersion(ver+1);

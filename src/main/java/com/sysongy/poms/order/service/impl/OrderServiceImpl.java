@@ -1,8 +1,10 @@
 package com.sysongy.poms.order.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import com.github.pagehelper.PageHelper;
@@ -203,14 +205,52 @@ public class OrderServiceImpl implements OrderService {
     
 	/**
      * 判断订单能否充红
-     * 1.如果是充值：取得订单的创建时间，然后从订单对应的账户debit_account中找到对应的司机或者车队，如果此司机或者车队没有在订单创建时间后消费，则可以充红。
+     * 1.如果是充值：从订单对应的账户debit_account中找到对应的司机或者车队，如果此司机或者车队没有在订单创建时间后消费，则可以充红。
+     *   不用have_consume字段，只能从order表中查询是否在这个订单后，有消费记录
+     *    
      * 2.如果是消费，如果此消费订单没有超过24小时，则可以充红
      * @param order
      * @return
      * @throws Exception
      */
-    public boolean checkCanDischarge(SysOrder order) throws Exception{
-    	//TODO
+    public boolean checkCanDischarge(SysOrder originalOrder) throws Exception{
+    	
+    	String order_type = originalOrder.getOrderType();
+    	//如果是对司机充值的订单充红，或者是对车队充值的订单充红
+    	if(GlobalConstant.OrderType.CHARGE_TO_DRIVER.equalsIgnoreCase(order_type)
+    	  ||GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION.equalsIgnoreCase(order_type)
+    	  ||GlobalConstant.OrderType.CHARGE_TO_GASTATION.equalsIgnoreCase(order_type)){
+    		String debit_account = originalOrder.getDebitAccount();
+    		Date order_date = originalOrder.getOrderDate();
+    		HashMap map = new HashMap();
+    		map.put("userId", debit_account);
+    		map.put("order_date", order_date);
+    		map.put("CONSUME_BY_TRANSPORTION",GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);
+    		map.put("CONSUME_BY_DRIVER",GlobalConstant.OrderType.CONSUME_BY_DRIVER);
+    		List<SysOrder> orderList = sysOrderMapper.queryConsumeOrderByUserId(map);
+    		if(orderList==null || orderList.isEmpty()){
+    			return true;
+    		}else{
+    			return false;
+    		}
+    	}
+    	
+    	if(GlobalConstant.OrderType.CONSUME_BY_DRIVER.equalsIgnoreCase(order_type) || GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION.equalsIgnoreCase(order_type)){
+        	Date order_date = originalOrder.getOrderDate();
+        	long order_date_long = order_date.getTime(); 
+        	long now = System.currentTimeMillis();
+        	BigDecimal bg_old = new BigDecimal(order_date_long);
+        	BigDecimal bg_new = new BigDecimal(now);
+        	BigDecimal diff = bg_new.subtract(bg_old);
+        	BigDecimal onehour = new BigDecimal(1000*60*60);
+        	BigDecimal hours = diff.divide(onehour,2,RoundingMode.HALF_UP);
+        	if(hours.compareTo(new BigDecimal(24)) > 0){
+        		return false;
+        	}else{
+        		return true;
+        	}
+    	}
+    	
     	return true;
     }
     
@@ -445,6 +485,44 @@ public class OrderServiceImpl implements OrderService {
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
+	/**
+	 * 运输公司消费： 车队消费，扣除的是运输公司的账户里面的钱，并扣除车队的分配额度
+	 * 1.判断此车队是否分配额度，如果分配，则扣除此车队的额度。
+	 *   如果没有分配，则扣除此车队对应的运输公司的额度。
+	 * 2.扣除运输公司账户金额--和消费一样
+	 */
+	@Override
+	public String consumeByTransportion(SysOrder order) throws Exception{
+	   if (order ==null){
+		   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
+	   }
+	   
+	   String orderType = order.getOrderType();
+	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION))){
+		   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH);
+	   }
+	   
+	   String credit_account = order.getCreditAccount();
+	   if(credit_account==null || credit_account.equalsIgnoreCase("")){
+		   throw new Exception( GlobalConstant.OrderProcessResult.CREDIT_ACCOUNT_IS_NULL);
+	   }
+
+	   String operatorTargetType = order.getOperatorTargetType();
+	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.TRANSPORTION))){
+		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_TRANSPORTION);
+	   }
+		//TODO
+	   //2.扣除运输公司账户金额
+	   //消费的时候传过去的cash是正值,充红的时候传过去的是负值
+	   String consume_success =transportionService.consumeTransportion(order);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
+  		   //如果出错直接返回错误代码退出
+		   throw new Exception( consume_success);
+  	   }
+	   //TODO
+	   return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
+	
 	@Override
 	public String validAccount(SysOrder record){
 		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
