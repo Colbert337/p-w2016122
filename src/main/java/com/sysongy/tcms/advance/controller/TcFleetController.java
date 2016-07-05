@@ -10,6 +10,7 @@ import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.tcms.advance.service.TcFleetVehicleService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,14 +49,13 @@ public class TcFleetController extends BaseContoller {
      * @return
      */
     @RequestMapping("/list/page")
-    public String queryFleetListPage(@ModelAttribute CurrUser currUser, TcFleet fleet, ModelMap map){
+    public String queryFleetListPage(@ModelAttribute CurrUser currUser, TcFleet fleet, ModelMap map) throws Exception{
         String stationId = currUser.getStationId();
         if(fleet.getPageNum() == null){
             fleet.setPageNum(GlobalConstant.PAGE_NUM);
             fleet.setPageSize(GlobalConstant.PAGE_SIZE);
         }
         fleet.setStationId(stationId);
-
         //封装分页参数，用于查询分页内容
         PageInfo<Map<String, Object>> fleetPageInfo = new PageInfo<Map<String, Object>>();
         try {
@@ -92,14 +93,24 @@ public class TcFleetController extends BaseContoller {
      */
     @RequestMapping("/info/name")
     @ResponseBody
-    public TcFleet queryFleetByName(TcFleet fleet, ModelMap map){
+    public JSONObject queryFleetByName( @ModelAttribute CurrUser currUser, TcFleet fleet, ModelMap map){
+        JSONObject json = new JSONObject();
+        String stationId = currUser.getStationId();
         String fleetName = "";
         if(fleet != null && fleet.getFleetName() != null && !"".equals(fleet.getFleetName())){
             fleetName = fleet.getFleetName().trim();
-        }
-        TcFleet tcFleet = tcFleetService.queryFleetByName(fleetName);
+            TcFleet tcFleet = tcFleetService.queryFleetByName(stationId, fleetName);
 
-        return tcFleet;
+            if(tcFleet == null){
+                json.put("valid",true);
+            }else{
+                json.put("valid",false);
+            }
+        }else{
+            json.put("valid",false);
+        }
+
+        return json;
     }
 
     /**
