@@ -68,7 +68,7 @@ public class SysOrder extends BaseModel{
 
     private Gastation gastation;
 
-    public String getDischarge_reason() {
+	public String getDischarge_reason() {
 		return discharge_reason;
 	}
 

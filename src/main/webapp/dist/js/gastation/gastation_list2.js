@@ -1,7 +1,7 @@
 	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 	
 	var listOptions ={   
-            url:'../web/gastation/gastationList',
+            url:'../web/gastation/gastationList2',
             type:'post',                    
             dataType:'html',
             success:function(data){
@@ -64,6 +64,7 @@
 		loadPage('#main', '../webpage/poms/gastation/gastation_deposit.jsp?acconutid='+acconutid+'&gastationame='+stationame+'&gastationdeposit='+stationdeposit+'&stationid='+stationid);
 	}
 	
+	
 	function commitForm(obj){
 		//设置当前页的值
 		if(typeof obj == "undefined") {
@@ -72,9 +73,23 @@
 			$("#pageNum").val($(obj).text());
 		}
 		
-		$("#formgastation").ajaxSubmit(listOptions);
-	}
+		var options ={   
+	            url:'../web/gastation/gastationList2',
+	            type:'post',                    
+	            dataType:'html',
+	            success:function(data){
+		              $("#main").html(data);
+		              if($("#retCode").val() != "100"){
+			            	 //$("#modal-table").modal("show");
+			          }
+	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
 
+		       }
+		}
+		
+		$("#formgastation").ajaxSubmit(options);
+	}
+	
 	function del(obj){
 		var cardid = $(obj).parents('tr').find("td:first").find("input").val();
 		
@@ -94,8 +109,9 @@
 		$("#formgastation").ajaxSubmit(deloptions);
 	}
 	
+	
 	function init(){
-		loadPage('#main', '../web/gastation/gastationList');
+		loadPage('#main', '../web/gastation/gastationList2');
 	}
 	
 	function showInnerModel(obj1,obj2,obj3,obj4){

@@ -1,6 +1,6 @@
 package com.sysongy.poms.order.dao;
 
-import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
 
 import java.util.List;
@@ -8,6 +8,8 @@ import java.util.List;
 public interface SysOrderMapper {
 
     List<SysOrder> queryForPage(SysOrder record);
+    
+    List<OrderLog> queryOrderLogs(OrderLog record);
 
     int deleteByPrimaryKey(String orderId);
 

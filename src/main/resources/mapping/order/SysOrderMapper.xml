@@ -29,7 +29,7 @@
                  javaType="com.sysongy.poms.card.model.GasCard"
                  select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
     </association>
-    <association property="orderTypeInfo" column="order_type"
+    <association property="orderDeal" column="order_id"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
     </association>
@@ -37,6 +37,11 @@
                 column="order_id"
                 select="com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper.selectByOrderID" />
   </resultMap>
+  
+  <resultMap type="com.sysongy.poms.order.model.OrderLog" id="OrderLogResultMap">
+  
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
     charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id,operator_source_type, operator_target_type,consume_card
@@ -55,6 +60,15 @@
     </if>
   </select>
 
+  <select id="queryOrderLogs" resultMap="OrderLogResultMap" parameterType="java.lang.String" >
+    select s.order_id,so.deal_number,so.remark,s.order_type,s.operator,so.run_success,so.deal_date 
+    from sys_order s,sys_order_deal so 
+    where s.order_id = so.order_id and s.order_number= #{order_number,jdbcType=VARCHAR}
+    <if test="deal_date_after != null &amp;&amp; deal_date_after != ''">
+        and so.deal_date between CONCAT(#{deal_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{deal_date_before,jdbcType=VARCHAR},' 23:59:59')
+    </if>
+  </select>
+	
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
