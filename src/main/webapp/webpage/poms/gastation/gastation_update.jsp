@@ -9,17 +9,6 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
-	<link rel="stylesheet" href="<%=basePath %>/assets/css/colorbox.css" />
-
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/moment.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/assets/js/date-time/bootstrap-datepicker.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/fileinput.js"></script>
-	<script type="text/javascript" src="<%=basePath %>/common/js/zh.js"></script>
-	<script src="<%=basePath %>/assets/js/ace-extra.js"></script>
-	<script src="<%=basePath %>/assets/js/jquery.colorbox.js"></script>
-
-	<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
-
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
 				<div class="main-content-inner">

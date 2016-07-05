@@ -179,49 +179,43 @@
 </div>
 
 
-<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
+<div id="innerModel" class="modal modal-alert fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
-			</div>
+			<%--<div class="modal-header">--%>
+				<%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--%>
+				<%--<h4 class="modal-title" id="gridSystemModalLabel"></h4>--%>
+			<%--</div>--%>
 			<div class="modal-body">
-				<div class="container-fluid" id="tt">
-					<div class="gastation-infomation">
-
-					    <div class="row">
-					        <div class="col-sm-3">
-					            <a class="gastation-log-colorbox" href="" data-rel="colorbox">
-									<img class="img-responsive" src="" alt="" id="innerimg1">
-									<div class="title">工商注册证</div>
-								</a>
-					        </div>
-					        <div class="col-sm-3">
-					        	<a class="gastation-log-colorbox" href="" data-rel="colorbox">
-									<img class="img-responsive" src="" alt="" id="innerimg2">
-									<div class="title">税务注册证</div>
-								</a>
-					        </div>
-					        <div class="col-sm-3">
-					        	<a class="gastation-log-colorbox" href="" data-rel="colorbox">
-									<img class="img-responsive" src="" alt="" id="innerimg3">
-									<div class="title">LNG储装证</div>
-								</a>
-					        </div>
-					        <div class="col-sm-3">
-					        	<a class="gastation-log-colorbox" href="" data-rel="colorbox">
-									<img class="img-responsive" src="" alt="" id="innerimg4">
-									<div class="title">危化品证</div>
-								</a>
-					        </div>
-					    </div>
-					
+				<div class="row">
+					<div class="col-sm-3">
+						<a class="gastation-log-colorbox" href="" data-rel="colorbox">
+							<img class="img-responsive" src="" alt="" id="innerimg1">
+							<div class="title">工商注册证</div>
+						</a>
+					</div>
+					<div class="col-sm-3">
+						<a class="gastation-log-colorbox" href="" data-rel="colorbox">
+							<img class="img-responsive" src="" alt="" id="innerimg2">
+							<div class="title">税务注册证</div>
+						</a>
+					</div>
+					<div class="col-sm-3">
+						<a class="gastation-log-colorbox" href="" data-rel="colorbox">
+							<img class="img-responsive" src="" alt="" id="innerimg3">
+							<div class="title">LNG储装证</div>
+						</a>
+					</div>
+					<div class="col-sm-3">
+						<a class="gastation-log-colorbox" href="" data-rel="colorbox">
+							<img class="img-responsive" src="" alt="" id="innerimg4">
+							<div class="title">危化品证</div>
+						</a>
 					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-sm"  data-dismiss="modal">确 定</button>
+				<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>
 			</div>
 		</div>
 	</div>
