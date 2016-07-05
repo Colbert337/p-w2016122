@@ -168,7 +168,7 @@ public class DriverServiceImpl implements DriverService {
 			 }
 		}
 		//driver_account="abcd";		
-		String cash_success = sysUserAccountService.addCashToAccount(driver_account,cash);
+		String cash_success = sysUserAccountService.addCashToAccount(driver_account,cash,order.getOrderType());
 		//记录订单流水
 		String chong = "充值";
 		String orderDealType = GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE;
@@ -217,7 +217,7 @@ public class DriverServiceImpl implements DriverService {
 				throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
 			 }
 		}
-		String cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash);
+		String cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
 		//记录订单流水
 		String chong = "转账扣钱";
 		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_DRIVER_TO_DRIVER_DEDUCT_DRIVER;

@@ -37,6 +37,16 @@
     from sys_order
     where order_id = #{orderId,jdbcType=VARCHAR}
   </select>
+  
+  <select id="queryConsumeOrderByUserId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_order
+    where debit_account = #{userId,jdbcType=VARCHAR}
+     and order_type in (#{CONSUME_BY_TRANSPORTION,jdbcType=VARCHAR},#{CONSUME_BY_DRIVER,jdbcType=VARCHAR})
+     and order_date > #{order_date,jdbcType=TIMESTAMP}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_order
     where order_id = #{orderId,jdbcType=VARCHAR}

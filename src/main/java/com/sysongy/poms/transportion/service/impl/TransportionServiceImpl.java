@@ -203,7 +203,7 @@ public class TransportionServiceImpl implements TransportionService {
 		Transportion tran = this.queryTransportionByPK(debit_account);
 		String tran_account = tran.getSys_user_account_id();
 		BigDecimal cash = order.getCash();
-		String cash_success = sysUserAccountService.addCashToAccount(tran_account,cash);
+		String cash_success = sysUserAccountService.addCashToAccount(tran_account,cash,order.getOrderType());
 		//记录订单流水
 		String chong = "充值";
 		String orderDealType = GlobalConstant.OrderDealType.CHARGE_TO_TRANSPORTION_CHARGE;
@@ -214,6 +214,45 @@ public class TransportionServiceImpl implements TransportionService {
 		return cash_success;
 	}
 	
+	/**
+	 * 运输公司消费，以及消费充红
+	 * @param order
+	 * @return
+     * @throws Exception 
+	 */
+	@Override
+	public String consumeTransportion(SysOrder order) throws Exception{
+		if (order ==null){
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
+		}
+		
+		String credit_account = order.getCreditAccount();
+		if(credit_account==null ||credit_account.equalsIgnoreCase("")){
+			throw new Exception( GlobalConstant.OrderProcessResult.CREDIT_ACCOUNT_IS_NULL);
+		}
+		
+		//从账户扣钱
+		Transportion tran = this.queryTransportionByPK(credit_account);
+		String tran_account = tran.getSys_user_account_id();
+		BigDecimal cash = order.getCash();
+		//消费传过来的cash是正值，需要乘以-1,如果是充红，订单传过来的是负值，乘以-1，就成为正值。
+		BigDecimal addCash = cash.multiply(new BigDecimal(-1));
+		String cash_success = sysUserAccountService.addCashToAccount(tran_account,addCash,order.getOrderType());
+		//记录订单流水
+		String chong = "消费";
+		String orderDealType = GlobalConstant.OrderDealType.CONSUME_TRANSPORTION_DEDUCT;
+		
+		String is_discharge = order.getIs_discharge();
+		if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
+			chong = "消费充红";
+			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_TRANSPORTION_DEDUCT;
+		}
+
+		String remark =  tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。";
+		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
+		
+		return cash_success;
+	}
 	/**
 	 * 转账的时候，扣除运输公司账户金额
 	 * @param order
@@ -232,7 +271,7 @@ public class TransportionServiceImpl implements TransportionService {
 		BigDecimal cash = order.getCash();
 		//乘以-1，讲订单里面的cash变为负值，则就是减钱
 		BigDecimal add_cash = cash.multiply(new BigDecimal(-1));
-		String cash_success = sysUserAccountService.addCashToAccount(tran_account,add_cash);
+		String cash_success = sysUserAccountService.addCashToAccount(tran_account,add_cash,order.getOrderType());
 		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION;
 
 		String remark = "从"+ tran.getTransportion_name()+"的账户，扣款"+cash.toString()+"。";

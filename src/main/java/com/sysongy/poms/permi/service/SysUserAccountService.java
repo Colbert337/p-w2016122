@@ -1,12 +1,9 @@
 package com.sysongy.poms.permi.service;
 
-import com.sysongy.poms.permi.dao.SysUserAccountMapper;
-import com.sysongy.poms.permi.model.SysUserAccount;
-import com.sysongy.util.GlobalConstant;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.math.BigDecimal;
-import java.util.Date;
+
+import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.permi.model.SysUserAccount;
 
 public interface SysUserAccountService {
 	
@@ -24,8 +21,8 @@ public interface SysUserAccountService {
 	 * 更新最新余额到账户
 	 * @return
 	 */
-	String addCashToAccount(String accountId, BigDecimal cash) throws Exception;
-
+	String addCashToAccount(String accountId, BigDecimal cash, String order_type) throws Exception;
+	
 	/**
 	 * 根据站点ID查询站点账户信息
 	 * @param sysTransportionId 运输公司ID

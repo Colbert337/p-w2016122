@@ -196,7 +196,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		BigDecimal back_money = cash.multiply(cash_per) ;
 		
 		//3.给这个账户增加返现
-		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money);
+		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money,order.getOrderType());
 		
 		//4.写入订单处理流程
 		String remark = "给"+ accountUserName+"的账户，返现"+back_money.toString()+"。";
@@ -231,7 +231,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 			back_money = cash_back.multiply(new BigDecimal(-1));
 		}
 		//给这个账户把返现充红
-		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money);
+		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money,order.getOrderType());
 		//写入订单处理流程
 		String remark = "给"+ accountUserName+"的账户，充红返现"+back_money.toString()+"。";
 		String cash_per_str = orderDealRecord.getCashBackPer();

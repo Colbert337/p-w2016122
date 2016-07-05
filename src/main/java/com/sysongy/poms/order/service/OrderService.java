@@ -95,6 +95,11 @@ public interface OrderService {
      * 个人消费
      */
     String consumeByDriver(SysOrder record) throws Exception;
+    
+    /**
+     * 运输公司消费
+     */
+    String consumeByTransportion(SysOrder order) throws Exception;
 
     /**
      * 验证订单

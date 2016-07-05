@@ -36,4 +36,11 @@ public interface TransportionService {
 	 */
 	public String transferTransportionToDriverDeductCash(SysOrder order,Transportion tran) throws Exception;
 
+	/**
+	 * 运输公司消费
+	 * @param order
+	 * @return
+	 * @throws Exception
+	 */
+	public String consumeTransportion(SysOrder order) throws Exception;
 }
