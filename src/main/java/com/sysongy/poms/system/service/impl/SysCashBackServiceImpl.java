@@ -186,7 +186,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		SysCashBack eligible_cashback = null;
 		if(eligible_list.size()==0){
 			//记录订单流水，未找到有效记录
-			String remark ="给"+accountUserName+"返现"+cash.toString()+",未找到符合条件的返现规则。";
+			String remark ="给"+accountUserName+"充值"+cash.toString()+",因未找到符合条件的返现规则，返现金额为0";
 			orderDealService.createOrderDeal(order.getOrderId(),orderDealType, remark, GlobalConstant.OrderProcessResult.SUCCESS);
 			return GlobalConstant.OrderProcessResult.SUCCESS;
 		}else{
