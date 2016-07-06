@@ -21,6 +21,7 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.order.dao.SysOrderMapper;
 import com.sysongy.poms.order.dao.SysPrepayMapper;
+import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.model.SysPrepay;
@@ -675,5 +676,13 @@ public class OrderServiceImpl implements OrderService {
 			return null;
 		}
 		return orderDealService.selectCashBackByOrderID(orderId);
+	}
+
+	@Override
+	public PageInfo<OrderLog> queryOrderLogs(OrderLog record) throws Exception {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<OrderLog> list = sysOrderMapper.queryOrderLogs(record);
+		PageInfo<OrderLog> pageInfo = new PageInfo<OrderLog>(list);
+		return pageInfo;
 	}
 }

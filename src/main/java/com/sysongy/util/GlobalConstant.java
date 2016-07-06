@@ -148,7 +148,7 @@ public class GlobalConstant {
 	}
 
 	/*
-	 * 	110车队预付款充值  120 加油站预付款充值 130个人充值....
+	 * 	110运输公司预付款充值  120 加油站预付款充值 130个人充值 210运输公司消费 220 司机消费 310 运输公司对个人转账 320个人对个人转账
 	 */
 	public interface OrderType{
 		public static final String CHARGE_TO_TRANSPORTION ="110";

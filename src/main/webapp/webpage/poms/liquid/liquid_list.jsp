@@ -30,12 +30,12 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>液厂编号:</label>
-							<input type="text" name="sys_gas_source_id" placeholder="输入液源编号"  maxlength="32" value="${gasource.sys_gas_source_id}"/>
+							<input type="text" name="sys_gas_source_id" placeholder="输入液厂编号"  maxlength="32" value="${gasource.sys_gas_source_id}"/>
 						</div>
 						
 						<div class="item">
 						    <label>液厂名称:</label>
-							<input type="text" name="gas_factory_name" placeholder="输入液源名称"  maxlength="20" value="${gasource.gas_factory_name}"/>
+							<input type="text" name="gas_factory_name" placeholder="输入液厂名称"  maxlength="20" value="${gasource.gas_factory_name}"/>
 						</div>
 						
 						<div class="item">

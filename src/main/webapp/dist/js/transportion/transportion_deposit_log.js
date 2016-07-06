@@ -36,22 +36,21 @@
 	   });
 	})
 	
-	function commitForm(obj){
-		
-		var listOptions ={   
-	            url:'../web/transportion/depositList',   
-	            type:'post',                    
-	            dataType:'html',
-	            success:function(data){
-		              $("#main").html(data);
-		              if($("#retCode").val() != "100"){
-			            	 //$("#modal-table").modal("show");
-			          }
-	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+	var listOptions ={   
+		url:'../web/transportion/depositList',   
+	    type:'post',                    
+	    dataType:'html',
+	    success:function(data){
+	    	$("#main").html(data);
+		    if($("#retCode").val() != "100"){
+			   //$("#modal-table").modal("show");
+			}
+	    },error:function(XMLHttpRequest, textStatus, errorThrown) {
 	            	
-		       }
 		}
-		
+	}
+	
+	function commitForm(obj){
 		//设置当前页的值
 		if(typeof obj == "undefined") {
 			$("#pageNum").val("1");

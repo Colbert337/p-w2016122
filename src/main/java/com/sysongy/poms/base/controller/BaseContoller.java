@@ -146,10 +146,8 @@ public class BaseContoller {
      * @return
      */
     @RequestMapping(value = {"/web/panel/"})
-    @ResponseBody
     public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){
-
-        return "panel/panel";
+        return "common/g_main";
     }
     
     /**
