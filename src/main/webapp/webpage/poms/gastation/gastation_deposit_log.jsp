@@ -12,7 +12,7 @@
 <script src="<%=basePath %>/dist/js/gastation/gastation_deposit_log.js"></script>
 
 <div class="">
-	<form id="formcard">
+	<form id="formgastation">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -80,7 +80,7 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单流水号</th>
+									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单号</th>
 									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">工作站编号</th>
 									<th onclick="orderBy(this,'station_name');commitForm();" id="station_name_order">工作站名称</th>
 									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
@@ -99,7 +99,7 @@
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.sysDepositLogId}"/> 
+											<input type="checkbox" class="ace" id="pks" value="${list.order_number}"/> 
 											<span class="lbl"></span>
 										</label>
 									</td>
@@ -117,6 +117,11 @@
 										<a class="gastation-log-colorbox" href="<%=imagePath %>${list.transfer_photo}" title="查看图片" data-rel="colorbox">
 											<i class="ace-icon fa fa-camera bigger-130"></i>
 										</a>
+										<c:if test="${currUser.userType == 5}">
+											<a class="" href="javascript:void(0);" title="查看订单明细">
+												<i class="ace-icon fa fa-search-plus bigger-130" onclick="showOrderLog(this);"></i>
+											</a>
+										</c:if>
 									</td>
 								</tr>
 								</c:forEach>
@@ -134,12 +139,12 @@
 					<nav>
 						<ul id="ulhandle" class="pagination pull-right no-margin">
 							<li id="previous">
-								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formgastation');">
 									<span aria-hidden="true">&laquo;</span>
 								</a>
 							</li>
 							<li id="next">
-								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
 									<span aria-hidden="true">&raquo;</span>
 								</a>
 							</li>  

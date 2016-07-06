@@ -55,8 +55,8 @@
 		queryRoleList();
 		queryUserTypeList("");
 		/*密码输入框改为可编辑*/
-		$("#password").removeAttr("readonly");
-		$("#re_password").removeAttr("readonly");
+		/*$("#password").removeAttr("readonly");
+		$("#re_password").removeAttr("readonly");*/
 	}
 	//显示编辑用户弹出层
 	function queryRoleList(roleId){
@@ -165,9 +165,9 @@
 				$("#password").val(data.password);
 				$("#re_password").val(data.password);
 				/*密码输入框改为可编辑*/
-				$("#password").attr("readonly","readonly");
 				$("#user_name").attr("readonly","readonly");
-				$("#re_password").attr("readonly","readonly");
+				/*$("#password").attr("readonly","readonly");
+				$("#re_password").attr("readonly","readonly");*/
 				queryRoleList(data.sys_role_id);
 				queryUserTypeList(data.userType);
 			}
@@ -245,6 +245,10 @@
 
 			}
 		})
+	}
+	//重置
+	function init(){
+		loadPage('#main', '../web/permi/user/list/page');
 	}
 </script>
 <div class="page-header">
@@ -414,7 +418,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码： </label>
 									<div class="col-sm-4">
-										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[33]] col-xs-10 col-sm-12" />
+										<input type="password" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[33]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-4">

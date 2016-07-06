@@ -18,6 +18,8 @@ public interface TransportionMapper {
 
     int updateByPrimaryKey(Transportion record);
     
+    int updateDeposit(Transportion record);
+    
     List<Transportion> queryForPage(Transportion record);
     
     Transportion findTransportationid(String province_id);

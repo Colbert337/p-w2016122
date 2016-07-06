@@ -326,7 +326,7 @@
 											</a>
 										</c:if>
 									</span>
-									<a class="" href="javascript:deleteRole('${role.sysRoleId}');" title="修改" data-rel="tooltip">
+									<a class="" href="javascript:deleteRole('${role.sysRoleId}');" title="删除" data-rel="tooltip">
 										<span class="ace-icon fa fa-trash-o bigger-130"></span>
 									</a>
 								</td>

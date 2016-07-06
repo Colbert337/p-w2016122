@@ -153,12 +153,12 @@
 					<nav>
 						<ul id="ulhandle" class="pagination pull-right no-margin">
 							<li id="previous">
-								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formgastation');">
 									<span aria-hidden="true">&laquo;</span>
 								</a>
 							</li>
 							<li id="next">
-								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
 									<span aria-hidden="true">&raquo;</span>
 								</a>
 							</li>  

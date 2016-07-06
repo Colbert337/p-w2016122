@@ -148,7 +148,7 @@ public class GlobalConstant {
 	}
 
 	/*
-	 * 	110车队预付款充值  120 加油站预付款充值 130个人充值....
+	 * 	110运输公司预付款充值  120 加油站预付款充值 130个人充值 210运输公司消费 220 司机消费 310 运输公司对个人转账 320个人对个人转账
 	 */
 	public interface OrderType{
 		public static final String CHARGE_TO_TRANSPORTION ="110";
@@ -190,6 +190,13 @@ public class GlobalConstant {
 	 */
 	public static final String HAVE_CONSUME_YES = "1";
 	public static final String HAVE_CONSUME_NO = "0";
+	
+	/*
+	 * 车队是否分配额度 
+	 */
+	public static final int TCFLEET_IS_ALLOT_YES = 1;
+	public static final int TCFLEET_IS_ALLOT_NO = 0;
+	
 	
 	/*
 	 * 订单处理流程中的类型
@@ -286,6 +293,7 @@ public class GlobalConstant {
 		public static final String SUCCESS ="SUCCESS";
 		public static final String ORDER_IS_NULL="ORDER_IS_NULL";
 		public static final String TRANSPORTION_IS_NULL="TRANSPORTION_IS_NULL";
+		public static final String TCFLEET_IS_NULL="TCFLEET_IS_NULL";		
 		public static final String ORDER_TYPE_IS_NOT_MATCH="ORDER_TYPE_IS_NOT_MATCH";
 		public static final String ORDER_TYPE_IS_NOT_DISCHARGE="ORDER_TYPE_IS_NOT_DISCHARGE";
 		public static final String ORDER_TYPE_IS_NOT_CHARGE="ORDER_TYPE_IS_NOT_CHARGE";

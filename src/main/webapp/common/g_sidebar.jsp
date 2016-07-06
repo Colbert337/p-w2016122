@@ -49,7 +49,7 @@
 				<!-- /.sidebar-shortcuts -->
 				<ul class="nav nav-list">
 					<li class="active">
-						<a href="<%=basePath%>/web/login/">
+						<a href="<%=basePath%>/web/panel/">
 							<i class="menu-icon fa fa-tachometer"></i>
 							<span class="menu-text"> 总览 </span>
 						</a>

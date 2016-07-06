@@ -31,6 +31,8 @@
     <result column="created_time" property="created_time" jdbcType="TIMESTAMP" />
     <result column="updated_time" property="updated_time" jdbcType="TIMESTAMP" />
     <result column="pay_code" property="pay_code" jdbcType="VARCHAR" />
+    <result column="deposit" property="deposit" jdbcType="DECIMAL" />
+    
     <association column="sys_user_account_id" property="account" javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
     </association>
@@ -39,7 +41,7 @@
     sys_transportion_id, sys_user_account_id, transportion_name, station_manager, contact_phone, admin_username, email, 
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, salesmen_id, 
     salesmen_name, operations_id, operations_name, indu_com_number, tax_number, indu_com_certif, 
-    tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, updated_time, pay_code
+    tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, updated_time, pay_code,deposit
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -87,7 +89,7 @@
       operations_id, operations_name, indu_com_number, 
       tax_number, indu_com_certif, tax_certif, 
       lng_certif, dcp_certif, platform_type, 
-      status, created_time, updated_time,pay_code
+      status, created_time, updated_time,pay_code,deposit
       )
     values (#{sys_transportion_id,jdbcType=VARCHAR}, #{sys_user_account_id,jdbcType=VARCHAR}, 
       #{transportion_name,jdbcType=VARCHAR}, #{station_manager,jdbcType=VARCHAR}, #{contact_phone,jdbcType=VARCHAR},
@@ -99,7 +101,7 @@
       #{tax_number,jdbcType=VARCHAR}, #{indu_com_certif,jdbcType=VARCHAR}, #{tax_certif,jdbcType=VARCHAR}, 
       #{lng_certif,jdbcType=VARCHAR}, #{dcp_certif,jdbcType=VARCHAR}, #{platform_type,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR}, #{created_time,jdbcType=TIMESTAMP}, #{updated_time,jdbcType=TIMESTAMP},
-      #{pay_code,jdbcType=VARCHAR}
+      #{pay_code,jdbcType=VARCHAR},#{deposit,jdbcType=DECIMAL}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.transportion.model.Transportion" >
@@ -186,6 +188,9 @@
       <if test="pay_code != null" >
         pay_code,
       </if>
+      <if test="deposit != null" >
+        deposit,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sys_transportion_id != null" >
@@ -268,6 +273,9 @@
       </if>
       <if test="pay_code != null" >
         #{pay_code,jdbcType=VARCHAR},
+      </if>
+      <if test="deposit != null" >
+       #{deposit,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -355,6 +363,9 @@
       <if test="pay_code != null &amp;&amp; pay_code != ''" >
         pay_code = #{pay_code,jdbcType=VARCHAR},
       </if>
+      <if test="deposit != null &amp;&amp; deposit != ''" >
+        deposit = #{deposit,jdbcType=DECIMAL},
+      </if>
     </set>
     where sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
   </update>
@@ -386,7 +397,15 @@
       status = #{status,jdbcType=VARCHAR},
       created_time = #{created_time,jdbcType=TIMESTAMP},
       updated_time = #{updated_time,jdbcType=TIMESTAMP},
-      pay_code = #{pay_code,jdbcType=VARCHAR}
+      pay_code = #{pay_code,jdbcType=VARCHAR},
+      deposit = #{deposit,jdbcType=DECIMAL}
     where sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
+  </update>
+  
+   <update id="updateDeposit" parameterType="com.sysongy.poms.transportion.model.Transportion" >
+     update sys_transportion
+      set deposit = #{deposit,jdbcType=DECIMAL},
+      updated_time = now()
+      where  sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}          
   </update>
 </mapper>

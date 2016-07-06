@@ -1,8 +1,10 @@
 package com.sysongy.poms.order.service;
 
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.tcms.advance.model.TcFleet;
 
 /**
  * 
@@ -20,6 +22,8 @@ public interface OrderService {
     SysOrder selectByPrimaryKey(String orderId);
 
     int updateByPrimaryKey(SysOrder record);
+    
+    PageInfo<OrderLog> queryOrderLogs(OrderLog obj) throws Exception;
 
     /**
      * 给司机充值
@@ -103,7 +107,7 @@ public interface OrderService {
     /**
      * 运输公司消费
      */
-    String consumeByTransportion(SysOrder order) throws Exception;
+    String consumeByTransportion(SysOrder order,Transportion tran, TcFleet tcfleet) throws Exception;
 
     /**
      * 验证订单
