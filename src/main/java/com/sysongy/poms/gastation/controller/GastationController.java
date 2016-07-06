@@ -141,7 +141,7 @@ public class GastationController extends BaseContoller{
 	}
 	
 	@RequestMapping("/depositList")
-	public String querydepositList(ModelMap map, SysDepositLog deposit) throws Exception{
+	public String querydepositList(ModelMap map, SysDepositLog deposit, @ModelAttribute CurrUser currUser) throws Exception{
 
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_deposit_log";
@@ -154,6 +154,11 @@ public class GastationController extends BaseContoller{
 			if(StringUtils.isEmpty(deposit.getOrderby())){
 				deposit.setOrderby("optime desc");
 			}
+			
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUserType()){
+				deposit.setStationId(currUser.getStationId());
+			}
+			
 			deposit.setStation_type(GlobalConstant.OrderOperatorTargetType.GASTATION);
 			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
 
@@ -300,7 +305,7 @@ public class GastationController extends BaseContoller{
 
 		try {
 				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
-					rowcount = service.updatedepositGastation(deposit, currUser.getUserId());
+					rowcount = service.updatedepositGastation(deposit, currUser.getUser().getUserName());
 				}
 
 				ret = this.queryAllGastationList2(map, this.gastation);

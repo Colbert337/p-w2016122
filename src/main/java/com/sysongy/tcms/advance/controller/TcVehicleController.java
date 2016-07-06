@@ -7,12 +7,14 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import jxl.Sheet;
 import jxl.Workbook;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -108,6 +110,34 @@ public class TcVehicleController extends BaseContoller {
         }
         vehicleMap.put("gasCard",gasCard);
         return vehicleMap;
+    }
+
+    /**
+     * 根据用户名称查询车队信息
+     * @param vehicle
+     * @param map
+     * @return
+     */
+    @RequestMapping("/info/name")
+    @ResponseBody
+    public JSONObject queryFleetByName(@ModelAttribute CurrUser currUser, TcVehicle vehicle, ModelMap map){
+        JSONObject json = new JSONObject();
+        String stationId = currUser.getStationId();
+        String platesNumber = "";
+        if(vehicle != null && vehicle.getPlatesNumber() != null && !"".equals(vehicle.getPlatesNumber())){
+            platesNumber = vehicle.getPlatesNumber().trim();
+            TcVehicle vehicleTemp = tcVehicleService.queryVehicleByNumber(vehicle);
+
+            if(vehicleTemp == null){
+                json.put("valid",true);
+            }else{
+                json.put("valid",false);
+            }
+        }else{
+            json.put("valid",false);
+        }
+
+        return json;
     }
 
     /**

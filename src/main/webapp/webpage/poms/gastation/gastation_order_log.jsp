@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/gastation/gastation_product_price_list.js"></script>
+<script src="<%=basePath %>/dist/js/gastation/gastation_order_log.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -21,31 +21,21 @@
 
 					<div class="page-header">
 						<h1>
-							油气品价格管理
+							预存款充值记录
 						</h1>
 					</div>
 					
-					<input type="hidden" class="" name="product_id" value="${productPrice.product_id}" readonly="readonly"/>
+					<input type="hidden" class="" name="order_number" value="${order.order_number}" readonly="readonly"/>
 					
 					<div class="search-types">
-						<%-- <div class="item">
-						    <label>加注站编号:</label>
-							<input type="text" name="sys_gas_station_id" placeholder="输入加注站编号"  maxlength="10" value="${productPrice.sys_gas_station_id}"/>
-						</div>
-						
-						<div class="item">
-						    <label>加注站名称:</label>
-							<input type="text" name="gas_station_name" placeholder="输入加注站名称"  maxlength="20" value="${productPrice.gas_station_name}"/>
-						</div> --%>
-						
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>更新时间:</label>
-								<input type="text" class="" name="created_time_after" value="${productPrice.created_time_after}" readonly="readonly"/>
+								<label>交易时间:</label>
+								<input type="text" class="" name="deal_date_after" value="${order.deal_date_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="created_time_before" value="${productPrice.created_time_before}" readonly="readonly"/>
+								<input type="text" class="" name="deal_date_before" value="${order.deal_date_before}" readonly="readonly"/>
 							</div>
 						</div>
 
@@ -69,11 +59,8 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">油气品价格详细信息列表</div>
+					<div class="table-header">预存款充值记录订单列表</div>
 
-					<!-- div.table-responsive -->
-
-					<!-- div.dataTables_borderWrap -->
 					<div>
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
@@ -84,11 +71,13 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'id');commitForm();" id="id_order">价格编号</th>
-									<th onclick="orderBy(this,'product_price_id');commitForm();" id="product_price_id_order">气品子类型</th>
-									<th onclick="orderBy(this,'product_price');commitForm();" id="product_price_order">气品单价</th>
-									<th onclick="orderBy(this,'product_unit');commitForm();" id="product_unit_order">气品单位</th>
-									<th onclick="orderBy(this,'create_time');commitForm();" id="create_time_order"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新时间</th>
+									<th onclick="orderBy(this,'order_id');commitForm();" id="order_id_order">订单号</th>
+									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">订单流水号</th>
+									<th onclick="orderBy(this,'charge_type');commitForm();" id="charge_type_order">交易类型</th>
+									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th>
+									<th onclick="orderBy(this,'run_success');commitForm();" id="run_success_order">交易结果</th>
+									<th onclick="orderBy(this,'deal_date');commitForm();" id="deal_date_order"><i id="deal_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
+									<th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注信息</th>
 								</tr>
 							</thead>
 
@@ -98,16 +87,18 @@
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.id}"/> 
+											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
 											<span class="lbl"></span>
 										</label>
 									</td>
 
-									<td>${list.id}</td>
-								 	<td><s:Code2Name mcode="${list.productPriceId}" gcode="CARDTYPE"></s:Code2Name></td> 
-									<td>${list.productPrice}</td>
-									<td><s:Code2Name mcode="${list.productUnit}" gcode="GAS_UNIT"></s:Code2Name></td>
-									<td><fmt:formatDate value="${list.createTime}" type="both"/></td>
+									<td>${list.order_id}</td>
+									<td>${list.deal_number}</td>
+								 	<td><s:Code2Name mcode="${list.order_type}" gcode="ORDER_TYPE"></s:Code2Name></td> 
+									<td>${list.operator}</td>
+									<td>${list.run_success}</td>
+									<td><fmt:formatDate value="${list.deal_date}" type="both"/></td>
+									<td>${list.remark}</td>
 								</tr>
 							</c:forEach>
 							</tbody>

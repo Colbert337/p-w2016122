@@ -21,14 +21,27 @@
     <result column="discharge_reason" property="discharge_reason" jdbcType="VARCHAR" />
     <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
     <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
+    <association property="operatorInfo" column="operator"
+                 javaType="com.sysongy.poms.permi.model.SysUser"
+                 select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
+    </association>
     <association property="consume_cardInfo" column="consume_card"
                  javaType="com.sysongy.poms.card.model.GasCard"
                  select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
+    </association>
+    <association property="orderDeal" column="order_id"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
     </association>
     <collection property="sysOrderGoods" ofType="com.sysongy.poms.ordergoods.model.SysOrderGoods"
                 column="order_id"
                 select="com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper.selectByOrderID" />
   </resultMap>
+  
+  <resultMap type="com.sysongy.poms.order.model.OrderLog" id="OrderLogResultMap">
+  
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
     charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id,operator_source_type, operator_target_type,consume_card
@@ -47,6 +60,15 @@
     </if>
   </select>
 
+  <select id="queryOrderLogs" resultMap="OrderLogResultMap" parameterType="java.lang.String" >
+    select s.order_id,so.deal_number,so.remark,s.order_type,s.operator,so.run_success,so.deal_date 
+    from sys_order s,sys_order_deal so 
+    where s.order_id = so.order_id and s.order_number= #{order_number,jdbcType=VARCHAR}
+    <if test="deal_date_after != null &amp;&amp; deal_date_after != ''">
+        and so.deal_date between CONCAT(#{deal_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{deal_date_before,jdbcType=VARCHAR},' 23:59:59')
+    </if>
+  </select>
+	
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -54,6 +76,16 @@
     from sys_order
     where order_id = #{orderId,jdbcType=VARCHAR}
   </select>
+  
+  <select id="queryConsumeOrderByUserId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_order
+    where debit_account = #{userId,jdbcType=VARCHAR}
+     and order_type in (#{CONSUME_BY_TRANSPORTION,jdbcType=VARCHAR},#{CONSUME_BY_DRIVER,jdbcType=VARCHAR})
+     and order_date > #{order_date,jdbcType=TIMESTAMP}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_order
     where order_id = #{orderId,jdbcType=VARCHAR}

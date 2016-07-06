@@ -74,7 +74,6 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson queryCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
         AjaxJson ajaxJson = new AjaxJson();
-
         if(!StringUtils.isNotEmpty(sysDriver.getStationId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("气站ID为空！！！");
@@ -162,7 +161,6 @@ public class CRMCustomerContoller {
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
-
     @RequestMapping(value = {"/web/sendMsg"})
     @ResponseBody
     public AjaxJson sendMsg(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver,@RequestParam(required = false) String mobilePhone){
@@ -195,6 +193,12 @@ public class CRMCustomerContoller {
             String msgType = request.getParameter("msgType");
             if(msgType.equalsIgnoreCase("changePassword")){
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
+            } else if(msgType.equalsIgnoreCase("driverCharge")){
+                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
+            } else if(msgType.equalsIgnoreCase("driverConsume")){
+                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_CONSUME);
+            }else if(msgType.equalsIgnoreCase("driverHedge")){
+                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_HEDGE);
             } else {
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
             }
@@ -307,6 +311,7 @@ public class CRMCustomerContoller {
             Gastation gastation = gastationService.queryGastationByPK(sys_gas_station_id);
             sysDriver.setRegisSource(gastation.getGas_station_name());
 
+            sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
             int renum = driverService.saveDriver(sysDriver, "insert");
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);

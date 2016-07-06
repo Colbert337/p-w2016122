@@ -55,8 +55,8 @@
 		queryRoleList();
 		queryUserTypeList("");
 		/*密码输入框改为可编辑*/
-		$("#password").removeAttr("readonly");
-		$("#re_password").removeAttr("readonly");
+		/*$("#password").removeAttr("readonly");
+		$("#re_password").removeAttr("readonly");*/
 	}
 	//显示编辑用户弹出层
 	function queryRoleList(roleId){
@@ -165,9 +165,9 @@
 				$("#password").val(data.password);
 				$("#re_password").val(data.password);
 				/*密码输入框改为可编辑*/
-				$("#password").attr("readonly","readonly");
 				$("#user_name").attr("readonly","readonly");
-				$("#re_password").attr("readonly","readonly");
+				/*$("#password").attr("readonly","readonly");
+				$("#re_password").attr("readonly","readonly");*/
 				queryRoleList(data.sys_role_id);
 				queryUserTypeList(data.userType);
 			}
@@ -246,6 +246,10 @@
 			}
 		})
 	}
+	//重置
+	function init(){
+		loadPage('#main', '../web/permi/user/list/page');
+	}
 </script>
 <div class="page-header">
 	<h1>
@@ -296,7 +300,7 @@
 							<th>用户类型</th>
 							<th>用户状态</th>
 							<th class="td-w2">创建时间</th>
-							<th class="text-center">操作</th>
+							<th class="text-center td-w2">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -398,7 +402,7 @@
 							<!-- PAGE CONTENT BEGINS -->
 							<form class="form-horizontal" id="userForm">
 								<!-- #section:elements.form -->
-								<h5 class="header smaller lighter blue">账户信息</h5>
+								<h5 class="header smaller lighter blue no-margin-top">账户信息</h5>
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
 									<div class="col-sm-4">
@@ -414,7 +418,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码： </label>
 									<div class="col-sm-4">
-										<input type="password" readonly="readonly" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[33]] col-xs-10 col-sm-12" />
+										<input type="password" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[33]] col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-4">
@@ -466,47 +470,13 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('userModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveUser()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('userModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
 <!--添加用户弹层-结束-->
-
-<!--提示弹层-开始-->
-<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="alertModalLabel">警告提示</h4>
-			</div>
-			<div class="modal-body">
-				<div class="container-fluid">
-					<%--两行表单 开始--%>
-					<div class="row">
-						<div class="col-xs-12">
-							sadfasdfasdf
-						</div><!-- /.col -->
-					</div><!-- /.row -->
-					<%--两行表单 结束--%>
-				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-</div>
-<!--提示弹层-结束-->
 

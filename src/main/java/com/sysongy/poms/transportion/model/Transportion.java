@@ -1,5 +1,6 @@
 package com.sysongy.poms.transportion.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;

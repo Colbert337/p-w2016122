@@ -28,6 +28,8 @@ public class GasCard extends BaseModel{
 	
 	private String card_property;//用户卡属性 0:车辆卡  1:个人卡
 
+	private Usysparam card_property_info;
+
 	private String workstation; //用户卡所在地
 	
 	private String workstation_resp; //出入地责任人
@@ -53,6 +55,8 @@ public class GasCard extends BaseModel{
 	private String dName;
 
 	private String mPhone;
+
+	private String driverID;
 
 	private Date station_receive_time;
 
@@ -270,5 +274,21 @@ public class GasCard extends BaseModel{
 
 	public void setSysUserIdInfo(SysUser sysUserIdInfo) {
 		this.sysUserIdInfo = sysUserIdInfo;
+	}
+
+	public String getDriverID() {
+		return driverID;
+	}
+
+	public void setDriverID(String driverID) {
+		this.driverID = driverID;
+	}
+
+	public Usysparam getCard_property_info() {
+		return card_property_info;
+	}
+
+	public void setCard_property_info(Usysparam card_property_info) {
+		this.card_property_info = card_property_info;
 	}
 }

@@ -175,6 +175,11 @@ public final class DateTimeHelper {
 	 * 把时间格式成日期数字，如：20120606121212
 	 */
 	public final static String FMT_yyyyMMddhhmmss_noseparator = "yyyyMMddHHmmss";
+
+	/**
+	 * 把时间格式成日期数字，如：120606121212
+	 */
+	public final static String FMT_YYMMddhhmmsssss_noseparator = "YYMMddHHmmsssss";
 	/**
 	 * 常用的格式化时间的格式组，用于本类中格式化字符串成时间型
 	 */

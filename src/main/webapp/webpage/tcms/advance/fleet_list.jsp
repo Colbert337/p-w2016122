@@ -127,7 +127,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="fleet_name"><span class="red_star">*</span> 车队名称： </label>
 									<div class="col-sm-7">
-										<input type="text" name="fleetName" id="fleet_name" placeholder="车队名称" class="col-xs-10 col-sm-12" />
+										<input type="text" name="fleetName" id="fleet_name" placeholder="车队名称" class="col-xs-10 col-sm-12"/>
 										<input type="hidden" name="tcFleetId" id="tc_fleet_id" />
 									</div>
 								</div>
@@ -142,14 +142,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveFleet()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('editModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveFleet()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('editModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
@@ -176,7 +173,6 @@
 										<select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallist" style="display: none;height: 270px;"></select>
 										<input type="hidden" id="fleet_id" name="tcFleetId" />
 										<input type="hidden" id="sysUserId" name="sysUserId" />
-										<div class="hr hr-16 hr-dotted"></div>
 									</div>
 								</div>
 							</form>
@@ -184,46 +180,12 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveManage()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('manageModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveManage()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('manageModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
 <!--添加车辆管理弹层-结束-->
-
-<!--提示弹层-开始-->
-<div id="alertModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="alertModalLabel">警告提示</h4>
-			</div>
-			<div class="modal-body">
-				<div class="container-fluid">
-					<%--两行表单 开始--%>
-					<div class="row">
-						<div class="col-xs-12">
-							sadfasdfasdf
-						</div><!-- /.col -->
-					</div><!-- /.row -->
-					<%--两行表单 结束--%>
-				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-</div>
-<!--提示弹层-结束-->

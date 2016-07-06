@@ -292,7 +292,7 @@
 							<th>角色状态</th>
 							<th class="hidden-480">角色描述</th>
 							<th class="td-w2">添加时间</th>
-							<th class="text-center">操作</th>
+							<th class="text-center td-w2">操作</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -326,7 +326,7 @@
 											</a>
 										</c:if>
 									</span>
-									<a class="" href="javascript:deleteRole('${role.sysRoleId}');" title="修改" data-rel="tooltip">
+									<a class="" href="javascript:deleteRole('${role.sysRoleId}');" title="删除" data-rel="tooltip">
 										<span class="ace-icon fa fa-trash-o bigger-130"></span>
 									</a>
 								</td>
@@ -403,9 +403,8 @@
 										<textarea class="limited col-xs-10 col-sm-10" id="role_desc" name="roleDesc" maxlength="50" style="resize: none;"></textarea>
 									</div>
 								</div>
-								<hr/>
 								<div class="form-group">
-									<div class="col-sm-4"></div>
+									<label class="col-sm-4 control-label no-padding-right" for=""> 功能选择： </label>
 									<div class="col-sm-3">
 										<ul id="treeDiv" class="ztree"></ul>
 									</div>
@@ -415,14 +414,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveRole()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('roleModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveRole()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('roleModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>

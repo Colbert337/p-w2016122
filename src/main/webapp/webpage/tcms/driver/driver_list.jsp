@@ -154,7 +154,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 手机号码： </label>
 									<div class="col-sm-4">
-										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机号码" class="col-xs-10 col-sm-12" />
+										<input type="text" name="mobilePhone" id="mobile_phone" maxlength="11" placeholder="手机号码" class="col-xs-10 col-sm-12" />
 									</div>
 									<div class="col-sm-2">
 										<a id="sendMsgA" class="btn btn-sm btn-primary" href="javascript:sendMessage()">
@@ -177,13 +177,13 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
 									<div class="col-sm-7">
-										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" class="col-xs-10 col-sm-12" />
+										<input type="password" name="payCode" id="pay_code" maxlength="6" placeholder="支付密码" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-7">
-										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" class="col-xs-10 col-sm-12" />
+										<input type="password" id="re_password" name="rePassword" maxlength="6" placeholder="确认密码" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 							</form>
@@ -191,14 +191,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveDriver()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('driverModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveDriver()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('driverModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
@@ -222,14 +219,11 @@
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
-				<!--底部按钮 -->
-				<div class="row">
-					<div class="space"></div>
-					<div class="col-xs-3"></div>
-					<div class="col-xs-3"><button class="btn btn-primary" onclick="saveUser()">确   定</button></div>
-					<div class="col-xs-6"><button class="btn" i="close" onclick="closeDialog('alertModel')">取   消 </button></div>
-				</div>
 			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveUser()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('alertModel')">取   消 </button>
+			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>

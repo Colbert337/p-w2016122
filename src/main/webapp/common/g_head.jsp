@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -32,22 +33,6 @@
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
 
 		<!-- page specific plugin styles -->
-
-		<!-- text fonts -->
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-fonts.css" />
-
-		<!-- ace styles -->
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
-
-		<!--[if lte IE 9]>
-			<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-part2.css" class="ace-main-stylesheet" />
-		<![endif]-->
-
-		<!--[if lte IE 9]>
-		  <link rel="stylesheet" href="<%=basePath %>/assets/css/ace-ie.css" />
-		<![endif]-->
-		
-		<link rel="stylesheet" href="<%=basePath %>/common/css/comm.css" />
 		<!-- 弹层样式及插件 -->
 		<link type="text/css" href="<%=basePath %>/assets/artDialog/css/ui-dialog.css" rel="stylesheet" />
 		<!-- 日期控件 -->
@@ -61,6 +46,18 @@
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorbox.css" />
 		<link rel="stylesheet" href="<%=basePath %>/common/css/fileinput.css" />
 		<link rel="stylesheet" href="<%=basePath%>/assets/css/select2.css" />
+
+		<!-- text fonts -->
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-fonts.css" />
+		<!-- ace styles -->
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+		<!--[if lte IE 9]>
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-part2.css" class="ace-main-stylesheet" />
+		<![endif]-->
+		<!--[if lte IE 9]>
+		<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-ie.css" />
+		<![endif]-->
+		<link rel="stylesheet" href="<%=basePath %>/common/css/comm.css" />
 	</head>
 
 	<body class="no-skin">

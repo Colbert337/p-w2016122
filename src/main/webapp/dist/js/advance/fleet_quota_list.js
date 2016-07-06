@@ -88,7 +88,7 @@ function savePassword(){
         type:'post',
         dataType:'html',
         success:function(data){
-            sucDialog("操作成功!")//保存成功弹窗
+            bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
         }
     }
@@ -128,7 +128,7 @@ function saveFenpei(){
         data:{data:dataForm},
         dataType:'html',
         success:function(data){
-            sucDialog("操作成功!")//保存成功弹窗
+            bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
         }
     }
@@ -204,7 +204,7 @@ function saveZhuan(){
         type:'post',
         dataType:'html',
         success:function(data){
-            sucDialog("操作成功!")//保存成功弹窗
+            bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
         }
     }

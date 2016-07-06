@@ -1,13 +1,16 @@
 package com.sysongy.poms.order.dao;
 
-import com.sysongy.poms.card.model.GasCard;
-import com.sysongy.poms.order.model.SysOrder;
-
 import java.util.List;
+import java.util.Map;
+
+import com.sysongy.poms.order.model.OrderLog;
+import com.sysongy.poms.order.model.SysOrder;
 
 public interface SysOrderMapper {
 
     List<SysOrder> queryForPage(SysOrder record);
+    
+    List<OrderLog> queryOrderLogs(OrderLog record);
 
     int deleteByPrimaryKey(String orderId);
 
@@ -20,4 +23,14 @@ public interface SysOrderMapper {
     int updateByPrimaryKeySelective(SysOrder record);
 
     int updateByPrimaryKey(SysOrder record);
+    
+    /**
+     * 查询某个用户在start_date之后，有没有产生消费
+     * 用于在用户充红的时候判断能否充红。
+     * @param userId---用户ID
+     * @param order_type --- 传过来消费的类型
+     * @param start_date ----特定日期
+     * @return
+     */
+    List<SysOrder> queryConsumeOrderByUserId(Map paraMap);
 }

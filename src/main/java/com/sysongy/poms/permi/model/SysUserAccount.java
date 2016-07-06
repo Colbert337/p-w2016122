@@ -25,7 +25,17 @@ public class SysUserAccount extends BaseModel{
     
     private String account_status;
 
-    private Usysparam account_statusInfo;
+    private String have_consume;
+    
+    public String getHave_consume() {
+		return have_consume;
+	}
+
+	public void setHave_consume(String have_consume) {
+		this.have_consume = have_consume;
+	}
+
+	private Usysparam account_statusInfo;
 
     private BigDecimal deposit;
 
@@ -111,11 +121,4 @@ public class SysUserAccount extends BaseModel{
         this.account_statusInfo = account_statusInfo;
     }
 
-    public SysDriver getSys_drive_info() {
-        return sys_drive_info;
-    }
-
-    public void setSys_drive_info(SysDriver sys_drive_info) {
-        this.sys_drive_info = sys_drive_info;
-    }
 }

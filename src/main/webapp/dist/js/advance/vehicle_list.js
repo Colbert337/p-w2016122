@@ -110,10 +110,10 @@ function freeze(cardNo){
         type:'post',
         dataType:'html',
         success:function(data){
-            sucDialog("操作成功！");
+            bootbox.alert("操作成功！");
             $("#main").html(data);
         },error: function(XMLHttpRequest, textStatus, errorThrown) {
-            failDialog("操作失败！");
+            bootbox.alert("操作失败！");
         }
     }
     $("#editForm").ajaxSubmit(saveOptions);
@@ -151,10 +151,10 @@ function saveVehicle(){
             type:'post',
             dataType:'html',
             success:function(data){
-                sucDialog("操作成功！");
+                bootbox.alert("操作成功！");
                 $("#main").html(data);
             },error: function(XMLHttpRequest, textStatus, errorThrown) {
-                failDialog("操作失败！");
+                bootbox.alert("操作失败！");
             }
         }
         $("#editForm").ajaxSubmit(saveOptions);
@@ -179,10 +179,10 @@ function leaveDriver(){
             type:'post',
             dataType:'text',
             success:function(data){
-                sucDialog("操作成功!");//保存成功弹窗
+                bootbox.alert("操作成功!");//保存成功弹窗
                 $("#main").html(data);
             },error: function(XMLHttpRequest, textStatus, errorThrown) {
-                failDialog("操作失败！");
+                bootbox.alert("操作失败！");
             }
         }
         $("#listForm").ajaxSubmit(deleteOptions);
@@ -220,6 +220,17 @@ $('#editForm').bootstrapValidator({
             validators: {
                 notEmpty: {
                     message: '车牌号不能为空'
+                },
+                remote: {
+                    url: '../web/tcms/vehicle/info/name',
+                    type: "post",
+                    async: false,
+                    data: function(validator, $field, value) {
+                        return{
+                            platesNumber:$("#plates_number").val()
+                        };
+                    },
+                    message: '车队名称已经存在'
                 }
             }
         },
@@ -313,7 +324,7 @@ $('#importForm').bootstrapValidator({
                     fileImport:$("#file_import").val()
                 };
             },
-            message: '支付密码错误'
+            message: '文件导入失败'
         }
     }
 });
@@ -328,9 +339,9 @@ function saveTemplate(){
         dataType:'text',
         enctype:"multipart/form-data",
         success:function(data){
-            sucDialog("操作成功！");
+            bootbox.alert("操作成功！");
         },error:function(XMLHttpRequest, textStatus, errorThrown) {
-            failDialog("操作失败！");
+            bootbox.alert("操作失败！");
         }
     }
     $("#importForm").ajaxSubmit(multipartOptions);

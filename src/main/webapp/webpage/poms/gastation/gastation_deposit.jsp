@@ -42,10 +42,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="email" class="col-sm-3 control-label no-padding-right" >加注站预存款： </label>
+										<label for="deposit" class="col-sm-3 control-label no-padding-right" >加注站预存款： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" maxlength="8"/>
+											<input type="text" name="deposit" id="deposit" placeholder="输入保证金" class="form-control" maxlength="8"/>
 										</div>
 									</div>
 									
@@ -59,10 +59,10 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right">企业名称：</label>
+										<label for="company" class="col-sm-3 control-label no-padding-right">企业名称：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="company" placeholder="输入企业名称" class="form-control" maxlength="20"/>
+											<input type="text" name="company" id="company" placeholder="输入企业名称" class="form-control" maxlength="20"/>
 										</div>
 									</div>
 									
@@ -79,7 +79,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label for="station_manager" class="col-sm-3 control-label no-padding-right">操作人员：</label>
+										<label for="operator" class="col-sm-3 control-label no-padding-right">操作人员：</label>
 
 										<div class="col-sm-4">
 											<input type="text" id="operator" name="operator" class="form-control"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
@@ -96,7 +96,9 @@
 
 												<div class="widget-body">
 													<div class="widget-main">
-														<input type="file" name="image" class="projectfile" id="transfer_select" />
+														<label for="transfer_select">
+															<input type="file" name="image" class="projectfile" id="transfer_select" />
+														</label>
 														<input type="hidden" id="transfer_photo" name="transfer_photo"/> 
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#transfer_select','#transfer_photo');">
 															<i class="ace-icon fa fa-check bigger-110"></i>

@@ -64,6 +64,12 @@ public class GasCardServiceImpl implements GasCardService{
 	}
 
 	@Override
+	public GasCard selectByCardNoForCRM(String cardNo) throws Exception{
+		GasCard gasCard = gasCardMapper.selectByCardNoForCRM(cardNo);
+		return gasCard;
+	}
+
+	@Override
 	public Integer updateGasCardInfo(GasCard cascard) throws Exception{
 		GasCardLog gascardlog = new GasCardLog();
 		BeanUtils.copyProperties(cascard, gascardlog);

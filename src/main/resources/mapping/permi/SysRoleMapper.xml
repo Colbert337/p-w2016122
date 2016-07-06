@@ -22,7 +22,7 @@
     select
     <include refid="Base_Column_List" />
     from sys_role
-    where is_deleted = 1 and role_status = 0 and is_admin > 0
+    where is_deleted = 1 and is_admin > 0
     <trim>
       <if test="sysRoleId != null &amp;&amp; sysRoleId !=''" >
         and sys_role_id = #{sysRoleId}

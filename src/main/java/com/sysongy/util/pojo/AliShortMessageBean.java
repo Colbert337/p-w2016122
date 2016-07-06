@@ -21,6 +21,12 @@ public class AliShortMessageBean {
 
     private String templateID;   //短信模板，必填
 
+    private String spentMoney;
+
+    private String mobilePhone;
+
+    private String balance;
+
     public String getSendNumber() {
         return sendNumber;
     }
@@ -83,5 +89,29 @@ public class AliShortMessageBean {
 
     public void setTemplateID(String templateID) {
         this.templateID = templateID;
+    }
+
+    public String getSpentMoney() {
+        return spentMoney;
+    }
+
+    public void setSpentMoney(String spentMoney) {
+        this.spentMoney = spentMoney;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
     }
 }

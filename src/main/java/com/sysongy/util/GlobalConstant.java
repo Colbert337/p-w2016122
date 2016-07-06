@@ -110,7 +110,13 @@ public class GlobalConstant {
 
 	/* 配置文件路径 */
 	public static final String CONF_PATH = "conf/system-conf.properties";
-	
+
+	/********************************** 司机类型 ************************************************/
+	public interface DriverType{
+		public static final int TRANSPORT = 0;//运输公司关联司机
+		public static final int GAS_STATION = 1;//气站关联司机
+	}
+
 	//用户卡状态  0:已冻结 1：已入库；2：已出库；3:已/未发放 4:使用中 5:已失效
 	public interface CardStatus{
 		public static final String PAUSED ="0";
@@ -142,7 +148,7 @@ public class GlobalConstant {
 	}
 
 	/*
-	 * 	110车队预付款充值  120 加油站预付款充值 130个人充值....
+	 * 	110运输公司预付款充值  120 加油站预付款充值 130个人充值 210运输公司消费 220 司机消费 310 运输公司对个人转账 320个人对个人转账
 	 */
 	public interface OrderType{
 		public static final String CHARGE_TO_TRANSPORTION ="110";
@@ -180,6 +186,12 @@ public class GlobalConstant {
 	
 	
 	/*
+	 * 充值后是否产生消费 
+	 */
+	public static final String HAVE_CONSUME_YES = "1";
+	public static final String HAVE_CONSUME_NO = "0";
+	
+	/*
 	 * 订单处理流程中的类型
 	 * Charge ---表示充值
 	 * discharge---表示充红
@@ -199,6 +211,8 @@ public class GlobalConstant {
 		
 		public static final String CONSUME_DRIVER_DEDUCT ="221";
 		public static final String DISCONSUME_DRIVER_DEDUCT ="222";
+		public static final String CONSUME_TRANSPORTION_DEDUCT ="211";
+		public static final String DISCONSUME_TRANSPORTION_DEDUCT ="212";
 		
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION ="311";
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION ="312";

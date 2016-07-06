@@ -1,7 +1,7 @@
 	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 	
 	var listOptions ={   
-            url:'../web/gastation/gastationList',
+            url:'../web/gastation/gastationList2',
             type:'post',                    
             dataType:'html',
             success:function(data){
@@ -64,18 +64,8 @@
 		loadPage('#main', '../webpage/poms/gastation/gastation_deposit.jsp?acconutid='+acconutid+'&gastationame='+stationame+'&gastationdeposit='+stationdeposit+'&stationid='+stationid);
 	}
 	
-	function commitForm(obj){
-		//设置当前页的值
-		if(typeof obj == "undefined") {
-			$("#pageNum").val("1");
-		}else{
-			$("#pageNum").val($(obj).text());
-		}
-		
-		$("#formgastation").ajaxSubmit(listOptions);
-	}
 	
-	function commitForm2(obj){
+	function commitForm(obj){
 		//设置当前页的值
 		if(typeof obj == "undefined") {
 			$("#pageNum").val("1");
@@ -119,16 +109,12 @@
 		$("#formgastation").ajaxSubmit(deloptions);
 	}
 	
-	function init(){
-		loadPage('#main', '../web/gastation/gastationList');
-	}
 	
-	function init2(){
+	function init(){
 		loadPage('#main', '../web/gastation/gastationList2');
 	}
 	
 	function showInnerModel(obj1,obj2,obj3,obj4){
-
 		$("#innerimg1").attr("src",obj1);
 		$("#innerimg1").parent("a").attr("href",obj1);
 		$("#innerimg2").attr("src",obj2);

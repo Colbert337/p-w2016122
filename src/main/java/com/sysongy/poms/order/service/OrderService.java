@@ -1,7 +1,7 @@
 package com.sysongy.poms.order.service;
 
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
 
 /**
@@ -20,6 +20,8 @@ public interface OrderService {
     SysOrder selectByPrimaryKey(String orderId);
 
     int updateByPrimaryKey(SysOrder record);
+    
+    PageInfo<OrderLog> queryOrderLogs(OrderLog obj) throws Exception;
 
     /**
      * 给司机充值
@@ -99,6 +101,11 @@ public interface OrderService {
      * 个人消费
      */
     String consumeByDriver(SysOrder record) throws Exception;
+    
+    /**
+     * 运输公司消费
+     */
+    String consumeByTransportion(SysOrder order) throws Exception;
 
     /**
      * 验证订单

@@ -29,6 +29,10 @@
                  javaType="com.sysongy.poms.permi.model.SysUser"
                  select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
     </association>
+    <association property="card_property_info" column="card_property"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderPropertyByMcode">
+    </association>
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -36,7 +40,7 @@
   </sql>
 
   <sql id="Base_Column_List1" >
-    driver.full_name as dName, driver.mobile_phone as mPhone, card_no, card_type, card_status, card_property, operator, storage_time, release_time, gc.memo as memo, workstation, workstation_resp, batch_no, card_flag_id, sysUserId, station_receive_time
+    driver.sys_driver_id as driverID, driver.full_name as dName, driver.mobile_phone as mPhone, card_no, card_type, card_status, card_property, operator, storage_time, release_time, gc.memo as memo, workstation, workstation_resp, batch_no, card_flag_id, sysUserId, station_receive_time
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultList"  parameterType="com.sysongy.poms.card.model.GasCard" >
@@ -193,7 +197,14 @@
   <select id="selectByCardNo" resultMap="BaseResultList" parameterType="java.lang.String" >
     select card_status,workstation from gas_card where card_no = #{cardNo,jdbcType=VARCHAR}
   </select>
-  
+
+  <select id="selectByCardNoForCRM" resultMap="BaseResultList" parameterType="java.lang.String" >
+    select
+     <include refid="Base_Column_List" />
+       from gas_card
+      where card_no = #{cardNo,jdbcType=VARCHAR}
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultList" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

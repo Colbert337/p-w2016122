@@ -47,6 +47,12 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label class="col-sm-4 control-label no-padding-right"> 注册邮箱： </label>
+				<div class="col-sm-8">
+					<label class="pad-top-10">${transportion.email}</label>
+				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-sm-4 control-label no-padding-right"> 平台有效期： </label>
 				<div class="col-sm-8">
 					<label class="pad-top-10"><fmt:formatDate value="${transportion.expiry_date}" type="both" pattern="yyyy-MM-dd HH:mm"/></label>

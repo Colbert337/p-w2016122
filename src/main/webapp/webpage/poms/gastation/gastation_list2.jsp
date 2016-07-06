@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/gastation/gastation_list.js"></script>
+<script src="<%=basePath %>/dist/js/gastation/gastation_list2.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -55,11 +55,11 @@
 						</div>
 
 						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm2();">
+							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
 							</button>
-							<button class="btn btn-sm" type="button" onclick="init2();">
+							<button class="btn btn-sm" type="button" onclick="init();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
 							</button>
@@ -149,12 +149,12 @@
 					<nav>
 						<ul id="ulhandle" class="pagination pull-right no-margin">
 							<li id="previous">
-								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formgastation');">
 									<span aria-hidden="true">&laquo;</span>
 								</a>
 							</li>
 							<li id="next">
-								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
 									<span aria-hidden="true">&raquo;</span>
 								</a>
 							</li>  

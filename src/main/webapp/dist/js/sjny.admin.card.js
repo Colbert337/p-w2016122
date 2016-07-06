@@ -9,7 +9,7 @@ var listOptions = {
 		}
 	},
 	error: function(XMLHttpRequest, textStatus, errorThrown) {
-		alert("error");
+		bootbox.alert("error");
 	}
 };
 
