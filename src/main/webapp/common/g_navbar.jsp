@@ -30,13 +30,13 @@
 						<small>
 							<!-- <i class="fa fa-leaf"></i> -->
 							<c:if test="${sessionScope.currUser.user.userType == 1}">
-								气站管理系统
+								加注站管理系统
 							</c:if>
 							<c:if test="${sessionScope.currUser.user.userType == 2}">
 								运输公司管理系统
 							</c:if>
 							<c:if test="${sessionScope.currUser.user.userType == 4}">
-								气站集团管理系统
+								加注站集团管理系统
 							</c:if>
 							<c:if test="${sessionScope.currUser.user.userType == 5}">
 								司集能源运维管理平台
