@@ -1,5 +1,6 @@
 package com.sysongy.poms.transportion.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
@@ -45,4 +46,12 @@ public interface TransportionService {
 	 * @throws Exception
 	 */
 	public String consumeTransportion(SysOrder order) throws Exception;
+	
+	/**
+	 * 修改运输公司的额度
+	 * @param transportion
+	 * @return
+	 * @throws Exception
+	 */
+	public int modifyDeposit(Transportion transportion, BigDecimal increment) throws Exception ;
 }

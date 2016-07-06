@@ -1,5 +1,6 @@
 package com.sysongy.poms.transportion.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
@@ -74,6 +75,16 @@ public class Transportion extends BaseModel{
 	private SysUserAccount account;
 
 	private String pay_code;
+	
+	private BigDecimal deposit;
+
+	public BigDecimal getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(BigDecimal deposit) {
+		this.deposit = deposit;
+	}
 
 	public SysUserAccount getAccount() {
 		return account;
