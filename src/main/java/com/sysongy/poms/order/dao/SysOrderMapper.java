@@ -3,11 +3,14 @@ package com.sysongy.poms.order.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
 
 public interface SysOrderMapper {
 
     List<SysOrder> queryForPage(SysOrder record);
+    
+    List<OrderLog> queryOrderLogs(OrderLog record);
 
     int deleteByPrimaryKey(String orderId);
 
