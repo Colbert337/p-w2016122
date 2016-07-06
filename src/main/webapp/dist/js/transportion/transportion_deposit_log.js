@@ -61,6 +61,36 @@
 		$("#formcard").ajaxSubmit(listOptions);
 	}
 	
+	function showOrderLog(obj){
+		var orderNumber = $(obj).parents('tr').find("td:first").find("input").val();
+		commitForm1('', orderNumber);
+	}
+	
+	function commitForm1(obj,orderNumber){
+		//设置当前页的值
+		if(typeof obj == "undefined") {
+			$("#pageNum").val("1");
+		}else{
+			$("#pageNum").val($(obj).text());
+		}
+		
+		var listOptions ={   
+	            url:'../web/order/queryOrderDeal?order_number='+orderNumber,
+	            type:'post',                    
+	            dataType:'html',
+	            success:function(data){
+		              $("#main").html(data);		              
+		              if($("#retCode").val() != "100"){
+		            	  
+			          }
+		              $('[data-rel="tooltip"]').tooltip();
+	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+
+	            }
+		}
+		$("#formcard").ajaxSubmit(listOptions);
+	}
+	
 	function init(){
 		loadPage('#main', '../web/transportion/depositList');
 	}

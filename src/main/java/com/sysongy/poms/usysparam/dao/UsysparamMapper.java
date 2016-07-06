@@ -6,6 +6,8 @@ import com.sysongy.poms.usysparam.model.Usysparam;
 
 public interface UsysparamMapper {
 	public List<Usysparam> selectDefault(Usysparam usysparam);
+	
+	public List<Usysparam> selectAll(Usysparam usysparam);
     /**
      * 根据gcode查询参数对象
      * @param gcode

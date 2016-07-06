@@ -195,8 +195,8 @@
 				</div>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<button class="btn btn-primary btn-sm" onclick="addMemo()">确   定</button>
-				<button class="btn btn-sm" i="close" onclick="hideInnerModel();">取   消 </button>
+				<button class="btn btn-primary btn-sm" onclick="hideInnerModel();">关闭</button>
+				<!-- <button class="btn btn-sm" i="close" onclick="hideInnerModel();">取   消 </button> -->
 			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
