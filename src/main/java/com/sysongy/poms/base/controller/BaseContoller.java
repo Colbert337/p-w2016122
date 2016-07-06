@@ -110,6 +110,15 @@ public class BaseContoller {
 
             //判断登录是否成功
             if(user != null && user.getUserName() != null && user.getPassword() != null){
+                if(user.getIsDeleted() == 0){
+                    returnPath = "login";
+                    map.addAttribute("erroMsg","当前用户已删除！");
+                    return returnPath;
+                }else if(user.getStatus() == 2 ){
+                    returnPath = "login";
+                    map.addAttribute("erroMsg","当前用户已禁用！");
+                    return returnPath;
+                }
                 //封装用户信息
                 int userType = user.getUserType();
                 currUser.setUserId(user.getSysUserId());

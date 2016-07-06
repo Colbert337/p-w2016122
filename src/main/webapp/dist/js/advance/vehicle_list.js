@@ -52,9 +52,13 @@ function editVehicle(vehicleId){
             $("#editVehicle").text("修改车辆");
             $("#plates_number").removeAttr("onblur");
 
+            $("#dongjie").empty();
             if(data.gasCard != null && data.gasCard.card_no != null){
-                if(data.gasCard.card_no != ""){
-                    var str = "<button onclick='freeze("+data.gasCard.card_no+")'>冻结</button>";
+                if(data.gasCard.card_no != "" && data.gasCard.card_status == 4){
+                    var str = "<button onclick='freeze("+data.gasCard.card_no+",0)'>冻结</button>";
+                    $("#dongjie").append(str);
+                }else if(data.gasCard.card_no != "" && data.gasCard.card_status == 0){
+                    var str = "<button onclick='freeze("+data.gasCard.card_no+",4)'>解冻</button>";
                     $("#dongjie").append(str);
                 }
                 var cardType,cardStatus;
@@ -80,10 +84,19 @@ function editVehicle(vehicleId){
                         cardStatus = "已冻结"
                         break;
                     case '1':
-                        cardStatus = "未使用"
+                        cardStatus = "已入库"
                         break;
                     case '2':
+                        cardStatus = "已出库"
+                        break;
+                    case '3':
+                        cardStatus = "未发放"
+                        break;
+                    case '4':
                         cardStatus = "使用中"
+                        break;
+                    case '5':
+                        cardStatus = "已失效"
                         break;
                     default:
                         cardStatus = "未使用"
@@ -105,13 +118,13 @@ function editVehicle(vehicleId){
 /**
  * 冻结卡
  */
-function freeze(cardNo){
+function freeze(cardNo,status){
     var saveOptions ={
         url:"../web/tcms/vehicle/update/freeze",
-        data:{card_no:cardNo},
-        type:'post',
+        data:{card_no:cardNo,card_status:status},
+        type: "POST",
         dataType:'html',
-        success:function(data){
+        success: function(data){
             bootbox.alert("操作成功！");
             $("#main").html(data);
         },error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -123,7 +136,6 @@ function freeze(cardNo){
     $("#editModel").modal('hide');
     $(".modal-backdrop").css("display","none");
 }
-
 /*取消弹层方法*/
 function closeDialog(divId){
     jQuery('#editForm').validationEngine('hide');//隐藏验证弹窗
@@ -351,11 +363,15 @@ function saveTemplate(){
         enctype:"multipart/form-data",
         success:function(data){
             bootbox.alert("操作成功！");
+            $("#main").html(data);
         },error:function(XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败！");
         }
     }
     $("#importForm").ajaxSubmit(multipartOptions);
+    $("#importDivModel").modal('hide').removeClass('in');
+    $("body").removeClass('modal-open').removeAttr('style');
+    $(".modal-backdrop").remove();
 }
 
 

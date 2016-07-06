@@ -314,7 +314,7 @@
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								<img class="nav-user-photo" src="<%=basePath %>/assets/avatars/user.jpg" alt="Jason's Photo" />
 								<span class="user-info">
-									<small>欢迎登陆,</small>
+									<small>欢迎登录,</small>
 									${sessionScope.currUser.user.realName}
 								</span>
 

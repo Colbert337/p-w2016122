@@ -78,10 +78,19 @@
 										已冻结
 									</c:if>
 									<c:if test="${vehicle.cardStatus == 1}">
-										未使用
+										已入库
 									</c:if>
 									<c:if test="${vehicle.cardStatus == 2}">
+										已出库
+									</c:if>
+									<c:if test="${vehicle.cardStatus == 3}">
+										未发放
+									</c:if>
+									<c:if test="${vehicle.cardStatus == 4}">
 										使用中
+									</c:if>
+									<c:if test="${vehicle.cardStatus == 5}">
+										已失效
 									</c:if>
 								</td>
 								<td class="text-center">
