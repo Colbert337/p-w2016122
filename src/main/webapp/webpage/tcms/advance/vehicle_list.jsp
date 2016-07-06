@@ -142,7 +142,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="plates_number"><span class="red_star">*</span> 车牌号： </label>
 									<div class="col-sm-7">
-										<input type="text" name="platesNumber" id="plates_number" placeholder="车牌号" class="col-xs-10 col-sm-12" />
+										<input type="text" name="platesNumber" id="plates_number" onblur="isVehicleExit()" placeholder="车牌号" class="col-xs-10 col-sm-12" />
 										<input type="hidden" name="tcVehicleId" id="tc_vehicle_id" />
 									</div>
 								</div>

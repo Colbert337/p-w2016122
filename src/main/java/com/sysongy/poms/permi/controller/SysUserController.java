@@ -124,8 +124,9 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/save")
-	public String saveUser(SysUser user, ModelMap map){
+	public String saveUser(@ModelAttribute CurrUser currUser,SysUser user, ModelMap map){
 		int resultInt = 0;
+		String stationId = currUser.getStationId();
 		if(user != null && user.getSysUserId() != null && !"".equals(user.getSysUserId())){
 			//修改用户
 			user.setUpdatedDate(new Date());
@@ -144,8 +145,7 @@ public class SysUserController extends BaseContoller{
 			resultInt = 2;
 		}else if(user != null){//添加
 			user.setSysUserId(UUIDGenerator.getUUID());
-			user.setUserType(GlobalConstant.USER_TYPE_MANAGE);
-
+			user.setStationId(stationId);
 			sysUserService.addUser(user);
 			resultInt = 1;
 		}

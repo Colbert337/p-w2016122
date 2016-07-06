@@ -50,6 +50,8 @@ function editVehicle(vehicleId){
             $("#notice_phone").val(data.vehicle.noticePhone);
             $("#copy_phone").val(data.vehicle.copyPhone);
             $("#editVehicle").text("修改车辆");
+            $("#plates_number").removeAttr("onblur");
+
             if(data.gasCard != null && data.gasCard.card_no != null){
                 if(data.gasCard.card_no != ""){
                     var str = "<button onclick='freeze("+data.gasCard.card_no+")'>冻结</button>";
@@ -206,7 +208,27 @@ function fileFormat(){
         return false;
     }
 }
+/**
+ * 判断用户名是否存在
+ */
+function isVehicleExit(){
+    var platesNumber = $("#plates_number").val();
+    $.ajax({
+        url: '../web/tcms/vehicle/info/name',
+        data:{platesNumber:platesNumber},
+        async:false,
+        type: "POST",
+        success: function(data){
+            console.log(data);
+            if(!data.valid){
+                alert("车牌号已存在!");
+                $("#plates_number").focus();
+            }
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
 
+        }
+    })
+}
 //bootstrap验证控件
 $('#editForm').bootstrapValidator({
     message: 'This value is not valid',
@@ -220,17 +242,6 @@ $('#editForm').bootstrapValidator({
             validators: {
                 notEmpty: {
                     message: '车牌号不能为空'
-                },
-                remote: {
-                    url: '../web/tcms/vehicle/info/name',
-                    type: "post",
-                    async: false,
-                    data: function(validator, $field, value) {
-                        return{
-                            platesNumber:$("#plates_number").val()
-                        };
-                    },
-                    message: '车队名称已经存在'
                 }
             }
         },
