@@ -333,4 +333,21 @@ public class SysUserServiceImpl implements SysUserService{
     public int updateCRMUser(SysUser user) {
         return sysUserMapper.updateUser(user);
     }
+
+    /**
+     * 根据用户名和站点ID重置用户密码
+     * @param record
+     * userName
+     * stationId
+     * @return
+     */
+    @Override
+    public int updateUserByUserName(SysUser record) {
+        int returnVal = 0;
+        if(record != null && record.getUserName() != null){
+            record.setPassword(Encoder.MD5Encode("111111".getBytes()));
+            sysUserMapper.updateUserByUserName(record);
+        }
+        return returnVal;
+    }
 }

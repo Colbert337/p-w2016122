@@ -452,4 +452,10 @@
     where user_name = #{userName}
     and user_type = #{userType}
   </update>
+  <update id="updateUserByUserName" parameterType="com.sysongy.poms.permi.model.SysUser" >
+    update sys_user
+    set password = #{password}
+    where user_name = #{userName}
+    and station_id = #{stationId}
+  </update>
 </mapper>
