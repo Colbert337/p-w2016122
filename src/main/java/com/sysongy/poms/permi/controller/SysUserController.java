@@ -128,9 +128,19 @@ public class SysUserController extends BaseContoller{
 		int resultInt = 0;
 		if(user != null && user.getSysUserId() != null && !"".equals(user.getSysUserId())){
 			//修改用户
-			user.setPassword(null);//不修改用户密码
 			user.setUpdatedDate(new Date());
+			String password = user.getPassword().trim();
+			password = Encoder.MD5Encode(password.getBytes());
+			SysUser userParam = new SysUser();
+			userParam.setSysUserId(user.getSysUserId());
+			SysUser userTemp = sysUserService.queryUser(userParam);
+			if(password.equals(userTemp.getPassword())){
+				user.setPassword(null);
+			}else{
+				user.setPassword(password);
+			}
 			sysUserService.updateUser(user);
+
 			resultInt = 2;
 		}else if(user != null){//添加
 			user.setSysUserId(UUIDGenerator.getUUID());

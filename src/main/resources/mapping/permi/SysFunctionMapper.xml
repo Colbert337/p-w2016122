@@ -111,8 +111,8 @@
   <!--根据当前用户ID查询功能列表-->
   <select id="queryFunctionListByUserId" resultMap="ResultMap" >
     select sf.* from sys_function sf left join sys_role_function srf on sf.sys_function_id = srf.sys_function_id
-    left join sys_user_role sur on srf.sys_role_id = sur.sys_role_id
-    where sur.sys_user_id = #{0} and sf.function_type = #{1} and parent_id != '1'
+    left join sys_user_role sur on srf.sys_role_id = sur.sys_role_id left join sys_role sr on sur.sys_role_id = sr.sys_role_id
+    where sur.sys_user_id = #{0} and sf.function_type = #{1} and sf.parent_id != '1' and sr.role_status = 0
     order by sf.function_sort asc
     <!--and user_type = #{1}-->
   </select>
