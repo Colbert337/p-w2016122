@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper;
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +75,8 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private SysPrepayMapper sysPrepayMapper;
 
+	@Autowired
+	private SysOrderGoodsMapper sysOrderGoodsMapper;
 
 	@Override
 	public PageInfo<SysOrder> queryOrders(SysOrder record) throws Exception {
@@ -94,7 +98,12 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public SysOrder selectByPrimaryKey(String orderId) {
-		return sysOrderMapper.selectByPrimaryKey(orderId);
+		SysOrder sysOrder = sysOrderMapper.selectByPrimaryKey(orderId);
+		List<SysOrderGoods> sysOrderGoods = sysOrderGoodsMapper.selectByOrderID(orderId);
+		if((sysOrderGoods != null) && (sysOrderGoods.size() != 0)){
+			sysOrder.setSysOrderGoods(sysOrderGoods);
+		}
+		return sysOrder;
 	}
 
 	@Override
@@ -482,6 +491,14 @@ public class OrderServiceImpl implements OrderService {
   		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
   	   }
+
+		for (SysOrderGoods sysOrderGoods : order.getSysOrderGoods()) {
+			int nRet = sysOrderGoodsMapper.insert(sysOrderGoods);
+			if(nRet < 1){
+				logger.error("产品插入出错" + sysOrderGoods.getOrderId());
+			}
+		}
+
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
