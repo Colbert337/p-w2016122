@@ -181,7 +181,6 @@ public class TcVehicleController extends BaseContoller {
     public String saveVehicle(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map){
 
         if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
-            vehicle.setPayCode(null);
             TcVehicle tcVehicle = new TcVehicle();
             tcVehicle = tcVehicleService.queryVehicle(vehicle);
             if(tcVehicle != null){
