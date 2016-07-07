@@ -203,7 +203,7 @@ public class TcFleetController extends BaseContoller {
                     tcVehicleService.updateVehicle(vehicle);
                 }
 
-                tcFleetVehicleService.addFleetVehicleList(fleetVehicleList,fleetId);
+                tcFleetVehicleService.addFleetVehicleList(fleetVehicleList,fleetId,stationId);
             }else{
                 TcFleetVehicle fleetVehicle = new TcFleetVehicle();
                 fleetVehicle.setTcFleetId(fleetId);
