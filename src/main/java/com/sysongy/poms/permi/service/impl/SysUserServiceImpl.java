@@ -91,7 +91,7 @@ public class SysUserServiceImpl implements SysUserService{
     @Override
     public SysUser queryUserByAccount(SysUser user) {
         SysUser sysUser = null;
-        if (user != null) {
+        if (user != null && user.getUserName() != null && user.getPassword() != null) {
             String password = user.getPassword();
             String userName = user.getUserName();
             try {
@@ -286,6 +286,7 @@ public class SysUserServiceImpl implements SysUserService{
 
         //创建管理员角色
         SysRole sysRole = new SysRole();
+        //查询当前运输公司下的管理员角色
         String roleId = UUIDGenerator.getUUID();
         sysRole.setSysRoleId(roleId);
         sysRole.setRoleType(userType);

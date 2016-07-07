@@ -54,9 +54,10 @@
 		$("#editUserDiv").text("添加用户");
 		queryRoleList();
 		queryUserTypeList("");
-		/*密码输入框改为可编辑*/
-		/*$("#password").removeAttr("readonly");
-		$("#re_password").removeAttr("readonly");*/
+		$("#user_name").removeAttr("readonly");
+		$("#user_name").on("blur",function(){
+			isUserExit();
+		});
 	}
 	//显示编辑用户弹出层
 	function queryRoleList(roleId){
@@ -150,7 +151,8 @@
 				$("#real_name").val(data.realName);
 				$("#user_type").val(data.userType);
 				$("#editUserDiv").text("修改用户");
-				$("#user_name").removeAttr("onblur");
+				$("#user_name").off("blur");
+				$('.user-name-valid').remove();
 
 				if(data.gender == 0){
 					$("#gender_b").attr("checked","checked");
@@ -230,22 +232,26 @@
 	 * 判断用户名是否存在
 	 */
 	function isUserExit(){
-		var userName = $("#user_name").val();
+		var userName = $("#user_name").val().replace(/\s/g,'');
 		$.ajax({
 			url:"<%=basePath%>/web/permi/user/info/isUserName",
 			data:{userName:userName},
-			async:false,
+			//async:false,
 			type: "POST",
 			success: function(data){
-				console.log(data);
 				if(data.valid){
-					alert("用户名已存在!");
+					if($('.user-name-valid').is(':visible')){
+						return false;
+					}
+					$('#user_name').after('<div class="tooltip fade top in user-name-valid"><div class="tooltip-arrow"></div><div class="tooltip-inner">用户名已存在!</div></div>');
+				} else {
+					$('.user-name-valid').remove();
 					$("#user_name").focus();
 				}
 			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
 
 			}
-		})
+		});
 	}
 	//重置
 	function init(){
@@ -407,7 +413,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="userName" id="user_name" placeholder="用户名" onblur="isUserExit()" class="validate[required,minSize[3],maxSize[20],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
+										<input type="text" name="userName" id="user_name" placeholder="用户名" class="validate[required,minSize[3],maxSize[20],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
 										<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户类型： </label>

@@ -11,6 +11,8 @@ public class TcVehicle extends BaseModel{
 
     private String tcFleetId;
 
+    private Integer isAllot;
+
     private String stationId;
 
     private String noticePhone;
@@ -123,5 +125,13 @@ public class TcVehicle extends BaseModel{
 
     public void setPayCode(String payCode) {
         this.payCode = payCode;
+    }
+
+    public Integer getIsAllot() {
+        return isAllot;
+    }
+
+    public void setIsAllot(Integer isAllot) {
+        this.isAllot = isAllot;
     }
 }

@@ -81,4 +81,11 @@ public interface TcVehicleMapper {
      * @return
      */
     List<TcVehicle> queryVehicleByCardNo(String cardNo);
+
+    /**
+     * 根据运输公司编号查询车辆信息
+     * @param stationId
+     * @return
+     */
+    List<TcVehicle> queryVehicleByStationId(String stationId);
 }
