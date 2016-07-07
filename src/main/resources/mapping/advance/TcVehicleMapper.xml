@@ -47,7 +47,7 @@
     <include refid="Base_Column_List" />
     from tc_vehicle
     where plates_number = #{platesNumber,jdbcType=VARCHAR}
-    and is_deleted = 1
+    and is_deleted = 1  and station_id = #{stationId,jdbcType=VARCHAR}
   </select>
   <select id="queryVehicleList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     select
@@ -81,8 +81,11 @@
     order by created_date desc
   </select>
   <select id="queryVehicleMapList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
-    select tv.*,tf.fleet_name,gc.card_status from tc_vehicle tv left join tc_fleet_vehicle tfv on tv.tc_vehicle_id = tfv.tc_vehicle_id
-    left join tc_fleet tf on tfv.tc_fleet_id = tf.tc_fleet_id left join gas_card gc on tv.card_no = gc.card_no
+    select tv.tc_vehicle_id, tv.plates_number, tv.tc_fleet_id, tv.station_id, tv.notice_phone, tv.copy_phone,
+    tv.user_name, tv.created_date, tv.updated_date, tv.is_deleted, tv.pay_code,tf.fleet_name,tvc.card_no,gc.card_status
+    from tc_vehicle tv left join tc_fleet_vehicle tfv on tv.tc_vehicle_id = tfv.tc_vehicle_id
+    left join tc_fleet tf on tfv.tc_fleet_id = tf.tc_fleet_id left join tc_vehicle_card tvc on tv.tc_vehicle_id = tvc.tc_vehicle_id
+    left join gas_card gc on tvc.card_no = gc.card_no
     where tv.is_deleted = 1 and tv.station_id = #{stationId}
     <if test="tcVehicleId != null &amp;&amp; tcVehicleId !=''">
       and tv.tc_vehicle_id = #{tcVehicleId}

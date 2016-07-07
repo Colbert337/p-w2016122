@@ -78,10 +78,19 @@
 										已冻结
 									</c:if>
 									<c:if test="${vehicle.cardStatus == 1}">
-										未使用
+										已入库
 									</c:if>
 									<c:if test="${vehicle.cardStatus == 2}">
+										已出库
+									</c:if>
+									<c:if test="${vehicle.cardStatus == 3}">
+										未发放
+									</c:if>
+									<c:if test="${vehicle.cardStatus == 4}">
 										使用中
+									</c:if>
+									<c:if test="${vehicle.cardStatus == 5}">
+										已失效
 									</c:if>
 								</td>
 								<td class="text-center">
@@ -142,20 +151,20 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="plates_number"><span class="red_star">*</span> 车牌号： </label>
 									<div class="col-sm-7">
-										<input type="text" name="platesNumber" id="plates_number" placeholder="车牌号" class="col-xs-10 col-sm-12" />
+										<input type="text" name="platesNumber" id="plates_number" onblur="isVehicleExit()" placeholder="车牌号" class="col-xs-10 col-sm-12" />
 										<input type="hidden" name="tcVehicleId" id="tc_vehicle_id" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
 									<div class="col-sm-7">
-										<input type="password" name="payCode" id="pay_code" maxlength="6" placeholder="支付密码" class="col-xs-10 col-sm-12" />
+										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-7">
-										<input type="password" id="re_password" name="rePassword" maxlength="6" placeholder="确认密码" class="col-xs-10 col-sm-12" />
+										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">

@@ -347,4 +347,10 @@ public class GlobalConstant {
 		public static final String CARD_SUSPEND = "1";
 		public static final String NORMAL = "2";
 	}
+
+	public interface  GasCardType{
+		public static final String LNG = "0";
+		public static final String OIL = "1";
+		public static final String CNG = "2";
+	}
 }

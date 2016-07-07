@@ -53,7 +53,7 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("188.6"));
+        	order.setCash(new BigDecimal("168.8"));
         	order.setDebitAccount("748f08a4e31545c2b6de454d3deb0979");
         	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
         	order.setChannel("亭口加注站");
@@ -81,11 +81,14 @@ public class TestOrderContoller {
         Map<String, Object> attributes = new HashMap<String, Object>();
        //测试充红，要通过原始订单，创建充红订单，然后调用discharge_order方法：
     	try{
-        	SysOrder originalOrder = orderService.selectByPrimaryKey("57363949d9a0428f8eeb7e851fbc5e6a");
+    		//测试充值的充红：4c2c2ab4ee2b4ef89d6e332587aef9e3
+        	SysOrder originalOrder = orderService.selectByPrimaryKey("4c2c2ab4ee2b4ef89d6e332587aef9e3");
         	boolean bl = orderService.checkCanDischarge(originalOrder);
-			System.out.println("能否充红："+bl);
-			SysOrder dischargeOrder = orderService.createDischargeOrderByOriginalOrder(originalOrder, "006648b1e6c1469fa4fff0a0ad86ac06", "没啥原因，就想撤销。");
-			orderService.dischargeOrder(originalOrder, dischargeOrder);
+        	System.out.println("能否充红："+bl);
+        	if(bl){
+	        	SysOrder dischargeOrder = orderService.createDischargeOrderByOriginalOrder(originalOrder, "006648b1e6c1469fa4fff0a0ad86ac06", "没啥原因，就想撤销。");
+	        	orderService.dischargeOrder(originalOrder, dischargeOrder);
+        	}
     		//orderService.chargeToDriver(order);
     	}catch(Exception e){
     		System.out.println("Found exception:"+e.getMessage());

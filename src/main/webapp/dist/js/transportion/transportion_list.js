@@ -65,3 +65,19 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 	function init(){
 		loadPage('#main', '../web/transportion/transportionList');
 	}
+	
+	function resetPassword(obj){
+		var userName = $(obj).parents("tr").children("td").eq(5).text();
+		var station = $(obj).parents("tr").children("td").eq(1).text();
+		
+		$.ajax({
+			   type: "POST",
+			   url:'../web/transportion/resetPassword?gastationid='+station+'&username='+userName,
+	           dataType:'text',
+	           async:false,
+	           success:function(data){
+	        	   $("#main").html(data);
+	        	   $("#modal-table").modal("show");
+	           }
+		});
+	}

@@ -126,4 +126,11 @@ public interface SysUserService {
     int updateUserByName(SysUser record) throws Exception;
 
     int updateCRMUser(SysUser user) throws Exception;
+
+    /**
+     * 根据用户名和站点ID重置用户密码
+     * @param record
+     * @return
+     */
+    int updateUserByUserName(SysUser record);
 }
