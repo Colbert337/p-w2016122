@@ -67,8 +67,8 @@ public class TcFleetVehicleServiceImpl implements TcFleetVehicleService{
                     vehicleMap.put("selected","true");
                     fleetVehicleList.add(vehicleMap);
                 }else{
-                    vehicleMap.put("selected","false");
                     if(vehicleMap.get("isAllot") != null && vehicleMap.get("isAllot").toString().equals("0")){
+                        vehicleMap.put("selected","false");
                         fleetVehicleList.add(vehicleMap);
                     }
                 }
@@ -94,4 +94,5 @@ public class TcFleetVehicleServiceImpl implements TcFleetVehicleService{
     public int deleteFleetVehicle(TcFleetVehicle tFleetVehicle) {
         return tcFleetVehicleMapper.deleteFleetVehicle(tFleetVehicle);
     }
+
 }

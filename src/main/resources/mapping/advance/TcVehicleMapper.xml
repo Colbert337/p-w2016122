@@ -124,6 +124,12 @@
     select tv.* from tc_vehicle tv left join tc_vehicle_card tvc on tv.tc_vehicle_id = tvc.tc_vehicle_id
     where tv.is_deleted = 1 and tvc.card_no = #{0}
   </select>
+  <select id="queryVehicleByStationId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select v.* from (
+    select tv.* from tc_vehicle tv where tv.tc_vehicle_id not in(select tfv.tc_vehicle_id from tc_fleet_vehicle tfv where tfv.station_id = #{stationId})
+    ) v
+    where v.station_id =  #{stationId} and v.is_deleted = 1
+  </select>
   <delete id="deleteVehicle" parameterType="java.lang.String" >
     delete from tc_vehicle
     where tc_vehicle_id = #{tcVehicleId,jdbcType=VARCHAR}
