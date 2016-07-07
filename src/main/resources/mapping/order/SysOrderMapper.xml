@@ -64,6 +64,9 @@
     select s.order_id,so.deal_number,so.remark,s.order_type,s.operator,so.run_success,so.deal_date 
     from sys_order s,sys_order_deal so 
     where s.order_id = so.order_id and s.order_number= #{order_number,jdbcType=VARCHAR}
+    <if test="deal_number != null &amp;&amp; deal_number != ''">
+        and so.deal_number = #{deal_number,jdbcType=VARCHAR}
+    </if>
     <if test="deal_date_after != null &amp;&amp; deal_date_after != ''">
         and so.deal_date between CONCAT(#{deal_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{deal_date_before,jdbcType=VARCHAR},' 23:59:59')
     </if>

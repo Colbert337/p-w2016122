@@ -40,6 +40,21 @@
       and (scode is null or scode='')
   </select>
   
+  <select id="selectAll" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+  	 select * from usysparam u where 1=1
+    <trim>
+      <if test="gcode != null &amp;&amp; gcode != ''" >
+        and gcode like concat(concat('%',#{gcode,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mcode != null &amp;&amp; mcode != ''" >
+        and mcode like concat(concat('%',#{mcode,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mname != null &amp;&amp; mname != ''" >
+        and mname like concat(concat('%',#{mname,jdbcType=VARCHAR}),'%')
+      </if>
+    </trim>
+  </select>
+  
   <insert id="insert" parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
     insert into usysparam (gcode, mcode, mname, 
       data, scode)

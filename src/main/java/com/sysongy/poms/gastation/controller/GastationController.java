@@ -14,6 +14,8 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
 import com.sysongy.util.GlobalConstant;
@@ -27,8 +29,12 @@ public class GastationController extends BaseContoller{
 	private GastationService service;
 	@Autowired
 	private SysDepositLogService depositLogService;
+	@Autowired
+	private SysUserService sysUserService;
 	
 	private Gastation gastation;
+	
+	
 	/**
 	 * 加气站查询
 	 * @param map
@@ -275,6 +281,46 @@ public class GastationController extends BaseContoller{
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+gastationid+"]删除成功");
+				bean.setRetValue(rowcount.toString());
+				bean.setPageInfo(ret);
+
+				map.addAttribute("ret", bean);
+
+
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			ret = this.queryAllGastationList(map, this.gastation);
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/resetPassword")
+	public String resetPassword(ModelMap map, @RequestParam String gastationid, @RequestParam String username){
+
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_list";
+		Integer rowcount = null;
+
+		try {
+				if(gastationid != null && !"".equals(gastationid)){
+					SysUser user = new SysUser();
+					user.setStationId(gastationid);
+					user.setUserName(username);
+					rowcount = sysUserService.updateUserByUserName(user);
+				}
+
+				ret = this.queryAllGastationList(map, this.gastation);
+
+				bean.setRetCode(100);
+				bean.setRetMsg("["+gastationid+"]管理员["+username+"]密码已成功重置为 111111");
 				bean.setRetValue(rowcount.toString());
 				bean.setPageInfo(ret);
 

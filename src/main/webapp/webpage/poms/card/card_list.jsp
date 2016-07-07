@@ -140,9 +140,11 @@
 									<td><fmt:formatDate value="${list.release_time}" type="both"/></td>
 
 									<td class="text-center">
-										<a href="" class="logic-del" title="删除" data-rel="tooltip">
-											<i class="ace-icon fa fa-trash-o bigger-130"></i>
-										</a>
+										<c:if test="${list.card_status != 0 && list.card_status != 4}">
+											<a href="" class="logic-del" title="删除" data-rel="tooltip">
+												<i class="ace-icon fa fa-trash-o bigger-130"></i>
+											</a>
+										</c:if>
 									</td>
 								</tr>
 								</c:forEach>

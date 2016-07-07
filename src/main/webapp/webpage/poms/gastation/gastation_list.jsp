@@ -137,6 +137,9 @@
 										<a class="" href="javascript:void(0);" title="查看图片">
 											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel('${list.indu_com_certif}','${list.tax_certif}','${list.lng_certif}','${list.dcp_certif}');"></i>
 										</a>
+										<a class="option-btn-m" href="javascript:void(0);" title="重置密码" data-rel="tooltip">
+											<i class="ace-icon fa fa-key bigger-130" onclick="resetPassword(this);"></i>
+										</a>
 									</td>
 								</tr>
 								</c:forEach>

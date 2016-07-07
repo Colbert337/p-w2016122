@@ -27,10 +27,20 @@
 						</h1>
 					</div>
 					<div class="search-types">
-						<div class="item">
-						    <label>工作站编号:</label>
-							<input type="text" name="stationId" placeholder="输入工作站编号"  maxlength="10" value="${deposit.stationId}"/>
-						</div>
+						<c:choose> 
+							<c:when test="${currUser.userType == 5}">
+								<div class="item">
+								    <label>工作站编号:</label>
+									<input type="text" name="stationId" placeholder="输入工作站编号"  maxlength="10" value="${deposit.stationId}"/>
+								</div>
+							</c:when>
+							<c:otherwise>
+								<div class="item" style="display: none">
+								    <label>工作站编号:</label>
+									<input type="text" name="stationId" placeholder="输入工作站编号"  maxlength="10" value="${currUser.stationId}"/>
+								</div>
+							</c:otherwise>
+						</c:choose>
 						
 						<div class="item">
 						    <label>操作员:</label>
