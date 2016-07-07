@@ -80,6 +80,12 @@
     where  tc_fleet_id = #{tcFleetId}
     and station_id = #{stationId}
   </select>
+
+  <select id="queryFleetByVehicleId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select tf.* from tc_fleet tf left join tc_fleet_vehicle tfv on tf.tc_fleet_id = tfv.tc_fleet_id
+    where tf.is_deleted = 1 and tf.station_id = #{0}  and tfv.tc_vehicle_id = #{1}
+  </select>
+
   <select id="queryFleet" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
     select
     <include refid="Base_Column_List" />

@@ -75,4 +75,10 @@ public interface TcVehicleMapper {
 
     /*********************************基础方法 end*************************************/
 
+    /**
+     * 根据卡号查询车辆信息
+     * @param cardNo
+     * @return
+     */
+    List<TcVehicle> queryVehicleByCardNo(String cardNo);
 }

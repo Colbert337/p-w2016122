@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.tcms.advance.model.TcFleet;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,4 +82,12 @@ public interface TcFleetService {
      * @return
      */
     TcFleet queryFleetByName(String stationId, String fleetName);
+
+    /**
+     * 根据车辆编号查询车队信息
+     * @param stationId 站点编号
+     * @param vehicleId 车辆编号
+     * @return
+     */
+    List<TcFleet> queryFleetByVehicleId(String stationId,String vehicleId);
 }

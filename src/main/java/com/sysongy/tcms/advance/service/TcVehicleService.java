@@ -84,7 +84,8 @@ public interface TcVehicleService {
 
     /**
      * 根据卡号查询车辆信息
+     * @param cardNo
      * @return
      */
-    TcVehicle queryVehicleByCardNo();
+    List<TcVehicle> queryVehicleByCardNo(String cardNo);
 }
