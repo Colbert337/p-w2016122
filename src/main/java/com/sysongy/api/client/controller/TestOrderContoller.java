@@ -83,9 +83,9 @@ public class TestOrderContoller {
     	try{
         	SysOrder originalOrder = orderService.selectByPrimaryKey("57363949d9a0428f8eeb7e851fbc5e6a");
         	boolean bl = orderService.checkCanDischarge(originalOrder);
-        	System.out.println("能否充红："+bl);
-        	SysOrder dischargeOrder = orderService.createDischargeOrderByOriginalOrder(originalOrder, "006648b1e6c1469fa4fff0a0ad86ac06", "没啥原因，就想撤销。");
-        	orderService.dischargeOrder(originalOrder, dischargeOrder);
+			System.out.println("能否充红："+bl);
+			SysOrder dischargeOrder = orderService.createDischargeOrderByOriginalOrder(originalOrder, "006648b1e6c1469fa4fff0a0ad86ac06", "没啥原因，就想撤销。");
+			orderService.dischargeOrder(originalOrder, dischargeOrder);
     		//orderService.chargeToDriver(order);
     	}catch(Exception e){
     		System.out.println("Found exception:"+e.getMessage());

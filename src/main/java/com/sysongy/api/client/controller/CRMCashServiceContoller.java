@@ -20,6 +20,9 @@ import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.slf4j.Logger;
@@ -66,6 +69,12 @@ public class CRMCashServiceContoller {
 
     @Autowired
     private GastationService gastationService;
+
+    @Autowired
+    private TcFleetService tcFleetService;
+
+    @Autowired
+    private TransportionService transportionService;
 
     @ResponseBody
     @RequestMapping("/web/customerGasCharge")
@@ -159,6 +168,9 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+
+
+
         SysDriver sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
         SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(sysDriver.getSysUserAccountId());
         if((creditAccount == null) || (sysDriver == null)
@@ -205,7 +217,13 @@ public class CRMCashServiceContoller {
         if(sysDriver.getDriverType() == GlobalConstant.DriverType.TRANSPORT){
             record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
-            String orderConsume = orderService.consumeByTransportion(record);
+
+            //TcFleet tcFleet
+            //tcFleetService.queryFleet()
+
+
+
+            String orderConsume = orderService.consumeByTransportion(record, null, null);
             if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单消费错误：" + orderConsume);
@@ -290,15 +308,63 @@ public class CRMCashServiceContoller {
         SysUser sysUserAdmin = new SysUser();
         sysUserAdmin.setMobilePhone(adminUserName);
         SysUser sysUserOperator = sysUserService.queryUser(sysUserAdmin);
+        SysOrder originalOrder = orderService.selectByPrimaryKey(record.getOrderId());
+        boolean canDischarge = orderService.checkCanDischarge(originalOrder);
+        if(!canDischarge){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("该订单不符合冲红条件！！！");
+            return ajaxJson;
+        }
+        SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(originalOrder,
+                sysUserOperator.getSysUserId(), record.getDischarge_reason());
 
-        String strReason = request.getParameter("hedgeReason");
-        SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(record,
-                sysUserOperator.getSysUserId(), strReason);
-        hedgeRecord.getConsume_card();
-        //orderService.dischargeOrder();
+        String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
+        if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
+            logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单冲红错误：" + originalOrder.getOrderId());
+            return ajaxJson;
+        }
+
+        int nRet = orderService.insert(hedgeRecord);
+        if(nRet < 1){
+            logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单冲红保存错误：" + originalOrder.getOrderId());
+            return ajaxJson;
+        }
 
         Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("sysOrder", record);
+        attributes.put("sysOrder", hedgeRecord);
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
+    @ResponseBody
+    @RequestMapping("/web/queryNotHedgeOrder")
+    public AjaxJson queryNotHedgeOrder(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception {
+        AjaxJson ajaxJson = new AjaxJson();
+        if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
+                StringUtils.isEmpty(record.getOperatorSourceId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单ID或气站ID为空！！！" );
+            return ajaxJson;
+        }
+        SysOrder originalOrder = orderService.selectByOrderGASID(record.getOrderId());
+        if(originalOrder == null){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("该订单不存在或已被冲红！！！" );
+            return ajaxJson;
+        }
+        if(originalOrder.getOperatorTargetType().equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER)){
+            SysDriver sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
+            originalOrder.setSysDriver(sysDriver);
+        } else {
+            Transportion transportion = transportionService.queryTransportionByPK(record.getCreditAccount());
+            originalOrder.setTransportion(transportion);
+        }
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("sysOrder", originalOrder);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
