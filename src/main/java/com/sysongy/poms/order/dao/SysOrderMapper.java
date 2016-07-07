@@ -20,6 +20,8 @@ public interface SysOrderMapper {
 
     SysOrder selectByPrimaryKey(String orderId);
 
+    SysOrder selectByOrderGASID(String orderId);
+
     int updateByPrimaryKeySelective(SysOrder record);
 
     int updateByPrimaryKey(SysOrder record);
