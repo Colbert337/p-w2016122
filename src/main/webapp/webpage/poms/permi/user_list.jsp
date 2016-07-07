@@ -230,7 +230,7 @@
 	 * 判断用户名是否存在
 	 */
 	function isUserExit(){
-		var userName = $("#user_name").val().replace(/\s/g,'');;
+		var userName = $("#user_name").val().replace(/\s/g,'');
 		$.ajax({
 			url:"<%=basePath%>/web/permi/user/info/isUserName",
 			data:{userName:userName},
@@ -411,7 +411,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="userName" id="user_name" placeholder="用户名"  class="validate[required,minSize[3],maxSize[20],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
+										<input type="text" name="userName" id="user_name" placeholder="用户名" onblur="isUserExit()" class="validate[required,minSize[3],maxSize[20],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
 										<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户类型： </label>
