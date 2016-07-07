@@ -125,6 +125,7 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
                 drivers = driverService.querySingleDriver(sysDriver);
             } else {
+                tcFleetService.queryVehicleByCardNo(sysDriver.getCardId());
                 //tcFleetService.queryFleet();
                 //transportionService.queryTransportionByPK();
             }
@@ -286,7 +287,7 @@ public class CRMCustomerContoller {
                 return ajaxJson;
             }
 
-            PageInfo<SysDriver> drivers = driverService.querySingleDriver(sysDriver);
+            PageInfo<SysDriver> drivers = driverService.ifExistDriver(sysDriver);
             if((drivers != null) && (drivers.getList().size() != 0)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("该用户已经创建成功，请勿重复创建！！！");
