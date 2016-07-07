@@ -54,9 +54,10 @@
 		$("#editUserDiv").text("添加用户");
 		queryRoleList();
 		queryUserTypeList("");
-		/*密码输入框改为可编辑*/
-		/*$("#password").removeAttr("readonly");
-		$("#re_password").removeAttr("readonly");*/
+		$("#user_name").removeAttr("readonly");
+		$("#user_name").on("blur",function(){
+			isUserExit();
+		});
 	}
 	//显示编辑用户弹出层
 	function queryRoleList(roleId){
@@ -150,7 +151,8 @@
 				$("#real_name").val(data.realName);
 				$("#user_type").val(data.userType);
 				$("#editUserDiv").text("修改用户");
-				$("#user_name").removeAttr("onblur");
+				$("#user_name").off("blur");
+				$('.user-name-valid').remove();
 
 				if(data.gender == 0){
 					$("#gender_b").attr("checked","checked");
@@ -411,7 +413,7 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
 									<div class="col-sm-4">
-										<input type="text" name="userName" id="user_name" placeholder="用户名" onblur="isUserExit()" class="validate[required,minSize[3],maxSize[20],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
+										<input type="text" name="userName" id="user_name" placeholder="用户名" class="validate[required,minSize[3],maxSize[20],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
 										<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
 									</div>
 									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户类型： </label>
