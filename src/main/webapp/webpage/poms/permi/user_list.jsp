@@ -150,6 +150,7 @@
 				$("#real_name").val(data.realName);
 				$("#user_type").val(data.userType);
 				$("#editUserDiv").text("修改用户");
+				$("#user_name").removeAttr("onblur");
 
 				if(data.gender == 0){
 					$("#gender_b").attr("checked","checked");
@@ -238,7 +239,7 @@
 			success: function(data){
 				console.log(data);
 				if(data.valid){
-					bootbox.alert("用户名已存在!");
+					alert("用户名已存在!");
 					$("#user_name").focus();
 				}
 			}, error: function (XMLHttpRequest, textStatus, errorThrown) {

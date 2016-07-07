@@ -55,4 +55,20 @@ public class UsysparamServiceImpl implements UsysparamService {
 	public List<Usysparam> queryUsysparamByGcode(String gcode){
 		return usysparamMapper.queryUsysparamByGcode(gcode);
 	}
+	@Override
+	public List<Usysparam> queryAll(Usysparam recode) {
+		return usysparamMapper.selectAll(recode);
+	}
+	@Override
+	public String saveUsysparam(Usysparam obj, String operation) throws Exception {
+		if("insert".equals(operation)){
+			return this.saveUsysparam(obj).toString();
+		}else{
+			return this.updateUsysparam(obj).toString();
+		}
+	}
+	@Override
+	public Integer deleteByGcodeAndMcode(Usysparam recode) {
+		return usysparamMapper.delete(recode);
+	}
 }

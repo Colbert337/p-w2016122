@@ -99,6 +99,7 @@ public class TransportionServiceImpl implements TransportionService {
 			record.setTax_certif(show_path);
 			record.setLng_certif(show_path);
 			record.setDcp_certif(show_path);
+			record.setDeposit(BigDecimal.valueOf(0.0));
 			
 			transportionMapper.insert(record);
 			//创建管理员
