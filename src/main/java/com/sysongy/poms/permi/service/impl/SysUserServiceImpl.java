@@ -91,7 +91,7 @@ public class SysUserServiceImpl implements SysUserService{
     @Override
     public SysUser queryUserByAccount(SysUser user) {
         SysUser sysUser = null;
-        if (user != null) {
+        if (user != null && user.getUserName() != null && user.getPassword() != null) {
             String password = user.getPassword();
             String userName = user.getUserName();
             try {

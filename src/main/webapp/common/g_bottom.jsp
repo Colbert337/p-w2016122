@@ -23,6 +23,7 @@
 							司集能源运维管理平台
 						</c:if>
 						&copy; 2015-2016
+					<input type="text" value="${sessionScope.currUser.user.userName}"/>
 					</div>
 					<!-- /section:basics/footer -->
 				</div>
@@ -64,6 +65,21 @@
 			var sjny = sjny || {};
 			sjny.basePath = '<%=basePath %>';
 		</script>
+		
+		<script src="<%=basePath %>/common/js/xhr-overwrite.min.js"></script>
+	<script type="text/javascript">
+		overwriteXhr({
+		    open: function(method, url, async) {
+		        this.xhr.open(method, url);
+		    },
+		    send: function(data) {
+		    	var current = "${sessionScope.currUser.user.userName}";
+		    	console.debug(current);
+		        this.xhr.send(data);
+		    }
+		});
+	
+	</script>
 
 		<!--[if IE]>
 		<script type="text/javascript">
