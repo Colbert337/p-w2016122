@@ -9,6 +9,8 @@ import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
+import com.sysongy.tcms.advance.model.TcVehicleCard;
+import com.sysongy.tcms.advance.service.TcVehicleCardService;
 import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
@@ -58,6 +60,9 @@ public class TcVehicleController extends BaseContoller {
     RedisClientInterface redisClientImpl;
     @Autowired
     GasCardService cardService;
+    @Autowired
+    TcVehicleCardService tcVehicleCardService;
+
 
     /**
      * 查询车辆列表
@@ -99,10 +104,15 @@ public class TcVehicleController extends BaseContoller {
         Map<String, Object> vehicleMap = new HashMap<>();
         GasCard gasCard = new GasCard();
         TcVehicle tcVehicle = tcVehicleService.queryVehicle(vehicle);
+        TcVehicleCard tcVehicleCardTemp = new TcVehicleCard();
+        tcVehicleCardTemp.setTcVehicleId(tcVehicle.getTcVehicleId());
+        tcVehicleCardTemp.setStationId(tcVehicle.getStationId());
+
+        TcVehicleCard tcVehicleCard = tcVehicleCardService.queryTcVehicleCardByVecId(tcVehicleCardTemp);
         vehicleMap.put("vehicle",tcVehicle);
-        if(tcVehicle != null && tcVehicle.getCardNo() != null){
+        if(tcVehicle != null && tcVehicle.getCardNo() != null && tcVehicleCard != null){
             try {
-                gasCard = gasCardService.queryGasCardInfo(tcVehicle.getCardNo());
+                gasCard = gasCardService.queryGasCardInfo(tcVehicleCard.getCardNo());
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -126,6 +136,8 @@ public class TcVehicleController extends BaseContoller {
         String platesNumber = "";
         if(vehicle != null && vehicle.getPlatesNumber() != null && !"".equals(vehicle.getPlatesNumber())){
             platesNumber = vehicle.getPlatesNumber().trim();
+            vehicle.setStationId(stationId);
+            vehicle.setPlatesNumber(platesNumber);
             TcVehicle vehicleTemp = tcVehicleService.queryVehicleByNumber(vehicle);
 
             if(vehicleTemp == null){
@@ -143,16 +155,17 @@ public class TcVehicleController extends BaseContoller {
     /**
      * 冻结卡
      * @param currUser
-     * @param vehicle
      * @param map
      * @return
      */
     @RequestMapping("/update/freeze")
-    public String updateFreeze(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map)throws Exception{
-        GasCard gasCard = new GasCard();
-        gasCard.setCard_status(GlobalConstant.CardStatus.PAUSED);
-        gasCard.setCard_no(vehicle.getCardNo());
-        cardService.updateGasCardInfo(gasCard);
+    public String updateFreeze(@ModelAttribute("currUser") CurrUser currUser, GasCard gasCard, ModelMap map)throws Exception{
+        GasCard gasCardTemp = new GasCard();
+        gasCardTemp = gasCardService.selectByCardNoForCRM(gasCard.getCard_no());
+        gasCardTemp.setCard_status(gasCard.getCard_status());
+
+        cardService.updateGasCardInfo(gasCardTemp);
+        map.addAttribute("gasCard",gasCardTemp);
 
         return "redirect:/web/tcms/vehicle/list/page";
     }
@@ -268,11 +281,22 @@ public class TcVehicleController extends BaseContoller {
                             copyPhone = sheet.getCell(4, i).getContents().replaceAll(" ", "");
                             tcVehicle.setCopyPhone(copyPhone);
                         }
+
+                        //添加车辆与卡关系
+                        TcVehicleCard tcVehicleCard = new TcVehicleCard();
+                        tcVehicleCard.setTcVehicleId(tcVehicle.getTcVehicleId());
+                        tcVehicleCard.setCardNo(tcVehicle.getCardNo());
+                        tcVehicleCard.setTcVehicleCardId(UUIDGenerator.getUUID());
+                        tcVehicleCard.setStationId(stationId);
+                        tcVehicleService.addVehicleCard(tcVehicleCard);
+                        System.out.println("正在导入车辆数据》》》》》》》》》》》》》");
+
+                        tcVehicle.setCardNo(null);
                         vehicleList.add(tcVehicle);
-                        System.out.println("正在导入幼儿数据》》》》》》》》》》》》》");
                     }
 
                 }
+                //添加车辆及卡关系
                 if(vehicleList != null && vehicleList.size() > 0){
                     tcVehicleService.addVehicleList(vehicleList);
                 }
@@ -282,7 +306,7 @@ public class TcVehicleController extends BaseContoller {
             e.printStackTrace();
         }
 
-        return "webpage/tcms/advance/vehicle_list";
+        return "redirect:/web/tcms/vehicle/list/page";
     }
 
 

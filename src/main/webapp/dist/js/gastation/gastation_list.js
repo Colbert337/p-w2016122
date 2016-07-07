@@ -140,3 +140,19 @@
 		
 		$("#innerModel").modal('show');
 	}
+	
+	function resetPassword(obj){
+		var userName = $(obj).parents("tr").children("td").eq(5).text();
+		var station = $(obj).parents("tr").children("td").eq(1).text();
+		
+		$.ajax({
+			   type: "POST",
+			   url:'../web/gastation/resetPassword?gastationid='+station+'&username='+userName,
+	           dataType:'text',
+	           async:false,
+	           success:function(data){
+	        	   $("#main").html(data);
+	        	   $("#modal-table").modal("show");
+	           }
+		});
+	}

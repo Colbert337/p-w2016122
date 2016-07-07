@@ -131,8 +131,8 @@
 												<i class="ace-icon fa fa-credit-card bigger-130" onclick="preDeposit(this);"></i>
 											</a>
 											<!-- <a href="" class="logic-del" title="删除" data-rel="tooltip">
-											<i class="ace-icon fa fa-trash-o bigger-130"></i> -->
-										</a>
+											<i class="ace-icon fa fa-trash-o bigger-130"></i> 
+											</a>-->
 									</td>
 								</tr>
 								</c:forEach>

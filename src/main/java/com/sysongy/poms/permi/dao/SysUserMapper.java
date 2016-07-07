@@ -35,6 +35,13 @@ public interface SysUserMapper {
 
     int updateUserByName(SysUser record);
 
+    /**
+     * 根据用户名和站点ID重置用户密码
+     * @param record
+     * @return
+     */
+    int updateUserByUserName(SysUser record);
+
     SysUser queryUserForCRM(SysUser user);
     /**
      * 完全匹配

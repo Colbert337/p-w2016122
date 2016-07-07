@@ -26,7 +26,7 @@
 	            }
 		}
 		
-		$("#formgastation").ajaxSubmit(listOptions);
+		$("#formtransportion").ajaxSubmit(listOptions);
 	}
 	
 	function init(){
@@ -34,9 +34,8 @@
 		$("[name=deal_date_before]").val("");
 		$("[name=deal_number]").val("");
 		commitForm();
-		//loadPage('#main', '../crmGasPriceService/queryProductPriceList');
 	}
 	
 	function returnpage(){
-		loadPage('#main', '../web/gastation/depositList');
+		loadPage('#main', '../web/transportion/depositList');
 	}
