@@ -44,7 +44,7 @@
   
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
-    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id,operator_source_type, operator_target_type,consume_card
+    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id,operator_source_type, operator_source_id, operator_target_type,consume_card
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -78,6 +78,19 @@
     <include refid="Base_Column_List" />
     from sys_order
     where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectByOrderGASID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_order
+      where order_id = #{orderId,jdbcType=VARCHAR} and is_discharge='0' and been_discharged='0'
+    <trim>
+      <if test="operatorSourceId != null &amp;&amp; operatorSourceId != ''" >
+        and operator_source_id = #{operatorSourceId, jdbcType=VARCHAR}
+      </if>
+    </trim>
   </select>
   
   <select id="queryConsumeOrderByUserId" resultMap="BaseResultMap" parameterType="java.util.Map" >

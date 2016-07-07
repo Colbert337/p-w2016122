@@ -12,13 +12,13 @@
 		<meta charset="utf-8" />
 		<title>
 			<c:if test="${sessionScope.currUser.user.userType == 1}">
-				陕西司集能源气站管理系统
+				陕西司集能源加注站管理系统
 			</c:if>
 			<c:if test="${sessionScope.currUser.user.userType == 2}">
 				陕西司集能源运输公司管理系统
 			</c:if>
 			<c:if test="${sessionScope.currUser.user.userType == 4}">
-				陕西司集能源气站集团管理系统
+				陕西司集能源加注站集团管理系统
 			</c:if>
 			<c:if test="${sessionScope.currUser.user.userType == 5}">
 				陕西司集能源运维管理平台

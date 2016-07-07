@@ -19,6 +19,8 @@ import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.util.GlobalConstant;
 
 @Service
@@ -34,6 +36,8 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	@Autowired
 	private SysUserAccountService sysUserAccountService;
 	
+	@Autowired
+	private TransportionService transportionService;
 	
 	  
 	@Override
@@ -182,7 +186,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		SysCashBack eligible_cashback = null;
 		if(eligible_list.size()==0){
 			//记录订单流水，未找到有效记录
-			String remark ="给"+accountUserName+"返现"+cash.toString()+",未找到符合条件的返现规则。";
+			String remark ="给"+accountUserName+"充值"+cash.toString()+",因未找到符合条件的返现规则，返现金额为0";
 			orderDealService.createOrderDeal(order.getOrderId(),orderDealType, remark, GlobalConstant.OrderProcessResult.SUCCESS);
 			return GlobalConstant.OrderProcessResult.SUCCESS;
 		}else{
@@ -206,6 +210,15 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		
 		//3.给这个账户增加返现
 		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money,order.getOrderType());
+		//增加逻辑，如果是运输公司转账，则要将返现的金额加到额度里面：
+		if(GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION.equalsIgnoreCase(orderDealType)){
+		   BigDecimal increment = back_money;
+		   Transportion tran = transportionService.queryTransportionByPK(order.getCreditAccount());
+		   int up_row = transportionService.modifyDeposit(tran, increment);
+		   if(up_row!=1){
+				throw new Exception("更新运输公司"+tran.getTransportion_name()+"的剩余额度时出错。");
+		   }
+		}
 		
 		//4.写入订单处理流程
 		String remark = "给"+ accountUserName+"的账户，返现"+back_money.toString()+"。";

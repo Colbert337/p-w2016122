@@ -153,6 +153,7 @@ public class TcFleetQuotaController extends BaseContoller {
                         order.setOrderId(UUIDGenerator.getUUID());
 
                         order.setOrderType(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
+                        String orderNum = orderService.createOrderNumber(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
                         order.setOrderDate(new Date());
                         BigDecimal cash = new BigDecimal(mapDriver.get("amount").toString());
                         order.setCash(cash);
@@ -163,6 +164,7 @@ public class TcFleetQuotaController extends BaseContoller {
                         order.setOperatorSourceId(stationId);
                         order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.TRANSPORTION);
                         order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);
+                        order.setOrderNumber(orderNum);
 
                         //添加订单
                         orderService.insert(order);

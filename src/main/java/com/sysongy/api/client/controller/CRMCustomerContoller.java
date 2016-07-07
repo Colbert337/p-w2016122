@@ -14,6 +14,8 @@ import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import net.sf.json.JSONObject;
@@ -53,6 +55,12 @@ public class CRMCustomerContoller {
 
     @Autowired
     GastationService gastationService;
+
+    @Autowired
+    private TcFleetService tcFleetService;
+
+    @Autowired
+    private TransportionService transportionService;
 
     public DriverService getDriverService() {
         return driverService;
@@ -105,15 +113,22 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson querySingleCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
         AjaxJson ajaxJson = new AjaxJson();
-        if(!StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
+        if(StringUtils.isEmpty(sysDriver.getMobilePhone()) && StringUtils.isEmpty(sysDriver.getCardId())){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("输入手机号为空！！！");
+            ajaxJson.setMsg("输入查询内容为空！！！");
             return ajaxJson;
         }
         Map<String, Object> attributes = new HashMap<String, Object>();
         try
         {
-            PageInfo<SysDriver> drivers = driverService.querySingleDriver(sysDriver);
+            PageInfo<SysDriver> drivers = new PageInfo<SysDriver>();
+            if(StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
+                drivers = driverService.querySingleDriver(sysDriver);
+            } else {
+                //tcFleetService.queryFleet();
+                //transportionService.queryTransportionByPK();
+            }
+
             if((drivers == null) || (drivers.getList().size() == 0)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("没有查询到所需内容！！！");
@@ -125,6 +140,7 @@ public class CRMCustomerContoller {
                 ajaxJson.setMsg("该用户数据异常！！！");
                 return ajaxJson;
             }
+
             attributes.put("PageInfo", drivers);
             attributes.put("drivers", drivers.getList());
         } catch (Exception e) {
@@ -265,6 +281,13 @@ public class CRMCustomerContoller {
 
             SysDriver isAlreadyHaveDrivers = driverService.queryDriverByPK(sysDriver.getSysDriverId());
             if(isAlreadyHaveDrivers != null){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("该用户已经创建成功，请勿重复创建！！！");
+                return ajaxJson;
+            }
+
+            PageInfo<SysDriver> drivers = driverService.querySingleDriver(sysDriver);
+            if((drivers != null) && (drivers.getList().size() != 0)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("该用户已经创建成功，请勿重复创建！！！");
                 return ajaxJson;

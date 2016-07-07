@@ -59,7 +59,8 @@
     select
     <include refid="User_Role_List" />
     from sys_user su left join sys_user_role sur on su.sys_user_id = sur.sys_user_id left join sys_role sr on sur.sys_role_id = sr.sys_role_id
-    where su.is_deleted = 1
+    and sr.is_deleted = 1 and sr.role_status = 0
+    where su.is_deleted = 1 and  su.is_admin > 0
     <trim>
       <if test="sysUserId != null &amp;&amp; sysUserId !=''" >
         and su.sys_user_id = #{sysUserId}
@@ -87,9 +88,9 @@
       <if test="status != null &amp;&amp; status !=''" >
         and  su.status = #{status}
       </if>
-      <if test="isAdmin != null &amp;&amp; isAdmin !=''" >
+      <!--<if test="isAdmin != null &amp;&amp; isAdmin !=''" >
         and  su.is_admin = #{isAdmin}
-      </if>
+      </if>-->
       <if test="stationId != null &amp;&amp; stationId !=''" >
         and  su.station_id = #{stationId}
       </if>
@@ -100,7 +101,7 @@
   select
   <include refid="User_Role_List" />
   from sys_user su left join sys_user_role sur on su.sys_user_id = sur.sys_user_id left join sys_role sr on sur.sys_role_id = sr.sys_role_id
-  where su.is_deleted = 1
+  where su.is_deleted = 1 and  su.is_admin > 0
     <if test="sysUserId != null &amp;&amp; sysUserId !=''" >
       and su.sys_user_id = #{sysUserId}
     </if>
@@ -109,9 +110,6 @@
     </if>
     <if test="status != null &amp;&amp; status !=''" >
       and  su.status = #{status}
-    </if>
-    <if test="isAdmin != null &amp;&amp; isAdmin !=''" >
-      and  su.is_admin = #{isAdmin}
     </if>
     <if test="stationId != null &amp;&amp; stationId !=''" >
       and  su.station_id = #{stationId}

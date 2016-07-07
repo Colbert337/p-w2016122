@@ -251,13 +251,13 @@ $('#driverForm').bootstrapValidator({
                     message: '支付密码不能为空'
                 },
                 regexp: {
-                    regexp: '^[0-9a-zA-Z]+$',
-                    message: '密码只能包含数字和字母'
+                    regexp: '^[0-9]+$',
+                    message: '密码只能包含数字'
                 },
                 stringLength: {
                     min: 6,
-                    max: 10,
-                    message: '支付面膜不能小于6个字符，不能大于10个字符'
+                    max: 6,
+                    message: '支付密码不能小于6个数字，不能大于10个字符'
                 }
             }
         },
@@ -267,8 +267,13 @@ $('#driverForm').bootstrapValidator({
                     message: '确认密码不能为空'
                 },
                 regexp: {
-                    regexp: '^[0-9a-zA-Z]+$',
-                    message: '密码只能包含数字和字母'
+                    regexp: '^[0-9]+$',
+                    message: '密码只能包含数字'
+                },
+                stringLength: {
+                    min: 6,
+                    max: 6,
+                    message: '支付密码不能小于6个数字，不能大于10个字符'
                 },
                 callback: {
                     message: '支付密码不一致',

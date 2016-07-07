@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper;
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,8 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.tcms.advance.model.TcFleet;
+import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
@@ -73,7 +77,12 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private SysPrepayMapper sysPrepayMapper;
+	
+	@Autowired
+	private TcFleetService tcFleetService;
 
+	@Autowired
+	private SysOrderGoodsMapper sysOrderGoodsMapper;
 
 	@Override
 	public PageInfo<SysOrder> queryOrders(SysOrder record) throws Exception {
@@ -95,7 +104,22 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public SysOrder selectByPrimaryKey(String orderId) {
-		return sysOrderMapper.selectByPrimaryKey(orderId);
+		SysOrder sysOrder = sysOrderMapper.selectByPrimaryKey(orderId);
+		List<SysOrderGoods> sysOrderGoods = sysOrderGoodsMapper.selectByOrderID(orderId);
+		if((sysOrderGoods != null) && (sysOrderGoods.size() != 0)){
+			sysOrder.setSysOrderGoods(sysOrderGoods);
+		}
+		return sysOrder;
+	}
+
+	@Override
+	public SysOrder selectByOrderGASID(String orderId) {
+		SysOrder sysOrder = sysOrderMapper.selectByOrderGASID(orderId);
+		List<SysOrderGoods> sysOrderGoods = sysOrderGoodsMapper.selectByOrderID(orderId);
+		if((sysOrderGoods != null) && (sysOrderGoods.size() != 0)){
+			sysOrder.setSysOrderGoods(sysOrderGoods);
+		}
+		return sysOrder;
 	}
 
 	@Override
@@ -330,13 +354,23 @@ public class OrderServiceImpl implements OrderService {
 		      }
 		   }
 		   
-		   //针对消费充红
+		   //针对司机消费充红
 		   if(orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CONSUME_DRIVER_DEDUCT)){
 			  String disChargeConsume_success = driverService.deductCashToDriver(dischargeOrder, GlobalConstant.ORDER_ISCHARGE_YES);
 			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargeConsume_success)){
 		    		//如果出错，直接退出
 				  throw new Exception( disChargeConsume_success);
 		      }
+		   }
+		   
+		  //针对运输公司消费充红
+		   if(orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CONSUME_TRANSPORTION_DEDUCT)){
+			  String disChargeConsume_success = transportionService.consumeTransportion(dischargeOrder);
+			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargeConsume_success)){
+		    		//如果出错，直接退出
+				  throw new Exception( disChargeConsume_success);
+		      }
+			  //和产品经理沟通：暂时不恢复运输公司或者车队的额度。
 		   }
 		   
 		   
@@ -453,6 +487,7 @@ public class OrderServiceImpl implements OrderService {
     
 	/**
 	 * 个人消费：
+	 * 注意消费的时候，cash一定传正值
 	 * 1.判断账户余额
 	 * 2.扣除账户金额--乐观锁操作
 	 */
@@ -483,19 +518,36 @@ public class OrderServiceImpl implements OrderService {
   		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
   	   }
+
+		for (SysOrderGoods sysOrderGoods : order.getSysOrderGoods()) {
+			int nRet = sysOrderGoodsMapper.insert(sysOrderGoods);
+			if(nRet < 1){
+				logger.error("产品插入出错" + sysOrderGoods.getOrderId());
+			}
+		}
+
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
 	/**
 	 * 运输公司消费： 车队消费，扣除的是运输公司的账户里面的钱，并扣除车队的分配额度
+	 * 注意消费的时候，cash一定传正值
+	 * 注意：order里面传的credit_account存的是运输公司的UUID
 	 * 1.判断此车队是否分配额度，如果分配，则扣除此车队的额度。
 	 *   如果没有分配，则扣除此车队对应的运输公司的额度。
 	 * 2.扣除运输公司账户金额--和消费一样
 	 */
 	@Override
-	public String consumeByTransportion(SysOrder order) throws Exception{
+	public String consumeByTransportion(SysOrder order,Transportion tran, TcFleet tcfleet) throws Exception{
 	   if (order ==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
+	   }
+	   
+	   if (tran ==null){
+		   throw new Exception( GlobalConstant.OrderProcessResult.TRANSPORTION_IS_NULL);
+	   }
+	   if (tcfleet ==null){
+		   throw new Exception( GlobalConstant.OrderProcessResult.TCFLEET_IS_NULL);
 	   }
 	   
 	   String orderType = order.getOrderType();
@@ -512,7 +564,17 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.TRANSPORTION))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_TRANSPORTION);
 	   }
-		//TODO
+	   //1.判断此车队是否分配额度
+	   Integer is_allot = tcfleet.getIsAllot();
+	 //扣除车队额度//传过去负值
+	   BigDecimal cash = order.getCash();
+	   BigDecimal addcash = cash.multiply(new BigDecimal(-1)); 
+	   if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_YES){
+		   tcFleetService.updateFleetQuota(tran.getSys_transportion_id(), tcfleet.getTcFleetId(), addcash);
+	   }else if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_NO){
+		   transportionService.modifyDeposit(tran, addcash);
+	   }
+	   
 	   //2.扣除运输公司账户金额
 	   //消费的时候传过去的cash是正值,充红的时候传过去的是负值
 	   String consume_success =transportionService.consumeTransportion(order);
@@ -520,7 +582,6 @@ public class OrderServiceImpl implements OrderService {
   		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
   	   }
-	   //TODO
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 	
@@ -574,7 +635,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * 运输公司给个人转账
+	 * 运输公司给个人转账:注意cash是正值
 	 * 1.扣除运输公司账户
 	 * 2.个人账户增加金额
 	 * 3.给运输公司返现。
@@ -608,6 +669,14 @@ public class OrderServiceImpl implements OrderService {
   		   //如果出错直接返回错误代码退出
 		   throw new Exception( success_deduct);
   	   }
+	   //增加逻辑：要扣除运输公司的额度,因为转账的时候cash是正值，这里需要转为负值
+	   BigDecimal cash = order.getCash();
+	   BigDecimal increment = cash.multiply(new BigDecimal(-1));
+	   int up_row = transportionService.modifyDeposit(tran, increment);
+	   if(up_row!=1){
+			throw new Exception("更新运输公司"+tran.getTransportion_name()+"的剩余额度时出错。");
+	   }
+	   
 	   //2.个人账户增加金额
 	   String is_discharge = GlobalConstant.ORDER_ISCHARGE_NO;
 	   String success_chong = driverService.chargeCashToDriver(order, is_discharge);
@@ -621,6 +690,7 @@ public class OrderServiceImpl implements OrderService {
 	   String accountId = new String(tran_account);
 	   String accountUserName = tran.getTransportion_name();
 	   String orderDealType = GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION;
+	   //修改了cashToAccount方法，里面增加了运输公司转账的时候，修改运输公司剩余额度。
 	   String success_cashBack = sysCashBackService.cashToAccount(order, cashBackList, accountId, accountUserName, orderDealType);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_cashBack)){
   		   //如果出错直接返回错误代码退出

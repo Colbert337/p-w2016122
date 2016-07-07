@@ -13,12 +13,16 @@ import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.slf4j.Logger;
@@ -31,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Controller
@@ -65,6 +70,12 @@ public class CRMCashServiceContoller {
     @Autowired
     private GastationService gastationService;
 
+    @Autowired
+    private TcFleetService tcFleetService;
+
+    @Autowired
+    private TransportionService transportionService;
+
     @ResponseBody
     @RequestMapping("/web/customerGasCharge")
     public AjaxJson customerGasCharge(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
@@ -85,6 +96,7 @@ public class CRMCashServiceContoller {
         }
 
         record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
+        record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
         String orderCharge = orderService.chargeToDriver(record);
         if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
             ajaxJson.setSuccess(false);
@@ -132,8 +144,9 @@ public class CRMCashServiceContoller {
 
     @ResponseBody
     @RequestMapping("/web/customerGasPay")
-    public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
+    public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
+        SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
         if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
                 StringUtils.isEmpty(record.getOperatorSourceId()) ){
             ajaxJson.setSuccess(false);
@@ -155,9 +168,12 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+
+
+
         SysDriver sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
-        SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(record.getCreditAccount());
-        if((creditAccount != null) || (sysDriver != null)
+        SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(sysDriver.getSysUserAccountId());
+        if((creditAccount == null) || (sysDriver == null)
                 || !(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("支付密码错误！！！");
@@ -190,10 +206,24 @@ public class CRMCashServiceContoller {
         if(gasCard != null){
             record.setGasCard(gasCard);
         }
+
+        BigDecimal totalPrice = new BigDecimal(0);
+        for(SysOrderGoods goods : record.getSysOrderGoods()){
+            totalPrice = totalPrice.add(goods.getSumPrice());
+        }
+
+        record.setCash(totalPrice);
         sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
         if(sysDriver.getDriverType() == GlobalConstant.DriverType.TRANSPORT){
             record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
-            String orderConsume = orderService.consumeByTransportion(record);
+            record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+
+            //TcFleet tcFleet
+            //tcFleetService.queryFleet()
+
+
+
+            String orderConsume = orderService.consumeByTransportion(record, null, null);
             if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单消费错误：" + orderConsume);
@@ -201,6 +231,7 @@ public class CRMCashServiceContoller {
             }
         } else {
             record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
+            record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
             String orderConsume = orderService.consumeByDriver(record);
             if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
@@ -220,13 +251,16 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-        record = orderService.selectByPrimaryKey(record.getOrderId());
+        SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
+        recordNew.setCash(record.getCash());
+        recordNew.setGasCard(record.getGasCard());
         Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
         if(gastation != null){
-            record.setGastation(gastation);
+            recordNew.setGastation(gastation);
         }
         if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
-            record.setSysDriver(sysDriver);
+            SysDriver sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
+            recordNew.setSysDriver(sysDriverNew);
             AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
             aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
             aliShortMessageBean.setProduct("司集能源科技平台");
@@ -236,7 +270,7 @@ public class CRMCashServiceContoller {
         }
 
         Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("sysOrder", record);
+        attributes.put("sysOrder", recordNew);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
@@ -251,8 +285,8 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-        String curUserName = request.getParameter("userName");
-        String curPassword = request.getParameter("password");
+        String curUserName = request.getParameter("suserName");
+        String curPassword = request.getParameter("spassword");
         SysUser sysUser = new SysUser();
         sysUser.setMobilePhone(curUserName);
         sysUser.setPassword(curPassword);
@@ -274,15 +308,63 @@ public class CRMCashServiceContoller {
         SysUser sysUserAdmin = new SysUser();
         sysUserAdmin.setMobilePhone(adminUserName);
         SysUser sysUserOperator = sysUserService.queryUser(sysUserAdmin);
+        SysOrder originalOrder = orderService.selectByPrimaryKey(record.getOrderId());
+        boolean canDischarge = orderService.checkCanDischarge(originalOrder);
+        if(!canDischarge){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("该订单不符合冲红条件！！！");
+            return ajaxJson;
+        }
+        SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(originalOrder,
+                sysUserOperator.getSysUserId(), record.getDischarge_reason());
 
-        String strReason = request.getParameter("hedgeReason");
-        SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(record,
-                sysUserOperator.getSysUserId(), strReason);
-        hedgeRecord.getConsume_card();
-        //orderService.dischargeOrder();
+        String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
+        if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
+            logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单冲红错误：" + originalOrder.getOrderId());
+            return ajaxJson;
+        }
+
+        int nRet = orderService.insert(hedgeRecord);
+        if(nRet < 1){
+            logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单冲红保存错误：" + originalOrder.getOrderId());
+            return ajaxJson;
+        }
 
         Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("sysOrder", record);
+        attributes.put("sysOrder", hedgeRecord);
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
+    @ResponseBody
+    @RequestMapping("/web/queryNotHedgeOrder")
+    public AjaxJson queryNotHedgeOrder(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception {
+        AjaxJson ajaxJson = new AjaxJson();
+        if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
+                StringUtils.isEmpty(record.getOperatorSourceId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单ID或气站ID为空！！！" );
+            return ajaxJson;
+        }
+        SysOrder originalOrder = orderService.selectByOrderGASID(record.getOrderId());
+        if(originalOrder == null){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("该订单不存在或已被冲红！！！" );
+            return ajaxJson;
+        }
+        if(originalOrder.getOperatorTargetType().equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER)){
+            SysDriver sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
+            originalOrder.setSysDriver(sysDriver);
+        } else {
+            Transportion transportion = transportionService.queryTransportionByPK(record.getCreditAccount());
+            originalOrder.setTransportion(transportion);
+        }
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("sysOrder", originalOrder);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }

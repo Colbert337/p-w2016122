@@ -52,6 +52,7 @@ public class TcFleetVehicleServiceImpl implements TcFleetVehicleService{
 
         //查询当前运输公司所有车辆列表
         List<Map<String, Object>> vehicleMapList = tcVehicleMapper.queryVehicleMapArray(tcVehicle);
+
         if(vehicleMapList != null && vehicleMapList.size() > 0){
             for (Map<String, Object> vehicleMap:vehicleMapList) {
                 int count = 0;
@@ -64,10 +65,13 @@ public class TcFleetVehicleServiceImpl implements TcFleetVehicleService{
                 }
                 if(count > 0){
                     vehicleMap.put("selected","true");
+                    fleetVehicleList.add(vehicleMap);
                 }else{
                     vehicleMap.put("selected","false");
+                    if(vehicleMap.get("isAllot") != null && vehicleMap.get("isAllot").toString().equals("0")){
+                        fleetVehicleList.add(vehicleMap);
+                    }
                 }
-                fleetVehicleList.add(vehicleMap);
 
             }
         }

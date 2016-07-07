@@ -186,6 +186,7 @@ public class TransportionServiceImpl implements TransportionService {
 	
 	 /**
 	 * 给运输公司充值(无充红,不返现)
+	 * 同事增加运输公司的剩余额度。
 	 * @param order
 	 * @return
      * @throws Exception 
@@ -205,6 +206,12 @@ public class TransportionServiceImpl implements TransportionService {
 		String tran_account = tran.getSys_user_account_id();
 		BigDecimal cash = order.getCash();
 		String cash_success = sysUserAccountService.addCashToAccount(tran_account,cash,order.getOrderType());
+		
+		//变更额度：
+		int up_row = modifyDeposit(tran,cash);
+		if(up_row!=1){
+			throw new Exception("更新运输公司"+tran.getTransportion_name()+"的剩余额度时出错。");
+		}
 		//记录订单流水
 		String chong = "充值";
 		String orderDealType = GlobalConstant.OrderDealType.CHARGE_TO_TRANSPORTION_CHARGE;
@@ -216,7 +223,7 @@ public class TransportionServiceImpl implements TransportionService {
 	}
 	
 	/**
-	 * 运输公司消费，以及消费充红
+	 * 运输公司消费，以及消费充红 ---扣除账户的操作
 	 * @param order
 	 * @return
      * @throws Exception 
@@ -235,19 +242,25 @@ public class TransportionServiceImpl implements TransportionService {
 		//从账户扣钱
 		Transportion tran = this.queryTransportionByPK(credit_account);
 		String tran_account = tran.getSys_user_account_id();
+				
 		BigDecimal cash = order.getCash();
-		//消费传过来的cash是正值，需要乘以-1,如果是充红，订单传过来的是负值，乘以-1，就成为正值。
-		BigDecimal addCash = cash.multiply(new BigDecimal(-1));
-		String cash_success = sysUserAccountService.addCashToAccount(tran_account,addCash,order.getOrderType());
-		//记录订单流水
+		//订单流水
 		String chong = "消费";
 		String orderDealType = GlobalConstant.OrderDealType.CONSUME_TRANSPORTION_DEDUCT;
-		
+				
 		String is_discharge = order.getIs_discharge();
 		if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
 			chong = "消费充红";
 			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_TRANSPORTION_DEDUCT;
+			//充红传过来必须是负值
+			if(cash.compareTo(new BigDecimal(0)) > 0){
+				throw new Exception(GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE);
+			}
 		}
+		
+		//消费传过来的cash是正值，需要乘以-1,如果是充红，订单传过来的是负值，乘以-1，就成为正值。
+		BigDecimal addCash = cash.multiply(new BigDecimal(-1));
+		String cash_success = sysUserAccountService.addCashToAccount(tran_account,addCash,order.getOrderType());
 
 		String remark =  tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。";
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
@@ -286,6 +299,21 @@ public class TransportionServiceImpl implements TransportionService {
 		return transportionMapper.updateByPrimaryKeySelective(transportion);
 	}
 
+	/**
+	 * 修改运输公司的额度
+	 * increment ---正值是增加，负值是减少
+	 * @param transportion
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public synchronized int modifyDeposit(Transportion transportion, BigDecimal increment) throws Exception {
+		BigDecimal deposit = transportion.getDeposit();
+		BigDecimal deposit_result = deposit.add(increment);
+		transportion.setDeposit(deposit_result);
+		return transportionMapper.updateDeposit(transportion);
+	}
+	
 	@Override
 	public int updatedeposiTransportion(SysDepositLog log, String operation) throws Exception {
 		SysUserAccount account = new SysUserAccount();

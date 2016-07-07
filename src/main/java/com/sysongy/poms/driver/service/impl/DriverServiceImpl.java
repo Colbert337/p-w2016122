@@ -279,10 +279,11 @@ public class DriverServiceImpl implements DriverService {
 	@Override
 	public String cashBackToDriver(SysOrder order) throws Exception{
 		//1.判断是否首次返现，是则调用首次返现规则
-		String accountId = order.getDebitAccount();
-		SysDriver driver = sysDriverMapper.selectByPrimaryKey(accountId);
+		String debitAccount = order.getDebitAccount();
+		SysDriver driver = sysDriverMapper.selectByPrimaryKey(debitAccount);
 		String accountUserName = driver.getFullName();
         Integer is_first_charge = driver.getIsFirstCharge();
+        String accountId = driver.getSysUserAccountId();
         if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
         	List<SysCashBack>  cashBackList = sysCashBackService.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
         	String cashTo_success = sysCashBackService.cashToAccount(order, cashBackList, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);

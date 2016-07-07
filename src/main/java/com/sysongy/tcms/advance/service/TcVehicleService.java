@@ -2,6 +2,7 @@ package com.sysongy.tcms.advance.service;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.tcms.advance.model.TcVehicle;
+import com.sysongy.tcms.advance.model.TcVehicleCard;
 
 import java.util.List;
 import java.util.Map;
@@ -74,4 +75,17 @@ public interface TcVehicleService {
      */
     int updateVehicle(TcVehicle tcVehicle);
 
+    /**
+     * 添加车辆与卡关系
+     * @param tcVehicleCard
+     * @return
+     */
+    int addVehicleCard(TcVehicleCard tcVehicleCard);
+
+    /**
+     * 根据卡号查询车辆信息
+     * @param cardNo
+     * @return
+     */
+    List<TcVehicle> queryVehicleByCardNo(String cardNo);
 }
