@@ -108,7 +108,7 @@ public class TcVehicleController extends BaseContoller {
 
         TcVehicleCard tcVehicleCard = tcVehicleCardService.queryTcVehicleCardByVecId(tcVehicleCardTemp);
         vehicleMap.put("vehicle",tcVehicle);
-        if(tcVehicle != null && tcVehicle.getCardNo() != null && tcVehicleCard != null){
+        if(tcVehicle != null && tcVehicleCard.getCardNo() != null && tcVehicleCard != null){
             try {
                 gasCard = gasCardService.queryGasCardInfo(tcVehicleCard.getCardNo());
             }catch (Exception e){
