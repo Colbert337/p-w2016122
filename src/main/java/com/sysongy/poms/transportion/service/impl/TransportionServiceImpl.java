@@ -185,7 +185,7 @@ public class TransportionServiceImpl implements TransportionService {
 	
 	 /**
 	 * 给运输公司充值(无充红,不返现)
-	 * 同事增加运输公司的剩余额度。
+	 * 同时增加运输公司的剩余额度。
 	 * @param order
 	 * @return
      * @throws Exception 

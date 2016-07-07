@@ -39,7 +39,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
-    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id,operator_source_type, operator_target_type,consume_card
+    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id, operator_source_id, operator_source_type, operator_target_type,consume_card
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -67,7 +67,7 @@
     select 
     <include refid="Base_Column_List" />
     from sys_order
-    where debit_account = #{userId,jdbcType=VARCHAR}
+    where credit_account = #{userId,jdbcType=VARCHAR}
      and order_type in (#{CONSUME_BY_TRANSPORTION,jdbcType=VARCHAR},#{CONSUME_BY_DRIVER,jdbcType=VARCHAR})
      and order_date > #{order_date,jdbcType=TIMESTAMP}
   </select>

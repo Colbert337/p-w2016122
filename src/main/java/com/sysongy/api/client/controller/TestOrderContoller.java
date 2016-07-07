@@ -53,8 +53,8 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("188.6"));
-        	order.setDebitAccount("748f08a4e31545c2b6de454d3deb0979");
+        	order.setCash(new BigDecimal("100"));
+        	order.setDebitAccount("5afe8e6d943c4d8988bcb605123390ca");
         	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
         	order.setChannel("亭口加注站");
         	order.setChannelNumber("GS12000003");
@@ -81,11 +81,13 @@ public class TestOrderContoller {
         Map<String, Object> attributes = new HashMap<String, Object>();
        //测试充红，要通过原始订单，创建充红订单，然后调用discharge_order方法：
     	try{
-        	SysOrder originalOrder = orderService.selectByPrimaryKey("57363949d9a0428f8eeb7e851fbc5e6a");
+        	SysOrder originalOrder = orderService.selectByPrimaryKey("20c39a44cfbe480c9c3a576791ba02c7");
         	boolean bl = orderService.checkCanDischarge(originalOrder);
         	System.out.println("能否充红："+bl);
-        	SysOrder dischargeOrder = orderService.createDischargeOrderByOriginalOrder(originalOrder, "006648b1e6c1469fa4fff0a0ad86ac06", "没啥原因，就想撤销。");
-        	orderService.dischargeOrder(originalOrder, dischargeOrder);
+        	if(bl){
+	        	SysOrder dischargeOrder = orderService.createDischargeOrderByOriginalOrder(originalOrder, "006648b1e6c1469fa4fff0a0ad86ac06", "没啥原因，就想撤销。");
+	        	orderService.dischargeOrder(originalOrder, dischargeOrder);
+        	}
     		//orderService.chargeToDriver(order);
     	}catch(Exception e){
     		System.out.println("Found exception:"+e.getMessage());
@@ -94,5 +96,110 @@ public class TestOrderContoller {
     	
     	return ajaxJson;
     }
+    
+    @RequestMapping(value = {"/chargeToTransportion"})
+    @ResponseBody
+    public AjaxJson testChargeToTransportion(HttpServletRequest request, HttpServletResponse response){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+       //测试充值：
+    	try{
+    		SysOrder order = new SysOrder();
+        	order.setOrderId(UUIDGenerator.getUUID());
+        	String order_type = GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION;
+        	String order_number = orderService.createOrderNumber(order_type);
+        	order.setOrderNumber(order_number);
+        	order.setOrderType(order_type);
+        	order.setOrderDate(new Date());
+        	order.setCash(new BigDecimal("2000"));
+        	order.setDebitAccount("t7300001");
+        	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
+        	order.setChannel("本公司");
+        	order.setChannelNumber("123456789");
+        	order.setOperator("14e9ef72ce5c424dbcc36859d6618a6b");
+        	//order.setOperatorSourceId();
+        	//order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
+        	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+        	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
+    		orderService.insert(order);
+    		orderService.chargeToTransportion(order);
+    	}catch(Exception e){
+    		System.out.println("Found exception:"+e.getMessage());
+    		e.printStackTrace();
+    	}
+    	
+    	return ajaxJson;
+    }
+    
+    
+    @RequestMapping(value = {"/chargeToGasStation"})
+    @ResponseBody
+    public AjaxJson testchargeToGasStation(HttpServletRequest request, HttpServletResponse response){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+       //测试充值：
+    	try{
+    		SysOrder order = new SysOrder();
+        	order.setOrderId(UUIDGenerator.getUUID());
+        	String order_type = GlobalConstant.OrderType.CHARGE_TO_GASTATION;
+        	String order_number = orderService.createOrderNumber(order_type);
+        	order.setOrderNumber(order_number);
+        	order.setOrderType(order_type);
+        	order.setOrderDate(new Date());
+        	order.setCash(new BigDecimal("30000"));
+        	order.setDebitAccount("GS12000003");
+        	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_POS_CHARGE);
+        	order.setChannel("本公司");
+        	order.setChannelNumber("123456789");
+        	order.setOperator("14e9ef72ce5c424dbcc36859d6618a6b");
+        	//order.setOperatorSourceId();
+        	//order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
+        	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.GASTATION);
+        	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
+    		orderService.insert(order);
+    		orderService.chargeToGasStation(order);
+    	}catch(Exception e){
+    		System.out.println("Found exception:"+e.getMessage());
+    		e.printStackTrace();
+    	}
+    	
+    	return ajaxJson;
+    }
+    
+    @RequestMapping(value = {"/consumeByDriver"})
+    @ResponseBody
+    public AjaxJson testConsumeByDriver(HttpServletRequest request, HttpServletResponse response){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+       //测试充值：
+    	try{
+    		SysOrder order = new SysOrder();
+        	order.setOrderId(UUIDGenerator.getUUID());
+        	String order_type = GlobalConstant.OrderType.CONSUME_BY_DRIVER;
+        	String order_number = orderService.createOrderNumber(order_type);
+        	order.setOrderNumber(order_number);
+        	order.setOrderType(order_type);
+        	order.setOrderDate(new Date());
+        	order.setCash(new BigDecimal("100"));
+        	order.setCreditAccount("5afe8e6d943c4d8988bcb605123390ca");
+        	//order.setDebitAccount("GS12000003");
+        	//order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_POS_CHARGE);
+        	order.setChannel("亭口加注站");
+        	order.setChannelNumber("TK456123");
+        	order.setOperator("3f974dee326248ec96464874bc04129e");
+        	//order.setOperatorSourceId();
+        	//order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
+        	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+        	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
+    		orderService.insert(order);
+    		orderService.consumeByDriver(order);
+    	}catch(Exception e){
+    		System.out.println("Found exception:"+e.getMessage());
+    		e.printStackTrace();
+    	}
+    	
+    	return ajaxJson;
+    }
+    
 
 }
