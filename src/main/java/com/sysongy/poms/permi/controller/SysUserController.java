@@ -116,6 +116,7 @@ public class SysUserController extends BaseContoller{
 	 */
 	@RequestMapping("/update/staruts")
 	public String updateStatusByUserId(SysUser sysUser, ModelMap map){
+		sysUser.setUserName(null);
 		sysUserService.updateStatus(sysUser);
 		return "redirect:/web/permi/user/list/page";
 	}
