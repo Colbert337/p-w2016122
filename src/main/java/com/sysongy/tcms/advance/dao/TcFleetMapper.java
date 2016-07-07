@@ -86,4 +86,12 @@ public interface TcFleetMapper {
      * @return
      */
     TcFleet queryFleetByName(String stationId, String fleetName);
+
+    /**
+     * 根据车辆编号查询车队信息
+     * @param stationId 站点编号
+     * @param vehicleId 车辆编号
+     * @return
+     */
+    List<TcFleet> queryFleetByVehicleId(String stationId,String vehicleId);
 }

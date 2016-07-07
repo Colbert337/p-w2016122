@@ -32,7 +32,7 @@
     <result column="updated_time" property="updated_time" jdbcType="TIMESTAMP" />
     <result column="pay_code" property="pay_code" jdbcType="VARCHAR" />
     <result column="deposit" property="deposit" jdbcType="DECIMAL" />
-    
+
     <association column="sys_user_account_id" property="account" javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
     </association>
@@ -401,11 +401,11 @@
       deposit = #{deposit,jdbcType=DECIMAL}
     where sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
   </update>
-  
+
    <update id="updateDeposit" parameterType="com.sysongy.poms.transportion.model.Transportion" >
      update sys_transportion
       set deposit = #{deposit,jdbcType=DECIMAL},
       updated_time = now()
-      where  sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}          
+      where  sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
   </update>
 </mapper>

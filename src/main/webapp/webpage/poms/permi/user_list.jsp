@@ -150,6 +150,7 @@
 				$("#real_name").val(data.realName);
 				$("#user_type").val(data.userType);
 				$("#editUserDiv").text("修改用户");
+				$("#user_name").removeAttr("onblur");
 
 				if(data.gender == 0){
 					$("#gender_b").attr("checked","checked");
@@ -243,6 +244,7 @@
 					$('#user_name').after('<div class="tooltip fade top in user-name-valid"><div class="tooltip-arrow"></div><div class="tooltip-inner">用户名已存在!</div></div>');
 				} else {
 					$('.user-name-valid').remove();
+					$("#user_name").focus();
 				}
 			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
 

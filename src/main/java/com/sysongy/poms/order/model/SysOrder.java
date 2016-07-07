@@ -6,6 +6,7 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.math.BigDecimal;
@@ -67,6 +68,8 @@ public class SysOrder extends BaseModel{
     private Usysparam orderTypeInfo;
 
     private Gastation gastation;
+
+    private Transportion transportion;
 
 	public String getDischarge_reason() {
 		return discharge_reason;
@@ -283,5 +286,13 @@ public class SysOrder extends BaseModel{
 
     public void setCashBack(String cashBack) {
         this.cashBack = cashBack;
+    }
+
+    public Transportion getTransportion() {
+        return transportion;
+    }
+
+    public void setTransportion(Transportion transportion) {
+        this.transportion = transportion;
     }
 }

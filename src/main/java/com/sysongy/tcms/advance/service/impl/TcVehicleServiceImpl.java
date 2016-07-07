@@ -2,8 +2,10 @@ package com.sysongy.tcms.advance.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.tcms.advance.dao.TcVehicleCardMapper;
 import com.sysongy.tcms.advance.dao.TcVehicleMapper;
 import com.sysongy.tcms.advance.model.TcVehicle;
+import com.sysongy.tcms.advance.model.TcVehicleCard;
 import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.GlobalConstant;
@@ -27,6 +29,8 @@ import java.util.Map;
 public class TcVehicleServiceImpl implements TcVehicleService{
     @Autowired
     TcVehicleMapper tcVehicleMapper;
+    @Autowired
+    TcVehicleCardMapper tcVehicleCardMapper;
 
     @Override
     public TcVehicle queryVehicle(TcVehicle tcVehicle) {
@@ -107,5 +111,20 @@ public class TcVehicleServiceImpl implements TcVehicleService{
         }else{
             return 0;
         }
+    }
+
+    @Override
+    public int addVehicleCard(TcVehicleCard tcVehicleCard) {
+        return tcVehicleCardMapper.addVehicleCard(tcVehicleCard);
+    }
+
+    /**
+     * 根据卡号查询车辆信息
+     * @param cardNo
+     * @return
+     */
+    @Override
+    public List<TcVehicle> queryVehicleByCardNo(String cardNo) {
+        return tcVehicleMapper.queryVehicleByCardNo(cardNo);
     }
 }

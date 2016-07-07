@@ -71,6 +71,7 @@ function editFleet(fleetId){
             $("#fleet_name").val(data.fleetName);
             $("#tc_fleet_id").val(data.tcFleetId);
             $("#sys_user_id").val(data.sysUserId);
+            $("#fleet_name").removeAttr("onblur");
             userId = data.sysUserId;
             $("#editFleetDiv").text("修改车队");
             if(data.gasCard != null && data.gasCard.card_no != null){
@@ -142,6 +143,9 @@ function editFleet(fleetId){
 function closeDialog(divId){
     jQuery('#editForm').validationEngine('hide');//隐藏验证弹窗
     $("#editForm :input").each(function () {
+        $(this).val("");
+    });
+    $("#manageForm :input").each(function () {
         $(this).val("");
     });
     $("#avatar_b").empty();
@@ -252,6 +256,29 @@ function saveManage(){
     setlectItem.empty();
 
 }
+
+/**
+ * 判断用户名是否存在
+ */
+function isFleetExit(){
+    var fleetName = $("#fleet_name").val();
+    $.ajax({
+        url: '../web/tcms/fleet/info/name',
+        data:{fleetName:fleetName},
+        async:false,
+        type: "POST",
+        success: function(data){
+            console.log(data);
+            if(!data.valid){
+                alert("车队名称已存在!");
+                $("#fleet_name").focus();
+            }
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+        }
+    })
+}
+
 //bootstrap验证控件
 $('#editForm').bootstrapValidator({
     message: 'This value is not valid',
@@ -265,17 +292,6 @@ $('#editForm').bootstrapValidator({
             validators: {
                 notEmpty: {
                     message: '车队名称不能为空'
-                },
-                remote: {
-                    url: '../web/tcms/fleet/info/name',
-                    type: "post",
-                    async: false,
-                    data: function(validator, $field, value) {
-                        return{
-                            fleetName:$("#fleet_name").val()
-                        };
-                    },
-                    message: '车队名称已经存在'
                 }
             }
         },

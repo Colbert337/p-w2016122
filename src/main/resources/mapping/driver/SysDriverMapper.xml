@@ -91,7 +91,7 @@
       <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
         and checked_status = #{checkedStatus,jdbcType=VARCHAR}
       </if>
-      <if test="userName != null &amp;&amp; checkedStatus != ''">
+      <if test="userName != null &amp;&amp; userName != ''">
         and user_name = #{userName,jdbcType=INTEGER}
       </if>
       <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">

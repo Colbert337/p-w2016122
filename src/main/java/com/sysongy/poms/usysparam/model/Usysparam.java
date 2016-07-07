@@ -2,7 +2,9 @@ package com.sysongy.poms.usysparam.model;
 
 import java.util.List;
 
-public class Usysparam {
+import com.sysongy.poms.base.model.BaseModel;
+
+public class Usysparam extends BaseModel{
 	
 	private String gcode;
 	private String mcode;
