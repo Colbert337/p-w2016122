@@ -286,6 +286,7 @@ public class SysUserServiceImpl implements SysUserService{
 
         //创建管理员角色
         SysRole sysRole = new SysRole();
+        //查询当前运输公司下的管理员角色
         String roleId = UUIDGenerator.getUUID();
         sysRole.setSysRoleId(roleId);
         sysRole.setRoleType(userType);
