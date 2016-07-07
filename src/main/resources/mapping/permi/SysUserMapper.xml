@@ -59,6 +59,7 @@
     select
     <include refid="User_Role_List" />
     from sys_user su left join sys_user_role sur on su.sys_user_id = sur.sys_user_id left join sys_role sr on sur.sys_role_id = sr.sys_role_id
+    and sr.is_deleted = 1 and sr.role_status = 0
     where su.is_deleted = 1 and  su.is_admin > 0
     <trim>
       <if test="sysUserId != null &amp;&amp; sysUserId !=''" >
