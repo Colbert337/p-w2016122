@@ -110,7 +110,7 @@ public class AliShortMessage {
                 break;
             case DRIVER_CONSUME:
                 req.setSmsTemplateCode("SMS_11560787");
-                req.setSmsFreeSignName("消费通知");
+                req.setSmsFreeSignName("消费验证码");
                 req.setSmsParamString("{\"code\":\"" + aliShortMessageBean.getCode() + "\"}");
                 break;
             case DRIVER_CONSUME_SUCCESSFUL:

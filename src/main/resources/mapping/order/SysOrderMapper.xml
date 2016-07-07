@@ -21,6 +21,10 @@
     <result column="discharge_reason" property="discharge_reason" jdbcType="VARCHAR" />
     <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
     <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
+    <association property="orderTypeInfo" column="order_type"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
+    </association>
     <association property="operatorInfo" column="operator"
                  javaType="com.sysongy.poms.permi.model.SysUser"
                  select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
@@ -28,10 +32,6 @@
     <association property="consume_cardInfo" column="consume_card"
                  javaType="com.sysongy.poms.card.model.GasCard"
                  select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
-    </association>
-    <association property="orderDeal" column="order_id"
-                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
-                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
     </association>
     <collection property="sysOrderGoods" ofType="com.sysongy.poms.ordergoods.model.SysOrderGoods"
                 column="order_id"
@@ -81,12 +81,15 @@
   </select>
 
 
-  <select id="selectByOrderGASID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByOrderGASID" resultMap="BaseResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     select
     <include refid="Base_Column_List" />
     from sys_order
-      where order_id = #{orderId,jdbcType=VARCHAR} and is_discharge='0' and been_discharged='0'
+      where 1=1 and is_discharge='0' and been_discharged='0'
     <trim>
+      <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and order_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
       <if test="operatorSourceId != null &amp;&amp; operatorSourceId != ''" >
         and operator_source_id = #{operatorSourceId, jdbcType=VARCHAR}
       </if>

@@ -113,9 +113,9 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public SysOrder selectByOrderGASID(String orderId) {
-		SysOrder sysOrder = sysOrderMapper.selectByOrderGASID(orderId);
-		List<SysOrderGoods> sysOrderGoods = sysOrderGoodsMapper.selectByOrderID(orderId);
+	public SysOrder selectByOrderGASID(SysOrder record) {
+		SysOrder sysOrder = sysOrderMapper.selectByOrderGASID(record);
+		List<SysOrderGoods> sysOrderGoods = sysOrderGoodsMapper.selectByOrderID(record.getOrderId());
 		if((sysOrderGoods != null) && (sysOrderGoods.size() != 0)){
 			sysOrder.setSysOrderGoods(sysOrderGoods);
 		}

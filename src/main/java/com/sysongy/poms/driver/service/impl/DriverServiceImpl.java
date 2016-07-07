@@ -221,9 +221,14 @@ public class DriverServiceImpl implements DriverService {
 			chong = "转账";
 			orderDealType = GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_INCREASE_DRIVER;
 		}
-		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+
+        String remark = null;
+        if(StringUtils.isEmpty(driver.getFullName())){
+            remark = "给"+ driver.getMobilePhone() +"的账户，"+chong+cash.toString()+"。";
+        } else {
+            remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+        }
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
-		
 		return cash_success;
 	}
 	

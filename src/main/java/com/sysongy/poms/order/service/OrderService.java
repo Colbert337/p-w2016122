@@ -25,7 +25,7 @@ public interface OrderService {
     
     PageInfo<OrderLog> queryOrderLogs(OrderLog obj) throws Exception;
 
-    SysOrder selectByOrderGASID(String orderId);
+    SysOrder selectByOrderGASID(SysOrder record);
     /**
      * 给司机充值
      * @param order
