@@ -3,7 +3,15 @@
  */
 function loadPage(obj,url){
 	jQuery(obj).load(url,
-		function(){
+		function(response,status,xhr){
+				
+			if(status == "error"){
+				bootbox.confirm("当前会话已超时，请重新登录",function (result) {
+					if(result){
+						window.location.href = '../login.jsp';
+					}
+				});
+			}
 			$('[data-rel="tooltip"]').tooltip();
 		}
 	)

@@ -22,18 +22,21 @@ public class SecurityServlet extends HttpServlet implements Filter {
 	@Override
 	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2)
 			throws IOException, ServletException {
-		System.out.println("进来啦!");
 		
 		HttpServletRequest request=(HttpServletRequest)arg0;     
         HttpServletResponse response  =(HttpServletResponse) arg1;      
         HttpSession session = request.getSession(true);       
         CurrUser currUser = (CurrUser) session.getAttribute("currUser");//登录人角色  
         String url=request.getRequestURI();     
-        if(currUser == null || "".equals(currUser.getUserId())) {        
+        if(currUser == null || "".equals(currUser.getUserId())) {
              //判断获取的路径不为空且不是访问登录页面或执行登录操作时跳转     
-             if(url!=null && !url.equals("") && ( url.indexOf("Login")<0 && url.indexOf("login")<0 )) {     
-//                 response.sendRedirect(request.getContextPath() + "/login.jsp");     
-//                 return ;     
+             if(url!=null && !url.equals("") && ( url.indexOf("Login")<0 && url.indexOf("login")<0 )) {
+            	 if(url.contains("poms-web/web/")){
+            		 throw new ServletException("need login");
+            	 }else{
+            		 response.sendRedirect(request.getContextPath()+"/login.jsp");
+                	 return;
+            	 }
              }                
          }    
          arg2.doFilter(arg0, arg1);     

@@ -65,22 +65,6 @@
 			var sjny = sjny || {};
 			sjny.basePath = '<%=basePath %>';
 		</script>
-		
-		<script src="<%=basePath %>/common/js/xhr-overwrite.min.js"></script>
-	<script type="text/javascript">
-		overwriteXhr({
-		    open: function(method, url, async) {
-		        this.xhr.open(method, url);
-		    },
-		    send: function(data) {
-		    	var current = "${sessionScope.currUser.user.userName}";
-		    	console.debug(current);
-		        this.xhr.send(data);
-		    }
-		});
-	
-	</script>
-
 		<!--[if IE]>
 		<script type="text/javascript">
 		window.jQuery || document.write("<script src='../assets/js/jquery1x.js'>"+"<"+"/script>");
