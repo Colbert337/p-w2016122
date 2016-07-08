@@ -1,9 +1,11 @@
 package com.sysongy.poms.order.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SysOrderDeal {
+public class SysOrderDeal extends BaseModel{
     private String dealId;
 
     private String orderId;

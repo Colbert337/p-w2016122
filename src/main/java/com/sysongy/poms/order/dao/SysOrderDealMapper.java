@@ -1,7 +1,9 @@
 package com.sysongy.poms.order.dao;
 
 import java.util.List;
+import java.util.Map;
 
+import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 
 public interface SysOrderDealMapper {
@@ -20,4 +22,11 @@ public interface SysOrderDealMapper {
     List<SysOrderDeal> queryOrderDealByOrderId(String orderId);
 
     String selectCashBackByOrderID(String orderId);
+
+    /**
+     * 查询运输公司充值列表
+     * @param stationId
+     * @return
+     */
+    List<Map<String, Object>> queryRechargeList(String stationId);
  }

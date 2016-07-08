@@ -4,7 +4,12 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.order.model.OrderLog;
+import com.sysongy.poms.order.model.SysOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,5 +108,19 @@ public class OrderDealServiceImpl implements OrderDealService {
 			return null;
 		}
 		return sysOrderDealMapper.selectCashBackByOrderID(orderId);
+	}
+
+
+	/**
+	 * 查询运输公司充值列表
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public PageInfo<Map<String, Object>> queryRechargeList(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderDealMapper.queryRechargeList(record.getDebitAccount());
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
 	}
 }
