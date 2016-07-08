@@ -26,6 +26,8 @@ public interface SysOrderMapper {
 
     int updateByPrimaryKey(SysOrder record);
     
+    int updateOriginalOrderAfterDischarged(Map map);
+    
     /**
      * 查询某个用户在start_date之后，有没有产生消费
      * 用于在用户充红的时候判断能否充红。
