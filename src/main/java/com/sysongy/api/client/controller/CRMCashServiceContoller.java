@@ -154,6 +154,7 @@ public class CRMCashServiceContoller {
     public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
         SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
+        record.setIs_discharge("0");
         if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
                 StringUtils.isEmpty(record.getOperatorSourceId()) ){
             ajaxJson.setSuccess(false);
@@ -208,7 +209,7 @@ public class CRMCashServiceContoller {
 
         GasCard gasCard = null;
         if(StringUtils.isEmpty(checkCode)){
-            gasCard = gasCardService.selectByCardNoForCRM(sysDriver.getCardId());
+            gasCard = gasCardService.selectByCardNoForCRM(record.getConsume_card());
         } else {
             gasCard = gasCardService.selectByCardNoForCRM(record.getConsume_card());
         }
@@ -224,7 +225,7 @@ public class CRMCashServiceContoller {
 
         record.setCash(totalPrice);
         sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
-        if(gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION)){
+        if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
             record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
             TcFleet tcFleet = findFleetInfo(record.getConsume_card());
@@ -242,6 +243,7 @@ public class CRMCashServiceContoller {
                 ajaxJson.setMsg("所属运输公司无法查询！！！");
                 return ajaxJson;
             }
+
 
             String orderConsume = orderService.consumeByTransportion(record, transportion, tcFleet);
             if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
@@ -426,7 +428,6 @@ public class CRMCashServiceContoller {
             originalOrder.setTransportion(transportion);
 
         }
-
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", originalOrder);
         ajaxJson.setAttributes(attributes);
@@ -438,6 +439,18 @@ public class CRMCashServiceContoller {
     public AjaxJson queryOrderChangeDeal(HttpServletRequest request, HttpServletResponse response,
                                          SysOrderDeal sysOrderDeal) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
+
+        if(StringUtils.isEmpty(sysOrderDeal.getStationID())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！" );
+            return ajaxJson;
+        }
+
+        if(StringUtils.isEmpty(sysOrderDeal.getIsCharge())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("报表类型为空！！！" );
+            return ajaxJson;
+        }
 
         if(StringUtils.isEmpty(sysOrderDeal.getStorage_time_after())
                 || StringUtils.isEmpty(sysOrderDeal.getStorage_time_before())){

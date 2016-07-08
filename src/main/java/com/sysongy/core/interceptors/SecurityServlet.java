@@ -1,6 +1,7 @@
 package com.sysongy.core.interceptors;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -13,10 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.github.abel533.sql.SqlMapper;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.util.taglib.cache.UsysparamVO;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 
 public class SecurityServlet extends HttpServlet implements Filter {
 
@@ -61,8 +68,20 @@ public class SecurityServlet extends HttpServlet implements Filter {
 		sysUser.setUserName(curUserName);
 		sysUser.setMobilePhone(curUserName);
 		sysUser.setPassword(curPassword);
-		SysUser user = sysUserService.queryUserMapByAccount(sysUser);
-		if(user == null){
+
+		WebApplicationContext wac = ContextLoader.getCurrentWebApplicationContext();
+		SqlSessionFactory sessionFactory = (SqlSessionFactory) wac.getBean("sqlSessionFactory");
+		SqlSession session = sessionFactory.openSession();
+		SqlMapper sqlMapper = new SqlMapper(session);
+		String excuteSQL = "SELECT * FROM poms_web_v2_dev.sys_user where user_name=" +
+				curUserName +
+				" and password=" +
+				curPassword +
+				" and user_type='3' and status='0' and is_deleted='1'";
+		List<SysUser> list = sqlMapper.selectList(excuteSQL, SysUser.class);
+		session.close();
+
+		if((list == null) || (list.size() == 0)){
 			return false;
 		}
 		return true;

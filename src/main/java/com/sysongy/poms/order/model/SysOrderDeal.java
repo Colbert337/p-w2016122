@@ -33,6 +33,14 @@ public class SysOrderDeal extends BaseModel {
 
     private String operator;
 
+    private String cardID;
+
+    private String mobilePhone;
+
+    private String stationID;
+
+    private String isCharge;
+
     public String getRemark() {
 		return remark;
 	}
@@ -135,5 +143,37 @@ public class SysOrderDeal extends BaseModel {
 
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+
+    public String getCardID() {
+        return cardID;
+    }
+
+    public void setCardID(String cardID) {
+        this.cardID = cardID;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getStationID() {
+        return stationID;
+    }
+
+    public void setStationID(String stationID) {
+        this.stationID = stationID;
+    }
+
+    public String getIsCharge() {
+        return isCharge;
+    }
+
+    public void setIsCharge(String isCharge) {
+        this.isCharge = isCharge;
     }
 }
