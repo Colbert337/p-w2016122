@@ -25,8 +25,8 @@ public interface SysOrderDealMapper {
 
     /**
      * 查询运输公司充值列表
-     * @param stationId
+     * @param record
      * @return
      */
-    List<Map<String, Object>> queryRechargeList(String stationId);
+    List<Map<String, Object>> queryRechargeList(SysOrder record);
  }

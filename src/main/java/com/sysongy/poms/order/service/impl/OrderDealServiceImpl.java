@@ -119,7 +119,7 @@ public class OrderDealServiceImpl implements OrderDealService {
 	@Override
 	public PageInfo<Map<String, Object>> queryRechargeList(SysOrder record) {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
-		List<Map<String, Object>> list = sysOrderDealMapper.queryRechargeList(record.getDebitAccount());
+		List<Map<String, Object>> list = sysOrderDealMapper.queryRechargeList(record);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}

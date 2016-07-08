@@ -214,6 +214,9 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                 BigDecimal accountTotal = new BigDecimal(BigInteger.ZERO);
                 if(userAccount != null){
                     accountTotal = new BigDecimal(userAccount.getAccountBalance());
+                    if(accountTotal.compareTo(BigDecimal.ZERO) < 0){
+                        throw new Exception("账户余额为负值！");
+                    }
                     accountTotal = BigDecimalArith.sub(accountTotal,totalCash);
 
                     sysUserAccountService.addCashToAccount(userAccount.getSysUserAccountId(),accountTotal.multiply(new BigDecimal(-1)),"");

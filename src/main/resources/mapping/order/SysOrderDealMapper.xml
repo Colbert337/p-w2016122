@@ -34,9 +34,24 @@
     from sys_order_deal
     where deal_id = #{dealId,jdbcType=VARCHAR}
   </select>
-  <select id="queryRechargeList" resultMap="MapResultMap" parameterType="java.lang.String" >
+  <select id="queryRechargeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     select sod.*,sor.order_number,sor.operator from sys_order_deal sod left join sys_order sor on sod.order_id = sor.order_id
-    where sor.debit_account = #{stationId}
+    where 1 = 1
+    <if test="orderNumber != null &amp;&amp; orderNumber !=''" >
+      and sor.order_number = #{orderNumber}
+    </if>
+    <if test="debitAccount != null &amp;&amp; debitAccount !=''" >
+      and sor.debit_account = #{debitAccount}
+    </if>
+    <if test="channel != null &amp;&amp; channel !=''" >
+      and sor.channel = #{channel}
+    </if>
+    <if test="channelNumber != null &amp;&amp; channelNumber !=''" >
+      and sor.channel_number = #{channelNumber}
+    </if>
+    <if test="operatorSourceType != null &amp;&amp; operatorTargetType != ''">
+      and sor.order_date between CONCAT(#{operator_source_type,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{operator_target_type,jdbcType=VARCHAR},' 23:59:59')
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_order_deal

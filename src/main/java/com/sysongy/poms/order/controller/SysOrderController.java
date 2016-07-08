@@ -71,7 +71,7 @@ public class SysOrderController extends BaseContoller {
 	public String queryRechargeList(@ModelAttribute CurrUser currUser, ModelMap map, SysOrder order) throws Exception{
 		String stationId = currUser.getStationId();
 		PageBean bean = new PageBean();
-		String ret = "webpage/poms/transportion/transportion_recharge_list";
+		String ret = "webpage/poms/transportion/transportion_recharge_log";
 
 		try {
 			if(order.getPageNum() == null){
