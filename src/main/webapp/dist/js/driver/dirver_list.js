@@ -25,7 +25,9 @@ var listOptions ={
 /*分页相关方法 end*/
 //显示添加用户弹出层
 function addDriver(){
-    $("#driverModel").modal('show');
+    $("#driverModel").modal('show').on('hidden.bs.modal', function() {
+        $('#driverForm').bootstrapValidator('resetForm',true);
+    });
 }
 
 var countdown=60;
