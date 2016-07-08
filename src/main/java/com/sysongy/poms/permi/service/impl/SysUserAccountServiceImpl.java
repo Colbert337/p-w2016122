@@ -76,6 +76,9 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		if(balance_result.compareTo(new BigDecimal(0))<0){
 			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_ERROR_BALANCE_IS_NOT_ENOUGH);
 		}
+		//保留两位小数，四舍五入---去掉这段逻辑，不要四舍五入了
+		//balance_result =  balance_result.setScale(2, BigDecimal.ROUND_HALF_UP);
+		
 		sysUserAccount.setAccountBalance(balance_result.toString());
 		sysUserAccount.setUpdatedDate(new Date());
 		String have_consume = getHaveConsumeFromOrder(order_type,sysUserAccount);
