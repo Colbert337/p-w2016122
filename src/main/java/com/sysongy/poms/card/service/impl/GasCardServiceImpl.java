@@ -231,4 +231,9 @@ public class GasCardServiceImpl implements GasCardService{
 		PageInfo<GasCard> pageInfo = new PageInfo<GasCard>(list);
 		return pageInfo;
 	}
+
+	@Override
+	public int updateByPrimaryKeySelective(GasCard record) throws Exception {
+		return gasCardMapper.updateByPrimaryKeySelective(record);
+	}
 }

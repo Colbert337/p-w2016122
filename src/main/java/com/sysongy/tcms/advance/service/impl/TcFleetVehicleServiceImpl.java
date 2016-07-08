@@ -79,14 +79,33 @@ public class TcFleetVehicleServiceImpl implements TcFleetVehicleService{
     }
 
     @Override
-    public int addFleetVehicleList(List<TcFleetVehicle> fleetVehicleList, String fleetId) {
+    public int addFleetVehicleList(List<TcFleetVehicle> fleetVehicleList, String fleetId, String stationId) throws Exception {
         int result = 0;
         TcFleetVehicle fleetVehicle = new TcFleetVehicle();
         fleetVehicle.setTcFleetId(fleetId);
-        //删除当前车队车辆关系
-        tcFleetVehicleMapper.deleteFleetVehicle(fleetVehicle);
-        //添加车队车辆关系
-        result = tcFleetVehicleMapper.addFleetVehicleList(fleetVehicleList);
+        try {
+            //删除当前车队车辆关系
+            tcFleetVehicleMapper.deleteFleetVehicle(fleetVehicle);
+            //添加车队车辆关系
+            result = tcFleetVehicleMapper.addFleetVehicleList(fleetVehicleList);
+            //更新状态
+            //查询当前运输公司未分配车辆
+            List<TcVehicle> vehicleList = new ArrayList<>();
+            fleetVehicle.setStationId(stationId);
+            List<TcVehicle> tcVehicleList = tcVehicleMapper.queryVehicleByStationId(stationId);
+            if(tcVehicleList != null && tcVehicleList.size() > 0){
+                for (TcVehicle vehicleTemp:tcVehicleList) {
+                    TcVehicle vehicle = new TcVehicle();
+                    vehicle.setTcVehicleId(vehicleTemp.getTcVehicleId());
+                    vehicle.setIsAllot(0);//是否分配 0 不分配 1 分配
+                    vehicleList.add(vehicle);
+                    tcVehicleMapper.updateVehicle(vehicle);
+                }
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return result;
     }
 

@@ -21,6 +21,10 @@
     <result column="discharge_reason" property="discharge_reason" jdbcType="VARCHAR" />
     <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
     <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
+    <association property="orderTypeInfo" column="order_type"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
+    </association>
     <association property="operatorInfo" column="operator"
                  javaType="com.sysongy.poms.permi.model.SysUser"
                  select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
@@ -28,10 +32,6 @@
     <association property="consume_cardInfo" column="consume_card"
                  javaType="com.sysongy.poms.card.model.GasCard"
                  select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
-    </association>
-    <association property="orderDeal" column="order_id"
-                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
-                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
     </association>
     <collection property="sysOrderGoods" ofType="com.sysongy.poms.ordergoods.model.SysOrderGoods"
                 column="order_id"
@@ -44,7 +44,7 @@
   
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
-    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id,operator_source_type, operator_source_id, operator_target_type,consume_card
+    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id, operator_source_id, operator_source_type, operator_target_type,consume_card
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -81,12 +81,15 @@
   </select>
 
 
-  <select id="selectByOrderGASID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByOrderGASID" resultMap="BaseResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     select
     <include refid="Base_Column_List" />
     from sys_order
-      where order_id = #{orderId,jdbcType=VARCHAR} and is_discharge='0' and been_discharged='0'
+      where 1=1 and is_discharge='0' and been_discharged='0'
     <trim>
+      <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and order_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
       <if test="operatorSourceId != null &amp;&amp; operatorSourceId != ''" >
         and operator_source_id = #{operatorSourceId, jdbcType=VARCHAR}
       </if>
@@ -97,7 +100,7 @@
     select 
     <include refid="Base_Column_List" />
     from sys_order
-    where debit_account = #{userId,jdbcType=VARCHAR}
+    where credit_account = #{userId,jdbcType=VARCHAR}
      and order_type in (#{CONSUME_BY_TRANSPORTION,jdbcType=VARCHAR},#{CONSUME_BY_DRIVER,jdbcType=VARCHAR})
      and order_date > #{order_date,jdbcType=TIMESTAMP}
   </select>
@@ -281,6 +284,22 @@
       </if>
       <if test="consume_card != null" >
         consume_card = #{consume_card,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateOriginalOrderAfterDischarged" parameterType="java.util.Map" >
+    update sys_order
+    <set >
+      <if test="been_discharged != null" >
+        been_discharged = #{been_discharged,jdbcType=VARCHAR},
+      </if>
+      <if test="discharge_reason != null" >
+        discharge_reason = #{discharge_reason,jdbcType=VARCHAR},
+      </if>
+      <if test="dischargeOrderId != null" >
+        discharge_order_id = #{dischargeOrderId,jdbcType=VARCHAR},
       </if>
     </set>
     where order_id = #{orderId,jdbcType=VARCHAR}

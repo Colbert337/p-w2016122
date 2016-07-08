@@ -113,9 +113,9 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public SysOrder selectByOrderGASID(String orderId) {
-		SysOrder sysOrder = sysOrderMapper.selectByOrderGASID(orderId);
-		List<SysOrderGoods> sysOrderGoods = sysOrderGoodsMapper.selectByOrderID(orderId);
+	public SysOrder selectByOrderGASID(SysOrder record) {
+		SysOrder sysOrder = sysOrderMapper.selectByOrderGASID(record);
+		List<SysOrderGoods> sysOrderGoods = sysOrderGoodsMapper.selectByOrderID(record.getOrderId());
 		if((sysOrderGoods != null) && (sysOrderGoods.size() != 0)){
 			sysOrder.setSysOrderGoods(sysOrderGoods);
 		}
@@ -377,8 +377,15 @@ public class OrderServiceImpl implements OrderService {
 		 //TODO 针对其他类型进行操作
 	   }
 	   //充红完成后，将对应的原订单里面的discharge_order_id修改为此订单ID。同时修改been_discharged字段为1
-	   originalOrder.setDischargeOrderId(dischargeOrder.getOrderId());
-	   originalOrder.setBeen_discharged(GlobalConstant.ORDER_BEEN_DISCHARGED_YES);
+	   HashMap<String,String> map = new HashMap<String,String>();
+	   map.put("orderId", originalOrder.getOrderId());
+	   map.put("dischargeOrderId", dischargeOrder.getOrderId());
+	   map.put("discharge_reason", dischargeOrder.getDischarge_reason());
+	   map.put("been_discharged", GlobalConstant.ORDER_BEEN_DISCHARGED_YES);
+	   sysOrderMapper.updateOriginalOrderAfterDischarged(map);
+//	   originalOrder.setDischargeOrderId(dischargeOrder.getOrderId());
+//	   originalOrder.setDischarge_reason(dischargeOrder.getDischarge_reason());
+//	   originalOrder.setBeen_discharged(GlobalConstant.ORDER_BEEN_DISCHARGED_YES);
 	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}

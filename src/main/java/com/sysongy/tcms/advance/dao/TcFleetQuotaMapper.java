@@ -1,5 +1,7 @@
 package com.sysongy.tcms.advance.dao;
 
+import com.github.pagehelper.PageInfo;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 
 import java.util.List;
@@ -60,4 +62,11 @@ public interface TcFleetQuotaMapper {
     int updateFleetQuota(TcFleetQuota tcFleetQuota);
 
     /*********************************基础方法 end*************************************/
+
+    /**
+     * 查询车队额度信息列表
+     * @param tcFleet
+     * @return
+     */
+    List<Map<String, Object>> queryQuotaList(TcFleet tcFleet);
 }

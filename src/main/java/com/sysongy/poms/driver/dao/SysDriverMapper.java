@@ -23,6 +23,8 @@ public interface SysDriverMapper {
 
     List<SysDriver> querySingleDriver(SysDriver record);
 
+    List<SysDriver> ifExistDriver(SysDriver record);
+
     int isExists(SysDriver record);
 
     SysDriver queryDriverByMobilePhone(SysDriver record);

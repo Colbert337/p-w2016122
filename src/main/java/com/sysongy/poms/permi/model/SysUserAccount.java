@@ -17,6 +17,8 @@ public class SysUserAccount extends BaseModel{
 
     private String accountBalance;
 
+    private BigDecimal accountBalanceBigDecimal;
+
     private Date createdDate;
 
     private Date updatedDate;
@@ -38,8 +40,6 @@ public class SysUserAccount extends BaseModel{
 	private Usysparam account_statusInfo;
 
     private BigDecimal deposit;
-
-    private SysDriver sys_drive_info;
 
     public BigDecimal getDeposit() {
 		return deposit;
@@ -121,4 +121,20 @@ public class SysUserAccount extends BaseModel{
         this.account_statusInfo = account_statusInfo;
     }
 
+    public BigDecimal getAccountBalanceBigDecimal() {
+        if(this.accountBalanceBigDecimal == null){
+            BigDecimal bd = new BigDecimal(accountBalance);
+            bd = bd.setScale(2, BigDecimal.ROUND_DOWN);
+            this.accountBalanceBigDecimal = bd;
+        }
+        return accountBalanceBigDecimal;
+    }
+
+    public void setAccountBalanceBigDecimal(BigDecimal accountBalanceBigDecimal) {
+        if(this.accountBalanceBigDecimal == null){
+            BigDecimal bd = new BigDecimal(accountBalance);
+            bd = bd.setScale(2, BigDecimal.ROUND_DOWN);
+            this.accountBalanceBigDecimal = bd;
+        }
+    }
 }

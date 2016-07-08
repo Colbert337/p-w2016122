@@ -20,11 +20,13 @@ public interface SysOrderMapper {
 
     SysOrder selectByPrimaryKey(String orderId);
 
-    SysOrder selectByOrderGASID(String orderId);
+    SysOrder selectByOrderGASID(SysOrder record);
 
     int updateByPrimaryKeySelective(SysOrder record);
 
     int updateByPrimaryKey(SysOrder record);
+    
+    int updateOriginalOrderAfterDischarged(Map map);
     
     /**
      * 查询某个用户在start_date之后，有没有产生消费

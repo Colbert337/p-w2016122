@@ -359,7 +359,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_icon">功能图标： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="validate[required,maxSize[10]] col-xs-10 col-sm-10" />
+										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="validate[maxSize[10]] col-xs-10 col-sm-10" />
 									</div>
 								</div>
 								<div class="form-group">
