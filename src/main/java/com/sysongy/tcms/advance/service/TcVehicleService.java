@@ -1,6 +1,7 @@
 package com.sysongy.tcms.advance.service;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.model.TcVehicleCard;
 
@@ -95,4 +96,11 @@ public interface TcVehicleService {
      * @return
      */
     List<TcVehicle> queryVehicleByStationId(String stationId);
+
+    /**
+     * 查询当前区域下的最大下标
+     * @param provinceId
+     * @return
+     */
+    TcVehicle queryMaxIndex(String provinceId);
 }

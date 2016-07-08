@@ -9,6 +9,7 @@ import com.sysongy.poms.card.dao.GasCardLogMapper;
 import com.sysongy.poms.card.model.GasCardLog;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 
+import com.sysongy.tcms.advance.model.TcFleet;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -363,5 +364,11 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public int deleteDriverByIds(List<String> idList) {
         return sysDriverMapper.deleteDriverByIds(idList);
+    }
+
+    @Override
+    public SysDriver queryMaxIndex() {
+        String provinceId = "%P%";
+        return sysDriverMapper.queryMaxIndex(provinceId);
     }
 }

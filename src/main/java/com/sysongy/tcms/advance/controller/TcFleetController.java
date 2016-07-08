@@ -143,14 +143,13 @@ public class TcFleetController extends BaseContoller {
             String newid;
             TcFleet fleetTemp = tcFleetService.queryMaxIndex(transportion.getProvince_id());
             if(fleetTemp == null || StringUtils.isEmpty(fleetTemp.getTcFleetId())){
-                newid = "TA"+transportion.getProvince_id() + "000001";
+                newid = "TA"+transportion.getProvince_id() + "00001";
             }else{
-                Integer tmp = Integer.valueOf(fleetTemp.getTcFleetId().substring(6, 10)) + 1;
-                newid = "TA"+transportion.getProvince_id() + StringUtils.leftPad(tmp.toString() , 6, "0");
+                Integer tmp = Integer.valueOf(fleetTemp.getTcFleetId().substring(5, 10)) + 1;
+                newid = "TA"+transportion.getProvince_id() + StringUtils.leftPad(tmp.toString() , 5, "0");
             }
 
             fleet.setStationId(stationId);
-
             fleet.setTcFleetId(newid);
             fleet.setIsDeleted(GlobalConstant.STATUS_NOTDELETE+"");
 

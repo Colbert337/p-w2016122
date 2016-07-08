@@ -7,6 +7,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.tcms.advance.model.TcFleet;
+import com.sysongy.tcms.advance.model.TcFleetQuota;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,6 +56,8 @@ public class DriverController extends BaseContoller{
 	RedisClientInterface redisClientImpl;
 	@Autowired
 	SysUserAccountService sysUserAccountService;
+	@Autowired
+	TransportionService transportionService;
 
 	SysDriver driver;
 	/**
@@ -125,7 +131,7 @@ public class DriverController extends BaseContoller{
      * @return
      */
 	@RequestMapping("/save")
-	public String saveDriver(@ModelAttribute("currUser") CurrUser currUser, SysDriver driver, ModelMap map){
+	public String saveDriver(@ModelAttribute("currUser") CurrUser currUser, SysDriver driver, ModelMap map) throws Exception{
 		int userType = currUser.getUser().getUserType();
 		int result = 0;
 		int resultInt = 0;
@@ -139,9 +145,18 @@ public class DriverController extends BaseContoller{
 		driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
 		driver.setStationId(stationId);//站点编号
 
+		String newid;
+		SysDriver driverTemp = driverService.queryMaxIndex();
+		if(driverTemp == null || StringUtils.isEmpty(driverTemp.getSysDriverId())){
+			newid = "P" + "000000001";
+		}else{
+			Integer tmp = Integer.valueOf(driverTemp.getSysDriverId().substring(1, 10)) + 1;
+			newid = "P" + StringUtils.leftPad(tmp.toString() , 9, "0");
+		}
 
-		driver.setSysDriverId(UUIDGenerator.getUUID());
+		driver.setSysDriverId(newid);
 		driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
+
 
 		try {
 			result = driverService.saveDriver(driver,operation);

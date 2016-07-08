@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.tcms.advance.dao.TcVehicleCardMapper;
 import com.sysongy.tcms.advance.dao.TcVehicleMapper;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.model.TcVehicleCard;
 import com.sysongy.tcms.advance.service.TcFleetService;
@@ -136,5 +137,11 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     @Override
     public List<TcVehicle> queryVehicleByStationId(String stationId) {
         return tcVehicleMapper.queryVehicleByStationId(stationId);
+    }
+
+    @Override
+    public TcVehicle queryMaxIndex(String provinceId) {
+        provinceId = "%"+provinceId+"%";
+        return tcVehicleMapper.queryMaxIndex(provinceId);
     }
 }

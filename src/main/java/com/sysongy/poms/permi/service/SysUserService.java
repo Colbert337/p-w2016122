@@ -1,6 +1,7 @@
 package com.sysongy.poms.permi.service;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserRole;
 
@@ -133,4 +134,10 @@ public interface SysUserService {
      * @return
      */
     int updateUserByUserName(SysUser record);
+
+    /**
+     * 查询当前区域下的最大下标
+     * @return
+     */
+    SysUser queryMaxIndex();
 }

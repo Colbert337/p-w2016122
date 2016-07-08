@@ -51,6 +51,10 @@
     where plates_number = #{platesNumber,jdbcType=VARCHAR}
     and is_deleted = 1  and station_id = #{stationId,jdbcType=VARCHAR}
   </select>
+  <!--查询最大索引-->
+  <select id="queryMaxIndex" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from tc_vehicle where tc_vehicle_id like #{provinceId} order by tc_vehicle_id desc limit 1
+  </select>
   <select id="queryVehicleList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     select
     <include refid="Base_Column_List" />
