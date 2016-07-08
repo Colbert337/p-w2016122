@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+
+import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +50,7 @@ public class OrderDealServiceImpl implements OrderDealService {
     
     /**
      * 创建流水单编码 deal_type+YYMMDD+hhmmss+3位毫秒
-     * @param record
+     * @paramrecord
      * @return
      */
    public String createDealNumber(String deal_type){
@@ -59,7 +62,7 @@ public class OrderDealServiceImpl implements OrderDealService {
    
    /**
     * 根据订单来查询订单操作流水
-    * @param record
+    * @paramrecord
     * @return
     */
    public List<SysOrderDeal> queryOrderDealByOrderId(String orderId){
@@ -68,7 +71,7 @@ public class OrderDealServiceImpl implements OrderDealService {
    
    /**
     * 创建订单流水单--调用createOrderDealWithCashBack，穿过去参数cash_back_per="", cash_back=0
-    * @param record
+    * @paramrecord
     * @return
     */
    public String createOrderDeal(String order_id, String deal_type, String remark, String run_success){
@@ -79,7 +82,7 @@ public class OrderDealServiceImpl implements OrderDealService {
    
    /**
     * 创建订单流水单
-    * @param record
+    * @paramrecord
     * @return
     */
    public String createOrderDealWithCashBack(String order_id, String deal_type, String remark,String cash_back_per,BigDecimal cash_back, String run_success){
@@ -109,8 +112,20 @@ public class OrderDealServiceImpl implements OrderDealService {
 	}
 
 	@Override
-	public List<SysOrderDeal>  queryOrderDeals(SysOrderDeal record) throws Exception{
+	public List<SysOrderDeal>  queryOrderDeals(SysOrderDeal record) throws Exception {
 		List<SysOrderDeal> list = sysOrderDealMapper.queryForPage(record);
 		return list;
+	}
+	/**
+	 * 查询运输公司充值列表
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public PageInfo<Map<String, Object>> queryRechargeList(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderDealMapper.queryRechargeList(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
 	}
 }

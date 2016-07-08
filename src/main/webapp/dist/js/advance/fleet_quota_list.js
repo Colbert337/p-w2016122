@@ -189,7 +189,6 @@ function queryDriverInfo(index){
  * @param obj
  */
 function deleteRow(index){
-    console.log( $("#tr_"+index));
     $("#tr_"+index).remove();
 }
 /**

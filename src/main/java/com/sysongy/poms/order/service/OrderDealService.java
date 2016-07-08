@@ -2,6 +2,7 @@ package com.sysongy.poms.order.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.SysOrder;
@@ -53,4 +54,11 @@ public interface OrderDealService {
     public String createOrderDealWithCashBack(String orderId, String deal_type, String remark,String cash_back_per,BigDecimal cash_back, String run_success);
 
     String selectCashBackByOrderID(String orderId);
+
+    /**
+     * 查询运输公司充值列表
+     * @param record
+     * @return
+     */
+    PageInfo<Map<String, Object>> queryRechargeList(SysOrder record);
 }

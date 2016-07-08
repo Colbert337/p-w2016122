@@ -1,12 +1,15 @@
 package com.sysongy.tcms.advance.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
 import com.sysongy.tcms.advance.service.TcFleetService;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -200,6 +204,56 @@ public class TcFleetQuotaController extends BaseContoller {
         }
 
         return driver;
+    }
+
+    /**
+     * 查询车队额度信息列表
+     * @param tcFleet
+     * @return
+     */
+    @RequestMapping("/list/quota")
+    public String queryQuotaList(@ModelAttribute CurrUser currUser, TcFleet tcFleet, ModelMap map){
+        String stationId = currUser.getStationId();
+        PageBean bean = new PageBean();
+        String ret = "webpage/tcms/advance/fleet_quota_log";
+
+        try {
+            if(tcFleet.getPageNum() == null){
+                tcFleet.setOrderby("created_date desc");
+                tcFleet.setPageNum(1);
+                tcFleet.setPageSize(10);
+            }
+            tcFleet.setStationId(stationId);
+            PageInfo<Map<String, Object>> pageinfo = tcFleetQuotaService.queryQuotaList(tcFleet);
+
+            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+                BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                    if(quotaMap.get("quota") != null && !"".equals(quotaMap.get("quota").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("quota").toString()));
+                    }
+                }
+                //累计总划款金额
+                map.addAttribute("totalCash",totalCash);
+            }
+            bean.setRetCode(100);
+            bean.setRetMsg("查询成功");
+            bean.setPageInfo(ret);
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("pageInfo", pageinfo);
+            map.addAttribute("tcFleet",tcFleet);
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+            throw e;
+        }
+        finally {
+            return ret;
+        }
     }
 
 }

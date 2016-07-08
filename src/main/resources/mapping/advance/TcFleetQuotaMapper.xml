@@ -60,30 +60,41 @@
   order by created_date desc
   </select>
   <select id="queryFleetQuotaMapList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleetQuota" >
-    select tf.fleet_name,tf.station_id,tf.tc_fleet_id,sr.real_name,sr.alias_name,sr.user_name,sr.mobile_phone,tf.is_allot,tf.quota,tf.updated_date
-    from tc_fleet tf left join sys_user sr on tf.sys_user_id = sr.sys_user_id
-    where tf.is_deleted = 1
-    and tf.station_id = #{stationId}
-    <if test="tcFleetId != null  &amp;&amp; tcFleetId !=''" >
-      and  tf.tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
-    </if>
-    <if test="quota != null &amp;&amp; quota !=''" >
-      and  tf.quota = #{quota,jdbcType=DECIMAL}
-    </if>
-    <if test="isAllot != null &amp;&amp; isAllot !=''" >
-      and  tf.is_allot = #{isAllot,jdbcType=INTEGER}
-    </if>
-    <if test="createdDate != null &amp;&amp; createdDate !=''" >
-      and  tf.created_date = #{createdDate,jdbcType=TIMESTAMP}
-    </if>
-    <if test="updatedDate != null &amp;&amp; updatedDate !=''" >
-      and  tf.updated_date = #{updatedDate,jdbcType=TIMESTAMP}
-    </if>
+  select tf.fleet_name,tf.station_id,tf.tc_fleet_id,sr.real_name,sr.alias_name,sr.user_name,sr.mobile_phone,tf.is_allot,tf.quota,tf.updated_date
+  from tc_fleet tf left join sys_user sr on tf.sys_user_id = sr.sys_user_id
+  where tf.is_deleted = 1
+  and tf.station_id = #{stationId}
+  <if test="tcFleetId != null  &amp;&amp; tcFleetId !=''" >
+    and  tf.tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
+  </if>
+  <if test="quota != null &amp;&amp; quota !=''" >
+    and  tf.quota = #{quota,jdbcType=DECIMAL}
+  </if>
+  <if test="isAllot != null &amp;&amp; isAllot !=''" >
+    and  tf.is_allot = #{isAllot,jdbcType=INTEGER}
+  </if>
+  <if test="createdDate != null &amp;&amp; createdDate !=''" >
+    and  tf.created_date = #{createdDate,jdbcType=TIMESTAMP}
+  </if>
+  <if test="updatedDate != null &amp;&amp; updatedDate !=''" >
+    and  tf.updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+  </if>
+  <if test="fleetName != null &amp;&amp; fleetName !=''" >
+    and (tf.fleet_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%')
+    or  sr.real_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%'))
+  </if>
+  order by tf.created_date desc
+</select>
+  <select id="queryQuotaList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
+    select tfq.*,tf.fleet_name from tc_fleet_quota tfq left join tc_fleet tf on tfq.tc_fleet_id = tf.tc_fleet_id
+    where tfq.station_id = #{stationId}
     <if test="fleetName != null &amp;&amp; fleetName !=''" >
-      and (tf.fleet_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%')
-      or  sr.real_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%'))
+      and (tf.fleet_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%'))
     </if>
-    order by tf.created_date desc
+    <if test="startDate != null &amp;&amp; endDate !=null  &amp;&amp; startDate != '' &amp;&amp; endDate !='' " >
+      and  tfq.created_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+    </if>
+
   </select>
   <delete id="deleteFleetQuota" parameterType="com.sysongy.tcms.advance.model.TcFleetQuota" >
     delete from tc_fleet_quota

@@ -9,6 +9,7 @@ import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.tcms.advance.dao.TcFleetMapper;
 import com.sysongy.tcms.advance.dao.TcFleetQuotaMapper;
 import com.sysongy.tcms.advance.dao.TcTransferAccountMapper;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.model.TcTransferAccount;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
@@ -214,6 +215,9 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                 BigDecimal accountTotal = new BigDecimal(BigInteger.ZERO);
                 if(userAccount != null){
                     accountTotal = new BigDecimal(userAccount.getAccountBalance());
+                    if(accountTotal.compareTo(BigDecimal.ZERO) < 0){
+                        throw new Exception("账户余额为负值！");
+                    }
                     accountTotal = BigDecimalArith.sub(accountTotal,totalCash);
 
                     sysUserAccountService.addCashToAccount(userAccount.getSysUserAccountId(),accountTotal.multiply(new BigDecimal(-1)),"");
@@ -224,5 +228,23 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
             e.printStackTrace();
         }
         return 0;
+    }
+
+    /**
+     * 查询车队额度信息列表
+     * @param tcFleet
+     * @return
+     */
+    @Override
+    public PageInfo<Map<String, Object>> queryQuotaList(TcFleet tcFleet) {
+        if(tcFleet != null){
+            PageHelper.startPage(tcFleet.getPageNum(),tcFleet.getPageSize());
+
+            List<Map<String, Object>> fleetQuotaList = tcFleetQuotaMapper.queryQuotaList(tcFleet);
+            PageInfo<Map<String, Object>> fleetQuotaPageInfo = new PageInfo<>(fleetQuotaList);
+            return fleetQuotaPageInfo;
+        }else{
+            return null;
+        }
     }
 }
