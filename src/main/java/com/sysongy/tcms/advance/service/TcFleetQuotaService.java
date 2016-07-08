@@ -67,4 +67,10 @@ public interface TcFleetQuotaService {
      */
     int updateFleetQuota(TcFleetQuota tcFleetQuota);
 
+    /**
+     * 个人转账
+     * @param list 个人转账列表
+     * @return
+     */
+    int personalTransfer(List<Map<String, Object>> list,String stationId ,String userName) throws Exception;
 }

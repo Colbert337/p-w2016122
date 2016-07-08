@@ -263,8 +263,8 @@ $('#editForm').bootstrapValidator({
                     message: '支付密码不能为空'
                 },
                 regexp: {
-                    regexp: '^[0-9]+$',
-                    message: '密码只能包含数字'
+                    regexp: '^[0-9a-zA-Z]+$',
+                    message: '密码只能包含数字和字母'
                 }
             }
         },
@@ -274,8 +274,8 @@ $('#editForm').bootstrapValidator({
                     message: '确认密码不能为空'
                 },
                 regexp: {
-                    regexp: '^[0-9]+$',
-                    message: '密码只能包含数字'
+                    regexp: '^[0-9a-zA-Z]+$',
+                    message: '密码只能包含数字和字母'
                 },
                 callback: {
                     message: '支付密码不一致',
@@ -294,7 +294,7 @@ $('#editForm').bootstrapValidator({
                     message: '手机号不能为空'
                 },
                 regexp: {
-                    regexp: '^[0-9]+$',
+                    regexp: '^[0-9a-zA-Z]+$',
                     message: '手机号只能包含数字'
                 },
                 stringLength: {

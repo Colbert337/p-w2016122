@@ -50,8 +50,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/web/tcms/vehicle")
 public class TcVehicleController extends BaseContoller {
-
-
     @Autowired
     TcVehicleService tcVehicleService;
     @Autowired
@@ -110,7 +108,7 @@ public class TcVehicleController extends BaseContoller {
 
         TcVehicleCard tcVehicleCard = tcVehicleCardService.queryTcVehicleCardByVecId(tcVehicleCardTemp);
         vehicleMap.put("vehicle",tcVehicle);
-        if(tcVehicle != null && tcVehicle.getCardNo() != null && tcVehicleCard != null){
+        if(tcVehicle != null && tcVehicleCard.getCardNo() != null && tcVehicleCard != null){
             try {
                 gasCard = gasCardService.queryGasCardInfo(tcVehicleCard.getCardNo());
             }catch (Exception e){
@@ -291,7 +289,13 @@ public class TcVehicleController extends BaseContoller {
                         System.out.println("正在导入车辆数据》》》》》》》》》》》》》");
 
                         tcVehicle.setCardNo(null);
+                        tcVehicle.setIsAllot(0);//是否分配 0 不分配 1 分配
                         vehicleList.add(tcVehicle);
+                        //修改卡状态
+                        GasCard gasCard = new GasCard();
+                        gasCard.setCard_no(cardNo);
+                        gasCard.setCard_status(GlobalConstant.CardStatus.USED);
+                        gasCardService.updateByPrimaryKeySelective(gasCard);
                     }
 
                 }

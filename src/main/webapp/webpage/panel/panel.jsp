@@ -21,16 +21,16 @@
 		 <div class="space-32" style="margin-top: 10%;"></div>
 		 <h1>
 			 <c:if test="${sessionScope.currUser.user.userType == 1}">
-				 欢迎登陆司集气站管理系统！
+				 欢迎登录司集加注站管理系统！
 			 </c:if>
 			 <c:if test="${sessionScope.currUser.user.userType == 2}">
-				 欢迎登陆司集运输公司管理系统！
+				 欢迎登录司集运输公司管理系统！
 			 </c:if>
 			 <c:if test="${sessionScope.currUser.user.userType == 4}">
-				 欢迎登陆司集集团管理系统！
+				 欢迎登录司集集团管理系统！
 			 </c:if>
 			 <c:if test="${sessionScope.currUser.user.userType == 5}">
-				 欢迎登陆司集运维管理平台！
+				 欢迎登录司集运维管理平台！
 			 </c:if>
 		 </h1>
 	</div>
