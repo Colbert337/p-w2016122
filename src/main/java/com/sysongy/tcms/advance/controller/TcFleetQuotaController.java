@@ -1,12 +1,15 @@
 package com.sysongy.tcms.advance.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
 import com.sysongy.tcms.advance.service.TcFleetService;
@@ -200,6 +203,46 @@ public class TcFleetQuotaController extends BaseContoller {
         }
 
         return driver;
+    }
+
+    /**
+     * 查询车队额度信息列表
+     * @param tcFleet
+     * @return
+     */
+    @RequestMapping("/list/quota")
+    public String queryQuotaList(@ModelAttribute CurrUser currUser, TcFleet tcFleet, ModelMap map){
+        String stationId = currUser.getStationId();
+        PageBean bean = new PageBean();
+        String ret = "webpage/tcms/advance/fleet_quota_log";
+
+        try {
+            if(tcFleet.getPageNum() == null){
+                tcFleet.setOrderby("created_date desc");
+                tcFleet.setPageNum(1);
+                tcFleet.setPageSize(10);
+            }
+            tcFleet.setStationId(stationId);
+            PageInfo<Map<String, Object>> pageinfo = tcFleetQuotaService.queryQuotaList(tcFleet);
+
+            bean.setRetCode(100);
+            bean.setRetMsg("查询成功");
+            bean.setPageInfo(ret);
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("pageInfo", pageinfo);
+            map.addAttribute("tcFleet",tcFleet);
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+            throw e;
+        }
+        finally {
+            return ret;
+        }
     }
 
 }

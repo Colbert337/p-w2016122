@@ -24,6 +24,10 @@ public class TcFleet extends BaseModel{
 
     private String isDeleted;
 
+    private String startDate;
+
+    private String endDate;
+
     public String getTcFleetId() {
         return tcFleetId;
     }
@@ -94,5 +98,21 @@ public class TcFleet extends BaseModel{
 
     public void setIsAllot(Integer isAllot) {
         this.isAllot = isAllot;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

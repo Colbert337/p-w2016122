@@ -1,6 +1,7 @@
 package com.sysongy.tcms.advance.service;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 
 import java.util.List;
@@ -31,6 +32,13 @@ public interface TcFleetQuotaService {
      * @return
      */
     PageInfo<TcFleetQuota> queryFleetQuotaList(TcFleetQuota tcFleetQuota);
+
+    /**
+     * 查询车队额度信息列表
+     * @param tcFleet
+     * @return
+     */
+    PageInfo<Map<String, Object>> queryQuotaList(TcFleet tcFleet);
 
     /**
      * 查询车队额度信息列表
