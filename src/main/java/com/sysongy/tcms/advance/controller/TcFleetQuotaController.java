@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -225,6 +226,16 @@ public class TcFleetQuotaController extends BaseContoller {
             tcFleet.setStationId(stationId);
             PageInfo<Map<String, Object>> pageinfo = tcFleetQuotaService.queryQuotaList(tcFleet);
 
+            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+                BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                    if(quotaMap.get("quota") != null && !"".equals(quotaMap.get("quota").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("quota").toString()));
+                    }
+                }
+                //累计总划款金额
+                map.addAttribute("totalCash",totalCash);
+            }
             bean.setRetCode(100);
             bean.setRetMsg("查询成功");
             bean.setPageInfo(ret);
