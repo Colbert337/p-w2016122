@@ -255,6 +255,22 @@
     </set>
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
+  
+  <update id="updateOriginalOrderAfterDischarged" parameterType="java.util.Map" >
+    update sys_order
+    <set >
+      <if test="been_discharged != null" >
+        been_discharged = #{been_discharged,jdbcType=VARCHAR},
+      </if>
+      <if test="discharge_reason != null" >
+        discharge_reason = #{discharge_reason,jdbcType=VARCHAR},
+      </if>
+      <if test="dischargeOrderId != null" >
+        discharge_order_id = #{dischargeOrderId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.order.model.SysOrder" >
     update sys_order
     set order_number = #{orderNumber,jdbcType=VARCHAR},
