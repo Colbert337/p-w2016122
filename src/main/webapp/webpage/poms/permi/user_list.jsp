@@ -244,9 +244,9 @@
 						return false;
 					}
 					$('#user_name').after('<div class="tooltip fade top in user-name-valid"><div class="tooltip-arrow"></div><div class="tooltip-inner">用户名已存在!</div></div>');
+					/*$("#user_name").focus();*/
 				} else {
 					$('.user-name-valid').remove();
-					$("#user_name").focus();
 				}
 			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
 
