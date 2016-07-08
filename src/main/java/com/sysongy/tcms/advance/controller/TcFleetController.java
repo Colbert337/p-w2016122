@@ -3,6 +3,8 @@ package com.sysongy.tcms.advance.controller;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.model.TcFleetVehicle;
@@ -13,6 +15,7 @@ import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -47,6 +50,8 @@ public class TcFleetController extends BaseContoller {
     TcFleetVehicleService tcFleetVehicleService;
     @Autowired
     TcVehicleService tcVehicleService;
+    @Autowired
+    TransportionService transportionService;
 
     /**
      * 查询车队列表
@@ -125,17 +130,28 @@ public class TcFleetController extends BaseContoller {
      * @return
      */
     @RequestMapping("/save")
-    public String saveFleet(@ModelAttribute("currUser") CurrUser currUser, TcFleet fleet, ModelMap map){
+    public String saveFleet(@ModelAttribute("currUser") CurrUser currUser, TcFleet fleet, ModelMap map) throws Exception{
         int userType = currUser.getUser().getUserType();
         int result = 0;
+        String stationId = currUser.getStationId();
 
+        Transportion transportion = transportionService.queryTransportionByPK(stationId);
         if(fleet.getTcFleetId() != null && fleet.getTcFleetId() != ""){
             tcFleetService.updateFleet(fleet);
             TcFleetQuota fleetQuota = new TcFleetQuota();
         }else{
-            String stationId = currUser.getStationId();
+            String newid;
+            TcFleet fleetTemp = tcFleetService.queryMaxIndex(transportion.getProvince_id());
+            if(fleetTemp == null || StringUtils.isEmpty(fleetTemp.getTcFleetId())){
+                newid = "TA"+transportion.getProvince_id() + "000001";
+            }else{
+                Integer tmp = Integer.valueOf(fleetTemp.getTcFleetId().substring(6, 10)) + 1;
+                newid = "TA"+transportion.getProvince_id() + StringUtils.leftPad(tmp.toString() , 6, "0");
+            }
+
             fleet.setStationId(stationId);
-            fleet.setTcFleetId(UUIDGenerator.getUUID());
+
+            fleet.setTcFleetId(newid);
             fleet.setIsDeleted(GlobalConstant.STATUS_NOTDELETE+"");
 
             try {

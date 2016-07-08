@@ -90,4 +90,11 @@ public interface TcFleetService {
      * @return
      */
     List<TcFleet> queryFleetByVehicleId(String stationId,String vehicleId);
+
+    /**
+     * 查询当前区域下的最大下标
+     * @param provinceId
+     * @return
+     */
+    TcFleet queryMaxIndex(String provinceId);
 }
