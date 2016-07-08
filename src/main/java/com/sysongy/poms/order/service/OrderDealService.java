@@ -3,6 +3,8 @@ package com.sysongy.poms.order.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 
 /**
@@ -11,7 +13,8 @@ import com.sysongy.poms.order.model.SysOrderDeal;
  *
  */
 public interface OrderDealService {
-	
+
+    List<SysOrderDeal> queryOrderDeals(SysOrderDeal record) throws Exception;
 	
 	int deleteByPrimaryKey(String dealId);
 

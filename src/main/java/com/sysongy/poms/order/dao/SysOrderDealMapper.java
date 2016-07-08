@@ -2,6 +2,7 @@ package com.sysongy.poms.order.dao;
 
 import java.util.List;
 
+import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.order.model.SysOrderDeal;
 
 public interface SysOrderDealMapper {
@@ -20,4 +21,6 @@ public interface SysOrderDealMapper {
     List<SysOrderDeal> queryOrderDealByOrderId(String orderId);
 
     String selectCashBackByOrderID(String orderId);
+
+    List<SysOrderDeal> queryForPage(SysOrderDeal record);
  }

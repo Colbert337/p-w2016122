@@ -56,10 +56,6 @@ public class CRMCardContoller {
         }
         try
         {
-            String startTime = gascard.getStorage_time_before();
-            String endTime = gascard.getStorage_time_after();
-            gascard.setStorage_time_after(startTime);
-            gascard.setStorage_time_before(endTime);
             PageInfo<GasCard> pageinfo = gasCardService.queryGasCard(gascard);
             if((pageinfo == null) || (pageinfo.getList().size() == 0)){
                 ajaxJson.setSuccess(false);

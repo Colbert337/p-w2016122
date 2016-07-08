@@ -14,10 +14,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SecurityServlet extends HttpServlet implements Filter {
 
 	private static final long serialVersionUID = 1L;
+
+	@Autowired
+	SysUserService sysUserService;
 
 	@Override
 	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2)
@@ -27,7 +33,12 @@ public class SecurityServlet extends HttpServlet implements Filter {
         HttpServletResponse response  =(HttpServletResponse) arg1;      
         HttpSession session = request.getSession(true);       
         CurrUser currUser = (CurrUser) session.getAttribute("currUser");//登录人角色  
-        String url=request.getRequestURI();     
+        String url=request.getRequestURI();
+		if(canAllowCRMUserAccess(request)){
+			arg2.doFilter(arg0, arg1);
+			return;
+		}
+
         if(currUser == null || "".equals(currUser.getUserId())) {
              //判断获取的路径不为空且不是访问登录页面或执行登录操作时跳转     
              if(url!=null && !url.equals("") && ( url.indexOf("Login")<0 && url.indexOf("login")<0 )) {
@@ -41,6 +52,20 @@ public class SecurityServlet extends HttpServlet implements Filter {
          }    
          arg2.doFilter(arg0, arg1);     
          return;
+	}
+
+	private boolean canAllowCRMUserAccess(HttpServletRequest request){
+		String curUserName = request.getParameter("suserName");
+		String curPassword = request.getParameter("spassword");
+		SysUser sysUser = new SysUser();
+		sysUser.setUserName(curUserName);
+		sysUser.setMobilePhone(curUserName);
+		sysUser.setPassword(curPassword);
+		SysUser user = sysUserService.queryUserMapByAccount(sysUser);
+		if(user == null){
+			return false;
+		}
+		return true;
 	}
 
 	@Override

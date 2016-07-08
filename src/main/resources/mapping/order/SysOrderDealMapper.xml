@@ -11,10 +11,33 @@
     <result column="cash_back" property="cashBack" jdbcType="DECIMAL" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="run_success" property="runSuccess" jdbcType="VARCHAR" />
+    <association property="sysOrderInfo" column="order_id"
+                 javaType="com.sysongy.poms.order.model.SysOrder"
+                 select="com.sysongy.poms.order.dao.SysOrderMapper.selectByPrimaryKey">
+    </association>
   </resultMap>
   <sql id="Base_Column_List" >
     deal_id, order_id, deal_number, deal_date, deal_type, cash_back_per, cash_back, remark, run_success
   </sql>
+
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_order_deal
+    where 1=1
+    <if test="orderId != null &amp;&amp; orderId != ''" >
+      and order_id = #{orderId,jdbcType=VARCHAR}
+    </if>
+    <if test="operator != null &amp;&amp; operator != ''" >
+      and sysOrderInfo.operator = #{operator,jdbcType=VARCHAR}
+    </if>
+    <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
+      and deal_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
+    </if>
+  </select>
+
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

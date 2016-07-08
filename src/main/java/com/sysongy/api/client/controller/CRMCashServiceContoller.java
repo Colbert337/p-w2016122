@@ -11,6 +11,7 @@ import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
@@ -428,6 +429,32 @@ public class CRMCashServiceContoller {
 
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", originalOrder);
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
+    @ResponseBody
+    @RequestMapping("/web/queryOrderChangeDeal")
+    public AjaxJson queryOrderChangeDeal(HttpServletRequest request, HttpServletResponse response,
+                                         SysOrderDeal sysOrderDeal) throws Exception{
+        AjaxJson ajaxJson = new AjaxJson();
+
+        if(StringUtils.isEmpty(sysOrderDeal.getStorage_time_after())
+                || StringUtils.isEmpty(sysOrderDeal.getStorage_time_before())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("起始时间或终止时间为空！！！" );
+            return ajaxJson;
+        }
+
+        List<SysOrderDeal> sysOrderDeals = orderDealService.queryOrderDeals(sysOrderDeal);
+        if((sysOrderDeals == null) || (sysOrderDeals.size() == 0)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("您所查询的数据为空！！！" );
+            return ajaxJson;
+        }
+
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("sysOrderDeals", sysOrderDeals);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }

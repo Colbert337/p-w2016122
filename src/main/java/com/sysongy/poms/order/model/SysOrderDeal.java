@@ -1,9 +1,12 @@
 package com.sysongy.poms.order.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SysOrderDeal {
+public class SysOrderDeal extends BaseModel {
+
     private String dealId;
 
     private String orderId;
@@ -21,6 +24,14 @@ public class SysOrderDeal {
     private String runSuccess;
     
     private String remark;
+
+    private SysOrder sysOrderInfo;
+
+    private String storage_time_before;
+
+    private String storage_time_after;
+
+    private String operator;
 
     public String getRemark() {
 		return remark;
@@ -92,5 +103,37 @@ public class SysOrderDeal {
 
     public void setRunSuccess(String runSuccess) {
         this.runSuccess = runSuccess == null ? null : runSuccess.trim();
+    }
+
+    public SysOrder getSysOrderInfo() {
+        return sysOrderInfo;
+    }
+
+    public void setSysOrderInfo(SysOrder sysOrderInfo) {
+        this.sysOrderInfo = sysOrderInfo;
+    }
+
+    public String getStorage_time_before() {
+        return storage_time_before;
+    }
+
+    public void setStorage_time_before(String storage_time_before) {
+        this.storage_time_before = storage_time_before;
+    }
+
+    public String getStorage_time_after() {
+        return storage_time_after;
+    }
+
+    public void setStorage_time_after(String storage_time_after) {
+        this.storage_time_after = storage_time_after;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 }

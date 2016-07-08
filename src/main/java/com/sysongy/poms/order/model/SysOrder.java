@@ -160,10 +160,12 @@ public class SysOrder extends BaseModel{
     }
 
     public BigDecimal getCash() {
+        this.cash = cash.setScale(2, BigDecimal.ROUND_DOWN);
         return cash;
     }
 
     public void setCash(BigDecimal cash) {
+        cash = cash.setScale(2, BigDecimal.ROUND_DOWN);
         this.cash = cash;
     }
 

@@ -294,7 +294,12 @@ public class DriverServiceImpl implements DriverService {
 		//1.判断是否首次返现，是则调用首次返现规则
 		String debitUserID = order.getDebitAccount();
 		SysDriver driver = sysDriverMapper.selectByPrimaryKey(debitUserID);
-		String accountUserName = driver.getFullName();
+        String accountUserName = null;
+        if(StringUtils.isEmpty(driver.getFullName())){
+            accountUserName = driver.getMobilePhone();
+        } else {
+            accountUserName = driver.getFullName();
+        }
         Integer is_first_charge = driver.getIsFirstCharge();
         String accountId = driver.getSysUserAccountId();
         

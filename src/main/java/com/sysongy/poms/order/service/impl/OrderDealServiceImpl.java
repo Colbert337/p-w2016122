@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.order.model.SysOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,5 +106,11 @@ public class OrderDealServiceImpl implements OrderDealService {
 			return null;
 		}
 		return sysOrderDealMapper.selectCashBackByOrderID(orderId);
+	}
+
+	@Override
+	public List<SysOrderDeal>  queryOrderDeals(SysOrderDeal record) throws Exception{
+		List<SysOrderDeal> list = sysOrderDealMapper.queryForPage(record);
+		return list;
 	}
 }
