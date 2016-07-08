@@ -104,6 +104,11 @@ public class DriverController extends BaseContoller{
 
         //封装分页参数，用于查询分页内容
         PageInfo<SysDriverReviewStr> driverPageInfo = new PageInfo<SysDriverReviewStr>();
+        
+        if(StringUtils.isEmpty(driver.getOrderby())){
+        	driver.setOrderby("checked_date desc");
+        }
+        
         try {
             driverPageInfo = driverService.queryDriversLog(driver);
         }catch (Exception e){
@@ -160,6 +165,10 @@ public class DriverController extends BaseContoller{
 		try {
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
         
+        if(StringUtils.isEmpty(driver.getOrderby())){
+        	driver.setOrderby("created_date desc");
+        }
+        
         driver.setNotin_checked_status("0");
 
         pageinfo = driverService.queryDrivers(driver);
@@ -195,7 +204,7 @@ public class DriverController extends BaseContoller{
 	        PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
 
 	        if(StringUtils.isEmpty(driver.getOrderby())){
-	        	driver.setOrderby("updated_date desc");
+	        	driver.setOrderby("created_date desc");
 	        }
 
 	        pageinfo = driverService.queryDrivers(driver);

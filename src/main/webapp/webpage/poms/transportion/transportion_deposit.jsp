@@ -32,7 +32,7 @@
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 运输公司名称： </label>
+										<label class="col-sm-3 control-label no-padding-right">运输公司名称： </label>
 
 										<div class="col-sm-4">
 											<label class="control-label no-padding-right" id="stationame">${param.stationame}</label>

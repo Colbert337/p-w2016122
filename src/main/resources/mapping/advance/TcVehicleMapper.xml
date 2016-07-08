@@ -15,6 +15,12 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
     <result column="is_allot" property="isAllot" jdbcType="INTEGER" />
+    <association column="card_no" property="gas_card" javaType="com.sysongy.poms.card.model.GasCard"
+                 select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
+    </association>
+    <association column="tc_vehicle_id" property="fv" javaType="com.sysongy.tcms.advance.model.TcFleetVehicle"
+                 select="com.sysongy.tcms.advance.dao.TcFleetVehicleMapper.selectByVehicleId">
+    </association>
   </resultMap>
   <resultMap id="MapResultMap" type="java.util.Map" >
     <id column="tc_vehicle_id" property="tcVehicleId" jdbcType="VARCHAR" />
@@ -60,7 +66,7 @@
       and tc_vehicle_id = #{tcVehicleId}
     </if>
     <if test="platesNumber != null &amp;&amp; platesNumber !=''" >
-      plates_number like CONCAT(#{platesNumber,jdbcType=VARCHAR},'%')
+      and plates_number like CONCAT(#{platesNumber,jdbcType=VARCHAR},'%')
     </if>
     <if test="tcFleetId != null &amp;&amp; tcFleetId !=''" >
       and tc_fleet_id = #{tcFleetId}
@@ -80,7 +86,9 @@
     <if test="userName != null &amp;&amp; userName !=''" >
       and user_name = #{userName}
     </if>
-    order by created_date desc
+    <if test="created_date_after != null &amp;&amp; created_date_after !=''" >
+      and created_date between CONCAT(#{created_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{created_date_before,jdbcType=VARCHAR},' 23:59:59')
+    </if>
   </select>
   <select id="queryVehicleMapList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcVehicle" >
     select tv.tc_vehicle_id, tv.plates_number, tv.tc_fleet_id, tv.station_id, tv.notice_phone, tv.copy_phone,

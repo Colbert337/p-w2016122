@@ -1,11 +1,10 @@
 package com.sysongy.tcms.advance.dao;
 
-import com.sysongy.tcms.advance.model.TcFleet;
-import com.sysongy.tcms.advance.model.TcFleet;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
+import com.sysongy.tcms.advance.model.TcFleet;
 
 public interface TcFleetMapper {
 
@@ -94,4 +93,6 @@ public interface TcFleetMapper {
      * @return
      */
     List<TcFleet> queryFleetByVehicleId(String stationId,String vehicleId);
+    
+    TcFleet selectByFleetId(String tcFleetId);
 }

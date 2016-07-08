@@ -195,7 +195,7 @@
   </select>
 
   <select id="selectByCardNo" resultMap="BaseResultList" parameterType="java.lang.String" >
-    select card_no,card_status,card_type,workstation from gas_card where card_no = #{cardNo,jdbcType=VARCHAR}
+    select <include refid="Base_Column_List" /> from gas_card where card_no = #{cardNo,jdbcType=VARCHAR}
   </select>
 
   <select id="selectByCardNoForCRM" resultMap="BaseResultList" parameterType="java.lang.String" >

@@ -7,6 +7,9 @@
     <result column="tc_fleet_id" property="tcFleetId" jdbcType="VARCHAR" />
     <result column="tc_vehicle_id" property="tcVehicleId" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <association column="tc_fleet_id" property="tf" javaType="com.sysongy.tcms.advance.model.TcFleet"
+                 select="com.sysongy.tcms.advance.dao.TcFleetMapper.selectByFleetId">
+    </association>
   </resultMap>
   <resultMap id="MapResultMap" type="java.util.Map" >
     <id column="tc_fleet_vehicle_id" property="tcFleetVehicleId" jdbcType="VARCHAR" />
@@ -19,6 +22,14 @@
   <sql id="Base_Column_List" >
     tc_fleet_vehicle_id, station_id, tc_fleet_id, tc_vehicle_id, created_date
   </sql>
+  
+  <select id="selectByVehicleId" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
+    select 
+    <include refid="Base_Column_List" />
+    from tc_fleet_vehicle
+    where tc_vehicle_id = #{tcVehicleId,jdbcType=VARCHAR}
+  </select>
+  
   <select id="queryFleetVehicleList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleetVehicle" >
     select 
     <include refid="Base_Column_List" />

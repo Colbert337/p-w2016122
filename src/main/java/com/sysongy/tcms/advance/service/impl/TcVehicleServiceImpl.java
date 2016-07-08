@@ -2,6 +2,9 @@ package com.sysongy.tcms.advance.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.card.dao.GasCardMapper;
+import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.tcms.advance.dao.TcVehicleCardMapper;
 import com.sysongy.tcms.advance.dao.TcVehicleMapper;
 import com.sysongy.tcms.advance.model.TcVehicle;
@@ -31,6 +34,8 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     TcVehicleMapper tcVehicleMapper;
     @Autowired
     TcVehicleCardMapper tcVehicleCardMapper;
+    @Autowired
+    GasCardMapper gasCardMapper;
 
     @Override
     public TcVehicle queryVehicle(TcVehicle tcVehicle) {
@@ -137,4 +142,20 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     public List<TcVehicle> queryVehicleByStationId(String stationId) {
         return tcVehicleMapper.queryVehicleByStationId(stationId);
     }
+
+	@Override
+	public Integer updateAndchangeCard(String tcVehicleId, String newcardno) throws Exception{
+		GasCard card = gasCardMapper.selectByPrimaryKey(newcardno);
+		
+		if(card == null || !GlobalConstant.CardStatus.MOVED.equals(card.getCard_status())){
+			throw new Exception("该卡不存在或卡状态异常");
+		}
+		
+		TcVehicle vehicle = new TcVehicle();
+		
+		vehicle.setCardNo(newcardno);
+		vehicle.setTcVehicleId(tcVehicleId);
+		
+		return tcVehicleMapper.updateVehicle(vehicle);
+	}
 }

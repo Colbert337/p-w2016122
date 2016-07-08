@@ -90,7 +90,7 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单号</th>
+									<!-- <th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单号</th> -->
 									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">工作站编号</th>
 									<th onclick="orderBy(this,'station_name');commitForm();" id="station_name_order">工作站名称</th>
 									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
@@ -114,7 +114,7 @@
 										</label>
 									</td>
 
-									<td>${list.order_number}</td>
+									<%-- <td>${list.order_number}</td> --%>
 									<td>${list.stationId}</td>
 								 	<td>${list.stationName}</td> 
 									<td>${list.company}</td>

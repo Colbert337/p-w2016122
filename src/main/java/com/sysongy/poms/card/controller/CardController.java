@@ -281,6 +281,19 @@ public class CardController extends BaseContoller{
 			return  ret;
 		}
 	}
+	
+	@ResponseBody
+	@RequestMapping("/updateCardStatus")
+	public String updateCardStatus(ModelMap map, @RequestParam String cardno, @RequestParam String cardstatus,@RequestParam(required=false) String memo) throws Exception{
+
+		GasCard gascard = new GasCard();
+		
+		gascard.setCard_no(cardno);
+		gascard.setCard_status(cardstatus);
+		gascard.setMemo(memo);
+		
+		return service.updateGasCardInfo(gascard).toString();
+	}
 
 	@RequestMapping("/update/freeze")
 	@ResponseBody

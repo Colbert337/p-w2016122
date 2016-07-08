@@ -1,11 +1,11 @@
 package com.sysongy.tcms.advance.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.model.TcVehicleCard;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @FileName: TcFleetService
@@ -95,4 +95,6 @@ public interface TcVehicleService {
      * @return
      */
     List<TcVehicle> queryVehicleByStationId(String stationId);
+    
+    Integer updateAndchangeCard(String tcVehicleId, String newcardno) throws Exception;
 }

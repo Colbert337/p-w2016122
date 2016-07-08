@@ -151,6 +151,20 @@ public class TcVehicleController extends BaseContoller {
 
         return json;
     }
+    
+    @RequestMapping("/changeCard")
+    @ResponseBody
+    public String changeCard(@RequestParam String tc_vehicle_id, @RequestParam String newcardno) throws Exception{
+        String ret = "";
+    	try{
+        	ret = tcVehicleService.updateAndchangeCard(tc_vehicle_id, newcardno).toString();
+        }catch(Exception e){
+        	ret = e.getMessage();
+        	throw e;
+        }finally{
+        	return ret;
+        }
+    }
 
     /**
      * 冻结卡

@@ -10,6 +10,8 @@ import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.tcms.advance.model.TcVehicle;
+import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
@@ -44,6 +46,8 @@ public class TransportionController extends BaseContoller{
 	private SimpleMailMessage mailMessage;
 	@Autowired
 	private SysUserService sysUserService;
+	@Autowired
+    TcVehicleService tcVehicleService;
 
 	private Transportion transportion;
 	/**
@@ -302,7 +306,7 @@ public class TransportionController extends BaseContoller{
 
 		try {
 				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
-					rowcount = service.updatedeposiTransportion(deposit, currUser.getUserId());
+					rowcount = service.updatedeposiTransportion(deposit, currUser.getUser().getUserName());
 				}
 
 				ret = this.queryAllTransportionList2(map, this.transportion);
@@ -541,5 +545,43 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
+	
+	@RequestMapping("/Vehiclelist")
+    public String queryVehiclelist(@ModelAttribute CurrUser currUser, TcVehicle vehicle, ModelMap map){
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/vehicle_list";
+
+		try {
+				String stationId = currUser.getStationId();
+		        if(vehicle.getPageNum() == null){
+		            vehicle.setPageNum(GlobalConstant.PAGE_NUM);
+		            vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
+		        }
+		        vehicle.setStationId(stationId);
+
+				PageInfo<TcVehicle> pageinfo = tcVehicleService.queryVehicleList(vehicle);
+
+				bean.setRetCode(100);
+				bean.setRetMsg("查询成功");
+				bean.setPageInfo(ret);
+
+				map.addAttribute("ret", bean);
+				map.addAttribute("pageInfo", pageinfo);
+				map.addAttribute("vehicle",vehicle);
+
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+
 
 }

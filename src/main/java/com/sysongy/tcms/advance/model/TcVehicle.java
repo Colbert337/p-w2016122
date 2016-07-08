@@ -1,6 +1,7 @@
 package com.sysongy.tcms.advance.model;
 
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.card.model.GasCard;
 
 import java.util.Date;
 
@@ -30,8 +31,48 @@ public class TcVehicle extends BaseModel{
     private String isDeleted;
 
     private String payCode;
+    
+    private String created_date_after;
+    
+    private String created_date_before;
+    
+    private GasCard gas_card;
+    
+    private TcFleetVehicle fv;
 
-    public String getTcVehicleId() {
+    public TcFleetVehicle getFv() {
+		return fv;
+	}
+
+	public void setFv(TcFleetVehicle fv) {
+		this.fv = fv;
+	}
+
+	public GasCard getGas_card() {
+		return gas_card;
+	}
+
+	public void setGas_card(GasCard gas_card) {
+		this.gas_card = gas_card;
+	}
+
+	public String getCreated_date_after() {
+		return created_date_after;
+	}
+
+	public void setCreated_date_after(String created_date_after) {
+		this.created_date_after = created_date_after;
+	}
+
+	public String getCreated_date_before() {
+		return created_date_before;
+	}
+
+	public void setCreated_date_before(String created_date_before) {
+		this.created_date_before = created_date_before;
+	}
+
+	public String getTcVehicleId() {
         return tcVehicleId;
     }
 
