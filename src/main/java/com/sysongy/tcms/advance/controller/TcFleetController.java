@@ -6,8 +6,10 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.model.TcFleetVehicle;
+import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.tcms.advance.service.TcFleetVehicleService;
+import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import net.sf.json.JSONObject;
@@ -43,6 +45,8 @@ public class TcFleetController extends BaseContoller {
     TcFleetService tcFleetService;
     @Autowired
     TcFleetVehicleService tcFleetVehicleService;
+    @Autowired
+    TcVehicleService tcVehicleService;
 
     /**
      * 查询车队列表
@@ -168,28 +172,62 @@ public class TcFleetController extends BaseContoller {
      * @return
      */
     @RequestMapping("/save/fv")
-    public String saveFleetVehicle(HttpServletRequest request, @ModelAttribute("currUser") CurrUser currUser, TcFleet fleet, ModelMap map){
-        String selectedVeh = fleet.getSysUserId();
+    public String saveFleetVehicle(HttpServletRequest request, @ModelAttribute("currUser") CurrUser currUser, TcFleet fleet, ModelMap map) throws Exception{
+        String selectedVeh = fleet.getSysUserId();//临时存储已选中车辆ID
         String fleetId = "";
         String stationId = currUser.getStationId();
         if(fleet != null ){
             fleetId = fleet.getTcFleetId();
         }
-        List<TcFleetVehicle> fleetVehicleList = new ArrayList<>();
-        if (selectedVeh != null && !"".equals(selectedVeh)){
-            String[] vehicleArray = selectedVeh.split(",");
-            for (String vehicleId:vehicleArray){
+
+        try {
+            List<TcFleetVehicle> fleetVehicleList = new ArrayList<>();
+            List<TcVehicle> vehicleList = new ArrayList<>();
+            if (selectedVeh != null && !"".equals(selectedVeh)){
+                String[] vehicleArray = selectedVeh.split(",");
+                for (String vehicleId:vehicleArray){
+                    TcFleetVehicle fleetVehicle = new TcFleetVehicle();
+
+                    fleetVehicle.setTcFleetVehicleId(UUIDGenerator.getUUID());
+                    fleetVehicle.setStationId(stationId);
+                    fleetVehicle.setTcFleetId(fleetId);
+                    fleetVehicle.setTcVehicleId(vehicleId);
+
+                    fleetVehicleList.add(fleetVehicle);
+
+                    TcVehicle vehicle = new TcVehicle();
+                    vehicle.setTcVehicleId(vehicleId);
+                    vehicle.setIsAllot(1);//是否分配 0 不分配 1 分配
+                    vehicleList.add(vehicle);
+
+                    tcVehicleService.updateVehicle(vehicle);
+                }
+
+                tcFleetVehicleService.addFleetVehicleList(fleetVehicleList,fleetId,stationId);
+            }else{
                 TcFleetVehicle fleetVehicle = new TcFleetVehicle();
-
-                fleetVehicle.setTcFleetVehicleId(UUIDGenerator.getUUID());
-                fleetVehicle.setStationId(stationId);
                 fleetVehicle.setTcFleetId(fleetId);
-                fleetVehicle.setTcVehicleId(vehicleId);
 
-                fleetVehicleList.add(fleetVehicle);
+                //删除当前车队车辆关系
+                tcFleetVehicleService.deleteFleetVehicle(fleetVehicle);
+
+                //查询当前运输公司未分配车辆
+                fleetVehicle.setStationId(stationId);
+                List<TcVehicle> tcVehicleList = tcVehicleService.queryVehicleByStationId(stationId);
+                if(tcVehicleList != null && tcVehicleList.size() > 0){
+                    for (TcVehicle vehicleTemp:tcVehicleList) {
+                        TcVehicle vehicle = new TcVehicle();
+                        vehicle.setTcVehicleId(vehicleTemp.getTcVehicleId());
+                        vehicle.setIsAllot(0);//是否分配 0 不分配 1 分配
+                        vehicleList.add(vehicle);
+                        tcVehicleService.updateVehicle(vehicle);
+                    }
+
+                }
+
             }
-
-            tcFleetVehicleService.addFleetVehicleList(fleetVehicleList,fleetId);
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         return "redirect:/web/tcms/fleet/list/page";

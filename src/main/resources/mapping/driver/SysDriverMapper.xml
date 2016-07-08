@@ -156,6 +156,22 @@
 
 
 
+  <select id="ifExistDriver" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    *
+    from sys_driver
+    where 1=1
+    <trim>
+      <if test="mobilePhone != null &amp;&amp; mobilePhone != ''" >
+        and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+      </if>
+      <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
+        or plate_number = #{plateNumber,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+
+
   <select id="queryForPageSingleList" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     *

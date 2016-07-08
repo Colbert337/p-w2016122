@@ -37,7 +37,7 @@ public interface TcFleetVehicleService {
      * @param fleetVehicleList
      * @return
      */
-    int addFleetVehicleList(List<TcFleetVehicle> fleetVehicleList, String fleetId);
+    int addFleetVehicleList(List<TcFleetVehicle> fleetVehicleList, String fleetId,String stationId) throws Exception;
 
     /**
      * 删除车队车辆关系

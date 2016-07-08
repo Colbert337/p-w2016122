@@ -149,4 +149,15 @@ public class TcFleetServiceImpl implements TcFleetService{
     public TcFleet queryFleetByName(String stationId, String fleetName) {
         return tcFleetMapper.queryFleetByName(stationId,fleetName);
     }
+
+    /**
+     * 根据车辆编号查询车队信息
+     * @param stationId 站点编号
+     * @param vehicleId 车辆编号
+     * @return
+     */
+    @Override
+    public List<TcFleet> queryFleetByVehicleId(String stationId, String vehicleId) {
+        return tcFleetMapper.queryFleetByVehicleId(stationId,vehicleId);
+    }
 }

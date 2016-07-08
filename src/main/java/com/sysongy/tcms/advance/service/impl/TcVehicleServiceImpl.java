@@ -117,4 +117,24 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     public int addVehicleCard(TcVehicleCard tcVehicleCard) {
         return tcVehicleCardMapper.addVehicleCard(tcVehicleCard);
     }
+
+    /**
+     * 根据卡号查询车辆信息
+     * @param cardNo
+     * @return
+     */
+    @Override
+    public List<TcVehicle> queryVehicleByCardNo(String cardNo) {
+        return tcVehicleMapper.queryVehicleByCardNo(cardNo);
+    }
+
+    /**
+     * 根据运输公司编号查询车辆信息
+     * @param stationId
+     * @return
+     */
+    @Override
+    public List<TcVehicle> queryVehicleByStationId(String stationId) {
+        return tcVehicleMapper.queryVehicleByStationId(stationId);
+    }
 }

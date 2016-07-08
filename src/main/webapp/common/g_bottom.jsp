@@ -23,6 +23,7 @@
 							司集能源运维管理平台
 						</c:if>
 						&copy; 2015-2016
+					<input type="text" value="${sessionScope.currUser.user.userName}"/>
 					</div>
 					<!-- /section:basics/footer -->
 				</div>
@@ -64,7 +65,6 @@
 			var sjny = sjny || {};
 			sjny.basePath = '<%=basePath %>';
 		</script>
-
 		<!--[if IE]>
 		<script type="text/javascript">
 		window.jQuery || document.write("<script src='../assets/js/jquery1x.js'>"+"<"+"/script>");

@@ -86,6 +86,14 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
+    public PageInfo<SysDriver> ifExistDriver(SysDriver record) throws Exception {
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        List<SysDriver> list = sysDriverMapper.ifExistDriver(record);
+        PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
+        return pageInfo;
+    }
+
+    @Override
     public PageInfo<SysDriver> queryForPageSingleList(SysDriver record) throws Exception {
         PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
         List<SysDriver> list = sysDriverMapper.queryForPage(record);
@@ -213,9 +221,14 @@ public class DriverServiceImpl implements DriverService {
 			chong = "转账";
 			orderDealType = GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_INCREASE_DRIVER;
 		}
-		String remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+
+        String remark = null;
+        if(StringUtils.isEmpty(driver.getFullName())){
+            remark = "给"+ driver.getMobilePhone() +"的账户，"+chong+cash.toString()+"。";
+        } else {
+            remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+        }
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
-		
 		return cash_success;
 	}
 	
@@ -279,11 +292,12 @@ public class DriverServiceImpl implements DriverService {
 	@Override
 	public String cashBackToDriver(SysOrder order) throws Exception{
 		//1.判断是否首次返现，是则调用首次返现规则
-		String debitAccount = order.getDebitAccount();
-		SysDriver driver = sysDriverMapper.selectByPrimaryKey(debitAccount);
+		String debitUserID = order.getDebitAccount();
+		SysDriver driver = sysDriverMapper.selectByPrimaryKey(debitUserID);
 		String accountUserName = driver.getFullName();
         Integer is_first_charge = driver.getIsFirstCharge();
         String accountId = driver.getSysUserAccountId();
+        
         if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
         	List<SysCashBack>  cashBackList = sysCashBackService.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
         	String cashTo_success = sysCashBackService.cashToAccount(order, cashBackList, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);

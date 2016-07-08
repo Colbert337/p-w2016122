@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.tcms.advance.dao.TcTransferAccountMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.tcms.advance.model.TcTransferAccount" >
+    <id column="tc_transfer_account_id" property="tcTransferAccountId" jdbcType="VARCHAR" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="sys_driver_id" property="sysDriverId" jdbcType="VARCHAR" />
+    <result column="full_name" property="fullName" jdbcType="VARCHAR" />
+    <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="used" property="used" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tc_transfer_account_id, station_id, sys_driver_id, full_name, mobile_phone, amount, 
+    used, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tc_transfer_account
+    where tc_transfer_account_id = #{tcTransferAccountId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tc_transfer_account
+    where tc_transfer_account_id = #{tcTransferAccountId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
+    insert into tc_transfer_account (tc_transfer_account_id, station_id, sys_driver_id, 
+      full_name, mobile_phone, amount, 
+      used, created_date, updated_date
+      )
+    values (#{tcTransferAccountId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{sysDriverId,jdbcType=VARCHAR}, 
+      #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, 
+      #{used,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
+    insert into tc_transfer_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tcTransferAccountId != null" >
+        tc_transfer_account_id,
+      </if>
+      <if test="stationId != null" >
+        station_id,
+      </if>
+      <if test="sysDriverId != null" >
+        sys_driver_id,
+      </if>
+      <if test="fullName != null" >
+        full_name,
+      </if>
+      <if test="mobilePhone != null" >
+        mobile_phone,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="used != null" >
+        used,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tcTransferAccountId != null" >
+        #{tcTransferAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="stationId != null" >
+        #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDriverId != null" >
+        #{sysDriverId,jdbcType=VARCHAR},
+      </if>
+      <if test="fullName != null" >
+        #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="used != null" >
+        #{used,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
+    update tc_transfer_account
+    <set >
+      <if test="stationId != null" >
+        station_id = #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDriverId != null" >
+        sys_driver_id = #{sysDriverId,jdbcType=VARCHAR},
+      </if>
+      <if test="fullName != null" >
+        full_name = #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="used != null" >
+        used = #{used,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where tc_transfer_account_id = #{tcTransferAccountId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
+    update tc_transfer_account
+    set station_id = #{stationId,jdbcType=VARCHAR},
+      sys_driver_id = #{sysDriverId,jdbcType=VARCHAR},
+      full_name = #{fullName,jdbcType=VARCHAR},
+      mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      used = #{used,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where tc_transfer_account_id = #{tcTransferAccountId,jdbcType=VARCHAR}
+  </update>
+</mapper>

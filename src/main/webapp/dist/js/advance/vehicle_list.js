@@ -294,7 +294,7 @@ $('#editForm').bootstrapValidator({
                     message: '手机号不能为空'
                 },
                 regexp: {
-                    regexp: '^[0-9]+$',
+                    regexp: '^[0-9a-zA-Z]+$',
                     message: '手机号只能包含数字'
                 },
                 stringLength: {

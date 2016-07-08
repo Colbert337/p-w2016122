@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.ShortMessageInfoModel;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
@@ -13,12 +14,19 @@ import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.tcms.advance.model.TcFleet;
+import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcFleetService;
+import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import net.sf.json.JSONObject;
+import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -60,7 +68,16 @@ public class CRMCustomerContoller {
     private TcFleetService tcFleetService;
 
     @Autowired
+    private TcVehicleService tcVehicleService;
+
+    @Autowired
     private TransportionService transportionService;
+
+    @Autowired
+    private GasCardService gasCardService;
+
+    @Autowired
+    private SysUserAccountService sysUserAccountService;
 
     public DriverService getDriverService() {
         return driverService;
@@ -125,8 +142,15 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
                 drivers = driverService.querySingleDriver(sysDriver);
             } else {
-                //tcFleetService.queryFleet();
-                //transportionService.queryTransportionByPK();
+                SysDriver sysDriverForFleet = findFleetInfo(sysDriver.getCardId());
+                if(sysDriverForFleet == null){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("没有查询到所需内容！！！");
+                    return ajaxJson;
+                }
+                List<SysDriver> driversList = new ArrayList<SysDriver>();
+                driversList.add(sysDriverForFleet);
+                drivers.setList(driversList);
             }
 
             if((drivers == null) || (drivers.getList().size() == 0)){
@@ -152,6 +176,47 @@ public class CRMCustomerContoller {
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
+
+
+    private SysDriver findFleetInfo(String cardID){
+        if(StringUtils.isEmpty(cardID)){
+            return null;
+        }
+        SysDriver sysDriverForFleet = null;
+        try
+        {
+            List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(cardID);
+            if(vehicles.size() > 0){
+                logger.error("查询出现多个车辆: " + cardID);
+                return null;
+            }
+            for(TcVehicle tcVehicle : vehicles){
+                List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
+                if(tcFleets.size() > 0){
+                    logger.error("查询出现多个车队: " + tcVehicle.getTcVehicleId());
+                    return null;
+                }
+                for(TcFleet tcFleet : tcFleets){
+                    Transportion transportion = transportionService.queryTransportionByPK(tcFleet.getStationId());
+                    sysDriverForFleet = new SysDriver();
+                    sysDriverForFleet.setFullName(tcVehicle.getPlatesNumber());
+                    sysDriverForFleet.setMobilePhone(tcVehicle.getTcFleetId());
+                    GasCard gasCard = gasCardService.selectByCardNoForCRM(cardID);
+                    sysDriverForFleet.setCardInfo(gasCard);
+                    SysUserAccount sysUserAccount = new SysUserAccount();
+                    Usysparam usysparam = new Usysparam();
+                    usysparam.setMname(gasCard.getCardStatusInfo().getMname());
+                    sysUserAccount.setAccount_statusInfo(usysparam);
+                    sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
+                    sysDriverForFleet.setAccount(sysUserAccount);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sysDriverForFleet;
+    }
+
 
     @RequestMapping(value = {"/web/queryForPageSingleList"})
     @ResponseBody
@@ -286,7 +351,7 @@ public class CRMCustomerContoller {
                 return ajaxJson;
             }
 
-            PageInfo<SysDriver> drivers = driverService.querySingleDriver(sysDriver);
+            PageInfo<SysDriver> drivers = driverService.ifExistDriver(sysDriver);
             if((drivers != null) && (drivers.getList().size() != 0)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("该用户已经创建成功，请勿重复创建！！！");

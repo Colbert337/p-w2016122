@@ -14,6 +14,8 @@ public interface DriverService {
 
 	public PageInfo<SysDriver> querySingleDriver(SysDriver obj) throws Exception;
 
+	public PageInfo<SysDriver> ifExistDriver(SysDriver obj) throws Exception;
+
 	public PageInfo<SysDriver> queryForPageSingleList(SysDriver obj) throws Exception;
 	
 	public SysDriver queryDriverByPK(String sysDriverId) throws Exception;

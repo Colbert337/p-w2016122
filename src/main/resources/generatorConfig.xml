@@ -92,7 +92,7 @@
                enableSelectByExample="false"
                enableUpdateByExample="false">
         </table>-->
-        <table schema="${jdbc.database}" tableName="tc_vehicle_card" domainObjectName="TcVehicleCard"
+        <table schema="${jdbc.database}" tableName="tc_transfer_account" domainObjectName="TcTransferAccount"
                enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"

@@ -353,4 +353,13 @@ public class GlobalConstant {
 		public static final String OIL = "1";
 		public static final String CNG = "2";
 	}
+
+	/*
+ * 卡类型 0车辆卡 1个人卡
+ *
+ */
+	public interface CARD_PROPERTY{
+		public static final String CARD_PROPERTY_TRANSPORTION = "0";
+		public static final String CARD_PROPERTY_DRIVER = "1";
+	}
 }
