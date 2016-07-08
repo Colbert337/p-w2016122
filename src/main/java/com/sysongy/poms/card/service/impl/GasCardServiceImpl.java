@@ -21,6 +21,7 @@ import com.sysongy.poms.card.dao.GasCardMapper;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.model.GasCardLog;
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.util.CommonsUtils;
 import com.sysongy.util.GlobalConstant;
 
 @Service
@@ -72,7 +73,9 @@ public class GasCardServiceImpl implements GasCardService{
 	@Override
 	public Integer updateGasCardInfo(GasCard cascard) throws Exception{
 		GasCardLog gascardlog = new GasCardLog();
-		BeanUtils.copyProperties(cascard, gascardlog);
+		GasCard cascardall = this.queryGasCardInfo(cascard.getCard_no());
+		CommonsUtils.copyPropertiesIgnoreNull(cascard, cascardall);
+		CommonsUtils.copyPropertiesIgnoreNull(cascardall, gascardlog);
 		gascardlog.setAction(GlobalConstant.CardAction.ADD);
 		gascardlog.setOptime(new Date());
 		gasCardLogMapper.insert(gascardlog);

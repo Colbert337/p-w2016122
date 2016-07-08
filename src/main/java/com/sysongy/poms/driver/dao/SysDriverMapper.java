@@ -3,6 +3,7 @@ package com.sysongy.poms.driver.dao;
 import java.util.List;
 
 import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.tcms.advance.model.TcFleet;
 
 public interface SysDriverMapper {
     int deleteByPrimaryKey(String sysDriverId);
@@ -46,4 +47,10 @@ public interface SysDriverMapper {
     List<SysDriver> queryForPageSingleList(SysDriver record);
 
     SysDriver selectByAccount(String sysUserAccount);
+
+    /**
+     * 查询当前区域下的最大下标
+     * @return
+     */
+    SysDriver queryMaxIndex(String provinceId);
 }

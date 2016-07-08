@@ -7,6 +7,8 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.model.TcVehicleCard;
@@ -60,6 +62,8 @@ public class TcVehicleController extends BaseContoller {
     GasCardService cardService;
     @Autowired
     TcVehicleCardService tcVehicleCardService;
+    @Autowired
+    TransportionService transportionService;
 
 
     /**
@@ -149,6 +153,20 @@ public class TcVehicleController extends BaseContoller {
 
         return json;
     }
+    
+    @RequestMapping("/changeCard")
+    @ResponseBody
+    public String changeCard(@RequestParam String tc_vehicle_id, @RequestParam String newcardno) throws Exception{
+        String ret = "";
+    	try{
+        	ret = tcVehicleService.updateAndchangeCard(tc_vehicle_id, newcardno).toString();
+        }catch(Exception e){
+        	ret = e.getMessage();
+        	throw e;
+        }finally{
+        	return ret;
+        }
+    }
 
     /**
      * 冻结卡
@@ -176,8 +194,9 @@ public class TcVehicleController extends BaseContoller {
      * @return
      */
     @RequestMapping("/save")
-    public String saveVehicle(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map){
-
+    public String saveVehicle(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map) throws Exception{
+        String stationId = currUser.getStationId();
+        Transportion transportion = transportionService.queryTransportionByPK(stationId);
         if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
             TcVehicle tcVehicle = new TcVehicle();
             tcVehicle = tcVehicleService.queryVehicle(vehicle);
@@ -193,9 +212,17 @@ public class TcVehicleController extends BaseContoller {
 
             tcVehicleService.updateVehicle(vehicle);
         }else{
-            String stationId = currUser.getStationId();
+            String newid;
+            TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getProvince_id());
+            if(tcVehicleTemp == null || StringUtils.isEmpty(tcVehicleTemp.getTcVehicleId())){
+                newid = "TAL"+transportion.getProvince_id() + "000001";
+            }else{
+                Integer tmp = Integer.valueOf(tcVehicleTemp.getTcVehicleId().substring(6, 12)) + 1;
+                newid = "TAL"+transportion.getProvince_id() + StringUtils.leftPad(tmp.toString() , 6, "0");
+            }
+
             vehicle.setStationId(stationId);
-            vehicle.setTcVehicleId(UUIDGenerator.getUUID());
+            vehicle.setTcVehicleId(newid);
             String payCode = vehicle.getPayCode();
             vehicle.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
             vehicle.setIsDeleted(GlobalConstant.STATUS_NOTDELETE+"");

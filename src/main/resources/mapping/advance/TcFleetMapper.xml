@@ -26,6 +26,12 @@
   <sql id="Base_Column_List" >
     tc_fleet_id, station_id, fleet_name, sys_user_id, quota, is_allot, created_date, updated_date
   </sql>
+  <select id="selectByFleetId" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
+    select 
+    <include refid="Base_Column_List" />
+    from tc_fleet
+    where tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
+  </select>
   <select id="queryFleetList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
     select 
     <include refid="Base_Column_List" />
@@ -80,7 +86,10 @@
     where  tc_fleet_id = #{tcFleetId}
     and station_id = #{stationId}
   </select>
-
+  <!--查询最大索引-->
+  <select id="queryMaxIndex" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from tc_fleet where tc_fleet_id like #{provinceId} order by tc_fleet_id desc limit 1
+  </select>
   <select id="queryFleetByVehicleId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select tf.* from tc_fleet tf left join tc_fleet_vehicle tfv on tf.tc_fleet_id = tfv.tc_fleet_id
     where tf.is_deleted = 1 and tf.station_id = #{0}  and tfv.tc_vehicle_id = #{1}

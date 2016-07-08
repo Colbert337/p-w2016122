@@ -69,6 +69,10 @@
     and user_status &lt; 2
     ORDER BY created_date DESC
   </select>
+  <!--查询最大索引-->
+  <select id="queryMaxIndex" resultMap="BaseResultMap" >
+    select * from sys_driver where sys_driver_id like #{provinceId} order by sys_driver_id desc limit 1
+  </select>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select

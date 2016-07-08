@@ -155,6 +155,10 @@
     where user_name = #{0} and password = #{1}
     and status = 0 and is_deleted = 1
   </select>
+  <!--查询最大索引-->
+  <select id="queryMaxIndex" resultMap="BaseResultMap" >
+    select * from sys_user where sys_user_id like #{provinceId} order by sys_user_id desc limit 1
+  </select>
   <select id="queryUser" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />

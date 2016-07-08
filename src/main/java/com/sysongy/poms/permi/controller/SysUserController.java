@@ -6,6 +6,7 @@ import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysRoleService;
@@ -17,6 +18,7 @@ import com.sysongy.util.UUIDGenerator;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -145,6 +147,16 @@ public class SysUserController extends BaseContoller{
 
 			resultInt = 2;
 		}else if(user != null){//添加
+
+			String newid;
+			SysUser userTemp = sysUserService.queryMaxIndex();
+			if(userTemp == null || StringUtils.isEmpty(userTemp.getSysUserId())){
+				newid = "S" + "000001";
+			}else{
+				Integer tmp = Integer.valueOf(userTemp.getSysUserId().substring(1, 7)) + 1;
+				newid = "S" + StringUtils.leftPad(tmp.toString() , 6, "0");
+			}
+
 			user.setSysUserId(UUIDGenerator.getUUID());
 			user.setStationId(stationId);
 			sysUserService.addUser(user);

@@ -1,6 +1,7 @@
 package com.sysongy.tcms.advance.dao;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
 
 import java.util.List;
@@ -88,4 +89,11 @@ public interface TcVehicleMapper {
      * @return
      */
     List<TcVehicle> queryVehicleByStationId(String stationId);
+
+    /**
+     * 查询当前区域下的最大下标
+     * @param provinceId
+     * @return
+     */
+    TcVehicle queryMaxIndex(String provinceId);
 }

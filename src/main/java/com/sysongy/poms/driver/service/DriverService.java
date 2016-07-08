@@ -7,6 +7,7 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.model.SysDriverReviewStr;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.tcms.advance.model.TcFleet;
 
 public interface DriverService {
 	
@@ -68,4 +69,10 @@ public interface DriverService {
 	int deleteDriverByIds(List<String> idList);
 	
 	PageInfo<SysDriverReviewStr> queryDriversLog(SysDriverReviewStr record) throws Exception;
+
+	/**
+	 * 查询当前区域下的最大下标
+	 * @return
+	 */
+	SysDriver queryMaxIndex();
 }

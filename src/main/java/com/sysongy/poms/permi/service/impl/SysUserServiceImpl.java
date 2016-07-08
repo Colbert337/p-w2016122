@@ -2,6 +2,7 @@ package com.sysongy.poms.permi.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.permi.dao.*;
 import com.sysongy.poms.permi.model.*;
 import com.sysongy.poms.permi.service.SysFunctionService;
@@ -350,5 +351,11 @@ public class SysUserServiceImpl implements SysUserService{
             sysUserMapper.updateUserByUserName(record);
         }
         return returnVal;
+    }
+
+    @Override
+    public SysUser queryMaxIndex() {
+        String provinceId = "%S%";
+        return sysUserMapper.queryMaxIndex(provinceId);
     }
 }

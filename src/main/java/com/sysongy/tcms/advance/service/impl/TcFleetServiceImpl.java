@@ -160,4 +160,10 @@ public class TcFleetServiceImpl implements TcFleetService{
     public List<TcFleet> queryFleetByVehicleId(String stationId, String vehicleId) {
         return tcFleetMapper.queryFleetByVehicleId(stationId,vehicleId);
     }
+
+    @Override
+    public TcFleet queryMaxIndex(String provinceId) {
+        provinceId = "%"+provinceId+"%";
+        return tcFleetMapper.queryMaxIndex(provinceId);
+    }
 }
