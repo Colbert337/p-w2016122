@@ -166,16 +166,16 @@ public class BaseContoller {
                             }catch (Exception e){
                                 e.printStackTrace();
                                 returnPath = "login";
-                                map.addAttribute("erroMsg","加注站公司已过有效期！");
+                                map.addAttribute("erroMsg","加注站已过有效期！");
                                 return returnPath;
                             }
                             if(gastation.getStatus().equals("0")){
                                 returnPath = "login";
-                                map.addAttribute("erroMsg","加注站公司已关闭！");
+                                map.addAttribute("erroMsg","加注站已关闭！");
                                 return returnPath;
                             }else if(compareVal < 0){
                                 returnPath = "login";
-                                map.addAttribute("erroMsg","加注站公司已过有效期！");
+                                map.addAttribute("erroMsg","加注站已过有效期！");
                                 return returnPath;
                             }
                         }

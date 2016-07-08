@@ -122,7 +122,7 @@ public class TcFleetQuotaController extends BaseContoller {
      * @return
      */
     @RequestMapping("/save/zhuan")
-    public String saveZhuan(@ModelAttribute CurrUser currUser,@RequestParam String data, ModelMap map){
+    public String saveZhuan(@ModelAttribute CurrUser currUser,@RequestParam String data, ModelMap map) throws Exception{
         String stationId = currUser.getStationId();
         String userName = currUser.getUser().getUserName();
         try {
@@ -147,7 +147,8 @@ public class TcFleetQuotaController extends BaseContoller {
                     }
                 }
 
-                if(list != null && list.size() > 0){
+                tcFleetQuotaService.personalTransfer(list,stationId,userName);
+                /*if(list != null && list.size() > 0){
                     for (Map<String, Object> mapDriver:list){
                         SysOrder order = new SysOrder();
                         order.setOrderId(UUIDGenerator.getUUID());
@@ -171,7 +172,7 @@ public class TcFleetQuotaController extends BaseContoller {
                         //运输公司往个人转账
                         orderService.transferTransportionToDriver(order);
                     }
-                }
+                }*/
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -187,9 +188,11 @@ public class TcFleetQuotaController extends BaseContoller {
      */
     @RequestMapping("/info/driver")
     @ResponseBody
-    public SysDriver queryDriverInfo(SysDriver sysDriver, ModelMap map){
+    public SysDriver queryDriverInfo(@ModelAttribute CurrUser currUser,SysDriver sysDriver, ModelMap map){
         SysDriver driver = new SysDriver();
+        String stationId = currUser.getStationId();
         driver = sysDriver;
+        driver.setStationId(stationId);
         try {
             driver = driverService.queryDriverByMobilePhone(driver);
         }catch (Exception e){
