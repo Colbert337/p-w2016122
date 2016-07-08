@@ -56,7 +56,10 @@ function addFleet(){
     $("#re_password").removeAttr("readonly");
 
     $("#cardInfoDiv").hide();
-    $("#editModel").modal('show');
+    $("#editModel").modal('show').on('hidden.bs.modal', function() {
+        $('#editForm').bootstrapValidator('resetForm',true);
+        $('.user-name-valid').remove();
+    });
 }
 
 //显示编辑车队弹出层
@@ -165,6 +168,9 @@ function saveFleet(){
         if(!$('#editForm').data('bootstrapValidator').isValid()){
             return ;
         }
+        if($('.user-name-valid').is(':visible')){
+            return ;
+        }
 
         var saveOptions ={
             url:'../web/tcms/fleet/save',
@@ -270,8 +276,12 @@ function isFleetExit(){
         success: function(data){
             console.log(data);
             if(!data.valid){
-                alert("车队名称已存在!");
-                $("#fleet_name").focus();
+                if($('.user-name-valid').is(':visible')){
+                    return false;
+                }
+                $('#fleet_name').after('<div class="tooltip fade top in user-name-valid"><div class="tooltip-arrow"></div><div class="tooltip-inner">车队名称已存在!</div></div>');
+            } else {
+                $('.user-name-valid').remove();
             }
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
 

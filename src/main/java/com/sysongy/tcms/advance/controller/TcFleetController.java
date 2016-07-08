@@ -111,7 +111,7 @@ public class TcFleetController extends BaseContoller {
                 json.put("valid",false);
             }
         }else{
-            json.put("valid",false);
+            json.put("valid",true);
         }
 
         return json;
