@@ -12,7 +12,7 @@
 		}
 		
 		var listOptions ={   
-	            url:'../web/order/queryOrderDeal',
+	            url:'../web/order/list/recharge',
 	            type:'post',                    
 	            dataType:'html',
 	            success:function(data){
@@ -30,13 +30,10 @@
 	}
 	
 	function init(){
-		$("[name=deal_date_after]").val("");
-		$("[name=deal_date_before]").val("");
+		$("[name=operatorSourceType]").val("");
+		$("[name=operatorTargetType]").val("");
 		$("[name=deal_number]").val("");
 		commitForm();
 		//loadPage('#main', '../crmGasPriceService/queryProductPriceList');
 	}
 	
-	function returnpage(){
-		loadPage('#main', '../web/gastation/depositList');
-	}
