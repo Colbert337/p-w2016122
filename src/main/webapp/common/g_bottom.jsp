@@ -23,7 +23,6 @@
 							司集能源运维管理平台
 						</c:if>
 						&copy; 2015-2016
-					<input type="text" value="${sessionScope.currUser.user.userName}"/>
 					</div>
 					<!-- /section:basics/footer -->
 				</div>

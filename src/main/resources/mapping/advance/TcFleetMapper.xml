@@ -26,6 +26,12 @@
   <sql id="Base_Column_List" >
     tc_fleet_id, station_id, fleet_name, sys_user_id, quota, is_allot, created_date, updated_date
   </sql>
+  <select id="selectByFleetId" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
+    select 
+    <include refid="Base_Column_List" />
+    from tc_fleet
+    where tc_fleet_id = #{tcFleetId,jdbcType=VARCHAR}
+  </select>
   <select id="queryFleetList" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
     select 
     <include refid="Base_Column_List" />

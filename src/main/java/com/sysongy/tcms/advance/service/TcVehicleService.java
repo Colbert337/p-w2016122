@@ -1,5 +1,8 @@
 package com.sysongy.tcms.advance.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
@@ -103,4 +106,6 @@ public interface TcVehicleService {
      * @return
      */
     TcVehicle queryMaxIndex(String provinceId);
+
+    Integer updateAndchangeCard(String tcVehicleId, String newcardno) throws Exception;
 }

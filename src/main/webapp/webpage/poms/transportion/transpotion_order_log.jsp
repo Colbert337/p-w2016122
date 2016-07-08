@@ -55,7 +55,7 @@
 							</button>
 							<button class="btn btn-sm" type="button" onclick="returnpage();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								返回
+								返回111
 							</button>
 						</div>
 					</div>
@@ -76,7 +76,7 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'order_id');commitForm();" id="order_id_order">订单号</th>
+									<!-- <th onclick="orderBy(this,'order_id');commitForm();" id="order_id_order">订单号</th> -->
 									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">订单流水号</th>
 									<th onclick="orderBy(this,'charge_type');commitForm();" id="charge_type_order">交易类型</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th>
@@ -97,7 +97,7 @@
 										</label>
 									</td>
 
-									<td>${list.order_id}</td>
+									<%-- <td>${list.order_id}</td> --%>
 									<td>${list.deal_number}</td>
 								 	<td><s:Code2Name mcode="${list.order_type}" gcode="ORDER_TYPE"></s:Code2Name></td> 
 									<td>${list.operator}</td>
