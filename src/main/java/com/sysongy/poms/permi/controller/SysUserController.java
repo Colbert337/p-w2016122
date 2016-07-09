@@ -226,7 +226,7 @@ public class SysUserController extends BaseContoller{
 
 		SysUser sysUser = new SysUser();
 		sysUser.setUserName(admin_username);
-		sysUser.setUserType(Integer.valueOf(userType));
+		/*sysUser.setUserType(Integer.valueOf(userType));*/
 		SysUser user = sysUserService.queryUser(sysUser);
 
 		if(user == null){
