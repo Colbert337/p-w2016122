@@ -112,7 +112,7 @@ public class TcVehicleController extends BaseContoller {
 
         TcVehicleCard tcVehicleCard = tcVehicleCardService.queryTcVehicleCardByVecId(tcVehicleCardTemp);
         vehicleMap.put("vehicle",tcVehicle);
-        if(tcVehicle != null && tcVehicleCard.getCardNo() != null && tcVehicleCard != null){
+        if(tcVehicle != null && tcVehicleCard != null && tcVehicleCard.getCardNo() != null && tcVehicleCard != null){
             try {
                 gasCard = gasCardService.queryGasCardInfo(tcVehicleCard.getCardNo());
             }catch (Exception e){
@@ -207,6 +207,8 @@ public class TcVehicleController extends BaseContoller {
                 //新密码何原始密码不一致，则修改密码
                 if(!password.equals(tcVehicle.getPayCode())){
                     vehicle.setPayCode(password);
+                }else{
+                    vehicle.setPayCode(null);
                 }
             }
 

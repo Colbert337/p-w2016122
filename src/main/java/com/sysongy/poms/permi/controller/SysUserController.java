@@ -134,13 +134,13 @@ public class SysUserController extends BaseContoller{
 			//修改用户
 			user.setUpdatedDate(new Date());
 			String password = user.getPassword().trim();
-			password = Encoder.MD5Encode(password.getBytes());
 			SysUser userParam = new SysUser();
 			userParam.setSysUserId(user.getSysUserId());
 			SysUser userTemp = sysUserService.queryUser(userParam);
 			if(password.equals(userTemp.getPassword())){
 				user.setPassword(null);
 			}else{
+				password = Encoder.MD5Encode(password.getBytes());
 				user.setPassword(password);
 			}
 			sysUserService.updateUser(user);
