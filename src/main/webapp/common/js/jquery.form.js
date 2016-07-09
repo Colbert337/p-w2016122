@@ -210,6 +210,14 @@ $.fn.ajaxSubmit = function(options) {//alert("jinlaile");
         options.error = function(xhr, status, error) {
             var context = options.context || this;
             oldError.apply(context, [xhr, status, error, $form]);
+            
+            if (xhr.status == 911) {  
+          		 bootbox.confirm("当前会话已超时，请重新登录",function (result) {
+   					if(result){
+   						window.location.href = '../login.jsp';
+   					}
+   				});
+            }
         };
     }
 
