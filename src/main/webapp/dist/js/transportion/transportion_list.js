@@ -70,14 +70,22 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 		var userName = $(obj).parents("tr").children("td").eq(5).text();
 		var station = $(obj).parents("tr").children("td").eq(1).text();
 		
-		$.ajax({
-			   type: "POST",
-			   url:'../web/transportion/resetPassword?gastationid='+station+'&username='+userName,
-	           dataType:'text',
-	           async:false,
-	           success:function(data){
-	        	   $("#main").html(data);
-	        	   $("#modal-table").modal("show");
-	           }
-		});
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("将重置该运输公司的管理员密码，是否确认?", function (result) {
+			if (!result) {
+				$('[data-rel=tooltip]').tooltip('hide');
+				return;
+			}else{
+				$.ajax({
+					   type: "POST",
+					   url:'../web/transportion/resetPassword?gastationid='+station+'&username='+userName,
+			           dataType:'text',
+			           async:false,
+			           success:function(data){
+			        	   $("#main").html(data);
+			        	   $("#modal-table").modal("show");
+			           }
+				});
+			}
+		})
 	}

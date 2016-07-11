@@ -206,6 +206,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                     tcTransferAccount.setAmount(new BigDecimal(mapDriver.get("amount").toString()) );
                     tcTransferAccount.setFullName(mapDriver.get("fullName").toString());
                     tcTransferAccount.setMobilePhone(mapDriver.get("mobilePhone").toString());
+                    tcTransferAccount.setUsed(mapDriver.get("remark").toString());
                     tcTransferAccount.setUpdatedDate(new Date());
                     tcTransferAccountMapper.insertSelective(tcTransferAccount);
                 }

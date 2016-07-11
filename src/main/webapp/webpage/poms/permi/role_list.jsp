@@ -11,16 +11,27 @@
 <link href="<%=basePath %>/assets/zTree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
 <script src="<%=basePath %>/assets/zTree/js/jquery.ztree.all-3.5.min.js"/>
 <script type="text/javascript">
-	$(function() {
-		/*表单验证*/
-		jQuery('#roleForm').validationEngine('attach', {
-			promptPosition: 'topRight',		//提示信息的位置，可设置为：'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'centerRight', 'centerLeft', 'inline'
-			validationEventTrigger:'blur',	//触发验证的事件
-			binded:true,						//是否绑定即时验证
-			scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
-		});
+	$('#roleForm').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			roleName: {
+				validators: {
+					notEmpty: {
+						message: '角色名称不能为空'
+					},
+					stringLength: {
+						min: 3,
+						message: '角色名称不能小于3个字符'
+					}
+				}
+			}
+		}
 	});
-
 
 	//初始化菜单树
 	function intiTree(option){
@@ -136,12 +147,13 @@
 		clearDiv();
 		intiTree("add");
 		queryUserTypeList();
-		$("#roleModel").modal('show');
+		$("#roleModel").on('hidden.bs.modal', function() {
+			$('#roleForm').bootstrapValidator('resetForm',true);
+		});
 	}
 
 	/*取消弹层方法*/
 	function closeDialog(divId){
-		jQuery('#roleForm').validationEngine('hide');//隐藏验证弹窗
 		$("#roleForm :input").each(function () {
 			$(this).val("");
 		});
@@ -151,25 +163,28 @@
 	 * 保存用户信息
 	 */
 	function saveRole(){
-		if(jQuery('#roleForm').validationEngine('validate')){
-			var saveOptions ={
-				url:'<%=basePath%>/web/permi/role/save',
-				type:'post',
-				dataType:'html',
-				success:function(data){
-					$("#main").html(data);
-					$("#modal-table").modal("show");
-				}, error: function (XMLHttpRequest, textStatus, errorThrown) {
-
-				}
-			}
-			$("#roleForm").ajaxSubmit(saveOptions);
-
-			$("#userModel").modal('hide').removeClass('in');
-			$("body").removeClass('modal-open').removeAttr('style');
-			$(".modal-backdrop").remove();
-			clearDiv();
+		$('#roleForm').data('bootstrapValidator').validate();
+		if(!$('#roleForm').data('bootstrapValidator').isValid()){
+			return ;
 		}
+		var saveOptions ={
+			url:'<%=basePath%>/web/permi/role/save',
+			type:'post',
+			dataType:'html',
+			success:function(data){
+				$("#main").html(data);
+				$("#modal-table").modal("show");
+			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		}
+		$("#roleForm").ajaxSubmit(saveOptions);
+
+		$("#userModel").modal('hide').removeClass('in');
+		$("body").removeClass('modal-open').removeAttr('style');
+		$(".modal-backdrop").remove();
+		clearDiv();
+
 	}
 	//显示编辑用户弹出层
 	function queryUserTypeList(userType){
@@ -204,7 +219,10 @@
 
 				updateTree(data.functionList);
 				queryUserTypeList(data.roleType);
-				$("#roleModel").modal('show');
+
+				$("#roleModel").on('hidden.bs.modal', function() {
+					$('#roleForm').bootstrapValidator('resetForm',true);
+				});
 			}
 		});
 
@@ -383,29 +401,29 @@
 							<form class="form-horizontal" id="roleForm">
 								<!-- #section:elements.form -->
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="role_name"> <span class="red_star">*</span>角色名称： </label>
-									<div class="col-sm-8">
-										<input type="text" id="role_name" name="roleName" placeholder="角色名称" class="validate[required,minSize[3]] col-xs-10 col-sm-10" />
-										<input type="hidden" id="sys_role_id" name="sysRoleId" class="col-xs-10 col-sm-10" />
-										<input type="hidden" id="role_code" name="roleCode" class="col-xs-10 col-sm-10" />
+									<label class="col-sm-3 control-label no-padding-right" for="role_name"> <span class="red_star">*</span>角色名称： </label>
+									<div class="col-sm-9">
+										<input type="text" id="role_name" name="roleName" placeholder="角色名称" class="form-control" />
+										<input type="hidden" id="sys_role_id" name="sysRoleId" />
+										<input type="hidden" id="role_code" name="roleCode" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="role_type"> <span class="red_star">*</span>角色类型： </label>
-									<div class="col-sm-8">
+									<label class="col-sm-3 control-label no-padding-right" for="role_type"> <span class="red_star">*</span>角色类型： </label>
+									<div class="col-sm-9">
 										<label class="col-xs-10 col-sm-12 pad-top-10" id="mname"></label>
 										<input type="hidden" id="role_type" name="roleType"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="role_desc"> 描述： </label>
-									<div class="col-sm-8">
-										<textarea class="limited col-xs-10 col-sm-10" id="role_desc" name="roleDesc" maxlength="50" style="resize: none;"></textarea>
+									<label class="col-sm-3 control-label no-padding-right" for="role_desc"> 描述： </label>
+									<div class="col-sm-9">
+										<textarea class="limited form-control" id="role_desc" name="roleDesc" maxlength="50" ></textarea>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for=""> 功能选择： </label>
-									<div class="col-sm-3">
+									<label class="col-sm-3 control-label no-padding-right"> 功能选择： </label>
+									<div class="col-sm-9">
 										<ul id="treeDiv" class="ztree"></ul>
 									</div>
 								</div>
@@ -417,7 +435,7 @@
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
 				<button class="btn btn-primary btn-sm" onclick="saveRole()">确   定</button>
-				<button class="btn btn-sm" i="close" onclick="closeDialog('roleModel')">取   消 </button>
+				<button class="btn btn-sm" onclick="closeDialog('roleModel')">取   消 </button>
 			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->

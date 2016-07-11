@@ -6,6 +6,7 @@ import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysRoleService;
@@ -17,6 +18,7 @@ import com.sysongy.util.UUIDGenerator;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -132,19 +134,29 @@ public class SysUserController extends BaseContoller{
 			//修改用户
 			user.setUpdatedDate(new Date());
 			String password = user.getPassword().trim();
-			password = Encoder.MD5Encode(password.getBytes());
 			SysUser userParam = new SysUser();
 			userParam.setSysUserId(user.getSysUserId());
 			SysUser userTemp = sysUserService.queryUser(userParam);
 			if(password.equals(userTemp.getPassword())){
 				user.setPassword(null);
 			}else{
+				password = Encoder.MD5Encode(password.getBytes());
 				user.setPassword(password);
 			}
 			sysUserService.updateUser(user);
 
 			resultInt = 2;
 		}else if(user != null){//添加
+
+			String newid;
+			SysUser userTemp = sysUserService.queryMaxIndex();
+			if(userTemp == null || StringUtils.isEmpty(userTemp.getSysUserId())){
+				newid = "S" + "000001";
+			}else{
+				Integer tmp = Integer.valueOf(userTemp.getSysUserId().substring(1, 7)) + 1;
+				newid = "S" + StringUtils.leftPad(tmp.toString() , 6, "0");
+			}
+
 			user.setSysUserId(UUIDGenerator.getUUID());
 			user.setStationId(stationId);
 			sysUserService.addUser(user);
@@ -214,7 +226,7 @@ public class SysUserController extends BaseContoller{
 
 		SysUser sysUser = new SysUser();
 		sysUser.setUserName(admin_username);
-		sysUser.setUserType(Integer.valueOf(userType));
+		/*sysUser.setUserType(Integer.valueOf(userType));*/
 		SysUser user = sysUserService.queryUser(sysUser);
 
 		if(user == null){

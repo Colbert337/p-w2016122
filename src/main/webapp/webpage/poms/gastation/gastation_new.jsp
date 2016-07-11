@@ -213,8 +213,6 @@
 															<option value ="890">西藏自治区</option>
 															<option value ="950">宁夏回族自治区</option>
 															<option value ="990">新疆维吾尔自治区</option>
-															<option value ="851">香港特别行政区</option>
-															<option value ="853">澳门特别行政区</option>
 													</select>
 												</div>
 												<div class="col-sm-6">
@@ -374,10 +372,6 @@
 			$("#province_id").trigger("change");
 			$("#city").find("option[value="+city_id+"]").attr("selected",true);
 			$("#detail").val(detail.split(" ")[2]);
-		}
-
-		if(operations_id!=null){
-			$("#operations_id").find("option[value="+operations_id+"]").attr("selected",true);
 		}
 		
 		function chinaChange(province, city) {

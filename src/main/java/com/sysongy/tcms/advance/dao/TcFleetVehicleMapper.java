@@ -1,9 +1,9 @@
 package com.sysongy.tcms.advance.dao;
 
-import com.sysongy.tcms.advance.model.TcFleetVehicle;
-
 import java.util.List;
 import java.util.Map;
+
+import com.sysongy.tcms.advance.model.TcFleetVehicle;
 
 public interface TcFleetVehicleMapper {
     /**
@@ -39,5 +39,7 @@ public interface TcFleetVehicleMapper {
      * @return
      */
     int deleteFleetVehicle(TcFleetVehicle tFleetVehicle);
+    
+    TcFleetVehicle selectByVehicleId(String tc_fleet_vehicle_id);
 
 }

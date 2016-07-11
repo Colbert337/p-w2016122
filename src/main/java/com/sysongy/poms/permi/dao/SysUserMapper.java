@@ -1,5 +1,6 @@
 package com.sysongy.poms.permi.dao;
 
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.permi.model.SysFunction;
 import com.sysongy.poms.permi.model.SysUser;
 
@@ -49,4 +50,10 @@ public interface SysUserMapper {
      * @return
      */
     List<SysUser> queryUserListByUserName(SysUser sysUser);
+
+    /**
+     * 查询当前区域下的最大下标
+     * @return
+     */
+    SysUser queryMaxIndex(String provinceId);
 }

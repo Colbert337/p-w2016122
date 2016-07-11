@@ -3,6 +3,7 @@ package com.sysongy.tcms.advance.model;
 import java.util.Date;
 
 public class TcFleetVehicle {
+	
     private String tcFleetVehicleId;
 
     private String stationId;
@@ -12,8 +13,18 @@ public class TcFleetVehicle {
     private String tcVehicleId;
 
     private Date createdDate;
+    
+    private TcFleet tf;
 
-    public String getTcFleetVehicleId() {
+    public TcFleet getTf() {
+		return tf;
+	}
+
+	public void setTf(TcFleet tf) {
+		this.tf = tf;
+	}
+
+	public String getTcFleetVehicleId() {
         return tcFleetVehicleId;
     }
 
