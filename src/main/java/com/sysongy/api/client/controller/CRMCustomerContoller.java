@@ -142,6 +142,12 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
                 drivers = driverService.querySingleDriver(sysDriver);
             } else {
+                if(sysDriver.getIsCharge() == GlobalConstant.DriverType.TRANSPORT){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("车队卡不允许在客户端充值！！！");
+                    return ajaxJson;
+                }
+
                 SysDriver sysDriverForFleet = findFleetInfo(sysDriver.getCardId());
                 if(sysDriverForFleet == null){
                     ajaxJson.setSuccess(false);
@@ -186,21 +192,22 @@ public class CRMCustomerContoller {
         try
         {
             List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(cardID);
-            if(vehicles.size() > 0){
+            if(vehicles.size() > 1){
                 logger.error("查询出现多个车辆: " + cardID);
                 return null;
             }
             for(TcVehicle tcVehicle : vehicles){
                 List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
-                if(tcFleets.size() > 0){
+                if(tcFleets.size() > 1){
                     logger.error("查询出现多个车队: " + tcVehicle.getTcVehicleId());
                     return null;
                 }
                 for(TcFleet tcFleet : tcFleets){
                     Transportion transportion = transportionService.queryTransportionByPK(tcFleet.getStationId());
                     sysDriverForFleet = new SysDriver();
+                    sysDriverForFleet.setSysDriverId(transportion.getSys_transportion_id());
                     sysDriverForFleet.setFullName(tcVehicle.getPlatesNumber());
-                    sysDriverForFleet.setMobilePhone(tcVehicle.getTcFleetId());
+                    sysDriverForFleet.setMobilePhone(tcFleet.getFleetName());
                     GasCard gasCard = gasCardService.selectByCardNoForCRM(cardID);
                     sysDriverForFleet.setCardInfo(gasCard);
                     SysUserAccount sysUserAccount = new SysUserAccount();
