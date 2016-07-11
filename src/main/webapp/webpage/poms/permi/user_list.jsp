@@ -179,7 +179,7 @@
 				$("#main").html(data);
 				$("#modal-table").modal("show");
 			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
-
+				bootbox.clone();
 			}
 		}
 		$("#userForm").ajaxSubmit(saveOptions);

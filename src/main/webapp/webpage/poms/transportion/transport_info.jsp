@@ -7,8 +7,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
-<script type="text/javascript">
-</script>
+<script src="<%=basePath %>/dist/js/transportion/transportion_info.js"></script>
 <div class="page-header">
 	<h1>
 		公司信息
@@ -88,22 +87,29 @@
 			</span>
 		</h3>
 		<div class="row">
-			<div class="col-sm-12">${transportion.indu_com_certif}
+			<div class="col-sm-6">
 				<c:choose>
 					<c:when test="${transportion.indu_com_certif == null || transportion.indu_com_certif == ''}">
 						<img class="col-sm-4" src="../common/images/default_productBig.jpg">
 					</c:when>
 					<c:otherwise>
-						asdf<img class="col-sm-6" src="<%=imagePath %>${transportion.indu_com_certif}">
+						<a class="gastation-log-colorbox" href="${transportion.indu_com_certif}" data-rel="colorbox">
+							<img class="img-responsive" src="${transportion.indu_com_certif}" alt="">
+							<div class="title">工商注册证</div>
+						</a>
 					</c:otherwise>
 				</c:choose>
-
+			</div>
+			<div class="col-sm-6">
 				<c:choose>
 					<c:when test="${transportion.tax_certif == null || transportion.tax_certif == ''}">
 						<img class="col-sm-4" src="../common/images/default_productBig.jpg">
 					</c:when>
 					<c:otherwise>
-						asdf<img class="col-sm-6" src="<%=imagePath %>${transportion.tax_certif}">
+						<a class="gastation-log-colorbox" href="${transportion.tax_certif}" data-rel="colorbox">
+							<img class="img-responsive" src="${transportion.tax_certif}" alt="">
+							<div class="title">税务登记证</div>
+						</a>
 					</c:otherwise>
 				</c:choose>
 			</div>

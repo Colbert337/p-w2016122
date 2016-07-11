@@ -124,6 +124,8 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
 
 <!--充值弹层-开始-->
 <div id="chongzhiModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
@@ -281,7 +283,7 @@
 												<input type="hidden" id="sys_driver_id_1" name="sysDriverId" class="col-sm-12"/>
 											</td>
 											<td>
-												<input type="text" id="amount_1" name="amount" class="col-sm-12"/>
+												<input type="text" id="amount_1" name="amount" class="col-sm-12 validate[required]"/>
 											</td>
 											<td>
 												<input type="text" id="remark_1" name="remark" class="col-sm-12"/>

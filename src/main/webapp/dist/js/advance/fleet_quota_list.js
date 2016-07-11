@@ -11,6 +11,8 @@ var listOptions ={
     dataType:'html',
     success:function(data){
         $("#main").html(data);
+    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+        bootbox.alert("操作失败!")//保存成功弹窗
     }
 }
 
@@ -50,6 +52,8 @@ function addPassword(){
                 $("#paswordDiv").hide();
             }
 
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     });
     $("#passwordModel").modal('show');
@@ -88,8 +92,10 @@ function savePassword(){
         type:'post',
         dataType:'html',
         success:function(data){
-            bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
+            $("#modal-table").modal("show");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     }
     $("#passwordForm").ajaxSubmit(saveOptions);
@@ -130,6 +136,8 @@ function saveFenpei(){
         success:function(data){
             bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     }
     $("#fenpeiForm").ajaxSubmit(saveOptions);
@@ -179,6 +187,8 @@ function queryDriverInfo(index){
                 alert("请求失败！");
             }
 
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     });
 
@@ -203,8 +213,10 @@ function saveZhuan(){
         type:'post',
         dataType:'html',
         success:function(data){
-            bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
+            $("#modal-table").modal("show");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     }
     $("#zhuanForm").ajaxSubmit(saveOptions);
@@ -242,6 +254,8 @@ function saveFleetQuota(){
             dataType:'html',
             success:function(data){
                 $("#main").html(data);
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                bootbox.alert("操作失败!")//保存成功弹窗
             }
         }
         $("#editForm").ajaxSubmit(saveOptions);
