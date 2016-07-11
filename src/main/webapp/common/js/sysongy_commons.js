@@ -4,8 +4,7 @@
 function loadPage(obj,url){
 	jQuery(obj).load(url,
 		function(response,status,xhr){
-				
-			if(status == "error"){
+			if(xhr.status == 911){
 				bootbox.confirm("当前会话已超时，请重新登录",function (result) {
 					if(result){
 						window.location.href = '../login.jsp';

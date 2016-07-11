@@ -10,7 +10,13 @@
 		            	 //$("#modal-table").modal("show");
 		          }
             },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+            	 /*if (XMLHttpRequest.status == 911) {  
+            		 bootbox.confirm("当前会话已超时，请重新登录",function (result) {
+     					if(result){
+     						window.location.href = '../login.jsp';
+     					}
+     				});
+                 }*/
 	       }
 	}
 	
