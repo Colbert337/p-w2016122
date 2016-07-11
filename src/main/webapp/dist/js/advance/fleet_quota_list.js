@@ -205,6 +205,11 @@ function deleteRow(index){
  * 提交个人转账
  */
 function saveZhuan(){
+    $('#zhuanForm').data('bootstrapValidator').validate();
+    if(!$('#zhuanForm').data('bootstrapValidator').isValid()){
+        return ;
+    }
+
     var data = $("#zhuanForm").serialize(); //序列化表单 获取到数据
     data = decodeURIComponent(data,true);
     var saveOptions ={
@@ -352,3 +357,74 @@ $('#passwordForm').bootstrapValidator({
         }
     }
 });
+
+//个人转账bug
+$('#zhuanForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        pay_code: {
+            validators: {
+                notEmpty: {
+                    message: '支付密码不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9]+$',
+                    message: '密码只能包含数字'
+                },
+                remote: {
+                    url: '../web/transportion/info/password',
+                    type: "post",
+                    async: false,
+                    data: function(validator, $field, value) {
+                        return{
+                            pay_code:$("#pay_code").val()
+                        };
+                    },
+                    message: '支付密码错误'
+                }
+            }
+        }
+    }
+});
+
+/*资金分配*/
+//bootstrap验证控件
+$('#fenpeiForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        pay_code: {
+            validators: {
+                notEmpty: {
+                    message: '支付密码不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9]+$',
+                    message: '密码只能包含数字'
+                },
+                remote: {
+                    url: '../web/transportion/info/password',
+                    type: "post",
+                    async: false,
+                    data: function(validator, $field, value) {
+                        return{
+                            pay_code:$("#pay_code").val()
+                        };
+                    },
+                    message: '支付密码错误'
+                }
+            }
+        }
+    }
+});
+
+
