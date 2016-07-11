@@ -139,8 +139,8 @@ function saveFenpei(){
         data:{data:dataForm},
         dataType:'html',
         success:function(data){
-            bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
+            $("#modal-table").modal("show");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败!")//保存成功弹窗
         }
@@ -187,7 +187,6 @@ function queryDriverInfo(index){
             if(data != null){
                 $("#full_name_"+index).val(data.fullName);
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
-
             }else{
                 alert("请求失败！");
             }
