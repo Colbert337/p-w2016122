@@ -56,7 +56,7 @@ public class TcFleetQuotaController extends BaseContoller {
      * @return
      */
     @RequestMapping("/list/page")
-    public String queryFleetQuotaListPage(@ModelAttribute CurrUser currUser, TcFleetQuota fleetQuota, ModelMap map){
+    public String queryFleetQuotaListPage(@ModelAttribute CurrUser currUser, TcFleetQuota fleetQuota, @RequestParam(required = false) Integer resultInt, ModelMap map){
         String stationId = currUser.getStationId();
         List<Map<String, Object>> fleetQuotaList = new ArrayList<>();
         Map<String, Object> fleetQuotaMap = new HashMap<>();
@@ -70,6 +70,17 @@ public class TcFleetQuotaController extends BaseContoller {
         map.addAttribute("fleetQuotaMap",fleetQuotaMap);
         map.addAttribute("fleetQuota",fleetQuota);
         map.addAttribute("stationId",stationId);
+        if(resultInt != null){
+            Map<String, Object> resultMap = new HashMap<>();
+            if(resultInt == 1){
+                resultMap.put("retMsg","转账成功！");
+            }else if(resultInt == 0){
+                resultMap.put("retMsg","账户余额为负，不能转账！");
+            }else if(resultInt < 0){
+                resultMap.put("retMsg","账户余额不足，请先充值！");
+            }
+            map.addAttribute("ret",resultMap);
+        }
 
         return "webpage/tcms/advance/fleet_quota_list";
     }
@@ -127,6 +138,7 @@ public class TcFleetQuotaController extends BaseContoller {
      */
     @RequestMapping("/save/zhuan")
     public String saveZhuan(@ModelAttribute CurrUser currUser,@RequestParam String data, ModelMap map) throws Exception{
+        int resultInt = 1;
         String stationId = currUser.getStationId();
         String userName = currUser.getUser().getUserName();
         try {
@@ -151,7 +163,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     }
                 }
 
-                tcFleetQuotaService.personalTransfer(list,stationId,userName);
+                resultInt = tcFleetQuotaService.personalTransfer(list,stationId,userName);
                 /*if(list != null && list.size() > 0){
                     for (Map<String, Object> mapDriver:list){
                         SysOrder order = new SysOrder();
@@ -178,10 +190,11 @@ public class TcFleetQuotaController extends BaseContoller {
                     }
                 }*/
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
-        return "redirect:/web/tcms/fleetQuota/list/page";
+        return "redirect:/web/tcms/fleetQuota/list/page?resultInt="+resultInt;
     }
 
     /**
