@@ -147,7 +147,6 @@
 
 	/*取消弹层方法*/
 	function closeDialog(divId){
-		jQuery('#userForm').validationEngine('hide');//隐藏验证弹窗
 		$("#userForm :input").each(function () {
 			$(this).val("");
 		});
