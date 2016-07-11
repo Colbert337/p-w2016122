@@ -126,6 +126,11 @@ function allocation(obj,index){
  * 保存配置
  */
 function saveFenpei(){
+    $('#fenpeiForm').data('bootstrapValidator').validate();
+    if(!$('#fenpeiForm').data('bootstrapValidator').isValid()){
+        return ;
+    }
+
     var dataForm = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
     dataForm = decodeURIComponent(dataForm,true);
     var saveOptions ={
