@@ -209,6 +209,7 @@ public class CRMCustomerContoller {
                     sysDriverForFleet.setFullName(tcVehicle.getPlatesNumber());
                     sysDriverForFleet.setMobilePhone(tcFleet.getFleetName());
                     GasCard gasCard = gasCardService.selectByCardNoForCRM(cardID);
+                    sysDriverForFleet.setCardId(cardID);
                     sysDriverForFleet.setCardInfo(gasCard);
                     SysUserAccount sysUserAccount = new SysUserAccount();
                     Usysparam usysparam = new Usysparam();

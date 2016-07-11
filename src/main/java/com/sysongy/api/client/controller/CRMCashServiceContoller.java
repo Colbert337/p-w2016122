@@ -180,8 +180,6 @@ public class CRMCashServiceContoller {
         GasCard gasCard = null;
         if(StringUtils.isEmpty(checkCode)){
             gasCard = gasCardService.selectByCardNoForCRM(record.getConsume_card());
-        } else {
-            gasCard = gasCardService.selectByCardNoForCRM(record.getConsume_card());
         }
 
         SysDriver sysDriver = null;
@@ -296,7 +294,13 @@ public class CRMCashServiceContoller {
             recordNew.setGastation(gastation);
         }
         if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
-            SysDriver sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
+            SysDriver sysDriverNew = null;
+            if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
+                sysDriverNew = convertSysDriver(record.getConsume_card());
+            } else {
+                sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
+            }
+
             recordNew.setSysDriver(sysDriverNew);
             AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
             aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
@@ -328,7 +332,7 @@ public class CRMCashServiceContoller {
                     logger.error("查询出现多个车队: " + tcVehicle.getTcVehicleId());
                     return null;
                 }
-                return tcFleets.get(1);
+                return tcFleets.get(0);
             }
         } catch (Exception e){
             logger.error("获取车队出错： " + e);
@@ -441,7 +445,9 @@ public class CRMCashServiceContoller {
         } else {
             Transportion transportion = transportionService.queryTransportionByPK(originalOrder.getCreditAccount());
             originalOrder.setTransportion(transportion);
-
+            SysDriver sysDriver = new SysDriver();
+            sysDriver.setCardId(originalOrder.getConsume_card());
+            originalOrder.setSysDriver(sysDriver);
         }
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", originalOrder);
@@ -482,15 +488,23 @@ public class CRMCashServiceContoller {
         }
 
         List<SysOrderDeal> sysOrderDealInfos = new ArrayList<SysOrderDeal>();
-        for(SysOrderDeal sysOrderDealInfo : sysOrderDeals){
-            if(sysOrderDealInfo.getSysOrderInfo().getOrderType().equalsIgnoreCase
-                    (GlobalConstant.OrderType.CONSUME_BY_DRIVER)){
-                SysDriver sysDriverInfo = driverService.queryDriverByPK(sysOrderDealInfo.getSysOrderInfo().getCreditAccount());
-                sysOrderDealInfo.setSysDriver(sysDriverInfo);
-            } else {
-                sysOrderDealInfo = findSysOrderDeal(sysOrderDealInfo, sysOrderDealInfo.getSysOrderInfo().getConsume_card());
+        if(sysOrderDeal.getIsCharge().equalsIgnoreCase("0")){
+            for(SysOrderDeal sysOrderDealInfo : sysOrderDeals){
+                if(sysOrderDealInfo.getSysOrderInfo().getOrderType().equalsIgnoreCase
+                        (GlobalConstant.OrderType.CONSUME_BY_DRIVER)){
+                    SysDriver sysDriverInfo = driverService.queryDriverByPK(sysOrderDealInfo.getSysOrderInfo().getCreditAccount());
+                    sysOrderDealInfo.setSysDriver(sysDriverInfo);
+                } else {
+                    sysOrderDealInfo = findSysOrderDeal(sysOrderDealInfo, sysOrderDealInfo.getSysOrderInfo().getConsume_card());
+                }
+                sysOrderDealInfos.add(sysOrderDealInfo);
             }
-            sysOrderDealInfos.add(sysOrderDealInfo);
+        } else {
+            for(SysOrderDeal sysOrderDealInfo : sysOrderDeals){
+                SysDriver sysDriverInfo = driverService.queryDriverByPK(sysOrderDealInfo.getSysOrderInfo().getDebitAccount());
+                sysOrderDealInfo.setSysDriver(sysDriverInfo);
+                sysOrderDealInfos.add(sysOrderDealInfo);
+            }
         }
 
         Map<String, Object> attributes = new HashMap<String, Object>();
@@ -541,7 +555,18 @@ public class CRMCashServiceContoller {
                     sysDriver.setPlateNumber(tcVehicle.getPlatesNumber());
                     sysDriver.setMobilePhone(tcVehicle.getNoticePhone());
                     sysDriver.setFullName(tcVehicle.getUserName());
-                    return sysDriver;
+                    List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
+                    if(tcFleets.size() > 1){
+                        logger.error("查询出现多个车队: " + tcVehicle.getTcVehicleId());
+                        return null;
+                    }
+
+                    for(TcFleet tcFleet : tcFleets){
+                        SysUserAccount sysUserAccount = new SysUserAccount();
+                        sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
+                        sysDriver.setAccount(sysUserAccount);
+                        return sysDriver;
+                    }
                 }
             } catch(Exception e){
                 logger.error("获取车队出错： " + e);

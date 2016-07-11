@@ -61,7 +61,7 @@
       and deal_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
     </if>
     <if test="isCharge != null &amp;&amp; isCharge == 1" >
-      and deal_type &lt; '200'
+      and b.order_type='130'
     </if>
     <if test="isCharge != null &amp;&amp; isCharge == 0" >
       and deal_type &gt; '200'
