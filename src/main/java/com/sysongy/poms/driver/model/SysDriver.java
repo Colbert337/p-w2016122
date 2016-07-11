@@ -83,6 +83,8 @@ public class SysDriver extends BaseModel{
 
     private int driverType;
 
+    private int isCharge;
+
     public String getMemo() {
 		return memo;
 	}
@@ -378,5 +380,13 @@ public class SysDriver extends BaseModel{
 
     public void setDriverType(int driverType) {
         this.driverType = driverType;
+    }
+
+    public int getIsCharge() {
+        return isCharge;
+    }
+
+    public void setIsCharge(int isCharge) {
+        this.isCharge = isCharge;
     }
 }

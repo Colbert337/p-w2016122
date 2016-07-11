@@ -176,16 +176,37 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-        SysDriver sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
-        SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(sysDriver.getSysUserAccountId());
-        if((creditAccount == null) || (sysDriver == null)
-                || !(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("支付密码错误！！！");
-            return ajaxJson;
+        String checkCode = request.getParameter("checkCode");
+        GasCard gasCard = null;
+        if(StringUtils.isEmpty(checkCode)){
+            gasCard = gasCardService.selectByCardNoForCRM(record.getConsume_card());
         }
 
-        String checkCode = request.getParameter("checkCode");
+        SysDriver sysDriver = null;
+        if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
+            sysDriver = convertSysDriver(record.getConsume_card());
+            List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(record.getConsume_card());
+            if (vehicles.size() > 1) {
+                logger.error("查询出现多个车辆: " + record.getConsume_card());
+                return null;
+            }
+            if((vehicles == null) || (vehicles.get(0) == null)
+                    || !(vehicles.get(0).getPayCode().equalsIgnoreCase(payCode))){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("支付密码错误！！！");
+                return ajaxJson;
+            }
+        } else {
+            sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
+            SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(sysDriver.getSysUserAccountId());
+            if((creditAccount == null) || (sysDriver == null)
+                    || !(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("支付密码错误！！！");
+                return ajaxJson;
+            }
+        }
+
         if(!StringUtils.isEmpty(checkCode)){
             record.setConsume_card(sysDriver.getCardId());
             String checkCodeFromRedis = (String)redisClientImpl.getFromCache
@@ -205,13 +226,6 @@ public class CRMCashServiceContoller {
                 ajaxJson.setMsg("短信验证码错误！！！");
                 return ajaxJson;
             }
-        }
-
-        GasCard gasCard = null;
-        if(StringUtils.isEmpty(checkCode)){
-            gasCard = gasCardService.selectByCardNoForCRM(record.getConsume_card());
-        } else {
-            gasCard = gasCardService.selectByCardNoForCRM(record.getConsume_card());
         }
 
         if(gasCard != null){
@@ -243,7 +257,6 @@ public class CRMCashServiceContoller {
                 ajaxJson.setMsg("所属运输公司无法查询！！！");
                 return ajaxJson;
             }
-
 
             String orderConsume = orderService.consumeByTransportion(record, transportion, tcFleet);
             if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
@@ -281,7 +294,13 @@ public class CRMCashServiceContoller {
             recordNew.setGastation(gastation);
         }
         if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
-            SysDriver sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
+            SysDriver sysDriverNew = null;
+            if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
+                sysDriverNew = convertSysDriver(record.getConsume_card());
+            } else {
+                sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
+            }
+
             recordNew.setSysDriver(sysDriverNew);
             AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
             aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
@@ -303,17 +322,17 @@ public class CRMCashServiceContoller {
         }
         try {
             List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(cardID);
-            if (vehicles.size() > 0) {
+            if (vehicles.size() > 1) {
                 logger.error("查询出现多个车辆: " + cardID);
                 return null;
             }
             for (TcVehicle tcVehicle : vehicles) {
                 List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
-                if (tcFleets.size() > 0) {
+                if (tcFleets.size() > 1) {
                     logger.error("查询出现多个车队: " + tcVehicle.getTcVehicleId());
                     return null;
                 }
-                return tcFleets.get(1);
+                return tcFleets.get(0);
             }
         } catch (Exception e){
             logger.error("获取车队出错： " + e);
@@ -426,7 +445,9 @@ public class CRMCashServiceContoller {
         } else {
             Transportion transportion = transportionService.queryTransportionByPK(originalOrder.getCreditAccount());
             originalOrder.setTransportion(transportion);
-
+            SysDriver sysDriver = new SysDriver();
+            sysDriver.setCardId(originalOrder.getConsume_card());
+            originalOrder.setSysDriver(sysDriver);
         }
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", originalOrder);
@@ -466,9 +487,91 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        List<SysOrderDeal> sysOrderDealInfos = new ArrayList<SysOrderDeal>();
+        if(sysOrderDeal.getIsCharge().equalsIgnoreCase("0")){
+            for(SysOrderDeal sysOrderDealInfo : sysOrderDeals){
+                if(sysOrderDealInfo.getSysOrderInfo().getOrderType().equalsIgnoreCase
+                        (GlobalConstant.OrderType.CONSUME_BY_DRIVER)){
+                    SysDriver sysDriverInfo = driverService.queryDriverByPK(sysOrderDealInfo.getSysOrderInfo().getCreditAccount());
+                    sysOrderDealInfo.setSysDriver(sysDriverInfo);
+                } else {
+                    sysOrderDealInfo = findSysOrderDeal(sysOrderDealInfo, sysOrderDealInfo.getSysOrderInfo().getConsume_card());
+                }
+                sysOrderDealInfos.add(sysOrderDealInfo);
+            }
+        } else {
+            for(SysOrderDeal sysOrderDealInfo : sysOrderDeals){
+                SysDriver sysDriverInfo = driverService.queryDriverByPK(sysOrderDealInfo.getSysOrderInfo().getDebitAccount());
+                sysOrderDealInfo.setSysDriver(sysDriverInfo);
+                sysOrderDealInfos.add(sysOrderDealInfo);
+            }
+        }
+
         Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("sysOrderDeals", sysOrderDeals);
+        attributes.put("sysOrderDeals", sysOrderDealInfos);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
+    }
+
+    private SysOrderDeal findSysOrderDeal(SysOrderDeal sysOrderDealInfo, String cardID){
+        if(StringUtils.isEmpty(cardID)){
+            return null;
+        }
+        try {
+            SysDriver sysDriver = new SysDriver();
+            List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(cardID);
+            if (vehicles.size() > 1) {
+                logger.error("查询出现多个车辆: " + cardID);
+                return null;
+            }
+
+            for (TcVehicle tcVehicle : vehicles) {
+                sysDriver.setPlateNumber(tcVehicle.getPlatesNumber());
+                sysDriver.setMobilePhone(tcVehicle.getNoticePhone());
+                sysDriver.setFullName(tcVehicle.getUserName());
+                sysOrderDealInfo.setSysDriver(sysDriver);
+                return sysOrderDealInfo;
+            }
+        } catch (Exception e){
+            logger.error("获取车队出错： " + e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private SysDriver convertSysDriver(String cardID){
+        if(StringUtils.isEmpty(cardID)){
+            return null;
+        }
+        try {
+                SysDriver sysDriver = new SysDriver();
+                List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(cardID);
+                if (vehicles.size() > 1) {
+                    logger.error("查询出现多个车辆: " + cardID);
+                    return null;
+                }
+
+                for (TcVehicle tcVehicle : vehicles) {
+                    sysDriver.setPlateNumber(tcVehicle.getPlatesNumber());
+                    sysDriver.setMobilePhone(tcVehicle.getNoticePhone());
+                    sysDriver.setFullName(tcVehicle.getUserName());
+                    List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
+                    if(tcFleets.size() > 1){
+                        logger.error("查询出现多个车队: " + tcVehicle.getTcVehicleId());
+                        return null;
+                    }
+
+                    for(TcFleet tcFleet : tcFleets){
+                        SysUserAccount sysUserAccount = new SysUserAccount();
+                        sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
+                        sysDriver.setAccount(sysUserAccount);
+                        return sysDriver;
+                    }
+                }
+            } catch(Exception e){
+                logger.error("获取车队出错： " + e);
+                e.printStackTrace();
+            }
+        return null;
     }
 }
