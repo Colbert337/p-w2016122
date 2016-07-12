@@ -115,10 +115,10 @@ public class TcFleetServiceImpl implements TcFleetService{
      * @return
      */
     @Override
-    public int updateFleetQuota(String transportionId, String fleetId, BigDecimal cash) {
+    public int updateFleetQuota(String transportionId, String fleetId, BigDecimal result_quota) {
         int result = 0;
         if(transportionId != null && !"".equals(transportionId) && fleetId != null && !"".equals(fleetId)){
-            result = tcFleetMapper.updateFleetQuota(transportionId,fleetId,cash);
+            result = tcFleetMapper.updateFleetQuota(transportionId,fleetId,result_quota);
         }
         return result;
     }
