@@ -145,7 +145,8 @@ public class DriverController extends BaseContoller{
 		String operation = "insert";
 		String payCode = driver.getPayCode();
 
-		driver.setUserName(null);
+		driver.setUserName(driver.getMobilePhone());
+		driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
 		driver.setUserStatus("0");//0 使用中 1 已冻结
 		driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
 		driver.setStationId(stationId);//站点编号

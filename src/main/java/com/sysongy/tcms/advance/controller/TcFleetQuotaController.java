@@ -88,7 +88,16 @@ public class TcFleetQuotaController extends BaseContoller {
                 resultMap.put("retMsg","余额不足！");
             }else if(resultInt == 4){
                 resultMap.put("retMsg","分配失败！");
+            }else if(resultInt == 5){
+                resultMap.put("retMsg","支付密码修改失败！");
+            }else if(resultInt == 6){
+                resultMap.put("retMsg","支付密码修改成功！");
+            }else if(resultInt == 7){
+                resultMap.put("retMsg","邮件发送失败！");
+            }else if(resultInt == 8){
+                resultMap.put("retMsg","邮件发送成功！");
             }
+
             map.addAttribute("ret",resultMap);
         }
 

@@ -44,7 +44,7 @@
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								<form class="form-horizontal" id="passwordForm">
+								<form class="form-horizontal" id="passwordForm" action="<%=basePath%>/web/transportion/save/payCode" method="post">
 									<!-- #section:elements.form -->
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="pay_code"> <span class="red_star">*</span>支付密码： </label>
@@ -61,14 +61,14 @@
 									</div>
 									<div class="form-group">
 										<div class="col-sm-offset-4 col-sm-8">
-											<button class="btn btn-info" type="button" onclick="savePsSet()">
+											<button class="btn btn-info" type="submit" onclick="savePsSet()">
 												<i class="ace-icon fa fa-check bigger-110"></i>
 												保存
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											<button class="btn" type="reset">
 												<i class="ace-icon fa fa-undo bigger-110"></i>
-												取消
+												重置
 											</button>
 										</div>
 									</div>

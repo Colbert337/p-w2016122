@@ -351,7 +351,7 @@ $('#passwordForm').bootstrapValidator({
                 callback: {
                     message: '支付密码不一致',
                     callback: function (value, validator, $field) {
-                        if($("[name=pay_code]").val() != value){
+                        if($("#new_password").val() != value){
                             return false;
                         }
                         return true;
