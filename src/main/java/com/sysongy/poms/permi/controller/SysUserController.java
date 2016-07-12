@@ -51,7 +51,8 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryUserListPage(@ModelAttribute CurrUser currUser, SysUser sysUser, @RequestParam(required = false) Integer resultInt, ModelMap map){
+	public String queryUserListPage(@ModelAttribute CurrUser currUser, SysUser sysUser, @RequestParam(required = false) Integer resultInt,
+									@RequestParam(required = false) Integer userType, ModelMap map){
 		String stationId = currUser.getStationId();
 		sysUser.setStationId(stationId);
 		if(sysUser.getPageNum() == null){
@@ -59,7 +60,13 @@ public class SysUserController extends BaseContoller{
 			sysUser.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
 		sysUser.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-		sysUser.setUserType(currUser.getUserType());
+		//查询CRM角色列表
+		if(userType != null && !"".equals(userType)){
+			sysUser.setUserType(userType);
+		}else{
+			sysUser.setUserType(currUser.getUserType());
+		}
+
 		//封装分页参数，用于查询分页内容
 		PageInfo<SysUser> userPageInfo = new PageInfo<SysUser>();
 		userPageInfo = sysUserService.queryUserListPage(sysUser);
@@ -150,14 +157,14 @@ public class SysUserController extends BaseContoller{
 
 			String newid;
 			SysUser userTemp = sysUserService.queryMaxIndex();
-			if(userTemp == null || StringUtils.isEmpty(userTemp.getSysUserId())){
+			if(userTemp == null || StringUtils.isEmpty(userTemp.getSysUserId()) || userTemp.getSysUserId().length() > 7){
 				newid = "S" + "000001";
 			}else{
 				Integer tmp = Integer.valueOf(userTemp.getSysUserId().substring(1, 7)) + 1;
 				newid = "S" + StringUtils.leftPad(tmp.toString() , 6, "0");
 			}
 
-			user.setSysUserId(UUIDGenerator.getUUID());
+			user.setSysUserId(newid);
 			user.setStationId(stationId);
 			sysUserService.addUser(user);
 			resultInt = 1;
