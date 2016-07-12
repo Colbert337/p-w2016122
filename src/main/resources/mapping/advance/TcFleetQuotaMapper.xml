@@ -87,7 +87,7 @@
 </select>
   <select id="queryQuotaList" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcFleet" >
     select tfq.*,tf.fleet_name from tc_fleet_quota tfq left join tc_fleet tf on tfq.tc_fleet_id = tf.tc_fleet_id
-    where tfq.station_id = #{stationId}
+    where tfq.is_allot = 1 and tfq.station_id = #{stationId}
     <if test="fleetName != null &amp;&amp; fleetName !=''" >
       and (tf.fleet_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%'))
     </if>

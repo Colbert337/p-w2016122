@@ -118,6 +118,14 @@ public class BaseContoller {
                     returnPath = "login";
                     map.addAttribute("erroMsg","当前用户已禁用！");
                     return returnPath;
+                }else if((user.getStationId() == null || user.getStationId().equals("")) && user.getUserType() < GlobalConstant.USER_TYPE_MANAGE){
+                    returnPath = "login";//非运维用户站点ID不能为空
+                    map.addAttribute("erroMsg","当前用户无效！");
+                    return returnPath;
+                }else if(user.getUserType() == GlobalConstant.USER_TYPE_CRM){
+                    returnPath = "login";//CRM用户无法登录web站点
+                    map.addAttribute("erroMsg","CRM客户端用户禁止登录！");
+                    return returnPath;
                 }
                 //封装用户信息
                 int userType = user.getUserType();

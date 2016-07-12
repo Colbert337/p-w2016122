@@ -274,6 +274,10 @@ public class TcVehicleController extends BaseContoller {
                 int rows = sheet.getRows();
                 int columns = sheet.getColumns();
 
+                Transportion transportion = transportionService.queryTransportionByPK(stationId);
+                TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getProvince_id());
+                Integer tempVal = 1;
+
                 for (int i = 1; i < rows; i++) {
 
                     //第一个是列数，第二个是行数
@@ -285,7 +289,21 @@ public class TcVehicleController extends BaseContoller {
                     String copyPhone = "";
                     if(sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i))){
                         TcVehicle tcVehicle = new TcVehicle();
-                        tcVehicle.setTcVehicleId(UUIDGenerator.getUUID());
+
+                        String newid;
+                        /*当添加第一条数据时*/
+                        if(tcVehicleTemp == null || StringUtils.isEmpty(tcVehicleTemp.getTcVehicleId())){
+                            newid = stationId + StringUtils.leftPad(tempVal.toString() , 4, "0");
+                        }else if(tempVal == 1){
+                            Integer tmp = Integer.valueOf(tcVehicleTemp.getTcVehicleId().substring(11, 14)) + 1;
+                            tempVal = tmp;
+                            newid = stationId + StringUtils.leftPad(tempVal.toString() , 4, "0");
+                        }else{//添加非第一条数据
+                            newid = stationId + StringUtils.leftPad(tempVal.toString() , 4, "0");
+                        }
+                        tempVal++;
+                        tcVehicle.setTcVehicleId(newid);
+
                         tcVehicle.setPayCode(Encoder.MD5Encode("111111".getBytes()));
                         tcVehicle.setStationId(stationId);
 

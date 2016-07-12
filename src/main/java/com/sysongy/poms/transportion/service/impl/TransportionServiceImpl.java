@@ -179,8 +179,10 @@ public class TransportionServiceImpl implements TransportionService {
 	@Override
 	public Transportion queryTransportionByPK(String transportionid) throws Exception {
 		Transportion station =  transportionMapper.selectByPrimaryKey(transportionid);
-		 station.setExpiry_date_frompage(new SimpleDateFormat("yyyy-MM-dd").format(station.getExpiry_date()));
-		 return station;
+		if(station != null && station.getExpiry_date() != null){
+			station.setExpiry_date_frompage(new SimpleDateFormat("yyyy-MM-dd").format(station.getExpiry_date()));
+		}
+		return station;
 	}
 	
 	
