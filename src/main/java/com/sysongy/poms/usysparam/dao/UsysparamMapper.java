@@ -23,6 +23,8 @@ public interface UsysparamMapper {
 
     public List<Usysparam> queryUsysparamByGcode(String gcode);
 
+    public List<Usysparam> queryUsysparamChildByGcode(String gcode);
+
     public Usysparam queryCardTypeByMcode(String mcode);
 
     public Usysparam queryCardStatusByMcode(String mcode);
