@@ -62,7 +62,7 @@
 		//初始化左侧树
 		$.ajax({
 			url:path,
-			data:{},
+			data:{roleType:${roleType}},
 			async:false,
 			type: "POST",
 			success: function(data){
@@ -190,7 +190,7 @@
 	function queryUserTypeList(userType){
 		$.ajax({
 			url:"<%=basePath%>/web/usysparam/info",
-			data:{mcode:userType},
+			data:{mcode:${roleType}},
 			async:false,
 			type: "POST",
 			success: function(data){

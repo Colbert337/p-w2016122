@@ -45,7 +45,7 @@ public class SysRoleController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryRoleListPage(@ModelAttribute CurrUser currUser, SysRole role, @RequestParam(required = false) Integer resultInt, ModelMap map){
+	public String queryRoleListPage(@ModelAttribute CurrUser currUser, SysRole role,@RequestParam(required = false) Integer userType, @RequestParam(required = false) Integer resultInt, ModelMap map){
 		String stationId = currUser.getStationId();
 		role.setStationId(stationId);
 		if(role.getPageNum() == null){
@@ -55,7 +55,15 @@ public class SysRoleController extends BaseContoller{
 
 		role.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
 		int roleType = currUser.getUserType();
-		role.setRoleType(roleType);
+		//查询CRM角色列表
+		if(userType != null && !"".equals(userType)){
+			role.setRoleType(userType);
+			map.addAttribute("roleType",userType);//将用户类型传递到页面
+		}else{
+			role.setRoleType(roleType);
+			map.addAttribute("roleType",roleType);//将用户类型传递到页面
+		}
+
 		//封装分页参数，用于查询分页内容
 		PageInfo<SysRole> rolePageInfo = new PageInfo<SysRole>();
 		rolePageInfo = sysRoleService.queryRoleListPage(role);

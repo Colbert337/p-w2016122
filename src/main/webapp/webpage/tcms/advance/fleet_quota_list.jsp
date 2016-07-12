@@ -232,6 +232,14 @@
 										</c:forEach>
 									</tbody>
 								</table>
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
+										<div class="col-sm-7">
+											<input type="password" id="payCode" name="pay_code" maxlength="6" placeholder="支付密码" class="col-xs-10 col-sm-5" />
+										</div>
+									</div>
+								</div>
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
@@ -293,12 +301,21 @@
 									</tbody>
 								</table>
 								<tr><td colspan="4" align="right"><a href="javascript:addRow();">添加</a></td></tr>
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
+										<div class="col-sm-7">
+											<input type="password" id="pay_code" name="pay_code" maxlength="6" placeholder="支付密码" class="col-xs-10 col-sm-5" />
+										</div>
+									</div>
+								</div>
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
 					<%--两行表单 结束--%>
 				</div>
 			</div><!-- /.modal-content -->
+
 			<div class="modal-footer">
 				<button class="btn btn-primary btn-sm" onclick="saveZhuan()">确   定</button>
 				<button class="btn btn-sm" i="close" onclick="closeDialog('zhuanModel')">取   消 </button>

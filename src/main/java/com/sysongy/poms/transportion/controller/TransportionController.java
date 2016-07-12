@@ -265,6 +265,38 @@ public class TransportionController extends BaseContoller{
 		return transportion;
 	}
 
+	/**
+	 * 判断支付密码是否正确
+	 * @param map
+	 * @param currUser
+     * @return
+     */
+	@RequestMapping("/info/password")
+	@ResponseBody
+	public JSONObject queryPasswordIsRight(Transportion transport, @ModelAttribute CurrUser currUser, ModelMap map){
+		JSONObject json = new JSONObject();
+
+		String transportionId = currUser.getStationId();
+		Transportion transportion = new Transportion();
+		try {
+			transportion = service.queryTransportionByPK(transportionId);
+
+			if(transportion != null && transport != null){
+				String password = transportion.getPay_code();
+				if(password.equals(Encoder.MD5Encode(transport.getPay_code().getBytes()))){
+					json.put("valid",true);
+				}else{
+					json.put("valid",false);
+				}
+			}
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+
 	@RequestMapping("/depositList")
 	public String querydepositList(ModelMap map, SysDepositLog deposit) throws Exception{
 

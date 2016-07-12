@@ -113,11 +113,11 @@ public class TcFleetServiceImpl implements TcFleetService{
      * 修改车队额度
      * @param transportionId 运输公司ID
      * @param fleetId 车队ID
-     * @param cash 金额（正负）
+     * @param increment 金额（正负）
      * @return
      */
     @Override
-    public synchronized int updateFleetQuota(String transportionId, String fleetId, BigDecimal cash) throws Exception{
+    public synchronized int updateFleetQuota(String transportionId, String fleetId, BigDecimal increment) throws Exception{
         int result = 0;
         if(transportionId != null && !"".equals(transportionId) && fleetId != null && !"".equals(fleetId)){
             TcFleet tcFleetTemp = new TcFleet();
@@ -127,20 +127,18 @@ public class TcFleetServiceImpl implements TcFleetService{
                 BigDecimal quota = new BigDecimal(BigInteger.ZERO);
                 if(tcFleet != null){
                     quota = tcFleet.getQuota();
-                    BigDecimal newQuota = BigDecimalArith.add(quota,cash);
+                    BigDecimal newQuota = BigDecimalArith.add(quota,increment);
                     int resultVal = newQuota.compareTo(BigDecimal.ZERO);
                     if(resultVal >= 0){
                         result = tcFleetMapper.updateFleetQuota(transportionId,fleetId,newQuota);
                     }else{
                         throw new Exception("计算额度结果为负数！");
                     }
-
-                }
-
+               }
             }catch (Exception e){
                 e.printStackTrace();
             }
-
+        
         }
         return result;
     }

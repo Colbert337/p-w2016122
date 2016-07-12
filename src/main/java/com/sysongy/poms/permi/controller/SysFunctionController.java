@@ -143,8 +143,11 @@ public class SysFunctionController extends BaseContoller{
 	 */
 	@RequestMapping("/list/type")
 	@ResponseBody
-	public List<Map<String,Object>> queryFunctionListByType(@ModelAttribute("currUser") CurrUser currUser, ModelMap mapTemp){
+	public List<Map<String,Object>> queryFunctionListByType(@ModelAttribute("currUser") CurrUser currUser,@RequestParam(required = false) Integer roleType, ModelMap mapTemp){
 		int userType = currUser.getUser().getUserType();
+		if(roleType != null && !"".equals(roleType)){//获取页面传递的角色类型
+			userType = roleType;
+		}
 		List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionListByType(userType);
 		List<Map<String,Object>> functionListTree = new ArrayList<>();
 		for (Map<String,Object> function:sysFunctionList) {
