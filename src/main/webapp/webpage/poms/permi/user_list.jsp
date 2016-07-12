@@ -113,7 +113,7 @@
 	function queryRoleList(roleId){
 		$.ajax({
 			url:"<%=basePath%>/web/permi/user/list/role",
-			data:{},
+			data:{userType:${userType}},
 			async:false,
 			type: "POST",
 			success: function(data){
@@ -134,7 +134,7 @@
 	function queryUserTypeList(userType){
 		$.ajax({
 			url:"<%=basePath%>/web/usysparam/info",
-			data:{mcode:userType},
+			data:{mcode:${userType}},
 			async:false,
 			type: "POST",
 			success: function(data){

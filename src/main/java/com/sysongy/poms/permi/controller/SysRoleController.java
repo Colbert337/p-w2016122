@@ -58,8 +58,10 @@ public class SysRoleController extends BaseContoller{
 		//查询CRM角色列表
 		if(userType != null && !"".equals(userType)){
 			role.setRoleType(userType);
+			map.addAttribute("roleType",userType);//将用户类型传递到页面
 		}else{
 			role.setRoleType(roleType);
+			map.addAttribute("roleType",roleType);//将用户类型传递到页面
 		}
 
 		//封装分页参数，用于查询分页内容

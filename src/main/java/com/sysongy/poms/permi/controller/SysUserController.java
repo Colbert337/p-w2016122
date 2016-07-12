@@ -60,11 +60,13 @@ public class SysUserController extends BaseContoller{
 			sysUser.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
 		sysUser.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-		//查询CRM角色列表
+		//查询CRM用户类型
 		if(userType != null && !"".equals(userType)){
 			sysUser.setUserType(userType);
-		}else{
+			map.addAttribute("userType",userType);//将用户类型传递到页面
+		}else{//当前用户类型
 			sysUser.setUserType(currUser.getUserType());
+			map.addAttribute("userType",currUser.getUserType());
 		}
 
 		//封装分页参数，用于查询分页内容
@@ -194,9 +196,8 @@ public class SysUserController extends BaseContoller{
 	 */
 	@RequestMapping("/list/role")
 	@ResponseBody
-	public List<SysRole> queryRoleList(@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
+	public List<SysRole> queryRoleList(@ModelAttribute("currUser") CurrUser currUser,@RequestParam(required = false) Integer userType, ModelMap map){
 		String stationId = currUser.getStationId();
-		int userType = currUser.getUser().getUserType();
 		List<SysRole> roleList = sysRoleService.queryRoleListByUserType(userType+"",stationId);
 
 		return roleList;
