@@ -183,7 +183,6 @@ public class CRMCustomerContoller {
         return ajaxJson;
     }
 
-
     private SysDriver findFleetInfo(String cardID){
         if(StringUtils.isEmpty(cardID)){
             return null;
