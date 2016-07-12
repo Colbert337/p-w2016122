@@ -261,7 +261,7 @@ public class TcFleetQuotaController extends BaseContoller {
     }
 
     /**
-     * 查询车队额度信息列表
+     * 额度划拨报表
      * @param tcFleet
      * @return
      */
