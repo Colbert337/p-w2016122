@@ -374,11 +374,11 @@ $('#zhuanForm').bootstrapValidator({
         pay_code: {
             validators: {
                 notEmpty: {
-                    message: '支付密码不能为空'
+                    message: '请输入支付密码！'
                 },
                 regexp: {
                     regexp: '^[0-9]+$',
-                    message: '密码只能包含数字'
+                    message: '支付密码只能包含数字'
                 },
                 remote: {
                     url: '../web/transportion/info/password',
@@ -409,11 +409,11 @@ $('#fenpeiForm').bootstrapValidator({
         pay_code: {
             validators: {
                 notEmpty: {
-                    message: '支付密码不能为空'
+                    message: '请输入支付密码!'
                 },
                 regexp: {
                     regexp: '^[0-9]+$',
-                    message: '密码只能包含数字'
+                    message: '支付密码只能包含数字'
                 },
                 remote: {
                     url: '../web/transportion/info/password',

@@ -104,13 +104,13 @@ public class TcFleetQuotaController extends BaseContoller {
     @RequestMapping("/save/fenpei")
     public String saveFenpei(@ModelAttribute CurrUser currUser,@RequestParam String data, ModelMap map){
         int resultInt = 0;
+        String stationId = currUser.getStationId();
         try {
             if(data != null && !"".equals(data)) {
                 String datas[] = data.split("&");
                 List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();//将值分开存在list中
                 Map<String, Object> mapObj = new HashMap();
                 String dataTemp[];
-                String stationId = "";
                 //根据运输公司ID查询运输公司信息
                 Transportion transportion = transportionService.queryTransportionByPK(stationId);
                 if(datas != null && datas.length > 0){
