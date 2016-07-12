@@ -120,7 +120,7 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("2000"));
+        	order.setCash(new BigDecimal("500"));
         	order.setDebitAccount("TC37000001");
         	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
         	order.setChannel("本公司");
