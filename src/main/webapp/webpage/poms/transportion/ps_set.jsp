@@ -62,12 +62,10 @@
 									<div class="form-group">
 										<div class="col-sm-offset-4 col-sm-8">
 											<button class="btn btn-info" type="submit" onclick="savePsSet()">
-												<i class="ace-icon fa fa-check bigger-110"></i>
-												保存
+												确定
 											</button>
 											&nbsp; &nbsp; &nbsp;
 											<button class="btn" type="reset">
-												<i class="ace-icon fa fa-undo bigger-110"></i>
 												重置
 											</button>
 										</div>
