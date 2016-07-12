@@ -22,7 +22,9 @@ public interface UsysparamService {
 	public Integer deleteUsysparam(Usysparam recode);
 
 	public List<Usysparam> queryUsysparamByGcode(String gcode);
-	
+
+	public List<Usysparam> queryUsysparamChildByGcode(String gcode);
+
 	public List<Usysparam> queryAll(Usysparam recode);
 	
 	public Integer deleteByGcodeAndMcode(Usysparam recode);
