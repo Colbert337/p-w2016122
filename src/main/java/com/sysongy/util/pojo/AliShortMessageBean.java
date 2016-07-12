@@ -25,7 +25,25 @@ public class AliShortMessageBean {
 
     private String mobilePhone;
 
+    private String backCash;
+
+    private String operatorName;
+
+    private String name;
+
     private String balance;
+
+    private String string;
+
+    private String name1;
+
+    private String time;
+
+    private String money;
+
+    private String money1;
+
+    private String license;
 
     public String getSendNumber() {
         return sendNumber;
@@ -113,5 +131,77 @@ public class AliShortMessageBean {
 
     public void setBalance(String balance) {
         this.balance = balance;
+    }
+
+    public String getBackCash() {
+        return backCash;
+    }
+
+    public void setBackCash(String backCash) {
+        this.backCash = backCash;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getString() {
+        return string;
+    }
+
+    public void setString(String string) {
+        this.string = string;
+    }
+
+    public String getName1() {
+        return name1;
+    }
+
+    public void setName1(String name1) {
+        this.name1 = name1;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public String getMoney1() {
+        return money1;
+    }
+
+    public void setMoney1(String money1) {
+        this.money1 = money1;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
     }
 }

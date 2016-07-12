@@ -393,7 +393,7 @@ public class CRMCustomerContoller {
             sysDriver.setUpdatedDate(new Date());
             sysDriver.setCreatedDate(new Date() );
             sysDriver.setExpiryDate(new Date());
-
+            sysDriver.setUserName(sysDriver.getMobilePhone());
 
             String sys_gas_station_id = request.getParameter("sys_gas_station_id");
             if(!StringUtils.isNotEmpty(sys_gas_station_id)){

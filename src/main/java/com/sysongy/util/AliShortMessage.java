@@ -37,6 +37,16 @@ public class AliShortMessage {
         DRIVER_CONSUME,                //司机消费
         DRIVER_CHARGE,                 //司机充值
         DRIVER_HEDGE,                  //司机转账
+        CARD_FROZEN,                            //账户卡冻结模板
+        SELF_CHARGE_CONSUME_PREINPUT,           //个人转账消费、预付款充值
+        TRANSPORTION_TRANSFER_SELF_CHARGE,      //车队转账，个人充值
+        REMIND_BALANCE,                         //预付款余额提醒
+        GAS_STATION_FROZEN,                     //加注站平台冻结
+        TEAM_LEADER_REMIND,                     //队长日报
+        DRIVER_AUDIT_SUCCESS,                   //司机实名认证审核
+        DRIVER_REGISTER_SUCCESS,                //司机注册成功
+        DRIVER_BATCH_REGISTER,                  //运维平台批量注册司机
+        VEHICLE_CREATED,                        //车辆创建
         DRIVER_CONSUME_SUCCESSFUL
     }
 
@@ -133,6 +143,62 @@ public class AliShortMessage {
                 req.setSmsFreeSignName("变更验证");
                 req.setSmsParamString("{\"code\":\"" + aliShortMessageBean.getCode() + "\",\"product\":\""
                         + aliShortMessageBean.getProduct() + "\"}");
+                break;
+            case CARD_FROZEN:
+                req.setSmsTemplateCode("SMS_11550962");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"string\":\"" + aliShortMessageBean.getString() + "\",\"code\":\""
+                        + aliShortMessageBean.getCode() + "\",\"time\":\""
+                        + aliShortMessageBean.getTime() + "\"}");
+                break;
+            case SELF_CHARGE_CONSUME_PREINPUT:
+                req.setSmsTemplateCode("SMS_12200990");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"time\":\"" + aliShortMessageBean.getTime() + "\",\"string\":\""
+                        + aliShortMessageBean.getString() + "\",\"money\":\""
+                        + aliShortMessageBean.getMoney()  + "\",\"money1\":\""
+                        + aliShortMessageBean.getMoney1() + "\"}");
+                break;
+            case TRANSPORTION_TRANSFER_SELF_CHARGE:
+                req.setSmsTemplateCode("SMS_12140738");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"time\":\"" + aliShortMessageBean.getTime() + "\",\"string\":\""
+                        + aliShortMessageBean.getString() + "\",\"money\":\""
+                        + aliShortMessageBean.getMoney() + "\",\"backCash\":\""
+                        + aliShortMessageBean.getBackCash()  + "\",\"money1\":\""
+                        + aliShortMessageBean.getMoney1() + "\"}");
+                break;
+            case REMIND_BALANCE:
+                req.setSmsTemplateCode("SMS_11530947");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"money\":\"" + aliShortMessageBean.getString() + "\"}");
+                break;
+            case GAS_STATION_FROZEN:
+                req.setSmsTemplateCode("SMS_12216006");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"name\":\"" + aliShortMessageBean.getName() + "\"}");
+                break;
+            case DRIVER_AUDIT_SUCCESS:
+                req.setSmsTemplateCode("SMS_11550963");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"string\":\"" + aliShortMessageBean.getString() + "\"}");
+                break;
+
+
+            case DRIVER_REGISTER_SUCCESS:
+                req.setSmsTemplateCode("SMS_3130045");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"code\":\"" + aliShortMessageBean.getCode() + "\"}");
+                break;
+            case DRIVER_BATCH_REGISTER:
+                req.setSmsTemplateCode("SMS_12151038");
+                req.setSmsFreeSignName("变更验证");
+                break;
+            case VEHICLE_CREATED:
+                req.setSmsTemplateCode("SMS_11521189");
+                req.setSmsParamString("{\"license\":\"" + aliShortMessageBean.getLicense() + "\",\"code\":\""
+                        + aliShortMessageBean.getCode() + "\",\"string\":\""
+                        + aliShortMessageBean.getString() + "\"}");
                 break;
             case ACCOUNT_RECEIVE_MONEY:
                 req.setSmsTemplateCode("SMS_4415951");
