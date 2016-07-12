@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysDepositLog;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -48,6 +52,8 @@ public class TransportionController extends BaseContoller{
 	private SysUserService sysUserService;
 	@Autowired
     TcVehicleService tcVehicleService;
+	@Autowired
+	private OrderDealService orderDealService;
 
 	private Transportion transportion;
 	/**
@@ -257,6 +263,38 @@ public class TransportionController extends BaseContoller{
 		}
 
 		return transportion;
+	}
+
+	/**
+	 * 判断支付密码是否正确
+	 * @param map
+	 * @param currUser
+     * @return
+     */
+	@RequestMapping("/info/password")
+	@ResponseBody
+	public JSONObject queryPasswordIsRight(Transportion transport, @ModelAttribute CurrUser currUser, ModelMap map){
+		JSONObject json = new JSONObject();
+
+		String transportionId = currUser.getStationId();
+		Transportion transportion = new Transportion();
+		try {
+			transportion = service.queryTransportionByPK(transportionId);
+
+			if(transportion != null && transport != null){
+				String password = transportion.getPay_code();
+				if(password.equals(Encoder.MD5Encode(transport.getPay_code().getBytes()))){
+					json.put("valid",true);
+				}else{
+					json.put("valid",false);
+				}
+			}
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return json;
 	}
 
 	@RequestMapping("/depositList")
@@ -583,5 +621,46 @@ public class TransportionController extends BaseContoller{
 		}
 	}
 
+	/**
+	 * 查询运输公司充值记录（单个运输公司）
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/list/recharge")
+	public String queryRechargeList(@ModelAttribute CurrUser currUser, ModelMap map, SysOrder order) throws Exception{
+		String stationId = currUser.getStationId();
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transportion_recharge_log";
+
+		try {
+			if(order.getPageNum() == null){
+				order.setOrderby("deal_date desc");
+				order.setPageNum(1);
+				order.setPageSize(10);
+			}
+			order.setDebitAccount(stationId);
+			order.setCash(new BigDecimal(BigInteger.ZERO));
+			PageInfo<Map<String, Object>> pageinfo = orderDealService.queryRechargeList(order);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("order",order);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
 
 }

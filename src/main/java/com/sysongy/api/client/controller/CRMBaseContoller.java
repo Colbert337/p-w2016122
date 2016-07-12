@@ -56,6 +56,22 @@ public class CRMBaseContoller {
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
+
+    @ResponseBody
+    @RequestMapping("/web/dictInfoWithChild")
+    public AjaxJson queryParamWithChildList(HttpServletRequest request, HttpServletResponse response, Usysparam usysparam) throws Exception{
+        AjaxJson ajaxJson = new AjaxJson();
+        if((usysparam == null) || (!StringUtils.isNotEmpty(usysparam.getGcode()))){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("Gcode为空！！！");
+            return ajaxJson;
+        }
+        List<Usysparam> usysparamInfo = service.queryUsysparamChildByGcode(usysparam.getGcode());
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("usysparamInfos", usysparamInfo);
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
     
     //单文件上传
     @RequestMapping(value = "/web/upload")

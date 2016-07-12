@@ -234,7 +234,7 @@ public class OrderServiceImpl implements OrderService {
      *   不用have_consume字段，只能从order表中查询是否在这个订单后，有消费记录
      *    
      * 2.如果是消费，如果此消费订单没有超过24小时，则可以充红
-     * @param order
+     * @paramorder
      * @return
      * @throws Exception
      */
@@ -527,6 +527,7 @@ public class OrderServiceImpl implements OrderService {
   	   }
 
 		for (SysOrderGoods sysOrderGoods : order.getSysOrderGoods()) {
+			sysOrderGoods.setOrderId(order.getOrderId());
 			int nRet = sysOrderGoodsMapper.insert(sysOrderGoods);
 			if(nRet < 1){
 				logger.error("产品插入出错" + sysOrderGoods.getOrderId());
@@ -577,6 +578,7 @@ public class OrderServiceImpl implements OrderService {
 	   BigDecimal cash = order.getCash();
 	   BigDecimal addcash = cash.multiply(new BigDecimal(-1)); 
 	   if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_YES){
+		   
 		   tcFleetService.updateFleetQuota(tran.getSys_transportion_id(), tcfleet.getTcFleetId(), addcash);
 	   }else if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_NO){
 		   transportionService.modifyDeposit(tran, addcash);
@@ -589,6 +591,15 @@ public class OrderServiceImpl implements OrderService {
   		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
   	   }
+
+		for (SysOrderGoods sysOrderGoods : order.getSysOrderGoods()) {
+			sysOrderGoods.setOrderId(order.getOrderId());
+			int nRet = sysOrderGoodsMapper.insert(sysOrderGoods);
+			if(nRet < 1){
+				logger.error("产品插入出错" + sysOrderGoods.getOrderId());
+			}
+		}
+
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 	

@@ -106,15 +106,11 @@ public class TcVehicleController extends BaseContoller {
         Map<String, Object> vehicleMap = new HashMap<>();
         GasCard gasCard = new GasCard();
         TcVehicle tcVehicle = tcVehicleService.queryVehicle(vehicle);
-        TcVehicleCard tcVehicleCardTemp = new TcVehicleCard();
-        tcVehicleCardTemp.setTcVehicleId(tcVehicle.getTcVehicleId());
-        tcVehicleCardTemp.setStationId(tcVehicle.getStationId());
 
-        TcVehicleCard tcVehicleCard = tcVehicleCardService.queryTcVehicleCardByVecId(tcVehicleCardTemp);
         vehicleMap.put("vehicle",tcVehicle);
-        if(tcVehicle != null && tcVehicleCard.getCardNo() != null && tcVehicleCard != null){
+        if(tcVehicle != null && tcVehicle.getCardNo() != null ){
             try {
-                gasCard = gasCardService.queryGasCardInfo(tcVehicleCard.getCardNo());
+                gasCard = gasCardService.queryGasCardInfo(tcVehicle.getCardNo());
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -204,9 +200,11 @@ public class TcVehicleController extends BaseContoller {
                 //新密码
                 String password = vehicle.getPayCode();
                 password = Encoder.MD5Encode(password.getBytes());
-                //新密码何原始密码不一致，则修改密码
+                //新密码和原始密码不一致，则修改密码
                 if(!password.equals(tcVehicle.getPayCode())){
                     vehicle.setPayCode(password);
+                }else{
+                    vehicle.setPayCode(null);
                 }
             }
 
@@ -215,10 +213,10 @@ public class TcVehicleController extends BaseContoller {
             String newid;
             TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getProvince_id());
             if(tcVehicleTemp == null || StringUtils.isEmpty(tcVehicleTemp.getTcVehicleId())){
-                newid = "TAL"+transportion.getProvince_id() + "000001";
+                newid = stationId + "0001";
             }else{
-                Integer tmp = Integer.valueOf(tcVehicleTemp.getTcVehicleId().substring(6, 12)) + 1;
-                newid = "TAL"+transportion.getProvince_id() + StringUtils.leftPad(tmp.toString() , 6, "0");
+                Integer tmp = Integer.valueOf(tcVehicleTemp.getTcVehicleId().substring(11, 14)) + 1;
+                newid = stationId + StringUtils.leftPad(tmp.toString() , 4, "0");
             }
 
             vehicle.setStationId(stationId);
@@ -276,6 +274,10 @@ public class TcVehicleController extends BaseContoller {
                 int rows = sheet.getRows();
                 int columns = sheet.getColumns();
 
+                Transportion transportion = transportionService.queryTransportionByPK(stationId);
+                TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getProvince_id());
+                Integer tempVal = 1;
+
                 for (int i = 1; i < rows; i++) {
 
                     //第一个是列数，第二个是行数
@@ -287,7 +289,21 @@ public class TcVehicleController extends BaseContoller {
                     String copyPhone = "";
                     if(sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i))){
                         TcVehicle tcVehicle = new TcVehicle();
-                        tcVehicle.setTcVehicleId(UUIDGenerator.getUUID());
+
+                        String newid;
+                        /*当添加第一条数据时*/
+                        if(tcVehicleTemp == null || StringUtils.isEmpty(tcVehicleTemp.getTcVehicleId())){
+                            newid = stationId + StringUtils.leftPad(tempVal.toString() , 4, "0");
+                        }else if(tempVal == 1){
+                            Integer tmp = Integer.valueOf(tcVehicleTemp.getTcVehicleId().substring(11, 14)) + 1;
+                            tempVal = tmp;
+                            newid = stationId + StringUtils.leftPad(tempVal.toString() , 4, "0");
+                        }else{//添加非第一条数据
+                            newid = stationId + StringUtils.leftPad(tempVal.toString() , 4, "0");
+                        }
+                        tempVal++;
+                        tcVehicle.setTcVehicleId(newid);
+
                         tcVehicle.setPayCode(Encoder.MD5Encode("111111".getBytes()));
                         tcVehicle.setStationId(stationId);
 
@@ -307,15 +323,14 @@ public class TcVehicleController extends BaseContoller {
                         }
 
                         //添加车辆与卡关系
-                        TcVehicleCard tcVehicleCard = new TcVehicleCard();
+                        /*TcVehicleCard tcVehicleCard = new TcVehicleCard();
                         tcVehicleCard.setTcVehicleId(tcVehicle.getTcVehicleId());
                         tcVehicleCard.setCardNo(tcVehicle.getCardNo());
                         tcVehicleCard.setTcVehicleCardId(UUIDGenerator.getUUID());
                         tcVehicleCard.setStationId(stationId);
-                        tcVehicleService.addVehicleCard(tcVehicleCard);
+                        tcVehicleService.addVehicleCard(tcVehicleCard);*/
                         System.out.println("正在导入车辆数据》》》》》》》》》》》》》");
 
-                        tcVehicle.setCardNo(null);
                         tcVehicle.setIsAllot(0);//是否分配 0 不分配 1 分配
                         vehicleList.add(tcVehicle);
                         //修改卡状态
@@ -326,7 +341,7 @@ public class TcVehicleController extends BaseContoller {
                     }
 
                 }
-                //添加车辆及卡关系
+                //添加车辆
                 if(vehicleList != null && vehicleList.size() > 0){
                     tcVehicleService.addVehicleList(vehicleList);
                 }

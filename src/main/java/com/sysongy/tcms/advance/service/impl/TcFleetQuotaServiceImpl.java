@@ -170,64 +170,74 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     @Override
     public int personalTransfer(List<Map<String, Object>> list,String stationId ,String userName) throws Exception{
         BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+        int resultVal = 1;
         try {
 
             if(list != null && list.size() > 0){
-                for (Map<String, Object> mapDriver:list){
-                    SysOrder order = new SysOrder();
-                    order.setOrderId(UUIDGenerator.getUUID());
-
-                    order.setOrderType(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
-                    String orderNum = orderService.createOrderNumber(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
-                    order.setOrderDate(new Date());
-                    BigDecimal cash = new BigDecimal(mapDriver.get("amount").toString());
-                    totalCash = BigDecimalArith.add(totalCash,cash);
-
-                    order.setCash(cash);
-                    order.setCreditAccount(stationId);
-                    order.setDebitAccount(mapDriver.get("sysDriverId").toString());
-                    order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_TRANSFER_CHARGE);
-                    order.setOperator(userName);
-                    order.setOperatorSourceId(stationId);
-                    order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.TRANSPORTION);
-                    order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);
-                    order.setOrderNumber(orderNum);
-
-                    //添加订单
-                    orderService.insert(order);
-                    //运输公司往个人转账
-                    orderService.transferTransportionToDriver(order);
-
-                    //添加转账记录
-                    TcTransferAccount tcTransferAccount = new TcTransferAccount();
-                    tcTransferAccount.setTcTransferAccountId(UUIDGenerator.getUUID());
-                    tcTransferAccount.setStationId(stationId);
-                    tcTransferAccount.setSysDriverId(mapDriver.get("sysDriverId").toString());
-                    tcTransferAccount.setAmount(new BigDecimal(mapDriver.get("amount").toString()) );
-                    tcTransferAccount.setFullName(mapDriver.get("fullName").toString());
-                    tcTransferAccount.setMobilePhone(mapDriver.get("mobilePhone").toString());
-                    tcTransferAccount.setUpdatedDate(new Date());
-                    tcTransferAccountMapper.insertSelective(tcTransferAccount);
+                //获取转账总金额
+                for (Map<String, Object> map:list){
+                    BigDecimal cashVal = new BigDecimal(map.get("amount").toString());
+                    totalCash = BigDecimalArith.add(totalCash,cashVal);
                 }
-
-                //修改运输公司总金额
+                //判断转账金额是否够用
                 SysUserAccount userAccount = sysUserAccountService.queryUserAccountByStationId(stationId);
                 BigDecimal accountTotal = new BigDecimal(BigInteger.ZERO);
                 if(userAccount != null){
                     accountTotal = new BigDecimal(userAccount.getAccountBalance());
                     if(accountTotal.compareTo(BigDecimal.ZERO) < 0){
+                        resultVal = 0;
                         throw new Exception("账户余额为负值！");
+                    }else if(accountTotal.compareTo(totalCash) < 0 ){
+                        resultVal = -1;
+                        throw new Exception("账户余额不足，请先充值！");
+                    }else{
+                        /*循环生成订单*/
+                        for (Map<String, Object> mapDriver:list){
+                            SysOrder order = new SysOrder();
+                            order.setOrderId(UUIDGenerator.getUUID());
+
+                            order.setOrderType(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
+                            String orderNum = orderService.createOrderNumber(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
+                            order.setOrderDate(new Date());
+                            BigDecimal cash = new BigDecimal(mapDriver.get("amount").toString());
+
+                            order.setCash(cash);
+                            order.setCreditAccount(stationId);
+                            order.setDebitAccount(mapDriver.get("sysDriverId").toString());
+                            order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_TRANSFER_CHARGE);
+                            order.setOperator(userName);
+                            order.setOperatorSourceId(stationId);
+                            order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.TRANSPORTION);
+                            order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);
+                            order.setOrderNumber(orderNum);
+
+                            //添加订单
+                            resultVal = orderService.insert(order);
+                            //运输公司往个人转账
+                            orderService.transferTransportionToDriver(order);
+
+                            //添加转账记录
+                            TcTransferAccount tcTransferAccount = new TcTransferAccount();
+                            tcTransferAccount.setTcTransferAccountId(UUIDGenerator.getUUID());
+                            tcTransferAccount.setStationId(stationId);
+                            tcTransferAccount.setSysDriverId(mapDriver.get("sysDriverId").toString());
+                            tcTransferAccount.setAmount(new BigDecimal(mapDriver.get("amount").toString()) );
+                            tcTransferAccount.setFullName(mapDriver.get("fullName").toString());
+                            tcTransferAccount.setMobilePhone(mapDriver.get("mobilePhone").toString());
+                            tcTransferAccount.setUsed(mapDriver.get("remark").toString());
+                            tcTransferAccount.setUpdatedDate(new Date());
+                            resultVal = tcTransferAccountMapper.insertSelective(tcTransferAccount);
+                        }
+
                     }
-                    accountTotal = BigDecimalArith.sub(accountTotal,totalCash);
-
-                    sysUserAccountService.addCashToAccount(userAccount.getSysUserAccountId(),accountTotal.multiply(new BigDecimal(-1)),"");
+                    /*accountTotal = BigDecimalArith.sub(accountTotal,totalCash);
+                    sysUserAccountService.addCashToAccount(userAccount.getSysUserAccountId(),accountTotal.multiply(new BigDecimal(-1)),"");*/
                 }
-
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return 0;
+        return resultVal;
     }
 
     /**

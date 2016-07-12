@@ -9,6 +9,8 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
@@ -50,13 +52,15 @@ public class TcFleetQuotaController extends BaseContoller {
     DriverService driverService;
     @Autowired
     OrderService orderService;
+    @Autowired
+    TransportionService transportionService;
 
     /**
      * 查询车辆列表
      * @return
      */
     @RequestMapping("/list/page")
-    public String queryFleetQuotaListPage(@ModelAttribute CurrUser currUser, TcFleetQuota fleetQuota, ModelMap map){
+    public String queryFleetQuotaListPage(@ModelAttribute CurrUser currUser, TcFleetQuota fleetQuota, @RequestParam(required = false) Integer resultInt, ModelMap map){
         String stationId = currUser.getStationId();
         List<Map<String, Object>> fleetQuotaList = new ArrayList<>();
         Map<String, Object> fleetQuotaMap = new HashMap<>();
@@ -70,6 +74,23 @@ public class TcFleetQuotaController extends BaseContoller {
         map.addAttribute("fleetQuotaMap",fleetQuotaMap);
         map.addAttribute("fleetQuota",fleetQuota);
         map.addAttribute("stationId",stationId);
+        if(resultInt != null){
+            Map<String, Object> resultMap = new HashMap<>();
+            if(resultInt == 1){
+                resultMap.put("retMsg","转账成功！");
+            }else if(resultInt == 0){
+                resultMap.put("retMsg","账户余额为负，不能转账！");
+            }else if(resultInt < 0){
+                resultMap.put("retMsg","账户余额不足，请先充值！");
+            }else if(resultInt == 2){
+                resultMap.put("retMsg","分配成功！");
+            }else if(resultInt == 3){
+                resultMap.put("retMsg","余额不足！");
+            }else if(resultInt == 4){
+                resultMap.put("retMsg","分配失败！");
+            }
+            map.addAttribute("ret",resultMap);
+        }
 
         return "webpage/tcms/advance/fleet_quota_list";
     }
@@ -81,14 +102,17 @@ public class TcFleetQuotaController extends BaseContoller {
      * @return
      */
     @RequestMapping("/save/fenpei")
-    public String saveFenpei(@RequestParam String data, ModelMap map){
+    public String saveFenpei(@ModelAttribute CurrUser currUser,@RequestParam String data, ModelMap map){
+        int resultInt = 0;
+        String stationId = currUser.getStationId();
         try {
             if(data != null && !"".equals(data)) {
                 String datas[] = data.split("&");
                 List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();//将值分开存在list中
                 Map<String, Object> mapObj = new HashMap();
                 String dataTemp[];
-                String stationId = "";
+                //根据运输公司ID查询运输公司信息
+                Transportion transportion = transportionService.queryTransportionByPK(stationId);
                 if(datas != null && datas.length > 0){
                     for (int i = 0; i < datas.length; i++) {
                         dataTemp = datas[i].split("=");
@@ -110,13 +134,41 @@ public class TcFleetQuotaController extends BaseContoller {
 
                     }
                 }
+                //判断未分配额度是否够用
+                BigDecimal userQuota = new BigDecimal(BigInteger.ZERO);//使用额度
+                if(list != null && list.size() > 0){
+                    BigDecimal totalVal = new BigDecimal(BigInteger.ZERO);
+                    BigDecimal deposit = transportion.getDeposit();
+                    for (Map<String, Object> mapVal:list) {
+                        if(mapVal.get("quota").toString().equals("1")){//分配
+                            userQuota.add(new BigDecimal(mapVal.get("quota").toString()));
+                        }
+                    }
+                    if(userQuota.compareTo(deposit) > 0){
+                        //添加分配记录
+                        tcFleetQuotaService.addFleetQuotaList(list);
 
-                tcFleetQuotaService.addFleetQuotaList(list);
+                        //计算运输公司剩余额度
+                        userQuota = transportion.getDeposit().subtract(userQuota);
+
+                        //更新运输公司剩余额度
+                        Transportion quotaTrans = new Transportion();
+                        quotaTrans.setSys_transportion_id(stationId);
+                        quotaTrans.setDeposit(userQuota);
+
+                        transportionService.updatedeposiTransport(quotaTrans);
+                        resultInt = 2;//成功
+                    }else{
+                        resultInt = 3;//余额不足
+                    }
+                }
+
             }
         }catch (Exception e){
+            resultInt = 4;//失败
             e.printStackTrace();
         }
-            return "redirect:/web/tcms/fleetQuota/list/page";
+            return "redirect:/web/tcms/fleetQuota/list/page?resultInt="+resultInt;
     }
 
     /**
@@ -127,6 +179,7 @@ public class TcFleetQuotaController extends BaseContoller {
      */
     @RequestMapping("/save/zhuan")
     public String saveZhuan(@ModelAttribute CurrUser currUser,@RequestParam String data, ModelMap map) throws Exception{
+        int resultInt = 1;
         String stationId = currUser.getStationId();
         String userName = currUser.getUser().getUserName();
         try {
@@ -151,7 +204,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     }
                 }
 
-                tcFleetQuotaService.personalTransfer(list,stationId,userName);
+                resultInt = tcFleetQuotaService.personalTransfer(list,stationId,userName);
                 /*if(list != null && list.size() > 0){
                     for (Map<String, Object> mapDriver:list){
                         SysOrder order = new SysOrder();
@@ -178,10 +231,11 @@ public class TcFleetQuotaController extends BaseContoller {
                     }
                 }*/
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
-        return "redirect:/web/tcms/fleetQuota/list/page";
+        return "redirect:/web/tcms/fleetQuota/list/page?resultInt="+resultInt;
     }
 
     /**
@@ -207,7 +261,7 @@ public class TcFleetQuotaController extends BaseContoller {
     }
 
     /**
-     * 查询车队额度信息列表
+     * 额度划拨报表
      * @param tcFleet
      * @return
      */

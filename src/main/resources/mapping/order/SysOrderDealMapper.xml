@@ -12,7 +12,7 @@
   <result column="remark" property="remark" jdbcType="VARCHAR" />
   <result column="run_success" property="runSuccess" jdbcType="VARCHAR" />
 </resultMap>
-  <resultMap id="MapResultMap" type="java.util.Map" >
+  <resultMap id="MapResultMap" type="com.sysongy.poms.order.model.SysOrderDeal" >
     <id column="deal_id" property="dealId" jdbcType="VARCHAR" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
@@ -34,10 +34,10 @@
   </sql>
 
   <sql id="Base_Column_List1" >
-    deal_id, a.order_id, deal_number, deal_date, deal_type, cash_back_per, cash_back, remark, run_success
+    deal_id, a.order_id as order_id, deal_number, deal_date, deal_type, cash_back_per, cash_back, remark, run_success
   </sql>
 
-  <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
+  <select id="queryForPage" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
     select
     <include refid="Base_Column_List1" />
     from sys_order_deal a
@@ -60,10 +60,10 @@
     <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
       and deal_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
     </if>
-    <if test="isCharge != null &amp;&amp; isCharge == 0" >
-      and deal_type &lt; '200'
-    </if>
     <if test="isCharge != null &amp;&amp; isCharge == 1" >
+      and b.order_type='130'
+    </if>
+    <if test="isCharge != null &amp;&amp; isCharge == 0" >
       and deal_type &gt; '200'
     </if>
      and  b.operator_source_id=#{stationID,jdbcType=VARCHAR}

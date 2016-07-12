@@ -52,9 +52,17 @@ public class UsysparamServiceImpl implements UsysparamService {
 		return usysparamMapper.delete(recode);
 	}
 
+	@Override
 	public List<Usysparam> queryUsysparamByGcode(String gcode){
 		return usysparamMapper.queryUsysparamByGcode(gcode);
 	}
+
+	@Override
+	public List<Usysparam> queryUsysparamChildByGcode(String gcode){
+		return usysparamMapper.queryUsysparamChildByGcode(gcode);
+	}
+
+
 	@Override
 	public List<Usysparam> queryAll(Usysparam recode) {
 		return usysparamMapper.selectAll(recode);

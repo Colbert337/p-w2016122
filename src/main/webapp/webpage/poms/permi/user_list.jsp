@@ -10,21 +10,67 @@
 %>
 
 <script type="text/javascript">
-	$(function() {
-		/*表单验证*/
-		jQuery('#userForm').validationEngine('attach', {
-			promptPosition: 'topRight',		//提示信息的位置，可设置为：'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'centerRight', 'centerLeft', 'inline'
-			validationEventTrigger:'blur',	//触发验证的事件
-			binded:true,						//是否绑定即时验证
-			scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
-		});
-
-		$.extend($.validationEngineLanguage.allRules,{ "isUserExist": {
-			"url": "<%=basePath%>/web/permi/user/info/isUserName",
-			"extraData": "dt="+(new Date()).getTime(),
-			"alertText": "* 验证失败！",
-			"alertTextLoad": "* 验证中，请稍候..."}
-		});
+	$('#userForm').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			userName: {
+				validators: {
+					notEmpty: {
+						message: '用户名不能为空'
+					}
+				}
+			},
+			password: {
+				validators: {
+					notEmpty: {
+						message: '支付密码不能为空'
+					},
+					stringLength: {
+						min: 6,
+						message: '密码不能小于6个字符'
+					}
+				}
+			},
+			rePassword: {
+				validators: {
+					notEmpty: {
+						message: '确认密码不能为空'
+					},
+					stringLength: {
+						min: 6,
+						message: '密码不能小于6个字符'
+					},
+					callback: {
+						message: '密码不一致',
+						callback: function (value, validator, $field) {
+							if($("[name=password]").val() != value){
+								return false;
+							}
+							return true;
+						}
+					}
+				}
+			},
+			avatarB: {
+				validators: {
+					notEmpty: {
+						message: '用户角色不能为空'
+					}
+				}
+			},
+			realName: {
+				validators: {
+					notEmpty: {
+						message: '姓名不能为空'
+					}
+				}
+			}
+		}
 	});
 
 	/*分页相关方法 start*/
@@ -58,12 +104,16 @@
 		$("#user_name").on("blur",function(){
 			isUserExit();
 		});
+		$("#userModel").on('hidden.bs.modal', function() {
+			$('#userForm').bootstrapValidator('resetForm',true);
+			$('.user-name-valid').remove();
+		});
 	}
 	//显示编辑用户弹出层
 	function queryRoleList(roleId){
 		$.ajax({
 			url:"<%=basePath%>/web/permi/user/list/role",
-			data:{},
+			data:{userType:${userType}},
 			async:false,
 			type: "POST",
 			success: function(data){
@@ -84,7 +134,7 @@
 	function queryUserTypeList(userType){
 		$.ajax({
 			url:"<%=basePath%>/web/usysparam/info",
-			data:{mcode:userType},
+			data:{mcode:${userType}},
 			async:false,
 			type: "POST",
 			success: function(data){
@@ -97,7 +147,6 @@
 
 	/*取消弹层方法*/
 	function closeDialog(divId){
-		jQuery('#userForm').validationEngine('hide');//隐藏验证弹窗
 		$("#userForm :input").each(function () {
 			$(this).val("");
 		});
@@ -114,25 +163,30 @@
 	 * 保存用户信息
 	 */
 	function saveUser(){
-		if(jQuery('#userForm').validationEngine('validate')){
-
-			var saveOptions = {
-				url: '<%=basePath%>/web/permi/user/save',
-				type: 'post',
-				dataType: 'html',
-				success: function (data) {
-					$("#main").html(data);
-					$("#modal-table").modal("show");
-				}, error: function (XMLHttpRequest, textStatus, errorThrown) {
-
-				}
-			}
-			$("#userForm").ajaxSubmit(saveOptions);
-
-			$("#userModel").modal('hide').removeClass('in');
-			$("body").removeClass('modal-open').removeAttr('style');
-			$(".modal-backdrop").remove();
+		$('#userForm').data('bootstrapValidator').validate();
+		if(!$('#userForm').data('bootstrapValidator').isValid()){
+			return ;
 		}
+		if($('.user-name-valid').is(':visible')){
+			return ;
+		}
+
+		var saveOptions = {
+			url: '<%=basePath%>/web/permi/user/save',
+			type: 'post',
+			dataType: 'html',
+			success: function (data) {
+				$("#main").html(data);
+				$("#modal-table").modal("show");
+			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+				bootbox.clone();
+			}
+		}
+		$("#userForm").ajaxSubmit(saveOptions);
+
+		$("#userModel").modal('hide').removeClass('in');
+		$("body").removeClass('modal-open').removeAttr('style');
+		$(".modal-backdrop").remove();
 	}
 
 	/**
@@ -225,7 +279,6 @@
 			 $("#listForm").ajaxSubmit(deleteOptions);
 			}
 		})
-
 	}
 
 	/**
@@ -410,66 +463,104 @@
 							<form class="form-horizontal" id="userForm">
 								<!-- #section:elements.form -->
 								<h5 class="header smaller lighter blue no-margin-top">账户信息</h5>
-								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名： </label>
-									<div class="col-sm-4">
-										<input type="text" name="userName" id="user_name" placeholder="用户名" class="validate[required,minSize[3],maxSize[20],custom[onlyLetterNumber]] col-xs-10 col-sm-12" />
-										<input type="hidden" name="sysUserId" id="sys_user_id" class="col-xs-10 col-sm-12" />
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label no-padding-right" for="user_name"><span class="red_star">*</span> 用户名:</label>
+											<div class="col-sm-8">
+												<input type="text" name="userName" id="user_name" placeholder="用户名" class="form-control" />
+												<input type="hidden" name="sysUserId" id="sys_user_id" />
+											</div>
+										</div>
 									</div>
-									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户类型： </label>
-									<div class="col-sm-4">
-										<label class="col-xs-10 col-sm-12 pad-top-10" id="mname"></label>
-										<input type="hidden" id="user_type" name="userType"/>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码： </label>
-									<div class="col-sm-4">
-										<input type="password" name="password" id="password" placeholder="用户密码" class="validate[required,minSize[6],maxSize[33]] col-xs-10 col-sm-12" />
-									</div>
-									<label class="col-sm-2 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
-									<div class="col-sm-4">
-										<input type="password" id="re_password" placeholder="确认密码" class="validate[required,minSize[6],maxSize[33],equals[password]] col-xs-10 col-sm-12" />
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户角色： </label>
-									<div class="col-sm-4">
-										<select class="chosen-select col-xs-10 col-sm-12" id="avatar_b" name="avatarB"></select>
-									</div>
-									<label class="col-sm-2 control-label no-padding-right"> 备注： </label>
-									<div class="col-sm-4">
-										<textarea class="limited col-xs-10 col-sm-12"  id="remark" name="remark" maxlength="50" style="resize: none;"></textarea>
-									</div>
-								</div>
-								<h5 class="header smaller lighter blue">基本信息</h5>
-								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="real_name">  <span class="red_star">*</span>姓名： </label>
-									<div class="col-sm-4">
-										<input type="text" name="realName" id="real_name" placeholder="姓名" class="validate[required,minSize[2],maxSize[10]] col-xs-10 col-sm-12" />
-									</div>
-									<label class="col-sm-2 control-label no-padding-right"> 性别： </label>
-									<div class="col-sm-4">
-										<div class="radio">
-											<label>
-												<input name="gender" id="gender_b" type="radio" class="ace" checked="checked" value="0">
-												<span class="lbl"> 男</span>
-											</label>
-											<label>
-												<input name="gender" id="gender_g" type="radio" class="ace" value="1">
-												<span class="lbl"> 女</span>
-											</label>
+									<div class="col-sm-6">
+										<label class="col-sm-4 control-label no-padding-right" for="user_type">用户类型:</label>
+										<div class="col-sm-8">
+											<span id="mname" class="form-control"></span>
+											<input type="hidden" id="user_type" name="userType"/>
 										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label no-padding-right" for="email"> 邮箱： </label>
-									<div class="col-sm-4">
-										<input type="email" name="email" id="email" placeholder="邮箱" class="validate[minSize[6],maxSize[20],custom[email]] col-xs-10 col-sm-12" />
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码:</label>
+											<div class="col-sm-8">
+												<input type="password" name="password" id="password" placeholder="用户密码" class="form-control" />
+											</div>
+										</div>
 									</div>
-									<label class="col-sm-2 control-label no-padding-right" for="mobile_phone"> 手机： </label>
-									<div class="col-sm-4">
-										<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="validate[minSize[11],maxSize[11],custom[phone]] col-xs-10 col-sm-12" />
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码:</label>
+											<div class="col-sm-8">
+												<input type="password" name="rePassword" id="re_password" placeholder="确认密码" class="form-control" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label no-padding-right" for="user_type"><span class="red_star">*</span> 用户角色:</label>
+											<div class="col-sm-8">
+												<select class="chosen-select form-control" id="avatar_b" name="avatarB"></select>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label no-padding-right"> 备注:</label>
+											<div class="col-sm-8">
+												<textarea class="limited form-control"  id="remark" name="remark" maxlength="50" style="resize: none;"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+								<h5 class="header smaller lighter blue">基本信息</h5>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label no-padding-right" for="real_name">  <span class="red_star">*</span>姓名:</label>
+											<div class="col-sm-8">
+												<input type="text" name="realName" id="real_name" placeholder="姓名" class="form-control" />
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label no-padding-right"> 性别:</label>
+											<div class="col-sm-8">
+												<div class="radio">
+													<label>
+														<input name="gender" id="gender_b" type="radio" class="ace" checked="checked" value="0">
+														<span class="lbl"> 男</span>
+													</label>
+													<label>
+														<input name="gender" id="gender_g" type="radio" class="ace" value="1">
+														<span class="lbl"> 女</span>
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label no-padding-right" for="email"> 邮箱:</label>
+											<div class="col-sm-8">
+												<input type="email" name="email" id="email" placeholder="邮箱" class="form-control" />
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label class="col-sm-4 control-label no-padding-right" for="mobile_phone"> 手机:</label>
+											<div class="col-sm-8">
+												<input type="text" name="mobilePhone" id="mobile_phone" placeholder="手机" class="form-control" />
+											</div>
+										</div>
 									</div>
 								</div>
 							</form>
@@ -479,8 +570,8 @@
 				</div>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<button class="btn btn-primary btn-sm" onclick="saveUser()">确   定</button>
-				<button class="btn btn-sm" i="close" onclick="closeDialog('userModel')">取   消 </button>
+				<button class="btn btn-primary btn-sm" type="submit" onclick="saveUser()">确   定</button>
+				<button class="btn btn-sm" onclick="closeDialog('userModel')">取   消 </button>
 			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->

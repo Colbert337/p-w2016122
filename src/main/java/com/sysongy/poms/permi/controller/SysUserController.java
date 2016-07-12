@@ -51,7 +51,8 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryUserListPage(@ModelAttribute CurrUser currUser, SysUser sysUser, @RequestParam(required = false) Integer resultInt, ModelMap map){
+	public String queryUserListPage(@ModelAttribute CurrUser currUser, SysUser sysUser, @RequestParam(required = false) Integer resultInt,
+									@RequestParam(required = false) Integer userType, ModelMap map){
 		String stationId = currUser.getStationId();
 		sysUser.setStationId(stationId);
 		if(sysUser.getPageNum() == null){
@@ -59,7 +60,15 @@ public class SysUserController extends BaseContoller{
 			sysUser.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
 		sysUser.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-		sysUser.setUserType(currUser.getUserType());
+		//查询CRM用户类型
+		if(userType != null && !"".equals(userType)){
+			sysUser.setUserType(userType);
+			map.addAttribute("userType",userType);//将用户类型传递到页面
+		}else{//当前用户类型
+			sysUser.setUserType(currUser.getUserType());
+			map.addAttribute("userType",currUser.getUserType());
+		}
+
 		//封装分页参数，用于查询分页内容
 		PageInfo<SysUser> userPageInfo = new PageInfo<SysUser>();
 		userPageInfo = sysUserService.queryUserListPage(sysUser);
@@ -134,13 +143,13 @@ public class SysUserController extends BaseContoller{
 			//修改用户
 			user.setUpdatedDate(new Date());
 			String password = user.getPassword().trim();
-			password = Encoder.MD5Encode(password.getBytes());
 			SysUser userParam = new SysUser();
 			userParam.setSysUserId(user.getSysUserId());
 			SysUser userTemp = sysUserService.queryUser(userParam);
 			if(password.equals(userTemp.getPassword())){
 				user.setPassword(null);
 			}else{
+				password = Encoder.MD5Encode(password.getBytes());
 				user.setPassword(password);
 			}
 			sysUserService.updateUser(user);
@@ -150,14 +159,14 @@ public class SysUserController extends BaseContoller{
 
 			String newid;
 			SysUser userTemp = sysUserService.queryMaxIndex();
-			if(userTemp == null || StringUtils.isEmpty(userTemp.getSysUserId())){
+			if(userTemp == null || StringUtils.isEmpty(userTemp.getSysUserId()) || userTemp.getSysUserId().length() > 7){
 				newid = "S" + "000001";
 			}else{
 				Integer tmp = Integer.valueOf(userTemp.getSysUserId().substring(1, 7)) + 1;
 				newid = "S" + StringUtils.leftPad(tmp.toString() , 6, "0");
 			}
 
-			user.setSysUserId(UUIDGenerator.getUUID());
+			user.setSysUserId(newid);
 			user.setStationId(stationId);
 			sysUserService.addUser(user);
 			resultInt = 1;
@@ -187,9 +196,8 @@ public class SysUserController extends BaseContoller{
 	 */
 	@RequestMapping("/list/role")
 	@ResponseBody
-	public List<SysRole> queryRoleList(@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
+	public List<SysRole> queryRoleList(@ModelAttribute("currUser") CurrUser currUser,@RequestParam(required = false) Integer userType, ModelMap map){
 		String stationId = currUser.getStationId();
-		int userType = currUser.getUser().getUserType();
 		List<SysRole> roleList = sysRoleService.queryRoleListByUserType(userType+"",stationId);
 
 		return roleList;
@@ -226,7 +234,7 @@ public class SysUserController extends BaseContoller{
 
 		SysUser sysUser = new SysUser();
 		sysUser.setUserName(admin_username);
-		sysUser.setUserType(Integer.valueOf(userType));
+		/*sysUser.setUserType(Integer.valueOf(userType));*/
 		SysUser user = sysUserService.queryUser(sysUser);
 
 		if(user == null){

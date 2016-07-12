@@ -219,7 +219,7 @@ public class TestOrderContoller {
     	try{
     		String  tranId ="TC37000001";
     		//String  tcfleetId ="f29f828a74d14c50b8409b9f94f83da3"; //张三车队有分配额度
-    		String  tcfleetId ="7731c97fad2e49a98e6c3a4939555f77";
+    		String  tcfleetId ="f29f828a74d14c50b8409b9f94f83da3";
     		SysOrder order = new SysOrder();
         	order.setOrderId(UUIDGenerator.getUUID());
         	String order_type = GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION;
@@ -227,7 +227,7 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("188.86"));
+        	order.setCash(new BigDecimal("26.8"));
         	order.setCreditAccount(tranId);
         	//order.setDebitAccount("GS12000003");
         	//order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_POS_CHARGE);

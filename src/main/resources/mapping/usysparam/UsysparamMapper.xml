@@ -74,9 +74,13 @@
     delete from usysparam where gcode = #{gcode,jdbcType=VARCHAR} and mcode = #{mcode,jdbcType=VARCHAR}
   </delete>
 
-  <select id="queryUsysparamByGcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+  <select id="queryUsysparamByGcode" resultMap="BaseResultMapForCard"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
     select * from usysparam where gcode = #{0} and (scode is null or scode='')
   </select>
+
+    <select id="queryUsysparamChildByGcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+        select * from usysparam where gcode = #{0}
+    </select>
 
   <select id="queryCardTypeByMcode" resultMap="BaseResultMapForCard"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
     select * from usysparam where gcode = 'CARDTYPE' and mcode = #{mcode,jdbcType=VARCHAR}

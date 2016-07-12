@@ -11,6 +11,8 @@ var listOptions ={
     dataType:'html',
     success:function(data){
         $("#main").html(data);
+    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+        bootbox.alert("操作失败!")//保存成功弹窗
     }
 }
 
@@ -50,6 +52,8 @@ function addPassword(){
                 $("#paswordDiv").hide();
             }
 
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     });
     $("#passwordModel").modal('show');
@@ -88,8 +92,10 @@ function savePassword(){
         type:'post',
         dataType:'html',
         success:function(data){
-            bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
+            $("#modal-table").modal("show");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     }
     $("#passwordForm").ajaxSubmit(saveOptions);
@@ -120,6 +126,11 @@ function allocation(obj,index){
  * 保存配置
  */
 function saveFenpei(){
+    $('#fenpeiForm').data('bootstrapValidator').validate();
+    if(!$('#fenpeiForm').data('bootstrapValidator').isValid()){
+        return ;
+    }
+
     var dataForm = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
     dataForm = decodeURIComponent(dataForm,true);
     var saveOptions ={
@@ -128,8 +139,10 @@ function saveFenpei(){
         data:{data:dataForm},
         dataType:'html',
         success:function(data){
-            bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
+            $("#modal-table").modal("show");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     }
     $("#fenpeiForm").ajaxSubmit(saveOptions);
@@ -174,11 +187,12 @@ function queryDriverInfo(index){
             if(data != null){
                 $("#full_name_"+index).val(data.fullName);
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
-
             }else{
                 alert("请求失败！");
             }
 
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     });
 
@@ -195,6 +209,11 @@ function deleteRow(index){
  * 提交个人转账
  */
 function saveZhuan(){
+    $('#zhuanForm').data('bootstrapValidator').validate();
+    if(!$('#zhuanForm').data('bootstrapValidator').isValid()){
+        return ;
+    }
+
     var data = $("#zhuanForm").serialize(); //序列化表单 获取到数据
     data = decodeURIComponent(data,true);
     var saveOptions ={
@@ -203,8 +222,10 @@ function saveZhuan(){
         type:'post',
         dataType:'html',
         success:function(data){
-            bootbox.alert("操作成功!")//保存成功弹窗
             $("#main").html(data);
+            $("#modal-table").modal("show");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败!")//保存成功弹窗
         }
     }
     $("#zhuanForm").ajaxSubmit(saveOptions);
@@ -242,6 +263,8 @@ function saveFleetQuota(){
             dataType:'html',
             success:function(data){
                 $("#main").html(data);
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                bootbox.alert("操作失败!")//保存成功弹窗
             }
         }
         $("#editForm").ajaxSubmit(saveOptions);
@@ -338,3 +361,74 @@ $('#passwordForm').bootstrapValidator({
         }
     }
 });
+
+//个人转账bug
+$('#zhuanForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        pay_code: {
+            validators: {
+                notEmpty: {
+                    message: '请输入支付密码！'
+                },
+                regexp: {
+                    regexp: '^[0-9]+$',
+                    message: '支付密码只能包含数字'
+                },
+                remote: {
+                    url: '../web/transportion/info/password',
+                    type: "post",
+                    async: false,
+                    data: function(validator, $field, value) {
+                        return{
+                            pay_code:$("#pay_code").val()
+                        };
+                    },
+                    message: '支付密码错误'
+                }
+            }
+        }
+    }
+});
+
+/*资金分配*/
+//bootstrap验证控件
+$('#fenpeiForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        pay_code: {
+            validators: {
+                notEmpty: {
+                    message: '请输入支付密码!'
+                },
+                regexp: {
+                    regexp: '^[0-9]+$',
+                    message: '支付密码只能包含数字'
+                },
+                remote: {
+                    url: '../web/transportion/info/password',
+                    type: "post",
+                    async: false,
+                    data: function(validator, $field, value) {
+                        return{
+                            pay_code:$("#pay_code").val()
+                        };
+                    },
+                    message: '支付密码错误'
+                }
+            }
+        }
+    }
+});
+
+
