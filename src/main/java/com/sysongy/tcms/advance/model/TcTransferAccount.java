@@ -1,9 +1,11 @@
 package com.sysongy.tcms.advance.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TcTransferAccount {
+public class TcTransferAccount extends BaseModel{
     private String tcTransferAccountId;
 
     private String stationId;

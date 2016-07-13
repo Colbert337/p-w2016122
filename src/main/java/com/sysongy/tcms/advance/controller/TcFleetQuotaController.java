@@ -15,8 +15,10 @@ import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
+import com.sysongy.tcms.advance.model.TcTransferAccount;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
 import com.sysongy.tcms.advance.service.TcFleetService;
+import com.sysongy.tcms.advance.service.TcTransferAccountService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,8 @@ public class TcFleetQuotaController extends BaseContoller {
     TransportionService transportionService;
     @Autowired
     SysUserAccountService userAccountService;
+    @Autowired
+    TcTransferAccountService tcTransferAccountService;
 
     /**
      * 查询车辆列表
@@ -317,6 +321,47 @@ public class TcFleetQuotaController extends BaseContoller {
             map.addAttribute("ret", bean);
             map.addAttribute("pageInfo", pageinfo);
             map.addAttribute("tcFleet",tcFleet);
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+            throw e;
+        }
+        finally {
+            return ret;
+        }
+    }
+
+    /**
+     * 转账报表
+     * @param transferAccount
+     * @return
+     */
+    @RequestMapping("/list/transfer")
+    public String queryTransferListPage(@ModelAttribute CurrUser currUser, TcTransferAccount transferAccount, ModelMap map){
+        String stationId = currUser.getStationId();
+        PageBean bean = new PageBean();
+        String ret = "webpage/poms/advance/transfer_log";
+
+        try {
+            if(transferAccount.getPageNum() == null){
+                transferAccount.setOrderby("created_date desc");
+                transferAccount.setPageNum(1);
+                transferAccount.setPageSize(10);
+            }
+            transferAccount.setStationId(stationId);
+            transferAccount.setUsed(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
+            PageInfo<Map<String, Object>> pageinfo = tcTransferAccountService.queryTransferListPage(transferAccount);
+
+            bean.setRetCode(100);
+            bean.setRetMsg("查询成功");
+            bean.setPageInfo(ret);
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("pageInfo", pageinfo);
+            map.addAttribute("transferAccount",transferAccount);
         } catch (Exception e) {
             bean.setRetCode(5000);
             bean.setRetMsg(e.getMessage());
