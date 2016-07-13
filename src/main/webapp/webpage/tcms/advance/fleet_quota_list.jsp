@@ -29,6 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
+							<label>车队名称/队长姓名：</label>
 							<input type="text" name="fleetName" placeholder="车队名称/队长姓名"  maxlength="11" value="${fleetQuota.fleetName}"/>
 						</div>
 						<div class="item">
@@ -339,7 +340,7 @@
 					<div class="row">
 						<div id="firstDiv" class="col-xs-12" style="display: none;">
 							<!-- 首次设置 -->
-							您的支付密码还未设置，点击提交按钮后，我们会向您注册账号时的邮箱发送验证邮件，请您及时进行后续操作。
+							您的支付密码还未设置，点击确定按钮后，我们会向您注册账号时的邮箱发送验证邮件，请您及时进行后续操作。
 						</div>
 						<div id="paswordDiv" class="col-xs-12">
 							<form class="form-horizontal" id="passwordForm">

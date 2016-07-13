@@ -151,16 +151,16 @@ public class DriverController extends BaseContoller{
 		driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
 		driver.setStationId(stationId);//站点编号
 
-		String newid;
+		/*String newid;
 		SysDriver driverTemp = driverService.queryMaxIndex();
 		if(driverTemp == null || StringUtils.isEmpty(driverTemp.getSysDriverId())){
 			newid = "P" + "000000001";
 		}else{
 			Integer tmp = Integer.valueOf(driverTemp.getSysDriverId().substring(1, 10)) + 1;
 			newid = "P" + StringUtils.leftPad(tmp.toString() , 9, "0");
-		}
+		}*/
 
-		driver.setSysDriverId(newid);
+		driver.setSysDriverId(UUIDGenerator.getUUID());
 		driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
 
 

@@ -114,7 +114,7 @@ public class BaseContoller {
                     returnPath = "login";
                     map.addAttribute("erroMsg","当前用户已删除！");
                     return returnPath;
-                }else if(user.getStatus() == 2 ){
+                }else if(user.getStatus() == 1 ){
                     returnPath = "login";
                     map.addAttribute("erroMsg","当前用户已禁用！");
                     return returnPath;
