@@ -183,12 +183,9 @@ public class AliShortMessage {
                 req.setSmsFreeSignName("变更验证");
                 req.setSmsParamString("{\"string\":\"" + aliShortMessageBean.getString() + "\"}");
                 break;
-
-
             case DRIVER_REGISTER_SUCCESS:
-                req.setSmsTemplateCode("SMS_3130045");
+                req.setSmsTemplateCode("SMS_11480893");
                 req.setSmsFreeSignName("变更验证");
-                req.setSmsParamString("{\"code\":\"" + aliShortMessageBean.getCode() + "\"}");
                 break;
             case DRIVER_BATCH_REGISTER:
                 req.setSmsTemplateCode("SMS_12151038");

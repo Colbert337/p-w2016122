@@ -144,10 +144,27 @@ public class CRMCashServiceContoller {
             logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
         }
 
+        sendChargeMessage(recordNew);
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", recordNew);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
+    }
+
+    private void sendChargeMessage(SysOrder recordNew){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(recordNew.getSysDriver().getMobilePhone());
+        if(recordNew.getOrderDate() != null){
+            String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
+                    DateTimeHelper.FMT_yyyyMMddhhmmss_noseparator);
+            aliShortMessageBean.setTime(curStrDate);
+        }
+        aliShortMessageBean.setString("消费");
+        aliShortMessageBean.setMoney(recordNew.getCash().toString());
+        aliShortMessageBean.setBackCash(recordNew.getCashBack());
+        aliShortMessageBean.setMoney1(recordNew.getSysDriver().getAccount().getAccountBalance());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.TRANSPORTION_TRANSFER_SELF_CHARGE);
     }
 
     @ResponseBody
@@ -265,6 +282,7 @@ public class CRMCashServiceContoller {
                 ajaxJson.setMsg("订单消费错误：" + orderConsume);
                 return ajaxJson;
             }
+
         } else {
             record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
@@ -303,18 +321,30 @@ public class CRMCashServiceContoller {
             }
 
             recordNew.setSysDriver(sysDriverNew);
-            AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-            aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
-            aliShortMessageBean.setProduct("司集能源科技平台");
-            AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
+
         } else {
             logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
         }
-
+        sendConsumeMessage(recordNew);
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", recordNew);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
+    }
+
+    private void sendConsumeMessage(SysOrder recordNew){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(recordNew.getSysDriver().getMobilePhone());
+        if(recordNew.getOrderDate() != null){
+            String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
+                    DateTimeHelper.FMT_yyyyMMddhhmmss_noseparator);
+            aliShortMessageBean.setTime(curStrDate);
+        }
+        aliShortMessageBean.setString("消费");
+        aliShortMessageBean.setMoney(recordNew.getCash().toString());
+        aliShortMessageBean.setMoney1(recordNew.getSysDriver().getAccount().getAccountBalance());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
     }
 
     private TcFleet findFleetInfo(String cardID){

@@ -11,6 +11,7 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -415,12 +416,20 @@ public class CRMCustomerContoller {
                 ajaxJson.setMsg("无用户添加！！！");
                 return ajaxJson;
             }
+            sendRegisterSuccessMessage(sysDriver);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_USER_ERROR + e.getMessage());
             logger.error("add customer error： " + e);
         }
         return ajaxJson;
+    }
+
+    private void sendRegisterSuccessMessage(SysDriver sysDriver){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_REGISTER_SUCCESS);
     }
 
     @RequestMapping(value = {"/web/delCustomer"})
