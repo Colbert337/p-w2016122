@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 @Controller
@@ -102,6 +103,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
         record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
         String orderCharge = orderService.chargeToDriver(record);
@@ -128,6 +130,8 @@ public class CRMCashServiceContoller {
         Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
         if(gastation != null){
             recordNew.setGastation(gastation);
+            record.setChannel(gastation.getGas_station_name());
+            record.setChannelNumber(gastation.getSys_gas_station_id());
         }
         if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
             recordNew.setSysDriver(sysDriver);
@@ -143,10 +147,27 @@ public class CRMCashServiceContoller {
             logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
         }
 
+        sendChargeMessage(recordNew);
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", recordNew);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
+    }
+
+    private void sendChargeMessage(SysOrder recordNew){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(recordNew.getSysDriver().getMobilePhone());
+        if(recordNew.getOrderDate() != null){
+            String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
+                    DateTimeHelper.FMT_yyyyMMddhhmmss_noseparator);
+            aliShortMessageBean.setTime(curStrDate);
+        }
+        aliShortMessageBean.setString("消费");
+        aliShortMessageBean.setMoney(recordNew.getCash().toString());
+        aliShortMessageBean.setBackCash(recordNew.getCashBack());
+        aliShortMessageBean.setMoney1(recordNew.getSysDriver().getAccount().getAccountBalance());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.TRANSPORTION_TRANSFER_SELF_CHARGE);
     }
 
     @ResponseBody
@@ -162,6 +183,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
         if((sysOrders == null) || (sysOrders.getList().size() > 0)){
             ajaxJson.setSuccess(false);
@@ -264,6 +286,7 @@ public class CRMCashServiceContoller {
                 ajaxJson.setMsg("订单消费错误：" + orderConsume);
                 return ajaxJson;
             }
+
         } else {
             record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
@@ -279,6 +302,17 @@ public class CRMCashServiceContoller {
         String curStrDate = DateTimeHelper.formatDateTimetoString(curDate, DateTimeHelper.FMT_YYMMddhhmmsssss_noseparator);
         record.setOrderNumber("220"+ curStrDate);
         record.setOrderDate(curDate);
+        SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
+        recordNew.setCash(record.getCash());
+        recordNew.setGasCard(record.getGasCard());
+        Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
+
+        if(gastation != null){
+            recordNew.setGastation(gastation);
+            record.setChannel("亭口加注站");
+            record.setChannelNumber("GS12000003");
+        }
+
         int nCreateOrder = orderService.insert(record);
         if(nCreateOrder < 1){
             ajaxJson.setSuccess(false);
@@ -286,13 +320,6 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-        SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
-        recordNew.setCash(record.getCash());
-        recordNew.setGasCard(record.getGasCard());
-        Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
-        if(gastation != null){
-            recordNew.setGastation(gastation);
-        }
         if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
             SysDriver sysDriverNew = null;
             if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
@@ -300,20 +327,30 @@ public class CRMCashServiceContoller {
             } else {
                 sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
             }
-
             recordNew.setSysDriver(sysDriverNew);
-            AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-            aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
-            aliShortMessageBean.setProduct("司集能源科技平台");
-            AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
         } else {
             logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
         }
-
+        sendConsumeMessage(recordNew);
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("sysOrder", recordNew);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
+    }
+
+    private void sendConsumeMessage(SysOrder recordNew){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(recordNew.getSysDriver().getMobilePhone());
+        if(recordNew.getOrderDate() != null){
+            String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
+                    DateTimeHelper.FMT_yyyyMMddhhmmss_noseparator);
+            aliShortMessageBean.setTime(curStrDate);
+        }
+        aliShortMessageBean.setString("消费");
+        aliShortMessageBean.setMoney(recordNew.getCash().toString());
+        aliShortMessageBean.setMoney1(recordNew.getSysDriver().getAccount().getAccountBalance());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
     }
 
     private TcFleet findFleetInfo(String cardID){
