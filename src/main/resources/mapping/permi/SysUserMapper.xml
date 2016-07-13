@@ -153,7 +153,7 @@
     <include refid="Base_Column_List" />
     from sys_user
     where user_name = #{0} and password = #{1}
-    and status = 0 and is_deleted = 1
+    /*and status = 0 and is_deleted = 1*/
   </select>
   <!--查询最大索引-->
   <select id="queryMaxIndex" resultMap="BaseResultMap" >

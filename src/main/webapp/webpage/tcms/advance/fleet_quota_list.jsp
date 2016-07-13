@@ -340,7 +340,7 @@
 					<div class="row">
 						<div id="firstDiv" class="col-xs-12" style="display: none;">
 							<!-- 首次设置 -->
-							您的支付密码还未设置，点击提交按钮后，我们会向您注册账号时的邮箱发送验证邮件，请您及时进行后续操作。
+							您的支付密码还未设置，点击确定按钮后，我们会向您注册账号时的邮箱发送验证邮件，请您及时进行后续操作。
 						</div>
 						<div id="paswordDiv" class="col-xs-12">
 							<form class="form-horizontal" id="passwordForm">

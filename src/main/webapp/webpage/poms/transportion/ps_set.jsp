@@ -61,7 +61,7 @@
 									</div>
 									<div class="form-group">
 										<div class="col-sm-offset-4 col-sm-8">
-											<button class="btn btn-info" type="button" >
+											<button class="btn btn-info" type="submit" >
 												确定
 											</button>
 											&nbsp; &nbsp; &nbsp;

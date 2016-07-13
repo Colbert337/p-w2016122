@@ -14,6 +14,10 @@ $(function(){
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
+        },submitHandler: function(validator, form, submitButton) {
+            bootbox.alert("支付密码修改成功！");
+            var payCode = $("#pay_code").val();
+            window.location=form.attr('action')+"?pay_code="+payCode;
         },
         fields: {
             pay_code: {
@@ -48,9 +52,6 @@ $(function(){
                 }
             }
         }
-    }).on('success.form.bv', function(e) {
-        bootbox.alert("支付密码修改成功！");
     });
-    ;
 })
 
