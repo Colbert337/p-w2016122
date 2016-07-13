@@ -259,7 +259,7 @@ public class TcFleetQuotaController extends BaseContoller {
         SysDriver driver = new SysDriver();
         String stationId = currUser.getStationId();
         driver = sysDriver;
-        driver.setStationId(stationId);
+        /*driver.setStationId(stationId);*/
         try {
             driver = driverService.queryDriverByMobilePhone(driver);
         }catch (Exception e){
