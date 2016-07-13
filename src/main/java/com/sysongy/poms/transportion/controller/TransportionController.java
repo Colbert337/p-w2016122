@@ -176,7 +176,7 @@ public class TransportionController extends BaseContoller{
 				ret = "webpage/poms/transportion/transportion_update";
 				transportionid = service.saveTransportion(transportion,"update");
 				bean.setRetMsg("["+transportionid+"]保存成功");
-				ret = this.queryAllTransportionList(map, this.transportion);
+				ret = this.queryAllTransportionList(map, this.transportion==null?new Transportion():this.transportion);
 			}
 
 			bean.setRetCode(100);
@@ -219,7 +219,7 @@ public class TransportionController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllTransportionList(map, this.transportion);
+			ret = this.queryAllTransportionList(map, this.transportion==null?new Transportion():this.transportion);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -348,7 +348,7 @@ public class TransportionController extends BaseContoller{
 					rowcount = service.updatedeposiTransportion(deposit, currUser.getUser().getUserName());
 				}
 
-				ret = this.queryAllTransportionList2(map, this.transportion);
+				ret = this.queryAllTransportionList2(map, this.transportion==null?new Transportion():this.transportion);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+deposit.getStationName()+"]充值成功");
@@ -362,7 +362,7 @@ public class TransportionController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllTransportionList2(map, this.transportion);
+			ret = this.queryAllTransportionList2(map, this.transportion==null?new Transportion():this.transportion);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -590,7 +590,7 @@ public class TransportionController extends BaseContoller{
 					rowcount = sysUserService.updateUserByUserName(user);
 				}
 
-				ret = this.queryAllTransportionList(map, this.transportion);
+				ret = this.queryAllTransportionList(map, this.transportion==null?new Transportion():this.transportion);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+gastationid+"]管理员["+username+"]密码已成功重置为 111111");
@@ -604,7 +604,7 @@ public class TransportionController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllTransportionList(map, this.transportion);
+			ret = this.queryAllTransportionList(map, this.transportion==null?new Transportion():this.transportion);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
