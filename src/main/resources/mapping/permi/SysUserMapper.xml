@@ -66,9 +66,9 @@
         and su.sys_user_id = #{sysUserId}
       </if>
       <if test="userName != null &amp;&amp; userName !=''" >
-        and (su.user_name like CONCAT(#{userName,jdbcType=VARCHAR},'%')
-        or  su.real_name like CONCAT(#{userName,jdbcType=VARCHAR},'%')
-        or  su.mobile_phone like CONCAT(#{userName,jdbcType=VARCHAR},'%'))
+        and (su.user_name like CONCAT('%',CONCAT(#{userName,jdbcType=VARCHAR},'%'))
+        or  su.real_name like CONCAT('%',CONCAT(#{userName,jdbcType=VARCHAR},'%'))
+        or  su.mobile_phone like CONCAT('%',CONCAT(#{userName,jdbcType=VARCHAR},'%')))
       </if>
       <if test="userType != null &amp;&amp; userType !=''" >
         and  su.user_type = #{userType}

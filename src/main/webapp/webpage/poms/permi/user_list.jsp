@@ -331,6 +331,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
+							<label>账号/姓名/联系电话：</label>
 							<input type="text" name="userName" placeholder="账号/姓名/联系电话"  maxlength="15" value="${sysUser.userName}"/>
 						</div>
 						<div class="item">

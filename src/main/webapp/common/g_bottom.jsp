@@ -82,11 +82,10 @@
 		<script type="text/javascript"  src="<%=basePath %>/assets/artDialog/dist/dialog-plus-min.js"></script>
 		<!-- JqueryValidationEngine表单验证  -->
 		<link rel="stylesheet" type="text/css" href="<%=basePath %>/assets/jQueryVE/css/validationEngine.jquery.css" />
+		<script src="<%=basePath %>/assets/js/bootstrap.js"></script>
 		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine-zh_CN.js"></script>
 		<script type="text/javascript" src="<%=basePath %>/assets/jQueryVE/js/jquery.validationEngine.min.js"></script>
 		<script type="text/javascript" src="<%=basePath %>/assets/js/bootstrapValidator.js"></script>
-
-		<script src="<%=basePath %>/assets/js/bootstrap.js"></script>
 
 		<!-- page specific plugin scripts -->
 		<script src="<%=basePath %>/assets/js/jquery.bootstrap-duallistbox.js"></script>
