@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -404,7 +405,7 @@ public class TransportionController extends BaseContoller{
 		String stationId = currUser.getStationId();
 		Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 		String http_poms_path = (String) prop.get("http_poms_path");
-
+		int resultInt = 7;
 		try {
 			transportion = service.queryTransportionByPK(stationId);
 			String email = transportion.getEmail();
@@ -415,10 +416,12 @@ public class TransportionController extends BaseContoller{
 			model.put("userName",userName);
 			model.put("url",url+"/web/transportion/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
+			resultInt = 8;
 		}catch (Exception e){
+			resultInt = 7;
 			e.printStackTrace();
 		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "redirect:/web/tcms/fleetQuota/list/page?resultInt="+resultInt;
 	}
 
 	/**
@@ -440,6 +443,29 @@ public class TransportionController extends BaseContoller{
 	}
 
 	/**
+	 * 保存邮件设置的密码
+	 * @param currUser
+	 * @param transportion
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/save/payCode")
+	public String saveMailPayCode(@ModelAttribute("currUser") CurrUser currUser, Transportion transportion,
+								   SessionStatus sessionStatus, ModelMap map) throws Exception{
+		String userName = currUser.getUser().getUserName();
+		String stationId = currUser.getStationId();
+
+		Transportion transport = new Transportion();
+		transport.setSys_transportion_id(stationId);
+		String password = transportion.getPay_code();
+		password = Encoder.MD5Encode(password.getBytes());
+		transport.setPay_code(password);
+
+		service.updatedeposiTransport(transport);
+		sessionStatus.setComplete();
+		return "redirect:/";
+	}
+	/**
 	 * 发送修改密码邮件
 	 * @param currUser
 	 * @param transportion
@@ -453,7 +479,7 @@ public class TransportionController extends BaseContoller{
 		String stationId = currUser.getStationId();
 		Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 		String http_poms_path = (String) prop.get("http_poms_path");
-
+		int resultInt = 7;
 		try {
 			transportion = service.queryTransportionByPK(stationId);
 			String email = transportion.getEmail();
@@ -465,10 +491,12 @@ public class TransportionController extends BaseContoller{
 			model.put("userName",userName);
 			model.put("url",url+"/web/transportion/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
+			resultInt = 8;
 		}catch (Exception e){
+			resultInt = 7;
 			e.printStackTrace();
 		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "redirect:/web/tcms/fleetQuota/list/page?resultInt="+resultInt;
 	}
 
 	/**
@@ -504,14 +532,17 @@ public class TransportionController extends BaseContoller{
 		String userName = currUser.getUser().getUserName();
 		String stationId = currUser.getStationId();
 		transportion.setSys_transportion_id(stationId);
+		int resultInt = 5;
 		try {
 			transportion.setPay_code(Encoder.MD5Encode(transportion.getPay_code().getBytes()));
 			service.updatedeposiTransport(transportion);
+			resultInt = 6;
 
 		}catch (Exception e){
 			e.printStackTrace();
+			resultInt = 5;
 		}
-		return "redirect:/web/tcms/fleetQuota/list/page";
+		return "redirect:/web/tcms/fleetQuota/list/page?resultInt="+resultInt;
 	}
 
 	/**

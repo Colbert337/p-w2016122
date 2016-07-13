@@ -89,7 +89,7 @@
     select tfq.*,tf.fleet_name from tc_fleet_quota tfq left join tc_fleet tf on tfq.tc_fleet_id = tf.tc_fleet_id
     where tfq.is_allot = 1 and tfq.station_id = #{stationId}
     <if test="fleetName != null &amp;&amp; fleetName !=''" >
-      and (tf.fleet_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%'))
+      and (tf.fleet_name like CONCAT(CONCAT('%', #{fleetName,jdbcType=VARCHAR}), '%'))
     </if>
     <if test="startDate != null &amp;&amp; endDate !=null  &amp;&amp; startDate != '' &amp;&amp; endDate !='' " >
       and  tfq.created_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')

@@ -9,21 +9,11 @@
 function savePsSet(){
         $('#passwordForm').data('bootstrapValidator').validate();
         if(!$('#passwordForm').data('bootstrapValidator').isValid()){
-            return ;
+            return false;
+        }else{
+            $("#submitBtn").trigger('submit');
         }
 
-        var saveOptions ={
-            url:'../web/transportion/update/password',
-            type:'post',
-            dataType:'html',
-            success:function(data){
-                $("#main").html(data);
-            }
-        }
-        $("#passwordForm").ajaxSubmit(saveOptions);
-
-        $("#passwordForm").modal('hide');
-        $(".modal-backdrop").css("display","none");
 
 }
 
@@ -68,4 +58,6 @@ $('#passwordForm').bootstrapValidator({
             }
         }
     }
+}).on('success.form.bv', function(e) {
+    e.preventDefault();
 });
