@@ -110,6 +110,6 @@ var listOptions ={
 	}
 	
 	function addMemo(){
-		//review($("#objid").val(),$("#objval").val(),$("[name=remark]").val());
+		review($("#objid").val(),$("#objval").val(),$("[name=remark]").val());
 		hideInnerModel();
 	}

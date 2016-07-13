@@ -108,7 +108,7 @@ public class UsysparamController extends BaseContoller{
 				bean.setRetMsg("保存成功");
 			}
 			
-			ret = this.queryAll(map, this.usysparam);
+			ret = this.queryAll(map, this.usysparam==null?new Usysparam():this.usysparam);
 
 			bean.setRetCode(100);
 			bean.setRetValue(transportionid);
@@ -142,7 +142,7 @@ public class UsysparamController extends BaseContoller{
 			service.deleteByGcodeAndMcode(usysparam);
 			bean.setRetMsg("删除成功");
 			
-			ret = this.queryAll(map, this.usysparam);
+			ret = this.queryAll(map, this.usysparam==null?new Usysparam():this.usysparam);
 
 			bean.setRetCode(100);
 			bean.setPageInfo(ret);
@@ -181,7 +181,7 @@ public class UsysparamController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAll(map, this.usysparam);
+			ret = this.queryAll(map, this.usysparam==null?new Usysparam():this.usysparam);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

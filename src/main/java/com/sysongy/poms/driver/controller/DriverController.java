@@ -258,7 +258,7 @@ public class DriverController extends BaseContoller{
 			SysDriver driver = new SysDriver();
 			driver.setSysUserAccountId(accountid);
 			
-			ret = this.queryDriverInfoList(this.driver, map);
+			ret = this.queryDriverInfoList(this.driver ==null?new SysDriver():this.driver, map);
 
 			bean.setRetCode(100);
 			bean.setRetMsg("状态修改成功");
@@ -290,7 +290,7 @@ public class DriverController extends BaseContoller{
 					rowcount = driverService.updateAndReview(driverid, type, memo, currUser.getUser().getUserName());
 				}
 
-				ret = this.queryDriverList(this.driver, map);
+				ret = this.queryDriverList(this.driver ==null?new SysDriver():this.driver, map);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+driverid+"]已审核");
@@ -304,7 +304,7 @@ public class DriverController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryDriverList(new SysDriver(), map);
+			ret = this.queryDriverList(this.driver ==null?new SysDriver():this.driver, map);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

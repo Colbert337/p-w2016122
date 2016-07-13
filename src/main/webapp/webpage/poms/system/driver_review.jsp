@@ -77,7 +77,7 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'sys_driver_id');commitForm();" id="sys_gas_station_id_order">个人用户编号</th>
+									<!-- <th onclick="orderBy(this,'sys_driver_id');commitForm();" id="sys_gas_station_id_order">个人用户编号</th> -->
 									<th onclick="orderBy(this,'user_name');commitForm();" id="gas_station_name_order">认证姓名</th>
 									<th onclick="orderBy(this,'plate_number');commitForm();" id="salesmen_name_order">车牌号</th>
 									<th onclick="orderBy(this,'identity_card');commitForm();" id="operations_name_order">身份证号</th>
@@ -105,7 +105,7 @@
 										</label>
 									</td>
 
-									<td>${list.sysDriverId}</td>
+									<%-- <td>${list.sysDriverId}</td> --%>
 								 	<td>${list.fullName}</td> 
 									<td>${list.plateNumber}</td>
 									<td>${list.identityCard}</td>

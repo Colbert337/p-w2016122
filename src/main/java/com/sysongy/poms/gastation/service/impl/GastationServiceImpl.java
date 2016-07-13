@@ -28,9 +28,11 @@ import com.sysongy.poms.system.dao.SysDepositLogMapper;
 import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
+import com.sysongy.util.AliShortMessage;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
 @Service
 public class GastationServiceImpl implements GastationService {
@@ -69,6 +71,9 @@ public class GastationServiceImpl implements GastationService {
 
 	@Override
 	public String saveGastation(Gastation record, String operation) throws Exception {
+		
+		boolean statusChanged = false;
+		
 		if("insert".equals(operation)){
 			Gastation station = gasStationMapper.findGastationid("GS"+record.getStation_level()+record.getProvince_id());
 			String newid;
@@ -132,6 +137,10 @@ public class GastationServiceImpl implements GastationService {
 				record.setExpiry_date(new SimpleDateFormat("yyyy-MM-dd").parse(record.getExpiry_date_frompage()));
 			}
 			record.setUpdated_time(new Date());
+			Gastation mergeobj = gasStationMapper.selectByPrimaryKey(record.getSys_gas_station_id());
+			if(!mergeobj.getStatus().equals(record.getStatus())){
+				statusChanged = true;
+			}
 			gasStationMapper.updateByPrimaryKeySelective(record);
 			//更新系统参数字典表
 			Usysparam usysparam = new Usysparam();
@@ -155,6 +164,13 @@ public class GastationServiceImpl implements GastationService {
 				if(tmp == null){
 					usysparamService.saveUsysparam(usysparam);
 				}
+			}
+			
+			if(statusChanged && GlobalConstant.StationStatus.PAUSE.equals(record.getStatus())){
+				AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+				aliShortMessageBean.setSendNumber(record.getContact_phone());
+				aliShortMessageBean.setName(record.getGas_station_name());
+				AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.GAS_STATION_FROZEN);
 			}
 			
 			return record.getSys_gas_station_id();
@@ -307,5 +323,24 @@ public class GastationServiceImpl implements GastationService {
 			   sysPrepayMapper.insert(sysPrepay);
 		   }
 		   return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
+	
+	/**
+	 * 余额提醒短信
+	 * @return
+	 * @throws Exception
+	 */
+	public Integer alertPrepayBalance() throws Exception{
+		List<Gastation> list = gasStationMapper.queryForPage(new Gastation());
+		
+		for(int i=0;i<list.size();i++){
+			AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+			aliShortMessageBean.setSendNumber(list.get(i).getContact_phone());
+			aliShortMessageBean.setName(list.get(i).getPrepay_balance().toString());
+
+			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.REMIND_BALANCE);
+		}
+		
+		return list.size();
 	}
 }

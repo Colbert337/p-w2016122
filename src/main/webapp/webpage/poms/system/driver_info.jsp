@@ -77,7 +77,7 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'sys_driver_id');commitForm();" id="sys_driver_id_order">个人用户编号</th>
+									<!-- <th onclick="orderBy(this,'sys_driver_id');commitForm();" id="sys_driver_id_order">个人用户编号</th> -->
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
 									<th onclick="orderBy(this,'card_id');commitForm();" id="card_id_order">实体卡号</th>
 									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册来源</th>
@@ -103,7 +103,7 @@
 										</label>
 									</td>
 
-									<td>${list.sysDriverId}</td>
+									<%-- <td>${list.sysDriverId}</td> --%>
 								 	<td>${list.userName}</td> 
 								 	<td id="sysUserAccountId" style="display: none;">${list.sysUserAccountId}</td>
 									<td>${list.cardId}</td>
