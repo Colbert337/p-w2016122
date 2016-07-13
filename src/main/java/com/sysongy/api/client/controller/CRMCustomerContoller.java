@@ -144,7 +144,8 @@ public class CRMCustomerContoller {
                 drivers = driverService.querySingleDriver(sysDriver);
             } else {
                 GasCard gasCard = gasCardService.selectByCardNoForCRM(sysDriver.getCardId());
-                if(gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION)){
+                if((sysDriver.getIsCharge() == GlobalConstant.DriverType.TRANSPORT)  &&
+                        (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("车队卡不允许在客户端充值！！！");
                     return ajaxJson;
@@ -418,6 +419,9 @@ public class CRMCustomerContoller {
                 return ajaxJson;
             }
             sendRegisterSuccessMessage(sysDriver);
+            SysDriver responseDriver = driverService.queryDriverByPK(sysDriver.getSysDriverId());
+            attributes.put("driver", responseDriver);
+            ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_USER_ERROR + e.getMessage());
@@ -487,6 +491,7 @@ public class CRMCustomerContoller {
             listDrivers.add(updateSysDriver);
             attributes.put("drivers", listDrivers);
             ajaxJson.setAttributes(attributes);
+
         }catch (Exception e){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_USER_ERROR + e.getMessage());
@@ -631,7 +636,7 @@ public class CRMCustomerContoller {
                 ajaxJson.setMsg("手机号或者卡号或者气站号为空！！！");
                 return ajaxJson;
             }
-
+            sysDriver.setStationId("");
             SysDriver orgSysDriver = driverService.queryDriverByMobilePhone(sysDriver);
             if(orgSysDriver == null){
                 ajaxJson.setSuccess(false);
