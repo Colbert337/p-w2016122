@@ -70,7 +70,7 @@
       and tc_vehicle_id = #{tcVehicleId}
     </if>
     <if test="platesNumber != null &amp;&amp; platesNumber !=''" >
-      and plates_number like CONCAT(#{platesNumber,jdbcType=VARCHAR},'%')
+      and plates_number like CONCAT(CONCAT('%', #{platesNumber,jdbcType=VARCHAR}), '%')
     </if>
     <if test="tcFleetId != null &amp;&amp; tcFleetId !=''" >
       and tc_fleet_id = #{tcFleetId}

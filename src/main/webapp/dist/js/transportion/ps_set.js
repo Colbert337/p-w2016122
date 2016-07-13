@@ -11,7 +11,7 @@ function savePsSet(){
         if(!$('#passwordForm').data('bootstrapValidator').isValid()){
             return false;
         }else{
-            windows.location.href = "";
+            $("#submitBtn").trigger('submit');
         }
 
 
