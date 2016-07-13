@@ -12,7 +12,7 @@
 		}
 		
 		var listOptions ={   
-	            url:'../web/order/list/recharge',
+	            url:'../web/transportion/list/recharge',
 	            type:'post',                    
 	            dataType:'html',
 	            success:function(data){

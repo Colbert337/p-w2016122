@@ -24,6 +24,10 @@ public class TcTransferAccount extends BaseModel{
 
     private Date updatedDate;
 
+    private String startDate;
+
+    private String endDate;
+
     public String getTcTransferAccountId() {
         return tcTransferAccountId;
     }
@@ -94,5 +98,21 @@ public class TcTransferAccount extends BaseModel{
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

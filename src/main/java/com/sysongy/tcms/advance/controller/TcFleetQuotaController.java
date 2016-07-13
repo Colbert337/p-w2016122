@@ -343,16 +343,16 @@ public class TcFleetQuotaController extends BaseContoller {
     public String queryTransferListPage(@ModelAttribute CurrUser currUser, TcTransferAccount transferAccount, ModelMap map){
         String stationId = currUser.getStationId();
         PageBean bean = new PageBean();
-        String ret = "webpage/poms/advance/transfer_log";
+        String ret = "webpage/tcms/advance/transfer_log";
 
         try {
             if(transferAccount.getPageNum() == null){
-                transferAccount.setOrderby("created_date desc");
+                transferAccount.setOrderby("deal_date desc");
                 transferAccount.setPageNum(1);
                 transferAccount.setPageSize(10);
             }
             transferAccount.setStationId(stationId);
-            transferAccount.setUsed(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
+            transferAccount.setSysDriverId(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
             PageInfo<Map<String, Object>> pageinfo = tcTransferAccountService.queryTransferListPage(transferAccount);
 
             bean.setRetCode(100);

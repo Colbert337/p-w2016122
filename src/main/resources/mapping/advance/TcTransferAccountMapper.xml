@@ -32,6 +32,7 @@
     <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
     <result column="amount" property="amount" jdbcType="DECIMAL" />
     <result column="used" property="used" jdbcType="VARCHAR" />
+    <result column="order_by" property="orderBy" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -46,13 +47,19 @@
     where tc_transfer_account_id = #{tcTransferAccountId,jdbcType=VARCHAR}
   </select>
   <!--转账报表-->
-  <select id="queryTransferListPage" resultMap="BaseResultMap" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
+  <select id="queryTransferListPage" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
     select sr.order_number,sr.order_type,sr.cash,su.real_name,sod.*,tta.full_name,tta.mobile_phone,tta.used
     from sys_order  sr left join sys_order_deal sod  on sr.order_id = sod.order_id
     left join tc_transfer_account tta on sr.debit_account = tta.sys_driver_id
     left join sys_user su on sr.operator
-    where sr.credit_account = #{stationId} and sr.order_type = #{used}
-    order by sr.order_number desc
+    where sr.credit_account = #{stationId} and sr.order_type = #{sysDriverId}
+    <if test="fullName != null &amp;&amp; fullName !=''" >
+      and (tta.full_name like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%'))
+      or  tta.mobile_phone like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%')))
+    </if>
+    <if test="startDate != null &amp;&amp; endDate != ''">
+      and sod.deal_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from tc_transfer_account

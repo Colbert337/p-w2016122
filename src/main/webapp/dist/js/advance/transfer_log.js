@@ -12,7 +12,7 @@
 		}
 		
 		var listOptions ={   
-	            url:'../web/order/list/recharge',
+	            url:'../web/tcms/fleetQuota/list/transfer',
 	            type:'post',                    
 	            dataType:'html',
 	            success:function(data){
@@ -30,9 +30,9 @@
 	}
 	
 	function init(){
-		$("[name=operatorSourceType]").val("");
-		$("[name=operatorTargetType]").val("");
-		$("[name=deal_number]").val("");
+		$("[name=startDate]").val("");
+		$("[name=endDate]").val("");
+		$("[name=fullName]").val("");
 		commitForm();
 		//loadPage('#main', '../crmGasPriceService/queryProductPriceList');
 	}
