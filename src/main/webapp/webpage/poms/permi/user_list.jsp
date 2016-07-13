@@ -22,6 +22,15 @@
 				validators: {
 					notEmpty: {
 						message: '用户名不能为空'
+					},
+					regexp: {
+						regexp: '^[0-9a-zA-Z]+$',
+						message: '用户名只能包含数字和字母'
+					},
+					stringLength: {
+						min: 4,
+						max: 20,
+						message: '用户名长度必须在4~20位之间'
 					}
 				}
 			},
