@@ -47,6 +47,7 @@ public class AliShortMessage {
         DRIVER_REGISTER_SUCCESS,                //司机注册成功
         DRIVER_BATCH_REGISTER,                  //运维平台批量注册司机
         VEHICLE_CREATED,                        //车辆创建
+        DRIVER_CHECKCODE_PASSWORD_MODIFY,       //司机手机验证码/支付密码修改
         DRIVER_CONSUME_SUCCESSFUL
     }
 
@@ -203,6 +204,11 @@ public class AliShortMessage {
                 req.setSmsParamString("{\"account\":\"" + aliShortMessageBean.getAccountNumber() + "\",\"time\":\""
                         + aliShortMessageBean.getCreateTime() + "\"" + ",\"money\":\""
                         + aliShortMessageBean.getTotalPrice() + "\""+ "}");
+                break;
+            case DRIVER_CHECKCODE_PASSWORD_MODIFY:
+                req.setSmsTemplateCode("SMS_12255408");
+                req.setSmsParamString("\",\"code\":\"" + aliShortMessageBean.getCode() + "\",\"string\":\""
+                        + aliShortMessageBean.getString() + "\"}");
                 break;
             default:
                 break;

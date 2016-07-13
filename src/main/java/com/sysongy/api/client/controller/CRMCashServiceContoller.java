@@ -103,6 +103,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
         record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
         String orderCharge = orderService.chargeToDriver(record);
@@ -129,6 +130,8 @@ public class CRMCashServiceContoller {
         Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
         if(gastation != null){
             recordNew.setGastation(gastation);
+            record.setChannel(gastation.getGas_station_name());
+            record.setChannelNumber(gastation.getSys_gas_station_id());
         }
         if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
             recordNew.setSysDriver(sysDriver);
@@ -180,6 +183,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
         if((sysOrders == null) || (sysOrders.getList().size() > 0)){
             ajaxJson.setSuccess(false);
@@ -298,6 +302,17 @@ public class CRMCashServiceContoller {
         String curStrDate = DateTimeHelper.formatDateTimetoString(curDate, DateTimeHelper.FMT_YYMMddhhmmsssss_noseparator);
         record.setOrderNumber("220"+ curStrDate);
         record.setOrderDate(curDate);
+        SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
+        recordNew.setCash(record.getCash());
+        recordNew.setGasCard(record.getGasCard());
+        Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
+
+        if(gastation != null){
+            recordNew.setGastation(gastation);
+            record.setChannel("亭口加注站");
+            record.setChannelNumber("GS12000003");
+        }
+
         int nCreateOrder = orderService.insert(record);
         if(nCreateOrder < 1){
             ajaxJson.setSuccess(false);
@@ -305,13 +320,6 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-        SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
-        recordNew.setCash(record.getCash());
-        recordNew.setGasCard(record.getGasCard());
-        Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
-        if(gastation != null){
-            recordNew.setGastation(gastation);
-        }
         if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
             SysDriver sysDriverNew = null;
             if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
@@ -319,9 +327,7 @@ public class CRMCashServiceContoller {
             } else {
                 sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
             }
-
             recordNew.setSysDriver(sysDriverNew);
-
         } else {
             logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
         }

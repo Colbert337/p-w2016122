@@ -143,7 +143,8 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
                 drivers = driverService.querySingleDriver(sysDriver);
             } else {
-                if(sysDriver.getIsCharge() == GlobalConstant.DriverType.TRANSPORT){
+                GasCard gasCard = gasCardService.selectByCardNoForCRM(sysDriver.getCardId());
+                if(gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("车队卡不允许在客户端充值！！！");
                     return ajaxJson;
