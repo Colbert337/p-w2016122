@@ -4,6 +4,7 @@ import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.util.NumberUtils;
 
 import java.util.Date;
 
@@ -84,6 +85,10 @@ public class SysDriver extends BaseModel{
     private int driverType;
 
     private int isCharge;
+
+    private int driver_number;
+
+    private String strDriverNumber;
 
     public String getMemo() {
 		return memo;
@@ -388,5 +393,21 @@ public class SysDriver extends BaseModel{
 
     public void setIsCharge(int isCharge) {
         this.isCharge = isCharge;
+    }
+
+    public int getDriver_number() {
+        return driver_number;
+    }
+
+    public void setDriver_number(int driver_number) {
+        this.driver_number = driver_number;
+    }
+
+    public String getStrDriverNumber() {
+        return NumberUtils.convertFormatNumber(this.driver_number);
+    }
+
+    public void setStrDriverNumber(String strDriverNumber) {
+        this.strDriverNumber = NumberUtils.convertFormatNumber(this.driver_number);
     }
 }
