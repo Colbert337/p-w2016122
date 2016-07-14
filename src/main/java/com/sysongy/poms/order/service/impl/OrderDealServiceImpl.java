@@ -116,6 +116,12 @@ public class OrderDealServiceImpl implements OrderDealService {
 		List<SysOrderDeal> list = sysOrderDealMapper.queryForPage(record);
 		return list;
 	}
+
+	@Override
+	public List<SysOrderDeal>  queryOrderDealCRMs(SysOrderDeal record) throws Exception {
+		List<SysOrderDeal> list = sysOrderDealMapper.queryForPageCRM(record);
+		return list;
+	}
 	/**
 	 * 查询运输公司充值列表
 	 * @param record
