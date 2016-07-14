@@ -151,15 +151,20 @@ public class CRMCustomerContoller {
                     return ajaxJson;
                 }
 
-                SysDriver sysDriverForFleet = findFleetInfo(sysDriver.getCardId());
-                if(sysDriverForFleet == null){
-                    ajaxJson.setSuccess(false);
-                    ajaxJson.setMsg("没有查询到所需内容！！！");
-                    return ajaxJson;
+                if(StringUtils.isNotEmpty(sysDriver.getCardId())
+                        && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_DRIVER))){
+                    drivers = driverService.querySingleDriver(sysDriver);
+                } else {
+                    SysDriver sysDriverForFleet = findFleetInfo(sysDriver.getCardId());
+                    if(sysDriverForFleet == null){
+                        ajaxJson.setSuccess(false);
+                        ajaxJson.setMsg("没有查询到所需内容！！！");
+                        return ajaxJson;
+                    }
+                    List<SysDriver> driversList = new ArrayList<SysDriver>();
+                    driversList.add(sysDriverForFleet);
+                    drivers.setList(driversList);
                 }
-                List<SysDriver> driversList = new ArrayList<SysDriver>();
-                driversList.add(sysDriverForFleet);
-                drivers.setList(driversList);
             }
 
             if((drivers == null) || (drivers.getList().size() == 0)){
@@ -204,22 +209,11 @@ public class CRMCustomerContoller {
                     logger.error("查询出现多个车队: " + tcVehicle.getTcVehicleId());
                     return null;
                 }
-                for(TcFleet tcFleet : tcFleets){
-                    Transportion transportion = transportionService.queryTransportionByPK(tcFleet.getStationId());
-                    sysDriverForFleet = new SysDriver();
-                    sysDriverForFleet.setSysDriverId(transportion.getSys_transportion_id());
-                    sysDriverForFleet.setFullName(tcVehicle.getPlatesNumber());
-                    sysDriverForFleet.setMobilePhone(tcFleet.getFleetName());
-                    GasCard gasCard = gasCardService.selectByCardNoForCRM(cardID);
-                    sysDriverForFleet.setCardId(cardID);
-                    sysDriverForFleet.setCardInfo(gasCard);
-                    SysUserAccount sysUserAccount = new SysUserAccount();
-                    Usysparam usysparam = new Usysparam();
-                    usysparam.setMname(gasCard.getCardStatusInfo().getMname());
-                    sysUserAccount.setAccount_statusInfo(usysparam);
-                    sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
-                    sysDriverForFleet.setAccount(sysUserAccount);
+                TcFleet tcFleet = null;
+                if(tcFleets.size() == 1){
+                    tcFleet = tcFleets.get(0);
                 }
+                return getSysDriverFromVehicle(cardID, tcVehicle, tcFleet);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -227,6 +221,37 @@ public class CRMCustomerContoller {
         return sysDriverForFleet;
     }
 
+    private SysDriver getSysDriverFromVehicle(String cardID, TcVehicle tcVehicle, TcFleet tcFleet){
+        try
+        {
+            Transportion transportion = transportionService.queryTransportionByPK(tcVehicle.getStationId());
+            SysDriver sysDriverForFleet = new SysDriver();
+            sysDriverForFleet.setSysDriverId(transportion.getSys_transportion_id());
+            sysDriverForFleet.setFullName(tcVehicle.getPlatesNumber());
+            if(tcFleet != null){
+                sysDriverForFleet.setMobilePhone(tcFleet.getFleetName());
+            } else {
+                sysDriverForFleet.setMobilePhone(transportion.getContact_phone());
+            }
+            GasCard gasCard = gasCardService.selectByCardNoForCRM(cardID);
+            sysDriverForFleet.setCardId(cardID);
+            sysDriverForFleet.setCardInfo(gasCard);
+            SysUserAccount sysUserAccount = new SysUserAccount();
+            Usysparam usysparam = new Usysparam();
+            usysparam.setMname(gasCard.getCardStatusInfo().getMname());
+            sysUserAccount.setAccount_statusInfo(usysparam);
+            if(tcFleet != null){
+                sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
+            } else {
+                sysUserAccount.setAccountBalance(transportion.getAccount().getAccountBalance());
+            }
+            sysDriverForFleet.setAccount(sysUserAccount);
+            return sysDriverForFleet;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @RequestMapping(value = {"/web/queryForPageSingleList"})
     @ResponseBody

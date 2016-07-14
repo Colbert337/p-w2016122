@@ -317,7 +317,7 @@ public class GlobalConstant {
 		public static final String TRANSFER_CREDIT_ACCOUNT_IS_NULL ="TRANSFER_CREDIT_ACCOUNT_IS_NULL";
 		public static final String TRANSFER_DEBIT_ACCOUNT_IS_NULL ="TRANSFER_DEBIT_ACCOUNT_IS_NULL";
 		
-		public static final String ORDER_ERROR_PREPAY_IS_NOT_ENOUGH = "PREPAY_IS_NOT_ENOUGH";
+		public static final String ORDER_ERROR_PREPAY_IS_NOT_ENOUGH = "余额不足！";
 		public static final String ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR = "ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR";
 		
 		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";

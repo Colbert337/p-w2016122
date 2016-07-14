@@ -100,6 +100,7 @@
     </set>
     where order_goods_id = #{orderGoodsId,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.ordergoods.model.SysOrderGoods" >
     update sys_order_goods
     set order_id = #{orderId,jdbcType=VARCHAR},

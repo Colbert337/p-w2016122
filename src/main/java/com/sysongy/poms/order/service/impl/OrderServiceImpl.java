@@ -528,6 +528,7 @@ public class OrderServiceImpl implements OrderService {
 
 		for (SysOrderGoods sysOrderGoods : order.getSysOrderGoods()) {
 			sysOrderGoods.setOrderId(order.getOrderId());
+			sysOrderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
 			int nRet = sysOrderGoodsMapper.insert(sysOrderGoods);
 			if(nRet < 1){
 				logger.error("产品插入出错" + sysOrderGoods.getOrderId());
