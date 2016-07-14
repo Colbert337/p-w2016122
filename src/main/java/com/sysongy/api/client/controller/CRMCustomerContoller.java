@@ -11,6 +11,7 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -142,7 +143,9 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
                 drivers = driverService.querySingleDriver(sysDriver);
             } else {
-                if(sysDriver.getIsCharge() == GlobalConstant.DriverType.TRANSPORT){
+                GasCard gasCard = gasCardService.selectByCardNoForCRM(sysDriver.getCardId());
+                if((sysDriver.getIsCharge() == GlobalConstant.DriverType.TRANSPORT)  &&
+                        (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("车队卡不允许在客户端充值！！！");
                     return ajaxJson;
@@ -415,12 +418,23 @@ public class CRMCustomerContoller {
                 ajaxJson.setMsg("无用户添加！！！");
                 return ajaxJson;
             }
+            sendRegisterSuccessMessage(sysDriver);
+            SysDriver responseDriver = driverService.queryDriverByPK(sysDriver.getSysDriverId());
+            attributes.put("driver", responseDriver);
+            ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_ADD_USER_ERROR + e.getMessage());
             logger.error("add customer error： " + e);
         }
         return ajaxJson;
+    }
+
+    private void sendRegisterSuccessMessage(SysDriver sysDriver){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_REGISTER_SUCCESS);
     }
 
     @RequestMapping(value = {"/web/delCustomer"})
@@ -477,6 +491,7 @@ public class CRMCustomerContoller {
             listDrivers.add(updateSysDriver);
             attributes.put("drivers", listDrivers);
             ajaxJson.setAttributes(attributes);
+
         }catch (Exception e){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_USER_ERROR + e.getMessage());
@@ -621,7 +636,7 @@ public class CRMCustomerContoller {
                 ajaxJson.setMsg("手机号或者卡号或者气站号为空！！！");
                 return ajaxJson;
             }
-
+            sysDriver.setStationId("");
             SysDriver orgSysDriver = driverService.queryDriverByMobilePhone(sysDriver);
             if(orgSysDriver == null){
                 ajaxJson.setSuccess(false);

@@ -9,12 +9,16 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
+import com.sysongy.tcms.advance.model.TcTransferAccount;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
 import com.sysongy.tcms.advance.service.TcFleetService;
+import com.sysongy.tcms.advance.service.TcTransferAccountService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +58,10 @@ public class TcFleetQuotaController extends BaseContoller {
     OrderService orderService;
     @Autowired
     TransportionService transportionService;
+    @Autowired
+    SysUserAccountService userAccountService;
+    @Autowired
+    TcTransferAccountService tcTransferAccountService;
 
     /**
      * 查询车辆列表
@@ -149,24 +157,31 @@ public class TcFleetQuotaController extends BaseContoller {
                     BigDecimal totalVal = new BigDecimal(BigInteger.ZERO);
                     BigDecimal deposit = transportion.getDeposit();
                     for (Map<String, Object> mapVal:list) {
-                        if(mapVal.get("quota").toString().equals("1")){//分配
-                            userQuota.add(new BigDecimal(mapVal.get("quota").toString()));
+                        if(mapVal.get("isAllot").toString().equals("1")){//分配
+                            BigDecimal quotaBig = new BigDecimal(mapVal.get("quota").toString());
+                            userQuota = userQuota.add(quotaBig);
                         }
                     }
-                    if(userQuota.compareTo(deposit) > 0){
+                    if(userQuota.compareTo(deposit) < 0){
                         //添加分配记录
                         tcFleetQuotaService.addFleetQuotaList(list);
 
                         //计算运输公司剩余额度
-                        userQuota = transportion.getDeposit().subtract(userQuota);
+                        SysUserAccount userAccount = userAccountService.queryUserAccountByStationId(stationId);
+                        if(userAccount != null){
+                            BigDecimal banlance = userAccount.getAccountBalanceBigDecimal();
+                            userQuota = banlance.subtract(userQuota);
 
-                        //更新运输公司剩余额度
-                        Transportion quotaTrans = new Transportion();
-                        quotaTrans.setSys_transportion_id(stationId);
-                        quotaTrans.setDeposit(userQuota);
+                            //更新运输公司剩余额度
+                            Transportion quotaTrans = new Transportion();
+                            quotaTrans.setSys_transportion_id(stationId);
+                            quotaTrans.setDeposit(userQuota);
 
-                        transportionService.updatedeposiTransport(quotaTrans);
-                        resultInt = 2;//成功
+                            transportionService.updatedeposiTransport(quotaTrans);
+                            resultInt = 2;//成功
+                        }else{
+                            resultInt = 4;//失败
+                        }
                     }else{
                         resultInt = 3;//余额不足
                     }
@@ -306,6 +321,47 @@ public class TcFleetQuotaController extends BaseContoller {
             map.addAttribute("ret", bean);
             map.addAttribute("pageInfo", pageinfo);
             map.addAttribute("tcFleet",tcFleet);
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+            throw e;
+        }
+        finally {
+            return ret;
+        }
+    }
+
+    /**
+     * 转账报表
+     * @param transferAccount
+     * @return
+     */
+    @RequestMapping("/list/transfer")
+    public String queryTransferListPage(@ModelAttribute CurrUser currUser, TcTransferAccount transferAccount, ModelMap map){
+        String stationId = currUser.getStationId();
+        PageBean bean = new PageBean();
+        String ret = "webpage/tcms/advance/transfer_log";
+
+        try {
+            if(transferAccount.getPageNum() == null){
+                transferAccount.setOrderby("deal_date desc");
+                transferAccount.setPageNum(1);
+                transferAccount.setPageSize(10);
+            }
+            transferAccount.setStationId(stationId);
+            transferAccount.setSysDriverId(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
+            PageInfo<Map<String, Object>> pageinfo = tcTransferAccountService.queryTransferListPage(transferAccount);
+
+            bean.setRetCode(100);
+            bean.setRetMsg("查询成功");
+            bean.setPageInfo(ret);
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("pageInfo", pageinfo);
+            map.addAttribute("transferAccount",transferAccount);
         } catch (Exception e) {
             bean.setRetCode(5000);
             bean.setRetMsg(e.getMessage());

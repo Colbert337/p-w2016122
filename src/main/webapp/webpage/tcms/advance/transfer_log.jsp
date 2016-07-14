@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/transportion/transportion_recharge_log.js"></script>
+<script src="<%=basePath %>/dist/js/advance/transfer_log.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -21,21 +21,23 @@
 
 					<div class="page-header">
 						<h1>
-							充值报表
+							转账报表
 						</h1>
 					</div>
 					
-					<input type="hidden" class="" name="order_number" value="${order.orderNumber}" readonly="readonly"/>
-					
 					<div class="search-types">
+						<div class="item">
+							<label>收款人/手机号码：</label>
+							<input type="text" name="fullName" placeholder="收款人/手机号码"  maxlength="20" value="${transferAccount.fullName}"/>
+						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
-								<input type="text" class="" name="operatorSourceType" value="${order.operatorSourceType}" readonly="readonly"/>
+								<input type="text" class="" name="startDate" value="${transferAccount.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="operatorTargetType" value="${order.operatorTargetType}" readonly="readonly"/>
+								<input type="text" class="" name="endDate" value="${transferAccount.endDate}" readonly="readonly"/>
 							</div>			
 						</div>
 						
@@ -60,7 +62,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">充值报表列表</div>
+					<div class="table-header">转账报表列表</div>
 
 					<div>
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
@@ -73,11 +75,13 @@
 										</label>
 									</th>--%>
 									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
-									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">订单流水号</th>
-									<th onclick="orderBy(this,'channel');commitForm();" id="transportion_name_order">运输公司名称</th>
-									<%--<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">充值渠道</th>--%>
-									<th onclick="orderBy(this,'charge_type');commitForm();" id="charge_type_order">充值方式</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">充值金额</th>
+									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>
+									<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">交易类型</th>
+									<th onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">收款人</th>
+									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">手机号码</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">转账金额</th>
+									<th onclick="orderBy(this,'used');commitForm();" id="used_order">资金用途</th>
+									<th onclick="orderBy(this,'cash_back');commitForm();" id="cash_back_order">返现金额</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 									<th onclick="orderBy(this,'deal_date');commitForm();" id="deal_date_order"><i id="deal_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 								</tr>
@@ -96,10 +100,13 @@
 
 									<td>${list.orderNumber}</td>
 									<td>${list.dealNumber}</td>
-									<%--<td>${list.transportionName}</td>--%>
-									<td>${list.channel}</td>
-									<td><s:Code2Name mcode="${list.chargeType}" gcode="CASHBACK"></s:Code2Name></td>
+									<td>${list.orderType}</td>
+									<td>${list.fullName}</td>
+									<td>${list.mobilePhone}</td>
+									<%--<td><s:Code2Name mcode="${list.chargeType}" gcode="CASHBACK"></s:Code2Name></td>--%>
 									<td>${list.cash}</td>
+									<td>${list.used}</td>
+									<td>${list.cashBack}</td>
 									<td>${list.operator}</td>
 									<td><fmt:formatDate value="${list.dealDate}" type="both"/></td>
 								</tr>
@@ -132,6 +139,7 @@
 					</div>
 					<%--分页 end--%>
 					<jsp:include page="/common/message.jsp"></jsp:include>
+
 
 			<!-- PAGE CONTENT ENDS -->
 		</div>

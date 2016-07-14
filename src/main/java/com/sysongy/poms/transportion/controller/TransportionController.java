@@ -653,7 +653,7 @@ public class TransportionController extends BaseContoller{
 	}
 
 	/**
-	 * 查询运输公司充值记录（单个运输公司）
+	 * 运输公司充值报表（单个运输公司）
 	 * @param map
 	 * @return
 	 * @throws Exception
