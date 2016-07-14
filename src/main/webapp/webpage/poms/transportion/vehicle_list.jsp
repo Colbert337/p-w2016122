@@ -25,7 +25,7 @@
 					</div>
 					<div class="search-types">
 						<div class="item">
-						    <label>车队卡编号:</label>
+						    <label>车队编号:</label>
 							<input type="text" name="tcVehicleId" placeholder="输入车队卡编号" maxlength="32" value="${vehicle.tcVehicleId}"/>
 						</div>
 						

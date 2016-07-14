@@ -120,7 +120,7 @@
 									</c:choose>
 									<td>${list.regisSource}</td>
 									<td>${list.stationId}</td>
-									<td>${list.account.accountBalance}</td> 
+									<td><fmt:formatNumber type="number" value="${list.account.accountBalance}" pattern="0.00" maxFractionDigits="2"/>  </td> 
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
 									<td><s:Code2Name mcode="${list.cardInfo.card_status}" gcode="CARDSTATUS"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>

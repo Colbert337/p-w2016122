@@ -109,7 +109,7 @@
 								 	<td>${list.fullName}</td> 
 									<td>${list.plateNumber}</td>
 									<td>${list.identityCard}</td>
-									<td><s:Code2Name mcode="${list.fuelType}" gcode="CARDTYPE"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.fuelType}" gcode="FUEL_TYPE"></s:Code2Name></td>
 									<td>${list.stationId}</td>
 									<%-- <td>${list.isIdent == '0'?'否':'是'}</td>  --%>
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
