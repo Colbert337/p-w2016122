@@ -151,16 +151,16 @@ public class DriverController extends BaseContoller{
 		driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
 		driver.setStationId(stationId);//站点编号
 
-		String newid;
+		/*String newid;
 		SysDriver driverTemp = driverService.queryMaxIndex();
 		if(driverTemp == null || StringUtils.isEmpty(driverTemp.getSysDriverId())){
 			newid = "P" + "000000001";
 		}else{
 			Integer tmp = Integer.valueOf(driverTemp.getSysDriverId().substring(1, 10)) + 1;
 			newid = "P" + StringUtils.leftPad(tmp.toString() , 9, "0");
-		}
+		}*/
 
-		driver.setSysDriverId(newid);
+		driver.setSysDriverId(UUIDGenerator.getUUID());
 		driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
 
 
@@ -258,7 +258,7 @@ public class DriverController extends BaseContoller{
 			SysDriver driver = new SysDriver();
 			driver.setSysUserAccountId(accountid);
 			
-			ret = this.queryDriverInfoList(this.driver, map);
+			ret = this.queryDriverInfoList(this.driver ==null?new SysDriver():this.driver, map);
 
 			bean.setRetCode(100);
 			bean.setRetMsg("状态修改成功");
@@ -290,7 +290,7 @@ public class DriverController extends BaseContoller{
 					rowcount = driverService.updateAndReview(driverid, type, memo, currUser.getUser().getUserName());
 				}
 
-				ret = this.queryDriverList(this.driver, map);
+				ret = this.queryDriverList(this.driver ==null?new SysDriver():this.driver, map);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+driverid+"]已审核");
@@ -304,7 +304,7 @@ public class DriverController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryDriverList(new SysDriver(), map);
+			ret = this.queryDriverList(this.driver ==null?new SysDriver():this.driver, map);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

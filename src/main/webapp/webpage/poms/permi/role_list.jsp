@@ -26,7 +26,8 @@
 					},
 					stringLength: {
 						min: 3,
-						message: '角色名称不能小于3个字符'
+						max: 10,
+						message: '角色名长度必须在3~10之间'
 					}
 				}
 			}

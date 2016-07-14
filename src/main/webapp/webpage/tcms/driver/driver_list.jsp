@@ -29,6 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
+							<label>司机姓名/手机号码：</label>
 							<input type="text" name="fullName" placeholder="司机姓名/手机号码"  maxlength="11" value="${driver.fullName}"/>
 						</div>
 						<div class="item">

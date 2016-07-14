@@ -87,7 +87,7 @@
 			</span>
 		</h3>
 		<div class="row">
-			<div class="col-sm-6">
+			<div class="col-sm-6 gastation-infomation">
 				<c:choose>
 					<c:when test="${transportion.indu_com_certif == null || transportion.indu_com_certif == ''}">
 						<img class="col-sm-4" src="../common/images/default_productBig.jpg">
@@ -100,7 +100,7 @@
 					</c:otherwise>
 				</c:choose>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-6 gastation-infomation">
 				<c:choose>
 					<c:when test="${transportion.tax_certif == null || transportion.tax_certif == ''}">
 						<img class="col-sm-4" src="../common/images/default_productBig.jpg">

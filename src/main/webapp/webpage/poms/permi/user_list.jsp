@@ -22,6 +22,15 @@
 				validators: {
 					notEmpty: {
 						message: '用户名不能为空'
+					},
+					regexp: {
+						regexp: '^[0-9a-zA-Z]+$',
+						message: '用户名只能包含数字和字母'
+					},
+					stringLength: {
+						min: 4,
+						max: 20,
+						message: '用户名长度必须在4~20位之间'
 					}
 				}
 			},
@@ -331,6 +340,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
+							<label>账号/姓名/联系电话：</label>
 							<input type="text" name="userName" placeholder="账号/姓名/联系电话"  maxlength="15" value="${sysUser.userName}"/>
 						</div>
 						<div class="item">

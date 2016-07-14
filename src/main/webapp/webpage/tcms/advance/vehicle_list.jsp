@@ -29,6 +29,7 @@
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
 						<div class="item">
+							<label>车牌号：</label>
 							<input type="text" name="platesNumber" placeholder="车牌号"  maxlength="11" value="${vehicle.platesNumber}"/>
 						</div>
 						<div class="item">

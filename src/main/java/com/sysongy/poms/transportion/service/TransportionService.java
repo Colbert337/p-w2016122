@@ -54,4 +54,6 @@ public interface TransportionService {
 	 * @throws Exception
 	 */
 	public int modifyDeposit(Transportion transportion, BigDecimal increment) throws Exception ;
+
+	public Integer alertPrepayBalance() throws Exception;
 }

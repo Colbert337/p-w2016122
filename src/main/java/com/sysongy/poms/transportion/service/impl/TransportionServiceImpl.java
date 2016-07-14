@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
@@ -27,9 +28,11 @@ import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
+import com.sysongy.util.AliShortMessage;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
 @Service
 public class TransportionServiceImpl implements TransportionService {
@@ -350,6 +353,28 @@ public class TransportionServiceImpl implements TransportionService {
 			log.setTransfer_photo(show_path);
 		}
 		return sysDepositLogMapper.insert(log);
+	}
+	
+	/**
+	 * 余额提醒短信
+	 * @return
+	 * @throws Exception
+	 */
+	public Integer alertPrepayBalance() throws Exception{
+		
+		List<Transportion> list = transportionMapper.queryForPage(new Transportion());
+		
+		for(int i=0;i<list.size();i++){
+			
+			if(list.get(i).getDeposit().compareTo(BigDecimal.valueOf(2000)) == -1){
+				AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+				aliShortMessageBean.setSendNumber(list.get(i).getContact_phone());
+				aliShortMessageBean.setName(list.get(i).getDeposit().toString());
+				AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.REMIND_BALANCE);
+			}
+		}
+		
+		return list.size();
 	}
 
 }

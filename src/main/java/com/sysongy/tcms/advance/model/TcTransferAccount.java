@@ -1,9 +1,11 @@
 package com.sysongy.tcms.advance.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TcTransferAccount {
+public class TcTransferAccount extends BaseModel{
     private String tcTransferAccountId;
 
     private String stationId;
@@ -21,6 +23,10 @@ public class TcTransferAccount {
     private Date createdDate;
 
     private Date updatedDate;
+
+    private String startDate;
+
+    private String endDate;
 
     public String getTcTransferAccountId() {
         return tcTransferAccountId;
@@ -92,5 +98,21 @@ public class TcTransferAccount {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

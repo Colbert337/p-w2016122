@@ -1,9 +1,8 @@
 	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 
 	window.onload = setCurrentPage();
-
 	var listOptions ={
-		url:'../web/tcms/fleetQuota/list/quota',
+		url:'../web/tcms/fleetQuota/list/transfer',
 		type:'post',
 		dataType:'html',
 		success:function(data){
@@ -25,14 +24,15 @@
 		}else{
 			$("#pageNum").val($(obj).text());
 		}
-
-		$("#formtransportion").ajaxSubmit(listOptions);
+		
+		$("#formgastation").ajaxSubmit(listOptions);
 	}
 	
 	function init(){
 		$("[name=startDate]").val("");
 		$("[name=endDate]").val("");
-		$("[name=fleetName]").val("");
+		$("[name=fullName]").val("");
 		commitForm();
+		//loadPage('#main', '../crmGasPriceService/queryProductPriceList');
 	}
-
+	

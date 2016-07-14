@@ -197,6 +197,14 @@ public class GlobalConstant {
 	public static final int TCFLEET_IS_ALLOT_YES = 1;
 	public static final int TCFLEET_IS_ALLOT_NO = 0;
 	
+	/*
+	 * 系统账户（钱袋）状态 
+	 */
+	public static final String SYS_USER_ACCOUNT_STATUS_FROZEN = "0";
+	public static final String SYS_USER_ACCOUNT_STATUS_CARD_FROZEN = "1";
+	public static final String SYS_USER_ACCOUNT_STATUS_NORMAL = "2";
+	
+	
 	
 	/*
 	 * 订单处理流程中的类型
@@ -317,7 +325,7 @@ public class GlobalConstant {
 		public static final String TRANSFER_CREDIT_ACCOUNT_IS_NULL ="TRANSFER_CREDIT_ACCOUNT_IS_NULL";
 		public static final String TRANSFER_DEBIT_ACCOUNT_IS_NULL ="TRANSFER_DEBIT_ACCOUNT_IS_NULL";
 		
-		public static final String ORDER_ERROR_PREPAY_IS_NOT_ENOUGH = "PREPAY_IS_NOT_ENOUGH";
+		public static final String ORDER_ERROR_PREPAY_IS_NOT_ENOUGH = "余额不足！";
 		public static final String ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR = "ORDER_ERROR_UPDATE_GASTATION_PREYPAY_ERROR";
 		
 		public static final String DEBIT_ACCOUNT_IS_NULL="DEBIT_ACCOUNT_IS_NULL";

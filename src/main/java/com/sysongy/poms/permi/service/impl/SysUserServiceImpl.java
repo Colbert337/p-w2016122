@@ -231,8 +231,7 @@ public class SysUserServiceImpl implements SysUserService{
                 /*用户有效*/
                 if(sysUser != null){
                     /*查询用户菜单列表*/
-                    int userType = 1;
-                    List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionAllList(userType);
+                    List<Map<String,Object>> sysFunctionList = sysFunctionService.queryFunctionListByUserId(sysUser.getSysUserId(),user.getUserType());
                     //将数据做分组处理，需要优化分组函数
                     Map group = GroupUtil.group(sysFunctionList, new GroupUtil.GroupBy<String>() {
                         @Override

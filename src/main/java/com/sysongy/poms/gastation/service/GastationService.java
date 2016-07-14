@@ -27,5 +27,7 @@ public interface GastationService {
 	public String updatePrepayBalance(Gastation obj, BigDecimal addCash) throws Exception;
 	
 	public String chargeToDriverUpdateGastationPrepay(SysOrder order, String is_discharge) throws Exception;
+	
+	public Integer alertPrepayBalance() throws Exception;
 
 }

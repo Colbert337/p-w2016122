@@ -84,7 +84,7 @@ public class LiquidController extends BaseContoller{
 				bean.setRetMsg("["+gastationid+"]保存成功");
 			}
 			
-			ret = this.queryAllGasSourceList(map, this.gasource);
+			ret = this.queryAllGasSourceList(map, this.gasource==null?new SysGasSource():this.gasource);
 			bean.setRetCode(100);
 			
 			bean.setRetValue(gastationid);
@@ -127,7 +127,7 @@ public class LiquidController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 	
-			ret = this.queryAllGasSourceList(map, this.gasource);
+			ret = this.queryAllGasSourceList(map, this.gasource==null?new SysGasSource():this.gasource);
 	
 			map.addAttribute("ret", bean);
 			logger.error("", e);
