@@ -3,6 +3,7 @@ package com.sysongy.poms.card.controller;
 import com.sysongy.util.GlobalConstant;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,6 +213,21 @@ public class CardController extends BaseContoller{
 		Boolean exist = service.checkCardExist(cardid);
 
 		return  exist?"1":"0";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/getCard")
+	public JSONObject checkCard(@RequestParam String cardno) throws Exception{
+
+		GasCard gasCard = service.selectByCardNoForCRM(cardno);
+		JSONObject json = new JSONObject();
+		
+		if(gasCard != null){
+			json.put("status", gasCard.getCard_status());
+			json.put("station", gasCard.getWorkstation());
+		}	
+		
+		return json;
 	}
 
 	@ResponseBody

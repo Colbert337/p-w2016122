@@ -119,7 +119,7 @@
 												<i class="ace-icon fa fa-key bigger-130" onclick="showInnerModel(this,'4');"></i>
 											</a>
 											<a class="option-btn-m" href="javascript:void(0);" title="补发卡" data-rel="tooltip">
-												<i class="ace-icon fa fa-credit-card bigger-130" onclick="showInnerModel2(this);"></i>
+												<i class="ace-icon fa fa-credit-card bigger-130" onclick="showInnerModel2(this,'${list.stationId}');"></i>
 											</a>
 										</c:if>
 									</td>
@@ -199,7 +199,7 @@
 				<div class="container-fluid">
 					<div class="form-group">
 						<label class="control-label">新卡号：</label>
-						<input type="text" name="newcardno" maxlength="10"/>
+						<input type="text" name="newcardno" maxlength="10" onblur="checkCard(this.value);"/>
 					</div>
 					<div class="form-group">
 						<label class="control-label">备注：</label>
