@@ -104,6 +104,7 @@ public class CRMCashServiceContoller {
                 return ajaxJson;
             }
 
+            record.setIs_discharge("0");
             record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
             record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
