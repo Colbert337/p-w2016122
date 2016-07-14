@@ -334,7 +334,7 @@ public class GlobalConstant {
 		public static final String ORDER_ERROR_BALANCE_IS_NOT_ENOUGH = "余额不足！";
 
 		public static final String ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN = "账号已冻结！";
-		public static final String ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN = "DEBIT_ACCOUNT_IS_FROEN";
+		public static final String ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN = "账号已冻结！";
 		public static final String ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN = "该卡已冻结！";
 		
 		public static final String ORDER_ACCOUNT_VERSION_HAVE_CHANGED = "ORDER_ACCOUNT_VERSION_HAVE_CHANGED";

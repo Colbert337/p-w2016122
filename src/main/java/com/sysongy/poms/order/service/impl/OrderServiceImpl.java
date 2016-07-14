@@ -640,13 +640,13 @@ public class OrderServiceImpl implements OrderService {
 			else if(orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION)){
 				accountId = transportionService.queryTransportionByPK(debitAccountId).getSys_user_account_id();
 			}
-			SysUserAccount debitAccount = sysUserAccountService.selectByPrimaryKey(accountId);
-			boolean isFrozen = validateAccountIfFroen(debitAccount,record);
-			if(isFrozen){
+			SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(accountId);
+			boolean isFrozen_debitAccount = debitAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
+			if(isFrozen_debitAccount){
 				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN);
 			}
 		}
-		//消费，只验证creditAccount，因为debitAccount为null
+		//消费，只验证creditAccount，因为debitAccount为null--只有消费会判断卡是否冻结
 		if( orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_DRIVER) 
 		   ||orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION)){
 			String accountId ="";
@@ -661,6 +661,11 @@ public class OrderServiceImpl implements OrderService {
 			boolean isFrozen = creditAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
 			if(isFrozen){
 				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
+			}
+			boolean isCreditAccountCardFrozen = (StringUtils.isNotEmpty(record.getConsume_card())
+					&& (creditAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_CARD_FROZEN)));
+			if(isCreditAccountCardFrozen){
+				return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN;
 			}
 		}
 		//转账，验证creditAccount，和debitAccount都不为null
@@ -683,32 +688,12 @@ public class OrderServiceImpl implements OrderService {
 				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
 			}
 			SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(debitSysAccountId);
-			boolean isFrozen_debitAccount = validateAccountIfFroen(debitAccount,record);
+			boolean isFrozen_debitAccount = debitAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
 			if(isFrozen_debitAccount){
 				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN);
 			}
 		}
 		return GlobalConstant.OrderProcessResult.SUCCESS;
-	}
-
-	/**
-	 * 查看消费账户冻结
-	 * @param creditAccount
-	 * @param debitAccount
-	 * @param record
-     * @return
-     */
-	private boolean validateAccountIfFroen(SysUserAccount account, SysOrder record){
-		boolean isCreditFrozen = account.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
-		if(isCreditFrozen)
-			return true;
-
-		boolean isCreditAccountCardFrozen = (StringUtils.isNotEmpty(record.getConsume_card())
-				&& (account.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_CARD_FROZEN)));
-		if(isCreditAccountCardFrozen){
-			return true;
-		}
-		return false;
 	}
 
 	/**
