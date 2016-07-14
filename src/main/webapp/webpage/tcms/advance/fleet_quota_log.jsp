@@ -99,31 +99,31 @@
 							</tbody>
 						</table>
 					</div>
-			
 
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
-				</div>
-				<div class="col-sm-6">
-					<nav>
-						<ul id="ulhandle" class="pagination pull-right no-margin">
-							<li id="previous">
-								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
-									<span aria-hidden="true">&laquo;</span>
-								</a>
-							</li>
-							<li id="next">
-								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
-									<span aria-hidden="true">&raquo;</span>
-								</a>
-							</li>  
-						</ul>
-					</nav>
-				</div>
-			</div>
-
-			<jsp:include page="/common/message.jsp"></jsp:include>
+					<%--分页start--%>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
+								<ul id="ulhandle" class="pagination">
+									<li id="previous" class="paginate_button previous" aria-controls="dynamic-table" tabindex="0">
+										<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formtransportion');">
+											<span aria-hidden="true">上一页</span>
+										</a>
+									</li>
+									<li id="next" class="paginate_button next" aria-controls="dynamic-table" tabindex="0">
+										<a id="nexthandle" href="javascript:nextpage('#formtransportion');" aria-label="Next" >
+											<span aria-hidden="true">下一页</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<%--分页 end--%>
+					<jsp:include page="/common/message.jsp"></jsp:include>
 
 
 			<!-- PAGE CONTENT ENDS -->
