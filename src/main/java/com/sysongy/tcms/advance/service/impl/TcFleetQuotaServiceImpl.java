@@ -235,6 +235,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                 }
             }
         }catch (Exception e){
+            resultVal = -1;
             e.printStackTrace();
         }
         return resultVal;
