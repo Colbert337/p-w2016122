@@ -16,6 +16,8 @@ import com.sysongy.poms.order.model.SysOrderDeal;
 public interface OrderDealService {
 
     List<SysOrderDeal> queryOrderDeals(SysOrderDeal record) throws Exception;
+
+    List<SysOrderDeal> queryOrderDealCRMs(SysOrderDeal record) throws Exception;
 	
 	int deleteByPrimaryKey(String dealId);
 

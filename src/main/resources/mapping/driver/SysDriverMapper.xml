@@ -153,6 +153,9 @@
       <if test="driverType!= null &amp;&amp; driverType != ''" >
         and driver_type = #{driverType,jdbcType=INTEGER}
       </if>
+      <if test="cardId!= null &amp;&amp; cardId != ''" >
+        and card_id = #{cardId, jdbcType=INTEGER}
+      </if>
     </trim>
   </select>
 
