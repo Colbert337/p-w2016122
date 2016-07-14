@@ -158,6 +158,7 @@ public class TcVehicleController extends BaseContoller {
         	ret = tcVehicleService.updateAndchangeCard(tc_vehicle_id, newcardno).toString();
         }catch(Exception e){
         	ret = e.getMessage();
+        	logger.error("",e);
         	throw e;
         }finally{
         	return ret;
