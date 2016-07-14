@@ -100,10 +100,10 @@
 
 									<td>${list.orderNumber}</td>
 									<td>${list.dealNumber}</td>
-									<td>${list.orderType}</td>
+									<%--<td>${list.orderType}</td>--%>
+									<td><s:Code2Name mcode="${list.orderType}" gcode="ORDER_TYPE"></s:Code2Name></td>
 									<td>${list.fullName}</td>
 									<td>${list.mobilePhone}</td>
-									<%--<td><s:Code2Name mcode="${list.chargeType}" gcode="CASHBACK"></s:Code2Name></td>--%>
 									<td>${list.cash}</td>
 									<td>${list.used}</td>
 									<td>${list.cashBack}</td>
