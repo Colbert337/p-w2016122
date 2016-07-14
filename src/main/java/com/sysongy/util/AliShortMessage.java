@@ -172,7 +172,7 @@ public class AliShortMessage {
             case REMIND_BALANCE:
                 req.setSmsTemplateCode("SMS_11530947");
                 req.setSmsFreeSignName("变更验证");
-                req.setSmsParamString("{\"money\":\"" + aliShortMessageBean.getString() + "\"}");
+                req.setSmsParamString("{\"money\":\"" + aliShortMessageBean.getName() + "\"}");
                 break;
             case GAS_STATION_FROZEN:
                 req.setSmsTemplateCode("SMS_12216006");

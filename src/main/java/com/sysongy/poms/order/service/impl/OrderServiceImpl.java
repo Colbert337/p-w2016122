@@ -162,6 +162,9 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER);
 	   }
+	   //检查订单
+	   validAccount(order);
+	   
 	   String is_discharge = order.getIs_discharge();
 	   //1.现金充值抵扣预付款。如果现金充值，取操作源operator_source_type，如果是加注站，则判断充值金额不能超过加注站预付款
 	   String charge_type = order.getChargeType();
@@ -304,6 +307,8 @@ public class OrderServiceImpl implements OrderService {
 	   if(discharge_order_id==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_ID_IS_NULL);
 	   }
+	   //检查订单
+	   validAccount(dischargeOrder);
 	   
 	   //充红的金额必须是负值
 	   BigDecimal cash = dischargeOrder.getCash();
@@ -429,6 +434,10 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.TRANSPORTION))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_TRANSPORTION);
 	   }
+	   
+	   //检查订单
+	   validAccount(order);
+	   
 	   //给运输公司充值
 	   String success_charge = transportionService.chargeCashToTransportion(order);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_charge)){
@@ -460,7 +469,9 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.GASTATION))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_GASTATION);
 	   }
-	   
+	   //检查订单
+	   validAccount(order);
+
 	   BigDecimal cash = order.getCash();
 	   String debit_account = order.getDebitAccount();
 	   if(debit_account==null ||debit_account.equalsIgnoreCase("")){
@@ -518,6 +529,8 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER);
 	   }
+	   //检查订单
+	   validAccount(order);
 
 	   //消费的时候传过去的cash是正值
 	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
@@ -555,9 +568,10 @@ public class OrderServiceImpl implements OrderService {
 	   if (tran ==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.TRANSPORTION_IS_NULL);
 	   }
-	   if (tcfleet ==null){
+	   //更改逻辑，如果tcfleet是null，则直接扣运输公司的金额以及额度
+	   /*if (tcfleet ==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.TCFLEET_IS_NULL);
-	   }
+	   }*/
 	   
 	   String orderType = order.getOrderType();
 	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION))){
@@ -573,13 +587,18 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.TRANSPORTION))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_TRANSPORTION);
 	   }
+	   //检查订单
+	   validAccount(order);
+
 	   //1.判断此车队是否分配额度
-	   Integer is_allot = tcfleet.getIsAllot();
+	   Integer is_allot = GlobalConstant.TCFLEET_IS_ALLOT_NO;
+	   if(tcfleet!=null){
+	    is_allot = tcfleet.getIsAllot();
+	   }
 	 //扣除车队额度//传过去负值
 	   BigDecimal cash = order.getCash();
 	   BigDecimal addcash = cash.multiply(new BigDecimal(-1)); 
 	   if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_YES){
-		   
 		   tcFleetService.updateFleetQuota(tran.getSys_transportion_id(), tcfleet.getTcFleetId(), addcash);
 	   }else if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_NO){
 		   transportionService.modifyDeposit(tran, addcash);
@@ -605,17 +624,71 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	@Override
-	public String validAccount(SysOrder record){
-		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
-		SysUserAccount creditAccount = sysUserAccountMapper.selectByPrimaryKey(record.getCreditAccount());
-		SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(record.getDebitAccount());
-		String strFrozen = validateAccountIfFroen(creditAccount, debitAccount, record);
-		if(strFrozen.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
-			return strFrozen;
-		String strLackMoney = validateAccountBalance(creditAccount, record);
-		if(strLackMoney.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
-			return strLackMoney;
-		return strRet;
+	public String validAccount(SysOrder record) throws Exception{
+		String orderType = record.getOrderType();
+		//充值，只验证debitAccount，因为creditAccount为null
+		if( orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_DRIVER) 
+		   ||orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_GASTATION)
+		   ||orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION)){
+			String accountId ="";
+			String debitAccountId = record.getDebitAccount();
+			if(orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_DRIVER)){
+				accountId = driverService.queryDriverByPK(debitAccountId).getSysUserAccountId();
+			}else if(orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_GASTATION)){
+				accountId = gastationService.queryGastationByPK(debitAccountId).getSys_user_account_id();
+			}
+			else if(orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION)){
+				accountId = transportionService.queryTransportionByPK(debitAccountId).getSys_user_account_id();
+			}
+			SysUserAccount debitAccount = sysUserAccountService.selectByPrimaryKey(accountId);
+			boolean isFrozen = validateAccountIfFroen(debitAccount,record);
+			if(isFrozen){
+				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN);
+			}
+		}
+		//消费，只验证creditAccount，因为debitAccount为null
+		if( orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_DRIVER) 
+		   ||orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION)){
+			String accountId ="";
+			String creditAccountId = record.getCreditAccount();
+			if(orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_DRIVER)){
+				accountId = driverService.queryDriverByPK(creditAccountId).getSysUserAccountId();
+			}
+			if(orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION)){
+				accountId = transportionService.queryTransportionByPK(creditAccountId).getSys_user_account_id();
+			}
+			SysUserAccount creditAccount = sysUserAccountMapper.selectByPrimaryKey(accountId);
+			boolean isFrozen = creditAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
+			if(isFrozen){
+				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
+			}
+		}
+		//转账，验证creditAccount，和debitAccount都不为null
+		if( orderType.equalsIgnoreCase(GlobalConstant.OrderType.TRANSFER_DRIVER_TO_DRIVER) 
+		   ||orderType.equalsIgnoreCase(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER)){
+			String creditSysAccountId ="",debitSysAccountId="";
+			String debitAccountId = record.getDebitAccount();
+			String creditAccountId = record.getCreditAccount();
+			if(orderType.equalsIgnoreCase(GlobalConstant.OrderType.TRANSFER_DRIVER_TO_DRIVER)){
+				creditSysAccountId = driverService.queryDriverByPK(creditAccountId).getSysUserAccountId();
+				debitSysAccountId = driverService.queryDriverByPK(debitAccountId).getSysUserAccountId();
+			}
+			if(orderType.equalsIgnoreCase(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER)){
+				creditSysAccountId = transportionService.queryTransportionByPK(creditAccountId).getSys_user_account_id();
+				debitSysAccountId = driverService.queryDriverByPK(debitAccountId).getSysUserAccountId();
+			}
+			SysUserAccount creditAccount = sysUserAccountMapper.selectByPrimaryKey(creditSysAccountId);
+			boolean isFrozen = creditAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
+			if(isFrozen){
+				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
+			}
+			SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(debitSysAccountId);
+			boolean isFrozen_debitAccount = validateAccountIfFroen(debitAccount,record);
+			if(isFrozen_debitAccount){
+				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN);
+			}
+		}
+		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
 	/**
@@ -625,18 +698,17 @@ public class OrderServiceImpl implements OrderService {
 	 * @param record
      * @return
      */
-	private String validateAccountIfFroen(SysUserAccount creditAccount, SysUserAccount debitAccount, SysOrder record){
-		String strRet = GlobalConstant.OrderProcessResult.SUCCESS;
-		boolean isCreditFrozen = creditAccount.getAccount_status().equalsIgnoreCase("0");
+	private boolean validateAccountIfFroen(SysUserAccount account, SysOrder record){
+		boolean isCreditFrozen = account.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
 		if(isCreditFrozen)
-			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN;
+			return true;
 
 		boolean isCreditAccountCardFrozen = (StringUtils.isNotEmpty(record.getConsume_card())
-				&& (creditAccount.getAccount_status().equalsIgnoreCase("1")));
+				&& (account.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_CARD_FROZEN)));
 		if(isCreditAccountCardFrozen){
-			return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN;
+			return true;
 		}
-		return strRet;
+		return false;
 	}
 
 	/**
@@ -678,7 +750,9 @@ public class OrderServiceImpl implements OrderService {
 	   if(debit_account==null || debit_account.equalsIgnoreCase("")){
 		   throw new Exception( GlobalConstant.OrderProcessResult.TRANSFER_DEBIT_ACCOUNT_IS_NULL);
 	   }
-	   
+	   //检查订单
+	   validAccount(order);
+
 	   Transportion tran = transportionService.queryTransportionByPK(credit_account);
 	   String tran_account = tran.getSys_user_account_id();
 		
@@ -742,6 +816,9 @@ public class OrderServiceImpl implements OrderService {
 	   if(debit_account==null || debit_account.equalsIgnoreCase("")){
 		   throw new Exception( GlobalConstant.OrderProcessResult.TRANSFER_DEBIT_ACCOUNT_IS_NULL);
 	   }
+	   //检查订单
+	   validAccount(order);
+
 	   //1.扣除credit_account账户钱
 	   String is_discharge = GlobalConstant.ORDER_ISCHARGE_NO;
 	   String success_deduct = driverService.deductCashToDriver(order, is_discharge);

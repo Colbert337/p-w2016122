@@ -12,6 +12,30 @@
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
+  <resultMap id="MapResultMap" type="java.util.Map" >
+    <id column="deal_id" property="dealId" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="deal_number" property="dealNumber" jdbcType="VARCHAR" />
+    <result column="deal_date" property="dealDate" jdbcType="TIMESTAMP" />
+    <result column="deal_type" property="dealType" jdbcType="VARCHAR" />
+    <result column="cash_back_per" property="cashBackPer" jdbcType="VARCHAR" />
+    <result column="cash_back" property="cashBack" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="run_success" property="runSuccess" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="cash" property="cash" jdbcType="DECIMAL" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="sys_driver_id" property="sysDriverId" jdbcType="VARCHAR" />
+    <result column="full_name" property="fullName" jdbcType="VARCHAR" />
+    <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="used" property="used" jdbcType="VARCHAR" />
+    <result column="order_by" property="orderBy" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
   <sql id="Base_Column_List" >
     tc_transfer_account_id, station_id, sys_driver_id, full_name, mobile_phone, amount, 
     used, created_date, updated_date
@@ -21,6 +45,24 @@
     <include refid="Base_Column_List" />
     from tc_transfer_account
     where tc_transfer_account_id = #{tcTransferAccountId,jdbcType=VARCHAR}
+  </select>
+  <!--转账报表-->
+  <select id="queryTransferListPage" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
+    select sr.order_number,sr.order_type,sr.cash,su.real_name,sod.*,tta.full_name,tta.mobile_phone,tta.used
+    from sys_order  sr left join sys_order_deal sod  on sr.order_id = sod.order_id
+    left join tc_transfer_account tta on sr.debit_account = tta.sys_driver_id
+    left join sys_user su on sr.operator
+    where sr.order_type = #{sysDriverId}
+    <if test="fullName != null &amp;&amp; fullName !=''" >
+      and (tta.full_name like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%'))
+      or  tta.mobile_phone like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%')))
+    </if>
+    <if test="stationId != null &amp;&amp; stationId != ''">
+      and  sr.credit_account = #{stationId}
+    </if>
+    <if test="startDate != null &amp;&amp; endDate != ''">
+      and sod.deal_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from tc_transfer_account

@@ -209,7 +209,7 @@ public class GastationController extends BaseContoller{
 				ret = "webpage/poms/gastation/gastation_update";
 				gastationid = service.saveGastation(gastation,"update");
 				bean.setRetMsg("["+gastationid+"]保存成功");
-				ret = this.queryAllGastationList(map, this.gastation);
+				ret = this.queryAllGastationList(map, this.gastation==null?new Gastation():this.gastation);
 			}
 
 			bean.setRetCode(100);
@@ -254,7 +254,7 @@ public class GastationController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 	
-			ret = this.queryAllGastationList(map, this.gastation);
+			ret = this.queryAllGastationList(map, this.gastation==null?new Gastation():this.gastation);
 	
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -277,7 +277,7 @@ public class GastationController extends BaseContoller{
 					rowcount = service.delGastation(gastationid);
 				}
 
-				ret = this.queryAllGastationList(map, this.gastation);
+				ret = this.queryAllGastationList(map, this.gastation==null?new Gastation():this.gastation);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+gastationid+"]删除成功");
@@ -291,7 +291,7 @@ public class GastationController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllGastationList(map, this.gastation);
+			ret = this.queryAllGastationList(map, this.gastation==null?new Gastation():this.gastation);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -317,7 +317,7 @@ public class GastationController extends BaseContoller{
 					rowcount = sysUserService.updateUserByUserName(user);
 				}
 
-				ret = this.queryAllGastationList(map, this.gastation);
+				ret = this.queryAllGastationList(map, this.gastation==null?new Gastation():this.gastation);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+gastationid+"]管理员["+username+"]密码已成功重置为 111111");
@@ -331,7 +331,7 @@ public class GastationController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllGastationList(map, this.gastation);
+			ret = this.queryAllGastationList(map, this.gastation==null?new Gastation():this.gastation);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
@@ -354,7 +354,7 @@ public class GastationController extends BaseContoller{
 					rowcount = service.updatedepositGastation(deposit, currUser.getUser().getUserName());
 				}
 
-				ret = this.queryAllGastationList2(map, this.gastation);
+				ret = this.queryAllGastationList2(map, this.gastation==null?new Gastation():this.gastation);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("["+deposit.getStationName()+"]充值成功");
@@ -368,7 +368,7 @@ public class GastationController extends BaseContoller{
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllGastationList2(map, this.gastation);
+			ret = this.queryAllGastationList2(map, this.gastation==null?new Gastation():this.gastation);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

@@ -60,13 +60,13 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("166.66"));
-        	order.setDebitAccount("748f08a4e31545c2b6de454d3deb0979");
+        	order.setCash(new BigDecimal("188.88"));
+        	order.setDebitAccount("419f5bfcde2f43c0a7c36cea200b0a00");
         	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
         	order.setChannel("亭口加注站");
-        	order.setChannelNumber("GS12000003");
+        	order.setChannelNumber("GS12900001");
         	order.setOperator("14e9ef72ce5c424dbcc36859d6618a6b");
-        	order.setOperatorSourceId("GS12000003");
+        	order.setOperatorSourceId("GS12900001");
         	order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
         	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
@@ -120,7 +120,7 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("2000"));
+        	order.setCash(new BigDecimal("500"));
         	order.setDebitAccount("TC37000001");
         	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
         	order.setChannel("本公司");

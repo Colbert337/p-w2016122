@@ -80,8 +80,8 @@
     and  tf.updated_date = #{updatedDate,jdbcType=TIMESTAMP}
   </if>
   <if test="fleetName != null &amp;&amp; fleetName !=''" >
-    and (tf.fleet_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%')
-    or  sr.real_name like CONCAT(#{fleetName,jdbcType=VARCHAR},'%'))
+    and (tf.fleet_name like CONCAT('%',CONCAT(#{fleetName,jdbcType=VARCHAR},'%'))
+    or  sr.real_name like CONCAT('%',CONCAT(#{fleetName,jdbcType=VARCHAR},'%')))
   </if>
   order by tf.created_date desc
 </select>

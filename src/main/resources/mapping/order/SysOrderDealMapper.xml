@@ -12,7 +12,7 @@
   <result column="remark" property="remark" jdbcType="VARCHAR" />
   <result column="run_success" property="runSuccess" jdbcType="VARCHAR" />
 </resultMap>
-  <resultMap id="MapResultMap" type="com.sysongy.poms.order.model.SysOrderDeal" >
+  <resultMap id="MapResultMap" type="java.util.Map" >
     <id column="deal_id" property="dealId" jdbcType="VARCHAR" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />

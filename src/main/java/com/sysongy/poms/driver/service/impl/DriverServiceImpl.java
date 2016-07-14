@@ -33,8 +33,10 @@ import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.util.AliShortMessage;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
 
 /**
@@ -353,7 +355,16 @@ public class DriverServiceImpl implements DriverService {
 		BeanUtils.copyProperties(log, record);
 		log.setOperator(operator);
 		
-		return sysDriverReviewStrMapper.insert(log);
+		int retn = sysDriverReviewStrMapper.insert(log);
+		
+		if(GlobalConstant.DriverStatus.PASSED.equals(type)){
+			AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+			aliShortMessageBean.setSendNumber(record.getMobilePhone());
+			aliShortMessageBean.setString("");
+			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_AUDIT_SUCCESS);
+		}
+		
+		return retn;
 	}
 
     /**

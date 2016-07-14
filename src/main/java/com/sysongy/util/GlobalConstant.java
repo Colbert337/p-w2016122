@@ -197,6 +197,14 @@ public class GlobalConstant {
 	public static final int TCFLEET_IS_ALLOT_YES = 1;
 	public static final int TCFLEET_IS_ALLOT_NO = 0;
 	
+	/*
+	 * 系统账户（钱袋）状态 
+	 */
+	public static final String SYS_USER_ACCOUNT_STATUS_FROZEN = "0";
+	public static final String SYS_USER_ACCOUNT_STATUS_CARD_FROZEN = "1";
+	public static final String SYS_USER_ACCOUNT_STATUS_NORMAL = "2";
+	
+	
 	
 	/*
 	 * 订单处理流程中的类型
