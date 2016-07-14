@@ -525,7 +525,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-        List<SysOrderDeal> sysOrderDeals = orderDealService.queryOrderDeals(sysOrderDeal);
+        List<SysOrderDeal> sysOrderDeals = orderDealService.queryOrderDealCRMs(sysOrderDeal);
         if((sysOrderDeals == null) || (sysOrderDeals.size() == 0)){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("您所查询的数据为空！！！" );

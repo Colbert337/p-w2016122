@@ -25,6 +25,9 @@ public interface SysOrderDealMapper {
     String selectCashBackByOrderID(String orderId);
 
     List<SysOrderDeal> queryForPage(SysOrderDeal record);
+
+    List<SysOrderDeal> queryForPageCRM(SysOrderDeal record);
+
     /**
      * 查询运输公司充值列表
      * @param record
