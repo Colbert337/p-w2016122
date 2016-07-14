@@ -567,9 +567,10 @@ public class OrderServiceImpl implements OrderService {
 	   if (tran ==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.TRANSPORTION_IS_NULL);
 	   }
-	   if (tcfleet ==null){
+	   //更改逻辑，如果tcfleet是null，则直接扣运输公司的金额以及额度
+	   /*if (tcfleet ==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.TCFLEET_IS_NULL);
-	   }
+	   }*/
 	   
 	   String orderType = order.getOrderType();
 	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION))){
@@ -589,12 +590,14 @@ public class OrderServiceImpl implements OrderService {
 	   validAccount(order);
 
 	   //1.判断此车队是否分配额度
-	   Integer is_allot = tcfleet.getIsAllot();
+	   Integer is_allot = GlobalConstant.TCFLEET_IS_ALLOT_NO;
+	   if(tcfleet!=null){
+	    is_allot = tcfleet.getIsAllot();
+	   }
 	 //扣除车队额度//传过去负值
 	   BigDecimal cash = order.getCash();
 	   BigDecimal addcash = cash.multiply(new BigDecimal(-1)); 
 	   if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_YES){
-		   
 		   tcFleetService.updateFleetQuota(tran.getSys_transportion_id(), tcfleet.getTcFleetId(), addcash);
 	   }else if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_NO){
 		   transportionService.modifyDeposit(tran, addcash);
