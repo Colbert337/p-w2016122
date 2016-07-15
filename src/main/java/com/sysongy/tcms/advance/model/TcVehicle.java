@@ -40,6 +40,8 @@ public class TcVehicle extends BaseModel{
     
     private TcFleetVehicle fv;
 
+    private String onflag;//添加或修改标记
+
     public TcFleetVehicle getFv() {
 		return fv;
 	}
@@ -174,5 +176,13 @@ public class TcVehicle extends BaseModel{
 
     public void setIsAllot(Integer isAllot) {
         this.isAllot = isAllot;
+    }
+
+    public String getOnflag() {
+        return onflag;
+    }
+
+    public void setOnflag(String onflag) {
+        this.onflag = onflag;
     }
 }
