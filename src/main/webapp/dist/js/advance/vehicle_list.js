@@ -30,9 +30,10 @@ function addVehicle(){
     /*密码输入框改为可编辑*/
     $("#pay_code").removeAttr("readonly");
     $("#re_password").removeAttr("readonly");
+    $("#plates_number").attr("data-onFlag","add");
 
     $("#cardInfoDiv").hide();
-    $("#editModel").modal('show').on('hidden.bs.modal', function() {
+    $("#editModel").modal('show').on('hide.bs.modal', function() {
         $('#editForm').bootstrapValidator('resetForm',true);
         $('.user-name-valid').remove();
     });
@@ -53,7 +54,7 @@ function editVehicle(vehicleId){
             $("#notice_phone").val(data.vehicle.noticePhone);
             $("#copy_phone").val(data.vehicle.copyPhone);
             $("#editVehicle").text("修改车辆");
-            $("#plates_number").removeAttr("onblur");
+            $("#plates_number").attr("data-onFlag","edit");
 
             $("#dongjie").empty();
             if(data.gasCard != null && data.gasCard.card_no != null){
@@ -115,10 +116,7 @@ function editVehicle(vehicleId){
         }
     })
     $("#cardInfoDiv").show();
-    $("#editModel").modal('show').on('hidden.bs.modal', function() {
-        $('#editForm').bootstrapValidator('resetForm',true);
-        $('.user-name-valid').remove();
-    });
+    $("#editModel").modal('show');
 }
 
 /**
@@ -232,11 +230,14 @@ function fileFormat(){
 /**
  * 判断用户名是否存在
  */
-function isVehicleExit(){
-    var platesNumber = $("#plates_number").val();
+function isVehicleExit(onflag){
+    var numberType = {
+        platesNumber: $("#plates_number").val(),
+        onFlag: $("#plates_number").attr("data-onFlag")
+    };
     $.ajax({
         url: '../web/tcms/vehicle/info/name',
-        data:{platesNumber:platesNumber},
+        data: numberType,
         type: "POST",
         success: function(data){
             console.log(data);
