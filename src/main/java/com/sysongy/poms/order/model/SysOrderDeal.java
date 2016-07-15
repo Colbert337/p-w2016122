@@ -2,6 +2,7 @@ package com.sysongy.poms.order.model;
 
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.usysparam.model.Usysparam;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -43,6 +44,8 @@ public class SysOrderDeal extends BaseModel {
     private String isCharge;
 
     private SysDriver sysDriver;
+
+    private Usysparam dealTypeInfo;
 
     public String getRemark() {
 		return remark;
@@ -186,5 +189,13 @@ public class SysOrderDeal extends BaseModel {
 
     public void setSysDriver(SysDriver sysDriver) {
         this.sysDriver = sysDriver;
+    }
+
+    public Usysparam getDealTypeInfo() {
+        return dealTypeInfo;
+    }
+
+    public void setDealTypeInfo(Usysparam dealTypeInfo) {
+        this.dealTypeInfo = dealTypeInfo;
     }
 }

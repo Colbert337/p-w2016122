@@ -25,6 +25,10 @@
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
     </association>
+    <association property="chargeTypeInfo" column="charge_type"
+                 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCashBackByMcode">
+    </association>
     <association property="operatorInfo" column="operator"
                  javaType="com.sysongy.poms.permi.model.SysUser"
                  select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
