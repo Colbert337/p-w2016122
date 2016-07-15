@@ -284,7 +284,7 @@ public class TcFleetQuotaController extends BaseContoller {
 
         return driver;
     }
-
+    /********************************************运输公司消费报表接口*********************************/
     /**
      * 额度划拨报表
      * @param tcFleet
@@ -305,16 +305,17 @@ public class TcFleetQuotaController extends BaseContoller {
             tcFleet.setStationId(stationId);
             PageInfo<Map<String, Object>> pageinfo = tcFleetQuotaService.queryQuotaList(tcFleet);
 
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
             if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
-                BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
                 for (Map<String, Object> quotaMap:pageinfo.getList()) {
                     if(quotaMap.get("quota") != null && !"".equals(quotaMap.get("quota").toString())){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("quota").toString()));
                     }
                 }
-                //累计总划款金额
-                map.addAttribute("totalCash",totalCash);
             }
+            //累计总划款金额
+            map.addAttribute("totalCash",totalCash);
+
             bean.setRetCode(100);
             bean.setRetMsg("查询成功");
             bean.setPageInfo(ret);
@@ -356,6 +357,18 @@ public class TcFleetQuotaController extends BaseContoller {
             transferAccount.setSysDriverId(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
             PageInfo<Map<String, Object>> pageinfo = tcTransferAccountService.queryTransferListPage(transferAccount);
 
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+
+                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                    }
+                }
+            }
+            //累计总划款金额
+            map.addAttribute("totalCash",totalCash);
+
             bean.setRetCode(100);
             bean.setRetMsg("查询成功");
             bean.setPageInfo(ret);
@@ -363,6 +376,168 @@ public class TcFleetQuotaController extends BaseContoller {
             map.addAttribute("ret", bean);
             map.addAttribute("pageInfo", pageinfo);
             map.addAttribute("transferAccount",transferAccount);
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+            throw e;
+        }
+        finally {
+            return ret;
+        }
+    }
+
+    /**
+     * 运输公司个人消费报表
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/list/report/personal")
+    public String queryTcPersonalReport(@ModelAttribute CurrUser currUser, ModelMap map, SysOrder order) throws Exception{
+        String stationId = currUser.getStationId();
+        PageBean bean = new PageBean();
+        String ret = "webpage/tcms/advance/personal_log";
+
+        try {
+            if(order.getPageNum() == null){
+                order.setOrderby("deal_date desc");
+                order.setPageNum(1);
+                order.setPageSize(10);
+            }
+            order.setDebitAccount(stationId);
+            order.setCash(new BigDecimal(BigInteger.ZERO));
+            PageInfo<Map<String, Object>> pageinfo = orderService.queryTcPersonalReport(order);
+
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+
+                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                    }
+                }
+            }
+            //累计总划款金额
+            map.addAttribute("totalCash",totalCash);
+
+            bean.setRetCode(100);
+            bean.setRetMsg("查询成功");
+            bean.setPageInfo(ret);
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("pageInfo", pageinfo);
+            map.addAttribute("order",order);
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+            throw e;
+        }
+        finally {
+            return ret;
+        }
+    }
+
+    /**
+     * 运输公司车队消费报表
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/list/report/fleets")
+    public String queryTcFleetReport(@ModelAttribute CurrUser currUser, ModelMap map, SysOrder order) throws Exception{
+        String stationId = currUser.getStationId();
+        PageBean bean = new PageBean();
+        String ret = "webpage/tcms/advance/fleets_log";
+
+        try {
+            if(order.getPageNum() == null){
+                order.setOrderby("deal_date desc");
+                order.setPageNum(1);
+                order.setPageSize(10);
+            }
+            order.setDebitAccount(stationId);
+            order.setCash(new BigDecimal(BigInteger.ZERO));
+            PageInfo<Map<String, Object>> pageinfo = orderService.queryTcFleetReport(order);
+
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+
+                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                    }
+                }
+            }
+            //累计总划款金额
+            map.addAttribute("totalCash",totalCash);
+
+            bean.setRetCode(100);
+            bean.setRetMsg("查询成功");
+            bean.setPageInfo(ret);
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("pageInfo", pageinfo);
+            map.addAttribute("order",order);
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+            throw e;
+        }
+        finally {
+            return ret;
+        }
+    }
+
+    /**
+     * 运输公司个人消费报表
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/list/report/fleetMg")
+    public String queryTcFleetMgReport(@ModelAttribute CurrUser currUser, ModelMap map, SysOrder order) throws Exception{
+        String stationId = currUser.getStationId();
+        PageBean bean = new PageBean();
+        String ret = "webpage/tcms/advance/fleetMg_log";
+
+        try {
+            if(order.getPageNum() == null){
+                order.setOrderby("deal_date desc");
+                order.setPageNum(1);
+                order.setPageSize(10);
+            }
+            order.setDebitAccount(stationId);
+            order.setCash(new BigDecimal(BigInteger.ZERO));
+            PageInfo<Map<String, Object>> pageinfo = orderService.queryTcFleetMgReport(order);
+
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+
+                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                    }
+                }
+            }
+            //累计总划款金额
+            map.addAttribute("totalCash",totalCash);
+
+            bean.setRetCode(100);
+            bean.setRetMsg("查询成功");
+            bean.setPageInfo(ret);
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("pageInfo", pageinfo);
+            map.addAttribute("order",order);
         } catch (Exception e) {
             bean.setRetCode(5000);
             bean.setRetMsg(e.getMessage());

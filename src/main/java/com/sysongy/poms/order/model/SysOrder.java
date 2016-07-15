@@ -71,6 +71,10 @@ public class SysOrder extends BaseModel{
 
     private Transportion transportion;
 
+    private String startDate;
+
+    private String endDate;
+
 	public String getDischarge_reason() {
 		return discharge_reason;
 	}
@@ -304,5 +308,21 @@ public class SysOrder extends BaseModel{
 
     public void setTransportion(Transportion transportion) {
         this.transportion = transportion;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

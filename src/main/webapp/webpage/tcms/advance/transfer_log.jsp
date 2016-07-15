@@ -65,6 +65,9 @@
 					<div class="table-header">转账报表列表</div>
 
 					<div>
+						<div class="alert alert-info alert-mt">
+							<span class="bigger-120">转账总金额：${totalCash}元</span>
+						</div>
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
