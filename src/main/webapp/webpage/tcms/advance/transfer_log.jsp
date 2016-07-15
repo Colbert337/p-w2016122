@@ -75,7 +75,7 @@
 										</label>
 									</th>--%>
 									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
-									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>
+									<%--<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>--%>
 									<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">交易类型</th>
 									<th onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">收款人</th>
 									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">手机号码</th>
@@ -99,7 +99,7 @@
 									</td>--%>
 
 									<td>${list.orderNumber}</td>
-									<td>${list.dealNumber}</td>
+									<%--<td>${list.dealNumber}</td>--%>
 									<%--<td>${list.orderType}</td>--%>
 									<td><s:Code2Name mcode="${list.orderType}" gcode="ORDER_TYPE"></s:Code2Name></td>
 									<td>${list.fullName}</td>

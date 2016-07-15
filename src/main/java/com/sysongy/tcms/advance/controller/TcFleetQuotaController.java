@@ -130,6 +130,7 @@ public class TcFleetQuotaController extends BaseContoller {
                 String dataTemp[];
                 //根据运输公司ID查询运输公司信息
                 Transportion transportion = transportionService.queryTransportionByPK(stationId);
+                SysUserAccount userAccount = userAccountService.queryUserAccountByStationId(stationId);
                 if(datas != null && datas.length > 0){
                     for (int i = 0; i < datas.length; i++) {
                         dataTemp = datas[i].split("=");
@@ -162,12 +163,12 @@ public class TcFleetQuotaController extends BaseContoller {
                             userQuota = userQuota.add(quotaBig);
                         }
                     }
-                    if(userQuota.compareTo(deposit) < 0){
+                    if(userQuota.compareTo(userAccount.getAccountBalanceBigDecimal()) <= 0){
                         //添加分配记录
                         tcFleetQuotaService.addFleetQuotaList(list);
 
                         //计算运输公司剩余额度
-                        SysUserAccount userAccount = userAccountService.queryUserAccountByStationId(stationId);
+
                         if(userAccount != null){
                             BigDecimal banlance = userAccount.getAccountBalanceBigDecimal();
                             userQuota = banlance.subtract(userQuota);
@@ -177,7 +178,7 @@ public class TcFleetQuotaController extends BaseContoller {
                             quotaTrans.setSys_transportion_id(stationId);
                             quotaTrans.setDeposit(userQuota);
 
-                            transportionService.updatedeposiTransport(quotaTrans);
+                            transportionService.updateDeposit(quotaTrans);
                             resultInt = 2;//成功
                         }else{
                             resultInt = 4;//失败
