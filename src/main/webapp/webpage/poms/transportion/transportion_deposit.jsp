@@ -45,7 +45,7 @@
 										<label for="email" class="col-sm-3 control-label no-padding-right" >充值金额： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" maxlength="8"/>
+											<input type="text" name="deposit" placeholder="输入保证金" class="form-control" maxlength="6"/>
 										</div>
 									</div>
 									
