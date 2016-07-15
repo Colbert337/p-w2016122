@@ -3,6 +3,7 @@ package com.sysongy.poms.order.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
 
@@ -37,4 +38,17 @@ public interface SysOrderMapper {
      * @return
      */
     List<SysOrder> queryConsumeOrderByUserId(Map paraMap);
+    /********************************************运输公司消费报表接口*********************************/
+    /**
+     * 运输公司个人消费报表
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryTcPersonalReport(SysOrder record);
+    /**
+     * 运输公司车队消费报表
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryTcFleetReport(SysOrder record);
 }

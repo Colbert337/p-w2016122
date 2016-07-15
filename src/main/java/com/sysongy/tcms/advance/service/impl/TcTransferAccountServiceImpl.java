@@ -36,7 +36,7 @@ public class TcTransferAccountServiceImpl implements TcTransferAccountService{
     public PageInfo<Map<String, Object>> queryTransferListPage(TcTransferAccount transferAccount) throws Exception{
         List<Map<String, Object>> transferList = new ArrayList<>();
         if(transferAccount != null ){
-            PageHelper.startPage(transferAccount.getPageNum(),transferAccount.getPageSize());
+            PageHelper.startPage(transferAccount.getPageNum(),transferAccount.getPageSize(),transferAccount.getOrderby());
             transferList = tcTransferAccountMapper.queryTransferListPage(transferAccount);
             PageInfo<Map<String, Object>> transferPageInfo = new PageInfo<>(transferList);
 

@@ -235,6 +235,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                 }
             }
         }catch (Exception e){
+            resultVal = -1;
             e.printStackTrace();
         }
         return resultVal;
@@ -248,7 +249,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     @Override
     public PageInfo<Map<String, Object>> queryQuotaList(TcFleet tcFleet) {
         if(tcFleet != null){
-            PageHelper.startPage(tcFleet.getPageNum(),tcFleet.getPageSize());
+            PageHelper.startPage(tcFleet.getPageNum(),tcFleet.getPageSize(), tcFleet.getOrderby());
 
             List<Map<String, Object>> fleetQuotaList = tcFleetQuotaMapper.queryQuotaList(tcFleet);
             PageInfo<Map<String, Object>> fleetQuotaPageInfo = new PageInfo<>(fleetQuotaList);
