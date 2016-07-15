@@ -243,7 +243,7 @@ public class CRMCustomerContoller {
             if(tcFleet != null){
                 sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
             } else {
-                sysUserAccount.setAccountBalance(transportion.getAccount().getAccountBalance());
+                sysUserAccount.setAccountBalance(transportion.getDeposit().toString());
             }
             sysDriverForFleet.setAccount(sysUserAccount);
             return sysDriverForFleet;
