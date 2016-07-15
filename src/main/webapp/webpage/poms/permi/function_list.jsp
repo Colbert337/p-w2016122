@@ -75,13 +75,6 @@
 			$("#listForm").ajaxSubmit(queryMenuOptions);
 		}
 		/*左侧树初始化 结束*/
-		/*表单验证*/
-		jQuery('#functionForm').validationEngine('attach', {
-			promptPosition: 'topRight',		//提示信息的位置，可设置为：'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'centerRight', 'centerLeft', 'inline'
-			validationEventTrigger:'blur',	//触发验证的事件
-			binded:true,						//是否绑定即时验证
-			scroll: true 					//屏幕自动滚动到第一个验证不通过的位置
-		});
 	});
 
 	/*分页相关方法 start*/
@@ -105,6 +98,40 @@
 		}
 	}
 	/*分页相关方法 end*/
+
+	/*表单验证*/
+	$('#functionForm').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			functionName: {
+				validators: {
+					notEmpty: {
+						message: '功能名称不能为空'
+					}
+				}
+			},
+			functionPath: {
+				validators: {
+					notEmpty: {
+						message: '功能路径不能为空'
+					}
+				}
+			},
+			functionType: {
+				validators: {
+					notEmpty: {
+						message: '功能类型不能为空'
+					}
+				}
+			}
+		}
+	});
+
 	//显示添加用户弹出层
 	function addFunction(functionId){
 		if(functionId != null && functionId != ""){
@@ -123,7 +150,9 @@
 		<%--bootbox.alert("parentId:${parentId} +parentName:${parentName}");--%>
 		$("#parent_id").val('${parentId}');
 		$("#parent_name").val('${parentName}');
-		$("#functionModel").modal('show');
+		$("#functionModel").modal('show').on('hide.bs.modal', function() {
+			$('#functionForm').bootstrapValidator('resetForm',true);
+		});
 	}
 
 	/*取消弹层方法*/
@@ -138,24 +167,27 @@
 	 * 保存用户信息
 	 */
 	function saveFunction(){
-		if(jQuery('#functionForm').validationEngine('validate')){
-			var saveOptions ={
-				url:'<%=basePath%>/web/permi/function/save',
-				type:'post',
-				dataType:'html',
-				success:function(data){
-					$("#main").html(data);
-					$("#modal-table").modal("show");
-				}, error: function (XMLHttpRequest, textStatus, errorThrown) {
-
-				}
-			}
-			$("#functionForm").ajaxSubmit(saveOptions);
-
-			$("#userModel").modal('hide').removeClass('in');
-			$("body").removeClass('modal-open').removeAttr('style');
-			$(".modal-backdrop").remove();
+		$('#functionForm').data('bootstrapValidator').validate();
+		if(!$('#functionForm').data('bootstrapValidator').isValid()){
+			return ;
 		}
+		var saveOptions ={
+			url:'<%=basePath%>/web/permi/function/save',
+			type:'post',
+			dataType:'html',
+			success:function(data){
+				$("#main").html(data);
+				$("#modal-table").modal("show");
+			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		}
+		$("#functionForm").ajaxSubmit(saveOptions);
+
+		$("#userModel").modal('hide').removeClass('in');
+		$("body").removeClass('modal-open').removeAttr('style');
+		$(".modal-backdrop").remove();
+
 	}
 
 	/**
@@ -331,27 +363,27 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_name"> <span class="red_star">*</span>功能名称： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_name" name="functionName" placeholder="功能名称" class="validate[required,maxSize[20]] col-xs-10 col-sm-10" />
-										<input type="hidden" id="sys_function_id" name="sysFunctionId" class="col-xs-10 col-sm-10" />
+										<input type="text" id="function_name" name="functionName" placeholder="功能名称" class="form-control" />
+										<input type="hidden" id="sys_function_id" name="sysFunctionId" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_path"> <span class="red_star">*</span>功能路径： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_path" name="functionPath" placeholder="功能路径" class="validate[required,maxSize[50]] col-xs-10 col-sm-10" />
+										<input type="text" id="function_path" name="functionPath" placeholder="功能路径" class="form-control" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="parent_id">父级菜单： </label>
 									<div class="col-sm-8">
-										<input type="text" id="parent_name" placeholder="父级菜单" class="col-xs-10 col-sm-10"  readonly="readonly"/>
+										<input type="text" id="parent_name" placeholder="父级菜单" class="form-control"  readonly="readonly"/>
 										<input type="hidden" id="parent_id" name="parentId" placeholder="父级菜单"/>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_type"> <span class="red_star">*</span>功能类型： </label>
 									<div class="col-sm-8">
-										<select class="chosen-select col-xs-10 col-sm-10" id="function_type" name="functionType" data-placeholder="功能类型">
+										<select class="chosen-select form-control" id="function_type" name="functionType" data-placeholder="功能类型">
 											<s:option flag="true" gcode="PLF_TYPE" link="false" />
 										</select>
 									</div>
@@ -359,13 +391,13 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_icon">功能图标： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="validate[maxSize[50]] col-xs-10 col-sm-10" />
+										<input type="text" id="function_icon" name="functionIcon" placeholder="功能图标" class="form-control" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_sort">功能排序： </label>
 									<div class="col-sm-8">
-										<input type="text" id="function_sort" name="functionSort" placeholder="功能排序" class="validate[required,maxSize[3]] col-xs-10 col-sm-10" />
+										<input type="text" id="function_sort" name="functionSort" placeholder="功能排序" class="form-control" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -386,7 +418,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="function_desc"> 描述： </label>
 									<div class="col-sm-8">
-										<textarea class="limited col-xs-10 col-sm-10" id="function_desc" name="roleDesc" maxlength="50" style="resize: none;"></textarea>
+										<textarea class="limited form-control" id="function_desc" name="roleDesc" maxlength="50" style="resize: none;"></textarea>
 									</div>
 								</div>
 							</form>
