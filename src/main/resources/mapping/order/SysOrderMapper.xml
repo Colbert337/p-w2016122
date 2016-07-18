@@ -419,7 +419,7 @@
 
   <select id="queryGoodsOrderInfos" resultMap="BaseResultReportMap" parameterType="com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport" >
       SELECT order_goods_id,a.order_id,
-      price, 'number',sum_price,goods_type,
+      price, number,sum_price,goods_type,
       b.order_id as orderID,order_number,order_type,
       order_date, cash, credit_account,debit_account,
       charge_type,channel,channel_number,
