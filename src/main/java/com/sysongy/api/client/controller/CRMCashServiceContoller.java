@@ -109,6 +109,7 @@ public class CRMCashServiceContoller {
             record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
             record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+            record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
             String orderCharge = orderService.chargeToDriver(record);
             if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
@@ -288,6 +289,7 @@ public class CRMCashServiceContoller {
                 return ajaxJson;
             }
 
+            record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION));
             String orderConsume = orderService.consumeByTransportion(record, transportion, tcFleet);
             if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
@@ -298,6 +300,7 @@ public class CRMCashServiceContoller {
         } else {
             record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+            record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
             String orderConsume = orderService.consumeByDriver(record);
             if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
