@@ -70,7 +70,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     }
 
     @Override
-    public Map<String, Object> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota) {
+    public Map<String, Object> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota) throws Exception {
         if(tcFleetQuota != null){
             Map<String, Object> fleetQuotaMap = new HashMap<>();
             List<Map<String, Object>> fleetQuotaList = tcFleetQuotaMapper.queryFleetQuotaMapList(tcFleetQuota);

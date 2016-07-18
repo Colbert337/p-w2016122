@@ -68,11 +68,13 @@ public class TcFleetQuotaController extends BaseContoller {
      * @return
      */
     @RequestMapping("/list/page")
-    public String queryFleetQuotaListPage(@ModelAttribute CurrUser currUser, TcFleetQuota fleetQuota, @RequestParam(required = false) Integer resultInt, ModelMap map){
+    public String queryFleetQuotaListPage(@ModelAttribute CurrUser currUser, TcFleetQuota fleetQuota,
+                                          @RequestParam(required = false) Integer resultInt, ModelMap map) throws Exception{
         String stationId = currUser.getStationId();
         List<Map<String, Object>> fleetQuotaList = new ArrayList<>();
         Map<String, Object> fleetQuotaMap = new HashMap<>();
         fleetQuota.setStationId(stationId);
+        Transportion transportion = transportionService.queryTransportionByPK(stationId);
         try {
             fleetQuotaMap = tcFleetQuotaService.queryFleetQuotaMapList(fleetQuota);
         }catch (Exception e){
@@ -81,6 +83,7 @@ public class TcFleetQuotaController extends BaseContoller {
 
         map.addAttribute("fleetQuotaMap",fleetQuotaMap);
         map.addAttribute("fleetQuota",fleetQuota);
+        map.addAttribute("transportion",transportion);
         map.addAttribute("stationId",stationId);
         if(resultInt != null){
             Map<String, Object> resultMap = new HashMap<>();
