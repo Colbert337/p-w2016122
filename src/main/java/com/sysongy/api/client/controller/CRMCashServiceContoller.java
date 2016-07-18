@@ -15,6 +15,7 @@ import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
+import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -118,7 +119,7 @@ public class CRMCashServiceContoller {
             String curStrDate = DateTimeHelper.formatDateTimetoString(curDate, DateTimeHelper.FMT_YYMMddhhmmsssss_noseparator);
             record.setOrderNumber("130"+ curStrDate);
             record.setOrderDate(curDate);
-            int nCreateOrder = orderService.insert(record);
+            int nCreateOrder = orderService.insert(record, null);
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单生成错误：" + record.getOrderId());
@@ -310,7 +311,7 @@ public class CRMCashServiceContoller {
         record.setOrderNumber("220"+ curStrDate);
         record.setOrderDate(curDate);
 
-        int nCreateOrder = orderService.insert(record);
+        int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
         if(nCreateOrder < 1){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单消费生成错误：" + record.getOrderId());
@@ -449,12 +450,18 @@ public class CRMCashServiceContoller {
         hedgeRecord.setIs_discharge("1");
         hedgeRecord.setBeen_discharged("1");
         hedgeRecord.setDischargeOrderId(originalOrder.getOrderId());
-        int nRet = orderService.insert(hedgeRecord);
+
+        int nRet = orderService.insert(hedgeRecord, originalOrder.getSysOrderGoods());
         if(nRet < 1){
             logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单冲红保存错误：" + originalOrder.getOrderId());
             return ajaxJson;
+        }
+
+        List<SysOrderGoods> goods = originalOrder.getSysOrderGoods();
+        for(SysOrderGoods sysOrderGoods : goods){
+
         }
 
         Map<String, Object> attributes = new HashMap<String, Object>();
@@ -627,5 +634,39 @@ public class CRMCashServiceContoller {
                 e.printStackTrace();
             }
         return null;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/web/queryGoodsOrderInfos")
+    public AjaxJson queryGoodsOrderInfos(HttpServletRequest request, HttpServletResponse response,
+                                         SysOrderGoodsForCRMReport sysOrderGoodsForCRMReport) throws Exception{
+        AjaxJson ajaxJson = new AjaxJson();
+
+        if(StringUtils.isEmpty(sysOrderGoodsForCRMReport.getOperatorSourceId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！" );
+            return ajaxJson;
+        }
+
+        if(StringUtils.isEmpty(sysOrderGoodsForCRMReport.getStorage_time_after())
+                || StringUtils.isEmpty(sysOrderGoodsForCRMReport.getStorage_time_before())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("起始时间或终止时间为空！！！" );
+            return ajaxJson;
+        }
+
+        List<SysOrderGoodsForCRMReport> sysOrderGoodsForCRMReports =
+                    orderService.queryGoodsOrderInfos(sysOrderGoodsForCRMReport);
+        if((sysOrderGoodsForCRMReports == null) || (sysOrderGoodsForCRMReports.size() == 0)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("您所查询的数据为空！！！" );
+            return ajaxJson;
+        }
+
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("sysOrderGoodsForCRMReports", sysOrderGoodsForCRMReports);
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
     }
 }

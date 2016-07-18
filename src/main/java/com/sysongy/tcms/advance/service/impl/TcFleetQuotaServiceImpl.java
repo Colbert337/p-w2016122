@@ -212,7 +212,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                             order.setOrderNumber(orderNum);
 
                             //添加订单
-                            resultVal = orderService.insert(order);
+                            resultVal = orderService.insert(order, null);
                             //运输公司往个人转账
                             orderService.transferTransportionToDriver(order);
 

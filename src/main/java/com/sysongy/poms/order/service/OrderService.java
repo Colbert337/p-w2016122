@@ -3,8 +3,12 @@ package com.sysongy.poms.order.service;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
+import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.tcms.advance.model.TcFleet;
+
+import java.util.List;
 
 /**
  * 
@@ -17,7 +21,7 @@ public interface OrderService {
 
     int deleteByPrimaryKey(String orderId);
 
-    int insert(SysOrder record);
+    int insert(SysOrder record, List<SysOrderGoods> sysOrderGoods);
 
     SysOrder selectByPrimaryKey(String orderId);
 
@@ -114,4 +118,6 @@ public interface OrderService {
      * 验证订单
      */
     String validAccount(SysOrder record) throws Exception;
+
+    List<SysOrderGoodsForCRMReport> queryGoodsOrderInfos(SysOrderGoodsForCRMReport sysOrderGoodsForCRMReport) throws Exception;
 }
