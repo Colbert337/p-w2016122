@@ -77,8 +77,6 @@ public class SysOrderGoodsForCRMReport {
 
     private String discharge_reason;
 
-    private String operatorSourceId;
-
     private String consume_card;
 
     private GasCard consume_cardInfo;
@@ -90,6 +88,8 @@ public class SysOrderGoodsForCRMReport {
     private String realNum;
 
     private String realPrice;
+
+    private String operatorSourceId;
 
     public String getOrderGoodsId() {
         return orderGoodsId;
@@ -404,4 +404,6 @@ public class SysOrderGoodsForCRMReport {
             this.realPrice = "-" + sumPrice.toString();
         }
     }
+
+
 }

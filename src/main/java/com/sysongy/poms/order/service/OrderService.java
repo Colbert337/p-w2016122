@@ -8,11 +8,8 @@ import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.tcms.advance.model.TcFleet;
 
-<<<<<<< HEAD
 import java.util.List;
-=======
 import java.util.Map;
->>>>>>> dfbcf7d50d4a257a11283fb71772dcf80b82ac8e
 
 /**
  * 

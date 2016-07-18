@@ -402,8 +402,24 @@
       operator_target_type,is_discharge,discharge_order_id,consume_card,discharge_reason,
       been_discharged
       FROM sys_order_goods a left join sys_order b on a.order_id = b.order_id
+      WHERE 1=1
+
+    <trim>
+      <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and order_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
+      <if test="operatorSourceId != null &amp;&amp; operatorSourceId != ''" >
+        and operator_source_id = #{operatorSourceId, jdbcType=VARCHAR}
+      </if>
+      <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
+        and order_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+      <if test="goodsType != null &amp;&amp; goodsType != ''" >
+        and goods_type = #{goodsType, jdbcType=VARCHAR}
+      </if>
+    </trim>
   </select>
-  
+
   <!--运输公司个人消费报表-->
   <select id="queryTcPersonalReport" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     select sor.order_number,sor.order_type,sor.is_discharge,sor.cash,sd.full_name,sd.mobile_phone,sgs.gas_station_name,
