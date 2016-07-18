@@ -619,11 +619,12 @@ public class CRMCustomerContoller {
         try {
             Map<String, Object> attributes = new HashMap<String, Object>();
             for (int i = 0; i < files.length; i++) {
-                String path = filePath + files[i].getOriginalFilename();
+                long timeStamp = System.currentTimeMillis();
+                String path = filePath + timeStamp + files[i].getOriginalFilename();
                 File destFile = new File(path);
                 String contextPath = request.getContextPath();
                 String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-                String httpPath = basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename();
+                String httpPath = basePath + (String) prop.get("show_images_path") + "/" + realPath + timeStamp + files[i].getOriginalFilename();
                 String fileNum = String.valueOf(i);
                 attributes.put(imgTag + fileNum, httpPath);
                 FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
@@ -633,6 +634,7 @@ public class CRMCustomerContoller {
                     sysDriver.setVehicleLice(httpPath);
                 }
             }
+
             if(StringUtils.isNotEmpty(sysDriver.getExpireTimeForCRM())){
                 sysDriver.setExpiryDate(DateUtil.strToDate(sysDriver.getExpireTimeForCRM(), "yyyy-MM-dd"));
             }
@@ -703,7 +705,6 @@ public class CRMCustomerContoller {
     @ResponseBody
     public AjaxJson sendMsgApi(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver,@RequestParam(required = false) String mobilePhone){
         AjaxJson ajaxJson = new AjaxJson();
-
         if(sysDriver == null || sysDriver.getMobilePhone() == null || "".equals(sysDriver.getMobilePhone())){
             sysDriver.setMobilePhone(mobilePhone);
         }

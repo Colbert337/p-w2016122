@@ -394,9 +394,10 @@ public class CRMCashServiceContoller {
     @RequestMapping("/web/hedgeFund")
     public AjaxJson hedgeFund(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
-        if((record == null) || StringUtils.isEmpty(record.getOrderId())){
+        if((record == null) || StringUtils.isEmpty(record.getOrderId())
+                || StringUtils.isEmpty(record)){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("订单ID为空！！！");
+            ajaxJson.setMsg("订单ID或者气站ID为空！！！");
             return ajaxJson;
         }
 
@@ -460,11 +461,6 @@ public class CRMCashServiceContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单冲红保存错误：" + originalOrder.getOrderId());
             return ajaxJson;
-        }
-
-        List<SysOrderGoods> goods = originalOrder.getSysOrderGoods();
-        for(SysOrderGoods sysOrderGoods : goods){
-
         }
 
         Map<String, Object> attributes = new HashMap<String, Object>();
@@ -638,7 +634,6 @@ public class CRMCashServiceContoller {
             }
         return null;
     }
-
 
     @ResponseBody
     @RequestMapping("/web/queryGoodsOrderInfos")

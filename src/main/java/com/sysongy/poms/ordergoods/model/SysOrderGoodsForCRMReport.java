@@ -382,28 +382,33 @@ public class SysOrderGoodsForCRMReport {
     public String getRealNum() {
         if((this.is_discharge != null) && (this.is_discharge.equalsIgnoreCase("1"))){
             return "-" + this.number;
+        } else {
+            return String.valueOf(this.number);
         }
-        return realNum;
     }
 
     public void setRealNum(String realNum) {
         if((this.is_discharge != null) && (this.is_discharge.equalsIgnoreCase("1"))){
             this.realNum = "-" + this.number;
+        } else {
+            this.realNum = String.valueOf(this.number);
         }
     }
 
     public String getRealPrice() {
         if((this.is_discharge != null) && (this.is_discharge.equalsIgnoreCase("1"))){
             return "-" + sumPrice.toString();
+        } else {
+            return sumPrice.toString();
         }
-        return realPrice;
     }
 
     public void setRealPrice(String realPrice) {
         if((this.is_discharge != null) && (this.is_discharge.equalsIgnoreCase("1"))){
             this.realPrice = "-" + sumPrice.toString();
+        } else {
+            this.realPrice = sumPrice.toString();
         }
     }
-
 
 }

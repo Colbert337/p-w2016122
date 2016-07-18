@@ -412,9 +412,6 @@
                  javaType="com.sysongy.poms.card.model.GasCard"
                  select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
     </association>
-    <collection property="sysOrderGoods" ofType="com.sysongy.poms.ordergoods.model.SysOrderGoods"
-                column="order_id"
-                select="com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper.selectByOrderID" />
   </resultMap>
 
   <select id="queryGoodsOrderInfos" resultMap="BaseResultReportMap" parameterType="com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport" >
@@ -428,7 +425,6 @@
       been_discharged
       FROM sys_order_goods a left join sys_order b on a.order_id = b.order_id
       WHERE 1=1
-
     <trim>
       <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
         and order_number = #{orderNumber, jdbcType=VARCHAR}
