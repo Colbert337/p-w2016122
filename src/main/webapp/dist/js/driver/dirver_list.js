@@ -22,15 +22,21 @@ var listOptions ={
         $("#main").html(data);
     }
 }
+var countdown=60;
 /*分页相关方法 end*/
 //显示添加用户弹出层
 function addDriver(){
+    countdown = 0;
+    var obj = $("#sendMsgA");
+    obj.removeAttr("disabled");
+    obj.attr("href","javascript:sendMessage()");
+    obj.text("发送验证码");
+
     $("#driverModel").modal('show').on('hidden.bs.modal', function() {
         $('#driverForm').bootstrapValidator('resetForm',true);
     });
 }
 
-var countdown=60;
 function settime() {
     var obj = $("#sendMsgA");
     if (countdown == 0) {
@@ -44,10 +50,10 @@ function settime() {
         obj.attr("disabled",true);
         obj.text("重新发送(" + countdown + ")");
         countdown--;
-    }
-    setTimeout(function() {
+        setTimeout(function() {
             settime()
-    },1000)
+        },1000)
+    }
 }
 
 /**

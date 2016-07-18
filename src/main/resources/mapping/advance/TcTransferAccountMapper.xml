@@ -51,8 +51,8 @@
     select sr.order_number,sr.order_type,sr.cash,su.real_name,sod.*,tta.full_name,tta.mobile_phone,tta.used
     from sys_order  sr left join sys_order_deal sod  on sr.order_id = sod.order_id
     left join tc_transfer_account tta on sr.debit_account = tta.sys_driver_id
-    left join sys_user su on sr.operator
-    where sr.order_type = #{sysDriverId}
+    left join sys_user su on sr.operator = su.sys_user_id
+    where sr.order_type = #{sysDriverId} and sod.deal_type != '313'
     <if test="fullName != null &amp;&amp; fullName !=''" >
       and (tta.full_name like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%'))
       or  tta.mobile_phone like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%')))

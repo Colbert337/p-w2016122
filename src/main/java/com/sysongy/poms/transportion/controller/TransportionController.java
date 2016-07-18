@@ -414,7 +414,7 @@ public class TransportionController extends BaseContoller{
 			mailMessage.setSubject("用户设置密码邮件通知");
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("userName",userName);
-			model.put("url",url+"/web/transportion/info/setPassword");
+			model.put("url",url+"/msg/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
 			resultInt = 8;
 		}catch (Exception e){
@@ -433,13 +433,17 @@ public class TransportionController extends BaseContoller{
      */
 	@RequestMapping("/info/setPassword")
 	public String querySetPassword(@ModelAttribute("currUser") CurrUser currUser,Transportion transportion, ModelMap map){
-		String userName = currUser.getUser().getUserName();
-		String stationId = currUser.getStationId();
+		if(currUser == null){
+			return "redirect:/";
+		}else{
+			String userName = currUser.getUser().getUserName();
+			String stationId = currUser.getStationId();
 
-		map.addAttribute("userName",userName);
-		map.addAttribute("stationId",stationId);
+			map.addAttribute("userName",userName);
+			map.addAttribute("stationId",stationId);
 
-		return "webpage/poms/transportion/ps_set";
+			return "webpage/poms/transportion/ps_set";
+		}
 	}
 
 	/**

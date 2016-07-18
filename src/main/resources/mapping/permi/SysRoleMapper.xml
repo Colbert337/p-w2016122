@@ -67,6 +67,15 @@
     where sys_role_id = #{sysRoleId,jdbcType=VARCHAR}
     and is_deleted = 1 and role_status = 0
   </select>
+  <!--查询平台管理员角色列表-->
+  <select id="queryAdminRoleList" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.permi.model.SysRole"  >
+    select
+    <include refid="Base_Column_List" />
+    from sys_role
+    where is_admin = 0
+    and is_deleted = 1 and role_type = #{roleType,jdbcType=INTEGER}
+    order by created_date desc
+  </select>
   <!--根据用户类型查询用户角色列表-->
   <select id="queryRoleListByUserType" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select

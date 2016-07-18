@@ -194,6 +194,7 @@ public class AliShortMessage {
                 break;
             case VEHICLE_CREATED:
                 req.setSmsTemplateCode("SMS_11521189");
+                req.setSmsFreeSignName("司集科技");
                 req.setSmsParamString("{\"license\":\"" + aliShortMessageBean.getLicense() + "\",\"code\":\""
                         + aliShortMessageBean.getCode() + "\",\"string\":\""
                         + aliShortMessageBean.getString() + "\"}");
@@ -207,6 +208,7 @@ public class AliShortMessage {
                 break;
             case DRIVER_CHECKCODE_PASSWORD_MODIFY:
                 req.setSmsTemplateCode("SMS_12255408");
+                req.setSmsFreeSignName("司集科技");
                 req.setSmsParamString("\",\"code\":\"" + aliShortMessageBean.getCode() + "\",\"string\":\""
                         + aliShortMessageBean.getString() + "\"}");
                 break;

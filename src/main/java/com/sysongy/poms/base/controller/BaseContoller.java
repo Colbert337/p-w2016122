@@ -247,5 +247,26 @@ public class BaseContoller {
     	map.put("menuIndex", menuIndex);
     	return result;
     }
-    
+
+    /**
+     * 进入设置密码页面
+     * @param currUser
+     * @param transportion
+     * @param map
+     * @return
+     */
+    @RequestMapping("/msg/info/setPassword")
+    public String querySetPassword(@ModelAttribute("currUser") CurrUser currUser,Transportion transportion, ModelMap map){
+        if(currUser == null){
+            return "redirect:/";
+        }else{
+            String userName = currUser.getUser().getUserName();
+            String stationId = currUser.getStationId();
+
+            map.addAttribute("userName",userName);
+            map.addAttribute("stationId",stationId);
+
+            return "webpage/poms/transportion/ps_set";
+        }
+    }
 }
