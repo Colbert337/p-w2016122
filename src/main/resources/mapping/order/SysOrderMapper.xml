@@ -45,7 +45,27 @@
   <resultMap type="com.sysongy.poms.order.model.OrderLog" id="OrderLogResultMap">
   
   </resultMap>
-  
+  <resultMap id="MapResultMap" type="java.util.Map" >
+  <id column="order_id" property="orderId" jdbcType="VARCHAR" />
+  <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+  <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+  <result column="order_date" property="orderDate" jdbcType="TIMESTAMP" />
+  <result column="cash" property="cash" jdbcType="DECIMAL" />
+  <result column="credit_account" property="creditAccount" jdbcType="VARCHAR" />
+  <result column="debit_account" property="debitAccount" jdbcType="VARCHAR" />
+  <result column="charge_type" property="chargeType" jdbcType="VARCHAR" />
+  <result column="channel" property="channel" jdbcType="VARCHAR" />
+  <result column="channel_number" property="channelNumber" jdbcType="VARCHAR" />
+  <result column="operator" property="operator" jdbcType="VARCHAR" />
+  <result column="operator_target_type" property="operatorTargetType" jdbcType="VARCHAR" />
+  <result column="operator_source_type" property="operatorSourceType" jdbcType="VARCHAR" />
+  <result column="operator_source_id" property="operatorSourceId" jdbcType="VARCHAR" />
+  <result column="is_discharge" property="is_discharge" jdbcType="VARCHAR" />
+  <result column="been_discharged" property="been_discharged" jdbcType="VARCHAR" />
+  <result column="discharge_reason" property="discharge_reason" jdbcType="VARCHAR" />
+  <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
+  <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
     charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id, operator_source_id, operator_source_type, operator_target_type,consume_card
@@ -331,7 +351,6 @@
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
 
-
   <resultMap id="BaseResultReportMap" type="com.sysongy.poms.order.model.SysOrder" >
     <id column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
@@ -383,6 +402,63 @@
       operator_target_type,is_discharge,discharge_order_id,consume_card,discharge_reason,
       been_discharged
       FROM sys_order_goods a left join sys_order b on a.order_id = b.order_id
+  </select>
+  
+  <!--运输公司个人消费报表-->
+  <select id="queryTcPersonalReport" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    select sor.order_number,sor.order_type,sor.is_discharge,sor.cash,sd.full_name,sd.mobile_phone,sgs.gas_station_name,
+    sog.goods_type,sog.price,sog.number,sog.sum_price,sor.order_date,sod.remark
+    from sys_driver sd
+    left join sys_order sor on sd.card_id = sor.consume_card
+    left join sys_order_goods sog on sog.order_id = sor.order_id
+    left join sys_order_deal sod on sor.order_id = sod.order_id
+    left join sys_gas_station sgs on sgs.sys_gas_station_id = sor.operator_source_id
+    where sor.order_id is not null
+    <if test="debitAccount != null &amp;&amp; debitAccount != ''" >
+      and sd.station_id = #{debitAccount,jdbcType=VARCHAR}
+    </if>
+    <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
+      and sor.is_discharge = #{is_discharge,jdbcType=VARCHAR}
+    </if>
+    <if test="orderNumber != null &amp;&amp; orderNumber !=''" >
+      and (sd.full_name like CONCAT('%',CONCAT(#{orderNumber,jdbcType=VARCHAR},'%'))
+      or  sd.mobile_phone like CONCAT('%',CONCAT(#{orderNumber,jdbcType=VARCHAR},'%')))
+    </if>
+    <if test="startDate != null &amp;&amp; endDate !=null  &amp;&amp; startDate != '' &amp;&amp; endDate !='' " >
+      and  sor.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+    </if>
+  </select>
+
+
+  <!--运输公司车队消费报表-->
+  <select id="queryTcFleetReport" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    select sor.order_number,sor.order_type,sor.is_discharge,tf.fleet_name,tv.plates_number,sgs.gas_station_name,
+    sog.goods_type,sog.price,sog.number,sog.sum_price,sod.deal_date,sod.remark
+    from  tc_vehicle tv
+    left join tc_fleet_vehicle tfv on tv.tc_vehicle_id = tfv.tc_vehicle_id
+    left join tc_fleet tf on tfv.tc_fleet_id = tf.tc_fleet_id
+    left join sys_order sor on sor.consume_card = tv.card_no
+    left join sys_order_deal sod on sor.order_id = sod.order_id
+    left join sys_order_goods sog on sog.order_id = sor.order_id
+    left join sys_gas_station sgs on sgs.sys_gas_station_id = sor.operator_source_id
+    where tv.is_deleted = '1' and tf.is_deleted = '1'
+    and sor.order_id is not null
+    <if test="orderId != null &amp;&amp; orderId != ''" >
+      and tf.tc_fleet_id = #{orderId,jdbcType=VARCHAR}
+    </if>
+    <if test="debitAccount != null &amp;&amp; debitAccount != ''" >
+      and tv.station_id  = #{debitAccount,jdbcType=VARCHAR}
+    </if>
+    <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
+      and sor.is_discharge = #{is_discharge,jdbcType=VARCHAR}
+    </if>
+    <if test="orderNumber != null &amp;&amp; orderNumber !=''" >
+      and (tf.fleet_name like CONCAT('%',CONCAT(#{orderNumber,jdbcType=VARCHAR},'%'))
+      or  tv.plates_number like CONCAT('%',CONCAT(#{orderNumber,jdbcType=VARCHAR},'%')))
+    </if>
+    <if test="startDate != null &amp;&amp; endDate !=null  &amp;&amp; startDate != '' &amp;&amp; endDate !='' " >
+      and  sor.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+    </if>
   </select>
 
 </mapper>

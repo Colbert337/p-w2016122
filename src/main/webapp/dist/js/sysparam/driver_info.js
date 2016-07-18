@@ -50,11 +50,11 @@ var listOptions ={
 		loadPage('#main', '../web/driver/driverInfoList');
 	}
 	
-	function change(obj,status){
+	function change(obj,status,cardno){
 		var accountid = $(obj).parents("tr").find("td[id=sysUserAccountId]").text();
 		$.ajax({
 			   type: "POST",
-			   url:'../web/driver/changeDriverStatus?accountid='+accountid+'&status='+status,   
+			   url:'../web/driver/changeDriverStatus?accountid='+accountid+'&status='+status+'&cardno='+cardno,   
 	           contentType:"application/x-www-form-urlencoded; charset=UTF-8",
 	           dataType:'text',
 	           async:false,

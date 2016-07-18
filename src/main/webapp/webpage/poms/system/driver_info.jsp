@@ -139,11 +139,11 @@
 													</li>
 													
 													<li>
-														<a href="javascript:void(0);" onclick="change(this,1);">冻结卡</a>
+														<a href="javascript:void(0);" onclick="change(this,1,'${list.cardId}');">冻结卡</a>
 													</li>
 
 													<li>
-														<a href="javascript:void(0);" onclick="change(this,2);">解冻</a>
+														<a href="javascript:void(0);" onclick="change(this,2,'${list.cardId}');">解冻</a>
 													</li>
 												</ul>
 											</div>
