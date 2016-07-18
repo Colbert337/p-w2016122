@@ -8,17 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper;
-import com.sysongy.poms.ordergoods.model.SysOrderGoods;
-import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
@@ -31,6 +28,9 @@ import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.model.SysPrepay;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper;
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
+import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -176,6 +176,22 @@ public class OrderServiceImpl implements OrderService {
 	   }
 	   //检查订单
 	   validAccount(order);
+	   
+	   //TODO 判断此driver是否通过实名认证，如果没有，则取其累计充值，不能超过5000
+	   String debitAccountId = order.getDebitAccount();
+	   SysDriver driver =  driverService.queryDriverByPK(debitAccountId); 
+	   String checkedStatus = driver.getCheckedStatus();
+	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(checkedStatus)){
+		   //未认证，取得累计充值金额
+		   HashMap<String,String> map = new HashMap<String,String>();
+		   map.put("userId", debitAccountId);
+		   map.put("CHARGE_TO_DRIVER", GlobalConstant.OrderType.CHARGE_TO_DRIVER);
+		   Map returnMap = sysOrderMapper.querySumChargeByUserId(map);
+		   BigDecimal sum = (BigDecimal)returnMap.get("sumcash");
+		   if(GlobalConstant.DRIVER_NOT_CERTIFICATE_LIMIT.compareTo(sum)<0){
+			   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT);
+		   }
+	   }
 	   
 	   String is_discharge = order.getIs_discharge();
 	   //1.现金充值抵扣预付款。如果现金充值，取操作源operator_source_type，如果是加注站，则判断充值金额不能超过加注站预付款
@@ -633,13 +649,13 @@ public class OrderServiceImpl implements OrderService {
 			else if(orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION)){
 				accountId = transportionService.queryTransportionByPK(debitAccountId).getSys_user_account_id();
 			}
-			SysUserAccount debitAccount = sysUserAccountService.selectByPrimaryKey(accountId);
-			boolean isFrozen = validateAccountIfFroen(debitAccount,record);
-			if(isFrozen){
+			SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(accountId);
+			boolean isFrozen_debitAccount = debitAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
+			if(isFrozen_debitAccount){
 				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN);
 			}
 		}
-		//消费，只验证creditAccount，因为debitAccount为null
+		//消费，只验证creditAccount，因为debitAccount为null--只有消费会判断卡是否冻结
 		if( orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_DRIVER) 
 		   ||orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION)){
 			String accountId ="";
@@ -654,6 +670,11 @@ public class OrderServiceImpl implements OrderService {
 			boolean isFrozen = creditAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
 			if(isFrozen){
 				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
+			}
+			boolean isCreditAccountCardFrozen = (StringUtils.isNotEmpty(record.getConsume_card())
+					&& (creditAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_CARD_FROZEN)));
+			if(isCreditAccountCardFrozen){
+				return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN;
 			}
 		}
 		//转账，验证creditAccount，和debitAccount都不为null
@@ -676,7 +697,7 @@ public class OrderServiceImpl implements OrderService {
 				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
 			}
 			SysUserAccount debitAccount = sysUserAccountMapper.selectByPrimaryKey(debitSysAccountId);
-			boolean isFrozen_debitAccount = validateAccountIfFroen(debitAccount,record);
+			boolean isFrozen_debitAccount = debitAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_FROZEN);
 			if(isFrozen_debitAccount){
 				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN);
 			}
@@ -746,7 +767,12 @@ public class OrderServiceImpl implements OrderService {
 
 	   Transportion tran = transportionService.queryTransportionByPK(credit_account);
 	   String tran_account = tran.getSys_user_account_id();
-		
+	   //增加逻辑：个人未实名认证：不能转入：
+	   SysDriver driver = driverService.queryDriverByPK(debit_account);
+	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())){
+		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+	   }
+	   
 	   //1.扣除运输公司账户
 	   String success_deduct = transportionService.transferTransportionToDriverDeductCash(order,tran);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_deduct)){
@@ -809,6 +835,15 @@ public class OrderServiceImpl implements OrderService {
 	   }
 	   //检查订单
 	   validAccount(order);
+	   //增加逻辑：个人未实名认证：不能转入：
+	   SysDriver driver = driverService.queryDriverByPK(debit_account);
+	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())){
+		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+	   }
+	   SysDriver driver2 = driverService.queryDriverByPK(credit_account);
+	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver2.getCheckedStatus())){
+		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+	   }
 
 	   //1.扣除credit_account账户钱
 	   String is_discharge = GlobalConstant.ORDER_ISCHARGE_NO;

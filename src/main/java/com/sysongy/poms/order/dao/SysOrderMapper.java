@@ -31,6 +31,13 @@ public interface SysOrderMapper {
     int updateOriginalOrderAfterDischarged(Map map);
     
     /**
+     * 
+     * @param map
+     * @return
+     */
+   public Map querySumChargeByUserId(Map map);
+    
+    /**
      * 查询某个用户在start_date之后，有没有产生消费
      * 用于在用户充红的时候判断能否充红。
      * @param userId---用户ID
