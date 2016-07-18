@@ -605,7 +605,7 @@ public class CRMCashServiceContoller {
                     if((tcFleets == null) || (tcFleets.size() == 0)){
                         Transportion transportion = transportionService.queryTransportionByPK(tcVehicle.getStationId());
                         SysUserAccount sysUserAccount = new SysUserAccount();
-                        sysUserAccount.setAccountBalance(transportion.getAccount().getAccountBalance());
+                        sysUserAccount.setAccountBalance(transportion.getDeposit().toString());
                         sysDriver.setAccount(sysUserAccount);
                         return sysDriver;
                     }

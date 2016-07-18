@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -693,8 +694,6 @@ public class OrderServiceImpl implements OrderService {
 
 	/**
 	 * 查看消费账户冻结
-	 * @param creditAccount
-	 * @param debitAccount
 	 * @param record
      * @return
      */
@@ -849,6 +848,43 @@ public class OrderServiceImpl implements OrderService {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<OrderLog> list = sysOrderMapper.queryOrderLogs(record);
 		PageInfo<OrderLog> pageInfo = new PageInfo<OrderLog>(list);
+		return pageInfo;
+	}
+	/********************************************运输公司消费报表接口*********************************/
+	/**
+	 * 运输公司个人消费报表
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public PageInfo<Map<String, Object>> queryTcPersonalReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryTcPersonalReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+	/**
+	 * 运输公司车队消费报表
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public PageInfo<Map<String, Object>> queryTcFleetReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryTcFleetReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+	/**
+	 * 运输公司队内消费报表
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public PageInfo<Map<String, Object>> queryTcFleetMgReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryTcFleetReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
 }

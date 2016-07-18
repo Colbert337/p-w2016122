@@ -13,39 +13,14 @@
 </div><!-- /.page-header -->
 
 <div class="gastation-infomation">
-
-    <div class="row">
-        <div class="col-sm-3">
-            <a class="gastation-log-colorbox" href="${gastation.indu_com_certif}" data-rel="colorbox">
-				<img class="img-responsive" src="${gastation.indu_com_certif}" alt="">
-				<div class="title">工商注册证</div>
-			</a>
-        </div>
-        <div class="col-sm-3">
-        	<a class="gastation-log-colorbox" href="${gastation.tax_certif}" data-rel="colorbox">
-				<img class="img-responsive" src="${gastation.tax_certif}" alt="">
-				<div class="title">税务注册证</div>
-			</a>
-        </div>
-        <div class="col-sm-3">
-        	<a class="gastation-log-colorbox" href="${gastation.lng_certif}" data-rel="colorbox">
-				<img class="img-responsive" src="${gastation.lng_certif}" alt="">
-				<div class="title">LNG储装证</div>
-			</a>
-        </div>
-        <div class="col-sm-3">
-        	<a class="gastation-log-colorbox" href="${gastation.dcp_certif}" data-rel="colorbox">
-				<img class="img-responsive" src="${gastation.dcp_certif}" alt="">
-				<div class="title">危化品证</div>
-			</a>
-        </div>
-    </div><!--/.imgs-->
-
+    <div class="gastation-infomation-hd">
+        加注站
+    </div>
     <div class="gastation-infomation-items">
         <div class="item">
             <div class="row">
                 <div class="col-sm-3 text-right">
-                                                 加注站名称
+                    加注站名称:
                 </div>
                 <div class="col-sm-9">
                     <span class="value">${gastation.gas_station_name}</span>
@@ -55,7 +30,7 @@
         <div class="item">
             <div class="row">
                 <div class="col-sm-3 text-right">
-                  	  站长姓名
+                    站长姓名:
                 </div>
                 <div class="col-sm-9">
                     <span class="value">${gastation.station_manager}</span>
@@ -65,7 +40,7 @@
         <div class="item">
             <div class="row">
                 <div class="col-sm-3 text-right">
-                  	  联系电话
+                    联系电话:
                 </div>
                 <div class="col-sm-9">
                     <span class="value">${gastation.contact_phone}</span>
@@ -75,7 +50,7 @@
         <div class="item">
             <div class="row">
                 <div class="col-sm-3 text-right">
-                                                    加注站地址
+                    加注站地址:
                 </div>
                 <div class="col-sm-9">
                     <span class="value">${gastation.address}</span>
@@ -85,7 +60,7 @@
         <div class="item">
             <div class="row">
                 <div class="col-sm-3 text-right">
-                                                    加注站地址坐标
+                    加注站地址坐标:
                 </div>
                 <div class="col-sm-9">
                     <span class="value">${gastation.longitude}，${gastation.latitude}</span>
@@ -95,7 +70,7 @@
         <div class="item">
             <div class="row">
                 <div class="col-sm-3 text-right">
-                                                    账户余额
+                    账户余额:
                 </div>
                 <div class="col-sm-9">
                     <span class="value">${gastation.prepay_balance} 元</span>
@@ -103,5 +78,37 @@
             </div>
         </div>
     </div>
+
+    <div class="gastation-infomation-hd">
+        证件信息
+    </div>
+    <div class="gastation-infomation-cert">
+        <div class="row">
+            <div class="col-sm-3 item">
+                <a class="gastation-log-colorbox" href="${gastation.indu_com_certif}" data-rel="colorbox">
+                    <img class="img-responsive" src="${gastation.indu_com_certif}" alt="">
+                    <div class="title">工商注册证</div>
+                </a>
+            </div>
+            <div class="col-sm-3 item">
+                <a class="gastation-log-colorbox" href="${gastation.tax_certif}" data-rel="colorbox">
+                    <img class="img-responsive" src="${gastation.tax_certif}" alt="">
+                    <div class="title">税务注册证</div>
+                </a>
+            </div>
+            <div class="col-sm-3 item">
+                <a class="gastation-log-colorbox" href="${gastation.lng_certif}" data-rel="colorbox">
+                    <img class="img-responsive" src="${gastation.lng_certif}" alt="">
+                    <div class="title">LNG储装证</div>
+                </a>
+            </div>
+            <div class="col-sm-3 item">
+                <a class="gastation-log-colorbox" href="${gastation.dcp_certif}" data-rel="colorbox">
+                    <img class="img-responsive" src="${gastation.dcp_certif}" alt="">
+                    <div class="title">危化品证</div>
+                </a>
+            </div>
+        </div>
+    </div><!--/.imgs-->
 
 </div><!-- /.row -->

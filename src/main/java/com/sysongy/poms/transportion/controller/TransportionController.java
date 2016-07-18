@@ -677,6 +677,18 @@ public class TransportionController extends BaseContoller{
 			order.setCash(new BigDecimal(BigInteger.ZERO));
 			PageInfo<Map<String, Object>> pageinfo = orderDealService.queryRechargeList(order);
 
+			BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+			if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+
+				for (Map<String, Object> quotaMap:pageinfo.getList()) {
+					if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+						totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+					}
+				}
+			}
+			//累计总划款金额
+			map.addAttribute("totalCash",totalCash);
+
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");
 			bean.setPageInfo(ret);
@@ -696,5 +708,6 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
+
 
 }

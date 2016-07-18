@@ -133,6 +133,14 @@ public class TcVehicleController extends BaseContoller {
         String stationId = currUser.getStationId();
         String platesNumber = "";
         if(vehicle != null && vehicle.getPlatesNumber() != null && !"".equals(vehicle.getPlatesNumber())){
+
+            if(vehicle.getTcVehicleId() != null && !"".equals(vehicle.getTcVehicleId())){
+                TcVehicle vh = new TcVehicle();
+                vh.setTcVehicleId(vehicle.getTcVehicleId());
+                TcVehicle veh = tcVehicleService.queryVehicle(vh);
+                vehicle.setUserName(veh.getPlatesNumber());
+            }
+
             platesNumber = vehicle.getPlatesNumber().trim();
             vehicle.setStationId(stationId);
             vehicle.setPlatesNumber(platesNumber);
