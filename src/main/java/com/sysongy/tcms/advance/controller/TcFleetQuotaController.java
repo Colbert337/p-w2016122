@@ -478,8 +478,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
 
                 for (Map<String, Object> quotaMap:pageinfo.getList()) {
-                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
                     }
                 }
             }
@@ -532,8 +532,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
 
                 for (Map<String, Object> quotaMap:pageinfo.getList()) {
-                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
                     }
                 }
             }
