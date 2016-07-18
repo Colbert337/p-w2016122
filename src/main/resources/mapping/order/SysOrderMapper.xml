@@ -42,6 +42,10 @@
   
   </resultMap>
   
+  <resultMap type="java.util.Map" id="SumChargeResultMap">
+    <result column="sumcash" property="sumcash" jdbcType="DECIMAL" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
     charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id, operator_source_id, operator_source_type, operator_target_type,consume_card
@@ -103,6 +107,14 @@
     where credit_account = #{userId,jdbcType=VARCHAR}
      and order_type in (#{CONSUME_BY_TRANSPORTION,jdbcType=VARCHAR},#{CONSUME_BY_DRIVER,jdbcType=VARCHAR})
      and order_date > #{order_date,jdbcType=TIMESTAMP}
+  </select>
+  
+  <select id="querySumChargeByUserId" resultMap="SumChargeResultMap" parameterType="java.util.Map" >
+    select 
+     sum(cash) as sumcash 
+    from sys_order
+    where debit_account = #{userId,jdbcType=VARCHAR}
+     and order_type = #{CHARGE_TO_DRIVER,jdbcType=VARCHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >

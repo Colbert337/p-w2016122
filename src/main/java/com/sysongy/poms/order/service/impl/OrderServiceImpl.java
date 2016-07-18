@@ -6,17 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper;
-import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
@@ -29,6 +28,8 @@ import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.model.SysPrepay;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper;
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -164,6 +165,22 @@ public class OrderServiceImpl implements OrderService {
 	   }
 	   //检查订单
 	   validAccount(order);
+	   
+	   //TODO 判断此driver是否通过实名认证，如果没有，则取其累计充值，不能超过5000
+	   String debitAccountId = order.getDebitAccount();
+	   SysDriver driver =  driverService.queryDriverByPK(debitAccountId); 
+	   String checkedStatus = driver.getCheckedStatus();
+	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(checkedStatus)){
+		   //未认证，取得累计充值金额
+		   HashMap<String,String> map = new HashMap<String,String>();
+		   map.put("userId", debitAccountId);
+		   map.put("CHARGE_TO_DRIVER", GlobalConstant.OrderType.CHARGE_TO_DRIVER);
+		   Map returnMap = sysOrderMapper.querySumChargeByUserId(map);
+		   BigDecimal sum = (BigDecimal)returnMap.get("sumcash");
+		   if(GlobalConstant.DRIVER_NOT_CERTIFICATE_LIMIT.compareTo(sum)<0){
+			   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT);
+		   }
+	   }
 	   
 	   String is_discharge = order.getIs_discharge();
 	   //1.现金充值抵扣预付款。如果现金充值，取操作源operator_source_type，如果是加注站，则判断充值金额不能超过加注站预付款
@@ -740,7 +757,12 @@ public class OrderServiceImpl implements OrderService {
 
 	   Transportion tran = transportionService.queryTransportionByPK(credit_account);
 	   String tran_account = tran.getSys_user_account_id();
-		
+	   //增加逻辑：个人未实名认证：不能转入：
+	   SysDriver driver = driverService.queryDriverByPK(debit_account);
+	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())){
+		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+	   }
+	   
 	   //1.扣除运输公司账户
 	   String success_deduct = transportionService.transferTransportionToDriverDeductCash(order,tran);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_deduct)){
@@ -803,6 +825,15 @@ public class OrderServiceImpl implements OrderService {
 	   }
 	   //检查订单
 	   validAccount(order);
+	   //增加逻辑：个人未实名认证：不能转入：
+	   SysDriver driver = driverService.queryDriverByPK(debit_account);
+	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())){
+		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+	   }
+	   SysDriver driver2 = driverService.queryDriverByPK(credit_account);
+	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver2.getCheckedStatus())){
+		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+	   }
 
 	   //1.扣除credit_account账户钱
 	   String is_discharge = GlobalConstant.ORDER_ISCHARGE_NO;
