@@ -230,10 +230,11 @@ function fileFormat(){
 /**
  * 判断用户名是否存在
  */
-function isVehicleExit(onflag){
+function isVehicleExit(){
     var numberType = {
         platesNumber: $("#plates_number").val(),
-        onFlag: $("#plates_number").attr("data-onFlag")
+        /*onFlag: $("#plates_number").attr("data-onFlag")*/
+        tcVehicleId: $("#tc_vehicle_id").val()
     };
     $.ajax({
         url: '../web/tcms/vehicle/info/name',
