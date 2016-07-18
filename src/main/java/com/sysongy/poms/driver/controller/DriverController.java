@@ -294,7 +294,7 @@ public class DriverController extends BaseContoller{
 				ret = this.queryDriverList(this.driver ==null?new SysDriver():this.driver, map);
 
 				bean.setRetCode(100);
-				bean.setRetMsg("["+driverid+"]已审核");
+				bean.setRetMsg("已审核");
 				bean.setRetValue(rowcount.toString());
 				bean.setPageInfo(ret);
 

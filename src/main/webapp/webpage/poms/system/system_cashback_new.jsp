@@ -87,7 +87,7 @@
 										</div>
 									</div>
 									
-									<div class="form-group">
+									<div class="form-group start-date-before">
 										<label class="col-sm-3 control-label no-padding-right">失效日期： </label>
 										<div class="col-sm-4">
 												<div class="input-group">

@@ -85,11 +85,10 @@ var listOptions ={
 	}
 	
 	function showInnerModel(obj,type){
-		
-		if(type==null ||type==''){
-			$("#optionbutton").css('display','none');
+		if(type==null ||type==undefined){
+			$("#optionbutton").attr("onclick","hideInnerModel();");
 		}else{
-			$("#optionbutton").css('display','block');
+			$("#optionbutton").attr("onclick","addMemo();");
 		}
 		
 		var driverid = $(obj).parents('tr').find("td:first").find("input").val();
