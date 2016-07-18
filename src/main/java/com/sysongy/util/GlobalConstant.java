@@ -1,5 +1,8 @@
 package com.sysongy.util;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+
 /**
  * @FileName : GlobalConstant.java
  * @Encoding : UTF-8
@@ -148,6 +151,21 @@ public class GlobalConstant {
 	}
 
 	/*
+	 * 	司机认证状态
+	 */
+	public interface DriverCheckedStatus{
+		public static final String NOT_CERTIFICATE ="0";
+		public static final String CERTIFICATING="1";
+		public static final String ALREADY_CERTIFICATED="2";
+		public static final String CERTIFICATE_NOT_PASS="3";
+	}
+
+	/*
+	 * 未实名认证司机累计充值金额 
+	 */
+	public static final BigDecimal DRIVER_NOT_CERTIFICATE_LIMIT= new BigDecimal("5000"); 
+	
+	/*
 	 * 	110运输公司预付款充值  120 加油站预付款充值 130个人充值 210运输公司消费 220 司机消费 310 运输公司对个人转账 320个人对个人转账
 	 */
 	public interface OrderType{
@@ -158,6 +176,17 @@ public class GlobalConstant {
 		public static final String CONSUME_BY_DRIVER ="220";
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER ="310";
 		public static final String TRANSFER_DRIVER_TO_DRIVER ="320";
+	}
+	
+	public static HashMap<String,String> OrderClassify = new HashMap<String,String>();
+	static{
+		OrderClassify.put("110", "充值");
+		OrderClassify.put("120", "充值");
+		OrderClassify.put("130", "充值");
+		OrderClassify.put("210", "消费");
+		OrderClassify.put("220", "消费");
+		OrderClassify.put("310", "转账");
+		OrderClassify.put("320", "转账");
 	}
 
 	/*
@@ -334,8 +363,11 @@ public class GlobalConstant {
 		public static final String ORDER_ERROR_BALANCE_IS_NOT_ENOUGH = "余额不足！";
 
 		public static final String ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN = "账号已冻结！";
-		public static final String ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN = "DEBIT_ACCOUNT_IS_FROEN";
+		public static final String ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN = "账号已冻结！";
 		public static final String ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN = "该卡已冻结！";
+		
+		public static final String DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT = "该司机未实名认证，并且累计充值已经大于"+DRIVER_NOT_CERTIFICATE_LIMIT.toString();
+		public static final String DRIVER_NOT_CERTIFICATE = "该司机未实名认证。";
 		
 		public static final String ORDER_ACCOUNT_VERSION_HAVE_CHANGED = "ORDER_ACCOUNT_VERSION_HAVE_CHANGED";
 	}

@@ -60,8 +60,8 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("188.88"));
-        	order.setDebitAccount("419f5bfcde2f43c0a7c36cea200b0a00");
+        	order.setCash(new BigDecimal("2000"));
+        	order.setDebitAccount("748f08a4e31545c2b6de454d3deb0979");
         	order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
         	order.setChannel("亭口加注站");
         	order.setChannelNumber("GS12900001");
