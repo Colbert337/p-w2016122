@@ -168,7 +168,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
      * @return
      */
     @Override
-    public int personalTransfer(List<Map<String, Object>> list,String stationId ,String userName) throws Exception{
+    public int personalTransfer(List<Map<String, Object>> list,String stationId ,String userId) throws Exception{
         BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
         int resultVal = 1;
         try {
@@ -205,7 +205,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                             order.setCreditAccount(stationId);
                             order.setDebitAccount(mapDriver.get("sysDriverId").toString());
                             order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_TRANSFER_CHARGE);
-                            order.setOperator(userName);
+                            order.setOperator(userId);
                             order.setOperatorSourceId(stationId);
                             order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.TRANSPORTION);
                             order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);

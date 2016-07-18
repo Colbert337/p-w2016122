@@ -110,7 +110,7 @@
 									<td>${list.cash}</td>
 									<td>${list.used}</td>
 									<td>${list.cashBack}</td>
-									<td>${list.operator}</td>
+									<td>${list.realName}</td>
 									<td><fmt:formatDate value="${list.dealDate}" type="both"/></td>
 								</tr>
 							</c:forEach>

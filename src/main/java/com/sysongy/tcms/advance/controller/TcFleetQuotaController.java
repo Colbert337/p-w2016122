@@ -210,6 +210,7 @@ public class TcFleetQuotaController extends BaseContoller {
         int resultInt = 1;
         String stationId = currUser.getStationId();
         String userName = currUser.getUser().getUserName();
+        String userId = currUser.getUser().getSysUserId();
         try {
             if(data != null && !"".equals(data)) {
                 String datas[] = data.split("&");
@@ -232,7 +233,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     }
                 }
 
-                resultInt = tcFleetQuotaService.personalTransfer(list,stationId,userName);
+                resultInt = tcFleetQuotaService.personalTransfer(list,stationId,userId);
                 /*if(list != null && list.size() > 0){
                     for (Map<String, Object> mapDriver:list){
                         SysOrder order = new SysOrder();
@@ -361,13 +362,18 @@ public class TcFleetQuotaController extends BaseContoller {
             PageInfo<Map<String, Object>> pageinfo = tcTransferAccountService.queryTransferListPage(transferAccount);
 
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            BigDecimal backCash = new BigDecimal(BigInteger.ZERO);
             if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
 
                 for (Map<String, Object> quotaMap:pageinfo.getList()) {
-                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())
+                            && GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION.equals(quotaMap.get("dealType"))){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                    }else{
+                        backCash = backCash.add(new BigDecimal(quotaMap.get("cashBack").toString()));
                     }
                 }
+                totalCash = totalCash.add(backCash);
             }
             //累计总划款金额
             map.addAttribute("totalCash",totalCash);
@@ -501,7 +507,7 @@ public class TcFleetQuotaController extends BaseContoller {
     }
 
     /**
-     * 运输公司个人消费报表
+     * 运输公司队内管理消费报表
      * @param map
      * @return
      * @throws Exception
