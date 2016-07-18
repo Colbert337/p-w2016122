@@ -233,7 +233,7 @@ public class GastationServiceImpl implements GastationService {
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.GASTATION);
 		String orderNumber = orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_GASTATION);
 		order.setOrderNumber(orderNumber);
-		orderService.insert(order);
+		orderService.insert(order, null);
 		orderService.chargeToGasStation(order);
 		
 		//写日志

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 
 public interface SysOrderMapper {
 
@@ -30,6 +31,13 @@ public interface SysOrderMapper {
     int updateOriginalOrderAfterDischarged(Map map);
     
     /**
+     * 
+     * @param map
+     * @return
+     */
+   public Map querySumChargeByUserId(Map map);
+    
+    /**
      * 查询某个用户在start_date之后，有没有产生消费
      * 用于在用户充红的时候判断能否充红。
      * @param userId---用户ID
@@ -38,6 +46,8 @@ public interface SysOrderMapper {
      * @return
      */
     List<SysOrder> queryConsumeOrderByUserId(Map paraMap);
+
+    List<SysOrderGoodsForCRMReport> queryGoodsOrderInfos(SysOrderGoodsForCRMReport sysOrderGoodsForCRMReport);
     /********************************************运输公司消费报表接口*********************************/
     /**
      * 运输公司个人消费报表
