@@ -2,8 +2,13 @@ package com.sysongy.tcms.advance.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.tcms.advance.dao.TcFleetMapper;
@@ -13,15 +18,22 @@ import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.model.TcTransferAccount;
 import com.sysongy.tcms.advance.service.TcFleetQuotaService;
+import com.sysongy.util.AliShortMessage;
 import com.sysongy.util.BigDecimalArith;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.SimpleFormatter;
 
 /**
  * @FileName: TcFleetQuotaServiceImpl
@@ -35,6 +47,7 @@ import java.util.*;
  */
 @Service
 public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     TcFleetQuotaMapper tcFleetQuotaMapper;
     @Autowired
@@ -44,7 +57,10 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     @Autowired
     OrderService orderService;
     @Autowired
+    OrderDealService orderDealService;
+    @Autowired
     TcTransferAccountMapper tcTransferAccountMapper;
+
 
     @Override
     public TcFleetQuota queryFleetQuota(TcFleetQuota tcFleetQuota) {
@@ -194,7 +210,8 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                         /*循环生成订单*/
                         for (Map<String, Object> mapDriver:list){
                             SysOrder order = new SysOrder();
-                            order.setOrderId(UUIDGenerator.getUUID());
+                            String orderId = UUIDGenerator.getUUID();
+                            order.setOrderId(orderId);
 
                             order.setOrderType(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
                             String orderNum = orderService.createOrderNumber(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
@@ -227,6 +244,35 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                             tcTransferAccount.setUsed(mapDriver.get("remark").toString());
                             tcTransferAccount.setUpdatedDate(new Date());
                             resultVal = tcTransferAccountMapper.insertSelective(tcTransferAccount);
+
+                            /*发送转账通知短信*/
+                            AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+                            SimpleDateFormat sfm = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
+                            String time = sfm.format(new Date());
+                            aliShortMessageBean.setTime(time);
+                            aliShortMessageBean.setString("转账");
+                            aliShortMessageBean.setMoney(mapDriver.get("amount").toString());
+                            aliShortMessageBean.setSendNumber(mapDriver.get("mobilePhone").toString());
+                            /*查询返现金额*/
+                            List<SysOrderDeal> orderDealList = orderDealService.queryOrderDealByOrderId(orderId);
+                            if(orderDealList != null && orderDealList.size() > 0){
+                                BigDecimal backCash = new BigDecimal(BigInteger.ZERO);
+                                for (SysOrderDeal orderDeal:orderDealList){
+                                    backCash.add(orderDeal.getCashBack());
+                                }
+                                aliShortMessageBean.setBackCash(backCash.toString());
+                            }else{
+                                aliShortMessageBean.setBackCash("0.00");
+                            }
+                            /*查询账户余额*/
+                            SysUserAccount sysUserAccount = sysUserAccountService.queryUserAccountByDriverId(mapDriver.get("sysDriverId").toString());
+                            if(sysUserAccount != null){
+                                aliShortMessageBean.setMoney1(sysUserAccount.getAccountBalance());
+                            }else{
+                                aliShortMessageBean.setMoney1("0.00");
+                            }
+
+                            sendMsgApi(aliShortMessageBean);
                         }
 
                     }
@@ -258,4 +304,31 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
             return null;
         }
     }
+
+    /**
+     * 发送短信
+     * @param aliShortMessageBean
+     * @return
+     */
+    public AjaxJson sendMsgApi(AliShortMessageBean aliShortMessageBean){
+        AjaxJson ajaxJson = new AjaxJson();
+
+        if(!StringUtils.isNotEmpty(aliShortMessageBean.getSendNumber())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("手机号为空！！！");
+            return ajaxJson;
+        }
+
+        try
+        {
+            AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.TRANSPORTION_TRANSFER_SELF_CHARGE);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        return ajaxJson;
+    }
+
 }

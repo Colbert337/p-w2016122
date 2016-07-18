@@ -120,4 +120,9 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	public SysUserAccount queryUserAccountByStationId(String sysTransportionId) {
 		return sysUserAccountMapper.queryUserAccountByStationId(sysTransportionId);
 	}
+
+	@Override
+	public SysUserAccount queryUserAccountByDriverId(String sysDriverId) {
+		return sysUserAccountMapper.queryUserAccountByDriverId(sysDriverId);
+	}
 }
