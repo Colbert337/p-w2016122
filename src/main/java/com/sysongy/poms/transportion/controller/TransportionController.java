@@ -627,6 +627,9 @@ public class TransportionController extends BaseContoller{
 		            vehicle.setPageNum(GlobalConstant.PAGE_NUM);
 		            vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
 		        }
+		        if(StringUtils.isEmpty(vehicle.getOrderby())){
+		        	vehicle.setOrderby("created_date desc");
+				}
 		        vehicle.setStationId(stationId);
 
 				PageInfo<TcVehicle> pageinfo = tcVehicleService.queryVehicleList(vehicle);

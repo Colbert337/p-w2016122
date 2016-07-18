@@ -248,12 +248,12 @@ public class DriverController extends BaseContoller{
     }
 
     @RequestMapping("/changeDriverStatus")
-    public String changeDriverStatus(@RequestParam String accountid, @RequestParam String status, ModelMap map)throws Exception{
+    public String changeDriverStatus(@RequestParam String accountid, @RequestParam String status, @RequestParam String cardno, ModelMap map)throws Exception{
     	PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/driver_info";
 
 		try {
-			sysUserAccountService.changeStatus(accountid, status);
+			sysUserAccountService.changeStatus(accountid, status, cardno);
 
 			SysDriver driver = new SysDriver();
 			driver.setSysUserAccountId(accountid);
