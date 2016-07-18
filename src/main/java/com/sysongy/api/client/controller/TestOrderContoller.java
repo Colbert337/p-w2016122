@@ -70,7 +70,7 @@ public class TestOrderContoller {
         	order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
         	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
-    		orderService.insert(order);
+    		orderService.insert(order, null);
     		orderService.chargeToDriver(order);
     	}catch(Exception e){
     		System.out.println("Found exception:"+e.getMessage());
@@ -94,7 +94,7 @@ public class TestOrderContoller {
         	if(bl){
 	        	SysOrder dischargeOrder = orderService.createDischargeOrderByOriginalOrder(originalOrder, "006648b1e6c1469fa4fff0a0ad86ac06", "没啥原因，就想撤销。");
 	        	//注意要保存充红订单
-	        	orderService.insert(dischargeOrder);
+	        	orderService.insert(dischargeOrder, dischargeOrder.getSysOrderGoods());
 	        	orderService.dischargeOrder(originalOrder, dischargeOrder);
         	}
     		//orderService.chargeToDriver(order);
@@ -130,7 +130,7 @@ public class TestOrderContoller {
         	//order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
         	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
-    		orderService.insert(order);
+    		orderService.insert(order, null);
     		orderService.chargeToTransportion(order);
     	}catch(Exception e){
     		System.out.println("Found exception:"+e.getMessage());
@@ -165,7 +165,7 @@ public class TestOrderContoller {
         	//order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.GASTATION);
         	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
-    		orderService.insert(order);
+    		orderService.insert(order, null);
     		orderService.chargeToGasStation(order);
     	}catch(Exception e){
     		System.out.println("Found exception:"+e.getMessage());
@@ -200,7 +200,7 @@ public class TestOrderContoller {
         	//order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
         	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
-    		orderService.insert(order);
+    		orderService.insert(order, order.getSysOrderGoods());
     		orderService.consumeByDriver(order);
     	}catch(Exception e){
     		System.out.println("Found exception:"+e.getMessage());
@@ -238,7 +238,7 @@ public class TestOrderContoller {
         	//order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
         	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
-    		orderService.insert(order);
+    		orderService.insert(order, order.getSysOrderGoods());
     		Transportion tran = transportionService.queryTransportionByPK(tranId);
     		TcFleet tcFleetNew = new TcFleet();
     		tcFleetNew.setTcFleetId(tcfleetId);
@@ -282,7 +282,7 @@ public class TestOrderContoller {
         	//order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
         	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
-    		orderService.insert(order);
+    		orderService.insert(order, null);
     		orderService.transferTransportionToDriver(order);
     		
     	}catch(Exception e){
@@ -319,7 +319,7 @@ public class TestOrderContoller {
         	//order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
         	order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
         	order.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_NO);
-    		orderService.insert(order);
+    		orderService.insert(order, null);
     		orderService.transferDriverToDriver(order);
     		
     	}catch(Exception e){

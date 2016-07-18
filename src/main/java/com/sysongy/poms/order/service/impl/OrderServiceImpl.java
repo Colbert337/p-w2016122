@@ -30,6 +30,7 @@ import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.dao.SysOrderGoodsMapper;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
+import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -99,7 +100,17 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public int insert(SysOrder record) {
+	public int insert(SysOrder record, List<SysOrderGoods> sysOrderGoods) {
+		if(sysOrderGoods != null){
+			for(SysOrderGoods sysOrderGood : sysOrderGoods){
+				sysOrderGood.setOrderId(record.getOrderId());
+				sysOrderGood.setOrderGoodsId(UUIDGenerator.getUUID());
+				int n = sysOrderGoodsMapper.insert(sysOrderGood);
+				if(n < 1){
+					logger.error("商品插入失败， orderID为：" + record.getOrderId());
+				}
+			}
+		}
 		return sysOrderMapper.insert(record);
 	}
 
@@ -555,16 +566,6 @@ public class OrderServiceImpl implements OrderService {
   		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
   	   }
-
-		for (SysOrderGoods sysOrderGoods : order.getSysOrderGoods()) {
-			sysOrderGoods.setOrderId(order.getOrderId());
-			sysOrderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
-			int nRet = sysOrderGoodsMapper.insert(sysOrderGoods);
-			if(nRet < 1){
-				logger.error("产品插入出错" + sysOrderGoods.getOrderId());
-			}
-		}
-
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
@@ -628,15 +629,6 @@ public class OrderServiceImpl implements OrderService {
   		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
   	   }
-
-		for (SysOrderGoods sysOrderGoods : order.getSysOrderGoods()) {
-			sysOrderGoods.setOrderId(order.getOrderId());
-			int nRet = sysOrderGoodsMapper.insert(sysOrderGoods);
-			if(nRet < 1){
-				logger.error("产品插入出错" + sysOrderGoods.getOrderId());
-			}
-		}
-
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 	
@@ -884,6 +876,11 @@ public class OrderServiceImpl implements OrderService {
 		List<OrderLog> list = sysOrderMapper.queryOrderLogs(record);
 		PageInfo<OrderLog> pageInfo = new PageInfo<OrderLog>(list);
 		return pageInfo;
+	}
+
+	@Override
+	public List<SysOrderGoodsForCRMReport> queryGoodsOrderInfos(SysOrderGoodsForCRMReport sysOrderGoodsForCRMReport) throws Exception {
+		return sysOrderMapper.queryGoodsOrderInfos(sysOrderGoodsForCRMReport);
 	}
 	/********************************************运输公司消费报表接口*********************************/
 	/**

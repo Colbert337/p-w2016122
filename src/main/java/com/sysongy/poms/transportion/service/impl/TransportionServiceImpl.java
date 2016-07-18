@@ -348,7 +348,7 @@ public class TransportionServiceImpl implements TransportionService {
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 		String orderNumber = orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
 		order.setOrderNumber(orderNumber);
-		orderService.insert(order);
+		orderService.insert(order, null);
 		orderService.chargeToTransportion(order);
 		
 		//写日志

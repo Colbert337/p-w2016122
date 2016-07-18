@@ -6,6 +6,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 
 public interface SysOrderMapper {
 
@@ -45,6 +46,8 @@ public interface SysOrderMapper {
      * @return
      */
     List<SysOrder> queryConsumeOrderByUserId(Map paraMap);
+
+    List<SysOrderGoodsForCRMReport> queryGoodsOrderInfos(SysOrderGoodsForCRMReport sysOrderGoodsForCRMReport);
     /********************************************运输公司消费报表接口*********************************/
     /**
      * 运输公司个人消费报表
