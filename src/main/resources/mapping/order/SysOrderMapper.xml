@@ -425,7 +425,6 @@
       been_discharged
       FROM sys_order_goods a left join sys_order b on a.order_id = b.order_id
       WHERE 1=1
-
     <trim>
       <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
         and order_number = #{orderNumber, jdbcType=VARCHAR}
