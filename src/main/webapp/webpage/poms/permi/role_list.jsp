@@ -148,7 +148,7 @@
 		clearDiv();
 		intiTree("add");
 		queryUserTypeList();
-		$("#roleModel").on('hidden.bs.modal', function() {
+		$("#roleModel").modal('show').on('hide.bs.modal', function() {
 			$('#roleForm').bootstrapValidator('resetForm',true);
 		});
 	}
@@ -198,8 +198,7 @@
 				$("#mname").text(data.mname);
 				$("#role_type").val(data.mcode);
 			}
-		})
-		$("#roleModel").modal('show');
+		});
 	}
 	/**
 	 * 回显用户信息
@@ -221,9 +220,7 @@
 				updateTree(data.functionList);
 				queryUserTypeList(data.roleType);
 
-				$("#roleModel").on('hidden.bs.modal', function() {
-					$('#roleForm').bootstrapValidator('resetForm',true);
-				});
+				$("#roleModel").modal('show');
 			}
 		});
 

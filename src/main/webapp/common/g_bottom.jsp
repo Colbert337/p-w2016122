@@ -150,5 +150,6 @@
 		<script src="<%=basePath %>/assets/js/bootbox.js"></script>
 		<script src="<%=basePath %>/assets/js/jquery.colorbox.js"></script>
 		<script src="<%=basePath %>/common/js/zh.js"></script>
+		<script src="<%=basePath %>/common/js/json2.js"></script>
 	</body>
 </html>

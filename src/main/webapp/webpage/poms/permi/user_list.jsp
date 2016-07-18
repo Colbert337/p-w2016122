@@ -113,7 +113,7 @@
 		$("#user_name").on("blur",function(){
 			isUserExit();
 		});
-		$("#userModel").on('hidden.bs.modal', function() {
+		$("#userModel").modal('show').on('hide.bs.modal', function() {
 			$('#userForm').bootstrapValidator('resetForm',true);
 			$('.user-name-valid').remove();
 		});

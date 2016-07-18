@@ -7,7 +7,7 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 
 public interface SysUserAccountService {
 	
-	int changeStatus(String accountid, String status);
+	int changeStatus(String accountid, String status, String cardno) throws Exception;
 
 	int deleteByPrimaryKey(String sysUserAccountId);
 

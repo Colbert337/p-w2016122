@@ -6,6 +6,8 @@ import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.tcms.advance.model.TcFleet;
 
+import java.util.Map;
+
 /**
  * 
  * @author zhangyt 2016-06-16
@@ -114,4 +116,24 @@ public interface OrderService {
      * 验证订单
      */
     String validAccount(SysOrder record) throws Exception;
+
+    /********************************************运输公司消费报表接口*********************************/
+    /**
+     * 运输公司个人消费报表
+     * @param record
+     * @return
+     */
+    PageInfo<Map<String,Object>> queryTcPersonalReport(SysOrder record);
+    /**
+     * 运输公司车队消费报表
+     * @param record
+     * @return
+     */
+    PageInfo<Map<String,Object>> queryTcFleetReport(SysOrder record);
+    /**
+     * 运输公司队内消费报表
+     * @param record
+     * @return
+     */
+    PageInfo<Map<String,Object>> queryTcFleetMgReport(SysOrder record);
 }

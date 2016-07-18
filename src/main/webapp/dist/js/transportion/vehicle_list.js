@@ -1,5 +1,5 @@
 $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
-var obj,status;
+var obj,status,station;
 
 	var listOptions ={   
             url:'../web/transportion/Vehiclelist',
@@ -65,6 +65,7 @@ var obj,status;
 	}
 	
 	function changeCard(){
+		
 		var tcVehicleId = $(obj).parents("tr").find("td:first").find("input").val();
 		var newcardno = $("[name=newcardno]").val();
 		
@@ -102,8 +103,9 @@ var obj,status;
 		hideInnerModel();
 	}
 	
-	function showInnerModel2(obj){
+	function showInnerModel2(obj,station){
 		this.obj = obj;
+		this.station = station;
 		
 		$("#innerModel2").modal('show');
 	}
@@ -130,4 +132,36 @@ var obj,status;
 	
 	function init(){
 		loadPage('#main', '../web/transportion/Vehiclelist');
+	}
+	
+	function checkCard(cardno,obj){
+		
+		if(cardno == ""){
+			return;
+		}
+		
+		if(cardno.length != 9){
+			bootbox.alert('卡号必须位9位');
+			return;
+		}
+		
+		$.ajax({
+			type: "POST",
+			url: '../web/card/getCard?cardno='+cardno,
+			dataType: 'text',
+			success: function(msg){
+				var card = JSON.parse(msg);
+				if(card.status!=2){
+					bootbox.alert('卡状态需要为[已出库]');
+					return;
+				}
+				if(card.station != station){
+					bootbox.alert('卡所属地错误，请检查');
+				}
+				
+			},
+			error:function(){
+				bootbox.alert('加载页面时出错！');
+			}
+		});
 	}

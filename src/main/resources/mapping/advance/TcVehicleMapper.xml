@@ -56,6 +56,9 @@
     from tc_vehicle
     where plates_number = #{platesNumber,jdbcType=VARCHAR}
     and is_deleted = 1  and station_id = #{stationId,jdbcType=VARCHAR}
+    <if test="userName != null &amp;&amp; userName !=''" >
+      and plates_number != #{userName,jdbcType=VARCHAR}
+    </if>
   </select>
   <!--查询最大索引-->
   <select id="queryMaxIndex" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -105,7 +108,7 @@
       and tv.tc_vehicle_id = #{tcVehicleId}
     </if>
     <if test="platesNumber != null &amp;&amp; platesNumber !=''" >
-      and tv.plates_number = #{platesNumber}
+      and tv.plates_number like CONCAT(CONCAT('%', #{platesNumber,jdbcType=VARCHAR}), '%')
     </if>
     <if test="tcFleetId != null &amp;&amp; tcFleetId !=''" >
       and tv.tc_fleet_id = #{tcFleetId}
