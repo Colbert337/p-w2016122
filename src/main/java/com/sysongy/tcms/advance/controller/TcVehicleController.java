@@ -201,6 +201,7 @@ public class TcVehicleController extends BaseContoller {
     @RequestMapping("/save")
     public String saveVehicle(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map) throws Exception{
         String stationId = currUser.getStationId();
+        String payCode = "";
         Transportion transportion = transportionService.queryTransportionByPK(stationId);
         if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
             TcVehicle tcVehicle = new TcVehicle();
@@ -230,7 +231,7 @@ public class TcVehicleController extends BaseContoller {
 
             vehicle.setStationId(stationId);
             vehicle.setTcVehicleId(newid);
-            String payCode = vehicle.getPayCode();
+            payCode = vehicle.getPayCode();
             vehicle.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
             vehicle.setIsDeleted(GlobalConstant.STATUS_NOTDELETE+"");
 
@@ -241,14 +242,20 @@ public class TcVehicleController extends BaseContoller {
             }
         }
         String msgType = "user_register";
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setCode(payCode);
+        aliShortMessageBean.setLicense(vehicle.getPlatesNumber());
+        aliShortMessageBean.setString(transportion.getTransportion_name());
         //给通知手机发送短信
         if(vehicle != null && vehicle.getNoticePhone() != null && !vehicle.getNoticePhone().equals("")){
-            sendMsgApi(vehicle.getNoticePhone(),msgType);
+            aliShortMessageBean.setSendNumber(vehicle.getNoticePhone());
+            sendMsgApi(vehicle.getNoticePhone(),msgType,aliShortMessageBean);
         }
 
         //给抄送手机发送短信
         if(vehicle != null && vehicle.getCopyPhone() != null && !vehicle.getCopyPhone().equals("")){
-            sendMsgApi(vehicle.getCopyPhone(),msgType);
+            aliShortMessageBean.setSendNumber(vehicle.getCopyPhone());
+            sendMsgApi(vehicle.getCopyPhone(),msgType,aliShortMessageBean);
         }
 
         return "redirect:/web/tcms/vehicle/list/page";
@@ -371,7 +378,7 @@ public class TcVehicleController extends BaseContoller {
      * @param msgType
      * @return
      */
-    public AjaxJson sendMsgApi(@RequestParam(required = false) String mobilePhone, @RequestParam(required = false) String msgType){
+    public AjaxJson sendMsgApi(String mobilePhone,String msgType, AliShortMessageBean aliShortMessageBean){
         AjaxJson ajaxJson = new AjaxJson();
 
         if(!StringUtils.isNotEmpty(mobilePhone)){
@@ -382,20 +389,7 @@ public class TcVehicleController extends BaseContoller {
 
         try
         {
-            Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
-            AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-            aliShortMessageBean.setSendNumber(mobilePhone);
-            aliShortMessageBean.setCode(checkCode.toString());
-            aliShortMessageBean.setProduct("司集能源科技平台");
-            String key = GlobalConstant.MSG_PREFIX + mobilePhone;
-            redisClientImpl.addToCache(key, checkCode.toString(), 60);
-
-            if(msgType.equalsIgnoreCase("changePassword")){
-                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
-            } else {
-                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
-            }
-
+            AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.VEHICLE_CREATED);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());

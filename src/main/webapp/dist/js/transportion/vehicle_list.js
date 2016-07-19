@@ -93,6 +93,8 @@ var obj,status,station;
 		             if($("#retCode").val() != "100"){
 		            	 $("#modal-table").modal("show");
 		             }*/
+	            	$("[name=newcardno]").val("");
+	            	$("#station").text("");
 	            },
 	            error:function(XMLHttpRequest, textStatus, errorThrown) {
 					
@@ -123,6 +125,9 @@ var obj,status,station;
 		$("body").removeClass('modal-open').removeAttr('style');
 		$(".modal-backdrop").remove();
 		$("#tmpclass").remove();
+		
+		$("[name=newcardno]").val("");
+    	$("#station").text("");
 	}
 	
 	function addMemo(){
@@ -134,7 +139,7 @@ var obj,status,station;
 		loadPage('#main', '../web/transportion/Vehiclelist');
 	}
 	
-	function checkCard(cardno,obj){
+	function checkCard(cardno){
 		
 		if(cardno == ""){
 			return;
@@ -142,6 +147,7 @@ var obj,status,station;
 		
 		if(cardno.length != 9){
 			bootbox.alert('卡号必须位9位');
+			$("#station").text("");
 			return;
 		}
 		
@@ -151,12 +157,19 @@ var obj,status,station;
 			dataType: 'text',
 			success: function(msg){
 				var card = JSON.parse(msg);
+				
 				if(card.status!=2){
 					bootbox.alert('卡状态需要为[已出库]');
+					$("#station").text("");
 					return;
 				}
 				if(card.station != station){
 					bootbox.alert('卡所属地错误，请检查');
+					$("#station").text("");
+				}
+				else{
+					var name = $(obj).parents("tr").children("td").eq(4).text();
+					$("#station").text(name);
 				}
 				
 			},

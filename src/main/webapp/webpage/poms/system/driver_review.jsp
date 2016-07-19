@@ -26,8 +26,8 @@
 
 					<div class="search-types">
 						<div class="item">
-						    <label>个人用户账号:</label>
-							<input type="text" name="userName" placeholder="输入个人用户账号"  maxlength="32" value="${driver.userName}"/>
+						    <label>会员账号:</label>
+							<input type="text" name="userName" placeholder="输入会员账号"  maxlength="32" value="${driver.userName}"/>
 						</div>
 						
 						<div class="item">
@@ -77,7 +77,7 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">个人用户账号</th>
+									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
 									<th onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">认证姓名</th>
 									<th onclick="orderBy(this,'plate_number');commitForm();" id="salesmen_name_order">车牌号</th>
 									<th onclick="orderBy(this,'identity_card');commitForm();" id="operations_name_order">身份证号</th>
@@ -219,7 +219,7 @@
 				</div>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<button class="btn btn-primary btn-sm" onclick="addMemo()">确   定</button>
+				<button class="btn btn-primary btn-sm" onclick="addMemo()" id="optionbutton">确   定</button>
 				<button class="btn btn-sm" i="close" onclick="hideInnerModel();">取   消 </button>
 			</div>
 		</div><!-- /.modal-dialog -->

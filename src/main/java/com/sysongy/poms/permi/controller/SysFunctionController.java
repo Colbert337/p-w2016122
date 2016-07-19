@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.permi.model.SysFunction;
+import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.service.SysFunctionService;
 import com.sysongy.poms.permi.service.SysFunctionService;
 import com.sysongy.util.GlobalConstant;
@@ -230,17 +231,19 @@ public class SysFunctionController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/save")
-	public String saveFunction(SysFunction function, ModelMap map){
+	public String saveFunction(SysFunction function, ModelMap map) throws Exception{
 		int resultInt = 0;
 		if(function != null && function.getSysFunctionId() != null && !"".equals(function.getSysFunctionId())){
 			//修改功能
 			sysFunctionService.updateFunction(function);
 			resultInt = 2;
 		}else if(function != null){//添加
-			function.setSysFunctionId(UUIDGenerator.getUUID());
+			String functionId = UUIDGenerator.getUUID();
+			function.setSysFunctionId(functionId);
 			function.setFunctionStatus(GlobalConstant.STATUS_ENABLE);
 			function.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
 			sysFunctionService.addFunction(function);
+
 			resultInt = 1;
 		}
 

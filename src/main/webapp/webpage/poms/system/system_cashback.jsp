@@ -141,9 +141,12 @@
 														<td><fmt:formatDate value="${list.updated_date}" type="both"/></td>
 					
 														<td class="text-center">
-															<a class="option-btn-m" href="javascript:void(0);"  title="修改" data-rel="tooltip">
-																<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
-															</a>
+														<jsp:useBean id="now" class="java.util.Date" />   
+															<c:if test="${list.end_date ge now}">
+																<a class="option-btn-m" href="javascript:void(0);"  title="修改" data-rel="tooltip">
+																	<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+																</a>
+															</c:if>
 															<a class="" href="javascript:void(0);" onclick="del(this);" title="删除" data-rel="tooltip">
 																<i class="ace-icon fa fa-trash-o bigger-130"></i>
 															</a>

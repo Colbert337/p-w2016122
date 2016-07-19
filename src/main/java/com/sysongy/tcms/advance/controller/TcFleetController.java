@@ -95,6 +95,23 @@ public class TcFleetController extends BaseContoller {
     }
 
     /**
+     * 查询车队信息
+     * @param fleet
+     * @param map
+     * @return
+     */
+    @RequestMapping("/list")
+    @ResponseBody
+    public List<TcFleet> queryFleetList(@ModelAttribute CurrUser currUser, TcFleet fleet, ModelMap map){
+        String stationId = currUser.getStationId();
+        fleet.setStationId(stationId);
+
+        List<TcFleet> tcFleet = tcFleetService.queryFleetListByStationId(fleet);
+
+        return tcFleet;
+    }
+
+    /**
      * 根据用户名称查询车队信息
      * @param fleet
      * @param map

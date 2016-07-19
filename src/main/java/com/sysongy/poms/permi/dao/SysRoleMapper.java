@@ -17,4 +17,6 @@ public interface SysRoleMapper {
     int addRole(SysRole record);
 
     int updateRole(SysRole record);
+
+    List<SysRole> queryAdminRoleList(SysRole sysRole);
 }

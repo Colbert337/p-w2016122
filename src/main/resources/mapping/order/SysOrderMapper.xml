@@ -489,6 +489,9 @@
     <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
       and sor.is_discharge = #{is_discharge,jdbcType=VARCHAR}
     </if>
+    <if test="channel != null &amp;&amp; channel != ''" >
+      and sor.channel = #{channel,jdbcType=VARCHAR}
+    </if>
     <if test="orderNumber != null &amp;&amp; orderNumber !=''" >
       and (tf.fleet_name like CONCAT('%',CONCAT(#{orderNumber,jdbcType=VARCHAR},'%'))
       or  tv.plates_number like CONCAT('%',CONCAT(#{orderNumber,jdbcType=VARCHAR},'%')))
