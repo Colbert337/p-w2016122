@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/transportion/transportion_recharge_log.js"></script>
+<script src="<%=basePath %>/dist/js/advance/fleetMg_log.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -21,21 +21,35 @@
 
 					<div class="page-header">
 						<h1>
-							充值报表
+							队内管理
 						</h1>
 					</div>
 					
-					<input type="hidden" class="" name="order_number" value="${order.orderNumber}" readonly="readonly"/>
-					
 					<div class="search-types">
+						<div class="item">
+							<label>车队：</label>
+							<select id="channel" name="channel"  maxlength="20"></select>
+						</div>
+						<div class="item">
+							<label>交易类型：</label>
+							<select name="is_discharge"  maxlength="20">
+								<option value="">全部</option>
+								<option value="0">消费</option>
+								<option value="1">冲红</option>
+							</select>
+						</div>
+						<div class="item">
+							<label>车队名称/车牌号：</label>
+							<input type="text" name="orderNumber" placeholder="车队名称/车牌号"  maxlength="20" value="${order.orderNumber}"/>
+						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
-								<input type="text" class="" name="operatorSourceType" value="${order.operatorSourceType}" readonly="readonly"/>
+								<input type="text" class="" name="startDate" value="${orderNumber.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="operatorTargetType" value="${order.operatorTargetType}" readonly="readonly"/>
+								<input type="text" class="" name="endDate" value="${orderNumber.endDate}" readonly="readonly"/>
 							</div>			
 						</div>
 						
@@ -62,11 +76,11 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">充值报表列表</div>
+					<div class="table-header">个人报表列表</div>
 
 					<div>
 						<div class="alert alert-info alert-mt">
-							<span class="bigger-120">充值总金额：${totalCash}元</span>
+							<span class="bigger-120">消费总金额：${totalCash}元</span>
 						</div>
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
@@ -78,20 +92,25 @@
 										</label>
 									</th>--%>
 									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
-									<%--<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">订单流水号</th>--%>
-									<%--<th onclick="orderBy(this,'channel');commitForm();" id="transportion_name_order">运输公司名称</th>--%>
-									<%--<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">充值渠道</th>--%>
-									<th onclick="orderBy(this,'charge_type');commitForm();" id="charge_type_order">充值方式</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">充值金额</th>
-									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
-									<th onclick="orderBy(this,'deal_date');commitForm();" id="deal_date_order"><i id="deal_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
+									<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">订单类型</th>
+									<th>交易类型</th>
+									<%--<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>--%>
+									<th onclick="orderBy(this,'fleet_name');commitForm();" id="fleet_name_order">车队名称</th>
+									<th onclick="orderBy(this,'plates_number');commitForm();" id="plates_number_order">车牌号</th>
+									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
+									<th onclick="orderBy(this,'goods_type');commitForm();" id="goods_type_order">商品名称</th>
+									<th onclick="orderBy(this,'price');commitForm();" id="price_order">结算单价</th>
+									<th onclick="orderBy(this,'number');commitForm();" id="number_order">消费数量</th>
+									<th onclick="orderBy(this,'sum_price');commitForm();" id="sum_price_order">消费金额</th>
+									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
+									<th>备注</th>
 								</tr>
 							</thead>
 
 							<tbody>
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
-								<tr id="listobj">
+								<tr id="listobj" <c:if test="${list.is_discharge == 1}"> style="color: #A60000;" </c:if> >
 									<%--<td class="center">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
@@ -101,12 +120,22 @@
 
 									<td>${list.orderNumber}</td>
 									<%--<td>${list.dealNumber}</td>--%>
-									<%--<td>${list.transportionName}</td>--%>
-									<%--<td>${list.channel}</td>--%>
-									<td><s:Code2Name mcode="${list.charge_type}" gcode="CASHBACK"></s:Code2Name></td>
-									<td>${list.cash}</td>
-									<td>${list.operator}</td>
-									<td><fmt:formatDate value="${list.dealDate}" type="both"/></td>
+									<%--<td>${list.orderType}</td>--%>
+									<td><s:Code2Name mcode="${list.orderType}" gcode="ORDER_TYPE"></s:Code2Name></td>
+									<td>
+										<c:if test="${list.is_discharge == 0}">消费</c:if>
+										<c:if test="${list.is_discharge == 1}">冲红</c:if>
+									</td>
+									<%--<td>${list.sum_price}</td>--%>
+									<td>${list.fleet_name}</td>
+									<td>${list.plates_number}</td>
+									<td>${list.gas_station_name}</td>
+									<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
+									<td>${list.price}</td>
+									<td>${list.number}</td>
+									<td>${list.sum_price}</td>
+									<td><fmt:formatDate value="${list.deal_date}" type="both"/></td>
+									<td>${list.remark}</td>
 								</tr>
 							</c:forEach>
 							</tbody>
@@ -137,6 +166,7 @@
 					</div>
 					<%--分页 end--%>
 					<jsp:include page="/common/message.jsp"></jsp:include>
+
 
 			<!-- PAGE CONTENT ENDS -->
 		</div>

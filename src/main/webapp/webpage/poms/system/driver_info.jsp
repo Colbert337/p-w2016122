@@ -26,11 +26,6 @@
 
 					<div class="search-types">	
 						<div class="item">
-						    <label>个人用户编号:</label>
-							<input type="text" name="sysDriverId" placeholder="输入个人用户编号"  maxlength="32" value="${driver.sysDriverId}"/>
-						</div>
-						
-						<div class="item">
 						    <label>会员账号:</label>
 							<input type="text" name="userName" placeholder="输入会员账号" maxlength="20" value="${driver.userName}"/>
 						</div>
@@ -139,11 +134,11 @@
 													</li>
 													
 													<li>
-														<a href="javascript:void(0);" onclick="change(this,1);">冻结卡</a>
+														<a href="javascript:void(0);" onclick="change(this,1,'${list.cardId}');">冻结卡</a>
 													</li>
 
 													<li>
-														<a href="javascript:void(0);" onclick="change(this,2);">解冻</a>
+														<a href="javascript:void(0);" onclick="change(this,2,'${list.cardId}');">解冻</a>
 													</li>
 												</ul>
 											</div>

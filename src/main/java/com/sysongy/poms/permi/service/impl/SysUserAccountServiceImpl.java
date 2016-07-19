@@ -4,6 +4,8 @@ import com.sysongy.util.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -17,13 +19,30 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	
 	@Autowired
 	private SysUserAccountMapper sysUserAccountMapper;
+	@Autowired
+	private GasCardService gasCardService;
 	
 	@Override
-	public int changeStatus(String accountid,String status) {
+	public int changeStatus(String accountid,String status, String cardno) throws Exception{
 		
 		SysUserAccount record = new SysUserAccount();
 		record.setSysUserAccountId(accountid);
 		record.setAccount_status(status);
+		
+		if(!"0".equals(status)){
+			
+			GasCard gasCard = new GasCard();
+			
+			gasCard.setCard_no(cardno);
+			if("1".equals(status)){
+				gasCard.setCard_status(GlobalConstant.CardStatus.PAUSED);
+			}else{
+				gasCard.setCard_status(GlobalConstant.CardStatus.USED);
+			}
+			
+			
+			gasCardService.updateByPrimaryKeySelective(gasCard);
+		}
 		
 		return sysUserAccountMapper.updateByPrimaryKeySelective(record);
 	}
@@ -100,5 +119,10 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	@Override
 	public SysUserAccount queryUserAccountByStationId(String sysTransportionId) {
 		return sysUserAccountMapper.queryUserAccountByStationId(sysTransportionId);
+	}
+
+	@Override
+	public SysUserAccount queryUserAccountByDriverId(String sysDriverId) {
+		return sysUserAccountMapper.queryUserAccountByDriverId(sysDriverId);
 	}
 }

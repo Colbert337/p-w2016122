@@ -60,10 +60,9 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     @Override
     public PageInfo<TcVehicle> queryVehicleList(TcVehicle tcVehicle) {
         if(tcVehicle != null){
-            PageHelper.startPage(tcVehicle.getPageNum(),tcVehicle.getPageSize());
-
+            PageHelper.startPage(tcVehicle.getPageNum(),tcVehicle.getPageSize(), tcVehicle.getOrderby());
             List<TcVehicle> vehicleList = tcVehicleMapper.queryVehicleList(tcVehicle);
-            PageInfo<TcVehicle> vehiclePageInfo = new PageInfo<>(vehicleList);
+            PageInfo<TcVehicle> vehiclePageInfo = new PageInfo<TcVehicle>(vehicleList);
             return vehiclePageInfo;
         }else{
             return null;

@@ -55,6 +55,11 @@ public class TcFleetServiceImpl implements TcFleetService{
     }
 
     @Override
+    public List<TcFleet> queryFleetListByStationId(TcFleet tcFleet) {
+        return tcFleetMapper.queryFleetList(tcFleet);
+    }
+
+    @Override
     public PageInfo<Map<String, Object>> queryFleetMapList(TcFleet tcFleet) {
         if(tcFleet != null){
             PageHelper.startPage(tcFleet.getPageNum(),tcFleet.getPageSize());
@@ -122,7 +127,6 @@ public class TcFleetServiceImpl implements TcFleetService{
         if(transportionId != null && !"".equals(transportionId) && fleetId != null && !"".equals(fleetId)){
             TcFleet tcFleetTemp = new TcFleet();
             tcFleetTemp.setTcFleetId(fleetId);
-            try {
                 TcFleet tcFleet = tcFleetMapper.queryFleet(tcFleetTemp);
                 BigDecimal quota = new BigDecimal(BigInteger.ZERO);
                 if(tcFleet != null){
@@ -135,10 +139,7 @@ public class TcFleetServiceImpl implements TcFleetService{
                         throw new Exception("计算额度结果为负数！");
                     }
                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        
+
         }
         return result;
     }

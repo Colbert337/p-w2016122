@@ -414,7 +414,7 @@ public class TransportionController extends BaseContoller{
 			mailMessage.setSubject("用户设置密码邮件通知");
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("userName",userName);
-			model.put("url",url+"/web/transportion/info/setPassword");
+			model.put("url",url+"/msg/info/setPassword");
 			mailEngine.send(mailMessage, "password.ftl", model);
 			resultInt = 8;
 		}catch (Exception e){
@@ -433,13 +433,17 @@ public class TransportionController extends BaseContoller{
      */
 	@RequestMapping("/info/setPassword")
 	public String querySetPassword(@ModelAttribute("currUser") CurrUser currUser,Transportion transportion, ModelMap map){
-		String userName = currUser.getUser().getUserName();
-		String stationId = currUser.getStationId();
+		if(currUser == null){
+			return "redirect:/";
+		}else{
+			String userName = currUser.getUser().getUserName();
+			String stationId = currUser.getStationId();
 
-		map.addAttribute("userName",userName);
-		map.addAttribute("stationId",stationId);
+			map.addAttribute("userName",userName);
+			map.addAttribute("stationId",stationId);
 
-		return "webpage/poms/transportion/ps_set";
+			return "webpage/poms/transportion/ps_set";
+		}
 	}
 
 	/**
@@ -627,6 +631,9 @@ public class TransportionController extends BaseContoller{
 		            vehicle.setPageNum(GlobalConstant.PAGE_NUM);
 		            vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
 		        }
+		        if(StringUtils.isEmpty(vehicle.getOrderby())){
+		        	vehicle.setOrderby("created_date desc");
+				}
 		        vehicle.setStationId(stationId);
 
 				PageInfo<TcVehicle> pageinfo = tcVehicleService.queryVehicleList(vehicle);
@@ -674,6 +681,18 @@ public class TransportionController extends BaseContoller{
 			order.setCash(new BigDecimal(BigInteger.ZERO));
 			PageInfo<Map<String, Object>> pageinfo = orderDealService.queryRechargeList(order);
 
+			BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+			if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+
+				for (Map<String, Object> quotaMap:pageinfo.getList()) {
+					if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+						totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+					}
+				}
+			}
+			//累计总划款金额
+			map.addAttribute("totalCash",totalCash);
+
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");
 			bean.setPageInfo(ret);
@@ -693,5 +712,6 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
+
 
 }

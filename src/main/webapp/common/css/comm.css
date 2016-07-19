@@ -83,28 +83,48 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
     font-size: 36px;
 }
 .gastation-infomation {
-    max-width: 1000px;
-    margin: 2% auto 0 auto;
+    margin: 2% 10% 0 10%;
 }
-.gastation-infomation a {
-	display: block;
+.gastation-infomation-cert {
     background-color: #ddd;
-    text-align: center;
+    border: 1px solid #ccc;
 }
-.gastation-infomation img{
-	height:160px;
+.gastation-infomation-cert .item {
+    border-right: 1px solid #ccc;
+}
+.gastation-infomation-cert a {
+	display: block;
+    text-align: center;
+    margin-top: 12px;
+}
+.gastation-infomation-cert img{
+	height:180px;
 	margin: 0 auto;
 	padding: 5px;
+    background-color: #fff;
 }
-.gastation-infomation .title {
-    border-top: 1px solid #eee;
-    padding: 5px 0;
+.gastation-infomation-cert .title {
+    padding: 10px 0;
+}
+.gastation-infomation-cert .item:last-child {
+    border-right-width: 0;
+}
+.gastation-infomation-cert .item:last-child a {
+    margin-right: 12px;
+}
+.gastation-infomation-cert .item:first-child a {
+    margin-left: 12px;
 }
 .gastation-infomation-items {
-	margin-top: 2%;
+	margin-bottom: 2%;
+}
+.gastation-infomation-hd {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    margin-bottom: 10px;
+    color: #2679b5;
 }
 .gastation-infomation-items .item {
-    border-bottom: 1px solid #ddd;
     padding: 8px 0;
 }
 .gastation-infomation-items .value {

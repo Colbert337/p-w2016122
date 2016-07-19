@@ -150,6 +150,8 @@ public class DriverController extends BaseContoller{
 		driver.setUserStatus("0");//0 使用中 1 已冻结
 		driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
 		driver.setStationId(stationId);//站点编号
+		Transportion transportion = transportionService.queryTransportionByPK(stationId);
+		driver.setRegisSource(transportion.getTransportion_name());//司机注册来源（运输公司名称）
 
 		/*String newid;
 		SysDriver driverTemp = driverService.queryMaxIndex();
@@ -248,12 +250,12 @@ public class DriverController extends BaseContoller{
     }
 
     @RequestMapping("/changeDriverStatus")
-    public String changeDriverStatus(@RequestParam String accountid, @RequestParam String status, ModelMap map)throws Exception{
+    public String changeDriverStatus(@RequestParam String accountid, @RequestParam String status, @RequestParam String cardno, ModelMap map)throws Exception{
     	PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/driver_info";
 
 		try {
-			sysUserAccountService.changeStatus(accountid, status);
+			sysUserAccountService.changeStatus(accountid, status, cardno);
 
 			SysDriver driver = new SysDriver();
 			driver.setSysUserAccountId(accountid);
@@ -293,7 +295,7 @@ public class DriverController extends BaseContoller{
 				ret = this.queryDriverList(this.driver ==null?new SysDriver():this.driver, map);
 
 				bean.setRetCode(100);
-				bean.setRetMsg("["+driverid+"]已审核");
+				bean.setRetMsg("已审核");
 				bean.setRetValue(rowcount.toString());
 				bean.setPageInfo(ret);
 

@@ -15,6 +15,7 @@ import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
+import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -108,6 +109,7 @@ public class CRMCashServiceContoller {
             record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
             record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+            record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
             String orderCharge = orderService.chargeToDriver(record);
             if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
@@ -118,7 +120,7 @@ public class CRMCashServiceContoller {
             String curStrDate = DateTimeHelper.formatDateTimetoString(curDate, DateTimeHelper.FMT_YYMMddhhmmsssss_noseparator);
             record.setOrderNumber("130"+ curStrDate);
             record.setOrderDate(curDate);
-            int nCreateOrder = orderService.insert(record);
+            int nCreateOrder = orderService.insert(record, null);
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单生成错误：" + record.getOrderId());
@@ -287,6 +289,7 @@ public class CRMCashServiceContoller {
                 return ajaxJson;
             }
 
+            record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION));
             String orderConsume = orderService.consumeByTransportion(record, transportion, tcFleet);
             if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
@@ -297,6 +300,7 @@ public class CRMCashServiceContoller {
         } else {
             record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+            record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
             String orderConsume = orderService.consumeByDriver(record);
             if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
@@ -310,7 +314,7 @@ public class CRMCashServiceContoller {
         record.setOrderNumber("220"+ curStrDate);
         record.setOrderDate(curDate);
 
-        int nCreateOrder = orderService.insert(record);
+        int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
         if(nCreateOrder < 1){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单消费生成错误：" + record.getOrderId());
@@ -390,9 +394,10 @@ public class CRMCashServiceContoller {
     @RequestMapping("/web/hedgeFund")
     public AjaxJson hedgeFund(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
-        if((record == null) || StringUtils.isEmpty(record.getOrderId())){
+        if((record == null) || StringUtils.isEmpty(record.getOrderId())
+                || StringUtils.isEmpty(record)){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("订单ID为空！！！");
+            ajaxJson.setMsg("订单ID或者气站ID为空！！！");
             return ajaxJson;
         }
 
@@ -449,7 +454,8 @@ public class CRMCashServiceContoller {
         hedgeRecord.setIs_discharge("1");
         hedgeRecord.setBeen_discharged("1");
         hedgeRecord.setDischargeOrderId(originalOrder.getOrderId());
-        int nRet = orderService.insert(hedgeRecord);
+
+        int nRet = orderService.insert(hedgeRecord, originalOrder.getSysOrderGoods());
         if(nRet < 1){
             logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
             ajaxJson.setSuccess(false);
@@ -605,7 +611,7 @@ public class CRMCashServiceContoller {
                     if((tcFleets == null) || (tcFleets.size() == 0)){
                         Transportion transportion = transportionService.queryTransportionByPK(tcVehicle.getStationId());
                         SysUserAccount sysUserAccount = new SysUserAccount();
-                        sysUserAccount.setAccountBalance(transportion.getAccount().getAccountBalance());
+                        sysUserAccount.setAccountBalance(transportion.getDeposit().toString());
                         sysDriver.setAccount(sysUserAccount);
                         return sysDriver;
                     }
@@ -627,5 +633,38 @@ public class CRMCashServiceContoller {
                 e.printStackTrace();
             }
         return null;
+    }
+
+    @ResponseBody
+    @RequestMapping("/web/queryGoodsOrderInfos")
+    public AjaxJson queryGoodsOrderInfos(HttpServletRequest request, HttpServletResponse response,
+                                         SysOrderGoodsForCRMReport sysOrderGoodsForCRMReport) throws Exception{
+        AjaxJson ajaxJson = new AjaxJson();
+
+        if(StringUtils.isEmpty(sysOrderGoodsForCRMReport.getOperatorSourceId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！" );
+            return ajaxJson;
+        }
+
+        if(StringUtils.isEmpty(sysOrderGoodsForCRMReport.getStorage_time_after())
+                || StringUtils.isEmpty(sysOrderGoodsForCRMReport.getStorage_time_before())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("起始时间或终止时间为空！！！" );
+            return ajaxJson;
+        }
+
+        List<SysOrderGoodsForCRMReport> sysOrderGoodsForCRMReports =
+                    orderService.queryGoodsOrderInfos(sysOrderGoodsForCRMReport);
+        if((sysOrderGoodsForCRMReports == null) || (sysOrderGoodsForCRMReports.size() == 0)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("您所查询的数据为空！！！" );
+            return ajaxJson;
+        }
+
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("sysOrderGoodsForCRMReports", sysOrderGoodsForCRMReports);
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
     }
 }

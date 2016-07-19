@@ -7,7 +7,7 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 
 public interface SysUserAccountService {
 	
-	int changeStatus(String accountid, String status);
+	int changeStatus(String accountid, String status, String cardno) throws Exception;
 
 	int deleteByPrimaryKey(String sysUserAccountId);
 
@@ -29,4 +29,11 @@ public interface SysUserAccountService {
 	 * @return
      */
 	SysUserAccount queryUserAccountByStationId(String sysTransportionId);
+
+	/**
+	 * 根据司机编号查询司机账户信息
+	 * @param sysDriverId 运输公司ID
+	 * @return
+	 */
+	SysUserAccount queryUserAccountByDriverId(String sysDriverId);
 }

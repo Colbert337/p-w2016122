@@ -318,7 +318,18 @@ public class TransportionServiceImpl implements TransportionService {
 		transportion.setDeposit(deposit_result);
 		return transportionMapper.updateDeposit(transportion);
 	}
-	
+
+	/**
+	 * 修改运输公司额度
+	 * @param transportion
+	 * @return
+	 * @throws Exception
+     */
+	@Override
+	public int updateDeposit(Transportion transportion) throws Exception {
+		return transportionMapper.updateDeposit(transportion);
+	}
+
 	@Override
 	public int updatedeposiTransportion(SysDepositLog log, String operation) throws Exception {
 		SysUserAccount account = new SysUserAccount();
@@ -337,7 +348,7 @@ public class TransportionServiceImpl implements TransportionService {
 		order.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 		String orderNumber = orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
 		order.setOrderNumber(orderNumber);
-		orderService.insert(order);
+		orderService.insert(order, null);
 		orderService.chargeToTransportion(order);
 		
 		//写日志
