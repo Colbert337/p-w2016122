@@ -5,7 +5,7 @@
     <id column="order_goods_id" property="orderGoodsId" jdbcType="VARCHAR" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="DECIMAL" />
-    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="number" property="number" jdbcType="DOUBLE" />
     <result column="sum_price" property="sumPrice" jdbcType="DECIMAL" />
     <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
     <association property="goods_type_info" column="goods_type"
@@ -32,7 +32,7 @@
       number, sum_price, goods_type
       )
     values (#{orderGoodsId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
-      #{number,jdbcType=INTEGER}, #{sumPrice,jdbcType=DECIMAL}, #{goodsType,jdbcType=VARCHAR}
+      #{number,jdbcType=DOUBLE}, #{sumPrice,jdbcType=DECIMAL}, #{goodsType,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.ordergoods.model.SysOrderGoods" >
@@ -68,7 +68,7 @@
         #{price,jdbcType=DECIMAL},
       </if>
       <if test="number != null" >
-        #{number,jdbcType=INTEGER},
+        #{number,jdbcType=DOUBLE},
       </if>
       <if test="sumPrice != null" >
         #{sumPrice,jdbcType=DECIMAL},
@@ -89,7 +89,7 @@
         price = #{price,jdbcType=DECIMAL},
       </if>
       <if test="number != null" >
-        number = #{number,jdbcType=INTEGER},
+        number = #{number,jdbcType=DOUBLE},
       </if>
       <if test="sumPrice != null" >
         sum_price = #{sumPrice,jdbcType=DECIMAL},
@@ -105,7 +105,7 @@
     update sys_order_goods
     set order_id = #{orderId,jdbcType=VARCHAR},
       price = #{price,jdbcType=DECIMAL},
-      number = #{number,jdbcType=INTEGER},
+      number = #{number,jdbcType=DOUBLE},
       sum_price = #{sumPrice,jdbcType=DECIMAL},
       goods_type = #{goodsType,jdbcType=VARCHAR}
     where order_goods_id = #{orderGoodsId,jdbcType=VARCHAR}

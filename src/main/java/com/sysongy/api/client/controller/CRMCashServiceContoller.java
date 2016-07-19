@@ -2,6 +2,8 @@ package com.sysongy.api.client.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.api.client.controller.model.PayCodeValidModel;
+import com.sysongy.api.client.controller.model.ShortMessageInfoModel;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
@@ -62,9 +64,6 @@ public class CRMCashServiceContoller {
     SysUserService sysUserService;
 
     @Autowired
-    RedisClientInterface redisClientImpl;
-
-    @Autowired
     DriverService driverService;
 
     @Autowired
@@ -84,6 +83,9 @@ public class CRMCashServiceContoller {
 
     @Autowired
     private TcVehicleService tcVehicleService;
+
+    @Autowired
+    RedisClientInterface redisClientImpl;
 
     @ResponseBody
     @RequestMapping("/web/customerGasCharge")
@@ -117,8 +119,6 @@ public class CRMCashServiceContoller {
                 return ajaxJson;
             }
             Date curDate = new Date();
-            String curStrDate = DateTimeHelper.formatDateTimetoString(curDate, DateTimeHelper.FMT_YYMMddhhmmsssss_noseparator);
-            record.setOrderNumber("130"+ curStrDate);
             record.setOrderDate(curDate);
             int nCreateOrder = orderService.insert(record, null);
             if(nCreateOrder < 1){
@@ -157,9 +157,9 @@ public class CRMCashServiceContoller {
             ajaxJson.setAttributes(attributes);
             return ajaxJson;
         } catch (Exception e){
+            e.printStackTrace();
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(e.getMessage());
-            e.printStackTrace();
             return ajaxJson;
         }
 
@@ -185,169 +185,190 @@ public class CRMCashServiceContoller {
     @RequestMapping("/web/customerGasPay")
     public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
-        SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
-        record.setIs_discharge("0");
-        if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
-                StringUtils.isEmpty(record.getOperatorSourceId()) ){
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("订单ID或者气站ID为空！！！");
-            return ajaxJson;
-        }
-
-        record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
-        PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
-        if((sysOrders == null) || (sysOrders.getList().size() > 0)){
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("该订单已存在，请勿提交重复订单！！！");
-            return ajaxJson;
-        }
-
-        String payCode = request.getParameter("payCode");
-        if(StringUtils.isEmpty(payCode)){
-            ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("支付密码为空！！！");
-            return ajaxJson;
-        }
-
-        String checkCode = request.getParameter("checkCode");
-        GasCard gasCard = null;
-        if(StringUtils.isEmpty(checkCode)){
-            gasCard = gasCardService.selectByCardNoForCRM(record.getConsume_card());
-        }
-
-        SysDriver sysDriver = null;
-        if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
-            sysDriver = convertSysDriver(record.getConsume_card());
-            List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(record.getConsume_card());
-            if (vehicles.size() > 1) {
-                logger.error("查询出现多个车辆: " + record.getConsume_card());
-                return null;
-            }
-            if((vehicles == null) || (vehicles.get(0) == null)
-                    || !(vehicles.get(0).getPayCode().equalsIgnoreCase(payCode))){
+        try {
+            SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
+            record.setIs_discharge("0");
+            if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
+                    StringUtils.isEmpty(record.getOperatorSourceId()) ){
                 ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("支付密码错误！！！");
+                ajaxJson.setMsg("订单ID或者气站ID为空！！！");
                 return ajaxJson;
             }
-        } else {
-            sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
-            SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(sysDriver.getSysUserAccountId());
-            if((creditAccount == null) || (sysDriver == null)
-                    || !(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("支付密码错误！！！");
-                return ajaxJson;
-            }
-        }
 
-        if(!StringUtils.isEmpty(checkCode)){
-            record.setConsume_card(sysDriver.getCardId());
-            String checkCodeFromRedis = (String)redisClientImpl.getFromCache
-                    (sysDriver.getSysDriverId());
-            if(StringUtils.isEmpty(checkCodeFromRedis)){
+            record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
+            PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
+            if((sysOrders == null) || (sysOrders.getList().size() > 0)){
                 ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("验证码已失效，请重新生成验证码！！！");
+                ajaxJson.setMsg("该订单已存在，请勿提交重复订单！！！");
                 return ajaxJson;
             }
+
+            String payCode = request.getParameter("payCode");
+            if(StringUtils.isEmpty(payCode)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("支付密码为空！！！");
+                return ajaxJson;
+            }
+
+            String checkCode = request.getParameter("checkCode");
+            GasCard gasCard = null;
             if(StringUtils.isEmpty(checkCode)){
+                gasCard = gasCardService.selectByCardNoForCRM(record.getConsume_card());
+            }
+
+            SysDriver sysDriver = null;
+            if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
+                sysDriver = convertSysDriver(record.getConsume_card());
+                List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(record.getConsume_card());
+                if (vehicles.size() > 1) {
+                    logger.error("查询出现多个车辆: " + record.getConsume_card());
+                    return null;
+                }
+                if((vehicles == null) || (vehicles.get(0) == null)
+                        || !(vehicles.get(0).getPayCode().equalsIgnoreCase(payCode))){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("支付密码错误！！！");
+                    return ajaxJson;
+                }
+            } else {
+                sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
+                SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(sysDriver.getSysUserAccountId());
+                if((creditAccount == null) || (sysDriver == null)
+                        || !(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("支付密码错误！！！");
+                    return ajaxJson;
+                }
+            }
+
+            if(!StringUtils.isEmpty(checkCode)){
+                record.setConsume_card(sysDriver.getCardId());
+                String checkCodeFromRedis = (String)redisClientImpl.getFromCache
+                        (sysDriver.getSysDriverId());
+                if(StringUtils.isEmpty(checkCodeFromRedis)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("验证码已失效，请重新生成验证码！！！");
+                    return ajaxJson;
+                }
+                if(StringUtils.isEmpty(checkCode)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("短信验证码为空！！！");
+                    return ajaxJson;
+                }
+                if(!checkCode.equalsIgnoreCase(checkCodeFromRedis)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("短信验证码错误！！！");
+                    return ajaxJson;
+                }
+            }
+
+            if(gasCard != null){
+                record.setGasCard(gasCard);
+            }
+
+            BigDecimal totalPrice = new BigDecimal(0);
+            for(SysOrderGoods goods : record.getSysOrderGoods()){
+                totalPrice = totalPrice.add(goods.getSumPrice());
+            }
+
+            record.setCash(totalPrice);
+            sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
+            if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
+                record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
+                record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
+
+                TcFleet tcFleet = findFleetInfo(record.getConsume_card());      //如果车队为空，则直接消费运输公司资金
+                List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(record.getConsume_card());
+                Transportion transportion = null;
+                if (vehicles.size() > 0) {
+                    transportion = transportionService.queryTransportionByPK(vehicles.get(0).getStationId());
+                }
+                if(transportion == null){
+                    logger.error("所属运输公司无法查询:" + tcFleet.getStationId());
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("所属运输公司无法查询！！！");
+                    return ajaxJson;
+                }
+
+                record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION));
+                String orderConsume = orderService.consumeByTransportion(record, transportion, tcFleet);
+                if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("订单消费错误：" + orderConsume);
+                    return ajaxJson;
+                }
+
+            } else {
+                record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
+                record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+                record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
+                String orderConsume = orderService.consumeByDriver(record);
+                if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("订单消费错误：" + orderConsume);
+                    return ajaxJson;
+                }
+            }
+
+            Date curDate = new Date();
+            record.setOrderDate(curDate);
+            int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
+            if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("短信验证码为空！！！");
+                ajaxJson.setMsg("订单消费生成错误：" + record.getOrderId());
                 return ajaxJson;
             }
-            if(!checkCode.equalsIgnoreCase(checkCodeFromRedis)){
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("短信验证码错误！！！");
-                return ajaxJson;
-            }
-        }
 
-        if(gasCard != null){
-            record.setGasCard(gasCard);
-        }
+            SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
+            recordNew.setCash(record.getCash());
+            recordNew.setGasCard(record.getGasCard());
+            Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
 
-        BigDecimal totalPrice = new BigDecimal(0);
-        for(SysOrderGoods goods : record.getSysOrderGoods()){
-            totalPrice = totalPrice.add(goods.getSumPrice());
-        }
-
-        record.setCash(totalPrice);
-        sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
-        if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
-            record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
-            record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
-
-            TcFleet tcFleet = findFleetInfo(record.getConsume_card());      //如果车队为空，则直接消费运输公司资金
-            List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(record.getConsume_card());
-            Transportion transportion = null;
-            if (vehicles.size() > 0) {
-                transportion = transportionService.queryTransportionByPK(vehicles.get(0).getStationId());
-            }
-            if(transportion == null){
-                logger.error("所属运输公司无法查询:" + tcFleet.getStationId());
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("所属运输公司无法查询！！！");
-                return ajaxJson;
+            if(gastation != null){
+                recordNew.setGastation(gastation);
+                record.setChannel(gastation.getGas_station_name());
+                record.setChannelNumber(gastation.getSys_gas_station_id());
             }
 
-            record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION));
-            String orderConsume = orderService.consumeByTransportion(record, transportion, tcFleet);
-            if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("订单消费错误：" + orderConsume);
-                return ajaxJson;
+            if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
+                SysDriver sysDriverNew = null;
+                if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
+                    sysDriverNew = convertSysDriver(record.getConsume_card());
+                } else {
+                    sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
+                }
+                recordNew.setSysDriver(sysDriverNew);
+            } else {
+                logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
-
-        } else {
-            record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
-            record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
-            record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
-            String orderConsume = orderService.consumeByDriver(record);
-            if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("订单消费错误：" + orderConsume);
-                return ajaxJson;
-            }
-        }
-
-        Date curDate = new Date();
-        String curStrDate = DateTimeHelper.formatDateTimetoString(curDate, DateTimeHelper.FMT_YYMMddhhmmsssss_noseparator);
-        record.setOrderNumber("220"+ curStrDate);
-        record.setOrderDate(curDate);
-
-        int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
-        if(nCreateOrder < 1){
+            sendConsumeMessage(recordNew);
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            attributes.put("sysOrder", recordNew);
+            ajaxJson.setAttributes(attributes);
+            return ajaxJson;
+        } catch (Exception e) {
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("订单消费生成错误：" + record.getOrderId());
+            ajaxJson.setMsg("订单消费错误：" + e.getMessage());
             return ajaxJson;
         }
+    }
 
-        SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
-        recordNew.setCash(record.getCash());
-        recordNew.setGasCard(record.getGasCard());
-        Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
-
-        if(gastation != null){
-            recordNew.setGastation(gastation);
-            record.setChannel(gastation.getGas_station_name());
-            record.setChannelNumber(gastation.getSys_gas_station_id());
-        }
-
-        if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
-            SysDriver sysDriverNew = null;
-            if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
-                sysDriverNew = convertSysDriver(record.getConsume_card());
-            } else {
-                sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
-            }
-            recordNew.setSysDriver(sysDriverNew);
+    private boolean isLock24Hours(String id){
+        boolean bRet = false;
+        PayCodeValidModel payCodeValidModel = (PayCodeValidModel)redisClientImpl.getFromCache(id);
+        if(payCodeValidModel == null){
+            PayCodeValidModel payCodeValidModelInfo = new PayCodeValidModel();
+            payCodeValidModelInfo.setId(id);
+            payCodeValidModelInfo.setErrTimes(0);
+            redisClientImpl.addToCache(id, payCodeValidModelInfo, 86400);
         } else {
-            logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
+            payCodeValidModel.setErrTimes(payCodeValidModel.getErrTimes() + 1);
+            redisClientImpl.addToCache(id, payCodeValidModel, 86400);
+            if(payCodeValidModel.getErrTimes() == 5){
+
+            }
         }
-        sendConsumeMessage(recordNew);
-        Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("sysOrder", recordNew);
-        ajaxJson.setAttributes(attributes);
-        return ajaxJson;
+        return bRet;
     }
 
     private void sendConsumeMessage(SysOrder recordNew){
@@ -407,6 +428,7 @@ public class CRMCashServiceContoller {
         sysUser.setUserName(curUserName);
         sysUser.setMobilePhone(curUserName);
         sysUser.setPassword(curPassword);
+        sysUser.setUserType(InterfaceConstants.USER_TYPE_CRM_USER);
         SysUser user = sysUserService.queryUserMapByAccount(sysUser);
         if(user == null){
             ajaxJson.setSuccess(false);
@@ -426,6 +448,7 @@ public class CRMCashServiceContoller {
         sysUserAdmin.setMobilePhone(adminUserName);
         sysUserAdmin.setUserName(adminUserName);
         sysUserAdmin.setPassword(adminPassword);
+        sysUserAdmin.setUserType(InterfaceConstants.USER_TYPE_CRM_USER);
         SysUser sysUserOperator = sysUserService.queryUserMapByAccount(sysUserAdmin);
         if((sysUserOperator == null) || (sysUserOperator.getIsAdmin() != 0)){
             ajaxJson.setSuccess(false);
@@ -640,7 +663,6 @@ public class CRMCashServiceContoller {
     public AjaxJson queryGoodsOrderInfos(HttpServletRequest request, HttpServletResponse response,
                                          SysOrderGoodsForCRMReport sysOrderGoodsForCRMReport) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
-
         if(StringUtils.isEmpty(sysOrderGoodsForCRMReport.getOperatorSourceId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("气站ID为空！！！" );

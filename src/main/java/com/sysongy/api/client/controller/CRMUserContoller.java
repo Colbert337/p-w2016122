@@ -61,6 +61,12 @@ public class CRMUserContoller {
                     return ajaxJson;
                 }
 
+                if(!user.getStationId().equalsIgnoreCase(sysUser.getStationId())){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("该用户无权登录该气站客户端！");
+                    return ajaxJson;
+                }
+
                 if((user.getSysFunctionList() == null) || (user.getSysFunctionList().size() == 0)
                         || ((user.getSysFunctionList().get(0).get("children")) == null)){
                     ajaxJson.setSuccess(false);

@@ -134,7 +134,15 @@ public class CRMProductPriceController {
                 return ajaxJson;
             }
 
-            attributes.put("productPrice", productPrice);
+            ProductPrice productPriceInfo =
+                    productPriceService.queryProductPriceByPK(productPrice.getId());
+            if(productPriceInfo == null){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("商品价格变动出错！！！");
+                return ajaxJson;
+            }
+
+            attributes.put("productPrice", productPriceInfo);
             ajaxJson.setAttributes(attributes);
         } catch (Exception e){
             ajaxJson.setSuccess(false);
