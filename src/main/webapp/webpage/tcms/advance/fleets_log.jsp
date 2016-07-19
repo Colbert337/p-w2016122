@@ -63,6 +63,8 @@
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
 							</button>
+							<div class="item"></div>
+							<a class="btn btn-sm btn-primary" href="#">导出报表</a>
 						</div>
 					</div>
 
