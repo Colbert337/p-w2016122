@@ -83,6 +83,7 @@
 			},
 			onClosed:function(){
 				document.body.style.overflow = $overflow;
+				$('[data-rel="tooltip"]').tooltip('hide');
 			},
 			onComplete:function(){
 				$.colorbox.resize();

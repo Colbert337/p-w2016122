@@ -21,6 +21,7 @@
 			},
 			onClosed:function(){
 				document.body.style.overflow = $overflow;
+				$('[data-rel="tooltip"]').tooltip('hide');
 			},
 			onComplete:function(){
 				$.colorbox.resize();
@@ -28,6 +29,7 @@
 		};
 	
 		$('.gastation-log-colorbox').colorbox(colorbox_params);
+
 		$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
 		
 		
@@ -45,6 +47,7 @@
 		    if($("#retCode").val() != "100"){
 			   //$("#modal-table").modal("show");
 			}
+			$('[data-rel="tooltip"]').tooltip();
 	    },error:function(XMLHttpRequest, textStatus, errorThrown) {
 	            	
 		}

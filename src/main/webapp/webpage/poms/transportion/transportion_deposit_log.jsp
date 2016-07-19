@@ -89,7 +89,7 @@
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th> 
 									<th onclick="orderBy(this,'optime');commitForm();" id="optime_order" class="td-w2"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th>
 									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">充值金额(元)</th>
-									<th>更多操作</th>
+									<th class="text-center">更多操作0</th>
 								</tr>
 							</thead>
 
@@ -114,11 +114,11 @@
 					                <td><fmt:formatDate value="${list.optime}" type="both"/></td>
 									<td>${list.deposit}</td>
 									<td class="text-center">
-										<a class="gastation-log-colorbox" href="<%=imagePath %>${list.transfer_photo}" title="查看图片" data-rel="colorbox">
+										<a class="option-btn-m gastation-log-colorbox" href="<%=imagePath %>${list.transfer_photo}" title="查看图片" data-rel="tooltip" data-rel="colorbox">
 											<i class="ace-icon fa fa-camera bigger-130"></i>
 										</a>
 										<c:if test="${currUser.userType == 5}">
-											<a class="" href="javascript:void(0);" title="查看订单明细">
+											<a class="" href="javascript:void(0);" title="查看订单明细" data-rel="tooltip">
 												<i class="ace-icon fa fa-search-plus bigger-130" onclick="showOrderLog(this);"></i>
 											</a>
 										</c:if>

@@ -102,7 +102,7 @@
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order" class="td-w2"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
 									<th onclick="orderBy(this,'prepay_balance');commitForm();" id="prepay_balance_order">预付款额度</th>
 									<th style="display: none">钱袋编号</th>
-									<th class="text-center td-w3">更多操作</th>
+									<th class="text-center td-w2">更多操作</th>
 								</tr>
 							</thead>
 
@@ -134,10 +134,10 @@
 										<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 										</a>
-										<a class="" href="javascript:void(0);" title="查看图片">
+										<a class="option-btn-m" href="javascript:void(0);" title="查看图片" data-rel="tooltip">
 											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showInnerModel('${list.indu_com_certif}','${list.tax_certif}','${list.lng_certif}','${list.dcp_certif}');"></i>
 										</a>
-										<a class="option-btn-m" href="javascript:void(0);" title="重置密码" data-rel="tooltip">
+										<a href="javascript:void(0);" title="重置密码" data-rel="tooltip">
 											<i class="ace-icon fa fa-key bigger-130" onclick="resetPassword(this);"></i>
 										</a>
 									</td>
