@@ -55,6 +55,11 @@ public class TcFleetServiceImpl implements TcFleetService{
     }
 
     @Override
+    public List<TcFleet> queryFleetListByStationId(TcFleet tcFleet) {
+        return tcFleetMapper.queryFleetList(tcFleet);
+    }
+
+    @Override
     public PageInfo<Map<String, Object>> queryFleetMapList(TcFleet tcFleet) {
         if(tcFleet != null){
             PageHelper.startPage(tcFleet.getPageNum(),tcFleet.getPageSize());

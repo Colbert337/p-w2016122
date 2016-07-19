@@ -38,6 +38,13 @@ public interface TcFleetService {
      * @param tcFleet
      * @return
      */
+    List<TcFleet> queryFleetListByStationId(TcFleet tcFleet);
+
+    /**
+     * 查询车队信息列表
+     * @param tcFleet
+     * @return
+     */
     PageInfo<Map<String,Object>> queryFleetMapList(TcFleet tcFleet);
 
     /**

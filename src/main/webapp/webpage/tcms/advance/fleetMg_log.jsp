@@ -27,6 +27,10 @@
 					
 					<div class="search-types">
 						<div class="item">
+							<label>车队：</label>
+							<select id="channel" name="channel"  maxlength="20"></select>
+						</div>
+						<div class="item">
 							<label>交易类型：</label>
 							<select name="is_discharge"  maxlength="20">
 								<option value="">全部</option>
