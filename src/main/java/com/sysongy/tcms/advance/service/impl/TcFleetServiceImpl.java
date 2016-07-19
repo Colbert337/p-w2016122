@@ -136,7 +136,7 @@ public class TcFleetServiceImpl implements TcFleetService{
                     if(resultVal >= 0){
                         result = tcFleetMapper.updateFleetQuota(transportionId,fleetId,newQuota);
                     }else{
-                        throw new Exception("计算额度结果为负数！");
+                        throw new Exception("车队余额不足！");
                     }
                }
 

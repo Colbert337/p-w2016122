@@ -283,7 +283,7 @@ public class GlobalConstant {
 	public static final String CASHBACK_STATUS_DISABLE = "1";
 	
 	/*
-	 * 返现类型的编号
+	 * 返现类型的编号---对应返现表
 	 */
 	public interface CashBackNumber{
 		public static final String CASHBACK_TRANSFER_CHARGE ="101";
@@ -296,6 +296,8 @@ public class GlobalConstant {
 		public static final String CASHBACK_UNIONPAY_CHARGE ="105";
 		public static final String CASHBACK_CARD_CHARGE ="106";
 		public static final String CASHBACK_POS_CHARGE ="107";
+		public static final String CASHBACK_PLATFORM_CHARGE ="108";
+		
 	}
 	
 	/*
@@ -310,6 +312,7 @@ public class GlobalConstant {
 		public static final String CHARGETYPE_UNIONPAY_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_UNIONPAY_CHARGE;
 		public static final String CHARGETYPE_CARD_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_CARD_CHARGE;
 		public static final String CHARGETYPE_POS_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_POS_CHARGE;
+		public static final String CHARGETYPE_PLATFORM_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_PLATFORM_CHARGE;
 	}
 	
 	/*

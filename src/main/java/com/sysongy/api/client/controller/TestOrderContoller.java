@@ -227,7 +227,7 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("18.8"));
+        	order.setCash(new BigDecimal("600"));
         	order.setCreditAccount(tranId);
         	//order.setDebitAccount("GS12000003");
         	//order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_POS_CHARGE);
