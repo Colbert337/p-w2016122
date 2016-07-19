@@ -158,8 +158,8 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         } catch (Exception e){
             ajaxJson.setSuccess(false);
-
             ajaxJson.setMsg(e.getMessage());
+            e.printStackTrace();
             return ajaxJson;
         }
 
@@ -662,9 +662,47 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        List<SysOrderGoodsForCRMReport> sysOrderGoodsForCRMReportInfos = new ArrayList<SysOrderGoodsForCRMReport>();
+        for(SysOrderGoodsForCRMReport goodsForCRMReport : sysOrderGoodsForCRMReports){
+            if(goodsForCRMReport.getOrderType().equalsIgnoreCase
+                    (GlobalConstant.OrderType.CONSUME_BY_DRIVER)){
+                SysDriver sysDriverInfo = driverService.queryDriverByPK(goodsForCRMReport.getCreditAccount());
+                goodsForCRMReport.setSysDriver(sysDriverInfo);
+            } else {
+                goodsForCRMReport = findSysOrderCRMReport(goodsForCRMReport, goodsForCRMReport.getConsume_card());
+            }
+            sysOrderGoodsForCRMReportInfos.add(goodsForCRMReport);
+        }
+
         Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("sysOrderGoodsForCRMReports", sysOrderGoodsForCRMReports);
+        attributes.put("sysOrderGoodsForCRMReports", sysOrderGoodsForCRMReportInfos);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
+    }
+
+    private SysOrderGoodsForCRMReport findSysOrderCRMReport(SysOrderGoodsForCRMReport sysOrderGoodsForCRMReport, String cardID){
+        if(StringUtils.isEmpty(cardID)){
+            return null;
+        }
+        try {
+            SysDriver sysDriver = new SysDriver();
+            List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(cardID);
+            if (vehicles.size() > 1) {
+                logger.error("查询出现多个车辆: " + cardID);
+                return null;
+            }
+
+            for (TcVehicle tcVehicle : vehicles) {
+                sysDriver.setPlateNumber(tcVehicle.getPlatesNumber());
+                sysDriver.setMobilePhone(tcVehicle.getNoticePhone());
+                sysDriver.setFullName(tcVehicle.getUserName());
+                sysOrderGoodsForCRMReport.setSysDriver(sysDriver);
+                return sysOrderGoodsForCRMReport;
+            }
+        } catch (Exception e){
+            logger.error("获取车队出错： " + e);
+            e.printStackTrace();
+        }
+        return null;
     }
 }
