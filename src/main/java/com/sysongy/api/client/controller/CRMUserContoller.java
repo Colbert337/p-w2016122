@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -59,6 +60,14 @@ public class CRMUserContoller {
                     ajaxJson.setMsg("用户名或密码错误，请重新登录！");
                     return ajaxJson;
                 }
+
+                if((user.getSysFunctionList() == null) || (user.getSysFunctionList().size() == 0)
+                        || ((user.getSysFunctionList().get(0).get("children")) == null)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("该用户还没有授权，请在气站平台授予该用户权限！");
+                    return ajaxJson;
+                }
+
                 attributes.put("UserInfo",user);
                 ajaxJson.setAttributes(attributes);
                 ajaxJson.setSuccess(true);
