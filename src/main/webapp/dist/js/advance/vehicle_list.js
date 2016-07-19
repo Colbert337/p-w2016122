@@ -223,7 +223,7 @@ function fileFormat(){
     var fileName= $("#file_import").val();
     var suffix = fileName.substr(fileName.indexOf("."));
     if(suffix != '.xls' && suffix !=".xlsx"){
-        alert("导入文件格式错误，必须是excle格式！");
+        bootbox.alert("导入文件格式错误，必须是excle格式！");
         return false;
     }
 }
