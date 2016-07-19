@@ -69,7 +69,7 @@ public interface SysFunctionService {
      * @param function 功能信息
      * @return
      */
-    int addFunction(SysFunction function);
+    int addFunction(SysFunction function) throws Exception;
 
     /**
      * 更新功能

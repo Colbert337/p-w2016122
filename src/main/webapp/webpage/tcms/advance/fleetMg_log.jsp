@@ -88,7 +88,7 @@
 									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
 									<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">订单类型</th>
 									<th>交易类型</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<%--<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>--%>
 									<th onclick="orderBy(this,'fleet_name');commitForm();" id="fleet_name_order">车队名称</th>
 									<th onclick="orderBy(this,'plates_number');commitForm();" id="plates_number_order">车牌号</th>
 									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
@@ -116,16 +116,19 @@
 									<%--<td>${list.dealNumber}</td>--%>
 									<%--<td>${list.orderType}</td>--%>
 									<td><s:Code2Name mcode="${list.orderType}" gcode="ORDER_TYPE"></s:Code2Name></td>
-									<td>${list.used}</td>
-									<td>${list.cash}</td>
-									<td>${list.fleetName}</td>
-									<td>${list.mobilePhone}</td>
-									<td>${list.platesNumber}</td>
-									<td><s:Code2Name mcode="${list.goodsType}" gcode="CARDTYPE"></s:Code2Name></td>
+									<td>
+										<c:if test="${list.is_discharge == 0}">消费</c:if>
+										<c:if test="${list.is_discharge == 1}">冲红</c:if>
+									</td>
+									<%--<td>${list.sum_price}</td>--%>
+									<td>${list.fleet_name}</td>
+									<td>${list.plates_number}</td>
+									<td>${list.gas_station_name}</td>
+									<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td>${list.price}</td>
 									<td>${list.number}</td>
-									<td>${list.sumPrice}</td>
-									<td><fmt:formatDate value="${list.order_date}" type="both"/></td>
+									<td>${list.sum_price}</td>
+									<td><fmt:formatDate value="${list.deal_date}" type="both"/></td>
 									<td>${list.remark}</td>
 								</tr>
 							</c:forEach>
