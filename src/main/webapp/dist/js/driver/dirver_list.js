@@ -71,7 +71,7 @@ function sendMessage(){
             async:false,
             type: "POST",
             success: function(data){
-                alert(data.msg);
+                bootbox.alert(data.msg);
             }
         })
     }
