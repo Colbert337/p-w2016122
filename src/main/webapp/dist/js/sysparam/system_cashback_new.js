@@ -1,4 +1,4 @@
-			//bootstrap验证控件
+		//bootstrap验证控件
 		    $('#cashbackform').bootstrapValidator({
 		        message: 'This value is not valid',
 		        feedbackIcons: {
@@ -7,17 +7,6 @@
 		            validating: 'glyphicon glyphicon-refresh'
 		        },
 		        fields: {
-		        	threshold_min_value: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '阈最小值不能为空'
-		                    },
-		                    regexp: {
-		                        regexp: '^[0-9]*$',
-		                        message: '阈最小值必须是整数'
-		                    }
-		                }
-		            },
 		            threshold_max_value: {
 		                validators: { 
 		                    notEmpty: {
@@ -67,26 +56,31 @@
 		                validators: {
 		                    notEmpty: {
 		                        message: '生效日期不能为空'
-		                    },
+		                    }/*,
 		                    callback: {
 		                    	message: '生效日期必须大于等于当前日期',
 		                    	callback: function (value, validator, $field) {
 		                    		return compareDate(value ,new Date().toLocaleDateString());
 	                            }
-		                    }
+		                    }*/
 		                },
 		                trigger: 'change'
 		            },
 		            start_date_before: {
-		                validators: {
+		                validators: { 
 		                    notEmpty: {
 		                        message: '失效日期不能为空'
 		                    },
 		                    callback: {
-		                    	message: '失效日期必须大于等于生效日期',
 		                    	callback: function (value, validator, $field) {
+		                    		if(!compareDate(value ,new Date().toLocaleDateString())){
+		                    			var txt = $('.start-date-before small[data-bv-validator="callback"]').text('失效日期必须大于等于当前日期');
+
+		                    			return false;
+		                    		}     		
 		                    		return !compareDate($('[name=start_date_after]').val(), value);
-	                            }
+	                            },
+	                            message: '失效日期必须大于等于生效日期'
 		                    }
 		                },
 		                trigger: 'change'

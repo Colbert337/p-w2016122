@@ -77,7 +77,7 @@
 									</th>--%>
 									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
 									<%--<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">订单流水号</th>--%>
-									<th onclick="orderBy(this,'channel');commitForm();" id="transportion_name_order">运输公司名称</th>
+									<%--<th onclick="orderBy(this,'channel');commitForm();" id="transportion_name_order">运输公司名称</th>--%>
 									<%--<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">充值渠道</th>--%>
 									<th onclick="orderBy(this,'charge_type');commitForm();" id="charge_type_order">充值方式</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">充值金额</th>
@@ -100,7 +100,7 @@
 									<td>${list.orderNumber}</td>
 									<%--<td>${list.dealNumber}</td>--%>
 									<%--<td>${list.transportionName}</td>--%>
-									<td>${list.channel}</td>
+									<%--<td>${list.channel}</td>--%>
 									<td><s:Code2Name mcode="${list.charge_type}" gcode="CASHBACK"></s:Code2Name></td>
 									<td>${list.cash}</td>
 									<td>${list.operator}</td>

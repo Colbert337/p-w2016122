@@ -116,16 +116,19 @@
 									<%--<td>${list.dealNumber}</td>--%>
 									<%--<td>${list.orderType}</td>--%>
 									<td><s:Code2Name mcode="${list.orderType}" gcode="ORDER_TYPE"></s:Code2Name></td>
-									<td>${list.used}</td>
+									<td>
+										<c:if test="${list.is_discharge == 0}">消费</c:if>
+										<c:if test="${list.is_discharge == 1}">冲红</c:if>
+									</td>
 									<td>${list.cash}</td>
-									<td>${list.fullName}</td>
-									<td>${list.mobilePhone}</td>
+									<td>${list.full_name}</td>
+									<td>${list.mobile_phone}</td>
 									<td>${list.gas_station_name}</td>
-									<td><s:Code2Name mcode="${list.goodsType}" gcode="CARDTYPE"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td>${list.price}</td>
 									<td>${list.number}</td>
-									<td>${list.sumPrice}</td>
-									<td><fmt:formatDate value="${list.order_date}" type="both"/></td>
+									<td>${list.sum_price}</td>
+									<td><fmt:formatDate value="${list.orderDate}" type="both"/></td>
 									<td>${list.remark}</td>
 								</tr>
 							</c:forEach>

@@ -45,7 +45,7 @@ public interface TcFleetQuotaService {
      * @param tcFleetQuota
      * @return
      */
-    Map<String,Object> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota);
+    Map<String,Object> queryFleetQuotaMapList(TcFleetQuota tcFleetQuota) throws Exception;
 
     /**
      * 添加车队额度
@@ -80,5 +80,5 @@ public interface TcFleetQuotaService {
      * @param list 个人转账列表
      * @return
      */
-    int personalTransfer(List<Map<String, Object>> list,String stationId ,String userName) throws Exception;
+    int personalTransfer(List<Map<String, Object>> list,String stationId ,String userId) throws Exception;
 }

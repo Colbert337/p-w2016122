@@ -29,4 +29,11 @@ public interface SysUserAccountService {
 	 * @return
      */
 	SysUserAccount queryUserAccountByStationId(String sysTransportionId);
+
+	/**
+	 * 根据司机编号查询司机账户信息
+	 * @param sysDriverId 运输公司ID
+	 * @return
+	 */
+	SysUserAccount queryUserAccountByDriverId(String sysDriverId);
 }

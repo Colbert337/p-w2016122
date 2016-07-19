@@ -3,10 +3,15 @@ package com.sysongy.poms.permi.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.permi.dao.SysFunctionMapper;
+import com.sysongy.poms.permi.dao.SysRoleFunctionMapper;
+import com.sysongy.poms.permi.dao.SysRoleMapper;
 import com.sysongy.poms.permi.model.SysFunction;
+import com.sysongy.poms.permi.model.SysRole;
+import com.sysongy.poms.permi.model.SysRoleFunction;
 import com.sysongy.poms.permi.service.SysFunctionService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.GroupUtil;
+import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +35,10 @@ public class SysFunctionServiceImpl implements SysFunctionService{
 
     @Autowired
     SysFunctionMapper sysFunctionMapper;
+    @Autowired
+    SysRoleMapper sysRoleMapper;
+    @Autowired
+    SysRoleFunctionMapper sysRoleFunctionMapper;
     /**
      * 查询功能列表(分页)
      * @return
@@ -156,8 +165,26 @@ public class SysFunctionServiceImpl implements SysFunctionService{
      * @return
      */
     @Override
-    public int addFunction(SysFunction function) {
-        return sysFunctionMapper.addFunction(function);
+    public int addFunction(SysFunction function) throws Exception {
+       int resultVal = sysFunctionMapper.addFunction(function);
+        //将菜单添加到已经创建的管理员角色上
+        String functionId = function.getSysFunctionId();
+        SysRole sysRole = new SysRole();
+        sysRole.setRoleType(function.getFunctionType());
+        List<SysRole> roleList = sysRoleMapper.queryAdminRoleList(sysRole);
+        if(roleList != null && roleList.size() > 0){
+            List<SysRoleFunction> roleFunctionList = new ArrayList<>();
+            for (SysRole role:roleList){
+                SysRoleFunction sysRoleFunction = new SysRoleFunction();
+                sysRoleFunction.setSysRoleFunctionId(UUIDGenerator.getUUID());
+                sysRoleFunction.setSysRoleId(role.getSysRoleId());
+                sysRoleFunction.setSysFunctionId(functionId);
+
+                roleFunctionList.add(sysRoleFunction);
+            }
+            sysRoleFunctionMapper.addRoleFunctionList(roleFunctionList);
+        }
+        return resultVal;
     }
     /**
      * 更新功能
