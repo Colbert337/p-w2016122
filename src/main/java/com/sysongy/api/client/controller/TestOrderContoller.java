@@ -217,9 +217,9 @@ public class TestOrderContoller {
         Map<String, Object> attributes = new HashMap<String, Object>();
        //测试充值：
     	try{
-    		String  tranId ="TC37000001";
+    		String  tranId ="TC59000001";
     		//String  tcfleetId ="f29f828a74d14c50b8409b9f94f83da3"; //张三车队有分配额度
-    		String  tcfleetId ="f29f828a74d14c50b8409b9f94f83da3";
+    		String  tcfleetId ="TA59000001";
     		SysOrder order = new SysOrder();
         	order.setOrderId(UUIDGenerator.getUUID());
         	String order_type = GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION;
@@ -227,7 +227,7 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("26.8"));
+        	order.setCash(new BigDecimal("18.8"));
         	order.setCreditAccount(tranId);
         	//order.setDebitAccount("GS12000003");
         	//order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_POS_CHARGE);
@@ -271,7 +271,7 @@ public class TestOrderContoller {
         	order.setOrderNumber(order_number);
         	order.setOrderType(order_type);
         	order.setOrderDate(new Date());
-        	order.setCash(new BigDecimal("200"));
+        	order.setCash(new BigDecimal("100"));
         	order.setCreditAccount(tranId);
         	order.setDebitAccount("748f08a4e31545c2b6de454d3deb0979");
         	//order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_POS_CHARGE);
