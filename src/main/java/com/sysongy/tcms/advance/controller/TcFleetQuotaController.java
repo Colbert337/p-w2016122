@@ -345,6 +345,107 @@ public class TcFleetQuotaController extends BaseContoller {
             return ret;
         }
     }
+    /**
+     * 额度划拨报表导出
+     * @param tcFleet
+     * @return
+     */
+    @RequestMapping("/list/quota/import")
+    public String queryQuotaListImport(@ModelAttribute CurrUser currUser, TcFleet tcFleet,
+                                       ModelMap map,HttpServletResponse response){
+        String stationId = currUser.getStationId();
+        Transportion transportion = new Transportion();
+        String transName = "";
+        try {
+            transportion = transportionService.queryTransportionByPK(stationId);
+            if(transportion != null){
+                transName = transportion.getTransportion_name();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        PageBean bean = new PageBean();
+
+        try {
+            if(tcFleet.getPageNum() == null){
+                tcFleet.setOrderby("created_date desc");
+                tcFleet.setPageNum(1);
+                tcFleet.setPageSize(1048576);
+            }
+            tcFleet.setStationId(stationId);
+            PageInfo<Map<String, Object>> pageInfo = tcFleetQuotaService.queryQuotaList(tcFleet);
+
+            /*生成报表*/
+            int cells = 0 ; // 记录条数
+            if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
+                cells += pageInfo.getList().size();
+            }
+            OutputStream os = response.getOutputStream();
+            ExportUtil reportExcel = new ExportUtil();
+            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+            downLoadFileName = "额度划拨报表_" + downLoadFileName;
+            try {
+                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+            } catch (UnsupportedEncodingException e1) {
+                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+            }
+            String[][] content = new String[cells+3][13];//[行数][列数]
+            //设置表头
+            content[0] = new String[]{transName+"额度划拨报表"};
+            content[2] = new String[]{"划拨对象","划拨额度","划拨时间"};
+            //设置列宽
+            String [] wcell = new String []{"0,26","1,13","2,23"};
+            //合并第一行单元格
+            String [] mergeinfo = new String []{"0,0,2,0","1,1,2,1"};
+            //设置表名
+            String sheetName = "额度划拨报表";
+            //设置字体
+            String [] font = new String []{"0,15","2,13"};
+            /*组装报表*/
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            int i = 3;
+
+            if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
+                for (Map<String, Object> quotaMap:pageInfo.getList()) {
+                    if(quotaMap.get("quota") != null && !"".equals(quotaMap.get("quota").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("quota").toString()));
+                    }
+
+                    //组装表格
+                    String fleetName = "";//订单编号
+                    if(quotaMap.get("fleetName") != null){
+                        fleetName = quotaMap.get("fleetName").toString();
+                    }
+
+                    String quota = "";
+                    if(quotaMap.get("quota") != null){
+                        quota = quotaMap.get("quota").toString();
+                    }
+                    String createdDate = "";
+                    if(quotaMap.get("createdDate") != null){
+                        createdDate = quotaMap.get("createdDate").toString();
+                    }
+
+                    content[i] = new String[]{fleetName,quota,createdDate};
+                    i++;
+                }
+            }
+            //合计交易金额和返现金额
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
+            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
+
+            //累计总划款金额
+            map.addAttribute("totalCash",totalCash);
+
+            map.addAttribute("pageInfo", pageInfo);
+            map.addAttribute("tcFleet",tcFleet);
+        } catch (Exception e) {
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+        }
+            return null;
+    }
 
     /**
      * 转账报表
@@ -517,11 +618,12 @@ public class TcFleetQuotaController extends BaseContoller {
                     content[i] = new String[]{orderNumber,orderType,fullName,mobilePhone,cash,used,cashBack,realName,dealDate};
                     i++;
                 }
-                //合计交易金额和返现金额
-                totalCash = totalCash.add(backCash);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
+
             }
+            //合计交易金额和返现金额
+            totalCash = totalCash.add(backCash);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
             reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
 
             //累计总划款金额
@@ -806,6 +908,149 @@ public class TcFleetQuotaController extends BaseContoller {
     }
 
     /**
+     * 运输公司车队消费报表导出
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/list/report/fleets/import")
+    public String queryTcFleetImport(@ModelAttribute CurrUser currUser, ModelMap map,
+                                     SysOrder order,HttpServletResponse response) throws Exception{
+        String stationId = currUser.getStationId();
+        Transportion transportion = new Transportion();
+        String transName = "";
+        try {
+            transportion = transportionService.queryTransportionByPK(stationId);
+            if(transportion != null){
+                transName = transportion.getTransportion_name();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        PageBean bean = new PageBean();
+
+        try {
+            if(order.getPageNum() == null){
+                order.setOrderby("deal_date desc");
+                order.setPageNum(1);
+                order.setPageSize(1048576);
+            }
+            order.setDebitAccount(stationId);
+            order.setCash(new BigDecimal(BigInteger.ZERO));
+            PageInfo<Map<String, Object>> pageInfo = orderService.queryTcFleetReport(order);
+
+            /*生成报表*/
+            int cells = 0 ; // 记录条数
+            if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
+                cells += pageInfo.getList().size();
+            }
+            OutputStream os = response.getOutputStream();
+            ExportUtil reportExcel = new ExportUtil();
+            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+            downLoadFileName = "车队消费报表_" + downLoadFileName;
+            try {
+                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+            } catch (UnsupportedEncodingException e1) {
+                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+            }
+            String[][] content = new String[cells+3][13];//[行数][列数]
+            //设置表头
+            content[0] = new String[]{transName+"车队消费报表"};
+            content[2] = new String[]{"订单编号","订单类型","交易类型","交易金额","姓名","手机号码","加注站名称",
+                    "商品名称","结算单价","消费数量","消费金额","交易时间","备注"};
+            //设置列宽
+            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,23","9,13","10,13","11,13","12,23"};
+            //合并第一行单元格
+            String [] mergeinfo = new String []{"0,0,12,0","1,1,12,1"};
+            //设置表名
+            String sheetName = "车队消费报表";
+            //设置字体
+            String [] font = new String []{"0,15","2,13"};
+            /*组装报表*/
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            int i = 3;
+            if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
+
+                for (Map<String, Object> quotaMap:pageInfo.getList()) {
+                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    }
+
+                    //组装表格
+                    String orderNumber = "";//订单编号
+                    if(quotaMap.get("orderNumber") != null){
+                        orderNumber = quotaMap.get("orderNumber").toString();
+                    }
+                    String isDischarge = "";
+                    if(quotaMap.get("is_discharge") != null){
+                        if(quotaMap.get("is_discharge").toString().equals("0")){
+                            isDischarge = "消费";
+                        }else if(quotaMap.get("is_discharge").toString().equals("1")){
+                            isDischarge = "冲红";
+                        }
+                    }
+                    String orderType = "";
+                    if(quotaMap.get("orderType") != null){
+                        orderType = quotaMap.get("orderType").toString();
+                    }
+                    String fleetName = "";
+                    if(quotaMap.get("fleet_name") != null){
+                        fleetName = quotaMap.get("fleet_name").toString();
+                    }
+                    String platesNumber = "";
+                    if(quotaMap.get("plates_number") != null){
+                        platesNumber = quotaMap.get("plates_number").toString();
+                    }
+                    String gasStationName = "";
+                    if(quotaMap.get("gas_station_name") != null){
+                        gasStationName = quotaMap.get("gas_station_name").toString();
+                    }
+                    String goodsType = "";
+                    if(quotaMap.get("goods_type") != null){
+                        goodsType = quotaMap.get("goods_type").toString();
+                    }
+                    String price = "";
+                    if(quotaMap.get("price") != null){
+                        price = quotaMap.get("price").toString();
+                    }
+                    String number = "";
+                    if(quotaMap.get("number") != null){
+                        number = quotaMap.get("number").toString();
+                    }
+                    String sumPrice = "";
+                    if(quotaMap.get("sum_price") != null){
+                        sumPrice = quotaMap.get("sum_price").toString();
+                    }
+                    String dealDate = "";
+                    if(quotaMap.get("deal_date") != null){
+                        dealDate = quotaMap.get("deal_date").toString();
+                    }
+                    String remark = "";
+                    if(quotaMap.get("remark") != null){
+                        remark = quotaMap.get("remark").toString();
+                    }
+                    content[i] = new String[]{orderNumber,orderType,isDischarge,fleetName,platesNumber,gasStationName,goodsType,price,number,sumPrice,dealDate,remark};
+                    i++;
+                }
+            }
+            //合计交易金额和返现金额
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
+            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
+
+            //累计总划款金额
+            map.addAttribute("totalCash",totalCash);
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("pageInfo", pageInfo);
+            map.addAttribute("order",order);
+        } catch (Exception e) {
+            logger.error("", e);
+            throw e;
+        }
+        return null;
+    }
+    /**
      * 运输公司队内管理消费报表
      * @param map
      * @return
@@ -859,4 +1104,146 @@ public class TcFleetQuotaController extends BaseContoller {
         }
     }
 
+    /**
+     * 运输公司队内管理消费报表导出
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/list/report/fleetMg/import")
+    public String queryTcFleetMgImport(@ModelAttribute CurrUser currUser, ModelMap map,
+                                       SysOrder order,HttpServletResponse response) throws Exception{
+        String stationId = currUser.getStationId();
+        Transportion transportion = new Transportion();
+        String transName = "";
+        try {
+            transportion = transportionService.queryTransportionByPK(stationId);
+            if(transportion != null){
+                transName = transportion.getTransportion_name();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        PageBean bean = new PageBean();
+
+        try {
+            if(order.getPageNum() == null){
+                order.setOrderby("deal_date desc");
+                order.setPageNum(1);
+                order.setPageSize(1048576);
+            }
+            order.setDebitAccount(stationId);
+            order.setCash(new BigDecimal(BigInteger.ZERO));
+            PageInfo<Map<String, Object>> pageInfo = orderService.queryTcFleetMgReport(order);
+
+            /*生成报表*/
+            int cells = 0 ; // 记录条数
+            if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
+                cells += pageInfo.getList().size();
+            }
+            OutputStream os = response.getOutputStream();
+            ExportUtil reportExcel = new ExportUtil();
+            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+            downLoadFileName = "队内管理消费报表_" + downLoadFileName;
+            try {
+                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+            } catch (UnsupportedEncodingException e1) {
+                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+            }
+            String[][] content = new String[cells+3][13];//[行数][列数]
+            //设置表头
+            content[0] = new String[]{transName+"队内管理消费报表"};
+            content[2] = new String[]{"订单编号","订单类型","交易类型","交易金额","姓名","手机号码","加注站名称",
+                    "商品名称","结算单价","消费数量","消费金额","交易时间","备注"};
+            //设置列宽
+            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,23","9,13","10,13","11,13","12,23"};
+            //合并第一行单元格
+            String [] mergeinfo = new String []{"0,0,12,0","1,1,12,1"};
+            //设置表名
+            String sheetName = "队内管理消费报表";
+            //设置字体
+            String [] font = new String []{"0,15","2,13"};
+            /*组装报表*/
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            int i = 3;
+
+            if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
+                for (Map<String, Object> quotaMap:pageInfo.getList()) {
+                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    }
+
+                    //组装表格
+                    String orderNumber = "";//订单编号
+                    if(quotaMap.get("orderNumber") != null){
+                        orderNumber = quotaMap.get("orderNumber").toString();
+                    }
+                    String isDischarge = "";
+                    if(quotaMap.get("is_discharge") != null){
+                        if(quotaMap.get("is_discharge").toString().equals("0")){
+                            isDischarge = "消费";
+                        }else if(quotaMap.get("is_discharge").toString().equals("1")){
+                            isDischarge = "冲红";
+                        }
+                    }
+                    String orderType = "";
+                    if(quotaMap.get("orderType") != null){
+                        orderType = quotaMap.get("orderType").toString();
+                    }
+                    String fleetName = "";
+                    if(quotaMap.get("fleet_name") != null){
+                        fleetName = quotaMap.get("fleet_name").toString();
+                    }
+                    String platesNumber = "";
+                    if(quotaMap.get("plates_number") != null){
+                        platesNumber = quotaMap.get("plates_number").toString();
+                    }
+                    String gasStationName = "";
+                    if(quotaMap.get("gas_station_name") != null){
+                        gasStationName = quotaMap.get("gas_station_name").toString();
+                    }
+                    String goodsType = "";
+                    if(quotaMap.get("goods_type") != null){
+                        goodsType = quotaMap.get("goods_type").toString();
+                    }
+                    String price = "";
+                    if(quotaMap.get("price") != null){
+                        price = quotaMap.get("price").toString();
+                    }
+                    String number = "";
+                    if(quotaMap.get("number") != null){
+                        number = quotaMap.get("number").toString();
+                    }
+                    String sumPrice = "";
+                    if(quotaMap.get("sum_price") != null){
+                        sumPrice = quotaMap.get("sum_price").toString();
+                    }
+                    String dealDate = "";
+                    if(quotaMap.get("deal_date") != null){
+                        dealDate = quotaMap.get("deal_date").toString();
+                    }
+                    String remark = "";
+                    if(quotaMap.get("remark") != null){
+                        remark = quotaMap.get("remark").toString();
+                    }
+                    content[i] = new String[]{orderNumber,orderType,isDischarge,fleetName,platesNumber,gasStationName,goodsType,price,number,sumPrice,dealDate,remark};
+                    i++;
+                }
+            }
+            //合计交易金额和返现金额
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
+            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
+
+            //累计总划款金额
+            map.addAttribute("totalCash",totalCash);
+            map.addAttribute("pageInfo", pageInfo);
+            map.addAttribute("order",order);
+        } catch (Exception e) {
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+            throw e;
+        }
+        return null;
+    }
 }

@@ -14,9 +14,7 @@ import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.*;
 import com.sysongy.util.mail.MailEngine;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -30,8 +28,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -55,8 +58,11 @@ public class TransportionController extends BaseContoller{
     TcVehicleService tcVehicleService;
 	@Autowired
 	private OrderDealService orderDealService;
+	@Autowired
+	TransportionService transportionService;
 
 	private Transportion transportion;
+
 	/**
 	 * 运输公司查询
 	 * @param map
@@ -712,6 +718,120 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
+	/**
+	 * 运输公司充值报表导出（单个运输公司）
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/list/recharge/import")
+	public String queryRechargeListImport(@ModelAttribute CurrUser currUser, ModelMap map,
+										  SysOrder order,HttpServletResponse response) throws Exception{
+		String stationId = currUser.getStationId();
+		Transportion transportion = new Transportion();
+		String transName = "";
+		try {
+			transportion = transportionService.queryTransportionByPK(stationId);
+			if(transportion != null){
+				transName = transportion.getTransportion_name();
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		PageBean bean = new PageBean();
 
+		try {
+			if(order.getPageNum() == null){
+				order.setOrderby("deal_date desc");
+				order.setPageNum(1);
+				order.setPageSize(1048576);
+			}
+			order.setDebitAccount(stationId);
+			order.setCash(new BigDecimal(BigInteger.ZERO));
+			PageInfo<Map<String, Object>> pageInfo = orderDealService.queryRechargeList(order);
+
+            /*生成报表*/
+			int cells = 0 ; // 记录条数
+			if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
+				cells += pageInfo.getList().size();
+			}
+			OutputStream os = response.getOutputStream();
+			ExportUtil reportExcel = new ExportUtil();
+			String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+			downLoadFileName = "充值报表_" + downLoadFileName;
+			try {
+				response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+			} catch (UnsupportedEncodingException e1) {
+				response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+			}
+			String[][] content = new String[cells+3][13];//[行数][列数]
+			//设置表头
+			content[0] = new String[]{transName+"充值报表"};
+			content[2] = new String[]{"订单编号","充值方式","充值金额","操作人","交易时间"};
+			//设置列宽
+			String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13"};
+			//合并第一行单元格
+			String [] mergeinfo = new String []{"0,0,4,0","1,1,4,1"};
+			//设置表名
+			String sheetName = "充值报表";
+			//设置字体
+			String [] font = new String []{"0,15","2,13"};
+            /*组装报表*/
+			BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+			int i = 3;
+
+			if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
+
+				for (Map<String, Object> quotaMap:pageInfo.getList()) {
+					if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+						totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+					}
+
+					//组装表格
+					String orderNumber = "";//订单编号
+					if(quotaMap.get("orderNumber") != null){
+						orderNumber = quotaMap.get("orderNumber").toString();
+					}
+					String chargeType = "";
+					if(quotaMap.get("charge_type") != null){
+						chargeType = quotaMap.get("charge_type").toString();
+					}
+					String cash = "";
+					if(quotaMap.get("cash") != null){
+						cash = quotaMap.get("cash").toString();
+					}
+					String operator = "";
+					if(quotaMap.get("operator") != null){
+						operator = quotaMap.get("operator").toString();
+					}
+					String dealDate = "";
+					if(quotaMap.get("dealDate") != null){
+						dealDate = quotaMap.get("dealDate").toString();
+					}
+
+					content[i] = new String[]{orderNumber,chargeType,cash,operator,dealDate};
+					i++;
+				}
+			}
+			//合计交易金额和返现金额
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
+			reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
+
+			//累计总划款金额
+			map.addAttribute("totalCash",totalCash);
+
+			map.addAttribute("pageInfo", pageInfo);
+			map.addAttribute("order",order);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+			return null;
+	}
 
 }
