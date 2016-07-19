@@ -83,7 +83,7 @@
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">实体卡状态</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">用户状态</th> 
-									<th class="text-center">更多操作</th>
+									<th class="text-center">状态修改</th>
 								</tr>
 							</thead>
 
@@ -120,28 +120,16 @@
 									<td><s:Code2Name mcode="${list.cardInfo.card_status}" gcode="CARDSTATUS"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.account.account_status}" gcode="ACCOUNT_STATUS"></s:Code2Name></td>
-									<td>
-										<div class="text-center">
-											<div class="btn-group">
-												<button data-toggle="dropdown" class="btn btn-info btn-xs dropdown-toggle">
-													状态修改
-													<span class="ace-icon fa fa-caret-down icon-on-right"></span>
-												</button>
-
-												<ul class="dropdown-menu dropdown-info dropdown-menu-right">
-													<li>
-														<a href="javascript:void(0);" onclick="change(this,0);">冻结用户</a>
-													</li>
-													
-													<li>
-														<a href="javascript:void(0);" onclick="change(this,1,'${list.cardId}');">冻结卡</a>
-													</li>
-
-													<li>
-														<a href="javascript:void(0);" onclick="change(this,2,'${list.cardId}');">解冻</a>
-													</li>
-												</ul>
-											</div>
+									<td class="text-center">
+										<a class="option-btn-m" href="javascript:void(0);" onclick="change(this,0);" title="冻结用户" data-rel="tooltip">
+											<i class="ace-icon fa fa-user-times bigger-130" onclick="preUpdate(this);"></i>
+										</a>
+										<a class="option-btn-m" href="javascript:void(0);" onclick="change(this,1,'${list.cardId}');" title="冻结卡" data-rel="tooltip">
+											<i class="ace-icon fa fa-archive bigger-130" onclick="preUpdate(this);"></i>
+										</a>
+										<a class="" href="javascript:void(0);" onclick="change(this,2,'${list.cardId}');" title="解冻" data-rel="tooltip">
+											<i class="ace-icon fa fa-pencil-square-o bigger-130 green" onclick="preUpdate(this);"></i>
+										</a>
 									</td>
 								</tr>
 								</c:forEach>

@@ -128,10 +128,10 @@
 									<td>${list.account.accountBalance}</td> 
 									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">
-										<a class="" href="javascript:void(0);" title="修改" data-rel="tooltip">
+										<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 										</a>
-										<a class="option-btn-m" href="javascript:void(0);" title="重置密码" data-rel="tooltip">
+										<a href="javascript:void(0);" title="重置密码" data-rel="tooltip">
 											<i class="ace-icon fa fa-key bigger-130" onclick="resetPassword(this);"></i>
 										</a>
 									</td>
