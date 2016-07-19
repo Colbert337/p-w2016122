@@ -44,6 +44,10 @@ public class TcTransferAccountServiceImpl implements TcTransferAccountService{
         }else{
             return null;
         }
+    }
 
+    @Override
+    public List<Map<String, Object>> queryTransferList(TcTransferAccount transferAccount) throws Exception {
+        return tcTransferAccountMapper.queryTransferListPage(transferAccount);
     }
 }

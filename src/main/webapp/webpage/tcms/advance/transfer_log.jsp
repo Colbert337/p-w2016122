@@ -56,7 +56,7 @@
 								重置
 							</button>
 							<div class="item"></div>
-							<a class="btn btn-sm btn-primary" href="#">导出报表</a>
+							<a class="btn btn-sm btn-primary" href="<%=basePath%>/web/tcms/fleetQuota/list/transfer/report">导出报表</a>
 						</div>
 					</div>
 

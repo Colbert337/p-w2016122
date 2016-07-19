@@ -426,25 +426,13 @@ public class TcFleetQuotaController extends BaseContoller {
             }
             transferAccount.setStationId(stationId);
             transferAccount.setSysDriverId(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
-            PageInfo<Map<String, Object>> pageinfo = tcTransferAccountService.queryTransferListPage(transferAccount);
-
-            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-            BigDecimal backCash = new BigDecimal(BigInteger.ZERO);
-            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
-
-                for (Map<String, Object> quotaMap:pageinfo.getList()) {
-                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())
-                            && GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION.equals(quotaMap.get("dealType"))){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
-                    }else{
-                        backCash = backCash.add(new BigDecimal(quotaMap.get("cashBack").toString()));
-                    }
-                }
-                totalCash = totalCash.add(backCash);
-            }
+            List<Map<String, Object>> list = tcTransferAccountService.queryTransferList(transferAccount);
 
             /*生成报表*/
             int cells = 0 ; // 记录条数
+            if(list != null && list.size() > 0){
+                cells += list.size();
+            }
             OutputStream os = response.getOutputStream();
             ExportUtil reportExcel = new ExportUtil();
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
@@ -454,17 +442,71 @@ public class TcFleetQuotaController extends BaseContoller {
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
-            String[][] content = new String[cells+1][35];//[行数][列数]
+            String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            content[0] = new String[]{"姓名","班级编码","性别","出生日期","身份证件类型","身份证件号码","血型","国籍/地区","民族","港澳台侨外",
-                    "出生所在地","籍贯","户口性质","非农业户口类型","户口所在地","现住址","入园日期","就读方式","是否独生子女","是否留守儿童","否进城务工人员子女",
-                    "健康状况","是否残疾幼儿","残疾幼儿类别","是否孤儿","监护人姓名","监护人身份证件类型","监护人身份证件号码","健康档案号","爸爸姓名","爸爸电话","爸爸年龄","妈妈姓名","妈妈电话","妈妈年龄"};
+            content[0] = new String[]{"订单编号","交易类型","收款人","手机号码","转账金额","资金用途","返现金额","操作人","交易时间"};
+
+            /*组装报表*/
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            BigDecimal backCash = new BigDecimal(BigInteger.ZERO);
             int i = 1;
+            if(list != null && list.size() > 0){
+                for (Map<String, Object> quotaMap:list) {
+                    //累计总金额
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())
+                            && GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION.equals(quotaMap.get("dealType"))){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                    }else{
+                        backCash = backCash.add(new BigDecimal(quotaMap.get("cashBack").toString()));
+                    }
+
+                    //组装表格
+                    String orderNumber = "";//订单编号
+                    if(quotaMap.get("orderNumber") != null){
+                        orderNumber = quotaMap.get("orderNumber").toString();
+                    }
+                    String orderType = "";
+                    if(quotaMap.get("orderType") != null){
+                        orderType = quotaMap.get("orderType").toString();
+                    }
+                    String fullName = "";
+                    if(quotaMap.get("fullName") != null){
+                        fullName = quotaMap.get("fullName").toString();
+                    }
+                    String mobilePhone = "";
+                    if(quotaMap.get("mobilePhone") != null){
+                        mobilePhone = quotaMap.get("mobilePhone").toString();
+                    }
+                    String cash = "";
+                    if(quotaMap.get("cash") != null){
+                        cash = quotaMap.get("cash").toString();
+                    }
+                    String used = "";
+                    if(quotaMap.get("used") != null){
+                        used = quotaMap.get("used").toString();
+                    }
+                    String cashBack = "";
+                    if(quotaMap.get("cashBack") != null){
+                        cashBack = quotaMap.get("cashBack").toString();
+                    }
+                    String realName = "";
+                    if(quotaMap.get("realName") != null){
+                        realName = quotaMap.get("realName").toString();
+                    }
+                    String dealDate = "";
+                    if(quotaMap.get("dealDate") != null){
+                        dealDate = quotaMap.get("dealDate").toString();
+                    }
+                    content[i] = new String[]{orderNumber,orderType,fullName,mobilePhone,cash,used,cashBack,realName,dealDate};
+                    i++;
+                }
+                //合计交易金额和返现金额
+                totalCash = totalCash.add(backCash);
+            }
 
             String [] mergeinfo = new String []{"0,0,0,0"};
             //单元格默认宽度
-            String sheetName = "全园学生列表";
-            //childexcel.exportFormatExcel(content, sheetName,mergeinfo ,os);
+            String sheetName = "转账报表";
             reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 0, null, 0, null, null, false);
 
             //累计总划款金额
@@ -475,18 +517,16 @@ public class TcFleetQuotaController extends BaseContoller {
             bean.setPageInfo(ret);
 
             map.addAttribute("ret", bean);
-            map.addAttribute("pageInfo", pageinfo);
+            map.addAttribute("list", list);
             map.addAttribute("transferAccount",transferAccount);
         } catch (Exception e) {
             bean.setRetCode(5000);
             bean.setRetMsg(e.getMessage());
             map.addAttribute("ret", bean);
             logger.error("", e);
-            throw e;
         }
-        finally {
-            return ret;
-        }
+
+        return null;
     }
     /**
      * 运输公司个人消费报表

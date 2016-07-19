@@ -24,4 +24,12 @@ public interface TcTransferAccountService {
      * @throws Exception
      */
     PageInfo<Map<String, Object>> queryTransferListPage(TcTransferAccount transferAccount) throws Exception;
+
+    /**
+     * 转账报表
+     * @param transferAccount 转账对象
+     * @return
+     * @throws Exception
+     */
+    List<Map<String, Object>> queryTransferList(TcTransferAccount transferAccount) throws Exception;
 }
