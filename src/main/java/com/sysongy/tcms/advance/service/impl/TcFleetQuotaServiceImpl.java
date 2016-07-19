@@ -281,8 +281,10 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                 }
             }
         }catch (Exception e){
-            resultVal = -1;
+            resultVal = -2;
             e.printStackTrace();
+            throw e;
+            /*GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE;*/
         }
         return resultVal;
     }

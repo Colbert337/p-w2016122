@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -412,6 +413,17 @@ public class TcFleetQuotaController extends BaseContoller {
     public String queryTransferListReport(@ModelAttribute CurrUser currUser, TcTransferAccount transferAccount,
                                           ModelMap map,HttpServletResponse response) throws IOException {
         String stationId = currUser.getStationId();
+        Transportion transportion = new Transportion();
+        String transName = "";
+        try {
+            transportion = transportionService.queryTransportionByPK(stationId);
+            if(transportion != null){
+                transName = transportion.getTransportion_name();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         PageBean bean = new PageBean();
         String ret = "webpage/tcms/advance/transfer_log";
         /*查询数据*/
@@ -439,14 +451,22 @@ public class TcFleetQuotaController extends BaseContoller {
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
-            String[][] content = new String[cells+1][9];//[行数][列数]
-            //第一列
-            content[0] = new String[]{"订单编号","交易类型","收款人","手机号码","转账金额","资金用途","返现金额","操作人","交易时间"};
-
+            String[][] content = new String[cells+3][9];//[行数][列数]
+            //设置表头
+            content[0] = new String[]{transName+"转账报表"};
+            content[2] = new String[]{"订单编号","交易类型","收款人","手机号码","转账金额","资金用途","返现金额","操作人","交易时间"};
+            //设置列宽
+            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,23",};
+            //合并第一行单元格
+            String [] mergeinfo = new String []{"0,0,8,0","1,1,8,1"};
+            //设置表名
+            String sheetName = "转账报表";
+            //设置字体
+            String [] font = new String []{"0,15","2,13"};
             /*组装报表*/
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
             BigDecimal backCash = new BigDecimal(BigInteger.ZERO);
-            int i = 1;
+            int i = 3;
             if(list != null && list.size() > 0){
                 for (Map<String, Object> quotaMap:list) {
                     //累计总金额
@@ -482,7 +502,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     if(quotaMap.get("used") != null){
                         used = quotaMap.get("used").toString();
                     }
-                    String cashBack = "";
+                    String cashBack = "0.00";
                     if(quotaMap.get("cashBack") != null){
                         cashBack = quotaMap.get("cashBack").toString();
                     }
@@ -499,12 +519,10 @@ public class TcFleetQuotaController extends BaseContoller {
                 }
                 //合计交易金额和返现金额
                 totalCash = totalCash.add(backCash);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
             }
-
-            String [] mergeinfo = new String []{"0,0,0,0"};
-            //单元格默认宽度
-            String sheetName = "转账报表";
-            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 0, null, 0, null, null, false);
+            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
 
             //累计总划款金额
             map.addAttribute("totalCash",totalCash);
