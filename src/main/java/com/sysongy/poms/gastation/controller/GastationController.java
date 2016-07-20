@@ -1,5 +1,17 @@
 package com.sysongy.poms.gastation.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +30,9 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
+import com.sysongy.tcms.advance.model.TcTransferAccount;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.ExportUtil;
 import com.sysongy.util.GlobalConstant;
 
 
@@ -33,7 +48,6 @@ public class GastationController extends BaseContoller{
 	private SysUserService sysUserService;
 	
 	private Gastation gastation;
-	
 	
 	/**
 	 * 加气站查询
@@ -117,6 +131,100 @@ public class GastationController extends BaseContoller{
 			return ret;
 		}
 	}
+	
+	@RequestMapping("/depositReport")
+    public String queryTransferListReport(ModelMap map, SysDepositLog deposit, HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
+        try {
+			deposit.setPageNum(1);
+			deposit.setPageSize(1048576);
+			
+			if(StringUtils.isEmpty(deposit.getOrderby())){
+				deposit.setOrderby("optime desc");
+			}
+			
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUserType()){
+				deposit.setStationId(currUser.getStationId());
+			}
+			
+			deposit.setStation_type(GlobalConstant.OrderOperatorTargetType.GASTATION);
+			PageInfo<SysDepositLog> pageinfo = depositLogService.queryDepositLog(deposit);
+			List<SysDepositLog> list = pageinfo.getList();
+
+            int cells = 0 ; // 记录条数
+            
+            if(list != null && list.size() > 0){
+                cells += list.size();
+            }
+            OutputStream os = response.getOutputStream();
+            ExportUtil reportExcel = new ExportUtil();
+            
+            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+            downLoadFileName = "预存款充值_" + downLoadFileName;
+           
+            try {
+                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+            } catch (UnsupportedEncodingException e1) {
+                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+            }
+            
+            String[][] content = new String[cells+1][9];//[行数][列数]
+            //第一列
+            content[0] = new String[]{"订单号","工作站编号","工作站名称","所属公司","转账时间","转账方式","操作员","操作时间","预存款金额"};
+
+            int i = 1;
+            if(list != null && list.size() > 0){
+                for (SysDepositLog station : list) {
+                	
+                    String orderNumber = station.getOrder_number();
+                    String stationid = station.getStationId();
+                    String stationname = station.getStationName();
+                    String company = station.getCompany();
+                    String depositTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(station.getDepositTime());
+                    String depositType = station.getDepositType();
+                    switch (station.getDepositType()) {
+					case "0":{
+						depositType = "公对公";
+						break;	
+					}
+					case "1":{
+						depositType = "支票";
+						break;
+					}
+					case "2":{
+						depositType = "承兑汇票";
+						break;
+					}
+					case "3":{
+						depositType = "现金";
+						break;
+					}
+					case "4":{
+						depositType = "POS机";
+						break;
+					}
+					default:
+						break;
+					}
+                    String operator = station.getOperator();
+                    String optime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(station.getOptime());
+                    String deposit_ = station.getDeposit().toString();
+                   
+                    content[i] = new String[]{orderNumber,stationid,stationname,company,depositTime,depositType,operator,optime,deposit_};
+                    i++;
+                }
+            }
+
+            String [] mergeinfo = new String []{"0,0,0,0"};
+            //单元格默认宽度
+            String sheetName = "预存款充值";
+            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+
+        return null;
+    }
 	
 	@RequestMapping("/queryGastationInfo")
 	public String queryGastationInfo(ModelMap map, @ModelAttribute CurrUser currUser) throws Exception{

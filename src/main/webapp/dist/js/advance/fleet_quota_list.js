@@ -112,6 +112,8 @@ function allocation(obj,index){
     if ($(obj).attr('checked')) {
         $(obj).attr("checked",false);
         $("#is_allot_"+index).val(0);
+        var allotVal = $("#notIsAllot").text();
+        $("#quota_"+index).val(allotVal);
         $("#quota_"+index).attr("readonly","readonly");
     }else{
         $(obj).attr("checked","checked");
@@ -164,7 +166,7 @@ function addRow(){
     zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' onblur='queryDriverInfo("+objIndex+");'/></td>";
     zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly'>";
     zhuan += "<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>";
-    zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' /></td>";
+    zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12'  onblur='isTransfer("+objIndex+");'/></td>";
     zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td>";
     zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除</a>";
     zhuan += "</td></tr>";
@@ -184,20 +186,44 @@ function queryDriverInfo(index){
         async:false,
         url: "../web/tcms/fleetQuota/info/driver",
         success: function(data){
-            if(data != null){
+            if(data != null && (data.fullName == "" || data.fullName == undefined)){
+                bootbox.alert("未认证司机无法接受转账!");
+                return false;
+            }else if(data != null){
                 $("#full_name_"+index).val(data.fullName);
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
+                return false;
             }else{
-                alert("请求失败！");
+                bootbox.alert("请求失败！");
+                return false;
             }
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败!")//保存成功弹窗
+            return false;
         }
     });
 
 }
-
+/**
+ * 判断是否可以转账
+ */
+function isTransfer(index){
+    var amount = $("#amount_"+index).val();
+    var notIsAllot = $("#notIsAllot").text();
+    var mobilePhone = $("#mobile_phone_"+index).val();
+    var fullName = $("#full_name_"+index).val();
+    if(mobilePhone == ""){
+        bootbox.alert("请先输入手机号！");
+        return false;
+    }else if(fullName == ""){
+        bootbox.alert("未认证司机无法接受转账！");
+        return false;
+    }else if(amount > notIsAllot){
+        bootbox.alert("转账金额不能大于未分配额度！");
+        return false;
+    }
+}
 /**
  * 删除列
  * @param obj

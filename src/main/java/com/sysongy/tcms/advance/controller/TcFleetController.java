@@ -169,6 +169,7 @@ public class TcFleetController extends BaseContoller {
             fleet.setStationId(stationId);
             fleet.setTcFleetId(newid);
             fleet.setIsDeleted(GlobalConstant.STATUS_NOTDELETE+"");
+            fleet.setQuota(transportion.getDeposit());
 
             try {
                 tcFleetService.addFleet(fleet);

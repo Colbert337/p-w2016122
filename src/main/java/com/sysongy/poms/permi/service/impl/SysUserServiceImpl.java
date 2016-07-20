@@ -292,6 +292,7 @@ public class SysUserServiceImpl implements SysUserService{
         sysRole.setRoleType(userType);
         sysRole.setIsAdmin(GlobalConstant.ADMIN_YES);
         sysRole.setRoleName("管理员");
+        sysRole.setStationId(user.getStationId());
         result = sysRoleMapper.addRole(sysRole);
 
         //创建管理员角色用户关系

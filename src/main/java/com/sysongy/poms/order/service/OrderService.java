@@ -141,4 +141,5 @@ public interface OrderService {
      * @return
      */
     PageInfo<Map<String,Object>> queryTcFleetMgReport(SysOrder record);
+
 }

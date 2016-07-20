@@ -177,7 +177,40 @@ public class GlobalConstant {
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER ="310";
 		public static final String TRANSFER_DRIVER_TO_DRIVER ="320";
 	}
-	
+
+	/**
+	 * 获取订单类型内容
+	 * @param key
+	 * @return
+     */
+	public static String getOrderType(String key){
+		String value = "";
+		switch (key){
+			case OrderType.CHARGE_TO_TRANSPORTION:
+				value = "运输公司预付款充值";
+				break;
+			case OrderType.CHARGE_TO_GASTATION:
+				value = "加油站预付款充值";
+				break;
+			case OrderType.CHARGE_TO_DRIVER:
+				value = "个人充值";
+				break;
+			case OrderType.CONSUME_BY_TRANSPORTION:
+				value = "运输公司消费";
+				break;
+			case OrderType.CONSUME_BY_DRIVER:
+				value = "司机消费";
+				break;
+			case OrderType.TRANSFER_TRANSPORTION_TO_DRIVER:
+				value = "运输公司对个人转账";
+				break;
+			case OrderType.TRANSFER_DRIVER_TO_DRIVER:
+				value = "个人对个人转账";
+				break;
+		}
+		return value;
+	}
+
 	public static HashMap<String,String> OrderClassify = new HashMap<String,String>();
 	static{
 		OrderClassify.put("110", "充值");
@@ -241,29 +274,93 @@ public class GlobalConstant {
 	 * discharge---表示充红
 	 */
 	public interface OrderDealType{
-		public static final String CHARGE_TO_DRIVER_CHARGE ="131";
-		public static final String CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="132";
-		public static final String CHARGE_TO_DRIVER_CASHBACK ="133";
-		public static final String DISCHARGE_TO_DRIVER_CHARGE ="134";
-		public static final String DISCHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="135";
-		public static final String DISCHARGE_TO_DRIVER_CASHBACK ="136";
-		public static final String CHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY ="137";
-		public static final String DISCHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY ="138";
+		public static final String CHARGE_TO_DRIVER_CHARGE ="131";//个人充值
+		public static final String CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="132";//首充返现
+		public static final String CHARGE_TO_DRIVER_CASHBACK ="133";//个人返现
+		public static final String DISCHARGE_TO_DRIVER_CHARGE ="134";//充值冲红
+		public static final String DISCHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="135";//首次充值返现冲红
+		public static final String DISCHARGE_TO_DRIVER_CASHBACK ="136";//返现冲红
+		public static final String CHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY ="137";//加注站预付款余额扣除
+		public static final String DISCHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY ="138";//加注站预付款余额冲红
 		
-		public static final String CHARGE_TO_TRANSPORTION_CHARGE ="111";
-		public static final String CHARGE_TO_GASTATION_CHARGE ="121";
+		public static final String CHARGE_TO_TRANSPORTION_CHARGE ="111";//车队充值
+		public static final String CHARGE_TO_GASTATION_CHARGE ="121";//加注站预付款充值
 		
-		public static final String CONSUME_DRIVER_DEDUCT ="221";
-		public static final String DISCONSUME_DRIVER_DEDUCT ="222";
-		public static final String CONSUME_TRANSPORTION_DEDUCT ="211";
-		public static final String DISCONSUME_TRANSPORTION_DEDUCT ="212";
+		public static final String CONSUME_DRIVER_DEDUCT ="221";//个人消费
+		public static final String DISCONSUME_DRIVER_DEDUCT ="222";//冲红
+		public static final String CONSUME_TRANSPORTION_DEDUCT ="211";//车队消费
+		public static final String DISCONSUME_TRANSPORTION_DEDUCT ="212";//转入
 		
-		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION ="311";
-		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION ="312";
-		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_INCREASE_DRIVER ="313";
-		public static final String TRANSFER_DRIVER_TO_DRIVER_DEDUCT_DRIVER ="321";
-		public static final String TRANSFER_DRIVER_TO_DRIVER_INCREASE_DRIVER ="322";
+		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION ="311";//运输公司转出
+		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION ="312";//运输公司转出
+		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_INCREASE_DRIVER ="313";//个人转入
+		public static final String TRANSFER_DRIVER_TO_DRIVER_DEDUCT_DRIVER ="321";//转入
+		public static final String TRANSFER_DRIVER_TO_DRIVER_INCREASE_DRIVER ="322";//转出
 		
+	}
+
+	public static String getOrderDealType(String key){
+		String value = "";
+		switch (key){
+			case OrderDealType.CHARGE_TO_DRIVER_CHARGE:
+				value = "个人充值";
+				break;
+			case OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK:
+				value = "首充返现";
+				break;
+			case OrderDealType.CHARGE_TO_DRIVER_CASHBACK:
+				value = "个人返现";
+				break;
+			case OrderDealType.DISCHARGE_TO_DRIVER_CHARGE:
+				value = "充值冲红";
+				break;
+			case OrderDealType.DISCHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK:
+				value = "首次充值返现冲红";
+				break;
+			case OrderDealType.DISCHARGE_TO_DRIVER_CASHBACK:
+				value = "返现冲红";
+				break;
+			case OrderDealType.CHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY:
+				value = "加注站预付款余额扣除";
+				break;
+			case OrderDealType.DISCHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY:
+				value = "加注站预付款余额冲红";
+				break;
+			case OrderDealType.CHARGE_TO_TRANSPORTION_CHARGE:
+				value = "车队充值";
+				break;
+			case OrderDealType.CHARGE_TO_GASTATION_CHARGE:
+				value = "加注站预付款充值";
+				break;
+			case OrderDealType.CONSUME_DRIVER_DEDUCT:
+				value = "个人消费";
+				break;
+			case OrderDealType.DISCONSUME_DRIVER_DEDUCT:
+				value = "冲红";
+				break;
+			case OrderDealType.CONSUME_TRANSPORTION_DEDUCT:
+				value = "车队消费";
+				break;
+			case OrderDealType.DISCONSUME_TRANSPORTION_DEDUCT:
+				value = "转入";
+				break;
+			case OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION:
+				value = "运输公司转出";
+				break;
+			case OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION:
+				value = "运输公司转出";
+				break;
+			case OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_INCREASE_DRIVER:
+				value = "个人转入";
+				break;
+			case OrderDealType.TRANSFER_DRIVER_TO_DRIVER_DEDUCT_DRIVER:
+				value = "转入";
+				break;
+			case OrderDealType.TRANSFER_DRIVER_TO_DRIVER_INCREASE_DRIVER:
+				value = "转出";
+				break;
+		}
+		return value;
 	}
 
 	/*
@@ -283,21 +380,65 @@ public class GlobalConstant {
 	public static final String CASHBACK_STATUS_DISABLE = "1";
 	
 	/*
-	 * 返现类型的编号---对应返现表
+	 * 返现类型的编号
 	 */
 	public interface CashBackNumber{
-		public static final String CASHBACK_TRANSFER_CHARGE ="101";
-		public static final String CASHBACK_CASH_CHARGE ="102";
-		public static final String CASHBACK_REGISTER ="201";
-		public static final String CASHBACK_FIRST_CHARGE ="202";
-		public static final String CASHBACK_INVITE ="203";
-		public static final String CASHBACK_WEICHAT_CHARGE ="103";
-		public static final String CASHBACK_ALIPAY_CHARGE ="104";
-		public static final String CASHBACK_UNIONPAY_CHARGE ="105";
-		public static final String CASHBACK_CARD_CHARGE ="106";
-		public static final String CASHBACK_POS_CHARGE ="107";
-		public static final String CASHBACK_PLATFORM_CHARGE ="108";
-		
+		public static final String CASHBACK_TRANSFER_CHARGE ="101";//转账返现
+		public static final String CASHBACK_CASH_CHARGE ="102";//现金充值
+		public static final String CASHBACK_REGISTER ="201";//注册
+		public static final String CASHBACK_FIRST_CHARGE ="202";//首次充值
+		public static final String CASHBACK_INVITE ="203";//邀请
+		public static final String CASHBACK_WEICHAT_CHARGE ="103";//微信充值
+		public static final String CASHBACK_ALIPAY_CHARGE ="104";//支付宝充值
+		public static final String CASHBACK_UNIONPAY_CHARGE ="105";//银联充值
+		public static final String CASHBACK_CARD_CHARGE ="106";//充值卡充值
+		public static final String CASHBACK_POS_CHARGE ="107";//POS充值
+		public static final String CASHBACK_PLATFORM_CHARGE ="108";//后台充值
+	}
+
+	/**
+	 * 获取充值方式/返现类型
+	 * @param key
+	 * @return
+     */
+	public static String getCashBackNumber(String key){
+		String value = "";
+		switch (key){
+			case CashBackNumber.CASHBACK_TRANSFER_CHARGE:
+				value = "转账返现";
+				break;
+			case CashBackNumber.CASHBACK_CASH_CHARGE:
+				value = "现金充值";
+				break;
+			case CashBackNumber.CASHBACK_REGISTER:
+				value = "注册";
+				break;
+			case CashBackNumber.CASHBACK_FIRST_CHARGE:
+				value = "首次充值";
+				break;
+			case CashBackNumber.CASHBACK_INVITE:
+				value = "邀请";
+				break;
+			case CashBackNumber.CASHBACK_WEICHAT_CHARGE:
+				value = "微信充值";
+				break;
+			case CashBackNumber.CASHBACK_ALIPAY_CHARGE:
+				value = "支付宝充值";
+				break;
+			case CashBackNumber.CASHBACK_UNIONPAY_CHARGE:
+				value = "银联充值";
+				break;
+			case CashBackNumber.CASHBACK_CARD_CHARGE:
+				value = "充值卡充值";
+				break;
+			case CashBackNumber.CASHBACK_POS_CHARGE:
+				value = "POS充值";
+				break;
+			case CashBackNumber.CASHBACK_PLATFORM_CHARGE:
+				value = "后台充值";
+				break;
+		}
+		return value;
 	}
 	
 	/*
@@ -391,12 +532,41 @@ public class GlobalConstant {
 		public static final String NORMAL = "2";
 	}
 
+	/*可类型/商品类型*/
 	public interface  GasCardType{
-		public static final String LNG = "0";
-		public static final String OIL = "1";
-		public static final String CNG = "2";
+		public static final String LNG = "10";
+		public static final String CNG = "20";
+		public static final String CNG01 = "2001";
+		public static final String LNG01 = "1001";
+		public static final String LNG02 = "1002";
 	}
 
+	/**
+	 * 获取卡类型/商品类型
+	 * @param key
+	 * @return
+     */
+	public static String getGasCardType(String key){
+		String value = "";
+		switch (key){
+			case GasCardType.LNG:
+				value = "运输公司预付款充值";
+				break;
+			case GasCardType.CNG:
+				value = "加油站预付款充值";
+				break;
+			case GasCardType.CNG01:
+				value = "个人充值";
+				break;
+			case GasCardType.LNG01:
+				value = "运输公司消费";
+				break;
+			case GasCardType.LNG02:
+				value = "司机消费";
+				break;
+		}
+		return value;
+	}
 	/*
  * 卡类型 0车辆卡 1个人卡
  *
