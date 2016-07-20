@@ -586,6 +586,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     String orderType = "";
                     if(quotaMap.get("orderType") != null){
                         orderType = quotaMap.get("orderType").toString();
+                        orderType = GlobalConstant.getOrderType(orderType);
                     }
                     String fullName = "";
                     if(quotaMap.get("fullName") != null){
@@ -598,6 +599,8 @@ public class TcFleetQuotaController extends BaseContoller {
                     String cash = "";
                     if(quotaMap.get("cash") != null){
                         cash = quotaMap.get("cash").toString();
+                    }else{
+                        cash = "0.00";
                     }
                     String used = "";
                     if(quotaMap.get("used") != null){
@@ -751,7 +754,7 @@ public class TcFleetQuotaController extends BaseContoller {
             content[2] = new String[]{"订单编号","订单类型","交易类型","交易金额","姓名","手机号码","加注站名称",
                     "商品名称","结算单价","消费数量","消费金额","交易时间","备注"};
             //设置列宽
-            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,23","9,13","10,13","11,13","12,23"};
+            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,13","9,13","10,13","11,23","12,23"};
             //合并第一行单元格
             String [] mergeinfo = new String []{"0,0,12,0","1,1,12,1"};
             //设置表名
@@ -774,6 +777,11 @@ public class TcFleetQuotaController extends BaseContoller {
                     if(quotaMap.get("orderNumber") != null){
                         orderNumber = quotaMap.get("orderNumber").toString();
                     }
+                    String orderType = "";
+                    if(quotaMap.get("orderType") != null){
+                        orderType = quotaMap.get("orderType").toString();
+                        orderType = GlobalConstant.getOrderType(orderType);
+                    }
                     String isDischarge = "";
                     if(quotaMap.get("is_discharge") != null){
                         if(quotaMap.get("is_discharge").toString().equals("0")){
@@ -785,6 +793,8 @@ public class TcFleetQuotaController extends BaseContoller {
                     String cash = "";
                     if(quotaMap.get("cash") != null){
                         cash = quotaMap.get("cash").toString();
+                    }else{
+                        cash = "0.00";
                     }
                     String fullName = "";
                     if(quotaMap.get("full_name") != null){
@@ -801,6 +811,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     String goodsType = "";
                     if(quotaMap.get("goods_type") != null){
                         goodsType = quotaMap.get("goods_type").toString();
+                        goodsType = GlobalConstant.getGasCardType(goodsType);
                     }
                     String price = "";
                     if(quotaMap.get("price") != null){
@@ -822,7 +833,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     if(quotaMap.get("remark") != null){
                         remark = quotaMap.get("remark").toString();
                     }
-                    content[i] = new String[]{orderNumber,isDischarge,cash,fullName,mobilePhone,gasStationName,goodsType,price,number,sumPrice,orderDate,remark};
+                    content[i] = new String[]{orderNumber,orderType,isDischarge,cash,fullName,mobilePhone,gasStationName,goodsType,price,number,sumPrice,orderDate,remark};
                     i++;
                 }
             }
@@ -956,12 +967,12 @@ public class TcFleetQuotaController extends BaseContoller {
             String[][] content = new String[cells+3][13];//[行数][列数]
             //设置表头
             content[0] = new String[]{transName+"车队消费报表"};
-            content[2] = new String[]{"订单编号","订单类型","交易类型","交易金额","姓名","手机号码","加注站名称",
+            content[2] = new String[]{"订单编号","订单类型","交易类型","车队名称","车牌号","加注站名称",
                     "商品名称","结算单价","消费数量","消费金额","交易时间","备注"};
             //设置列宽
-            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,23","9,13","10,13","11,13","12,23"};
+            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,13","9,13","10,23","11,30"};
             //合并第一行单元格
-            String [] mergeinfo = new String []{"0,0,12,0","1,1,12,1"};
+            String [] mergeinfo = new String []{"0,0,11,0","1,1,11,1"};
             //设置表名
             String sheetName = "车队消费报表";
             //设置字体
@@ -992,6 +1003,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     String orderType = "";
                     if(quotaMap.get("orderType") != null){
                         orderType = quotaMap.get("orderType").toString();
+                        orderType = GlobalConstant.getOrderType(orderType);
                     }
                     String fleetName = "";
                     if(quotaMap.get("fleet_name") != null){
@@ -1008,18 +1020,25 @@ public class TcFleetQuotaController extends BaseContoller {
                     String goodsType = "";
                     if(quotaMap.get("goods_type") != null){
                         goodsType = quotaMap.get("goods_type").toString();
+                        goodsType = GlobalConstant.getGasCardType(goodsType);
                     }
                     String price = "";
                     if(quotaMap.get("price") != null){
                         price = quotaMap.get("price").toString();
+                    }else{
+                        price = "0.00";
                     }
                     String number = "";
                     if(quotaMap.get("number") != null){
                         number = quotaMap.get("number").toString();
+                    }else{
+                        number = "0.00";
                     }
                     String sumPrice = "";
                     if(quotaMap.get("sum_price") != null){
                         sumPrice = quotaMap.get("sum_price").toString();
+                    }else{
+                        sumPrice = "0.00";
                     }
                     String dealDate = "";
                     if(quotaMap.get("deal_date") != null){
@@ -1153,12 +1172,12 @@ public class TcFleetQuotaController extends BaseContoller {
             String[][] content = new String[cells+3][13];//[行数][列数]
             //设置表头
             content[0] = new String[]{transName+"队内管理消费报表"};
-            content[2] = new String[]{"订单编号","订单类型","交易类型","交易金额","姓名","手机号码","加注站名称",
+            content[2] = new String[]{"订单编号","订单类型","交易类型","车队名称","车牌号","加注站名称",
                     "商品名称","结算单价","消费数量","消费金额","交易时间","备注"};
             //设置列宽
-            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,23","9,13","10,13","11,13","12,23"};
+            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,13","9,13","10,23","11,30"};
             //合并第一行单元格
-            String [] mergeinfo = new String []{"0,0,12,0","1,1,12,1"};
+            String [] mergeinfo = new String []{"0,0,11,0","1,1,11,1"};
             //设置表名
             String sheetName = "队内管理消费报表";
             //设置字体
@@ -1189,6 +1208,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     String orderType = "";
                     if(quotaMap.get("orderType") != null){
                         orderType = quotaMap.get("orderType").toString();
+                        orderType = GlobalConstant.getOrderType(orderType);
                     }
                     String fleetName = "";
                     if(quotaMap.get("fleet_name") != null){
@@ -1205,18 +1225,25 @@ public class TcFleetQuotaController extends BaseContoller {
                     String goodsType = "";
                     if(quotaMap.get("goods_type") != null){
                         goodsType = quotaMap.get("goods_type").toString();
+                        goodsType = GlobalConstant.getGasCardType(goodsType);
                     }
                     String price = "";
                     if(quotaMap.get("price") != null){
                         price = quotaMap.get("price").toString();
+                    }else{
+                        price = "0.00";
                     }
                     String number = "";
-                    if(quotaMap.get("number") != null){
+                    if(quotaMap.get("number") != null && !"".equals(quotaMap.get("number"))){
                         number = quotaMap.get("number").toString();
+                    }else{
+                        number = "0.00";
                     }
                     String sumPrice = "";
                     if(quotaMap.get("sum_price") != null){
                         sumPrice = quotaMap.get("sum_price").toString();
+                    }else{
+                        sumPrice = "0.00";
                     }
                     String dealDate = "";
                     if(quotaMap.get("deal_date") != null){

@@ -769,7 +769,7 @@ public class TransportionController extends BaseContoller{
 			content[0] = new String[]{transName+"充值报表"};
 			content[2] = new String[]{"订单编号","充值方式","充值金额","操作人","交易时间"};
 			//设置列宽
-			String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13"};
+			String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,23"};
 			//合并第一行单元格
 			String [] mergeinfo = new String []{"0,0,4,0","1,1,4,1"};
 			//设置表名
@@ -795,6 +795,7 @@ public class TransportionController extends BaseContoller{
 					String chargeType = "";
 					if(quotaMap.get("charge_type") != null){
 						chargeType = quotaMap.get("charge_type").toString();
+						chargeType = GlobalConstant.getCashBackNumber(chargeType);
 					}
 					String cash = "";
 					if(quotaMap.get("cash") != null){
