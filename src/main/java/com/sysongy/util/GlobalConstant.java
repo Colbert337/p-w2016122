@@ -393,6 +393,7 @@ public class GlobalConstant {
 		public static final String CASHBACK_UNIONPAY_CHARGE ="105";//银联充值
 		public static final String CASHBACK_CARD_CHARGE ="106";//充值卡充值
 		public static final String CASHBACK_POS_CHARGE ="107";//POS充值
+		public static final String CASHBACK_PLATFORM_CHARGE ="108";//后台充值
 	}
 
 	/**
@@ -433,6 +434,9 @@ public class GlobalConstant {
 			case CashBackNumber.CASHBACK_POS_CHARGE:
 				value = "POS充值";
 				break;
+			case CashBackNumber.CASHBACK_PLATFORM_CHARGE:
+				value = "后台充值";
+				break;
 		}
 		return value;
 	}
@@ -449,6 +453,7 @@ public class GlobalConstant {
 		public static final String CHARGETYPE_UNIONPAY_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_UNIONPAY_CHARGE;
 		public static final String CHARGETYPE_CARD_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_CARD_CHARGE;
 		public static final String CHARGETYPE_POS_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_POS_CHARGE;
+		public static final String CHARGETYPE_PLATFORM_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_PLATFORM_CHARGE;
 	}
 	
 	/*

@@ -226,7 +226,7 @@ public class GastationServiceImpl implements GastationService {
 		order.setOrderId(UUIDGenerator.getUUID());
 		order.setDebitAccount(log.getStationId());
 		order.setCash(log.getDeposit());
-		order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
+		order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_PLATFORM_CHARGE);
 		order.setOperator(operation);
 		order.setOrderDate(new Date());
 		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_GASTATION);

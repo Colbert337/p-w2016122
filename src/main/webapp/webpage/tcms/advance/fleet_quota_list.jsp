@@ -292,7 +292,7 @@
 												<input type="hidden" id="sys_driver_id_1" name="sysDriverId" class="col-sm-12"/>
 											</td>
 											<td>
-												<input type="text" id="amount_1" name="amount" class="col-sm-12 validate[required]"/>
+												<input type="text" id="amount_1" name="amount" class="col-sm-12 validate[required]" onblur="isTransfer(1);"/>
 											</td>
 											<td>
 												<input type="text" id="remark_1" name="remark" class="col-sm-12"/>
