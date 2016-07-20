@@ -112,6 +112,8 @@ function allocation(obj,index){
     if ($(obj).attr('checked')) {
         $(obj).attr("checked",false);
         $("#is_allot_"+index).val(0);
+        var allotVal = $("#notIsAllot").text();
+        $("#quota_"+index).val(allotVal);
         $("#quota_"+index).attr("readonly","readonly");
     }else{
         $(obj).attr("checked","checked");
