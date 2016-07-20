@@ -32,7 +32,7 @@
 						</div>
 						<div class="item">
 							<label>交易类型：</label>
-							<select name="is_discharge"  maxlength="20">
+							<select id="is_discharge" name="is_discharge"  maxlength="20">
 								<option value="">全部</option>
 								<option value="0">消费</option>
 								<option value="1">冲红</option>
@@ -175,3 +175,38 @@
 	<!-- /.row -->
 	</form>
 </div>
+<script type="text/javascript">
+	/*初始化选择菜单*/
+	$(function(){
+		var fleetId = '${order.channel}';
+		$.ajax({
+			url:"../web/tcms/fleet/list",
+			data:{},
+			async:false,
+			type: "POST",
+			success: function(data){
+				$("#channel").empty();
+				$("#channel").append("<option value=''>全部车队</option>");
+				$.each(data,function(i,val){
+					if(val.tcFleetId == fleetId){
+						$("#channel").append("<option value='"+val.tcFleetId+"' selected='selected'>"+val.fleetName+"</option>");
+					}else{
+						$("#channel").append("<option value='"+val.tcFleetId+"'>"+val.fleetName+"</option>");
+					}
+
+				})
+			}
+		})
+
+		/*消费类型*/
+		var is_discharge = '${order.is_discharge}';
+		/*alert("is_discharge:"+is_discharge);*/
+		if(is_discharge == ""){
+			$("#is_discharge").val("");
+		}else if(is_discharge == "0"){
+			$("#is_discharge").val("0");
+		}else if(is_discharge == "1"){
+			$("#is_discharge").val("1");
+		}
+	})
+</script>
