@@ -108,7 +108,7 @@ public class TcFleetController extends BaseContoller {
 
         List<TcFleet> tcFleetList = tcFleetService.queryFleetListByStationId(fleet);
         TcFleet tcFleet = new TcFleet();
-        tcFleet.setTcFleetId("0");
+        tcFleet.setTcFleetId("other");
         tcFleet.setFleetName("其他");
         tcFleetList.add(tcFleet);
 
