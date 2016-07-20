@@ -103,7 +103,7 @@
 
 									<td>${list.sysGasStationId}</td>
 								 	<td>${list.gas_station.gas_station_name}</td> 
-									<td>${list.gs_gas_source_info.market_price}</td>
+									<td>${list.productPriceInfo.productPrice}</td>
 									<td><s:Code2Name mcode="${list.gasNum}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.gasName}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>

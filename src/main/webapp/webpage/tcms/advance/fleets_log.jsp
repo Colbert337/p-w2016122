@@ -12,7 +12,7 @@
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation">
+	<form id="formgastation" action="<%=basePath%>/web/tcms/fleetQuota/list/report/fleets/import">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -28,7 +28,7 @@
 					<div class="search-types">
 						<div class="item">
 							<label>交易类型：</label>
-							<select name="is_discharge"  maxlength="20">
+							<select id="is_discharge" name="is_discharge"  maxlength="20">
 								<option value="">全部</option>
 								<option value="0">消费</option>
 								<option value="1">冲红</option>
@@ -64,7 +64,7 @@
 								重置
 							</button>
 							<div class="item"></div>
-							<a class="btn btn-sm btn-primary" href="#">导出报表</a>
+							<button class="btn btn-sm btn-primary" type="submit">导出报表</button>
 						</div>
 					</div>
 
@@ -171,3 +171,17 @@
 	<!-- /.row -->
 	</form>
 </div>
+<script type="text/javascript">
+	$(function(){
+		/*消费类型*/
+		var is_discharge = '${order.is_discharge}';
+		/*alert("is_discharge:"+is_discharge);*/
+		if(is_discharge == ""){
+			$("#is_discharge").val("");
+		}else if(is_discharge == "0"){
+			$("#is_discharge").val("0");
+		}else if(is_discharge == "1"){
+			$("#is_discharge").val("1");
+		}
+	})
+</script>

@@ -37,19 +37,3 @@
 		//loadPage('#main', '../crmGasPriceService/queryProductPriceList');
 	}
 
-	/*初始化选择菜单*/
-	$(function(){
-		$.ajax({
-			url:"../web/tcms/fleet/list",
-			data:{},
-			async:false,
-			type: "POST",
-			success: function(data){
-				$("#channel").empty();
-				$("#channel").append("<option value=''>全部车队</option>");
-				$.each(data,function(i,val){
-					$("#channel").append("<option value='"+val.tcFleetId+"'>"+val.fleetName+"</option>");
-				})
-			}
-		})
-	})

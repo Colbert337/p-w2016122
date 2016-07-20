@@ -12,7 +12,7 @@
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formtransportion">
+	<form id="formtransportion" action="<%=basePath%>/web/tcms/fleetQuota/list/quota/import">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -52,6 +52,8 @@
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
 							</button>
+							<div class="item"></div>
+							<button class="btn btn-sm btn-primary" type="submit">导出报表</button>
 						</div>
 					</div>
 
