@@ -478,7 +478,7 @@
     left join sys_order_deal sod on sor.order_id = sod.order_id
     left join sys_order_goods sog on sog.order_id = sor.order_id
     left join sys_gas_station sgs on sgs.sys_gas_station_id = sor.operator_source_id
-    where tv.is_deleted = '1' and tf.is_deleted = '1'
+    where tv.is_deleted = '1'
     and sor.order_id is not null
     <if test="orderId != null &amp;&amp; orderId != ''" >
       and tf.tc_fleet_id = #{orderId,jdbcType=VARCHAR}

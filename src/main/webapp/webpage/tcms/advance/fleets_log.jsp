@@ -123,7 +123,10 @@
 										<c:if test="${list.is_discharge == 1}">冲红</c:if>
 									</td>
 									<%--<td>${list.cash}</td>--%>
-									<td>${list.fleet_name}</td>
+									<td>
+										<c:if test="${list.fleet_name == '' || list.fleet_name == null}">其他</c:if>
+										<c:if test="${list.fleet_name != ''}">${list.fleet_name}</c:if>
+									</td>
 									<td>${list.plates_number}</td>
 									<td>${list.gas_station_name}</td>
 									<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
