@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sysongy.poms.card.service.GasCardService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +86,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private SysOrderGoodsMapper sysOrderGoodsMapper;
+
+	@Autowired
+	private GasCardService gasCardService;
 
 	@Override
 	public PageInfo<SysOrder> queryOrders(SysOrder record) throws Exception {
@@ -592,12 +596,12 @@ public class OrderServiceImpl implements OrderService {
 	   /*if (tcfleet ==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.TCFLEET_IS_NULL);
 	   }*/
-	   
+
 	   String orderType = order.getOrderType();
 	   if(orderType==null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH);
 	   }
-	   
+
 	   String credit_account = order.getCreditAccount();
 	   if(credit_account==null || credit_account.equalsIgnoreCase("")){
 		   throw new Exception( GlobalConstant.OrderProcessResult.CREDIT_ACCOUNT_IS_NULL);
@@ -607,31 +611,33 @@ public class OrderServiceImpl implements OrderService {
 	   if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.TRANSPORTION))){
 		   throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_TRANSPORTION);
 	   }
-	   //检查订单
+
 	   validAccount(order);
 
 	   //1.判断此车队是否分配额度
 	   Integer is_allot = GlobalConstant.TCFLEET_IS_ALLOT_NO;
 	   if(tcfleet!=null){
-	    is_allot = tcfleet.getIsAllot();
+		   is_allot = tcfleet.getIsAllot();
 	   }
-	 //扣除车队额度//传过去负值
+	   //扣除车队额度//传过去负值
 	   BigDecimal cash = order.getCash();
-	   BigDecimal addcash = cash.multiply(new BigDecimal(-1)); 
+	   BigDecimal addcash = cash.multiply(new BigDecimal(-1));
 	   if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_YES){
 		   tcFleetService.updateFleetQuota(tran.getSys_transportion_id(), tcfleet.getTcFleetId(), addcash);
 	   }else if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_NO){
 		   transportionService.modifyDeposit(tran, addcash);
 	   }
-	   
+
 	   //2.扣除运输公司账户金额
 	   //消费的时候传过去的cash是正值,充红的时候传过去的是负值
 	   String consume_success =transportionService.consumeTransportion(order);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
-  		   //如果出错直接返回错误代码退出
+		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
-  	   }
+	   }
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
+
+
 	}
 	
 	@Override
@@ -675,8 +681,12 @@ public class OrderServiceImpl implements OrderService {
 			}
 			boolean isCreditAccountCardFrozen = (StringUtils.isNotEmpty(record.getConsume_card())
 					&& (creditAccount.getAccount_status().equalsIgnoreCase(GlobalConstant.SYS_USER_ACCOUNT_STATUS_CARD_FROZEN)));
+			if(!isCreditAccountCardFrozen && !StringUtils.isEmpty(record.getConsume_card())){
+				isCreditAccountCardFrozen = gasCardService.selectByCardNoForCRM(record.getConsume_card())
+						.getCard_status().equalsIgnoreCase(GlobalConstant.CardStatus.PAUSED);
+			}
 			if(isCreditAccountCardFrozen){
-				return GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN;
+				throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN);
 			}
 		}
 		//转账，验证creditAccount，和debitAccount都不为null
