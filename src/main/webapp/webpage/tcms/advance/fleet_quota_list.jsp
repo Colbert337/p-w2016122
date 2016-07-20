@@ -58,7 +58,7 @@
 					<%--</h4>--%>
 					<div class="alert alert-info alert-mt">
 						<span class="bigger-120">账户余额：${fleetQuotaMap.userAccount.accountBalance}元</span>&nbsp;&nbsp;&nbsp;&nbsp;
-						<span class="bigger-120">未分配资金：${transportion.deposit}元</span>
+						<span class="bigger-120">未分配资金：<label id="notIsAllot">${transportion.deposit}</label>元</span>
 						<input type="hidden" id="sysTransportId" name="sysTransportId" value="${stationId}"/>
 					</div>
 					<%--<table id="simple-table" class="table table-striped table-bordered table-hover">--%>
@@ -292,7 +292,7 @@
 												<input type="hidden" id="sys_driver_id_1" name="sysDriverId" class="col-sm-12"/>
 											</td>
 											<td>
-												<input type="text" id="amount_1" name="amount" class="col-sm-12 validate[required]"/>
+												<input type="text" id="amount_1" name="amount" class="col-sm-12 validate[required]" onblur="isTransfer(1);"/>
 											</td>
 											<td>
 												<input type="text" id="remark_1" name="remark" class="col-sm-12"/>

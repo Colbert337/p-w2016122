@@ -82,7 +82,7 @@ public class TransportionServiceImpl implements TransportionService {
 			sysUserAccount.setSysUserAccountId(UUIDGenerator.getUUID());
 			sysUserAccount.setAccountCode("GS"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
 			sysUserAccount.setAccountType(GlobalConstant.AccounType.GASTATION);
-			sysUserAccount.setAccountBalance("0.0");
+			sysUserAccount.setAccountBalance("0.00");
 			sysUserAccount.setCreatedDate(new Date());
 			sysUserAccount.setUpdatedDate(new Date());
 			sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
@@ -102,7 +102,7 @@ public class TransportionServiceImpl implements TransportionService {
 			record.setTax_certif(show_path);
 			record.setLng_certif(show_path);
 			record.setDcp_certif(show_path);
-			record.setDeposit(BigDecimal.valueOf(0.0));
+			record.setDeposit(BigDecimal.valueOf(0.00));
 			
 			transportionMapper.insert(record);
 			//创建管理员
@@ -341,7 +341,7 @@ public class TransportionServiceImpl implements TransportionService {
 		order.setOrderId(UUIDGenerator.getUUID());
 		order.setDebitAccount(log.getStationId());
 		order.setCash(log.getDeposit());
-		order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE);
+		order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_PLATFORM_CHARGE);
 		order.setOperator(operation);
 		order.setOrderDate(new Date());
 		order.setOrderType(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
