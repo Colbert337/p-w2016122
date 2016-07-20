@@ -2,22 +2,21 @@
 
 	window.onload = setCurrentPage();
 	
+	var listOptions ={   
+            url:'../web/gastation/depositList',   
+            type:'post',                    
+            dataType:'html',
+            success:function(data){
+	              $("#main").html(data);
+	              if($("#retCode").val() != "100"){
+		            	 //$("#modal-table").modal("show");
+		          }
+            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+            	
+	       }
+	}
+	
 	function commitForm(obj){
-		
-		var listOptions ={   
-	            url:'../web/gastation/depositList',   
-	            type:'post',                    
-	            dataType:'html',
-	            success:function(data){
-		              $("#main").html(data);
-		              if($("#retCode").val() != "100"){
-			            	 //$("#modal-table").modal("show");
-			          }
-	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-	            	
-		       }
-		}
-		
 		//设置当前页的值
 		if(typeof obj == "undefined") {
 			$("#pageNum").val("1");

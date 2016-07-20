@@ -12,7 +12,7 @@
 <script src="<%=basePath %>/dist/js/transportion/transportion_deposit_log.js"></script>
 
 <div class="">
-	<form id="formcard">
+	<form id="formcard" action="../web/transportion/depositReport">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -56,6 +56,10 @@
 							<button class="btn btn-sm" type="button" onclick="init();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
+							</button>
+							<button class="btn btn-sm btn-primary" type="submit">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								导出报表
 							</button>
 						</div>
 
