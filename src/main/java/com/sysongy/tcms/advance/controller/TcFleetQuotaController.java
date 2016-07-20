@@ -22,8 +22,8 @@ import com.sysongy.tcms.advance.service.TcTransferAccountService;
 import com.sysongy.util.DateTimeHelper;
 import com.sysongy.util.ExportUtil;
 import com.sysongy.util.GlobalConstant;
+
 import com.sysongy.util.UUIDGenerator;
-import javafx.scene.Parent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -154,7 +154,7 @@ public class TcFleetQuotaController extends BaseContoller {
                                 mapObj.put(dataTemp[0], "0");
                             }
                             if (i % 3 == 0) {   //数字12 为  提交过来每一行  需要修改数据的数量
-                                mapObj.put("tcFleetQuotaId",UUIDGenerator.getUUID());
+                                mapObj.put("tcFleetQuotaId", UUIDGenerator.getUUID());
                                 mapObj.put("stationId",stationId);
                                 list.add(mapObj);
                                 mapObj = new HashMap<>();
