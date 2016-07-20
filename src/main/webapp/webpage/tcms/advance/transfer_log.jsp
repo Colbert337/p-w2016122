@@ -12,7 +12,7 @@
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation">
+	<form id="formgastation" action="<%=basePath%>/web/tcms/fleetQuota/list/transfer/import">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -56,7 +56,7 @@
 								重置
 							</button>
 							<div class="item"></div>
-							<a class="btn btn-sm btn-primary" href="<%=basePath%>/web/tcms/fleetQuota/list/transfer/report">导出报表</a>
+							<button class="btn btn-sm btn-primary" type="submit">导出报表</button>
 						</div>
 					</div>
 

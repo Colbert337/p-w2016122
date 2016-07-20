@@ -12,19 +12,17 @@
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation">
+	<form id="formgastation" action="<%=basePath%>/web/tcms/fleetQuota/list/report/personal/import">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 	<div class="row">
 		<div class="col-xs-12">
-
 					<div class="page-header">
 						<h1>
 							个人消费
 						</h1>
 					</div>
-					
 					<div class="search-types">
 						<div class="item">
 							<label>交易类型：</label>
@@ -64,7 +62,7 @@
 								重置
 							</button>
 							<div class="item"></div>
-							<a class="btn btn-sm btn-primary" href="#">导出报表</a>
+							<button class="btn btn-sm btn-primary" type="submit">导出报表</button>
 						</div>
 					</div>
 

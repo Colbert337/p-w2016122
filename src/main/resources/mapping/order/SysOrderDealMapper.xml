@@ -131,8 +131,9 @@
     where deal_id = #{dealId,jdbcType=VARCHAR}
   </select>
   <select id="queryRechargeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-    select sod.*,sor.order_number,sor.operator,sor.channel,sor.charge_type,sor.cash
+    select sod.*,sor.order_number,sur.real_name as operator,sor.channel,sor.charge_type,sor.cash
     from sys_order_deal sod left join sys_order sor on sod.order_id = sor.order_id
+    left join sys_user sur on sor.operator = sur.sys_user_id
     where 1 = 1
     <if test="orderNumber != null &amp;&amp; orderNumber !=''" >
       and sor.order_number = #{orderNumber}

@@ -157,16 +157,16 @@ public class SysUserController extends BaseContoller{
 			resultInt = 2;
 		}else if(user != null){//添加
 
-			String newid;
+			/*String newid;
 			SysUser userTemp = sysUserService.queryMaxIndex();
 			if(userTemp == null || StringUtils.isEmpty(userTemp.getSysUserId()) || userTemp.getSysUserId().length() > 7){
 				newid = "S" + "000001";
 			}else{
 				Integer tmp = Integer.valueOf(userTemp.getSysUserId().substring(1, 7)) + 1;
 				newid = "S" + StringUtils.leftPad(tmp.toString() , 6, "0");
-			}
+			}*/
 
-			user.setSysUserId(newid);
+			user.setSysUserId(UUIDGenerator.getUUID());
 			user.setStationId(stationId);
 			sysUserService.addUser(user);
 			resultInt = 1;
