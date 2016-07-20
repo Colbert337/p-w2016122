@@ -480,7 +480,10 @@
     left join sys_gas_station sgs on sgs.sys_gas_station_id = sor.operator_source_id
     where tv.is_deleted = '1'
     and sor.order_id is not null
-    <if test="orderId != null &amp;&amp; orderId != ''" >
+    <if test="orderId != null &amp;&amp; orderId == '0'" >
+      and (tf.tc_fleet_id = '' || tf.tc_fleet_id is null )
+    </if>
+    <if test="orderId != null &amp;&amp; orderId != '' &amp;&amp; orderId != '0'" >
       and tf.tc_fleet_id = #{orderId,jdbcType=VARCHAR}
     </if>
     <if test="debitAccount != null &amp;&amp; debitAccount != ''" >
