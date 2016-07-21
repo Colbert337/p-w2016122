@@ -142,6 +142,14 @@
     ) v
     where v.station_id =  #{stationId} and v.is_deleted = 1
   </select>
+  <select id="queryVehicleCount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tc_vehicle
+    where station_id = #{0}
+    and plates_number = #{1}
+    and is_deleted = 1
+  </select>
   <delete id="deleteVehicle" parameterType="java.lang.String" >
     delete from tc_vehicle
     where tc_vehicle_id = #{tcVehicleId,jdbcType=VARCHAR}

@@ -426,8 +426,10 @@ public class TcFleetQuotaController extends BaseContoller {
                     }
 
                     String quota = "";
-                    if(quotaMap.get("quota") != null){
+                    if(quotaMap.get("quota") != null && !"".equals(quotaMap.get("quota").toString())){
                         quota = quotaMap.get("quota").toString();
+                    }else{
+                        quota = "0.00";
                     }
                     String createdDate = "";
                     if(quotaMap.get("createdDate") != null){

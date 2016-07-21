@@ -96,4 +96,6 @@ public interface TcVehicleMapper {
      * @return
      */
     TcVehicle queryMaxIndex(String provinceId);
+
+    List<TcVehicle> queryVehicleCount(String stationId, String platesNumber);
 }

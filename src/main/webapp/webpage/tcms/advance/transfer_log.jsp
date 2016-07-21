@@ -56,7 +56,7 @@
 								重置
 							</button>
 							<div class="item"></div>
-							<button class="btn btn-sm btn-primary" type="submit">导出报表</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="importReport()">导出报表</button>
 						</div>
 					</div>
 
