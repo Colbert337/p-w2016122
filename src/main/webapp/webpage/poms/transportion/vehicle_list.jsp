@@ -25,8 +25,8 @@
 					</div>
 					<div class="search-types">
 						<div class="item">
-						    <label>车队编号:</label>
-							<input type="text" name="tcVehicleId" placeholder="输入车队卡编号" maxlength="32" value="${vehicle.tcVehicleId}"/>
+						    <label>车辆编号:</label>
+							<input type="text" name="tcVehicleId" placeholder="输入车辆编号" maxlength="32" value="${vehicle.tcVehicleId}"/>
 						</div>
 						
 						<div class="item">
@@ -74,7 +74,7 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'tc_vehicle_id');commitForm();" id="tc_vehicle_id_order">车队编号</th>
+									<th onclick="orderBy(this,'tc_vehicle_id');commitForm();" id="tc_vehicle_id_order">车辆编号</th>
 									<th onclick="orderBy(this,'plates_number');commitForm();" id="plates_number_order">车牌号</th>
 									<th onclick="orderBy(this,'');commitForm();" id="_order">车队名称</th>
 									<th onclick="orderBy(this,'');commitForm();" id="_order">所属公司</th>
@@ -205,7 +205,7 @@
 					<div class="form-group">
 						<label class="control-label">新卡号：</label>
 						<input type="text" name="newcardno" maxlength="9" onblur="checkCard(this.value);"/>
-						<label class="control-label">归属工作站：</label>
+						<label class="control-label">&nbsp;&nbsp;&nbsp;归属工作站：</label>
 						<label id="station"></label>
 					</div>
 					<div class="form-group">
