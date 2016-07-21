@@ -107,5 +107,13 @@ public interface TcVehicleService {
      */
     TcVehicle queryMaxIndex(String provinceId);
 
+    /**
+     * 查询当前运输公司系统中的车牌号是否重复
+     * @param stationId
+     * @param platesNumber
+     * @return
+     */
+    int queryVehicleCount(String stationId,String platesNumber);
+
     Integer updateAndchangeCard(String tcVehicleId, String newcardno) throws Exception;
 }

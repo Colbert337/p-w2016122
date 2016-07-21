@@ -36,4 +36,9 @@
 		commitForm();
 		//loadPage('#main', '../crmGasPriceService/queryProductPriceList');
 	}
+
+	//导出报表
+	function importReport(){
+		$("#formgastation").submit();
+	}
 	
