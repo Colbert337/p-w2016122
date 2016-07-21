@@ -208,3 +208,9 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 .user-name-valid.tooltip.top .tooltip-arrow{
     border-top-color: #ee0101;
 }
+.fleet-quota-list .table {
+    margin-bottom: 0;
+}
+.fleet-quota-tips {
+    padding: 10px;
+}
