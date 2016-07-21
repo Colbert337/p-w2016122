@@ -207,23 +207,38 @@ public class TcVehicleController extends BaseContoller {
         if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
             TcVehicle tcVehicle = new TcVehicle();
             tcVehicle = tcVehicleService.queryVehicle(vehicle);
-            if(tcVehicle != null){
-                //新密码
-                String password = vehicle.getPayCode();
-                password = Encoder.MD5Encode(password.getBytes());
-                //新密码和原始密码不一致，则修改密码
-                if(!password.equals(tcVehicle.getPayCode())){
-                    vehicle.setPayCode(password);
-                }else{
-                    vehicle.setPayCode(null);
+            //判断车牌号是否重复
+            TcVehicle vehicle1Update = new TcVehicle();
+            vehicle1Update.setStationId(stationId);
+            vehicle1Update.setPlatesNumber(vehicle.getPlatesNumber());
+            vehicle1Update.setUserName(tcVehicle.getPlatesNumber());
+            TcVehicle vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Update);
+
+            if(vehicle1Count != null){
+                return "redirect:/web/tcms/vehicle/list/page";
+            }else{
+                if(tcVehicle != null){
+                    //新密码
+                    String password = vehicle.getPayCode();
+                    password = Encoder.MD5Encode(password.getBytes());
+                    //新密码和原始密码不一致，则修改密码
+                    if(!password.equals(tcVehicle.getPayCode())){
+                        vehicle.setPayCode(password);
+                    }else{
+                        vehicle.setPayCode(null);
+                    }
                 }
+
+                tcVehicleService.updateVehicle(vehicle);
             }
 
-            tcVehicleService.updateVehicle(vehicle);
         }else{
             //判断车牌号是否重复
-            count = tcVehicleService.queryVehicleCount(vehicle.getStationId(), vehicle.getPlatesNumber());
-            if(count > 0){
+            TcVehicle vehicle1Add = new TcVehicle();
+            vehicle1Add.setStationId(stationId);
+            vehicle1Add.setPlatesNumber(vehicle.getPlatesNumber());
+            TcVehicle vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Add);
+            if(vehicle1Count != null){
                 return "redirect:/web/tcms/vehicle/list/page";
             }else{
                 String newid;
