@@ -157,7 +157,7 @@ public class CRMCashServiceContoller {
             ajaxJson.setAttributes(attributes);
             return ajaxJson;
         } catch (Exception e){
-            e.printStackTrace();
+            logger.warn("账户充值异常：" + e.getMessage());
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(e.getMessage());
             return ajaxJson;
@@ -194,7 +194,6 @@ public class CRMCashServiceContoller {
                 ajaxJson.setMsg("订单ID或者气站ID为空！！！");
                 return ajaxJson;
             }
-
 
             record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
             PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
@@ -442,14 +441,14 @@ public class CRMCashServiceContoller {
         }
         try {
             List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(cardID);
-            if (vehicles.size() > 1) {
-                logger.error("查询出现多个车辆: " + cardID);
+            if (vehicles.size() != 1) {
+                logger.warn("查询出现无车辆或多个车辆: " + cardID);
                 return null;
             }
             for (TcVehicle tcVehicle : vehicles) {
                 List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
-                if (tcFleets.size() > 1) {
-                    logger.error("查询出现多个车队: " + tcVehicle.getTcVehicleId());
+                if (tcFleets.size() != 1) {
+                    logger.warn("查询无车队或者多个车队: " + tcVehicle.getTcVehicleId());
                     return null;
                 }
                 return tcFleets.get(0);
