@@ -314,6 +314,7 @@ public class CRMCustomerContoller {
             } else if(msgType.equalsIgnoreCase("driverConsume")){
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_CONSUME);
             }else if(msgType.equalsIgnoreCase("reSetCode")){
+                aliShortMessageBean.setProduct("进行订单冲红");
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_HEDGE);
             } else {
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
@@ -513,7 +514,8 @@ public class CRMCustomerContoller {
 
             Map<String, Object> attributes = new HashMap<String, Object>();
             List<SysDriver> listDrivers = new ArrayList<SysDriver>();
-            listDrivers.add(updateSysDriver);
+            SysDriver updateSysDriverNew = driverService.queryDriverByPK(updateSysDriver.getSysDriverId());
+            listDrivers.add(updateSysDriverNew);
             attributes.put("drivers", listDrivers);
             ajaxJson.setAttributes(attributes);
 

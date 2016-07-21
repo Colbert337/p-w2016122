@@ -65,7 +65,7 @@ public class CRMUserContoller {
 
                 Gastation gastation = gastationService.queryGastationByPK(sysUser.getStationId());
                 long nTime = gastation.getExpiry_date().getTime() - new Date().getTime();
-                if(gastation.getStatus().equalsIgnoreCase(GlobalConstant.StationStatus.PAUSE) || (nTime >0.0)){
+                if(gastation.getStatus().equalsIgnoreCase(GlobalConstant.StationStatus.PAUSE) || (nTime < 0.0)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("气站已过期或者气站已关闭！");
                     return ajaxJson;

@@ -356,6 +356,7 @@
       </if>
     </set>
      where CAST(card_no as unsigned) &gt; #{startID,jdbcType=INTEGER} and CAST(card_no as unsigned) &lt; #{endID,jdbcType=INTEGER}
+      and card_status != 2
   </update>
 
 </mapper>

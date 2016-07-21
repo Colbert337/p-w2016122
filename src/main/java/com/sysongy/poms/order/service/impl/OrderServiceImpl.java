@@ -192,12 +192,12 @@ public class OrderServiceImpl implements OrderService {
 		   map.put("CHARGE_TO_DRIVER", GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 		   Map returnMap = sysOrderMapper.querySumChargeByUserId(map);
 
-		   BigDecimal sum = new BigDecimal(0.00);
+		   BigDecimal sum = order.getCash();
 		   if(returnMap != null){
-			   sum = (BigDecimal)returnMap.get("sumcash");
+			   sum = sum.add((BigDecimal)returnMap.get("sumcash"));
 		   }
 
-		   if(GlobalConstant.DRIVER_NOT_CERTIFICATE_LIMIT.compareTo(sum)<0){
+		   if(GlobalConstant.DRIVER_NOT_CERTIFICATE_LIMIT.compareTo(sum) < 0){
 			   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT);
 		   }
 	   }
