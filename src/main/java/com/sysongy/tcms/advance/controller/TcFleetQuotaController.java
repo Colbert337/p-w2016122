@@ -292,12 +292,15 @@ public class TcFleetQuotaController extends BaseContoller {
     public SysDriver queryDriverInfo(@ModelAttribute CurrUser currUser,SysDriver sysDriver, ModelMap map){
         SysDriver driver = new SysDriver();
         String stationId = currUser.getStationId();
-        driver = sysDriver;
-        /*driver.setStationId(stationId);*/
-        try {
-            driver = driverService.queryDriverByMobilePhone(driver);
-        }catch (Exception e){
-            e.printStackTrace();
+        if(sysDriver != null && sysDriver.getMobilePhone() != null && !"".equals(sysDriver.getMobilePhone())){
+            driver = sysDriver;
+            try {
+                driver = driverService.queryDriverByMobilePhone(driver);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else{
+            driver = null;
         }
 
         return driver;
