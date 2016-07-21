@@ -313,7 +313,7 @@ public class CRMCustomerContoller {
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
             } else if(msgType.equalsIgnoreCase("driverConsume")){
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_CONSUME);
-            }else if(msgType.equalsIgnoreCase("driverHedge")){
+            }else if(msgType.equalsIgnoreCase("reSetCode")){
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_HEDGE);
             } else {
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);

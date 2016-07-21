@@ -2,6 +2,8 @@ package com.sysongy.api.client.controller;
 
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.FileUtil;
@@ -22,10 +24,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @Controller
 @RequestMapping("/crmUserService")
@@ -37,6 +36,9 @@ public class CRMUserContoller {
 
     @Autowired
     SysUserService sysUserService;
+
+    @Autowired
+    private GastationService gastationService;
 
     @RequestMapping(value = {"/web/queryUserInfo"})
     @ResponseBody
@@ -58,6 +60,14 @@ public class CRMUserContoller {
                 if(user == null){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("用户名或密码错误，请重新登录！");
+                    return ajaxJson;
+                }
+
+                Gastation gastation = gastationService.queryGastationByPK(sysUser.getStationId());
+                long nTime = gastation.getExpiry_date().getTime() - new Date().getTime();
+                if(gastation.getStatus().equalsIgnoreCase(GlobalConstant.StationStatus.PAUSE) || (nTime >0.0)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("气站已过期或者气站已关闭！");
                     return ajaxJson;
                 }
 
