@@ -67,7 +67,7 @@
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
 							</button>
-							<button class="btn btn-sm btn-primary" type="submit">
+							<button class="btn btn-sm btn-primary" type="button" onclick="importReport()">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								导出报表
 							</button>

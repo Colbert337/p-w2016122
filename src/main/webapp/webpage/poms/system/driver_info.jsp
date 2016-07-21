@@ -122,13 +122,13 @@
 									<td><s:Code2Name mcode="${list.account.account_status}" gcode="ACCOUNT_STATUS"></s:Code2Name></td>
 									<td class="text-center">
 										<a class="option-btn-m" href="javascript:void(0);" onclick="change(this,0);" title="冻结用户" data-rel="tooltip">
-											<i class="ace-icon fa fa-user-times bigger-130" onclick="preUpdate(this);"></i>
+											<i class="ace-icon fa fa-user-times bigger-130"></i>
 										</a>
 										<a class="option-btn-m" href="javascript:void(0);" onclick="change(this,1,'${list.cardId}');" title="冻结卡" data-rel="tooltip">
-											<i class="ace-icon fa fa-archive bigger-130" onclick="preUpdate(this);"></i>
+											<i class="ace-icon fa fa-archive bigger-130"></i>
 										</a>
 										<a class="" href="javascript:void(0);" onclick="change(this,2,'${list.cardId}');" title="解冻" data-rel="tooltip">
-											<i class="ace-icon fa fa-pencil-square-o bigger-130 green" onclick="preUpdate(this);"></i>
+											<i class="ace-icon fa fa-pencil-square-o bigger-130 green"></i>
 										</a>
 									</td>
 								</tr>

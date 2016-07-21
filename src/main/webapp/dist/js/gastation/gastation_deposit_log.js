@@ -97,3 +97,8 @@
 			$('#colorbox, #cboxOverlay').remove();
 	   });
 	})
+
+	//导出报表
+	function importReport(){
+		$("#formgastation").submit();
+	}
