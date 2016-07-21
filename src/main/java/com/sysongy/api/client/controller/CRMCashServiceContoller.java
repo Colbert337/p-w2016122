@@ -259,9 +259,15 @@ public class CRMCashServiceContoller {
                     return ajaxJson;
                 }
 
+                if(isLock24Hours(sysDriver.getAccount().getSysUserAccountId())){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("支付密码已输错5次，账户已被冻结24小时！！！");
+                    return ajaxJson;
+                }
+
                 if(!(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
-                    addWrongTimes(sysDriver.getSysDriverId());
-                    if(isWrong4Times(sysDriver.getSysDriverId())){
+                    addWrongTimes(sysDriver.getAccount().getSysUserAccountId());
+                    if(isWrong4Times(sysDriver.getAccount().getSysUserAccountId())){
                         ajaxJson.setSuccess(false);
                         ajaxJson.setMsg("支付密码错误，已输入错误4次，输入5次错误后冻结账户24小时！！！");
                         return ajaxJson;
@@ -270,7 +276,7 @@ public class CRMCashServiceContoller {
                     ajaxJson.setMsg("支付密码错误！！！");
                     return ajaxJson;
                 }else {
-                    redisClientImpl.deleteFromCache(sysDriver.getSysDriverId());
+                    redisClientImpl.deleteFromCache(sysDriver.getMobilePhone());
                 }
 
             }
