@@ -153,9 +153,12 @@ public class TcVehicleServiceImpl implements TcVehicleService{
 	public Integer updateAndchangeCard(String tcVehicleId, String newcardno) throws Exception{
 		GasCard card = gasCardMapper.selectByPrimaryKey(newcardno);
 
-		if(card == null || !GlobalConstant.CardStatus.MOVED.equals(card.getCard_status())){
+		if(card == null || (!GlobalConstant.CardStatus.PROVIDE.equals(card.getCard_status()) && GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION.equals(card.getCard_property()))){
 			throw new Exception("该卡不存在或卡状态异常");
 		}
+		
+		card.setCard_status(GlobalConstant.CardStatus.USED);
+		gasCardMapper.updateByPrimaryKey(card);
 
 		TcVehicle vehicle = new TcVehicle();
 

@@ -106,9 +106,13 @@ public class TcFleetController extends BaseContoller {
         String stationId = currUser.getStationId();
         fleet.setStationId(stationId);
 
-        List<TcFleet> tcFleet = tcFleetService.queryFleetListByStationId(fleet);
+        List<TcFleet> tcFleetList = tcFleetService.queryFleetListByStationId(fleet);
+        TcFleet tcFleet = new TcFleet();
+        tcFleet.setTcFleetId("other");
+        tcFleet.setFleetName("其他");
+        tcFleetList.add(tcFleet);
 
-        return tcFleet;
+        return tcFleetList;
     }
 
     /**

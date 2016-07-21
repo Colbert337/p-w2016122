@@ -158,15 +158,20 @@ var obj,status,station;
 			success: function(msg){
 				var card = JSON.parse(msg);
 				
-				if(card.status!=2){
-					bootbox.alert('卡状态需要为[已出库]');
+				if(card.status!=3){
+					bootbox.alert('卡状态需要为[已发放]');
 					$("#station").text("");
 					return;
 				}
-				if(card.station != station){
+				if(card.card_property!=0){
+					bootbox.alert('卡属性需要为[车辆卡]');
+					$("#station").text("");
+					return;
+				}
+				/*if(card.station != station){
 					bootbox.alert('卡所属地错误，请检查');
 					$("#station").text("");
-				}
+				}*/
 				else{
 					var name = $(obj).parents("tr").children("td").eq(4).text();
 					$("#station").text(name);

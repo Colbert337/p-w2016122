@@ -225,6 +225,7 @@ public class CardController extends BaseContoller{
 		if(gasCard != null){
 			json.put("status", gasCard.getCard_status());
 			json.put("station", gasCard.getWorkstation());
+			json.put("card_property", gasCard.getCard_property());
 		}	
 		
 		return json;
