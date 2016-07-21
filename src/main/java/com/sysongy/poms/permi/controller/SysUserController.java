@@ -51,7 +51,7 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryUserListPage(@ModelAttribute CurrUser currUser, SysUser sysUser, @RequestParam(required = false) Integer resultInt,
+	public String queryUserListPage(@ModelAttribute CurrUser currUser,SysUser sysUser, @RequestParam(required = false) Integer resultInt,
 									@RequestParam(required = false) Integer userType, ModelMap map){
 		String stationId = currUser.getStationId();
 		sysUser.setStationId(stationId);
@@ -65,8 +65,11 @@ public class SysUserController extends BaseContoller{
 			sysUser.setUserType(userType);
 			map.addAttribute("userType",userType);//将用户类型传递到页面
 		}else{//当前用户类型
-			sysUser.setUserType(currUser.getUserType());
-			map.addAttribute("userType",currUser.getUserType());
+			SysUser userTemp = currUser.getUser();//将当前系统的登录用户类型设置为用户类型
+			Integer sysType = userTemp.getUserType();
+			sysUser.setUserType(sysType);
+			currUser.setUserType(sysType);
+			map.addAttribute("userType",sysType);
 		}
 
 		//封装分页参数，用于查询分页内容
