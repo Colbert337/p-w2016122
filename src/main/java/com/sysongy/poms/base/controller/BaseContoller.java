@@ -100,6 +100,7 @@ public class BaseContoller {
     	String password = request.getParameter("password");
     	String returnPath = "login";
         CurrUser currUser = new CurrUser();
+        Integer sysType = 0;
 
         SysUser user = new SysUser();
 
@@ -133,6 +134,7 @@ public class BaseContoller {
                 currUser.setUser(user);
                 currUser.setUserType(userType);//当前用户类型
                 currUser.setStationId(user.getStationId());//当前用户站点信息
+                sysType = userType;
 
                 //封装用户菜单信息
                 List<Map<String, Object>> functionList = sysFunctionService.queryFunctionListByUserId(user.getSysUserId(),user.getUserType());
@@ -196,6 +198,7 @@ public class BaseContoller {
 
                 map.addAttribute("current_module", "webpage/demo/demo");
                 map.addAttribute("currUser",currUser);
+                map.addAttribute("sysType",sysType);
                 returnPath = "common/g_main";
             }else{
                 returnPath = "login";

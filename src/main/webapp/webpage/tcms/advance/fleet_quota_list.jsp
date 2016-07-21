@@ -270,7 +270,7 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<!-- PAGE CONTENT BEGINS -->
-							<form class="form-horizontal" id="zhuanForm">
+							<form class="form-horizontal fleet-quota-list" id="zhuanForm">
 								<!-- #section:elements.form -->
 								<table id="zhuanTable" class="table table-striped table-bordered table-hover">
 									<thead>
@@ -285,10 +285,10 @@
 									<tbody>
 										<tr>
 											<td id="tr_1">
-												<input type="text"  id="mobile_phone_1" name="mobilePhone" maxlength="11" class="col-sm-12" onblur="queryDriverInfo(1);"/>
+												<input type="text"  id="mobile_phone_1" name="mobilePhone" maxlength="11" class="col-sm-12" onblur="vailPhone(1);"/>
 											</td>
 											<td>
-												<input type="text"  id="full_name_1" name="fullName" class="col-sm-12" readonly="readonly"/>
+												<input type="text"  id="full_name_1" name="fullName" class="col-sm-12" readonly="readonly" onclick="queryDriverInfo(1);"/>
 												<input type="hidden" id="sys_driver_id_1" name="sysDriverId" class="col-sm-12"/>
 											</td>
 											<td>
@@ -301,7 +301,11 @@
 										</tr>
 									</tbody>
 								</table>
-								<tr><td colspan="4" align="right"><a href="javascript:addRow();">添加</a></td></tr>
+								<div class="fleet-quota-tips clearfix">
+									<span class="pull-right"><a href="javascript:addRow();">添加一行</a></span>
+									<div class="fleet-quota-error red"></div>
+								</div>
+
 								<div class="col-sm-12">
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>

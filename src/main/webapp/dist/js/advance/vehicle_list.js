@@ -230,7 +230,7 @@ function fileFormat(){
     }
 }
 /**
- * 判断用户名是否存在
+ * 判断车牌号是否存在
  */
 function isVehicleExit(){
     var numberType = {

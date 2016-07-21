@@ -167,4 +167,21 @@ public class TcVehicleServiceImpl implements TcVehicleService{
 
 		return tcVehicleMapper.updateVehicle(vehicle);
 	}
+
+    /**
+     * 查询当前运输公司系统中的车牌号是否重复
+     * @param stationId
+     * @param platesNumber
+     * @return
+     */
+    @Override
+    public int queryVehicleCount(String stationId, String platesNumber) {
+        int resultCount = 0;
+        List<TcVehicle> tcVehicleList = tcVehicleMapper.queryVehicleCount(stationId, platesNumber);
+        if(tcVehicleList != null && tcVehicleList.size() > 0){
+            resultCount = tcVehicleList.size();
+        }
+
+        return resultCount;
+    }
 }

@@ -97,3 +97,8 @@
 	function init(){
 		loadPage('#main', '../web/transportion/depositList');
 	}
+
+	//导出报表
+	function importReport(){
+		$("#formcard").submit();
+	}
