@@ -36,3 +36,7 @@
 		commitForm();
 	}
 
+	//导出报表
+	function importReport(){
+		$("#formtransportion").submit();
+	}
