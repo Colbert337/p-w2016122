@@ -180,7 +180,13 @@ public class GasCardServiceImpl implements GasCardService{
 				for(int i=0;i<tmp.length;i++){
 					GasCard card = new GasCard();
 					card.setCard_no(tmp[i]);
-					card.setCard_status(GlobalConstant.CardStatus.MOVED);
+					
+					if(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_DRIVER.equals(card.getCard_property())){
+						card.setCard_status(GlobalConstant.CardStatus.MOVED);
+					}else{
+						card.setCard_status(GlobalConstant.CardStatus.USED);
+					}
+					
 					card.setWorkstation(gascard.getWorkstation());
 					card.setWorkstation_resp(gascard.getWorkstation_resp());
 					card.setRelease_time(new Date());
