@@ -202,6 +202,7 @@ public class TcVehicleController extends BaseContoller {
     public String saveVehicle(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map) throws Exception{
         String stationId = currUser.getStationId();
         String payCode = "";
+        int count = 0;
         Transportion transportion = transportionService.queryTransportionByPK(stationId);
         if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
             TcVehicle tcVehicle = new TcVehicle();
@@ -220,42 +221,51 @@ public class TcVehicleController extends BaseContoller {
 
             tcVehicleService.updateVehicle(vehicle);
         }else{
-            String newid;
-            TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getProvince_id());
-            if(tcVehicleTemp == null || StringUtils.isEmpty(tcVehicleTemp.getTcVehicleId())){
-                newid = stationId + "0001";
+            //判断车牌号是否重复
+            count = tcVehicleService.queryVehicleCount(vehicle.getStationId(), vehicle.getPlatesNumber());
+            if(count > 0){
+                return "redirect:/web/tcms/vehicle/list/page";
             }else{
-                Integer tmp = Integer.valueOf(tcVehicleTemp.getTcVehicleId().substring(11, 14)) + 1;
-                newid = stationId + StringUtils.leftPad(tmp.toString() , 4, "0");
-            }
+                String newid;
+                TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getSys_transportion_id());
+                if(tcVehicleTemp == null || StringUtils.isEmpty(tcVehicleTemp.getTcVehicleId())){
+                    newid = stationId + "0001";
+                }else{
+                    Integer tmp = Integer.valueOf(tcVehicleTemp.getTcVehicleId().substring(11, 14)) + 1;
+                    newid = stationId + StringUtils.leftPad(tmp.toString() , 4, "0");
+                }
 
-            vehicle.setStationId(stationId);
-            vehicle.setTcVehicleId(newid);
-            payCode = vehicle.getPayCode();
-            vehicle.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
-            vehicle.setIsDeleted(GlobalConstant.STATUS_NOTDELETE+"");
+                vehicle.setStationId(stationId);
+                vehicle.setTcVehicleId(newid);
+                payCode = vehicle.getPayCode();
+                vehicle.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
+                vehicle.setIsDeleted(GlobalConstant.STATUS_NOTDELETE+"");
 
-            try {
-                tcVehicleService.addVehicle(vehicle);
-            }catch (Exception e){
-                e.printStackTrace();
+                try {
+                    tcVehicleService.addVehicle(vehicle);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
-        String msgType = "user_register";
-        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-        aliShortMessageBean.setCode(payCode);
-        aliShortMessageBean.setLicense(vehicle.getPlatesNumber());
-        aliShortMessageBean.setString(transportion.getTransportion_name());
-        //给通知手机发送短信
-        if(vehicle != null && vehicle.getNoticePhone() != null && !vehicle.getNoticePhone().equals("")){
-            aliShortMessageBean.setSendNumber(vehicle.getNoticePhone());
-            sendMsgApi(vehicle.getNoticePhone(),msgType,aliShortMessageBean);
-        }
 
-        //给抄送手机发送短信
-        if(vehicle != null && vehicle.getCopyPhone() != null && !vehicle.getCopyPhone().equals("")){
-            aliShortMessageBean.setSendNumber(vehicle.getCopyPhone());
-            sendMsgApi(vehicle.getCopyPhone(),msgType,aliShortMessageBean);
+        if(count <= 0){
+            String msgType = "user_register";
+            AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+            aliShortMessageBean.setCode(payCode);
+            aliShortMessageBean.setLicense(vehicle.getPlatesNumber());
+            aliShortMessageBean.setString(transportion.getTransportion_name());
+            //给通知手机发送短信
+            if(vehicle != null && vehicle.getNoticePhone() != null && !vehicle.getNoticePhone().equals("")){
+                aliShortMessageBean.setSendNumber(vehicle.getNoticePhone());
+                sendMsgApi(vehicle.getNoticePhone(),msgType,aliShortMessageBean);
+            }
+
+            //给抄送手机发送短信
+            if(vehicle != null && vehicle.getCopyPhone() != null && !vehicle.getCopyPhone().equals("")){
+                aliShortMessageBean.setSendNumber(vehicle.getCopyPhone());
+                sendMsgApi(vehicle.getCopyPhone(),msgType,aliShortMessageBean);
+            }
         }
 
         return "redirect:/web/tcms/vehicle/list/page";
@@ -290,8 +300,15 @@ public class TcVehicleController extends BaseContoller {
                 int rows = sheet.getRows();
                 int columns = sheet.getColumns();
 
+                //非空校验
+
+                //车牌号及实体卡号重复判断
+
+                //判断卡是否已出库，未出库的不能导入
+
+
                 Transportion transportion = transportionService.queryTransportionByPK(stationId);
-                TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getProvince_id());
+                TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getSys_transportion_id());
                 Integer tempVal = 1;
 
                 for (int i = 1; i < rows; i++) {
