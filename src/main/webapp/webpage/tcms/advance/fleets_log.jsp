@@ -28,7 +28,7 @@
 					<div class="search-types">
 						<div class="item">
 							<label>交易类型：</label>
-							<select name="is_discharge"  maxlength="20">
+							<select id="is_discharge" name="is_discharge"  maxlength="20">
 								<option value="">全部</option>
 								<option value="0">消费</option>
 								<option value="1">冲红</option>
@@ -123,7 +123,10 @@
 										<c:if test="${list.is_discharge == 1}">冲红</c:if>
 									</td>
 									<%--<td>${list.cash}</td>--%>
-									<td>${list.fleet_name}</td>
+									<td>
+										<c:if test="${list.fleet_name == '' || list.fleet_name == null}">其他</c:if>
+										<c:if test="${list.fleet_name != ''}">${list.fleet_name}</c:if>
+									</td>
 									<td>${list.plates_number}</td>
 									<td>${list.gas_station_name}</td>
 									<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
@@ -171,3 +174,17 @@
 	<!-- /.row -->
 	</form>
 </div>
+<script type="text/javascript">
+	$(function(){
+		/*消费类型*/
+		var is_discharge = '${order.is_discharge}';
+		/*alert("is_discharge:"+is_discharge);*/
+		if(is_discharge == ""){
+			$("#is_discharge").val("");
+		}else if(is_discharge == "0"){
+			$("#is_discharge").val("0");
+		}else if(is_discharge == "1"){
+			$("#is_discharge").val("1");
+		}
+	})
+</script>

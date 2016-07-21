@@ -160,6 +160,7 @@ public class TcFleetQuotaController extends BaseContoller {
                             }
                         }
 
+
                     }
                 }
                 //判断未分配额度是否够用
@@ -174,11 +175,8 @@ public class TcFleetQuotaController extends BaseContoller {
                         }
                     }
                     if(userQuota.compareTo(userAccount.getAccountBalanceBigDecimal()) <= 0){
-                        //添加分配记录
-                        tcFleetQuotaService.addFleetQuotaList(list);
 
                         //计算运输公司剩余额度
-
                         if(userAccount != null){
                             BigDecimal banlance = userAccount.getAccountBalanceBigDecimal();
                             userQuota = banlance.subtract(userQuota);
@@ -193,6 +191,15 @@ public class TcFleetQuotaController extends BaseContoller {
                         }else{
                             resultInt = 4;//失败
                         }
+
+                        //重置未分配额度的车队额度
+                        for(Map<String, Object> quota:list){
+                            if(quota.get("isAllot").toString().equals("0")){
+                                quota.put("quota",userQuota);
+                            }
+                        }
+                        //添加分配记录
+                        tcFleetQuotaService.addFleetQuotaList(list);
                     }else{
                         resultInt = 3;//余额不足
                     }
