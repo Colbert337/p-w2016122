@@ -214,3 +214,7 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
 .fleet-quota-tips {
     padding: 10px;
 }
+.fleet-quota-option{
+    text-align: center;
+    padding-top: 16px;
+}
