@@ -174,6 +174,31 @@ function addRow(){
     $("#zhuanTable").append(zhuan);
 }
 
+//验证手机号
+function vailPhone(index){
+    var mobilePhone = $("#mobile_phone_"+index).val();
+    var flag = false;
+    var message = "";
+    var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(15[0-3]{1})|(15[5-9]{1})|(18[0-9]{1}))+\d{8})$/;
+    $("#full_name_"+index).val("");
+    if(mobilePhone == ''){
+        message = "手机号码不能为空！";
+    }else if(mobilePhone.length !=11){
+        message = "请输入有效的手机号码！";
+    }else if(!myreg.test(mobilePhone)){
+        message = "请输入有效的手机号码！";
+    }else{
+        flag = true;
+    }
+    if(!flag){
+        $(".fleet-quota-error").text(message);
+    }else{
+        $(".fleet-quota-error").empty();
+        $(event.target).parent().next().find('input[name="fullName"]').trigger('click');
+    }
+    return flag;
+}
+
 /**
  * 根据下标查找司机信息
  * @param index
@@ -183,23 +208,24 @@ function queryDriverInfo(index){
     $.ajax({
         type: "POST",
         data:{mobilePhone:mobilePhone},
-        async:false,
+        //async:false,
         url: "../web/tcms/fleetQuota/info/driver",
         success: function(data){
             if(data != null && (data.fullName == "" || data.fullName == undefined)){
-                bootbox.alert("未认证司机无法接受转账!");
+                $("#full_name_"+index).val("");
+                $(".fleet-quota-error").text("未认证司机无法接受转账!");
                 return false;
             }else if(data != null){
                 $("#full_name_"+index).val(data.fullName);
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
                 return false;
             }else{
-                bootbox.alert("请求失败！");
+                $(".fleet-quota-error").text("请求失败！");
                 return false;
             }
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            bootbox.alert("操作失败!")//保存成功弹窗
+            $(".fleet-quota-error").text("操作失败!")//保存成功弹窗
             return false;
         }
     });
@@ -213,14 +239,15 @@ function isTransfer(index){
     var notIsAllot = $("#notIsAllot").text();
     var mobilePhone = $("#mobile_phone_"+index).val();
     var fullName = $("#full_name_"+index).val();
+    var error = $(".fleet-quota-error");
     if(mobilePhone == ""){
-        bootbox.alert("请先输入手机号！");
+        error.text("请先输入手机号！");
         return false;
     }else if(fullName == ""){
-        bootbox.alert("未认证司机无法接受转账！");
+        error.text("未认证司机无法接受转账！");
         return false;
     }else if(amount > notIsAllot){
-        bootbox.alert("转账金额不能大于未分配额度！");
+        error.text("转账金额不能大于未分配额度！");
         return false;
     }
 }
@@ -444,7 +471,6 @@ $('#fenpeiForm').bootstrapValidator({
                 remote: {
                     url: '../web/transportion/info/password',
                     type: "post",
-                    async: false,
                     data: function(validator, $field, value) {
                         return{
                             pay_code:$("#pay_code").val()

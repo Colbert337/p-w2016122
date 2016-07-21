@@ -159,13 +159,13 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
 									<div class="col-sm-7">
-										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" class="col-xs-10 col-sm-12" />
+										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" maxlength="6" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-7">
-										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" class="col-xs-10 col-sm-12" />
+										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" maxlength="6" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
