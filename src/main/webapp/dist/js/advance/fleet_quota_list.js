@@ -26,14 +26,18 @@ function addChongzhi(){
 function addFenpei(){
     clearDiv();
 
-    $("#fenpeiModel").modal('show');
+    $("#fenpeiModel").modal('show').on('hide.bs.modal', function() {
+        $('#fenpeiForm').bootstrapValidator('resetForm',true);
+    });
 }
 
 
 //显示添加个人转账弹出层add
 function addZhuan(){
     clearDiv();
-    $("#zhuanModel").modal('show');
+    $("#zhuanModel").modal('show').on('hide.bs.modal', function() {
+        $('#zhuanForm').bootstrapValidator('resetForm',true);
+    });
 }
 
 //显示添加修改密码弹出层add
@@ -56,7 +60,9 @@ function addPassword(){
             bootbox.alert("操作失败!")//保存成功弹窗
         }
     });
-    $("#passwordModel").modal('show');
+    $("#passwordModel").modal('show').on('hide.bs.modal', function() {
+        $('#passwordForm').bootstrapValidator('resetForm',true);
+    });
 }
 
 /**
@@ -93,15 +99,14 @@ function savePassword(){
         dataType:'html',
         success:function(data){
             $("#main").html(data);
-            $("#modal-table").modal("show");
+            bootbox.alert("支付密码修改成功");//保存成功弹窗
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            bootbox.alert("操作失败!")//保存成功弹窗
+            bootbox.alert("操作失败!");
         }
     }
     $("#passwordForm").ajaxSubmit(saveOptions);
-    $("#passwordModel").modal('hide').removeClass('in');
-    $("body").removeClass('modal-open').removeAttr('style');
-    $(".modal-backdrop").remove();
+
+    hideModal("#passwordModel");
 }
 /**
  * 资金分配状态修改
@@ -142,9 +147,9 @@ function saveFenpei(){
         dataType:'html',
         success:function(data){
             $("#main").html(data);
-            $("#modal-table").modal("show");
+            bootbox.alert("资金分配成功");//保存成功弹窗
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            bootbox.alert("操作失败!")//保存成功弹窗
+            bootbox.alert("操作失败!");
         }
     }
     $("#fenpeiForm").ajaxSubmit(saveOptions);
@@ -163,12 +168,12 @@ function addRow(){
     var objIndex = zhuanIndex++;
     var zhuan = "";
     zhuan += "<tr id='tr_"+objIndex+"'>";
-    zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' onblur='queryDriverInfo("+objIndex+");'/></td>";
-    zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly'>";
+    zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' data-sj-result='invalid' onblur='queryDriverInfo("+objIndex+");'/></td>";
+    zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly' data-sj-result='invalid' onclick='queryDriverInfo("+objIndex+");'>";
     zhuan += "<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>";
-    zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12'  onblur='isTransfer("+objIndex+");'/></td>";
-    zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td>";
-    zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除</a>";
+    zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' data-sj-result='invalid' onblur='isTransfer("+objIndex+");'/></td>";
+    zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td class='fleet-quota-option'>";
+    zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除该行</a>";
     zhuan += "</td></tr>";
 
     $("#zhuanTable").append(zhuan);
@@ -176,24 +181,30 @@ function addRow(){
 
 //验证手机号
 function vailPhone(index){
-    var mobilePhone = $("#mobile_phone_"+index).val();
+    var $mobilePhone = $("#mobile_phone_"+index);
+    var mobilePhoneVal = $mobilePhone.val();
     var flag = false;
     var message = "";
-    var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(15[0-3]{1})|(15[5-9]{1})|(18[0-9]{1}))+\d{8})$/;
+    //手机真实性校验
+    //var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(15[0-3]{1})|(15[5-9]{1})|(18[0-9]{1}))+\d{8})$/;
     $("#full_name_"+index).val("");
-    if(mobilePhone == ''){
+    if(mobilePhoneVal == ''){
         message = "手机号码不能为空！";
-    }else if(mobilePhone.length !=11){
+    }else if(mobilePhoneVal.length !=11){
         message = "请输入有效的手机号码！";
-    }else if(!myreg.test(mobilePhone)){
+    }
+    /*else if(!myreg.test(mobilePhoneVal)){
         message = "请输入有效的手机号码！";
-    }else{
+    }*/
+    else{
         flag = true;
     }
     if(!flag){
         $(".fleet-quota-error").text(message);
+        $mobilePhone.attr("data-sj-result","invalid");
     }else{
         $(".fleet-quota-error").empty();
+        $mobilePhone.attr("data-sj-result","valid");
         $(event.target).parent().next().find('input[name="fullName"]').trigger('click');
     }
     return flag;
@@ -212,11 +223,11 @@ function queryDriverInfo(index){
         url: "../web/tcms/fleetQuota/info/driver",
         success: function(data){
             if(data != null && (data.fullName == "" || data.fullName == undefined)){
-                $("#full_name_"+index).val("");
+                $("#full_name_"+index).val("").attr("data-sj-result","invalid");
                 $(".fleet-quota-error").text("未认证司机无法接受转账!");
                 return false;
             }else if(data != null){
-                $("#full_name_"+index).val(data.fullName);
+                $("#full_name_"+index).val(data.fullName).attr("data-sj-result","valid");
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
                 return false;
             }else{
@@ -225,7 +236,7 @@ function queryDriverInfo(index){
             }
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            $(".fleet-quota-error").text("操作失败!")//保存成功弹窗
+            $(".fleet-quota-error").text("操作失败!");
             return false;
         }
     });
@@ -235,6 +246,7 @@ function queryDriverInfo(index){
  * 判断是否可以转账
  */
 function isTransfer(index){
+    var $amount = $("#amount_"+index);
     var amount = $("#amount_"+index).val();
     var notIsAllot = $("#notIsAllot").text();
     var mobilePhone = $("#mobile_phone_"+index).val();
@@ -242,13 +254,18 @@ function isTransfer(index){
     var error = $(".fleet-quota-error");
     if(mobilePhone == ""){
         error.text("请先输入手机号！");
+        $amount.attr("data-sj-result","invalid");
         return false;
     }else if(fullName == ""){
         error.text("未认证司机无法接受转账！");
+        $amount.attr("data-sj-result","invalid");
         return false;
     }else if(amount > notIsAllot){
         error.text("转账金额不能大于未分配额度！");
+        $amount.attr("data-sj-result","invalid");
         return false;
+    } else {
+        $amount.attr("data-sj-result","valid");
     }
 }
 /**
@@ -262,6 +279,15 @@ function deleteRow(index){
  * 提交个人转账
  */
 function saveZhuan(){
+
+    $('input[name="mobilePhone"],input[name="fullName"],input[name="amount"]').each(function(index,val){
+        if($(this).attr("data-sj-result")=="invalid"){
+            console.log('ssssssssssssssss')
+            $(".fleet-quota-error").text('信息有误！')
+            return;
+        }
+    });
+
     $('#zhuanForm').data('bootstrapValidator').validate();
     if(!$('#zhuanForm').data('bootstrapValidator').isValid()){
         return ;
@@ -276,23 +302,23 @@ function saveZhuan(){
         dataType:'html',
         success:function(data){
             $("#main").html(data);
-            $("#modal-table").modal("show");
+            bootbox.alert("个人转账成功");//保存成功弹窗
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            bootbox.alert("操作失败!")//保存成功弹窗
+            bootbox.alert("操作失败!");
         }
     }
     $("#zhuanForm").ajaxSubmit(saveOptions);
-    $("#zhuanModel").modal('hide');
+
+    hideModal("#zhuanModel");
     $("#zhuanTable").empty();
 }
 
 /*取消弹层方法*/
 function closeDialog(divId){
-    jQuery('#editForm').validationEngine('hide');//隐藏验证弹窗
-    $("#editForm :input").each(function () {
-        $(this).val("");
+    $("#"+divId+" :input").each(function () {
+        $(this).val("").removeAttr("data-sj-result");
     });
-    $("#avatar_b").empty();
+    $(".fleet-quota-error").empty();
     $("#"+divId).modal('hide');
 }
 function clearDiv(){
@@ -300,6 +326,11 @@ function clearDiv(){
         $(this).val("");
     });
     $("#avatar_b").empty();
+}
+function hideModal(obj){
+    $(obj).modal('hide').removeClass('in');
+    $("body").removeClass('modal-open').removeAttr('style');
+    $(".modal-backdrop").remove();
 }
 /**
  * 保存车队额度信息
@@ -317,13 +348,12 @@ function saveFleetQuota(){
             success:function(data){
                 $("#main").html(data);
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                bootbox.alert("操作失败!")//保存成功弹窗
+                bootbox.alert("操作失败!");
             }
         }
         $("#editForm").ajaxSubmit(saveOptions);
 
-        $("#editModel").modal('hide');
-        $(".modal-backdrop").css("display","none");
+        hideModal("#editModel");
 
 }
 
