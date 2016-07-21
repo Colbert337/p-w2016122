@@ -231,7 +231,7 @@ public class CRMCustomerContoller {
             if(tcFleet != null){
                 sysDriverForFleet.setMobilePhone(tcFleet.getFleetName());
             } else {
-                sysDriverForFleet.setMobilePhone(transportion.getContact_phone());
+                sysDriverForFleet.setMobilePhone("");
             }
             GasCard gasCard = gasCardService.selectByCardNoForCRM(cardID);
             sysDriverForFleet.setCardId(cardID);

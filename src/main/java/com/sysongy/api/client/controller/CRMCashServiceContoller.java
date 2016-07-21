@@ -692,8 +692,8 @@ public class CRMCashServiceContoller {
                     sysDriver.setMobilePhone(tcVehicle.getNoticePhone());
                     sysDriver.setFullName(tcVehicle.getUserName());
                     List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
-
                     if((tcFleets == null) || (tcFleets.size() == 0)){
+                        sysDriver.setFullName("");
                         Transportion transportion = transportionService.queryTransportionByPK(tcVehicle.getStationId());
                         SysUserAccount sysUserAccount = new SysUserAccount();
                         sysUserAccount.setAccountBalance(transportion.getDeposit().toString());
