@@ -232,8 +232,10 @@
 				$("#re_password").val(data.password);
 				/*密码输入框改为可编辑*/
 				$("#user_name").attr("readonly","readonly");
-				/*$("#password").attr("readonly","readonly");
-				$("#re_password").attr("readonly","readonly");*/
+
+				$("#password").removeAttr("maxlength");
+				$("#re_password").removeAttr("maxlength");
+
 				queryRoleList(data.sys_role_id);
 				queryUserTypeList(data.userType);
 			}
@@ -496,7 +498,7 @@
 										<div class="form-group">
 											<label class="col-sm-4 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码:</label>
 											<div class="col-sm-8">
-												<input type="password" name="password" id="password" placeholder="用户密码" class="form-control" />
+												<input type="password" name="password" id="password" placeholder="用户密码" maxlength="6" class="form-control" />
 											</div>
 										</div>
 									</div>
@@ -504,7 +506,7 @@
 										<div class="form-group">
 											<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码:</label>
 											<div class="col-sm-8">
-												<input type="password" name="rePassword" id="re_password" placeholder="确认密码" class="form-control" />
+												<input type="password" name="rePassword" id="re_password" placeholder="确认密码" maxlength="6" class="form-control" />
 											</div>
 										</div>
 									</div>

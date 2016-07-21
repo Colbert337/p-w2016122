@@ -195,6 +195,7 @@ public class CRMCashServiceContoller {
                 return ajaxJson;
             }
 
+
             record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
             PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
             if((sysOrders == null) || (sysOrders.getList().size() > 0)){
@@ -224,21 +225,55 @@ public class CRMCashServiceContoller {
                     logger.error("查询出现多个车辆: " + record.getConsume_card());
                     return null;
                 }
-                if((vehicles == null) || (vehicles.get(0) == null)
-                        || !(vehicles.get(0).getPayCode().equalsIgnoreCase(payCode))){
+
+                if((vehicles == null) || (vehicles.get(0) == null)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("所属车队为空！！！");
+                    return ajaxJson;
+                }
+
+                if(isLock24Hours(vehicles.get(0).getTcVehicleId())){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("支付密码已输错5次，账户已被冻结24小时！！！");
+                    return ajaxJson;
+                }
+
+                if(!(vehicles.get(0).getPayCode().equalsIgnoreCase(payCode))){
+                    addWrongTimes(vehicles.get(0).getTcVehicleId());
+                    if(isWrong4Times(vehicles.get(0).getTcVehicleId())){
+                        ajaxJson.setSuccess(false);
+                        ajaxJson.setMsg("支付密码错误，已输入错误4次，输入5次错误后冻结账户24小时！！！");
+                        return ajaxJson;
+                    }
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("支付密码错误！！！");
                     return ajaxJson;
+                } else {
+                    redisClientImpl.deleteFromCache(vehicles.get(0).getTcVehicleId());
                 }
             } else {
                 sysDriver = driverService.queryDriverByPK(record.getCreditAccount());
                 SysUserAccount creditAccount = sysUserAccountService.selectByPrimaryKey(sysDriver.getSysUserAccountId());
-                if((creditAccount == null) || (sysDriver == null)
-                        || !(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
+                if((creditAccount == null) || (sysDriver == null)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("司机或账户为空！！！");
+                    return ajaxJson;
+                }
+
+                if(!(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
+                    addWrongTimes(sysDriver.getSysDriverId());
+                    if(isWrong4Times(sysDriver.getSysDriverId())){
+                        ajaxJson.setSuccess(false);
+                        ajaxJson.setMsg("支付密码错误，已输入错误4次，输入5次错误后冻结账户24小时！！！");
+                        return ajaxJson;
+                    }
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("支付密码错误！！！");
                     return ajaxJson;
+                }else {
+                    redisClientImpl.deleteFromCache(sysDriver.getSysDriverId());
                 }
+
             }
 
             if(!StringUtils.isEmpty(checkCode)){
@@ -356,6 +391,24 @@ public class CRMCashServiceContoller {
     private boolean isLock24Hours(String id){
         boolean bRet = false;
         PayCodeValidModel payCodeValidModel = (PayCodeValidModel)redisClientImpl.getFromCache(id);
+        if((payCodeValidModel != null) && (payCodeValidModel.getErrTimes() == 4)){
+            bRet = true;
+        }
+        return bRet;
+    }
+
+    private boolean isWrong4Times(String id){
+        boolean bRet = false;
+        PayCodeValidModel payCodeValidModel = (PayCodeValidModel)redisClientImpl.getFromCache(id);
+        if((payCodeValidModel != null) && (payCodeValidModel.getErrTimes() == 3)){
+            bRet = true;
+        }
+        return bRet;
+    }
+
+    private boolean addWrongTimes(String id){
+        boolean bRet = false;
+        PayCodeValidModel payCodeValidModel = (PayCodeValidModel)redisClientImpl.getFromCache(id);
         if(payCodeValidModel == null){
             PayCodeValidModel payCodeValidModelInfo = new PayCodeValidModel();
             payCodeValidModelInfo.setId(id);
@@ -364,9 +417,6 @@ public class CRMCashServiceContoller {
         } else {
             payCodeValidModel.setErrTimes(payCodeValidModel.getErrTimes() + 1);
             redisClientImpl.addToCache(id, payCodeValidModel, 86400);
-            if(payCodeValidModel.getErrTimes() == 5){
-
-            }
         }
         return bRet;
     }

@@ -471,7 +471,6 @@ $('#fenpeiForm').bootstrapValidator({
                 remote: {
                     url: '../web/transportion/info/password',
                     type: "post",
-                    async: false,
                     data: function(validator, $field, value) {
                         return{
                             pay_code:$("#pay_code").val()
