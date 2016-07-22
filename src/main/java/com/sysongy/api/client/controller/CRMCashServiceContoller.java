@@ -367,22 +367,26 @@ public class CRMCashServiceContoller {
                 record.setChannelNumber(gastation.getSys_gas_station_id());
             }
 
+            String mobilePhone = record.getSysDriver().getMobilePhone();
             if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
                 SysDriver sysDriverNew = null;
                 if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
                     sysDriverNew = convertSysDriver(record.getConsume_card());
+                    mobilePhone = recordNew.getSysDriver().getMobilePhone();
+                    recordNew.getSysDriver().setMobilePhone("");
+                    recordNew.getSysDriver().setFullName("");
                 } else {
                     sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
                 }
                 recordNew.setSysDriver(sysDriverNew);
+
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
             recordNew.setGasCard(record.getGasCard());
             recordNew.setCash(record.getCash());
-            sendConsumeMessage(recordNew);
-            recordNew.getSysDriver().setMobilePhone("");
-            recordNew.getSysDriver().setFullName("");
+            sendConsumeMessage(recordNew, mobilePhone);
+
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", recordNew);
             ajaxJson.setAttributes(attributes);
@@ -427,9 +431,9 @@ public class CRMCashServiceContoller {
         return bRet;
     }
 
-    private void sendConsumeMessage(SysOrder recordNew){
+    private void sendConsumeMessage(SysOrder recordNew, String mobilePhone){
         AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-        aliShortMessageBean.setSendNumber(recordNew.getSysDriver().getMobilePhone());
+        aliShortMessageBean.setSendNumber(mobilePhone);
         if(recordNew.getOrderDate() != null){
             String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
                     DateTimeHelper.FMT_yyyyMMddhhmmss_noseparator);
