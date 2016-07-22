@@ -222,7 +222,7 @@ function queryDriverInfo(index){
         //async:false,
         url: "../web/tcms/fleetQuota/info/driver",
         success: function(data){
-            if(data != null && (data.fullName == "" || data.fullName == undefined)){
+            if(data != null && data.che){
                 $("#full_name_"+index).val("").attr("data-sj-result","invalid");
                 $(".fleet-quota-error").text("未认证司机无法接受转账!");
                 return false;
@@ -248,7 +248,10 @@ function queryDriverInfo(index){
 function isTransfer(index){
     var $amount = $("#amount_"+index);
     var amount = $("#amount_"+index).val();
+    amount = parseFloat(amount);
+
     var notIsAllot = $("#notIsAllot").text();
+    notIsAllot = parseFloat(notIsAllot);
     var mobilePhone = $("#mobile_phone_"+index).val();
     var fullName = $("#full_name_"+index).val();
     var error = $(".fleet-quota-error");
@@ -261,6 +264,7 @@ function isTransfer(index){
         $amount.attr("data-sj-result","invalid");
         return false;
     }else if(amount > notIsAllot){
+        /*alert("amount:"+amount+" notIsAllot:"+notIsAllot);*/
         error.text("转账金额不能大于未分配额度！");
         $amount.attr("data-sj-result","invalid");
         return false;
@@ -283,8 +287,8 @@ function saveZhuan(){
     $('input[name="mobilePhone"],input[name="fullName"],input[name="amount"]').each(function(index,val){
         if($(this).attr("data-sj-result")=="invalid"){
             console.log('ssssssssssssssss')
-            $(".fleet-quota-error").text('信息有误！')
-            return;
+            $(".fleet-quota-error").text('操作失败！')
+            return false;
         }
     });
 

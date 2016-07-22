@@ -440,6 +440,29 @@
       </if>
     </trim>
   </select>
+  
+  <select id="queryRechargeReport" resultMap="BaseResultReportMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    select so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.debit_account,so.channel,sd.card_id,sod.remark,so.operator 
+	from sys_order so ,sys_order_deal sod,sys_driver sd where so.order_id = sod.order_id and so.consume_card=sd.card_id 
+	union all
+	select so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.debit_account,so.channel,so.consume_card,sod.remark,so.operator 
+	from sys_order so ,sys_order_deal sod,tc_vehicle tv where so.order_id = sod.order_id and so.consume_card=tv.card_no
+    WHERE 1=1
+    <!-- <trim>
+      <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and order_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
+      <if test="operatorSourceId != null &amp;&amp; operatorSourceId != ''" >
+        and operator_source_id = #{operatorSourceId, jdbcType=VARCHAR}
+      </if>
+      <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
+        and order_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+      <if test="goodsType != null &amp;&amp; goodsType != ''" >
+        and goods_type = #{goodsType, jdbcType=VARCHAR}
+      </if>
+    </trim> -->
+  </select>
 
   <!--运输公司个人消费报表-->
   <select id="queryTcPersonalReport" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >

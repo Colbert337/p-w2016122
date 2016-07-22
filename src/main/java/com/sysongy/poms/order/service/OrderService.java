@@ -31,6 +31,8 @@ public interface OrderService {
     PageInfo<OrderLog> queryOrderLogs(OrderLog obj) throws Exception;
 
     SysOrder selectByOrderGASID(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryRechargeReport(SysOrder record);
     /**
      * 给司机充值
      * @param order
