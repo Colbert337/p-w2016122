@@ -6,6 +6,7 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.model.SysRole;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysRoleService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
@@ -54,13 +55,16 @@ public class SysRoleController extends BaseContoller{
 		}
 
 		role.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-		int roleType = currUser.getUserType();
+
 		//查询CRM角色列表
 		if(userType != null && !"".equals(userType)){
 			role.setRoleType(userType);
+			currUser.setUserType(userType);
 			map.addAttribute("roleType",userType);//将用户类型传递到页面
 		}else{
+			int roleType = currUser.getUser().getUserType();
 			role.setRoleType(roleType);
+			currUser.setUserType(roleType);
 			map.addAttribute("roleType",roleType);//将用户类型传递到页面
 		}
 
@@ -125,6 +129,7 @@ public class SysRoleController extends BaseContoller{
 		String stationId = currUser.getStationId();
 		role.setStationId(stationId);
 		int resultInt = 0;
+		String resultPath = "redirect:/web/permi/role/list/page?resultInt="+resultInt;
 		if(role != null && role.getSysRoleId() != null && !"".equals(role.getSysRoleId())){
 			//修改角色
 			sysRoleService.updateRole(role);
@@ -138,7 +143,11 @@ public class SysRoleController extends BaseContoller{
 			resultInt = 1;
 		}
 
-		return "redirect:/web/permi/role/list/page?resultInt="+resultInt;
+		if(currUser.getUserType() == GlobalConstant.USER_TYPE_CRM){
+			resultPath = resultPath + "&userType="+currUser.getUserType();
+		}
+
+		return resultPath;
 	}
 
 	/**
@@ -146,13 +155,17 @@ public class SysRoleController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/delete")
-	public String deleteRoleByRoleId(@RequestParam String roleId, ModelMap map){
+	public String deleteRoleByRoleId(@ModelAttribute CurrUser currUser,@RequestParam String roleId, ModelMap map){
 		SysRole role = new SysRole();
 		if (roleId != null) {
 			role.setSysRoleId(roleId);
 			role.setIsDeleted(GlobalConstant.STATUS_DELETE);//
 			sysRoleService.updateRole(role);
 		}
-		return "redirect:/web/permi/role/list/page";
+		String resultPath = "redirect:/web/permi/role/list/page";
+		if(currUser.getUserType() == GlobalConstant.USER_TYPE_CRM){
+			resultPath = resultPath + "?userType="+currUser.getUserType();
+		}
+		return resultPath;
 	}
 }
