@@ -146,7 +146,6 @@ public class SysUserController extends BaseContoller{
 	@RequestMapping("/save")
 	public String saveUser(@ModelAttribute CurrUser currUser,SysUser user, ModelMap map){
 		int resultInt = 0;
-		String resultPath = "redirect:/web/permi/user/list/page?resultInt="+resultInt;
 		String stationId = currUser.getStationId();
 		if(user != null && user.getSysUserId() != null && !"".equals(user.getSysUserId())){
 			//修改用户
@@ -181,6 +180,7 @@ public class SysUserController extends BaseContoller{
 			resultInt = 1;
 		}
 
+		String resultPath = "redirect:/web/permi/user/list/page?resultInt="+resultInt;
 		if(currUser.getUserType() == GlobalConstant.USER_TYPE_CRM){
 			resultPath = resultPath + "&userType="+currUser.getUserType();
 		}

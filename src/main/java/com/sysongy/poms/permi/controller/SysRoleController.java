@@ -129,7 +129,6 @@ public class SysRoleController extends BaseContoller{
 		String stationId = currUser.getStationId();
 		role.setStationId(stationId);
 		int resultInt = 0;
-		String resultPath = "redirect:/web/permi/role/list/page?resultInt="+resultInt;
 		if(role != null && role.getSysRoleId() != null && !"".equals(role.getSysRoleId())){
 			//修改角色
 			sysRoleService.updateRole(role);
@@ -142,7 +141,8 @@ public class SysRoleController extends BaseContoller{
 			sysRoleService.addRole(role);
 			resultInt = 1;
 		}
-
+		
+		String resultPath = "redirect:/web/permi/role/list/page?resultInt="+resultInt;
 		if(currUser.getUserType() == GlobalConstant.USER_TYPE_CRM){
 			resultPath = resultPath + "&userType="+currUser.getUserType();
 		}

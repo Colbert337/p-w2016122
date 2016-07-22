@@ -100,6 +100,8 @@
 		dataType:'html',
 		success:function(data){
 			$("#main").html(data);
+		}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+			bootbox.alert("操作失败!")//保存成功弹窗
 		}
 	}
 	/*分页相关方法 end*/
