@@ -146,7 +146,7 @@ public class TcVehicleController extends BaseContoller {
             vehicle.setPlatesNumber(platesNumber);
             List<TcVehicle> vehicleTemp = tcVehicleService.queryVehicleByNumber(vehicle);
 
-            if(vehicleTemp == null){
+            if(vehicleTemp == null || vehicleTemp.size() == 0){
                 json.put("valid",true);
             }else{
                 json.put("valid",false);
