@@ -2,7 +2,7 @@
 
 	window.onload = setCurrentPage();
 	var listOptions ={
-		url:'../web/transportion/queryRechargeReport',
+		url:'../web/tcms/fleetQuota/list/report/fleets',
 		type:'post',
 		dataType:'html',
 		success:function(data){
