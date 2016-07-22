@@ -20,6 +20,8 @@ var listOptions ={
     dataType:'html',
     success:function(data){
         $("#main").html(data);
+    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+        bootbox.alert("操作失败!")//保存成功弹窗
     }
 }
 /*分页相关方法 end*/
@@ -381,8 +383,9 @@ function saveTemplate(){
         dataType:'text',
         enctype:"multipart/form-data",
         success:function(data){
-            bootbox.alert("操作成功！");
+            /*bootbox.alert("操作成功！");*/
             $("#main").html(data);
+            $("#modal-table").modal("show");
         },error:function(XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败！");
         }

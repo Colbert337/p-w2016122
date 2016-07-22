@@ -132,6 +132,9 @@
 		<!-- PAGE CONTENT ENDS -->
 	</div><!-- /.col -->
 </div><!-- /.row -->
+<%--提示弹层--%>
+<jsp:include page="/common/message.jsp"></jsp:include>
+
 <!--添加车辆弹层-开始-->
 <div id="editModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
