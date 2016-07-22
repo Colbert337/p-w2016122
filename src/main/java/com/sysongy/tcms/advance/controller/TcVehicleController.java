@@ -144,7 +144,7 @@ public class TcVehicleController extends BaseContoller {
             platesNumber = vehicle.getPlatesNumber().trim();
             vehicle.setStationId(stationId);
             vehicle.setPlatesNumber(platesNumber);
-            TcVehicle vehicleTemp = tcVehicleService.queryVehicleByNumber(vehicle);
+            List<TcVehicle> vehicleTemp = tcVehicleService.queryVehicleByNumber(vehicle);
 
             if(vehicleTemp == null){
                 json.put("valid",true);
@@ -212,7 +212,7 @@ public class TcVehicleController extends BaseContoller {
             vehicle1Update.setStationId(stationId);
             vehicle1Update.setPlatesNumber(vehicle.getPlatesNumber());
             vehicle1Update.setUserName(tcVehicle.getPlatesNumber());
-            TcVehicle vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Update);
+            List<TcVehicle> vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Update);
 
             if(vehicle1Count != null){
                 return "redirect:/web/tcms/vehicle/list/page";
@@ -237,7 +237,7 @@ public class TcVehicleController extends BaseContoller {
             TcVehicle vehicle1Add = new TcVehicle();
             vehicle1Add.setStationId(stationId);
             vehicle1Add.setPlatesNumber(vehicle.getPlatesNumber());
-            TcVehicle vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Add);
+            List<TcVehicle> vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Add);
             if(vehicle1Count != null){
                 return "redirect:/web/tcms/vehicle/list/page";
             }else{

@@ -935,4 +935,12 @@ public class OrderServiceImpl implements OrderService {
 		return pageInfo;
 	}
 
+	@Override
+	public PageInfo<Map<String, Object>> queryRechargeReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryRechargeReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
 }
