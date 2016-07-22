@@ -63,9 +63,10 @@ public class CRMUserContoller {
                     return ajaxJson;
                 }
 
-                if(user.getStatus() == GlobalConstant.USER_STATUS.FROZEN_STATUS){
+                if((user.getStatus() == GlobalConstant.USER_STATUS.FROZEN_STATUS) ||
+                        (user.getIsDeleted() == GlobalConstant.USER_DELETE.DELETED_STATUS)){
                     ajaxJson.setSuccess(false);
-                    ajaxJson.setMsg("该用户已被禁用！");
+                    ajaxJson.setMsg("该用户已被禁用或删除！");
                     return ajaxJson;
                 }
 

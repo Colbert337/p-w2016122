@@ -236,7 +236,7 @@ public class CRMCustomerContoller {
             Usysparam usysparam = new Usysparam();
             usysparam.setMname(gasCard.getCardStatusInfo().getMname());
             sysUserAccount.setAccount_statusInfo(usysparam);
-            if(tcFleet != null){
+            if((tcFleet != null) && (tcFleet.getIsAllot() == GlobalConstant.TCFLEET_IS_ALLOT_YES)){
                 sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
             } else {
                 sysUserAccount.setAccountBalance(transportion.getDeposit().toString());

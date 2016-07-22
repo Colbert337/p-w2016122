@@ -372,9 +372,9 @@ public class CRMCashServiceContoller {
                 SysDriver sysDriverNew = null;
                 if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
                     sysDriverNew = convertSysDriver(record.getConsume_card());
-                    mobilePhone = recordNew.getSysDriver().getMobilePhone();
-                    recordNew.getSysDriver().setMobilePhone("");
-                    recordNew.getSysDriver().setFullName("");
+                    mobilePhone = sysDriverNew.getMobilePhone();
+                    sysDriverNew.setMobilePhone("");
+                    sysDriverNew.setFullName("");
                 } else {
                     sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
                 }
@@ -713,7 +713,13 @@ public class CRMCashServiceContoller {
 
                     for(TcFleet tcFleet : tcFleets){
                         SysUserAccount sysUserAccount = new SysUserAccount();
-                        sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
+                        if((tcFleet != null) && (tcFleet.getIsAllot() == GlobalConstant.TCFLEET_IS_ALLOT_YES)){
+                            sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
+                            sysDriver.setAccount(sysUserAccount);
+                        } else {
+                            Transportion transportion = transportionService.queryTransportionByPK(tcVehicle.getStationId());
+                            sysUserAccount.setAccountBalance(transportion.getDeposit().toString());
+                        }
                         sysDriver.setAccount(sysUserAccount);
                         return sysDriver;
                     }
