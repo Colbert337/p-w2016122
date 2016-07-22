@@ -79,4 +79,9 @@ public class UsysparamServiceImpl implements UsysparamService {
 	public Integer deleteByGcodeAndMcode(Usysparam recode) {
 		return usysparamMapper.delete(recode);
 	}
+
+	@Override
+	public List<Usysparam> queryCardTypeByMcodeAndScode(Usysparam record) throws Exception {
+		return usysparamMapper.queryCardTypeByMcodeAndScode(record);
+	}
 }
