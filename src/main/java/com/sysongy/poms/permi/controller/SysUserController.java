@@ -60,9 +60,10 @@ public class SysUserController extends BaseContoller{
 			sysUser.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
 		sysUser.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-		//查询CRM用户类型
+
 		if(userType != null && !"".equals(userType)){
 			sysUser.setUserType(userType);
+			currUser.setUserType(userType);
 			map.addAttribute("userType",userType);//将用户类型传递到页面
 		}else{//当前用户类型
 			SysUser userTemp = currUser.getUser();//将当前系统的登录用户类型设置为用户类型
@@ -129,10 +130,14 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/update/staruts")
-	public String updateStatusByUserId(SysUser sysUser, ModelMap map){
+	public String updateStatusByUserId(@ModelAttribute CurrUser currUser,SysUser sysUser, ModelMap map){
 		sysUser.setUserName(null);
 		sysUserService.updateStatus(sysUser);
-		return "redirect:/web/permi/user/list/page";
+		String resultPath = "redirect:/web/permi/user/list/page";
+		if(currUser.getUserType() == GlobalConstant.USER_TYPE_CRM){
+			resultPath = resultPath + "?userType="+currUser.getUserType();
+		}
+		return resultPath;
 	}
 	/**
 	 * 保存用户
@@ -141,6 +146,7 @@ public class SysUserController extends BaseContoller{
 	@RequestMapping("/save")
 	public String saveUser(@ModelAttribute CurrUser currUser,SysUser user, ModelMap map){
 		int resultInt = 0;
+		String resultPath = "redirect:/web/permi/user/list/page?resultInt="+resultInt;
 		String stationId = currUser.getStationId();
 		if(user != null && user.getSysUserId() != null && !"".equals(user.getSysUserId())){
 			//修改用户
@@ -175,7 +181,11 @@ public class SysUserController extends BaseContoller{
 			resultInt = 1;
 		}
 
-		return "redirect:/web/permi/user/list/page?resultInt="+resultInt;
+		if(currUser.getUserType() == GlobalConstant.USER_TYPE_CRM){
+			resultPath = resultPath + "&userType="+currUser.getUserType();
+		}
+
+		return resultPath;
 	}
 
 	/**
@@ -183,14 +193,18 @@ public class SysUserController extends BaseContoller{
 	 * @return
 	 */
 	@RequestMapping("/delete")
-	public String deleteUserByUserId(@RequestParam String userId, ModelMap map){
+	public String deleteUserByUserId(@ModelAttribute CurrUser currUser,@RequestParam String userId, ModelMap map){
 		SysUser user = new SysUser();
 		if (userId != null) {
 			user.setSysUserId(userId);
 			user.setIsDeleted(GlobalConstant.STATUS_DELETE);
 			sysUserService.updateStatus(user);
 		}
-		return "redirect:/web/permi/user/list/page";
+		String resultPath = "redirect:/web/permi/user/list/page";
+		if(currUser.getUserType() == GlobalConstant.USER_TYPE_CRM){
+			resultPath = resultPath + "?userType="+currUser.getUserType();
+		}
+		return resultPath;
 	}
 
 	/**
