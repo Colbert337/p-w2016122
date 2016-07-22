@@ -381,6 +381,8 @@ public class CRMCashServiceContoller {
             recordNew.setGasCard(record.getGasCard());
             recordNew.setCash(record.getCash());
             sendConsumeMessage(recordNew);
+            recordNew.getSysDriver().setMobilePhone("");
+            recordNew.getSysDriver().setFullName("");
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", recordNew);
             ajaxJson.setAttributes(attributes);
@@ -688,8 +690,8 @@ public class CRMCashServiceContoller {
 
                 for (TcVehicle tcVehicle : vehicles) {
                     sysDriver.setPlateNumber(tcVehicle.getPlatesNumber());
-                    sysDriver.setMobilePhone("");
-                    sysDriver.setFullName("");
+                    sysDriver.setMobilePhone(tcVehicle.getNoticePhone());
+                    sysDriver.setFullName(tcVehicle.getUserName());
                     List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
                     if((tcFleets == null) || (tcFleets.size() == 0)){
                         sysDriver.setFullName("");
