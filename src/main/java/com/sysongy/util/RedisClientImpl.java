@@ -38,6 +38,7 @@ public class RedisClientImpl implements RedisClientInterface{
     }
 
     public void addToCache(String key, Object obj, int expireTime){
+        deleteFromCache(key);
         ValueOperations<String, Object> valueops = redisTemplate.opsForValue();
         valueops.set(key, obj);
         if(expireTime > 0){

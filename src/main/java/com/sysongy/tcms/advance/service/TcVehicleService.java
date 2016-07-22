@@ -35,7 +35,7 @@ public interface TcVehicleService {
      * @param tcVehicle
      * @return
      */
-    TcVehicle queryVehicleByNumber(TcVehicle tcVehicle);
+    List<TcVehicle> queryVehicleByNumber(TcVehicle tcVehicle);
 
     /**
      * 查询车辆信息列表
@@ -106,6 +106,14 @@ public interface TcVehicleService {
      * @return
      */
     TcVehicle queryMaxIndex(String provinceId);
+
+    /**
+     * 查询当前运输公司系统中的车牌号是否重复
+     * @param stationId
+     * @param platesNumber
+     * @return
+     */
+    int queryVehicleCount(String stationId,String platesNumber);
 
     Integer updateAndchangeCard(String tcVehicleId, String newcardno) throws Exception;
 }

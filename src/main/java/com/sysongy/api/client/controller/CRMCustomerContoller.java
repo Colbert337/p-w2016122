@@ -304,7 +304,7 @@ public class CRMCustomerContoller {
             aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
             aliShortMessageBean.setCode(checkCode.toString());
             aliShortMessageBean.setProduct("司集能源科技平台");
-            redisClientImpl.addToCache(sysDriver.getSysDriverId(), checkCode.toString(), 60);
+            redisClientImpl.addToCache(sysDriver.getSysDriverId(), checkCode.toString(), 120);
 
             String msgType = request.getParameter("msgType");
             if(msgType.equalsIgnoreCase("changePassword")){

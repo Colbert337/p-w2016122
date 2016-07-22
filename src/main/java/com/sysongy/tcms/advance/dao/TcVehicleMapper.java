@@ -23,7 +23,7 @@ public interface TcVehicleMapper {
      * @param tcVehicle
      * @return
      */
-    TcVehicle queryVehicleByNumber(TcVehicle tcVehicle);
+    List<TcVehicle> queryVehicleByNumber(TcVehicle tcVehicle);
     /**
      * 查询车辆信息列表
      * @param tcVehicle
@@ -96,4 +96,6 @@ public interface TcVehicleMapper {
      * @return
      */
     TcVehicle queryMaxIndex(String provinceId);
+
+    List<TcVehicle> queryVehicleCount(String stationId, String platesNumber);
 }

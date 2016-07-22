@@ -83,7 +83,7 @@
     where 1=1
     <trim>
       <if test="card_no != null &amp;&amp; card_no != ''" >
-        and card_no = #{card_no,jdbcType=VARCHAR}
+        and (card_no = #{card_no,jdbcType=VARCHAR} or (driver.mobile_phone = #{card_no,jdbcType=VARCHAR}))
       </if>
       <if test="card_type != null &amp;&amp; card_type != ''" >
         and card_type = #{card_type,jdbcType=VARCHAR}

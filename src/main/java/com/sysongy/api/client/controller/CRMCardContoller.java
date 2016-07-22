@@ -42,7 +42,7 @@ public class CRMCardContoller {
     private GasCardService gasCardService;
 
     @Autowired
-    DriverService driverService;
+    private DriverService driverService;
 
     @RequestMapping(value = {"/web/queryCardInfo"})
     @ResponseBody
