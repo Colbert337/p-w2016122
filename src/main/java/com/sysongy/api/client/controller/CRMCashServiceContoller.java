@@ -196,8 +196,8 @@ public class CRMCashServiceContoller {
             }
 
             record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
-            PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
-            if((sysOrders == null) || (sysOrders.getList().size() > 0)){
+            SysOrder sysOrders = orderService.selectByPrimaryKey(record.getOrderId());
+            if(sysOrders != null){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("该订单已存在，请勿提交重复订单！！！");
                 return ajaxJson;
