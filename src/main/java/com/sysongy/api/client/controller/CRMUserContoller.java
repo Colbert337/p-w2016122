@@ -63,6 +63,12 @@ public class CRMUserContoller {
                     return ajaxJson;
                 }
 
+                if(user.getStatus() == GlobalConstant.USER_STATUS.FROZEN_STATUS){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("该用户已被禁用！");
+                    return ajaxJson;
+                }
+
                 Gastation gastation = gastationService.queryGastationByPK(sysUser.getStationId());
                 long nTime = gastation.getExpiry_date().getTime() - new Date().getTime();
                 if(gastation.getStatus().equalsIgnoreCase(GlobalConstant.StationStatus.PAUSE) || (nTime < 0.0)){

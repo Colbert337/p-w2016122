@@ -52,4 +52,6 @@ public interface UsysparamMapper {
     public Usysparam queryDealTypeByMcode(String mcode);
 
     public Usysparam queryChargeTypeByMcode(String mcode);
+
+    public List<Usysparam> queryCardTypeByMcodeAndScode(Usysparam record);
 }

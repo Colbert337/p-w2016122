@@ -360,10 +360,7 @@ public class CRMCashServiceContoller {
             }
 
             SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
-            recordNew.setCash(record.getCash());
-            recordNew.setGasCard(record.getGasCard());
             Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
-
             if(gastation != null){
                 recordNew.setGastation(gastation);
                 record.setChannel(gastation.getGas_station_name());
@@ -381,6 +378,8 @@ public class CRMCashServiceContoller {
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
+            recordNew.setGasCard(record.getGasCard());
+            recordNew.setCash(record.getCash());
             sendConsumeMessage(recordNew);
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", recordNew);
@@ -689,8 +688,8 @@ public class CRMCashServiceContoller {
 
                 for (TcVehicle tcVehicle : vehicles) {
                     sysDriver.setPlateNumber(tcVehicle.getPlatesNumber());
-                    sysDriver.setMobilePhone(tcVehicle.getNoticePhone());
-                    sysDriver.setFullName(tcVehicle.getUserName());
+                    sysDriver.setMobilePhone("");
+                    sysDriver.setFullName("");
                     List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
                     if((tcFleets == null) || (tcFleets.size() == 0)){
                         sysDriver.setFullName("");
