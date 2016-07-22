@@ -279,20 +279,20 @@
 										<th width="10%">对方姓名</th>
 										<th width="15%">转账金额</th>
 										<th width="25%">用途</th>
-										<th width="10%">操作</th>
+										<th class="text-center" width="10%">操作</th>
 									</tr>
 									</thead>
 									<tbody>
 										<tr>
 											<td id="tr_1">
-												<input type="text"  id="mobile_phone_1" name="mobilePhone" maxlength="11" class="col-sm-12" onblur="vailPhone(1);"/>
+												<input type="text"  id="mobile_phone_1" name="mobilePhone" maxlength="11" class="col-sm-12" data-sj-result="invalid" onblur="vailPhone(1);"/>
 											</td>
 											<td>
-												<input type="text"  id="full_name_1" name="fullName" class="col-sm-12" readonly="readonly" onclick="queryDriverInfo(1);"/>
+												<input type="text"  id="full_name_1" name="fullName" class="col-sm-12" readonly="readonly" data-sj-result="invalid" onclick="queryDriverInfo(1);"/>
 												<input type="hidden" id="sys_driver_id_1" name="sysDriverId" class="col-sm-12"/>
 											</td>
 											<td>
-												<input type="text" id="amount_1" name="amount" class="col-sm-12 validate[required]" onblur="isTransfer(1);"/>
+												<input type="text" id="amount_1" name="amount" class="col-sm-12 validate[required]" data-sj-result="invalid" onblur="isTransfer(1);"/>
 											</td>
 											<td>
 												<input type="text" id="remark_1" name="remark" class="col-sm-12"/>

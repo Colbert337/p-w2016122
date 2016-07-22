@@ -49,7 +49,7 @@ public class TcVehicleServiceImpl implements TcVehicleService{
     }
 
     @Override
-    public TcVehicle queryVehicleByNumber(TcVehicle tcVehicle) {
+    public List<TcVehicle> queryVehicleByNumber(TcVehicle tcVehicle) {
         if(tcVehicle != null){
             return tcVehicleMapper.queryVehicleByNumber(tcVehicle);
         }else{

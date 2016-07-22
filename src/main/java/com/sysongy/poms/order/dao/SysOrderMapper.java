@@ -36,6 +36,8 @@ public interface SysOrderMapper {
      * @return
      */
    public Map querySumChargeByUserId(Map map);
+   
+   List<Map<String,Object>> queryRechargeReport(SysOrder record);
     
     /**
      * 查询某个用户在start_date之后，有没有产生消费

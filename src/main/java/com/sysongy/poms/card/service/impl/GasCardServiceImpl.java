@@ -183,10 +183,12 @@ public class GasCardServiceImpl implements GasCardService{
 					GasCard card = new GasCard();
 					card.setCard_no(tmp[i]);
 					
+					card = gasCardMapper.selectByCardNo(card.getCard_no());
+					
 					if(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_DRIVER.equals(card.getCard_property())){
 						card.setCard_status(GlobalConstant.CardStatus.MOVED);
 					}else{
-						card.setCard_status(GlobalConstant.CardStatus.USED);
+						card.setCard_status(GlobalConstant.CardStatus.PROVIDE);
 					}
 					
 					card.setWorkstation(gascard.getWorkstation());

@@ -573,9 +573,16 @@ public class CRMCashServiceContoller {
             }
         } else {
             Transportion transportion = transportionService.queryTransportionByPK(originalOrder.getCreditAccount());
+            List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(originalOrder.getConsume_card());
+            if (vehicles.size() > 1) {
+                logger.error("查询出现多个车辆: " + originalOrder.getConsume_card());
+                return null;
+            }
             originalOrder.setTransportion(transportion);
             SysDriver sysDriver = new SysDriver();
             sysDriver.setCardId(originalOrder.getConsume_card());
+            sysDriver.setMobilePhone(vehicles.get(0).getNoticePhone());
+            sysDriver.setSysDriverId(vehicles.get(0).getTcVehicleId());
             originalOrder.setSysDriver(sysDriver);
         }
         Map<String, Object> attributes = new HashMap<String, Object>();
@@ -685,8 +692,8 @@ public class CRMCashServiceContoller {
                     sysDriver.setMobilePhone(tcVehicle.getNoticePhone());
                     sysDriver.setFullName(tcVehicle.getUserName());
                     List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
-
                     if((tcFleets == null) || (tcFleets.size() == 0)){
+                        sysDriver.setFullName("");
                         Transportion transportion = transportionService.queryTransportionByPK(tcVehicle.getStationId());
                         SysUserAccount sysUserAccount = new SysUserAccount();
                         sysUserAccount.setAccountBalance(transportion.getDeposit().toString());

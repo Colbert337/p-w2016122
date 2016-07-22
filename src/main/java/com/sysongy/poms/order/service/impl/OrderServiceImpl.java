@@ -191,11 +191,14 @@ public class OrderServiceImpl implements OrderService {
 		   map.put("userId", debitAccountId);
 		   map.put("CHARGE_TO_DRIVER", GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 		   Map returnMap = sysOrderMapper.querySumChargeByUserId(map);
+
+		   BigDecimal sum = order.getCash();
 		   if(returnMap != null){
-			   BigDecimal sum = (BigDecimal)returnMap.get("sumcash");
-			   if(GlobalConstant.DRIVER_NOT_CERTIFICATE_LIMIT.compareTo(sum)<0){
-				   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT);
-			   }
+			   sum = sum.add((BigDecimal)returnMap.get("sumcash"));
+		   }
+
+		   if(GlobalConstant.DRIVER_NOT_CERTIFICATE_LIMIT.compareTo(sum) < 0){
+			   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT);
 		   }
 	   }
 	   
@@ -928,6 +931,14 @@ public class OrderServiceImpl implements OrderService {
 	public PageInfo<Map<String, Object>> queryTcFleetMgReport(SysOrder record) {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Map<String, Object>> list = sysOrderMapper.queryTcFleetReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryRechargeReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryRechargeReport(record);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
