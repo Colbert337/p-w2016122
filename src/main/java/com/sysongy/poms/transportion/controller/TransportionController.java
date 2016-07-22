@@ -6,6 +6,7 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
+import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysDepositLog;
@@ -67,6 +68,8 @@ public class TransportionController extends BaseContoller{
 	private OrderDealService orderDealService;
 	@Autowired
 	TransportionService transportionService;
+	@Autowired
+	OrderService orderService;
 
 	private Transportion transportion;
 
@@ -147,6 +150,51 @@ public class TransportionController extends BaseContoller{
 			}
 
 			PageInfo<Transportion> pageinfo = service.queryTransportion(transportion);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("transportion",transportion);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/queryRechargeReport")
+	public String queryRechargeReport(ModelMap map, SysOrder sysOrder) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transportion_rechargereport";
+
+		try {
+			if(sysOrder.getPageNum() == null){
+				sysOrder.setPageNum(1);
+				sysOrder.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				//transportion.setOrderby("created_time desc");
+			}
+
+//			if(!StringUtils.isEmpty(transportion.getExpiry_date_frompage())){
+//				String []tmpRange = transportion.getExpiry_date_frompage().split("-");
+//				if(tmpRange.length==2){
+//					transportion.setExpiry_date_after(tmpRange[0].trim()+" 00:00:00");
+//					transportion.setExpiry_date_before(tmpRange[1]+" 23:59:59");
+//				}
+//			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeReport(sysOrder);
 
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");

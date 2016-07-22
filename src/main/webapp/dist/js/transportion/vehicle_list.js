@@ -83,7 +83,7 @@ var obj,status,station;
 	            dataType:'text',
 	            success:function(data){
 	            	if(data == "1"){
-	            		bootbox.alert("["+tcVehicleId+"]已更改实体卡号为"+newcardno);
+	            		bootbox.alert("已更改实体卡号为"+newcardno);
 	            	}else{
 	            		bootbox.alert(data);
 	            	}
