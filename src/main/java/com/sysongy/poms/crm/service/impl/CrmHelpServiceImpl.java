@@ -1,6 +1,6 @@
-package com.sysongy.crm.help.service.impl;
+package com.sysongy.poms.crm.service.impl;
 
-import com.sysongy.crm.help.service.CrmHelpService;
+import com.sysongy.poms.crm.service.CrmHelpService;
 import org.springframework.stereotype.Service;
 
 /**

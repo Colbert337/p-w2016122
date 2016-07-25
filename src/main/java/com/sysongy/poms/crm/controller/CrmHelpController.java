@@ -1,4 +1,4 @@
-package com.sysongy.crm.help.controller;
+package com.sysongy.poms.crm.controller;
 
 import com.sysongy.poms.base.controller.BaseContoller;
 import org.springframework.stereotype.Controller;

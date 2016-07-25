@@ -1,6 +1,6 @@
-package com.sysongy.crm.help.dao;
+package com.sysongy.poms.crm.dao;
 
-import com.sysongy.crm.help.model.CrmHelpType;
+import com.sysongy.poms.crm.model.CrmHelpType;
 
 public interface CrmHelpTypeMapper {
     int deleteByPrimaryKey(String crmHelpTypeId);

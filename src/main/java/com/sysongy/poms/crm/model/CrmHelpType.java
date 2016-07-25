@@ -1,4 +1,4 @@
-package com.sysongy.crm.help.model;
+package com.sysongy.poms.crm.model;
 
 import java.util.Date;
 

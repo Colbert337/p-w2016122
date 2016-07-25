@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sysongy.crm.help.dao.CrmHelpTypeMapper" >
-  <resultMap id="BaseResultMap" type="com.sysongy.crm.help.model.CrmHelpType" >
+<mapper namespace="com.sysongy.poms.crm.dao.CrmHelpTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.crm.model.CrmHelpType" >
     <id column="crm_help_type_id" property="crmHelpTypeId" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
@@ -22,7 +22,7 @@
     delete from crm_help_type
     where crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.crm.help.model.CrmHelpType" >
+  <insert id="insert" parameterType="com.sysongy.poms.crm.model.CrmHelpType" >
     insert into crm_help_type (crm_help_type_id, title, remark, 
       is_deleted, created_date, updated_date
       )
@@ -30,7 +30,7 @@
       #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.crm.help.model.CrmHelpType" >
+  <insert id="insertSelective" parameterType="com.sysongy.poms.crm.model.CrmHelpType" >
     insert into crm_help_type
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="crmHelpTypeId != null" >
@@ -73,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.crm.help.model.CrmHelpType" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.crm.model.CrmHelpType" >
     update crm_help_type
     <set >
       <if test="title != null" >
@@ -94,7 +94,7 @@
     </set>
     where crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.crm.help.model.CrmHelpType" >
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.crm.model.CrmHelpType" >
     update crm_help_type
     set title = #{title,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},

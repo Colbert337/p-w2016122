@@ -1,4 +1,4 @@
-package com.sysongy.crm.help.service;
+package com.sysongy.poms.crm.service;
 
 /**
  * @FileName: CrmHelpService
