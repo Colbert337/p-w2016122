@@ -166,6 +166,7 @@ public class CRMCardContoller {
                 ajaxJson.setMsg("当前卡状态无法使用，错误号：" + gasCardNew.getCard_status());
                 return ajaxJson;
             }
+
             gasCardNew.setCard_status(InterfaceConstants.CARD_STSTUS_IN_USE);
             Integer nRet = gasCardService.updateGasCardInfo(gasCardNew);
             if(nRet < 1){

@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,9 @@ import com.sysongy.util.GlobalConstant;
 
 @Service
 public class SysCashBackServiceImpl implements SysCashBackService {
-	
+
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private SysCashBackMapper cashBackMapper;
 
@@ -157,7 +161,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	 * 4.写入订单处理流程
 	 * 
 	 * @param order
-	 * @param cashBack
+	 * @paramcashBack
 	 * @return
 	 */
 	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,
@@ -222,6 +226,8 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		
 		//4.写入订单处理流程
 		String remark = "给"+ accountUserName+"的账户，返现"+back_money.toString()+"。";
+		logger.info(remark);
+		remark = "";
 		orderDealService.createOrderDealWithCashBack(order.getOrderId(), orderDealType, remark, cash_per_str, back_money, addCash_success);
 		
 		return addCash_success;
@@ -231,7 +237,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	 * 充红返现给账户
 	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则充红，否则不执行。
 	 * @param order 充红订单对象
-	 * @param cashBackRecord 订单处理流程对象
+	 * @paramcashBackRecord 订单处理流程对象
 	 * @param accountId
 	 * @param accountUserName
 	 * @param orderDealType 订单处理类型
@@ -256,6 +262,8 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money,order.getOrderType());
 		//写入订单处理流程
 		String remark = "给"+ accountUserName+"的账户，充红返现"+back_money.toString()+"。";
+		logger.info(remark);
+		remark = order.getDischarge_reason();
 		String cash_per_str = orderDealRecord.getCashBackPer();
 		orderDealService.createOrderDealWithCashBack(order.getOrderId(), orderDealType, remark, cash_per_str, back_money, addCash_success);
 				

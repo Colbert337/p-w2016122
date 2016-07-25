@@ -178,7 +178,6 @@ public class DriverController extends BaseContoller{
 		driver.setSysDriverId(UUIDGenerator.getUUID());
 		driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
 
-
 		try {
 			result = driverService.saveDriver(driver,operation);
 			resultInt = 1;

@@ -71,7 +71,8 @@ public class TcVehicleController extends BaseContoller {
      * @return
      */
     @RequestMapping("/list/page")
-    public String queryVehicleListPage(@ModelAttribute CurrUser currUser, TcVehicle vehicle, ModelMap map){
+    public String queryVehicleListPage(@ModelAttribute CurrUser currUser, TcVehicle vehicle,
+                                       @RequestParam(required = false) String resultInt, ModelMap map) throws Exception{
         String stationId = currUser.getStationId();
         if(vehicle.getPageNum() == null){
             vehicle.setPageNum(GlobalConstant.PAGE_NUM);
@@ -86,10 +87,16 @@ public class TcVehicleController extends BaseContoller {
         }catch (Exception e){
             e.printStackTrace();
         }
+        Map<String, Object> resultMap = new HashMap<>();
+        if(resultInt != null && !"".equals(resultInt)){
+            resultInt = Decoder.symmetricDecrypto(resultInt);
+            resultMap.put("retMsg",resultInt);
+        }
 
         map.addAttribute("vehicleList",vehiclePageInfo.getList());
         map.addAttribute("pageInfo",vehiclePageInfo);
         map.addAttribute("vehicle",vehicle);
+        map.addAttribute("ret",resultMap);
 
         return "webpage/tcms/advance/vehicle_list";
     }
@@ -146,7 +153,7 @@ public class TcVehicleController extends BaseContoller {
             vehicle.setPlatesNumber(platesNumber);
             List<TcVehicle> vehicleTemp = tcVehicleService.queryVehicleByNumber(vehicle);
 
-            if(vehicleTemp == null){
+            if(vehicleTemp == null || vehicleTemp.size() == 0){
                 json.put("valid",true);
             }else{
                 json.put("valid",false);
@@ -217,7 +224,7 @@ public class TcVehicleController extends BaseContoller {
             if(vehicle1Count != null){
                 return "redirect:/web/tcms/vehicle/list/page";
             }else{
-                if(tcVehicle != null){
+                if(tcVehicle != null && vehicle1Count.size() > 0){
                     //新密码
                     String password = vehicle.getPayCode();
                     password = Encoder.MD5Encode(password.getBytes());
@@ -238,7 +245,7 @@ public class TcVehicleController extends BaseContoller {
             vehicle1Add.setStationId(stationId);
             vehicle1Add.setPlatesNumber(vehicle.getPlatesNumber());
             List<TcVehicle> vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Add);
-            if(vehicle1Count != null){
+            if(vehicle1Count != null && vehicle1Count.size() > 0){
                 return "redirect:/web/tcms/vehicle/list/page";
             }else{
                 String newid;
@@ -296,6 +303,9 @@ public class TcVehicleController extends BaseContoller {
      */
     @RequestMapping("/info/file")
     public String importFile(@RequestParam(value = "fileImport") MultipartFile file ,HttpServletRequest request,@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
+        String resultStr = "";
+        String resultPath = "redirect:/web/tcms/vehicle/list/page?resultInt=";
+
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
         String stationId = currUser.getStationId();
         //获取参数   参数有 schoolId   gradeId   classId
@@ -314,13 +324,6 @@ public class TcVehicleController extends BaseContoller {
                 // 一共有多少行多少列数据
                 int rows = sheet.getRows();
                 int columns = sheet.getColumns();
-
-                //非空校验
-
-                //车牌号及实体卡号重复判断
-
-                //判断卡是否已出库，未出库的不能导入
-
 
                 Transportion transportion = transportionService.queryTransportionByPK(stationId);
                 TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getSys_transportion_id());
@@ -351,33 +354,73 @@ public class TcVehicleController extends BaseContoller {
                         }
                         tempVal++;
                         tcVehicle.setTcVehicleId(newid);
-
-                        tcVehicle.setPayCode(Encoder.MD5Encode("111111".getBytes()));
                         tcVehicle.setStationId(stationId);
-
                         platesNumber = sheet.getCell(0, i).getContents().replaceAll(" ", "");
                         tcVehicle.setPlatesNumber(platesNumber);
+
+                        //判断车牌号是否已经存在
+                        TcVehicle vehicle1Add = new TcVehicle();
+                        vehicle1Add.setStationId(stationId);
+                        vehicle1Add.setPlatesNumber(platesNumber);
+                        List<TcVehicle> vehicleTemp = tcVehicleService.queryVehicleByNumber(vehicle1Add);
+                        if(vehicleTemp != null && vehicleTemp.size() > 0){
+                            resultStr = "车牌号"+platesNumber+"已经存在！";
+                            resultStr = Encoder.symmetricEncrypto(resultStr);
+                            return resultPath+resultStr;
+                        }
+
                         if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
                             cardNo =  sheet.getCell(1, i).getContents().replaceAll(" ", "");
                             tcVehicle.setCardNo(cardNo);
+
+                            //判断卡号是否存在
+                            TcVehicle vehicle1Card = new TcVehicle();
+                            vehicle1Card.setStationId(stationId);
+                            vehicle1Card.setPlatesNumber(cardNo);
+                            List<TcVehicle> vehicleCardList = tcVehicleService.queryVehicleByNumber(vehicle1Card);
+                            if(vehicleCardList != null && vehicleCardList.size() > 0){
+                                resultStr = "卡号"+cardNo+"已经存在！";
+                                resultStr = Encoder.symmetricEncrypto(resultStr);
+                                return resultPath+resultStr;
+                            }
+                            //判断卡是否已经出库
+                            GasCard gasCard = gasCardService.queryGasCardInfo(cardNo);
+                            if(gasCard != null && !GlobalConstant.CardStatus.MOVED.equals(gasCard.getCard_status()) ){
+                                resultStr = "卡号"+cardNo+"未出库！";
+                                resultStr = Encoder.symmetricEncrypto(resultStr);
+                                return resultPath+resultStr;
+                            }
+
+                        }else{
+                            resultStr = "卡号不能为空！";
+                            resultStr = Encoder.symmetricEncrypto(resultStr);
+                            return resultPath+resultStr;
                         }
-                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
+
+                        if(sheet.getCell(2, i) != null && !"".equals(sheet.getCell(1, i))){
+                            payCode = sheet.getCell(2, i).getContents().replaceAll(" ", "");
+                            tcVehicle.setPayCode(Encoder.MD5Encode("111111".getBytes()));
+                        }else{
+                            resultStr = "支付密码不能为空！";
+                            resultStr = Encoder.symmetricEncrypto(resultStr);
+                            return resultPath+resultStr;
+                        }
+
+                        if(sheet.getCell(3, i) != null && !"".equals(sheet.getCell(1, i))){
                             noticePhone = sheet.getCell(3, i).getContents().replaceAll(" ", "");
                             tcVehicle.setNoticePhone(noticePhone);
+                        }else{
+                            resultStr = "通知手机不能为空！";
+                            resultStr = Encoder.symmetricEncrypto(resultStr);
+                            return resultPath+resultStr;
                         }
-                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
+
+                        if(sheet.getCell(4, i) != null && !"".equals(sheet.getCell(1, i))){
                             copyPhone = sheet.getCell(4, i).getContents().replaceAll(" ", "");
                             tcVehicle.setCopyPhone(copyPhone);
                         }
 
-                        //添加车辆与卡关系
-                        /*TcVehicleCard tcVehicleCard = new TcVehicleCard();
-                        tcVehicleCard.setTcVehicleId(tcVehicle.getTcVehicleId());
-                        tcVehicleCard.setCardNo(tcVehicle.getCardNo());
-                        tcVehicleCard.setTcVehicleCardId(UUIDGenerator.getUUID());
-                        tcVehicleCard.setStationId(stationId);
-                        tcVehicleService.addVehicleCard(tcVehicleCard);*/
-                        System.out.println("正在导入车辆数据》》》》》》》》》》》》》");
+                        logger.info("正在导入车辆数据》》》》》》》》》》》》》");
 
                         tcVehicle.setIsAllot(0);//是否分配 0 不分配 1 分配
                         vehicleList.add(tcVehicle);
@@ -386,6 +429,10 @@ public class TcVehicleController extends BaseContoller {
                         gasCard.setCard_no(cardNo);
                         gasCard.setCard_status(GlobalConstant.CardStatus.USED);
                         gasCardService.updateByPrimaryKeySelective(gasCard);
+                    }else{
+                        resultStr = "车牌号不能为空！";
+                        resultStr = Encoder.symmetricEncrypto(resultStr);
+                        return resultPath+resultStr;
                     }
 
                 }
@@ -399,7 +446,7 @@ public class TcVehicleController extends BaseContoller {
             e.printStackTrace();
         }
 
-        return "redirect:/web/tcms/vehicle/list/page";
+        return resultPath;
     }
 
 

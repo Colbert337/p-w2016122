@@ -196,8 +196,8 @@ public class CRMCashServiceContoller {
             }
 
             record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
-            PageInfo<SysOrder> sysOrders = orderService.queryOrders(record);
-            if((sysOrders == null) || (sysOrders.getList().size() > 0)){
+            SysOrder sysOrders = orderService.selectByPrimaryKey(record.getOrderId());
+            if(sysOrders != null){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("该订单已存在，请勿提交重复订单！！！");
                 return ajaxJson;
@@ -360,28 +360,33 @@ public class CRMCashServiceContoller {
             }
 
             SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
-            recordNew.setCash(record.getCash());
-            recordNew.setGasCard(record.getGasCard());
             Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
-
             if(gastation != null){
                 recordNew.setGastation(gastation);
                 record.setChannel(gastation.getGas_station_name());
                 record.setChannelNumber(gastation.getSys_gas_station_id());
             }
 
+            String mobilePhone = record.getSysDriver().getMobilePhone();
             if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
                 SysDriver sysDriverNew = null;
                 if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
                     sysDriverNew = convertSysDriver(record.getConsume_card());
+                    mobilePhone = sysDriverNew.getMobilePhone();
+                    sysDriverNew.setMobilePhone("");
+                    sysDriverNew.setFullName("");
                 } else {
                     sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
                 }
                 recordNew.setSysDriver(sysDriverNew);
+
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
-            sendConsumeMessage(recordNew);
+            recordNew.setGasCard(record.getGasCard());
+            recordNew.setCash(record.getCash());
+            sendConsumeMessage(recordNew, mobilePhone);
+
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", recordNew);
             ajaxJson.setAttributes(attributes);
@@ -426,9 +431,9 @@ public class CRMCashServiceContoller {
         return bRet;
     }
 
-    private void sendConsumeMessage(SysOrder recordNew){
+    private void sendConsumeMessage(SysOrder recordNew, String mobilePhone){
         AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-        aliShortMessageBean.setSendNumber(recordNew.getSysDriver().getMobilePhone());
+        aliShortMessageBean.setSendNumber(mobilePhone);
         if(recordNew.getOrderDate() != null){
             String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
                     DateTimeHelper.FMT_yyyyMMddhhmmss_noseparator);
@@ -573,9 +578,16 @@ public class CRMCashServiceContoller {
             }
         } else {
             Transportion transportion = transportionService.queryTransportionByPK(originalOrder.getCreditAccount());
+            List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(originalOrder.getConsume_card());
+            if (vehicles.size() > 1) {
+                logger.error("查询出现多个车辆: " + originalOrder.getConsume_card());
+                return null;
+            }
             originalOrder.setTransportion(transportion);
             SysDriver sysDriver = new SysDriver();
             sysDriver.setCardId(originalOrder.getConsume_card());
+            sysDriver.setMobilePhone(vehicles.get(0).getNoticePhone());
+            sysDriver.setSysDriverId(vehicles.get(0).getTcVehicleId());
             originalOrder.setSysDriver(sysDriver);
         }
         Map<String, Object> attributes = new HashMap<String, Object>();
@@ -685,8 +697,8 @@ public class CRMCashServiceContoller {
                     sysDriver.setMobilePhone(tcVehicle.getNoticePhone());
                     sysDriver.setFullName(tcVehicle.getUserName());
                     List<TcFleet> tcFleets = tcFleetService.queryFleetByVehicleId(tcVehicle.getStationId(), tcVehicle.getTcVehicleId());
-
                     if((tcFleets == null) || (tcFleets.size() == 0)){
+                        sysDriver.setFullName("");
                         Transportion transportion = transportionService.queryTransportionByPK(tcVehicle.getStationId());
                         SysUserAccount sysUserAccount = new SysUserAccount();
                         sysUserAccount.setAccountBalance(transportion.getDeposit().toString());
@@ -701,7 +713,13 @@ public class CRMCashServiceContoller {
 
                     for(TcFleet tcFleet : tcFleets){
                         SysUserAccount sysUserAccount = new SysUserAccount();
-                        sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
+                        if((tcFleet != null) && (tcFleet.getIsAllot() == GlobalConstant.TCFLEET_IS_ALLOT_YES)){
+                            sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
+                            sysDriver.setAccount(sysUserAccount);
+                        } else {
+                            Transportion transportion = transportionService.queryTransportionByPK(tcVehicle.getStationId());
+                            sysUserAccount.setAccountBalance(transportion.getDeposit().toString());
+                        }
                         sysDriver.setAccount(sysUserAccount);
                         return sysDriver;
                     }

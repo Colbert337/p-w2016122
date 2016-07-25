@@ -576,4 +576,14 @@ public class GlobalConstant {
 		public static final String CARD_PROPERTY_TRANSPORTION = "0";
 		public static final String CARD_PROPERTY_DRIVER = "1";
 	}
+
+	public interface USER_STATUS{
+		public static final int NORMAL_STATUS = 0;
+		public static final int FROZEN_STATUS = 1;
+	}
+
+	public interface USER_DELETE{
+		public static final int NORMAL_STATUS = 1;
+		public static final int DELETED_STATUS = 0;
+	}
 }

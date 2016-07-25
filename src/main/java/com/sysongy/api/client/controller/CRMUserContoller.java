@@ -2,6 +2,8 @@ package com.sysongy.api.client.controller;
 
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.FileUtil;
@@ -22,10 +24,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @Controller
 @RequestMapping("/crmUserService")
@@ -37,6 +36,9 @@ public class CRMUserContoller {
 
     @Autowired
     SysUserService sysUserService;
+
+    @Autowired
+    private GastationService gastationService;
 
     @RequestMapping(value = {"/web/queryUserInfo"})
     @ResponseBody
@@ -58,6 +60,21 @@ public class CRMUserContoller {
                 if(user == null){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("用户名或密码错误，请重新登录！");
+                    return ajaxJson;
+                }
+
+                if((user.getStatus() == GlobalConstant.USER_STATUS.FROZEN_STATUS) ||
+                        (user.getIsDeleted() == GlobalConstant.USER_DELETE.DELETED_STATUS)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("该用户已被禁用或删除！");
+                    return ajaxJson;
+                }
+
+                Gastation gastation = gastationService.queryGastationByPK(sysUser.getStationId());
+                long nTime = gastation.getExpiry_date().getTime() - new Date().getTime();
+                if(gastation.getStatus().equalsIgnoreCase(GlobalConstant.StationStatus.PAUSE) || (nTime < 0.0)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("气站已过期或者气站已关闭！");
                     return ajaxJson;
                 }
 
@@ -189,6 +206,32 @@ public class CRMUserContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("上传文件失败：" + e.getMessage());
             logger.error("uploadFileData Customer error： " + e);
+        }
+        return ajaxJson;
+    }
+
+    @RequestMapping(value = {"/web/queryUsers"})
+    @ResponseBody
+    public AjaxJson queryUsers(HttpServletRequest request, HttpServletResponse response, SysUser sysUser){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            if(sysUser.getStationId() == null){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("气站为空，请检查输入参数！");
+                return ajaxJson;
+            }
+
+            List<SysUser> sysUsers = sysUserService.queryUserList(sysUser);
+            attributes.put("SysUsers",sysUsers);
+            ajaxJson.setAttributes(attributes);
+            ajaxJson.setSuccess(true);
+            ajaxJson.setMsg("查询成功！");
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryUsers error： " + e);
         }
         return ajaxJson;
     }

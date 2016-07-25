@@ -30,4 +30,6 @@ public interface UsysparamService {
 	public Integer deleteByGcodeAndMcode(Usysparam recode);
 	
 	public String saveUsysparam(Usysparam obj,  String operation) throws Exception;
+
+	public List<Usysparam> queryCardTypeByMcodeAndScode(Usysparam record) throws Exception;
 }

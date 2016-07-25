@@ -215,6 +215,7 @@
       `batch_no`,`operator`,`storage_time`,`release_time`,`memo`,
       `card_property` from gas_card
       where card_flag_id &gt; #{startID,jdbcType=INTEGER} and card_flag_id &lt; #{endID,jdbcType=INTEGER}
+       and card_status=2
   </insert>
 
 

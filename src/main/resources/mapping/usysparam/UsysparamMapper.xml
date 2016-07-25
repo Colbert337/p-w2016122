@@ -86,6 +86,10 @@
     select * from usysparam where gcode = 'CARDTYPE' and mcode = #{mcode,jdbcType=VARCHAR}
   </select>
 
+   <select id="queryCardTypeByMcodeAndScode" resultMap="BaseResultMapForCard"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
+      select * from usysparam where gcode = 'CARDTYPE' and scode is not null
+   </select>
+
     <select id="queryCardStatusByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
         select * from usysparam where gcode = 'CARDSTATUS' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>

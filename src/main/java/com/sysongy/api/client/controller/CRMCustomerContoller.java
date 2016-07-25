@@ -228,11 +228,7 @@ public class CRMCustomerContoller {
             SysDriver sysDriverForFleet = new SysDriver();
             sysDriverForFleet.setSysDriverId(transportion.getSys_transportion_id());
             sysDriverForFleet.setFullName(tcVehicle.getPlatesNumber());
-            if(tcFleet != null){
-                sysDriverForFleet.setMobilePhone(tcFleet.getFleetName());
-            } else {
-                sysDriverForFleet.setMobilePhone(transportion.getContact_phone());
-            }
+            sysDriverForFleet.setMobilePhone("");
             GasCard gasCard = gasCardService.selectByCardNoForCRM(cardID);
             sysDriverForFleet.setCardId(cardID);
             sysDriverForFleet.setCardInfo(gasCard);
@@ -240,7 +236,7 @@ public class CRMCustomerContoller {
             Usysparam usysparam = new Usysparam();
             usysparam.setMname(gasCard.getCardStatusInfo().getMname());
             sysUserAccount.setAccount_statusInfo(usysparam);
-            if(tcFleet != null){
+            if((tcFleet != null) && (tcFleet.getIsAllot() == GlobalConstant.TCFLEET_IS_ALLOT_YES)){
                 sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());
             } else {
                 sysUserAccount.setAccountBalance(transportion.getDeposit().toString());
@@ -313,7 +309,8 @@ public class CRMCustomerContoller {
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
             } else if(msgType.equalsIgnoreCase("driverConsume")){
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_CONSUME);
-            }else if(msgType.equalsIgnoreCase("driverHedge")){
+            }else if(msgType.equalsIgnoreCase("reSetCode")){
+                aliShortMessageBean.setProduct("进行订单冲红");
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_HEDGE);
             } else {
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
@@ -513,7 +510,8 @@ public class CRMCustomerContoller {
 
             Map<String, Object> attributes = new HashMap<String, Object>();
             List<SysDriver> listDrivers = new ArrayList<SysDriver>();
-            listDrivers.add(updateSysDriver);
+            SysDriver updateSysDriverNew = driverService.queryDriverByPK(updateSysDriver.getSysDriverId());
+            listDrivers.add(updateSysDriverNew);
             attributes.put("drivers", listDrivers);
             ajaxJson.setAttributes(attributes);
 

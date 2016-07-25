@@ -192,16 +192,15 @@ function vailPhone(index){
         message = "手机号码不能为空！";
     }else if(mobilePhoneVal.length !=11){
         message = "请输入有效的手机号码！";
-    }
-    /*else if(!myreg.test(mobilePhoneVal)){
-        message = "请输入有效的手机号码！";
-    }*/
-    else{
+    }else{
         flag = true;
+        message = "";
     }
+
     if(!flag){
         $(".fleet-quota-error").text(message);
         $mobilePhone.attr("data-sj-result","invalid");
+        message = "请输入有效的手机号码！";
     }else{
         $(".fleet-quota-error").empty();
         $mobilePhone.attr("data-sj-result","valid");
@@ -222,16 +221,19 @@ function queryDriverInfo(index){
         //async:false,
         url: "../web/tcms/fleetQuota/info/driver",
         success: function(data){
-            if(data != null && data.che){
+            if(data != null && data.checkedStatus != "2"){
                 $("#full_name_"+index).val("").attr("data-sj-result","invalid");
                 $(".fleet-quota-error").text("未认证司机无法接受转账!");
                 return false;
-            }else if(data != null){
+            }else if(data != null && data.checkedStatus == "2"){
                 $("#full_name_"+index).val(data.fullName).attr("data-sj-result","valid");
+                $("#mobile_phone_"+index).attr("data-sj-result","valid");
+                $("#amount_"+index).attr("data-sj-result","valid");
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
-                return false;
+                $(".fleet-quota-error").text("");
+                return true;
             }else{
-                $(".fleet-quota-error").text("请求失败！");
+                $(".fleet-quota-error").text("手机号不存在！");
                 return false;
             }
 
@@ -246,6 +248,7 @@ function queryDriverInfo(index){
  * 判断是否可以转账
  */
 function isTransfer(index){
+    console.log("转账校验");
     var $amount = $("#amount_"+index);
     var amount = $("#amount_"+index).val();
     amount = parseFloat(amount);
@@ -270,6 +273,7 @@ function isTransfer(index){
         return false;
     } else {
         $amount.attr("data-sj-result","valid");
+        error.text("");
     }
 }
 /**
@@ -283,14 +287,19 @@ function deleteRow(index){
  * 提交个人转账
  */
 function saveZhuan(){
-
+    var count = 0;
     $('input[name="mobilePhone"],input[name="fullName"],input[name="amount"]').each(function(index,val){
         if($(this).attr("data-sj-result")=="invalid"){
             console.log('ssssssssssssssss')
             $(".fleet-quota-error").text('操作失败！')
+            count++;
             return false;
         }
     });
+   //校验失败，跳出方法
+    if(count > 0){
+        return false;
+    }
 
     $('#zhuanForm').data('bootstrapValidator').validate();
     if(!$('#zhuanForm').data('bootstrapValidator').isValid()){
