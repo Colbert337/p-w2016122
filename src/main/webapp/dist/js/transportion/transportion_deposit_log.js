@@ -78,7 +78,7 @@
 		}
 		
 		var listOptions ={   
-	            url:'../web/order/queryOrderDeal?order_number='+orderNumber,
+	            url:'../web/order/queryOrderDeal2?order_number='+orderNumber,
 	            type:'post',                    
 	            dataType:'html',
 	            success:function(data){

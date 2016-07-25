@@ -33,6 +33,22 @@ public interface OrderService {
     SysOrder selectByOrderGASID(SysOrder record);
     
     PageInfo<Map<String, Object>> queryRechargeReport(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryRechargeReportTotal(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryRechargeReportDetail(SysOrder record);
+        
+    PageInfo<Map<String, Object>> queryRechargeDriverReport(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryRechargeDriverReportTotal(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryRechargeDriverReportDetail(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryTransportionReport(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryTransportionReportTotal(SysOrder record);
+    
+    
     /**
      * 给司机充值
      * @param order

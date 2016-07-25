@@ -1,11 +1,17 @@
 package com.sysongy.poms.driver.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
@@ -27,8 +33,13 @@ import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.model.SysDriverReviewStr;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.poms.system.model.SysDepositLog;
+import com.sysongy.util.DateTimeHelper;
 import com.sysongy.util.Encoder;
+import com.sysongy.util.ExportUtil;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
@@ -58,6 +69,8 @@ public class DriverController extends BaseContoller{
 	SysUserAccountService sysUserAccountService;
 	@Autowired
 	TransportionService transportionService;
+	@Autowired
+	OrderService orderService;
 
 	SysDriver driver;
 	/**
@@ -177,9 +190,11 @@ public class DriverController extends BaseContoller{
 
     @RequestMapping("/driverList")
     public String queryDriverList(SysDriver driver, ModelMap map)throws Exception{
+    	
     	PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/driver_review";
-
+		this.driver = driver;
+		
 		try {
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
         
@@ -354,4 +369,170 @@ public class DriverController extends BaseContoller{
 		}
 		return json;
 	}
+	
+	@RequestMapping("/queryRechargeDriverReport")
+	public String queryRechargeDriverReport(ModelMap map, SysOrder sysOrder) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/system/driver_rechargereport";
+
+		try {
+			if(sysOrder.getPageNum() == null){
+				sysOrder.setPageNum(1);
+				sysOrder.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				//transportion.setOrderby("created_time desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeDriverReport(sysOrder);
+			PageInfo<Map<String, Object>> total = orderService.queryRechargeDriverReportTotal(sysOrder);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("sysOrder", sysOrder);
+			map.addAttribute("totalCash",total.getList().get(0).get("total"));
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/queryRechargeReportDetail")
+	public String queryRechargeReportDetail(ModelMap map,@RequestParam String order_id,@RequestParam String order_type,@RequestParam String cash) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/system/driver_rechargereportdetail";
+
+		try {
+			SysOrder sysOrder = new SysOrder();
+			sysOrder.setOrderId(order_id);
+			sysOrder.setOrderType(order_type);
+			
+			if(sysOrder.getPageNum() == null){
+				sysOrder.setPageNum(1);
+				sysOrder.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				//transportion.setOrderby("created_time desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeDriverReportDetail(sysOrder);
+			//PageInfo<Map<String, Object>> total = orderService.queryRechargeReportTotal(sysOrder);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("sysOrder", sysOrder);
+			map.addAttribute("totalCash",cash);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/consumeReport")
+    public String queryConsumeReport(ModelMap map, SysOrder sysOrder, HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
+        try {
+        	sysOrder.setPageNum(1);
+        	sysOrder.setPageSize(1048576);
+
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				sysOrder.setOrderby("order_date desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeDriverReport(sysOrder);
+			List<Map<String, Object>> list = pageinfo.getList();
+
+            int cells = 0 ; // 记录条数
+
+            if(list != null && list.size() > 0){
+                cells += list.size();
+            }
+            OutputStream os = response.getOutputStream();
+            ExportUtil reportExcel = new ExportUtil();
+
+            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+            downLoadFileName = "充值_" + downLoadFileName;
+
+            try {
+                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+            } catch (UnsupportedEncodingException e1) {
+                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+            }
+
+            String[][] content = new String[cells+1][9];//[行数][列数]
+            //第一列
+            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","会员账号","加注站编号","加注站名称","管联运输公司","备注","操作人"};
+
+            int i = 1;
+            if(list != null && list.size() > 0){
+            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+            		 
+            		String order_number = tmpMap.get("order_number").toString();
+            		String order_type;
+            		String deal_number = tmpMap.get("deal_number").toString();
+            		String order_date = tmpMap.get("order_date").toString();
+            		String is_discharge = tmpMap.get("is_discharge").toString()=="0"?"冲红":"消费";
+            		String cash = tmpMap.get("cash").toString();
+            		String user_name = tmpMap.get("user_name").toString();
+            		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
+            		String channel_number = tmpMap.get("channel_number")==null?"":tmpMap.get("channel_number").toString();
+            		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
+            		String remark = tmpMap.get("remark").toString();
+            		String operator = tmpMap.get("operator").toString();
+
+
+                    switch (tmpMap.get("order_type").toString()) {
+					case "210":{
+						order_type = "运输公司消费";
+						break;
+					}
+					case "220":{
+						order_type = "司机消费";
+						break;
+					}
+					default:
+						order_type = "";
+						break;
+					}
+
+
+                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,user_name,channel,channel_number,transportion_name,remark,operator};
+                    i++;
+                }
+            }
+
+            String [] mergeinfo = new String []{"0,0,0,0"};
+            //单元格默认宽度
+            String sheetName = "消费报表";
+            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+
+        return null;
+    }
 }

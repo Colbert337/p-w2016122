@@ -939,5 +939,61 @@ public class OrderServiceImpl implements OrderService {
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
+	
+	@Override
+	public PageInfo<Map<String, Object>> queryRechargeReportTotal(SysOrder record) {
+		PageHelper.startPage(1, 20, record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryRechargeReportTotal(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+	
+	@Override
+	public PageInfo<Map<String, Object>> queryRechargeReportDetail(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryRechargeReportDetail(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+	
+	@Override
+	public PageInfo<Map<String, Object>> queryRechargeDriverReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryRechargeDriverReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+	
+	@Override
+	public PageInfo<Map<String, Object>> queryRechargeDriverReportTotal(SysOrder record) {
+		PageHelper.startPage(1, 20, record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryRechargeDriverReportTotal(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+	
+	@Override
+	public PageInfo<Map<String, Object>> queryRechargeDriverReportDetail(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryRechargeReportDetail2(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryTransportionReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryTransportionReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryTransportionReportTotal(SysOrder record) {
+		PageHelper.startPage(1, 20, record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryTransportionReportTotal(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
 
 }
