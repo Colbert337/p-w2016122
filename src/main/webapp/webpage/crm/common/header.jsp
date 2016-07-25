@@ -13,12 +13,12 @@ pageEncoding="UTF-8"%>
                 <li>
                     <a class="nav-login" href="javascrip:;">登 录</a>
                     <ul>
-                        <li><a href="login2.jsp">加注站</a></li>
-                        <li><a href="login1.jsp">运输公司</a></li>
+                        <li><a href="login_gs.jsp">加注站</a></li>
+                        <li><a href="login_tc.jsp">运输公司</a></li>
                     </ul>
                 </li>
                 <li><a href="download-crm.jsp">产品下载</a></li>
-                <li><a href="help1.jsp">帮助中心</a></li>
+                <li><a href="hp_queston.jsp">帮助中心</a></li>
             </ul>
         </div>
     </header>

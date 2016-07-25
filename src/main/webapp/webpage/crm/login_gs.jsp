@@ -14,10 +14,10 @@
 <body class="login">
 <jsp:include page="common/header.jsp"></jsp:include>
 
-	<div class="login-wrap">
+	<div class="login-wrap cng">
 		<div class="wrap">
 			<div class="login-box">
-				<div class="hd">运输公司</div>
+				<div class="hd">加注站</div>
 				<ul class="bd">
 					<li>
 						<span class="icon icon-user"></span>
@@ -27,14 +27,14 @@
 						<span class="icon icon-lock-open-empty"></span>
 						<input class="txt" placeholder="密码" type="password">
 					</li>
-					<li>
+					<%--<li>
 						<input class="txt code" placeholder="验证码" type="text">
 						<span class="code-img">code img</span>
 					</li>
 					<li>
 						<span class="fp"><a href="">忘记密码？</a></span>
 						<a href="">商家注册</a>
-					</li>
+					</li>--%>
 					<li>
 						<button class="btn btn-block btn-primary">登录</button>
 					</li>
