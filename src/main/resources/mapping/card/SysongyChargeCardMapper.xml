@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.card.dao.SysongyChargeCardMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.card.model.SysongyChargeCard" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="ownid" property="ownid" jdbcType="VARCHAR" />
+    <result column="use_time" property="useTime" jdbcType="TIMESTAMP" />
+    <result column="cash" property="cash" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, password, ownid, use_time, cash
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sysongy_charge_card
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sysongy_charge_card
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.card.model.SysongyChargeCard" >
+    insert into sysongy_charge_card (id, password, ownid, 
+      use_time, cash)
+    values (#{id,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{ownid,jdbcType=VARCHAR}, 
+      #{useTime,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.card.model.SysongyChargeCard" >
+    insert into sysongy_charge_card
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="ownid != null" >
+        ownid,
+      </if>
+      <if test="useTime != null" >
+        use_time,
+      </if>
+      <if test="cash != null" >
+        cash,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="ownid != null" >
+        #{ownid,jdbcType=VARCHAR},
+      </if>
+      <if test="useTime != null" >
+        #{useTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cash != null" >
+        #{cash,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.card.model.SysongyChargeCard" >
+    update sysongy_charge_card
+    <set >
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="ownid != null" >
+        ownid = #{ownid,jdbcType=VARCHAR},
+      </if>
+      <if test="useTime != null" >
+        use_time = #{useTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cash != null" >
+        cash = #{cash,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.card.model.SysongyChargeCard" >
+    update sysongy_charge_card
+    set password = #{password,jdbcType=VARCHAR},
+      ownid = #{ownid,jdbcType=VARCHAR},
+      use_time = #{useTime,jdbcType=TIMESTAMP},
+      cash = #{cash,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="querySysongyChargeCard" resultMap="BaseResultMap" parameterType="com.sysongy.poms.card.model.SysongyChargeCard">
+     select * from sysongy_charge_card ORDER BY id DESC 
+  </select>
+  
+  <delete id="deleteSysongyChargeCard" parameterType="com.sysongy.poms.card.model.SysongyChargeCard">
+    delete from sysongy_charge_card
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+   <update id="updateSysongyChargeCard" parameterType="com.sysongy.poms.card.model.SysongyChargeCard" >
+    update sysongy_charge_card
+    set password = #{password,jdbcType=VARCHAR},
+      ownid = #{ownid,jdbcType=VARCHAR},
+      use_time = #{useTime,jdbcType=TIMESTAMP},
+      cash = #{cash,jdbcType=DECIMAL}
+    where ownid = #{ownid,jdbcType=VARCHAR}
+  </update>
+  
+   <insert id="addSysongyChargeCard" parameterType="com.sysongy.poms.card.model.SysongyChargeCard" >
+    insert into sysongy_charge_card (id, password, ownid, 
+      use_time, cash)
+    values (#{id,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{ownid,jdbcType=VARCHAR}, 
+      #{useTime,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL})
+  </insert>
+  
+  <select id="querySysongyChargeCardvalue" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.SysongyChargeCard" >
+    select * from sysongy_charge_card where ownid = #{ownid}
+  </select>
+  
+    <select id="selectSysongyChargeCardLike" resultMap="BaseResultMap" parameterType="com.sysongy.poms.card.model.SysongyChargeCard">
+  	 select * from sysongy_charge_card s where 1=1
+    <trim>
+      <if test="id != null &amp;&amp; id != ''" >
+        and id like concat(concat('%',#{id,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="password != null &amp;&amp; password != ''" >
+        and password like concat(concat('%',#{password,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="ownid != null &amp;&amp; ownid != ''" >
+        and ownid like concat(concat('%',#{ownid,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="useTime != null &amp;&amp; useTime != ''" >
+        and use_time like concat(concat('%',#{useTime,jdbcType=TIMESTAMP}),'%')
+      </if>
+      <if test="cash != null &amp;&amp; cash != ''" >
+        and cash like concat(concat('%',#{cash,jdbcType=DECIMAL}),'%')
+      </if>
+    </trim>
+  </select>
+  
+  <select id="queryisExist" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sysongy_charge_card
+    where 1 = 1
+    <trim>
+      <if test="id != null" >
+        and id = #{id}
+      </if>
+      <if test="ownid != null" >
+        and ownid = #{ownid}
+      </if>
+       <if test="password != null" >
+        and  password = #{password}
+      </if>
+      <if test="useTime != null" >
+        and  user_time = #{useTime}
+      </if>
+      <if test="cash != null" >
+        and  cash = #{cash}
+      </if>
+    </trim>
+  </select>
+</mapper>
