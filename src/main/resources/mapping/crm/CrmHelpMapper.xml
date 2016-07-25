@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.crm.dao.CrmHelpMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.crm.model.CrmHelp" >
+    <id column="crm_help_id" property="crmHelpId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="question" property="question" jdbcType="VARCHAR" />
+    <result column="issuer" property="issuer" jdbcType="VARCHAR" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="imgs" property="imgs" jdbcType="VARCHAR" />
+    <result column="is_notice" property="isNotice" jdbcType="INTEGER" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    crm_help_id, title, question, issuer, answer, imgs, is_notice, is_deleted, created_date, 
+    updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from crm_help
+    where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from crm_help
+    where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    insert into crm_help (crm_help_id, title, question, 
+      issuer, answer, imgs, 
+      is_notice, is_deleted, created_date, 
+      updated_date)
+    values (#{crmHelpId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
+      #{issuer,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, #{imgs,jdbcType=VARCHAR}, 
+      #{isNotice,jdbcType=INTEGER}, #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
+      #{updatedDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    insert into crm_help
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="crmHelpId != null" >
+        crm_help_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="question != null" >
+        question,
+      </if>
+      <if test="issuer != null" >
+        issuer,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="imgs != null" >
+        imgs,
+      </if>
+      <if test="isNotice != null" >
+        is_notice,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="crmHelpId != null" >
+        #{crmHelpId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="question != null" >
+        #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="issuer != null" >
+        #{issuer,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="imgs != null" >
+        #{imgs,jdbcType=VARCHAR},
+      </if>
+      <if test="isNotice != null" >
+        #{isNotice,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    update crm_help
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="question != null" >
+        question = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="issuer != null" >
+        issuer = #{issuer,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="imgs != null" >
+        imgs = #{imgs,jdbcType=VARCHAR},
+      </if>
+      <if test="isNotice != null" >
+        is_notice = #{isNotice,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    update crm_help
+    set title = #{title,jdbcType=VARCHAR},
+      question = #{question,jdbcType=VARCHAR},
+      issuer = #{issuer,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      imgs = #{imgs,jdbcType=VARCHAR},
+      is_notice = #{isNotice,jdbcType=INTEGER},
+      is_deleted = #{isDeleted,jdbcType=INTEGER},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+  </update>
+</mapper>

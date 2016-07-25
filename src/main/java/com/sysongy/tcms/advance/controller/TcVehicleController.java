@@ -304,7 +304,7 @@ public class TcVehicleController extends BaseContoller {
     @RequestMapping("/info/file")
     public String importFile(@RequestParam(value = "fileImport") MultipartFile file ,HttpServletRequest request,@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
         String resultStr = "";
-        String resultPath = "redirect:/web/tcms/vehicle/list/page?resultInt="+resultStr;
+        String resultPath = "redirect:/web/tcms/vehicle/list/page?resultInt=";
 
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
         String stationId = currUser.getStationId();
