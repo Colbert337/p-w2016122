@@ -836,10 +836,11 @@ public class TransportionController extends BaseContoller{
 			order.setCash(new BigDecimal(BigInteger.ZERO));
 			PageInfo<Map<String, Object>> pageinfo = orderDealService.queryRechargeList(order);
 
+			List<Map<String, Object>> list = orderDealService.queryRechargeListCount(order);
 			BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-			if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+			if(list != null && list.size() > 0){
 
-				for (Map<String, Object> quotaMap:pageinfo.getList()) {
+				for (Map<String, Object> quotaMap:list) {
 					if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
 						totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
 					}

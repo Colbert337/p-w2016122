@@ -307,6 +307,11 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
         }
     }
 
+    @Override
+    public List<Map<String, Object>> queryQuotaListCount(TcFleet tcFleet) {
+        return tcFleetQuotaMapper.queryQuotaList(tcFleet);
+    }
+
     /**
      * 发送短信
      * @param aliShortMessageBean

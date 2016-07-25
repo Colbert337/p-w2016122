@@ -910,6 +910,12 @@ public class OrderServiceImpl implements OrderService {
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
+
+	@Override
+	public List<Map<String, Object>> queryTcPersonalList(SysOrder record) {
+		return sysOrderMapper.queryTcPersonalReport(record);
+	}
+
 	/**
 	 * 运输公司车队消费报表
 	 * @param record
@@ -922,6 +928,12 @@ public class OrderServiceImpl implements OrderService {
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
+
+	@Override
+	public List<Map<String, Object>> queryTcFleetList(SysOrder record) {
+		return sysOrderMapper.queryTcFleetReport(record);
+	}
+
 	/**
 	 * 运输公司队内消费报表
 	 * @param record
@@ -943,4 +955,8 @@ public class OrderServiceImpl implements OrderService {
 		return pageInfo;
 	}
 
+	@Override
+	public List<Map<String, Object>> queryTcFleetMgList(SysOrder record) {
+		return sysOrderMapper.queryRechargeReport(record);
+	}
 }

@@ -42,6 +42,13 @@ public interface TcFleetQuotaService {
 
     /**
      * 查询车队额度信息列表
+     * @param tcFleet
+     * @return
+     */
+    List<Map<String, Object>> queryQuotaListCount(TcFleet tcFleet);
+
+    /**
+     * 查询车队额度信息列表
      * @param tcFleetQuota
      * @return
      */
