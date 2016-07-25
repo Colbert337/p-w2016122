@@ -31,11 +31,11 @@
 						<div class="col-sm-4">
 							<div class="key-item">
 								<span class="icon icon-lng"></span>
-								<a href="">
+								<a href="p1.jsp">
 									我是加注站
 								</a>
 							</div>
-							<a class="key-item-xs" href="">
+							<a class="key-item-xs" href="p1.jsp">
 								<span class="icon icon-lng"></span>
 								我是加注站
 							</a>
@@ -43,11 +43,11 @@
 						<div class="col-sm-4">
 							<div class="key-item">
 								<span class="icon icon-sun"></span>
-								<a href="">
+								<a href="p2.jsp">
 									我是运输公司
 								</a>
 							</div>
-							<a class="key-item-xs" href="">
+							<a class="key-item-xs" href="p2.jsp">
 								<span class="icon icon-sun"></span>
 								我是运输公司
 							</a>
@@ -55,13 +55,13 @@
 						<div class="col-sm-4">
 							<div class="key-item">
 								<span class="icon icon-car"></span>
-								<a href="">
-									我是个人司集
+								<a href="download-app.jsp">
+									我是个人司机
 								</a>
 							</div>
-							<a class="key-item-xs" href="">
+							<a class="key-item-xs" href="download-app.jsp">
 								<span class="icon icon-car"></span>
-								我是个人司集
+								我是个人司机
 							</a>
 						</div>
 					</div>
