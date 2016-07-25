@@ -42,6 +42,8 @@ public class TcVehicle extends BaseModel{
 
     private String onflag;//添加或修改标记
 
+    private int isLocked = 0;
+
     public TcFleetVehicle getFv() {
 		return fv;
 	}
@@ -184,5 +186,13 @@ public class TcVehicle extends BaseModel{
 
     public void setOnflag(String onflag) {
         this.onflag = onflag;
+    }
+
+    public int getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(int isLocked) {
+        this.isLocked = isLocked;
     }
 }

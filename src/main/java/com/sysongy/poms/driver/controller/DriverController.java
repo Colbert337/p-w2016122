@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -60,6 +61,7 @@ public class DriverController extends BaseContoller{
 	TransportionService transportionService;
 
 	SysDriver driver;
+
 	/**
      * 查询司机列表
      * @return
@@ -193,7 +195,7 @@ public class DriverController extends BaseContoller{
         bean.setRetCode(100);
 		bean.setRetMsg("查询成功");
 		bean.setPageInfo(ret);
-		
+
 		map.addAttribute("ret", bean);
 		map.addAttribute("pageInfo", pageinfo);
 		map.addAttribute("driver",driver);
@@ -226,6 +228,17 @@ public class DriverController extends BaseContoller{
 
 	        pageinfo = driverService.queryDrivers(driver);
 
+			List<SysDriver> sysDrivers = pageinfo.getList();
+			List<SysDriver> sysDriverNews = new ArrayList<SysDriver>();
+			for(SysDriver sysDriverInfo : sysDrivers){
+				PayCodeValidModel payCodeValidModel = (PayCodeValidModel)redisClientImpl.getFromCache(sysDriverInfo.getSysUserAccountId());
+				if((payCodeValidModel != null) && (payCodeValidModel.getErrTimes() == 4)){
+					sysDriverInfo.setIsLocked(1);
+				}
+				sysDriverNews.add(sysDriverInfo);
+			}
+			pageinfo.setList(sysDriverNews);
+
 	        bean.setRetCode(100);
 			bean.setRetMsg("查询成功");
 			bean.setPageInfo(ret);
@@ -247,6 +260,34 @@ public class DriverController extends BaseContoller{
 			return ret;
 		}
     }
+
+	@RequestMapping("/unLockDriver")
+	public String unLockDriver(@RequestParam String accountid, ModelMap map)throws Exception{
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/system/driver_info";
+		try {
+			PayCodeValidModel payCodeValidModel = (PayCodeValidModel)redisClientImpl.getFromCache(accountid);
+			if(payCodeValidModel != null){
+				redisClientImpl.deleteFromCache(accountid);
+			}
+			SysDriver driver = new SysDriver();
+			driver.setSysUserAccountId(accountid);
+			ret = this.queryDriverInfoList(this.driver ==null?new SysDriver():this.driver, map);
+			bean.setRetCode(100);
+			bean.setRetMsg("状态修改成功");
+			bean.setPageInfo(ret);
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
 
     @RequestMapping("/changeDriverStatus")
     public String changeDriverStatus(@RequestParam String accountid, @RequestParam String status, @RequestParam String cardno, ModelMap map)throws Exception{

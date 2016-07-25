@@ -111,7 +111,7 @@
 									<td class="text-center">
 										<c:if test="${list.gas_card.card_status == 4}">
 											<a class="option-btn-m" href="javascript:void(0);" title="冻结卡" data-rel="tooltip">
-												<i class="ace-icon fa fa-lock bigger-130" onclick="showInnerModel(this,'0');"></i>
+												<i class="ace-icon fa fa-archive bigger-130" onclick="showInnerModel(this,'0');"></i>
 											</a>
 										</c:if>
 										<c:if test="${list.gas_card.card_status == 0}">
@@ -125,6 +125,11 @@
 										<c:if test="${list.gas_card.card_status == null}">
 											<a class="option-btn-m" href="javascript:void(0);" title="补发卡" data-rel="tooltip">
 												<i class="ace-icon fa fa-credit-card bigger-130" onclick="showInnerModel2(this,'${list.stationId}');"></i>
+											</a>
+										</c:if>
+										<c:if test="${list.isLocked ==1}">
+											<a class="" href="javascript:void(0);" onclick="unLockUser(this,2,'${list.cardId}');" title="解锁" data-rel="tooltip">
+												<i class="ace-icon fa fa-lock bigger-130 green"></i>
 											</a>
 										</c:if>
 									</td>

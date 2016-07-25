@@ -90,6 +90,8 @@ public class SysDriver extends BaseModel{
 
     private String strDriverNumber;
 
+    private int isLocked = 0;
+
     public String getMemo() {
 		return memo;
 	}
@@ -409,5 +411,13 @@ public class SysDriver extends BaseModel{
 
     public void setStrDriverNumber(String strDriverNumber) {
         this.strDriverNumber = NumberUtils.convertFormatNumber(this.driver_number);
+    }
+
+    public int getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(int isLocked) {
+        this.isLocked = isLocked;
     }
 }

@@ -66,3 +66,19 @@ var listOptions ={
 	           }
 			});
 	}
+
+	function unLockUser(obj,status,cardno){
+		var accountid = $(obj).parents("tr").find("td[id=sysUserAccountId]").text();
+		$.ajax({
+			type: "POST",
+			url:'../web/driver/unLockDriver?accountid=' + accountid,
+			contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+			dataType:'text',
+			async:false,
+			success:function(data){
+				$("#main").html(data);
+				$("#modal-table").modal("show");
+				$('[data-rel="tooltip"]').tooltip();
+			}
+		});
+	}
