@@ -338,7 +338,7 @@ public class TcVehicleController extends BaseContoller {
                     String payCode = "";
                     String noticePhone = "";
                     String copyPhone = "";
-                    if(sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i))){
+                    if(sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i).getContents())){
                         TcVehicle tcVehicle = new TcVehicle();
 
                         String newid;
@@ -369,7 +369,7 @@ public class TcVehicleController extends BaseContoller {
                             return resultPath+resultStr;
                         }
 
-                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i))){
+                        if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
                             cardNo =  sheet.getCell(1, i).getContents().replaceAll(" ", "");
                             tcVehicle.setCardNo(cardNo);
 
@@ -386,7 +386,7 @@ public class TcVehicleController extends BaseContoller {
                             //判断卡是否已经出库
                             GasCard gasCard = gasCardService.queryGasCardInfo(cardNo);
                             if(gasCard != null && !GlobalConstant.CardStatus.MOVED.equals(gasCard.getCard_status()) ){
-                                resultStr = "卡号"+cardNo+"未出库！";
+                                resultStr = "卡号"+cardNo+GlobalConstant.getCardStatus(gasCard.getCard_status());
                                 resultStr = Encoder.symmetricEncrypto(resultStr);
                                 return resultPath+resultStr;
                             }
@@ -397,7 +397,7 @@ public class TcVehicleController extends BaseContoller {
                             return resultPath+resultStr;
                         }
 
-                        if(sheet.getCell(2, i) != null && !"".equals(sheet.getCell(1, i))){
+                        if(sheet.getCell(2, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
                             payCode = sheet.getCell(2, i).getContents().replaceAll(" ", "");
                             tcVehicle.setPayCode(Encoder.MD5Encode("111111".getBytes()));
                         }else{
@@ -406,7 +406,7 @@ public class TcVehicleController extends BaseContoller {
                             return resultPath+resultStr;
                         }
 
-                        if(sheet.getCell(3, i) != null && !"".equals(sheet.getCell(1, i))){
+                        if(sheet.getCell(3, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
                             noticePhone = sheet.getCell(3, i).getContents().replaceAll(" ", "");
                             tcVehicle.setNoticePhone(noticePhone);
                         }else{
@@ -415,7 +415,7 @@ public class TcVehicleController extends BaseContoller {
                             return resultPath+resultStr;
                         }
 
-                        if(sheet.getCell(4, i) != null && !"".equals(sheet.getCell(1, i))){
+                        if(sheet.getCell(4, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
                             copyPhone = sheet.getCell(4, i).getContents().replaceAll(" ", "");
                             tcVehicle.setCopyPhone(copyPhone);
                         }

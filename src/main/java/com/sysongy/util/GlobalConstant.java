@@ -129,7 +129,37 @@ public class GlobalConstant {
 		public static final String USED ="4";
 		public static final String INVALID ="5";
 	}
-	
+
+	/**
+	 * 获取卡状态内容
+	 * @param key
+	 * @return
+	 */
+	public static String getCardStatus(String key){
+		String value = "";
+		switch (key){
+			case CardStatus.PAUSED:
+				value = "已冻结";
+				break;
+			case CardStatus.STORAGED:
+				value = "已入库";
+				break;
+			case CardStatus.MOVED:
+				value = "已出库";
+				break;
+			case CardStatus.PROVIDE:
+				value = "未发放";
+				break;
+			case CardStatus.USED:
+				value = "使用中";
+				break;
+			case CardStatus.INVALID:
+				value = "已失效";
+				break;
+		}
+		return value;
+	}
+
 	public interface CardAction{
 		public static final String ADD="0";
 		public static final String UPDATE="1";
