@@ -268,6 +268,7 @@ public class GlobalConstant {
 		public static final String DRIVER ="1";
 		public static final String GASTATION="2";
 		public static final String TRANSPORTION="3";
+		public static final String PLATFORM="4";
 	}
 
 	/*

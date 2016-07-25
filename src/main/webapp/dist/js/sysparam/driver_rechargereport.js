@@ -2,7 +2,7 @@
 
 	window.onload = setCurrentPage();
 	var listOptions ={
-		url:'../web/transportion/queryRechargeReport',
+		url:'../web/driver/queryRechargeDriverReport',
 		type:'post',
 		dataType:'html',
 		success:function(data){
@@ -31,7 +31,7 @@
 	function showDetail(order_id,order_type,cash){
 		$.ajax({
 			type: "POST",
-			url: '../web/transportion/queryRechargeReportDetail?order_id='+order_id+'&order_type='+order_type+'&cash='+cash,
+			url: '../web/driver/queryRechargeReportDetail?order_id='+order_id+'&order_type='+order_type+'&cash='+cash,
 			dataType: 'text',
 			success: function(data){
 				$("#main").html(data);
@@ -44,7 +44,7 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/transportion/queryRechargeReport');
+		loadPage('#main', '../web/driver/queryRechargeDriverReport');
 	}
 
 

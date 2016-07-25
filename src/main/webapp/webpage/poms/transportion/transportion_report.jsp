@@ -8,11 +8,11 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/transportion/transportion_rechargereport.js"></script>
+<script src="<%=basePath %>/dist/js/transportion/transportion_report.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation" action="<%=basePath%>/web/transportion/consumeReport">
+	<form id="formgastation" action="<%=basePath%>/web/transportion/depositTransportionReport">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -21,22 +21,23 @@
 
 					<div class="page-header">
 						<h1>
-							消费明细
+							转账明细
 						</h1>
 					</div>
 					
 					<div class="search-types">
 						<div class="item">
 							<label>交易类型：</label>
-							<select id="is_discharge" name="is_discharge" maxlength="20">
+							<select id="dealType" name="order_deal.dealType">
 								<option value="">全部</option>
-								<option value="0">消费</option>
-								<option value="1">冲红</option>
+								<option value="311">运输公司转出</option>
+								<option value="312">运输公司转出返现</option>
+								<option value="313">个人转入</option>
 							</select>
 						</div>
 						<div class="item">
-							<label>车队名称/车牌号：</label>
-							<input type="text" name="sysDriver.plateNumber" placeholder="车队名称/车牌号"  maxlength="20" value="${sysOrder.sysDriver.plateNumber}"/>
+							<label>订单编号：</label>
+							<input type="text" name="orderNumber" placeholder="车队名称/车牌号"  maxlength="20" value="${sysOrder.orderNumber}"/>
 						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
@@ -91,21 +92,19 @@
 									<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">订单类型</th>
 									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
-									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'deal_type');commitForm();" id="deal_type_order">交易类型</th>
+									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">运输公司编号</th>
-									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
-									<th onclick="orderBy(this,'plates_number');commitForm();" id="plates_number_order">车牌号</th>
-									<th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th>
-									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">操作人</th>
-									<th>商品详情</th>
+									<th onclick="orderBy(this,'debit_account');commitForm();" id="debit_account_order">个人账号</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 								</tr>
 							</thead>
 
 							<tbody>
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
-								<tr id="listobj" <c:if test="${list.is_discharge == 1}">style="color: #A60000;" </c:if> >
+								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
@@ -117,21 +116,12 @@
 									<td><s:Code2Name mcode="${list.order_type}" gcode="ORDER_TYPE"></s:Code2Name></td>
 									<td>${list.deal_number}</td>
 									<td><fmt:formatDate value="${list.order_date}" type="both"/></td>
-									<td>
-										<c:if test="${list.is_discharge == 0}">消费</c:if>
-										<c:if test="${list.is_discharge == 1}">冲红</c:if>
-									</td>
-									<td>${list.cash}</td>
+									<td><s:Code2Name mcode="${list.deal_type}" gcode="ORDER_DEAL_TYPE"></s:Code2Name></td>
+									<td>${list.transportion_name}</td>
 									<td>${list.creditAccount}</td>
-									<td>${list.channel}</td>
-									<td>${list.plates_number}</td>
-									<td>${list.remark}</td>
-									<td>${list.user_name}</td>
-									<td class="text-center">
-										<a class="" href="javascript:void(0);" title="查看明细" data-rel="tooltip">
-											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showDetail('${list.order_id}','${list.order_type}','${list.cash}');"></i>
-										</a>
-									</td>
+									<td>${list.debit_account}</td>
+									<td>${list.cash}</td>
+									<td>${list.operator}</td>
 								</tr>
 							</c:forEach>
 							</tbody>
@@ -173,6 +163,6 @@
 </div>
 
 <script type="text/javascript">
-	var is_discharge = '${sysOrder.is_discharge}';
-	$("#is_discharge").find("option[value='"+is_discharge+"']").attr("selected",true);
+	var dealType = '${sysOrder.order_deal.dealType}';
+	$("#dealType").find("option[value='"+dealType+"']").attr("selected",true);
 </script>
