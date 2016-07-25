@@ -507,7 +507,11 @@
   
   <select id="queryRechargeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
 	select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,so.channel,tv.plates_number,sod.remark,su.user_name
-	from sys_order so ,sys_order_deal sod,tc_vehicle tv,sys_user su where so.order_id = sod.order_id and so.consume_card=tv.card_no and so.operator = su.sys_user_id
+	from sys_order so
+	inner join sys_order_deal sod on so.order_id = sod.order_id 
+	left join tc_vehicle tv on so.consume_card=tv.card_no 
+	inner join sys_user su on so.operator = su.sys_user_id
+	where 1=1
      <trim>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
@@ -525,7 +529,7 @@
     select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,so.operator
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id 
-	inner join sys_driver sd on so.consume_card=sd.card_id 
+	left join sys_driver sd on so.consume_card=sd.card_id 
 	inner join sys_user su on so.operator = su.sys_user_id
 	left join sys_transportion st on sd.station_id = st.sys_transportion_id
 	where 1=1
@@ -565,7 +569,7 @@
   	select sum(cash) total from (select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,so.operator
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id 
-	inner join sys_driver sd on so.consume_card=sd.card_id 
+	left join sys_driver sd on so.consume_card=sd.card_id 
 	inner join sys_user su on so.operator = su.sys_user_id
 	left join sys_transportion st on sd.station_id = st.sys_transportion_id
 	where 1=1
@@ -584,7 +588,11 @@
   
    <select id="queryRechargeReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
   	select sum(cash) total from (select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,so.channel,tv.plates_number,sod.remark,su.user_name
-	from sys_order so ,sys_order_deal sod,tc_vehicle tv,sys_user su where so.order_id = sod.order_id and so.consume_card=tv.card_no and so.operator = su.sys_user_id
+	from sys_order so
+	inner join sys_order_deal sod on so.order_id = sod.order_id 
+	left join tc_vehicle tv on so.consume_card=tv.card_no 
+	inner join sys_user su on so.operator = su.sys_user_id
+	where 1=1
 	<trim>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
