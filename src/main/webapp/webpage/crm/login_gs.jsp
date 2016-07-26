@@ -5,7 +5,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh" class="login-html">
 <head>
 	<meta charset="UTF-8">
 	<title>司集云平台</title>
