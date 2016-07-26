@@ -244,6 +244,11 @@ public class CRMCashServiceContoller {
                         ajaxJson.setMsg("支付密码错误，已输入错误4次，输入5次错误后冻结账户24小时！！！");
                         return ajaxJson;
                     }
+                    if(isWrong5Times(vehicles.get(0).getTcVehicleId())){
+                        ajaxJson.setSuccess(false);
+                        ajaxJson.setMsg("您输入秘密错误次数过多，导致账户被冻结24小时！！！");
+                        return ajaxJson;
+                    }
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("支付密码错误！！！");
                     return ajaxJson;
@@ -270,6 +275,11 @@ public class CRMCashServiceContoller {
                     if(isWrong4Times(sysDriver.getAccount().getSysUserAccountId())){
                         ajaxJson.setSuccess(false);
                         ajaxJson.setMsg("支付密码错误，已输入错误4次，输入5次错误后冻结账户24小时！！！");
+                        return ajaxJson;
+                    }
+                    if(isWrong5Times(sysDriver.getAccount().getSysUserAccountId())){
+                        ajaxJson.setSuccess(false);
+                        ajaxJson.setMsg("您输入秘密错误次数过多，导致账户被冻结24小时！！！");
                         return ajaxJson;
                     }
                     ajaxJson.setSuccess(false);
@@ -410,6 +420,15 @@ public class CRMCashServiceContoller {
         boolean bRet = false;
         PayCodeValidModel payCodeValidModel = (PayCodeValidModel)redisClientImpl.getFromCache(id);
         if((payCodeValidModel != null) && (payCodeValidModel.getErrTimes() == 3)){
+            bRet = true;
+        }
+        return bRet;
+    }
+
+    private boolean isWrong5Times(String id){
+        boolean bRet = false;
+        PayCodeValidModel payCodeValidModel = (PayCodeValidModel)redisClientImpl.getFromCache(id);
+        if((payCodeValidModel != null) && (payCodeValidModel.getErrTimes() == 4)){
             bRet = true;
         }
         return bRet;

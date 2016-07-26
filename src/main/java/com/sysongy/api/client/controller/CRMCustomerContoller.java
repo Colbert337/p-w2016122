@@ -2,6 +2,7 @@ package com.sysongy.api.client.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.api.client.controller.model.ShortMessageInfoModel;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
@@ -127,6 +128,23 @@ public class CRMCustomerContoller {
     	return ajaxJson;
     }
 
+    private boolean isLock24Hours(String id){
+        boolean bRet = false;
+        PayCodeValidModel payCodeValidModel = (PayCodeValidModel)redisClientImpl.getFromCache(id);
+        if((payCodeValidModel != null) && (payCodeValidModel.getErrTimes() == 4)){
+            bRet = true;
+        }
+        return bRet;
+    }
+
+    private SysUserAccount convertSysUserAccount(SysUserAccount account){
+        SysUserAccount sysUserAccount = account;
+        Usysparam usysparam = sysUserAccount.getAccount_statusInfo();
+        usysparam.setMname("已锁定");
+        sysUserAccount.setAccount_statusInfo(usysparam);
+        return sysUserAccount;
+    }
+
     @RequestMapping(value = {"/web/querySingleCustomerInfo"})
     @ResponseBody
     public AjaxJson querySingleCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
@@ -154,6 +172,15 @@ public class CRMCustomerContoller {
                 if(StringUtils.isNotEmpty(sysDriver.getCardId())
                         && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_DRIVER))){
                     drivers = driverService.querySingleDriver(sysDriver);
+                    if((drivers.getList().size() > 0) &&
+                            (isLock24Hours(drivers.getList().get(0).getSysUserAccountId()))){
+                        List<SysDriver> sysDriverInfos = new ArrayList<SysDriver>();
+                        SysDriver orgSysDriver = drivers.getList().get(0);
+                        orgSysDriver.setIsLocked(1);
+                        orgSysDriver.setAccount(convertSysUserAccount(orgSysDriver.getAccount()));
+                        sysDriverInfos.add(orgSysDriver);
+                        drivers.setList(sysDriverInfos);
+                    }
                 } else {
                     SysDriver sysDriverForFleet = findFleetInfo(sysDriver.getCardId());
                     if(sysDriverForFleet == null){
@@ -234,7 +261,12 @@ public class CRMCustomerContoller {
             sysDriverForFleet.setCardInfo(gasCard);
             SysUserAccount sysUserAccount = new SysUserAccount();
             Usysparam usysparam = new Usysparam();
-            usysparam.setMname(gasCard.getCardStatusInfo().getMname());
+            if(isLock24Hours(tcVehicle.getTcVehicleId())){
+                sysDriverForFleet.setIsLocked(1);
+                usysparam.setMname("已锁定");
+            } else {
+                usysparam.setMname(gasCard.getCardStatusInfo().getMname());
+            }
             sysUserAccount.setAccount_statusInfo(usysparam);
             if((tcFleet != null) && (tcFleet.getIsAllot() == GlobalConstant.TCFLEET_IS_ALLOT_YES)){
                 sysUserAccount.setAccountBalance(tcFleet.getQuota().toString());

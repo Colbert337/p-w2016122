@@ -127,9 +127,9 @@
 												<i class="ace-icon fa fa-credit-card bigger-130" onclick="showInnerModel2(this,'${list.stationId}');"></i>
 											</a>
 										</c:if>
-										<c:if test="${list.isLocked ==1}">
-											<a class="" href="javascript:void(0);" onclick="unLockUser(this,2,'${list.cardId}');" title="解锁" data-rel="tooltip">
-												<i class="ace-icon fa fa-lock bigger-130 green"></i>
+										<c:if test="${list.isLocked == 1}">
+											<a class="" href="javascript:void(0);" onclick="unLockUser(this,2,'${list.tcFleetId}');" title="解锁" data-rel="tooltip">
+												<i class="ace-icon fa fa-lock bigger-130"></i>
 											</a>
 										</c:if>
 									</td>
