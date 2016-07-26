@@ -147,7 +147,7 @@ function saveFenpei(){
         dataType:'html',
         success:function(data){
             $("#main").html(data);
-            bootbox.alert("资金分配成功");//保存成功弹窗
+            $("#modal-table").modal("show");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败!");
         }
