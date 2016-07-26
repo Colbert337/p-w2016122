@@ -79,6 +79,8 @@ public class SysOrder extends BaseModel{
 
     private String endDate;
 
+    private String consumeType;
+
 	public SysOrderDeal getOrder_deal() {
 		return order_deal;
 	}
@@ -344,5 +346,13 @@ public class SysOrder extends BaseModel{
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getConsumeType() {
+        return consumeType;
+    }
+
+    public void setConsumeType(String consumeType) {
+        this.consumeType = consumeType;
     }
 }

@@ -351,12 +351,18 @@ public class CRMCashServiceContoller {
                 record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
                 record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
                 record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
+
+                String cardID = record.getConsume_card();
+                if(record.getConsumeType().equalsIgnoreCase(GlobalConstant.ConsumeType.CONSUME_TYPE_CARD)){
+                    record.setConsume_card(null);
+                }
                 String orderConsume = orderService.consumeByDriver(record);
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
                     return ajaxJson;
                 }
+                record.setConsume_card(cardID);
             }
 
             Date curDate = new Date();

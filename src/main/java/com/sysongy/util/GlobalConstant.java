@@ -616,4 +616,9 @@ public class GlobalConstant {
 		public static final int NORMAL_STATUS = 1;
 		public static final int DELETED_STATUS = 0;
 	}
+
+	public interface ConsumeType{
+		public static final String CONSUME_TYPE_CARD = "1";
+		public static final String CONSUME_TYPE_ACCOUNT = "0";
+	}
 }
