@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/gastation/gastation_order_log.js"></script>
+<script src="<%=basePath %>/dist/js/transportion/transpotion_order_log.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -55,7 +55,7 @@
 							</button>
 							<button class="btn btn-sm" type="button" onclick="returnpage();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								返回111
+								返回
 							</button>
 						</div>
 					</div>

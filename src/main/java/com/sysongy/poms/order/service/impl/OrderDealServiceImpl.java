@@ -134,4 +134,9 @@ public class OrderDealServiceImpl implements OrderDealService {
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
+
+	@Override
+	public List<Map<String, Object>> queryRechargeListCount(SysOrder record) {
+		return sysOrderDealMapper.queryRechargeList(record);
+	}
 }

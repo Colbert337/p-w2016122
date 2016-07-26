@@ -169,6 +169,145 @@ public class TransportionController extends BaseContoller{
 		}
 	}
 	
+	@RequestMapping("/queryTransportionReport")
+	public String queryTransportionReport(ModelMap map, SysOrder sysOrder) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transportion_report";
+
+		try {
+			if(sysOrder.getPageNum() == null){
+				sysOrder.setPageNum(1);
+				sysOrder.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				//transportion.setOrderby("created_time desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryTransportionReport(sysOrder);
+			PageInfo<Map<String, Object>> total = orderService.queryTransportionReportTotal(sysOrder);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("sysOrder", sysOrder);
+			map.addAttribute("totalCash",total.getList().get(0).get("total"));
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/depositTransportionReport")
+    public String depositTransportionReport(ModelMap map, SysOrder sysOrder, HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
+		 try {
+	        	sysOrder.setPageNum(1);
+	        	sysOrder.setPageSize(1048576);
+
+				if(StringUtils.isEmpty(sysOrder.getOrderby())){
+					sysOrder.setOrderby("order_date desc");
+				}
+
+				PageInfo<Map<String, Object>> pageinfo = orderService.queryTransportionReport(sysOrder);
+				List<Map<String, Object>> list = pageinfo.getList();
+
+	            int cells = 0 ; // 记录条数
+
+	            if(list != null && list.size() > 0){
+	                cells += list.size();
+	            }
+	            OutputStream os = response.getOutputStream();
+	            ExportUtil reportExcel = new ExportUtil();
+
+	            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+	            downLoadFileName = "转账明细_" + downLoadFileName;
+
+	            try {
+	                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+	            } catch (UnsupportedEncodingException e1) {
+	                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+	            }
+
+	            String[][] content = new String[cells+1][9];//[行数][列数]
+	            //第一列
+	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","运输公司名称","运输公司编号","个人账号","交易金额","操作人"};
+
+	            int i = 1;
+	            if(list != null && list.size() > 0){
+	            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+	            		 
+	            		String order_number = tmpMap.get("order_number")==null?"":tmpMap.get("order_number").toString();
+	            		String order_type;
+	            		String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
+	            		String order_date = tmpMap.get("order_date").toString();
+	            		String deal_type;
+	            		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
+	            		String creditAccount = tmpMap.get("creditAccount").toString();
+	            		String debit_account = tmpMap.get("debitAccount")==null?"":tmpMap.get("debitAccount").toString();
+	            		String cash = tmpMap.get("cash").toString();
+	            		String operator = tmpMap.get("operator").toString();
+
+
+	                    switch (tmpMap.get("order_type").toString()) {
+						case "310":{
+							order_type = "运输公司对个人转账";
+							break;
+						}
+						case "320":{
+							order_type = "个人对个人转账";
+							break;
+						}
+						default:
+							order_type = "";
+							break;
+						}
+	                    
+	                    switch (tmpMap.get("deal_type")==null?"":tmpMap.get("deal_type").toString()) {
+						case "311":{
+							deal_type = "运输公司转出";
+							break;
+						}
+						case "312":{
+							deal_type = "运输公司转出";
+							break;
+						}
+						case "313":{
+							deal_type = "运输公司转出返现";
+							break;
+						}
+						default:
+							deal_type = "";
+							break;
+						}
+
+
+	                    content[i] = new String[]{order_number,order_type,deal_number,order_date,deal_type,transportion_name,creditAccount,debit_account,cash,operator};
+	                    i++;
+	                }
+	            }
+
+	            String [] mergeinfo = new String []{"0,0,0,0"};
+	            //单元格默认宽度
+	            String sheetName = "转账明细";
+	            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+	        } catch (Exception e) {
+	            logger.error("", e);
+	        }
+
+	        return null;
+    }
+	
 	@RequestMapping("/queryRechargeReport")
 	public String queryRechargeReport(ModelMap map, SysOrder sysOrder) throws Exception{
 		
@@ -184,15 +323,8 @@ public class TransportionController extends BaseContoller{
 				//transportion.setOrderby("created_time desc");
 			}
 
-//			if(!StringUtils.isEmpty(transportion.getExpiry_date_frompage())){
-//				String []tmpRange = transportion.getExpiry_date_frompage().split("-");
-//				if(tmpRange.length==2){
-//					transportion.setExpiry_date_after(tmpRange[0].trim()+" 00:00:00");
-//					transportion.setExpiry_date_before(tmpRange[1]+" 23:59:59");
-//				}
-//			}
-
 			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeReport(sysOrder);
+			PageInfo<Map<String, Object>> total = orderService.queryRechargeReportTotal(sysOrder);
 
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");
@@ -200,7 +332,51 @@ public class TransportionController extends BaseContoller{
 
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
-			map.addAttribute("transportion",transportion);
+			map.addAttribute("sysOrder", sysOrder);
+			map.addAttribute("totalCash",total.getList().get(0).get("total"));
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/queryRechargeReportDetail")
+	public String queryRechargeReportDetail(ModelMap map,@RequestParam String order_id,@RequestParam String order_type,@RequestParam String cash) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transportion_rechargereportdetail";
+
+		try {
+			SysOrder sysOrder = new SysOrder();
+			sysOrder.setOrderId(order_id);
+			sysOrder.setOrderType(order_type);
+			
+			if(sysOrder.getPageNum() == null){
+				sysOrder.setPageNum(1);
+				sysOrder.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				//transportion.setOrderby("created_time desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeReportDetail(sysOrder);
+			//PageInfo<Map<String, Object>> total = orderService.queryRechargeReportTotal(sysOrder);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("sysOrder", sysOrder);
+			map.addAttribute("totalCash",cash);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -382,6 +558,89 @@ public class TransportionController extends BaseContoller{
 
         return null;
     }
+	
+	@RequestMapping("/consumeReport")
+    public String queryConsumeReport(ModelMap map, SysOrder sysOrder, HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
+        try {
+        	sysOrder.setPageNum(1);
+        	sysOrder.setPageSize(1048576);
+
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				sysOrder.setOrderby("order_date desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeReport(sysOrder);
+			List<Map<String, Object>> list = pageinfo.getList();
+
+            int cells = 0 ; // 记录条数
+
+            if(list != null && list.size() > 0){
+                cells += list.size();
+            }
+            OutputStream os = response.getOutputStream();
+            ExportUtil reportExcel = new ExportUtil();
+
+            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+            downLoadFileName = "充值_" + downLoadFileName;
+
+            try {
+                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+            } catch (UnsupportedEncodingException e1) {
+                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+            }
+
+            String[][] content = new String[cells+1][9];//[行数][列数]
+            //第一列
+            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","运输公司编号","加注站名称","车牌号","备注","操作人"};
+
+            int i = 1;
+            if(list != null && list.size() > 0){
+            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+            		 
+            		String order_number = tmpMap.get("order_number").toString();
+            		String order_type;
+            		String deal_number = tmpMap.get("deal_number").toString();
+            		String order_date = tmpMap.get("order_date").toString();
+            		String is_discharge = tmpMap.get("is_discharge").toString()=="0"?"冲红":"消费";
+            		String cash = tmpMap.get("cash").toString();
+            		String credit_account = tmpMap.get("creditAccount").toString();
+            		String channel = tmpMap.get("channel") == null?"":tmpMap.get("channel").toString();
+            		String plates_number = tmpMap.get("plates_number").toString();
+            		String remark = tmpMap.get("remark").toString();
+            		String user_name = tmpMap.get("user_name").toString();
+
+
+                    switch (tmpMap.get("order_type").toString()) {
+					case "210":{
+						order_type = "运输公司消费";
+						break;
+					}
+					case "220":{
+						order_type = "司机消费";
+						break;
+					}
+					default:
+						order_type = "";
+						break;
+					}
+
+
+                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,credit_account,channel,plates_number,remark,user_name};
+                    i++;
+                }
+            }
+
+            String [] mergeinfo = new String []{"0,0,0,0"};
+            //单元格默认宽度
+            String sheetName = "消费报表";
+            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+
+        return null;
+    }
 
 	/**
 	 * 根据主键查询运输公司信息
@@ -498,7 +757,7 @@ public class TransportionController extends BaseContoller{
 
 		try {
 				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
-					rowcount = service.updatedeposiTransportion(deposit, currUser.getUser().getUserName());
+					rowcount = service.updatedeposiTransportion(deposit, currUser.getUser().getSysUserId());
 				}
 
 				ret = this.queryAllTransportionList2(map, this.transportion==null?new Transportion():this.transportion);
@@ -872,10 +1131,11 @@ public class TransportionController extends BaseContoller{
 			order.setCash(new BigDecimal(BigInteger.ZERO));
 			PageInfo<Map<String, Object>> pageinfo = orderDealService.queryRechargeList(order);
 
+			List<Map<String, Object>> list = orderDealService.queryRechargeListCount(order);
 			BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-			if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+			if(list != null && list.size() > 0){
 
-				for (Map<String, Object> quotaMap:pageinfo.getList()) {
+				for (Map<String, Object> quotaMap:list) {
 					if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
 						totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
 					}

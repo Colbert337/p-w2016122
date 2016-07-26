@@ -33,6 +33,22 @@ public interface OrderService {
     SysOrder selectByOrderGASID(SysOrder record);
     
     PageInfo<Map<String, Object>> queryRechargeReport(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryRechargeReportTotal(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryRechargeReportDetail(SysOrder record);
+        
+    PageInfo<Map<String, Object>> queryRechargeDriverReport(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryRechargeDriverReportTotal(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryRechargeDriverReportDetail(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryTransportionReport(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryTransportionReportTotal(SysOrder record);
+    
+    
     /**
      * 给司机充值
      * @param order
@@ -132,16 +148,34 @@ public interface OrderService {
      */
     PageInfo<Map<String,Object>> queryTcPersonalReport(SysOrder record);
     /**
+     * 运输公司个人消费报表
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryTcPersonalList(SysOrder record);
+    /**
      * 运输公司车队消费报表
      * @param record
      * @return
      */
     PageInfo<Map<String,Object>> queryTcFleetReport(SysOrder record);
     /**
+     * 运输公司车队消费报表
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryTcFleetList(SysOrder record);
+    /**
      * 运输公司队内消费报表
      * @param record
      * @return
      */
     PageInfo<Map<String,Object>> queryTcFleetMgReport(SysOrder record);
+    /**
+     * 运输公司队内消费报表
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryTcFleetMgList(SysOrder record);
 
 }
