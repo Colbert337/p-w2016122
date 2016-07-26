@@ -8,6 +8,8 @@ import java.util.Date;
 public class TcTransferAccount extends BaseModel{
     private String tcTransferAccountId;
 
+    private String orderId;
+
     private String stationId;
 
     private String sysDriverId;
@@ -114,5 +116,13 @@ public class TcTransferAccount extends BaseModel{
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

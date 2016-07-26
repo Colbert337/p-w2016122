@@ -315,6 +315,9 @@ public class TransportionServiceImpl implements TransportionService {
 	public synchronized int modifyDeposit(Transportion transportion, BigDecimal increment) throws Exception {
 		BigDecimal deposit = transportion.getDeposit();
 		BigDecimal deposit_result = deposit.add(increment);
+		if(deposit_result.compareTo(new BigDecimal(0)) < 0){
+			throw new Exception(GlobalConstant.OrderProcessResult.ORDER_ERROR_PREPAY_IS_NOT_ENOUGH);
+		}
 		transportion.setDeposit(deposit_result);
 		return transportionMapper.updateDeposit(transportion);
 	}

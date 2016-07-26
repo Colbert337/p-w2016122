@@ -243,6 +243,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                             tcTransferAccount.setMobilePhone(mapDriver.get("mobilePhone").toString());
                             tcTransferAccount.setUsed(mapDriver.get("remark").toString());
                             tcTransferAccount.setUpdatedDate(new Date());
+                            tcTransferAccount.setOrderId(orderId);
                             resultVal = tcTransferAccountMapper.insertSelective(tcTransferAccount);
 
                             /*发送转账通知短信*/
@@ -305,6 +306,11 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
         }else{
             return null;
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> queryQuotaListCount(TcFleet tcFleet) {
+        return tcFleetQuotaMapper.queryQuotaList(tcFleet);
     }
 
     /**

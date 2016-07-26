@@ -1,9 +1,11 @@
 package com.sysongy.poms.transportion.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
@@ -15,11 +17,7 @@ import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.DateTimeHelper;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.ExportUtil;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.*;
 import com.sysongy.util.mail.MailEngine;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -39,11 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -70,6 +64,8 @@ public class TransportionController extends BaseContoller{
 	TransportionService transportionService;
 	@Autowired
 	OrderService orderService;
+	@Autowired
+	RedisClientInterface redisClientImpl;
 
 	private Transportion transportion;
 
@@ -1032,7 +1028,9 @@ public class TransportionController extends BaseContoller{
 			return ret;
 		}
 	}
-	
+
+
+
 	@RequestMapping("/Vehiclelist")
     public String queryVehiclelist(@ModelAttribute CurrUser currUser, TcVehicle vehicle, ModelMap map){
 		
@@ -1051,6 +1049,19 @@ public class TransportionController extends BaseContoller{
 		        vehicle.setStationId(stationId);
 
 				PageInfo<TcVehicle> pageinfo = tcVehicleService.queryVehicleList(vehicle);
+
+
+				List<TcVehicle> tcVehicles = pageinfo.getList();
+				List<TcVehicle> tcVehicleNews = new ArrayList<TcVehicle>();
+				for(TcVehicle tcVehicleInfo : tcVehicles){
+					PayCodeValidModel payCodeValidModel = (PayCodeValidModel)
+							redisClientImpl.getFromCache(tcVehicleInfo.getTcVehicleId());
+					if((payCodeValidModel != null) && (payCodeValidModel.getErrTimes() == 4)){
+						tcVehicleInfo.setIsLocked(1);
+					}
+					tcVehicleNews.add(tcVehicleInfo);
+				}
+				pageinfo.setList(tcVehicleNews);
 
 				bean.setRetCode(100);
 				bean.setRetMsg("查询成功");
@@ -1073,6 +1084,32 @@ public class TransportionController extends BaseContoller{
 		}
 	}
 
+	@RequestMapping("/unLockDriver")
+	public String unLockDriver(@RequestParam String tcVehicleId, ModelMap map)throws Exception {
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/vehicle_list";
+		try {
+			PayCodeValidModel payCodeValidModel = (PayCodeValidModel) redisClientImpl.getFromCache(tcVehicleId);
+			if (payCodeValidModel != null) {
+				redisClientImpl.deleteFromCache(tcVehicleId);
+			}
+			TcVehicle tcVehicle = new TcVehicle();
+			tcVehicle.setTcVehicleId(tcVehicleId);
+			//ret = this.queryDriverInfoList(this.driver ==null?new SysDriver():this.driver, map);
+			bean.setRetCode(100);
+			bean.setRetMsg("状态修改成功");
+			bean.setPageInfo(ret);
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		} finally {
+			return ret;
+		}
+	}
 	/**
 	 * 运输公司充值报表（单个运输公司）
 	 * @param map
@@ -1095,10 +1132,11 @@ public class TransportionController extends BaseContoller{
 			order.setCash(new BigDecimal(BigInteger.ZERO));
 			PageInfo<Map<String, Object>> pageinfo = orderDealService.queryRechargeList(order);
 
+			List<Map<String, Object>> list = orderDealService.queryRechargeListCount(order);
 			BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-			if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+			if(list != null && list.size() > 0){
 
-				for (Map<String, Object> quotaMap:pageinfo.getList()) {
+				for (Map<String, Object> quotaMap:list) {
 					if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
 						totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
 					}

@@ -158,7 +158,7 @@
 										<input type="text" name="mobilePhone" id="mobile_phone" maxlength="11" placeholder="手机号码" class="col-xs-10 col-sm-12" />
 									</div>
 									<div class="col-sm-2">
-										<a id="sendMsgA" class="btn btn-sm btn-primary" href="javascript:sendMessage()">
+										<a id="sendMsgA" class="btn btn-sm btn-primary" >
 											发送验证码
 										</a>
 									</div>

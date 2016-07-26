@@ -183,3 +183,19 @@ var obj,status,station;
 			}
 		});
 	}
+
+function unLockUser(obj,status,cardno){
+	var accountid = $(obj).parents("tr").find("td[id=sysUserAccountId]").text();
+	$.ajax({
+		type: "POST",
+		url:'../web/transportion/unLockDriver?accountid=' + accountid,
+		contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+		dataType:'text',
+		async:false,
+		success:function(data){
+			$("#main").html(data);
+			$("#modal-table").modal("show");
+			$('[data-rel="tooltip"]').tooltip();
+		}
+	});
+}

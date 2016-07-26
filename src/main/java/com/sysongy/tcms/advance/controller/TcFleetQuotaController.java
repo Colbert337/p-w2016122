@@ -481,11 +481,12 @@ public class TcFleetQuotaController extends BaseContoller {
             transferAccount.setSysDriverId(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
             PageInfo<Map<String, Object>> pageinfo = tcTransferAccountService.queryTransferListPage(transferAccount);
 
+            List<Map<String, Object>> list = tcTransferAccountService.queryTransferList(transferAccount);
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
             BigDecimal backCash = new BigDecimal(BigInteger.ZERO);
-            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+            if(list != null && list.size() > 0){
 
-                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                for (Map<String, Object> quotaMap:list) {
                     if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())
                             && GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION.equals(quotaMap.get("dealType"))){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
@@ -545,7 +546,7 @@ public class TcFleetQuotaController extends BaseContoller {
             if(transferAccount.getPageNum() == null){
                 transferAccount.setOrderby("deal_date desc");
                 transferAccount.setPageNum(1);
-                transferAccount.setPageSize(10);
+                transferAccount.setPageSize(1048576);
             }
             transferAccount.setStationId(stationId);
             transferAccount.setSysDriverId(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
@@ -683,10 +684,11 @@ public class TcFleetQuotaController extends BaseContoller {
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageinfo = orderService.queryTcPersonalReport(order);
 
+            List<Map<String, Object>> list = orderService.queryTcPersonalList(order);
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+            if(list != null && list.size() > 0){
 
-                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                for (Map<String, Object> quotaMap:list) {
                     if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
@@ -899,10 +901,11 @@ public class TcFleetQuotaController extends BaseContoller {
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageinfo = orderService.queryTcFleetReport(order);
 
+            List<Map<String, Object>> list = orderService.queryTcPersonalList(order);
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+            if(list != null && list.size() > 0){
 
-                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                for (Map<String, Object> quotaMap:list) {
                     if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
                     }
@@ -1104,10 +1107,11 @@ public class TcFleetQuotaController extends BaseContoller {
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageinfo = orderService.queryTcFleetMgReport(order);
 
+            List<Map<String, Object>> list = orderService.queryTcFleetMgList(order);
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-            if(pageinfo.getList() != null && pageinfo.getList().size() > 0){
+            if(list != null && list.size() > 0){
 
-                for (Map<String, Object> quotaMap:pageinfo.getList()) {
+                for (Map<String, Object> quotaMap:list) {
                     if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
                     }

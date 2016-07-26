@@ -148,16 +148,34 @@ public interface OrderService {
      */
     PageInfo<Map<String,Object>> queryTcPersonalReport(SysOrder record);
     /**
+     * 运输公司个人消费报表
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryTcPersonalList(SysOrder record);
+    /**
      * 运输公司车队消费报表
      * @param record
      * @return
      */
     PageInfo<Map<String,Object>> queryTcFleetReport(SysOrder record);
     /**
+     * 运输公司车队消费报表
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryTcFleetList(SysOrder record);
+    /**
      * 运输公司队内消费报表
      * @param record
      * @return
      */
     PageInfo<Map<String,Object>> queryTcFleetMgReport(SysOrder record);
+    /**
+     * 运输公司队内消费报表
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryTcFleetMgList(SysOrder record);
 
 }
