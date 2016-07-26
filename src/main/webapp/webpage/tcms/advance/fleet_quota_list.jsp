@@ -249,7 +249,7 @@
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
 				<button class="btn btn-primary btn-sm" onclick="saveFenpei()">确   定</button>
-				<button class="btn btn-sm" i="close" onclick="closeDialog('fenpeiModel')">取   消 </button>
+				<button class="btn btn-sm" i="close" onclick="closeDiv('fenpeiModel')">取   消 </button>
 			</div>
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->

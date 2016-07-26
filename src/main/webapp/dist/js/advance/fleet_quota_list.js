@@ -24,8 +24,8 @@ function addChongzhi(){
 
 //显示添加资金分配弹出层add
 function addFenpei(){
-    clearDiv();
-
+    /*clearDiv();*/
+    console.log("123123");
     $("#fenpeiModel").modal('show').on('hide.bs.modal', function() {
         $('#fenpeiForm').bootstrapValidator('resetForm',true);
     });
@@ -290,7 +290,6 @@ function saveZhuan(){
     var count = 0;
     $('input[name="mobilePhone"],input[name="fullName"],input[name="amount"]').each(function(index,val){
         if($(this).attr("data-sj-result")=="invalid"){
-            console.log('ssssssssssssssss')
             $(".fleet-quota-error").text('操作失败！')
             count++;
             return false;
@@ -331,6 +330,11 @@ function closeDialog(divId){
     $("#"+divId+" :input").each(function () {
         $(this).val("").removeAttr("data-sj-result");
     });
+    $(".fleet-quota-error").empty();
+    $("#"+divId).modal('hide');
+}
+/*取消弹层方法*/
+function closeDiv(divId){
     $(".fleet-quota-error").empty();
     $("#"+divId).modal('hide');
 }

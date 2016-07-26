@@ -60,6 +60,15 @@ function settime() {
  * 发送验证码
  */
 function sendMessage(){
+    var hasError = $("#mobile_phone").parents(".form-group").hasClass("has-error");
+    console.log("hasError:"+hasError);
+    if(hasError){
+        $("#sendMsgA").off("click");
+        return false;
+    }else{
+        $("#sendMsgA").on("click",function(){sendMessage()});
+    }
+
     var mobilePhone = $("#mobile_phone").val();
     if(mobilePhone == ""){
         return false;

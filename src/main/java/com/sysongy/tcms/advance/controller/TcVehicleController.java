@@ -402,6 +402,10 @@ public class TcVehicleController extends BaseContoller {
                                 resultStr = "个人卡不能导入！";
                                 resultStr = Encoder.symmetricEncrypto(resultStr);
                                 return resultPath+resultStr;
+                            }else if(gasCard == null){
+                                resultStr = "卡号"+cardNo+"不存在！";
+                                resultStr = Encoder.symmetricEncrypto(resultStr);
+                                return resultPath+resultStr;
                             }
 
                         }else{
@@ -410,16 +414,16 @@ public class TcVehicleController extends BaseContoller {
                             return resultPath+resultStr;
                         }
 
-                        if(sheet.getCell(2, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
+                        if(sheet.getCell(2, i) != null && !"".equals(sheet.getCell(2, i).getContents())){
                             payCode = sheet.getCell(2, i).getContents().replaceAll(" ", "");
-                            tcVehicle.setPayCode(Encoder.MD5Encode("111111".getBytes()));
+                            tcVehicle.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
                         }else{
                             resultStr = "支付密码不能为空！";
                             resultStr = Encoder.symmetricEncrypto(resultStr);
                             return resultPath+resultStr;
                         }
 
-                        if(sheet.getCell(3, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
+                        if(sheet.getCell(3, i) != null && !"".equals(sheet.getCell(3, i).getContents())){
                             noticePhone = sheet.getCell(3, i).getContents().replaceAll(" ", "");
                             tcVehicle.setNoticePhone(noticePhone);
                         }else{
