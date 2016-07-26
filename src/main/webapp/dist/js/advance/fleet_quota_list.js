@@ -489,7 +489,7 @@ $('#zhuanForm').bootstrapValidator({
                             pay_code:$("#pay_code").val()
                         };
                     },
-                    message: '支付密码错误'
+                    message: '支付密码错误或未设置'
                 }
             }
         }
@@ -523,7 +523,7 @@ $('#fenpeiForm').bootstrapValidator({
                             pay_code:$("#pay_code").val()
                         };
                     },
-                    message: '支付密码错误'
+                    message: '支付密码错误或未设置'
                 }
             }
         }
