@@ -24,8 +24,8 @@ function addChongzhi(){
 
 //显示添加资金分配弹出层add
 function addFenpei(){
-    clearDiv();
-
+    /*clearDiv();*/
+    console.log("123123");
     $("#fenpeiModel").modal('show').on('hide.bs.modal', function() {
         $('#fenpeiForm').bootstrapValidator('resetForm',true);
     });
@@ -147,7 +147,7 @@ function saveFenpei(){
         dataType:'html',
         success:function(data){
             $("#main").html(data);
-            bootbox.alert("资金分配成功");//保存成功弹窗
+            $("#modal-table").modal("show");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败!");
         }
@@ -290,7 +290,6 @@ function saveZhuan(){
     var count = 0;
     $('input[name="mobilePhone"],input[name="fullName"],input[name="amount"]').each(function(index,val){
         if($(this).attr("data-sj-result")=="invalid"){
-            console.log('ssssssssssssssss')
             $(".fleet-quota-error").text('操作失败！')
             count++;
             return false;
@@ -331,6 +330,11 @@ function closeDialog(divId){
     $("#"+divId+" :input").each(function () {
         $(this).val("").removeAttr("data-sj-result");
     });
+    $(".fleet-quota-error").empty();
+    $("#"+divId).modal('hide');
+}
+/*取消弹层方法*/
+function closeDiv(divId){
     $(".fleet-quota-error").empty();
     $("#"+divId).modal('hide');
 }
@@ -485,7 +489,7 @@ $('#zhuanForm').bootstrapValidator({
                             pay_code:$("#pay_code").val()
                         };
                     },
-                    message: '支付密码错误'
+                    message: '支付密码错误或未设置'
                 }
             }
         }
@@ -519,7 +523,7 @@ $('#fenpeiForm').bootstrapValidator({
                             pay_code:$("#pay_code").val()
                         };
                     },
-                    message: '支付密码错误'
+                    message: '支付密码错误或未设置'
                 }
             }
         }

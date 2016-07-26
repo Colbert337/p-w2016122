@@ -534,9 +534,9 @@ public class DriverController extends BaseContoller{
             		String order_type;
             		String deal_number = tmpMap.get("deal_number").toString();
             		String order_date = tmpMap.get("order_date").toString();
-            		String is_discharge = tmpMap.get("is_discharge").toString()=="0"?"冲红":"消费";
+            		String is_discharge = tmpMap.get("is_discharge")==null?"":tmpMap.get("is_discharge").toString()=="0"?"冲红":"消费";
             		String cash = tmpMap.get("cash").toString();
-            		String user_name = tmpMap.get("user_name").toString();
+            		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
             		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
             		String channel_number = tmpMap.get("channel_number")==null?"":tmpMap.get("channel_number").toString();
             		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();

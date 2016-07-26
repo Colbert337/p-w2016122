@@ -1,5 +1,6 @@
 package com.sysongy.api.mobile.controller.login;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,14 @@ public class MobileController {
 
 	@RequestMapping(value = { "Login" })
 	@ResponseBody
-	public MobileReturn Login(MobileParams params) {
+	public String Login(MobileParams params) {
 
 		MobileLogin mobileLogin = new MobileLogin();
 		MobileReturn ret = new MobileReturn();
 		try {
 			
 			try {
-				mobileLogin = (MobileLogin) JSON.parse(params.getDetailParam());
+				mobileLogin = (MobileLogin) JSON.parseObject(params.getDetailParam(), MobileLogin.class);
 			} catch (Exception e) {
 				ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_ERROR, MobileLoginUtils.RET_LOGINPARAM_ERROR_MSG, null);
 
@@ -52,14 +53,18 @@ public class MobileController {
 			JSONObject json = new JSONObject();
 			json.put("token", sysUser.getSysUserId());
 
-			MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_SUCCESS, null, json.toJSONString());
+			MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_SUCCESS, MobileLoginUtils.RET_SUCCESS_MSG, json.toJSONString());
 
 		} catch (Exception e) {
-			ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_ERROR, null, null);
-
+			
+			if(StringUtils.isEmpty(ret.getMsg())){
+				ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_ERROR, null, null);
+			}
+			
 			logger.error("MobileController.Login ERROR： " + e);
+			
 		} finally {
-			return ret;
+			return JSON.toJSONString(ret);
 		}
 	}
 

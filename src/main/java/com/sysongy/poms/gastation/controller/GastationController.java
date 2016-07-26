@@ -169,7 +169,12 @@ public class GastationController extends BaseContoller{
             
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            content[0] = new String[]{"订单号","工作站编号","工作站名称","所属公司","转账时间","转账方式","操作员","操作时间","预存款金额"};
+            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+            	 content[0] = new String[]{"订单号","工作站编号","工作站名称","所属公司","转账时间","转账方式","操作员","操作时间","预存款金额"};
+            }else{
+            	 content[0] = new String[]{"订单号","工作站编号","工作站名称","所属公司","转账时间","充值方式 ","操作员","操作时间","预存款金额"};
+            }
+           
 
             int i = 1;
             if(list != null && list.size() > 0){
@@ -181,30 +186,35 @@ public class GastationController extends BaseContoller{
                     String company = station.getCompany();
                     String depositTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(station.getDepositTime());
                     String depositType = station.getDepositType();
-                    switch (station.getDepositType()) {
-					case "0":{
-						depositType = "公对公";
-						break;	
-					}
-					case "1":{
-						depositType = "支票";
-						break;
-					}
-					case "2":{
-						depositType = "承兑汇票";
-						break;
-					}
-					case "3":{
-						depositType = "现金";
-						break;
-					}
-					case "4":{
-						depositType = "POS机";
-						break;
-					}
-					default:
-						break;
-					}
+                    if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+                    	switch (station.getDepositType()) {
+    					case "0":{
+    						depositType = "公对公";
+    						break;	
+    					}
+    					case "1":{
+    						depositType = "支票";
+    						break;
+    					}
+    					case "2":{
+    						depositType = "承兑汇票";
+    						break;
+    					}
+    					case "3":{
+    						depositType = "现金";
+    						break;
+    					}
+    					case "4":{
+    						depositType = "POS机";
+    						break;
+    					}
+    					default:
+    						break;
+    					}
+                    }else{
+                    	depositType = "后台充值";
+                    }
+                    
                     String operator = station.getOperator();
                     String optime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(station.getOptime());
                     String deposit_ = station.getDeposit().toString();
