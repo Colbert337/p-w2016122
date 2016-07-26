@@ -385,8 +385,12 @@ public class TcVehicleController extends BaseContoller {
                             }
                             //判断卡是否已经出库
                             GasCard gasCard = gasCardService.queryGasCardInfo(cardNo);
-                            if(gasCard != null && !GlobalConstant.CardStatus.MOVED.equals(gasCard.getCard_status()) ){
+                            if(gasCard != null && !GlobalConstant.CardStatus.PROVIDE.equals(gasCard.getCard_status()) && gasCard.getCard_property().equals(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION) ){
                                 resultStr = "卡号"+cardNo+GlobalConstant.getCardStatus(gasCard.getCard_status());
+                                resultStr = Encoder.symmetricEncrypto(resultStr);
+                                return resultPath+resultStr;
+                            }else if(gasCard != null && gasCard.getCard_property().equals(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_DRIVER)){
+                                resultStr = "个人卡不能导入！";
                                 resultStr = Encoder.symmetricEncrypto(resultStr);
                                 return resultPath+resultStr;
                             }
