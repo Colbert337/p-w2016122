@@ -176,7 +176,7 @@ function saveVehicle(){
             type:'post',
             dataType:'html',
             success:function(data){
-                bootbox.alert("操作成功！");
+                $("#modal-table").modal("show");
                 $("#main").html(data);
             },error: function(XMLHttpRequest, textStatus, errorThrown) {
                 bootbox.alert("操作失败！");

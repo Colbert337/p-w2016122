@@ -209,6 +209,7 @@ public class TcVehicleController extends BaseContoller {
     public String saveVehicle(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map) throws Exception{
         String stationId = currUser.getStationId();
         String payCode = "";
+        String resultInt = "";
         int count = 0;
         Transportion transportion = transportionService.queryTransportionByPK(stationId);
         if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
@@ -222,7 +223,9 @@ public class TcVehicleController extends BaseContoller {
             List<TcVehicle> vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Update);
 
             if(vehicle1Count != null){
-                return "redirect:/web/tcms/vehicle/list/page";
+                resultInt = "车牌号已经存在！";
+                resultInt = Encoder.symmetricEncrypto(resultInt);
+                return "redirect:/web/tcms/vehicle/list/page?resultInt="+resultInt;
             }else{
                 if(tcVehicle != null && vehicle1Count.size() > 0){
                     //新密码
@@ -237,6 +240,8 @@ public class TcVehicleController extends BaseContoller {
                 }
 
                 tcVehicleService.updateVehicle(vehicle);
+                resultInt = "修改成功！";
+                resultInt = Encoder.symmetricEncrypto(resultInt);
             }
 
         }else{
@@ -246,7 +251,9 @@ public class TcVehicleController extends BaseContoller {
             vehicle1Add.setPlatesNumber(vehicle.getPlatesNumber());
             List<TcVehicle> vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Add);
             if(vehicle1Count != null && vehicle1Count.size() > 0){
-                return "redirect:/web/tcms/vehicle/list/page";
+                resultInt = "车牌号已存在！";
+                resultInt = Encoder.symmetricEncrypto(resultInt);
+                return "redirect:/web/tcms/vehicle/list/page?resultInt="+resultInt;
             }else{
                 String newid;
                 TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getSys_transportion_id());
@@ -265,6 +272,8 @@ public class TcVehicleController extends BaseContoller {
 
                 try {
                     tcVehicleService.addVehicle(vehicle);
+                    resultInt = "添加成功！";
+                    resultInt = Encoder.symmetricEncrypto(resultInt);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -290,7 +299,7 @@ public class TcVehicleController extends BaseContoller {
             }
         }
 
-        return "redirect:/web/tcms/vehicle/list/page";
+        return "redirect:/web/tcms/vehicle/list/page?resultInt="+resultInt;
     }
 
     /**
