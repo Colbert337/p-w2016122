@@ -17,23 +17,25 @@ public class MobileLoginUtils {
 	public static final String RET_LOGINPARAM_NULL_MSG = "用户名或密码为空";
 	public static final String RET_LOGIN_ERROR_MSG = "用户名或密码错误";
 
-	public static void checkParam(MobileLogin login, MobileReturn ret) {
+	public static void checkParam(MobileLogin login, MobileReturn ret) throws Exception{
 
-		if (StringUtils.isEmpty(login.getUsername()) || StringUtils.isEmpty(login.getPassword())) {
+		if (login == null || StringUtils.isEmpty(login.getUsername()) || StringUtils.isEmpty(login.getPassword())) {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_LOGINPARAM_NULL_MSG);
+			throw new Exception(RET_LOGINPARAM_NULL_MSG);
 		}
 	}
 
-	public static void checkLogin(SysUser sysUser, MobileReturn ret) {
+	public static void checkLogin(SysUser sysUser, MobileReturn ret) throws Exception{
 
-		if (StringUtils.isEmpty(sysUser.getSysUserId())) {
+		if (sysUser == null || StringUtils.isEmpty(sysUser.getSysUserId())) {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_LOGIN_ERROR_MSG);
+			throw new Exception(RET_LOGIN_ERROR_MSG);
 		}
 	}
 
-	public static SysUser packagingSysUser(MobileLogin login) {
+	public static SysUser packagingSysUser(MobileLogin login) throws Exception{
 
 		SysUser sysUser = new SysUser();
 
@@ -43,7 +45,7 @@ public class MobileLoginUtils {
 		return sysUser;
 	}
 
-	public static MobileReturn packagingMobileReturn(String error, String msg, String data) {
+	public static MobileReturn packagingMobileReturn(String error, String msg, String data) throws Exception{
 
 		MobileReturn ret = new MobileReturn();
 

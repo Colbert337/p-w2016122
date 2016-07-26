@@ -95,7 +95,7 @@
 									<th onclick="orderBy(this,'deal_type');commitForm();" id="deal_type_order">交易类型</th>
 									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">运输公司编号</th>
-									<th onclick="orderBy(this,'debit_account');commitForm();" id="debit_account_order">个人账号</th>
+									<th onclick="orderBy(this,'user_name');commitForm();" id="debit_account_order">个人账号</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 								</tr>
@@ -119,7 +119,7 @@
 									<td><s:Code2Name mcode="${list.deal_type}" gcode="ORDER_DEAL_TYPE"></s:Code2Name></td>
 									<td>${list.transportion_name}</td>
 									<td>${list.creditAccount}</td>
-									<td>${list.debit_account}</td>
+									<td>${list.user_name}</td>
 									<td>${list.cash}</td>
 									<td>${list.operator}</td>
 								</tr>

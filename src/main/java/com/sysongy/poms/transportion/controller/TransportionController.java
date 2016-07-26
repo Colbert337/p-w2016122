@@ -599,9 +599,9 @@ public class TransportionController extends BaseContoller{
             		String order_type;
             		String deal_number = tmpMap.get("deal_number").toString();
             		String order_date = tmpMap.get("order_date").toString();
-            		String is_discharge = tmpMap.get("is_discharge").toString()=="0"?"冲红":"消费";
+            		String is_discharge = tmpMap.get("is_discharge") == null?"":tmpMap.get("is_discharge").toString()=="0"?"冲红":"消费";
             		String cash = tmpMap.get("cash").toString();
-            		String credit_account = tmpMap.get("creditAccount").toString();
+            		String credit_account = tmpMap.get("creditAccount") == null?"":tmpMap.get("creditAccount").toString();
             		String channel = tmpMap.get("channel") == null?"":tmpMap.get("channel").toString();
             		String plates_number = tmpMap.get("plates_number").toString();
             		String remark = tmpMap.get("remark").toString();
