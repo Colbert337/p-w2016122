@@ -337,7 +337,6 @@ public class CRMCashServiceContoller {
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
                     return ajaxJson;
                 }
-
             } else {
                 record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
                 record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
@@ -373,7 +372,7 @@ public class CRMCashServiceContoller {
                 if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
                     sysDriverNew = convertSysDriver(record.getConsume_card());
                     mobilePhone = sysDriverNew.getMobilePhone();
-                    sysDriverNew.setMobilePhone("");
+                    sysDriverNew.setMobilePhone(record.getConsume_card());
                     sysDriverNew.setFullName("");
                 } else {
                     sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());

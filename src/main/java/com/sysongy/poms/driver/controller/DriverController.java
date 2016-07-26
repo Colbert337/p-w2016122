@@ -272,7 +272,7 @@ public class DriverController extends BaseContoller{
 			}
 			SysDriver driver = new SysDriver();
 			driver.setSysUserAccountId(accountid);
-			ret = this.queryDriverInfoList(this.driver ==null?new SysDriver():this.driver, map);
+			ret = this.queryDriverInfoList(this.driver ==null? new SysDriver():this.driver, map);
 			bean.setRetCode(100);
 			bean.setRetMsg("状态修改成功");
 			bean.setPageInfo(ret);

@@ -98,7 +98,7 @@
 											<span class="lbl"></span>
 										</label>
 									</td>
-									<td>${list.tcVehicleId}</td>
+									<td id="tcVehicleIdInfo" >${list.tcVehicleId}</td>
 								 	<td>${list.platesNumber}</td> 
 									<td>${list.fv.tf.fleetName}</td>
 									<td><s:Code2Name mcode="${list.stationId}" gcode="TRANSTION"></s:Code2Name></td>

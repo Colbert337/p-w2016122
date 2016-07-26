@@ -69,6 +69,8 @@ public class TransportionController extends BaseContoller{
 
 	private Transportion transportion;
 
+	private TcVehicle tcVehicle;
+
 	/**
 	 * 运输公司查询
 	 * @param map
@@ -774,7 +776,7 @@ public class TransportionController extends BaseContoller{
 
 	@RequestMapping("/Vehiclelist")
     public String queryVehiclelist(@ModelAttribute CurrUser currUser, TcVehicle vehicle, ModelMap map){
-		
+		this.tcVehicle = vehicle;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/vehicle_list";
 
@@ -788,10 +790,7 @@ public class TransportionController extends BaseContoller{
 		        	vehicle.setOrderby("created_date desc");
 				}
 		        vehicle.setStationId(stationId);
-
 				PageInfo<TcVehicle> pageinfo = tcVehicleService.queryVehicleList(vehicle);
-
-
 				List<TcVehicle> tcVehicles = pageinfo.getList();
 				List<TcVehicle> tcVehicleNews = new ArrayList<TcVehicle>();
 				for(TcVehicle tcVehicleInfo : tcVehicles){
@@ -826,7 +825,7 @@ public class TransportionController extends BaseContoller{
 	}
 
 	@RequestMapping("/unLockDriver")
-	public String unLockDriver(@RequestParam String tcVehicleId, ModelMap map)throws Exception {
+	public String unLockDriver(@ModelAttribute("currUser") CurrUser currUser, @RequestParam String tcVehicleId, ModelMap map)throws Exception {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/vehicle_list";
 		try {
@@ -836,7 +835,7 @@ public class TransportionController extends BaseContoller{
 			}
 			TcVehicle tcVehicle = new TcVehicle();
 			tcVehicle.setTcVehicleId(tcVehicleId);
-			//ret = this.queryDriverInfoList(this.driver ==null?new SysDriver():this.driver, map);
+			ret = this.queryVehiclelist(currUser, this.tcVehicle == null?new TcVehicle():this.tcVehicle, map);
 			bean.setRetCode(100);
 			bean.setRetMsg("状态修改成功");
 			bean.setPageInfo(ret);
