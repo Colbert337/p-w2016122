@@ -36,7 +36,7 @@
     </association>
     <association property="unitInfo" column="unit"
                  javaType="com.sysongy.poms.gastation.model.Gastation"
-                 select="com.sysongy.poms.gastation.dao.GastationMapper.selectByPrimaryKey">
+                 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryGasUnitTypeByMcode">
     </association>
   </resultMap>
 
