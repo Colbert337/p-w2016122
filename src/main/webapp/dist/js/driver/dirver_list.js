@@ -29,7 +29,7 @@ function addDriver(){
     countdown = 0;
     var obj = $("#sendMsgA");
     obj.removeAttr("disabled");
-    obj.attr("href","javascript:sendMessage()");
+    obj.attr("onclick","sendMessage()");
     obj.text("发送验证码");
 
     $("#driverModel").modal('show').on('hidden.bs.modal', function() {
@@ -41,12 +41,12 @@ function settime() {
     var obj = $("#sendMsgA");
     if (countdown == 0) {
         obj.removeAttr("disabled");
-        obj.attr("href","javascript:sendMessage()");
+        obj.attr("onclick","sendMessage()");
         obj.text("发送验证码");
         countdown = 60;
         return true
     } else {
-        obj.removeAttr("href");
+        obj.removeAttr("onclick");
         obj.attr("disabled",true);
         obj.text("重新发送(" + countdown + ")");
         countdown--;
@@ -64,6 +64,7 @@ function sendMessage(){
     if(mobilePhone == ""){
         return false;
     }else{
+        countdown=60;
         settime();
         $.ajax({
             url:"../crmCustomerService/web/sendMsg/api",
