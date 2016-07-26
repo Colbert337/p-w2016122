@@ -587,7 +587,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
         if(originalOrder.getOperatorTargetType().equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER)){
-            if(StringUtils.isEmpty(record.getCreditAccount())){
+            if(StringUtils.isEmpty(originalOrder.getCreditAccount())){
                 SysDriver sysDriver = driverService.queryDriverByPK(originalOrder.getDebitAccount());
                 originalOrder.setSysDriver(sysDriver);
             } else {
