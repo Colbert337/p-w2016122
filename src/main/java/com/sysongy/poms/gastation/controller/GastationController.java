@@ -459,7 +459,7 @@ public class GastationController extends BaseContoller{
 
 		try {
 				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
-					rowcount = service.updatedepositGastation(deposit, currUser.getUser().getUserName());
+					rowcount = service.updatedepositGastation(deposit, currUser.getUser().getSysUserId());
 				}
 
 				ret = this.queryAllGastationList2(map, this.gastation==null?new Gastation():this.gastation);

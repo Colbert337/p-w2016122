@@ -102,7 +102,7 @@
 									<c:if test="${currUser.userType == 5}">
 										<th onclick="orderBy(this,'deposit_type');commitForm();" id="deposit_type_order">转账方式</th>
 									</c:if>
-									<c:if test="${currUser.userType == 3}">
+									<c:if test="${currUser.userType == 1}">
 										<th onclick="orderBy(this,'deposit_type');commitForm();" id="deposit_type_order">充值方式</th>
 									</c:if>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th> 
@@ -131,7 +131,7 @@
 									<c:if test="${currUser.userType == 5}">
 										<td><s:Code2Name mcode="${list.depositType}" gcode="RECHARGE_TYPE"></s:Code2Name></td>
 									</c:if>
-									<c:if test="${currUser.userType == 3}">
+									<c:if test="${currUser.userType == 1}">
 										<td>后台充值</td>
 									</c:if>
 									<td>${list.operator}</td>

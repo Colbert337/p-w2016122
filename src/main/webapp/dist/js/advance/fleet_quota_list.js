@@ -227,6 +227,8 @@ function queryDriverInfo(index){
                 return false;
             }else if(data != null && data.checkedStatus == "2"){
                 $("#full_name_"+index).val(data.fullName).attr("data-sj-result","valid");
+                $("#mobile_phone_"+index).attr("data-sj-result","valid");
+                $("#amount_"+index).attr("data-sj-result","valid");
                 $("#sys_driver_id_"+index).val(data.sysDriverId);
                 $(".fleet-quota-error").text("");
                 return true;

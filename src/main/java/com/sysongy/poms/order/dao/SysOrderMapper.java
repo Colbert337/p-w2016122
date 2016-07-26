@@ -38,7 +38,21 @@ public interface SysOrderMapper {
    public Map querySumChargeByUserId(Map map);
    
    List<Map<String,Object>> queryRechargeReport(SysOrder record);
-    
+   
+   List<Map<String,Object>> queryRechargeReportTotal(SysOrder record);
+   
+   List<Map<String,Object>> queryRechargeReportDetail(SysOrder record);
+   
+   List<Map<String,Object>> queryRechargeReportDetail2(SysOrder record);
+   
+   List<Map<String,Object>> queryRechargeDriverReport(SysOrder record);
+   
+   List<Map<String,Object>> queryRechargeDriverReportTotal(SysOrder record);
+   
+   List<Map<String,Object>> queryTransportionReport(SysOrder record);
+   
+   List<Map<String,Object>> queryTransportionReportTotal(SysOrder record);
+   
     /**
      * 查询某个用户在start_date之后，有没有产生消费
      * 用于在用户充红的时候判断能否充红。

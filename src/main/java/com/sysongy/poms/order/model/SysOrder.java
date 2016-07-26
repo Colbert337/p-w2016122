@@ -72,10 +72,20 @@ public class SysOrder extends BaseModel{
     private Transportion transportion;
 
     private Usysparam chargeTypeInfo;
+    
+    private SysOrderDeal order_deal;
 
     private String startDate;
 
     private String endDate;
+
+	public SysOrderDeal getOrder_deal() {
+		return order_deal;
+	}
+
+	public void setOrder_deal(SysOrderDeal order_deal) {
+		this.order_deal = order_deal;
+	}
 
 	public String getDischarge_reason() {
 		return discharge_reason;

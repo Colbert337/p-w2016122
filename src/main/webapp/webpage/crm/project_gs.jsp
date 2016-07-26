@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +11,7 @@
 	<title>司集云平台</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
+    <link type="image/x-icon" href="<%=basePath %>/common/favicon.ico" rel="shortcut icon" />
 	<link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/jquery.fullPage.css">
     <link rel="stylesheet" href="css/fontello.css">
@@ -150,13 +155,13 @@
                                 <div class="col-sm-4">
                                     <div class="key-item">
                                         <span class="icon icon-lng"></span>
-                                        <a href="">
-                                            我是加注站
+                                        <a href="login_gs.jsp">
+                                            已有账号登录
                                         </a>
                                     </div>
-                                    <a class="key-item-xs" href="">
+                                    <a class="key-item-xs" href="login_gs.jsp">
                                         <span class="icon icon-lng"></span>
-                                        我是加注站
+                                        已有账号登录
                                     </a>
                                 </div>
                                 <div class="col-sm-4">

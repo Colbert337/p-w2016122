@@ -2,7 +2,7 @@
 
 	window.onload = setCurrentPage();
 	var listOptions ={
-		url:'../web/transportion/queryRechargeReport',
+		url:'../web/transportion/queryTransportionReport',
 		type:'post',
 		dataType:'html',
 		success:function(data){
@@ -28,23 +28,8 @@
 		$("#formgastation").ajaxSubmit(listOptions);
 	}
 	
-	function showDetail(order_id,order_type,cash){
-		$.ajax({
-			type: "POST",
-			url: '../web/transportion/queryRechargeReportDetail?order_id='+order_id+'&order_type='+order_type+'&cash='+cash,
-			dataType: 'text',
-			success: function(data){
-				$("#main").html(data);
-				$('[data-rel="tooltip"]').tooltip();
-			},
-			error:function(){
-				bootbox.alert('加载页面时出错！');
-			}
-		});
-	}
-	
 	function init(){
-		loadPage('#main', '../web/transportion/queryRechargeReport');
+		loadPage('#main', '../web/transportion/queryTransportionReport');
 	}
 
 

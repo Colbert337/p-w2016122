@@ -63,4 +63,10 @@ public interface OrderDealService {
      * @return
      */
     PageInfo<Map<String, Object>> queryRechargeList(SysOrder record);
+    /**
+     * 查询运输公司充值列表
+     * @param record
+     * @return
+     */
+    List<Map<String, Object>> queryRechargeListCount(SysOrder record);
 }

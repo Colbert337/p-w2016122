@@ -8,11 +8,11 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/transportion/transportion_rechargereport.js"></script>
+<script src="<%=basePath %>/dist/js/sysparam/driver_rechargereport.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation" action="<%=basePath%>/web/transportion/consumeReport">
+	<form id="formgastation" action="<%=basePath%>/web/driver/consumeReport">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -21,7 +21,7 @@
 
 					<div class="page-header">
 						<h1>
-							消费明细
+							个人司机消费
 						</h1>
 					</div>
 					
@@ -33,10 +33,6 @@
 								<option value="0">消费</option>
 								<option value="1">冲红</option>
 							</select>
-						</div>
-						<div class="item">
-							<label>车队名称/车牌号：</label>
-							<input type="text" name="sysDriver.plateNumber" placeholder="车队名称/车牌号"  maxlength="20" value="${sysOrder.sysDriver.plateNumber}"/>
 						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
@@ -93,11 +89,12 @@
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
-									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">运输公司编号</th>
+									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
+									<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
 									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
-									<th onclick="orderBy(this,'plates_number');commitForm();" id="plates_number_order">车牌号</th>
+									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">管理运输公司</th>
 									<th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th>
-									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">操作人</th>
+									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 									<th>商品详情</th>
 								</tr>
 							</thead>
@@ -122,11 +119,12 @@
 										<c:if test="${list.is_discharge == 1}">冲红</c:if>
 									</td>
 									<td>${list.cash}</td>
-									<td>${list.creditAccount}</td>
-									<td>${list.channel}</td>
-									<td>${list.plates_number}</td>
-									<td>${list.remark}</td>
 									<td>${list.user_name}</td>
+									<td>${list.channel_number}</td>
+									<td>${list.channel}</td>
+									<td>${list.transportion_name}</td>
+									<td>${list.remark}</td>
+									<td>${list.operator}</td>
 									<td class="text-center">
 										<a class="" href="javascript:void(0);" title="查看明细" data-rel="tooltip">
 											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showDetail('${list.order_id}','${list.order_type}','${list.cash}');"></i>
