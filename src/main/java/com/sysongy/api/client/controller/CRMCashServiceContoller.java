@@ -645,18 +645,18 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-        if(sysOrderDeal.getOperator().equalsIgnoreCase
-                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL)){
+        if((sysOrderDeal.getOperator() != null) && (sysOrderDeal.getOperator().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
             sysOrderDeal.setOperator(null);
         }
 
-        if(sysOrderDeal.getDealType().equalsIgnoreCase
-                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL)){
+        if((sysOrderDeal.getDealType() != null) && (sysOrderDeal.getDealType().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
             sysOrderDeal.setDealType(null);
         }
 
-        if(sysOrderDeal.getGoodType().equalsIgnoreCase
-                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL)){
+        if((sysOrderDeal.getGoodType() != null) && (sysOrderDeal.getGoodType().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
             sysOrderDeal.setGoodType(null);
         }
 
@@ -788,8 +788,8 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
-        if(sysOrderGoodsForCRMReport.getGoodsType().equalsIgnoreCase
-                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL)){
+        if((sysOrderGoodsForCRMReport.getGoodsType() != null) && (sysOrderGoodsForCRMReport.getGoodsType().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
             sysOrderGoodsForCRMReport.setGoodsType(null);
         }
 
