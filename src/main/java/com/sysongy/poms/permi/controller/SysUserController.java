@@ -351,7 +351,7 @@ public class SysUserController extends BaseContoller{
 		user.setSysUserId(sysUserId);
 		user.setPassword(password);
 
-		int resultVal = sysUserService.updateUser(user);
+		int resultVal = sysUserService.updateUserInfo(user);
 
 		return resultVal+"";
 	}
