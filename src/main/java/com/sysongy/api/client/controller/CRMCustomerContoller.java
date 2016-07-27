@@ -602,6 +602,8 @@ public class CRMCustomerContoller {
 
             if(StringUtils.isNotEmpty(sysDriver.getPayCode())){
                 orgSysDriver.setPayCode(sysDriver.getPayCode());
+            } else {
+                orgSysDriver.setCheckedStatus("1");
             }
 
             if(StringUtils.isNotEmpty(sysDriver.getMobilePhone())){
@@ -611,8 +613,7 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getFullName())){
                 orgSysDriver.setFullName(sysDriver.getFullName());
             }
-
-            orgSysDriver.setCheckedStatus("1");
+            
             int renum = driverService.saveDriver(orgSysDriver, "update");
             if(renum > 0){
                 return orgSysDriver;
