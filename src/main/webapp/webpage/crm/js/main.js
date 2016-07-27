@@ -86,5 +86,40 @@ $(function(){
 	if($("#table").length){
 		$("#table").searchable();
 	}
+
+	if($("#login").length){
+		$('#login').validate({
+
+			/* 设置验证规则 */
+			rules: {
+				userName: {
+					required: true,
+					rangelength: [3, 20]
+				},
+				password: {
+					required: true,
+					rangelength: [6, 16]
+				}
+			},
+
+			/* 设置错误信息 */
+			messages: {
+				userName: {
+					required: "请填写用户名",
+					rangelength: "用户名需由3-20个字符（数字、字母、下划线）组成！"
+				},
+				password: {
+					required: "请填写密码",
+					rangelength: "密码需由6-16个字符（数字、字母、下划线）组成！"
+				}
+			},
+
+			/*错误提示位置*/
+			errorPlacement: function (error, element) {
+				error.appendTo(element.siblings("div"));
+			}
+
+		});
+	}
 	
 });
