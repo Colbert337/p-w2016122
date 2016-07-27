@@ -404,6 +404,11 @@ nav {
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
+.form-item-error label {
+	font-weight: normal;
+	color: #f00;
+	margin-top: 10px;
+}
 
 .app {
 	text-align: center;
@@ -753,6 +758,17 @@ nav {
 	}
 	.slogan .sicon {
 		display: none;
+	}
+	.ys1 .slogan,
+	.ys2 .slogan {
+		color: #fff;
+	}
+	.ys1 .slogan .list,
+	.ys2 .slogan .list {
+		background-color: #56777e;
+		opacity: 0.77;
+		border-radius: 6px;
+		padding: 6px 10px;
 	}
 	.squares {
 		width: 100%;

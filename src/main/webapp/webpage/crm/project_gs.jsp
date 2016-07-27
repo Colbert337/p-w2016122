@@ -28,11 +28,11 @@
             <div class="container-fluid wrap">
                 <div class="clearfix">
                     <div class="slogan">
-                        <h1>加气市场竞争激烈，销量<br>忽<span>高</span>忽低<span>不稳定</span></h1>
+                        <h1>加气市场竞争激烈，销量<br>忽<span>高</span>忽低<span>不稳定</span>？</h1>
                         <ul class="list">
-                            <li>来来往往这么多人，哪些客户能成为常客？</li>
-                            <li>气站在做优惠活动，怎么让司机都知道？</li>
-                            <li>销售任务重，怎样增长销售业绩？</li>
+                            <li>怎么把客户成为常客</li>
+                            <li>气站在做优惠活动，怎么让更多的司机都知道</li>
+                            <li>销售任务重，怎样增长销售业绩</li>
                         </ul>
                         <span class="sicon"></span>
                     </div>
@@ -42,7 +42,7 @@
                         <div class="squares">
                             <div class="inner">
                                 <div class="icon icon-hand-focus"></div>
-                                <div class="text">帮建客户群，营销人员手把手教导推广</div>
+                                <div class="text">司集帮您构建互联网化的营销体系</div>
                             </div>
                             <div class="bg-opacity"></div>
                         </div>
@@ -51,7 +51,7 @@
                         <div class="squares">
                             <div class="inner">
                                 <span class="icon icon-crm"></span>
-                                <div class="text">客户信息管理，客户信息一目了然</div>
+                                <div class="text">营销人员手把手教导推广客户</div>
                             </div>
                             <div class="bg-opacity"></div>
                         </div>
@@ -60,7 +60,7 @@
                         <div class="squares">
                             <div class="inner">
                                 <span class="icon icon-see-film"></span>
-                                <div class="text">加入司集，数十万司机都是你的客户</div>
+                                <div class="text">共享100000+LNG司机，都是你的客户</div>
                             </div>
                             <div class="bg-opacity"></div>
                         </div>
@@ -73,10 +73,10 @@
             <div class="container-fluid wrap">
                 <div class="clearfix">
                     <div class="slogan">
-                        <h1>加气站位置偏，来加气的车辆<span>少</span>，怎么破</h1>
+                        <h1>加气站位置偏，来加气的车辆<span>少</span>，怎么破？</h1>
                         <ul class="list">
-                            <li>传统导航气站信息不标注。</li>
-                            <li>传统导航气站信息不完整，标识错误改的慢。</li>
+                            <li>传统导航气站信息位置不精确，站属性不准确</li>
+                            <li>传统导航气站软件使用不方便，无推广，用户少</li>
                         </ul>
                         <span class="sicon"></span>
                     </div>
@@ -87,7 +87,7 @@
                             <div class="squares">
                                 <div class="inner">
                                     <span class="icon icon-nav-scan"></span>
-                                    <div class="text">专业的气站导航引导司机</div>
+                                    <div class="text">专业的气站导航准确引导司机 </div>
                                 </div>
                                 <div class="bg-opacity"></div>
                             </div>
@@ -96,7 +96,7 @@
                             <div class="squares">
                                 <div class="inner">
                                     <span class="icon icon-extension"></span>
-                                    <div class="text">运营人员定期推广气站</div>
+                                    <div class="text">100000+LNG司机轻松到站</div>
                                 </div>
                                 <div class="bg-opacity"></div>
                             </div>
@@ -156,12 +156,12 @@
                                     <div class="key-item">
                                         <span class="icon icon-lng"></span>
                                         <a href="login_gs.jsp">
-                                            已有账号登录
+                                            登录加注站
                                         </a>
                                     </div>
                                     <a class="key-item-xs" href="login_gs.jsp">
                                         <span class="icon icon-lng"></span>
-                                        已有账号登录
+                                        登录加注站
                                     </a>
                                 </div>
                                 <div class="col-sm-4">

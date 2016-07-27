@@ -30,10 +30,9 @@
                     <div class="slogan">
                         <h1>市场上气站<span>太多</span>，合作协议<span>不好谈</span>，又麻烦</h1>
                         <ul class="list">
-                            <li>气站挨家挨户谈合作，优惠不稳定心好累。加入司集，全国上百家气站享受优惠价。</li>
-                            <li>财务管理繁琐，各家气站结账周期不同每天跑断腿，发票难开。</li>
-                            <li>油气质量难以一一验证，无法保障优品质量。</li>
-                            <li>每家气站都得交押金，资金周转率低。</li>
+                            <li>气站谈合作，优惠不稳定，心好累</li>
+                            <li>气品质量难以一一验证，无法保证气品质量</li>
+                            <li>每家气站都得交押金，资金周转率低</li>
                         </ul>
                         <span class="sicon"></span>
                     </div>
@@ -44,7 +43,7 @@
                             <div class="squares">
                                 <div class="inner">
                                     <span class="icon icon-trend"></span>
-                                    <div class="text">加入司集，财务周期统一，发票随时开</div>
+                                    <div class="text">加入司集，享受全国知名上百家LNG气站优惠价</div>
                                 </div>
                                 <div class="bg-opacity"></div>
                             </div>
@@ -69,8 +68,8 @@
                     <div class="slogan">
                         <h1>车辆<span>管理难</span>，车在外军令有所不受</h1>
                         <ul class="list">
-                            <li>外出车辆身在何地无法监管，不放心。</li>
-                            <li>外出车辆加气价格靠发票，留有猫腻不放心。</li>
+                            <li>外出车辆身不放心</li>
+                            <li>外出车辆加气价格、气品模糊</li>
                         </ul>
                         <span class="sicon"></span>
                     </div>
@@ -90,7 +89,7 @@
                             <div class="squares">
                                 <div class="inner">
                                     <span class="icon icon-phone"></span>
-                                    <div class="text">加气价格数量数据线上统计，直观放心</div>
+                                    <div class="text">各种数据线上统计，直观放心</div>
                                 </div>
                                 <div class="bg-opacity"></div>
                             </div>
@@ -109,12 +108,12 @@
                                     <div class="key-item">
                                         <span class="icon icon-lng"></span>
                                         <a href="login_tc.jsp">
-                                            已有账号登录
+                                            登录运输公司
                                         </a>
                                     </div>
                                     <a class="key-item-xs" href="login_tc.jsp">
                                         <span class="icon icon-lng"></span>
-                                        已有账号登录
+                                        登录运输公司
                                     </a>
                                 </div>
                                 <div class="col-sm-4">
