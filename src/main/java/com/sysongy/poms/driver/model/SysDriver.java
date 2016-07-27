@@ -42,6 +42,10 @@ public class SysDriver extends BaseModel{
 
     private String identityCard;
 
+    private String avatarS;
+
+    private String avatarB;
+
     private String cardId;
 
     private GasCard cardInfo;
@@ -419,5 +423,21 @@ public class SysDriver extends BaseModel{
 
     public void setIsLocked(int isLocked) {
         this.isLocked = isLocked;
+    }
+
+    public String getAvatarS() {
+        return avatarS;
+    }
+
+    public void setAvatarS(String avatarS) {
+        this.avatarS = avatarS;
+    }
+
+    public String getAvatarB() {
+        return avatarB;
+    }
+
+    public void setAvatarB(String avatarB) {
+        this.avatarB = avatarB;
     }
 }

@@ -317,4 +317,42 @@ public class SysUserController extends BaseContoller{
 		return userList;
 	}
 
+	/**
+	 * 判断用户密码是否正确
+	 * @return
+	 */
+	@RequestMapping("/info/isPassword")
+	@ResponseBody
+	public JSONObject queryUserByPassword(@ModelAttribute CurrUser currUser,@RequestParam String password, ModelMap map){
+		String sysUserId = currUser.getUserId();
+		JSONObject json = new JSONObject();
+		Map<String, Object> userMap = sysUserService.queryUserMapByUserId(sysUserId);
+		password = Encoder.MD5Encode(password.getBytes());
+
+		if(userMap.get("password") != null && password.equals(userMap.get("password").toString())){
+			json.put("valid",true);
+		}else{
+			json.put("valid",false);
+		}
+		return json;
+	}
+
+	/**
+	 * 修改用户密码
+	 * @return
+	 */
+	@RequestMapping("/update/password")
+	@ResponseBody
+	public String updateUserPasswordByUserId(@ModelAttribute CurrUser currUser,@RequestParam String password, ModelMap map){
+		String sysUserId = currUser.getUserId();
+		password = Encoder.MD5Encode(password.getBytes());
+
+		SysUser user = new SysUser();
+		user.setSysUserId(sysUserId);
+		user.setPassword(password);
+
+		int resultVal = sysUserService.updateUser(user);
+
+		return resultVal+"";
+	}
 }
