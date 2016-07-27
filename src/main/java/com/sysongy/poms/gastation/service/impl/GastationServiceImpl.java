@@ -323,6 +323,8 @@ public class GastationServiceImpl implements GastationService {
 			   }
 			   sysPrepay.setRemark(remark);
 			   sysPrepayMapper.insert(sysPrepay);
+		   }else{
+			   throw new Exception("此订单的操作发起者不是加注站。");
 		   }
 		   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
