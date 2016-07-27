@@ -645,6 +645,21 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        if(sysOrderDeal.getOperator().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL)){
+            sysOrderDeal.setOperator(null);
+        }
+
+        if(sysOrderDeal.getDealType().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL)){
+            sysOrderDeal.setDealType(null);
+        }
+
+        if(sysOrderDeal.getGoodType().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL)){
+            sysOrderDeal.setGoodType(null);
+        }
+
         List<SysOrderDeal> sysOrderDeals = orderDealService.queryOrderDealCRMs(sysOrderDeal);
         if((sysOrderDeals == null) || (sysOrderDeals.size() == 0)){
             ajaxJson.setSuccess(false);
@@ -771,6 +786,11 @@ public class CRMCashServiceContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("起始时间或终止时间为空！！！" );
             return ajaxJson;
+        }
+
+        if(sysOrderGoodsForCRMReport.getGoodsType().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL)){
+            sysOrderGoodsForCRMReport.setGoodsType(null);
         }
 
         List<SysOrderGoodsForCRMReport> sysOrderGoodsForCRMReports =

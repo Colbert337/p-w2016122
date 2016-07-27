@@ -23,10 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @Controller
 @RequestMapping("/crmBaseService")
@@ -67,8 +64,14 @@ public class CRMBaseContoller {
             return ajaxJson;
         }
         List<Usysparam> usysparamInfo = service.queryCardTypeByMcodeAndScode(usysparam);
+        List<Usysparam> usysparamInfos = new ArrayList<Usysparam>();
+        Usysparam usysparamNew = new Usysparam();
+        usysparamNew.setMname(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
+        usysparamNew.setMcode(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
+        usysparamInfos.add(usysparamNew);
+        usysparamInfos.addAll(usysparamInfo);
         Map<String, Object> attributes = new HashMap<String, Object>();
-        attributes.put("usysparamInfos", usysparamInfo);
+        attributes.put("usysparamInfos", usysparamInfos);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
@@ -120,6 +123,28 @@ public class CRMBaseContoller {
             e.printStackTrace();
         }
         ajaxJson.setObj(show_path);
+        return ajaxJson;
+    }
+
+    @ResponseBody
+    @RequestMapping("/web/queryParamListForCRMReport")
+    public AjaxJson queryParamListForCRMReport(HttpServletRequest request, HttpServletResponse response, Usysparam usysparam) throws Exception{
+        AjaxJson ajaxJson = new AjaxJson();
+        if((usysparam == null) || (!StringUtils.isNotEmpty(usysparam.getGcode()))){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("Gcode为空！！！");
+            return ajaxJson;
+        }
+        List<Usysparam> usysparamInfo = service.queryUsysparamByGcode(usysparam.getGcode());
+        List<Usysparam> usysparamInfos = new ArrayList<Usysparam>();
+        Usysparam usysparamNew = new Usysparam();
+        usysparamNew.setMname(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
+        usysparamNew.setMcode(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
+        usysparamInfos.add(usysparamNew);
+        usysparamInfos.addAll(usysparamInfo);
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("usysparamInfos", usysparamInfos);
+        ajaxJson.setAttributes(attributes);
         return ajaxJson;
     }
 }

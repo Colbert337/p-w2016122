@@ -235,4 +235,37 @@ public class CRMUserContoller {
         }
         return ajaxJson;
     }
+
+    @RequestMapping(value = {"/web/queryUsersForCRMReport"})
+    @ResponseBody
+    public AjaxJson queryUsersForCRMReport(HttpServletRequest request, HttpServletResponse response, SysUser sysUser){
+        AjaxJson ajaxJson = new AjaxJson();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            if(sysUser.getStationId() == null){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("气站为空，请检查输入参数！");
+                return ajaxJson;
+            }
+            List<SysUser> sysUsersNew = new ArrayList<SysUser>();
+            List<SysUser> sysUsers = sysUserService.queryUserList(sysUser);
+            SysUser sysUserNew = new SysUser();
+            sysUserNew.setSysUserId(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
+            sysUserNew.setUserName(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
+            sysUserNew.setMobilePhone(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
+            sysUserNew.setRealName(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
+            sysUsersNew.add(sysUserNew);
+            sysUsersNew.addAll(sysUsers);
+            attributes.put("SysUsers",sysUsers);
+            ajaxJson.setAttributes(attributes);
+            ajaxJson.setSuccess(true);
+            ajaxJson.setMsg("查询成功！");
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryUsersForCRMReport error： " + e);
+        }
+        return ajaxJson;
+    }
 }

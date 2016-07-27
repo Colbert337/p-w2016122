@@ -621,4 +621,8 @@ public class GlobalConstant {
 		public static final String CONSUME_TYPE_CARD = "1";
 		public static final String CONSUME_TYPE_ACCOUNT = "0";
 	}
+
+	public interface Query_Condition {
+		public static final String QUERY_CONDITION_ALL = "ALL";
+	}
 }
