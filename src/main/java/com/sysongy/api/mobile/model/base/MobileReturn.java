@@ -6,7 +6,7 @@ public class MobileReturn {
 	
 	private String msg;
 	
-	private String data;
+	private Data data;
 	
 	public String getError() {
 		return error;
@@ -20,10 +20,10 @@ public class MobileReturn {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	public String getData() {
+	public Data getData() {
 		return data;
 	}
-	public void setData(String data) {
+	public void setData(Data data) {
 		this.data = data;
 	}
 	

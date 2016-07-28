@@ -174,6 +174,11 @@ public class SysUserServiceImpl implements SysUserService{
         return sysUserMapper.updateUser(user);
     }
 
+    @Override
+    public int updateUserInfo(SysUser user) {
+        return sysUserMapper.updateUser(user);
+    }
+
     /**
      * 修改用户状态
      * @param user 用户信息

@@ -12,6 +12,8 @@ import com.sysongy.tcms.advance.model.TcFleet;
 public interface DriverService {
 	
 	public PageInfo<SysDriver> queryDrivers(SysDriver obj) throws Exception;
+	
+	public List<SysDriver> queryeSingleList(SysDriver record) throws Exception;
 
 	public PageInfo<SysDriver> querySingleDriver(SysDriver obj) throws Exception;
 
