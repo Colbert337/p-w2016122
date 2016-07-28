@@ -92,7 +92,7 @@
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
 									<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
 									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
-									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">管理运输公司</th>
+									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">关联运输公司</th>
 									<th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 									<th>商品详情</th>

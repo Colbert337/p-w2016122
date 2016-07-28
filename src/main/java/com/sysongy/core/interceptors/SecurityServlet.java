@@ -52,13 +52,12 @@ public class SecurityServlet extends HttpServlet implements Filter {
              if(url!=null && !url.equals("") && ( url.indexOf("Login")<0 && url.indexOf("login")<0 )) {
             	 if(!"true".equals(isdownloadreport)){
             		 response.setStatus(911);
-            		 return;
 //            		 throw new ServletException("need login");
             	 }else{
-            		 //response.setHeader("Location ", request.getContextPath());
-            		 response.sendRedirect("test.jsp");
+            		 response.sendRedirect(request.getContextPath());
             		 //response.setStatus(911); 
             	 }
+            	 return;
              }                
          }    
          arg2.doFilter(request, response);     

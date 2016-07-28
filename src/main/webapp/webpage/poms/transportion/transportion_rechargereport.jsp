@@ -36,8 +36,8 @@
 							</select>
 						</div>
 						<div class="item">
-							<label>车队名称/车牌号：</label>
-							<input type="text" name="sysDriver.plateNumber" placeholder="车队名称/车牌号"  maxlength="20" value="${sysOrder.sysDriver.plateNumber}"/>
+							<label>车牌号：</label>
+							<input type="text" name="sysDriver.plateNumber" placeholder="车牌号"  maxlength="20" value="${sysOrder.sysDriver.plateNumber}"/>
 						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
@@ -95,6 +95,7 @@
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">运输公司编号</th>
+									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
 									<th onclick="orderBy(this,'plates_number');commitForm();" id="plates_number_order">车牌号</th>
 									<th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th>
@@ -124,6 +125,7 @@
 									</td>
 									<td>${list.cash}</td>
 									<td>${list.creditAccount}</td>
+									<td>${list.transportion_name}</td>
 									<td>${list.channel}</td>
 									<td>${list.plates_number}</td>
 									<td>${list.remark}</td>

@@ -37,8 +37,14 @@
 						</div> --%>
 						<div class="item">
 							<label>订单编号：</label>
-							<input type="text" name="orderNumber" placeholder="车队名称/车牌号"  maxlength="20" value="${sysOrder.orderNumber}"/>
+							<input type="text" name="orderNumber" placeholder="请输入订单编号"  maxlength="20" value="${sysOrder.orderNumber}"/>
 						</div>
+						
+						<div class="item">
+						    <label>运输公司编号：</label>
+							<input type="text" name="creditAccount" placeholder="请输入运输公司编号" maxlength="10" value="${sysOrder.creditAccount}"/>
+						</div>
+						
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
@@ -49,11 +55,6 @@
 								<input type="text" class="" name="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
 							</div>			
 						</div>
-						
-						<%--<div class="item">
-						    <label>充值渠道：</label>
-							<input type="text" name="deal_number" placeholder="充值渠道"  maxlength="20" value="${order.channel}"/>
-						</div>--%>
 
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">

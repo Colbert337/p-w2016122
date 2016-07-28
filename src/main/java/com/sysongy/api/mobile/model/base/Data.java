@@ -18,7 +18,15 @@ public class Data {
 	
 	private String cumulativeReturn;//累计返现
 	
-	private String photoUrl;
+	private String imageUrl;
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 
 	public String getNick() {
 		return nick;
@@ -66,14 +74,6 @@ public class Data {
 
 	public void setCumulativeReturn(String cumulativeReturn) {
 		this.cumulativeReturn = cumulativeReturn;
-	}
-
-	public String getPhotoUrl() {
-		return photoUrl;
-	}
-
-	public void setPhotoUrl(String photoUrl) {
-		this.photoUrl = photoUrl;
 	}
 
 	public String getVerificationCode() {
