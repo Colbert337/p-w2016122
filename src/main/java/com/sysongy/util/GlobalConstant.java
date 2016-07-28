@@ -309,7 +309,7 @@ public class GlobalConstant {
 		public static final String CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="132";//首充返现
 		public static final String CHARGE_TO_DRIVER_CASHBACK ="133";//个人返现
 		public static final String DISCHARGE_TO_DRIVER_CHARGE ="134";//充值冲红
-		public static final String DISCHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="135";//首次充值返现冲红
+		public static final String DISCHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK ="135";//首次充值返现冲红（只有个人充值）
 		public static final String DISCHARGE_TO_DRIVER_CASHBACK ="136";//返现冲红
 		public static final String CHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY ="137";//加注站预付款余额扣除
 		public static final String DISCHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY ="138";//加注站预付款余额冲红
@@ -320,7 +320,7 @@ public class GlobalConstant {
 		public static final String CONSUME_DRIVER_DEDUCT ="221";//个人消费
 		public static final String DISCONSUME_DRIVER_DEDUCT ="222";//冲红
 		public static final String CONSUME_TRANSPORTION_DEDUCT ="211";//车队消费
-		public static final String DISCONSUME_TRANSPORTION_DEDUCT ="212";//转入
+		public static final String DISCONSUME_TRANSPORTION_DEDUCT ="212";//冲红
 		
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION ="311";//运输公司转出
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER_CASHBACK_TO_TRANSPORTION ="312";//运输公司转出
@@ -623,6 +623,6 @@ public class GlobalConstant {
 	}
 
 	public interface Query_Condition {
-		public static final String QUERY_CONDITION_ALL = "ALL";
+		public static final String QUERY_CONDITION_ALL = "全部";
 	}
 }

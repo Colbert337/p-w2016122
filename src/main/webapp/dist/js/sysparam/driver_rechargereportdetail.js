@@ -29,7 +29,7 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/transportion/queryRechargeReport');
+		loadPage('#main', '../web/driver/queryRechargeReport');
 	}
 
 
