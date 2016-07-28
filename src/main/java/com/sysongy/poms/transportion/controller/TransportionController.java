@@ -194,7 +194,7 @@ public class TransportionController extends BaseContoller{
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("sysOrder", sysOrder);
-			map.addAttribute("totalCash",total.getList().get(0).get("total"));
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -233,7 +233,7 @@ public class TransportionController extends BaseContoller{
 	            downLoadFileName = "转账明细_" + downLoadFileName;
 
 	            try {
-	                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+	            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
 	            } catch (UnsupportedEncodingException e1) {
 	                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
 	            }
@@ -249,13 +249,13 @@ public class TransportionController extends BaseContoller{
 	            		String order_number = tmpMap.get("order_number")==null?"":tmpMap.get("order_number").toString();
 	            		String order_type;
 	            		String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
-	            		String order_date = tmpMap.get("order_date").toString();
+	            		String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
 	            		String deal_type;
 	            		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
-	            		String creditAccount = tmpMap.get("creditAccount").toString();
+	            		String creditAccount = tmpMap.get("creditAccount")==null?"":tmpMap.get("creditAccount").toString();
 	            		String debit_account = tmpMap.get("debitAccount")==null?"":tmpMap.get("debitAccount").toString();
-	            		String cash = tmpMap.get("cash").toString();
-	            		String operator = tmpMap.get("operator").toString();
+	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+	            		String operator = tmpMap.get("operator")==null?"":tmpMap.get("operator").toString();
 
 
 	                    switch (tmpMap.get("order_type").toString()) {
@@ -333,7 +333,7 @@ public class TransportionController extends BaseContoller{
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("sysOrder", sysOrder);
-			map.addAttribute("totalCash",total.getList().get(0).get("total"));
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -584,7 +584,7 @@ public class TransportionController extends BaseContoller{
             downLoadFileName = "充值_" + downLoadFileName;
 
             try {
-                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));  
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
@@ -597,17 +597,17 @@ public class TransportionController extends BaseContoller{
             if(list != null && list.size() > 0){
             	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
             		 
-            		String order_number = tmpMap.get("order_number").toString();
+            		String order_number = tmpMap.get("order_number") == null?"":tmpMap.get("order_number").toString();
             		String order_type;
-            		String deal_number = tmpMap.get("deal_number").toString();
-            		String order_date = tmpMap.get("order_date").toString();
-            		String is_discharge = tmpMap.get("is_discharge") == null?"":tmpMap.get("is_discharge").toString()=="0"?"冲红":"消费";
-            		String cash = tmpMap.get("cash").toString();
+            		String deal_number = tmpMap.get("deal_number") == null?"":tmpMap.get("deal_number").toString();
+            		String order_date = tmpMap.get("order_date") == null?"":tmpMap.get("order_date").toString();
+            		String is_discharge = tmpMap.get("is_discharge") == null?"":"0".equals(tmpMap.get("is_discharge").toString())?"消费":"冲红";
+            		String cash = tmpMap.get("cash") == null?"":tmpMap.get("cash").toString();
             		String credit_account = tmpMap.get("creditAccount") == null?"":tmpMap.get("creditAccount").toString();
             		String channel = tmpMap.get("channel") == null?"":tmpMap.get("channel").toString();
-            		String plates_number = tmpMap.get("plates_number").toString();
-            		String remark = tmpMap.get("remark").toString();
-            		String user_name = tmpMap.get("user_name").toString();
+            		String plates_number = tmpMap.get("plates_number") == null?"":tmpMap.get("plates_number").toString();
+            		String remark = tmpMap.get("remark") == null?"":tmpMap.get("remark").toString();
+            		String user_name = tmpMap.get("user_name") == null?"":tmpMap.get("user_name").toString();
 
 
                     switch (tmpMap.get("order_type").toString()) {
@@ -1205,7 +1205,7 @@ public class TransportionController extends BaseContoller{
 			String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
 			downLoadFileName = "充值报表_" + downLoadFileName;
 			try {
-				response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+				response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));  
 			} catch (UnsupportedEncodingException e1) {
 				response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
 			}

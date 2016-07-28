@@ -28,12 +28,12 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>加注站编号:</label>
-							<input type="text" id="gsGasPrice.sysGasStationId" name="gsGasPrice.sysGasStationId" placeholder="输入加注站编号" maxlength="10" value="${gsGasPrice.sysGasStationId}"/>
+							<input type="text" id="gsGasPrice.sysGasStationId" name="sysGasStationId" placeholder="输入加注站编号" maxlength="10" value="${gsGasPrice.sysGasStationId}"/>
 						</div>
 						
 						<div class="item">
 							<label>气品类型:</label>
-							<select class="chosen-select" name="gsGasPrice.gasNum" >
+							<select class="chosen-select" name="gasNum" >
 								<s:option flag="true" gcode="CARDTYPE" form="gsGasPrice" field="gasNum" />
 							</select>
 						</div>
@@ -41,11 +41,11 @@
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>创建时间:</label>
-								<input type="text" class="" name="gsGasPrice.created_date_after" value="${gsGasPrice.created_date_after}" readonly="readonly"/>
+								<input type="text" class="" name="created_date_after" value="${gsGasPrice.created_date_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="gsGasPrice.created_date_before" value="${gsGasPrice.created_date_before}" readonly="readonly"/>
+								<input type="text" class="" name="created_date_before" value="${gsGasPrice.created_date_before}" readonly="readonly"/>
 							</div>
 						</div>
 

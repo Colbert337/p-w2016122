@@ -2,16 +2,26 @@ package com.sysongy.api.mobile.model.base;
 
 public class MobileParams {
 	
-	private String VersionCode;
+	private String versionCode;
+	
+	private String apiKey;
 	
 	private String detailParam;
 
 	public String getVersionCode() {
-		return VersionCode;
+		return versionCode;
 	}
 
 	public void setVersionCode(String versionCode) {
-		VersionCode = versionCode;
+		this.versionCode = versionCode;
+	}
+
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
 	}
 
 	public String getDetailParam() {

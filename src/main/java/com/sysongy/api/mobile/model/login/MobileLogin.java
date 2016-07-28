@@ -1,4 +1,4 @@
-package com.sysongy.api.mobile.model.Login;
+package com.sysongy.api.mobile.model.login;
 
 public class MobileLogin {
 	

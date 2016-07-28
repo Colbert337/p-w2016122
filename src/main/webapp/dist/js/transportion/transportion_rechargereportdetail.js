@@ -29,7 +29,7 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/driver/queryRechargeDriverReport');
+		loadPage('#main', '../web/transportion/queryRechargeReport');
 	}
 
 
