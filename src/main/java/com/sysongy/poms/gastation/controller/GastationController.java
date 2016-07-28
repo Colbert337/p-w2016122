@@ -162,7 +162,7 @@ public class GastationController extends BaseContoller{
             downLoadFileName = "预存款充值_" + downLoadFileName;
            
             try {
-                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+                response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));  
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }

@@ -514,7 +514,7 @@ public class DriverController extends BaseContoller{
             ExportUtil reportExcel = new ExportUtil();
 
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
-            downLoadFileName = "充值_" + downLoadFileName;
+            downLoadFileName = "个人司机消费_" + downLoadFileName;
 
             try {
                 response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));  

@@ -488,6 +488,9 @@
 	left join sys_user su on su.sys_user_id = so.operator 
 	where deal_type ='311'
 	<trim>
+      <if test="creditAccount != null &amp;&amp; creditAccount != ''" >
+        and so.credit_account = #{creditAccount, jdbcType=VARCHAR}
+      </if>
       <if test="order_deal != null &amp;&amp; order_deal.dealType != null &amp;&amp; order_deal.dealType != ''" >
         and sod.deal_type = #{order_deal.dealType, jdbcType=VARCHAR}
       </if>
@@ -495,7 +498,8 @@
         and so.order_number = #{orderNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
-		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      </if>
+		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+	  </if>
     </trim>
   </select>
   
@@ -521,18 +525,19 @@
   </select>
   
   <select id="queryRechargeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-	select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,so.channel,tv.plates_number,sod.remark,su.user_name
+	select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id 
 	left join tc_vehicle tv on so.consume_card=tv.card_no 
 	inner join sys_user su on so.operator = su.sys_user_id
+	left join sys_transportion st on so.credit_account = st.sys_transportion_id
 	where 1=1 and so.order_type = '210'
      <trim>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
       </if>
       <if test="sysDriver != null &amp;&amp;sysDriver.plateNumber != null &amp;&amp; sysDriver.plateNumber != ''" >
-        and tv.plates_number = #{operatorSourceId, jdbcType=VARCHAR}
+        and tv.plates_number = #{sysDriver.plateNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
         and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -553,7 +558,7 @@
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
       </if>
       <if test="sysDriver != null &amp;&amp; sysDriver.plateNumber != null &amp;&amp; sysDriver.plateNumber != ''" >
-        and sd.plate_number = #{operatorSourceId, jdbcType=VARCHAR}
+        and sd.plate_number = #{sysDriver.plateNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
 		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      </if>
@@ -593,7 +598,7 @@
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
       </if>
       <if test="sysDriver != null &amp;&amp; sysDriver.plateNumber != null &amp;&amp; sysDriver.plateNumber != ''" >
-        and sd.plate_number = #{operatorSourceId, jdbcType=VARCHAR}
+        and sd.plate_number = #{sysDriver.plateNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
 		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      </if>
@@ -602,18 +607,19 @@
   </select>
   
    <select id="queryRechargeReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-  	select sum(cash) total from (select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,so.channel,tv.plates_number,sod.remark,su.user_name
+  	select sum(cash) total from (select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id 
 	left join tc_vehicle tv on so.consume_card=tv.card_no 
 	inner join sys_user su on so.operator = su.sys_user_id
+	left join sys_transportion st on so.credit_account = st.sys_transportion_id
 	where 1=1 and so.order_type = '210'
 	<trim>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
       </if>
       <if test="sysDriver != null &amp;&amp;sysDriver.plateNumber != null &amp;&amp; sysDriver.plateNumber != ''" >
-        and tv.plates_number = #{operatorSourceId, jdbcType=VARCHAR}
+        and tv.plates_number = #{sysDriver.plateNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
         and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')

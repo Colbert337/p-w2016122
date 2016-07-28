@@ -70,6 +70,8 @@ public class TransportionController extends BaseContoller{
 	private Transportion transportion;
 
 	private TcVehicle tcVehicle;
+	
+	private SysOrder sysOrder;
 
 	/**
 	 * 运输公司查询
@@ -310,6 +312,8 @@ public class TransportionController extends BaseContoller{
 	
 	@RequestMapping("/queryRechargeReport")
 	public String queryRechargeReport(ModelMap map, SysOrder sysOrder) throws Exception{
+		
+		this.sysOrder = sysOrder;
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_rechargereport";
@@ -581,7 +585,7 @@ public class TransportionController extends BaseContoller{
             ExportUtil reportExcel = new ExportUtil();
 
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
-            downLoadFileName = "充值_" + downLoadFileName;
+            downLoadFileName = "运输公司消费_" + downLoadFileName;
 
             try {
             	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));  

@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/transportion/transportion_rechargereportdetail.js"></script>
+<script src="<%=basePath %>/dist/js/driver/driver_rechargereportdetail.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
