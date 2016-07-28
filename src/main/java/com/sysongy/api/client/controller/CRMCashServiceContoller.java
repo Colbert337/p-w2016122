@@ -120,6 +120,12 @@ public class CRMCashServiceContoller {
             }
             Date curDate = new Date();
             record.setOrderDate(curDate);
+            Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
+            if(gastation != null){
+                record.setChannel(gastation.getGas_station_name());
+                record.setChannelNumber(gastation.getSys_gas_station_id());
+            }
+
             int nCreateOrder = orderService.insert(record, null);
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -128,15 +134,11 @@ public class CRMCashServiceContoller {
             }
 
             SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
+            recordNew.setGastation(gastation);
             String cashBack = orderDealService.selectCashBackByOrderID(record.getOrderId());
             recordNew.setCashBack(cashBack);
             SysDriver sysDriver = driverService.queryDriverByPK(record.getDebitAccount());
-            Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
-            if(gastation != null){
-                recordNew.setGastation(gastation);
-                record.setChannel(gastation.getGas_station_name());
-                record.setChannelNumber(gastation.getSys_gas_station_id());
-            }
+
             if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
                 recordNew.setSysDriver(sysDriver);
                 GasCard gasCard = gasCardService.selectByCardNoForCRM(sysDriver.getCardId());
@@ -367,6 +369,11 @@ public class CRMCashServiceContoller {
 
             Date curDate = new Date();
             record.setOrderDate(curDate);
+            Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
+            if(gastation != null){
+                record.setChannel(gastation.getGas_station_name());
+                record.setChannelNumber(gastation.getSys_gas_station_id());
+            }
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -375,12 +382,7 @@ public class CRMCashServiceContoller {
             }
 
             SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
-            Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
-            if(gastation != null){
-                recordNew.setGastation(gastation);
-                record.setChannel(gastation.getGas_station_name());
-                record.setChannelNumber(gastation.getSys_gas_station_id());
-            }
+            recordNew.setGastation(gastation);
 
             String mobilePhone = record.getSysDriver().getMobilePhone();
             if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
