@@ -93,7 +93,7 @@
         and full_name = #{fullName,jdbcType=VARCHAR}
       </if>
       <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
-        and mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+        and (mobile_phone = #{mobilePhone,jdbcType=VARCHAR} or full_name = #{mobilePhone,jdbcType=VARCHAR})
       </if>
       <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
         and checked_status = #{checkedStatus,jdbcType=VARCHAR}

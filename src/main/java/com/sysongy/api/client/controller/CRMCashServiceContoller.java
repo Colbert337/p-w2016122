@@ -390,18 +390,19 @@ public class CRMCashServiceContoller {
                     mobilePhone = sysDriverNew.getMobilePhone();
                     sysDriverNew.setMobilePhone(record.getConsume_card());
                     sysDriverNew.setFullName("");
+                    recordNew.setGasCard(record.getGasCard());
                 } else {
                     sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
+                    recordNew.setGasCard(sysDriverNew.getCardInfo());
                 }
                 recordNew.setSysDriver(sysDriverNew);
 
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
-            recordNew.setGasCard(record.getGasCard());
+
             recordNew.setCash(record.getCash());
             sendConsumeMessage(recordNew, mobilePhone);
-
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", recordNew);
             ajaxJson.setAttributes(attributes);
@@ -562,7 +563,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
         SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(originalOrder,
-                sysUserOperator.getSysUserId(), record.getDischarge_reason());
+                user.getSysUserId(), record.getDischarge_reason());
 
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){

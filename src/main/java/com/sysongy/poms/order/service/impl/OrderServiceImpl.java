@@ -261,7 +261,8 @@ public class OrderServiceImpl implements OrderService {
     	//设置为充红
     	dischargeOrder.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_YES);
     	//设置dischargeorderid，为原订单Id
-    	dischargeOrder.setDischargeOrderId(originalOrder.getOrderId()); 
+    	dischargeOrder.setDischargeOrderId(originalOrder.getOrderId());
+		dischargeOrder.setConsume_card(originalOrder.getConsume_card());
     	dischargeOrder.setConsume_cardInfo(originalOrder.getConsume_cardInfo());
     	//设置订单充红原因
     	dischargeOrder.setDischarge_reason(discharge_reason);
