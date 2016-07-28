@@ -76,7 +76,7 @@ public class SecurityServlet extends HttpServlet implements Filter {
 		SqlSessionFactory sessionFactory = (SqlSessionFactory) wac.getBean("sqlSessionFactory");
 		SqlSession session = sessionFactory.openSession();
 		SqlMapper sqlMapper = new SqlMapper(session);
-		String excuteSQL = "SELECT * FROM poms_web_v2_dev.sys_user where user_name=" +
+		String excuteSQL = "SELECT * FROM sys_user where user_name=" +
 				curUserName +
 				" and password=" +
 				curPassword +

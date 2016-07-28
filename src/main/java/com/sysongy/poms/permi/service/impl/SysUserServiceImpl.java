@@ -284,6 +284,7 @@ public class SysUserServiceImpl implements SysUserService{
         user.setIsAdmin(GlobalConstant.ADMIN_YES);
         String password = user.getPassword();
         String userName = user.getUserName();
+        user.setRealName("管理员");
         password = Encoder.MD5Encode(password.getBytes());
         user.setPassword(password);
 
