@@ -332,9 +332,15 @@ public class CRMCustomerContoller {
             aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
             aliShortMessageBean.setCode(checkCode.toString());
             aliShortMessageBean.setProduct("司集能源科技平台");
-            redisClientImpl.addToCache(sysDriver.getSysDriverId(), checkCode.toString(), 120);
 
             String msgType = request.getParameter("msgType");
+            String orderID = request.getParameter("orderID");
+            if(msgType.equalsIgnoreCase("reSetCode")){
+                redisClientImpl.addToCache(orderID, checkCode.toString(), 120);
+            } else {
+                redisClientImpl.addToCache(sysDriver.getSysDriverId(), checkCode.toString(), 120);
+            }
+
             if(msgType.equalsIgnoreCase("changePassword")){
                 AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
             } else if(msgType.equalsIgnoreCase("driverCharge")){
