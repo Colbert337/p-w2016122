@@ -37,6 +37,8 @@ public interface SysOrderMapper {
      */
    public Map querySumChargeByUserId(Map map);
    
+   List<Map<String,Object>> calcDriverCashBack(String driverid);
+   
    List<Map<String,Object>> queryRechargeReport(SysOrder record);
    
    List<Map<String,Object>> queryRechargeReportTotal(SysOrder record);

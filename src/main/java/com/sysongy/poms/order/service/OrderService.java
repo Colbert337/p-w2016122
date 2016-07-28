@@ -32,6 +32,8 @@ public interface OrderService {
 
     SysOrder selectByOrderGASID(SysOrder record);
     
+    List<Map<String,Object>> calcDriverCashBack(String driverid);
+    
     PageInfo<Map<String, Object>> queryRechargeReport(SysOrder record);
     
     PageInfo<Map<String, Object>> queryRechargeReportTotal(SysOrder record);

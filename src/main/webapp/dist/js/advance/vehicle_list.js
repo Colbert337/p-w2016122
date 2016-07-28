@@ -176,8 +176,8 @@ function saveVehicle(){
             type:'post',
             dataType:'html',
             success:function(data){
-                $("#modal-table").modal("show");
                 $("#main").html(data);
+                $("#modal-table").modal("show");
             },error: function(XMLHttpRequest, textStatus, errorThrown) {
                 bootbox.alert("操作失败！");
             }

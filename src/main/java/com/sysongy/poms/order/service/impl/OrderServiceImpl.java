@@ -1015,4 +1015,9 @@ public class OrderServiceImpl implements OrderService {
 	public List<Map<String, Object>> queryTcFleetMgList(SysOrder record) {
 		return sysOrderMapper.queryRechargeReport(record);
 	}
+
+	@Override
+	public List<Map<String,Object>> calcDriverCashBack(String driverid) {
+		return sysOrderMapper.calcDriverCashBack(driverid);
+	}
 }

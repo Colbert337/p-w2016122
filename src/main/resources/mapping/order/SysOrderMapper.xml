@@ -77,6 +77,7 @@
 	  <result column="order_date" property="order_date" jdbcType="TIMESTAMP" />
 	  <result column="is_discharge" property="is_discharge" jdbcType="VARCHAR" />
 	  <result column="cash" property="cash" jdbcType="DECIMAL" />
+	  <result column="cash_back" property="cash_back" jdbcType="DECIMAL" />
 	  <result column="credit_account" property="creditAccount" jdbcType="VARCHAR" />
 	  <result column="debit_account" property="debitAccount" jdbcType="VARCHAR" />
 	  <result column="channel" property="channel" jdbcType="VARCHAR" />
@@ -88,6 +89,7 @@
 	  <result column="channel_number" property="channel_number" jdbcType="VARCHAR" />
 	  <result column="operator" property="operator" jdbcType="VARCHAR" />
 	  <result column="transportion_name" property="transportion_name" jdbcType="VARCHAR" />
+	  
   </resultMap>
   
   <resultMap id="HenryTotalMap" type="java.util.Map" >
@@ -466,15 +468,22 @@
       </if>
     </trim>
   </select>
+ 	
+  <select id="calcDriverCashBack" resultMap="HenryResultMap" parameterType="java.lang.String" >
+    select sum(sod.cash_back) from sys_order so
+	inner join sys_order_deal sod on so.order_id = sod.order_id
+	where so.debit_account = #{0}
+	and sod.deal_type = '133'
+  </select>
   
   <select id="queryTransportionReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-    select so.order_number,so.order_type,sod.deal_type,sod.deal_number,so.order_date,so.credit_account,st.transportion_name,sd.user_name,so.cash,su.user_name as operator 
+    select so.order_number,so.order_type,sod.deal_type,sod.deal_number,so.order_date,so.credit_account,st.transportion_name,sd.user_name, so.cash,(select cash_back from sys_order_deal sod2 where order_id = so.order_id and deal_type = '312') cash_back,su.user_name as operator 
 	from sys_order so
 	left join sys_order_deal sod on so.order_id = sod.order_id
 	left join sys_transportion st on so.credit_account = st.sys_transportion_id
 	left join sys_driver sd on sd.sys_driver_id = so.debit_account
 	left join sys_user su on su.sys_user_id = so.operator 
-	where order_type ='310'
+	where deal_type ='311'
 	<trim>
       <if test="order_deal != null &amp;&amp; order_deal.dealType != null &amp;&amp; order_deal.dealType != ''" >
         and sod.deal_type = #{order_deal.dealType, jdbcType=VARCHAR}
@@ -488,13 +497,13 @@
   </select>
   
   <select id="queryTransportionReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-  	select sum(cash) total from (select so.order_number,so.order_type,sod.deal_type,sod.deal_number,so.order_date,so.credit_account,st.transportion_name,sd.user_name,so.cash,su.user_name as operator 
+  	select sum(cash) total from (select so.order_number,so.order_type,sod.deal_type,sod.deal_number,so.order_date,so.credit_account,st.transportion_name,sd.user_name, so.cash,(select cash_back from sys_order_deal sod2 where order_id = so.order_id and deal_type = '312') cash_back,su.user_name as operator 
 	from sys_order so
 	left join sys_order_deal sod on so.order_id = sod.order_id
 	left join sys_transportion st on so.credit_account = st.sys_transportion_id
 	left join sys_driver sd on sd.sys_driver_id = so.debit_account
 	left join sys_user su on su.sys_user_id = so.operator 
-	where order_type ='310'
+	where deal_type ='311'
 	<trim>
       <if test="order_deal != null &amp;&amp; order_deal.dealType != null &amp;&amp; order_deal.dealType != ''" >
         and sod.deal_type = #{order_deal.dealType, jdbcType=VARCHAR}
@@ -532,7 +541,7 @@
     select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name operator
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id 
-	left join sys_driver sd on so.consume_card=sd.card_id 
+	left join sys_driver sd on so.credit_account=sd.sys_driver_id
 	inner join sys_user su on so.operator = su.sys_user_id
 	left join sys_transportion st on sd.station_id = st.sys_transportion_id
 	where 1=1 and so.order_type = '220'
@@ -572,7 +581,7 @@
   	select sum(cash) total from (select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name operator
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id 
-	left join sys_driver sd on so.consume_card=sd.card_id 
+	left join sys_driver sd on so.credit_account=sd.sys_driver_id
 	inner join sys_user su on so.operator = su.sys_user_id
 	left join sys_transportion st on sd.station_id = st.sys_transportion_id
 	where 1=1 and so.order_type = '220'

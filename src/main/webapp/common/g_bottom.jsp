@@ -31,7 +31,54 @@
 			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 			</a>
-
+<!--修改用户密码-开始-->
+<div id="editPassword" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="editPasswordModalLabel">修改密码</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<form class="form-horizontal" id="editPasswordForm">
+								<!-- #section:elements.form -->
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="userOldPassword"><span class="red_star">*</span> 原始密码： </label>
+									<div class="col-sm-7">
+										<input type="password" name="userOldPassword" id="userOldPassword" placeholder="原始密码" maxlength="6" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="userNewPassword"><span class="red_star">*</span> 新密码： </label>
+									<div class="col-sm-7">
+										<input type="password" name="userNewPassword" id="userNewPassword" placeholder="新密码" maxlength="6" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="userRePassword"><span class="red_star">*</span> 确认密码： </label>
+									<div class="col-sm-7">
+										<input type="password" id="userRePassword" name="userRePassword" placeholder="确认密码" maxlength="6" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+							</form>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveUserPassword()">确   定</button>
+				<button class="btn btn-sm" onclick="closeUserPassword()">取   消 </button>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+<!--修改用户密码-结束-->
 	<!--弹层-成功提示-->
 	<div id="suc-hint" class="all-hidden">
 		<!--弹层内容 -->
@@ -151,5 +198,9 @@
 		<script src="<%=basePath %>/assets/js/jquery.colorbox.js"></script>
 		<script src="<%=basePath %>/common/js/zh.js"></script>
 		<script src="<%=basePath %>/common/js/json2.js"></script>
+
+		<script src="<%=basePath %>/common/js/json2.js"></script>
+		<%--全局js--%>
+		<script src="<%=basePath %>/dist/js/global/global.js"></script>
 	</body>
 </html>

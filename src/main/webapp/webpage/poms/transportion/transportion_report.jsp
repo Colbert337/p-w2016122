@@ -26,7 +26,7 @@
 					</div>
 					
 					<div class="search-types">
-						<div class="item">
+						<%-- <div class="item">
 							<label>交易类型：</label>
 							<select id="dealType" name="order_deal.dealType">
 								<option value="">全部</option>
@@ -34,7 +34,7 @@
 								<option value="312">运输公司转出返现</option>
 								<option value="313">个人转入</option>
 							</select>
-						</div>
+						</div> --%>
 						<div class="item">
 							<label>订单编号：</label>
 							<input type="text" name="orderNumber" placeholder="车队名称/车牌号"  maxlength="20" value="${sysOrder.orderNumber}"/>
@@ -97,6 +97,7 @@
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">运输公司编号</th>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="debit_account_order">个人账号</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'cash_back');commitForm();" id="cash_back_order">返现金额</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 								</tr>
 							</thead>
@@ -121,6 +122,7 @@
 									<td>${list.creditAccount}</td>
 									<td>${list.user_name}</td>
 									<td>${list.cash}</td>
+									<td>${list.cash_back}</td>
 									<td>${list.operator}</td>
 								</tr>
 							</c:forEach>

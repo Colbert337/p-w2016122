@@ -9,6 +9,8 @@
     <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
     <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
     <result column="user_status" property="userStatus" jdbcType="VARCHAR" />
+    <result column="avatar_s" property="avatarS" jdbcType="VARCHAR" />
+    <result column="avatar_b" property="avatarB" jdbcType="VARCHAR" />
     <result column="is_ident" property="isIdent" jdbcType="INTEGER" />
     <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
     <result column="expiry_date" property="expiryDate" jdbcType="TIMESTAMP" />
@@ -47,7 +49,7 @@
     </association>
   </resultMap>
   <sql id="Base_Column_List" >
-    sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,
+    sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,avatar_s,avatar_b,
     is_ident, plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card,
     card_id, sys_user_account_id, regis_company, regis_source, created_date,
     updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type, driver_number
@@ -159,8 +161,6 @@
     </trim>
   </select>
 
-
-
   <select id="ifExistDriver" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     *
@@ -175,7 +175,6 @@
       </if>
     </trim>
   </select>
-
 
   <select id="queryForPageSingleList" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
@@ -240,7 +239,8 @@
   <insert id="insert" parameterType="com.sysongy.poms.driver.model.SysDriver" >
     insert into sys_driver (sys_driver_id, user_name, password, 
       full_name, mobile_phone, pay_code,
-      user_status, is_ident, plate_number,
+      user_status,avatar_s,avatar_b,
+      is_ident, plate_number,
       expiry_date, fuel_type, driving_lice,
       vehicle_lice, identity_card, card_id,
       sys_user_account_id, regis_company,
@@ -249,7 +249,8 @@
       )
     values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR},
-      #{userStatus,jdbcType=VARCHAR}, #{isIdent,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR},
+      #{userStatus,jdbcType=VARCHAR},#{avatarS,jdbcType=VARCHAR},#{avatarB,jdbcType=VARCHAR},
+      #{isIdent,jdbcType=INTEGER}, #{plateNumber,jdbcType=VARCHAR},
       #{expiryDate,jdbcType=TIMESTAMP}, #{fuelType,jdbcType=VARCHAR}, #{drivingLice,jdbcType=VARCHAR},
       #{vehicleLice,jdbcType=VARCHAR}, #{identityCard,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR},
       #{sysUserAccountId,jdbcType=VARCHAR},  #{regisCompany,jdbcType=VARCHAR},
@@ -281,6 +282,12 @@
       </if>
       <if test="userStatus != null" >
         user_status,
+      </if>
+      <if test="avatarS != null" >
+        avatar_s,
+      </if>
+      <if test="avatarB != null" >
+        avatar_b,
       </if>
       <if test="isIdent != null" >
         is_ident,
@@ -359,6 +366,12 @@
       <if test="userStatus != null" >
         #{userStatus,jdbcType=VARCHAR},
       </if>
+      <if test="avatarS != null" >
+        #{avatarS,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarB != null" >
+        #{avatarB,jdbcType=VARCHAR},
+      </if>
       <if test="isIdent != null" >
         #{isIdent,jdbcType=INTEGER},
       </if>
@@ -436,6 +449,12 @@
       <if test="userStatus != null" >
         user_status = #{userStatus,jdbcType=VARCHAR},
       </if>
+      <if test="avatarS != null" >
+        avatar_s = #{avatarS,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarB != null" >
+        avatar_b = #{avatarB,jdbcType=VARCHAR},
+      </if>
       <if test="isIdent != null" >
         is_ident = #{isIdent,jdbcType=INTEGER},
       </if>
@@ -512,6 +531,8 @@
       mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
       pay_code = #{payCode,jdbcType=VARCHAR},
       user_status = #{userStatus,jdbcType=VARCHAR},
+      avatar_s = #{avatarS,jdbcType=VARCHAR},
+      avatar_b = #{avatarB,jdbcType=VARCHAR},
       is_ident = #{isIdent,jdbcType=INTEGER},
       plate_number = #{plateNumber,jdbcType=VARCHAR},
       expiry_date = #{expiryDate,jdbcType=TIMESTAMP},
