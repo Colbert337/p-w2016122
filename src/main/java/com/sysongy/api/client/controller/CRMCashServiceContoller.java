@@ -528,6 +528,20 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        String checkCode = request.getParameter("inputCode");
+        String checkCodeFromRedis = (String)redisClientImpl.getFromCache(record.getOrderId());
+        if(StringUtils.isEmpty(checkCode)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("短信验证码为空！！！");
+            return ajaxJson;
+        }
+
+        if(!checkCode.equalsIgnoreCase(checkCodeFromRedis)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("短信验证码错误！！！");
+            return ajaxJson;
+        }
+
         SysUser sysUserAdmin = new SysUser();
         sysUserAdmin.setMobilePhone(adminUserName);
         sysUserAdmin.setUserName(adminUserName);
