@@ -5,11 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.sysongy.poms.card.dao.GasCardLogMapper;
-import com.sysongy.poms.card.model.GasCardLog;
-import com.sysongy.poms.permi.service.SysUserAccountService;
-
-import com.sysongy.tcms.advance.model.TcFleet;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -20,8 +15,10 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.card.dao.GasCardLogMapper;
 import com.sysongy.poms.card.dao.GasCardMapper;
 import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.model.GasCardLog;
 import com.sysongy.poms.driver.dao.SysDriverMapper;
 import com.sysongy.poms.driver.dao.SysDriverReviewStrMapper;
 import com.sysongy.poms.driver.model.SysDriver;
@@ -31,6 +28,7 @@ import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.AliShortMessage;
@@ -102,6 +100,11 @@ public class DriverServiceImpl implements DriverService {
         List<SysDriver> list = sysDriverMapper.queryForPage(record);
         PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
         return pageInfo;
+    }
+    
+    @Override
+    public List<SysDriver> queryeSingleList(SysDriver record) throws Exception {
+         return sysDriverMapper.queryForPage(record);
     }
     
     @Override

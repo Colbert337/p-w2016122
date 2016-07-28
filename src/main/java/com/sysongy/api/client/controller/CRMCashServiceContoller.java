@@ -351,12 +351,18 @@ public class CRMCashServiceContoller {
                 record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);            //预付款消费
                 record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
                 record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
+
+                String cardID = record.getConsume_card();
+                if(record.getConsumeType().equalsIgnoreCase(GlobalConstant.ConsumeType.CONSUME_TYPE_CARD)){
+                    record.setConsume_card(null);
+                }
                 String orderConsume = orderService.consumeByDriver(record);
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
                     return ajaxJson;
                 }
+                record.setConsume_card(cardID);
             }
 
             Date curDate = new Date();
@@ -639,6 +645,21 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        if((sysOrderDeal.getOperator() != null) && (sysOrderDeal.getOperator().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
+            sysOrderDeal.setOperator(null);
+        }
+
+        if((sysOrderDeal.getDealType() != null) && (sysOrderDeal.getDealType().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
+            sysOrderDeal.setDealType(null);
+        }
+
+        if((sysOrderDeal.getGoodType() != null) && (sysOrderDeal.getGoodType().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
+            sysOrderDeal.setGoodType(null);
+        }
+
         List<SysOrderDeal> sysOrderDeals = orderDealService.queryOrderDealCRMs(sysOrderDeal);
         if((sysOrderDeals == null) || (sysOrderDeals.size() == 0)){
             ajaxJson.setSuccess(false);
@@ -765,6 +786,11 @@ public class CRMCashServiceContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("起始时间或终止时间为空！！！" );
             return ajaxJson;
+        }
+
+        if((sysOrderGoodsForCRMReport.getGoodsType() != null) && (sysOrderGoodsForCRMReport.getGoodsType().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
+            sysOrderGoodsForCRMReport.setGoodsType(null);
         }
 
         List<SysOrderGoodsForCRMReport> sysOrderGoodsForCRMReports =

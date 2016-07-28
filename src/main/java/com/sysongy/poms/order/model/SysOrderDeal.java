@@ -47,6 +47,8 @@ public class SysOrderDeal extends BaseModel {
 
     private Usysparam dealTypeInfo;
 
+    private String goodType;
+
     public String getRemark() {
 		return remark;
 	}
@@ -197,5 +199,13 @@ public class SysOrderDeal extends BaseModel {
 
     public void setDealTypeInfo(Usysparam dealTypeInfo) {
         this.dealTypeInfo = dealTypeInfo;
+    }
+
+    public String getGoodType() {
+        return goodType;
+    }
+
+    public void setGoodType(String goodType) {
+        this.goodType = goodType;
     }
 }

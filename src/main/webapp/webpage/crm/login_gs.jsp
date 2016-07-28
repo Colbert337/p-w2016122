@@ -27,14 +27,13 @@
 				<ul class="bd">
 					<li>
 						<span class="icon icon-user"></span>
-						<input id="userName" name="userName" class="txt form-control required user" tabIndex="1" placeholder="用户名" type="text">
+						<input id="userName" name="userName" class="txt required user" tabIndex="1" placeholder="用户名" type="text">
 						<div class="form-item-error"></div>
 					</li>
 					<li>
 						<span class="icon icon-lock-open-empty"></span>
-						<input id="password" name="password" class="txt form-control required" placeholder="密码" tabIndex="2" type="password">
+						<input id="password" name="password" class="txt required" placeholder="密码" tabIndex="2" type="password">
 						<div class="form-item-error"></div>
-						<label id="errorNotice" style="color: #FF0000;height: 14px;font-size: 12px;">${erroMsg}</label>
 					</li>
 					<%--<li>
 						<input class="txt code" placeholder="验证码" type="text">
@@ -45,7 +44,7 @@
 						<a href="">商家注册</a>
 					</li>--%>
 					<li>
-						<button class="btn btn-block btn-primary" type="submit" tabIndex="4">登录</button>
+						<button class="btn btn-block btn-primary" type="submit" tabIndex="3">登录</button>
 					</li>
 				</ul>
 				</form>
@@ -57,6 +56,7 @@
 		陕西司集能源科技有限公司
 	</footer>
 	<script src="js/jquery.min.js"></script>
+	<script type='text/javascript' src='<%=basePath%>/assets/js/jquery.validate.js'></script>
 	<script src="js/main.js"></script>
 </body>
 </html>
