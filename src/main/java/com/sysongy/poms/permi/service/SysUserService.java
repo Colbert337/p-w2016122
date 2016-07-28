@@ -92,6 +92,12 @@ public interface SysUserService {
     int updateUser(SysUser user);
 
     /**
+     * 修改用户信息
+     * @param user 用户信息
+     * @return
+     */
+    int updateUserInfo(SysUser user);
+    /**
      * 修改用户状态
      * @param user 用户信息
      * @return

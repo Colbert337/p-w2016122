@@ -357,7 +357,7 @@
 							</button>
 							<div class="item"></div>
 							<button class="btn btn-sm btn-primary" type="button" onclick="addUser();">
-								新建
+								添加
 							</button>
 						</div>
 					</div>
