@@ -623,6 +623,6 @@ public class GlobalConstant {
 	}
 
 	public interface Query_Condition {
-		public static final String QUERY_CONDITION_ALL = "ALL";
+		public static final String QUERY_CONDITION_ALL = "全部";
 	}
 }

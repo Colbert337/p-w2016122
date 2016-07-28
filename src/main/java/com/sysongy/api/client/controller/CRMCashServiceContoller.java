@@ -808,6 +808,12 @@ public class CRMCashServiceContoller {
             sysOrderGoodsForCRMReport.setGoodsType(null);
         }
 
+
+        if((sysOrderGoodsForCRMReport.getOperator() != null) && (sysOrderGoodsForCRMReport.getOperator().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
+            sysOrderGoodsForCRMReport.setOperator(null);
+        }
+
         List<SysOrderGoodsForCRMReport> sysOrderGoodsForCRMReports =
                     orderService.queryGoodsOrderInfos(sysOrderGoodsForCRMReport);
         if((sysOrderGoodsForCRMReports == null) || (sysOrderGoodsForCRMReports.size() == 0)){

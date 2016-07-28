@@ -466,6 +466,9 @@
       <if test="goodsType != null &amp;&amp; goodsType != ''" >
         and goods_type = #{goodsType, jdbcType=VARCHAR}
       </if>
+      <if test="operator != null &amp;&amp; operator != ''" >
+        and b.operator = #{operator,jdbcType=VARCHAR}
+      </if>
     </trim>
   </select>
  	
