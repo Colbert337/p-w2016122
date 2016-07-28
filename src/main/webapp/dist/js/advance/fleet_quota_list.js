@@ -25,18 +25,21 @@ function addChongzhi(){
 //显示添加资金分配弹出层add
 function addFenpei(){
     /*clearDiv();*/
-    console.log("123123");
+    console.log("addFenpei()");
     $("#fenpeiModel").modal('show').on('hide.bs.modal', function() {
         $('#fenpeiForm').bootstrapValidator('resetForm',true);
+        $('.pay-code-error').text("");
     });
 }
 
 
 //显示添加个人转账弹出层add
 function addZhuan(){
+    console.log('addZhuan()');
     clearDiv();
     $("#zhuanModel").modal('show').on('hide.bs.modal', function() {
         $('#zhuanForm').bootstrapValidator('resetForm',true);
+        $('.pay-code-error').text("");
     });
 }
 
@@ -132,12 +135,15 @@ function allocation(obj,index){
 /**
  * 保存配置
  */
+var isPayCodeError = false;
 function saveFenpei(){
     $('#fenpeiForm').data('bootstrapValidator').validate();
     if(!$('#fenpeiForm').data('bootstrapValidator').isValid()){
         return ;
     }
-
+    if(isPayCodeError == true){
+        return false;
+    }
     var dataForm = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
     dataForm = decodeURIComponent(dataForm,true);
     var saveOptions ={
@@ -303,6 +309,10 @@ function saveZhuan(){
     $('#zhuanForm').data('bootstrapValidator').validate();
     if(!$('#zhuanForm').data('bootstrapValidator').isValid()){
         return ;
+    }
+
+    if(isPayCodeError == true){
+        return false;
     }
 
     var data = $("#zhuanForm").serialize(); //序列化表单 获取到数据
@@ -479,17 +489,6 @@ $('#zhuanForm').bootstrapValidator({
                 regexp: {
                     regexp: '^[0-9]+$',
                     message: '支付密码只能包含数字'
-                },
-                remote: {
-                    url: '../web/transportion/info/password',
-                    type: "post",
-                    async: false,
-                    data: function(validator, $field, value) {
-                        return{
-                            pay_code:$("#pay_code").val()
-                        };
-                    },
-                    message: '支付密码错误或未设置'
                 }
             }
         }
@@ -514,20 +513,51 @@ $('#fenpeiForm').bootstrapValidator({
                 regexp: {
                     regexp: '^[0-9]+$',
                     message: '支付密码只能包含数字'
-                },
-                remote: {
-                    url: '../web/transportion/info/password',
-                    type: "post",
-                    data: function(validator, $field, value) {
-                        return{
-                            pay_code:$("#pay_code").val()
-                        };
-                    },
-                    message: '支付密码错误或未设置'
                 }
             }
         }
     }
 });
 
+function checkPaycode(elem) {
+    var $payCode = $(elem),
+        $payCodeGroup = $payCode.parents('.form-group');
+    $.ajax({
+        url:'../web/transportion/info/password',
+        type:'post',
+        data:{pay_code:$payCode.val()},
+        success:function(data) {
+            console.log(data);
+            if(data.valid==true){
+                $payCodeGroup.removeClass('has-error').addClass('has-success');
+                $payCodeGroup.find('.form-control-feedback').removeClass('glyphicon-remove').addClass('glyphicon-ok').show();
+                $payCodeGroup.find('.pay-code-error').text("");
+                isPayCodeError = false;
+            } else if(data.valid=="erroEmpty") {
+                $payCodeGroup.removeClass('has-success').addClass('has-error');
+                $payCodeGroup.find('.form-control-feedback').removeClass('glyphicon-ok').addClass('glyphicon-remove').show();
+                $payCodeGroup.find('.pay-code-error').text("支付密码未设置");
+                isPayCodeError = true;
+            } else {
+                $payCodeGroup.removeClass('has-success').addClass('has-error');
+                $payCodeGroup.find('.form-control-feedback').removeClass('glyphicon-ok').addClass('glyphicon-remove').show();
+                $payCodeGroup.find('.pay-code-error').text("支付密码错误");
+                isPayCodeError = true;
+            }
+        },
+        error: function(){
+            console.log('error');
+        }
+    });
+}
 
+$(function(){
+    //资金分配
+    $('#payCode').on("blur", function () {
+        checkPaycode("#payCode");
+    });
+    //个人转账
+    $('#pay_code').on("blur", function () {
+        checkPaycode("#pay_code");
+    });
+});
