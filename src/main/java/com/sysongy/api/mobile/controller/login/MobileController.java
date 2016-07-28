@@ -1,15 +1,24 @@
 package com.sysongy.api.mobile.controller.login;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.alibaba.fastjson.JSON;
 import com.sysongy.api.mobile.model.base.Data;
@@ -17,25 +26,35 @@ import com.sysongy.api.mobile.model.base.MobileParams;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.login.MobileLogin;
 import com.sysongy.api.mobile.model.register.MobileRegister;
+import com.sysongy.api.mobile.model.upload.MobileUpload;
 import com.sysongy.api.mobile.model.userinfo.MobileUserInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.tools.MobileUtils;
 import com.sysongy.api.mobile.tools.login.MobileLoginUtils;
 import com.sysongy.api.mobile.tools.register.MobileRegisterUtils;
+import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
 import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
+import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.DateUtil;
+import com.sysongy.util.FileUtil;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
 @RequestMapping("/api/mobile/user/")
 @Controller
 public class MobileController {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 
 	@Autowired
 	SysUserService sysUserService;
@@ -96,23 +115,18 @@ public class MobileController {
 		
 		try {	
 			verification = MobileVerificationUtils.checkVerificationCodeParam(params, ret);
-			//生成设置验证码
+
 	        Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
-//	        shortMessage.setCode(checkCode.toString());
-//	        //发送短信
-//	        sendShortMessage(shortMessage);
-//	        
-//	        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-//			aliShortMessageBean.setSendNumber(record.getContact_phone());
-//			aliShortMessageBean.setName(record.getGas_station_name());
-//			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.GAS_STATION_FROZEN);
-//	        //将手机号码与验证码存储到redis
+
+	        MobileVerificationUtils.sendMSG(verification, checkCode.toString());
+
 	        redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 60);
 	        
 	        Data data = new Data();
 			data.setVerificationCode(checkCode.toString());
 			
 	        ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileVerificationUtils.RET_VERIFICATION_CODE, data);
+		
 		} catch (Exception e) {
 			if(StringUtils.isEmpty(ret.getMsg())){
 				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
@@ -214,4 +228,57 @@ public class MobileController {
 			return JSON.toJSONString(ret);
 		}
 	}
+	
+	//单文件上传
+    @RequestMapping(value = "/web/upload")
+    @ResponseBody
+    public String upload(MobileParams params, @RequestParam("file") CommonsMultipartFile[] files, HttpServletRequest request){
+    	
+    	MobileReturn ret = new MobileReturn();
+    	MobileUpload upload = new MobileUpload();
+    	
+    	try {
+		upload = MobileUploadUtils.checkUploadParam(params, ret);
+		
+		String sysPathID = upload.getToken();
+		String realPath =  sysPathID + "/" ;
+        String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
+        String httpPath = "";
+        FileUtil.createIfNoExist(filePath);
+        
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            for (int i = 0; i < files.length; i++) {
+                long timeStamp = System.currentTimeMillis();
+                String path = filePath + timeStamp + files[i].getOriginalFilename();
+                File destFile = new File(path);
+                String contextPath = request.getContextPath();
+                String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
+                httpPath = basePath + (String) prop.get("show_images_path") + "/" + realPath + timeStamp + files[i].getOriginalFilename();
+
+                FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
+            }
+
+//            if(StringUtils.isNotEmpty(sysDriver.getExpireTimeForCRM())){
+//                sysDriver.setExpiryDate(DateUtil.strToDate(sysDriver.getExpireTimeForCRM(), "yyyy-MM-dd"));
+//            }
+//
+//            driverService.saveDriver(sysDriver, "update");
+//            SysDriver sysDriverNew = driverService.queryDriverByPK(sysDriver.getSysDriverId());
+            
+            Data data = new Data();
+            data.setImageUrl(httpPath);
+            
+            ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileGetUserInfoUtils.RET_USERINFO_SUCCESS, data);
+
+        } catch (Exception e) {
+        	if(StringUtils.isEmpty(ret.getMsg())){
+				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+			}
+			
+			logger.error("MobileController.Login ERROR： " + e);
+        }
+        finally {
+			return JSON.toJSONString(ret);
+		}
+    }
 }

@@ -1,5 +1,7 @@
 package com.sysongy.api.mobile.model.base;
 
+import java.io.File;
+
 public class MobileParams {
 	
 	private String versionCode;
@@ -7,6 +9,16 @@ public class MobileParams {
 	private String apiKey;
 	
 	private String detailParam;
+	
+	private File file;
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
 
 	public String getVersionCode() {
 		return versionCode;

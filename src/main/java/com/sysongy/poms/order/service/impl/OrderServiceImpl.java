@@ -1014,7 +1014,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<Map<String, Object>> queryTcFleetMgList(SysOrder record) {
-		return sysOrderMapper.queryRechargeReport(record);
+		/*return sysOrderMapper.queryRechargeReport(record);*/
+		return sysOrderMapper.queryTcFleetReport(record);
 	}
 
 	@Override

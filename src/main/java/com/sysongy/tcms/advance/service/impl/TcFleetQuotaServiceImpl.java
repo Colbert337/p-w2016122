@@ -244,6 +244,9 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                             tcTransferAccount.setUsed(mapDriver.get("remark").toString());
                             tcTransferAccount.setUpdatedDate(new Date());
                             tcTransferAccount.setOrderId(orderId);
+                            if(tcTransferAccount.getUsed().equals("0")){
+                                tcTransferAccount.setUsed("");
+                            }
                             resultVal = tcTransferAccountMapper.insertSelective(tcTransferAccount);
 
                             /*发送转账通知短信*/

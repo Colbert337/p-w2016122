@@ -222,7 +222,7 @@ public class TcVehicleController extends BaseContoller {
             vehicle1Update.setUserName(tcVehicle.getPlatesNumber());
             List<TcVehicle> vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Update);
 
-            if(vehicle1Count != null){
+            if(vehicle1Count != null && vehicle1Count.size() > 0){
                 resultInt = "车牌号已经存在！";
                 resultInt = Encoder.symmetricEncrypto(resultInt);
                 return "redirect:/web/tcms/vehicle/list/page?resultInt="+resultInt;
@@ -457,6 +457,24 @@ public class TcVehicleController extends BaseContoller {
                         gasCard.setCard_no(tcVehicle.getCardNo());
                         gasCard.setCard_status(GlobalConstant.CardStatus.USED);
                         gasCardService.updateByPrimaryKeySelective(gasCard);
+
+                        //给通知手机和抄送手机发送短信
+                        String msgType = "user_register";
+                        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+                        aliShortMessageBean.setCode(tcVehicle.getPayCode());
+                        aliShortMessageBean.setLicense(tcVehicle.getPlatesNumber());
+                        aliShortMessageBean.setString(transportion.getTransportion_name());
+                        //给通知手机发送短信
+                        if(tcVehicle != null && tcVehicle.getNoticePhone() != null && !tcVehicle.getNoticePhone().equals("")){
+                            aliShortMessageBean.setSendNumber(tcVehicle.getNoticePhone());
+                            sendMsgApi(tcVehicle.getNoticePhone(),msgType,aliShortMessageBean);
+                        }
+
+                        //给抄送手机发送短信
+                        if(tcVehicle != null && tcVehicle.getCopyPhone() != null && !tcVehicle.getCopyPhone().equals("")){
+                            aliShortMessageBean.setSendNumber(tcVehicle.getCopyPhone());
+                            sendMsgApi(tcVehicle.getCopyPhone(),msgType,aliShortMessageBean);
+                        }
                     }
                 }
 
