@@ -503,7 +503,7 @@ public class CRMCashServiceContoller {
     public AjaxJson hedgeFund(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
         if((record == null) || StringUtils.isEmpty(record.getOrderId())
-                || StringUtils.isEmpty(record)){
+                || StringUtils.isEmpty(record.getOperatorSourceId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单ID或者气站ID为空！！！");
             return ajaxJson;
@@ -551,7 +551,8 @@ public class CRMCashServiceContoller {
         sysUserAdmin.setPassword(adminPassword);
         sysUserAdmin.setUserType(InterfaceConstants.USER_TYPE_CRM_USER);
         SysUser sysUserOperator = sysUserService.queryUserMapByAccount(sysUserAdmin);
-        if((sysUserOperator == null) || (sysUserOperator.getIsAdmin() != 0)){
+        if((sysUserOperator == null) || (sysUserOperator.getIsAdmin() != 0) ||
+                !(sysUserOperator.getStationId().equalsIgnoreCase(record.getOperatorSourceId()))){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("该用户无冲红权限！！！");
             return ajaxJson;
