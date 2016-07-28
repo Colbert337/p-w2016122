@@ -222,7 +222,7 @@ public class TcVehicleController extends BaseContoller {
             vehicle1Update.setUserName(tcVehicle.getPlatesNumber());
             List<TcVehicle> vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Update);
 
-            if(vehicle1Count != null){
+            if(vehicle1Count != null && vehicle1Count.size() > 0){
                 resultInt = "车牌号已经存在！";
                 resultInt = Encoder.symmetricEncrypto(resultInt);
                 return "redirect:/web/tcms/vehicle/list/page?resultInt="+resultInt;
@@ -441,11 +441,6 @@ public class TcVehicleController extends BaseContoller {
 
                         tcVehicle.setIsAllot(0);//是否分配 0 不分配 1 分配
                         vehicleList.add(tcVehicle);
-                        //修改卡状态
-                        GasCard gasCard = new GasCard();
-                        gasCard.setCard_no(cardNo);
-                        gasCard.setCard_status(GlobalConstant.CardStatus.USED);
-                        gasCardService.updateByPrimaryKeySelective(gasCard);
                     }else{
                         resultStr = "车牌号不能为空！";
                         resultStr = Encoder.symmetricEncrypto(resultStr);
@@ -456,6 +451,31 @@ public class TcVehicleController extends BaseContoller {
                 //添加车辆
                 if(vehicleList != null && vehicleList.size() > 0){
                     tcVehicleService.addVehicleList(vehicleList);
+                    /*修改卡状态*/
+                    for(TcVehicle tcVehicle:vehicleList){
+                        GasCard gasCard = new GasCard();
+                        gasCard.setCard_no(tcVehicle.getCardNo());
+                        gasCard.setCard_status(GlobalConstant.CardStatus.USED);
+                        gasCardService.updateByPrimaryKeySelective(gasCard);
+
+                        //给通知手机和抄送手机发送短信
+                        String msgType = "user_register";
+                        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+                        aliShortMessageBean.setCode(tcVehicle.getPayCode());
+                        aliShortMessageBean.setLicense(tcVehicle.getPlatesNumber());
+                        aliShortMessageBean.setString(transportion.getTransportion_name());
+                        //给通知手机发送短信
+                        if(tcVehicle != null && tcVehicle.getNoticePhone() != null && !tcVehicle.getNoticePhone().equals("")){
+                            aliShortMessageBean.setSendNumber(tcVehicle.getNoticePhone());
+                            sendMsgApi(tcVehicle.getNoticePhone(),msgType,aliShortMessageBean);
+                        }
+
+                        //给抄送手机发送短信
+                        if(tcVehicle != null && tcVehicle.getCopyPhone() != null && !tcVehicle.getCopyPhone().equals("")){
+                            aliShortMessageBean.setSendNumber(tcVehicle.getCopyPhone());
+                            sendMsgApi(tcVehicle.getCopyPhone(),msgType,aliShortMessageBean);
+                        }
+                    }
                 }
 
             }

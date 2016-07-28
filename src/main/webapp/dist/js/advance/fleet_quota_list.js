@@ -170,19 +170,22 @@ function saveFenpei(){
  */
 var zhuanIndex = 2;
 function addRow(){
-
     var objIndex = zhuanIndex++;
-    var zhuan = "";
-    zhuan += "<tr id='tr_"+objIndex+"'>";
-    zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' data-sj-result='invalid' onblur='queryDriverInfo("+objIndex+");'/></td>";
-    zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly' data-sj-result='invalid' onclick='queryDriverInfo("+objIndex+");'>";
-    zhuan += "<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>";
-    zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' data-sj-result='invalid' onblur='isTransfer("+objIndex+");'/></td>";
-    zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td class='fleet-quota-option'>";
-    zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除该行</a>";
-    zhuan += "</td></tr>";
+    if(objIndex <= 10){
+        var zhuan = "";
+        zhuan += "<tr id='tr_"+objIndex+"'>";
+        zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' data-sj-result='invalid' onblur='queryDriverInfo("+objIndex+");'/></td>";
+        zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly' data-sj-result='invalid' onclick='queryDriverInfo("+objIndex+");'>";
+        zhuan += "<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>";
+        zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' data-sj-result='invalid' onblur='isTransfer("+objIndex+");'/></td>";
+        zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td class='fleet-quota-option'>";
+        zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除该行</a>";
+        zhuan += "</td></tr>";
 
-    $("#zhuanTable").append(zhuan);
+        $("#zhuanTable").append(zhuan);
+    }else{
+        bootbox.alert("一次转账人数不能超过10人！");
+    }
 }
 
 //验证手机号

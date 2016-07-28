@@ -120,6 +120,12 @@ public class CRMCashServiceContoller {
             }
             Date curDate = new Date();
             record.setOrderDate(curDate);
+            Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
+            if(gastation != null){
+                record.setChannel(gastation.getGas_station_name());
+                record.setChannelNumber(gastation.getSys_gas_station_id());
+            }
+
             int nCreateOrder = orderService.insert(record, null);
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -128,15 +134,11 @@ public class CRMCashServiceContoller {
             }
 
             SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
+            recordNew.setGastation(gastation);
             String cashBack = orderDealService.selectCashBackByOrderID(record.getOrderId());
             recordNew.setCashBack(cashBack);
             SysDriver sysDriver = driverService.queryDriverByPK(record.getDebitAccount());
-            Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
-            if(gastation != null){
-                recordNew.setGastation(gastation);
-                record.setChannel(gastation.getGas_station_name());
-                record.setChannelNumber(gastation.getSys_gas_station_id());
-            }
+
             if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
                 recordNew.setSysDriver(sysDriver);
                 GasCard gasCard = gasCardService.selectByCardNoForCRM(sysDriver.getCardId());
@@ -367,6 +369,11 @@ public class CRMCashServiceContoller {
 
             Date curDate = new Date();
             record.setOrderDate(curDate);
+            Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
+            if(gastation != null){
+                record.setChannel(gastation.getGas_station_name());
+                record.setChannelNumber(gastation.getSys_gas_station_id());
+            }
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -375,12 +382,7 @@ public class CRMCashServiceContoller {
             }
 
             SysOrder recordNew = orderService.selectByPrimaryKey(record.getOrderId());
-            Gastation gastation = gastationService.queryGastationByPK(record.getOperatorSourceId());
-            if(gastation != null){
-                recordNew.setGastation(gastation);
-                record.setChannel(gastation.getGas_station_name());
-                record.setChannelNumber(gastation.getSys_gas_station_id());
-            }
+            recordNew.setGastation(gastation);
 
             String mobilePhone = record.getSysDriver().getMobilePhone();
             if((sysDriver != null) && !StringUtils.isEmpty(sysDriver.getMobilePhone())){
@@ -390,18 +392,19 @@ public class CRMCashServiceContoller {
                     mobilePhone = sysDriverNew.getMobilePhone();
                     sysDriverNew.setMobilePhone(record.getConsume_card());
                     sysDriverNew.setFullName("");
+                    recordNew.setGasCard(record.getGasCard());
                 } else {
                     sysDriverNew = driverService.queryDriverByPK(record.getCreditAccount());
+                    recordNew.setGasCard(sysDriverNew.getCardInfo());
                 }
                 recordNew.setSysDriver(sysDriverNew);
 
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
-            recordNew.setGasCard(record.getGasCard());
+
             recordNew.setCash(record.getCash());
             sendConsumeMessage(recordNew, mobilePhone);
-
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", recordNew);
             ajaxJson.setAttributes(attributes);
@@ -500,7 +503,7 @@ public class CRMCashServiceContoller {
     public AjaxJson hedgeFund(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
         if((record == null) || StringUtils.isEmpty(record.getOrderId())
-                || StringUtils.isEmpty(record)){
+                || StringUtils.isEmpty(record.getOperatorSourceId())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单ID或者气站ID为空！！！");
             return ajaxJson;
@@ -528,13 +531,28 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+        String checkCode = request.getParameter("inputCode");
+        String checkCodeFromRedis = (String)redisClientImpl.getFromCache(record.getOrderId());
+        if(StringUtils.isEmpty(checkCode)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("短信验证码为空！！！");
+            return ajaxJson;
+        }
+
+        if(!checkCode.equalsIgnoreCase(checkCodeFromRedis)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("短信验证码错误！！！");
+            return ajaxJson;
+        }
+
         SysUser sysUserAdmin = new SysUser();
         sysUserAdmin.setMobilePhone(adminUserName);
         sysUserAdmin.setUserName(adminUserName);
         sysUserAdmin.setPassword(adminPassword);
         sysUserAdmin.setUserType(InterfaceConstants.USER_TYPE_CRM_USER);
         SysUser sysUserOperator = sysUserService.queryUserMapByAccount(sysUserAdmin);
-        if((sysUserOperator == null) || (sysUserOperator.getIsAdmin() != 0)){
+        if((sysUserOperator == null) || (sysUserOperator.getIsAdmin() != 0) ||
+                !(sysUserOperator.getStationId().equalsIgnoreCase(record.getOperatorSourceId()))){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("该用户无冲红权限！！！");
             return ajaxJson;
@@ -548,7 +566,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
         SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(originalOrder,
-                sysUserOperator.getSysUserId(), record.getDischarge_reason());
+                user.getSysUserId(), record.getDischarge_reason());
 
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
@@ -791,6 +809,12 @@ public class CRMCashServiceContoller {
         if((sysOrderGoodsForCRMReport.getGoodsType() != null) && (sysOrderGoodsForCRMReport.getGoodsType().equalsIgnoreCase
                 (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
             sysOrderGoodsForCRMReport.setGoodsType(null);
+        }
+
+
+        if((sysOrderGoodsForCRMReport.getOperator() != null) && (sysOrderGoodsForCRMReport.getOperator().equalsIgnoreCase
+                (GlobalConstant.Query_Condition.QUERY_CONDITION_ALL))){
+            sysOrderGoodsForCRMReport.setOperator(null);
         }
 
         List<SysOrderGoodsForCRMReport> sysOrderGoodsForCRMReports =

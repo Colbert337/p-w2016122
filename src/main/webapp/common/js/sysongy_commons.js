@@ -27,9 +27,17 @@ function ajaxQueryData(obj,url,datatype){
 		//cache:false,
 		success: function(msg){
 			$(obj).html(msg);
+			$('[data-rel="tooltip"]').tooltip();
 		},
-		error:function(){
-			bootbox.alert('加载页面' + url + '时出错！');
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+			if(XMLHttpRequest.status == 911){
+				bootbox.confirm("当前会话已超时，请重新登录",function (result) {
+					if(result){
+						window.location.href = '../login.jsp';
+					}
+				});
+			}
+			$('[data-rel="tooltip"]').tooltip();
 		}
 	});
 }

@@ -435,7 +435,7 @@ public class DriverController extends BaseContoller{
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("sysOrder", sysOrder);
-			map.addAttribute("totalCash",total.getList().get(0).get("total"));
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -493,7 +493,7 @@ public class DriverController extends BaseContoller{
 	}
 	
 	@RequestMapping("/consumeReport")
-    public String queryConsumeReport(ModelMap map, SysOrder sysOrder, HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
+    public String queryConsumeReport(ModelMap map, SysOrder sysOrder, HttpServletRequest request,HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
         try {
         	sysOrder.setPageNum(1);
         	sysOrder.setPageSize(1048576);
@@ -514,37 +514,37 @@ public class DriverController extends BaseContoller{
             ExportUtil reportExcel = new ExportUtil();
 
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
-            downLoadFileName = "充值_" + downLoadFileName;
+            downLoadFileName = "个人司机消费_" + downLoadFileName;
 
             try {
-                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+                response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));  
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
 
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","会员账号","加注站编号","加注站名称","管联运输公司","备注","操作人"};
+            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","会员账号","加注站编号","加注站名称","关联运输公司","备注","操作人"};
 
             int i = 1;
             if(list != null && list.size() > 0){
             	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
             		 
-            		String order_number = tmpMap.get("order_number").toString();
+            		String order_number = tmpMap.get("order_number")==null?"":tmpMap.get("order_number").toString();
             		String order_type;
-            		String deal_number = tmpMap.get("deal_number").toString();
-            		String order_date = tmpMap.get("order_date").toString();
-            		String is_discharge = tmpMap.get("is_discharge")==null?"":tmpMap.get("is_discharge").toString()=="0"?"冲红":"消费";
-            		String cash = tmpMap.get("cash").toString();
+            		String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
+            		String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
+            		String is_discharge = tmpMap.get("is_discharge")==null?"":"0".equals(tmpMap.get("is_discharge").toString())?"消费":"冲红";
+            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
             		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
             		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
             		String channel_number = tmpMap.get("channel_number")==null?"":tmpMap.get("channel_number").toString();
             		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
-            		String remark = tmpMap.get("remark").toString();
-            		String operator = tmpMap.get("operator").toString();
+            		String remark = tmpMap.get("remark")==null?"":tmpMap.get("remark").toString();
+            		String operator = tmpMap.get("operator")==null?"":tmpMap.get("operator").toString();
 
 
-                    switch (tmpMap.get("order_type").toString()) {
+                    switch (tmpMap.get("order_type")==null?"":tmpMap.get("order_type").toString()) {
 					case "210":{
 						order_type = "运输公司消费";
 						break;

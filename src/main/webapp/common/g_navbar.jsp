@@ -322,17 +322,17 @@
 							</a>
 
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-								<li>
+								<%--<li>
 									<a href="#">
 										<i class="ace-icon fa fa-cog"></i>
 										设置
 									</a>
-								</li>
+								</li>--%>
 
-								<li>
-									<a href="profile.html">
+								<li style="cursor: pointer;">
+									<a onclick="editUserPassword()" >
 										<i class="ace-icon fa fa-user"></i>
-										个人资料
+										修改密码
 									</a>
 								</li>
 

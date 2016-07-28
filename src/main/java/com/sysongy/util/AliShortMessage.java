@@ -48,7 +48,7 @@ public class AliShortMessage {
         DRIVER_BATCH_REGISTER,                  //运维平台批量注册司机
         VEHICLE_CREATED,                        //车辆创建
         DRIVER_CHECKCODE_PASSWORD_MODIFY,       //司机手机验证码/支付密码修改
-        DRIVER_CONSUME_SUCCESSFUL
+        DRIVER_CONSUME_SUCCESSFUL,
     }
 
     /**

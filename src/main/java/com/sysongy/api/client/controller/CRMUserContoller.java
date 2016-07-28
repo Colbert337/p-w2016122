@@ -255,9 +255,10 @@ public class CRMUserContoller {
             sysUserNew.setUserName(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
             sysUserNew.setMobilePhone(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
             sysUserNew.setRealName(GlobalConstant.Query_Condition.QUERY_CONDITION_ALL);
+            sysUserNew.setGender(1);
             sysUsersNew.add(sysUserNew);
             sysUsersNew.addAll(sysUsers);
-            attributes.put("SysUsers",sysUsers);
+            attributes.put("SysUsers",sysUsersNew);
             ajaxJson.setAttributes(attributes);
             ajaxJson.setSuccess(true);
             ajaxJson.setMsg("查询成功！");
