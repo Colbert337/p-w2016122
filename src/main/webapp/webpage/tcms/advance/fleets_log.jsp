@@ -144,7 +144,7 @@
 					<%--分页start--%>
 					<div class="row">
 						<div class="col-sm-6">
-							<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
+							<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
