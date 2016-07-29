@@ -903,11 +903,12 @@ public class TcFleetQuotaController extends BaseContoller {
 
             List<Map<String, Object>> list = orderService.queryTcFleetList(order);
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            BigDecimal chongHong = new BigDecimal(BigInteger.ZERO);
             if(list != null && list.size() > 0){
 
                 for (Map<String, Object> quotaMap:list) {
-                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
                 }
             }
@@ -999,8 +1000,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
 
                 for (Map<String, Object> quotaMap:pageInfo.getList()) {
-                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
 
                     //组装表格
@@ -1112,8 +1113,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(list != null && list.size() > 0){
 
                 for (Map<String, Object> quotaMap:list) {
-                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
                 }
             }
@@ -1205,8 +1206,8 @@ public class TcFleetQuotaController extends BaseContoller {
 
             if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
                 for (Map<String, Object> quotaMap:pageInfo.getList()) {
-                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
 
                     //组装表格
