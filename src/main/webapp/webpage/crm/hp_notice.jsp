@@ -18,7 +18,16 @@
 </head>
 <body>
 <jsp:include page="common/header.jsp"></jsp:include>
-<jsp:include page="common/help.jsp"></jsp:include>
+<div class="subnav">
+    <div class="inner">
+        <ul>
+            <li class="home"><a href="index.jsp">首页</a></li>
+            <li><a href="<%=basePath %>/portal/crm/help/list/all">常见问题</a></li>
+            <li><a href="hp_service.jsp">客服咨询</a></li>
+            <li class="current"><a href="<%=basePath %>/portal/crm/help/list/notice">服务公告</a></li>
+        </ul>
+    </div>
+</div>
 
 	<div class="container-fluid wrap">
 		<div class="help-container">

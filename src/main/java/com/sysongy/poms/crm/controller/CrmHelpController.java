@@ -32,7 +32,7 @@ import com.sysongy.util.UUIDGenerator;
  * @Version: V2.0 Copyright(c)陕西司集能源科技有限公司
  * @Description:
  */
-@RequestMapping("/web/crm/help")
+@RequestMapping("/portal/crm/help")
 @Controller
 public class CrmHelpController extends BaseContoller{
 	
