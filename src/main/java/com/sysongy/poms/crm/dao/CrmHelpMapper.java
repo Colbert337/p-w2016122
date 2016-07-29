@@ -32,6 +32,14 @@ public interface CrmHelpMapper {
     public List<CrmHelp> queryQuestiontypeList(CrmHelp record);
     
     //public List<CrmHelp> queryNotice(String record);//公告查询
-    
-       
+
+    /**
+     * 查询问题列表
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    public List<CrmHelp> queryQuestionListByName(CrmHelp obj) throws Exception;
+
+
 }

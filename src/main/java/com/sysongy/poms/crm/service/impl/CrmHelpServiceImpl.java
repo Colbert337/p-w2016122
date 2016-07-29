@@ -93,4 +93,8 @@ public class CrmHelpServiceImpl implements CrmHelpService{
 		
 	}
 
+	@Override
+	public List<CrmHelp> queryQuestionListByName(CrmHelp obj) throws Exception {
+		return crmHelpMapper.queryQuestionListByName(obj);
+	}
 }

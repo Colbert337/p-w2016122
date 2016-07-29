@@ -21,4 +21,11 @@ public interface CrmHelpTypeMapper {
     public List<CrmHelpType> queryForPageList(CrmHelpType record);//分页查询
     
     public int add(CrmHelpType record);//添加
+
+    /**
+     * 查询问题分类列表
+     * @return
+     * @throws Exception
+     */
+    List<CrmHelpType> queryCrmHelpTypeList() throws Exception;
 }

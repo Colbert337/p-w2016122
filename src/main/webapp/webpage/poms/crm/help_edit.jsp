@@ -29,17 +29,10 @@ $(function() {
                                 <!-- PAGE CONTENT BEGINS -->
                                 <form class="form-horizontal" id="formedit">
                                    
-                                   <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right" for="crmHelpId">题号： </label>
-                                        <div class="col-sm-4">
-                                            <input type="text" name="crmHelpId" placeholder="标题"  class="form-control" value="${crmHelp.crmHelpId}"/>
-                                        </div>
-                                    </div>
-                                   
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="title">标题： </label>
                                         <div class="col-sm-4">
-                                            <input type="text" name="title" placeholder="标题"  class="form-control" value="${crmHelp.title}"/>
+                                            <input type="text" id="title" name="title" placeholder="标题"  class="form-control" value="${crmHelp.title}"/>
                                         </div>
                                     </div>
                                 
@@ -47,7 +40,6 @@ $(function() {
                                         <label class="col-sm-3 control-label no-padding-right" for="question">问题： </label>
                                         <div class="col-sm-4">
                                         <textarea class="limited form-control" id="question" name="question" maxlength="50" style="resize: none;">${crmHelp.question}</textarea>
-                                            <!--  <input type="text" name="question" placeholder="问题"  class="form-control" value="${crmHelp.question}"/>-->
                                         </div>
                                     </div>
                                     
@@ -55,7 +47,6 @@ $(function() {
                                         <label class="col-sm-3 control-label no-padding-right">内容： </label>
                                         <div class="col-sm-4">
                                            <textarea class="limited form-control" id="question" name="question" maxlength="50" style="resize: none;">${crmHelp.answer}</textarea>
-                                            <!--  <input type="text" name="answer" placeholder="内容"  class="form-control" value="${crmHelp.answer}"/>-->
                                         </div>
                                     </div>
                                     
@@ -65,8 +56,7 @@ $(function() {
                                             <select class="chosen-select form-control" id="crmHelpTypeId" name="crmHelpTypeId" data-placeholder="类型">
 											   <s:option flag="true" gcode="PLF_TYPE" link="false" />
 										    </select>
-                                            <!-- <input type="text"  name="crmHelpTypeId" placeholder="类型" class="form-control"  value="${crmHelp.crmHelpTypeId}"/>-->
-                                        </div>                               
+                                        </div>
                                     </div>
                                     
                                     <div class="form-group">
@@ -99,20 +89,7 @@ $(function() {
                                             <input type="text" id="issuer" name="issuer" placeholder="发布人" class="form-control" value="${crmHelp.issuer}"/>
                                         </div>
                                     </div> 
-                                    
-                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right" for="createdDate">发布时间：</label>
-                                        <div class="col-sm-4">
-                                         <div class="input-group">
-														<input class="form-control date-picker" name="expiry_date_frompage" id="datepicker" type="text" data-date-format="yyyy-mm-dd" readonly="readonly"/>
-														<span class="input-group-addon">
-																<i class="fa fa-calendar bigger-110"></i>
-														</span>
-											</div>
-                                           <!--   <input type="text" id="datepicker" name="createdDate" placeholder="发布时间" class="form-control" value="<fmt:formatDate value="${crmHelp.createdDate}" type="both" pattern="yyyy-MM-dd"/>"/>-->
-                                        </div>                               
-                                    </div>
-                                                                                                                                          
+
                                     <div class="clearfix form-actions">
                                         <div class="col-md-offset-3 col-md-9">
                                             

@@ -36,4 +36,8 @@ public class CrmHelpTypeServiceImpl implements CrmHelpTypeService{
 		return crmHelpTypeMapper.add(obj);
 	}
 
+	@Override
+	public List<CrmHelpType> queryCrmHelpTypeList() throws Exception {
+		return crmHelpTypeMapper.queryCrmHelpTypeList();
+	}
 }

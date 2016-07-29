@@ -118,7 +118,7 @@ $(function(){
                     <table id="simple-table" class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th onclick="orderBy(this,'crmHelpId');commitForm();" id="crmHelpId_order">题号</th>
+                            <th onclick="orderBy(this,'crmHelpId');commitForm();" id="crmHelpId_order">编号</th>
                             <th>标题</th>
                             <th>问题</th>
                             <th>内容</th>
@@ -132,7 +132,7 @@ $(function(){
                         <tbody>
                         <c:forEach items="${crmHelpList.list}" var="list" varStatus="status">
                             <tr>
-                                <td>${status.index}</td>
+                                <td>${status.index+1}</td>
                                 <td>${list.title}</td>
                                 <td>${list.question}</td>
                                 <td>${list.answer}</td> 

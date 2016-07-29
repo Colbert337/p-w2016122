@@ -12,6 +12,29 @@
   <sql id="Base_Column_List" >
     crm_help_type_id, title, remark, is_deleted, created_date, updated_date
   </sql>
+
+  <!--查询问题分类列表-->
+  <select id="queryCrmHelpTypeList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.crm.model.CrmHelpType" >
+    select
+    <include refid="Base_Column_List" />
+    from crm_help_type
+    where 1=1
+    <trim>
+      <if test="crmHelpTypeId != null &amp;&amp; crmHelpTypeId != ''" >
+        and crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
+      </if>
+      <if test="title!= null &amp;&amp; title != ''" >
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="remark != null &amp;&amp; remark != ''" >
+        and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="isDeleted != null &amp;&amp; isDeleted != ''" >
+        and is_deleted = #{isDeleted,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

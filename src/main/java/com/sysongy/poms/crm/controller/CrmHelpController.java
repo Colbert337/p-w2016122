@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -93,7 +94,7 @@ public class CrmHelpController extends BaseContoller{
      */
     @RequestMapping("/update")
     public String update(Model model,CrmHelp obj) throws Exception{
-    	obj.setModel(new Date());
+    	obj.setUpdatedDate(new Date());
     	crmHelpService.update(obj);
         return "redirect:/web/crm/help/list";        
     }
@@ -105,7 +106,6 @@ public class CrmHelpController extends BaseContoller{
     @RequestMapping("/save")
     public String save(CrmHelp obj)throws Exception{
     	obj.setCrmHelpId(UUIDGenerator.getUUID());
-    	obj.setCreatedDate(new Date());
     	crmHelpService.save(obj);
     	return "redirect:/web/crm/help/list";    	
     }
@@ -151,5 +151,19 @@ public class CrmHelpController extends BaseContoller{
     	crmHelpTypeService.save(obj);
     	return "redirect:/web/crm/help/type/list";    	
     }
-    
+
+
+	/**
+	 * 查询所有分类列表
+	 * @param obj
+	 * @return
+	 * @throws Exception
+     */
+	@RequestMapping("/type/list/all")
+	public String queryTypeList(CrmHelpType obj,ModelMap map)throws Exception{
+		List<CrmHelpType> crmHelpTypeList = crmHelpTypeService.queryCrmHelpTypeList();
+		map.addAttribute("crmHelpTypeList",crmHelpTypeList);
+		return "redirect:/web/crm/help/type/list";
+	}
+
 }
