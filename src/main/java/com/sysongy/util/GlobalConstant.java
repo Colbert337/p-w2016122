@@ -625,4 +625,10 @@ public class GlobalConstant {
 	public interface Query_Condition {
 		public static final String QUERY_CONDITION_ALL = "全部";
 	}
+
+//	产品网站问题/公告
+	public interface QuestionNotice {
+	public static final int NOTICE = 0;
+		public static final int QUESTION = 1;
+	}
 }

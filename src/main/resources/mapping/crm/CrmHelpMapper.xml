@@ -18,6 +18,42 @@
     crm_help_id,crm_help_type_id, title, question, issuer, answer, imgs, is_notice, is_deleted, created_date, 
     updated_date
   </sql>
+  <!--查询问题列表-->
+  <select id="queryQuestionListByName" resultMap="BaseResultMap" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    select
+    <include refid="Base_Column_List" />
+    from crm_help
+    where 1=1
+    <trim>
+      <if test="crmHelpId != null &amp;&amp; crmHelpId != ''" >
+        and crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+      </if>
+      <if test="crmHelpTypeId != null &amp;&amp; crmHelpTypeId != ''" >
+        and crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
+      </if>
+      <if test="title!= null &amp;&amp; title != ''" >
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="question != null &amp;&amp; question != ''" >
+        and question = #{question,jdbcType=VARCHAR}
+      </if>
+      <if test="issuer != null &amp;&amp; issuer != ''" >
+        and issuer = #{issuer,jdbcType=VARCHAR}
+      </if>
+      <if test="answer != null &amp;&amp; answer != ''" >
+        and answer = #{answer,jdbcType=VARCHAR}
+      </if>
+      <if test="imgs != null &amp;&amp; imgs != ''" >
+        and imgs = #{imgs,jdbcType=VARCHAR}
+      </if>
+      <if test="isNotice != null &amp;&amp; isNotice != ''" >
+        and is_notice = #{isNotice,jdbcType=INTEGER}
+      </if>
+      <if test="isDeleted != null &amp;&amp; isDeleted != ''" >
+        and is_deleted = #{isDeleted,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
