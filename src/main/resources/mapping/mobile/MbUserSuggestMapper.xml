@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.api.mobile.dao.MbUserSuggestMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+    <id column="mb_user_suggest_id" property="mbUserSuggestId" jdbcType="VARCHAR" />
+    <result column="sys_driver_id" property="sysDriverId" jdbcType="VARCHAR" />
+    <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
+    <result column="suggest" property="suggest" jdbcType="VARCHAR" />
+    <result column="suggest_res" property="suggestRes" jdbcType="VARCHAR" />
+    <result column="follow_up" property="followUp" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mb_user_suggest_id, sys_driver_id, mobile_phone, suggest, suggest_res, follow_up, 
+    memo, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from mb_user_suggest
+    where mb_user_suggest_id = #{mbUserSuggestId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from mb_user_suggest
+    where mb_user_suggest_id = #{mbUserSuggestId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+    insert into mb_user_suggest (mb_user_suggest_id, sys_driver_id, mobile_phone, 
+      suggest, suggest_res, follow_up, 
+      memo, created_date, updated_date
+      )
+    values (#{mbUserSuggestId,jdbcType=VARCHAR}, #{sysDriverId,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, 
+      #{suggest,jdbcType=VARCHAR}, #{suggestRes,jdbcType=VARCHAR}, #{followUp,jdbcType=VARCHAR}, 
+      #{memo,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+    insert into mb_user_suggest
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mbUserSuggestId != null" >
+        mb_user_suggest_id,
+      </if>
+      <if test="sysDriverId != null" >
+        sys_driver_id,
+      </if>
+      <if test="mobilePhone != null" >
+        mobile_phone,
+      </if>
+      <if test="suggest != null" >
+        suggest,
+      </if>
+      <if test="suggestRes != null" >
+        suggest_res,
+      </if>
+      <if test="followUp != null" >
+        follow_up,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mbUserSuggestId != null" >
+        #{mbUserSuggestId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDriverId != null" >
+        #{sysDriverId,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="suggest != null" >
+        #{suggest,jdbcType=VARCHAR},
+      </if>
+      <if test="suggestRes != null" >
+        #{suggestRes,jdbcType=VARCHAR},
+      </if>
+      <if test="followUp != null" >
+        #{followUp,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+    update mb_user_suggest
+    <set >
+      <if test="sysDriverId != null" >
+        sys_driver_id = #{sysDriverId,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="suggest != null" >
+        suggest = #{suggest,jdbcType=VARCHAR},
+      </if>
+      <if test="suggestRes != null" >
+        suggest_res = #{suggestRes,jdbcType=VARCHAR},
+      </if>
+      <if test="followUp != null" >
+        follow_up = #{followUp,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where mb_user_suggest_id = #{mbUserSuggestId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+    update mb_user_suggest
+    set sys_driver_id = #{sysDriverId,jdbcType=VARCHAR},
+      mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      suggest = #{suggest,jdbcType=VARCHAR},
+      suggest_res = #{suggestRes,jdbcType=VARCHAR},
+      follow_up = #{followUp,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+    where mb_user_suggest_id = #{mbUserSuggestId,jdbcType=VARCHAR}
+  </update>
+</mapper>
