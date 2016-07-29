@@ -62,13 +62,11 @@ public class BaseContoller {
 
     @RequestMapping(value = {"","/"})
     public String index(ModelMap map){  
-    	/*ModelAndView result = new ModelAndView();
-    	String pmcName = "登录测试成功！";
-    	result.addObject("pmcName", pmcName);
-    	result.addObject("current_module", "webpage/test");
-        result.setViewName("comm/g_main");*/
-        
-        map.addAttribute("current_module", "webpage/demo/panel");
+        return "redirect:/webpage/crm/index.jsp";
+    }
+
+    @RequestMapping("/admin")
+    public String adminLogin(ModelMap map){
         return "login";
     }
 

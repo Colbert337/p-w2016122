@@ -12,19 +12,27 @@ pageEncoding="UTF-8"%>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link type="image/x-icon" href="<%=basePath %>/common/favicon.ico" rel="shortcut icon" />
-	<link rel="stylesheet" href="css/bootstrap.css">
-	<link rel="stylesheet" href="css/fontello.css">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/bootstrap.css">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/style.css">
 </head>
 <body>
 	<jsp:include page="common/header.jsp"></jsp:include>
-    <jsp:include page="common/download.jsp"></jsp:include>
+	<div class="subnav">
+		<div class="inner">
+			<ul>
+				<li class="home"><a href="<%=basePath %>/webpage/crm/index.jsp">首页</a></li>
+				<li><a href="<%=basePath %>/webpage/crm/download-crm.jsp">CRM下载</a></li>
+				<li class="current"><a href="<%=basePath %>/webpage/crm/download-app.jsp">APP下载</a></li>
+			</ul>
+		</div>
+	</div>
 
 	<div class="container-fluid app">
 		<img class="img-responsive" src="images/app.jpg" alt="">
 	</div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
+    <script src="<%=basePath %>/webpage/crm/js/main.js"></script>
 </body>
 </html>

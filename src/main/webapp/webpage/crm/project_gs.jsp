@@ -12,10 +12,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
     <link type="image/x-icon" href="<%=basePath %>/common/favicon.ico" rel="shortcut icon" />
-	<link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/jquery.fullPage.css">
-    <link rel="stylesheet" href="css/fontello.css">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/bootstrap.css">
+    <link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/jquery.fullPage.css">
+    <link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/style.css">
 </head>
 <body>
     <div id="cng-fullpage">
@@ -155,11 +155,11 @@
                                 <div class="col-sm-4">
                                     <div class="key-item">
                                         <span class="icon icon-lng"></span>
-                                        <a href="login_gs.jsp">
+                                        <a href="<%=basePath %>/webpage/crm/login_gs.jsp">
                                             登录加注站
                                         </a>
                                     </div>
-                                    <a class="key-item-xs" href="login_gs.jsp">
+                                    <a class="key-item-xs" href="<%=basePath %>/webpage/crm/login_gs.jsp">
                                         <span class="icon icon-lng"></span>
                                         登录加注站
                                     </a>
@@ -177,10 +177,10 @@
 
     </div>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery.fullpage.min.js"></script>
-<script src="js/jquery.easings.min.js"></script>
-<script src="js/main.js"></script>
+<script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
+<script src="<%=basePath %>/webpage/crm/js/jquery.fullpage.min.js"></script>
+<script src="<%=basePath %>/webpage/crm/js/jquery.easings.min.js"></script>
+<script src="<%=basePath %>/webpage/crm/js/main.js"></script>
 
 </body>
 </html>

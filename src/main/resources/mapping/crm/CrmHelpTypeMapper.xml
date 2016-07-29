@@ -12,6 +12,29 @@
   <sql id="Base_Column_List" >
     crm_help_type_id, title, remark, is_deleted, created_date, updated_date
   </sql>
+
+  <!--查询问题分类列表-->
+  <select id="queryCrmHelpTypeList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.crm.model.CrmHelpType" >
+    select
+    <include refid="Base_Column_List" />
+    from crm_help_type
+    where 1=1
+    <trim>
+      <if test="crmHelpTypeId != null &amp;&amp; crmHelpTypeId != ''" >
+        and crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
+      </if>
+      <if test="title!= null &amp;&amp; title != ''" >
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="remark != null &amp;&amp; remark != ''" >
+        and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="isDeleted != null &amp;&amp; isDeleted != ''" >
+        and is_deleted = #{isDeleted,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -103,4 +126,76 @@
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
   </update>
+  <!-- 分页查询 -->
+  <select id="queryForPageList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  select 
+    <include refid="Base_Column_List" />
+    from crm_help_type
+    where 1=1
+  <trim>
+      <if test="crmHelpTypeId != null &amp;&amp; crmHelpTypeId != ''" >
+        and crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
+      </if>
+      <if test="title!= null &amp;&amp; title != ''" >
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="remark != null &amp;&amp; remark != ''" >
+        and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="isDeleted != null &amp;&amp; isDeleted != ''" >
+        and is_deleted = #{isDeleted,jdbcType=INTEGER}
+      </if>
+      <if test="createdDate != null &amp;&amp; createdDate != ''" >
+        and created_date = #{createdDate,jdbcType=VARCHAR}
+      </if>
+      <if test="updatedDate != null &amp;&amp; updatedDate != ''" >
+        and updated_date = #{updatedDate,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+  
+   <!-- 添加 -->
+   <insert id="add" parameterType="com.sysongy.poms.crm.model.CrmHelpType" >
+    insert into crm_help_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="crmHelpTypeId != null" >
+        crm_help_type_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="crmHelpTypeId != null" >
+        #{crmHelpTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
 </mapper>

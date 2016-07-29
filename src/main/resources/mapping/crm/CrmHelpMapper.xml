@@ -3,6 +3,7 @@
 <mapper namespace="com.sysongy.poms.crm.dao.CrmHelpMapper" >
   <resultMap id="BaseResultMap" type="com.sysongy.poms.crm.model.CrmHelp" >
     <id column="crm_help_id" property="crmHelpId" jdbcType="VARCHAR" />
+    <result column="crm_help_type_id" property="crmHelpTypeId" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="question" property="question" jdbcType="VARCHAR" />
     <result column="issuer" property="issuer" jdbcType="VARCHAR" />
@@ -14,9 +15,45 @@
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    crm_help_id, title, question, issuer, answer, imgs, is_notice, is_deleted, created_date, 
+    crm_help_id,crm_help_type_id, title, question, issuer, answer, imgs, is_notice, is_deleted, created_date, 
     updated_date
   </sql>
+  <!--查询问题列表-->
+  <select id="queryQuestionListByName" resultMap="BaseResultMap" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    select
+    <include refid="Base_Column_List" />
+    from crm_help
+    where 1=1
+    <trim>
+      <if test="crmHelpId != null &amp;&amp; crmHelpId != ''" >
+        and crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+      </if>
+      <if test="crmHelpTypeId != null &amp;&amp; crmHelpTypeId != ''" >
+        and crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
+      </if>
+      <if test="title!= null &amp;&amp; title != ''" >
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="question != null &amp;&amp; question != ''" >
+        and question = #{question,jdbcType=VARCHAR}
+      </if>
+      <if test="issuer != null &amp;&amp; issuer != ''" >
+        and issuer = #{issuer,jdbcType=VARCHAR}
+      </if>
+      <if test="answer != null &amp;&amp; answer != ''" >
+        and answer = #{answer,jdbcType=VARCHAR}
+      </if>
+      <if test="imgs != null &amp;&amp; imgs != ''" >
+        and imgs = #{imgs,jdbcType=VARCHAR}
+      </if>
+      <if test="isNotice != null &amp;&amp; isNotice != ''" >
+        and is_notice = #{isNotice,jdbcType=INTEGER}
+      </if>
+      <if test="isDeleted != null &amp;&amp; isDeleted != ''" >
+        and is_deleted = #{isDeleted,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -28,11 +65,11 @@
     where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
-    insert into crm_help (crm_help_id, title, question, 
+    insert into crm_help (crm_help_id,crm_help_type_id, title, question, 
       issuer, answer, imgs, 
       is_notice, is_deleted, created_date, 
       updated_date)
-    values (#{crmHelpId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
+    values (#{crmHelpId,jdbcType=VARCHAR},#{crmHelpTypeId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
       #{issuer,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, #{imgs,jdbcType=VARCHAR}, 
       #{isNotice,jdbcType=INTEGER}, #{isDeleted,jdbcType=INTEGER}, #{createdDate,jdbcType=TIMESTAMP}, 
       #{updatedDate,jdbcType=TIMESTAMP})
@@ -42,6 +79,9 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="crmHelpId != null" >
         crm_help_id,
+      </if>
+      <if test="crmHelpTypeId != null" >
+        crm_help_type_id,
       </if>
       <if test="title != null" >
         title,
@@ -75,6 +115,9 @@
       <if test="crmHelpId != null" >
         #{crmHelpId,jdbcType=VARCHAR},
       </if>
+      <if test="crmHelpTypeId != null" >
+        #{crmHelpTypeId,jdbcType=VARCHAR},
+      </if>
       <if test="title != null" >
         #{title,jdbcType=VARCHAR},
       </if>
@@ -107,6 +150,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
     update crm_help
     <set >
+      <if test="crmHelpTypeId != null" >
+        crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR},
+      </if>
       <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
       </if>
@@ -139,7 +185,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
     update crm_help
-    set title = #{title,jdbcType=VARCHAR},
+    set crm_help_id = #{crmHelpId,jdbcType=VARCHAR},
+    	title = #{title,jdbcType=VARCHAR},
       question = #{question,jdbcType=VARCHAR},
       issuer = #{issuer,jdbcType=VARCHAR},
       answer = #{answer,jdbcType=VARCHAR},
@@ -150,4 +197,200 @@
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
   </update>
+  <!-- 列表查询 -->
+  <select id="queryCrmHelp" resultMap="BaseResultMap" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    select 
+    <include refid="Base_Column_List" />
+    from crm_help
+  </select>
+  
+  <!-- 回显信息查询 -->
+  <select id="queryCrmHelpValue" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    select * from crm_help where crm_help_id = #{crmHelpId} 
+  </select>
+  
+  <!-- 删除 -->
+  <delete id="deleteCrmHelp" parameterType="java.lang.String" >
+    delete from crm_help
+    where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+  </delete>
+  
+  <!-- 更新 -->
+  <update id="updateCrmHelp" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    update crm_help
+    <set >
+      <if test="crmHelpTypeId != null" >
+        crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="question != null" >
+        question = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="issuer != null" >
+        issuer = #{issuer,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="imgs != null" >
+        imgs = #{imgs,jdbcType=VARCHAR},
+      </if>
+      <if test="isNotice != null" >
+        is_notice = #{isNotice,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        created_date = #{createdDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedDate != null" >
+        updated_date = #{updatedDate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+  </update>
+  
+   <!-- 添加 -->
+   <insert id="add" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+    insert into crm_help
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="crmHelpId != null" >
+        crm_help_id,
+      </if>
+      <if test="crmHelpTypeId != null" >
+        crm_help_type_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="question != null" >
+        question,
+      </if>
+      <if test="issuer != null" >
+        issuer,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="imgs != null" >
+        imgs,
+      </if>
+      <if test="isNotice != null" >
+        is_notice,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="crmHelpId != null" >
+        #{crmHelpId,jdbcType=VARCHAR},
+      </if>
+      <if test="crmHelpTypeId != null" >
+        #{crmHelpTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="question != null" >
+        #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="issuer != null" >
+        #{issuer,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="imgs != null" >
+        #{imgs,jdbcType=VARCHAR},
+      </if>
+      <if test="isNotice != null" >
+        #{isNotice,jdbcType=INTEGER},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 分页查询 -->
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+  select 
+    <include refid="Base_Column_List" />
+    from crm_help
+    where 1=1
+  <trim>
+  	  <if test="crmHelpId != null &amp;&amp; crmHelpId != ''" >
+        and crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+      </if>
+      <if test="crmHelpTypeId != null &amp;&amp; crmHelpTypeId != ''" >
+        and crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
+      </if>
+      <if test="title!= null &amp;&amp; title != ''" >
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="question != null &amp;&amp; question != ''" >
+        and question = #{question,jdbcType=VARCHAR}
+      </if>
+      <if test="issuer != null &amp;&amp; issuer != ''" >
+        and issuer = #{issuer,jdbcType=VARCHAR}
+      </if>
+      <if test="answer != null &amp;&amp; answer != ''" >
+        and answer = #{answer,jdbcType=VARCHAR}
+      </if>
+      <if test="imgs != null &amp;&amp; imgs != ''" >
+        and imgs = #{imgs,jdbcType=VARCHAR}
+      </if>
+      <if test="isNotice != null &amp;&amp; isNotice != ''" >
+        and is_notice = #{isNotice,jdbcType=INTEGER}
+      </if>
+      <if test="isDeleted != null &amp;&amp; isDeleted != ''" >
+        and is_deleted = #{isDeleted,jdbcType=INTEGER}
+      </if>
+      <if test="createdDate != null &amp;&amp; createdDate != ''" >
+        and created_date = #{createdDate,jdbcType=VARCHAR}
+      </if>
+      <if test="updatedDate != null &amp;&amp; updatedDate != ''" >
+        and updated_date = #{updatedDate,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+  
+  <!-- 问题类型查询 -->
+  <select id="queryQuestiontypeList" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.crm.model.CrmHelp">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_help
+    where is_deleted = 1
+    <if test="crmHelpId != null &amp;&amp; crmHelpId !=''" >
+      and crm_help_id = #{crmHelpId}
+    </if>
+    <if test="crmHelpTypeId != null &amp;&amp; crmHelpTypeId !=''" >
+      and crm_help_type_id = #{crm_help_type_id}
+    </if>
+    order by created_date desc
+  </select>
+  
+  <!-- 公告查询 
+  <select id="queryNotice" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from crm_help where is_notice = #{isNotice}
+  </select>
+  -->
+  
+  
 </mapper>
