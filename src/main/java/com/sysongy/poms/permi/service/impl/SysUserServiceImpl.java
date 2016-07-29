@@ -174,6 +174,11 @@ public class SysUserServiceImpl implements SysUserService{
         return sysUserMapper.updateUser(user);
     }
 
+    @Override
+    public int updateUserInfo(SysUser user) {
+        return sysUserMapper.updateUser(user);
+    }
+
     /**
      * 修改用户状态
      * @param user 用户信息
@@ -279,6 +284,7 @@ public class SysUserServiceImpl implements SysUserService{
         user.setIsAdmin(GlobalConstant.ADMIN_YES);
         String password = user.getPassword();
         String userName = user.getUserName();
+        user.setRealName("管理员");
         password = Encoder.MD5Encode(password.getBytes());
         user.setPassword(password);
 

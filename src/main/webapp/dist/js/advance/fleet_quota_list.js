@@ -24,19 +24,22 @@ function addChongzhi(){
 
 //显示添加资金分配弹出层add
 function addFenpei(){
-    clearDiv();
-
+    /*clearDiv();*/
+    console.log("addFenpei()");
     $("#fenpeiModel").modal('show').on('hide.bs.modal', function() {
         $('#fenpeiForm').bootstrapValidator('resetForm',true);
+        $('.pay-code-error').text("");
     });
 }
 
 
 //显示添加个人转账弹出层add
 function addZhuan(){
+    console.log('addZhuan()');
     clearDiv();
     $("#zhuanModel").modal('show').on('hide.bs.modal', function() {
         $('#zhuanForm').bootstrapValidator('resetForm',true);
+        $('.pay-code-error').text("");
     });
 }
 
@@ -132,12 +135,15 @@ function allocation(obj,index){
 /**
  * 保存配置
  */
+var isPayCodeError = false;
 function saveFenpei(){
     $('#fenpeiForm').data('bootstrapValidator').validate();
     if(!$('#fenpeiForm').data('bootstrapValidator').isValid()){
         return ;
     }
-
+    if(isPayCodeError == true){
+        return false;
+    }
     var dataForm = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
     dataForm = decodeURIComponent(dataForm,true);
     var saveOptions ={
@@ -147,7 +153,7 @@ function saveFenpei(){
         dataType:'html',
         success:function(data){
             $("#main").html(data);
-            bootbox.alert("资金分配成功");//保存成功弹窗
+            $("#modal-table").modal("show");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败!");
         }
@@ -164,19 +170,22 @@ function saveFenpei(){
  */
 var zhuanIndex = 2;
 function addRow(){
-
     var objIndex = zhuanIndex++;
-    var zhuan = "";
-    zhuan += "<tr id='tr_"+objIndex+"'>";
-    zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' data-sj-result='invalid' onblur='queryDriverInfo("+objIndex+");'/></td>";
-    zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly' data-sj-result='invalid' onclick='queryDriverInfo("+objIndex+");'>";
-    zhuan += "<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>";
-    zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' data-sj-result='invalid' onblur='isTransfer("+objIndex+");'/></td>";
-    zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td class='fleet-quota-option'>";
-    zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除该行</a>";
-    zhuan += "</td></tr>";
+    if(objIndex <= 10){
+        var zhuan = "";
+        zhuan += "<tr id='tr_"+objIndex+"'>";
+        zhuan += "<td><input type='text'  id='mobile_phone_"+objIndex+"' name='mobilePhone' class='col-sm-12' data-sj-result='invalid' onblur='queryDriverInfo("+objIndex+");'/></td>";
+        zhuan += "<td><input type='text'  id='full_name_"+objIndex+"' name='fullName' class='col-sm-12' readonly='readonly' data-sj-result='invalid' onclick='queryDriverInfo("+objIndex+");'>";
+        zhuan += "<input type='hidden' id='sys_driver_id_"+objIndex+"' name='sysDriverId' class='col-sm-12'/></td>";
+        zhuan += "<td><input type='text'  id='amount_"+objIndex+"' name='amount' class='col-sm-12' data-sj-result='invalid' onblur='isTransfer("+objIndex+");'/></td>";
+        zhuan += "<td><input type='text'  id='remark_"+objIndex+"' name='remark' class='col-sm-12' /></td><td class='fleet-quota-option'>";
+        zhuan += "<a href='javascript:deleteRow("+objIndex+");'>删除该行</a>";
+        zhuan += "</td></tr>";
 
-    $("#zhuanTable").append(zhuan);
+        $("#zhuanTable").append(zhuan);
+    }else{
+        bootbox.alert("一次转账人数不能超过10人！");
+    }
 }
 
 //验证手机号
@@ -290,7 +299,6 @@ function saveZhuan(){
     var count = 0;
     $('input[name="mobilePhone"],input[name="fullName"],input[name="amount"]').each(function(index,val){
         if($(this).attr("data-sj-result")=="invalid"){
-            console.log('ssssssssssssssss')
             $(".fleet-quota-error").text('操作失败！')
             count++;
             return false;
@@ -304,6 +312,10 @@ function saveZhuan(){
     $('#zhuanForm').data('bootstrapValidator').validate();
     if(!$('#zhuanForm').data('bootstrapValidator').isValid()){
         return ;
+    }
+
+    if(isPayCodeError == true){
+        return false;
     }
 
     var data = $("#zhuanForm").serialize(); //序列化表单 获取到数据
@@ -331,6 +343,11 @@ function closeDialog(divId){
     $("#"+divId+" :input").each(function () {
         $(this).val("").removeAttr("data-sj-result");
     });
+    $(".fleet-quota-error").empty();
+    $("#"+divId).modal('hide');
+}
+/*取消弹层方法*/
+function closeDiv(divId){
     $(".fleet-quota-error").empty();
     $("#"+divId).modal('hide');
 }
@@ -475,17 +492,6 @@ $('#zhuanForm').bootstrapValidator({
                 regexp: {
                     regexp: '^[0-9]+$',
                     message: '支付密码只能包含数字'
-                },
-                remote: {
-                    url: '../web/transportion/info/password',
-                    type: "post",
-                    async: false,
-                    data: function(validator, $field, value) {
-                        return{
-                            pay_code:$("#pay_code").val()
-                        };
-                    },
-                    message: '支付密码错误'
                 }
             }
         }
@@ -510,20 +516,51 @@ $('#fenpeiForm').bootstrapValidator({
                 regexp: {
                     regexp: '^[0-9]+$',
                     message: '支付密码只能包含数字'
-                },
-                remote: {
-                    url: '../web/transportion/info/password',
-                    type: "post",
-                    data: function(validator, $field, value) {
-                        return{
-                            pay_code:$("#pay_code").val()
-                        };
-                    },
-                    message: '支付密码错误'
                 }
             }
         }
     }
 });
 
+function checkPaycode(elem) {
+    var $payCode = $(elem),
+        $payCodeGroup = $payCode.parents('.form-group');
+    $.ajax({
+        url:'../web/transportion/info/password',
+        type:'post',
+        data:{pay_code:$payCode.val()},
+        success:function(data) {
+            console.log(data);
+            if(data.valid==true){
+                $payCodeGroup.removeClass('has-error').addClass('has-success');
+                $payCodeGroup.find('.form-control-feedback').removeClass('glyphicon-remove').addClass('glyphicon-ok').show();
+                $payCodeGroup.find('.pay-code-error').text("");
+                isPayCodeError = false;
+            } else if(data.valid=="erroEmpty") {
+                $payCodeGroup.removeClass('has-success').addClass('has-error');
+                $payCodeGroup.find('.form-control-feedback').removeClass('glyphicon-ok').addClass('glyphicon-remove').show();
+                $payCodeGroup.find('.pay-code-error').text("支付密码未设置");
+                isPayCodeError = true;
+            } else {
+                $payCodeGroup.removeClass('has-success').addClass('has-error');
+                $payCodeGroup.find('.form-control-feedback').removeClass('glyphicon-ok').addClass('glyphicon-remove').show();
+                $payCodeGroup.find('.pay-code-error').text("支付密码错误");
+                isPayCodeError = true;
+            }
+        },
+        error: function(){
+            console.log('error');
+        }
+    });
+}
 
+$(function(){
+    //资金分配
+    $('#payCode').on("blur", function () {
+        checkPaycode("#payCode");
+    });
+    //个人转账
+    $('#pay_code').on("blur", function () {
+        checkPaycode("#pay_code");
+    });
+});

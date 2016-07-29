@@ -69,6 +69,10 @@ public class TransportionController extends BaseContoller{
 
 	private Transportion transportion;
 
+	private TcVehicle tcVehicle;
+	
+	private SysOrder sysOrder;
+
 	/**
 	 * 运输公司查询
 	 * @param map
@@ -192,7 +196,7 @@ public class TransportionController extends BaseContoller{
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("sysOrder", sysOrder);
-			map.addAttribute("totalCash",total.getList().get(0).get("total"));
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -231,7 +235,7 @@ public class TransportionController extends BaseContoller{
 	            downLoadFileName = "转账明细_" + downLoadFileName;
 
 	            try {
-	                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+	            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
 	            } catch (UnsupportedEncodingException e1) {
 	                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
 	            }
@@ -247,13 +251,13 @@ public class TransportionController extends BaseContoller{
 	            		String order_number = tmpMap.get("order_number")==null?"":tmpMap.get("order_number").toString();
 	            		String order_type;
 	            		String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
-	            		String order_date = tmpMap.get("order_date").toString();
+	            		String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
 	            		String deal_type;
 	            		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
-	            		String creditAccount = tmpMap.get("creditAccount").toString();
+	            		String creditAccount = tmpMap.get("creditAccount")==null?"":tmpMap.get("creditAccount").toString();
 	            		String debit_account = tmpMap.get("debitAccount")==null?"":tmpMap.get("debitAccount").toString();
-	            		String cash = tmpMap.get("cash").toString();
-	            		String operator = tmpMap.get("operator").toString();
+	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+	            		String operator = tmpMap.get("operator")==null?"":tmpMap.get("operator").toString();
 
 
 	                    switch (tmpMap.get("order_type").toString()) {
@@ -309,6 +313,8 @@ public class TransportionController extends BaseContoller{
 	@RequestMapping("/queryRechargeReport")
 	public String queryRechargeReport(ModelMap map, SysOrder sysOrder) throws Exception{
 		
+		this.sysOrder = sysOrder;
+		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_rechargereport";
 
@@ -331,7 +337,7 @@ public class TransportionController extends BaseContoller{
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("sysOrder", sysOrder);
-			map.addAttribute("totalCash",total.getList().get(0).get("total"));
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -579,10 +585,10 @@ public class TransportionController extends BaseContoller{
             ExportUtil reportExcel = new ExportUtil();
 
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
-            downLoadFileName = "充值_" + downLoadFileName;
+            downLoadFileName = "运输公司消费_" + downLoadFileName;
 
             try {
-                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));  
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
@@ -595,17 +601,17 @@ public class TransportionController extends BaseContoller{
             if(list != null && list.size() > 0){
             	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
             		 
-            		String order_number = tmpMap.get("order_number").toString();
+            		String order_number = tmpMap.get("order_number") == null?"":tmpMap.get("order_number").toString();
             		String order_type;
-            		String deal_number = tmpMap.get("deal_number").toString();
-            		String order_date = tmpMap.get("order_date").toString();
-            		String is_discharge = tmpMap.get("is_discharge").toString()=="0"?"冲红":"消费";
-            		String cash = tmpMap.get("cash").toString();
-            		String credit_account = tmpMap.get("creditAccount").toString();
+            		String deal_number = tmpMap.get("deal_number") == null?"":tmpMap.get("deal_number").toString();
+            		String order_date = tmpMap.get("order_date") == null?"":tmpMap.get("order_date").toString();
+            		String is_discharge = tmpMap.get("is_discharge") == null?"":"0".equals(tmpMap.get("is_discharge").toString())?"消费":"冲红";
+            		String cash = tmpMap.get("cash") == null?"":tmpMap.get("cash").toString();
+            		String credit_account = tmpMap.get("creditAccount") == null?"":tmpMap.get("creditAccount").toString();
             		String channel = tmpMap.get("channel") == null?"":tmpMap.get("channel").toString();
-            		String plates_number = tmpMap.get("plates_number").toString();
-            		String remark = tmpMap.get("remark").toString();
-            		String user_name = tmpMap.get("user_name").toString();
+            		String plates_number = tmpMap.get("plates_number") == null?"":tmpMap.get("plates_number").toString();
+            		String remark = tmpMap.get("remark") == null?"":tmpMap.get("remark").toString();
+            		String user_name = tmpMap.get("user_name") == null?"":tmpMap.get("user_name").toString();
 
 
                     switch (tmpMap.get("order_type").toString()) {
@@ -694,7 +700,9 @@ public class TransportionController extends BaseContoller{
 
 			if(transportion != null && transport != null){
 				String password = transportion.getPay_code();
-				if(password.equals(Encoder.MD5Encode(transport.getPay_code().getBytes()))){
+				if(password == null || "".equals(password)){
+					json.put("valid","erroEmpty");
+				}else if(password.equals(Encoder.MD5Encode(transport.getPay_code().getBytes()))){
 					json.put("valid",true);
 				}else{
 					json.put("valid",false);
@@ -1033,7 +1041,7 @@ public class TransportionController extends BaseContoller{
 
 	@RequestMapping("/Vehiclelist")
     public String queryVehiclelist(@ModelAttribute CurrUser currUser, TcVehicle vehicle, ModelMap map){
-		
+		this.tcVehicle = vehicle;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/vehicle_list";
 
@@ -1047,10 +1055,7 @@ public class TransportionController extends BaseContoller{
 		        	vehicle.setOrderby("created_date desc");
 				}
 		        vehicle.setStationId(stationId);
-
 				PageInfo<TcVehicle> pageinfo = tcVehicleService.queryVehicleList(vehicle);
-
-
 				List<TcVehicle> tcVehicles = pageinfo.getList();
 				List<TcVehicle> tcVehicleNews = new ArrayList<TcVehicle>();
 				for(TcVehicle tcVehicleInfo : tcVehicles){
@@ -1085,7 +1090,7 @@ public class TransportionController extends BaseContoller{
 	}
 
 	@RequestMapping("/unLockDriver")
-	public String unLockDriver(@RequestParam String tcVehicleId, ModelMap map)throws Exception {
+	public String unLockDriver(@ModelAttribute("currUser") CurrUser currUser, @RequestParam String tcVehicleId, ModelMap map)throws Exception {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/vehicle_list";
 		try {
@@ -1095,7 +1100,7 @@ public class TransportionController extends BaseContoller{
 			}
 			TcVehicle tcVehicle = new TcVehicle();
 			tcVehicle.setTcVehicleId(tcVehicleId);
-			//ret = this.queryDriverInfoList(this.driver ==null?new SysDriver():this.driver, map);
+			ret = this.queryVehiclelist(currUser, this.tcVehicle == null?new TcVehicle():this.tcVehicle, map);
 			bean.setRetCode(100);
 			bean.setRetMsg("状态修改成功");
 			bean.setPageInfo(ret);
@@ -1206,7 +1211,7 @@ public class TransportionController extends BaseContoller{
 			String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
 			downLoadFileName = "充值报表_" + downLoadFileName;
 			try {
-				response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+				response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));  
 			} catch (UnsupportedEncodingException e1) {
 				response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
 			}

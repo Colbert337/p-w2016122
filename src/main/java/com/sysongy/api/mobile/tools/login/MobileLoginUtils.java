@@ -1,70 +1,47 @@
 package com.sysongy.api.mobile.tools.login;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 
-import com.sysongy.api.mobile.model.Login.MobileLogin;
 import com.sysongy.api.mobile.model.base.MobileReturn;
-import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.api.mobile.model.login.MobileLogin;
+import com.sysongy.api.mobile.tools.MobileUtils;
+import com.sysongy.poms.driver.model.SysDriver;
 
-public class MobileLoginUtils {
-
-	public static final String RET_SUCCESS = "0";
-	public static final String RET_ERROR = "1";
-
-	public static final String RET_SUCCESS_MSG = "登录成功";
-	public static final String RET_ERROR_MSG = "系统繁忙";
-	public static final String RET_LOGINPARAM_ERROR_MSG = "请求参数格式不正确";
+public class MobileLoginUtils extends MobileUtils{
+	
 	public static final String RET_LOGINPARAM_NULL_MSG = "用户名或密码为空";
 	public static final String RET_LOGIN_ERROR_MSG = "用户名或密码错误";
 
-	public static void checkParam(MobileLogin login, MobileReturn ret) {
-
-		if (StringUtils.isEmpty(login.getUsername()) || StringUtils.isEmpty(login.getPassword())) {
+	public static void checkLoginParam(MobileLogin login, String apiKey, MobileReturn ret) throws Exception{
+		
+		checkApiKey(apiKey, ret);
+		
+		if (login == null || StringUtils.isEmpty(login.getUsername()) || StringUtils.isEmpty(login.getPassword())) {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_LOGINPARAM_NULL_MSG);
+			throw new Exception(RET_LOGINPARAM_NULL_MSG);
 		}
 	}
 
-	public static void checkLogin(SysUser sysUser, MobileReturn ret) {
+	public static void checkLogin(List<SysDriver> driver, MobileReturn ret) throws Exception{
 
-		if (StringUtils.isEmpty(sysUser.getSysUserId())) {
+		if (driver == null || driver.size() != 1 || StringUtils.isEmpty(driver.get(0).getSysDriverId())) {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_LOGIN_ERROR_MSG);
+			throw new Exception(RET_LOGIN_ERROR_MSG);
 		}
 	}
 
-	public static SysUser packagingSysUser(MobileLogin login) {
+	public static SysDriver packagingSysDriver(MobileLogin login) throws Exception{
 
-		SysUser sysUser = new SysUser();
+		SysDriver driver = new SysDriver();
 
-		sysUser.setUserName(login.getUsername());
-		sysUser.setPassword(login.getPassword());
+		driver.setUserName(login.getUsername());
+		driver.setPassword(login.getPassword());
 
-		return sysUser;
-	}
-
-	public static MobileReturn packagingMobileReturn(String error, String msg, String data) {
-
-		MobileReturn ret = new MobileReturn();
-
-		ret.setError(error);
-		ret.setData(data);
-		if(StringUtils.isEmpty(msg)){
-			switch (error) {
-			case RET_SUCCESS:
-				ret.setMsg(RET_SUCCESS_MSG);
-				break;
-
-			case RET_ERROR:
-				ret.setMsg(RET_ERROR_MSG);
-				break;
-
-			default:
-				ret.setMsg(msg == null?"":msg);
-			}
-		}
-
-		return ret;
+		return driver;
 	}
 
 }

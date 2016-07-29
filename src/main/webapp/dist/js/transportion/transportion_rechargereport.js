@@ -29,7 +29,7 @@
 	}
 	
 	function showDetail(order_id,order_type,cash){
-		$.ajax({
+		/*$.ajax({
 			type: "POST",
 			url: '../web/transportion/queryRechargeReportDetail?order_id='+order_id+'&order_type='+order_type+'&cash='+cash,
 			dataType: 'text',
@@ -40,7 +40,9 @@
 			error:function(){
 				bootbox.alert('加载页面时出错！');
 			}
-		});
+		});*/
+		var url = '../web/transportion/queryRechargeReportDetail?order_id='+order_id+'&order_type='+order_type+'&cash='+cash;
+		ajaxQueryData('#main',url,'text');
 	}
 	
 	function init(){
@@ -50,5 +52,7 @@
 
 	//导出报表
 	function importReport(){
+		var cur = "${sessionScope.currUser.userId}";
+		//alert(cur);
 		$("#formgastation").submit();
 	}

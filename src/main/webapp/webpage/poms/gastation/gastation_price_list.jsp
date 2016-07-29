@@ -28,12 +28,12 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>加注站编号:</label>
-							<input type="text" id="gsGasPrice.sysGasStationId" name="gsGasPrice.sysGasStationId" placeholder="输入加注站编号" maxlength="10" value="${gsGasPrice.sysGasStationId}"/>
+							<input type="text" id="gsGasPrice.sysGasStationId" name="sysGasStationId" placeholder="输入加注站编号" maxlength="10" value="${gsGasPrice.sysGasStationId}"/>
 						</div>
 						
 						<div class="item">
 							<label>气品类型:</label>
-							<select class="chosen-select" name="gsGasPrice.gasNum" >
+							<select class="chosen-select" name="gasNum" >
 								<s:option flag="true" gcode="CARDTYPE" form="gsGasPrice" field="gasNum" />
 							</select>
 						</div>
@@ -41,11 +41,11 @@
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>创建时间:</label>
-								<input type="text" class="" name="gsGasPrice.created_date_after" value="${gsGasPrice.created_date_after}" readonly="readonly"/>
+								<input type="text" class="" name="created_date_after" value="${gsGasPrice.created_date_after}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="gsGasPrice.created_date_before" value="${gsGasPrice.created_date_before}" readonly="readonly"/>
+								<input type="text" class="" name="created_date_before" value="${gsGasPrice.created_date_before}" readonly="readonly"/>
 							</div>
 						</div>
 
@@ -86,6 +86,7 @@
 									<th onclick="orderBy(this,'gas_num');commitForm();" id="gas_num_order">气品类型</th>
 									<th onclick="orderBy(this,'gas_name');commitForm();" id="gas_name_order">气品子类型</th>
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="createdDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
+									<!-- <th class="td-w2"><i id="createTime" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新时间</th> -->
 									<th class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
@@ -106,7 +107,8 @@
 									<td>${list.productPriceInfo.productPrice}</td>
 									<td><s:Code2Name mcode="${list.gasNum}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.gasName}" gcode="CARDTYPE"></s:Code2Name></td>
-									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
+									<%-- <td><fmt:formatDate value="${list.createdDate}" type="both"/></td> --%>
+									<td><fmt:formatDate value="${list.productPriceInfo.createTime}" type="both"/></td>
 									<td class="text-center">
 										<a class="option-btn-m" href="javascript:void(0);" title="查看历史价格" data-rel="tooltip">
 											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showPriceLog(this);"></i>

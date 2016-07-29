@@ -198,7 +198,8 @@
 	<bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage">
 		<property name="from" value="rdadmin@sysongy.com"/>
 	</bean>
-	
+
+	<!--定时任务开始-->
 	<bean id="gastationAlertjob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
 		<property name="targetObject">  
 			<bean class="com.sysongy.util.job.GastationAlertjob" />  
@@ -218,6 +219,6 @@
 				<ref bean="cronTrigger" />  
 			</list>  
 		</property>  
-	</bean>      
-
+	</bean>
+	<!--定时任务结束-->
 </beans>

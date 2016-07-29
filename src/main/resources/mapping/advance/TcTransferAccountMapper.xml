@@ -3,6 +3,7 @@
 <mapper namespace="com.sysongy.tcms.advance.dao.TcTransferAccountMapper" >
   <resultMap id="BaseResultMap" type="com.sysongy.tcms.advance.model.TcTransferAccount" >
     <id column="tc_transfer_account_id" property="tcTransferAccountId" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="station_id" property="stationId" jdbcType="VARCHAR" />
     <result column="sys_driver_id" property="sysDriverId" jdbcType="VARCHAR" />
     <result column="full_name" property="fullName" jdbcType="VARCHAR" />
@@ -37,7 +38,7 @@
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    tc_transfer_account_id, station_id, sys_driver_id, full_name, mobile_phone, amount, 
+    tc_transfer_account_id,order_id, station_id, sys_driver_id, full_name, mobile_phone, amount,
     used, created_date, updated_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -51,6 +52,7 @@
     select sr.order_number,sr.order_type,sr.cash,su.real_name,sod.*,tta.full_name,tta.mobile_phone,tta.used
     from sys_order  sr left join sys_order_deal sod  on sr.order_id = sod.order_id
     left join tc_transfer_account tta on sr.debit_account = tta.sys_driver_id
+    and sr.order_id = tta.order_id
     left join sys_user su on sr.operator = su.sys_user_id
     where sr.order_type = #{sysDriverId} and sod.deal_type != '313'
     <if test="fullName != null &amp;&amp; fullName !=''" >
@@ -69,11 +71,11 @@
     where tc_transfer_account_id = #{tcTransferAccountId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
-    insert into tc_transfer_account (tc_transfer_account_id, station_id, sys_driver_id, 
+    insert into tc_transfer_account (tc_transfer_account_id,order_id, station_id, sys_driver_id,
       full_name, mobile_phone, amount, 
       used, created_date, updated_date
       )
-    values (#{tcTransferAccountId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{sysDriverId,jdbcType=VARCHAR}, 
+    values (#{tcTransferAccountId,jdbcType=VARCHAR},#{orderId,jdbcType=VARCHAR}, #{stationId,jdbcType=VARCHAR}, #{sysDriverId,jdbcType=VARCHAR},
       #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, 
       #{used,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
       )
@@ -83,6 +85,9 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tcTransferAccountId != null" >
         tc_transfer_account_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
       </if>
       <if test="stationId != null" >
         station_id,
@@ -113,6 +118,9 @@
       <if test="tcTransferAccountId != null" >
         #{tcTransferAccountId,jdbcType=VARCHAR},
       </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
       <if test="stationId != null" >
         #{stationId,jdbcType=VARCHAR},
       </if>
@@ -142,6 +150,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
     update tc_transfer_account
     <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
       <if test="stationId != null" >
         station_id = #{stationId,jdbcType=VARCHAR},
       </if>
@@ -171,7 +182,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
     update tc_transfer_account
-    set station_id = #{stationId,jdbcType=VARCHAR},
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      station_id = #{stationId,jdbcType=VARCHAR},
       sys_driver_id = #{sysDriverId,jdbcType=VARCHAR},
       full_name = #{fullName,jdbcType=VARCHAR},
       mobile_phone = #{mobilePhone,jdbcType=VARCHAR},

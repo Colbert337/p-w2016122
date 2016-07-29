@@ -41,6 +41,7 @@ public class SecurityServlet extends HttpServlet implements Filter {
         HttpSession session = request.getSession(true);       
         CurrUser currUser = (CurrUser) session.getAttribute("currUser");//登录人角色  
         String url=request.getRequestURI();
+        String isdownloadreport = request.getParameter("downloadreport");
 		if(canAllowCRMUserAccess(request)){
 			arg2.doFilter(arg0, arg1);
 			return;
@@ -49,14 +50,14 @@ public class SecurityServlet extends HttpServlet implements Filter {
         if(currUser == null || "".equals(currUser.getUserId())) {
              //判断获取的路径不为空且不是访问登录页面或执行登录操作时跳转     
              if(url!=null && !url.equals("") && ( url.indexOf("Login")<0 && url.indexOf("login")<0 )) {
-//            	 if(url.contains("poms-web/web/")){
+            	 if(!"true".equals(isdownloadreport)){
             		 response.setStatus(911);
 //            		 throw new ServletException("need login");
-//            	 }else{
-            		 //response.sendRedirect(request.getContextPath()+"/login.jsp");
-//            		 response.setStatus(911);
-                	 return;
-//            	 }
+            	 }else{
+            		 response.sendRedirect(request.getContextPath());
+            		 //response.setStatus(911); 
+            	 }
+            	 return;
              }                
          }    
          arg2.doFilter(request, response);     
@@ -75,7 +76,7 @@ public class SecurityServlet extends HttpServlet implements Filter {
 		SqlSessionFactory sessionFactory = (SqlSessionFactory) wac.getBean("sqlSessionFactory");
 		SqlSession session = sessionFactory.openSession();
 		SqlMapper sqlMapper = new SqlMapper(session);
-		String excuteSQL = "SELECT * FROM poms_web_v2_dev.sys_user where user_name=" +
+		String excuteSQL = "SELECT * FROM sys_user where user_name=" +
 				curUserName +
 				" and password=" +
 				curPassword +

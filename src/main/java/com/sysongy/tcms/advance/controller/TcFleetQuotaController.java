@@ -396,7 +396,7 @@ public class TcFleetQuotaController extends BaseContoller {
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
             downLoadFileName = "额度划拨报表_" + downLoadFileName;
             try {
-                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+                response.setHeader("Content-Disposition","attachment;filename=" + new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
@@ -494,7 +494,7 @@ public class TcFleetQuotaController extends BaseContoller {
                         backCash = backCash.add(new BigDecimal(quotaMap.get("cashBack").toString()));
                     }
                 }
-                totalCash = totalCash.add(backCash);
+                /*totalCash = totalCash.add(backCash);*/  //取消添加返现金额
             }
             //累计总划款金额
             map.addAttribute("totalCash",totalCash);
@@ -562,7 +562,7 @@ public class TcFleetQuotaController extends BaseContoller {
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
             downLoadFileName = "转账报表_" + downLoadFileName;
             try {
-                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+                response.setHeader("Content-Disposition","attachment;filename=" + new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
@@ -759,7 +759,7 @@ public class TcFleetQuotaController extends BaseContoller {
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
             downLoadFileName = "个人消费报表_" + downLoadFileName;
             try {
-                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+                response.setHeader("Content-Disposition","attachment;filename=" + new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
@@ -901,13 +901,14 @@ public class TcFleetQuotaController extends BaseContoller {
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageinfo = orderService.queryTcFleetReport(order);
 
-            List<Map<String, Object>> list = orderService.queryTcPersonalList(order);
+            List<Map<String, Object>> list = orderService.queryTcFleetList(order);
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            BigDecimal chongHong = new BigDecimal(BigInteger.ZERO);
             if(list != null && list.size() > 0){
 
                 for (Map<String, Object> quotaMap:list) {
-                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
                 }
             }
@@ -976,7 +977,7 @@ public class TcFleetQuotaController extends BaseContoller {
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
             downLoadFileName = "车队消费报表_" + downLoadFileName;
             try {
-                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+                response.setHeader("Content-Disposition","attachment;filename=" + new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
@@ -999,8 +1000,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
 
                 for (Map<String, Object> quotaMap:pageInfo.getList()) {
-                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
 
                     //组装表格
@@ -1112,8 +1113,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(list != null && list.size() > 0){
 
                 for (Map<String, Object> quotaMap:list) {
-                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
                 }
             }
@@ -1182,7 +1183,7 @@ public class TcFleetQuotaController extends BaseContoller {
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
             downLoadFileName = "队内管理消费报表_" + downLoadFileName;
             try {
-                response.setHeader("Content-Disposition","attachment;filename=" + java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
+                response.setHeader("Content-Disposition","attachment;filename=" + new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
             } catch (UnsupportedEncodingException e1) {
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
@@ -1205,8 +1206,8 @@ public class TcFleetQuotaController extends BaseContoller {
 
             if(pageInfo.getList() != null && pageInfo.getList().size() > 0){
                 for (Map<String, Object> quotaMap:pageInfo.getList()) {
-                    if(quotaMap.get("sum_price") != null && !"".equals(quotaMap.get("sum_price").toString())){
-                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("sum_price").toString()));
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
 
                     //组装表格

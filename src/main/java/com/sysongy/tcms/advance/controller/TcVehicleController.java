@@ -209,6 +209,7 @@ public class TcVehicleController extends BaseContoller {
     public String saveVehicle(@ModelAttribute("currUser") CurrUser currUser, TcVehicle vehicle, ModelMap map) throws Exception{
         String stationId = currUser.getStationId();
         String payCode = "";
+        String resultInt = "";
         int count = 0;
         Transportion transportion = transportionService.queryTransportionByPK(stationId);
         if(vehicle.getTcVehicleId() != null && vehicle.getTcVehicleId() != ""){
@@ -221,8 +222,10 @@ public class TcVehicleController extends BaseContoller {
             vehicle1Update.setUserName(tcVehicle.getPlatesNumber());
             List<TcVehicle> vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Update);
 
-            if(vehicle1Count != null){
-                return "redirect:/web/tcms/vehicle/list/page";
+            if(vehicle1Count != null && vehicle1Count.size() > 0){
+                resultInt = "车牌号已经存在！";
+                resultInt = Encoder.symmetricEncrypto(resultInt);
+                return "redirect:/web/tcms/vehicle/list/page?resultInt="+resultInt;
             }else{
                 if(tcVehicle != null && vehicle1Count.size() > 0){
                     //新密码
@@ -237,6 +240,8 @@ public class TcVehicleController extends BaseContoller {
                 }
 
                 tcVehicleService.updateVehicle(vehicle);
+                resultInt = "修改成功！";
+                resultInt = Encoder.symmetricEncrypto(resultInt);
             }
 
         }else{
@@ -246,7 +251,9 @@ public class TcVehicleController extends BaseContoller {
             vehicle1Add.setPlatesNumber(vehicle.getPlatesNumber());
             List<TcVehicle> vehicle1Count = tcVehicleService.queryVehicleByNumber(vehicle1Add);
             if(vehicle1Count != null && vehicle1Count.size() > 0){
-                return "redirect:/web/tcms/vehicle/list/page";
+                resultInt = "车牌号已存在！";
+                resultInt = Encoder.symmetricEncrypto(resultInt);
+                return "redirect:/web/tcms/vehicle/list/page?resultInt="+resultInt;
             }else{
                 String newid;
                 TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getSys_transportion_id());
@@ -265,6 +272,8 @@ public class TcVehicleController extends BaseContoller {
 
                 try {
                     tcVehicleService.addVehicle(vehicle);
+                    resultInt = "添加成功！";
+                    resultInt = Encoder.symmetricEncrypto(resultInt);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -290,7 +299,7 @@ public class TcVehicleController extends BaseContoller {
             }
         }
 
-        return "redirect:/web/tcms/vehicle/list/page";
+        return "redirect:/web/tcms/vehicle/list/page?resultInt="+resultInt;
     }
 
     /**
@@ -385,8 +394,16 @@ public class TcVehicleController extends BaseContoller {
                             }
                             //判断卡是否已经出库
                             GasCard gasCard = gasCardService.queryGasCardInfo(cardNo);
-                            if(gasCard != null && !GlobalConstant.CardStatus.MOVED.equals(gasCard.getCard_status()) ){
+                            if(gasCard != null && !GlobalConstant.CardStatus.PROVIDE.equals(gasCard.getCard_status()) && gasCard.getCard_property().equals(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION) ){
                                 resultStr = "卡号"+cardNo+GlobalConstant.getCardStatus(gasCard.getCard_status());
+                                resultStr = Encoder.symmetricEncrypto(resultStr);
+                                return resultPath+resultStr;
+                            }else if(gasCard != null && gasCard.getCard_property().equals(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_DRIVER)){
+                                resultStr = "个人卡不能导入！";
+                                resultStr = Encoder.symmetricEncrypto(resultStr);
+                                return resultPath+resultStr;
+                            }else if(gasCard == null){
+                                resultStr = "卡号"+cardNo+"不存在！";
                                 resultStr = Encoder.symmetricEncrypto(resultStr);
                                 return resultPath+resultStr;
                             }
@@ -397,16 +414,16 @@ public class TcVehicleController extends BaseContoller {
                             return resultPath+resultStr;
                         }
 
-                        if(sheet.getCell(2, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
+                        if(sheet.getCell(2, i) != null && !"".equals(sheet.getCell(2, i).getContents())){
                             payCode = sheet.getCell(2, i).getContents().replaceAll(" ", "");
-                            tcVehicle.setPayCode(Encoder.MD5Encode("111111".getBytes()));
+                            tcVehicle.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
                         }else{
                             resultStr = "支付密码不能为空！";
                             resultStr = Encoder.symmetricEncrypto(resultStr);
                             return resultPath+resultStr;
                         }
 
-                        if(sheet.getCell(3, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
+                        if(sheet.getCell(3, i) != null && !"".equals(sheet.getCell(3, i).getContents())){
                             noticePhone = sheet.getCell(3, i).getContents().replaceAll(" ", "");
                             tcVehicle.setNoticePhone(noticePhone);
                         }else{
@@ -424,11 +441,6 @@ public class TcVehicleController extends BaseContoller {
 
                         tcVehicle.setIsAllot(0);//是否分配 0 不分配 1 分配
                         vehicleList.add(tcVehicle);
-                        //修改卡状态
-                        GasCard gasCard = new GasCard();
-                        gasCard.setCard_no(cardNo);
-                        gasCard.setCard_status(GlobalConstant.CardStatus.USED);
-                        gasCardService.updateByPrimaryKeySelective(gasCard);
                     }else{
                         resultStr = "车牌号不能为空！";
                         resultStr = Encoder.symmetricEncrypto(resultStr);
@@ -439,6 +451,31 @@ public class TcVehicleController extends BaseContoller {
                 //添加车辆
                 if(vehicleList != null && vehicleList.size() > 0){
                     tcVehicleService.addVehicleList(vehicleList);
+                    /*修改卡状态*/
+                    for(TcVehicle tcVehicle:vehicleList){
+                        GasCard gasCard = new GasCard();
+                        gasCard.setCard_no(tcVehicle.getCardNo());
+                        gasCard.setCard_status(GlobalConstant.CardStatus.USED);
+                        gasCardService.updateByPrimaryKeySelective(gasCard);
+
+                        //给通知手机和抄送手机发送短信
+                        String msgType = "user_register";
+                        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+                        aliShortMessageBean.setCode(tcVehicle.getPayCode());
+                        aliShortMessageBean.setLicense(tcVehicle.getPlatesNumber());
+                        aliShortMessageBean.setString(transportion.getTransportion_name());
+                        //给通知手机发送短信
+                        if(tcVehicle != null && tcVehicle.getNoticePhone() != null && !tcVehicle.getNoticePhone().equals("")){
+                            aliShortMessageBean.setSendNumber(tcVehicle.getNoticePhone());
+                            sendMsgApi(tcVehicle.getNoticePhone(),msgType,aliShortMessageBean);
+                        }
+
+                        //给抄送手机发送短信
+                        if(tcVehicle != null && tcVehicle.getCopyPhone() != null && !tcVehicle.getCopyPhone().equals("")){
+                            aliShortMessageBean.setSendNumber(tcVehicle.getCopyPhone());
+                            sendMsgApi(tcVehicle.getCopyPhone(),msgType,aliShortMessageBean);
+                        }
+                    }
                 }
 
             }

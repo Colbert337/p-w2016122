@@ -11,7 +11,7 @@ pageEncoding="UTF-8"%>
             </button>
             <ul class="nav">
                 <li>
-                    <a class="nav-login" href="index.jsp">登 录</a>
+                    <a class="nav-login" href="javascrip:;">登 录</a>
                     <ul>
                         <li><a href="login_gs.jsp">加注站</a></li>
                         <li><a href="login_tc.jsp">运输公司</a></li>

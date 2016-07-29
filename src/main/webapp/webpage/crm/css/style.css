@@ -27,7 +27,7 @@ a {
 	height: 100%;
 }
 .index body {
-	background: #246c62 url(../images/bg_index.png) center bottom no-repeat;
+	background: #246c62 url(../images/bg_index.jpg) center bottom no-repeat;
 	background-size: cover;
 }
 .main {
@@ -38,7 +38,8 @@ a {
 header {
 	background-color: #256b62;
 }
-header .inner {
+header .inner,
+.subnav .inner {
 	margin-left: auto;
 	margin-right: auto;
 	max-width: 970px;
@@ -107,6 +108,7 @@ header a:hover {
 .subnav {
 	background-color: #fff;
 	padding-bottom: 10px;
+	border-bottom: 15px solid #256b62;
 }
 .subnav ul {
 	padding-left: 15px;
@@ -187,8 +189,8 @@ footer {
 .my-selected .key-close {
 	position: absolute;
 	right: 5px;
-    top: 5px;
-    border: 1px dashed #666;
+	top: 5px;
+	border: 1px dashed #666;
 }
 .key-item {
 	position: relative;
@@ -219,24 +221,24 @@ footer {
 }
 
 .key-item .icon {
-    position: absolute;
-    z-index: 3;
-    left: 0px;
-    width: 80px;
-    line-height: 80px;
-    display: inline-block;
-    text-align: center;
-    font-size: 30px;
+	position: absolute;
+	z-index: 3;
+	left: 0px;
+	width: 80px;
+	line-height: 80px;
+	display: inline-block;
+	text-align: center;
+	font-size: 30px;
 }
 .key-item a {
 	position: absolute;
-    left: 80px;
-    top: 25px;
-    display: inline-block;
-    height: 37px;
-    width: 130px;
-    line-height: 37px;
-    text-align: center;
+	left: 80px;
+	top: 25px;
+	display: inline-block;
+	height: 37px;
+	width: 130px;
+	line-height: 37px;
+	text-align: center;
 }
 
 
@@ -261,19 +263,19 @@ nav {
 	width: 100%;
 }
 .cp1 {
-	background: #e8e8e8 url(../images/cp1.png) center bottom no-repeat;
+	background: #e8e8e8 url(../images/cp1.jpg) center bottom no-repeat;
 }
 .cp2 {
-	background: #b8b6a6 url(../images/cp2.png) center bottom no-repeat;
+	background: #b8b6a6 url(../images/cp2.jpg) center bottom no-repeat;
 }
 .cp3 {
-	background: #b9d7f0 url(../images/cp3.png) center bottom no-repeat;
+	background: #b9d7f0 url(../images/cp3.jpg) center bottom no-repeat;
 }
 .ys1 {
-	background: #378ccd url(../images/ys1.png) center bottom no-repeat;
+	background: #378ccd url(../images/ys1.jpg) center bottom no-repeat;
 }
 .ys2 {
-	background: #4f8284 url(../images/ys2.png) center bottom no-repeat;
+	background: #4f8284 url(../images/ys2.jpg) center bottom no-repeat;
 }
 
 .squares {
@@ -338,8 +340,16 @@ nav {
 }
 
 /*login*/
+.login-html,
+.login-html body {
+	min-height: 100%;
+}
 .login {
-	background: #79cadd url(../images/bg_login.jpg) 0 0 repeat-x;
+	background-color: #79cadd;
+	background: -webkit-linear-gradient(#246c62, #95e2fa);
+	background: -o-linear-gradient(#246c62, #95e2fa);
+	background: -moz-linear-gradient(#246c62, #95e2fa);
+	background: linear-gradient(#246c62, #95e2fa);
 }
 .login-wrap {
 	background: url(../images/bg_login_1.png) center bottom no-repeat;
@@ -393,6 +403,11 @@ nav {
 .login-box .btn {
 	padding-top: 10px;
 	padding-bottom: 10px;
+}
+.form-item-error label {
+	font-weight: normal;
+	color: #f00;
+	margin-top: 10px;
 }
 
 .app {
@@ -459,11 +474,11 @@ nav {
 
 .help {
 	min-height: 100%;
-	background: url(../images/bg_help.png) right bottom no-repeat;
+	background: url(../images/bg_help.jpg) right bottom no-repeat;
 	background-size: cover;
 }
 .help.service {
-	background-image: url(../images/bg_service.png);
+	background-image: url(../images/bg_service.jpg);
 }
 .help body {
 	background: none;
@@ -508,14 +523,14 @@ nav {
 	text-decoration: none;
 }
 .search-list .info {
-    font-size: 12px;
-    padding: 10px;
-    color: #666;
-    display: none;
-    background-color: #fff;
-    max-height: 150px;
-    overflow-y: auto;
-    line-height: 180%;
+	font-size: 12px;
+	padding: 10px;
+	color: #666;
+	display: none;
+	background-color: #fff;
+	max-height: 150px;
+	overflow-y: auto;
+	line-height: 180%;
 }
 .search-list .selected .tit {
 	background-color: #256b61;
@@ -622,9 +637,9 @@ nav {
 		top: 0;
 	}
 	.login-wrap {
-	    min-width: 920px;
-	    min-height: 539px;
-	    margin-top: 10%;
+		min-width: 920px;
+		min-height: 539px;
+		margin-top: 10%;
 	}
 	.login-box {
 		padding: 20px 30px;
@@ -640,16 +655,16 @@ nav {
 /*mobile view*/
 @media screen and (max-width: 767px) {
 	.logo {
-	    width: 115px;
-        height: 72px;
+		width: 115px;
+		height: 72px;
 	}
 	.nav {
-        padding-top: 0;
-	    border-top: 1px solid #367e7a;
-	    border-bottom: 1px solid #367e7a;
-	    width: 100%;
-	    text-align: right;
-	    display: none;
+		padding-top: 0;
+		border-top: 1px solid #367e7a;
+		border-bottom: 1px solid #367e7a;
+		width: 100%;
+		text-align: right;
+		display: none;
 	}
 	.nav.nav-selected {
 		display: block;
@@ -659,8 +674,8 @@ nav {
 		display: inline-block;
 	}
 	.nav > li > a {
-	    padding-top: 10px;
-	    padding-bottom: 10px;
+		padding-top: 10px;
+		padding-bottom: 10px;
 	}
 	.nav > li > ul {
 		text-align: left;
@@ -668,20 +683,23 @@ nav {
 	}
 	.nav > li > ul > li a {
 		padding-top: 10px;
-	    padding-bottom: 10px;
+		padding-bottom: 10px;
+	}
+	.subnav {
+		border-bottom-width: 3px;
 	}
 	.subnav li.home {
 		display: none;
 	}
 	.banner {
-	    padding: 6% 0 0 0;
+		padding: 6% 0 0 0;
 	}
 	.banner h1 {
-	    font-size: 30px;
+		font-size: 30px;
 	}
 	.banner h2 {
-	    font-size: 20px;
-	    line-height: 1.5em;
+		font-size: 20px;
+		line-height: 1.5em;
 	}
 	.my-selected .inner{
 		padding: 5px;
@@ -691,28 +709,28 @@ nav {
 	}
 	.key-item-xs {
 		display: block;
-    	height: 37px;
-    	line-height: 37px;
+		height: 37px;
+		line-height: 37px;
 		border-radius: 8px;
 		background-color: #b1ecb6;
-    	box-shadow: 2px 1px 3px #666;
-	    padding-left: 15px;
-	    font-size: 16px;
+		box-shadow: 2px 1px 3px #666;
+		padding-left: 15px;
+		font-size: 16px;
 	}
 	.key-item-xs .icon {
 		padding-right: 10px;
 	}
 	.key-item-xs .icon:before {
-	    font-size: 18px;
-	    float: left;
-	    padding-top: 10px;
+		font-size: 18px;
+		float: left;
+		padding-top: 10px;
 	}
 	.key-item-xs .icon.icon-lng:before {
 		font-size: 22px;
 	}
 	.my-selected .key-close {
-	    right: 10px;
-    	top: 13px;
+		right: 10px;
+		top: 13px;
 	}
 	.index .my-selected .inner{
 		padding: 0 10px 10px;
@@ -721,10 +739,10 @@ nav {
 		margin-top: 10px;
 	}
 	.index .my-selected .key-close {
-	    right: 1px;
-	    top: -30px;
-	    border-color: #ddd;
-    	color: #fff;
+		right: 1px;
+		top: -30px;
+		border-color: #ddd;
+		color: #fff;
 	}
 	.slogan {
 		margin-bottom: 20px;
@@ -740,6 +758,17 @@ nav {
 	}
 	.slogan .sicon {
 		display: none;
+	}
+	.ys1 .slogan,
+	.ys2 .slogan {
+		color: #fff;
+	}
+	.ys1 .slogan .list,
+	.ys2 .slogan .list {
+		background-color: #56777e;
+		opacity: 0.77;
+		border-radius: 6px;
+		padding: 6px 10px;
 	}
 	.squares {
 		width: 100%;
@@ -757,21 +786,21 @@ nav {
 		vertical-align: middle;
 	}
 	.squares .inner .icon {
-	    font-size: 30px;
-	    padding-right: 10px;
+		font-size: 30px;
+		padding-right: 10px;
 	}
 	.squares .inner .text {
 		font-size: 14px;
 		padding-top: 0;
 	}
 	#fp-nav.right {
-	    right: -5px;
+		right: -5px;
 	}
 	.crm-down {
 		font-size: 14px;
 	}
 	.crm-down .title {
-	    font-size: 22px;
+		font-size: 22px;
 	}
 	.help {
 		background-position: center bottom;

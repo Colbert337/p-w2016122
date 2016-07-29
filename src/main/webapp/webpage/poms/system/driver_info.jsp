@@ -131,8 +131,8 @@
 											<i class="ace-icon fa fa-pencil-square-o bigger-130 green"></i>
 										</a>
 										<c:if test="${list.isLocked ==1}">
-											<a class="" href="javascript:void(0);" onclick="unLockUser(this,2,'${list.cardId}');" title="解锁" data-rel="tooltip">
-												<i class="ace-icon fa fa-lock bigger-130 green"></i>
+											<a class="" href="javascript:void(0);" onclick="unLockUser(this,2,'${list.sysUserAccountId}');" title="解锁" data-rel="tooltip">
+												<i class="ace-icon fa fa-lock bigger-130"></i>
 											</a>
 										</c:if>
 									</td>
