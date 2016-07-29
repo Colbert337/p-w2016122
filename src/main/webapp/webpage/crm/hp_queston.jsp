@@ -26,6 +26,27 @@
             <div class="title">
                 <div>司集帮助中心</div>
             </div>
+            <div class="help-menu">
+                <div class="help-menu-title">二级分类：</div>
+                <ul>
+                    <li><a href="">1司集帮助中心二级菜单</a></li>
+                    <li><a href="">2司集帮助中心二级菜单</a></li>
+                    <li><a href="">3司集帮助中心二级菜单</a></li>
+                    <li><a href="">4司集帮助中心二级菜单</a></li>
+                    <li><a href="">5司集帮助中心二级菜单</a></li>
+                    <li><a href="">6司集帮助中心二级菜单</a></li>
+                    <li><a href="">7司集帮助中心二级菜单</a></li>
+                    <li><a href="">8司集帮助中心二级菜单</a></li>
+                    <li><a href="">1司集帮助中心二级菜单</a></li>
+                    <li><a href="">2司集帮助中心二级菜单</a></li>
+                    <li><a href="">3司集帮助中心二级菜单</a></li>
+                    <li><a href="">4司集帮助中心二级菜单</a></li>
+                    <li><a href="">5司集帮助中心二级菜单</a></li>
+                    <li><a href="">6司集帮助中心二级菜单</a></li>
+                    <li><a href="">7司集帮助中心二级菜单</a></li>
+                    <li><a href="">8司集帮助中心二级菜单</a></li>
+                </ul>
+            </div>
             <div class="search">
                 <div class="inner">
                     <input class="txt" type="search" id="search" placeholder="请输入关键字">
