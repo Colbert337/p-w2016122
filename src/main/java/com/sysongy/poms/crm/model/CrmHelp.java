@@ -2,8 +2,14 @@ package com.sysongy.poms.crm.model;
 
 import java.util.Date;
 
-public class CrmHelp {
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.sysongy.poms.base.model.BaseModel;
+
+public class CrmHelp extends BaseModel{
     private String crmHelpId;
+    
+    private String crmHelpTypeId;
 
     private String title;
 
@@ -18,9 +24,11 @@ public class CrmHelp {
     private Integer isNotice;
 
     private Integer isDeleted;
-
+    
+    @DateTimeFormat(pattern="yyyy-MM-dd") 
     private Date createdDate;
-
+    
+    @DateTimeFormat(pattern="yyyy-MM-dd") 
     private Date updatedDate;
 
     public String getCrmHelpId() {
@@ -102,4 +110,13 @@ public class CrmHelp {
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
     }
+
+	public String getCrmHelpTypeId() {
+		return crmHelpTypeId;
+	}
+
+	public void setCrmHelpTypeId(String crmHelpTypeId) {
+		this.crmHelpTypeId = crmHelpTypeId;
+	}
+    
 }
