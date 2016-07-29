@@ -13,7 +13,7 @@
 
 <div class="">
 	<form id="formcard" action="../web/transportion/depositReport">
-
+	<input type="hidden" name="downloadreport" value="true"/>
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 	<div class="row">

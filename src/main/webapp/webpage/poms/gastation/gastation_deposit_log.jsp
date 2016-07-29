@@ -13,7 +13,7 @@
 
 <div class="">
 	<form id="formgastation" action="../web/gastation/depositReport">
-
+	<input type="hidden" name="downloadreport" value="true"/>
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 	<div class="row">
