@@ -71,17 +71,26 @@ function editVehicle(vehicleId){
                 //卡类型
                 switch(data.gasCard.card_type)
                 {
-                    case '0':
+                    case '10':
                         cardType = "LNG"
                         break;
-                    case '1':
+                    case '1001':
                         cardType = "柴油"
                         break;
-                    case '2':
+                    case '1002':
+                        cardType = "LNG"
+                        break;
+                    case '2001':
+                        cardType = "LNG"
+                        break;
+                    case '2002':
+                        cardType = "LNG"
+                        break;
+                    case '20':
                         cardType = "LNG"
                         break;
                     default:
-                        cardType = "CNG"
+                        cardType = "LNG"
                 }
                 //卡状态
                 switch(data.gasCard.card_status)
