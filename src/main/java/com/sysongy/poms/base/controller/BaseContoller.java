@@ -220,7 +220,7 @@ public class BaseContoller {
     @RequestMapping(value = {"/web/loginOut"})  
     public String loginOut( HttpServletRequest request,HttpServletResponse response, SessionStatus sessionStatus, ModelMap map ){  
     	sessionStatus.setComplete();
-    	return "redirect:/";
+    	return "redirect:/webpage/crm/index.jsp";
     }
     
     /**
