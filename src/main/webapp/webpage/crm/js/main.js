@@ -87,6 +87,27 @@ $(function(){
 		$("#table").searchable();
 	}
 
+	//手机视图下点击展示二级菜单
+	function clickSubMenu(){
+		var $width = $(window).width();
+		if($width<768){
+			$('.help-menu').on('click',function(){
+				var $this = $(this);
+				if($this.hasClass('toggle')){
+					$this.removeClass('toggle');
+				} else {
+					$this.addClass('toggle');
+				}
+			});
+		} else {
+			$('.help-menu').removeClass('toggle').off('click');
+		}
+	}
+	clickSubMenu();
+	$(window).resize(function() {
+		clickSubMenu();
+	});
+
 	if($("#login").length){
 		$('#login').validate({
 
