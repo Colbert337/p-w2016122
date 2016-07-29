@@ -457,6 +457,9 @@
       <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
         and order_number = #{orderNumber, jdbcType=VARCHAR}
       </if>
+      <if test="orderId != null &amp;&amp; orderId != ''" >
+        and (b.order_id = #{orderId,jdbcType=VARCHAR} or b.order_number = #{orderId,jdbcType=VARCHAR})
+      </if>
       <if test="operatorSourceId != null &amp;&amp; operatorSourceId != ''" >
         and operator_source_id = #{operatorSourceId, jdbcType=VARCHAR}
       </if>
