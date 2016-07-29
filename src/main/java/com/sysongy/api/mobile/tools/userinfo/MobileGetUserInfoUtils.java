@@ -7,7 +7,6 @@ import com.sysongy.api.mobile.model.base.MobileParams;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.userinfo.MobileUserInfo;
 import com.sysongy.api.mobile.tools.MobileUtils;
-import com.sysongy.api.mobile.tools.login.MobileLoginUtils;
 
 public class MobileGetUserInfoUtils extends MobileUtils {
 	
@@ -21,7 +20,7 @@ public class MobileGetUserInfoUtils extends MobileUtils {
 		try {
 			userinfo = (MobileUserInfo) JSON.parseObject(param.getDetailParam(), MobileUserInfo.class);
 		} catch (Exception e) {
-			ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_ERROR, MobileLoginUtils.RET_PARAM_ERROR_MSG, null);
+			ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, MobileUtils.RET_PARAM_ERROR_MSG, null);
 			throw e;
 		}
 		

@@ -13,7 +13,7 @@
 <div class="">
 	<!-- /.page-header -->
 	<form id="formgastation" action="<%=basePath%>/web/transportion/depositTransportionReport">
-
+	<input type="hidden" name="downloadreport" value="true"/>
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 	<div class="row">
