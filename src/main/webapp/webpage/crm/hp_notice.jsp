@@ -21,7 +21,7 @@
 <div class="subnav">
     <div class="inner">
         <ul>
-            <li class="home"><a href="index.jsp">首页</a></li>
+            <li class="home"><a href="<%=basePath %>/webpage/crm/index.jsp">首页</a></li>
             <li><a href="<%=basePath %>/portal/crm/help/list/all">常见问题</a></li>
             <li><a href="<%=basePath %>/webpage/crm/hp_service.jsp">客服咨询</a></li>
             <li class="current"><a href="<%=basePath %>/portal/crm/help/list/notice">服务公告</a></li>

@@ -155,11 +155,11 @@
                                 <div class="col-sm-4">
                                     <div class="key-item">
                                         <span class="icon icon-lng"></span>
-                                        <a href="login_gs.jsp">
+                                        <a href="<%=basePath %>/webpage/crm/login_gs.jsp">
                                             登录加注站
                                         </a>
                                     </div>
-                                    <a class="key-item-xs" href="login_gs.jsp">
+                                    <a class="key-item-xs" href="<%=basePath %>/webpage/crm/login_gs.jsp">
                                         <span class="icon icon-lng"></span>
                                         登录加注站
                                     </a>

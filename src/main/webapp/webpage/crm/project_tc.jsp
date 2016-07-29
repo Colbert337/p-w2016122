@@ -107,11 +107,11 @@
                                 <div class="col-sm-4">
                                     <div class="key-item">
                                         <span class="icon icon-lng"></span>
-                                        <a href="login_tc.jsp">
+                                        <a href="<%=basePath %>/webpage/crm/login_tc.jsp">
                                             登录运输公司
                                         </a>
                                     </div>
-                                    <a class="key-item-xs" href="login_tc.jsp">
+                                    <a class="key-item-xs" href="<%=basePath %>/webpage/crm/login_tc.jsp">
                                         <span class="icon icon-lng"></span>
                                         登录运输公司
                                     </a>

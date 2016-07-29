@@ -36,11 +36,11 @@
 						<div class="col-sm-4">
 							<div class="key-item">
 								<span class="icon icon-lng"></span>
-								<a href="project_gs.jsp">
+								<a href="<%=basePath %>/webpage/crm/project_gs.jsp">
 									我是加注站
 								</a>
 							</div>
-							<a class="key-item-xs" href="project_gs.jsp">
+							<a class="key-item-xs" href="<%=basePath %>/webpage/crm/project_gs.jsp">
 								<span class="icon icon-lng"></span>
 								我是加注站
 							</a>
@@ -48,11 +48,11 @@
 						<div class="col-sm-4">
 							<div class="key-item">
 								<span class="icon icon-sun"></span>
-								<a href="project_tc.jsp">
+								<a href="<%=basePath %>/webpage/crm/project_tc.jsp">
 									我是运输公司
 								</a>
 							</div>
-							<a class="key-item-xs" href="project_tc.jsp">
+							<a class="key-item-xs" href="<%=basePath %>/webpage/crm/project_tc.jsp">
 								<span class="icon icon-sun"></span>
 								我是运输公司
 							</a>
@@ -60,11 +60,11 @@
 						<div class="col-sm-4">
 							<div class="key-item">
 								<span class="icon icon-car"></span>
-								<a href="download-app.jsp">
+								<a href="<%=basePath %>/webpage/crm/download-app.jsp">
 									我是个人司机
 								</a>
 							</div>
-							<a class="key-item-xs" href="download-app.jsp">
+							<a class="key-item-xs" href="<%=basePath %>/webpage/crm/download-app.jsp">
 								<span class="icon icon-car"></span>
 								我是个人司机
 							</a>
