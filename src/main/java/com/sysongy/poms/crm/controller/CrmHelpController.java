@@ -3,6 +3,7 @@ package com.sysongy.poms.crm.controller;
 import java.util.Date;
 import java.util.List;
 
+import com.sysongy.util.GlobalConstant;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -164,6 +165,37 @@ public class CrmHelpController extends BaseContoller{
 		List<CrmHelpType> crmHelpTypeList = crmHelpTypeService.queryCrmHelpTypeList();
 		map.addAttribute("crmHelpTypeList",crmHelpTypeList);
 		return "redirect:/web/crm/help/type/list";
+	}
+
+	/**
+	 * 查询问题列表
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/list/all")
+	public String queryQuestionListAll(CrmHelp obj,ModelMap map)throws Exception{
+		obj.setIsNotice(GlobalConstant.QuestionNotice.QUESTION);
+		List<CrmHelpType> crmHelpTypeList = crmHelpTypeService.queryCrmHelpTypeList();
+		List<CrmHelp> crmHelpList = crmHelpService.queryQuestionListByName(obj);
+
+		map.addAttribute("crmHelpTypeList",crmHelpTypeList);
+		map.addAttribute("crmHelpList",crmHelpList);
+		return "webpage/crm/hp_queston";
+	}
+
+	/**
+	 * 查询公告列表
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/list/notice")
+	public String queryNoticeListAll(CrmHelp obj,ModelMap map)throws Exception{
+		obj.setIsNotice(GlobalConstant.QuestionNotice.NOTICE);
+		List<CrmHelp> crmHelpList = crmHelpService.queryQuestionListByName(obj);
+		map.addAttribute("crmHelpList",crmHelpList);
+		return "webpage/crm/hp_notice";
 	}
 
 }
