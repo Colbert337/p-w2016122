@@ -236,8 +236,9 @@
 								<div class="col-sm-12">
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
-										<div class="col-sm-7">
-											<input type="password" id="payCode" name="pay_code" maxlength="6" placeholder="支付密码" class="col-xs-10 col-sm-5" />
+										<div class="col-sm-4">
+											<input type="password" id="payCode" name="pay_code" maxlength="6" placeholder="支付密码" class="form-control" />
+											<small class="help-block pay-code-error"></small>
 										</div>
 									</div>
 								</div>
@@ -309,8 +310,9 @@
 								<div class="col-sm-12">
 									<div class="form-group">
 										<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
-										<div class="col-sm-7">
-											<input type="password" id="pay_code" name="pay_code" maxlength="6" placeholder="支付密码" class="col-xs-10 col-sm-5" />
+										<div class="col-sm-4">
+											<input type="password" id="pay_code" name="pay_code" maxlength="6" placeholder="支付密码" class="form-control" />
+											<small class="help-block pay-code-error"></small>
 										</div>
 									</div>
 								</div>

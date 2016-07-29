@@ -466,6 +466,9 @@
       <if test="goodsType != null &amp;&amp; goodsType != ''" >
         and goods_type = #{goodsType, jdbcType=VARCHAR}
       </if>
+      <if test="operator != null &amp;&amp; operator != ''" >
+        and b.operator = #{operator,jdbcType=VARCHAR}
+      </if>
     </trim>
   </select>
  	
@@ -628,7 +631,7 @@
   <!--运输公司个人消费报表-->
   <select id="queryTcPersonalReport" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     select sor.order_number,sor.order_type,sor.is_discharge,sor.cash,sd.full_name,sd.mobile_phone,sgs.gas_station_name,
-    sog.goods_type,sog.price,sog.number,sog.sum_price,sor.order_date,sod.remark
+    sog.goods_type,sog.price,sog.number,sor.cash,sog.sum_price,sor.order_date,sod.remark
     from sys_driver sd
     left join sys_order sor on sd.card_id = sor.consume_card
     left join sys_order_goods sog on sog.order_id = sor.order_id
@@ -654,7 +657,7 @@
   <!--运输公司车队消费报表-->
   <select id="queryTcFleetReport" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     select sor.order_number,sor.order_type,sor.is_discharge,tf.fleet_name,tv.plates_number,sgs.gas_station_name,
-    sog.goods_type,sog.price,sog.number,sog.sum_price,sod.deal_date,sod.remark
+    sog.goods_type,sog.price,sog.number,sor.cash,sog.sum_price,sod.deal_date,sod.remark
     from  tc_vehicle tv
     left join tc_fleet_vehicle tfv on tv.tc_vehicle_id = tfv.tc_vehicle_id
     left join tc_fleet tf on tfv.tc_fleet_id = tf.tc_fleet_id

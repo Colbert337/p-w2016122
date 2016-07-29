@@ -700,7 +700,9 @@ public class TransportionController extends BaseContoller{
 
 			if(transportion != null && transport != null){
 				String password = transportion.getPay_code();
-				if(password.equals(Encoder.MD5Encode(transport.getPay_code().getBytes()))){
+				if(password == null || "".equals(password)){
+					json.put("valid","erroEmpty");
+				}else if(password.equals(Encoder.MD5Encode(transport.getPay_code().getBytes()))){
 					json.put("valid",true);
 				}else{
 					json.put("valid",false);
