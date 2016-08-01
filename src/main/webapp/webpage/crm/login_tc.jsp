@@ -12,9 +12,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link type="image/x-icon" href="<%=basePath %>/common/favicon.ico" rel="shortcut icon" />
-	<link rel="stylesheet" href="css/bootstrap.css">
-	<link rel="stylesheet" href="css/fontello.css">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/bootstrap.css">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/style.css">
 </head>
 <body class="login">
 <jsp:include page="common/header.jsp"></jsp:include>
@@ -54,8 +54,8 @@
 	<footer>
 		陕西司集能源科技有限公司
 	</footer>
-	<script src="js/jquery.min.js"></script>
+	<script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
 	<script type='text/javascript' src='<%=basePath%>/assets/js/jquery.validate.js'></script>
-	<script src="js/main.js"></script>
+	<script src="<%=basePath %>/webpage/crm/js/main.js"></script>
 </body>
 </html>

@@ -484,7 +484,7 @@ nav {
 	background: none;
 }
 .help-container {
-	padding-left: 150px;
+	padding-left: 170px;
 	position: relative;
 	margin-top: 20px;
 }
@@ -504,6 +504,25 @@ nav {
 }
 .help .title > div {
 	padding-top: 45px;
+}
+.help-menu-title {
+	font-weight: bold;
+}
+.help-menu li {
+	padding: 3px 0;
+}
+.help-menu li a {
+	display: inline-block;
+	padding: 3px 0 3px 12px;
+	position: relative;
+}
+.help-menu li a:before {
+	position: absolute;
+	left: 0;
+	top: 0;
+	content: '.';
+	font-size: 38px;
+	line-height: 0;
 }
 .search-list {
 	margin-top: 30px;
@@ -536,6 +555,10 @@ nav {
 	background-color: #256b61;
 	color: #fff;
 }
+.search-list .selected .tit:hover{
+	text-emphasis: none;
+}
+
 .search-list .selected .info {
 	display: block;
 }
@@ -650,6 +673,11 @@ nav {
 	}
 	.service-notice {
 		padding-top: 5%;
+	}
+	.help-menu {
+		position: absolute;
+		top: 115px;
+		left: 0;
 	}
 }
 /*mobile view*/
@@ -819,6 +847,33 @@ nav {
 	}
 	.help .title > div {
 		padding-top: 0;
+	}
+	.help-menu {
+		border: 1px dashed #256b61;
+		margin-bottom: 15px;
+	}
+	.help-menu-title {
+		padding: 5px 10px;
+		background-color: #eee;
+		position: relative;
+		font-weight: normal;
+	}
+	.help-menu-title:before {
+		position: absolute;
+		top: 0;
+		right: 8px;
+		content: '+';
+		font-size: 20px;
+	}
+	.help-menu ul {
+		display: none;
+		padding: 5px 0 4px 10px;
+	}
+	.help-menu.toggle .help-menu-title:before {
+		content: '-';
+	}
+	.help-menu.toggle ul {
+		display: block;
 	}
 	.login-wrap {
 		background-size: cover;

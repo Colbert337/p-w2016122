@@ -416,6 +416,7 @@ public class TcVehicleController extends BaseContoller {
 
                         if(sheet.getCell(2, i) != null && !"".equals(sheet.getCell(2, i).getContents())){
                             payCode = sheet.getCell(2, i).getContents().replaceAll(" ", "");
+                            tcVehicle.setOnflag(payCode);
                             tcVehicle.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
                         }else{
                             resultStr = "支付密码不能为空！";
@@ -461,7 +462,8 @@ public class TcVehicleController extends BaseContoller {
                         //给通知手机和抄送手机发送短信
                         String msgType = "user_register";
                         AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-                        aliShortMessageBean.setCode(tcVehicle.getPayCode());
+                        aliShortMessageBean.setCode(tcVehicle.getOnflag());
+                        tcVehicle.setOnflag(null);
                         aliShortMessageBean.setLicense(tcVehicle.getPlatesNumber());
                         aliShortMessageBean.setString(transportion.getTransportion_name());
                         //给通知手机发送短信
