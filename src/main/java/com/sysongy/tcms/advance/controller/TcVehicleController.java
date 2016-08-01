@@ -338,6 +338,10 @@ public class TcVehicleController extends BaseContoller {
                 TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getSys_transportion_id());
                 Integer tempVal = 1;
 
+                //车牌号存储
+                Map<String, Object> platesNumberMap = new HashMap<>();
+                //卡号存储
+                Map<String, Object> cardNoMap = new HashMap<>();
                 for (int i = 1; i < rows; i++) {
 
                     //第一个是列数，第二个是行数
@@ -347,6 +351,7 @@ public class TcVehicleController extends BaseContoller {
                     String payCode = "";
                     String noticePhone = "";
                     String copyPhone = "";
+
                     if(sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i).getContents())){
                         TcVehicle tcVehicle = new TcVehicle();
 
@@ -378,6 +383,15 @@ public class TcVehicleController extends BaseContoller {
                             return resultPath+resultStr;
                         }
 
+                        //判断车牌号是否在当前excel表中已存在
+                        if(platesNumberMap.get(platesNumber) != null && !"".equals(platesNumberMap.get(platesNumber)) ){
+                            resultStr = "车牌号"+platesNumber+"在当前EXCEL表中已经存在！";
+                            resultStr = Encoder.symmetricEncrypto(resultStr);
+                            return resultPath+resultStr;
+                        }else{
+                            platesNumberMap.put(platesNumber,platesNumber);
+                        }
+
                         if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
                             cardNo =  sheet.getCell(1, i).getContents().replaceAll(" ", "");
                             tcVehicle.setCardNo(cardNo);
@@ -392,6 +406,15 @@ public class TcVehicleController extends BaseContoller {
                                 resultStr = Encoder.symmetricEncrypto(resultStr);
                                 return resultPath+resultStr;
                             }
+                            //判断卡号是否在当前excel表中已存在
+                            if(cardNoMap.get(cardNo) != null && !"".equals(cardNoMap.get(cardNo)) ){
+                                resultStr = "卡号"+cardNo+"在当前EXCEL表中已经存在！";
+                                resultStr = Encoder.symmetricEncrypto(resultStr);
+                                return resultPath+resultStr;
+                            }else{
+                                cardNoMap.put(cardNo,cardNo);
+                            }
+
                             //判断卡是否已经出库
                             GasCard gasCard = gasCardService.queryGasCardInfo(cardNo);
                             if(gasCard != null && !GlobalConstant.CardStatus.PROVIDE.equals(gasCard.getCard_status()) && gasCard.getCard_property().equals(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION) ){
