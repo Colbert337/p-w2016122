@@ -80,7 +80,8 @@
 						<div class="alert alert-info alert-mt">
 							<span class="bigger-120">消费总金额：${totalCash}元</span>
 						</div>
-						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+						<div class="sjny-table-responsive">
+							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
 									<th class="center">
@@ -129,6 +130,7 @@
 							</c:forEach>
 							</tbody>
 						</table>
+						</div>
 					</div>
 
 					<%--分页start--%>

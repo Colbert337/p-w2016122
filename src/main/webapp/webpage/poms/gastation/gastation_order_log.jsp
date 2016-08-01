@@ -66,7 +66,7 @@
 					
 					<div class="table-header">预存款充值记录订单列表</div>
 
-					<div>
+					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
