@@ -50,7 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
-@RequestMapping("/crmCustomerService")
+@RequestMapping("/crmInterface/crmCustomerService")
 public class CRMCustomerContoller {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());

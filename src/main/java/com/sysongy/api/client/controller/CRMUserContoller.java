@@ -27,7 +27,7 @@ import java.io.File;
 import java.util.*;
 
 @Controller
-@RequestMapping("/crmUserService")
+@RequestMapping("/crmInterface/crmUserService")
 public class CRMUserContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());

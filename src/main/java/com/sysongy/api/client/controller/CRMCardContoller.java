@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Controller
-@RequestMapping("/crmCardService")
+@RequestMapping("/crmInterface/crmCardService")
 public class CRMCardContoller {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
