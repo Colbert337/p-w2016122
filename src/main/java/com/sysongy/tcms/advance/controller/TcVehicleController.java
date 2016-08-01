@@ -230,6 +230,7 @@ public class TcVehicleController extends BaseContoller {
                 if(tcVehicle != null && vehicle1Count.size() > 0){
                     //新密码
                     String password = vehicle.getPayCode();
+                    payCode = password;
                     password = Encoder.MD5Encode(password.getBytes());
                     //新密码和原始密码不一致，则修改密码
                     if(!password.equals(tcVehicle.getPayCode())){

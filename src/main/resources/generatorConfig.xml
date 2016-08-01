@@ -30,7 +30,7 @@
         </javaTypeResolver>  
           	
         <!-- 生成实体类地址 -->    
-        <javaModelGenerator targetPackage="com.sysongy.api.mobile.model.user"
+        <javaModelGenerator targetPackage="com.sysongy.poms.mobile.model"
             targetProject="src/main/java" >  
             
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
@@ -48,7 +48,7 @@
         </sqlMapGenerator>  
           
         <!-- 生成mapxml对应client，也就是接口dao -->      
-        <javaClientGenerator targetPackage="com.sysongy.api.mobile.dao"
+        <javaClientGenerator targetPackage="com.sysongy.poms.mobile.dao"
             targetProject="src/main/java" type="XMLMAPPER" >  
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
             <property name="enableSubPackages" value="false" />  
@@ -71,7 +71,7 @@
         </table>-->
 
 
-        <table schema="${jdbc.database}" tableName="mb_user_suggest" domainObjectName="MbUserSuggest"
+        <table schema="${jdbc.database}" tableName="mb_banner" domainObjectName="MbBanner"
                enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
