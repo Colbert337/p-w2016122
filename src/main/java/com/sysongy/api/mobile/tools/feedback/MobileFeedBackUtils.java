@@ -1,17 +1,22 @@
 package com.sysongy.api.mobile.tools.feedback;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
 import com.sysongy.api.mobile.model.base.MobileParams;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MobileFeedBack;
+import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.api.mobile.tools.MobileUtils;
 
 public class MobileFeedBackUtils extends MobileUtils{
 	
 	public static final String RET_FEEDBACK_PARAM_NULL_MSG = "用户名或密码为空";
-	public static final String RET_LOGIN_ERROR_MSG = "用户名或密码错误";
+	public static final String RET_FEEDBACK_SAVE_MSG = "感谢您的宝贵建议";
+	
+	@Autowired
+	MbUserSuggestServices mbUserSuggestServices;
 
 	public static MobileFeedBack checkFeedBackParam(MobileParams params, MobileReturn ret) throws Exception{
 		
@@ -34,4 +39,5 @@ public class MobileFeedBackUtils extends MobileUtils{
 		
 		return feedback;
 	}
+	
 }
