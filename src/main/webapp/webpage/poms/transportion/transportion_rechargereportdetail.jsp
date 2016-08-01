@@ -70,55 +70,57 @@
 						<div class="alert alert-info alert-mt">
 							<span class="bigger-120">消费总金额：${totalCash}元</span>
 						</div>
-						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-							<thead>
-								<tr>
-									<th class="center">
-										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
-											<span class="lbl"></span>
-										</label>
-									</th>
-									<th>订单编号</th>
-									<th><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
-									<th>商品名称</th>
-									<th>数量</th>
-									<th>单位</th>
-									<th>单价</th>
-									<th>商品金额</th>
-									<th>运输公司编号</th>
-									<th>加注站名称</th>
-									<th>车牌号</th>
-									<th>操作人</th>
-								</tr>
-							</thead>
+						<div class="sjny-table-responsive">
+							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th class="center">
+											<label class="pos-rel">
+												<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
+												<span class="lbl"></span>
+											</label>
+										</th>
+										<th>订单编号</th>
+										<th><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
+										<th>商品名称</th>
+										<th>数量</th>
+										<th>单位</th>
+										<th>单价</th>
+										<th>商品金额</th>
+										<th>运输公司编号</th>
+										<th>加注站名称</th>
+										<th>车牌号</th>
+										<th>操作人</th>
+									</tr>
+								</thead>
 
-							<tbody>
-								
-							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
-								<tr id="listobj">
-									<td class="center">
-										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
-											<span class="lbl"></span>
-										</label>
-									</td>
+								<tbody>
 
-									<td>${list.order_number}</td>
-									<td><fmt:formatDate value="${list.order_date}" type="both"/></td>
-									<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
-									<td>${list.number}</td>
-									<td>升</td>
-									<td>${list.price}</td>
-									<td>${list.sum_price}</td>
-									<td>${list.creditAccount}</td>
-									<td>${list.channel}</td>
-									<td>${list.plates_number}</td>
-									<td>${list.user_name}</td>
-								</tr>
-							</c:forEach>
-							</tbody>
-						</table>
+								<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
+									<tr id="listobj">
+										<td class="center">
+											<label class="pos-rel">
+												<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/>
+												<span class="lbl"></span>
+											</label>
+										</td>
+
+										<td>${list.order_number}</td>
+										<td><fmt:formatDate value="${list.order_date}" type="both"/></td>
+										<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
+										<td>${list.number}</td>
+										<td>升</td>
+										<td>${list.price}</td>
+										<td>${list.sum_price}</td>
+										<td>${list.creditAccount}</td>
+										<td>${list.channel}</td>
+										<td>${list.plates_number}</td>
+										<td>${list.user_name}</td>
+									</tr>
+								</c:forEach>
+								</tbody>
+							</table>
+						</div>
 					</div>
 
 					<%--分页start--%>
