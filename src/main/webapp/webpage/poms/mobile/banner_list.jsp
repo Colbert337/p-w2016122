@@ -153,34 +153,49 @@
 								<!-- #section:elements.form -->
 								<%--<h5 class="header smaller lighter blue">基本信息</h5>--%>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="plates_number"><span class="red_star">*</span> 标题： </label>
-									<div class="col-sm-7">
-										<input type="text" name="platesNumber" id="plates_number" data-onFlag="" onblur="isVehicleExit()" placeholder="车牌号" class="col-xs-10 col-sm-12" />
-										<input type="hidden" name="tcVehicleId" id="tc_vehicle_id" />
+									<label class="col-sm-3 control-label no-padding-right" for="title"><span class="red_star">*</span> 标题： </label>
+									<div class="col-sm-8">
+										<input type="text" name="title" id="title" data-onFlag="" placeholder="标题" class="col-xs-10 col-sm-12" />
+										<input type="hidden" name="mbBannerId" id="mb_banner_id" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 图片： </label>
-									<div class="col-sm-7">
-										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" maxlength="6" class="col-xs-10 col-sm-12" />
+									<label class="col-sm-3 control-label no-padding-right" ><span class="red_star">*</span> 图片： </label>
+									<div class="col-sm-8">
+										<div class="widget-box">
+											<div class="widget-header">
+												<h4 class="widget-title">图片上传</h4>
+											</div>
+
+											<div class="widget-body">
+												<div class="widget-main">
+													<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
+													<input type="hidden" id="img_path" name="imgPath"/>
+													<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
+														<i class="ace-icon fa fa-check bigger-110"></i>
+														图片上传
+													</button>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 链接地址： </label>
-									<div class="col-sm-7">
-										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" maxlength="6" class="col-xs-10 col-sm-12" />
+									<label class="col-sm-3 control-label no-padding-right" for="target_url"><span class="red_star">*</span> 链接地址： </label>
+									<div class="col-sm-8">
+										<input type="text" id="target_url" name="targetUrl" placeholder="链接地址" maxlength="6" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="notice_phone"><span class="red_star">*</span> 版本号： </label>
-									<div class="col-sm-7">
-										<input type="text" id="notice_phone" placeholder="通知手机" maxlength="11" name="noticePhone" class="col-xs-10 col-sm-12" />
+									<label class="col-sm-3 control-label no-padding-right" for="version"><span class="red_star">*</span> 版本号： </label>
+									<div class="col-sm-8">
+										<input type="text" id="version" placeholder="版本号" maxlength="11" name="version" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label no-padding-right" for="copy_phone"> 备注： </label>
-									<div class="col-sm-7">
-										<input type="text" name="copyPhone" id="copy_phone" maxlength="11" placeholder="抄送手机" class="col-xs-10 col-sm-12" />
+									<label class="col-sm-3 control-label no-padding-right" for="remark"> 备注： </label>
+									<div class="col-sm-8">
+										<input type="text" name="remark" id="remark" maxlength="11" placeholder="备注" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 							</form>

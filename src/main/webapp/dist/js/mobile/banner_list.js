@@ -131,27 +131,7 @@ function editVehicle(vehicleId){
     $("#editModel").modal('show');
 }
 
-/**
- * 冻结卡
- */
-function freeze(cardNo,status){
-    var saveOptions ={
-        url:"../web/tcms/vehicle/update/freeze",
-        data:{card_no:cardNo,card_status:status},
-        type: "POST",
-        dataType:'html',
-        success: function(data){
-            bootbox.alert("操作成功！");
-            $("#main").html(data);
-        },error: function(XMLHttpRequest, textStatus, errorThrown) {
-            bootbox.alert("操作失败！");
-        }
-    }
-    $("#editForm").ajaxSubmit(saveOptions);
 
-    $("#editModel").modal('hide');
-    $(".modal-backdrop").css("display","none");
-}
 /*取消弹层方法*/
 function closeDialog(divId){
     jQuery('#editForm').validationEngine('hide');//隐藏验证弹窗
@@ -166,35 +146,6 @@ function clearDiv(){
         $(this).val("");
     });
     $("#avatar_b").empty();
-}
-/**
- * 保存用户信息
- */
-function saveVehicle(){
-        $('#editForm').data('bootstrapValidator').validate();
-        if(!$('#editForm').data('bootstrapValidator').isValid()){
-            return ;
-        }
-        if($('.user-name-valid').is(':visible')){
-            return ;
-        }
-
-        var saveOptions ={
-            url:'../web/tcms/vehicle/save',
-            type:'post',
-            dataType:'html',
-            success:function(data){
-                $("#main").html(data);
-                $("#modal-table").modal("show");
-            },error: function(XMLHttpRequest, textStatus, errorThrown) {
-                bootbox.alert("操作失败！");
-            }
-        }
-        $("#editForm").ajaxSubmit(saveOptions);
-
-        $("#editModel").modal('hide');
-        $(".modal-backdrop").css("display","none");
-
 }
 
 //重置
@@ -221,11 +172,6 @@ function leaveDriver(){
         $("#listForm").ajaxSubmit(deleteOptions);
     }
 
-}
-
-//弹出导入模板弹层
-function openImportDiv(){
-    $("#importDivModel").modal("show");
 }
 
 /**
@@ -270,6 +216,30 @@ function isVehicleExit(){
         }
     })
 }
+var projectfileoptions = {
+    showUpload : false,
+    showRemove : false,
+    language : 'zh',
+    allowedPreviewTypes : [ 'image' ],
+    allowedFileExtensions : [ 'jpg', 'png', 'gif', 'jepg' ],
+    maxFileSize : 1000,
+}
+// 文件上传框
+$('input[class=projectfile]').each(function() {
+    var imageurl = $(this).attr("value");
+
+    if (imageurl) {
+        var op = $.extend({
+            initialPreview : [ // 预览图片的设置
+                "<img src='" + imageurl + "' class='file-preview-image'>", ]
+        }, projectfileoptions);
+
+        $(this).fileinput(op);
+    } else {
+        $(this).fileinput(projectfileoptions);
+    }
+});
+
 //bootstrap验证控件
 $('#editForm').bootstrapValidator({
     message: 'This value is not valid',
@@ -279,76 +249,51 @@ $('#editForm').bootstrapValidator({
         validating: 'glyphicon glyphicon-refresh'
     },
     fields: {
-        platesNumber: {
+        title: {
             validators: {
                 notEmpty: {
-                    message: '车牌号不能为空'
+                        message: '标题不能为空'
                 }
             }
         },
-        payCode: {
+        targetUrl: {
             validators: {
                 notEmpty: {
-                    message: '支付密码不能为空'
-                },
-                regexp: {
-                    regexp: '^[0-9a-zA-Z]+$',
-                    message: '密码只能包含数字和字母'
-                }
-            }
-        },
-        rePassword: {
-            validators: {
-                notEmpty: {
-                    message: '确认密码不能为空'
-                },
-                regexp: {
-                    regexp: '^[0-9a-zA-Z]+$',
-                    message: '密码只能包含数字和字母'
-                },
-                callback: {
-                    message: '支付密码不一致',
-                    callback: function (value, validator, $field) {
-                        if($("[name=payCode]").val() != value){
-                            return false;
-                        }
-                        return true;
-                    }
-                }
-            }
-        },
-        noticePhone: {
-            validators: {
-                notEmpty: {
-                    message: '手机号不能为空'
-                },
-                regexp: {
-                    regexp: '^[0-9a-zA-Z]+$',
-                    message: '手机号只能包含数字'
-                },
-                stringLength: {
-                    min: 11,
-                    max: 11,
-                    message: '手机号码为11位'
-                }
-            }
-        },
-        copyPhone: {
-            validators: {
-                regexp: {
-                    regexp: '^[0-9]+$',
-                    message: '手机号只能包含数字'
-                },
-                stringLength: {
-                    min: 11,
-                    max: 11,
-                    message: '手机号码为11位'
+                    message: '链接地址不能为空'
                 }
             }
         }
     }
 });
 
+function save_photo(fileobj,obj,obj1){
+    $(fileobj).parents("div").find("input[name=uploadfile]").each(function(){
+        $(this).attr("name","");
+    });
+    $(fileobj).parent("div").find("input:first").attr("name","uploadfile");
+    if($(obj).val()==null || $(obj).val()==""){
+        bootbox.alert("请先上传文件");
+        return;
+    }
+
+    var multipartOptions ={
+        url:'../crmInterface/crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),
+        type:'post',
+        dataType:'text',
+        enctype:"multipart/form-data",
+        success:function(data){
+            var s = JSON.parse(data);
+            if(s.success == true){
+                bootbox.alert("上传成功");
+                $(obj1).val(s.obj);
+            }
+
+        },error:function(XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("上传成功");
+        }
+    }
+    $("#gastationform").ajaxSubmit(multipartOptions);
+}
 /**
  * 文件上传验证
  */
@@ -380,43 +325,3 @@ $('#importForm').bootstrapValidator({
         }
     }
 });
-
-/**
- *导入文件
- */
-function saveTemplate(){
-    var multipartOptions ={
-        url:'../web/tcms/vehicle/info/file',
-        type:'post',
-        dataType:'text',
-        enctype:"multipart/form-data",
-        success:function(data){
-            /*bootbox.alert("操作成功！");*/
-            $("#main").html(data);
-            $("#modal-table").modal("show");
-        },error:function(XMLHttpRequest, textStatus, errorThrown) {
-            bootbox.alert("操作失败！");
-        }
-    }
-    $("#importForm").ajaxSubmit(multipartOptions);
-    $("#importDivModel").modal('hide').removeClass('in');
-    $("body").removeClass('modal-open').removeAttr('style');
-    $(".modal-backdrop").remove();
-}
-
-
-$(function(){
-    //美化上传框
-    $('#file_import').ace_file_input({
-        no_file:'请选择需要导入的文件',
-        btn_choose:'选择文件',
-        btn_change:'重新选择',
-        droppable:false,
-        onchange:null,
-        thumbnail:false //| true | large
-        //whitelist:'gif|png|jpg|jpeg'
-        //blacklist:'exe|php'
-        //onchange:''
-        //
-    });
-})
