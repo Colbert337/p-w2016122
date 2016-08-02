@@ -6,8 +6,24 @@ public class MobileReturn {
 	
 	private String msg;
 	
-	private Data data;
+	private Data[] data;
 	
+	private String totalAccountFor;
+	
+	private String totalReturn;
+	
+	public String getTotalAccountFor() {
+		return totalAccountFor;
+	}
+	public void setTotalAccountFor(String totalAccountFor) {
+		this.totalAccountFor = totalAccountFor;
+	}
+	public String getTotalReturn() {
+		return totalReturn;
+	}
+	public void setTotalReturn(String totalReturn) {
+		this.totalReturn = totalReturn;
+	}
 	public String getError() {
 		return error;
 	}
@@ -20,11 +36,11 @@ public class MobileReturn {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	public Data getData() {
+	public Data[] getData() {
 		return data;
 	}
-	public void setData(Data data) {
+	public void setData(Data[] data) {
 		this.data = data;
 	}
-	
+
 }

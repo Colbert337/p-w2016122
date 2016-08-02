@@ -28,7 +28,7 @@ public class MobileUtils {
 		}
 	}
 	
-	public static MobileReturn packagingMobileReturn(String error, String msg, Data data) throws Exception{
+	public static MobileReturn packagingMobileReturn(String error, String msg, Data[] data) throws Exception{
 
 		MobileReturn ret = new MobileReturn();
 

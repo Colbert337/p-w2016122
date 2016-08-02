@@ -24,7 +24,7 @@ public class MobileRegisterUtils extends MobileUtils {
 		try {
 			register = (MobileRegister) JSON.parseObject(param.getDetailParam(), MobileRegister.class);
 		} catch (Exception e) {
-			ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_ERROR, MobileLoginUtils.RET_PARAM_ERROR_MSG, null);
+			ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, MobileUtils.RET_PARAM_ERROR_MSG, null);
 			throw e;
 		}
 		
