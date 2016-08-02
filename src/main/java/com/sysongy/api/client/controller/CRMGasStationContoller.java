@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/crmGasService")
+@RequestMapping("/crmInterface/crmGasService")
 public class CRMGasStationContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());

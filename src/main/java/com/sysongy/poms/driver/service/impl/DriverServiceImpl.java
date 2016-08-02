@@ -280,7 +280,7 @@ public class DriverServiceImpl implements DriverService {
 			orderDealType = GlobalConstant.OrderDealType.CONSUME_DRIVER_DEDUCT;
 		}
 		if(GlobalConstant.OrderType.CONSUME_BY_DRIVER.equalsIgnoreCase(orderType) && GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
-			chong ="消费充红";
+			chong ="消费冲红";
 			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_DRIVER_DEDUCT;
 		}
 		

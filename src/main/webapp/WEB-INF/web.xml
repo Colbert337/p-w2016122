@@ -86,9 +86,14 @@
   </filter>    
   <filter-mapping>    
 	  <filter-name>SecurityServlet</filter-name>    
-	  <url-pattern>/web/*</url-pattern>    
-  </filter-mapping>    
+	  <url-pattern>/web/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+      <filter-name>SecurityServlet</filter-name>
+      <url-pattern>/crmInterface/*</url-pattern>
+  </filter-mapping>
   <!--<filter-mapping>
+>>>>>>> f58247c0aed82d1d364f0fb31545b3d36fb37b82
 	  <filter-name>SecurityServlet</filter-name>    
 	  <url-pattern>*.jsp</url-pattern>    
   </filter-mapping>-->

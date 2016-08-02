@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Controller
-@RequestMapping("/crmCashBackContoller")
+@RequestMapping("/crmInterface/crmCashBackContoller")
 public class CRMCashBackContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());

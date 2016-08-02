@@ -47,7 +47,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 @Controller
-@RequestMapping("/crmCashServiceContoller")
+@RequestMapping("/crmInterface/crmCashServiceContoller")
 public class CRMCashServiceContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -172,10 +172,10 @@ public class CRMCashServiceContoller {
         aliShortMessageBean.setSendNumber(recordNew.getSysDriver().getMobilePhone());
         if(recordNew.getOrderDate() != null){
             String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
-                    DateTimeHelper.FMT_yyyyMMddhhmmss_noseparator);
+                    DateTimeHelper.FMT_yyyyMMddHHmmss);
             aliShortMessageBean.setTime(curStrDate);
         }
-        aliShortMessageBean.setString("消费");
+        aliShortMessageBean.setString("充值");
         aliShortMessageBean.setMoney(recordNew.getCash().toString());
         aliShortMessageBean.setBackCash(recordNew.getCashBack());
         aliShortMessageBean.setMoney1(recordNew.getSysDriver().getAccount().getAccountBalance());
@@ -463,7 +463,7 @@ public class CRMCashServiceContoller {
         aliShortMessageBean.setSendNumber(mobilePhone);
         if(recordNew.getOrderDate() != null){
             String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
-                    DateTimeHelper.FMT_yyyyMMddhhmmss_noseparator);
+                    DateTimeHelper.FMT_yyyyMMddHHmmss);
             aliShortMessageBean.setTime(curStrDate);
         }
         aliShortMessageBean.setString("消费");

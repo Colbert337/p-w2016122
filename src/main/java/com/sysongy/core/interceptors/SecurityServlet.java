@@ -76,11 +76,11 @@ public class SecurityServlet extends HttpServlet implements Filter {
 		SqlSessionFactory sessionFactory = (SqlSessionFactory) wac.getBean("sqlSessionFactory");
 		SqlSession session = sessionFactory.openSession();
 		SqlMapper sqlMapper = new SqlMapper(session);
-		String excuteSQL = "SELECT * FROM sys_user where user_name=" +
+		String excuteSQL = "SELECT * FROM sys_user where user_name='" +
 				curUserName +
-				" and password=" +
+				"' and password='" +
 				curPassword +
-				" and user_type='3' and status='0' and is_deleted='1'";
+				"' and user_type='3' and status='0' and is_deleted='1'";
 		List<SysUser> list = sqlMapper.selectList(excuteSQL, SysUser.class);
 		session.close();
 

@@ -255,7 +255,7 @@ public class TransportionServiceImpl implements TransportionService {
 				
 		String is_discharge = order.getIs_discharge();
 		if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
-			chong = "消费充红";
+			chong = "消费冲红";
 			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_TRANSPORTION_DEDUCT;
 			//充红传过来必须是负值
 			if(cash.compareTo(new BigDecimal(0)) > 0){

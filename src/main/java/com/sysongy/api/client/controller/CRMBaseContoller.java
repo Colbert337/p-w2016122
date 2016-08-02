@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Controller
-@RequestMapping("/crmBaseService")
+@RequestMapping("/crmInterface/crmBaseService")
 public class CRMBaseContoller {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());

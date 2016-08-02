@@ -39,7 +39,7 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping("/crmGasPriceService")
+@RequestMapping("/crmInterface/crmGasPriceService")
 public class CRMGasPriceController {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
