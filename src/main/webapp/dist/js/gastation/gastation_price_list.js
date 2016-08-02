@@ -42,7 +42,7 @@
 		}
 		
 		var listOptions ={   
-	            url:'../crmGasPriceService/queryProductPriceList?product_id='+product_id,
+	            url:'../crmInterface/crmGasPriceService/queryProductPriceList?product_id='+product_id,
 	            type:'post',                    
 	            dataType:'html',
 	            success:function(data){
@@ -60,7 +60,7 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../crmGasPriceService/queryAllGasPriceList?product_id=');
+		loadPage('#main', '../crmInterface/crmGasPriceService/queryAllGasPriceList?product_id=');
 	}
 	
 	function showPriceLog(obj){
