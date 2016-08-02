@@ -1,6 +1,6 @@
 package com.sysongy.api.mobile.dao;
 
-import com.sysongy.api.mobile.model.user.MbUserSuggest;
+import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
 
 public interface MbUserSuggestMapper {
     int deleteByPrimaryKey(String mbUserSuggestId);

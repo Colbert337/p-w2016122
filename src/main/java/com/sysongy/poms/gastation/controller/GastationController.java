@@ -26,6 +26,8 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysDepositLog;
@@ -46,6 +48,8 @@ public class GastationController extends BaseContoller{
 	private SysDepositLogService depositLogService;
 	@Autowired
 	private SysUserService sysUserService;
+	@Autowired
+	private OrderService orderService;
 	
 	private Gastation gastation;
 	
@@ -487,6 +491,407 @@ public class GastationController extends BaseContoller{
 			bean.setRetMsg(e.getMessage());
 
 			ret = this.queryAllGastationList2(map, this.gastation==null?new Gastation():this.gastation);
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/queryRechargeReport")
+	public String queryRechargeReport(ModelMap map, SysOrder sysOrder) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_rechargereport";
+
+		try {
+			if(sysOrder.getPageNum() == null){
+				sysOrder.setPageNum(1);
+				sysOrder.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				sysOrder.setOrderby("order_date desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryGastationRechargeReport(sysOrder);
+			PageInfo<Map<String, Object>> total = orderService.queryGastationRechargeReportTotal(sysOrder);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("sysOrder", sysOrder);
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/reChargeReport")
+    public String reChargeReport(ModelMap map, SysOrder sysOrder, HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
+		 try {
+	        	sysOrder.setPageNum(1);
+	        	sysOrder.setPageSize(1048576);
+
+				if(StringUtils.isEmpty(sysOrder.getOrderby())){
+					sysOrder.setOrderby("order_date desc");
+				}
+
+				PageInfo<Map<String, Object>> pageinfo = orderService.queryGastationRechargeReport(sysOrder);
+				List<Map<String, Object>> list = pageinfo.getList();
+
+	            int cells = 0 ; // 记录条数
+
+	            if(list != null && list.size() > 0){
+	                cells += list.size();
+	            }
+	            OutputStream os = response.getOutputStream();
+	            ExportUtil reportExcel = new ExportUtil();
+
+	            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+	            downLoadFileName = "充值明细_" + downLoadFileName;
+
+	            try {
+	            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
+	            } catch (UnsupportedEncodingException e1) {
+	                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+	            }
+
+	            String[][] content = new String[cells+1][9];//[行数][列数]
+	            //第一列
+	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","客户账号","支付方式","充值金额","返现系数","返现金额","操作人"};
+
+	            int i = 1;
+	            if(list != null && list.size() > 0){
+	            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+	            		 
+	            		String order_number = tmpMap.get("order_number")==null?"":tmpMap.get("order_number").toString();
+	            		String order_type;
+	            		String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
+	            		String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
+	            		String is_discharge;
+	            		String deal_type;
+	            		String channel_number = tmpMap.get("channel_number")==null?"":tmpMap.get("channel_number").toString();
+	            		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
+	            		String full_name = tmpMap.get("full_name")==null?"":tmpMap.get("full_name").toString();
+	            		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
+	            		String charge_type;
+	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+	            		String cash_back_per = tmpMap.get("cash_back_per")==null?"":tmpMap.get("cash_back_per").toString();
+	            		String cash_back = tmpMap.get("cash_back")==null?"0.00":tmpMap.get("cash_back").toString();
+	            		String operator = tmpMap.get("operator")==null?"":tmpMap.get("operator").toString();
+
+	            		switch (tmpMap.get("is_discharge")==null?"":tmpMap.get("is_discharge").toString()) {
+						case "0":{
+							is_discharge = "消费";
+							break;
+						}
+						case "1":{
+							is_discharge = "冲红";
+							break;
+						}
+						default:
+							is_discharge = "";
+							break;
+						}
+	            		
+	                    switch (tmpMap.get("order_type")==null?"":tmpMap.get("order_type").toString()) {
+						case "130":{
+							order_type = "个人充值";
+							break;
+						}
+						default:
+							order_type = "";
+							break;
+						}
+	                    
+	                    switch (tmpMap.get("deal_type")==null?"":tmpMap.get("deal_type").toString()) {
+						case "131":{
+							deal_type = "个人充值";
+							break;
+						}
+						case "132":{
+							deal_type = "首次充值返现";
+							break;
+						}
+						case "133":{
+							deal_type = "充值返现";
+							break;
+						}
+						case "134":{
+							deal_type = "个人充值充红";
+							break;
+						}
+						case "135":{
+							deal_type = "首次充值返现充红";
+							break;
+						}
+						case "136":{
+							deal_type = "充值返现充红";
+							break;
+						}
+						case "137":{
+							deal_type = "加注站预付款余额扣除";
+							break;
+						}
+						case "138":{
+							deal_type = "加注站预付款余额扣除充红";
+							break;
+						}
+						default:
+							deal_type = "";
+							break;
+						}
+	                    
+	                    switch (tmpMap.get("charge_type")==null?"":tmpMap.get("charge_type").toString()) {
+						case "101":{
+							charge_type = "转账返现";
+							break;
+						}
+						case "102":{
+							charge_type = "现金充值";
+							break;
+						}
+						case "103":{
+							charge_type = "微信充值";
+							break;
+						}
+						case "104":{
+							charge_type = "支付宝充值";
+							break;
+						}
+						case "105":{
+							charge_type = "银联充值";
+							break;
+						}
+						case "106":{
+							charge_type = "充值卡充值";
+							break;
+						}
+						case "107":{
+							charge_type = "POS充值";
+							break;
+						}
+						case "108":{
+							charge_type = "后台充值";
+							break;
+						}
+						case "201":{
+							charge_type = "注册";
+							break;
+						}
+						case "202":{
+							charge_type = "首次充值";
+							break;
+						}
+						case "203":{
+							charge_type = "邀请";
+							break;
+						}
+						default:
+							charge_type = "";
+							break;
+						}
+
+
+	                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,deal_type,channel_number,channel,full_name,user_name,charge_type,cash,cash_back_per,cash_back,operator};
+	                    i++;
+	                }
+	            }
+
+	            String [] mergeinfo = new String []{"0,0,0,0"};
+	            //单元格默认宽度
+	            String sheetName = "转账明细";
+	            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+	        } catch (Exception e) {
+	            logger.error("", e);
+	        }
+
+	        return null;
+    }
+	
+	@RequestMapping("/queryConsumeReport")
+	public String queryConsumeReport(ModelMap map, SysOrder sysOrder) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_consumereport";
+
+		try {
+			if(sysOrder.getPageNum() == null){
+				sysOrder.setPageNum(1);
+				sysOrder.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				sysOrder.setOrderby("order_date desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryGastationConsumeReport(sysOrder);
+			PageInfo<Map<String, Object>> total = orderService.queryGastationConsumeReportTotal(sysOrder);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("sysOrder", sysOrder);
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	@RequestMapping("/consumeReport")
+    public String consumeReport(ModelMap map, SysOrder sysOrder, HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
+		 try {
+	        	sysOrder.setPageNum(1);
+	        	sysOrder.setPageSize(1048576);
+
+				if(StringUtils.isEmpty(sysOrder.getOrderby())){
+					sysOrder.setOrderby("order_date desc");
+				}
+
+				PageInfo<Map<String, Object>> pageinfo = orderService.queryGastationRechargeReport(sysOrder);
+				List<Map<String, Object>> list = pageinfo.getList();
+
+	            int cells = 0 ; // 记录条数
+
+	            if(list != null && list.size() > 0){
+	                cells += list.size();
+	            }
+	            OutputStream os = response.getOutputStream();
+	            ExportUtil reportExcel = new ExportUtil();
+
+	            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+	            downLoadFileName = "加注站消费_" + downLoadFileName;
+
+	            try {
+	            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
+	            } catch (UnsupportedEncodingException e1) {
+	                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+	            }
+
+	            String[][] content = new String[cells+1][9];//[行数][列数]
+	            //第一列
+	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","交易金额","交易时间","交易对象","加注站名称","加注站编号","用户账号","操作人"};
+
+	            int i = 1;
+	            if(list != null && list.size() > 0){
+	            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+	            		 
+	            		String order_number = tmpMap.get("order_number")==null?"":tmpMap.get("order_number").toString();
+	            		String order_type;
+	            		String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
+	            		String is_discharge;
+	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+	            		String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
+	            		String credit_account = tmpMap.get("credit_account")==null?"":tmpMap.get("credit_account").toString();
+	            		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
+	            		String channel_number = tmpMap.get("channel_number")==null?"":tmpMap.get("channel_number").toString();
+	            		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
+	            		String operator = tmpMap.get("operator")==null?"":tmpMap.get("operator").toString();
+	            		
+	            		switch (tmpMap.get("is_discharge")==null?"":tmpMap.get("is_discharge").toString()) {
+						case "0":{
+							is_discharge = "消费";
+							break;
+						}
+						case "1":{
+							is_discharge = "冲红";
+							break;
+						}
+						default:
+							is_discharge = "";
+							break;
+						}
+	            		
+	                    switch (tmpMap.get("order_type")==null?"":tmpMap.get("order_type").toString()) {
+						case "130":{
+							order_type = "个人充值";
+							break;
+						}
+						default:
+							order_type = "";
+							break;
+						}
+	                    
+	                    if(credit_account.length() == 32){
+	                    	credit_account = "个人";
+	                    }else{
+	                    	credit_account = "车队";
+	                    }
+
+	                    content[i] = new String[]{order_number,order_type,deal_number,is_discharge,cash,order_date,credit_account,channel,channel_number,user_name,operator};
+	                    i++;
+	                }
+	            }
+
+	            String [] mergeinfo = new String []{"0,0,0,0"};
+	            //单元格默认宽度
+	            String sheetName = "加注站消费";
+	            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+	        } catch (Exception e) {
+	            logger.error("", e);
+	        }
+
+	        return null;
+    }
+	
+	@RequestMapping("/queryConsumeReportDetail")
+	public String queryConsumeReportDetail(ModelMap map,@RequestParam String order_id,@RequestParam String order_type,@RequestParam String cash) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_consumereportdetail";
+
+		try {
+			SysOrder sysOrder = new SysOrder();
+			sysOrder.setOrderId(order_id);
+			sysOrder.setOrderType(order_type);
+			
+			if(sysOrder.getPageNum() == null){
+				sysOrder.setPageNum(1);
+				sysOrder.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+				sysOrder.setOrderby("order_date desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = orderService.queryGastationConsumeReportDetail(sysOrder);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("sysOrder", sysOrder);
+			map.addAttribute("totalCash",cash);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);

@@ -23,13 +23,16 @@ import com.sysongy.api.mobile.model.base.MobileParams;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MobileFeedBack;
 import com.sysongy.api.mobile.model.login.MobileLogin;
+import com.sysongy.api.mobile.model.loss.ReportLoss;
 import com.sysongy.api.mobile.model.register.MobileRegister;
 import com.sysongy.api.mobile.model.upload.MobileUpload;
 import com.sysongy.api.mobile.model.userinfo.MobileUserInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
+import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.api.mobile.tools.MobileUtils;
 import com.sysongy.api.mobile.tools.feedback.MobileFeedBackUtils;
 import com.sysongy.api.mobile.tools.login.MobileLoginUtils;
+import com.sysongy.api.mobile.tools.loss.ReportLossUtil;
 import com.sysongy.api.mobile.tools.register.MobileRegisterUtils;
 import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
 import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
@@ -37,6 +40,7 @@ import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
@@ -58,6 +62,10 @@ public class MobileController {
     RedisClientInterface redisClientImpl;
 	@Autowired
 	OrderService orderService;
+	@Autowired
+	MbUserSuggestServices mbUserSuggestServices;
+	@Autowired
+	SysUserAccountService sysUserAccountService;
 
 	@RequestMapping(value = {"Login"})
 	@ResponseBody
@@ -273,13 +281,44 @@ public class MobileController {
     	
     	try {
     		feedback = MobileFeedBackUtils.checkFeedBackParam(params, ret);
-			
 
+    		mbUserSuggestServices.saveSuggester(feedback);
             
             Data data = new Data();
             
-            ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileGetUserInfoUtils.RET_USERINFO_SUCCESS, data);
+            ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileFeedBackUtils.RET_FEEDBACK_SAVE_MSG, data);
 
+        } catch (Exception e) {
+        	if(StringUtils.isEmpty(ret.getMsg())){
+				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+			}
+			
+			logger.error("MobileController.Login ERROR： " + e);
+        }
+        finally {
+			return JSON.toJSONString(ret);
+		}
+    }
+    
+    @RequestMapping(value = "ReportTheLoss")
+    @ResponseBody
+    public String reportTheLoss(MobileParams params){
+    	
+    	MobileReturn ret = new MobileReturn();
+    	ReportLoss loss = new ReportLoss();
+    	
+    	try {
+    		loss = ReportLossUtil.checkReportTheLossParam(params, ret);
+
+    		SysDriver driver = driverService.queryDriverByPK(loss.getToken());
+    		int retvale = sysUserAccountService.changeStatus(driver.getAccount().getSysUserAccountId(), loss.getLossType(), driver.getCardInfo().getCard_no());
+            
+            
+            if(retvale >0 ){
+            	Data data = new Data();
+            	ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, ReportLossUtil.RET_LOSS_SUCESS_MSG, data);
+            }
+           
         } catch (Exception e) {
         	if(StringUtils.isEmpty(ret.getMsg())){
 				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
