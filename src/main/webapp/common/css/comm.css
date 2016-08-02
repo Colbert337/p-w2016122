@@ -222,3 +222,14 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
     color: #ccc;
     padding: 0 3px;
 }
+
+.shenhe-items-hd {
+	font-size: 16px;
+    color: #2679b5;
+    padding-bottom: 10px
+}
+.shenhe-items-bd {
+	padding-bottom: 10px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}

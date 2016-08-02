@@ -124,7 +124,7 @@ function save_photo(fileobj,obj,obj1){
 			}
 			
 			var multipartOptions ={   
-		            url:'../crmBaseService/web/upload?stationid='+$("[name=stationId]").val(),   
+		            url:'../crmInterface/crmBaseService/web/upload?stationid='+$("[name=stationId]").val(),
 		            type:'post',                    
 		            dataType:'text',
 		            enctype:"multipart/form-data",

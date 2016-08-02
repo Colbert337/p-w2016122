@@ -363,7 +363,12 @@ public class DriverServiceImpl implements DriverService {
 		if(GlobalConstant.DriverStatus.PASSED.equals(type)){
 			AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 			aliShortMessageBean.setSendNumber(record.getMobilePhone());
-			aliShortMessageBean.setString("");
+			aliShortMessageBean.setString("已");
+			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_AUDIT_SUCCESS);
+		}else if(GlobalConstant.DriverStatus.NOPASS.equals(type)){
+			AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+			aliShortMessageBean.setSendNumber(record.getMobilePhone());
+			aliShortMessageBean.setString("未");
 			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_AUDIT_SUCCESS);
 		}
 		

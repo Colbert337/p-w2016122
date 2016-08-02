@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sysongy.api.mobile.dao.MbUserSuggestMapper" >
-  <resultMap id="BaseResultMap" type="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+  <resultMap id="BaseResultMap" type="com.sysongy.api.mobile.model.feedback.MbUserSuggest" >
     <id column="mb_user_suggest_id" property="mbUserSuggestId" jdbcType="VARCHAR" />
     <result column="sys_driver_id" property="sysDriverId" jdbcType="VARCHAR" />
     <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR" />
@@ -26,7 +26,7 @@
     delete from mb_user_suggest
     where mb_user_suggest_id = #{mbUserSuggestId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+  <insert id="insert" parameterType="com.sysongy.api.mobile.model.feedback.MbUserSuggest" >
     insert into mb_user_suggest (mb_user_suggest_id, sys_driver_id, mobile_phone, 
       suggest, suggest_res, follow_up, 
       memo, created_date, updated_date
@@ -36,7 +36,7 @@
       #{memo,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+  <insert id="insertSelective" parameterType="com.sysongy.api.mobile.model.feedback.MbUserSuggest" >
     insert into mb_user_suggest
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="mbUserSuggestId != null" >
@@ -97,7 +97,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.api.mobile.model.feedback.MbUserSuggest" >
     update mb_user_suggest
     <set >
       <if test="sysDriverId != null" >
@@ -127,7 +127,7 @@
     </set>
     where mb_user_suggest_id = #{mbUserSuggestId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sysongy.api.mobile.model.user.MbUserSuggest" >
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.api.mobile.model.feedback.MbUserSuggest" >
     update mb_user_suggest
     set sys_driver_id = #{sysDriverId,jdbcType=VARCHAR},
       mobile_phone = #{mobilePhone,jdbcType=VARCHAR},

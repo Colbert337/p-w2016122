@@ -50,7 +50,16 @@ public interface OrderService {
     
     PageInfo<Map<String, Object>> queryTransportionReportTotal(SysOrder record);
     
+    PageInfo<Map<String, Object>> queryGastationRechargeReport(SysOrder record);
     
+    PageInfo<Map<String, Object>> queryGastationRechargeReportTotal(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryGastationConsumeReport(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryGastationConsumeReportTotal(SysOrder record);
+    
+    PageInfo<Map<String, Object>> queryGastationConsumeReportDetail(SysOrder record);
+   
     /**
      * 给司机充值
      * @param order

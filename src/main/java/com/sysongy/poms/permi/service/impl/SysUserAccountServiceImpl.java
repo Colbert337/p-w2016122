@@ -1,18 +1,23 @@
 package com.sysongy.poms.permi.service.impl;
 
-import com.sysongy.util.GlobalConstant;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
-import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
-
-import java.math.BigDecimal;
-import java.util.Date;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
 @Service
 public class SysUserAccountServiceImpl implements SysUserAccountService {
@@ -21,6 +26,8 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	private SysUserAccountMapper sysUserAccountMapper;
 	@Autowired
 	private GasCardService gasCardService;
+	@Autowired
+	private DriverService driverService;
 	
 	@Override
 	public int changeStatus(String accountid,String status, String cardno) throws Exception{
@@ -28,6 +35,17 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		SysUserAccount record = new SysUserAccount();
 		record.setSysUserAccountId(accountid);
 		record.setAccount_status(status);
+		
+		SysDriver driver = new SysDriver();
+		driver.setSysUserAccountId(accountid);
+		
+		List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+		
+		if(driverlist.size()!=1){
+			throw new Exception(this.getClass().getName()+"找不到唯一对应的司机用户");
+		}
+		
+		driver = driverlist.get(0);
 		
 		if(!"0".equals(status)){
 			
@@ -42,7 +60,21 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 			
 			
 			gasCardService.updateByPrimaryKeySelective(gasCard);
+			
+			AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+			aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+			aliShortMessageBean.setString("卡");
+			aliShortMessageBean.setCode(cardno);
+			aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
+			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.CARD_FROZEN);
 		}
+		
+		AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+		aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+		aliShortMessageBean.setString("用户");
+		aliShortMessageBean.setCode(driver.getMobilePhone());
+		aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
+		AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.CARD_FROZEN);
 		
 		return sysUserAccountMapper.updateByPrimaryKeySelective(record);
 	}

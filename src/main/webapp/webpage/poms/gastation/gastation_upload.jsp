@@ -17,12 +17,12 @@
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap.css" />
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/font-awesome.css" />
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/jquery-ui.custom.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
-		<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/chosen.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datepicker3.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-timepicker.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/daterangepicker.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/bootstrap-datetimepicker.css" />
+	<link rel="stylesheet" href="<%=basePath %>/assets/css/colorpicker.css" />
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-fonts.css" />
 	<link rel="stylesheet" href="<%=basePath %>/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
 	
@@ -330,7 +330,7 @@
 			}
 			
 			var multipartOptions ={   
-		            url:'../crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),   
+		            url:'../crmInterface/crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),
 		            type:'post',                    
 		            dataType:'text',
 		            enctype:"multipart/form-data",

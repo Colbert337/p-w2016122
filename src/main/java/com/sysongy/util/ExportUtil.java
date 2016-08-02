@@ -213,7 +213,7 @@ public class ExportUtil {
 						content[i][j] = "";
 					}
 					if("0".equals(content[i][j]) || "0.0".equals(content[i][j]) || "0.00".equals(content[i][j]) || "0.000".equals(content[i][j])){
-						content[i][j] = "";
+						//content[i][j] = "";
 					}
 					
 					format.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);//设置单元格边框

@@ -76,7 +76,7 @@ function sendMessage(){
         countdown=60;
         settime();
         $.ajax({
-            url:"../crmCustomerService/web/sendMsg/api",
+            url:"../crmInterface/crmCustomerService/web/sendMsg/api",
             data:{mobilePhone:mobilePhone,msgType:'register'},
             async:false,
             type: "POST",
@@ -238,7 +238,7 @@ $('#driverForm').bootstrapValidator({
                     message: '验证码必须为6位'
                 },
                 remote: {
-                    url: '../crmCustomerService/web/isMsg',
+                    url: '../crmInterface/crmCustomerService/web/isMsg',
                     type: "post",
                     async: false,
                     data: function(validator, $field, value) {
