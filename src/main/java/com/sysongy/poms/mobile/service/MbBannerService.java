@@ -19,25 +19,39 @@ public interface MbBannerService {
      * @param mbBanner
      * @return
      */
-    PageInfo<MbBanner> queryMbBannerListPage(MbBanner mbBanner);
+    PageInfo<MbBanner> queryMbBannerListPage(MbBanner mbBanner) throws Exception;
 
     /**
      * 保存图片
      * @param banner
      * @return
      */
-    int saveBanner(MbBanner banner);
+    int saveBanner(MbBanner banner) throws Exception;
 
     /**
      * 修改图片
      * @param banner
      * @return
      */
-    int updateBanner(MbBanner banner);
+    int updateBanner(MbBanner banner) throws Exception;
     /**
      * 删除图片
      * @param banner
      * @return
      */
-    int deleteBanner(MbBanner banner);
+    int deleteBanner(MbBanner banner) throws Exception;
+
+    /**
+     * 查询当前类型图片的最大序号
+     * @param imgType
+     * @return
+     */
+    MbBanner queryMaxIndex(int imgType);
+
+    /**
+     * 查询当前图片信息
+     * @param banner
+     * @return
+     */
+    MbBanner queryMbBanner(MbBanner banner);
 }

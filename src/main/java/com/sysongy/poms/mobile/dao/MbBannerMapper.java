@@ -41,4 +41,19 @@ public interface MbBannerMapper {
      * @return
      */
     int deleteBanner(MbBanner banner);
+
+    /**
+     * 查询当前类型图片的最大序号
+     * @param imgType
+     * @return
+     */
+    MbBanner queryMaxIndex(int imgType);
+
+    /**
+     * 查询当前图片信息
+     * @param banner
+     * @return
+     */
+    MbBanner queryMbBanner(MbBanner banner);
+
 }
