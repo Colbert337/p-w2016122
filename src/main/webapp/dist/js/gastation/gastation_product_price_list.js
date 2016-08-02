@@ -12,7 +12,7 @@
 		}
 		
 		var listOptions ={   
-	            url:'../crmGasPriceService/queryProductPriceList',
+	            url:'../crmInterface/crmGasPriceService/queryProductPriceList',
 	            type:'post',                    
 	            dataType:'html',
 	            success:function(data){
@@ -37,7 +37,7 @@
 	}
 	
 	function returnpage(){
-		loadPage('#main', '../crmGasPriceService/queryAllGasPriceList');
+		loadPage('#main', '../crmInterface/crmGasPriceService/queryAllGasPriceList');
 	}
 	
 	function hideInnerModel(){

@@ -60,7 +60,7 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../crmGasPriceService/queryAllGasPriceList?product_id=');
+		loadPage('#main', '../crmInterface/crmGasPriceService/queryAllGasPriceList?product_id=');
 	}
 	
 	function showPriceLog(obj){
