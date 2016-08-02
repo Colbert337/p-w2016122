@@ -34,10 +34,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @FileName: TcVehicleController
@@ -195,6 +192,20 @@ public class TcVehicleController extends BaseContoller {
         cardService.updateGasCardInfo(gasCardTemp);
         map.addAttribute("gasCard",gasCardTemp);
 
+        //发送短信
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        SimpleDateFormat sfm = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+        String time = sfm.format(new Date());
+        aliShortMessageBean.setTime(time);
+        aliShortMessageBean.setString("会员卡");
+        aliShortMessageBean.setCode(gasCard.getCard_no());
+        if(gasCard.getCard_status().equals(GlobalConstant.CardStatus.PAUSED)){
+            //卡冻结
+            sendMsgApi(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.CARD_FROZEN);
+        }else{
+            //卡解冻
+            sendMsgApi(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.CARD_THAW);
+        }
         return "redirect:/web/tcms/vehicle/list/page";
     }
 
@@ -541,6 +552,30 @@ public class TcVehicleController extends BaseContoller {
         return ajaxJson;
     }
 
+    /**
+     * 发送短信
+     * @param aliShortMessageBean
+     * @return
+     */
+    public AjaxJson sendMsgApi(AliShortMessageBean aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE msgType){
+        AjaxJson ajaxJson = new AjaxJson();
 
+        if(!StringUtils.isNotEmpty(aliShortMessageBean.getSendNumber())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("手机号为空！！！");
+            return ajaxJson;
+        }
+
+        try
+        {
+            AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.TRANSPORTION_TRANSFER_SELF_CHARGE);
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        return ajaxJson;
+    }
 
 }
