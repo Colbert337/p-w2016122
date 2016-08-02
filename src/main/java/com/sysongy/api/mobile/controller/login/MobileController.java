@@ -330,4 +330,35 @@ public class MobileController {
 			return JSON.toJSONString(ret);
 		}
     }
+    
+    @RequestMapping(value = "TransactionRecord")
+    @ResponseBody
+    public String transactionRecord(MobileParams params){
+    	
+    	MobileReturn ret = new MobileReturn();
+    	ReportLoss loss = new ReportLoss();
+    	
+    	try {
+    		loss = ReportLossUtil.checkReportTheLossParam(params, ret);
+
+    		SysDriver driver = driverService.queryDriverByPK(loss.getToken());
+    		int retvale = sysUserAccountService.changeStatus(driver.getAccount().getSysUserAccountId(), loss.getLossType(), driver.getCardInfo().getCard_no());
+            
+            
+            if(retvale >0 ){
+            	Data data = new Data();
+            	ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, ReportLossUtil.RET_LOSS_SUCESS_MSG, data);
+            }
+           
+        } catch (Exception e) {
+        	if(StringUtils.isEmpty(ret.getMsg())){
+				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+			}
+			
+			logger.error("MobileController.Login ERROR： " + e);
+        }
+        finally {
+			return JSON.toJSONString(ret);
+		}
+    }
 }

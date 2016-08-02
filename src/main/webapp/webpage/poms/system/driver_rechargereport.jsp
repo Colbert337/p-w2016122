@@ -27,6 +27,10 @@
 					
 					<div class="search-types">
 						<div class="item">
+						    <label>会员账号：</label>
+							<input type="text" name="sysDriver.userName" placeholder="请输入会员账号"  maxlength="20" value="${sysOrder.sysDriver.userName}"/>
+						</div>
+						<div class="item">
 							<label>交易类型：</label>
 							<select id="is_discharge" name="is_discharge" maxlength="20">
 								<option value="">全部</option>
@@ -44,7 +48,6 @@
 								<input type="text" class="" name="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
 							</div>			
 						</div>
-						
 						<%--<div class="item">
 						    <label>充值渠道：</label>
 							<input type="text" name="deal_number" placeholder="充值渠道"  maxlength="20" value="${order.channel}"/>

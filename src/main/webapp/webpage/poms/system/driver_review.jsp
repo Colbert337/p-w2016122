@@ -82,7 +82,8 @@
 									<th onclick="orderBy(this,'plate_number');commitForm();" id="salesmen_name_order">车牌号</th>
 									<th onclick="orderBy(this,'identity_card');commitForm();" id="operations_name_order">身份证号</th>
 									<th onclick="orderBy(this,'fuel_type');commitForm();" id="indu_com_number_order">燃料类型</th>
-									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="status_order">关联运输公司</th>
+									<th onclick="orderBy(this,'station_id_id');commitForm();" id="station_id_order">注册工作站编号</th>
+									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册工作站名称</th>
 									<!--  <th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> -->
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
@@ -111,6 +112,7 @@
 									<td>${list.identityCard}</td>
 									<td><s:Code2Name mcode="${list.fuelType}" gcode="FUEL_TYPE"></s:Code2Name></td>
 									<td>${list.stationId}</td>
+									<td>${list.regisSource}</td>
 									<%-- <td>${list.isIdent == '0'?'否':'是'}</td>  --%>
 									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
@@ -179,7 +181,64 @@
 			<div class="modal-body">
 				<div class="container-fluid">
 					<%--两行表单 开始--%>
-					<div class="row form-group">
+					<div class="shenhe-items">
+						<div class="shenhe-items-hd">
+							实名认证
+						</div>
+						
+						<div class="shenhe-items-bd">
+						<div class="row">
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">注册日期:</label>
+							<label class="control-label no-padding-right" id="createdate"></label>
+						</div>
+						
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">审核日期:</label>
+							<label class="control-label no-padding-right" id="checkedate"></label>
+						</div>
+						
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">认证来源:</label>
+							<label class="control-label no-padding-right" id="regisource"></label>
+						</div>
+						
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">审核状态:</label>
+							<label class="control-label no-padding-right" id="checkstatus"></label>
+						</div>
+						</div>
+						</div>
+						<div class="shenhe-items-hd">
+							个人信息
+						</div>
+						<div class="shenhe-items-bd">
+						<div class="row">
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">账号:</label>
+							<label class="control-label no-padding-right" id="userName"></label>
+						</div>
+						
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">姓名:</label>
+							<label class="control-label no-padding-right" id="fullName"></label>
+						</div>
+						
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">身份证号:</label>
+							<label class="control-label no-padding-right" id="identityCard"></label>
+						</div>
+						
+						<div class="col-xs-6">
+							<label class="control-label no-padding-right">车牌号:</label>
+							<label class="control-label no-padding-right" id="plateNumber"></label>
+						</div>
+						</div>
+						</div>
+						
+						<div class="shenhe-items-hd">证件照片</div>
+						<div class="shenhe-items-bd">
+						<div class="row">
 						<div class="col-xs-6">
 							<label class="control-label no-padding-right">驾驶证：</label>
 							<ul class="ace-thumbnails clearfix">
@@ -207,8 +266,11 @@
 							</ul>
 						</div>
 					</div>
+					</div>
+					</div>
+					
 					<div class="form-group">
-						<label class="control-label">审核备注：</label>
+						<label class="shenhe-items-hd">审核备注：</label>
 						<input type="hidden" id="objid"/>
 						<input type="hidden" id="objval"/>
 						<div>

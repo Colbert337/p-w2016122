@@ -28,6 +28,10 @@
 					
 					<div class="search-types">
 						<div class="item">
+						    <label>客户账号：</label>
+							<input type="text" name="sysDriver.userName" placeholder="请输入客户账号"  maxlength="20" value="${sysOrder.sysDriver.userName}"/>
+						</div>
+						<div class="item">
 							<label>订单编号：</label>
 							<input type="text" name="orderNumber" placeholder="订单编号/交易流水号"  maxlength="20" value="${sysOrder.orderNumber}"/>
 						</div>

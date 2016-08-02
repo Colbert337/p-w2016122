@@ -28,6 +28,14 @@
 					
 					<div class="search-types">
 						<div class="item">
+						    <label>运输公司编号：</label>
+							<input type="text" name="creditAccount" placeholder="请输入运输公司编号"  maxlength="20" value="${sysOrder.creditAccount}"/>
+						</div>
+						<div class="item">
+							<label>订单编号：</label>
+							<input type="text" name="orderNumber" placeholder="订单编号/交易流水号"  maxlength="20" value="${sysOrder.orderNumber}"/>
+						</div>
+						<div class="item">
 							<label>交易类型：</label>
 							<select id="is_discharge" name="is_discharge" maxlength="20">
 								<option value="">全部</option>

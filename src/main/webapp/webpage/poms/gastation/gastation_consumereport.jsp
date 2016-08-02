@@ -27,6 +27,10 @@
 					
 					<div class="search-types">
 						<div class="item">
+						    <label>客户账号：</label>
+							<input type="text" name="sysDriver.userName" placeholder="请输入客户账号"  maxlength="20" value="${sysOrder.sysDriver.userName}"/>
+						</div>
+						<div class="item">
 							<label>订单编号：</label>
 							<input type="text" name="orderNumber" placeholder="请输入订单编号/订单流水号"  maxlength="20" value="${sysOrder.orderNumber}"/>
 						</div>
@@ -95,7 +99,7 @@
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">交易对象</th>
 									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
 									<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
-									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">用户账号</th>
+									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">客户账号</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 									<th>商品详情</th>
 								</tr>

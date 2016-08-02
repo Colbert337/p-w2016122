@@ -498,7 +498,7 @@
         and sod.deal_type = #{order_deal.dealType, jdbcType=VARCHAR}
       </if>
       <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
-        and so.order_number = #{orderNumber, jdbcType=VARCHAR}
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
 		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -519,7 +519,7 @@
         and sod.deal_type = #{order_deal.dealType, jdbcType=VARCHAR}
       </if>
       <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
-        and so.order_number = #{orderNumber, jdbcType=VARCHAR}
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
 		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      </if>
@@ -535,6 +535,9 @@
 	inner join sys_user su on su.sys_user_id = so.operator
 	where sod.deal_type in ('131','132','133','134','135','136') 
      <trim>
+      <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
+        and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
+      </if>
       <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
         and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
       </if>
@@ -558,6 +561,9 @@
 	inner join sys_user su on su.sys_user_id = so.operator
 	where sod.deal_type = '131' 
 	<trim>
+	  <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
+        and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
+      </if>
       <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
         and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
       </if>
@@ -582,6 +588,9 @@
 	INNER JOIN sys_user su ON su.sys_user_id = so.operator 
 	WHERE sod.deal_type IN ('211', '212', '221', '222') 
      <trim>
+      <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
+        and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
+      </if>
       <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
         and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
       </if>
@@ -605,6 +614,9 @@
 	INNER JOIN sys_user su ON su.sys_user_id = so.operator 
 	WHERE sod.deal_type IN ('211', '212', '221', '222') 
 	<trim>
+	  <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
+        and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
+      </if>
       <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
         and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
       </if>
@@ -646,6 +658,12 @@
 	left join sys_transportion st on so.credit_account = st.sys_transportion_id
 	where 1=1 and so.order_type = '210'
      <trim>
+      <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
+      <if test="creditAccount != null &amp;&amp; creditAccount != ''" >
+        and so.credit_account = #{creditAccount, jdbcType=VARCHAR}
+      </if>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
       </if>
@@ -667,6 +685,9 @@
 	left join sys_transportion st on sd.station_id = st.sys_transportion_id
 	where 1=1 and so.order_type = '220'
 	<trim>
+	  <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
+        and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
+      </if>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
       </if>
@@ -674,7 +695,8 @@
         and sd.plate_number = #{sysDriver.plateNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
-		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      </if>
+		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      
+	  </if>
     </trim>
   </select>
   
@@ -728,6 +750,12 @@
 	left join sys_transportion st on so.credit_account = st.sys_transportion_id
 	where 1=1 and so.order_type = '210'
 	<trim>
+	  <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
+      <if test="creditAccount != null &amp;&amp; creditAccount != ''" >
+        and so.credit_account = #{creditAccount, jdbcType=VARCHAR}
+      </if>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
       </if>

@@ -36,13 +36,12 @@
 							</select>
 						</div> --%>
 						<div class="item">
-							<label>订单编号：</label>
-							<input type="text" name="orderNumber" placeholder="请输入订单编号"  maxlength="20" value="${sysOrder.orderNumber}"/>
-						</div>
-						
-						<div class="item">
 						    <label>运输公司编号：</label>
 							<input type="text" name="creditAccount" placeholder="请输入运输公司编号" maxlength="10" value="${sysOrder.creditAccount}"/>
+						</div>
+						<div class="item">
+							<label>订单编号：</label>
+							<input type="text" name="orderNumber" placeholder="订单编号/交易流水号""  maxlength="20" value="${sysOrder.orderNumber}"/>
 						</div>
 						
 						<div class="item">
