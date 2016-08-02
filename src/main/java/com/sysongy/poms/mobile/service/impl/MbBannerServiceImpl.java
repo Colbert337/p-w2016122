@@ -44,4 +44,19 @@ public class MbBannerServiceImpl implements MbBannerService{
             return null;
         }
     }
+
+    @Override
+    public int saveBanner(MbBanner banner) {
+        return 0;
+    }
+
+    @Override
+    public int updateBanner(MbBanner banner) {
+        return 0;
+    }
+
+    @Override
+    public int deleteBanner(MbBanner banner) {
+        return 0;
+    }
 }

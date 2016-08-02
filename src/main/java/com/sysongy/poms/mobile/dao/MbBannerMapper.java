@@ -22,4 +22,23 @@ public interface MbBannerMapper {
      * @return
      */
     List<MbBanner> queryMbBannerList(MbBanner mbBanner);
+    /**
+     * 保存图片
+     * @param banner
+     * @return
+     */
+    int saveBanner(MbBanner banner);
+
+    /**
+     * 修改图片
+     * @param banner
+     * @return
+     */
+    int updateBanner(MbBanner banner);
+    /**
+     * 删除图片
+     * @param banner
+     * @return
+     */
+    int deleteBanner(MbBanner banner);
 }
