@@ -69,7 +69,7 @@
   </resultMap>
   
   <resultMap id="HenryResultMap" type="java.util.Map" >
-  	<result column="order_id" property="order_id" jdbcType="VARCHAR" />
+  	  <result column="order_id" property="order_id" jdbcType="VARCHAR" />
 	  <result column="order_number" property="order_number" jdbcType="VARCHAR" />
 	  <result column="order_type" property="order_type" jdbcType="VARCHAR" />
 	  <result column="deal_type" property="deal_type" jdbcType="VARCHAR" />
@@ -89,7 +89,7 @@
 	  <result column="channel_number" property="channel_number" jdbcType="VARCHAR" />
 	  <result column="operator" property="operator" jdbcType="VARCHAR" />
 	  <result column="transportion_name" property="transportion_name" jdbcType="VARCHAR" />
-	  
+	  <result column="cash_back_per" property="cash_back_per" jdbcType="VARCHAR" />
   </resultMap>
   
   <resultMap id="HenryTotalMap" type="java.util.Map" >
@@ -525,6 +525,116 @@
 		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      </if>
     </trim>
 	) as total
+  </select>
+  
+  <select id="queryGastationRechargeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+	select so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,sod.deal_type,so.cash,sd.user_name,sd.full_name,so.charge_type,so.channel,so.channel_number,su.user_name operator,sod.cash_back_per,sod.cash_back
+	from sys_order so
+	inner join sys_order_deal sod on so.order_id = sod.order_id
+	inner join sys_driver sd on sd.sys_driver_id = so.debit_account
+	inner join sys_user su on su.sys_user_id = so.operator
+	where sod.deal_type in ('131','132','133','134','135','136') 
+     <trim>
+      <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
+      <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
+        and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
+      </if>
+      <if test="chargeType != null &amp;&amp; chargeType != ''" >
+        and so.charge_type = #{chargeType, jdbcType=VARCHAR}
+      </if>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+        and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+  </select>
+  
+   <select id="queryGastationRechargeReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+  	select sum(cash) total from (select so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,sod.deal_type,so.cash,sd.user_name,sd.full_name,so.charge_type,so.channel,so.channel_number,su.user_name operator,sod.cash_back_per,sod.cash_back
+	from sys_order so
+	inner join sys_order_deal sod on so.order_id = sod.order_id
+	inner join sys_driver sd on sd.sys_driver_id = so.debit_account
+	inner join sys_user su on su.sys_user_id = so.operator
+	where sod.deal_type = '131' 
+	<trim>
+      <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
+      <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
+        and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
+      </if>
+      <if test="chargeType != null &amp;&amp; chargeType != ''" >
+        and so.charge_type = #{chargeType, jdbcType=VARCHAR}
+      </if>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+        and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+	) as total
+  </select>
+  
+  <select id="queryGastationConsumeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+	SELECT so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sod.deal_type,so.credit_account,so.channel,so.channel_number,sd.user_name,su.user_name operator
+	FROM sys_order so 
+	INNER JOIN sys_order_deal sod ON so.order_id = sod.order_id 
+	LEFT JOIN sys_driver sd ON sd.sys_driver_id = so.credit_account 
+	INNER JOIN sys_user su ON su.sys_user_id = so.operator 
+	WHERE sod.deal_type IN ('211', '212', '221', '222') 
+     <trim>
+      <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
+      <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
+        and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
+      </if>
+      <if test="chargeType != null &amp;&amp; chargeType != ''" >
+        and so.charge_type = #{chargeType, jdbcType=VARCHAR}
+      </if>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+        and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+  </select>
+  
+  <select id="queryGastationConsumeReportTotal" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+	select sum(cash) total from (SELECT so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sod.deal_type,so.credit_account,so.channel,so.channel_number,sd.user_name,su.user_name operator
+	FROM sys_order so 
+	INNER JOIN sys_order_deal sod ON so.order_id = sod.order_id 
+	LEFT JOIN sys_driver sd ON sd.sys_driver_id = so.credit_account 
+	INNER JOIN sys_user su ON su.sys_user_id = so.operator 
+	WHERE sod.deal_type IN ('211', '212', '221', '222') 
+	<trim>
+      <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
+      <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
+        and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
+      </if>
+      <if test="chargeType != null &amp;&amp; chargeType != ''" >
+        and so.charge_type = #{chargeType, jdbcType=VARCHAR}
+      </if>
+      <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
+        and so.channel_number = #{chargeType, jdbcType=VARCHAR}
+      </if>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+        and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+	) as total
+  </select>
+  
+  <select id="queryGastationConsumeReportDetail" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+		select so.order_number,so.order_date,sog.goods_type,sog.price,sog.number,sog.sum_price,so.channel,su.user_name
+		from sys_order so
+		left join sys_user su on so.operator = su.sys_user_id
+		left join sys_order_goods sog on so.order_id = sog.order_id 
+		where 1=1
+		<trim>
+	      <if test="orderId != null &amp;&amp; orderId != ''" >
+	        and so.order_id = #{orderId, jdbcType=VARCHAR}
+	      </if>
+	    </trim>
   </select>
   
   <select id="queryRechargeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >

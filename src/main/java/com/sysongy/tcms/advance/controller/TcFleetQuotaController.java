@@ -837,8 +837,8 @@ public class TcFleetQuotaController extends BaseContoller {
                         number = quotaMap.get("number").toString();
                     }
                     String sumPrice = "";
-                    if(quotaMap.get("sum_price") != null){
-                        sumPrice = quotaMap.get("sum_price").toString();
+                    if(quotaMap.get("cash") != null){
+                        sumPrice = quotaMap.get("cash").toString();
                     }
                     String orderDate = "";
                     if(quotaMap.get("orderDate") != null){
@@ -1052,8 +1052,8 @@ public class TcFleetQuotaController extends BaseContoller {
                         number = "0.00";
                     }
                     String sumPrice = "";
-                    if(quotaMap.get("sum_price") != null){
-                        sumPrice = quotaMap.get("sum_price").toString();
+                    if(quotaMap.get("cash") != null){
+                        sumPrice = quotaMap.get("cash").toString();
                     }else{
                         sumPrice = "0.00";
                     }
@@ -1258,8 +1258,8 @@ public class TcFleetQuotaController extends BaseContoller {
                         number = "0.00";
                     }
                     String sumPrice = "";
-                    if(quotaMap.get("sum_price") != null){
-                        sumPrice = quotaMap.get("sum_price").toString();
+                    if(quotaMap.get("cash") != null){
+                        sumPrice = quotaMap.get("cash").toString();
                     }else{
                         sumPrice = "0.00";
                     }

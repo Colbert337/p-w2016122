@@ -55,6 +55,16 @@ public interface SysOrderMapper {
    
    List<Map<String,Object>> queryTransportionReportTotal(SysOrder record);
    
+   List<Map<String,Object>> queryGastationRechargeReport(SysOrder record);
+   
+   List<Map<String,Object>> queryGastationRechargeReportTotal(SysOrder record);
+   
+   List<Map<String,Object>> queryGastationConsumeReport(SysOrder record);
+   
+   List<Map<String,Object>> queryGastationConsumeReportTotal(SysOrder record);
+   
+   List<Map<String,Object>> queryGastationConsumeReportDetail(SysOrder record);
+   
     /**
      * 查询某个用户在start_date之后，有没有产生消费
      * 用于在用户充红的时候判断能否充红。

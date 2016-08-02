@@ -1022,4 +1022,44 @@ public class OrderServiceImpl implements OrderService {
 	public List<Map<String,Object>> calcDriverCashBack(String driverid) {
 		return sysOrderMapper.calcDriverCashBack(driverid);
 	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryGastationRechargeReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryGastationRechargeReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryGastationRechargeReportTotal(SysOrder record) {
+		PageHelper.startPage(1, 20, record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryGastationRechargeReportTotal(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryGastationConsumeReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryGastationConsumeReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryGastationConsumeReportTotal(SysOrder record) {
+		PageHelper.startPage(1, 20, record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryGastationConsumeReportTotal(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryGastationConsumeReportDetail(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryGastationConsumeReportDetail(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
 }

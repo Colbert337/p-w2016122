@@ -1,4 +1,4 @@
-package com.sysongy.api.mobile.model.user;
+package com.sysongy.api.mobile.model.feedback;
 
 import java.util.Date;
 
