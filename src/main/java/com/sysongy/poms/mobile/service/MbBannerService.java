@@ -1,5 +1,8 @@
 package com.sysongy.poms.mobile.service;
 
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.mobile.model.MbBanner;
+
 /**
  * @FileName: MbBannerService
  * @Encoding: UTF-8
@@ -11,5 +14,10 @@ package com.sysongy.poms.mobile.service;
  * @Description:
  */
 public interface MbBannerService {
-
+    /**
+     * 查询APP首页图片列表
+     * @param mbBanner
+     * @return
+     */
+    PageInfo<MbBanner> queryMbBannerListPage(MbBanner mbBanner);
 }
