@@ -14,6 +14,7 @@ jQuery(function($) {
 		maxWidth:'100%',
 		maxHeight:'100%',
 		onOpen:function(){
+			"'--"
 			$overflow = document.body.style.overflow;
 			document.body.style.overflow = 'hidden';
 		},
@@ -99,6 +100,17 @@ var listOptions ={
 		$("#driving_lice").parent("a").attr("href",$(obj).parents('tr').children("td").eq(11).text());
 		$("#vehicle_lice").attr("src",$(obj).parents('tr').children("td").eq(12).text());
 		$("#vehicle_lice").parent("a").attr("href",$(obj).parents('tr').children("td").eq(12).text());
+		
+		$("#createdate").text($(obj).parents('tr').children("td").eq(8).text());
+		$("#checkedate").text($(obj).parents('tr').children("td").eq(10).text());
+		$("#checkstatus").text($(obj).parents('tr').children("td").eq(9).text());
+		$("#regisource").text($(obj).parents('tr').children("td").eq(7).text());
+		
+		$("#userName").text($(obj).parents('tr').children("td").eq(1).text());
+		$("#fullName").text($(obj).parents('tr').children("td").eq(2).text());
+		$("#identityCard").text($(obj).parents('tr').children("td").eq(4).text());
+		$("#plateNumber").text($(obj).parents('tr').children("td").eq(3).text());
+
 		$("#innerModel").modal('show');
 	}
 	
