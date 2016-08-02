@@ -42,7 +42,7 @@
 		}
 		
 		var listOptions ={   
-	            url:'../crmGasPriceService/queryProductPriceList?product_id='+product_id,
+	            url:'../crmInterface/crmGasPriceService/queryProductPriceList?product_id='+product_id,
 	            type:'post',                    
 	            dataType:'html',
 	            success:function(data){
