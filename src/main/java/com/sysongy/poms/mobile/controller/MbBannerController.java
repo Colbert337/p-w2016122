@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ public class MbBannerController extends BaseContoller{
     @RequestMapping("/list/page")
     public String queryMbBannerListPage(@ModelAttribute CurrUser currUser, MbBanner mbBanner, @RequestParam(required = false) Integer resultInt,
                                         @RequestParam(required = false) Integer userType, ModelMap map){
+        String stationId = currUser.getStationId();
         if(mbBanner.getPageNum() == null){
             mbBanner.setPageNum(GlobalConstant.PAGE_NUM);
             mbBanner.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -74,4 +76,32 @@ public class MbBannerController extends BaseContoller{
     public String addBanner( ModelMap map){
         return "webpage/poms/mobile/banner_add";
     }
+
+    /**
+     * 添加图片
+     * @return
+     */
+    @RequestMapping("/save")
+    public String saveBanner(@ModelAttribute CurrUser currUser, MbBanner mbBanner, ModelMap map){
+        String stationId = currUser.getStationId();
+        if(mbBanner != null && mbBanner.getMbBannerId() !=  null){
+            //修改图片
+            mbBanner.setUpdatedDate(new Date());
+            mbBannerService.updateBanner(mbBanner);
+        }else{
+            //添加图片
+            mbBannerService.saveBanner(mbBanner);
+        }
+        return "redirect:/web/mobile/img/list/page";
+    }
+
+    /**
+     * 删除图片
+     * @return
+     */
+    @RequestMapping("/delete")
+    public String deleteBanner( MbBanner mbBanner,ModelMap map){
+        return "redirect:/web/mobile/img/list/page";
+    }
+
 }

@@ -157,6 +157,7 @@
 									<div class="col-sm-8">
 										<input type="text" name="title" id="title" data-onFlag="" placeholder="标题" class="col-xs-10 col-sm-12" />
 										<input type="hidden" name="mbBannerId" id="mb_banner_id" />
+										<input type="hidden" id="stationId" value="${stationId}" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -187,7 +188,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="version"><span class="red_star">*</span> 版本号： </label>
+									<label class="col-sm-3 control-label no-padding-right" for="version">版本号： </label>
 									<div class="col-sm-8">
 										<input type="text" id="version" placeholder="版本号" maxlength="11" name="version" class="col-xs-10 col-sm-12" />
 									</div>
@@ -195,7 +196,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="remark"> 备注： </label>
 									<div class="col-sm-8">
-										<input type="text" name="remark" id="remark" maxlength="11" placeholder="备注" class="col-xs-10 col-sm-12" />
+										<input type="textarea" name="remark" id="remark" style="resize: none;" maxlength="50" placeholder="备注" class="col-xs-10 col-sm-12 limited form-control" />
 									</div>
 								</div>
 							</form>
@@ -205,7 +206,7 @@
 				</div>
 			</div><!-- /.modal-content -->
 			<div class="modal-footer">
-				<button class="btn btn-primary btn-sm" onclick="saveVehicle()">确   定</button>
+				<button class="btn btn-primary btn-sm" onclick="saveBanner()">确   定</button>
 				<button class="btn btn-sm" i="close" onclick="closeDialog('editModel')">取   消 </button>
 			</div>
 		</div><!-- /.modal-dialog -->

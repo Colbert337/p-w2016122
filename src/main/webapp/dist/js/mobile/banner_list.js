@@ -173,7 +173,35 @@ function leaveDriver(){
     }
 
 }
+/**
+ * 保存图片信息
+ */
+function saveBanner(){
+    $('#editForm').data('bootstrapValidator').validate();
+    if(!$('#editForm').data('bootstrapValidator').isValid()){
+        return ;
+    }
+    if($('.user-name-valid').is(':visible')){
+        return ;
+    }
 
+    var saveOptions ={
+        url:'../web/tcms/vehicle/save',
+        type:'post',
+        dataType:'html',
+        success:function(data){
+            $("#main").html(data);
+            $("#modal-table").modal("show");
+        },error: function(XMLHttpRequest, textStatus, errorThrown) {
+            bootbox.alert("操作失败！");
+        }
+    }
+    $("#editForm").ajaxSubmit(saveOptions);
+
+    $("#editModel").modal('hide');
+    $(".modal-backdrop").css("display","none");
+
+}
 /**
  * 判断文件格式
  */
@@ -185,37 +213,7 @@ function fileFormat(){
         return false;
     }
 }
-/**
- * 判断车牌号是否存在
- */
-function isVehicleExit(){
-    var numberType = {
-        platesNumber: $("#plates_number").val(),
-        /*onFlag: $("#plates_number").attr("data-onFlag")*/
-        tcVehicleId: $("#tc_vehicle_id").val()
-    };
-    $.ajax({
-        url: '../web/tcms/vehicle/info/name',
-        data: numberType,
-        type: "POST",
-        success: function(data){
-            console.log(data);
-            console.log(data.valid);
 
-            if(!data.valid){
-                if($('.user-name-valid').is(':visible')){
-                    return false;
-                }
-                $('#plates_number').after('<div class="tooltip fade top in user-name-valid"><div class="tooltip-arrow"></div><div class="tooltip-inner">车牌号已存在!</div></div>');
-            } else {
-                $('.user-name-valid').remove();
-            }
-
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-
-        }
-    })
-}
 var projectfileoptions = {
     showUpload : false,
     showRemove : false,
@@ -277,7 +275,7 @@ function save_photo(fileobj,obj,obj1){
     }
 
     var multipartOptions ={
-        url:'../crmInterface/crmBaseService/web/upload?stationid='+$("#sys_gas_station_id").val(),
+        url:'../crmInterface/crmBaseService/web/upload?stationid='+$("#stationId").val(),
         type:'post',
         dataType:'text',
         enctype:"multipart/form-data",
