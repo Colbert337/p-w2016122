@@ -26,15 +26,14 @@ var listOptions ={
 }
 /*分页相关方法 end*/
 //显示添加用户弹出层add
-function addVehicle(){
+function addBanner(){
     clearDiv();
-    $("#editVehicle").text("添加车辆");
+    $("#editBanner").text("添加图片");
     /*密码输入框改为可编辑*/
     $("#pay_code").removeAttr("readonly");
     $("#re_password").removeAttr("readonly");
     $("#plates_number").attr("data-onFlag","add");
 
-    $("#cardInfoDiv").hide();
     $("#editModel").modal('show').on('hide.bs.modal', function() {
         $('#editForm').bootstrapValidator('resetForm',true);
         $('.user-name-valid').remove();

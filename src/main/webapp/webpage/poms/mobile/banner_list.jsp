@@ -8,169 +8,192 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-			<script src="<%=basePath %>/dist/js/mobile/banner_list.js"></script>
-			<div class="">
-				<form id="formcashback">
-						<jsp:include page="/common/page_param.jsp"></jsp:include>
-						<div class="page-header">
-							<h1>
-								首页编辑
-							</h1>
-						</div><!-- /.page-header -->
-						<div class="row">
-							<div class="col-xs-12">
-								<!-- PAGE CONTENT BEGINS -->
-								<div class="row">
-									<div class="col-sm-2">
-										<div class="dd dd-draghandle" >
-											<ol class="dd-list" id="cashbackol">
-												<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value=''>
-													<div class='dd-handle dd2-handle'>
-														<i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i>
-														<i class='drag-icon ace-icon fa fa-arrows bigger-125'></i>
-													</div>
-													<div class='dd2-content btn-info'>首页图片</div>
-												</li>
-												<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value=''>
-													<div class='dd-handle dd2-handle'>
-														<i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i>
-														<i class='drag-icon ace-icon fa fa-arrows bigger-125'></i>
-													</div>
-													<div class='dd2-content'>活动模块</div>
-												</li>
-											</ol>
+<script src="<%=basePath %>/dist/js/mobile/banner_list.js"></script>
+<div class="">
+	<form id="formcashback">
+			<jsp:include page="/common/page_param.jsp"></jsp:include>
+			<div class="page-header">
+				<h1>
+					首页编辑
+				</h1>
+			</div><!-- /.page-header -->
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="dd dd-draghandle" >
+								<ol class="dd-list" id="cashbackol">
+									<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value=''>
+										<div class='dd-handle dd2-handle'>
+											<i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i>
+											<i class='drag-icon ace-icon fa fa-arrows bigger-125'></i>
 										</div>
+										<div class='dd2-content btn-info'>首页图片</div>
+									</li>
+									<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value=''>
+										<div class='dd-handle dd2-handle'>
+											<i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i>
+											<i class='drag-icon ace-icon fa fa-arrows bigger-125'></i>
+										</div>
+										<div class='dd2-content'>活动模块</div>
+									</li>
+								</ol>
+							</div>
+						</div>
+
+						<div class="col-sm-10">
+								<div class="page-header">
+								<h1>
+									图片列表
+								</h1>
+							</div>
+
+							<div class="search-types">
+								<div class="item">
+									<button class="btn btn-sm btn-primary" type="button" onclick="addBanner()">
+										<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+										添加
+									</button>
+								</div>
+							</div>
+
+							<div class="clearfix">
+								<div class="pull-right tableTools-container"></div>
+							</div>
+
+							<div class="table-header">图片列表</div>
+
+							<!-- div.dataTables_borderWrap -->
+							<div class="sjny-table-responsive">
+								<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+									<thead>
+										<tr>
+											<th onclick="orderBy(this,'sort');commitForm();" id="sys_cash_back_id_order">序号</th>
+											<th onclick="orderBy(this,'title');commitForm();" id="threshold_min_value_order">标题</th>
+											<th onclick="orderBy(this,'img_path');commitForm();" id="threshold_max_value_order">缩略图</th>
+											<th onclick="orderBy(this,'target_url');commitForm();" id="cash_per_order">链接地址</th>
+											<th onclick="orderBy(this,'version');commitForm();" id="status">版本号</th>
+											<th onclick="orderBy(this,'remark');commitForm();" id="level">备注</th>
+											<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
+											<th class="text-center td-w3">操作</th>
+										</tr>
+									</thead>
+
+									<tbody>
+
+									<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
+										<tr id="listobj">
+											<td>${list.sort}</td>
+											<td>${list.title}</td>
+											<td>${list.imgPath}</td>
+											<td>${list.targetUrl}</td>
+											<td>${list.version}</td>
+											<td>${list.remark}</td>
+											<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
+											<td class="text-center">
+												<a class="option-btn-m" href="javascript:void(0);"  title="修改" data-rel="tooltip">
+													<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+												</a>
+												<a class="" href="javascript:void(0);" onclick="del(this);" title="删除" data-rel="tooltip">
+													<i class="ace-icon fa fa-trash-o bigger-130"></i>
+												</a>
+											</td>
+										</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+
+							<%--<div class="row">
+								<div class="col-sm-6">
+									<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
+								</div>
+								<div class="col-sm-6">
+									<nav>
+										<ul id="ulhandle" class="pagination pull-right no-margin">
+											<li id="previous">
+												<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+													<span aria-hidden="true">上一页</span>
+												</a>
+											</li>
+											<li id="next">
+												<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+													<span aria-hidden="true">下一页</span>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</div>--%>
+
+						</div>
+					</div><!-- PAGE CONTENT ENDS -->
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+			<jsp:include page="/common/message.jsp"></jsp:include>
+		</form>
+
+</div><!-- /.main-content -->
+<!--添加车辆弹层-开始-->
+<div id="editModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="editBanner">添加图片</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<form class="form-horizontal" id="editForm">
+								<!-- #section:elements.form -->
+								<%--<h5 class="header smaller lighter blue">基本信息</h5>--%>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="plates_number"><span class="red_star">*</span> 标题： </label>
+									<div class="col-sm-7">
+										<input type="text" name="platesNumber" id="plates_number" data-onFlag="" onblur="isVehicleExit()" placeholder="车牌号" class="col-xs-10 col-sm-12" />
+										<input type="hidden" name="tcVehicleId" id="tc_vehicle_id" />
 									</div>
-
-									<div class="col-sm-10">
-											<div class="page-header">
-											<h1>
-												图片列表
-											</h1>
-										</div>
-					
-										<div class="search-types">
-											<%--<input type="hidden" name="sys_cash_back_no" value=""/>
-											<div class="item">
-											    <label>优先级:</label>
-												<select class="chosen-select" name="level" >
-													<s:option flag="true" gcode="CASHBACKLEVEL" form="sysCashBack" field="level"/>
-												</select>
-											</div>
-					
-											<div class="item">
-												<label>状态:</label>
-												<select class="chosen-select " name="status" >
-														 <s:option flag="true" gcode="CASHBACKSTATUS" form="sysCashBack" field="status" />
-												</select>
-											</div>
-											
-											<div class="item">
-												<div class="input-daterange top" id="j-input-daterange-top">
-													<label>生效时间:</label>
-													<input type="text" class="" name="start_date_after"  value="" readonly="readonly"/>
-													<span class="">
-														<i class="fa fa-exchange"></i>
-													</span>
-													<input type="text" class="" name="start_date_before" value="" readonly="readonly"/>
-												</div>
-											</div>--%>
-					
-											<div class="item">
-												<button class="btn btn-sm btn-primary" type="button" id="newbutton">
-													<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-													新建
-												</button>
-												<%--<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
-													<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-													查询
-												</button>
-												<button class="btn btn-sm" type="button" onclick="init();">
-													<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-													重置
-												</button>--%>
-											</div>
-										</div>
-					
-										<div class="clearfix">
-											<div class="pull-right tableTools-container"></div>
-										</div>
-					
-										<div class="table-header">图片列表</div>
-					
-										<!-- div.table-responsive -->
-					
-										<!-- div.dataTables_borderWrap -->
-										<div class="sjny-table-responsive">
-											<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-												<thead>
-													<tr>
-														<th onclick="orderBy(this,'sys_cash_back_id');commitForm();" id="sys_cash_back_id_order">序号</th>
-														<th onclick="orderBy(this,'threshold_min_value');commitForm();" id="threshold_min_value_order">标题</th>
-														<th onclick="orderBy(this,'threshold_max_value');commitForm();" id="threshold_max_value_order">缩略图</th>
-														<th onclick="orderBy(this,'cash_per');commitForm();" id="cash_per_order">链接地址</th>
-														<th onclick="orderBy(this,'status');commitForm();" id="status">版本号</th>
-														<th onclick="orderBy(this,'level');commitForm();" id="level">备注</th>
-														<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
-														<th class="text-center td-w3">操作</th>
-													</tr>
-												</thead>
-					
-												<tbody>
-													
-												<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
-													<tr id="listobj">
-														<td>${list.sort}</td>
- 													 	<td>${list.title}</td>
-														<td>${list.imgPath}</td>
-														<td>${list.targetUrl}</td>
-														<td>${list.version}</td>
-														<td>${list.remark}</td>
-														<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
-														<td class="text-center">
-															<a class="option-btn-m" href="javascript:void(0);"  title="修改" data-rel="tooltip">
-																<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
-															</a>
-															<a class="" href="javascript:void(0);" onclick="del(this);" title="删除" data-rel="tooltip">
-																<i class="ace-icon fa fa-trash-o bigger-130"></i>
-															</a>
-														</td>
-													</tr>
-													</c:forEach>
-												</tbody>
-											</table>
-										</div>
-										
-										<%--<div class="row">
-											<div class="col-sm-6">
-												<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
-											</div>
-											<div class="col-sm-6">
-												<nav>
-													<ul id="ulhandle" class="pagination pull-right no-margin">
-														<li id="previous">
-															<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
-																<span aria-hidden="true">上一页</span>
-															</a>
-														</li>
-														<li id="next">
-															<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
-																<span aria-hidden="true">下一页</span>
-															</a>
-														</li>  
-													</ul>
-												</nav>
-											</div>
-										</div>--%>
-										
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 图片： </label>
+									<div class="col-sm-7">
+										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" maxlength="6" class="col-xs-10 col-sm-12" />
 									</div>
-								</div><!-- PAGE CONTENT ENDS -->
-							</div><!-- /.col -->
-						</div><!-- /.row -->
-						
-						<jsp:include page="/common/message.jsp"></jsp:include>
-						
-						</form>
-
-			</div><!-- /.main-content -->
-
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 链接地址： </label>
+									<div class="col-sm-7">
+										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" maxlength="6" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="notice_phone"><span class="red_star">*</span> 版本号： </label>
+									<div class="col-sm-7">
+										<input type="text" id="notice_phone" placeholder="通知手机" maxlength="11" name="noticePhone" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label no-padding-right" for="copy_phone"> 备注： </label>
+									<div class="col-sm-7">
+										<input type="text" name="copyPhone" id="copy_phone" maxlength="11" placeholder="抄送手机" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+							</form>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveVehicle()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('editModel')">取   消 </button>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+<!--添加车辆弹层-结束-->

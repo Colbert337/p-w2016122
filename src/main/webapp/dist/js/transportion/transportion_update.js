@@ -337,7 +337,7 @@
 			}
 			
 			var multipartOptions ={   
-					url:'../crmBaseService/web/upload?stationid='+$("#sys_transportion_id").val(),
+					url:'../crmInterface/crmBaseService/web/upload?stationid='+$("#sys_transportion_id").val(),
 		            type:'post',                    
 		            dataType:'text',
 		            enctype:"multipart/form-data",

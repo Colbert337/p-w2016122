@@ -65,4 +65,13 @@ public class MbBannerController extends BaseContoller{
 
         return "webpage/poms/mobile/banner_list";
     }
+
+    /**
+     * 跳转添加页面
+     * @return
+     */
+    @RequestMapping("/add")
+    public String addBanner( ModelMap map){
+        return "webpage/poms/mobile/banner_add";
+    }
 }
