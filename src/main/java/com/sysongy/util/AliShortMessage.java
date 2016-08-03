@@ -38,6 +38,7 @@ public class AliShortMessage {
         DRIVER_CHARGE,                 //司机充值
         DRIVER_HEDGE,                  //司机转账
         CARD_FROZEN,                            //账户卡冻结模板
+        CARD_THAW,                            //账户卡解冻模板
         SELF_CHARGE_CONSUME_PREINPUT,           //个人转账消费、预付款充值
         TRANSPORTION_TRANSFER_SELF_CHARGE,      //车队转账，个人充值
         REMIND_BALANCE,                         //预付款余额提醒
@@ -152,6 +153,13 @@ public class AliShortMessage {
                         + aliShortMessageBean.getCode() + "\",\"time\":\""
                         + aliShortMessageBean.getTime() + "\"}");
                 break;
+            case CARD_THAW:
+                req.setSmsTemplateCode("SMS_12885750");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"string\":\"" + aliShortMessageBean.getString() + "\",\"code\":\""
+                        + aliShortMessageBean.getCode() + "\",\"time\":\""
+                        + aliShortMessageBean.getTime() + "\"}");
+                break;
             case SELF_CHARGE_CONSUME_PREINPUT:
                 req.setSmsTemplateCode("SMS_12200990");
                 req.setSmsFreeSignName("变更验证");
@@ -193,7 +201,7 @@ public class AliShortMessage {
                 req.setSmsFreeSignName("变更验证");
                 break;
             case VEHICLE_CREATED:
-                req.setSmsTemplateCode("SMS_11521189");
+                req.setSmsTemplateCode("SMS_12916082");
                 req.setSmsFreeSignName("司集科技");
                 req.setSmsParamString("{\"license\":\"" + aliShortMessageBean.getLicense() + "\",\"code\":\""
                         + aliShortMessageBean.getCode() + "\",\"string\":\""

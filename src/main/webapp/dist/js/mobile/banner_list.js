@@ -40,94 +40,48 @@ function addBanner(){
     });
 }
 
+/**
+ * 删除图片
+ */
+function deleteBanner(imgId){
+    bootbox.setLocale("zh_CN");
+    bootbox.confirm("确认要删除图片吗？", function (result) {
+        if (result) {
+            var deleteOptions ={
+                url:'../web/mobile/img/delete',
+                data:{mbBannerId:imgId},
+                type:'post',
+                dataType:'text',
+                success:function(data){
+                    $("#main").html(data);
+                    $("#modal-table").modal("show");
+                    $('[data-rel="tooltip"]').tooltip();
+                }
+            }
+            $("#formcashback").ajaxSubmit(deleteOptions);
+        }
+    })
+
+}
+
 //显示编辑用户弹出层
-function editVehicle(vehicleId){
+function editBanner(imgId){
     $.ajax({
-        url:"../web/tcms/vehicle/info",
-        data:{tcVehicleId:vehicleId},
+        url:"../web/mobile/img/info",
+        data:{mbBannerId:imgId},
         async:false,
         type: "POST",
         success: function(data){
-            $("#plates_number").val(data.vehicle.platesNumber);
-            $("#tc_vehicle_id").val(data.vehicle.tcVehicleId);
-            $("#pay_code").val(data.vehicle.payCode);
-            $("#re_password").val(data.vehicle.payCode);
-            $("#notice_phone").val(data.vehicle.noticePhone);
-            $("#copy_phone").val(data.vehicle.copyPhone);
-            $("#editVehicle").text("修改车辆");
-            $("#plates_number").attr("data-onFlag","edit");
+            $("#mb_banner_id").val(data.mbBannerId);
+            $("#title").val(data.title);
+            $("#img_path").val(data.imgPath);
+            $("#target_url").val(data.targetUrl);
+            $("#version").val(data.version);
+            $("#remark").text(data.remark);
 
-            $("#dongjie").empty();
-            if(data.gasCard != null && data.gasCard.card_no != null){
-                if(data.gasCard.card_no != "" && data.gasCard.card_status == 4){
-                    var str = "<button onclick='freeze("+data.gasCard.card_no+",0)'>冻结</button>";
-                    $("#dongjie").append(str);
-                }else if(data.gasCard.card_no != "" && data.gasCard.card_status == 0){
-                    var str = "<button onclick='freeze("+data.gasCard.card_no+",4)'>解冻</button>";
-                    $("#dongjie").append(str);
-                }
-                var cardType,cardStatus;
-                //卡类型
-                switch(data.gasCard.card_type)
-                {
-                    case '10':
-                        cardType = "LNG"
-                        break;
-                    case '1001':
-                        cardType = "柴油"
-                        break;
-                    case '1002':
-                        cardType = "LNG"
-                        break;
-                    case '2001':
-                        cardType = "LNG"
-                        break;
-                    case '2002':
-                        cardType = "LNG"
-                        break;
-                    case '20':
-                        cardType = "LNG"
-                        break;
-                    default:
-                        cardType = "LNG"
-                }
-                //卡状态
-                switch(data.gasCard.card_status)
-                {
-                    case '0':
-                        cardStatus = "已冻结"
-                        break;
-                    case '1':
-                        cardStatus = "已入库"
-                        break;
-                    case '2':
-                        cardStatus = "已出库"
-                        break;
-                    case '3':
-                        cardStatus = "未发放"
-                        break;
-                    case '4':
-                        cardStatus = "使用中"
-                        break;
-                    case '5':
-                        cardStatus = "已失效"
-                        break;
-                    default:
-                        cardStatus = "未使用"
-                }
-                $("#card_no").text(data.gasCard.card_no);
-                $("#card_type").text(cardType);
-                $("#card_status").text(cardStatus);
-            }
-
-            /*密码输入框改为可编辑*/
-            /*$("#pay_code").attr("readonly","readonly");
-            $("#re_password").attr("readonly","readonly");*/
-            $("#pay_code").removeAttr("maxlength");
-            $("#re_password").removeAttr("maxlength");
+            $("#editBanner").text("修改图片");
         }
     })
-    $("#cardInfoDiv").show();
     $("#editModel").modal('show');
 }
 
@@ -148,31 +102,6 @@ function clearDiv(){
     $("#avatar_b").empty();
 }
 
-//重置
-function init(){
-    loadPage('#main', '../web/tcms/vehicle/list/page');
-}
-/**
- * 删除用户
- */
-function leaveDriver(){
-    if(confirm("确定要离职该司机吗？")){
-        var deleteOptions ={
-            url:'../web/driver/delete',
-            data:{},
-            type:'post',
-            dataType:'text',
-            success:function(data){
-                bootbox.alert("操作成功!");//保存成功弹窗
-                $("#main").html(data);
-            },error: function(XMLHttpRequest, textStatus, errorThrown) {
-                bootbox.alert("操作失败！");
-            }
-        }
-        $("#listForm").ajaxSubmit(deleteOptions);
-    }
-
-}
 /**
  * 保存图片信息
  */
@@ -181,12 +110,9 @@ function saveBanner(){
     if(!$('#editForm').data('bootstrapValidator').isValid()){
         return ;
     }
-    if($('.user-name-valid').is(':visible')){
-        return ;
-    }
 
     var saveOptions ={
-        url:'../web/tcms/vehicle/save',
+        url:'../web/mobile/img/save',
         type:'post',
         dataType:'html',
         success:function(data){

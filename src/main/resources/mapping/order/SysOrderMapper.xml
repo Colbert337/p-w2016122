@@ -483,7 +483,7 @@
   </select>
   
   <select id="queryTransportionReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-    select so.order_number,so.order_type,sod.deal_type,sod.deal_number,so.order_date,so.credit_account,st.transportion_name,sd.user_name, so.cash,(select cash_back from sys_order_deal sod2 where order_id = so.order_id and deal_type = '312') cash_back,su.user_name as operator 
+    select so.order_number,so.order_type,sod.deal_type,sod.deal_number,so.order_date,so.credit_account,st.transportion_name,sd.user_name, so.cash,(select sum(cash_back) from sys_order_deal sod2 where order_id = so.order_id and deal_type = '312') cash_back,su.user_name as operator 
 	from sys_order so
 	left join sys_order_deal sod on so.order_id = sod.order_id
 	left join sys_transportion st on so.credit_account = st.sys_transportion_id
@@ -507,7 +507,7 @@
   </select>
   
   <select id="queryTransportionReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-  	select sum(cash) total from (select so.order_number,so.order_type,sod.deal_type,sod.deal_number,so.order_date,so.credit_account,st.transportion_name,sd.user_name, so.cash,(select cash_back from sys_order_deal sod2 where order_id = so.order_id and deal_type = '312') cash_back,su.user_name as operator 
+  	select sum(cash) total from (select so.order_number,so.order_type,sod.deal_type,sod.deal_number,so.order_date,so.credit_account,st.transportion_name,sd.user_name, so.cash,(select sum(cash_back) from sys_order_deal sod2 where order_id = so.order_id and deal_type = '312') cash_back,su.user_name as operator 
 	from sys_order so
 	left join sys_order_deal sod on so.order_id = sod.order_id
 	left join sys_transportion st on so.credit_account = st.sys_transportion_id
@@ -528,12 +528,13 @@
   </select>
   
   <select id="queryGastationRechargeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-	select so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,sod.deal_type,so.cash,sd.user_name,sd.full_name,so.charge_type,so.channel,so.channel_number,su.user_name operator,sod.cash_back_per,sod.cash_back
+	select so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,sod.deal_type,so.cash,sd.user_name,sd.full_name,so.charge_type,so.channel,so.channel_number,su.user_name operator,sod.cash_back_per,
+	(select sum(cash_back) from sys_order_deal sod2 where sod2.order_id = so.order_id and deal_type in('132','133')) cash_back
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id
 	inner join sys_driver sd on sd.sys_driver_id = so.debit_account
 	inner join sys_user su on su.sys_user_id = so.operator
-	where sod.deal_type in ('131','132','133','134','135','136') 
+	where sod.deal_type in ('131','134') 
      <trim>
       <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
         and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
@@ -554,12 +555,13 @@
   </select>
   
    <select id="queryGastationRechargeReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-  	select sum(cash) total from (select so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,sod.deal_type,so.cash,sd.user_name,sd.full_name,so.charge_type,so.channel,so.channel_number,su.user_name operator,sod.cash_back_per,sod.cash_back
+  	select sum(cash) total from (select so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,sod.deal_type,so.cash,sd.user_name,sd.full_name,so.charge_type,so.channel,so.channel_number,su.user_name operator,sod.cash_back_per,
+	(select sum(cash_back) from sys_order_deal sod2 where sod2.order_id = so.order_id and deal_type in('132','133')) cash_back
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id
 	inner join sys_driver sd on sd.sys_driver_id = so.debit_account
 	inner join sys_user su on su.sys_user_id = so.operator
-	where sod.deal_type = '131' 
+	where sod.deal_type in ('131','134') 
 	<trim>
 	  <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
         and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}

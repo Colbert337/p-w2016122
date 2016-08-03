@@ -251,10 +251,10 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
 
                             /*发送转账通知短信*/
                             AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-                            SimpleDateFormat sfm = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
+                            SimpleDateFormat sfm = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
                             String time = sfm.format(new Date());
                             aliShortMessageBean.setTime(time);
-                            aliShortMessageBean.setString("转账");
+                            aliShortMessageBean.setString("已转入");
                             aliShortMessageBean.setMoney(mapDriver.get("amount").toString());
                             aliShortMessageBean.setSendNumber(mapDriver.get("mobilePhone").toString());
                             /*查询返现金额*/

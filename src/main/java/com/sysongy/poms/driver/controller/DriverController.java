@@ -559,7 +559,7 @@ public class DriverController extends BaseContoller{
 					}
 
 
-                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,user_name,channel,channel_number,transportion_name,remark,operator};
+                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,user_name,channel_number,channel,transportion_name,remark,operator};
                     i++;
                 }
             }
