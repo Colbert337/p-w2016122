@@ -248,31 +248,6 @@ public class TcFleetQuotaController extends BaseContoller {
                 }
 
                 resultInt = tcFleetQuotaService.personalTransfer(list,stationId,userId);
-                /*if(list != null && list.size() > 0){
-                    for (Map<String, Object> mapDriver:list){
-                        SysOrder order = new SysOrder();
-                        order.setOrderId(UUIDGenerator.getUUID());
-
-                        order.setOrderType(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
-                        String orderNum = orderService.createOrderNumber(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);
-                        order.setOrderDate(new Date());
-                        BigDecimal cash = new BigDecimal(mapDriver.get("amount").toString());
-                        order.setCash(cash);
-                        order.setCreditAccount(stationId);
-                        order.setDebitAccount(mapDriver.get("sysDriverId").toString());
-                        order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_TRANSFER_CHARGE);
-                        order.setOperator(userName);
-                        order.setOperatorSourceId(stationId);
-                        order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.TRANSPORTION);
-                        order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);
-                        order.setOrderNumber(orderNum);
-
-                        //添加订单
-                        orderService.insert(order);
-                        //运输公司往个人转账
-                        orderService.transferTransportionToDriver(order);
-                    }
-                }*/
             }
 
         }catch (Exception e){
@@ -494,7 +469,6 @@ public class TcFleetQuotaController extends BaseContoller {
                         backCash = backCash.add(new BigDecimal(quotaMap.get("cashBack").toString()));
                     }
                 }
-                /*totalCash = totalCash.add(backCash);*/  //取消添加返现金额
             }
             //累计总划款金额
             map.addAttribute("totalCash",totalCash);

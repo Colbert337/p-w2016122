@@ -191,12 +191,18 @@ public class TcVehicleController extends BaseContoller {
 
         cardService.updateGasCardInfo(gasCardTemp);
         map.addAttribute("gasCard",gasCardTemp);
+        List<TcVehicle> vehicleList = tcVehicleService.queryVehicleByCardNo(gasCard.getCard_no());
+        String noticePhone = "";
+        if(vehicleList != null && vehicleList.size() > 0){
+            noticePhone = vehicleList.get(0).getNoticePhone();
+        }
 
         //发送短信
         AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
         SimpleDateFormat sfm = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
         String time = sfm.format(new Date());
         aliShortMessageBean.setTime(time);
+        aliShortMessageBean.setSendNumber(noticePhone);
         aliShortMessageBean.setString("会员卡");
         aliShortMessageBean.setCode(gasCard.getCard_no());
         if(gasCard.getCard_status().equals(GlobalConstant.CardStatus.PAUSED)){
@@ -568,7 +574,7 @@ public class TcVehicleController extends BaseContoller {
 
         try
         {
-            AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.TRANSPORTION_TRANSFER_SELF_CHARGE);
+            AliShortMessage.sendShortMessage(aliShortMessageBean, msgType);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());

@@ -254,7 +254,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                             SimpleDateFormat sfm = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
                             String time = sfm.format(new Date());
                             aliShortMessageBean.setTime(time);
-                            aliShortMessageBean.setString("已转入");
+                            aliShortMessageBean.setString("转入");
                             aliShortMessageBean.setMoney(mapDriver.get("amount").toString());
                             aliShortMessageBean.setSendNumber(mapDriver.get("mobilePhone").toString());
                             /*查询返现金额*/
@@ -280,15 +280,13 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                         }
 
                     }
-                    /*accountTotal = BigDecimalArith.sub(accountTotal,totalCash);
-                    sysUserAccountService.addCashToAccount(userAccount.getSysUserAccountId(),accountTotal.multiply(new BigDecimal(-1)),"");*/
+
                 }
             }
         }catch (Exception e){
             resultVal = -2;
             e.printStackTrace();
             throw e;
-            /*GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE;*/
         }
         return resultVal;
     }
