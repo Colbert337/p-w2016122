@@ -19,6 +19,86 @@ public class Data {
 	private String cumulativeReturn;//累计返现
 	
 	private String imageUrl;
+	
+	private String time;
+	
+	private String cashBack;
+	
+	private String title;
+	
+	private String amount;
+	
+	private String orderCode;
+	
+	private String rechargePlatform;
+	
+	private String rechargeType;
+	
+	private String totalAmount;
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public String getCashBack() {
+		return cashBack;
+	}
+
+	public void setCashBack(String cashBack) {
+		this.cashBack = cashBack;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+
+	public String getOrderCode() {
+		return orderCode;
+	}
+
+	public void setOrderCode(String orderCode) {
+		this.orderCode = orderCode;
+	}
+
+	public String getRechargePlatform() {
+		return rechargePlatform;
+	}
+
+	public void setRechargePlatform(String rechargePlatform) {
+		this.rechargePlatform = rechargePlatform;
+	}
+
+	public String getRechargeType() {
+		return rechargeType;
+	}
+
+	public void setRechargeType(String rechargeType) {
+		this.rechargeType = rechargeType;
+	}
+
+	public String getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(String totalAmount) {
+		this.totalAmount = totalAmount;
+	}
 
 	public String getImageUrl() {
 		return imageUrl;

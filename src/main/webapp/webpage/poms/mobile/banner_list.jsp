@@ -93,9 +93,9 @@
 											<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
 											<td class="text-center">
 												<a class="option-btn-m" href="javascript:void(0);"  title="修改" data-rel="tooltip">
-													<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+													<i class="ace-icon fa fa-pencil bigger-130" onclick="editBanner('${list.mbBannerId}');"></i>
 												</a>
-												<a class="" href="javascript:void(0);" onclick="del(this);" title="删除" data-rel="tooltip">
+												<a class="" href="javascript:void(0);" onclick="deleteBanner('${list.mbBannerId}');" title="删除" data-rel="tooltip">
 													<i class="ace-icon fa fa-trash-o bigger-130"></i>
 												</a>
 											</td>
@@ -184,7 +184,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="target_url"><span class="red_star">*</span> 链接地址： </label>
 									<div class="col-sm-8">
-										<input type="text" id="target_url" name="targetUrl" placeholder="链接地址" maxlength="6" class="col-xs-10 col-sm-12" />
+										<input type="text" id="target_url" name="targetUrl" placeholder="链接地址" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -196,7 +196,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="remark"> 备注： </label>
 									<div class="col-sm-8">
-										<input type="textarea" name="remark" id="remark" style="resize: none;" maxlength="50" placeholder="备注" class="col-xs-10 col-sm-12 limited form-control" />
+										<textarea name="remark" id="remark" style="resize: none;" maxlength="50" placeholder="备注" class="col-xs-10 col-sm-12 limited form-control" ></textarea>
 									</div>
 								</div>
 							</form>

@@ -33,7 +33,7 @@ public class MbBannerServiceImpl implements MbBannerService{
      * @return
      */
     @Override
-    public PageInfo<MbBanner> queryMbBannerListPage(MbBanner mbBanner) {
+    public PageInfo<MbBanner> queryMbBannerListPage(MbBanner mbBanner)  throws Exception{
 
         if(mbBanner != null){
             PageHelper.startPage(mbBanner.getPageNum(),mbBanner.getPageSize(),mbBanner.getOrderby());
@@ -46,17 +46,37 @@ public class MbBannerServiceImpl implements MbBannerService{
     }
 
     @Override
-    public int saveBanner(MbBanner banner) {
-        return 0;
+    public int saveBanner(MbBanner banner)  throws Exception{
+        return mbBannerMapper.saveBanner(banner);
     }
 
     @Override
-    public int updateBanner(MbBanner banner) {
-        return 0;
+    public int updateBanner(MbBanner banner)  throws Exception{
+        return mbBannerMapper.updateBanner(banner);
     }
 
     @Override
-    public int deleteBanner(MbBanner banner) {
-        return 0;
+    public int deleteBanner(MbBanner banner)  throws Exception{
+        return mbBannerMapper.deleteBanner(banner);
+    }
+
+    /**
+     * 查询当前类型图片的最大序号
+     * @param imgType
+     * @return
+     */
+    @Override
+    public MbBanner queryMaxIndex(int imgType) {
+        return mbBannerMapper.queryMaxIndex(imgType);
+    }
+
+    /**
+     * 查询当前图片信息
+     * @param banner
+     * @return
+     */
+    @Override
+    public MbBanner queryMbBanner(MbBanner banner) {
+        return mbBannerMapper.queryMbBanner(banner);
     }
 }

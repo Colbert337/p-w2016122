@@ -19,9 +19,11 @@ public class MbBanner extends BaseModel{
 
     private Integer imgType;
 
-    private String sort;
+    private Integer sort;
 
     private String remark;
+
+    private int isDeleted;
 
     private Date createdDate;
 
@@ -83,12 +85,12 @@ public class MbBanner extends BaseModel{
         this.imgType = imgType;
     }
 
-    public String getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(String sort) {
-        this.sort = sort == null ? null : sort.trim();
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     public String getRemark() {
@@ -113,5 +115,13 @@ public class MbBanner extends BaseModel{
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
