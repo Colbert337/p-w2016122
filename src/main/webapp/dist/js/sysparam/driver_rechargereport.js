@@ -2,7 +2,7 @@
 
 	window.onload = setCurrentPage();
 	var listOptions ={
-		url:'../web/driver/queryRechargeDriverReport',
+		url:'../web/driver/queryRechargeDriverReport?page=个人司机',
 		type:'post',
 		dataType:'html',
 		success:function(data){
@@ -44,7 +44,7 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/driver/queryRechargeDriverReport');
+		loadPage('#main', '../web/driver/queryRechargeDriverReport?page=个人司机');
 	}
 
 
