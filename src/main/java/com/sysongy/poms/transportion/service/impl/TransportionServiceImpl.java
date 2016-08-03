@@ -267,7 +267,7 @@ public class TransportionServiceImpl implements TransportionService {
 		BigDecimal addCash = cash.multiply(new BigDecimal(-1));
 		String cash_success = sysUserAccountService.addCashToAccount(tran_account,addCash,order.getOrderType());
 
-		String remark =  tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。";
+		String remark =  tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
 		
 		return cash_success;
