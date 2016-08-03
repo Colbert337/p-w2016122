@@ -1,3 +1,4 @@
+/*
 package com.sysongy.api.mobile.controller.login;
 
 import java.util.Date;
@@ -362,3 +363,4 @@ public class MobileController {
 		}
     }
 }
+*/
