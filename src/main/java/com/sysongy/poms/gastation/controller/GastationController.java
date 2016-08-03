@@ -502,7 +502,7 @@ public class GastationController extends BaseContoller{
 	}
 	
 	@RequestMapping("/queryRechargeReport")
-	public String queryRechargeReport(ModelMap map, SysOrder sysOrder) throws Exception{
+	public String queryRechargeReport(ModelMap map, SysOrder sysOrder, @RequestParam String page) throws Exception{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_rechargereport";
@@ -526,6 +526,7 @@ public class GastationController extends BaseContoller{
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("sysOrder", sysOrder);
+			map.addAttribute("page", page);
 			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
 		} catch (Exception e) {
 			bean.setRetCode(5000);

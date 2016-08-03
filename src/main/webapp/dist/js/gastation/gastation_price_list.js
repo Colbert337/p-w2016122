@@ -11,7 +11,7 @@
 		}
 		
 		var listOptions ={   
-	            url:'../crmGasPriceService/queryAllGasPriceList',
+	            url:'../crmInterface/crmGasPriceService/queryAllGasPriceList',
 	            type:'post',                    
 	            dataType:'html',
 	            success:function(data){
