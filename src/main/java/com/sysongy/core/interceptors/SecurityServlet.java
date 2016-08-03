@@ -49,7 +49,7 @@ public class SecurityServlet extends HttpServlet implements Filter {
 
 		boolean isExcludedPage = false;
 		for (String page : excludedPageArray) {//判断是否在过滤url之外
-			if(request.getServletPath().equals(page)){
+			if(request.getServletPath().equalsIgnoreCase(page)){
 				isExcludedPage = true;
 				break;
 			}
