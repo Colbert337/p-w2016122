@@ -22,7 +22,7 @@
 
 					<div class="page-header">
 						<h1>
-							充值明细
+							${page}充值报表
 						</h1>
 					</div>
 					

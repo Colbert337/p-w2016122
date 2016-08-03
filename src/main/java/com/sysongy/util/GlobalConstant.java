@@ -628,7 +628,13 @@ public class GlobalConstant {
 
 //	产品网站问题/公告
 	public interface QuestionNotice {
-	public static final int NOTICE = 0;
+		public static final int NOTICE = 0;
 		public static final int QUESTION = 1;
 	}
+
+	public interface ImgType {
+		public static final int BANNER = 0;//banner图
+//		public static final int ACTIVITY = 1;//活动图
+	}
+
 }

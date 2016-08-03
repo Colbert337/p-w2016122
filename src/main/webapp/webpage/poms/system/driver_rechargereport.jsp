@@ -21,13 +21,13 @@
 
 					<div class="page-header">
 						<h1>
-							个人司机消费
+							个人司机消费报表
 						</h1>
 					</div>
 					
 					<div class="search-types">
 						<div class="item">
-						    <label>会员账号：</label>
+						    <label>客户账号：</label>
 							<input type="text" name="sysDriver.userName" placeholder="请输入会员账号"  maxlength="20" value="${sysOrder.sysDriver.userName}"/>
 						</div>
 						<div class="item">
@@ -93,7 +93,7 @@
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
-									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
+									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">客户账号</th>
 									<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
 									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
 									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">关联运输公司</th>

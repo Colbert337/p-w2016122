@@ -30,7 +30,7 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	private DriverService driverService;
 	
 	@Override
-	public int changeStatus(String accountid,String status, String cardno) throws Exception{
+	public int changeStatus(String accountid, String status, String cardno) throws Exception{
 		
 		SysUserAccount record = new SysUserAccount();
 		record.setSysUserAccountId(accountid);
@@ -47,7 +47,10 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		
 		driver = driverlist.get(0);
 		
-		if(!"0".equals(status)){
+		String sendMsg = "用户";
+		String sendCode = driver.getMobilePhone();
+		
+		if("1".equals(status)){
 			
 			GasCard gasCard = new GasCard();
 			
@@ -61,22 +64,23 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 			
 			gasCardService.updateByPrimaryKeySelective(gasCard);
 			
+			sendMsg = "卡";
+			sendCode = cardno;
+		}
+
+		int retValue =sysUserAccountMapper.updateByPrimaryKeySelective(record);
+		
+		if(!"2".equals(status)){
 			AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 			aliShortMessageBean.setSendNumber(driver.getMobilePhone());
-			aliShortMessageBean.setString("卡");
-			aliShortMessageBean.setCode(cardno);
+			aliShortMessageBean.setString(sendMsg);
+			aliShortMessageBean.setCode(sendCode);
 			aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.CARD_FROZEN);
 		}
 		
-		AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-		aliShortMessageBean.setSendNumber(driver.getMobilePhone());
-		aliShortMessageBean.setString("用户");
-		aliShortMessageBean.setCode(driver.getMobilePhone());
-		aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
-		AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.CARD_FROZEN);
-		
-		return sysUserAccountMapper.updateByPrimaryKeySelective(record);
+		 
+		return retValue;
 	}
 
 	@Override
