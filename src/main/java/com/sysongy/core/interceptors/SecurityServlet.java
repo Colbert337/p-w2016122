@@ -19,6 +19,7 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.taglib.cache.UsysparamVO;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +33,34 @@ public class SecurityServlet extends HttpServlet implements Filter {
 	@Autowired
 	SysUserService sysUserService;
 
+	private String excludedPages;
+
+	private String[] excludedPageArray;
+
 	@Override
 	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2)
 			throws IOException, ServletException {
-		
 		HttpServletRequest request=(HttpServletRequest)arg0;     
         HttpServletResponse response  =(HttpServletResponse) arg1;      
         HttpSession session = request.getSession(true);       
         CurrUser currUser = (CurrUser) session.getAttribute("currUser");//登录人角色  
         String url=request.getRequestURI();
         String isdownloadreport = request.getParameter("downloadreport");
+
+		boolean isExcludedPage = false;
+		for (String page : excludedPageArray) {//判断是否在过滤url之外
+			if(request.getServletPath().equals(page)){
+				isExcludedPage = true;
+				break;
+			}
+		}
+		if (isExcludedPage) {//在过滤url之外
+			arg2.doFilter(request, response);
+			return;
+		}
+
 		if(canAllowCRMUserAccess(request)){
-			arg2.doFilter(arg0, arg1);
+			arg2.doFilter(request, response);
 			return;
 		}
 
@@ -92,7 +109,11 @@ public class SecurityServlet extends HttpServlet implements Filter {
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-
+		excludedPages = arg0.getInitParameter("excludedPages");
+		if (StringUtils.isNotEmpty(excludedPages)) {
+			excludedPageArray = excludedPages.split(",");
+		}
+		return;
 	}
 
 }
