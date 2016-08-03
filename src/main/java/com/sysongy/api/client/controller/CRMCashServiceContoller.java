@@ -145,10 +145,6 @@ public class CRMCashServiceContoller {
                 if(gasCard != null){
                     recordNew.setGasCard(gasCard);
                 }
-                AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-                aliShortMessageBean.setSendNumber(sysDriver.getMobilePhone());
-                aliShortMessageBean.setProduct("司集能源科技平台");
-                AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }

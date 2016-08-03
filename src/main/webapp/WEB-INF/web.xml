@@ -82,7 +82,11 @@
   <!--登录安全拦截-->
   <filter>    
     <filter-name>SecurityServlet</filter-name>    
-    <filter-class>com.sysongy.core.interceptors.SecurityServlet</filter-class>    
+    <filter-class>com.sysongy.core.interceptors.SecurityServlet</filter-class>
+    <init-param>
+       <param-name>excludedPages</param-name>
+       <param-value>/crmInterface/crmUserService/web/queryUsers/*</param-value>
+    </init-param>
   </filter>    
   <filter-mapping>    
 	  <filter-name>SecurityServlet</filter-name>    

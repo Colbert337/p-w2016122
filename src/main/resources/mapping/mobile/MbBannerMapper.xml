@@ -9,20 +9,21 @@
     <result column="target_url" property="targetUrl" jdbcType="VARCHAR" />
     <result column="version" property="version" jdbcType="VARCHAR" />
     <result column="img_type" property="imgType" jdbcType="INTEGER" />
-    <result column="sort" property="sort" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
-    remark, created_date, updated_date
+    remark, is_deleted, created_date, updated_date
   </sql>
   <select id="queryMbBannerList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     select 
     <include refid="Base_Column_List" />
     from mb_banner
-    where 1 = 1
+    where is_deleted = 1
     <if test="title != null" >
       and title = #{title,jdbcType=VARCHAR}
     </if>
@@ -42,7 +43,7 @@
       and img_type = #{imgType,jdbcType=INTEGER}
     </if>
     <if test="sort != null" >
-      and sort = #{sort,jdbcType=VARCHAR}
+      and sort = #{sort,jdbcType=INTEGER}
     </if>
     <if test="remark != null" >
       and remark = #{remark,jdbcType=VARCHAR}
@@ -53,6 +54,16 @@
     <if test="updatedDate != null" >
       and updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     </if>
+    order by sort asc
+  </select>
+  <select id="queryMaxIndex" resultMap="BaseResultMap" >
+    select * from mb_banner where is_deleted = 1 and img_type = #{0}
+    order by sort desc
+    limit 0,1
+  </select>
+  <select id="queryMbBanner" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbBanner">
+    select * from mb_banner
+    where is_deleted = 1 and mb_banner_id = #{mbBannerId}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from mb_banner
@@ -65,10 +76,10 @@
       created_date, updated_date)
     values (#{mbBannerId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{imgPath,jdbcType=VARCHAR}, 
       #{imgSmPath,jdbcType=VARCHAR}, #{targetUrl,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
-      #{imgType,jdbcType=INTEGER}, #{sort,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{imgType,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR},
       #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
+  <insert id="saveBanner" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     insert into mb_banner
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="mbBannerId != null" >
@@ -128,7 +139,7 @@
         #{imgType,jdbcType=INTEGER},
       </if>
       <if test="sort != null" >
-        #{sort,jdbcType=VARCHAR},
+        #{sort,jdbcType=INTEGER},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -141,7 +152,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
+  <update id="updateBanner" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     update mb_banner
     <set >
       <if test="title != null" >
@@ -163,10 +174,13 @@
         img_type = #{imgType,jdbcType=INTEGER},
       </if>
       <if test="sort != null" >
-        sort = #{sort,jdbcType=VARCHAR},
+        sort = #{sort,jdbcType=INTEGER},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
       </if>
       <if test="createdDate != null" >
         created_date = #{createdDate,jdbcType=TIMESTAMP},
@@ -185,7 +199,7 @@
       target_url = #{targetUrl,jdbcType=VARCHAR},
       version = #{version,jdbcType=VARCHAR},
       img_type = #{imgType,jdbcType=INTEGER},
-      sort = #{sort,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP},
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
