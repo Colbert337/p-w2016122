@@ -269,7 +269,7 @@ public class TransportionServiceImpl implements TransportionService {
 
 		String remark =  tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
-		
+		order.setDischarge_reason(remark);
 		return cash_success;
 	}
 	/**

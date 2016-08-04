@@ -286,7 +286,7 @@ public class DriverServiceImpl implements DriverService {
 		
 		String remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
-		
+        order.setDischarge_reason(remark);
 		return cash_success;
 	}
 
