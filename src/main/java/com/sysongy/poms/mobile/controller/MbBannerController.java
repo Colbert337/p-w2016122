@@ -66,6 +66,7 @@ public class MbBannerController extends BaseContoller{
         map.addAttribute("pageInfo",mbBannerPageInfo);
         map.addAttribute("mbBanner",mbBanner);
         map.addAttribute("ret",resultMap);
+        map.addAttribute("stationId",stationId);
         return "webpage/poms/mobile/banner_list";
     }
 

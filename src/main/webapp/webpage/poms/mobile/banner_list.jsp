@@ -7,6 +7,7 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+	String imagePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 %>
 <script src="<%=basePath %>/dist/js/mobile/banner_list.js"></script>
 <div class="">
@@ -86,7 +87,7 @@
 										<tr id="listobj">
 											<td>${list.sort}</td>
 											<td>${list.title}</td>
-											<td>${list.imgPath}</td>
+											<td><img width="150" height="150" alt="150x150" src="<%=imagePath %>${list.imgPath}" /></td>
 											<td>${list.targetUrl}</td>
 											<td>${list.version}</td>
 											<td>${list.remark}</td>
@@ -170,6 +171,7 @@
 
 											<div class="widget-body">
 												<div class="widget-main">
+													<img id="show_img" width="150" height="150" alt="150x150" src="" />
 													<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
 													<input type="hidden" id="img_path" name="imgPath"/>
 													<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="savePhoto(this,'#indu_com_certif_select','#img_path');">
