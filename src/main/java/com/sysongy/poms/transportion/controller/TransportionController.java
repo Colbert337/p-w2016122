@@ -1192,11 +1192,11 @@ public class TransportionController extends BaseContoller{
 		PageBean bean = new PageBean();
 
 		try {
-			if(order.getPageNum() == null){
+			/*if(order.getPageNum() == null){*/
 				order.setOrderby("deal_date desc");
 				order.setPageNum(1);
 				order.setPageSize(1048576);
-			}
+//			}
 			order.setDebitAccount(stationId);
 			order.setCash(new BigDecimal(BigInteger.ZERO));
 			PageInfo<Map<String, Object>> pageInfo = orderDealService.queryRechargeList(order);
@@ -1245,7 +1245,7 @@ public class TransportionController extends BaseContoller{
 					}
 					String chargeType = "";
 					if(quotaMap.get("charge_type") != null){
-						chargeType = quotaMap.get("charge_type").toString();
+						chargeType = GlobalConstant.getCashBackNumber(quotaMap.get("charge_type").toString());
 					}
 					String cash = "";
 					if(quotaMap.get("cash") != null){

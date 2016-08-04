@@ -353,11 +353,11 @@ public class TcFleetQuotaController extends BaseContoller {
         PageBean bean = new PageBean();
 
         try {
-            if(tcFleet.getPageNum() == null){
+            /*if(tcFleet.getPageNum() == null){*/
                 tcFleet.setOrderby("created_date desc");
                 tcFleet.setPageNum(1);
                 tcFleet.setPageSize(1048576);
-            }
+            /*}*/
             tcFleet.setStationId(stationId);
             PageInfo<Map<String, Object>> pageInfo = tcFleetQuotaService.queryQuotaList(tcFleet);
 
@@ -516,11 +516,11 @@ public class TcFleetQuotaController extends BaseContoller {
         String ret = "webpage/tcms/advance/transfer_log";
         /*查询数据*/
         try {
-            if(transferAccount.getPageNum() == null){
+//            if(transferAccount.getPageNum() == null){
                 transferAccount.setOrderby("deal_date desc");
                 transferAccount.setPageNum(1);
                 transferAccount.setPageSize(1048576);
-            }
+//            }
             transferAccount.setStationId(stationId);
             transferAccount.setSysDriverId(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
             PageInfo<Map<String, Object>> pageInfo = tcTransferAccountService.queryTransferListPage(transferAccount);
@@ -713,11 +713,11 @@ public class TcFleetQuotaController extends BaseContoller {
         String ret = "webpage/tcms/advance/personal_log";
 
         try {
-            if(order.getPageNum() == null){
+//            if(order.getPageNum() == null){
                 order.setOrderby("deal_date desc");
                 order.setPageNum(1);
                 order.setPageSize(1048576);
-            }
+//            }
             order.setDebitAccount(stationId);
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageInfo = orderService.queryTcPersonalReport(order);
@@ -931,11 +931,11 @@ public class TcFleetQuotaController extends BaseContoller {
         PageBean bean = new PageBean();
 
         try {
-            if(order.getPageNum() == null){
+//            if(order.getPageNum() == null){
                 order.setOrderby("deal_date desc");
                 order.setPageNum(1);
                 order.setPageSize(1048576);
-            }
+//            }
             order.setDebitAccount(stationId);
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageInfo = orderService.queryTcFleetReport(order);
@@ -1139,11 +1139,11 @@ public class TcFleetQuotaController extends BaseContoller {
         PageBean bean = new PageBean();
 
         try {
-            if(order.getPageNum() == null){
+//            if(order.getPageNum() == null){
                 order.setOrderby("deal_date desc");
                 order.setPageNum(1);
                 order.setPageSize(1048576);
-            }
+//            }
             order.setDebitAccount(stationId);
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageInfo = orderService.queryTcFleetMgReport(order);
