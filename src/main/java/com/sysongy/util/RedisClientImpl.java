@@ -6,6 +6,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.concurrent.TimeUnit;
@@ -48,6 +49,9 @@ public class RedisClientImpl implements RedisClientInterface{
     }
 
     public Object getFromCache(String key){
+        if(StringUtils.isEmpty(key)){
+            return null;
+        }
         ValueOperations<String, Object> valueops = redisTemplate.opsForValue();
         logger.info("----------Get the data from redis successful: key=" + key + "----------");
         return valueops.get(key);
