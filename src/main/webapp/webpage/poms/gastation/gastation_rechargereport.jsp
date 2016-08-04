@@ -23,13 +23,14 @@
 					<div class="page-header">
 						<h1>
 							${page}充值报表
+							<input type="hidden" name="page" value="${page}"/>
 						</h1>
 					</div>
 					
 					<div class="search-types">
 						<div class="item">
-						    <label>客户账号：</label>
-							<input type="text" name="sysDriver.userName" placeholder="请输入客户账号"  maxlength="20" value="${sysOrder.sysDriver.userName}"/>
+						    <label>会员账号：</label>
+							<input type="text" name="sysDriver.userName" placeholder="请输入会员账号"  maxlength="20" value="${sysOrder.sysDriver.userName}"/>
 						</div>
 						<div class="item">
 							<label>订单编号：</label>
@@ -46,7 +47,7 @@
 						<div class="item">
 							<label>支付方式：</label>
 							<select name="chargeType">
-								<s:option gcode="CASHBACK" flag="true" form="sysOrder" field="chargeType"></s:option>
+								<s:option gcode="CHARGE_TYPE" flag="true" form="sysOrder" field="chargeType"></s:option>
 							</select>
 						</div>	
 						<div class="item">
@@ -107,10 +108,10 @@
 									<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
 									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
 									<th onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">客户姓名</th>
-									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">客户账号</th>
+									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
 									<th onclick="orderBy(this,'charge_type');commitForm();" id="charge_type_order">支付方式</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">充值金额</th>
-									<th onclick="orderBy(this,'cash_back_per');commitForm();" id="cash_back_per_order">返现系数</th>
+									<!-- <th onclick="orderBy(this,'cash_back_per');commitForm();" id="cash_back_per_order">返现系数</th> -->
 									<th onclick="orderBy(this,'cash_back');commitForm();" id="cash_back_order">返现金额</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 								</tr>
@@ -142,7 +143,7 @@
 									<td>${list.user_name}</td>
 									<td><s:Code2Name mcode="${list.charge_type}" gcode="CASHBACK"></s:Code2Name></td>
 									<td>${list.cash}</td>
-									<td>${list.cash_back_per}</td>
+									<%-- <td>${list.cash_back_per}</td> --%>
 									<td>${list.cash_back}</td>
 									<td>${list.operator}</td>
 								</tr>

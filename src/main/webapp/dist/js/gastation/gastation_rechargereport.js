@@ -2,7 +2,7 @@
 
 	window.onload = setCurrentPage();
 	var listOptions ={
-		url:'../web/gastation/queryRechargeReport?page=加注站',
+		url:'../web/gastation/queryRechargeReport',
 		type:'post',
 		dataType:'html',
 		success:function(data){
@@ -29,7 +29,7 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/gastation/queryRechargeReport?page=加注站');
+		loadPage('#main', '../web/gastation/queryRechargeReport');
 	}
 
 

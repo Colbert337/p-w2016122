@@ -234,6 +234,8 @@ public class GastationServiceImpl implements GastationService {
 		String orderNumber = orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_GASTATION);
 		order.setOrderNumber(orderNumber);
 		order.setChannel("综合管理平台");
+		order.setChannelNumber("ZHGLPT");
+		order.setIs_discharge("0");
 		order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.PLATFORM);
 		orderService.insert(order, null);
 		orderService.chargeToGasStation(order);

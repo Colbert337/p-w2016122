@@ -687,6 +687,9 @@
 	left join sys_transportion st on sd.station_id = st.sys_transportion_id
 	where 1=1 and so.order_type = '220'
 	<trim>
+	  <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
 	  <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
         and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
       </if>
@@ -731,6 +734,12 @@
 	left join sys_transportion st on sd.station_id = st.sys_transportion_id
 	where 1=1 and so.order_type = '220'
 	<trim>
+	  <if test="orderNumber != null &amp;&amp; orderNumber != ''" >
+        and so.order_number = #{orderNumber, jdbcType=VARCHAR} or sod.deal_number = #{orderNumber, jdbcType=VARCHAR}
+      </if>
+	  <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
+        and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
+      </if>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
       </if>
@@ -738,7 +747,8 @@
         and sd.plate_number = #{sysDriver.plateNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
-		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      </if>
+		and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      
+	  </if>
     </trim>
 	) as total
   </select>
