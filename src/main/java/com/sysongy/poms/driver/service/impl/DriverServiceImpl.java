@@ -283,8 +283,14 @@ public class DriverServiceImpl implements DriverService {
 			chong ="消费冲红";
 			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_DRIVER_DEDUCT;
 		}
-		
-		String remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
+
+        String remark = "";
+        if(StringUtils.isEmpty(order.getDischarge_reason())){
+            remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+        } else {
+            remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
+        }
+
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
         order.setDischarge_reason(remark);
 		return cash_success;
