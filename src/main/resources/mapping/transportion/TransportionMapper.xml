@@ -37,6 +37,19 @@
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
     </association>
   </resultMap>
+  
+  <resultMap id="HenryResultMap" type="java.util.Map" >  
+	  <result column="station_id" property="station_id" jdbcType="VARCHAR" />
+	  <result column="station_name" property="station_name" jdbcType="VARCHAR" />
+	  <result column="deposit" property="deposit" jdbcType="VARCHAR" />
+	  <result column="salesmen_name" property="salesmen_name" jdbcType="VARCHAR" />
+	  <result column="operations_name" property="operations_name" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="HenryTotalMap" type="java.util.Map" >
+	  <result column="total" property="total" jdbcType="DECIMAL" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     sys_transportion_id, sys_user_account_id, transportion_name, station_manager, contact_phone, admin_username, email, 
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, salesmen_id, 
@@ -408,4 +421,33 @@
       updated_time = now()
       where  sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
   </update>
+  
+  <select id="transportionRechargeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
+	select sdl.station_id,sdl.station_name,sum(sdl.deposit) deposit,st.salesmen_name,st.operations_name from sys_deposit_log sdl,sys_transportion st
+	where sdl.station_id = st.sys_transportion_id
+	group by sdl.station_id
+    <trim>
+      <if test="stationId != null &amp;&amp; stationId != ''" >
+        and sdl.station_id = #{stationId, jdbcType=VARCHAR} or sdl.station_name = #{stationId, jdbcType=VARCHAR}
+      </if>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+		and sdl.deposit_time between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      </if>
+    </trim>
+  </select>
+  
+  <select id="transportionRechargeReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
+  	select sum(deposit) total from (select sdl.station_id,sdl.station_name,sum(sdl.deposit) deposit,st.salesmen_name,st.operations_name from sys_deposit_log sdl,sys_transportion st
+	where sdl.station_id = st.sys_transportion_id
+	group by sdl.station_id
+	<trim>
+      <if test="stationId != null &amp;&amp; stationId != ''" >
+        and sdl.station_id = #{stationId, jdbcType=VARCHAR} or sdl.station_name = #{stationId, jdbcType=VARCHAR}
+      </if>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+		and sdl.deposit_time between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')      </if>
+    </trim>
+	) as total
+  </select>
+  
+  
 </mapper>

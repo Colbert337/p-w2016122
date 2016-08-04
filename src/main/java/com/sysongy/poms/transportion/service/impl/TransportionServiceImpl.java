@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
@@ -393,6 +394,22 @@ public class TransportionServiceImpl implements TransportionService {
 		}
 		
 		return list.size();
+	}
+	
+	@Override
+	public PageInfo<Map<String, Object>> transportionRechargeReport(SysDepositLog record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = transportionMapper.transportionRechargeReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+	
+	@Override
+	public PageInfo<Map<String, Object>> transportionRechargeReportTotal(SysDepositLog record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = transportionMapper.transportionRechargeReportTotal(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
 	}
 
 }

@@ -258,6 +258,7 @@ public class TransportionController extends BaseContoller{
 	            		String debit_account = tmpMap.get("debitAccount")==null?"":tmpMap.get("debitAccount").toString();
 	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
 	            		String operator = tmpMap.get("operator")==null?"":tmpMap.get("operator").toString();
+	            		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
 
 
 	                    switch (tmpMap.get("order_type").toString()) {
@@ -293,7 +294,7 @@ public class TransportionController extends BaseContoller{
 						}
 
 
-	                    content[i] = new String[]{order_number,order_type,deal_number,order_date,deal_type,transportion_name,creditAccount,debit_account,cash,operator};
+	                    content[i] = new String[]{order_number,order_type,deal_number,order_date,deal_type,transportion_name,creditAccount,user_name,cash,operator};
 	                    i++;
 	                }
 	            }
@@ -595,7 +596,7 @@ public class TransportionController extends BaseContoller{
 
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","运输公司编号","加注站名称","车牌号","备注","操作人"};
+            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","运输公司编号","运输公司名称","加注站名称","车牌号","备注","操作人"};
 
             int i = 1;
             if(list != null && list.size() > 0){
@@ -609,6 +610,8 @@ public class TransportionController extends BaseContoller{
             		String cash = tmpMap.get("cash") == null?"":tmpMap.get("cash").toString();
             		String credit_account = tmpMap.get("creditAccount") == null?"":tmpMap.get("creditAccount").toString();
             		String channel = tmpMap.get("channel") == null?"":tmpMap.get("channel").toString();
+            		String channel_number = tmpMap.get("channel_number") == null?"":tmpMap.get("channel_number").toString();
+            		String transportion_name = tmpMap.get("transportion_name") == null?"":tmpMap.get("transportion_name").toString();
             		String plates_number = tmpMap.get("plates_number") == null?"":tmpMap.get("plates_number").toString();
             		String remark = tmpMap.get("remark") == null?"":tmpMap.get("remark").toString();
             		String user_name = tmpMap.get("user_name") == null?"":tmpMap.get("user_name").toString();
@@ -629,7 +632,7 @@ public class TransportionController extends BaseContoller{
 					}
 
 
-                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,credit_account,channel,plates_number,remark,user_name};
+                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,credit_account,transportion_name,channel,plates_number,remark,user_name};
                     i++;
                 }
             }
@@ -1283,6 +1286,45 @@ public class TransportionController extends BaseContoller{
 			throw e;
 		}
 			return null;
+	}
+	
+	@RequestMapping("/transportionRechargeReport")
+	public String transportionRechargeReport(ModelMap map, SysDepositLog loger) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transportion_rechargecollectreport";
+
+		try {
+			if(loger.getPageNum() == null){
+				loger.setPageNum(1);
+				loger.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(loger.getOrderby())){
+				loger.setOrderby("station_id desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = transportionService.transportionRechargeReport(loger);
+			PageInfo<Map<String, Object>> total = transportionService.transportionRechargeReportTotal(loger);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("loger", loger);
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
 	}
 
 }

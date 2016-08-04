@@ -2,6 +2,7 @@ package com.sysongy.poms.transportion.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.system.model.SysDepositLog;
@@ -58,4 +59,8 @@ public interface TransportionService {
 	public int modifyDeposit(Transportion transportion, BigDecimal increment) throws Exception ;
 
 	public Integer alertPrepayBalance() throws Exception;
+	
+	public PageInfo<Map<String, Object>> transportionRechargeReport(SysDepositLog record);
+	
+	public PageInfo<Map<String, Object>> transportionRechargeReportTotal(SysDepositLog record);
 }

@@ -2,7 +2,7 @@
 
 	window.onload = setCurrentPage();
 	var listOptions ={
-		url:'../web/gastation/queryRechargeReport',
+		url:'../web/transportion/transportionRechargeReport',
 		type:'post',
 		dataType:'html',
 		success:function(data){
@@ -30,13 +30,11 @@
 	
 	function init(){
 		var page = $("[name=page]").val();
-		loadPage('#main', '../web/gastation/queryRechargeReport?page='+page);
+		loadPage('#main', '../web/transportion/transportionRechargeReport');
 	}
 
 
 	//导出报表
 	function importReport(){
-		var cur = "${sessionScope.currUser.userId}";
-		//alert(cur);
 		$("#formgastation").submit();
 	}
