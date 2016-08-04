@@ -998,6 +998,8 @@ public class TcFleetQuotaController extends BaseContoller {
                     String fleetName = "";
                     if(quotaMap.get("fleet_name") != null){
                         fleetName = quotaMap.get("fleet_name").toString();
+                    }else{
+                        fleetName = "其他";
                     }
                     String platesNumber = "";
                     if(quotaMap.get("plates_number") != null){
@@ -1204,7 +1206,10 @@ public class TcFleetQuotaController extends BaseContoller {
                     String fleetName = "";
                     if(quotaMap.get("fleet_name") != null){
                         fleetName = quotaMap.get("fleet_name").toString();
+                    }else{
+                        fleetName = "其他";
                     }
+
                     String platesNumber = "";
                     if(quotaMap.get("plates_number") != null){
                         platesNumber = quotaMap.get("plates_number").toString();
@@ -1227,6 +1232,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     String number = "";
                     if(quotaMap.get("number") != null && !"".equals(quotaMap.get("number"))){
                         number = quotaMap.get("number").toString();
+
                     }else{
                         number = "0.00";
                     }
