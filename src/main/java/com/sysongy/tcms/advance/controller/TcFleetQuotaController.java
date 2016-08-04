@@ -462,16 +462,15 @@ public class TcFleetQuotaController extends BaseContoller {
             if(list != null && list.size() > 0){
 
                 for (Map<String, Object> quotaMap:list) {
-                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())
-                            && GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION.equals(quotaMap.get("dealType"))){
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
-                    }else{
                         backCash = backCash.add(new BigDecimal(quotaMap.get("cashBack").toString()));
                     }
                 }
             }
             //累计总划款金额
             map.addAttribute("totalCash",totalCash);
+            map.addAttribute("backCash",backCash);
 
             bean.setRetCode(100);
             bean.setRetMsg("查询成功");
@@ -999,6 +998,8 @@ public class TcFleetQuotaController extends BaseContoller {
                     String fleetName = "";
                     if(quotaMap.get("fleet_name") != null){
                         fleetName = quotaMap.get("fleet_name").toString();
+                    }else{
+                        fleetName = "其他";
                     }
                     String platesNumber = "";
                     if(quotaMap.get("plates_number") != null){
@@ -1205,7 +1206,10 @@ public class TcFleetQuotaController extends BaseContoller {
                     String fleetName = "";
                     if(quotaMap.get("fleet_name") != null){
                         fleetName = quotaMap.get("fleet_name").toString();
+                    }else{
+                        fleetName = "其他";
                     }
+
                     String platesNumber = "";
                     if(quotaMap.get("plates_number") != null){
                         platesNumber = quotaMap.get("plates_number").toString();
@@ -1228,6 +1232,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     String number = "";
                     if(quotaMap.get("number") != null && !"".equals(quotaMap.get("number"))){
                         number = quotaMap.get("number").toString();
+
                     }else{
                         number = "0.00";
                     }

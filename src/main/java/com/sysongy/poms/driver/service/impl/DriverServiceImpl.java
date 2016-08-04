@@ -284,7 +284,7 @@ public class DriverServiceImpl implements DriverService {
 			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_DRIVER_DEDUCT;
 		}
 		
-		String remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+		String remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
 		
 		return cash_success;

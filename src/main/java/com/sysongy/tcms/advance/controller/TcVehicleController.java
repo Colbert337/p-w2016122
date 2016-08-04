@@ -244,7 +244,7 @@ public class TcVehicleController extends BaseContoller {
                 resultInt = Encoder.symmetricEncrypto(resultInt);
                 return "redirect:/web/tcms/vehicle/list/page?resultInt="+resultInt;
             }else{
-                if(tcVehicle != null && vehicle1Count.size() > 0){
+                if(tcVehicle != null){
                     //新密码
                     String password = vehicle.getPayCode();
                     payCode = password;
