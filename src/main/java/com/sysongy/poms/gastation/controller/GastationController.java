@@ -573,7 +573,7 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","客户账号","支付方式","充值金额","返现系数","返现金额","操作人"};
+	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","客户账号","支付方式","充值金额","返现金额","操作人"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -591,7 +591,6 @@ public class GastationController extends BaseContoller{
 	            		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
 	            		String charge_type;
 	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
-	            		String cash_back_per = tmpMap.get("cash_back_per")==null?"":tmpMap.get("cash_back_per").toString();
 	            		String cash_back = tmpMap.get("cash_back")==null?"0.00":tmpMap.get("cash_back").toString();
 	            		String operator = tmpMap.get("operator")==null?"":tmpMap.get("operator").toString();
 
@@ -708,7 +707,7 @@ public class GastationController extends BaseContoller{
 						}
 
 
-	                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,deal_type,channel_number,channel,full_name,user_name,charge_type,cash,cash_back_per,cash_back,operator};
+	                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,deal_type,channel_number,channel,full_name,user_name,charge_type,cash,cash_back,operator};
 	                    i++;
 	                }
 	            }

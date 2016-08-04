@@ -49,7 +49,16 @@
   </select>
   <!--转账报表-->
   <select id="queryTransferListPage" resultMap="MapResultMap" parameterType="com.sysongy.tcms.advance.model.TcTransferAccount" >
-    select sr.order_number,sr.order_type,sr.cash,su.real_name,sod.*,tta.full_name,tta.mobile_phone,tta.used
+/*    select sr.order_number,sr.order_type,sr.cash,su.real_name,sod.*,tta.full_name,tta.mobile_phone,tta.used
+    from sys_order  sr left join sys_order_deal sod  on sr.order_id = sod.order_id
+    left join tc_transfer_account tta on sr.debit_account = tta.sys_driver_id
+    and sr.order_id = tta.order_id
+    left join sys_user su on sr.operator = su.sys_user_id*/
+    select max(sr.order_number) order_number,max(sr.order_type) order_type,max(sr.cash) cash,
+    max(su.real_name) real_name,max(sod.deal_id) deal_id,max(sod.order_id) order_id,max(sod.deal_number) deal_number,
+    max(sod.deal_date) deal_date,max(sod.deal_type) deal_type,max(sod.cash_back_per) cash_back_per,
+    sum(sod.cash_back) cash_back,max(sod.run_success) run_success,max(sod.remark) remark,
+    max(tta.full_name) full_name,max(tta.mobile_phone) mobile_phone,max(tta.used) used
     from sys_order  sr left join sys_order_deal sod  on sr.order_id = sod.order_id
     left join tc_transfer_account tta on sr.debit_account = tta.sys_driver_id
     and sr.order_id = tta.order_id
@@ -65,6 +74,7 @@
     <if test="startDate != null &amp;&amp; endDate != ''">
       and sod.deal_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
     </if>
+    group by sr.order_number
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from tc_transfer_account

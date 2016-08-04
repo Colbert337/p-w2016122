@@ -11,6 +11,8 @@ import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.dao.TcFleetMapper;
 import com.sysongy.tcms.advance.dao.TcFleetQuotaMapper;
 import com.sysongy.tcms.advance.dao.TcTransferAccountMapper;
@@ -60,7 +62,8 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     OrderDealService orderDealService;
     @Autowired
     TcTransferAccountMapper tcTransferAccountMapper;
-
+    @Autowired
+    TransportionService transportionService;
 
     @Override
     public TcFleetQuota queryFleetQuota(TcFleetQuota tcFleetQuota) {
@@ -186,6 +189,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
     @Override
     public int personalTransfer(List<Map<String, Object>> list,String stationId ,String userId) throws Exception{
         BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+        Transportion transportion = transportionService.queryTransportionByPK(stationId);
         int resultVal = 1;
         try {
 
@@ -227,6 +231,9 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                             order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.TRANSPORTION);
                             order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);
                             order.setOrderNumber(orderNum);
+                            order.setChannel(transportion.getTransportion_name());
+                            order.setChannelNumber(stationId);
+                            order.setIs_discharge(GlobalConstant.ORDER_BEEN_DISCHARGED_NO);
 
                             //添加订单
                             resultVal = orderService.insert(order, null);
@@ -254,7 +261,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                             SimpleDateFormat sfm = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
                             String time = sfm.format(new Date());
                             aliShortMessageBean.setTime(time);
-                            aliShortMessageBean.setString("已转入");
+                            aliShortMessageBean.setString("转入");
                             aliShortMessageBean.setMoney(mapDriver.get("amount").toString());
                             aliShortMessageBean.setSendNumber(mapDriver.get("mobilePhone").toString());
                             /*查询返现金额*/
@@ -280,15 +287,13 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                         }
 
                     }
-                    /*accountTotal = BigDecimalArith.sub(accountTotal,totalCash);
-                    sysUserAccountService.addCashToAccount(userAccount.getSysUserAccountId(),accountTotal.multiply(new BigDecimal(-1)),"");*/
+
                 }
             }
         }catch (Exception e){
             resultVal = -2;
             e.printStackTrace();
             throw e;
-            /*GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE;*/
         }
         return resultVal;
     }

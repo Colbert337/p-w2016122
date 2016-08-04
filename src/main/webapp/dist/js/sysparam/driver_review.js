@@ -96,10 +96,10 @@ var listOptions ={
 		$("#objid").val(driverid);
 		$("#objval").val(type);
 		$("[name=remark]").val($(obj).parents('tr').children("td").eq(11).text());
-		$("#driving_lice").attr("src",$(obj).parents('tr').children("td").eq(11).text());
-		$("#driving_lice").parent("a").attr("href",$(obj).parents('tr').children("td").eq(11).text());
-		$("#vehicle_lice").attr("src",$(obj).parents('tr').children("td").eq(12).text());
-		$("#vehicle_lice").parent("a").attr("href",$(obj).parents('tr').children("td").eq(12).text());
+		$("#driving_lice").attr("src",$(obj).parents('tr').children("td").eq(12).text());
+		$("#driving_lice").parent("a").attr("href",$(obj).parents('tr').children("td").eq(12).text());
+		$("#vehicle_lice").attr("src",$(obj).parents('tr').children("td").eq(13).text());
+		$("#vehicle_lice").parent("a").attr("href",$(obj).parents('tr').children("td").eq(13).text());
 		
 		$("#createdate").text($(obj).parents('tr').children("td").eq(8).text());
 		$("#checkedate").text($(obj).parents('tr').children("td").eq(10).text());
