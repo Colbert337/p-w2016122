@@ -50,7 +50,7 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		String sendMsg = "用户";
 		String sendCode = driver.getMobilePhone();
 		
-		if("1".equals(status)){
+		if(!"0".equals(status)){
 			
 			GasCard gasCard = new GasCard();
 			

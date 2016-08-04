@@ -267,7 +267,7 @@ public class TransportionServiceImpl implements TransportionService {
 		BigDecimal addCash = cash.multiply(new BigDecimal(-1));
 		String cash_success = sysUserAccountService.addCashToAccount(tran_account,addCash,order.getOrderType());
 
-		String remark =  tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。";
+		String remark =  tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
 		
 		return cash_success;
@@ -352,6 +352,8 @@ public class TransportionServiceImpl implements TransportionService {
 		String orderNumber = orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION);
 		order.setOrderNumber(orderNumber);
 		order.setChannel("综合管理平台");
+		order.setChannelNumber("ZHGLPT");
+		order.setIs_discharge("0");
 		order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.PLATFORM);
 		orderService.insert(order, null);
 		orderService.chargeToTransportion(order);
