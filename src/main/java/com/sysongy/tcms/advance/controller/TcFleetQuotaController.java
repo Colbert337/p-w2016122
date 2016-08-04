@@ -353,11 +353,11 @@ public class TcFleetQuotaController extends BaseContoller {
         PageBean bean = new PageBean();
 
         try {
-            if(tcFleet.getPageNum() == null){
+            /*if(tcFleet.getPageNum() == null){*/
                 tcFleet.setOrderby("created_date desc");
                 tcFleet.setPageNum(1);
                 tcFleet.setPageSize(1048576);
-            }
+            /*}*/
             tcFleet.setStationId(stationId);
             PageInfo<Map<String, Object>> pageInfo = tcFleetQuotaService.queryQuotaList(tcFleet);
 
@@ -462,16 +462,15 @@ public class TcFleetQuotaController extends BaseContoller {
             if(list != null && list.size() > 0){
 
                 for (Map<String, Object> quotaMap:list) {
-                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())
-                            && GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION.equals(quotaMap.get("dealType"))){
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
-                    }else{
                         backCash = backCash.add(new BigDecimal(quotaMap.get("cashBack").toString()));
                     }
                 }
             }
             //累计总划款金额
             map.addAttribute("totalCash",totalCash);
+            map.addAttribute("backCash",backCash);
 
             bean.setRetCode(100);
             bean.setRetMsg("查询成功");
@@ -517,11 +516,11 @@ public class TcFleetQuotaController extends BaseContoller {
         String ret = "webpage/tcms/advance/transfer_log";
         /*查询数据*/
         try {
-            if(transferAccount.getPageNum() == null){
+//            if(transferAccount.getPageNum() == null){
                 transferAccount.setOrderby("deal_date desc");
                 transferAccount.setPageNum(1);
                 transferAccount.setPageSize(1048576);
-            }
+//            }
             transferAccount.setStationId(stationId);
             transferAccount.setSysDriverId(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
             PageInfo<Map<String, Object>> pageInfo = tcTransferAccountService.queryTransferListPage(transferAccount);
@@ -714,11 +713,11 @@ public class TcFleetQuotaController extends BaseContoller {
         String ret = "webpage/tcms/advance/personal_log";
 
         try {
-            if(order.getPageNum() == null){
+//            if(order.getPageNum() == null){
                 order.setOrderby("deal_date desc");
                 order.setPageNum(1);
                 order.setPageSize(1048576);
-            }
+//            }
             order.setDebitAccount(stationId);
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageInfo = orderService.queryTcPersonalReport(order);
@@ -932,11 +931,11 @@ public class TcFleetQuotaController extends BaseContoller {
         PageBean bean = new PageBean();
 
         try {
-            if(order.getPageNum() == null){
+//            if(order.getPageNum() == null){
                 order.setOrderby("deal_date desc");
                 order.setPageNum(1);
                 order.setPageSize(1048576);
-            }
+//            }
             order.setDebitAccount(stationId);
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageInfo = orderService.queryTcFleetReport(order);
@@ -999,6 +998,8 @@ public class TcFleetQuotaController extends BaseContoller {
                     String fleetName = "";
                     if(quotaMap.get("fleet_name") != null){
                         fleetName = quotaMap.get("fleet_name").toString();
+                    }else{
+                        fleetName = "其他";
                     }
                     String platesNumber = "";
                     if(quotaMap.get("plates_number") != null){
@@ -1138,11 +1139,11 @@ public class TcFleetQuotaController extends BaseContoller {
         PageBean bean = new PageBean();
 
         try {
-            if(order.getPageNum() == null){
+//            if(order.getPageNum() == null){
                 order.setOrderby("deal_date desc");
                 order.setPageNum(1);
                 order.setPageSize(1048576);
-            }
+//            }
             order.setDebitAccount(stationId);
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageInfo = orderService.queryTcFleetMgReport(order);
@@ -1205,7 +1206,10 @@ public class TcFleetQuotaController extends BaseContoller {
                     String fleetName = "";
                     if(quotaMap.get("fleet_name") != null){
                         fleetName = quotaMap.get("fleet_name").toString();
+                    }else{
+                        fleetName = "其他";
                     }
+
                     String platesNumber = "";
                     if(quotaMap.get("plates_number") != null){
                         platesNumber = quotaMap.get("plates_number").toString();
@@ -1228,6 +1232,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     String number = "";
                     if(quotaMap.get("number") != null && !"".equals(quotaMap.get("number"))){
                         number = quotaMap.get("number").toString();
+
                     }else{
                         number = "0.00";
                     }

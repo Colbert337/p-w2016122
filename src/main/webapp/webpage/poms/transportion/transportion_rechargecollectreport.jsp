@@ -8,12 +8,13 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/advance/transfer_log.js"></script>
+<script src="<%=basePath %>/dist/js/transportion/transportion_rechargecollectreport.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation" action="<%=basePath%>/web/tcms/fleetQuota/list/transfer/import">
+	<form id="formgastation" action="<%=basePath%>/web/transportion/transportionRechargeReport">
 	<input type="hidden" name="downloadreport" value="true"/>
+
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 	<div class="row">
@@ -21,23 +22,23 @@
 
 					<div class="page-header">
 						<h1>
-							转账报表
+							运输公司充值汇总
 						</h1>
 					</div>
 					
 					<div class="search-types">
 						<div class="item">
-							<label>收款人/手机号码：</label>
-							<input type="text" name="fullName" placeholder="收款人/手机号码"  maxlength="20" value="${transferAccount.fullName}"/>
+							<label>运输公司编号：</label>
+							<input type="text" name="stationId" placeholder="运输公司编号/运输公司名称" maxlength="20" value="${loger.stationId}"/>
 						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${transferAccount.startDate}" readonly="readonly"/>
+								<input type="text" class="" name="startDate" value="${loger.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="endDate" value="${transferAccount.endDate}" readonly="readonly"/>
+								<input type="text" class="" name="endDate" value="${loger.endDate}" readonly="readonly"/>
 							</div>			
 						</div>
 						
@@ -64,31 +65,26 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">转账报表列表</div>
+					<div class="table-header">运输公司充值汇总</div>
 
 					<div>
 						<div class="alert alert-info alert-mt">
-							<span class="bigger-120">转账总金额：${totalCash}元</span><span class="bigger-120">&emsp;返现总金额：${backCash}元</span>
+							<span class="bigger-120">充值总金额：${totalCash}元</span>
 						</div>
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<%--<th class="center">
+									<th class="center">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
 										</label>
-									</th>--%>
-									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
-									<%--<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>--%>
-									<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">交易类型</th>
-									<th onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">收款人</th>
-									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">手机号码</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">转账金额</th>
-									<th onclick="orderBy(this,'used');commitForm();" id="used_order">资金用途</th>
-									<th onclick="orderBy(this,'cash_back');commitForm();" id="cash_back_order">返现金额</th>
-									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
-									<th onclick="orderBy(this,'deal_date');commitForm();" id="deal_date_order"><i id="deal_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
+									</th>
+									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">运输公司编号</th>
+									<th onclick="orderBy(this,'station_name');commitForm();" id="station_name_order">运输公司名称</th>
+									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">充值金额</th>
+									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">运管人员</th>
+									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">销售人员</th>
 								</tr>
 							</thead>
 
@@ -96,24 +92,18 @@
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj">
-									<%--<td class="center">
+									<td class="center">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
 											<span class="lbl"></span>
 										</label>
-									</td>--%>
+									</td>
 
-									<td>${list.orderNumber}</td>
-									<%--<td>${list.dealNumber}</td>--%>
-									<%--<td>${list.orderType}</td>--%>
-									<td><s:Code2Name mcode="${list.orderType}" gcode="ORDER_TYPE"></s:Code2Name></td>
-									<td>${list.fullName}</td>
-									<td>${list.mobilePhone}</td>
-									<td>${list.cash}</td>
-									<td>${list.used}</td>
-									<td>${list.cashBack}</td>
-									<td>${list.realName}</td>
-									<td><fmt:formatDate value="${list.dealDate}" type="both"/></td>
+									<td>${list.station_id}</td>
+									<td>${list.station_name}</td>
+									<td>${list.deposit}</td>
+									<td>${list.salesmen_name}</td>
+									<td>${list.operations_name}</td>
 								</tr>
 							</c:forEach>
 							</tbody>

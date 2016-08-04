@@ -79,7 +79,7 @@
 									<!-- <th onclick="orderBy(this,'order_id');commitForm();" id="order_id_order">订单号</th> -->
 									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">订单流水号</th>
 									<th onclick="orderBy(this,'charge_type');commitForm();" id="charge_type_order">交易类型</th>
-									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th>
+									<!-- <th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作员</th> -->
 									<th onclick="orderBy(this,'run_success');commitForm();" id="run_success_order">交易结果</th>
 									<th onclick="orderBy(this,'deal_date');commitForm();" id="deal_date_order"><i id="deal_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注信息</th>
@@ -100,7 +100,7 @@
 									<%-- <td>${list.order_id}</td> --%>
 									<td>${list.deal_number}</td>
 								 	<td><s:Code2Name mcode="${list.order_type}" gcode="ORDER_TYPE"></s:Code2Name></td> 
-									<td>${list.operator}</td>
+									<%-- <td>${list.operator}</td> --%>
 									<td>${list.run_success}</td>
 									<td><fmt:formatDate value="${list.deal_date}" type="both"/></td>
 									<td>${list.remark}</td>

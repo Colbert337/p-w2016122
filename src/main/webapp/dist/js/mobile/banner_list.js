@@ -27,6 +27,7 @@ var listOptions ={
 /*分页相关方法 end*/
 //显示添加用户弹出层add
 function addBanner(){
+    $("#show_img").hide();
     clearDiv();
     $("#editBanner").text("添加图片");
     /*密码输入框改为可编辑*/
@@ -63,9 +64,18 @@ function deleteBanner(imgId){
     })
 
 }
-
+//获取当前网址，如： http://localhost:8080/Tmall/index.jsp
+var curWwwPath=window.document.location.href;
+//获取主机地址之后的目录如：/Tmall/index.jsp
+var pathName=window.document.location.pathname;
+var pos=curWwwPath.indexOf(pathName);
+//获取主机地址，如： http://localhost:8080
+var localhostPaht=curWwwPath.substring(0,pos);
+//获取带"/"的项目名，如：/Tmall
+var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
 //显示编辑用户弹出层
 function editBanner(imgId){
+    $("#show_img").show();
     $.ajax({
         url:"../web/mobile/img/info",
         data:{mbBannerId:imgId},
@@ -78,6 +88,7 @@ function editBanner(imgId){
             $("#target_url").val(data.targetUrl);
             $("#version").val(data.version);
             $("#remark").text(data.remark);
+            $("#show_img").attr("src",localhostPaht+data.imgPath);
 
             $("#editBanner").text("修改图片");
         }
@@ -190,7 +201,7 @@ $('#editForm').bootstrapValidator({
     }
 });
 
-function save_photo(fileobj,obj,obj1){
+function savePhoto(fileobj,obj,obj1){
     $(fileobj).parents("div").find("input[name=uploadfile]").each(function(){
         $(this).attr("name","");
     });
@@ -199,9 +210,9 @@ function save_photo(fileobj,obj,obj1){
         bootbox.alert("请先上传文件");
         return;
     }
-
+    var stationId = "mobile/banner";
     var multipartOptions ={
-        url:'../crmInterface/crmBaseService/web/upload?stationid='+$("#stationId").val(),
+        url:'../crmInterface/crmBaseService/web/upload?stationid='+stationId,
         type:'post',
         dataType:'text',
         enctype:"multipart/form-data",
@@ -216,7 +227,7 @@ function save_photo(fileobj,obj,obj1){
             bootbox.alert("上传成功");
         }
     }
-    $("#gastationform").ajaxSubmit(multipartOptions);
+    $("#editForm").ajaxSubmit(multipartOptions);
 }
 /**
  * 文件上传验证

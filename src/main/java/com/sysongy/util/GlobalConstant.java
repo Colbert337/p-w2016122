@@ -581,19 +581,19 @@ public class GlobalConstant {
 		String value = "";
 		switch (key){
 			case GasCardType.LNG:
-				value = "运输公司预付款充值";
+				value = "LNG";
 				break;
 			case GasCardType.CNG:
-				value = "加油站预付款充值";
+				value = "CNG";
 				break;
 			case GasCardType.CNG01:
-				value = "个人充值";
+				value = "CNG01";
 				break;
 			case GasCardType.LNG01:
-				value = "运输公司消费";
+				value = "LNG01";
 				break;
 			case GasCardType.LNG02:
-				value = "司机消费";
+				value = "LNG02";
 				break;
 		}
 		return value;

@@ -573,7 +573,7 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","客户账号","支付方式","充值金额","返现金额","操作人"};
+	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","会员账号","支付方式","充值金额","返现金额","操作人"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -773,7 +773,7 @@ public class GastationController extends BaseContoller{
 					sysOrder.setOrderby("order_date desc");
 				}
 
-				PageInfo<Map<String, Object>> pageinfo = orderService.queryGastationRechargeReport(sysOrder);
+				PageInfo<Map<String, Object>> pageinfo = orderService.queryGastationConsumeReport(sysOrder);
 				List<Map<String, Object>> list = pageinfo.getList();
 
 	            int cells = 0 ; // 记录条数
@@ -795,7 +795,7 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","交易金额","交易时间","交易对象","加注站名称","加注站编号","用户账号","操作人"};
+	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","交易金额","交易时间","交易对象","加注站名称","加注站编号","会员账号","操作人"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -804,32 +804,44 @@ public class GastationController extends BaseContoller{
 	            		String order_number = tmpMap.get("order_number")==null?"":tmpMap.get("order_number").toString();
 	            		String order_type;
 	            		String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
-	            		String is_discharge;
+	            		String deal_type;
 	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
 	            		String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
-	            		String credit_account = tmpMap.get("credit_account")==null?"":tmpMap.get("credit_account").toString();
+	            		String credit_account = tmpMap.get("creditAccount")==null?"":tmpMap.get("creditAccount").toString();
 	            		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
 	            		String channel_number = tmpMap.get("channel_number")==null?"":tmpMap.get("channel_number").toString();
 	            		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
 	            		String operator = tmpMap.get("operator")==null?"":tmpMap.get("operator").toString();
 	            		
-	            		switch (tmpMap.get("is_discharge")==null?"":tmpMap.get("is_discharge").toString()) {
-						case "0":{
-							is_discharge = "消费";
+	            		switch (tmpMap.get("deal_type")==null?"":tmpMap.get("deal_type").toString()) {
+						case "211":{
+							deal_type = "车队消费";
 							break;
 						}
-						case "1":{
-							is_discharge = "冲红";
+						case "212":{
+							deal_type = "车队消费冲红";
+							break;
+						}
+						case "221":{
+							deal_type = "个人消费";
+							break;
+						}
+						case "222":{
+							deal_type = "个人消费冲红";
 							break;
 						}
 						default:
-							is_discharge = "";
+							deal_type = "";
 							break;
 						}
 	            		
 	                    switch (tmpMap.get("order_type")==null?"":tmpMap.get("order_type").toString()) {
-						case "130":{
-							order_type = "个人充值";
+						case "210":{
+							order_type = "运输公司消费";
+							break;
+						}
+						case "220":{
+							order_type = "司机消费";
 							break;
 						}
 						default:
@@ -843,7 +855,7 @@ public class GastationController extends BaseContoller{
 	                    	credit_account = "车队";
 	                    }
 
-	                    content[i] = new String[]{order_number,order_type,deal_number,is_discharge,cash,order_date,credit_account,channel,channel_number,user_name,operator};
+	                    content[i] = new String[]{order_number,order_type,deal_number,deal_type,cash,order_date,credit_account,channel,channel_number,user_name,operator};
 	                    i++;
 	                }
 	            }
