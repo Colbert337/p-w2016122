@@ -462,16 +462,15 @@ public class TcFleetQuotaController extends BaseContoller {
             if(list != null && list.size() > 0){
 
                 for (Map<String, Object> quotaMap:list) {
-                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())
-                            && GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_DEDUCT_TRANSPORTION.equals(quotaMap.get("dealType"))){
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
-                    }else{
                         backCash = backCash.add(new BigDecimal(quotaMap.get("cashBack").toString()));
                     }
                 }
             }
             //累计总划款金额
             map.addAttribute("totalCash",totalCash);
+            map.addAttribute("backCash",backCash);
 
             bean.setRetCode(100);
             bean.setRetMsg("查询成功");

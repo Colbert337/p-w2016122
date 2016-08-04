@@ -172,7 +172,7 @@
 												<div class="widget-main">
 													<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
 													<input type="hidden" id="img_path" name="imgPath"/>
-													<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
+													<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="savePhoto(this,'#indu_com_certif_select','#img_path');">
 														<i class="ace-icon fa fa-check bigger-110"></i>
 														图片上传
 													</button>

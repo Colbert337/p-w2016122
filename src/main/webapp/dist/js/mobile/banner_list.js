@@ -190,7 +190,8 @@ $('#editForm').bootstrapValidator({
     }
 });
 
-function save_photo(fileobj,obj,obj1){
+function savePhoto(fileobj,obj,obj1){
+    alert(obj1);
     $(fileobj).parents("div").find("input[name=uploadfile]").each(function(){
         $(this).attr("name","");
     });
