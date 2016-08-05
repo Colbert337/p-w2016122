@@ -30,6 +30,14 @@ $(function(){
 			});			
 		}
 	})
+	var isNotice = '${crmHelp.isNotice}';
+	if(isNotice == ""){
+		$("#isNotice").val("");
+	}else if(isNotice == "2"){
+		$("#isNotice").val("2");
+	}else if(isNotice == "1"){
+		$("#isNotice").val("1");
+	} 
 })
 </script>
 
@@ -81,11 +89,11 @@ $(function(){
                                           <div class="col-sm-8">
 										      <div class="radio">
 										      <label>
-											    <input name="isMenu" id="isNotice_yes" type="radio" class="ace" checked="checked" value="2">
+											    <input name="isNotice" id="isNotice_yes" type="radio" class="ace" checked="checked" value="2">
 											      <span class="lbl">是</span>
 										       </label>
 										 <label>
-											<input name="isMenu" id="isNotice_no" type="radio" class="ace" value="1">
+											<input name="isNotice" id="isNotice_no" type="radio" class="ace" value="1">
 											<span class="lbl">否</span>
 										</label>
 									</div>
@@ -99,17 +107,17 @@ $(function(){
                                         </div>
                                     </div> 
                                     
-                                     <div class="form-group">
+                                   <%--   <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="createdDate">发布时间：</label>
                                         <div class="col-sm-4">
                                          <div class="input-group">
-														<input class="form-control date-picker" name="expiry_date_frompage" id="datepicker" type="text"  value="<fmt:formatDate value="${crmHelp.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/>"/>														                                										
+														<input class="form-control date-picker" name="createdDate" id="datepicker" type="text"  value="<fmt:formatDate value="${crmHelp.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/>"/>														                                										
 														<span class="input-group-addon">
 																<i class="fa fa-calendar bigger-110"></i>
 														</span>
 											</div>
                                         </div>                               
-                                    </div>
+                                    </div> --%>
                                                                                                                                           
                                     <div class="clearfix form-actions">
                                         <div class="col-md-offset-3 col-md-9">

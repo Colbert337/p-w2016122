@@ -82,6 +82,7 @@ public class CrmHelpController extends BaseContoller{
     @RequestMapping("/edit")
     public String edit(Model model, @RequestParam String crmHelpIdvalue)throws Exception{
     	CrmHelp crmHelp = crmHelpService.queryCrmHelp(crmHelpIdvalue);
+    	crmHelp.setCreatedDate(new Date());
     	model.addAttribute("crmHelp", crmHelp);//用于条件回显
         return "webpage/poms/crm/help_edit";           	
     }

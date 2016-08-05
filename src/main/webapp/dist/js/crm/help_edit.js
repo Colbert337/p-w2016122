@@ -94,24 +94,6 @@ $("#formedit").bootstrapValidator({
                     max: 5,
                     message: '发布人不能超过5个字符'
                 },
-       createdDate: {
-            message: 'The cardno is not valid',
-            validators: { 
-                notEmpty: {
-                    message: '日期不能为空'
-                },
-                callback: {
-                	message: '日期必须大于等于当前日期',
-                	callback: function (value, validator, $field) {
-                         if(compareDate(new Date().toLocaleDateString(),value)){
-                        	 return false;
-                         }
-                         return true;
-                    }
-                }
-            },
-            trigger: 'change'
-        },
             }
         }
      }
