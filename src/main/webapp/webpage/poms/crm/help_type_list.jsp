@@ -9,31 +9,6 @@
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 <script src="<%=basePath %>/dist/js/crm/help_list.js"></script>
-<script type="text/javascript">  
-    // 删除用户
-    function deletequestion(crmHelpId){
-        bootbox.setLocale("zh_CN");
-        bootbox.confirm("确认要删除用户吗？", function (result) {
-            if (result) {
-                var deleteOptions ={
-                    url:'<%=basePath%>/web/crm/help/delete',
-                    data:{crmHelpId:crmHelpId},
-                    type:'post',
-                    dataType:'text',
-                    success:function(data){
-                        $("#main").html(data);
-                        $('[data-rel="tooltip"]').tooltip();
-                    }
-                }
-                $("#listForm").ajaxSubmit(deleteOptions);
-        }
-     })
-   }
-    
-$(function() {
-   $("#datepicker").datepicker();
-      });
-</script>
 <div class="page-header">
     <h1>
                 问题分类
@@ -47,58 +22,47 @@ $(function() {
             <!-- PAGE CONTENT BEGINS -->
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="search-types">
-                        <div class="item">
-						    <label>分类编号:</label>
-							    <input type="text" name="crmHelpTypeId" placeholder="分类编号"  maxlength="15" value="${list.crmHelpTypeId}"/>
-						</div>
-                        <div class="item">
-                            <button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
-                                <i class="ace-icon fa fa-flask align-top bigger-125"></i>
-                                                                                   类型查询
-                            </button>
-                            <button class="btn btn-sm" type="button" onclick="init();">
-                                                                                  重置
-                            </button>
-                            <div class="item"></div>
-                            <!--  <button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/card/charge_new.jsp');">
-                                <i class="ace-icon fa fa-flask align-top bigger-125"></i>
-                                                                                 添加类型
-                            </button>
-                             <button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/crm/help_new.jsp');">
-                                <i class="ace-icon fa fa-flask align-top bigger-125"></i>
-                                                                                 添加问题
-                            </button>
-                            -->
-                        </div>
-                    </div>
+                      <div class="row">
+				           <div class="col-xs-12">
+					          <div class="pull-right btn-botton">
+                                <button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','../web/crm/help/list');">
+							            返回常见问题
+						        </button>
+					         </div>
+				        </div>
+			         </div>                  
                     <div class="sjny-table-responsive">
                     <table id="simple-table" class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th onclick="orderBy(this,'id');commitForm();" id="id_order">分类编号</th>
-                            <th onclick="orderBy(this,'id');commitForm();" id="id_order">分类名称</th>
-                            <th onclick="orderBy(this,'ownid');commitForm();" id="ownid_order">分类备注</th>
-                            <th onclick="orderBy(this,'useTime');commitForm();" id="useTime_order">是否删除</th>
-                            <th onclick="orderBy(this,'cash');commitForm();" id="cash_order">添加时间</th>
-                            <th onclick="orderBy(this,'cash');commitForm();" id="cash_order">修改时间</th>
+                            <th>编号</th>
+                            <th onclick="orderBy(this,'title');commitForm();" id="title_order">分类名称</th>
+                            <th onclick="orderBy(this,'remark');commitForm();" id="remark_order">分类备注</th>
+                            <th onclick="orderBy(this,'isDeleted');commitForm();" id="isDeleted_order">是否删除</th>
+                            <th onclick="orderBy(this,'createdDate');commitForm();" id="createdDate_order">添加时间</th>
+                            <th onclick="orderBy(this,'updatedDate');commitForm();" id="updatedDate_order">修改时间</th>
                             <th class="text-center td-w2">操作</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <c:forEach items="${crmHelpTypeList.list}" var="list">
+                        <c:forEach items="${pageInfo.list}" var="list" varStatus="status">
                             <tr>
-                                <td>${list.crmHelpTypeId}</td>
+                                <td>${status.index+1}</td>
                                 <td>${list.title}</td>
-                                <td>${list.remark}</td>
-                                <td>${list.isDeleted}</td>                                                         
-                                 <td><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd"/></td>  
-                                 <td><fmt:formatDate value="${list.updatedDate}" type="both" pattern="yyyy-MM-dd"/></td>                                                                                   
+                                <td>${list.remark}</td>                            
+                                <td>
+                                   <c:choose>
+                                      <c:when test="${list.isDeleted==1}">未删除</c:when>
+                                      <c:otherwise>删除</c:otherwise>
+                                  </c:choose>
+                                </td>                                                        
+                                 <td><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>  
+                                 <td><fmt:formatDate value="${list.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>                                                                                   
                                 <td class="text-center">
                                     <a class="" href="javascript:void(0);" title="编辑" data-rel="tooltip">
                                             <i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
                                     </a>
-                                    <a class="" href="javascript:deletequestion('${list.crmHelpTypeId}');" title="删除" data-rel="tooltip">
+                                    <a class="" href="javascript:deletetype('${list.crmHelpTypeId}');" title="删除" data-rel="tooltip">
                                         <span class="ace-icon fa fa-trash-o bigger-130"></span>
                                     </a>
                                 </td>
@@ -114,7 +78,7 @@ $(function() {
 </div>
 <div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${crmHelpTypeList.pageSize} 条|共 ${crmHelpTypeList.total} 条|共 ${crmHelpTypeList.pages} 页</div>
+					<div class="dataTables_info" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条|共 ${pageInfo.total} 条|共 ${pageInfo.pages} 页</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">
@@ -134,6 +98,74 @@ $(function() {
 				</div>
 			</div>
 <jsp:include page="/common/message.jsp"></jsp:include>
+<script type="text/javascript">  
+    // 删除
+    function deletetype(crmHelpTypeId){
+        bootbox.setLocale("zh_CN");
+        bootbox.confirm("确认要删除吗？", function (result) {
+            if (result) {
+                var deleteOptions ={
+                    url:'<%=basePath%>/web/crm/help/type/delete',
+                    data:{crmHelpTypeId:crmHelpTypeId},
+                    type:'post',
+                    dataType:'text',
+                    success:function(data){
+                        $("#main").html(data);
+                        $('[data-rel="tooltip"]').tooltip();
+                    }
+                }
+                $("#listForm").ajaxSubmit(deleteOptions);
+        }
+     })
+   }
+//时间插件    
+$(function() {
+   $("#datepicker").datepicker();
+      });
+      
+//编辑
+function preUpdate(obj){        
+        var crmHelpTypeId = $(obj).parents('tr').children("td").eq(1).text();        
+        loadPage('#main', '../web/crm/help/type/edit?crmHelpTypeIdvalue='+crmHelpTypeId);
+    }
 
+function commitForm(obj){
+	if(typeof obj == "undefined") {
+		$("#pageNum").val("1");
+	}else{
+		$("#pageNum").val($(obj).text());
+	}
+	$("#listForm").ajaxSubmit(typeoptions);
+}	
+	var typeoptions ={ 
+			url:'../web/crm/help/type/list', 
+          type:'post',                    
+          dataType:'html',
+          success:function(data){
+	              $("#main").html(data);	             
+          },error:function(XMLHttpRequest, textStatus, errorThrown) {}
+	}
+    
+function prepage(formid){
+	//如果是第一页
+	if(parseInt($("#pageNum").val()) <= 1){
+		return ;
+	}
+	//设置当前页-1
+	$("#pageNum").val(parseInt($("#pageNum").val())-1);
+	$(formid).ajaxSubmit(typeoptions);
+}
+
+function nextpage(formid){
+	//如果是最后一页
+	if(parseInt($("#pageNum").val()) >= parseInt($("#pageNumMax").val())){
+		return ;
+	}
+	//设置当前页+1
+	$("#pageNum").val(parseInt($("#pageNum").val())+1);
+	$(formid).ajaxSubmit(typeoptions);
+}
+
+</script>
 
 

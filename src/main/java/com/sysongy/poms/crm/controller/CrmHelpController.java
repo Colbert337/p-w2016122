@@ -2,13 +2,12 @@ package com.sysongy.poms.crm.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import com.sysongy.util.GlobalConstant;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,7 +20,6 @@ import com.sysongy.poms.crm.service.CrmHelpService;
 import com.sysongy.poms.crm.service.CrmHelpTypeService;
 import com.sysongy.util.UUIDGenerator;
 
-
 /**
  * @FileName: CrmHelpController
  * @Encoding: UTF-8
@@ -32,7 +30,7 @@ import com.sysongy.util.UUIDGenerator;
  * @Version: V2.0 Copyright(c)陕西司集能源科技有限公司
  * @Description:
  */
-@RequestMapping("/portal/crm/help")
+@RequestMapping("/web/crm/help")
 @Controller
 public class CrmHelpController extends BaseContoller{
 	
@@ -57,9 +55,10 @@ public class CrmHelpController extends BaseContoller{
 		if(StringUtils.isEmpty(crmHelp.getOrderby())){
 			crmHelp.setOrderby("created_date desc");
 		}
-
-    	PageInfo<CrmHelp> crmHelpList = crmHelpService.queryCrmHelpPage(crmHelp);
-    	model.addAttribute("crmHelpList", crmHelpList);
+		
+    	PageInfo<Map<String, Object>> crmHelpList = crmHelpService.queryCrmHelpPage(crmHelp);
+    	model.addAttribute("pageInfo", crmHelpList);
+    	model.addAttribute("crmHelp", crmHelp);
         return "webpage/poms/crm/help_list";
     }
     
@@ -74,6 +73,7 @@ public class CrmHelpController extends BaseContoller{
     	crmHelpService.delete(crmHelpId);
         return "redirect:/web/crm/help/list";    
     }
+    
     /**
      * 编辑
      * @return
@@ -82,7 +82,7 @@ public class CrmHelpController extends BaseContoller{
     @RequestMapping("/edit")
     public String edit(Model model, @RequestParam String crmHelpIdvalue)throws Exception{
     	CrmHelp crmHelp = crmHelpService.queryCrmHelp(crmHelpIdvalue);
-    	model.addAttribute("crmHelp", crmHelp);
+    	model.addAttribute("crmHelp", crmHelp);//用于条件回显
         return "webpage/poms/crm/help_edit";           	
     }
     
@@ -95,10 +95,11 @@ public class CrmHelpController extends BaseContoller{
      */
     @RequestMapping("/update")
     public String update(Model model,CrmHelp obj) throws Exception{
-    	obj.setUpdatedDate(new Date());
+    	obj.setModel(new Date());
     	crmHelpService.update(obj);
         return "redirect:/web/crm/help/list";        
     }
+    
     /**
      * 保存
      * @return
@@ -107,8 +108,10 @@ public class CrmHelpController extends BaseContoller{
     @RequestMapping("/save")
     public String save(CrmHelp obj)throws Exception{
     	obj.setCrmHelpId(UUIDGenerator.getUUID());
+    	obj.setCreatedDate(new Date());
+    	
     	crmHelpService.save(obj);
-    	return "redirect:/web/crm/help/list";    	
+    	return "redirect:/web/crm/help/list";    
     }
     
     /**
@@ -116,15 +119,11 @@ public class CrmHelpController extends BaseContoller{
      * @param obj
      * @return
      */
-    @RequestMapping("/type/query")
+    @RequestMapping("/question/type/query")
     @ResponseBody
-    public List<CrmHelp> queryQuestionType(CrmHelp obj)throws Exception{
-    	List<CrmHelp> list = crmHelpService.queryQuestionListById(obj);
-    	 CrmHelp crmHelp = new CrmHelp();
-    	 crmHelp.setCrmHelpId("other");
-    	 crmHelp.setCrmHelpTypeId("其他");
-    	 list.add(crmHelp);
-		return list;   	
+    public List<CrmHelpType> queryHelpType(CrmHelpType obj)throws Exception{
+    	List<CrmHelpType> typeList = crmHelpTypeService.queryTypeList(obj);
+		return typeList;   	
     }
     
     /**
@@ -136,8 +135,17 @@ public class CrmHelpController extends BaseContoller{
      */
     @RequestMapping("/type/list")
     public String queryHelpTypeList(Model model, CrmHelpType crmHelpType) throws Exception{
+    	if(crmHelpType.getPageNum() == null){
+    		crmHelpType.setPageNum(1);
+    		crmHelpType.setPageSize(10);
+		}
+		if(StringUtils.isEmpty(crmHelpType.getOrderby())){
+			crmHelpType.setOrderby("created_date desc");
+		}
+
     	PageInfo<CrmHelpType> crmHelpTypeList = crmHelpTypeService.queryCrmHelpTypePage(crmHelpType);
-    	model.addAttribute("crmHelpTypeList", crmHelpTypeList);
+    	model.addAttribute("pageInfo", crmHelpTypeList);
+    	model.addAttribute("crmHelpType", crmHelpType);
     	return "webpage/poms/crm/help_type_list";
     }
     
@@ -152,50 +160,42 @@ public class CrmHelpController extends BaseContoller{
     	crmHelpTypeService.save(obj);
     	return "redirect:/web/crm/help/type/list";    	
     }
-
-
-	/**
-	 * 查询所有分类列表
-	 * @param obj
-	 * @return
-	 * @throws Exception
+    
+    /**
+     * 问题分类删除
+     * @param crmHelpId
+     * @return
+     * @throws Exception
      */
-	@RequestMapping("/type/list/all")
-	public String queryTypeList(CrmHelpType obj,ModelMap map)throws Exception{
-		List<CrmHelpType> crmHelpTypeList = crmHelpTypeService.queryCrmHelpTypeList();
-		map.addAttribute("crmHelpTypeList",crmHelpTypeList);
-		return "redirect:/web/crm/help/type/list";
-	}
-
-	/**
-	 * 查询问题列表
-	 * @param obj
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/list/all")
-	public String queryQuestionListAll(CrmHelp obj,ModelMap map)throws Exception{
-		obj.setIsNotice(GlobalConstant.QuestionNotice.QUESTION);
-		List<CrmHelpType> crmHelpTypeList = crmHelpTypeService.queryCrmHelpTypeList();
-		List<CrmHelp> crmHelpList = crmHelpService.queryQuestionListByName(obj);
-
-		map.addAttribute("crmHelpTypeList",crmHelpTypeList);
-		map.addAttribute("crmHelpList",crmHelpList);
-		return "webpage/crm/hp_queston";
-	}
-
-	/**
-	 * 查询公告列表
-	 * @param obj
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/list/notice")
-	public String queryNoticeListAll(CrmHelp obj,ModelMap map)throws Exception{
-		obj.setIsNotice(GlobalConstant.QuestionNotice.NOTICE);
-		List<CrmHelp> crmHelpList = crmHelpService.queryQuestionListByName(obj);
-		map.addAttribute("crmHelpList",crmHelpList);
-		return "webpage/crm/hp_notice";
-	}
-
+    @RequestMapping("/type/delete")
+    public String deleteType(@RequestParam String crmHelpTypeId) throws Exception{
+    	crmHelpTypeService.delete(crmHelpTypeId);
+        return "redirect:/web/crm/help/type/list";    
+    }
+    
+    /**
+     * 类型编辑
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/type/edit")
+    public String editType(Model model, @RequestParam String crmHelpTypeIdvalue)throws Exception{
+    	CrmHelpType crmHelpType = crmHelpTypeService.editQuery(crmHelpTypeIdvalue);
+    	model.addAttribute("crmHelpType", crmHelpType);
+    	return "webpage/poms/crm/help_type_edit";       	
+    }
+    
+    /**
+     * 类型修改
+     * @param model
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/type/update")
+    public String updateType(Model model,CrmHelpType obj) throws Exception{
+    	obj.setModel(new Date());
+    	crmHelpTypeService.update(obj);
+    	return "redirect:/web/crm/help/type/list";              
+    }
 }

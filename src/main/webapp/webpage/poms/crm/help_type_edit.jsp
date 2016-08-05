@@ -10,27 +10,26 @@
 %>
 <script src="<%=basePath %>/dist/js/crm/help_edit.js"></script>
 <script type="text/javascript">
-/*初始化选择菜单*/
-$(function(){
-	var Id = '${crmHelp.crmHelpTypeId}';
-	$.ajax({
-		url:"../web/crm/help/question/type/query",
-		data:{},
-		async:false,
-		type: "POST",
-		success: function(data){
-			$("#crmHelpTypeId").empty();
-			$("#crmHelpTypeId").append("<option value=''>--全部--</option>");
-			$.each(data,function(i,val){
-				if(val.crmHelpTypeId == Id){
-					$("#crmHelpTypeId").append("<option value='"+val.crmHelpTypeId+"' selected='selected'>"+val.title+"</option>");					
-				}else{
-					$("#crmHelpTypeId").append("<option value='"+val.crmHelpTypeId+"'>"+val.title+"</option>");
-				}
-			});			
-		}
-	})
-})
+//修改  
+function save(){
+        var options ={   
+                url:'../web/crm/help/type/update',   
+                type:'post',                    
+                dataType:'text',
+                success:function(data){
+                    $("#main").html(data);
+                    alert("修改成功");
+                 },error:function(XMLHttpRequest, textStatus, errorThrown) {
+                        
+                  }
+            }    
+        $("#formedit").ajaxSubmit(options);
+}
+    
+//返回
+function returnpage(){
+    loadPage('#main', '../web/crm/help/type/list');
+}
 </script>
 
             <div class="main-content">
@@ -38,7 +37,7 @@ $(function(){
                     <div class="">
                         <div class="page-header">
                             <h1>
-                                                                           编辑常见问题
+                                                                           编辑问题分类
                             </h1>
                         </div>
 
@@ -47,69 +46,44 @@ $(function(){
                                 <!-- PAGE CONTENT BEGINS -->
                                 <form class="form-horizontal" id="formedit">
                                     <div class="form-group">
-                                        <input type="hidden" id="crmHelpId" name="crmHelpId" value="${crmHelp.crmHelpId}"/>
-                                        <label class="col-sm-3 control-label no-padding-right" for="title">标题： </label>
+                                        <input type="hidden" id="crmHelpTypeId" name="crmHelpTypeId" value="${crmHelpType.crmHelpTypeId}"/>
+                                        <label class="col-sm-3 control-label no-padding-right" for="title">分类名称： </label>
                                         <div class="col-sm-4">
-                                            <input type="text" id="title" name="title" placeholder="标题"  class="form-control" value="${crmHelp.title}"/>
+                                            <input type="text" id="title" name="title" placeholder="分类名称"  class="form-control" value="${crmHelpType.title}"/>
                                         </div>
                                     </div>
                                 
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right" for="question">问题： </label>
+                                        <label class="col-sm-3 control-label no-padding-right" for="remark">分类备注： </label>
                                         <div class="col-sm-4">
-                                        <textarea class="limited form-control" id="question" name="question" maxlength="50" style="resize: none;">${crmHelp.question}</textarea>
+                                        <textarea class="limited form-control" id="remark" name="remark" maxlength="50" style="resize: none;">${crmHelpType.remark}</textarea>
                                         </div>
-                                    </div>
+                                    </div>                                                                      
                                     
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right">内容： </label>
-                                        <div class="col-sm-4">
-                                           <textarea class="limited form-control" id="answer" name="answer" maxlength="50" style="resize: none;">${crmHelp.answer}</textarea>                                            
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right" for="crmHelpTypeId">类型：</label>
-                                        <div class="col-sm-4">
-                                            <select class="chosen-select form-control" id="crmHelpTypeId" name="crmHelpTypeId"></select>                                           
-                                        </div>                               
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right" for="isNotice">是否公告： </label>
-                                          
-                                          <div class="col-sm-8">
-										      <div class="radio">
-										      <label>
-											    <input name="isMenu" id="isNotice_yes" type="radio" class="ace" checked="checked" value="2">
-											      <span class="lbl">是</span>
-										       </label>
-										 <label>
-											<input name="isMenu" id="isNotice_no" type="radio" class="ace" value="1">
-											<span class="lbl">否</span>
-										</label>
-									</div>
-									</div>
-                                    </div>                                                                     
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right" for="issuer">发布人： </label>
-
-                                        <div class="col-sm-4">
-                                            <input type="text" id="issuer" name="issuer" placeholder="发布人" class="form-control" value="${crmHelp.issuer}"/>
-                                        </div>
-                                    </div> 
-                                    
-                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right" for="createdDate">发布时间：</label>
+                                                                                                                                      
+                                     <%-- <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="createdDate">添加时间：</label>
                                         <div class="col-sm-4">
                                          <div class="input-group">
-														<input class="form-control date-picker" name="expiry_date_frompage" id="datepicker" type="text"  value="<fmt:formatDate value="${crmHelp.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/>"/>														                                										
+														<input class="form-control date-picker" name="expiry_date_frompage" id="datepicker" type="text"  value="<fmt:formatDate value="${crmHelpType.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/>"/>														                                										
 														<span class="input-group-addon">
 																<i class="fa fa-calendar bigger-110"></i>
 														</span>
 											</div>
                                         </div>                               
                                     </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right" for="updatedDate">修改时间：</label>
+                                        <div class="col-sm-4">
+                                         <div class="input-group">
+														<input class="form-control date-picker" name="expiry_date_frompage" id="datepicker" type="text"  value="<fmt:formatDate value="${crmHelpType.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/>"/>														                                										
+														<span class="input-group-addon">
+																<i class="fa fa-calendar bigger-110"></i>
+														</span>
+											</div>
+                                        </div>                               
+                                    </div> --%>
                                                                                                                                           
                                     <div class="clearfix form-actions">
                                         <div class="col-md-offset-3 col-md-9">

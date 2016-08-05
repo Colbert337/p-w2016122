@@ -13,10 +13,10 @@ import com.sysongy.poms.crm.service.CrmHelpTypeService;
 
 @Service
 public class CrmHelpTypeServiceImpl implements CrmHelpTypeService{
-	
+    
 	@Autowired
 	private CrmHelpTypeMapper crmHelpTypeMapper;
-    
+	
 	/**
 	 * 分页列表
 	 */
@@ -27,17 +27,51 @@ public class CrmHelpTypeServiceImpl implements CrmHelpTypeService{
 		PageInfo<CrmHelpType> pageInfo = new PageInfo<CrmHelpType>(list);
 		return pageInfo;
 	}
-	
-    /**
+
+	/**
      * 类型保存
      */
 	@Override
 	public Integer save(CrmHelpType obj) throws Exception {
 		return crmHelpTypeMapper.add(obj);
 	}
+    
+    /**
+     * 问题类型
+     */
+	@Override
+	public List<CrmHelpType> queryTypeList(CrmHelpType obj) throws Exception {
+		return crmHelpTypeMapper.queryHelpTypeList(obj);
+	}
 
 	@Override
 	public List<CrmHelpType> queryCrmHelpTypeList() throws Exception {
 		return crmHelpTypeMapper.queryCrmHelpTypeList();
 	}
+    /**
+     * 删除
+     */
+	@Override
+	public void delete(String crmHelpTypeId) throws Exception {
+		crmHelpTypeMapper.deleteCrmHelpType(crmHelpTypeId);		
+	}
+    /**
+     * 编辑查询
+     */
+	@Override
+	public CrmHelpType editQuery(String crmHelpTypeId) throws Exception {
+		return crmHelpTypeMapper.queryCrmHelpTypeValue(crmHelpTypeId);		
+	}
+    /**
+     * 更新
+     */
+
+	@Override
+	public Integer update(CrmHelpType obj) throws Exception {
+		return crmHelpTypeMapper.updateCrmHelpType(obj);
+		
+	}
+
+
+	
 }
