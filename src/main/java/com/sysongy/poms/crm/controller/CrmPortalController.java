@@ -32,7 +32,7 @@ public class CrmPortalController {
     private CrmHelpTypeService crmHelpTypeService;
 
     /**
-     * 列表
+     * 问题列表
      * @param model
      * @param crmHelp
      * @return
@@ -45,5 +45,19 @@ public class CrmPortalController {
         model.addAttribute("crmHelpList", crmHelpList);
         return "webpage/crm/hp_queston";
     }
+    /**
+     * 公告列表
+     * @param model
+     * @param crmHelp
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/list/notice")
+    public String queryNoticeList(Model model, CrmHelp crmHelp) throws Exception{
 
+        List<Map<String, Object>> crmHelpList = crmHelpService.queryCrmHelpList(crmHelp);
+        crmHelp.setIsNotice(2);
+        model.addAttribute("crmHelpList", crmHelpList);
+        return "webpage/crm/hp_notice";
+    }
 }
