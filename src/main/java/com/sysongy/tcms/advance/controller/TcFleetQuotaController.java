@@ -13,6 +13,8 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
 import com.sysongy.tcms.advance.model.TcTransferAccount;
@@ -69,6 +71,8 @@ public class TcFleetQuotaController extends BaseContoller {
     SysUserAccountService userAccountService;
     @Autowired
     TcTransferAccountService tcTransferAccountService;
+    @Autowired
+    private UsysparamService service;
 
     /**
      * 查询车辆列表
@@ -799,7 +803,10 @@ public class TcFleetQuotaController extends BaseContoller {
                     String goodsType = "";
                     if(quotaMap.get("goods_type") != null){
                         goodsType = quotaMap.get("goods_type").toString();
-                        goodsType = GlobalConstant.getGasCardType(goodsType);
+                        Usysparam usysparam = service.queryUsysparamByCode("CARDTYPE",goodsType);
+                        if(usysparam != null){
+                            goodsType = usysparam.getMname();
+                        }
                     }
                     String price = "";
                     if(quotaMap.get("price") != null){
@@ -1012,7 +1019,10 @@ public class TcFleetQuotaController extends BaseContoller {
                     String goodsType = "";
                     if(quotaMap.get("goods_type") != null){
                         goodsType = quotaMap.get("goods_type").toString();
-                        goodsType = GlobalConstant.getGasCardType(goodsType);
+                        Usysparam usysparam = service.queryUsysparamByCode("CARDTYPE",goodsType);
+                        if(usysparam != null){
+                            goodsType = usysparam.getMname();
+                        }
                     }
                     String price = "";
                     if(quotaMap.get("price") != null){
@@ -1221,7 +1231,10 @@ public class TcFleetQuotaController extends BaseContoller {
                     String goodsType = "";
                     if(quotaMap.get("goods_type") != null){
                         goodsType = quotaMap.get("goods_type").toString();
-                        goodsType = GlobalConstant.getGasCardType(goodsType);
+                        Usysparam usysparam = service.queryUsysparamByCode("CARDTYPE",goodsType);
+                        if(usysparam != null){
+                            goodsType = usysparam.getMname();
+                        }
                     }
                     String price = "";
                     if(quotaMap.get("price") != null){
