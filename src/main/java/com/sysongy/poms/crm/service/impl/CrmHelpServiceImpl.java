@@ -85,7 +85,15 @@ public class CrmHelpServiceImpl implements CrmHelpService{
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
-	
+
+	/**
+	 * 列表
+	 */
+	@Override
+	public List<Map<String, Object>> queryCrmHelpList(CrmHelp obj) throws Exception {
+		List<Map<String, Object>> list = crmHelpMapper.queryForPage(obj);
+		return list;
+	}
     /**
      * 问题类型信息
      */

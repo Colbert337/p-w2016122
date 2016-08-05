@@ -30,6 +30,8 @@ public interface CrmHelpService {
     public Integer save(CrmHelp obj)throws Exception;//保存
     
     public PageInfo<Map<String, Object>> queryCrmHelpPage(CrmHelp obj) throws Exception;//分页
+
+    public List<Map<String, Object>> queryCrmHelpList(CrmHelp obj) throws Exception;//分页
     
     public List<CrmHelp> queryQuestionListById(CrmHelp obj) throws Exception;//查询问题类型信息
     
