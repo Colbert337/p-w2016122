@@ -30,6 +30,14 @@ $(function(){
 			});
 		}
 	})
+	var isNotice = '${crmHelp.isNotice}';
+	if(isNotice == ""){
+		$("#isNotice").val("");
+	}else if(isNotice == "2"){
+		$("#isNotice").val("2");
+	}else if(isNotice == "1"){
+		$("#isNotice").val("1");
+	} 
 })
 </script>
 
@@ -90,11 +98,11 @@ $(function(){
                                         <div class="col-sm-4">
                                             <div class="radio">
 										<label>
-											<input name="isMenu" id="isNotice_yes" type="radio" class="ace" checked="checked" value="2">
+											<input name="isNotice" id="isNotice_yes" type="radio" class="ace" value="2">
 											<span class="lbl">是</span>
 										</label>
 										<label>
-											<input name="isMenu" id="isNotice_no" type="radio" class="ace" value="1">
+											<input name="isNotice" id="isNotice_no" type="radio" class="ace" value="1">
 											<span class="lbl">否</span>
 										</label>
 									        </div>

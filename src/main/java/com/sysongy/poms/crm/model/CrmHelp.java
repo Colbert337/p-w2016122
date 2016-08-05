@@ -25,7 +25,7 @@ public class CrmHelp extends BaseModel{
 
     private Integer isDeleted;
     
-    @DateTimeFormat(pattern="yyyy-MM-dd") 
+    @DateTimeFormat(pattern="MM/dd/yyyy") 
     private Date createdDate;
     
     @DateTimeFormat(pattern="yyyy-MM-dd") 
