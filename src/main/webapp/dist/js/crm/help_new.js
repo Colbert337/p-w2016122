@@ -76,7 +76,15 @@ $("#formnew").bootstrapValidator({
                      message: '内容不能超过50个字符'
                  }
              }
-         },                   
+         }, 
+         crmHelpTypeId: {
+        	    message: 'The cardno is not valid',
+				validators: {
+					notEmpty: {
+						message: '类型不能为空'
+					}
+				}
+			},
          issuer: {
             message: 'The cardno is not valid',
             validators: {
