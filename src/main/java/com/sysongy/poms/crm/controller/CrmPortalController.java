@@ -37,12 +37,11 @@ public class CrmPortalController {
      * 问题列表和分类查询
      * @param model
      * @param crmHelp
-     * @param crmHelpType
      * @return
      * @throws Exception
      */
     @RequestMapping("/list/all")
-    public String queryAllList(Model model, CrmHelp crmHelp) throws Exception{
+    public String queryAllList(Model model, CrmHelp crmHelp, CrmHelpType crmHelpType) throws Exception{
 
         List<Map<String, Object>> crmHelpList = crmHelpService.queryCrmHelpList(crmHelp);
         model.addAttribute("crmHelpList", crmHelpList);
@@ -69,8 +68,6 @@ public class CrmPortalController {
    	    List<CrmHelp> crmHelpList = crmHelpService.queryCrmHelpServiceList(crmHelpTypeId);
     	model.addAttribute("crmHelpList", crmHelpList);
 
-		return "webpage/crm/hp_queston";
-   }
         model.addAttribute("crmHelpList", crmHelpList);
         return "webpage/crm/hp_queston";
     }
