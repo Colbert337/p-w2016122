@@ -37,7 +37,9 @@
                 <div>司集服务公告</div>
             </div>
             <div class="service-notice">
+                <h3 style="text-align: center">公告标题</h3>
                <c:forEach items="${noticeInfoList}" var="list">${list.answer}</c:forEach>
+                <div style="text-align: right">2016-08-08</div>
             </div>
         </div>
 	</div>
