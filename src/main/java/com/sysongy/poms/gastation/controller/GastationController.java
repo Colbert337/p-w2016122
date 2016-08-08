@@ -914,4 +914,105 @@ public class GastationController extends BaseContoller{
 		}
 	}
 	
+	@RequestMapping("/gastationConsumeReport")
+	public String gastationConsumeReport(ModelMap map, SysOrder order) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_consumecollectreport";
+
+		try {
+			if(order.getPageNum() == null){
+				order.setPageNum(1);
+				order.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(order.getOrderby())){
+				order.setOrderby("sys_gas_station_id desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = service.gastionConsumeReport(order);
+			PageInfo<Map<String, Object>> total = service.gastionConsumeReportTotal(order);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("order", order);
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+
+	@RequestMapping("/gastationConsumeReport/import")
+	public String transportionConsumeReportImport(ModelMap map, SysOrder order, HttpServletResponse response) throws IOException {
+		 try {
+			 	order.setPageNum(1);
+			 	order.setPageSize(1048576);
+
+				if(StringUtils.isEmpty(order.getOrderby())){
+					order.setOrderby("sys_gas_station_id desc");
+				}
+
+				PageInfo<Map<String, Object>> pageinfo = service.gastionConsumeReport(order);
+				List<Map<String, Object>> list = pageinfo.getList();
+
+	            int cells = 0 ; // 记录条数
+
+	            if(list != null && list.size() > 0){
+	                cells += list.size();
+	            }
+	            OutputStream os = response.getOutputStream();
+	            ExportUtil reportExcel = new ExportUtil();
+
+	            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+	            downLoadFileName = "加注站充值汇总_" + downLoadFileName;
+
+	            try {
+	            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
+	            } catch (UnsupportedEncodingException e1) {
+	                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+	            }
+
+	            String[][] content = new String[cells+1][9];//[行数][列数]
+	            //第一列
+	            content[0] = new String[]{"加注站编号","加注站名称","消费金额","冲红金额","运管人员","销售人员"};
+
+	            int i = 1;
+	            if(list != null && list.size() > 0){
+	            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+	            		 
+	            		String sys_gas_station_id = tmpMap.get("sys_gas_station_id")==null?"":tmpMap.get("sys_gas_station_id").toString();
+	            		String gas_station_name = tmpMap.get("gas_station_name")==null?"":tmpMap.get("gas_station_name").toString();
+	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+	            		String hedgefund = tmpMap.get("hedgefund")==null?"":tmpMap.get("hedgefund").toString();
+	            		String salesmen_name = tmpMap.get("salesmen_name")==null?"":tmpMap.get("salesmen_name").toString();
+	            		String operations_name = tmpMap.get("operations_name")==null?"":tmpMap.get("operations_name").toString();
+
+	                    content[i] = new String[]{sys_gas_station_id,gas_station_name,cash,hedgefund,salesmen_name,operations_name};
+	                    i++;
+	                }
+	            }
+
+	            String [] mergeinfo = new String []{"0,0,0,0"};
+	            //单元格默认宽度
+	            String sheetName = "加注站充值汇总";
+	            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+	        } catch (Exception e) {
+	            logger.error("", e);
+	        }
+
+	        return null;
+   }
+	
 }

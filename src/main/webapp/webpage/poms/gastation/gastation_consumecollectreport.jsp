@@ -8,11 +8,11 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/transportion/transportion_rechargecollectreport.js"></script>
+<script src="<%=basePath %>/dist/js/gastation/gastation_consumecollectreport.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation" action="<%=basePath%>/web/transportion/transportionRechargeReport/import">
+	<form id="formgastation" action="<%=basePath%>/web/gastation/gastationConsumeReport/import">
 	<input type="hidden" name="downloadreport" value="true"/>
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
@@ -22,30 +22,25 @@
 
 					<div class="page-header">
 						<h1>
-							运输公司充值汇总
+							加注站消费汇总
 						</h1>
 					</div>
 					
 					<div class="search-types">
 						<div class="item">
-							<label>运输公司编号：</label>
-							<input type="text" name="stationId" placeholder="运输公司编号/运输公司名称" maxlength="20" value="${loger.stationId}"/>
+							<label>加注站编号：</label>
+							<input type="text" name="channelNumber" placeholder="加注站编号/加注站名称" maxlength="20" value="${order.channelNumber}"/>
 						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${loger.startDate}" readonly="readonly"/>
+								<input type="text" class="" name="startDate" value="${order.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="endDate" value="${loger.endDate}" readonly="readonly"/>
+								<input type="text" class="" name="endDate" value="${order.endDate}" readonly="readonly"/>
 							</div>			
 						</div>
-						
-						<%--<div class="item">
-						    <label>充值渠道：</label>
-							<input type="text" name="deal_number" placeholder="充值渠道"  maxlength="20" value="${order.channel}"/>
-						</div>--%>
 
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
@@ -65,7 +60,7 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">运输公司充值汇总</div>
+					<div class="table-header">加注站消费汇总</div>
 
 					<div>
 						<div class="alert alert-info alert-mt">
@@ -80,11 +75,12 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'sys_transportion_id');commitForm();" id="sys_transportion_id_order">运输公司编号</th>
-									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
-									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">充值金额</th>
-									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">运管人员</th>
-									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">销售人员</th>
+									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
+									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">消费金额</th>
+									<th onclick="orderBy(this,'hedgefund');commitForm();" id="hedgefund_order">冲红金额</th>
+ 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
+ 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
 								</tr>
 							</thead>
 
@@ -94,16 +90,17 @@
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
+											<input type="checkbox" class="ace" id="pks" value="${list.sys_gas_station_id}"/> 
 											<span class="lbl"></span>
 										</label>
 									</td>
 
-									<td>${list.sys_transportion_id}</td>
-									<td>${list.transportion_name}</td>
-									<td>${list.deposit}</td>
-									<td>${list.salesmen_name}</td>
+									<td>${list.sys_gas_station_id}</td>
+									<td>${list.gas_station_name}</td>
+									<td>${list.cash}</td>
+									<td>${list.hedgefund}</td>
 									<td>${list.operations_name}</td>
+									<td>${list.salesmen_name}</td>
 								</tr>
 							</c:forEach>
 							</tbody>

@@ -2,6 +2,7 @@ package com.sysongy.poms.gastation.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.gastation.model.Gastation;
@@ -29,5 +30,9 @@ public interface GastationService {
 	public String chargeToDriverUpdateGastationPrepay(SysOrder order, String is_discharge) throws Exception;
 	
 	public Integer alertPrepayBalance() throws Exception;
+	
+	public PageInfo<Map<String, Object>> gastionConsumeReport(SysOrder order)throws Exception;
+    
+	public PageInfo<Map<String, Object>> gastionConsumeReportTotal(SysOrder record) throws Exception;
 
 }
