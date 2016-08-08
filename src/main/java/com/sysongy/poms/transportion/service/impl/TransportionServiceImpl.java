@@ -413,8 +413,24 @@ public class TransportionServiceImpl implements TransportionService {
 	
 	@Override
 	public PageInfo<Map<String, Object>> transportionRechargeReportTotal(SysDepositLog record) {
-		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		PageHelper.startPage(1, 20, record.getOrderby());
 		List<Map<String, Object>> list = transportionMapper.transportionRechargeReportTotal(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> transportionConsumeReport(SysDepositLog record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = transportionMapper.transportionConsumeReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> transportionConsumeReportTotal(SysDepositLog record) {
+		PageHelper.startPage(1, 20, record.getOrderby());
+		List<Map<String, Object>> list = transportionMapper.transportionConsumeReportTotal(record);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
