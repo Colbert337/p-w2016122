@@ -3,6 +3,7 @@ package com.sysongy.poms.transportion.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.transportion.model.Transportion;
 
@@ -29,5 +30,10 @@ public interface TransportionMapper {
     List<Map<String,Object>> transportionRechargeReport(SysDepositLog record);
     
     List<Map<String,Object>> transportionRechargeReportTotal(SysDepositLog record);
+    
+    List<Map<String,Object>> transportionConsumeReport(SysDepositLog record);
+    
+    List<Map<String,Object>> transportionConsumeReportTotal(SysDepositLog record);
+    
     
 }

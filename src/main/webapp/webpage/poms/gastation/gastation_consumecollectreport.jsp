@@ -8,33 +8,28 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/advance/personal_log.js"></script>
+<script src="<%=basePath %>/dist/js/gastation/gastation_consumecollectreport.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation" action="<%=basePath%>/web/tcms/fleetQuota/list/report/personal/import">
+	<form id="formgastation" action="<%=basePath%>/web/gastation/gastationConsumeReport/import">
+	<input type="hidden" name="downloadreport" value="true"/>
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 	<div class="row">
 		<div class="col-xs-12">
+
 					<div class="page-header">
 						<h1>
-							个人消费
+							加注站消费汇总
 						</h1>
 					</div>
+					
 					<div class="search-types">
 						<div class="item">
-							<label>交易类型：</label>
-							<select id="is_discharge" name="is_discharge"  maxlength="20" >
-								<option value="">全部</option>
-								<option value="0">消费</option>
-								<option value="1">冲红</option>
-							</select>
-						</div>
-						<div class="item">
-							<label>姓名/手机号码：</label>
-							<input type="text" name="orderNumber" placeholder="姓名/手机号码"  maxlength="20" value="${order.orderNumber}"/>
+							<label>加注站编号：</label>
+							<input type="text" name="channelNumber" placeholder="加注站编号/加注站名称" maxlength="20" value="${order.channelNumber}"/>
 						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
@@ -46,11 +41,6 @@
 								<input type="text" class="" name="endDate" value="${order.endDate}" readonly="readonly"/>
 							</div>			
 						</div>
-						
-						<%--<div class="item">
-						    <label>充值渠道：</label>
-							<input type="text" name="deal_number" placeholder="充值渠道"  maxlength="20" value="${order.channel}"/>
-						</div>--%>
 
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
@@ -70,66 +60,47 @@
 						<div class="pull-right tableTools-container"></div>
 					</div>
 					
-					<div class="table-header">个人报表列表</div>
+					<div class="table-header">加注站消费汇总</div>
 
 					<div>
 						<div class="alert alert-info alert-mt">
-							<span class="bigger-120">消费总金额：${totalCash}元</span>
+							<span class="bigger-120">充值总金额：${totalCash}元</span>
 						</div>
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<%--<th class="center">
+									<th class="center">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
 										</label>
-									</th>--%>
-									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
-									<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">订单类型</th>
-									<th>交易类型</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
-									<th onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">姓名</th>
-									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">手机号码</th>
+									</th>
+									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
 									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
-									<th onclick="orderBy(this,'goods_type');commitForm();" id="goods_type_order">商品名称</th>
-									<th onclick="orderBy(this,'price');commitForm();" id="price_order">结算单价</th>
-									<th onclick="orderBy(this,'number');commitForm();" id="number_order">消费数量</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="sum_price_order">消费金额</th>
-									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
-									<th>备注</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">消费金额</th>
+									<th onclick="orderBy(this,'hedgefund');commitForm();" id="hedgefund_order">冲红金额</th>
+ 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
+ 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
 								</tr>
 							</thead>
 
 							<tbody>
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
-								<tr id="listobj" <c:if test="${list.is_discharge == 1}"> style="color: #A60000;" </c:if> >
-									<%--<td class="center">
+								<tr id="listobj">
+									<td class="center">
 										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
+											<input type="checkbox" class="ace" id="pks" value="${list.sys_gas_station_id}"/> 
 											<span class="lbl"></span>
 										</label>
-									</td>--%>
-
-									<td>${list.orderNumber}</td>
-									<%--<td>${list.dealNumber}</td>--%>
-									<%--<td>${list.orderType}</td>--%>
-									<td><s:Code2Name mcode="${list.orderType}" gcode="ORDER_TYPE"></s:Code2Name></td>
-									<td>
-										<c:if test="${list.is_discharge == 0}">消费</c:if>
-										<c:if test="${list.is_discharge == 1}">冲红</c:if>
 									</td>
-									<td>${list.cash}</td>
-									<td>${list.full_name}</td>
-									<td>${list.mobile_phone}</td>
+
+									<td>${list.sys_gas_station_id}</td>
 									<td>${list.gas_station_name}</td>
-									<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
-									<td>${list.price}</td>
-									<td>${list.number}</td>
-									<td><c:if test="${list.is_discharge == 1}"> -</c:if>${list.sumPrice}</td>
-									<td><fmt:formatDate value="${list.orderDate}" type="both"/></td>
-									<td>${list.remark}</td>
+									<td>${list.cash}</td>
+									<td>${list.hedgefund}</td>
+									<td>${list.operations_name}</td>
+									<td>${list.salesmen_name}</td>
 								</tr>
 							</c:forEach>
 							</tbody>
@@ -169,17 +140,3 @@
 	<!-- /.row -->
 	</form>
 </div>
-<script type="text/javascript">
-	$(function(){
-		/*消费类型*/
-		var is_discharge = '${order.is_discharge}';
-		/*alert("is_discharge:"+is_discharge);*/
-		if(is_discharge == ""){
-			$("#is_discharge").val("");
-		}else if(is_discharge == "0"){
-			$("#is_discharge").val("0");
-		}else if(is_discharge == "1"){
-			$("#is_discharge").val("1");
-		}
-	})
-</script>

@@ -5,19 +5,22 @@ function init(){
     
 //编辑
 function preUpdate(obj){        
-        var crmHelpId = $(obj).parents('tr').children("td").eq(0).text();        
-        loadPage('#main', '../web/crm/help/edit?crmHelpIdvalue='+crmHelpId);
+        var crmHelpTypeId = $(obj).parents('tr').children("td").eq(2).text();        
+        loadPage('#main', '../web/crm/help/edit?crmHelpIdvalue='+crmHelpTypeId);
     }
-    
-////查询
-//function commitForm(obj){
-//	   var value = $('#select option:selected').val(); 
-//	   loadPage('#main', '../web/crm/help/list?selectval='+value);
-//}
-//查询
-function commitForm(obj){	
-	var options ={   
-            url:'../web/crm/help/list',
+
+window.onload = setCurrentPage();
+//问题类型查询
+function commitForm(obj){
+	if(typeof obj == "undefined") {
+		$("#pageNum").val("1");
+	}else{
+		$("#pageNum").val($(obj).text());
+	}
+	$("#listForm").ajaxSubmit(options);
+}	
+	var options ={ 
+			url:'../web/crm/help/list', 
             type:'post',                    
             dataType:'html',
             success:function(data){
@@ -25,28 +28,6 @@ function commitForm(obj){
             },error:function(XMLHttpRequest, textStatus, errorThrown) {}
 	}
 	
-	$("#listForm").ajaxSubmit(options);
-}
-//function commitForm(){
-//	var strvalue=$("#select").val();
-//	$.ajax({
-//	url: "../web/crm/help/list?crmHelp="+strvalue,
-//	type: "POST",
-//	dataType: "html",
-//	success: function (data) {
-//		 $("#main").html(data);
-//	}
-//	});
-//	}
-//弹框
-function addQuestion(){
-	$("#helpModel").modal('show');		
-}
-//取消弹框
-function closeDialog(divId){
-	$("#helpModel").modal('hide');	
-}
-
 //保存
 function save(){
         var options ={   
@@ -60,6 +41,32 @@ function save(){
                         
                   }
             }    
-        $("#formsave").ajaxSubmit(options);
-        $("#helpModel").modal('hide');	
-    }
+        $("#formsave").ajaxSubmit(options);      
+}
+
+function prepage(formid){
+	//如果是第一页
+	if(parseInt($("#pageNum").val()) <= 1){
+		return ;
+	}
+
+	//设置当前页-1
+	$("#pageNum").val(parseInt($("#pageNum").val())-1);
+
+	$(formid).ajaxSubmit(options);
+}
+
+function nextpage(formid){
+	//如果是最后一页
+	if(parseInt($("#pageNum").val()) >= parseInt($("#pageNumMax").val())){
+		return ;
+	}
+	//设置当前页+1
+	$("#pageNum").val(parseInt($("#pageNum").val())+1);
+	$(formid).ajaxSubmit(options);
+}
+
+ //时间插件   
+$(function() {
+   $("#datepicker").datepicker();
+});

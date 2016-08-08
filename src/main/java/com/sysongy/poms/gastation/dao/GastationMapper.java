@@ -1,8 +1,10 @@
 package com.sysongy.poms.gastation.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.order.model.SysOrder;
 
 public interface GastationMapper {
 
@@ -25,4 +27,8 @@ public interface GastationMapper {
 	Gastation findGastationid(String province_id);
 	
 	List<Gastation> getAllStationByArea(String areacode);
+	
+	List<Map<String,Object>> gastionConsumeReport(SysOrder record);
+    
+    List<Map<String,Object>> gastionConsumeReportTotal(SysOrder record);
 }

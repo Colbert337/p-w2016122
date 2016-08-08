@@ -63,4 +63,8 @@ public interface TransportionService {
 	public PageInfo<Map<String, Object>> transportionRechargeReport(SysDepositLog record);
 	
 	public PageInfo<Map<String, Object>> transportionRechargeReportTotal(SysDepositLog record);
+	
+	public PageInfo<Map<String, Object>> transportionConsumeReport(SysDepositLog record);
+	
+	public PageInfo<Map<String, Object>> transportionConsumeReportTotal(SysDepositLog record);
 }

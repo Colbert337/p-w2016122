@@ -1300,7 +1300,7 @@ public class TransportionController extends BaseContoller{
 				loger.setPageSize(10);
 			}
 			if(StringUtils.isEmpty(loger.getOrderby())){
-				loger.setOrderby("station_id desc");
+				loger.setOrderby("sys_transportion_id desc");
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = transportionService.transportionRechargeReport(loger);
@@ -1327,4 +1327,164 @@ public class TransportionController extends BaseContoller{
 		}
 	}
 
+	@RequestMapping("/transportionRechargeReport/import")
+	public String transportionRechargeReportImport(ModelMap map, SysDepositLog loger, HttpServletResponse response) throws IOException {
+		 try {
+			 	loger.setPageNum(1);
+			 	loger.setPageSize(1048576);
+
+				if(StringUtils.isEmpty(loger.getOrderby())){
+					loger.setOrderby("sys_transportion_id desc");
+				}
+
+				PageInfo<Map<String, Object>> pageinfo = transportionService.transportionRechargeReport(loger);
+				List<Map<String, Object>> list = pageinfo.getList();
+
+	            int cells = 0 ; // 记录条数
+
+	            if(list != null && list.size() > 0){
+	                cells += list.size();
+	            }
+	            OutputStream os = response.getOutputStream();
+	            ExportUtil reportExcel = new ExportUtil();
+
+	            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+	            downLoadFileName = "运输公司充值汇总_" + downLoadFileName;
+
+	            try {
+	            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
+	            } catch (UnsupportedEncodingException e1) {
+	                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+	            }
+
+	            String[][] content = new String[cells+1][9];//[行数][列数]
+	            //第一列
+	            content[0] = new String[]{"运输公司编号","运输公司名称","充值金额","运管人员","销售人员"};
+
+	            int i = 1;
+	            if(list != null && list.size() > 0){
+	            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+	            		 
+	            		String sys_transportion_id = tmpMap.get("sys_transportion_id")==null?"":tmpMap.get("sys_transportion_id").toString();
+	            		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
+	            		String deposit = tmpMap.get("deposit")==null?"":tmpMap.get("deposit").toString();
+	            		String salesmen_name = tmpMap.get("salesmen_name")==null?"":tmpMap.get("salesmen_name").toString();
+	            		String operations_name = tmpMap.get("operations_name")==null?"":tmpMap.get("operations_name").toString();
+
+	                    content[i] = new String[]{sys_transportion_id,transportion_name,deposit,salesmen_name,operations_name};
+	                    i++;
+	                }
+	            }
+
+	            String [] mergeinfo = new String []{"0,0,0,0"};
+	            //单元格默认宽度
+	            String sheetName = "运输公司充值汇总";
+	            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+	        } catch (Exception e) {
+	            logger.error("", e);
+	        }
+
+	        return null;
+   }
+	
+	@RequestMapping("/transportionConsumeReport")
+	public String transportionConsumeReport(ModelMap map, SysDepositLog loger) throws Exception{
+		
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transportion_consumecollectreport";
+
+		try {
+			if(loger.getPageNum() == null){
+				loger.setPageNum(1);
+				loger.setPageSize(10);
+			}
+			if(StringUtils.isEmpty(loger.getOrderby())){
+				loger.setOrderby("sys_transportion_id desc");
+			}
+
+			PageInfo<Map<String, Object>> pageinfo = transportionService.transportionConsumeReport(loger);
+			PageInfo<Map<String, Object>> total = transportionService.transportionConsumeReportTotal(loger);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("loger", loger);
+			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+
+	@RequestMapping("/transportionConsumeReport/import")
+	public String transportionConsumeReportImport(ModelMap map, SysDepositLog loger, HttpServletResponse response) throws IOException {
+		 try {
+			 	loger.setPageNum(1);
+			 	loger.setPageSize(1048576);
+
+				if(StringUtils.isEmpty(loger.getOrderby())){
+					loger.setOrderby("sys_transportion_id desc");
+				}
+
+				PageInfo<Map<String, Object>> pageinfo = transportionService.transportionConsumeReport(loger);
+				List<Map<String, Object>> list = pageinfo.getList();
+
+	            int cells = 0 ; // 记录条数
+
+	            if(list != null && list.size() > 0){
+	                cells += list.size();
+	            }
+	            OutputStream os = response.getOutputStream();
+	            ExportUtil reportExcel = new ExportUtil();
+
+	            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+	            downLoadFileName = "运输公司充值汇总_" + downLoadFileName;
+
+	            try {
+	            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
+	            } catch (UnsupportedEncodingException e1) {
+	                response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+	            }
+
+	            String[][] content = new String[cells+1][9];//[行数][列数]
+	            //第一列
+	            content[0] = new String[]{"运输公司编号","运输公司名称","充值金额","运管人员","销售人员"};
+
+	            int i = 1;
+	            if(list != null && list.size() > 0){
+	            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+	            		 
+	            		String sys_transportion_id = tmpMap.get("sys_transportion_id")==null?"":tmpMap.get("sys_transportion_id").toString();
+	            		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
+	            		String deposit = tmpMap.get("deposit")==null?"":tmpMap.get("deposit").toString();
+	            		String salesmen_name = tmpMap.get("salesmen_name")==null?"":tmpMap.get("salesmen_name").toString();
+	            		String operations_name = tmpMap.get("operations_name")==null?"":tmpMap.get("operations_name").toString();
+
+	                    content[i] = new String[]{sys_transportion_id,transportion_name,deposit,salesmen_name,operations_name};
+	                    i++;
+	                }
+	            }
+
+	            String [] mergeinfo = new String []{"0,0,0,0"};
+	            //单元格默认宽度
+	            String sheetName = "运输公司充值汇总";
+	            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+	        } catch (Exception e) {
+	            logger.error("", e);
+	        }
+
+	        return null;
+   }
 }
