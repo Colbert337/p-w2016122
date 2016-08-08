@@ -107,4 +107,11 @@ public class CrmHelpServiceImpl implements CrmHelpService{
 	public List<CrmHelp> queryQuestionListByName(CrmHelp obj) throws Exception {
 		return crmHelpMapper.queryQuestionListByName(obj);
 	}
+    /**
+     * 公告信息查询
+     */
+	@Override
+	public List<CrmHelp> queryCrmHelpNoticeInfo(String obj) throws Exception {
+		return crmHelpMapper.queryCrmHelpNoticInfo(obj);
+	}
 }
