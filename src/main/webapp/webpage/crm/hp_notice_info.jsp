@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -36,7 +37,7 @@
                 <div>司集服务公告</div>
             </div>
             <div class="service-notice">
-                文章正文……
+               <c:forEach items="${noticeInfoList}" var="list">${list.answer}</c:forEach>
             </div>
         </div>
 	</div>

@@ -76,7 +76,7 @@ $("#formnew").bootstrapValidator({
                      message: '内容不能超过50个字符'
                  }
              }
-         },
+         },                   
          issuer: {
             message: 'The cardno is not valid',
             validators: {

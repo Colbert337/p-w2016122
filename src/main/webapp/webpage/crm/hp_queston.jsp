@@ -37,7 +37,7 @@
                 <div>司集帮助中心</div>
             </div>
             <div class="help-menu">
-                <div class="help-menu-title">问题分类：</div>
+                <div class="help-menu-title"><a href="<%=basePath %>/portal/crm/help/list/all">问题分类：</a></div>
                 <c:forEach items="${crmHelpTypeList}" var="typeList">
                 <ul>
                     <li><a href="<%=basePath %>/portal/crm/help/type/list?crmHelpTypeId=${typeList.crmHelpTypeId}">${typeList.title}</a></li>                  
