@@ -88,7 +88,7 @@
 									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
 									<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">订单类型</th>
 									<th>交易类型</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<%--<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>--%>
 									<th onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">姓名</th>
 									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">手机号码</th>
 									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
@@ -120,7 +120,7 @@
 										<c:if test="${list.is_discharge == 0}">消费</c:if>
 										<c:if test="${list.is_discharge == 1}">冲红</c:if>
 									</td>
-									<td>${list.cash}</td>
+									<%--<td>${list.cash}</td>--%>
 									<td>${list.full_name}</td>
 									<td>${list.mobile_phone}</td>
 									<td>${list.gas_station_name}</td>
