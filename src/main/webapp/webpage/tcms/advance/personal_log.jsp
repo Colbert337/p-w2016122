@@ -39,11 +39,11 @@
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${orderNumber.startDate}" readonly="readonly"/>
+								<input type="text" class="" name="startDate" value="${order.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="endDate" value="${orderNumber.endDate}" readonly="readonly"/>
+								<input type="text" class="" name="endDate" value="${order.endDate}" readonly="readonly"/>
 							</div>			
 						</div>
 						
@@ -127,7 +127,7 @@
 									<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td>${list.price}</td>
 									<td>${list.number}</td>
-									<td>${list.cash}</td>
+									<td><c:if test="${list.is_discharge == 1}"> -</c:if>${list.sumPrice}</td>
 									<td><fmt:formatDate value="${list.orderDate}" type="both"/></td>
 									<td>${list.remark}</td>
 								</tr>

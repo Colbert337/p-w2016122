@@ -1,16 +1,16 @@
 package com.sysongy.poms.crm.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.card.model.GasCard;
-import com.sysongy.poms.crm.dao.CrmHelpMapper;
-import com.sysongy.poms.crm.model.CrmHelp;
-import com.sysongy.poms.crm.service.CrmHelpService;
-
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.crm.dao.CrmHelpMapper;
+import com.sysongy.poms.crm.model.CrmHelp;
+import com.sysongy.poms.crm.service.CrmHelpService;
 
 /**
  * @FileName: CrmHelpServiceImpl
@@ -32,9 +32,11 @@ public class CrmHelpServiceImpl implements CrmHelpService{
 	 * 列表查询
 	 */
 	@Override
-	public List<CrmHelp> queryCrmHelpServiceList(CrmHelp obj) throws Exception {
+	public PageInfo<CrmHelp> queryCrmHelpServiceList(CrmHelp obj) throws Exception {
+		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
 		List<CrmHelp> list = crmHelpMapper.queryCrmHelp(obj);
-		return list;
+		PageInfo<CrmHelp> pageInfo = new PageInfo<CrmHelp>(list);
+		return pageInfo;
 	}
     
 	/**
@@ -59,8 +61,8 @@ public class CrmHelpServiceImpl implements CrmHelpService{
 	 * 回显信息
 	 */
 	@Override
-	public CrmHelp queryCrmHelp(String crmHelpId) throws Exception {
-		return crmHelpMapper.queryCrmHelpValue(crmHelpId);
+	public CrmHelp queryCrmHelp(String crmHelpTypeId) throws Exception {
+		return crmHelpMapper.queryCrmHelpValue(crmHelpTypeId);
 		
 	}
 
@@ -77,13 +79,21 @@ public class CrmHelpServiceImpl implements CrmHelpService{
 	 * 分页
 	 */
 	@Override
-	public PageInfo<CrmHelp> queryCrmHelpPage(CrmHelp obj) throws Exception {
+	public PageInfo<Map<String, Object>> queryCrmHelpPage(CrmHelp obj) throws Exception {
 		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
-		List<CrmHelp> list = crmHelpMapper.queryForPage(obj);
-		PageInfo<CrmHelp> pageInfo = new PageInfo<CrmHelp>(list);
+		List<Map<String, Object>> list = crmHelpMapper.queryForPage(obj);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
-	
+
+	/**
+	 * 列表
+	 */
+	@Override
+	public List<Map<String, Object>> queryCrmHelpList(CrmHelp obj) throws Exception {
+		List<Map<String, Object>> list = crmHelpMapper.queryForPage(obj);
+		return list;
+	}
     /**
      * 问题类型信息
      */

@@ -5,7 +5,7 @@
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 <!DOCTYPE html>
-<html lang="zh">
+<html class="help service" lang="zh">
 <head>
 	<meta charset="UTF-8">
 	<title>司集云平台</title>
@@ -18,32 +18,25 @@
 </head>
 <body>
 <jsp:include page="common/header.jsp"></jsp:include>
-    <div class="subnav">
-        <div class="inner">
-            <ul>
-                <li class="home"><a href="<%=basePath %>/webpage/crm/index.jsp">首页</a></li>
-                <li class="current"><a href="<%=basePath %>/webpage/crm/download-crm.jsp">CRM下载</a></li>
-                <li><a href="<%=basePath %>/webpage/crm/download-app.jsp">APP下载</a></li>
-            </ul>
-        </div>
+<div class="subnav">
+    <div class="inner">
+        <ul>
+            <li class="home"><a href="<%=basePath %>/webpage/crm/index.jsp">首页</a></li>
+            <li><a href="<%=basePath %>/portal/crm/help/list/all">常见问题</a></li>
+            <li><a href="<%=basePath %>/webpage/crm/hp_service.jsp">客服咨询</a></li>
+            <li class="current"><a href="<%=basePath %>/portal/crm/help/list/notice">服务公告</a></li>
+        </ul>
     </div>
+</div>
 
-	<div class="container-fluid wrap crm">
-		<div class="row">
-            <div class="col-sm-7">
-                <img class="img-responsive" src="images/crm.jpg" alt="">
+	<div class="container-fluid wrap">
+		<div class="help-container">
+            <span class="icon-cs"></span>
+            <div class="title">
+                <div>司集服务公告</div>
             </div>
-            <div class="col-sm-5">
-                <ul class="crm-down">
-                    <li class="title">司集CRM V1.3.0</li>
-                    <li>
-                        <span class="pull-right">2016-6-24</span>
-                        16.5M
-                    </li>
-                    <li>
-                        <a href="http://download.sysongy.net/setup.exe" class="btn btn-block btn-primary btn-lg">下载</a>
-                    </li>
-                </ul>
+            <div class="service-notice">
+                文章正文……
             </div>
         </div>
 	</div>

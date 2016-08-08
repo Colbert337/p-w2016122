@@ -8,14 +8,7 @@
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script>
-$(function() {
-    $("#datepicker").datepicker();
-  }); 
-  
-$(function() {
-    $("#datepicker1").datepicker();
-  });
+<script type="text/javascript">
   
 //保存
 function typesave(){
@@ -32,6 +25,10 @@ function typesave(){
             }    
         $("#formnew").ajaxSubmit(options);
     }
+    
+function returnpage(){
+	loadPage('#main', '../web/crm/help/list');
+} 
 </script>
             <div class="main-content">
                 <div class="main-content-inner">
@@ -49,12 +46,12 @@ function typesave(){
                                 <!-- PAGE CONTENT BEGINS -->
                                 <form class="form-horizontal" id="formnew">
                                    
-                                   <div class="form-group">
+                                 <!--   <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="crmHelpTypeId">分类编号： </label>
                                         <div class="col-sm-4">
                                             <input type="text" name="crmHelpTypeId" placeholder="标题"  class="form-control"/>
                                         </div>
-                                    </div>
+                                    </div> -->
                                    
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="title">分类名称： </label>
@@ -70,23 +67,6 @@ function typesave(){
                                           </div>
                                     </div>
                                     
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right">是否删除： </label>
-                                        <div class="col-sm-4">
-                                           
-                                            <div class="radio">
-										<label>
-											<input name="isMenu" id="isDeleted_yes" type="radio" class="ace"  value="0">
-											<span class="lbl">是</span>
-										</label>
-										<label>
-											<input name="isMenu" id="isDeleted_no" type="radio" class="ace" checked="checked"  value="1">
-											<span class="lbl">否</span>
-										</label>
-									        
-                                        </div>
-                                        </div>
-                                    </div>                               
                                      <!-- <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="createdDate">添加时间： </label>
                                             <div class="col-sm-4">
@@ -186,42 +166,6 @@ $("#formnew").bootstrapValidator({
                 }
             }
         },
-       createdDate: {
-            message: 'The cardno is not valid',
-            validators: { 
-                notEmpty: {
-                    message: '日期不能为空'
-                },
-                callback: {
-                	message: '日期必须大于等于当前日期',
-                	callback: function (value, validator, $field) {
-                         if(compareDate(new Date().toLocaleDateString(),value)){
-                        	 return false;
-                         }
-                         return true;
-                    }
-                }
-            },
-            trigger: 'change'
-        },
-        updatedDate: {
-            message: 'The cardno is not valid',
-            validators: { 
-                notEmpty: {
-                    message: '日期不能为空'
-                },
-                callback: {
-                	message: '日期必须大于等于当前日期',
-                	callback: function (value, validator, $field) {
-                         if(compareDate(new Date().toLocaleDateString(),value)){
-                        	 return false;
-                         }
-                         return true;
-                    }
-                }
-            },
-            trigger: 'change'
-        },
-            }
+     }
 });
 </script>

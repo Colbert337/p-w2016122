@@ -458,6 +458,14 @@ public class CRMCustomerContoller {
             sysDriver.setExpiryDate(new Date());
             sysDriver.setUserName(sysDriver.getMobilePhone());
 
+            Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+            String show_path = (String) prop.get("default_img");
+            String contextPath = request.getContextPath();
+            String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
+            String httpPath = basePath + show_path;
+            sysDriver.setDrivingLice(httpPath);
+            sysDriver.setVehicleLice(httpPath);
+
             String sys_gas_station_id = request.getParameter("sys_gas_station_id");
             if(!StringUtils.isNotEmpty(sys_gas_station_id)){
                 ajaxJson.setSuccess(false);

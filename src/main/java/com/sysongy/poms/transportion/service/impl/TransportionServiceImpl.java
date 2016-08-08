@@ -268,9 +268,16 @@ public class TransportionServiceImpl implements TransportionService {
 		BigDecimal addCash = cash.multiply(new BigDecimal(-1));
 		String cash_success = sysUserAccountService.addCashToAccount(tran_account,addCash,order.getOrderType());
 
-		String remark =  tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
+
+		String remark = "";
+		if(StringUtils.isEmpty(order.getDischarge_reason())){
+			remark = tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。";
+		} else {
+			remark = tran.getTransportion_name()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
+		}
+
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
-		
+		order.setDischarge_reason(remark);
 		return cash_success;
 	}
 	/**

@@ -52,6 +52,7 @@
 	  <result column="order_type" property="orderType" jdbcType="VARCHAR" />
 	  <result column="order_date" property="orderDate" jdbcType="TIMESTAMP" />
 	  <result column="cash" property="cash" jdbcType="DECIMAL" />
+      <result column="sum_price" property="sumPrice" jdbcType="DECIMAL" />
 	  <result column="credit_account" property="creditAccount" jdbcType="VARCHAR" />
 	  <result column="debit_account" property="debitAccount" jdbcType="VARCHAR" />
 	  <result column="charge_type" property="chargeType" jdbcType="VARCHAR" />
@@ -789,7 +790,7 @@
     select sor.order_number,sor.order_type,sor.is_discharge,sor.cash,sd.full_name,sd.mobile_phone,sgs.gas_station_name,
     sog.goods_type,sog.price,sog.number,sor.cash,sog.sum_price,sor.order_date,sod.remark
     from sys_driver sd
-    left join sys_order sor on sd.card_id = sor.consume_card
+    left join sys_order sor on sd.card_id = sor.consume_card or sd.sys_driver_id = sor.credit_account
     left join sys_order_goods sog on sog.order_id = sor.order_id
     left join sys_order_deal sod on sor.order_id = sod.order_id
     left join sys_gas_station sgs on sgs.sys_gas_station_id = sor.operator_source_id
