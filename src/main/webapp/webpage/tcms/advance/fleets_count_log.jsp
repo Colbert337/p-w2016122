@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/transportion/fleets_count_log.js"></script>
+<script src="<%=basePath %>/dist/js/advance/fleets_count_log.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -27,10 +27,10 @@
 				</div>
 
 				<div class="search-types">
-					<div class="item">
+					<%--<div class="item">
 						<label>运输公司编号：</label>
 						<input type="text" name="stationId" placeholder="运输公司编号/运输公司名称" maxlength="20" value="${loger.stationId}"/>
-					</div>
+					</div>--%>
 					<div class="item">
 						<div class="input-daterange top" id="j-input-daterange-top">
 							<label>交易时间:</label>
@@ -69,13 +69,13 @@
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 						<thead>
 						<tr>
-							<th class="center">
+							<%--<th class="center">
 								<label class="pos-rel">
 									<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
 									<span class="lbl"></span>
 								</label>
-							</th>
-							<th onclick="orderBy(this,'sys_transportion_id');commitForm();" id="sys_transportion_id_order">运输公司编号</th>
+							</th>--%>
+							<%--<th onclick="orderBy(this,'sys_transportion_id');commitForm();" id="sys_transportion_id_order">运输公司编号</th>--%>
 							<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 							<th onclick="orderBy(this,'tc_fleet_id');commitForm();" id="tc_fleet_id_order">车队编号</th>
 							<th onclick="orderBy(this,'fleet_name');commitForm();" id="fleet_name_order">车队名称</th>
@@ -91,14 +91,14 @@
 
 						<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 							<tr id="listobj">
-								<td class="center">
+								<%--<td class="center">
 									<label class="pos-rel">
 										<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/>
 										<span class="lbl"></span>
 									</label>
-								</td>
+								</td>--%>
 
-								<td>${list.sys_transportion_id}</td>
+								<%--<td>${list.sys_transportion_id}</td>--%>
 								<td>${list.transportion_name}</td>
 								<td>${list.tc_fleet_id}</td>
 								<td>${list.fleet_name}</td>

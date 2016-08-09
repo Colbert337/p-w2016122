@@ -56,7 +56,7 @@ public class CrmHelpController extends BaseContoller{
 			crmHelp.setOrderby("created_date desc");
 		}
 		
-    	PageInfo<Map<String, Object>> crmHelpList = crmHelpService.queryCrmHelpPage(crmHelp);
+    	PageInfo<Map<String, Object>> crmHelpList = crmHelpService.queryCrmHelpPage(crmHelp);  	
     	model.addAttribute("pageInfo", crmHelpList);
     	model.addAttribute("crmHelp", crmHelp);
         return "webpage/poms/crm/help_list";

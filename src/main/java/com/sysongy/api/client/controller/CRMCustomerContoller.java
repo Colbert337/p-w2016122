@@ -462,7 +462,8 @@ public class CRMCustomerContoller {
             String show_path = (String) prop.get("default_img");
             String contextPath = request.getContextPath();
             String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-            String httpPath = basePath + show_path;
+            String basePathDefault = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort();
+            String httpPath = basePathDefault + show_path;
             sysDriver.setDrivingLice(httpPath);
             sysDriver.setVehicleLice(httpPath);
 

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -36,10 +37,12 @@
             <div class="title">
                 <div>司集服务公告</div>
             </div>
-            <div>
-                <h3 style="text-align: center">公告标题</h3>
-               <c:forEach items="${noticeInfoList}" var="list">${list.answer}</c:forEach>
-                <div style="text-align: right">2016-08-08</div>
+            <div class="service-notice">
+                <c:forEach items="${noticeInfoList}" var="list">
+                <h3 style="text-align: center">${list.title}</h3>
+                    ${list.answer}
+                <div style="text-align: right"><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd"/></div>
+                </c:forEach>
             </div>
         </div>
 	</div>

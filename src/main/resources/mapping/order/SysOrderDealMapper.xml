@@ -81,7 +81,7 @@
       and cc.mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
     </if>
     <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
-      and deal_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
+      and deal_date between #{storage_time_after,jdbcType=VARCHAR} and #{storage_time_before,jdbcType=VARCHAR}
     </if>
     <if test="isCharge != null &amp;&amp; isCharge == 1" >
       and b.order_type='130'
@@ -113,7 +113,7 @@
       and cc.mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
     </if>
     <if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
-      and deal_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{storage_time_before,jdbcType=VARCHAR},' 23:59:59')
+      and deal_date between #{storage_time_after,jdbcType=VARCHAR} and #{storage_time_before,jdbcType=VARCHAR}
     </if>
     <if test="isCharge != null &amp;&amp; isCharge == 1" >
       and (deal_type='131' or deal_type='134') 
@@ -151,7 +151,7 @@
       and sor.channel_number = #{channelNumber}
     </if>
     <if test="operatorSourceType != null &amp;&amp; operatorTargetType != ''">
-      and sor.order_date between CONCAT(#{operatorSourceType,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{operatorTargetType,jdbcType=VARCHAR},' 23:59:59')
+      and sor.order_date between  #{storage_time_after,jdbcType=VARCHAR} and #{storage_time_before,jdbcType=VARCHAR}
     </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
