@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="/WEB-INF/sysongytag.tld" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -131,7 +132,12 @@ $(function(){
                                 <td>${status.index+1}</td>
                                 <td>${list.title}</td>
                                 <td>${list.question}</td>
-                                <td>${list.answer}</td> 
+                                <td answer="${list.answer}">
+                                  <c:choose>
+                                    <c:when test="${fn:length(list.answer)>30}"><a title="${list.answer }" >${fn:substring(list.answer,0,30)}......</a></c:when>
+                                    <c:otherwise>${list.answer}</c:otherwise>
+                                  </c:choose>                              
+                                <td/>                                                           
                                 <td>${list.titleType}</td> 
                                 <td>
                                    <c:choose>

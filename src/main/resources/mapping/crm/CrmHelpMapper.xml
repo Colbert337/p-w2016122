@@ -217,7 +217,7 @@
   </select>
   <!-- 查询公告信息 -->
  <select id="queryCrmHelpNoticInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
-      select answer from crm_help where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
+      select * from crm_help where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
   </select> 
   
   <!-- 回显信息查询 -->
