@@ -48,7 +48,7 @@
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
     select
     <include refid="Base_Column_List" />
-    from gs_gas_price a left join usysparam b
+    from gs_gas_price a left join usysparam b on a.gas_name=b.mcode 
     where 1=1
     <trim>
      <if test="gasName != null &amp;&amp; gasName != ''" >
