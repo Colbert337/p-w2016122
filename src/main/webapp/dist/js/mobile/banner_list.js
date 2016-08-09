@@ -4,6 +4,18 @@
  */
 /*分页相关方法 start*/
 window.onload = setCurrentPage();
+
+var listOptions ={
+    url:'../web/mobile/img/list/page',
+    type:'post',
+    dataType:'html',
+    success:function(data){
+        $("#main").html(data);
+    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+        bootbox.alert("操作失败!")//保存成功弹窗
+    }
+}
+
 function commitForm(obj){
     //设置当前页的值
     if(typeof obj == "undefined") {
@@ -14,16 +26,13 @@ function commitForm(obj){
 
     $("#listForm").ajaxSubmit(listOptions);
 }
-var listOptions ={
-    url:'../web/tcms/vehicle/list/page',
-    type:'post',
-    dataType:'html',
-    success:function(data){
-        $("#main").html(data);
-    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-        bootbox.alert("操作失败!")//保存成功弹窗
-    }
+
+function choose(obj){
+	$("[name=imgType]").val($(obj).val());
+	//loadPage('#main', '../web/sysparam/cashbackList');
+	commitForm();
 }
+
 /*分页相关方法 end*/
 //显示添加用户弹出层add
 function addBanner(){
