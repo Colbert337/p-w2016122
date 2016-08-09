@@ -8,12 +8,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.util.Encoder;
@@ -35,6 +37,8 @@ import com.sysongy.util.UUIDGenerator;
 public class MbBannerController extends BaseContoller{
     @Autowired
     MbBannerService mbBannerService;
+    
+    MbBanner mbBanner;
 
     /**
      * 查询图片列表
@@ -43,6 +47,7 @@ public class MbBannerController extends BaseContoller{
     @RequestMapping("/list/page")
     public String queryMbBannerListPage(MbBanner mbBanner, ModelMap map) throws Exception{
     	
+    	this.mbBanner = mbBanner;
     	String ret = "webpage/poms/mobile/banner_list";
     	
     	PageBean bean = new PageBean();
@@ -96,31 +101,80 @@ public class MbBannerController extends BaseContoller{
      */
     @RequestMapping("/save")
     public String saveBanner(MbBanner mbBanner, ModelMap map) throws Exception{
-        String resultVal = "";
+//        String resultVal = "";
+//        
+//        if(mbBanner != null && mbBanner.getMbBannerId() !=  null && !"".equals(mbBanner.getMbBannerId())){
+//            //修改图片
+//            mbBanner.setUpdatedDate(new Date());
+//            mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+//            mbBannerService.updateBanner(mbBanner);
+//            resultVal = "修改成功！";
+//            resultVal = Encoder.symmetricEncrypto(resultVal);
+//        }else{
+//            //查询当前图片最大序号
+//            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
+//            if(maxBannerIndex != null){
+//                mbBanner.setSort(maxBannerIndex.getSort()+1);
+//            }else{
+//                mbBanner.setSort("0");
+//            }
+//            //添加图片
+//            mbBanner.setMbBannerId(UUIDGenerator.getUUID());
+//            mbBanner.setImgType(mbBanner.getImgType());
+//            mbBannerService.saveBanner(mbBanner);
+//            resultVal = "添加成功！";
+//            resultVal = Encoder.symmetricEncrypto(resultVal);
+//        }
+//        return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
         
-        if(mbBanner != null && mbBanner.getMbBannerId() !=  null && !"".equals(mbBanner.getMbBannerId())){
-            //修改图片
-            mbBanner.setUpdatedDate(new Date());
-            mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-            mbBannerService.updateBanner(mbBanner);
-            resultVal = "修改成功！";
-            resultVal = Encoder.symmetricEncrypto(resultVal);
-        }else{
-            //查询当前图片最大序号
-            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
-            if(maxBannerIndex != null){
-                mbBanner.setSort(maxBannerIndex.getSort()+1);
-            }else{
-                mbBanner.setSort("0");
-            }
-            //添加图片
-            mbBanner.setMbBannerId(UUIDGenerator.getUUID());
-            mbBanner.setImgType(GlobalConstant.ImgType.TOP);
-            mbBannerService.saveBanner(mbBanner);
-            resultVal = "添加成功！";
-            resultVal = Encoder.symmetricEncrypto(resultVal);
-        }
-        return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
+        PageBean bean = new PageBean();
+		String ret = "webpage/poms/mobile/banner_list";
+
+		try {
+			if(mbBanner != null && mbBanner.getMbBannerId() !=  null && !"".equals(mbBanner.getMbBannerId())){
+				
+				mbBanner.setUpdatedDate(new Date());
+	            mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+	            
+	            mbBannerService.updateBanner(mbBanner);
+	            
+				bean.setRetMsg("保存成功");
+				
+			}else{
+				
+				//查询当前图片最大序号
+	            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
+	            if(maxBannerIndex != null){
+	                mbBanner.setSort(maxBannerIndex.getSort()+1);
+	            }else{
+	                mbBanner.setSort("0");
+	            }
+
+	            mbBanner.setMbBannerId(UUIDGenerator.getUUID());
+	            mbBanner.setImgType(mbBanner.getImgType());
+	            
+	            mbBannerService.saveBanner(mbBanner);
+	            
+				bean.setRetMsg("新增成功");
+			}
+			
+			ret = this.queryMbBannerListPage(this.mbBanner==null?new MbBanner():this.mbBanner, map);
+
+			bean.setRetCode(100);
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			
+			logger.error("", e);
+		}
+		finally {
+			return ret;
+		}
     }
 
     /**
