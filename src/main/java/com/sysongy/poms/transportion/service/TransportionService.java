@@ -73,4 +73,7 @@ public interface TransportionService {
 	 * @return
 	 */
 	PageInfo<Map<String,Object>> queryTcPersonalCountReport(SysDepositLog record);
+
+	List<Map<String,Object>> queryTcPersonalCountList(SysDepositLog record);
+	List<Map<String, Object>> transportionConsumeList(SysDepositLog record);
 }
