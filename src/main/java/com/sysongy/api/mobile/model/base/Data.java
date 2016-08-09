@@ -1,5 +1,10 @@
 package com.sysongy.api.mobile.model.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
+
 public class Data {
 	
 	private String token;
@@ -28,6 +33,8 @@ public class Data {
 	
 	private String amount;
 	
+	private String channel;
+	
 	private String orderCode;
 	
 	private String rechargePlatform;
@@ -35,6 +42,24 @@ public class Data {
 	private String rechargeType;
 	
 	private String totalAmount;
+	
+	private List<SysOrderGoods> goods;
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public List<SysOrderGoods> getGoods() {
+		return goods;
+	}
+
+	public void setGoods(List<SysOrderGoods> goods) {
+		this.goods = goods;
+	}
 
 	public String getTime() {
 		return time;

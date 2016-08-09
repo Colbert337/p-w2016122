@@ -42,7 +42,8 @@ public class CrmPortalController {
      */
     @RequestMapping("/list/all")
     public String queryAllList(Model model, CrmHelp crmHelp, CrmHelpType crmHelpType) throws Exception{
-
+    	
+    	crmHelp.setIsNotice(1);
         List<Map<String, Object>> crmHelpList = crmHelpService.queryCrmHelpList(crmHelp);
         model.addAttribute("crmHelpList", crmHelpList);
         //问题分类列表
@@ -81,9 +82,24 @@ public class CrmPortalController {
     @RequestMapping("/list/notice")
     public String queryNoticeList(Model model, CrmHelp crmHelp) throws Exception{
 
-        List<Map<String, Object>> crmHelpList = crmHelpService.queryCrmHelpList(crmHelp);
-        crmHelp.setIsNotice(2);
+    	crmHelp.setIsNotice(2);
+        List<Map<String, Object>> crmHelpList = crmHelpService.queryCrmHelpList(crmHelp);       
         model.addAttribute("crmHelpList", crmHelpList);
         return "webpage/crm/hp_notice";
+    }
+    /**
+     * 公告信息列表
+     * @param model
+     * @param crmHelpId
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/list/notice/info")
+    public String queryNoticeInfoList(Model model,@RequestParam(value="crmHelpId",required = false) String crmHelpId)throws Exception{
+    	
+    	List<CrmHelp> noticeInfoList = crmHelpService.queryCrmHelpNoticeInfo(crmHelpId);
+    	model.addAttribute("noticeInfoList", noticeInfoList);
+    	return "webpage/crm/hp_notice_info";
+    	
     }
 }

@@ -8,11 +8,11 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/gastation/gastation_consumecollectreport.js"></script>
+<script src="<%=basePath %>/dist/js/gastation/gastation_rechargecollectreport.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation" action="<%=basePath%>/web/gastation/gastationConsumeReport/import">
+	<form id="formgastation" action="<%=basePath%>/web/gastation/gastationRechargeReport/import">
 	<input type="hidden" name="downloadreport" value="true"/>
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
@@ -64,7 +64,7 @@
 
 					<div>
 						<div class="alert alert-info alert-mt">
-							<span class="bigger-120">充值总金额：${totalCash}元</span>
+							<span class="bigger-120">消费总金额：${totalCash}元</span>
 						</div>
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
@@ -77,7 +77,7 @@
 									</th>
 									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
 									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">消费金额</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">充值金额</th>
 									<th onclick="orderBy(this,'hedgefund');commitForm();" id="hedgefund_order">冲红金额</th>
  									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
  									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>

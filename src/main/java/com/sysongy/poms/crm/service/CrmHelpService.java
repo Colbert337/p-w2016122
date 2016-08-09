@@ -35,7 +35,7 @@ public interface CrmHelpService {
     
     public List<CrmHelp> queryQuestionListById(CrmHelp obj) throws Exception;//查询问题类型信息
     
-    //public List<CrmHelp> queryCrmHelpNotice(String selectval)throws Exception;//公告查询
+    public List<CrmHelp> queryCrmHelpNoticeInfo(String obj)throws Exception;//公告信息查询
 
     /**
      * 查询问题列表

@@ -242,7 +242,6 @@ public class ExportUtil {
 					}
 					
 					format.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE); 	//垂直居中
-					Label label = new Label(j, i, content[i][j], format);
 					
 					//有宽度参数的处理
 					if(wcell != null){
@@ -261,7 +260,17 @@ public class ExportUtil {
 						sheet.setColumnView(j, defaultweight); //设置默认宽度为 8
 					}
 					
-					sheet.addCell(label);
+					try {
+						if(content[i][j].length() > 10){
+							throw new Exception("数字太长，做为字符处理");
+						}
+						Double.parseDouble(content[i][j]);
+						Number number = new Number(j, i, Double.parseDouble(content[i][j]),format);
+						sheet.addCell(number);
+					} catch (Exception e) {
+						Label label = new Label(j, i, content[i][j], format);
+						sheet.addCell(label);
+					}
 					
 					if(hrow != null){
 						boolean rhave = false ;

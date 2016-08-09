@@ -366,4 +366,20 @@ public class GastationServiceImpl implements GastationService {
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
+
+	@Override
+	public PageInfo<Map<String, Object>> gastionRechargeReport(SysOrder record) throws Exception{
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = gasStationMapper.gastionRechargeReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> gastionRechargeReportTotal(SysOrder record) throws Exception {
+		PageHelper.startPage(1, 20, record.getOrderby());
+		List<Map<String, Object>> list = gasStationMapper.gastionRechargeReportTotal(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
 }

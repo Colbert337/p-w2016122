@@ -34,7 +34,7 @@ public interface CrmHelpMapper {
     
     public List<CrmHelp> queryQuestiontypeList(CrmHelp record);
     
-    //public List<CrmHelp> queryNotice(String record);//公告查询
+    public List<CrmHelp> queryCrmHelpNoticInfo(String record);//公告信息查询
 
     /**
      * 查询问题列表
