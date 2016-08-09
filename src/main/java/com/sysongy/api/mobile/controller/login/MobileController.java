@@ -34,6 +34,7 @@ import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.api.mobile.tools.MobileUtils;
 import com.sysongy.api.mobile.tools.feedback.MobileFeedBackUtils;
+import com.sysongy.api.mobile.tools.getcitys.GetCitysUtils;
 import com.sysongy.api.mobile.tools.login.MobileLoginUtils;
 import com.sysongy.api.mobile.tools.loss.ReportLossUtil;
 import com.sysongy.api.mobile.tools.record.MobileRecordUtils;
@@ -436,6 +437,41 @@ public class MobileController {
     		
     		ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileRecordUtils.RET_SUCCESS_MSG, listc);
     		
+        } catch (Exception e) {
+        	if(StringUtils.isEmpty(ret.getMsg())){
+				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+			}
+			
+			logger.error("MobileController.Login ERROR： " + e);
+        }
+        finally {
+			return JSON.toJSONString(ret);
+		}
+    }
+    
+    @RequestMapping(value = "GetCitys")
+    @ResponseBody
+    public String getCitys(MobileParams params){
+    	
+    	MobileReturn ret = new MobileReturn();
+    	
+    	try {
+    		GetCitysUtils.checkParam(params, ret);
+    		
+    		String opencity = (String) prop.get("opencity");
+
+    
+            
+            if(opencity.split("~").length >0 ){
+            	Data data = new Data();
+            	data.setCity(opencity.split("~"));
+            	
+            	ArrayList<Data> list = new ArrayList<Data>();
+            	list.add(data);
+            	
+            	ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, GetCitysUtils.RET_QUERY_SUCCESS_MSG, list);
+            }
+           
         } catch (Exception e) {
         	if(StringUtils.isEmpty(ret.getMsg())){
 				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
