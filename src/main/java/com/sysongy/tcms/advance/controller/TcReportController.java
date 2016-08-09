@@ -387,7 +387,7 @@ public class TcReportController extends BaseContoller{
             ExportUtil reportExcel = new ExportUtil();
 
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
-            downLoadFileName = "运输公司充值汇总_" + downLoadFileName;
+            downLoadFileName = "车队消费汇总报表_" + downLoadFileName;
 
             try {
                 response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
@@ -395,29 +395,46 @@ public class TcReportController extends BaseContoller{
                 response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
             }
 
-            String[][] content = new String[cells+1][9];//[行数][列数]
+            String[][] content = new String[cells+3][8];//[行数][列数]
             //第一列
-            content[0] = new String[]{"运输公司编号","运输公司名称","充值金额","运管人员","销售人员"};
-
-            int i = 1;
+            content[0] = new String[]{transName+"车队消费汇总报表"};
+            content[2] = new String[]{"运输公司名称","车队编号","车队名称","加注站名称","消费金额","冲红金额","消费量","消费次数"};
+            //设置列宽
+            String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,13","9,13","10,23","11,30"};
+            //合并第一行单元格
+            String [] mergeinfo = new String []{"0,0,7,0","1,1,7,1"};
+            //设置表名
+            String sheetName = "车队消费汇总报表";
+            //设置字体
+            String [] font = new String []{"0,15","2,13"};
+            /*组装报表*/
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            int i = 3;
             if(list != null && list.size() > 0){
+
                 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+                    if(tmpMap.get("cash") != null && !"".equals(tmpMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(tmpMap.get("cash").toString()));
+                    }
 
-                    String sys_transportion_id = tmpMap.get("sys_transportion_id")==null?"":tmpMap.get("sys_transportion_id").toString();
                     String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
-                    String deposit = tmpMap.get("deposit")==null?"":tmpMap.get("deposit").toString();
-                    String salesmen_name = tmpMap.get("salesmen_name")==null?"":tmpMap.get("salesmen_name").toString();
-                    String operations_name = tmpMap.get("operations_name")==null?"":tmpMap.get("operations_name").toString();
-
-                    content[i] = new String[]{sys_transportion_id,transportion_name,deposit,salesmen_name,operations_name};
+                    String tc_fleet_id = tmpMap.get("tc_fleet_id")==null?"":tmpMap.get("tc_fleet_id").toString();
+                    String fleet_name = tmpMap.get("fleet_name")==null?"":tmpMap.get("fleet_name").toString();
+                    String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
+                    String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+                    String hedgefund = tmpMap.get("hedgefund")==null?"":tmpMap.get("hedgefund").toString();
+                    String summit = tmpMap.get("summit")==null?"":tmpMap.get("summit").toString();
+                    String consumecount = tmpMap.get("consumecount")==null?"":tmpMap.get("consumecount").toString();
+                    content[i] = new String[]{transportion_name,tc_fleet_id,fleet_name,channel,cash,hedgefund,summit,consumecount};
                     i++;
                 }
             }
 
-            String [] mergeinfo = new String []{"0,0,0,0"};
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
+
             //单元格默认宽度
-            String sheetName = "运输公司充值汇总";
-            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
 
         } catch (Exception e) {
             logger.error("", e);
