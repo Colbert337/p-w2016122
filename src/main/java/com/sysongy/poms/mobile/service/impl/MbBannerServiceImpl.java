@@ -66,7 +66,7 @@ public class MbBannerServiceImpl implements MbBannerService{
      * @return
      */
     @Override
-    public MbBanner queryMaxIndex(int imgType) {
+    public MbBanner queryMaxIndex(String imgType) {
         return mbBannerMapper.queryMaxIndex(imgType);
     }
 

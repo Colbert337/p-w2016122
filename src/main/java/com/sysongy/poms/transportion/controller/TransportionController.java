@@ -1449,7 +1449,7 @@ public class TransportionController extends BaseContoller{
 	            ExportUtil reportExcel = new ExportUtil();
 
 	            String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
-	            downLoadFileName = "运输公司充值汇总_" + downLoadFileName;
+	            downLoadFileName = "运输公司消费汇总_" + downLoadFileName;
 
 	            try {
 	            	response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
@@ -1459,7 +1459,7 @@ public class TransportionController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"运输公司编号","运输公司名称","充值金额","运管人员","销售人员"};
+	            content[0] = new String[]{"运输公司编号","运输公司名称","车队编号","车队名称","加注站名称","消费金额","冲红金额","消费量","消费次数"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -1467,18 +1467,22 @@ public class TransportionController extends BaseContoller{
 	            		 
 	            		String sys_transportion_id = tmpMap.get("sys_transportion_id")==null?"":tmpMap.get("sys_transportion_id").toString();
 	            		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
-	            		String deposit = tmpMap.get("deposit")==null?"":tmpMap.get("deposit").toString();
-	            		String salesmen_name = tmpMap.get("salesmen_name")==null?"":tmpMap.get("salesmen_name").toString();
-	            		String operations_name = tmpMap.get("operations_name")==null?"":tmpMap.get("operations_name").toString();
+	            		String tc_fleet_id = tmpMap.get("tc_fleet_id")==null?"":tmpMap.get("tc_fleet_id").toString();
+	            		String fleet_name = tmpMap.get("fleet_name")==null?"":tmpMap.get("fleet_name").toString();
+	            		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
+	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+	            		String hedgefund = tmpMap.get("hedgefund")==null?"":tmpMap.get("hedgefund").toString();
+	            		String summit = tmpMap.get("hedgefund")==null?"":tmpMap.get("summit").toString();
+	            		String consumecount = tmpMap.get("consumecount")==null?"":tmpMap.get("consumecount").toString();
 
-	                    content[i] = new String[]{sys_transportion_id,transportion_name,deposit,salesmen_name,operations_name};
+	                    content[i] = new String[]{sys_transportion_id,transportion_name,tc_fleet_id,fleet_name,channel,cash,hedgefund,summit,consumecount};
 	                    i++;
 	                }
 	            }
 
 	            String [] mergeinfo = new String []{"0,0,0,0"};
 	            //单元格默认宽度
-	            String sheetName = "运输公司充值汇总";
+	            String sheetName = "运输公司消费汇总";
 	            reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
 
 	        } catch (Exception e) {
