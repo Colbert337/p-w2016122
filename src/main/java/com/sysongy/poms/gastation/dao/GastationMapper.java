@@ -31,4 +31,8 @@ public interface GastationMapper {
 	List<Map<String,Object>> gastionConsumeReport(SysOrder record);
     
     List<Map<String,Object>> gastionConsumeReportTotal(SysOrder record);
+    
+    List<Map<String,Object>> gastionRechargeReport(SysOrder record);
+    
+    List<Map<String,Object>> gastionRechargeReportTotal(SysOrder record);	
 }

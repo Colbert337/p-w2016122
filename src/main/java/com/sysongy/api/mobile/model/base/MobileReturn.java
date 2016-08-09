@@ -1,12 +1,14 @@
 package com.sysongy.api.mobile.model.base;
 
+import java.util.ArrayList;
+
 public class MobileReturn {
 	
 	private String error;
 	
 	private String msg;
 	
-	private Data[] data;
+	private ArrayList<Data> data;
 	
 	private String totalAccountFor;
 	
@@ -36,11 +38,10 @@ public class MobileReturn {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	public Data[] getData() {
+	public ArrayList<Data> getData() {
 		return data;
 	}
-	public void setData(Data[] data) {
+	public void setData(ArrayList<Data> data) {
 		this.data = data;
 	}
-
 }
