@@ -19,7 +19,7 @@ public class SysOrderGoodsForCRMReport {
 
     private BigDecimal price;
 
-    private Integer number;
+    private Double number;
 
     private BigDecimal sumPrice;
 
@@ -267,11 +267,11 @@ public class SysOrderGoodsForCRMReport {
         this.price = price;
     }
 
-    public Integer getNumber() {
+    public Double getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(Double number) {
         this.number = number;
     }
 

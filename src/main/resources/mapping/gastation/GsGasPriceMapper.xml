@@ -48,11 +48,11 @@
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
     select
     <include refid="Base_Column_List" />
-    from gs_gas_price
+    from gs_gas_price a left join usysparam b
     where 1=1
     <trim>
      <if test="gasName != null &amp;&amp; gasName != ''" >
-      and (gas_name = #{gasName,jdbcType=VARCHAR} or gas_num = #{gasName,jdbcType=VARCHAR})
+      and (gas_name=#{gasName,jdbcType=VARCHAR} or b.mname=#{gasName,jdbcType=VARCHAR})
     </if>
     <if test="gasNum != null &amp;&amp; gasNum != ''" >
       and gas_num = #{gasNum,jdbcType=VARCHAR}
