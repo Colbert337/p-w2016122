@@ -137,7 +137,7 @@ $(function(){
                                     <c:when test="${fn:length(list.answer)>30}"><a title="${list.answer }" >${fn:substring(list.answer,0,30)}......</a></c:when>
                                     <c:otherwise>${list.answer}</c:otherwise>
                                   </c:choose>                              
-                                <td/>                                                           
+                                </td>
                                 <td>${list.titleType}</td> 
                                 <td>
                                    <c:choose>
