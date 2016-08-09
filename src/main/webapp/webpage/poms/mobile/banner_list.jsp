@@ -15,7 +15,7 @@
 			<jsp:include page="/common/page_param.jsp"></jsp:include>
 			<div class="page-header">
 				<h1>
-					首页编辑
+					首页编辑管理
 				</h1>
 			</div><!-- /.page-header -->
 			<div class="row">
@@ -23,7 +23,7 @@
 					<!-- PAGE CONTENT BEGINS -->
 					<div class="row">
 						<div class="col-sm-2">
-						<input name="imgType" value="${mbBanner.imgType}"/>
+						<input type="hidden" name="imgType" value="${mbBanner.imgType}"/>
 							<div class="dd dd-draghandle" >
 								<ol class="dd-list" id="cashbackol">
 									<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value='0'>
@@ -137,7 +137,6 @@
 		</form>
 
 </div><!-- /.main-content -->
-<!--添加车辆弹层-开始-->
 <div id="editModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -202,6 +201,7 @@
 										<textarea name="remark" id="remark" style="resize: none;" maxlength="50" placeholder="备注" class="col-xs-10 col-sm-12 limited form-control" ></textarea>
 									</div>
 								</div>
+								<input type="hidden" name="imgType" value="${mbBanner.imgType}"/>
 							</form>
 						</div><!-- /.col -->
 					</div><!-- /.row -->
@@ -216,6 +216,9 @@
 	</div><!-- /.modal -->
 </div>
 <script>
-	var imgType = $("[name=imgType]").val();
+	
+	
+	var imgType = $("[name=imgType]").eq(0).val();
+
 	$("li[value="+imgType+"]").children("div:last").addClass("btn-info")
 </script>
