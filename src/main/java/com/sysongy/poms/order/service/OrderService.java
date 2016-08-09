@@ -158,12 +158,7 @@ public interface OrderService {
      * @return
      */
     PageInfo<Map<String,Object>> queryTcPersonalReport(SysOrder record);
-    /**
-     * 运输公司个人消费汇总报表
-     * @param record
-     * @return
-     */
-    PageInfo<Map<String,Object>> queryTcPersonalCountReport(SysOrder record);
+
     /**
      * 运输公司个人消费报表
      * @param record
@@ -176,12 +171,7 @@ public interface OrderService {
      * @return
      */
     PageInfo<Map<String,Object>> queryTcFleetReport(SysOrder record);
-    /**
-     * 运输公司车队消费汇总报表
-     * @param record
-     * @return
-     */
-    PageInfo<Map<String,Object>> queryTcFleetCountReport(SysOrder record);
+
     /**
      * 运输公司车队消费报表
      * @param record

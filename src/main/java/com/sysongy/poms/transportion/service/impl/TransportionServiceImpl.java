@@ -435,4 +435,11 @@ public class TransportionServiceImpl implements TransportionService {
 		return pageInfo;
 	}
 
+	@Override
+	public PageInfo<Map<String, Object>> queryTcPersonalCountReport(SysDepositLog record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = transportionMapper.queryTcPersonalCountReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
 }
