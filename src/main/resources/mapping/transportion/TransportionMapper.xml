@@ -505,7 +505,7 @@
 	where rb.order_type = '210' 
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
-        and st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR}
+        and (st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR})
       </if>
 	</trim>
     group by st.sys_transportion_id,rb.tc_fleet_id,rb.channel 
@@ -547,7 +547,7 @@
 	where rb.order_type = '210' 
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
-        and st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR}
+        and (st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR})
       </if>
 	</trim>
     group by st.sys_transportion_id,rb.tc_fleet_id,rb.channel ) as total
