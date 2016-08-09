@@ -938,7 +938,7 @@ public class GastationController extends BaseContoller{
 
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
-			map.addAttribute("order", order);
+			map.addAttribute("order", order);	
 			map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
 		} catch (Exception e) {
 			bean.setRetCode(5000);

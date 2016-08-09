@@ -46,7 +46,7 @@ public interface MbBannerService {
      * @param imgType
      * @return
      */
-    MbBanner queryMaxIndex(int imgType);
+    MbBanner queryMaxIndex(String imgType);
 
     /**
      * 查询当前图片信息
