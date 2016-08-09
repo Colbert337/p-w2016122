@@ -74,15 +74,26 @@ public class TcReportController extends BaseContoller{
             }
 
             PageInfo<Map<String, Object>> pageinfo = transportionService.queryTcPersonalCountReport(loger);
+            List<Map<String, Object>> reportList = transportionService.queryTcPersonalCountList(loger);
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-            if(pageinfo != null && pageinfo.getList() != null && pageinfo.getList().size() > 0){
+            BigDecimal chonghongCash = new BigDecimal(BigInteger.ZERO);
+
+            if(reportList != null && reportList.size() > 0){
+                for (Map<String, Object> quotaMap:reportList) {
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                        chonghongCash = chonghongCash.add(new BigDecimal(quotaMap.get("hedgefund").toString()));
+                    }
+                }
+            }
+            /*if(pageinfo != null && pageinfo.getList() != null && pageinfo.getList().size() > 0){
                 List<Map<String, Object>> list = pageinfo.getList();
                 for (Map<String, Object> quotaMap:list) {
                     if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
                     }
                 }
-            }
+            }*/
 
             bean.setRetCode(100);
             bean.setRetMsg("查询成功");
@@ -92,6 +103,7 @@ public class TcReportController extends BaseContoller{
             map.addAttribute("pageInfo", pageinfo);
             map.addAttribute("loger", loger);
             map.addAttribute("totalCash",totalCash);
+            map.addAttribute("chonghongCash",chonghongCash);
         } catch (Exception e) {
             bean.setRetCode(5000);
             bean.setRetMsg(e.getMessage());
@@ -126,6 +138,18 @@ public class TcReportController extends BaseContoller{
             }
 
             PageInfo<Map<String, Object>> pageinfo = transportionService.queryTcPersonalCountReport(loger);
+            List<Map<String, Object>> reportList = transportionService.queryTcPersonalCountList(loger);
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            BigDecimal chonghongCash = new BigDecimal(BigInteger.ZERO);
+
+            if(reportList != null && reportList.size() > 0){
+                for (Map<String, Object> quotaMap:reportList) {
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                        chonghongCash = chonghongCash.add(new BigDecimal(quotaMap.get("hedgefund").toString()));
+                    }
+                }
+            }
             List<Map<String, Object>> list = pageinfo.getList();
 
             int cells = 0 ; // 记录条数
@@ -152,20 +176,21 @@ public class TcReportController extends BaseContoller{
             //设置列宽
             String [] wcell = new String []{"0,13","1,26","2,13","3,13","4,13","5,30"};
             //合并第一行单元格
-            String [] mergeinfo = new String []{"0,0,5,0","1,1,5,1"};
+            /*String [] mergeinfo = new String []{"0,0,5,0","1,1,5,1"};*/
+            String [] mergeinfo = new String []{"0,0,5,0","0,1,1,1","2,1,5,1"};
             //设置表名
             String sheetName = "个人消费汇总报表";
             //设置字体
             String [] font = new String []{"0,15","2,13"};
             /*组装报表*/
-            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            /*BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);*/
             int i = 3;
             if(list != null && list.size() > 0){
 
                 for (Map<String, Object> tmpMap:pageinfo.getList()) {
-                    if(tmpMap.get("cash") != null && !"".equals(tmpMap.get("cash").toString())){
+                    /*if(tmpMap.get("cash") != null && !"".equals(tmpMap.get("cash").toString())){
                         totalCash = totalCash.add(new BigDecimal(tmpMap.get("cash").toString()));
-                    }
+                    }*/
 
                     String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
                     String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
@@ -179,7 +204,7 @@ public class TcReportController extends BaseContoller{
             }
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
+            content[1] = new String[]{"消费总金额："+totalCash.toString()+"  冲红总金额："+chonghongCash.toString(),"","导出时间："+sdf.format(new Date())};
 
             //单元格默认宽度
             reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
@@ -214,12 +239,14 @@ public class TcReportController extends BaseContoller{
             }
 
             PageInfo<Map<String, Object>> pageinfo = transportionService.transportionConsumeReport(loger);
+            List<Map<String, Object>> reportList = transportionService.transportionConsumeList(loger);
             BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-            if(pageinfo != null && pageinfo.getList() != null && pageinfo.getList().size() > 0){
-                List<Map<String, Object>> list = pageinfo.getList();
-                for (Map<String, Object> quotaMap:list) {
+            BigDecimal chonghongCash = new BigDecimal(BigInteger.ZERO);
+            if(reportList != null && reportList.size() > 0){
+                for (Map<String, Object> quotaMap:reportList) {
                     if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
                         totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                        chonghongCash = chonghongCash.add(new BigDecimal(quotaMap.get("hedgefund").toString()));
                     }
                 }
             }
@@ -232,6 +259,7 @@ public class TcReportController extends BaseContoller{
             map.addAttribute("pageInfo", pageinfo);
             map.addAttribute("loger", loger);
             map.addAttribute("totalCash",totalCash);
+            map.addAttribute("chonghongCash",chonghongCash);
         } catch (Exception e) {
             bean.setRetCode(5000);
             bean.setRetMsg(e.getMessage());
@@ -267,6 +295,17 @@ public class TcReportController extends BaseContoller{
             }
 
             PageInfo<Map<String, Object>> pageinfo = transportionService.transportionConsumeReport(loger);
+            List<Map<String, Object>> reportList = transportionService.transportionConsumeList(loger);
+            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            BigDecimal chonghongCash = new BigDecimal(BigInteger.ZERO);
+            if(reportList != null && reportList.size() > 0){
+                for (Map<String, Object> quotaMap:reportList) {
+                    if(quotaMap.get("cash") != null && !"".equals(quotaMap.get("cash").toString())){
+                        totalCash = totalCash.add(new BigDecimal(quotaMap.get("cash").toString()));
+                        chonghongCash = chonghongCash.add(new BigDecimal(quotaMap.get("hedgefund").toString()));
+                    }
+                }
+            }
             List<Map<String, Object>> list = pageinfo.getList();
 
             int cells = 0 ; // 记录条数
@@ -293,13 +332,13 @@ public class TcReportController extends BaseContoller{
             //设置列宽
             String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,13","9,13","10,23","11,30"};
             //合并第一行单元格
-            String [] mergeinfo = new String []{"0,0,7,0","1,1,7,1"};
+            String [] mergeinfo = new String []{"0,0,7,0","0,1,1,1","2,1,7,1"};
             //设置表名
             String sheetName = "车队消费汇总报表";
             //设置字体
             String [] font = new String []{"0,15","2,13"};
             /*组装报表*/
-            BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+            /*BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);*/
             int i = 3;
             if(list != null && list.size() > 0){
 
@@ -321,7 +360,7 @@ public class TcReportController extends BaseContoller{
             }
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
+            content[1] = new String[]{"消费总金额："+totalCash.toString()+" 冲红总金额："+chonghongCash.toString(),"","导出时间："+sdf.format(new Date())};
 
             //单元格默认宽度
             reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
