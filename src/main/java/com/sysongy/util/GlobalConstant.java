@@ -633,8 +633,8 @@ public class GlobalConstant {
 	}
 
 	public interface ImgType {
-		public static final int BANNER = 0;//banner图
-//		public static final int ACTIVITY = 1;//活动图
+		public static final String TOP = "0";//banner图
+		public static final String TAILS = "1";//活动图
 	}
 
 }

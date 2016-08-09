@@ -17,9 +17,9 @@ public class MbBanner extends BaseModel{
 
     private String version;
 
-    private Integer imgType;
+    private String imgType;
 
-    private Integer sort;
+    private String sort;
 
     private String remark;
 
@@ -77,23 +77,23 @@ public class MbBanner extends BaseModel{
         this.version = version == null ? null : version.trim();
     }
 
-    public Integer getImgType() {
-        return imgType;
-    }
+    public String getImgType() {
+		return imgType;
+	}
 
-    public void setImgType(Integer imgType) {
-        this.imgType = imgType;
-    }
+	public void setImgType(String imgType) {
+		this.imgType = imgType;
+	}
 
-    public Integer getSort() {
-        return sort;
-    }
+	public String getSort() {
+		return sort;
+	}
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
 
-    public String getRemark() {
+	public String getRemark() {
         return remark;
     }
 

@@ -331,8 +331,6 @@ public class TcReportController extends BaseContoller{
                 }
             }
 
-            PageInfo<Map<String, Object>> total = transportionService.transportionConsumeReportTotal(loger);
-
             bean.setRetCode(100);
             bean.setRetMsg("查询成功");
             bean.setPageInfo(ret);
@@ -340,7 +338,7 @@ public class TcReportController extends BaseContoller{
             map.addAttribute("ret", bean);
             map.addAttribute("pageInfo", pageinfo);
             map.addAttribute("loger", loger);
-            map.addAttribute("totalCash",total.getList().get(0)==null?"0":total.getList().get(0).get("total"));
+            map.addAttribute("totalCash",totalCash);
         } catch (Exception e) {
             bean.setRetCode(5000);
             bean.setRetMsg(e.getMessage());
