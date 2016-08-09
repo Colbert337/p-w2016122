@@ -52,6 +52,7 @@
 	  <result column="hedgefund" property="hedgefund" jdbcType="VARCHAR" />
 	  <result column="summit" property="summit" jdbcType="VARCHAR" />
 	  <result column="consumecount" property="consumecount" jdbcType="VARCHAR" />
+	  <result column="been_discharged" property="been_discharged" jdbcType="VARCHAR" />
   </resultMap>
   
   <resultMap id="HenryTotalMap" type="java.util.Map" >
@@ -484,14 +485,14 @@
 	  </if>
 	</trim>
 	) hedgefund,
-	(select ifnull(sum(goods_sum),0) from report_business rb3 where st.sys_transportion_id = rb3.credit_account and rb3.channel_number = rb.channel_number and rb.tc_fleet_id = rb3.tc_fleet_id
+	(select ifnull(sum(goods_sum),0) from report_business rb3 where st.sys_transportion_id = rb3.credit_account and rb3.channel_number = rb.channel_number and rb.tc_fleet_id = rb3.tc_fleet_id and rb3.been_discharged = '0'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb3.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	</trim>
 	) summit,
-	(select ifnull(count(rb2.order_id),0) from report_business rb2 where st.sys_transportion_id = rb2.credit_account and rb2.channel_number = rb.channel_number and rb.tc_fleet_id = rb2.tc_fleet_id
+	(select ifnull(count(rb2.order_id),0) from report_business rb2 where st.sys_transportion_id = rb2.credit_account and rb2.channel_number = rb.channel_number and rb.tc_fleet_id = rb2.tc_fleet_id and rb2.been_discharged = '0'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -526,14 +527,14 @@
 	  </if>
 	</trim>
 	) hedgefund,
-	(select ifnull(sum(goods_sum),0) from report_business rb3 where st.sys_transportion_id = rb3.credit_account and rb3.channel_number = rb.channel_number and rb.tc_fleet_id = rb3.tc_fleet_id
+	(select ifnull(sum(goods_sum),0) from report_business rb3 where st.sys_transportion_id = rb3.credit_account and rb3.channel_number = rb.channel_number and rb.tc_fleet_id = rb3.tc_fleet_id and rb3.been_discharged = '0'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb3.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	</trim>
 	) summit,
-	(select ifnull(count(rb2.order_id),0) from report_business rb2 where st.sys_transportion_id = rb2.credit_account and rb2.channel_number = rb.channel_number and rb.tc_fleet_id = rb2.tc_fleet_id
+	(select ifnull(count(rb2.order_id),0) from report_business rb2 where st.sys_transportion_id = rb2.credit_account and rb2.channel_number = rb.channel_number and rb.tc_fleet_id = rb2.tc_fleet_id and rb2.been_discharged = '0'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
