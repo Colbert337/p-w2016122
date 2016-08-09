@@ -8,7 +8,7 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/gastation/gastation_consumecollectreport.js"></script>
+<script src="<%=basePath %>/dist/js/gastation/gastation_consumereport.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
