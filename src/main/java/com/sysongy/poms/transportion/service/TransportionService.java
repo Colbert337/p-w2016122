@@ -67,4 +67,10 @@ public interface TransportionService {
 	public PageInfo<Map<String, Object>> transportionConsumeReport(SysDepositLog record);
 	
 	public PageInfo<Map<String, Object>> transportionConsumeReportTotal(SysDepositLog record);
+	/**
+	 * 运输公司个人消费汇总报表
+	 * @param record
+	 * @return
+	 */
+	PageInfo<Map<String,Object>> queryTcPersonalCountReport(SysDepositLog record);
 }
