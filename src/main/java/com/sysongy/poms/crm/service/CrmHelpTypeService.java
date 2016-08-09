@@ -22,7 +22,7 @@ public interface CrmHelpTypeService {
 	 * @return
 	 * @throws Exception
      */
-	List<CrmHelpType> queryCrmHelpTypeList() throws Exception;
+	List<CrmHelpType> queryCrmHelpTypeList(CrmHelpType obj) throws Exception;
 	
 	public void delete(String crmHelpTypeId)throws Exception;//删除
 	

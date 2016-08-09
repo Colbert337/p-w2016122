@@ -913,6 +913,14 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public PageInfo<Map<String, Object>> queryTcPersonalCountReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryTcPersonalCountReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
 	public List<Map<String, Object>> queryTcPersonalList(SysOrder record) {
 		return sysOrderMapper.queryTcPersonalReport(record);
 	}
@@ -926,6 +934,14 @@ public class OrderServiceImpl implements OrderService {
 	public PageInfo<Map<String, Object>> queryTcFleetReport(SysOrder record) {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Map<String, Object>> list = sysOrderMapper.queryTcFleetReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryTcFleetCountReport(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryTcFleetCountReport(record);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}

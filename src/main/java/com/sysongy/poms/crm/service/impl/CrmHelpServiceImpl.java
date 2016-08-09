@@ -32,11 +32,11 @@ public class CrmHelpServiceImpl implements CrmHelpService{
 	 * 列表查询
 	 */
 	@Override
-	public PageInfo<CrmHelp> queryCrmHelpServiceList(CrmHelp obj) throws Exception {
-		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
+	public List<CrmHelp> queryCrmHelpServiceList(String obj) throws Exception {		
 		List<CrmHelp> list = crmHelpMapper.queryCrmHelp(obj);
-		PageInfo<CrmHelp> pageInfo = new PageInfo<CrmHelp>(list);
-		return pageInfo;
+//		PageInfo<CrmHelp> pageInfo = new PageInfo<CrmHelp>(list);
+//		return pageInfo;
+		return list;
 	}
     
 	/**
@@ -106,5 +106,12 @@ public class CrmHelpServiceImpl implements CrmHelpService{
 	@Override
 	public List<CrmHelp> queryQuestionListByName(CrmHelp obj) throws Exception {
 		return crmHelpMapper.queryQuestionListByName(obj);
+	}
+    /**
+     * 公告信息查询
+     */
+	@Override
+	public List<CrmHelp> queryCrmHelpNoticeInfo(String obj) throws Exception {
+		return crmHelpMapper.queryCrmHelpNoticInfo(obj);
 	}
 }

@@ -19,7 +19,7 @@ import com.sysongy.poms.crm.model.CrmHelp;
  */
 public interface CrmHelpService {
 	
-	public PageInfo<CrmHelp> queryCrmHelpServiceList(CrmHelp obj) throws Exception;//查询问题类型列表
+	public List<CrmHelp> queryCrmHelpServiceList(String crmHelpTypeId) throws Exception;//查询问题类型列表
 	
 	public void delete(String crmHelpId)throws Exception;//删除
 	
@@ -35,7 +35,7 @@ public interface CrmHelpService {
     
     public List<CrmHelp> queryQuestionListById(CrmHelp obj) throws Exception;//查询问题类型信息
     
-    //public List<CrmHelp> queryCrmHelpNotice(String selectval)throws Exception;//公告查询
+    public List<CrmHelp> queryCrmHelpNoticeInfo(String obj)throws Exception;//公告信息查询
 
     /**
      * 查询问题列表

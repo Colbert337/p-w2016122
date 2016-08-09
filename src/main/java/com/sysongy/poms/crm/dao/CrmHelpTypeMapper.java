@@ -28,7 +28,7 @@ public interface CrmHelpTypeMapper {
      * @return
      * @throws Exception
      */
-    List<CrmHelpType> queryCrmHelpTypeList() throws Exception;
+    List<CrmHelpType> queryCrmHelpTypeList(CrmHelpType obj) throws Exception;
     
     public int deleteCrmHelpType(String crmHelpTypeId);//删除
     

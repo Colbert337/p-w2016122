@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -36,12 +38,13 @@
                 <div>司集服务公告</div>
             </div>
             <div class="service-notice">
+                <c:forEach items="${crmHelpList}" var="list">
                 <ul>
                     <li>
-                        <a href="">司集服务平台全面进入测试阶段</a>
-                        <span class="date">2016-07-29</span>
+                        <a href="<%=basePath %>/portal/crm/help/list/notice/info?crmHelpId=${list.crmHelpId}">${list.question}</a>
+                        <span class="date"><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd"/></span>
                     </li>
-                    <li>
+                   <!--  <li>
                         <a href="">司集小妹表彰活动</a>
                         <span class="date">2016-07-21</span>
                     </li>
@@ -52,8 +55,9 @@
                     <li>
                         <a href="">公司发展历程</a>
                         <span class="date">2016-03-01</span>
-                    </li>
+                    </li> -->
                 </ul>
+                </c:forEach>
             </div>
         </div>
 	</div>
