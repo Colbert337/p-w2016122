@@ -64,7 +64,7 @@
 
 					<div>
 						<div class="alert alert-info alert-mt">
-							<span class="bigger-120">充值总金额：${totalCash}元</span>
+							<span class="bigger-120">消费总金额：${totalCash}元</span>
 						</div>
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
