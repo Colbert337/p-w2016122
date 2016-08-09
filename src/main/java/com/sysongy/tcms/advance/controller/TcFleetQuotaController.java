@@ -75,7 +75,7 @@ public class TcFleetQuotaController extends BaseContoller {
     private UsysparamService service;
 
     /**
-     * 查询车辆列表
+     * 查询车队额度列表
      * @return
      */
     @RequestMapping("/list/page")
