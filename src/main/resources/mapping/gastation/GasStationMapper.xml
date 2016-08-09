@@ -470,4 +470,48 @@
     group by sgs.sys_gas_station_id) as total
   </select>
   
+  <select id="gastionRechargeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+	select sgs.sys_gas_station_id, sgs.gas_station_name,
+	(select ifnull(sum(cash),0) from report_business rb where sgs.sys_gas_station_id = rb.channel_number and rb.deal_type ='131'
+	  <if test="startDate != null &amp;&amp; startDate != ''">
+		 and rb.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+	  </if>
+	) cash,
+	(select ifnull(sum(cash)*-1,0) from report_callback ra where sgs.sys_gas_station_id = ra.channel_number and ra.deal_type ='134'
+	  <if test="startDate != null &amp;&amp; startDate != ''">
+		 and ra.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+	  </if>
+	) hedgefund,
+	sgs.operations_name,sgs.salesmen_name
+	from sys_gas_station sgs where 1=1
+    <trim>
+      <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
+        and sgs.sys_gas_station_id = #{channelNumber, jdbcType=VARCHAR} or sgs.gas_station_name = #{channelNumber, jdbcType=VARCHAR}
+      </if>
+	</trim>
+    group by sgs.sys_gas_station_id
+  </select>
+  
+  <select id="gastionRechargeReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+  	select sum(cash) total from (select sgs.sys_gas_station_id, sgs.gas_station_name,
+	(select ifnull(sum(cash),0) from report_business rb where sgs.sys_gas_station_id = rb.channel_number and rb.order_type in('210' ,'220')
+	  <if test="startDate != null &amp;&amp; startDate != ''">
+		 and rb.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+	  </if>
+	) cash,
+	(select ifnull(sum(cash)*-1,0) from report_callback ra where sgs.sys_gas_station_id = ra.channel_number and ra.order_type in('210' ,'220')
+	  <if test="startDate != null &amp;&amp; startDate != ''">
+		 and ra.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+	  </if>
+	) hedgefund,
+	sgs.operations_name,sgs.salesmen_name
+	from sys_gas_station sgs where 1=1
+    <trim>
+      <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
+        and sgs.sys_gas_station_id = #{channelNumber, jdbcType=VARCHAR} or sgs.gas_station_name = #{channelNumber, jdbcType=VARCHAR}
+      </if>
+	</trim>
+    group by sgs.sys_gas_station_id) as total
+  </select>
+  
 </mapper>

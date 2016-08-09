@@ -440,6 +440,7 @@
 	)deposit,st.salesmen_name,st.operations_name 
 	from sys_transportion st 
 	left join sys_deposit_log sdl on st.sys_transportion_id = sdl.station_id
+	where 1=1
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
         and st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR}
@@ -458,6 +459,7 @@
 	)deposit,st.salesmen_name,st.operations_name 
 	from sys_transportion st 
 	left join sys_deposit_log sdl on st.sys_transportion_id = sdl.station_id
+	where 1=1
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
         and st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR}

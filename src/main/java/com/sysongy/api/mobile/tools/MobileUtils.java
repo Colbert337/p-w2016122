@@ -1,5 +1,7 @@
 package com.sysongy.api.mobile.tools;
 
+import java.util.ArrayList;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,7 @@ public class MobileUtils {
 		}
 	}
 	
-	public static MobileReturn packagingMobileReturn(String error, String msg, Data[] data) throws Exception{
+	public static MobileReturn packagingMobileReturn(String error, String msg, ArrayList<Data> data) throws Exception{
 
 		MobileReturn ret = new MobileReturn();
 

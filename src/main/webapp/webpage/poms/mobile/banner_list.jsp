@@ -25,14 +25,14 @@
 						<div class="col-sm-2">
 							<div class="dd dd-draghandle" >
 								<ol class="dd-list" id="cashbackol">
-									<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value=''>
+									<li class='dd-item dd2-item' data-id='14' value=''>
 										<div class='dd-handle dd2-handle'>
 											<i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i>
 											<i class='drag-icon ace-icon fa fa-arrows bigger-125'></i>
 										</div>
 										<div class='dd2-content btn-info'>首页图片</div>
 									</li>
-									<li class='dd-item dd2-item' data-id='14' onclick='choose(this);' value=''>
+									<li class='dd-item dd2-item' data-id='14' value=''>
 										<div class='dd-handle dd2-handle'>
 											<i class='normal-icon ace-icon fa fa-clock-o pink bigger-130'></i>
 											<i class='drag-icon ace-icon fa fa-arrows bigger-125'></i>

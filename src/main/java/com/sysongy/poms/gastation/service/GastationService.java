@@ -34,5 +34,8 @@ public interface GastationService {
 	public PageInfo<Map<String, Object>> gastionConsumeReport(SysOrder order)throws Exception;
     
 	public PageInfo<Map<String, Object>> gastionConsumeReportTotal(SysOrder record) throws Exception;
-
+	
+	public PageInfo<Map<String, Object>> gastionRechargeReport(SysOrder order)throws Exception;
+    
+	public PageInfo<Map<String, Object>> gastionRechargeReportTotal(SysOrder record) throws Exception;
 }
