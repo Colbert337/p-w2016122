@@ -19,7 +19,7 @@ import com.sysongy.poms.crm.model.CrmHelp;
  */
 public interface CrmHelpService {
 	
-	public PageInfo<CrmHelp> queryCrmHelpServiceList(CrmHelp obj) throws Exception;//查询问题类型列表
+	public List<CrmHelp> queryCrmHelpServiceList(String crmHelpTypeId) throws Exception;//查询问题类型列表
 	
 	public void delete(String crmHelpId)throws Exception;//删除
 	

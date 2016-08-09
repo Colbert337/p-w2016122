@@ -45,8 +45,8 @@ public class CrmHelpTypeServiceImpl implements CrmHelpTypeService{
 	}
 
 	@Override
-	public List<CrmHelpType> queryCrmHelpTypeList() throws Exception {
-		return crmHelpTypeMapper.queryCrmHelpTypeList();
+	public List<CrmHelpType> queryCrmHelpTypeList(CrmHelpType obj) throws Exception {
+		return crmHelpTypeMapper.queryCrmHelpTypeList(obj);
 	}
     /**
      * 删除

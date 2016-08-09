@@ -19,7 +19,7 @@ public interface CrmHelpMapper {
 
     int updateByPrimaryKey(CrmHelp record);
     
-    public List<CrmHelp> queryCrmHelp(CrmHelp record);//查询问题类型列表
+    public List<CrmHelp> queryCrmHelp(String record);//查询
     
     public int deleteCrmHelp(String crmHelpId);//删除
     

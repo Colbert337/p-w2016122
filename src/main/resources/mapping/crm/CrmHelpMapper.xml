@@ -211,8 +211,11 @@
       updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     where crm_help_id = #{crmHelpId,jdbcType=VARCHAR}
   </update>
-  <!-- 首页问题类型查询 -->
-  <select id="queryCrmHelp" resultMap="BaseResultMap" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
+  <!-- 查询 -->
+  <select id="queryCrmHelp" resultMap="BaseResultMap" parameterType="java.lang.String" >
+     select question,answer from crm_help where crm_help_type_id = #{crmHelpTypeId,jdbcType=VARCHAR}
+  </select>
+  <!-- <select id="queryCrmHelp" resultMap="BaseResultMap" parameterType="com.sysongy.poms.crm.model.CrmHelp" >
     select 
     <include refid="Base_Column_List" />
     from crm_help
@@ -252,7 +255,7 @@
         and updated_date = #{updatedDate,jdbcType=VARCHAR}
       </if>
     </trim>
-  </select>
+  </select> -->
   
   <!-- 回显信息查询 -->
   <select id="queryCrmHelpValue" resultMap="BaseResultMap"  parameterType="java.lang.String">

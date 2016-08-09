@@ -65,14 +65,14 @@ $(function(){
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="question">问题： </label>
                                         <div class="col-sm-4">
-                                        <textarea class="limited form-control" id="question" name="question" maxlength="50" style="resize: none;">${crmHelp.question}</textarea>
+                                        <textarea class="limited form-control" id="question" name="question" maxlength="100" style="resize: none;">${crmHelp.question}</textarea>
                                         </div>
                                     </div>
                                     
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right">内容： </label>
                                         <div class="col-sm-4">
-                                           <textarea class="limited form-control" id="answer" name="answer" maxlength="50" style="resize: none;">${crmHelp.answer}</textarea>                                            
+                                           <textarea class="limited form-control" id="answer" name="answer" maxlength="500" style="resize: none;">${crmHelp.answer}</textarea>                                            
                                         </div>
                                     </div>
                                     

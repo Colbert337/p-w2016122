@@ -12,7 +12,7 @@
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation" action="<%=basePath%>/web/transportion/transportionRechargeReport">
+	<form id="formgastation" action="<%=basePath%>/web/transportion/transportionRechargeReport/import">
 	<input type="hidden" name="downloadreport" value="true"/>
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
@@ -80,8 +80,8 @@
 											<span class="lbl"></span>
 										</label>
 									</th>
-									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">运输公司编号</th>
-									<th onclick="orderBy(this,'station_name');commitForm();" id="station_name_order">运输公司名称</th>
+									<th onclick="orderBy(this,'sys_transportion_id');commitForm();" id="sys_transportion_id_order">运输公司编号</th>
+									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">充值金额</th>
 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">运管人员</th>
 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">销售人员</th>
@@ -99,8 +99,8 @@
 										</label>
 									</td>
 
-									<td>${list.station_id}</td>
-									<td>${list.station_name}</td>
+									<td>${list.sys_transportion_id}</td>
+									<td>${list.transportion_name}</td>
 									<td>${list.deposit}</td>
 									<td>${list.salesmen_name}</td>
 									<td>${list.operations_name}</td>
