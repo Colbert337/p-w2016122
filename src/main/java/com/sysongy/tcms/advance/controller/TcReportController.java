@@ -332,7 +332,7 @@ public class TcReportController extends BaseContoller{
             //设置列宽
             String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,13","9,13","10,23","11,30"};
             //合并第一行单元格
-            String [] mergeinfo = new String []{"0,0,7,0","0,1,1,1","2,1,7,1"};
+            String [] mergeinfo = new String []{"0,0,6,0","0,1,1,1","2,1,6,1"};
             //设置表名
             String sheetName = "车队消费汇总报表";
             //设置字体
