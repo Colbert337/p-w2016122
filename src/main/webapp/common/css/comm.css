@@ -233,3 +233,9 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
     margin-bottom: 15px;
     border-bottom: 1px solid #ddd;
 }
+.required-item:before {
+    content: "\2a";
+    color: #f00;
+    padding-right: 10px;
+    font-family: v;
+}

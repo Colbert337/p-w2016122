@@ -72,7 +72,7 @@
 
 							<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">司机账户</th>
 							<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
-							<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">消费金额</th>
+							<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">消费金额(含冲红)</th>
 							<th onclick="orderBy(this,'hedgefund');commitForm();" id="hedgefund_order">冲红金额</th>
 							<th onclick="orderBy(this,'summit');commitForm();" id="summit_order">消费量</th>
 							<th onclick="orderBy(this,'consumecount');commitForm();" id="consumecount_order">消费次数</th>
