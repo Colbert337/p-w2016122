@@ -549,6 +549,9 @@
       <if test="chargeType != null &amp;&amp; chargeType != ''" >
         and so.charge_type = #{chargeType, jdbcType=VARCHAR}
       </if>
+      <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
+        and so.channel_number = #{channelNumber, jdbcType=VARCHAR}
+      </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
         and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
       </if>
@@ -575,6 +578,9 @@
       </if>
       <if test="chargeType != null &amp;&amp; chargeType != ''" >
         and so.charge_type = #{chargeType, jdbcType=VARCHAR}
+      </if>
+      <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
+        and so.channel_number = #{channelNumber, jdbcType=VARCHAR}
       </if>
       <if test="startDate != null &amp;&amp; startDate != ''">
         and order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')

@@ -41,7 +41,8 @@
 					},
 					stringLength: {
 						min: 6,
-						message: '密码不能小于6个字符'
+						max:20,
+						message: '密码长度必须在6~20位之间'
 					}
 				}
 			},
@@ -52,7 +53,8 @@
 					},
 					stringLength: {
 						min: 6,
-						message: '密码不能小于6个字符'
+						max:20,
+						message: '密码长度必须在6~20位之间'
 					},
 					callback: {
 						message: '密码不一致',
@@ -500,7 +502,7 @@
 										<div class="form-group">
 											<label class="col-sm-4 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码:</label>
 											<div class="col-sm-8">
-												<input type="password" name="password" id="password" placeholder="用户密码" maxlength="6" class="form-control" />
+												<input type="password" name="password" id="password" placeholder="用户密码" maxlength="20" class="form-control" />
 											</div>
 										</div>
 									</div>
@@ -508,7 +510,7 @@
 										<div class="form-group">
 											<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码:</label>
 											<div class="col-sm-8">
-												<input type="password" name="rePassword" id="re_password" placeholder="确认密码" maxlength="6" class="form-control" />
+												<input type="password" name="rePassword" id="re_password" placeholder="确认密码" maxlength="20" class="form-control" />
 											</div>
 										</div>
 									</div>

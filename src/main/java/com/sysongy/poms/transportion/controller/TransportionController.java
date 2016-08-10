@@ -1359,7 +1359,7 @@ public class TransportionController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"运输公司编号","运输公司名称","充值金额","运管人员","销售人员"};
+	            content[0] = new String[]{"运输公司编号","运输公司名称","充值金额(包含冲红)","运管人员","销售人员"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -1459,7 +1459,7 @@ public class TransportionController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"运输公司编号","运输公司名称","车队编号","车队名称","加注站名称","消费金额","冲红金额","消费量","消费次数"};
+	            content[0] = new String[]{"运输公司编号","运输公司名称","车队编号","车队名称","加注站名称","消费金额(包含冲红)","冲红金额","消费量","消费次数"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
