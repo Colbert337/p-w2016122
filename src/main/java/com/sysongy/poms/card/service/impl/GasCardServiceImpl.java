@@ -204,6 +204,7 @@ public class GasCardServiceImpl implements GasCardService{
 						 BeanUtils.copyProperties(cardtmp, log);
 						 log.setOptime(new Date());
 						 log.setAction(GlobalConstant.CardAction.UPDATE);
+						 log.setBatch_no(new SimpleDateFormat("YYYYMMddHHmmss").format(new Date()));
 						 gasCardLogMapper.insert(log);
 					 }
 					 ret++;
@@ -246,4 +247,14 @@ public class GasCardServiceImpl implements GasCardService{
 	public int updateByPrimaryKeySelective(GasCard record) throws Exception {
 		return gasCardMapper.updateByPrimaryKeySelective(record);
 	}
+
+	@Override
+	public List<GasCardLog> queryGasCardForList(GasCardLog obj) throws Exception {
+		// TODO Auto-generated method stub
+		List<GasCardLog> list = gasCardLogMapper.queryLogForList(obj);
+		return list;
+	}
+
+	 
+	
 }
