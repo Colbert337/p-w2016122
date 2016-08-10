@@ -64,7 +64,7 @@
 
 				<div>
 					<div class="alert alert-info alert-mt">
-						<span class="bigger-120">消费总金额：${totalCash}元</span>
+						<span class="bigger-120">消费总金额：${totalCash}元</span>&emsp;<span class="bigger-120">冲红总金额：${chonghongCash}元</span>
 					</div>
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 						<thead>
@@ -76,7 +76,6 @@
 								</label>
 							</th>--%>
 							<%--<th onclick="orderBy(this,'sys_transportion_id');commitForm();" id="sys_transportion_id_order">运输公司编号</th>--%>
-							<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 							<th onclick="orderBy(this,'tc_fleet_id');commitForm();" id="tc_fleet_id_order">车队编号</th>
 							<th onclick="orderBy(this,'fleet_name');commitForm();" id="fleet_name_order">车队名称</th>
 							<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
@@ -99,7 +98,6 @@
 								</td>--%>
 
 								<%--<td>${list.sys_transportion_id}</td>--%>
-								<td>${list.transportion_name}</td>
 								<td>${list.tc_fleet_id}</td>
 								<td>${list.fleet_name}</td>
 								<td>${list.channel}</td>

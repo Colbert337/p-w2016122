@@ -75,7 +75,7 @@ public class TcFleetQuotaController extends BaseContoller {
     private UsysparamService service;
 
     /**
-     * 查询车辆列表
+     * 查询车队额度列表
      * @return
      */
     @RequestMapping("/list/page")
@@ -424,7 +424,7 @@ public class TcFleetQuotaController extends BaseContoller {
             }
             //合计交易金额和返现金额
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
+            content[1] = new String[]{"","导出时间："+sdf.format(new Date())};
             reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
 
             //累计总划款金额

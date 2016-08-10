@@ -1,17 +1,8 @@
 package com.sysongy.poms.mobile.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.card.model.GasCard;
-import com.sysongy.poms.mobile.model.MbBanner;
-import com.sysongy.poms.mobile.service.MbBannerService;
-import com.sysongy.poms.permi.model.SysUser;
-import com.sysongy.tcms.advance.model.TcVehicle;
-import com.sysongy.util.Decoder;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.UUIDGenerator;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,9 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.mobile.model.MbBanner;
+import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.UUIDGenerator;
 
 /**
  * @FileName: MbBannerController
@@ -39,35 +37,43 @@ import java.util.Map;
 public class MbBannerController extends BaseContoller{
     @Autowired
     MbBannerService mbBannerService;
+    
+    MbBanner mbBanner;
 
     /**
      * 查询图片列表
      * @return
      */
     @RequestMapping("/list/page")
-    public String queryMbBannerListPage(@ModelAttribute CurrUser currUser, MbBanner mbBanner, @RequestParam(required = false) String resultVal,
-                                        ModelMap map) throws Exception{
-        String stationId = currUser.getStationId();
-        if(mbBanner.getPageNum() == null){
+    public String queryMbBannerListPage(MbBanner mbBanner, ModelMap map) throws Exception{
+    	
+    	this.mbBanner = mbBanner;
+    	String ret = "webpage/poms/mobile/banner_list";
+    	
+    	PageBean bean = new PageBean();
+
+    	if(mbBanner.getPageNum() == null){
             mbBanner.setPageNum(GlobalConstant.PAGE_NUM);
             mbBanner.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+    	
+    	if(StringUtils.isEmpty(mbBanner.getImgType())){
+    		mbBanner.setImgType(GlobalConstant.ImgType.TOP);
+    	}
 
-        //封装分页参数，用于查询分页内容
-        Map<String, Object> resultMap = new HashMap<>();
-        if(resultVal != null && !"".equals(resultVal)){
-            resultVal = Decoder.symmetricDecrypto(resultVal);
-            resultMap.put("retMsg",resultVal);
-        }
+        PageInfo<MbBanner> pageinfo = new PageInfo<MbBanner>();
+        
+        pageinfo = mbBannerService.queryMbBannerListPage(mbBanner);
+        
+        bean.setRetCode(100);
+		bean.setRetMsg("查询成功");
+		bean.setPageInfo(ret);
 
-        PageInfo<MbBanner> mbBannerPageInfo = new PageInfo<MbBanner>();
-        mbBannerPageInfo = mbBannerService.queryMbBannerListPage(mbBanner);
-        map.addAttribute("mbBannerList",mbBannerPageInfo.getList());
-        map.addAttribute("pageInfo",mbBannerPageInfo);
-        map.addAttribute("mbBanner",mbBanner);
-        map.addAttribute("ret",resultMap);
-        map.addAttribute("stationId",stationId);
-        return "webpage/poms/mobile/banner_list";
+		map.addAttribute("ret", bean);
+		map.addAttribute("pageInfo", pageinfo);
+		map.addAttribute("mbBanner",mbBanner);
+        
+        return ret;
     }
 
     /**
@@ -94,32 +100,81 @@ public class MbBannerController extends BaseContoller{
      * @return
      */
     @RequestMapping("/save")
-    public String saveBanner(@ModelAttribute CurrUser currUser, MbBanner mbBanner, ModelMap map) throws Exception{
-        String stationId = currUser.getStationId();
-        String resultVal = "";
-        if(mbBanner != null && mbBanner.getMbBannerId() !=  null && !"".equals(mbBanner.getMbBannerId())){
-            //修改图片
-            mbBanner.setUpdatedDate(new Date());
-            mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-            mbBannerService.updateBanner(mbBanner);
-            resultVal = "修改成功！";
-            resultVal = Encoder.symmetricEncrypto(resultVal);
-        }else{
-            //查询当前图片最大序号
-            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.BANNER);
-            if(maxBannerIndex != null){
-                mbBanner.setSort(maxBannerIndex.getSort()+1);
-            }else{
-                mbBanner.setSort(0);
-            }
-            //添加图片
-            mbBanner.setMbBannerId(UUIDGenerator.getUUID());
-            mbBanner.setImgType(GlobalConstant.ImgType.BANNER);
-            mbBannerService.saveBanner(mbBanner);
-            resultVal = "添加成功！";
-            resultVal = Encoder.symmetricEncrypto(resultVal);
-        }
-        return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
+    public String saveBanner(MbBanner mbBanner, ModelMap map) throws Exception{
+//        String resultVal = "";
+//        
+//        if(mbBanner != null && mbBanner.getMbBannerId() !=  null && !"".equals(mbBanner.getMbBannerId())){
+//            //修改图片
+//            mbBanner.setUpdatedDate(new Date());
+//            mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+//            mbBannerService.updateBanner(mbBanner);
+//            resultVal = "修改成功！";
+//            resultVal = Encoder.symmetricEncrypto(resultVal);
+//        }else{
+//            //查询当前图片最大序号
+//            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
+//            if(maxBannerIndex != null){
+//                mbBanner.setSort(maxBannerIndex.getSort()+1);
+//            }else{
+//                mbBanner.setSort("0");
+//            }
+//            //添加图片
+//            mbBanner.setMbBannerId(UUIDGenerator.getUUID());
+//            mbBanner.setImgType(mbBanner.getImgType());
+//            mbBannerService.saveBanner(mbBanner);
+//            resultVal = "添加成功！";
+//            resultVal = Encoder.symmetricEncrypto(resultVal);
+//        }
+//        return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
+        
+        PageBean bean = new PageBean();
+		String ret = "webpage/poms/mobile/banner_list";
+
+		try {
+			if(mbBanner != null && mbBanner.getMbBannerId() !=  null && !"".equals(mbBanner.getMbBannerId())){
+				
+				mbBanner.setUpdatedDate(new Date());
+	            mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+	            
+	            mbBannerService.updateBanner(mbBanner);
+	            
+				bean.setRetMsg("保存成功");
+				
+			}else{
+				
+				//查询当前图片最大序号
+	            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
+	            if(maxBannerIndex != null){
+	                mbBanner.setSort(maxBannerIndex.getSort()+1);
+	            }else{
+	                mbBanner.setSort("0");
+	            }
+
+	            mbBanner.setMbBannerId(UUIDGenerator.getUUID());
+	            mbBanner.setImgType(mbBanner.getImgType());
+	            
+	            mbBannerService.saveBanner(mbBanner);
+	            
+				bean.setRetMsg("新增成功");
+			}
+			
+			ret = this.queryMbBannerListPage(this.mbBanner==null?new MbBanner():this.mbBanner, map);
+
+			bean.setRetCode(100);
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			
+			logger.error("", e);
+		}
+		finally {
+			return ret;
+		}
     }
 
     /**
@@ -130,8 +185,11 @@ public class MbBannerController extends BaseContoller{
     public String deleteBanner( MbBanner mbBanner,ModelMap map) throws Exception{
         mbBanner.setIsDeleted(GlobalConstant.STATUS_DELETE);
         String resultVal = "删除成功！";
+        
         resultVal = Encoder.symmetricEncrypto(resultVal);
+        
         mbBannerService.updateBanner(mbBanner);
+        
         return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
     }
 
