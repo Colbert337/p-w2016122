@@ -82,7 +82,7 @@
 									</th>
 									<th onclick="orderBy(this,'sys_transportion_id');commitForm();" id="sys_transportion_id_order">运输公司编号</th>
 									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
-									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">充值金额</th>
+									<th onclick="orderBy(this,'deposit');commitForm();" id="deposit_order">充值金额(包含冲红)</th>
 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">运管人员</th>
 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">销售人员</th>
 								</tr>
