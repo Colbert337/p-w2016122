@@ -85,7 +85,7 @@
 									<th onclick="orderBy(this,'station_id_id');commitForm();" id="station_id_order">注册工作站编号</th>
 									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册工作站名称</th>
 									<!--  <th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> -->
-									<th onclick="orderBy(this,'created_date');commitForm();" id="created_time_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
+									<th onclick="orderBy(this,'updatedDate');commitForm();" id="created_time_order" class="td-w2"><i id="updatedDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
 									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
 									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order" class="td-w2"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
 									<th id="memoth" style="display:none">备注</th>
@@ -114,7 +114,7 @@
 									<td>${list.stationId}</td>
 									<td>${list.regisSource}</td>
 									<%-- <td>${list.isIdent == '0'?'否':'是'}</td>  --%>
-									<td><fmt:formatDate value="${list.createdDate}" type="both"/></td>
+									<td><fmt:formatDate value="${list.updatedDate}" type="both"/></td>
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>
 									<td style="display:none">${list.memo}</td>
