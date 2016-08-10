@@ -94,21 +94,22 @@ public class CardController extends BaseContoller{
 			bean.setPageInfo(ret);
 
 			map.addAttribute("ret", bean);
+			
 		} catch (Exception e) {
 			bean.setRetCode(5000);
-			bean.setRetMsg(e.getMessage());
+			bean.setRetMsg("入库失败，不可重复入库!");
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
-		}
-		finally {
-			return  ret;
+		} finally {
+
+			return ret;
 		}
 	}
-	
+
 	@RequestMapping("/saveCardMultiple")
-	public String saveCardMultiple(ModelMap map, GasCard gascard) throws Exception{
+	public String saveCardMultiple(ModelMap map, GasCard gascard) throws Exception {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/card/card_new";
 		Integer rowcount = null;

@@ -75,7 +75,7 @@
         and sys_transportion_id = #{sys_transportion_id,jdbcType=VARCHAR}
       </if>
       <if test="transportion_name != null &amp;&amp; transportion_name != ''" >
-        and transportion_name = #{transportion_name,jdbcType=VARCHAR}
+		and transportion_name  LIKE CONCAT(CONCAT('%', #{transportion_name,jdbcType=VARCHAR}), '%') 
       </if>
       <if test="status!= null &amp;&amp; status != ''" >
         and status = #{status,jdbcType=VARCHAR}
@@ -440,6 +440,7 @@
 	)deposit,st.salesmen_name,st.operations_name 
 	from sys_transportion st 
 	left join sys_deposit_log sdl on st.sys_transportion_id = sdl.station_id
+	where 1=1
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
         and st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR}
@@ -458,6 +459,7 @@
 	)deposit,st.salesmen_name,st.operations_name 
 	from sys_transportion st 
 	left join sys_deposit_log sdl on st.sys_transportion_id = sdl.station_id
+	where 1=1
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
         and st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR}

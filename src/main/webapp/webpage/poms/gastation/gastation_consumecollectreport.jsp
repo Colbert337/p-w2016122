@@ -12,7 +12,7 @@
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formgastation" action="<%=basePath%>/web/gastation/gastationConsumeReport/import">
+	<form id="formgastation" action="<%=basePath%>/web/gastation/gastationRechargeReport/import">
 	<input type="hidden" name="downloadreport" value="true"/>
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
@@ -64,7 +64,7 @@
 
 					<div>
 						<div class="alert alert-info alert-mt">
-							<span class="bigger-120">充值总金额：${totalCash}元</span>
+							<span class="bigger-120">消费总金额：${totalCash}元</span>
 						</div>
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
