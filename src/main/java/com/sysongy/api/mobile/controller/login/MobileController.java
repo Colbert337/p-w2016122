@@ -459,8 +459,39 @@ public class MobileController {
     		GetCitysUtils.checkParam(params, ret);
     		
     		String opencity = (String) prop.get("opencity");
-
+            
+            if(opencity.split("~").length >0 ){
+            	Data data = new Data();
+            	data.setCity(opencity.split("~"));
+            	
+            	ArrayList<Data> list = new ArrayList<Data>();
+            	list.add(data);
+            	
+            	ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, GetCitysUtils.RET_QUERY_SUCCESS_MSG, list);
+            }
+           
+        } catch (Exception e) {
+        	if(StringUtils.isEmpty(ret.getMsg())){
+				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+			}
+			
+			logger.error("MobileController.Login ERROR： " + e);
+        }
+        finally {
+			return JSON.toJSONString(ret);
+		}
+    }
     
+    @RequestMapping(value = "ReturnCash")
+    @ResponseBody
+    public String getReturnCash(MobileParams params){
+    	
+    	MobileReturn ret = new MobileReturn();
+    	
+    	try {
+    		GetCitysUtils.checkParam(params, ret);
+    		
+    		String opencity = (String) prop.get("opencity");
             
             if(opencity.split("~").length >0 ){
             	Data data = new Data();
