@@ -336,9 +336,9 @@ public class CRMCustomerContoller {
             String msgType = request.getParameter("msgType");
             String orderID = request.getParameter("orderID");
             if(msgType.equalsIgnoreCase("reSetCode")){
-                redisClientImpl.addToCache(orderID, checkCode.toString(), 120);
+                redisClientImpl.addToCache(orderID, checkCode.toString(), InterfaceConstants.SHORT_MSEEAGE_CODE_EXPIRE_TIME);
             } else {
-                redisClientImpl.addToCache(sysDriver.getSysDriverId(), checkCode.toString(), 120);
+                redisClientImpl.addToCache(sysDriver.getSysDriverId(), checkCode.toString(), InterfaceConstants.SHORT_MSEEAGE_CODE_EXPIRE_TIME);
             }
 
             if(msgType.equalsIgnoreCase("changePassword")){
@@ -372,6 +372,7 @@ public class CRMCustomerContoller {
                 redisClientImpl.addToCache(ip, new Date(), 60);
             } else {
                 if((new Date().getTime() - catchIPTime.getTime()) < 60000){     //IP地址发送过于频繁，同一分钟同一IP只允许发一次
+                    logger.error("该IP发送短信过于频繁，手机号为：" + sysDriver.getMobilePhone());
                     return true;
                 }
             }
@@ -381,11 +382,12 @@ public class CRMCustomerContoller {
                 ShortMessageInfoModel shortMessageInfoModel = new ShortMessageInfoModel();
                 shortMessageInfoModel.setCreateTime(new Date());
                 shortMessageInfoModel.setSendTimes(shortMessageInfoModel.getSendTimes() + 1);
-                redisClientImpl.addToCache(sysDriver.getMobilePhone(), shortMessageInfoModel, 300);
+                redisClientImpl.addToCache(sysDriver.getMobilePhone(), shortMessageInfoModel, 120);
             } else {
                 if( shortMessageInfo.getSendTimes() < 10 ){
                     shortMessageInfo.setSendTimes(shortMessageInfo.getSendTimes() + 1);
                 } else {
+                    logger.error("该手机在5分钟内发送短信超过10次，手机号为：" + sysDriver.getMobilePhone());
                     return true;
                 }
             }
@@ -633,6 +635,7 @@ public class CRMCustomerContoller {
                 orgSysDriver.setCheckedDate(sysDriver.getCheckedDate());
             }
 
+            orgSysDriver.setUpdatedDate(new Date());
             int renum = driverService.saveDriver(orgSysDriver, "update");
             if(renum > 0){
                 return orgSysDriver;
@@ -689,6 +692,7 @@ public class CRMCustomerContoller {
                 sysDriver.setExpiryDate(DateUtil.strToDate(sysDriver.getExpireTimeForCRM(), "yyyy-MM-dd"));
             }
 
+            sysDriver.setUpdatedDate(new Date());
             driverService.saveDriver(sysDriver, "update");
             SysDriver sysDriverNew = driverService.queryDriverByPK(sysDriver.getSysDriverId());
             attributes.put("driver", sysDriverNew);
@@ -779,7 +783,7 @@ public class CRMCustomerContoller {
             aliShortMessageBean.setCode(checkCode.toString());
             aliShortMessageBean.setProduct("司集能源科技平台");
             String key = GlobalConstant.MSG_PREFIX + sysDriver.getMobilePhone();
-            redisClientImpl.addToCache(key, checkCode.toString(), 60);
+            redisClientImpl.addToCache(key, checkCode.toString(), InterfaceConstants.SHORT_MSEEAGE_CODE_EXPIRE_TIME);
 
             String msgType = request.getParameter("msgType");
             if(msgType.equalsIgnoreCase("changePassword")){
