@@ -470,29 +470,29 @@
   </select>
   
   <select id="transportionConsumeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
-	select st.sys_transportion_id,st.transportion_name,rb.tc_fleet_id,rb.fleet_name,rb.channel, rb.channel_number,
-	(select ifnull(sum(cash),0) from report_business rb1 where st.sys_transportion_id = rb1.credit_account and rb1.channel_number = rb.channel_number and rb.tc_fleet_id = rb1.tc_fleet_id
+	select st.sys_transportion_id,st.transportion_name,tc.tc_fleet_id,tc.fleet_name,rb.channel, rb.channel_number,
+	(select ifnull(sum(cash),0) from report_business rb1 where st.sys_transportion_id = rb1.credit_account and rb1.channel_number = rb.channel_number and rb.tc_fleet_id = rb1.tc_fleet_id and rb1.order_type = '210'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb1.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	</trim>
 	) cash,
-	(select ifnull(sum(cash)*-1,0) from report_callback ra where st.sys_transportion_id = ra.credit_account and ra.channel_number = rb.channel_number and rb.tc_fleet_id = ra.tc_fleet_id
+	(select ifnull(sum(cash)*-1,0) from report_callback ra where st.sys_transportion_id = ra.credit_account and ra.channel_number = rb.channel_number and rb.tc_fleet_id = ra.tc_fleet_id and ra.order_type = '210'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and ra.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	</trim>
 	) hedgefund,
-	(select ifnull(sum(goods_sum),0) from report_business rb3 where st.sys_transportion_id = rb3.credit_account and rb3.channel_number = rb.channel_number and rb.tc_fleet_id = rb3.tc_fleet_id and rb3.been_discharged = '0'
+	(select ifnull(sum(goods_sum),0) from report_business rb3 where st.sys_transportion_id = rb3.credit_account and rb3.channel_number = rb.channel_number and rb.tc_fleet_id = rb3.tc_fleet_id and rb3.been_discharged = '0' and rb3.order_type = '210'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb3.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	</trim>
 	) summit,
-	(select ifnull(count(rb2.order_id),0) from report_business rb2 where st.sys_transportion_id = rb2.credit_account and rb2.channel_number = rb.channel_number and rb.tc_fleet_id = rb2.tc_fleet_id and rb2.been_discharged = '0'
+	(select ifnull(count(rb2.order_id),0) from report_business rb2 where st.sys_transportion_id = rb2.credit_account and rb2.channel_number = rb.channel_number and rb.tc_fleet_id = rb2.tc_fleet_id and rb2.been_discharged = '0' and rb2.order_type = '210'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -502,39 +502,39 @@
 	from tc_fleet tc
 	left join sys_transportion st on tc.station_id = sys_transportion_id
 	left join report_business rb on st.sys_transportion_id = rb.credit_account
-	where rb.order_type = '210' 
+	where 1=1 
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
         and (st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR})
       </if>
 	</trim>
-    group by st.sys_transportion_id,rb.tc_fleet_id,rb.channel 
+    group by st.sys_transportion_id,tc.tc_fleet_id,rb.channel 
   </select>
   
   <select id="transportionConsumeReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
   	select sum(cash) total from (select st.sys_transportion_id,st.transportion_name,rb.tc_fleet_id,rb.fleet_name,rb.channel, rb.channel_number,
-	(select ifnull(sum(cash),0) from report_business rb1 where st.sys_transportion_id = rb1.credit_account and rb1.channel_number = rb.channel_number and rb.tc_fleet_id = rb1.tc_fleet_id
+	(select ifnull(sum(cash),0) from report_business rb1 where st.sys_transportion_id = rb1.credit_account and rb1.channel_number = rb.channel_number and rb.tc_fleet_id = rb1.tc_fleet_id and rb1.order_type = '210'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb1.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	</trim>
 	) cash,
-	(select ifnull(sum(cash)*-1,0) from report_callback ra where st.sys_transportion_id = ra.credit_account and ra.channel_number = rb.channel_number and rb.tc_fleet_id = ra.tc_fleet_id
+	(select ifnull(sum(cash)*-1,0) from report_callback ra where st.sys_transportion_id = ra.credit_account and ra.channel_number = rb.channel_number and rb.tc_fleet_id = ra.tc_fleet_id and ra.order_type = '210'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and ra.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	</trim>
 	) hedgefund,
-	(select ifnull(sum(goods_sum),0) from report_business rb3 where st.sys_transportion_id = rb3.credit_account and rb3.channel_number = rb.channel_number and rb.tc_fleet_id = rb3.tc_fleet_id and rb3.been_discharged = '0'
+	(select ifnull(sum(goods_sum),0) from report_business rb3 where st.sys_transportion_id = rb3.credit_account and rb3.channel_number = rb.channel_number and rb.tc_fleet_id = rb3.tc_fleet_id and rb3.been_discharged = '0' and rb3.order_type = '210'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb3.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	</trim>
 	) summit,
-	(select ifnull(count(rb2.order_id),0) from report_business rb2 where st.sys_transportion_id = rb2.credit_account and rb2.channel_number = rb.channel_number and rb.tc_fleet_id = rb2.tc_fleet_id and rb2.been_discharged = '0'
+	(select ifnull(count(rb2.order_id),0) from report_business rb2 where st.sys_transportion_id = rb2.credit_account and rb2.channel_number = rb.channel_number and rb.tc_fleet_id = rb2.tc_fleet_id and rb2.been_discharged = '0' and rb2.order_type = '210'
 	<trim>
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -544,17 +544,17 @@
 	from tc_fleet tc
 	left join sys_transportion st on tc.station_id = sys_transportion_id
 	left join report_business rb on st.sys_transportion_id = rb.credit_account
-	where rb.order_type = '210' 
+	where 1=1 
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
         and (st.sys_transportion_id = #{stationId, jdbcType=VARCHAR} or st.transportion_name = #{stationId, jdbcType=VARCHAR})
       </if>
 	</trim>
-    group by st.sys_transportion_id,rb.tc_fleet_id,rb.channel ) as total
+    group by st.sys_transportion_id,tc.tc_fleet_id,rb.channel ) as total
   </select>
 
 <!--个人消费汇总报表-->
-  <select id="queryTcPersonalCountReport" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
+<!--  <select id="queryTcPersonalCountReport" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
     select sd.sys_driver_id,sd.user_name, sd.full_name, rb.channel, rb.channel_number,
     (select ifnull(sum(cash),0) from report_business rb1 WHERE (sd.card_id = rb1.consume_card or sd.sys_driver_id = rb1.credit_account ) AND rb1.channel_number = rb.channel_number
     <trim>
@@ -580,7 +580,7 @@
       </if>
     </trim>
     ) hedgefund,
-    (select ifnull(sum(goods_sum),0) from report_business rb3 WHERE (sd.card_id = rb3.consume_card or sd.sys_driver_id = rb3.credit_account ) AND rb3.channel_number = rb.channel_number
+    (select ifnull(sum(goods_sum),0) from report_business rb3 WHERE (sd.card_id = rb3.consume_card or sd.sys_driver_id = rb3.credit_account ) AND rb3.channel_number = rb.channel_number and rb3.been_discharged = '0'
     <trim>
       <if test="startDate != null &amp;&amp; startDate != ''">
         and rb3.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -592,7 +592,7 @@
       </if>
     </trim>
     ) summit,
-    (select ifnull(count(rb2.order_id),0) from report_business rb2 WHERE (sd.card_id = rb2.consume_card or sd.sys_driver_id = rb2.credit_account ) AND rb2.channel_number = rb.channel_number
+    (select ifnull(count(rb2.order_id),0) from report_business rb2 WHERE (sd.card_id = rb2.consume_card or sd.sys_driver_id = rb2.credit_account ) AND rb2.channel_number = rb.channel_number and rb2.been_discharged = '0'
     <trim>
       <if test="startDate != null &amp;&amp; startDate != ''">
         and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -605,8 +605,69 @@
     </trim>
     ) consumecount
     FROM sys_driver sd
-    LEFT JOIN report_business rb on sd.card_id = rb.consume_card or sd.sys_driver_id = rb.sys_driver_id
+    LEFT JOIN report_business rb on (sd.card_id = rb.consume_card or sd.sys_driver_id = rb.sys_driver_id)
     WHERE rb.order_type = '220'
+    <trim>
+      <if test="stationId != null &amp;&amp; stationId != ''" >
+        and sd.station_id = #{stationId, jdbcType=VARCHAR}
+      </if>
+    </trim>
+    GROUP BY sd.sys_driver_id, rb.channel
+  </select>-->
+
+  <select id="queryTcPersonalCountReport" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.system.model.SysDepositLog" >
+    select sd.sys_driver_id,sd.user_name, sd.full_name, rb.channel, rb.channel_number,
+    (select ifnull(sum(cash),0) from report_business rb1 WHERE (sd.card_id = rb1.consume_card or sd.sys_driver_id = rb1.credit_account ) AND rb1.channel_number = rb.channel_number and rb1.order_type = '220'
+    <trim>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+        and rb1.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+    <trim>
+      <if test="stationId != null &amp;&amp; stationId != ''" >
+        and sd.station_id = #{stationId, jdbcType=VARCHAR}
+      </if>
+    </trim>
+    ) cash,
+    (select ifnull(sum(cash)*-1,0) from report_callback ra WHERE (sd.card_id = ra.consume_card or sd.sys_driver_id = ra.credit_account ) AND ra.channel_number = rb.channel_number and ra.order_type = '220'
+    <trim>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+        and ra.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+    <trim>
+      <if test="stationId != null &amp;&amp; stationId != ''" >
+        and sd.station_id = #{stationId, jdbcType=VARCHAR}
+      </if>
+    </trim>
+    ) hedgefund,
+    (select ifnull(sum(goods_sum),0) from report_business rb3 WHERE (sd.card_id = rb3.consume_card or sd.sys_driver_id = rb3.credit_account ) AND rb3.channel_number = rb.channel_number and rb3.been_discharged = '0' and rb3.order_type = '220'
+    <trim>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+        and rb3.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+    <trim>
+      <if test="stationId != null &amp;&amp; stationId != ''" >
+        and sd.station_id = #{stationId, jdbcType=VARCHAR}
+      </if>
+    </trim>
+    ) summit,
+    (select ifnull(count(rb2.order_id),0) from report_business rb2 WHERE (sd.card_id = rb2.consume_card or sd.sys_driver_id = rb2.credit_account ) AND rb2.channel_number = rb.channel_number and rb2.been_discharged = '0' and rb2.order_type = '220'
+    <trim>
+      <if test="startDate != null &amp;&amp; startDate != ''">
+        and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+    <trim>
+      <if test="stationId != null &amp;&amp; stationId != ''" >
+        and sd.station_id = #{stationId, jdbcType=VARCHAR}
+      </if>
+    </trim>
+    ) consumecount
+    FROM sys_driver sd
+    LEFT JOIN report_business rb on (sd.card_id = rb.consume_card or sd.sys_driver_id = rb.sys_driver_id)
+    WHERE 1=1
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
         and sd.station_id = #{stationId, jdbcType=VARCHAR}
