@@ -62,7 +62,7 @@
  </error-page>
  
  <session-config> 
-	<session-timeout>5</session-timeout> 
+	<session-timeout>15</session-timeout> 
  </session-config>  
  
 <!--tomcat项目检测依赖包-->
@@ -97,7 +97,6 @@
       <url-pattern>/crmInterface/*</url-pattern>
   </filter-mapping>
   <!--<filter-mapping>
->>>>>>> f58247c0aed82d1d364f0fb31545b3d36fb37b82
 	  <filter-name>SecurityServlet</filter-name>    
 	  <url-pattern>*.jsp</url-pattern>    
   </filter-mapping>-->

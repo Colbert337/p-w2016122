@@ -85,6 +85,7 @@
 
 										<div class="col-sm-4">
 											<input type="text" id="gas_station_name"  name="gas_station_name" placeholder="输入加注站名称" class="form-control" maxlength="20" value="${station.gas_station_name}"/>
+											
 										</div>
 									</div>
 									

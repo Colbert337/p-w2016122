@@ -1070,7 +1070,7 @@ public class GastationController extends BaseContoller{
 					order.setOrderby("sys_gas_station_id desc");
 				}
 
-				PageInfo<Map<String, Object>> pageinfo = service.gastionConsumeReport(order);
+				PageInfo<Map<String, Object>> pageinfo = service.gastionRechargeReport(order);
 				List<Map<String, Object>> list = pageinfo.getList();
 
 	            int cells = 0 ; // 记录条数
@@ -1105,7 +1105,7 @@ public class GastationController extends BaseContoller{
 	            		String salesmen_name = tmpMap.get("salesmen_name")==null?"":tmpMap.get("salesmen_name").toString();
 	            		String operations_name = tmpMap.get("operations_name")==null?"":tmpMap.get("operations_name").toString();
 
-	                    content[i] = new String[]{sys_gas_station_id,gas_station_name,cash,hedgefund,salesmen_name,operations_name};
+	                    content[i] = new String[]{sys_gas_station_id,gas_station_name,cash,hedgefund,operations_name,salesmen_name};
 	                    i++;
 	                }
 	            }
