@@ -172,7 +172,7 @@ public class TcReportController extends BaseContoller{
             String[][] content = new String[cells+3][6];//[行数][列数]
             //第一列
             content[0] = new String[]{transName+"个人消费汇总报表"};
-            content[2] = new String[]{"司机账户","加注站名称","消费金额","冲红金额","消费量","消费次数"};
+            content[2] = new String[]{"司机账户","加注站名称","消费金额(含冲红)","冲红金额","消费量","消费次数"};
             //设置列宽
             String [] wcell = new String []{"0,13","1,26","2,13","3,13","4,13","5,30"};
             //合并第一行单元格
@@ -328,7 +328,7 @@ public class TcReportController extends BaseContoller{
             String[][] content = new String[cells+3][8];//[行数][列数]
             //第一列
             content[0] = new String[]{transName+"车队消费汇总报表"};
-            content[2] = new String[]{"车队编号","车队名称","加注站名称","消费金额","冲红金额","消费量","消费次数"};
+            content[2] = new String[]{"车队编号","车队名称","加注站名称","消费金额(含冲红)","冲红金额","消费量","消费次数"};
             //设置列宽
             String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,13","6,13","7,13","8,13","9,13","10,23","11,30"};
             //合并第一行单元格

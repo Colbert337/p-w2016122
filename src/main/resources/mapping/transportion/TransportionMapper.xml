@@ -580,7 +580,7 @@
       </if>
     </trim>
     ) hedgefund,
-    (select ifnull(sum(goods_sum),0) from report_business rb3 WHERE (sd.card_id = rb3.consume_card or sd.sys_driver_id = rb3.credit_account ) AND rb3.channel_number = rb.channel_number
+    (select ifnull(sum(goods_sum),0) from report_business rb3 WHERE (sd.card_id = rb3.consume_card or sd.sys_driver_id = rb3.credit_account ) AND rb3.channel_number = rb.channel_number and rb3.been_discharged = '0'
     <trim>
       <if test="startDate != null &amp;&amp; startDate != ''">
         and rb3.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -592,7 +592,7 @@
       </if>
     </trim>
     ) summit,
-    (select ifnull(count(rb2.order_id),0) from report_business rb2 WHERE (sd.card_id = rb2.consume_card or sd.sys_driver_id = rb2.credit_account ) AND rb2.channel_number = rb.channel_number
+    (select ifnull(count(rb2.order_id),0) from report_business rb2 WHERE (sd.card_id = rb2.consume_card or sd.sys_driver_id = rb2.credit_account ) AND rb2.channel_number = rb.channel_number and rb2.been_discharged = '0'
     <trim>
       <if test="startDate != null &amp;&amp; startDate != ''">
         and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -605,7 +605,7 @@
     </trim>
     ) consumecount
     FROM sys_driver sd
-    LEFT JOIN report_business rb on sd.card_id = rb.consume_card or sd.sys_driver_id = rb.sys_driver_id
+    LEFT JOIN report_business rb on (sd.card_id = rb.consume_card or sd.sys_driver_id = rb.sys_driver_id)
     WHERE rb.order_type = '220'
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
