@@ -772,12 +772,14 @@
         getInsertList: function () {
             var i, data, list = [],
                 align = getAlign(),
-                prefix = editor.getOpt('imageUrlPrefix');
+                prefix = editor.getOpt('imageUrlPrefix');              
             for (i = 0; i < this.imageList.length; i++) {
                 data = this.imageList[i];
                 list.push({
-                    src: prefix + data.url,
-                    _src: prefix + data.url,
+                	 src: getRootPath() + prefix + data.url,
+                     _src: getRootPath() + prefix + data.url,
+//                    src: prefix + data.url,
+//                    _src: prefix + data.url,
                     title: data.title,
                     alt: data.original,
                     floatStyle: align
@@ -911,8 +913,10 @@
                         }
                     })(img));
                     img.width = 113;
-                    img.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') == -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
-                    img.setAttribute('_src', urlPrefix + list[i].url);
+                    img.setAttribute('src', getRootPath() + urlPrefix + list[i].url + (list[i].url.indexOf('?') == -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
+                    img.setAttribute('_src', getRootPath() + urlPrefix + list[i].url);
+//                    img.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') == -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
+//                    img.setAttribute('_src', urlPrefix + list[i].url);
                     domUtils.addClass(icon, 'icon');
 
                     item.appendChild(img);
@@ -1140,3 +1144,21 @@
     };
 
 })();
+
+function getRootPath(){
+
+    //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+
+    var curWwwPath=window.document.location.href;
+
+    var pathName=window.document.location.pathname;
+
+    var pos=curWwwPath.indexOf(pathName);
+
+    var localhostPaht=curWwwPath.substring(0,pos);
+
+    var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+
+    return localhostPaht + projectName;
+
+}
