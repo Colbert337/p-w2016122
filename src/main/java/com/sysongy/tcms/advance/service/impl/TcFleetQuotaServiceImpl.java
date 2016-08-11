@@ -156,6 +156,9 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
         //更新车队资金分配信息
         if(tcFleetQuotaList != null &&  tcFleetQuotaList.size() > 0){
             for (Map<String, Object> fleetQuota:tcFleetQuotaList) {
+                SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String date = sft.format(new Date());
+                fleetQuota.put("updatedDate",date);
                 fleetMapper.updateFleetMap(fleetQuota);
             }
         }

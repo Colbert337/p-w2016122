@@ -146,7 +146,7 @@
         and  is_admin = #{isAdmin}
       </if>
     </trim>
-    and status = 0 and is_deleted = 1
+    /*and status = 0 and is_deleted = 1*/
   </select>
   <select id="queryUserByAccount" resultMap="BaseResultMap" >
     select
@@ -196,7 +196,7 @@
         and  is_deleted = #{isDeleted}
       </if>
     </trim>
-    and status = 0 and is_deleted = 1
+    /*and status = 0 and is_deleted = 1*/
   </select>
 
   <select id="queryUserForCRM" resultMap="BaseResultMap" >

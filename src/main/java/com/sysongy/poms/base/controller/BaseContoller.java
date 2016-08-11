@@ -1,9 +1,6 @@
 package com.sysongy.poms.base.controller;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -211,6 +208,147 @@ public class BaseContoller {
     }
 
     /**
+     * 用户登录
+     * @param request
+     * @param response
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = {"/web/login/common"})
+    @ResponseBody
+    public Map<String, Object> loginCommon( HttpServletRequest request,HttpServletResponse response,ModelMap map){
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
+        String returnPath = "login";
+        CurrUser currUser = new CurrUser();
+        Integer sysType = 0;
+        Map<String, Object> resultMap = new HashMap<>();
+
+        SysUser user = new SysUser();
+
+        user.setUserName(userName);
+        user.setPassword(password);
+        try {
+            user = sysUserService.queryUserByAccount(user);
+
+            //判断登录是否成功
+            if(user != null && user.getUserName() != null && user.getPassword() != null){
+                if(user.getIsDeleted() == 0){
+                    returnPath = "login";
+                    map.addAttribute("erroMsg","当前用户已删除！");
+                    resultMap.put("erroMsg","当前用户已删除！");
+                    return resultMap;
+                }else if(user.getStatus() == 1 ){
+                    returnPath = "login";
+                    map.addAttribute("erroMsg","当前用户已禁用！");
+                    resultMap.put("erroMsg","当前用户已禁用！");
+                    return resultMap;
+                }else if((user.getStationId() == null || user.getStationId().equals("")) && user.getUserType() < GlobalConstant.USER_TYPE_MANAGE){
+                    returnPath = "login";//非运维用户站点ID不能为空
+                    map.addAttribute("erroMsg","当前用户无效！");
+                    resultMap.put("erroMsg","当前用户无效！");
+                    return resultMap;
+                }else if(user.getUserType() == GlobalConstant.USER_TYPE_CRM){
+                    returnPath = "login";//CRM用户无法登录web站点
+                    map.addAttribute("erroMsg","CRM客户端用户禁止登录！");
+                    resultMap.put("erroMsg","CRM客户端用户禁止登录！");
+                    return resultMap;
+                }
+                //封装用户信息
+                int userType = user.getUserType();
+                currUser.setUserId(user.getSysUserId());
+                currUser.setUser(user);
+                currUser.setUserType(userType);//当前用户类型
+                currUser.setStationId(user.getStationId());//当前用户站点信息
+                sysType = userType;
+
+                //封装用户菜单信息
+                List<Map<String, Object>> functionList = sysFunctionService.queryFunctionListByUserId(user.getSysUserId(),user.getUserType());
+                currUser.setUserFunctionList(functionList);
+
+                //获取气站或运输公司信息
+                String stationId = user.getStationId();
+                if(stationId != null){
+                    if(user.getUserType().equals(GlobalConstant.USER_TYPE_TRANSPORT)){
+                        Transportion transportion = transportionService.queryTransportionByPK(user.getStationId());
+                        if(transportion != null ){
+                            Date expiryDate = transportion.getExpiry_date();
+                            int compareVal = 0;
+                            try {
+                                compareVal = DateTimeHelper.compareTwoDate(new Date(),expiryDate);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                returnPath = "login";
+                                map.addAttribute("erroMsg","运输公司已过有效期！");
+                                resultMap.put("erroMsg","运输公司已过有效期！");
+                                return resultMap;
+                            }
+                            if(transportion.getStatus().equals("0")){
+                                returnPath = "login";
+                                map.addAttribute("erroMsg","运输公司已关闭！");
+                                resultMap.put("erroMsg","运输公司已关闭！");
+                                return resultMap;
+                            }else if(compareVal < 0){
+                                returnPath = "login";
+                                map.addAttribute("erroMsg","运输公司已过有效期！");
+                                resultMap.put("erroMsg","运输公司已过有效期！");
+                                return resultMap;
+                            }
+                        }
+                    }else if(user.getUserType().equals(GlobalConstant.USER_TYPE_STATION)){
+                        Gastation gastation = gastationService.queryGastationByPK(stationId);
+                        if(gastation != null ){
+                            Date expiryDate = gastation.getExpiry_date();
+                            int compareVal = 0;
+                            try {
+                                compareVal = DateTimeHelper.compareTwoDate(new Date(),expiryDate);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                returnPath = "login";
+                                map.addAttribute("erroMsg","加注站已过有效期！");
+                                resultMap.put("erroMsg","加注站已过有效期！");
+                                return resultMap;
+                            }
+                            if(gastation.getStatus().equals("0")){
+                                returnPath = "login";
+                                map.addAttribute("erroMsg","加注站已关闭！");
+                                resultMap.put("erroMsg","加注站已关闭！");
+                                return resultMap;
+                            }else if(compareVal < 0){
+                                returnPath = "login";
+                                map.addAttribute("erroMsg","加注站已过有效期！");
+                                resultMap.put("erroMsg","加注站已过有效期！");
+                                return resultMap;
+                            }
+                        }
+                    }
+                }else{
+                    returnPath = "login";
+                    map.addAttribute("erroMsg","该用户未关联任何系统！");
+                    resultMap.put("erroMsg","该用户未关联任何系统！");
+                    return resultMap;
+                }
+
+                map.addAttribute("current_module", "webpage/demo/demo");
+                map.addAttribute("currUser",currUser);
+                map.addAttribute("sysType",sysType);
+                returnPath = "common/g_main";
+                resultMap.put("erroMsg","suceess");
+                return resultMap;
+            }else{
+                returnPath = "login";
+                map.addAttribute("erroMsg","账户名或密码错误！");
+                resultMap.put("erroMsg","账户名或密码错误！");
+                return resultMap;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.put("erroMsg","账户名或密码错误！");
+            return resultMap;
+        }
+    }
+
+    /**
      * 退出登录
      * @param request
      * @param response
@@ -234,7 +372,7 @@ public class BaseContoller {
     public String panelList( HttpServletRequest request,HttpServletResponse response,ModelMap map ){
         return "common/g_main";
     }
-    
+
     /**
      * 跳转控制面板
      * @param map

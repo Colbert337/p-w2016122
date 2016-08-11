@@ -37,6 +37,10 @@
 							<input type="text" name="orderNumber" placeholder="订单编号/交易流水号"  maxlength="20" value="${sysOrder.orderNumber}"/>
 						</div>
 						<div class="item">
+							<label>加注站编号：</label>
+							<input type="text" name="channelNumber" placeholder="请输入加注站编号" maxlength="10" value="${sysOrder.channelNumber}"/>
+						</div>
+						<div class="item">
 							<label>交易类型：</label>
 							<select id="is_discharge" name="is_discharge">
 								<option value="">全部</option>
@@ -44,12 +48,12 @@
 								<option value="1">冲红</option>
 							</select>
 						</div>	
-						<div class="item">
+						<%-- <div class="item">
 							<label>支付方式：</label>
 							<select name="chargeType">
 								<s:option gcode="CHARGE_TYPE" flag="true" form="sysOrder" field="chargeType"></s:option>
 							</select>
-						</div>	
+						</div>	 --%>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
