@@ -691,7 +691,7 @@ public class CRMCustomerContoller {
             if(StringUtils.isNotEmpty(sysDriver.getExpireTimeForCRM())){
                 sysDriver.setExpiryDate(DateUtil.strToDate(sysDriver.getExpireTimeForCRM(), "yyyy-MM-dd"));
             }
-
+            sysDriver.setCheckedStatus("1");
             sysDriver.setUpdatedDate(new Date());
             driverService.saveDriver(sysDriver, "update");
             SysDriver sysDriverNew = driverService.queryDriverByPK(sysDriver.getSysDriverId());

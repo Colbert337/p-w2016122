@@ -200,7 +200,9 @@ public class CRMUserContoller {
                 sysUser.setAvatarS(basePath + (String) prop.get("show_images_path") + "/" + realPath + files[i].getOriginalFilename());
                 sysUserService.updateCRMUser(sysUser);
             }
-            attributes.put("UserInfo", sysUser);
+
+            SysUser sysUserNew = sysUserService.queryUserByUserId(sysUser.getSysUserId());
+            attributes.put("UserInfo", sysUserNew);
             ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
