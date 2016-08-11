@@ -579,7 +579,7 @@
 
   <!--司机离职-->
   <update id="deleteDriverByIds" parameterType="java.util.List" >
-  update sys_driver  set user_status = 2
+  update sys_driver  set station_id = ''
   where sys_driver_id in
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
       #{item}
