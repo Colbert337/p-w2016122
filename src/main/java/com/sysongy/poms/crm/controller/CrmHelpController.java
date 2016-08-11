@@ -196,6 +196,8 @@ public class CrmHelpController extends BaseContoller{
     @RequestMapping("/type/update")
     public String updateType(Model model,CrmHelpType obj) throws Exception{
     	obj.setModel(new Date());
+    	obj.setCreatedDate(new Date());
+    	obj.setUpdatedDate(new Date());
     	crmHelpTypeService.update(obj);
     	return "redirect:/web/crm/help/type/list";              
     }
