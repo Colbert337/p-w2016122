@@ -37,7 +37,7 @@
             <div class="title">
                 <div>司集服务公告</div>
             </div>
-            <div>
+            <div class="notice-list">
                 <c:forEach items="${crmHelpList}" var="list">
                 <ul>
                     <li>
