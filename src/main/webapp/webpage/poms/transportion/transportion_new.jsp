@@ -145,11 +145,12 @@
 										</div>
 									</div>
 									
-									<div class="form-group">
+									<div class="row">
 										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
 										<div class="col-sm-4">
-											<div class="row form-group">
+											<div class="row">
 												<div class="col-sm-6">
+													<div class="form-group nospace">
 											<select class="form-control" name="province_id" id="province" onchange="chinaChange(this,document.getElementById('city'));">
 													<option value ="请选择市区">请选择省份</option>
 													<option value ="100">北京市</option>
@@ -186,13 +187,18 @@
 													<option value ="990">新疆维吾尔自治区</option>
 											</select>
 												</div>
+												</div>
 												<div class="col-sm-6">
-													<select class="form-control" id="city" name="city_id">
-													</select>
+													<div class="form-group nospace">
+														<select class="form-control" id="city" name="city_id">
+														</select>
+													</div>
 												</div>
 											</div>
-											<input type="text" id="detail" name="detail" class="form-control"  placeholder="输入详细地址" maxlength="30"/>
-											<input type="hidden" id="address" name="address" class="col-sm-12" />
+											<div class="form-group nospace">
+												<input type="text" id="detail" name="detail" class="form-control"  placeholder="输入详细地址" maxlength="30"/>
+												<input type="hidden" id="address" name="address" class="col-sm-12" />
+											</div>
 										</div>
 									</div>
 									
@@ -350,6 +356,10 @@
 				city.options[ii].value = parseInt(pv+i);
 			}
 		};
+
+		$('#province').on('change',function(){
+			$("#city").trigger("change");
+		})
 	
 	//datepicker plugin
 	$('.date-picker').datepicker({
@@ -507,21 +517,21 @@
 		                    }
 		                }
 		            },
-		            province: {
+		            province_id: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '注册地址省不能为空'
 		                    }
 		                }
 		            },
-		            city : {
+		            city_id: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '注册地址市不能为空'
 		                    }
 		                }
 		            },
-		            address: {
+					detail: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '注册详细地址不能为空'
