@@ -42,7 +42,7 @@
 				</li>
 				<li>
 					<div class="form-item">
-						<button class="btn" type="button" id="submitButton" onclick="submitForm()" tabIndex="4">btn</button>
+						<button class="btn" type="submit" tabIndex="4">btn</button>
 						<div class="rememberpw">
 							<input name="" id="rememberpw" type="checkbox" tabIndex="3">
 							<label for="rememberpw">记住密码</label>
