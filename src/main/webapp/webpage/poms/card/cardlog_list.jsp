@@ -110,7 +110,7 @@
 										<th onclick="orderBy(this,'operator');commitForm();"
 											id="operator_order">操作员</th>
 										<th onclick="orderBy(this,'batch_no');commitForm();"
-											id="batch_no_order">入库批次号</th>
+											id="batch_no_order">批次号</th>
 										<th onclick="orderBy(this,'storage_time');commitForm();"
 											id="storage_time_order" class="td-w2"><i
 											id="storage_time"
