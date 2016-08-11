@@ -359,7 +359,7 @@
 
 		$('#province').on('change',function(){
 			$("#city").trigger("change");
-		})
+		});
 	
 	//datepicker plugin
 	$('.date-picker').datepicker({
