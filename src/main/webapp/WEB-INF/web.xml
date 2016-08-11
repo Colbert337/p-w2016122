@@ -62,7 +62,7 @@
  </error-page>
  
  <session-config> 
-	<session-timeout>15</session-timeout> 
+	<session-timeout>15</session-timeout>
  </session-config>  
  
 <!--tomcat项目检测依赖包-->

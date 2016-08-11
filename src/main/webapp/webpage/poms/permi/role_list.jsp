@@ -421,7 +421,7 @@
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right"> 功能选择： </label>
-									<div class="col-sm-9">
+									<div class="col-sm-9" style="overflow-y:scroll;height: 300px;">
 										<ul id="treeDiv" class="ztree"></ul>
 									</div>
 								</div>
