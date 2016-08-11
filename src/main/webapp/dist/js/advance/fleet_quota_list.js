@@ -78,7 +78,7 @@ function changePassDiv(objOpen,objClose){
     $("#"+objClose).hide();
 }
 
-function savePassword(){
+function savePassword(){console.log("");
     var url = "";
     var fistDiv = $("#firstDiv").is(":visible");
     var updatePsDiv =  $("#updatePsDiv").is(":visible");
@@ -91,7 +91,6 @@ function savePassword(){
         if(!$('#passwordForm').data('bootstrapValidator').isValid()){
             return ;
         }
-
         url = "../web/transportion/update/password"
     }else if(lossPsDiv){
         url = "../web/transportion/update/setPasswordMail"
@@ -102,7 +101,7 @@ function savePassword(){
         dataType:'html',
         success:function(data){
             $("#main").html(data);
-            bootbox.alert("支付密码修改成功");//保存成功弹窗
+            $("#modal-table").modal("show");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败!");
         }

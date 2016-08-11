@@ -31,7 +31,7 @@
 	<div class="container-fluid wrap crm">
 		<div class="row">
             <div class="col-sm-7">
-                <img class="img-responsive" src="images/crm.jpg" alt="">
+                <img class="img-responsive" src="images/crm.png" alt="">
             </div>
             <div class="col-sm-5">
                 <ul class="crm-down">
