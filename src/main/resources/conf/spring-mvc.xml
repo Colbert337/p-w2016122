@@ -45,7 +45,7 @@
 		<property name="exceptionMappings">
 		   <props>
 				<!-- 遇到MaxUploadSizeExceededException异常时，自动跳转到XXX页面 -->
-				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">/webpage/login.jsp</prop>
+				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">/</prop>
 			 </props>
 		</property>
 	 </bean>
