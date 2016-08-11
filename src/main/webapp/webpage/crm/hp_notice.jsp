@@ -41,7 +41,7 @@
                 <c:forEach items="${crmHelpList}" var="list">
                 <ul>
                     <li>
-                        <a href="<%=basePath %>/portal/crm/help/list/notice/info?crmHelpId=${list.crmHelpId}" target="_blank">${list.question}</a>
+                        <a href="<%=basePath %>/portal/crm/help/list/notice/info?crmHelpId=${list.crmHelpId}" target="_blank">${list.title}</a>
                         <span class="date"><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd"/></span>
                     </li>
                 </ul>

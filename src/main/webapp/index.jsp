@@ -20,28 +20,9 @@
 <body>
 <div>
 	<script type="text/plain" style="width:1024px;height:500px;" id="editor"></script>	
-	<!-- <script type="text/plain" id="upload_ue"></script>	
-	<input type="text" id="picture" name="cover" /><a href="javascript:void(0);" onclick="upImage();">上传图片</a>
-	<input type="text" id="picture" name="cover" /><a href="javascript:void(0);" onclick="upFiles();">上传文件</a> -->
 </div>
     <script type="text/javascript">   
       var ue = UE.getEditor("editor"); 
     </script>
- <!--    <script type="text/javascript">
-  //上传独立使用
-    var _editor = UE.getEditor('upload_ue');
-        _editor.ready(function () {
-        //_editor.setDisabled();
-        _editor.hide();
-
-        _editor.addListener('beforeInsertImage', function (t, arg) {     //侦听图片上传
-
-          alert('asdf');
-            $("#pic_list").attr("value", arg[0].src);       //将地址赋值给相应的input
-            $("#preview").attr("src", arg[0].src);
-
-        });         
-    }); 
-    </script> -->
 </body>
 </html>
