@@ -1092,7 +1092,7 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"加注站编号","加注站名称","消费金额(包含冲红)","冲红金额","运管人员","销售人员"};
+	            content[0] = new String[]{"加注站编号","加注站名称","充值金额(包含冲红)","冲红金额","运管人员","销售人员"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){

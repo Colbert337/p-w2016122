@@ -37,25 +37,13 @@
             <div class="title">
                 <div>司集服务公告</div>
             </div>
-            <div class="service-notice">
+            <div class="notice-list">
                 <c:forEach items="${crmHelpList}" var="list">
                 <ul>
                     <li>
-                        <a href="<%=basePath %>/portal/crm/help/list/notice/info?crmHelpId=${list.crmHelpId}">${list.question}</a>
+                        <a href="<%=basePath %>/portal/crm/help/list/notice/info?crmHelpId=${list.crmHelpId}" target="_blank">${list.title}</a>
                         <span class="date"><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd"/></span>
                     </li>
-                   <!--  <li>
-                        <a href="">司集小妹表彰活动</a>
-                        <span class="date">2016-07-21</span>
-                    </li>
-                    <li>
-                        <a href="">总经理吴冠星一行考察中国加气产业联盟</a>
-                        <span class="date">2016-06-04</span>
-                    </li>
-                    <li>
-                        <a href="">公司发展历程</a>
-                        <span class="date">2016-03-01</span>
-                    </li> -->
                 </ul>
                 </c:forEach>
             </div>

@@ -130,14 +130,19 @@ $(function(){
                         <c:forEach items="${pageInfo.list}" var="list" varStatus="status">
                             <tr>
                                 <td>${status.index+1}</td>
-                                <td>${list.title}</td>
-                                <td>${list.question}</td>
-                                <td answer="${list.answer}">
+                                <td>${list.title}</td>                               
+                                <td>
                                   <c:choose>
-                                    <c:when test="${fn:length(list.answer)>30}"><a title="${list.answer }" >${fn:substring(list.answer,0,30)}......</a></c:when>
+                                    <c:when test="${fn:length(list.question)>20}"><a title="${list.question }" >${fn:substring(list.question,0,20)}......</a></c:when>
+                                    <c:otherwise>${list.question}</c:otherwise>
+                                  </c:choose>                              
+                                </td>    
+                                <td>
+                                  <c:choose>
+                                    <c:when test="${fn:length(list.answer)>25}"><a title="${list.answer }" >${fn:substring(list.answer,0,25)}......</a></c:when>
                                     <c:otherwise>${list.answer}</c:otherwise>
                                   </c:choose>                              
-                                </td>
+                                </td>                                                           
                                 <td>${list.titleType}</td> 
                                 <td>
                                    <c:choose>

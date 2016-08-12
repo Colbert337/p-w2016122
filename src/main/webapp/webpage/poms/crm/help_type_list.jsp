@@ -38,7 +38,7 @@
                             <th>编号</th>
                             <th onclick="orderBy(this,'title');commitForm();" id="title_order">分类名称</th>
                             <th onclick="orderBy(this,'remark');commitForm();" id="remark_order">分类备注</th>
-                            <th onclick="orderBy(this,'isDeleted');commitForm();" id="isDeleted_order">是否删除</th>
+                            <!-- <th onclick="orderBy(this,'isDeleted');commitForm();" id="isDeleted_order">是否删除</th> -->
                             <th onclick="orderBy(this,'createdDate');commitForm();" id="createdDate_order">添加时间</th>
                             <th onclick="orderBy(this,'updatedDate');commitForm();" id="updatedDate_order">修改时间</th>
                             <th class="text-center td-w2">操作</th>
@@ -50,12 +50,12 @@
                                 <td>${status.index+1}</td>
                                 <td>${list.title}</td>
                                 <td>${list.remark}</td>                            
-                                <td>
+                               <%--  <td>
                                    <c:choose>
                                       <c:when test="${list.isDeleted==1}">未删除</c:when>
                                       <c:otherwise>删除</c:otherwise>
                                   </c:choose>
-                                </td>                                                        
+                                </td>         --%>                                                
                                  <td><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>  
                                  <td><fmt:formatDate value="${list.updatedDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>                                                                                   
                                 <td class="text-center">

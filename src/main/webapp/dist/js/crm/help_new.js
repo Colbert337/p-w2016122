@@ -1,5 +1,12 @@
 //保存
 function save(){
+	$('#formnew').data('bootstrapValidator').validate();
+	if(!$('#formnew').data('bootstrapValidator').isValid()){
+		return ;
+	}
+	if($('.user-name-valid').is(':visible')){
+		return ;
+	}
         var options ={   
                 url:'../web/crm/help/save',   
                 type:'post',                    
@@ -27,19 +34,6 @@ $("#formnew").bootstrapValidator({
         validating: 'glyphicon glyphicon-refresh'
     },
     fields: {
-    	crmHelpId: {
-            message: 'The cardno is not valid',
-            validators: {
-                notEmpty: {
-                    message: '题号不能为空'
-                },
-                stringLength: {
-                    min: 1,
-                    max: 5,
-                    message: '题号不能超过5个数字'
-                }
-            }
-        },
         title: {
             message: 'The cardno is not valid',
             validators: {
@@ -48,8 +42,8 @@ $("#formnew").bootstrapValidator({
                 },
                 stringLength: {
                     min: 1,
-                    max: 20,
-                    message: '标题不能超过20个汉字'
+                    max: 10,
+                    message: '标题不能超过10个汉字'
                 }
             }
         },

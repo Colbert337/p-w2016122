@@ -108,39 +108,50 @@ $(function(){
 		clickSubMenu();
 	});
 
-	if($("#login").length){
-		$('#login').validate({
 
-			/* 设置验证规则 */
-			rules: {
-				userName: {
-					required: true,
-					rangelength: [3, 20]
-				},
-				password: {
-					required: true,
-					rangelength: [6, 16]
+
+});
+/*登录验证*/
+function loginValidate(userName,password){
+	if(userName == ""){
+		$("#errorNotice").text("用户名不能为空！");
+		return false;
+	}else if(password == ""){
+		$("#errorNotice").text("用户密码不能为空！");
+		return false;
+	}else{
+		return true;
+	}
+}
+/*回车提交表单*/
+$(document).keyup(function(event){
+	if(event.keyCode ==13){
+		$("#submitButton").trigger("click");
+	}
+});
+/*用户登录*/
+function submitForm(){
+	var userName = $("#userName").val();
+	var password = $("#password").val();
+	var resultVal = loginValidate(userName,password);
+	console.log("登录验证");
+	if(resultVal){
+		$.ajax({
+			type: "POST",
+			async:false,
+			data:{userName:userName,password:password},
+			url: "../../web/login/common",
+			success: function(data){
+				if(data != null && data.erroMsg != null && data.erroMsg =="suceess"){
+					window.location.href="../../common/g_main.jsp";
+				}else{
+					$("#errorNotice").text(data.erroMsg);
 				}
-			},
 
-			/* 设置错误信息 */
-			messages: {
-				userName: {
-					required: "请填写用户名",
-					rangelength: "用户名需由3-20个字符（数字、字母、下划线）组成！"
-				},
-				password: {
-					required: "请填写密码",
-					rangelength: "密码需由6-16个字符（数字、字母、下划线）组成！"
-				}
-			},
-
-			/*错误提示位置*/
-			errorPlacement: function (error, element) {
-				error.appendTo(element.siblings("div"));
+			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+				$("#errorNotice").text("登录失败!");
 			}
-
 		});
 	}
-	
-});
+
+}

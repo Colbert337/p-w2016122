@@ -31,15 +31,15 @@
 	<div class="container-fluid wrap crm">
 		<div class="row">
             <div class="col-sm-7">
-                <img class="img-responsive" src="images/crm.jpg" alt="">
+                <img class="img-responsive" src="images/crm.png" alt="">
             </div>
             <div class="col-sm-5">
                 <ul class="crm-down">
-                    <li class="title">司集CRM V1.3.0</li>
-                    <li>
+                    <li class="title">司集加注站CRM管理系统</li>
+                    <%--<li>
                         <span class="pull-right">2016-6-24</span>
                         16.5M
-                    </li>
+                    </li>--%>
                     <li>
                         <a href="http://download.sysongy.net/setup.exe" class="btn btn-block btn-primary btn-lg">下载</a>
                     </li>
