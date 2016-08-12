@@ -1,6 +1,7 @@
 package com.sysongy.api.mobile.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import com.sysongy.api.mobile.model.feedback.MobileFeedBack;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.poms.driver.dao.SysDriverMapper;
 import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.suggest.model.Suggest;
 import com.sysongy.util.UUIDGenerator;
 
 @Service
@@ -40,6 +42,12 @@ public class MbUserSuggestServicesImpl implements MbUserSuggestServices {
 		suggest.setUpdatedDate(new Date());
 		
 		return mbUserSuggestMapper.insert(suggest);
+	}
+
+	@Override
+	public List<Suggest> queryForPage(Suggest suggest) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
