@@ -80,6 +80,15 @@
 						message: '姓名不能为空'
 					}
 				}
+			},
+			mobilePhone: {
+				validators: {
+					stringLength: {
+						min: 11,
+						max:11,
+						message: '手机号码必须是11位'
+					}
+				}
 			}
 		}
 	});
