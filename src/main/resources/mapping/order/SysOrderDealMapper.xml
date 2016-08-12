@@ -281,6 +281,6 @@
        SELECT sum(cash_back)
         FROM sys_order_deal
        where order_id=#{orderId,jdbcType=VARCHAR}
-        and (deal_type='133' or deal_type='134')
+        and (deal_type='133' or deal_type='132')
     </select>
 </mapper>
