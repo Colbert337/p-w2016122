@@ -354,23 +354,32 @@
 				<div class="col-xs-12">
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
-						<div class="item">
-							<label>账号/姓名/联系电话：</label>
-							<input type="text" name="userName" placeholder="账号/姓名/联系电话"  maxlength="15" value="${sysUser.userName}"/>
-						</div>
-						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
-								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								查询
-							</button>
-							<button class="btn btn-sm" type="button" onclick="init();">
-								重置
-							</button>
-							<div class="item"></div>
-							<button class="btn btn-sm btn-primary" type="button" onclick="addUser();">
+						<c:if test="${userType != 3}">
+							<div class="item">
+								<label>账号/姓名/联系电话：</label>
+								<input type="text" name="userName" placeholder="账号/姓名/联系电话"  maxlength="15" value="${sysUser.userName}"/>
+							</div>
+
+							<div class="item">
+								<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+									<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+									查询
+								</button>
+								<button class="btn btn-sm" type="button" onclick="init();">
+									重置
+								</button>
+								<div class="item"></div>
+								<button class="btn btn-sm btn-primary" type="button" onclick="addUser();">
+									添加
+								</button>
+							</div>
+						</c:if>
+						<c:if test="${userType == 3}">
+							<a class="btn btn-sm btn-primary fl-r" style="margin-bottom: 10px;" type="button" onclick="addUser();">
 								添加
-							</button>
-						</div>
+							</a>
+							<div class="clear"></div>
+						</c:if>
 					</div>
 					<div class="sjny-table-responsive">
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
