@@ -1,4 +1,4 @@
-package com.sysongy.api.mobile.controller.login;
+package com.sysongy.api.mobile.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +25,7 @@ import com.sysongy.api.mobile.model.base.MobileParams;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MobileFeedBack;
 import com.sysongy.api.mobile.model.login.MobileLogin;
-import com.sysongy.api.mobile.model.loss.ReportLoss;
+import com.sysongy.api.mobile.model.loss.MobileLoss;
 import com.sysongy.api.mobile.model.record.MobileRecord;
 import com.sysongy.api.mobile.model.register.MobileRegister;
 import com.sysongy.api.mobile.model.upload.MobileUpload;
@@ -39,6 +39,7 @@ import com.sysongy.api.mobile.tools.login.MobileLoginUtils;
 import com.sysongy.api.mobile.tools.loss.ReportLossUtil;
 import com.sysongy.api.mobile.tools.record.MobileRecordUtils;
 import com.sysongy.api.mobile.tools.register.MobileRegisterUtils;
+import com.sysongy.api.mobile.tools.returncash.ReturnCashUtil;
 import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
 import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
@@ -106,7 +107,7 @@ public class MobileController {
 			ArrayList<Data> list = new ArrayList<Data>();
 	        list.add(data);
 
-			ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_SUCCESS, null, list);
+			ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_SUCCESS,	 null, list);
 
 		} catch (Exception e) {
 			
@@ -343,7 +344,7 @@ public class MobileController {
     public String reportTheLoss(MobileParams params){
     	
     	MobileReturn ret = new MobileReturn();
-    	ReportLoss loss = new ReportLoss();
+    	MobileLoss loss = new MobileLoss();
     	
     	try {
     		loss = ReportLossUtil.checkReportTheLossParam(params, ret);
@@ -489,19 +490,16 @@ public class MobileController {
     	MobileReturn ret = new MobileReturn();
     	
     	try {
-    		GetCitysUtils.checkParam(params, ret);
+    		ReturnCashUtil.checkParam(params, ret);
     		
-    		String opencity = (String) prop.get("opencity");
             
-            if(opencity.split("~").length >0 ){
-            	Data data = new Data();
-            	data.setCity(opencity.split("~"));
+            Data data = new Data();
             	
-            	ArrayList<Data> list = new ArrayList<Data>();
-            	list.add(data);
+            ArrayList<Data> list = new ArrayList<Data>();
+            list.add(data);
             	
-            	ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, GetCitysUtils.RET_QUERY_SUCCESS_MSG, list);
-            }
+            ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, GetCitysUtils.RET_QUERY_SUCCESS_MSG, list);
+
            
         } catch (Exception e) {
         	if(StringUtils.isEmpty(ret.getMsg())){

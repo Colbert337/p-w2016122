@@ -137,7 +137,7 @@
 									<td>${list.deal_number}</td>
 									<td><fmt:formatDate value="${list.order_date}" type="both"/></td>
 									<td>
-										<c:if test="${list.is_discharge == 0}">消费</c:if>
+										<c:if test="${list.is_discharge == 0}">充值</c:if>
 										<c:if test="${list.is_discharge == 1}">冲红</c:if>
 									</td>
 									<td><s:Code2Name mcode="${list.deal_type}" gcode="ORDER_DEAL_TYPE"></s:Code2Name></td>
