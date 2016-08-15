@@ -77,28 +77,20 @@
 												<input type="checkbox" class="ace"
 												onclick="checkedAllRows(this);" /> <span class="lbl"></span>
 										</label></th>
-										<th onclick="orderBy(this,'mb_user_suggest_id');"
-											id="card_no_order">编号</th>
-										<th onclick="orderBy(this,'sys_driver_id');"
-											id="card_type_order">司机名称</th>
-										<th onclick="orderBy(this,'mobile_phone');"
-											id="card_status_order">司机电话</th>
-										<th onclick="orderBy(this,'suggest');"
-											id="card_property_order">内容</th>
-										<th onclick="orderBy(this,'suggest_res');"
-											id="workstation_order">来源</th>
-										<th onclick="orderBy(this,'follow_up');"
-											id="workstation_resp_order">跟进人</th>
-										<th onclick="orderBy(this,'created_date');"
-											id="storage_time_order" class="td-w2"><i
-											id="storage_time"
-											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>投诉时间</th>
-										<th onclick="orderBy(this,'updated_date');"
-											id="release_time_order" class="td-w2"><i
-											id="release_time"
-											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th>
-										<th onclick="orderBy(this,'memo');" id="operator_order">备注</th>
-										
+										<th onclick="orderBy(this,'user_name');commitForm();"
+											id="user_name_order">司机名称</th>
+										<th onclick="orderBy(this,'mobile_phone');commitForm();"
+											id="mobile_phone_order">司机电话</th>
+										<th onclick="orderBy(this,'suggest');commitForm();" id="suggest_order">内容</th>
+										<th onclick="orderBy(this,'suggest_res');commitForm();"
+											id="suggest_res_order">来源</th>
+										<th onclick="orderBy(this,'follow_up');commitForm();"
+											id="follow_up_order">跟进人</th>
+										<th onclick="orderBy(this,'created_date');commitForm();"
+											id="created_date_order" class="td-w2">投诉时间</th>
+										<th onclick="orderBy(this,'updated_date');commitForm();"
+											id="updated_date_order" class="td-w2">修改时间</th>
+										<th onclick="orderBy(this,'memo');commitForm();" id="memo_order">备注</th>
 									</tr>
 								</thead>
 
@@ -110,8 +102,6 @@
 													type="checkbox" class="ace" id="pks"
 													value="${list.mb_user_suggest_id}" /> <span class="lbl"></span>
 											</label></td>
-
-											<td>${list.mb_user_suggest_id}</td>
 											<td>${list.user_name}</td>
 											<td>${list.mobile_phone}</td>
 											<td>${list.suggest}</td>
@@ -130,29 +120,26 @@
 
 
 				<div class="row">
-					<div class="col-sm-6">
-						<div class="dataTables_info sjny-page" id="dynamic-table_info"
-							role="status" aria-live="polite">
-							每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共
-							${pageInfo.total} 条 <span class="line">|</span> 共
-							${pageInfo.pages} 页
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<nav>
-							<ul id="ulhandle" class="pagination pull-right no-margin">
-								<li id="previous"><a href="javascript:void(0);"
-									aria-label="Previous" onclick="prepage('#formcard');"> <span
-										aria-hidden="true">上一页</span>
-								</a></li>
-								<li id="next"><a id="nexthandle" href="javascript:void(0);"
-									aria-label="Next" onclick="nextpage('#formcard');"> <span
-										aria-hidden="true">下一页</span>
-								</a></li>
-							</ul>
-						</nav>
-					</div>
+				<div class="col-sm-6">
+					<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
 				</div>
+				<div class="col-sm-6">
+					<nav>
+						<ul id="ulhandle" class="pagination pull-right no-margin">
+							<li id="previous">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+									<span aria-hidden="true">上一页</span>
+								</a>
+							</li>
+							<li id="next">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+									<span aria-hidden="true">下一页</span>
+								</a>
+							</li>  
+						</ul>
+					</nav>
+				</div>
+			</div>
 
 				<jsp:include page="/common/message.jsp"></jsp:include>
 

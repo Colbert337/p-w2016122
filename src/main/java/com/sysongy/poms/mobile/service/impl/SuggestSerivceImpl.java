@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.card.dao.GasCardLogMapper;
 import com.sysongy.poms.card.service.impl.GasCardServiceImpl;
@@ -19,14 +20,15 @@ public class SuggestSerivceImpl implements SuggestService {
 	protected Logger logger = LoggerFactory.getLogger(GasCardServiceImpl.class);
 	@Autowired
 	private SuggestMapper suggestMapper;
-//	@Autowired
-//	private GasCardLogMapper gasCardLogMapper;
+	// @Autowired
+	// private GasCardLogMapper gasCardLogMapper;
 
 	@Override
 	public PageInfo<Suggest> querySuggest(Suggest obj) {
 		// TODO Auto-generated method stub
-		List<Suggest> list= suggestMapper.querySuggest(obj);
-		PageInfo<Suggest> page=new PageInfo<>(list);
+		PageHelper.startPage(obj.getPageNum(), obj.getPageSize(), obj.getOrderby());
+		List<Suggest> list = suggestMapper.querySuggest(obj);
+		PageInfo<Suggest> page = new PageInfo<>(list);
 		return page;
 	}
 
