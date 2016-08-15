@@ -1,6 +1,6 @@
 package com.sysongy.api.mobile.model.loss;
 
-public class ReportLoss {
+public class MobileLoss {
 	
 	private String token;
 	private String lossType;
