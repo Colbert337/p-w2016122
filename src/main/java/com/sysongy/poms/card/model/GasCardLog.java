@@ -6,7 +6,7 @@ import com.sysongy.poms.base.model.BaseModel;
 
 public class GasCardLog extends BaseModel{
 	
-    private String cardLogId;
+    private String cardLogId; 
 
     private String card_no;
 
