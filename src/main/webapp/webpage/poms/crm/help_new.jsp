@@ -124,11 +124,6 @@ $(function(){
                                                                                                                          保存
                                             </button>
                                             &nbsp; &nbsp; &nbsp;
-                                            <button class="btn" type="reset">
-                                                <i class="ace-icon fa fa-repeat bigger-110"></i>
-                                                                                                                         重置
-                                            </button>
-                                            &nbsp; &nbsp; &nbsp;
                                             <button class="btn btn-success" type="button" onclick="returnpage();">
                                                 <i class="ace-icon fa fa-undo bigger-110"></i>
                                                                                                                           返回

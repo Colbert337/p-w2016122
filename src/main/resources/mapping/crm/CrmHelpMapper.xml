@@ -222,7 +222,7 @@
   
   <!-- 回显信息查询 -->
   <select id="queryCrmHelpValue" resultMap="BaseResultMap"  parameterType="java.lang.String">
-    select * from crm_help where question = #{question,jdbcType=VARCHAR}
+    select * from crm_help where crm_help_id = #{crmHelpTypeId,jdbcType=VARCHAR}
   </select>
   
   <!-- 删除 -->
