@@ -8,6 +8,7 @@ var listOptions = {
 	success: function(data) {
 		//alert(data);
 		$("#main").html(data);
+		//$("#modal-table").modal("show");
 		if ($("#retCode").val() != "100") {
 			//$("#modal-table").modal("show");
 		}

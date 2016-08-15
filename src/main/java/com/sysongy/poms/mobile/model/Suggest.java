@@ -13,6 +13,24 @@ public class Suggest extends BaseModel {
 	private String memo;
 	private String follow_up;
 	private String user_name;
+	private String created_date_sel;//用于查询的虚拟字段
+	private String updated_date_sel;//用于查询的虚拟字段
+
+	public String getCreated_date_sel() {
+		return created_date_sel;
+	}
+
+	public void setCreated_date_sel(String created_date_sel) {
+		this.created_date_sel = created_date_sel;
+	}
+
+	public String getUpdated_date_sel() {
+		return updated_date_sel;
+	}
+
+	public void setUpdated_date_sel(String updated_date_sel) {
+		this.updated_date_sel = updated_date_sel;
+	}
 
 	public String getUser_name() {
 		return user_name;
@@ -22,8 +40,8 @@ public class Suggest extends BaseModel {
 		this.user_name = user_name;
 	}
 
-	private String created_date;
-	private String updated_date;
+	private Date created_date;
+	private Date updated_date;
 
 	public String getMb_user_suggest_id() {
 		return mb_user_suggest_id;
@@ -83,19 +101,19 @@ public class Suggest extends BaseModel {
 
  
 
-	public void setCreated_date(String created_date) {
+	public void setCreated_date(Date created_date) {
 		this.created_date = created_date;
 	}
 
-	public String getUpdated_date() {
+	public Date getUpdated_date() {
 		return updated_date;
 	}
 
-	public void setUpdated_date(String updated_date) {
+	public void setUpdated_date(Date updated_date) {
 		this.updated_date = updated_date;
 	}
 
-	public String getCreated_date() {
+	public Date getCreated_date() {
 		return created_date;
 	}
  

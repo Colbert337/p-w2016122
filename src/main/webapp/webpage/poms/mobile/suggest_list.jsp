@@ -37,11 +37,11 @@
 							<div class="item">
 								<div class="input-daterange top" id="j-input-daterange-top">
 									<label>投诉时间:</label> <input type="text" class=""
-										name="created_date" value="${suggest.created_date}"
+										name="created_date_sel" value="${suggest.created_date_sel}"
 										readonly="readonly" /> <span class=""> <i
 										class="fa fa-exchange"></i>
-									</span> <input type="text" class="" name="updated_date"
-										value="${suggest.updated_date}" readonly="readonly" />
+									</span> <input type="text" class="" name="updated_date_sel"
+										value="${suggest.updated_date_sel}" readonly="readonly" />
 								</div>
 							</div>
 
@@ -87,9 +87,9 @@
 										<th onclick="orderBy(this,'follow_up');commitForm();"
 											id="follow_up_order">跟进人</th>
 										<th onclick="orderBy(this,'created_date');commitForm();"
-											id="created_date_order" class="td-w2">投诉时间</th>
+											id="created_date_order" class="td-w2"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>投诉时间</th>
 										<th onclick="orderBy(this,'updated_date');commitForm();"
-											id="updated_date_order" class="td-w2">修改时间</th>
+											id="updated_date_order" class="td-w2"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th>
 										<th onclick="orderBy(this,'memo');commitForm();" id="memo_order">备注</th>
 									</tr>
 								</thead>
@@ -107,8 +107,8 @@
 											<td>${list.suggest}</td>
 											<td>${list.suggest_res}</td>
 											<td>${list.follow_up}</td>
-											<td>${list.created_date}</td>
-											<td>${list.updated_date}</td>
+											<td><fmt:formatDate value="${list.created_date}" type="both" /></td>
+											<td><fmt:formatDate value="${list.updated_date}" type="both" /></td>
 											<td>${list.memo}</td>
 										</tr>
 									</c:forEach>
