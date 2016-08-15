@@ -4,9 +4,8 @@ function init(){
     } 
     
 //编辑
-function preUpdate(obj){        
-        var crmHelpTypeId = $(obj).parents('tr').children("td").eq(2).text();        
-        loadPage('#main', '../web/crm/help/edit?crmHelpIdvalue='+crmHelpTypeId);
+function preUpdate(crmHelpId){
+        loadPage('#main', '../web/crm/help/edit?crmHelpIdvalue='+crmHelpId);
     }
 
 window.onload = setCurrentPage();

@@ -145,6 +145,7 @@
 	}
 	//显示添加用户弹出层
 	function addRole(){
+		$("#editUserDiv").text("添加角色");
 		clearDiv();
 		intiTree("add");
 		queryUserTypeList();
@@ -204,6 +205,7 @@
 	 * 回显用户信息
 	 */
 	function editRole(roleId){
+		$("#editUserDiv").text("修改角色");
 		clearDiv();
 		$.ajax({
 			url:"<%=basePath%>/web/permi/role/update",
@@ -388,7 +390,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel">编辑角色</h4>
+				<h4 class="modal-title" id="editUserDiv">编辑角色</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
@@ -421,7 +423,7 @@
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right"> 功能选择： </label>
-									<div class="col-sm-9">
+									<div class="col-sm-9" style="overflow-y:scroll;height: 300px;">
 										<ul id="treeDiv" class="ztree"></ul>
 									</div>
 								</div>

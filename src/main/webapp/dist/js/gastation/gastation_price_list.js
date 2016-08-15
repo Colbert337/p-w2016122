@@ -2,32 +2,32 @@
 	
 	window.onload = setCurrentPage();
 	
+	var listOptions ={   
+            url:'../crmInterface/crmGasPriceService/queryAllGasPriceList',
+            type:'post',                    
+            dataType:'html',
+            success:function(data){
+	              	$("#main").html(data);
+            		//$("#innerModel").html(data);
+	              if(typeof product_id != "undefined") {
+	            	  $("#innerModel").modal("show");
+	              }
+	              
+	              if($("#retCode").val() != "100"){
+	            	  
+		          }
+				$('[data-rel="tooltip"]').tooltip();
+            },error:function(XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+	}
+	
 	function commitForm(obj,product_id){
 		//设置当前页的值
 		if(typeof obj == "undefined") {
 			$("#pageNum").val("1");
 		}else{
 			$("#pageNum").val($(obj).text());
-		}
-		
-		var listOptions ={   
-	            url:'../crmInterface/crmGasPriceService/queryAllGasPriceList',
-	            type:'post',                    
-	            dataType:'html',
-	            success:function(data){
-		              	$("#main").html(data);
-	            		//$("#innerModel").html(data);
-		              if(typeof product_id != "undefined") {
-		            	  $("#innerModel").modal("show");
-		              }
-		              
-		              if($("#retCode").val() != "100"){
-		            	  
-			          }
-					$('[data-rel="tooltip"]').tooltip();
-	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
-	            }
 		}
 		
 		$("#formgastation").ajaxSubmit(listOptions);

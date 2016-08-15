@@ -428,6 +428,12 @@ public class TransportionServiceImpl implements TransportionService {
 	}
 
 	@Override
+	public List<Map<String, Object>> transportionConsumeList(SysDepositLog record) {
+		List<Map<String, Object>> list = transportionMapper.transportionConsumeReport(record);
+		return list;
+	}
+
+	@Override
 	public PageInfo<Map<String, Object>> transportionConsumeReportTotal(SysDepositLog record) {
 		PageHelper.startPage(1, 20, record.getOrderby());
 		List<Map<String, Object>> list = transportionMapper.transportionConsumeReportTotal(record);
@@ -435,4 +441,17 @@ public class TransportionServiceImpl implements TransportionService {
 		return pageInfo;
 	}
 
+	@Override
+	public PageInfo<Map<String, Object>> queryTcPersonalCountReport(SysDepositLog record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = transportionMapper.queryTcPersonalCountReport(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public List<Map<String, Object>> queryTcPersonalCountList(SysDepositLog record) {
+		List<Map<String, Object>> list = transportionMapper.queryTcPersonalCountReport(record);
+		return list;
+	}
 }

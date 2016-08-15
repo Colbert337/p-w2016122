@@ -32,18 +32,12 @@
 </div>
 
 	<div class="container-fluid wrap">
-		<div class="help-container">
-            <span class="icon-cs"></span>
-            <div class="title">
-                <div>司集服务公告</div>
-            </div>
-            <div class="service-notice">
-                <c:forEach items="${noticeInfoList}" var="list">
-                <h3 style="text-align: center">${list.title}</h3>
-                    ${list.answer}
-                <div style="text-align: right"><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd"/></div>
-                </c:forEach>
-            </div>
+        <div class="service-notice-info">
+            <c:forEach items="${noticeInfoList}" var="list">
+            <div class="hd">${list.title}</div>
+            <div class="bd">${list.answer}</div>
+            <div class="fd"><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd"/></div>
+            </c:forEach>
         </div>
 	</div>
     <script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>

@@ -502,7 +502,7 @@ public class GastationController extends BaseContoller{
 	}
 	
 	@RequestMapping("/queryRechargeReport")
-	public String queryRechargeReport(ModelMap map, SysOrder sysOrder, @RequestParam String page) throws Exception{
+	public String queryRechargeReport(ModelMap map, SysOrder sysOrder, @RequestParam String page, @ModelAttribute CurrUser currUser) throws Exception{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_rechargereport";
@@ -514,6 +514,9 @@ public class GastationController extends BaseContoller{
 			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				sysOrder.setOrderby("order_date desc");
+			}
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUserType()){
+				sysOrder.setChannelNumber(currUser.getStationId());
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = orderService.queryGastationRechargeReport(sysOrder);
@@ -725,7 +728,7 @@ public class GastationController extends BaseContoller{
     }
 	
 	@RequestMapping("/queryConsumeReport")
-	public String queryConsumeReport(ModelMap map, SysOrder sysOrder) throws Exception{
+	public String queryConsumeReport(ModelMap map, SysOrder sysOrder, @ModelAttribute CurrUser currUser) throws Exception{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_consumereport";
@@ -737,6 +740,9 @@ public class GastationController extends BaseContoller{
 			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				sysOrder.setOrderby("order_date desc");
+			}
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUserType()){
+				sysOrder.setChannelNumber(currUser.getStationId());
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = orderService.queryGastationConsumeReport(sysOrder);
@@ -985,7 +991,7 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"加注站编号","加注站名称","消费金额","冲红金额","运管人员","销售人员"};
+	            content[0] = new String[]{"加注站编号","加注站名称","消费金额(包含冲红)","冲红金额","运管人员","销售人员"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -1064,7 +1070,7 @@ public class GastationController extends BaseContoller{
 					order.setOrderby("sys_gas_station_id desc");
 				}
 
-				PageInfo<Map<String, Object>> pageinfo = service.gastionConsumeReport(order);
+				PageInfo<Map<String, Object>> pageinfo = service.gastionRechargeReport(order);
 				List<Map<String, Object>> list = pageinfo.getList();
 
 	            int cells = 0 ; // 记录条数
@@ -1086,7 +1092,7 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"加注站编号","加注站名称","消费金额","冲红金额","运管人员","销售人员"};
+	            content[0] = new String[]{"加注站编号","加注站名称","充值金额(包含冲红)","冲红金额","运管人员","销售人员"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -1099,7 +1105,7 @@ public class GastationController extends BaseContoller{
 	            		String salesmen_name = tmpMap.get("salesmen_name")==null?"":tmpMap.get("salesmen_name").toString();
 	            		String operations_name = tmpMap.get("operations_name")==null?"":tmpMap.get("operations_name").toString();
 
-	                    content[i] = new String[]{sys_gas_station_id,gas_station_name,cash,hedgefund,salesmen_name,operations_name};
+	                    content[i] = new String[]{sys_gas_station_id,gas_station_name,cash,hedgefund,operations_name,salesmen_name};
 	                    i++;
 	                }
 	            }

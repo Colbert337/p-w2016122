@@ -48,6 +48,8 @@ function addBanner(){
         $('#editForm').bootstrapValidator('resetForm',true);
         $('.user-name-valid').remove();
     });
+    
+	$("[name=imgType]:last").val($("[name=imgType]:first").val());
 }
 
 /**
@@ -68,7 +70,7 @@ function deleteBanner(imgId){
                     $('[data-rel="tooltip"]').tooltip();
                 }
             }
-            $("#formcashback").ajaxSubmit(deleteOptions);
+            $("#listForm").ajaxSubmit(deleteOptions);
         }
     })
 
@@ -219,7 +221,7 @@ function savePhoto(fileobj,obj,obj1){
         bootbox.alert("请先上传文件");
         return;
     }
-    var stationId = "mobile/banner";
+    var stationId = "mobile";
     var multipartOptions ={
         url:'../crmInterface/crmBaseService/web/upload?stationid='+stationId,
         type:'post',

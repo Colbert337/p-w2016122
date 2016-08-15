@@ -12,6 +12,13 @@
   
 //保存
 function typesave(){
+	$('#formnew').data('bootstrapValidator').validate();
+	if(!$('#formnew').data('bootstrapValidator').isValid()){
+		return ;
+	}
+	if($('.user-name-valid').is(':visible')){
+		return ;
+	}
         var options ={   
                 url:'../web/crm/help/type/save',   
                 type:'post',                    
@@ -56,14 +63,14 @@ function returnpage(){
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="title">分类名称： </label>
                                         <div class="col-sm-4">
-                                            <input type="text" name="title" placeholder="分类名称"  class="form-control" />
+                                            <input type="text" name="title" placeholder="分类名称"  maxlength="15" class="form-control" />
                                         </div>
                                     </div>
                                 
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="remark">分类备注： </label>
                                           <div class="col-sm-4">                               
-										    <textarea class="limited form-control" id="remark" name="remark" maxlength="100" style="resize: none;"></textarea>
+										    <textarea class="limited form-control" id="remark" name="remark" maxlength="30" style="resize: none;"></textarea>
                                           </div>
                                     </div>
                                     
@@ -98,11 +105,6 @@ function returnpage(){
                                                                                                                          保存
                                             </button>
                                             &nbsp; &nbsp; &nbsp;
-                                            <button class="btn" type="reset">
-                                                <i class="ace-icon fa fa-repeat bigger-110"></i>
-                                                                                                                         重置
-                                            </button>
-                                            &nbsp; &nbsp; &nbsp;
                                             <button class="btn btn-success" type="button" onclick="returnpage();">
                                                 <i class="ace-icon fa fa-undo bigger-110"></i>
                                                                                                                           返回
@@ -128,19 +130,6 @@ $("#formnew").bootstrapValidator({
         validating: 'glyphicon glyphicon-refresh'
     },
     fields: {
-    	crmHelpTypeId: {
-            message: 'The cardno is not valid',
-            validators: {
-                notEmpty: {
-                    message: '分类编号不能为空'
-                },
-                stringLength: {
-                    min: 1,
-                    max: 5,
-                    message: '分类编号不能超过5个数字'
-                }
-            }
-        },
         title: {
             message: 'The cardno is not valid',
             validators: {
@@ -149,8 +138,8 @@ $("#formnew").bootstrapValidator({
                 },
                 stringLength: {
                     min: 1,
-                    max: 10,
-                    message: '分类名称不能超过10个汉字'
+                    max: 15,
+                    message: '分类名称不能超过15个字符'
                 }
             }
         },
@@ -161,8 +150,8 @@ $("#formnew").bootstrapValidator({
                 },
                 stringLength: {
                     min: 1,
-                    max: 50,
-                    message: '分类备注不能超过20个字符'
+                    max: 30,
+                    message: '分类备注不能超过30个字符'
                 }
             }
         },

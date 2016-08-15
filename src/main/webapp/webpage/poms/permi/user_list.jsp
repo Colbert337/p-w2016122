@@ -41,7 +41,8 @@
 					},
 					stringLength: {
 						min: 6,
-						message: '密码不能小于6个字符'
+						max:20,
+						message: '密码长度必须在6~20位之间'
 					}
 				}
 			},
@@ -52,7 +53,8 @@
 					},
 					stringLength: {
 						min: 6,
-						message: '密码不能小于6个字符'
+						max:20,
+						message: '密码长度必须在6~20位之间'
 					},
 					callback: {
 						message: '密码不一致',
@@ -76,6 +78,15 @@
 				validators: {
 					notEmpty: {
 						message: '姓名不能为空'
+					}
+				}
+			},
+			mobilePhone: {
+				validators: {
+					stringLength: {
+						min: 11,
+						max:11,
+						message: '手机号码必须是11位'
 					}
 				}
 			}
@@ -343,23 +354,32 @@
 				<div class="col-xs-12">
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
-						<div class="item">
-							<label>账号/姓名/联系电话：</label>
-							<input type="text" name="userName" placeholder="账号/姓名/联系电话"  maxlength="15" value="${sysUser.userName}"/>
-						</div>
-						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
-								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								查询
-							</button>
-							<button class="btn btn-sm" type="button" onclick="init();">
-								重置
-							</button>
-							<div class="item"></div>
-							<button class="btn btn-sm btn-primary" type="button" onclick="addUser();">
+						<c:if test="${userType != 3}">
+							<div class="item">
+								<label>账号/姓名/联系电话：</label>
+								<input type="text" name="userName" placeholder="账号/姓名/联系电话"  maxlength="15" value="${sysUser.userName}"/>
+							</div>
+
+							<div class="item">
+								<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+									<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+									查询
+								</button>
+								<button class="btn btn-sm" type="button" onclick="init();">
+									重置
+								</button>
+								<div class="item"></div>
+								<button class="btn btn-sm btn-primary" type="button" onclick="addUser();">
+									添加
+								</button>
+							</div>
+						</c:if>
+						<c:if test="${userType == 3}">
+							<a class="btn btn-sm btn-primary fl-r" style="margin-bottom: 10px;" type="button" onclick="addUser();">
 								添加
-							</button>
-						</div>
+							</a>
+							<div class="clear"></div>
+						</c:if>
 					</div>
 					<div class="sjny-table-responsive">
 					<table id="simple-table" class="table table-striped table-bordered table-hover">
@@ -500,7 +520,7 @@
 										<div class="form-group">
 											<label class="col-sm-4 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码:</label>
 											<div class="col-sm-8">
-												<input type="password" name="password" id="password" placeholder="用户密码" maxlength="6" class="form-control" />
+												<input type="password" name="password" id="password" placeholder="用户密码" maxlength="20" class="form-control" />
 											</div>
 										</div>
 									</div>
@@ -508,7 +528,7 @@
 										<div class="form-group">
 											<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码:</label>
 											<div class="col-sm-8">
-												<input type="password" name="rePassword" id="re_password" placeholder="确认密码" maxlength="6" class="form-control" />
+												<input type="password" name="rePassword" id="re_password" placeholder="确认密码" maxlength="20" class="form-control" />
 											</div>
 										</div>
 									</div>

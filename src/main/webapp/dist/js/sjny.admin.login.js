@@ -15,12 +15,12 @@ sjny.admin.login = {
 		$(window).resize();
 	},
 
-	loginValidate: function() {
+	/*loginValidate: function() {
 
 		//客户端开始验证
 		$('#login').validate({
 
-			/* 设置验证规则 */
+			/!* 设置验证规则 *!/
 			rules: {
 				userName: {
 					required: true,
@@ -32,7 +32,7 @@ sjny.admin.login = {
 	            }
 			},
 
-			/* 设置错误信息 */
+			/!* 设置错误信息 *!/
 			messages: {
 				userName: {
 					required: "请填写用户名",
@@ -44,13 +44,13 @@ sjny.admin.login = {
 	            }
 			},
 
-			/*错误提示位置*/
+			/!*错误提示位置*!/
 	        errorPlacement: function (error, element) {
 	            error.appendTo(element.siblings("div"));
 	        }
 
 		});
-	},
+	},*/
 
 	rememberPW: function(){
 		//初始化页面时验证是否记住了密码
@@ -93,6 +93,53 @@ sjny.admin.login = {
 		})
 	}
 };
+
+/*登录验证*/
+function loginValidate(userName,password){
+	if(userName == ""){
+		$("#errorNotice").text("用户名不能为空！");
+		return false;
+	}else if(password == ""){
+		$("#errorNotice").text("用户密码不能为空！");
+		return false;
+	}else{
+		return true;
+	}
+}
+
+/*用户登录*/
+function submitForm(){
+	console.log("登录验证");
+	var userName = $("#userName").val();
+	var password = $("#password").val();
+	var resultVal = loginValidate(userName,password);
+	if(resultVal){
+		$.ajax({
+			type: "POST",
+			async:false,
+			data:{userName:userName,password:password},
+			url: "web/login/common",
+			success: function(data){
+				if(data != null && data.erroMsg != null && data.erroMsg =="suceess"){
+					window.location.href="common/g_main.jsp";
+				}else{
+					$("#errorNotice").text(data.erroMsg);
+				}
+
+			}, error: function (XMLHttpRequest, textStatus, errorThrown) {
+				$("#errorNotice").text("登录失败!");
+			}
+		});
+	}
+
+}
+
+/*回车提交表单*/
+$(document).keyup(function(event){
+	if(event.keyCode ==13){
+		$("#submitButton").trigger("click");
+	}
+});
 
 $(document).ready(function() {
 	sjny.admin.login.verticalMiddle();
