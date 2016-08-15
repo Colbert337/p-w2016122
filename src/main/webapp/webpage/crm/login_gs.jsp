@@ -33,7 +33,7 @@
 					<li>
 						<span class="icon icon-lock-open-empty"></span>
 						<input id="password" name="password" class="txt required" placeholder="密码" tabIndex="2" type="password">
-						<div class="form-item-error"></div>
+						<div id="errorNotice" class="form-item-error" style="color: #f00;"></div>
 					</li>
 					<%--<li>
 						<input class="txt code" placeholder="验证码" type="text">
@@ -44,7 +44,7 @@
 						<a href="">商家注册</a>
 					</li>--%>
 					<li>
-						<button class="btn btn-block btn-primary" type="submit" tabIndex="3">登录</button>
+						<button class="btn btn-block btn-primary" type="button" id="submitButton" onclick="submitForm()" tabIndex="3">登录</button>
 					</li>
 				</ul>
 				</form>

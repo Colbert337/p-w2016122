@@ -39,27 +39,28 @@ public class GasCardLog extends BaseModel{
     private String action;
 
     private String memo;
-    private String work;
     
+    private String card_no_start;
+	
+	private String card_no_end;
     
-    public String getWork() {
-		return work;
+    public String getCard_no_start() {
+		return card_no_start;
 	}
 
-	public void setWork(String work) {
-		this.work = work;
+	public void setCard_no_start(String card_no_start) {
+		this.card_no_start = card_no_start;
 	}
 
-	public String getMname() {
-		return mname;
+	public String getCard_no_end() {
+		return card_no_end;
 	}
 
-	public void setMname(String mname) {
-		this.mname = mname;
+	public void setCard_no_end(String card_no_end) {
+		this.card_no_end = card_no_end;
 	}
 
-	private String mname; 
-    public String getCard_property() {
+	public String getCard_property() {
 		return card_property;
 	}
 

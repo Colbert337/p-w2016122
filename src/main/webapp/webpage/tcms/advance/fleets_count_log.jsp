@@ -64,7 +64,7 @@
 
 				<div>
 					<div class="alert alert-info alert-mt">
-						<span class="bigger-120">消费总金额：${totalCash}元</span>
+						<span class="bigger-120">消费总金额：${totalCash}元</span>&emsp;<span class="bigger-120">冲红总金额：${chonghongCash}元</span>
 					</div>
 					<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 						<thead>
@@ -79,7 +79,7 @@
 							<th onclick="orderBy(this,'tc_fleet_id');commitForm();" id="tc_fleet_id_order">车队编号</th>
 							<th onclick="orderBy(this,'fleet_name');commitForm();" id="fleet_name_order">车队名称</th>
 							<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
-							<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">消费金额</th>
+							<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">消费金额(含冲红)</th>
 							<th onclick="orderBy(this,'hedgefund');commitForm();" id="hedgefund_order">冲红金额</th>
 							<th onclick="orderBy(this,'summit');commitForm();" id="summit_order">消费量</th>
 							<th onclick="orderBy(this,'consumecount');commitForm();" id="consumecount_order">消费次数</th>

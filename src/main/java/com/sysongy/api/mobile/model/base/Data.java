@@ -40,10 +40,20 @@ public class Data {
 	private String rechargePlatform;
 	
 	private String rechargeType;
-	
+
 	private String totalAmount;
 	
 	private List<SysOrderGoods> goods;
+	
+	private String[] city;
+
+	public String[] getCity() {
+		return city;
+	}
+
+	public void setCity(String[] city) {
+		this.city = city;
+	}
 
 	public String getChannel() {
 		return channel;

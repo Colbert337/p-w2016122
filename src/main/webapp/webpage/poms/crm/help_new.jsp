@@ -67,7 +67,7 @@ $(function(){
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label no-padding-right" for="title">标题： </label>
                                         <div class="col-sm-4">
-                                            <input type="text" name="title" placeholder="标题"  class="form-control" value="${crmHelp.title}"/>
+                                            <input type="text" name="title" placeholder="标题"  maxlength="10" class="form-control" value="${crmHelp.title}"/>
                                         </div>
                                     </div>
                                 
@@ -112,7 +112,7 @@ $(function(){
                                         <label class="col-sm-3 control-label no-padding-right" for="issuer">发布人： </label>
 
                                         <div class="col-sm-4">
-                                            <input type="text" id="issuer" name="issuer" placeholder="发布人" class="form-control" value="${crmHelp.issuer}"/>
+                                            <input type="text" id="issuer" name="issuer" placeholder="发布人" maxlength="5" class="form-control" value="${crmHelp.issuer}"/>
                                         </div>
                                     </div> 
                                                                                                                                           
@@ -122,11 +122,6 @@ $(function(){
                                             <button class="btn btn-info" type="button" onclick="save();">
                                                 <i class="ace-icon fa fa-check bigger-110"></i>
                                                                                                                          保存
-                                            </button>
-                                            &nbsp; &nbsp; &nbsp;
-                                            <button class="btn" type="reset">
-                                                <i class="ace-icon fa fa-repeat bigger-110"></i>
-                                                                                                                         重置
                                             </button>
                                             &nbsp; &nbsp; &nbsp;
                                             <button class="btn btn-success" type="button" onclick="returnpage();">

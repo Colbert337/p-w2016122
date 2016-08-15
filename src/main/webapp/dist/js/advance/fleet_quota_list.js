@@ -102,7 +102,7 @@ function savePassword(){
         dataType:'html',
         success:function(data){
             $("#main").html(data);
-            bootbox.alert("支付密码修改成功");//保存成功弹窗
+            $("#modal-table").modal("show");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败!");
         }

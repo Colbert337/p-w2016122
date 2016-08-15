@@ -130,14 +130,19 @@ $(function(){
                         <c:forEach items="${pageInfo.list}" var="list" varStatus="status">
                             <tr>
                                 <td>${status.index+1}</td>
-                                <td>${list.title}</td>
-                                <td>${list.question}</td>
-                                <td answer="${list.answer}">
+                                <td>${list.title}</td>                               
+                                <td>
                                   <c:choose>
-                                    <c:when test="${fn:length(list.answer)>30}"><a title="${list.answer }" >${fn:substring(list.answer,0,30)}......</a></c:when>
+                                    <c:when test="${fn:length(list.question)>20}"><span style="" title="${list.question }" >${fn:substring(list.question,0,20)}......</span></c:when>
+                                    <c:otherwise>${list.question}</c:otherwise>
+                                  </c:choose>                              
+                                </td>    
+                                <td>
+                                  <c:choose>
+                                    <c:when test="${fn:length(list.answer)>25}"><span title="${list.answer }" >${fn:substring(list.answer,0,25)}......</span></c:when>
                                     <c:otherwise>${list.answer}</c:otherwise>
                                   </c:choose>                              
-                                <td/>                                                           
+                                </td>                                                           
                                 <td>${list.titleType}</td> 
                                 <td>
                                    <c:choose>
@@ -149,7 +154,7 @@ $(function(){
                                 <td><fmt:formatDate value="${list.createdDate}" type="both" pattern="yyyy-MM-dd HH:mm"/></td>                                                                                
                                 <td class="text-center">
                                     <a class="" href="javascript:void(0);" title="编辑" data-rel="tooltip">
-                                            <i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
+                                            <i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate('${list.crmHelpId}');"></i>
                                     </a>
                                     <a class="" href="javascript:deletequestion('${list.crmHelpId}');" title="删除" data-rel="tooltip">
                                         <span class="ace-icon fa fa-trash-o bigger-130"></span>

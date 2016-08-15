@@ -149,6 +149,7 @@ public class CRMCashServiceContoller {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
 
+            recordNew.setCash(formatCash(recordNew.getCash()));
             sendChargeMessage(recordNew);
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", recordNew);
@@ -161,6 +162,13 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }
 
+    }
+
+    private BigDecimal formatCash(BigDecimal cash){
+        if(cash == null)
+            return null;
+        BigDecimal cashNew = cash.setScale(2, BigDecimal.ROUND_DOWN);
+        return cashNew;
     }
 
     private void sendChargeMessage(SysOrder recordNew){
@@ -399,7 +407,7 @@ public class CRMCashServiceContoller {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
 
-            recordNew.setCash(record.getCash());
+            recordNew.setCash(formatCash(record.getCash()));
             sendConsumeMessage(recordNew, mobilePhone);
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", recordNew);

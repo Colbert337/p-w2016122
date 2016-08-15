@@ -5,6 +5,8 @@ package com.sysongy.poms.base.model;
  */
 public class InterfaceConstants {
 
+    public static final Integer SHORT_MSEEAGE_CODE_EXPIRE_TIME = 300; //短信验证码5分钟超时
+
     public static final Integer USER_TYPE_GAS_STATION_USER = 1;    //气站用户
 
     public static final Integer USER_TYPE_TRANSPORTATION_COMPANY_USER = 2;  //运输公司
