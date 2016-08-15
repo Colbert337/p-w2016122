@@ -37,7 +37,7 @@ public class SuggestController extends BaseContoller {
 	 */
 	@RequestMapping("/suggestList")
 	public String queryMbBannerListPage(Suggest suggest,HttpServletRequest request, ModelMap map ) throws Exception {
-		String text=request.getParameter("text");
+	 
 		String ret = "webpage/poms/mobile/suggest_list";
 
 		PageBean bean = new PageBean();
@@ -48,10 +48,7 @@ public class SuggestController extends BaseContoller {
 		}
 
 		PageInfo<Suggest> pageinfo = new PageInfo<Suggest>();
-		if (text!=null&&!"".equals(text)) {
-			suggest.setSuggest(text);	
-		}
-		
+			
 		pageinfo = suggestService.querySuggest(suggest);
 
 		bean.setRetCode(100);

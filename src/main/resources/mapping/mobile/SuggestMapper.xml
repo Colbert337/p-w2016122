@@ -43,10 +43,10 @@
         and suggest_res LIKE CONCAT(CONCAT('%',  #{suggest_res,jdbcType=VARCHAR}), '%')
       </if>
       <if test="created_date != null &amp;&amp; created_date != ''">
-        and created_date &gt; #{created_date,jdbcType=DATE}
+        and a.created_date &gt; #{created_date,jdbcType=TIMESTAMP}
       </if>
       <if test="updated_date != null &amp;&amp; updated_date != ''">
-        and created_date &lt;  #{updated_date,jdbcType=DATE}
+        and a.created_date &lt;  #{updated_date,jdbcType=TIMESTAMP}
       </if>
       
     </trim>

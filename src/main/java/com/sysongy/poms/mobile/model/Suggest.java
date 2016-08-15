@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
 
-public class Suggest  extends BaseModel{
+public class Suggest extends BaseModel {
 	private String mb_user_suggest_id;
 	private String sys_driver_id;
 	private String mobile_phone;
@@ -13,6 +13,7 @@ public class Suggest  extends BaseModel{
 	private String memo;
 	private String follow_up;
 	private String user_name;
+
 	public String getUser_name() {
 		return user_name;
 	}
@@ -21,8 +22,8 @@ public class Suggest  extends BaseModel{
 		this.user_name = user_name;
 	}
 
-	private Date created_date;
-	private Date updated_date;
+	private String created_date;
+	private String updated_date;
 
 	public String getMb_user_suggest_id() {
 		return mb_user_suggest_id;
@@ -80,19 +81,22 @@ public class Suggest  extends BaseModel{
 		this.follow_up = follow_up;
 	}
 
-	public Date getCreated_date() {
-		return created_date;
-	}
+ 
 
-	public void setCreated_date(Date created_date) {
+	public void setCreated_date(String created_date) {
 		this.created_date = created_date;
 	}
 
-	public Date getUpdated_date() {
+	public String getUpdated_date() {
 		return updated_date;
 	}
 
-	public void setUpdated_date(Date updated_date) {
+	public void setUpdated_date(String updated_date) {
 		this.updated_date = updated_date;
 	}
+
+	public String getCreated_date() {
+		return created_date;
+	}
+ 
 }

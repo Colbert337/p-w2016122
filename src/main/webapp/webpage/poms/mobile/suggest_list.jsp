@@ -25,12 +25,12 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="page-header">
-							<h1>投诉管理</h1>
+							<h1>意见投诉</h1>
 						</div>
 
 						<div class="search-types">
 							<div class="item">
-								<label>关键字:</label> <input type="text" id="text" name="text"
+								<label>关键字:</label> <input type="text" id="text" name="suggest"
 									placeholder="输入用关键字" maxlength="9" value="${suggest.suggest}" />
 							</div>
 
@@ -98,7 +98,7 @@
 											id="release_time"
 											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th>
 										<th onclick="orderBy(this,'memo');" id="operator_order">备注</th>
-										<th class="text-center">操作</th>
+										
 									</tr>
 								</thead>
 
@@ -117,10 +117,8 @@
 											<td>${list.suggest}</td>
 											<td>${list.suggest_res}</td>
 											<td>${list.follow_up}</td>
-											<td><fmt:formatDate value="${list.created_date}"
-													type="both" /></td>
-											<td><fmt:formatDate value="${list.updated_date}"
-													type="both" /></td>
+											<td>${list.created_date}</td>
+											<td>${list.updated_date}</td>
 											<td>${list.memo}</td>
 										</tr>
 									</c:forEach>

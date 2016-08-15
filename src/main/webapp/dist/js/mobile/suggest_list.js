@@ -1,8 +1,7 @@
-
+	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 var listOptions = {
 	url: sjny.basePath + '/web/mobile/suggest/suggestList',
 	type: 'post',
-	data:{"text":"'"+$("#text").val()+"'"},
 	dataType: 'html',
 	success: function(data) {
 		//alert(data);
