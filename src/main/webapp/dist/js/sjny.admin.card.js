@@ -3,6 +3,7 @@ var listOptions = {
 	type: 'post',
 	dataType: 'html',
 	success: function(data) {
+		//alert(data)
 		$("#main").html(data);
 		if ($("#retCode").val() != "100") {
 			//$("#modal-table").modal("show");

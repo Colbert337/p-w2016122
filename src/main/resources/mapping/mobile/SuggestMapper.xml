@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.mobile.dao.SuggestMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.mobile.model.Suggest" >
+    <id column="mb_user_suggest_id" property="mb_user_suggest_id" jdbcType="VARCHAR" />
+    <result column="sys_driver_id" property="sys_driver_id" jdbcType="VARCHAR" />
+    <result column="mobile_phone" property="mobile_phone" jdbcType="VARCHAR" />
+    <result column="suggest" property="suggest" jdbcType="VARCHAR" />
+    <result column="suggest_res" property="suggest_res" jdbcType="VARCHAR" />
+    <result column="follow_up" property="follow_up" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="user_name" property="user_name" jdbcType="VARCHAR" />
+    <result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updated_date" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mb_user_suggest_id, sys_driver_id, mobile_phone, suggest, suggest_res, follow_up, 
+    memo, created_date, updated_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from mb_user_suggest
+    where mb_user_suggest_id = #{mbUserSuggestId,jdbcType=VARCHAR}
+  </select>
+  
+<select id="querySuggest" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.mobile.model.Suggest" >
+  	 SELECT a.*,b.user_name FROM mb_user_suggest a, sys_driver b WHERE a.`sys_driver_id`=b.`sys_driver_id`
+    <trim>
+      <if test="mb_user_suggest_id != null &amp;&amp; mb_user_suggest_id != ''" >
+        and mb_user_suggest_id = #{mb_user_suggest_id,jdbcType=VARCHAR}
+      </if>
+      <if test="sys_driver_id != null &amp;&amp; sys_driver_id != ''" >
+        and sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile_phone != null &amp;&amp; mobile_phone != ''" >
+        and mobile_phone = #{card_status,jdbcType=VARCHAR}
+      </if>
+      <if test="suggest != null &amp;&amp; suggest != ''">
+        and (suggest LIKE CONCAT(CONCAT('%',  #{suggest,jdbcType=VARCHAR}), '%') or suggest_res like  CONCAT(CONCAT('%',  #{suggest,jdbcType=VARCHAR}), '%') or user_name like  CONCAT(CONCAT('%',  #{suggest,jdbcType=VARCHAR}), '%') or follow_up like  CONCAT(CONCAT('%',  #{suggest,jdbcType=VARCHAR}), '%') or a.memo like  CONCAT(CONCAT('%',  #{suggest,jdbcType=VARCHAR}), '%') or a.mobile_phone like  CONCAT(CONCAT('%',  #{suggest,jdbcType=VARCHAR}), '%') )
+      </if>
+        <if test="suggest_res != null &amp;&amp; suggest_res != ''">
+        and suggest_res LIKE CONCAT(CONCAT('%',  #{suggest_res,jdbcType=VARCHAR}), '%')
+      </if>
+      <if test="created_date != null &amp;&amp; created_date != ''">
+        and created_date &gt; #{created_date,jdbcType=DATE}
+      </if>
+      <if test="updated_date != null &amp;&amp; updated_date != ''">
+        and created_date &lt;  #{updated_date,jdbcType=DATE}
+      </if>
+      
+    </trim>
+  </select>
+   
+</mapper>
