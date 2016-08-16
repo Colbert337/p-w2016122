@@ -53,7 +53,7 @@ import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 
-@RequestMapping("/api/v1/mobile/user/")
+@RequestMapping("/api/v1/mobile")
 @Controller
 public class MobileController {
 
@@ -81,7 +81,7 @@ public class MobileController {
 	 * @param params
 	 * @return
      */
-	@RequestMapping(value = {"login"})
+	@RequestMapping(value = {"/user/login"})
 	@ResponseBody
 	public String login(String params) {
 		MobileReturn result = new MobileReturn();
@@ -140,7 +140,7 @@ public class MobileController {
 	 * @param params
 	 * @return
      */
-	@RequestMapping(value = {"getVerificationCode"})
+	@RequestMapping(value = {"/user/getVerificationCode"})
 	@ResponseBody
 	public String getVerificationCode(String params) {
 
@@ -155,7 +155,7 @@ public class MobileController {
 			/**
 			 * 解析参数
 			 */
-			params = Md5Util.base64decode(params);//参数解密
+			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 
@@ -181,7 +181,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = Md5Util.base64encode(resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 //			resultStr = Md5Util.base64decode(resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -198,7 +198,7 @@ public class MobileController {
 	 * @param params
 	 * @return
      */
-	@RequestMapping(value = {"register"})
+	@RequestMapping(value = {"/user/register"})
 	@ResponseBody
 	public String register(String params) {
 		MobileReturn result = new MobileReturn();
@@ -210,7 +210,7 @@ public class MobileController {
 			/**
 			 * 解析参数
 			 */
-			params = Md5Util.base64decode(params);//参数解密
+			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 
@@ -243,7 +243,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = Md5Util.base64encode(resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 //			resultStr = Md5Util.base64decode(resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -260,7 +260,7 @@ public class MobileController {
 	 * @param params
 	 * @return
      */
-	@RequestMapping(value = {"getUserInfo"})
+	@RequestMapping(value = {"/user/getUserInfo"})
 	@ResponseBody
 	public String getUserInfo(MobileParams params) {
 

@@ -14,8 +14,8 @@ import java.util.Map;
  * @Description:  接口返回结果集
  */
 public class MobileReturn {
-	public static final String STATUS_SUCCESS = "100";//成功
-	public static final String STATUS_FAIL = "200";//失败
+	public static final String STATUS_SUCCESS = "200";//成功
+	public static final String STATUS_FAIL = "100";//失败
 
 	public static final String STATUS_MSG_SUCCESS = "请求成功";
 	public static final String STATUS_MSG_FAIL = "请求失败";
