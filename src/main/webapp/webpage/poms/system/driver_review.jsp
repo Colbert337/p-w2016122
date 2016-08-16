@@ -31,6 +31,11 @@
 						</div>
 						
 						<div class="item">
+						    <label>车牌号:</label>
+							<input type="text" name="plateNumber" placeholder="输入车牌号码"  maxlength="20" value="${driver.plateNumber}"/>
+						</div>
+						
+						<div class="item">
 						    <label>认证姓名:</label>
 							<input type="text" name="fullName" placeholder="输入认证姓名"  maxlength="20" value="${driver.fullName}"/>
 						</div>

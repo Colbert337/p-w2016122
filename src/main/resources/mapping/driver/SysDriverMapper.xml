@@ -86,9 +86,6 @@
       <if test="sysDriverId != null &amp;&amp; sysDriverId != ''" >
         and sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
       </if>
-      <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
-        and plate_number = #{plateNumber,jdbcType=VARCHAR}
-      </if>
       <if test="fullName!= null &amp;&amp; fullName != ''" >
         and full_name = #{fullName,jdbcType=VARCHAR}
       </if>
@@ -115,6 +112,9 @@
       </if>
       <if test="driverType!= null &amp;&amp; driverType != ''" >
         and driver_type = #{driverType,jdbcType=INTEGER}
+      </if>
+      <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
+        and plate_number like CONCAT(CONCAT('%',  #{plateNumber,jdbcType=VARCHAR}), '%')
       </if>
     </trim>
   </select>
