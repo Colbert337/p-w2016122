@@ -23,11 +23,11 @@ public class ReturnCashUtil extends MobileUtils {
 
 		checkApiKey(param.getApiKey(), ret);
 
-		if (StringUtils.isEmpty(returnCash.getAmount()) || StringUtils.isEmpty(returnCash.getSys_driver_id())) {
+		/*if (StringUtils.isEmpty(returnCash.getAmount()) || StringUtils.isEmpty(returnCash.getSys_driver_id())) {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
-		}
+		}*/
 	}
 	
 	public static void calcCashBack(MobileReturnCash returnCash) throws Exception {

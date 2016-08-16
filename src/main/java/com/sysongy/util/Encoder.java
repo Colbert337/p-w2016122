@@ -10,11 +10,11 @@ import java.security.MessageDigest;
 /**
  * @FileName : Encoder.java
  * @Encoding : UTF-8
- * @Package : com.hbkis.base.controller
- * @Link : http://www.hbkis.com
+ * @Package : com.sysongy.util
+ * @Link : http://www.sysnongy.com
  * @Created on : 2015年10月20日, 下午5:53:21
  * @Author : Dongqiang.Wang [wdq_2012@126.com]
- * @Copyright : Copyright(c) 2015 西安海贝信息科技有限公司
+ * @Copyright : Copyright(c) 2016 陕西司集能源科技有限公司
  * @Description : 编码（加密）工具
  *
  */
@@ -188,7 +188,7 @@ public class Encoder {
 		/*System.out.println(Encoder.MD5Encode("111111".getBytes()));*/
 		// System.out.println(Encoder.SHA1Encode("我".getBytes()));
 
-		String uiatc = "wdq2012";
+		/*String uiatc = "wdq2012";
 		// try {
 		// byte[] byteArr = Encoder.symmetricEncrypto("fee".getBytes());
 		// uiatc = Encoder.byteArrayToHexString(byteArr);
@@ -203,13 +203,13 @@ public class Encoder {
 		// }
 		System.out.println(uiatc);
 		// try {
-		System.out.println(Decoder.symmetricDecrypto(uiatc));
-		System.out.println(Decoder.symmetricDecrypto(uiatc,"anday"));
+		System.out.println("加密："+Encoder.symmetricEncrypto("123123123qwerqwerqwerqwerqwer"));
+		System.out.println("解密："+Decoder.symmetricDecrypto("123123123qwerqwerqwerqwerqwer"));*/
 		// } catch (Exception ex) {
 		// Logger.getLogger(Encoder.class.getName()).log(Level.SEVERE, null,
 		// ex);
 		// }
-		/*System.out.println(uiatc);*/
+		System.out.printf(symmetricEncrypto("{\"main\":{\"phoneNum\":\"13474294206\",\"verificationCode\":\"688556\",\"password\":\"96e79218965eb72c92a549dd5a330112\",\"invitationCode\":\"12111111111\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}"));
 
 	}
 }

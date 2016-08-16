@@ -26,11 +26,11 @@ public class MobileGetUserInfoUtils extends MobileUtils {
 		
 		checkApiKey(param.getApiKey(), ret);
 
-		if (param == null || StringUtils.isEmpty(param.getDetailParam()) || param.getDetailParam().length() != 32) {
+		/*if (param == null || StringUtils.isEmpty(param.getDetailParam()) || param.getDetailParam().length() != 32) {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
-		}
+		}*/
 		
 		return userinfo;
 	}
