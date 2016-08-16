@@ -6,12 +6,13 @@ var listOptions = {
 	type: 'post',
 	dataType: 'html',
 	success: function(data) {
-		//alert(data);
 		$("#main").html(data);
-		//$("#modal-table").modal("show");
+		
 		if ($("#retCode").val() != "100") {
-			//$("#modal-table").modal("show");
+			$("#modal-table").modal("show");
 		}
+		
+		$('[data-rel="tooltip"]').tooltip();
 	},
 	error: function(XMLHttpRequest, textStatus, errorThrown) {
 		bootbox.alert("error");

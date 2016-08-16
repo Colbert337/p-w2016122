@@ -2,22 +2,22 @@ package com.sysongy.poms.mobile.controller;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
@@ -126,7 +126,10 @@ public class MbBannerController extends BaseContoller{
 //            resultVal = Encoder.symmetricEncrypto(resultVal);
 //        }
 //        return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
-        
+//    	mbBanner.setOperator();
+    	CurrUser user=(CurrUser)session.getAttribute("currUser");
+    	SysUser u=user.getUser();
+    	mbBanner.setOperator(u.getUserName());
         PageBean bean = new PageBean();
 		String ret = "webpage/poms/mobile/banner_list";
 
@@ -188,7 +191,7 @@ public class MbBannerController extends BaseContoller{
         
         resultVal = Encoder.symmetricEncrypto(resultVal);
         
-        mbBannerService.updateBanner(mbBanner);
+        mbBannerService.deleteBanner(mbBanner);
         
         return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
     }

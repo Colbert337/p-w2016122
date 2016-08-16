@@ -100,7 +100,7 @@ function editBanner(imgId){
             $("#version").val(data.version);
             $("#remark").text(data.remark);
             $("#show_img").attr("src",localhostPaht+data.imgPath);
-
+            $("#operator").val(data.operator);
             $("#editBanner").text("修改图片");
         }
     })
@@ -124,6 +124,19 @@ function clearDiv(){
     $("#avatar_b").empty();
 }
 
+/**
+ * 查看明细
+ */
+function showInnerModel(obj1,tr){
+	var show=$("label[name='show']");
+	for(var i=0;i<show.length;i++){
+		show[i].innerHTML=tr.children('td').eq(i).text();
+	}
+	$("#innerimg1").attr("src",obj1);
+	$("#innerimg1").parent("a").attr("href",obj1);
+ 
+	$("#innerModel").modal('show');
+}
 /**
  * 保存图片信息
  */
