@@ -100,7 +100,7 @@ public class MbBannerController extends BaseContoller{
      * @return
      */
     @RequestMapping("/save")
-    public String saveBanner(MbBanner mbBanner, ModelMap map) throws Exception{
+    public String saveBanner(MbBanner mbBanner, ModelMap map,HttpSession session) throws Exception{
 //        String resultVal = "";
 //        
 //        if(mbBanner != null && mbBanner.getMbBannerId() !=  null && !"".equals(mbBanner.getMbBannerId())){
