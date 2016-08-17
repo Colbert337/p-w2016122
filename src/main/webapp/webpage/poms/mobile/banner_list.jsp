@@ -76,8 +76,8 @@
 											id="sys_cash_back_id_order">序号</th>
 										<th onclick="orderBy(this,'title');commitForm();"
 											id="threshold_min_value_order">标题</th>
-										<th onclick="orderBy(this,'img_path');commitForm();"
-											id="threshold_max_value_order">缩略图</th>
+									<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
+											id="threshold_max_value_order">缩略图</th> -->
 										<th onclick="orderBy(this,'target_url');commitForm();"
 											id="cash_per_order">链接地址</th>
 										<th onclick="orderBy(this,'version');commitForm();"
@@ -99,8 +99,8 @@
 										<tr id="${list.mbBannerId }">
 											<td>${list.sort}</td>
 											<td>${list.title}</td>
-											<td><img width="150" height="150" alt="150x150"
-												src="<%=imagePath %>${list.imgPath}" /></td>
+								<%-- 		<td><img width="150" height="150" alt="150x150"
+												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 											<td>${list.targetUrl}</td>
 											<td>${list.version}</td>
 											<td>${list.remark}</td>
@@ -289,8 +289,7 @@
 								</div>
 								<div class="col-xs-6">
 									<label class="control-label no-padding-right">标题:</label> <label
-										class="control-label no-padding-right" name="show"></label><label
-										class="control-label no-padding-right" name="show"></label>
+										class="control-label no-padding-right" name="show"></label> 
 								</div>
 								 
 								<div class="col-xs-6">
@@ -321,7 +320,7 @@
 						<div class="shenhe-items-bd">
 							<div class="row">
 								<div class="col-xs-8">
-									<label class="control-label no-padding-right">图片：</label>
+									<label class="control-label no-padding-right"></label>
 									<ul class="ace-thumbnails clearfix">
 										<li><a href="" data-rel="colorbox"> <img
 												class="img-responsive" src="" alt="" id="innerimg1">
