@@ -38,6 +38,7 @@ import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
 import net.sf.json.JSONObject;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @RequestMapping("/api/v1/mobile")
@@ -360,24 +363,56 @@ public class MobileController {
 
 	/**
 	 * 图片上传
-	 * @param files
 	 * @param request
      * @return
      */
+	@RequestMapping(value = {"/img/imageUpload"})
     @ResponseBody
-    public String upload(@RequestParam("file") CommonsMultipartFile files, HttpServletRequest request){
+    public String upload(@RequestParam("file") CommonsMultipartFile file, HttpServletRequest request){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("图片上传成功!");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
-    	try {
-			String realPath =  "mobile/" ;
-	        String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
-	        String path = MobileUploadUtils.upload(request, prop, files, filePath, realPath);
+		if (file.isEmpty()) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("上传图片为空！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("上传图片为空： ");
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		}
 
+    	try {
+			String type = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));// 取文件格式后缀名
+			String filename = System.currentTimeMillis() + type;// 取当前时间戳作为文件名
+
+			/**
+			 * 上传文件
+			 */
+			String realPath =  "/mobile/" ;
+			String path = (String) prop.get("images_upload_path");
+			String show_path = (String) prop.get("show_images_path");
+			String http_poms_path =  (String) prop.get("http_poms_path");
+			http_poms_path = http_poms_path + show_path;
+			path+= realPath + filename;//上传路径
+			show_path+= realPath + filename;//相对路径
+			http_poms_path += realPath + filename;//绝对路径（web访问路径）
+			File destFile = new File(path);
+			try {
+				FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			/**
+			 * 封装返回数据
+			 */
 			Map<String, Object> tokenMap = new HashMap<>();
-			tokenMap.put("imageUrl",path);
+			tokenMap.put("imageUrl",http_poms_path);
+			tokenMap.put("relativeUrl",show_path);
 			result.setData(tokenMap);
 
 			resutObj = JSONObject.fromObject(result);
