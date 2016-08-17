@@ -1,25 +1,5 @@
 package com.sysongy.api.mobile.controller;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.sysongy.api.mobile.model.MobileLogin;
-import com.sysongy.api.util.DESUtil;
-import com.sysongy.api.util.Md5Util;
-import com.sysongy.util.*;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.Data;
@@ -28,7 +8,6 @@ import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MobileFeedBack;
 import com.sysongy.api.mobile.model.loss.MobileLoss;
 import com.sysongy.api.mobile.model.record.MobileRecord;
-import com.sysongy.api.mobile.model.register.MobileRegister;
 import com.sysongy.api.mobile.model.upload.MobileUpload;
 import com.sysongy.api.mobile.model.userinfo.MobileUserInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
@@ -36,7 +15,6 @@ import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.api.mobile.tools.MobileUtils;
 import com.sysongy.api.mobile.tools.feedback.MobileFeedBackUtils;
 import com.sysongy.api.mobile.tools.getcitys.GetCitysUtils;
-import com.sysongy.api.mobile.tools.login.MobileLoginUtils;
 import com.sysongy.api.mobile.tools.loss.ReportLossUtil;
 import com.sysongy.api.mobile.tools.record.MobileRecordUtils;
 import com.sysongy.api.mobile.tools.register.MobileRegisterUtils;
@@ -44,6 +22,7 @@ import com.sysongy.api.mobile.tools.returncash.ReturnCashUtil;
 import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
 import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
+import com.sysongy.api.util.DESUtil;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
@@ -52,6 +31,23 @@ import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.UUIDGenerator;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 @RequestMapping("/api/v1/mobile")
 @Controller
@@ -123,12 +119,16 @@ public class MobileController {
 //			resultStr = Md5Util.base64encode(resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 //			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
-//			resultStr = Md5Util.base64decode(resultStr);
+//			resultStr = DESUtil.encode(resultStr);
 			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("登录失败！");
+			resutObj = JSONObject.fromObject(result);
 			logger.error("登录失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			return resultStr;
 		} finally {
 			return resultStr;
@@ -182,11 +182,15 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-//			resultStr = Md5Util.base64decode(resultStr);
+//			resultStr = DESUtil.encode(resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("发送失败！");
+			resutObj = JSONObject.fromObject(result);
 			logger.error("发送失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			return resultStr;
 		} finally {
 			return resultStr;
@@ -244,11 +248,15 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-//			resultStr = Md5Util.base64decode(resultStr);
+//			resultStr = DESUtil.encode(resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("注册失败！");
+			resutObj = JSONObject.fromObject(result);
 			logger.error("注册失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} finally {
 			return resultStr;
 		}

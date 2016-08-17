@@ -124,7 +124,7 @@ public class DESUtil {
         String str = "{\"main\":{\"phoneNum\":\"13474294206\",\"verificationCode\":\"688556\",\"password\":\"96e79218965eb72c92a549dd5a330112\",\"invitationCode\":\"12111111111\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
-        String resultStr = decode(keyStr,"DE5DCAF1F59506F07B57CB0B4682BDE4E37937690FAD4A1201151F9AB8D2B24D0EA02F61A074806DFE146781C3BEF61B2FA9901B68B5A2D63390431674BA386FF910017ACCD5FAA63BC9F4EDCA4F7168BB530145C791B31F7997A524392AB79A");
+        String resultStr = decode(keyStr,"DE5DCAF1F59506F07B57CB0B4682BDE4E37937690FAD4A123FE7CEF9A7D55699C1EAC5E3BDFCAF9A6B15D90D4B4B0A91EB3066EDE557B3373DF27C3F2AE70586476C5A71359FA34989DA56FDE542ED62");
 //        resultStr = new String(resultStr.getBytes("GB2312"),"ISO-8859-1");
         System.out.println("解密后:"+resultStr);
     }
