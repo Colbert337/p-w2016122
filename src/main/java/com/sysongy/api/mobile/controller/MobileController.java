@@ -364,7 +364,6 @@ public class MobileController {
 	 * @param request
      * @return
      */
-    @RequestMapping(value = "/img/imageUpload")
     @ResponseBody
     public String upload(@RequestParam("file") CommonsMultipartFile files, HttpServletRequest request){
 		MobileReturn result = new MobileReturn();
@@ -372,7 +371,6 @@ public class MobileController {
 		result.setMsg("图片上传成功!");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
-    	
     	try {
 			String realPath =  "mobile/" ;
 	        String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
