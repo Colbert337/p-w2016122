@@ -176,102 +176,56 @@
 	<!-- /.row -->
 	</form>
 </div>
-<div id="innerModel" class="modal modal-alert fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
+
+<div id="innerModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
-			<%--<div class="modal-header">--%>
-				<%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--%>
-				<%--<h4 class="modal-title" id="gridSystemModalLabel"></h4>--%>
-			<%--</div>--%>
-				<div class="shenhe-items-bd">
+			<%--<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
+			</div>--%>
 			<div class="modal-body" >
-			<div class="shenhe-items-hd">
-							运输公司信息
-						</div>
-						
-				<div class="row">
-					<div class="col-sm-3">
-							<div class="title">运输公司编号</div>
-							<div id="sys_gas_station_id" name="show"></div>
-					</div>
-					<div class="col-sm-3">
-						 
-							<div class="title">运输公司名称</div>
-							<div id="gas_station_name" name="show"> </div>
-						 
-					</div>
-					<div class="col-sm-3">
-						 
-							<div class="title">销售人员</div>
-							<div id="salesmen_name" name="show"> </div>
-						 
-					</div>
-					<div class="col-sm-3">
-						 
-							<div class="title">运营人员</div>
-							<div id="operations_name" name="show"> </div>
-						 
-					</div>
-				</div>
-			</div>
-			
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-sm-3">
-					 
-							<div class="title">管理员账号</div>
-							<div id="admin_username" name="show"> </div>
-						
-					</div>
-					<div class="col-sm-3">
-						 
-							<div class="title">工商注册号</div>
-							<div id="indu_com_number" name="show">工商注册证</div>
-						 
-					</div>
-					<div class="col-sm-3">
-						 
-							<div class="title">状态</div>
-							<div id="status" name="show"></div>
-						
-					</div>
-					<div class="col-sm-3">
-						 
-							<div class="title">注册地址</div>
-							<div id="address" name="show"></div>
-						 
-					</div>
-				</div>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-sm-3">
-					 
-							<div class="title">注册日期</div>
-							<div id="created_time" name="show"> </div>
-						
-					</div>
-					<div class="col-sm-3">
-						 
-							<div class="title">平台有效期</div>
-							<div id="expiry_date" name="show">工商注册证</div>
-						 
-					</div>
-					<div class="col-sm-3">
-						 
-							<div class="title">预付款额度</div>
-							<div id="prepay_balance" name="show"></div>
-						
-					</div>
-					 
-				</div>
-			</div>
-			</div>
-			<div class="modal-body">
-			<div class="shenhe-items-hd">
-							证件照片
-						</div>
-				<div class="row">
+				<div class="shenhe-items-hd">运输公司信息</div>
+				<table class="table">
+					<tbody>
+					<tr>
+						<th width="15%">运输公司编号</th>
+						<td><div id="sys_gas_station_id" name="show"></div></td>
+						<th width="15%">运输公司名称</th>
+						<td><div id="gas_station_name" name="show"> </div></td>
+					</tr>
+					<tr>
+						<th>销售人员</th>
+						<td><div id="salesmen_name" name="show"> </div></td>
+						<th>运营人员</th>
+						<td><div id="operations_name" name="show"> </div></td>
+					</tr>
+					<tr>
+						<th>管理员账号</th>
+						<td><div id="admin_username" name="show"> </div></td>
+						<th>工商注册号</th>
+						<td><div id="indu_com_number" name="show"> </div></td>
+					</tr>
+					<tr>
+						<th>状态</th>
+						<td><div id="status" name="show"> </div></td>
+						<th>注册地址</th>
+						<td><div id="address" name="show"> </div></td>
+					</tr>
+					<tr>
+						<th>注册日期</th>
+						<td><div id="created_time" name="show"> </div></td>
+						<th>平台有效期</th>
+						<td><div id="expiry_date" name="show"> </div></td>
+					</tr>
+					<tr>
+						<th>预付款额度</th>
+						<td colspan="3"><div id="prepay_balance" name="show"> </div></td>
+					</tr>
+					</tbody>
+				</table>
+
+				<div class="shenhe-items-hd">证件照片</div>
 				<div class="row">
 					<div class="col-sm-3">
 						<a class="gastation-log-colorbox" href="" data-rel="colorbox">
@@ -286,7 +240,9 @@
 						</a>
 					</div>
 				</div>
+
 			</div>
+
 			<div class="modal-footer">
 				<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>
 			</div>

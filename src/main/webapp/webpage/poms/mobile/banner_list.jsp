@@ -315,7 +315,8 @@
 								</div>
 							</div>
 						</div>
-
+					</div>
+					<div class="shenhe-items">
 						<div class="shenhe-items-hd">图片</div>
 						<div class="shenhe-items-bd">
 							<div class="row">
