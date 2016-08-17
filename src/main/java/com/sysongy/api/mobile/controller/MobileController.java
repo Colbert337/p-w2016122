@@ -23,6 +23,8 @@ import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
 import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.api.util.DESUtil;
+import com.sysongy.api.util.ParameterUtil;
+import com.sysongy.api.util.ShareCodeUtil;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
@@ -56,6 +58,7 @@ public class MobileController {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 	public final String keyStr = "sysongys";
+	String localPath = (String) prop.get("http_poms_path");
 
 	@Autowired
 	SysUserService sysUserService;
@@ -116,10 +119,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-//			resultStr = Md5Util.base64encode(resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 //			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.encode(resultStr);
 			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -270,105 +271,135 @@ public class MobileController {
      */
 	@RequestMapping(value = {"/user/getUserInfo"})
 	@ResponseBody
-	public String getUserInfo(MobileParams params) {
-
-		MobileReturn ret = new MobileReturn();
-		MobileUserInfo userinfo = new MobileUserInfo();
+	public String getUserInfo(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取用户信息成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
 		
-		try {	
-			userinfo = MobileGetUserInfoUtils.checkGetUserInfoParam(params, ret);
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
 
-			SysDriver driver = new SysDriver();
-			driver.setSysDriverId(userinfo.getToken());
-			List<SysDriver> driverlist = driverService.queryeSingleList(driver);
-			
-			if(driverlist.size() != 1){
-				/*ret.setError(MobileUtils.RET_ERROR);
-				ret.setMsg(MobileGetUserInfoUtils.RET_USERINFO_ERROR);
-				
-				ArrayList<Data> listc = new ArrayList<Data>();
-				listc.add(new Data());
-				
-				ret.setData(listc);*/
-		        
-				throw new Exception(MobileGetUserInfoUtils.RET_USERINFO_ERROR);
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver driver = new SysDriver();
+				String sysDriverId = mainObj.optString("token");
+				if(sysDriverId != null && !sysDriverId.equals("")){
+					Map<String, Object> resultMap = new HashMap<>();
+					driver.setSysDriverId(sysDriverId);
+					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+					if(driverlist != null && driverlist.size() > 0){
+						List<Map<String, Object>> list = orderService.calcDriverCashBack(sysDriverId);
+						String cashBack = "0.00";
+						if(list != null && list.size() > 0 && list.get(0) != null && list.get(0).get("cash_back") != null){
+							cashBack = list.get(0).get("cash_back").toString();
+						}
+
+						driver = driverlist.get(0);
+						resultMap.put("nick",driver.getFullName());
+						resultMap.put("account",driver.getUserName());
+						resultMap.put("securityPhone",driver.getMobilePhone());
+						resultMap.put("isRealNameAuth",GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())?"true":"false");
+						resultMap.put("balance",driver.getAccount().getAccountBalance());
+
+						resultMap.put("cumulativeReturn",cashBack);
+						if(driver.getAvatarB() == null){
+							resultMap.put("photoUrl","");
+						}else{
+							resultMap.put("photoUrl",localPath+driver.getAvatarB());
+						}
+
+
+						String invitationCode = driver.getInvitationCode();//获取邀请码
+						if(invitationCode == null || "".equals(invitationCode)){
+							invitationCode = ShareCodeUtil.toSerialCode(driver.getDriver_number());
+							//更新当前司机邀请码
+							SysDriver driverCode = new SysDriver();
+							driverCode.setSysDriverId(driver.getSysDriverId());
+							driverCode.setInvitationCode(invitationCode);
+							driverService.saveDriver(driverCode,"update");
+						}
+						resultMap.put("invitationCode",invitationCode);
+						result.setData(resultMap);
+					}
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("登录失败！");
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			
-			driver = driverlist.get(0);
-			List<Map<String, Object>> list = orderService.calcDriverCashBack(driver.getSysDriverId());
-			
-	        Data data = new Data();
-	        data.setNick(driver.getFullName());
-	        data.setUsername(driver.getUserName());
-	        data.setSecurityPhone(driver.getMobilePhone());
-	        data.setBalance(driver.getAccount().getAccountBalance());
-	        data.setCumulativeReturn(list.size()!=1?"0":list.get(0).get("cash_back").toString());
-	        data.setIsRealNameAuth(GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())?"true":"false");			    
-	        
-	        ArrayList<Data> listd = new ArrayList<Data>();
-	        listd.add(data);
-        	
-	        ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileGetUserInfoUtils.RET_USERINFO_SUCCESS, listd);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+			logger.error("查询成功： " + resultStr);
 		} catch (Exception e) {
-			if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
-			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-		}
-		finally {
-			return JSON.toJSONString(ret);
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
 	}
 
 	/**
 	 * 图片上传
-	 * @param params
 	 * @param files
 	 * @param request
      * @return
      */
-    @RequestMapping(value = "upload")
+    @RequestMapping(value = "/img/imageUpload")
     @ResponseBody
-    public String upload(MobileParams params, @RequestParam("file") CommonsMultipartFile[] files, HttpServletRequest request){
-    	
-    	MobileReturn ret = new MobileReturn();
-    	MobileUpload upload = new MobileUpload();
+    public String upload(@RequestParam("file") CommonsMultipartFile files, HttpServletRequest request){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("图片上传成功!");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
     	
     	try {
-			upload = MobileUploadUtils.checkUploadParam(params, ret);
-			
-			String realPath =  upload.getToken() + "/" ;
+			String realPath =  "mobile/" ;
 	        String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
-	
-	        String []path = MobileUploadUtils.upload(request, prop, files, filePath, realPath, upload);
-            
-            SysDriver sysDriver = new SysDriver();
-            
-            sysDriver.setSysDriverId(upload.getToken());
-            sysDriver.setDrivingLice(path[0]);
-            sysDriver.setVehicleLice(path[1]);
-            sysDriver.setUpdatedDate(new Date());
+	        String path = MobileUploadUtils.upload(request, prop, files, filePath, realPath);
 
-            driverService.saveDriver(sysDriver, "update");
-            
-            Data data = new Data();
-            data.setImageUrl(path.toString());
-            
-            ArrayList<Data> list = new ArrayList<Data>();
-        	list.add(data);
-            
-            ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileGetUserInfoUtils.RET_USERINFO_SUCCESS, list);
+			Map<String, Object> tokenMap = new HashMap<>();
+			tokenMap.put("imageUrl",path);
+			result.setData(tokenMap);
 
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+
+			logger.error("图片上传成功： " + resultStr);
         } catch (Exception e) {
-        	if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
-			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-        }
-        finally {
-			return JSON.toJSONString(ret);
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("图片上传失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("图片上传失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
     }
 
