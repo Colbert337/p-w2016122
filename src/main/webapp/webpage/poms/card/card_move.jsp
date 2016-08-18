@@ -100,7 +100,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">工作站领取人：</label>
 										<div class="col-sm-4">
-												<input type="text" name="workstation_resp" class="form-control" id="workstation_resp" maxlength="10"/>
+												<input type="text" name="workstation_resp" class="form-control" id="workstation_resp" maxlength="20"/>
 												<%-- <select class="form-control" id="workstation_resp" name="workstation_resp">
 												</select> --%>
 										</div>

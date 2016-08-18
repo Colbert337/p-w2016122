@@ -66,7 +66,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="operator">操作人： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="operator" name="operator" class="form-control" readonly="readonly" value="${sessionScope.currUser.user.userName}"/>
+											<input type="text" id="operator" name="operator" class="form-control" readonly="readonly" value="${sessionScope.currUser.user.userName}"/>
 										</div>
 									</div>
 						
