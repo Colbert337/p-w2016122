@@ -1,5 +1,9 @@
 package com.sysongy.poms.base.service;
 
+import com.sysongy.poms.base.model.DistCity;
+
+import java.util.List;
+
 /**
  * @FileName: DistrictService
  * @Encoding: UTF-8
@@ -12,4 +16,9 @@ package com.sysongy.poms.base.service;
  */
 public interface DistrictService {
 
+    /**
+     * 查询热门城市列表
+     * @return
+     */
+    List<DistCity> queryHotCityList();
 }

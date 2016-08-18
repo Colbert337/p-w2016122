@@ -26,6 +26,8 @@ import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.api.util.DESUtil;
 import com.sysongy.api.util.ParameterUtil;
 import com.sysongy.api.util.ShareCodeUtil;
+import com.sysongy.poms.base.model.DistCity;
+import com.sysongy.poms.base.service.DistrictService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.mobile.model.Suggest;
@@ -80,6 +82,8 @@ public class MobileController {
 	SysUserAccountService sysUserAccountService;
 	@Autowired
 	SysOrderGoodsService sysOrderGoodsService;
+	@Autowired
+	DistrictService districtService;
 
 	/**
 	 * 用户登录
@@ -749,26 +753,23 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
-				String opencity = (String) prop.get("opencity");
-				if(opencity.split("~").length >0 ){
-					String[] cityStr = opencity.split("~");
-					if(cityStr != null && cityStr.length > 0){
-						List<Map<String, Object>> listMap = new ArrayList<>();
-						for(String cityName:cityStr){
-							Map<String, Object> cityMap = new HashMap<>();
-							cityMap.put("cityName",cityName);
-							listMap.add(cityMap);
-						}
-						result.setListMap(listMap);
+				List<DistCity> cityList = districtService.queryHotCityList();
+				List<Map<String, Object>> listMap = new ArrayList<>();
+				if(cityList != null && cityList.size() > 0){
+					for(DistCity city:cityList){
+						Map<String, Object> cityMap = new HashMap<>();
+						cityMap.put("cityName",city.getCityName());
+						listMap.add(cityMap);
 					}
-
+					result.setListMap(listMap);
 				}
+
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
 			}
 			resutObj = JSONObject.fromObject(result);
-			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 //			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
@@ -779,7 +780,7 @@ public class MobileController {
 			result.setMsg("查询城市失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("查询城市失败： " + e);
-			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			return resultStr;

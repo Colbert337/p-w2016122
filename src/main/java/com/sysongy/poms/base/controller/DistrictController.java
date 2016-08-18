@@ -1,5 +1,8 @@
 package com.sysongy.poms.base.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 /**
  * @FileName: DistrictController
  * @Encoding: UTF-8
@@ -10,6 +13,8 @@ package com.sysongy.poms.base.controller;
  * @Version: V2.0 Copyright(c)陕西司集能源科技有限公司
  * @Description: 地区信息管理
  */
+@RequestMapping("/web/district")
+@Controller
 public class DistrictController {
 
 }
