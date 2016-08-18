@@ -1,33 +1,13 @@
 package com.sysongy.api.mobile.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.Data;
 import com.sysongy.api.mobile.model.base.MobileParams;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MobileFeedBack;
-import com.sysongy.api.mobile.model.login.MobileLogin;
 import com.sysongy.api.mobile.model.loss.MobileLoss;
 import com.sysongy.api.mobile.model.record.MobileRecord;
-import com.sysongy.api.mobile.model.register.MobileRegister;
 import com.sysongy.api.mobile.model.upload.MobileUpload;
 import com.sysongy.api.mobile.model.userinfo.MobileUserInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
@@ -35,7 +15,6 @@ import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.api.mobile.tools.MobileUtils;
 import com.sysongy.api.mobile.tools.feedback.MobileFeedBackUtils;
 import com.sysongy.api.mobile.tools.getcitys.GetCitysUtils;
-import com.sysongy.api.mobile.tools.login.MobileLoginUtils;
 import com.sysongy.api.mobile.tools.loss.ReportLossUtil;
 import com.sysongy.api.mobile.tools.record.MobileRecordUtils;
 import com.sysongy.api.mobile.tools.register.MobileRegisterUtils;
@@ -43,6 +22,7 @@ import com.sysongy.api.mobile.tools.returncash.ReturnCashUtil;
 import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
 import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
+import com.sysongy.api.util.DESUtil;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
@@ -54,14 +34,28 @@ import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.UUIDGenerator;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-@RequestMapping("/api/mobile/user/")
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
+@RequestMapping("/api/v1/mobile")
 @Controller
 public class MobileController {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
-	
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+	public final String keyStr = "sysongys";
 
 	@Autowired
 	SysUserService sysUserService;
@@ -78,143 +72,206 @@ public class MobileController {
 	@Autowired
 	SysOrderGoodsService sysOrderGoodsService;
 
-	@RequestMapping(value = {"Login"})
+	/**
+	 * 用户登录
+	 * @param params
+	 * @return
+     */
+	@RequestMapping(value = {"/user/login"})
 	@ResponseBody
-	public String login(MobileParams params) {
-
-		MobileLogin mobileLogin = new MobileLogin();
-		MobileReturn ret = new MobileReturn();
+	public String login(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg(MobileReturn.STATUS_MSG_SUCCESS);
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
 		try {
-			
-			try {
-				mobileLogin = (MobileLogin) JSON.parseObject(params.getDetailParam(), MobileLogin.class);
-			} catch (Exception e) {
-				ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_ERROR, MobileLoginUtils.RET_PARAM_ERROR_MSG, null);
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
 
-				logger.error("MobileController.Login ERROR： " + e);
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver driver = new SysDriver();
+				driver.setUserName(mainObj.optString("username"));
+				driver.setPassword(mainObj.optString("password"));
+				List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+				if(driverlist != null && driverlist.size() > 0){
+					Map<String, Object> tokenMap = new HashMap<>();
+					tokenMap.put("token",driverlist.get(0).getSysDriverId());
+					result.setData(tokenMap);
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("登录失败！");
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-
-			MobileLoginUtils.checkLoginParam(mobileLogin, params.getApiKey(), ret);
-
-			SysDriver driver = MobileLoginUtils.packagingSysDriver(mobileLogin);
-			List<SysDriver> driverlist = driverService.queryeSingleList(driver);
-
-			MobileLoginUtils.checkLogin(driverlist, ret);
-			
-			Data data = new Data();
-			data.setToken(driverlist.get(0).getSysDriverId());
-			
-			ArrayList<Data> list = new ArrayList<Data>();
-	        list.add(data);
-
-			ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_SUCCESS,	 null, list);
-
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+//			resultStr = Md5Util.base64encode(resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.encode(resultStr);
+			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
-			
-			if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileLoginUtils.packagingMobileReturn(MobileLoginUtils.RET_ERROR, null, null);
-			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-			
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("登录失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("登录失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
 		} finally {
-			return JSON.toJSONString(ret);
+			return resultStr;
 		}
 	}
-	
-	@RequestMapping(value = {"GetVerificationCode"})
+
+	/**
+	 * 获取短信验证码
+	 * @param params
+	 * @return
+     */
+	@RequestMapping(value = {"/user/getVerificationCode"})
 	@ResponseBody
-	public String getVerificationCode(MobileParams params) {
-		
-		MobileReturn ret = new MobileReturn();
+	public String getVerificationCode(String params) {
+
 		MobileVerification verification = new MobileVerification();
-		
-		try {	
-			verification = MobileVerificationUtils.checkVerificationCodeParam(params, ret);
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取验证码成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
 
-	        Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
 
-	        MobileVerificationUtils.sendMSG(verification, checkCode.toString());
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				//发送短信
+				Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
+				verification.setPhoneNum(mainObj.optString("phoneNum"));
+				verification.setReqType(MobileVerificationUtils.APP_DRIVER_REG);
+				MobileVerificationUtils.sendMSG(verification, checkCode.toString());
 
-	        redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 60);
-	        
-	        Data data = new Data();
-			data.setVerificationCode(checkCode.toString());
-			
-			ArrayList<Data> list = new ArrayList<Data>();
-	        list.add(data);
-			
-	        ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileVerificationUtils.RET_VERIFICATION_CODE, list);
-		
-		} catch (Exception e) {
-			if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+				//设置短信有效期60秒
+				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 90);
+				Map<String, Object> tokenMap = new HashMap<>();
+				tokenMap.put("tokenMap",checkCode.toString());
+				result.setData(tokenMap);
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-		}
-		finally {
-			return JSON.toJSONString(ret);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+//			resultStr = DESUtil.encode(resultStr);
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("发送失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("发送失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
 	}
-	
-	@RequestMapping(value = {"Register"})
+
+	/**
+	 * 用户注册
+	 * @param params
+	 * @return
+     */
+	@RequestMapping(value = {"/user/register"})
 	@ResponseBody
-	public String register(MobileParams params) {
-		
-		MobileReturn ret = new MobileReturn();
-		
-		try {	
-			MobileRegister register = MobileRegisterUtils.checkRegisterParam(params, ret, redisClientImpl);
+	public String register(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("注册成功");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
 
-			SysDriver driver = new SysDriver();
-			driver.setUserName(register.getPhoneNum());
-			
-			List<SysDriver> driverlist = driverService.queryeSingleList(driver);
-			if(driverlist.size() != 0){
-				ret.setError(MobileUtils.RET_ERROR);
-				ret.setMsg(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
-				
-				ArrayList<Data> list = new ArrayList<Data>();
-		        list.add(new Data());
-		        
-				ret.setData(list);
-				
-				throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver driver = new SysDriver();
+				driver.setUserName(mainObj.optString("phoneNum"));
+
+				List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+				if(driverlist != null && driverlist.size() > 0){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("该手机号已注册！");
+					throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
+				}else{
+					String sysDriverId = UUIDGenerator.getUUID();
+					driver.setPassword(mainObj.optString("password"));
+					driver.setSysDriverId(sysDriverId);
+					Integer tmp = driverService.saveDriver(driver, "insert");
+
+					Map<String, Object> tokenMap = new HashMap<>();
+					tokenMap.put("token",sysDriverId);
+					result.setData(tokenMap);
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			
-			
-			driver.setPassword(register.getPassword());
-			Integer tmp = driverService.saveDriver(driver, "insert");
-			if(tmp == 1){
-				List<SysDriver> tmplist = driverService.queryeSingleList(driver);
-				driver = tmplist.get(0);
-			}
-			
-			Data data = new Data();
-			data.setToken(driver.getSysDriverId());
-			
-			ArrayList<Data> list = new ArrayList<Data>();
-	        list.add(data);
-	        
-	        ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileVerificationUtils.RET_VERIFICATION_CODE, list);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+//			resultStr = DESUtil.encode(resultStr);
 		} catch (Exception e) {
-			
-			if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileLoginUtils.RET_ERROR, null, null);
-			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("注册失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("注册失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+		} finally {
+			return resultStr;
 		}
-		finally {
-			return JSON.toJSONString(ret);
-		}
+
 	}
-	
-	@RequestMapping(value = {"GetUserInfo"})
+
+	/**
+	 * 获取用户信息
+	 * @param params
+	 * @return
+     */
+	@RequestMapping(value = {"/user/getUserInfo"})
 	@ResponseBody
 	public String getUserInfo(MobileParams params) {
-		
+
 		MobileReturn ret = new MobileReturn();
 		MobileUserInfo userinfo = new MobileUserInfo();
 		
@@ -226,13 +283,13 @@ public class MobileController {
 			List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 			
 			if(driverlist.size() != 1){
-				ret.setError(MobileUtils.RET_ERROR);
+				/*ret.setError(MobileUtils.RET_ERROR);
 				ret.setMsg(MobileGetUserInfoUtils.RET_USERINFO_ERROR);
 				
 				ArrayList<Data> listc = new ArrayList<Data>();
 				listc.add(new Data());
 				
-				ret.setData(listc);
+				ret.setData(listc);*/
 		        
 				throw new Exception(MobileGetUserInfoUtils.RET_USERINFO_ERROR);
 			}
@@ -263,8 +320,15 @@ public class MobileController {
 			return JSON.toJSONString(ret);
 		}
 	}
-	
-    @RequestMapping(value = "Upload")
+
+	/**
+	 * 图片上传
+	 * @param params
+	 * @param files
+	 * @param request
+     * @return
+     */
+    @RequestMapping(value = "upload")
     @ResponseBody
     public String upload(MobileParams params, @RequestParam("file") CommonsMultipartFile[] files, HttpServletRequest request){
     	
@@ -307,7 +371,12 @@ public class MobileController {
 			return JSON.toJSONString(ret);
 		}
     }
-    
+
+    /**
+	 * 意见反馈
+	 * @param params
+	 * @return
+     */
     @RequestMapping(value = "Feedback")
     @ResponseBody
     public String feedback(MobileParams params){
@@ -338,7 +407,12 @@ public class MobileController {
 			return JSON.toJSONString(ret);
 		}
     }
-    
+
+    /**
+	 * 挂失
+	 * @param params
+	 * @return
+     */
     @RequestMapping(value = "ReportTheLoss")
     @ResponseBody
     public String reportTheLoss(MobileParams params){
@@ -373,7 +447,12 @@ public class MobileController {
 			return JSON.toJSONString(ret);
 		}
     }
-    
+
+	/**
+	 * 交易记录
+	 * @param params
+	 * @return
+     */
     @RequestMapping(value = "TransactionRecord")
     @ResponseBody
     public String transactionRecord(MobileParams params){
@@ -449,7 +528,12 @@ public class MobileController {
 			return JSON.toJSONString(ret);
 		}
     }
-    
+
+    /**
+	 * 获取开通城市列表
+	 * @param params
+	 * @return
+     */
     @RequestMapping(value = "GetCitys")
     @ResponseBody
     public String getCitys(MobileParams params){
@@ -482,7 +566,12 @@ public class MobileController {
 			return JSON.toJSONString(ret);
 		}
     }
-    
+
+    /**
+	 * 获取返现金额
+	 * @param params
+	 * @return
+     */
     @RequestMapping(value = "ReturnCash")
     @ResponseBody
     public String getReturnCash(MobileParams params){

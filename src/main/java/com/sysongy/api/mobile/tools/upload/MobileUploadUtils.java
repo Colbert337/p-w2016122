@@ -36,11 +36,11 @@ public class MobileUploadUtils extends MobileUtils{
 
 		checkApiKey(params.getApiKey(), ret);
 		
-		if (StringUtils.isEmpty(upload.getReqType()) || StringUtils.isEmpty(upload.getToken()) || params.getFile() == null) {
+		/*if (StringUtils.isEmpty(upload.getReqType()) || StringUtils.isEmpty(upload.getToken()) || params.getFile() == null) {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
-		}
+		}*/
 		
 		return upload;
 	}

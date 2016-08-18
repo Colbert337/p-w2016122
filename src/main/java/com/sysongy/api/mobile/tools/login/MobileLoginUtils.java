@@ -2,10 +2,10 @@ package com.sysongy.api.mobile.tools.login;
 
 import java.util.List;
 
+import com.sysongy.api.mobile.model.MobileLogin;
 import org.apache.commons.lang.StringUtils;
 
 import com.sysongy.api.mobile.model.base.MobileReturn;
-import com.sysongy.api.mobile.model.login.MobileLogin;
 import com.sysongy.api.mobile.tools.MobileUtils;
 import com.sysongy.poms.driver.model.SysDriver;
 
@@ -19,7 +19,7 @@ public class MobileLoginUtils extends MobileUtils{
 		checkApiKey(apiKey, ret);
 		
 		if (login == null || StringUtils.isEmpty(login.getUsername()) || StringUtils.isEmpty(login.getPassword())) {
-			ret.setError(RET_ERROR);
+			/*ret.setError(RET_ERROR);*/
 			ret.setMsg(RET_LOGINPARAM_NULL_MSG);
 			throw new Exception(RET_LOGINPARAM_NULL_MSG);
 		}
@@ -28,7 +28,7 @@ public class MobileLoginUtils extends MobileUtils{
 	public static void checkLogin(List<SysDriver> driver, MobileReturn ret) throws Exception{
 
 		if (driver == null || driver.size() != 1 || StringUtils.isEmpty(driver.get(0).getSysDriverId())) {
-			ret.setError(RET_ERROR);
+			/*ret.setError(RET_ERROR);*/
 			ret.setMsg(RET_LOGIN_ERROR_MSG);
 			throw new Exception(RET_LOGIN_ERROR_MSG);
 		}
