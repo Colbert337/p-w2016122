@@ -537,6 +537,7 @@ public class MobileController {
 				suggest.setMbUserSuggestId(UUIDGenerator.getUUID());
 				suggest.setSysDriverId(mainObj.optString("token"));
 				suggest.setSuggest(mainObj.optString("content"));
+				suggest.setMobilePhone(mainObj.optString("mobilePhone"));
 				suggest.setCreatedDate(new Date());
 				suggest.setUpdatedDate(new Date());
 
@@ -767,7 +768,7 @@ public class MobileController {
 				result.setMsg("参数有误！");
 			}
 			resutObj = JSONObject.fromObject(result);
-			resutObj.remove("data");
+			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 //			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密

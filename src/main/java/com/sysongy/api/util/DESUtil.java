@@ -121,7 +121,7 @@ public class DESUtil {
 
     public static void main(String args[]) throws Exception{
 //        String str = "王冬强";
-        String str = "{\"main\":{},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+        String str = "{\"main\":{\"token\":\"96e79218965eb72c92a549dd5a330112\",\"content\":\"asdfasdfasdf\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
         String resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA56779A8EE272C9539ABB628364D52273FBB4A27EA9CD18409F904AF13F24090D8495DF9DEEB11D1FA015");

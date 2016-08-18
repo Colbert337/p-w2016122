@@ -18,7 +18,7 @@ public class MbUserSuggestServicesImpl implements MbUserSuggestServices {
 	@Override
 	public Integer saveSuggester(MbUserSuggest record) throws Exception {
 
-		return mbUserSuggestMapper.insert(record);
+		return mbUserSuggestMapper.insertSelective(record);
 	}
 
 }
