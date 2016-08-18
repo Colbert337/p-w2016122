@@ -30,7 +30,7 @@
         </javaTypeResolver>  
           	
         <!-- 生成实体类地址 -->    
-        <javaModelGenerator targetPackage="com.sysongy.poms.mobile.model"
+        <javaModelGenerator targetPackage="com.sysongy.poms.base.model"
             targetProject="src/main/java" >  
             
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
@@ -41,14 +41,14 @@
         </javaModelGenerator>  
           
         <!-- 生成mapxml文件 -->  
-        <sqlMapGenerator targetPackage="mobile"
+        <sqlMapGenerator targetPackage="base"
             targetProject="src/main/resources/mapping" >  
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
             <property name="enableSubPackages" value="false" />  
         </sqlMapGenerator>  
           
         <!-- 生成mapxml对应client，也就是接口dao -->      
-        <javaClientGenerator targetPackage="com.sysongy.poms.mobile.dao"
+        <javaClientGenerator targetPackage="com.sysongy.poms.base.dao"
             targetProject="src/main/java" type="XMLMAPPER" >  
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
             <property name="enableSubPackages" value="false" />  
@@ -71,7 +71,19 @@
         </table>-->
 
 
-        <table schema="${jdbc.database}" tableName="mb_banner" domainObjectName="MbBanner"
+        <table schema="${jdbc.database}" tableName="dist_area" domainObjectName="DistArea"
+               enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               enableUpdateByExample="false">
+        </table>
+        <table schema="${jdbc.database}" tableName="dist_city" domainObjectName="DistCity"
+               enableCountByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               enableUpdateByExample="false">
+        </table>
+        <table schema="${jdbc.database}" tableName="dist_province" domainObjectName="DistProvince"
                enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
