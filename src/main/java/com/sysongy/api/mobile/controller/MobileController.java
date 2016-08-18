@@ -130,7 +130,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+
 			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -193,7 +193,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-//			resultStr = DESUtil.encode(resultStr);
+
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("发送失败！");
@@ -259,7 +259,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-//			resultStr = DESUtil.encode(resultStr);
+
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("注册失败！");
@@ -351,8 +351,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			logger.error("查询成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -425,8 +424,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+			/*resultStr = DESUtil.encode(keyStr,resultStr);//参数加密*/
 
 			logger.error("图片上传成功： " + resultStr);
         } catch (Exception e) {
@@ -493,8 +491,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
 			logger.error("实名认证已提交审核，请耐心等待！： " + resultStr);
 		} catch (Exception e) {
@@ -558,8 +555,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
 			logger.error("提交建议成功！！： " + resultStr);
 
@@ -627,8 +623,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
 			logger.error(failStr+"成功： " + resultStr);
         } catch (Exception e) {
@@ -727,17 +722,78 @@ public class MobileController {
 		}
     }
 
-    /**
+	/**
 	 * 获取开通城市列表
 	 * @param params
 	 * @return
-     */
-    @RequestMapping(value = "/util/getCityList")
-    @ResponseBody
-    public String getCityList(String params){
+	 */
+	@RequestMapping(value = "/util/getCityList")
+	@ResponseBody
+	public String getCityList(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("查询成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				List<DistCity> cityList = districtService.queryHotCityList();
+				List<Map<String, Object>> listMap = new ArrayList<>();
+				if(cityList != null && cityList.size() > 0){
+					for(DistCity city:cityList){
+						Map<String, Object> cityMap = new HashMap<>();
+						cityMap.put("cityName",city.getCityName());
+						listMap.add(cityMap);
+					}
+					result.setListMap(listMap);
+				}
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+
+			logger.error("登录成功： " + resultStr);
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询城市失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询城市失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+    /**
+	 * 获取气站/运输公司信息列表
+	 * @param params
+	 * @return
+     */
+    @RequestMapping(value = "/map/queryStationList")
+    @ResponseBody
+    public String queryStationList(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询地图信息成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
     	
@@ -771,8 +827,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
 			logger.error("登录成功： " + resultStr);
         } catch (Exception e) {
