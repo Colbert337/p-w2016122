@@ -39,7 +39,21 @@
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryGasUnitTypeByMcode">
     </association>
   </resultMap>
-
+  <resultMap id="MapResultMap" type="java.util.Map" >
+    <result column="station_id" property="station_id" jdbcType="VARCHAR" />
+    <result column="station_name" property="station_name" jdbcType="VARCHAR" />
+    <result column="deposit" property="deposit" jdbcType="VARCHAR" />
+    <result column="salesmen_name" property="salesmen_name" jdbcType="VARCHAR" />
+    <result column="operations_name" property="operations_name" jdbcType="VARCHAR" />
+    <result column="tc_fleet_id" property="tc_fleet_id" jdbcType="VARCHAR" />
+    <result column="fleet_name" property="fleet_name" jdbcType="VARCHAR" />
+    <result column="channel" property="channel" jdbcType="VARCHAR" />
+    <result column="channel_number" property="channel_number" jdbcType="VARCHAR" />
+    <result column="cash" property="cash" jdbcType="VARCHAR" />
+    <result column="hedgefund" property="hedgefund" jdbcType="VARCHAR" />
+    <result column="summit" property="summit" jdbcType="VARCHAR" />
+    <result column="consumecount" property="consumecount" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
     gs_gas_price_id, sys_gas_station_id, gas_num, gas_name, price_id, unit, remark, created_date,
     updated_date, gs_gas_source_id
@@ -218,4 +232,9 @@
     </trim>
   </select>
 
+  <!--查询价格信息列表-->
+  <select id="queryPriceList" resultMap="MapResultMap" >
+    select b.mname as gasName,pp.product_price as gasPrice,ggp.unit from gs_gas_price ggp left join product_price pp on ggp.price_id = pp.id
+    left join usysparam b on ggp.gas_name=b.mcode
+  </select>
 </mapper>

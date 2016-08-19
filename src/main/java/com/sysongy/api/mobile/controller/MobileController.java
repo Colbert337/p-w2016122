@@ -32,6 +32,7 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.mobile.model.Suggest;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
@@ -88,6 +89,8 @@ public class MobileController {
 	DistrictService districtService;
 	@Autowired
 	GastationService gastationService;
+	@Autowired
+	GsGasPriceService gsGasPriceService;
 
 	/**
 	 * 用户登录
@@ -788,16 +791,16 @@ public class MobileController {
 	}
 
     /**
-	 * 获取气站/运输公司信息列表
+	 * 获取气站信息列表
 	 * @param params
 	 * @return
      */
-    @RequestMapping(value = "/map/queryStationList")
+    @RequestMapping(value = "/map/getStationList")
     @ResponseBody
     public String queryStationList(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询地图信息成功！");
+		result.setMsg("查询加注站信息成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
     	
@@ -813,18 +816,28 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
-				/*Gastation gastation = new Gastation();
-				List<Gastation> cityList = gastationService.getAllStationList(gastation);
-				List<Map<String, Object>> listMap = new ArrayList<>();
-				if(cityList != null && cityList.size() > 0){
-					for(DistCity city:cityList){
-						Map<String, Object> cityMap = new HashMap<>();
-						cityMap.put("cityName",city.getCityName());
-						listMap.add(cityMap);
-					}
-					result.setListMap(listMap);
-				}*/
+				//获取气站列表
+				Gastation gastation = new Gastation();
+				List<Map<String, Object>> gastationArray = new ArrayList<>();
+				List<Gastation> gastationList = gastationService.getAllStationList(gastation);
+				if(gastationList != null && gastationList.size() > 0){
+					for (Gastation gastationInfo:gastationList){
+						Map<String, Object> gastationMap = new HashMap<>();
+						gastationMap.put("name",gastationInfo.getGas_station_name());
+						gastationMap.put("longitude",gastationInfo.getLongitude());
+						gastationMap.put("latitude",gastationInfo.getLatitude());
+						//获取当前气站价格列表
+						List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
+						gastationMap.put("priceList",priceList);
+						gastationMap.put("phone",gastationInfo.getContact_phone());
+						gastationMap.put("state",gastationInfo.getStatus());
+						gastationMap.put("address",gastationInfo.getAddress());
 
+						gastationArray.add(gastationMap);
+					}
+
+					result.setListMap(gastationArray);
+				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -834,12 +847,12 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
-			logger.error("查询地图信息成功： " + resultStr);
+			logger.error("查询气站信息成功： " + resultStr);
         } catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询地图信息失败！");
+			result.setMsg("查询气站信息失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询地图信息失败： " + e);
+			logger.error("查询气站信息失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密

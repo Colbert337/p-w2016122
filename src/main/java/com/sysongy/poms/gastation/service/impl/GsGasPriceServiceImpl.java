@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -71,4 +72,13 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 		return gsGasPriceMapper.isExists(obj);
 	}
 
+	/**
+	 * 查询加注站价格列表
+	 * @param stationId 加注站编号
+	 * @return
+	 */
+	@Override
+	public List<Map<String, Object>> queryPriceList(String stationId) {
+		return gsGasPriceMapper.queryPriceList(stationId);
+	}
 }

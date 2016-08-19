@@ -6,6 +6,7 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GsGasPriceService {
 
@@ -20,4 +21,11 @@ public interface GsGasPriceService {
     public Integer delGsPrice(String gsPriceID) throws Exception;
 
     public Integer isExists(GsGasPrice obj) throws Exception;
+
+    /**
+     * 查询加注站价格列表
+     * @param stationId 加注站编号
+     * @return
+     */
+    List<Map<String, Object>> queryPriceList(String stationId);
 }
