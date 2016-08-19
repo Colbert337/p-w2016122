@@ -479,7 +479,7 @@ public class MobileController {
 			 */
 			if(mainObj != null){
 				SysDriver driver = new SysDriver();
-				driver.setUserName(mainObj.optString("name"));
+				driver.setFullName(mainObj.optString("name"));
 				driver.setPlateNumber(mainObj.optString("plateNumber"));
 				driver.setFuelType(mainObj.optString("gasType"));
 				if(mainObj.optString("endTime") != null && !"".equals(mainObj.optString("endTime"))){
@@ -902,8 +902,14 @@ public class MobileController {
 				driverMap.put("remark",mainObj.optString("remark"));
 				driverMap.put("paycode",mainObj.optString("paycode"));
 
-				mbDealOrderService.transferDriverToDriver(driverMap);
-
+				int resultVal = mbDealOrderService.transferDriverToDriver(driverMap);
+				if(resultVal > 0){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("转账失败！");
+				}else{
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("转账成功！");
+				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -912,7 +918,6 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
 
 			logger.error("转账成功： " + resultStr);
 
@@ -965,7 +970,6 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
 
 			logger.error("查询翻新金额成功： " + resultStr);
 
