@@ -1,21 +1,46 @@
-
+	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
+	
+ 
 var listOptions = {
 	url: sjny.basePath + '/web/mobile/suggest/suggestList',
 	type: 'post',
-	data:{"text":"'"+$("#text").val()+"'"},
 	dataType: 'html',
 	success: function(data) {
-		//alert(data);
 		$("#main").html(data);
+		
 		if ($("#retCode").val() != "100") {
-			//$("#modal-table").modal("show");
+			$("#modal-table").modal("show");
 		}
+		
+		$('[data-rel="tooltip"]').tooltip();
 	},
 	error: function(XMLHttpRequest, textStatus, errorThrown) {
 		bootbox.alert("error");
 	}
 };
 
+function clickDelRow() {
+	$('#logic-btn-card-reset').on('click', function() {
+		loadPage('#main', sjny.basePath + '/web/mobile/suggest/suggestList');
+	});
+	$('.logic-card-tbody-tr').each(function() {
+		$(this).find('.logic-del').on('click', function(event) {
+			event.preventDefault();
+			del(this);
+		})
+	})
+};
+
+function init() {
+
+	$('#j-input-daterange-top').datepicker({
+		autoclose: true,
+		format: 'yyyy/mm/dd',
+		language: 'cn'
+	});
+
+	window.onload = setCurrentPage();
+};
 
 function commitForm(obj) {
 	//设置当前页的值
@@ -39,6 +64,7 @@ function clickCommitForm() {
 
 
 $(document).ready(function() {
+	init();
 	clickCommitForm();
-	
+	clickDelRow();
 })

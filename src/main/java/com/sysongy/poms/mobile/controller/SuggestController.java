@@ -36,45 +36,41 @@ public class SuggestController extends BaseContoller {
 	 * @return
 	 */
 	@RequestMapping("/suggestList")
-	public String queryMbBannerListPage(Suggest suggest,HttpServletRequest request, ModelMap map ) throws Exception {
-		String text=request.getParameter("text");
+	public String queryMbBannerListPage(Suggest suggest, HttpServletRequest request, ModelMap map) throws Exception {
+
 		String ret = "webpage/poms/mobile/suggest_list";
 
 		PageBean bean = new PageBean();
+		try {
+			if (suggest.getPageNum() == null) {
+				suggest.setPageNum(GlobalConstant.PAGE_NUM);
+				suggest.setPageSize(GlobalConstant.PAGE_SIZE);
+			}
 
-		if (suggest.getPageNum() == null) {
-			suggest.setPageNum(GlobalConstant.PAGE_NUM);
-			suggest.setPageSize(GlobalConstant.PAGE_SIZE);
+			PageInfo<Suggest> pageinfo = new PageInfo<Suggest>();
+
+			pageinfo = suggestService.querySuggest(suggest);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("suggest", suggest);
+			map.addAttribute("current_module", "/web/mobile/suggest/suggestList");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		} finally {
+			return ret;
 		}
 
-		PageInfo<Suggest> pageinfo = new PageInfo<Suggest>();
-		if (text!=null&&!"".equals(text)) {
-			suggest.setSuggest(text);	
-		}
-		
-		pageinfo = suggestService.querySuggest(suggest);
-
-		bean.setRetCode(100);
-		bean.setRetMsg("查询成功");
-		bean.setPageInfo(ret);
-
-		map.addAttribute("ret", bean);
-		map.addAttribute("pageInfo", pageinfo);
-		map.addAttribute("suggest",suggest);
-		map.addAttribute("current_module", "/web/mobile/suggest/suggestList");
-
-		return ret;
 	}
-
-	/**
-	 * 跳转添加页面
-	 * 
-	 * @return
-	 */
-	@RequestMapping("/add")
-	public String addBanner(ModelMap map) {
-		return "webpage/poms/mobile/banner_add";
-	}
-
-	   
+ 
 }

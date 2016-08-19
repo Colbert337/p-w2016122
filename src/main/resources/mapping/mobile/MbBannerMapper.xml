@@ -11,13 +11,14 @@
     <result column="img_type" property="imgType" jdbcType="INTEGER" />
     <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
-    remark, is_deleted, created_date, updated_date
+    remark, is_deleted, created_date, updated_date,operator
   </sql>
   <select id="queryMbBannerList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     select 
@@ -73,11 +74,11 @@
     insert into mb_banner (mb_banner_id, title, img_path, 
       img_sm_path, target_url, version, 
       img_type, sort, remark, 
-      created_date, updated_date)
+      created_date, updated_date,operator)
     values (#{mbBannerId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{imgPath,jdbcType=VARCHAR}, 
       #{imgSmPath,jdbcType=VARCHAR}, #{targetUrl,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
       #{imgType,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR},
-      #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP})
+      #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},#{operator,jdbcType=VARCHAR})
   </insert>
   <insert id="saveBanner" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     insert into mb_banner
@@ -115,6 +116,9 @@
       <if test="updatedDate != null" >
         updated_date,
       </if>
+       <if test="operator != null" >
+        operator,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="mbBannerId != null" >
@@ -150,8 +154,16 @@
       <if test="updatedDate != null" >
         #{updatedDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
+  
+  <delete id="deleteBanner" parameterType="java.lang.String" >
+   DELETE FROM mb_banner WHERE mb_banner_id  = #{mbBannerId,jdbcType=VARCHAR}
+  </delete>
+  
   <update id="updateBanner" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     update mb_banner
     <set >
