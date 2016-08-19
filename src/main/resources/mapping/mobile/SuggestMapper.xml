@@ -42,11 +42,11 @@
         <if test="suggest_res != null &amp;&amp; suggest_res != ''">
         and suggest_res LIKE CONCAT(CONCAT('%',  #{suggest_res,jdbcType=VARCHAR}), '%')
       </if>
-      <if test="created_date != null &amp;&amp; created_date != ''">
-        and created_date &gt; #{created_date,jdbcType=DATE}
+      <if test="created_date_sel != null &amp;&amp; created_date_sel != ''">
+        and DATE_FORMAT(a.created_date,"%Y/%m/%d")<![CDATA[   >=  ]]> #{created_date_sel,jdbcType=TIMESTAMP}
       </if>
-      <if test="updated_date != null &amp;&amp; updated_date != ''">
-        and created_date &lt;  #{updated_date,jdbcType=DATE}
+      <if test="updated_date_sel != null &amp;&amp; updated_date_sel != ''">
+         and DATE_FORMAT(a.created_date,"%Y/%m/%d") <![CDATA[   <=  ]]>  #{updated_date_sel,jdbcType=TIMESTAMP}
       </if>
       
     </trim>

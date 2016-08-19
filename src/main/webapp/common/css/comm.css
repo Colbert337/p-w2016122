@@ -239,3 +239,6 @@ input[type=checkbox].ace.ace-switch.zh:checked + .lbl::before {
     padding-right: 10px;
     font-family: v;
 }
+.gastation-log-colorbox .title {
+    color: #000;
+}
