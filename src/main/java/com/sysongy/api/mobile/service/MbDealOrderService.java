@@ -18,5 +18,5 @@ public interface MbDealOrderService {
      * @param driverMap 转账参数
      * @return
      */
-    int transferDriverToDriver(Map<String, Object> driverMap);
+    int transferDriverToDriver(Map<String, Object> driverMap) throws Exception;
 }

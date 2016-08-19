@@ -903,12 +903,18 @@ public class MobileController {
 				driverMap.put("paycode",mainObj.optString("paycode"));
 
 				int resultVal = mbDealOrderService.transferDriverToDriver(driverMap);
-				if(resultVal > 0){
+				if(resultVal < 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("转账失败！");
-				}else{
+					result.setMsg("账户余额不足,无法转账！");
+				}else if(resultVal == 1){
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("转账成功！");
+				}else if(resultVal == 2){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("账户不存在,无法转账！");
+				}else if(resultVal == 3){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("司机不存在,无法转账！");
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
