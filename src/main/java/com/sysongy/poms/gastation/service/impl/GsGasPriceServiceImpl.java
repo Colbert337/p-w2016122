@@ -38,6 +38,12 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 	}
 
 	@Override
+	public List<GsGasPrice> queryGsPriceList(GsGasPrice gsGasPrice) throws Exception {
+		List<GsGasPrice> list = gsGasPriceMapper.queryForPage(gsGasPrice);
+		return list;
+	}
+
+	@Override
 	public GsGasPrice queryGsPriceByPK(String gsGasPriceID) throws Exception {
 		GsGasPrice gsGasPrice =  gsGasPriceMapper.selectByPrimaryKey(gsGasPriceID);
 		return gsGasPrice;

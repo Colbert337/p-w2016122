@@ -11,6 +11,8 @@ public interface GsGasPriceService {
 
     public PageInfo<GsGasPrice> queryGsPrice(GsGasPrice gsGasPrice) throws Exception;
 
+    public List<GsGasPrice> queryGsPriceList(GsGasPrice gsGasPrice) throws Exception;
+
     public GsGasPrice queryGsPriceByPK(String gsGasPriceID) throws Exception;
 
     public Integer saveGsPrice(GsGasPrice gsPriceID, String operation) throws Exception;
