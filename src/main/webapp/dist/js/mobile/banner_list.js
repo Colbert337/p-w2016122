@@ -100,7 +100,7 @@ function editBanner(imgId){
             $("#version").val(data.version);
             $("#remark").text(data.remark);
             $("#show_img").attr("src",localhostPaht+data.imgPath);
-
+            $("#operator").val(data.operator);
             $("#editBanner").text("修改图片");
         }
     })
@@ -124,6 +124,19 @@ function clearDiv(){
     $("#avatar_b").empty();
 }
 
+/**
+ * 查看明细
+ */
+function showInnerModel(obj1,tr){
+	var show=$("label[name='show']");
+	for(var i=0;i<show.length;i++){
+		show[i].innerHTML=tr.children('td').eq(i).text();
+	}
+	$("#innerimg1").attr("src",obj1);
+	$("#innerimg1").parent("a").attr("href",obj1);
+ 
+	$("#innerModel").modal('show');
+}
 /**
  * 保存图片信息
  */
@@ -271,3 +284,38 @@ $('#importForm').bootstrapValidator({
         }
     }
 });
+
+jQuery(function($) {
+	var $overflow = '';
+	var colorbox_params = {
+		rel: 'colorbox',
+		reposition:true,
+		scalePhotos:true,
+		scrolling:false,
+		previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+		next:'<i class="ace-icon fa fa-arrow-right"></i>',
+		close:'&times;',
+		current:'{current} of {total}',
+		maxWidth:'100%',
+		maxHeight:'100%',
+		onOpen:function(){
+			"'--"
+			$overflow = document.body.style.overflow;
+			document.body.style.overflow = 'hidden';
+		},
+		onClosed:function(){
+			document.body.style.overflow = $overflow;
+		},
+		onComplete:function(){
+			$.colorbox.resize();
+		}
+	};
+
+	$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+	$("#cboxLoadingGraphic").html("<i class='ace-icon fa fa-spinner orange fa-spin'></i>");//let's add a custom loading icon
+	
+	
+	$(document).one('ajaxloadstart.page', function(e) {
+		$('#colorbox, #cboxOverlay').remove();
+   });
+})

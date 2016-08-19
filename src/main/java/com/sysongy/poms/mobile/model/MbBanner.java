@@ -28,6 +28,16 @@ public class MbBanner extends BaseModel{
     private Date createdDate;
 
     private Date updatedDate;
+    
+    public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	private String operator;
 
     public String getMbBannerId() {
         return mbBannerId;
