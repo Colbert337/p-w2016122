@@ -81,7 +81,7 @@ public class TransportionServiceImpl implements TransportionService {
 			//初始化钱袋信息
 			SysUserAccount sysUserAccount = new SysUserAccount();
 			sysUserAccount.setSysUserAccountId(UUIDGenerator.getUUID());
-			sysUserAccount.setAccountCode("GS"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+			sysUserAccount.setAccountCode("TC"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
 			sysUserAccount.setAccountType(GlobalConstant.AccounType.GASTATION);
 			sysUserAccount.setAccountBalance("0.00");
 			sysUserAccount.setCreatedDate(new Date());

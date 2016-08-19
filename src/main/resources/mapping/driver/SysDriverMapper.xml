@@ -31,6 +31,7 @@
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="driver_type" property="driverType" jdbcType="INTEGER" />
     <result column="driver_number" property="driver_number" jdbcType="INTEGER" />
+    <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR" />
     <association property="account" column="sys_user_account_id"
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -52,7 +53,7 @@
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,avatar_s,avatar_b,
     is_ident, plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card,
     card_id, sys_user_account_id, regis_company, regis_source, created_date,
-    updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type, driver_number
+    updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type, driver_number, invitation_code
   </sql>
 
   <select id="querySearchDriverList" resultMap="BaseResultMap" >
@@ -86,9 +87,6 @@
       <if test="sysDriverId != null &amp;&amp; sysDriverId != ''" >
         and sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
       </if>
-      <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
-        and plate_number = #{plateNumber,jdbcType=VARCHAR}
-      </if>
       <if test="fullName!= null &amp;&amp; fullName != ''" >
         and full_name = #{fullName,jdbcType=VARCHAR}
       </if>
@@ -115,6 +113,9 @@
       </if>
       <if test="driverType!= null &amp;&amp; driverType != ''" >
         and driver_type = #{driverType,jdbcType=INTEGER}
+      </if>
+      <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
+        and plate_number like CONCAT(CONCAT('%',  #{plateNumber,jdbcType=VARCHAR}), '%')
       </if>
     </trim>
   </select>
@@ -245,7 +246,7 @@
       vehicle_lice, identity_card, card_id,
       sys_user_account_id, regis_company,
       regis_source, created_date, updated_date,
-      is_first_charge, checked_status, checked_date, station_id, driver_type
+      is_first_charge, checked_status, checked_date, station_id, driver_type, invitation_code
       )
     values (#{sysDriverId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{fullName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{payCode,jdbcType=VARCHAR},
@@ -256,7 +257,7 @@
       #{sysUserAccountId,jdbcType=VARCHAR},  #{regisCompany,jdbcType=VARCHAR},
       #{regisSource,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},
       #{isFirstCharge,jdbcType=INTEGER}, #{checkedStatus,jdbcType=INTEGER}, #{checkedDate,jdbcType=TIMESTAMP},
-      #{stationId,jdbcType=VARCHAR},#{driverType,jdbcType=INTEGER}
+      #{stationId,jdbcType=VARCHAR},#{driverType,jdbcType=INTEGER},#{invitationCode,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.driver.model.SysDriver" >
@@ -343,6 +344,9 @@
       <if test="driverType!= null" >
         driver_type,
       </if>
+      <if test="invitationCode!= null" >
+        invitation_code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sysDriverId != null" >
@@ -425,6 +429,9 @@
       </if>
       <if test="driverType != null" >
         #{driverType,jdbcType=INTEGER},
+      </if>
+      <if test="invitationCode != null" >
+        #{invitationCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -512,6 +519,9 @@
       <if test="driverType != null" >
         driver_type = #{driverType,jdbcType=INTEGER},
       </if>
+      <if test="invitationCode != null" >
+        invitation_code = #{invitationCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
@@ -550,7 +560,8 @@
       checked_status = #{checkedStatus,jdbcType=INTEGER},
       checked_date = #{checkedDate,jdbcType=TIMESTAMP},
       station_id = #{stationId,jdbcType=VARCHAR},
-      driver_type = #{driverType,jdbcType=INTEGER}
+      driver_type = #{driverType,jdbcType=INTEGER},
+      invitation_code = #{invitationCode,jdbcType=VARCHAR}
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
 

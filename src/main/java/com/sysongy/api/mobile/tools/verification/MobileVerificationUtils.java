@@ -31,7 +31,7 @@ public class MobileVerificationUtils extends MobileUtils{
 		checkApiKey(param.getApiKey(), ret);
 		
 		if (param == null || param.getDetailParam().length() != 11) {
-			ret.setError(RET_ERROR);
+			/*ret.setError(RET_ERROR);*/
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
 		}

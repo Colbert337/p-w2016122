@@ -576,8 +576,12 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","会员账号","支付方式","充值金额","返现金额","操作人"};
-
+	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+	            	content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","会员账号","支付方式","充值金额","返现金额","操作人"};
+	            }else{
+	            	content[0] = new String[]{"订单编号","交易流水号","交易时间","交易类型","客户姓名","会员账号","支付方式","充值金额","操作人"};
+	            }
+	            
 	            int i = 1;
 	            if(list != null && list.size() > 0){
 	            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
@@ -709,8 +713,11 @@ public class GastationController extends BaseContoller{
 							break;
 						}
 
-
-	                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,deal_type,channel_number,channel,full_name,user_name,charge_type,cash,cash_back,operator};
+	    	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+	    	            	content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,deal_type,channel_number,channel,full_name,user_name,charge_type,cash,cash_back,operator};
+	    	            }else{
+	    	            	content[i] = new String[]{order_number,deal_number,order_date,is_discharge,full_name,user_name,charge_type,cash,operator};	
+	    	            }
 	                    i++;
 	                }
 	            }
@@ -801,7 +808,12 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","交易金额","交易时间","交易对象","加注站名称","加注站编号","会员账号","操作人"};
+	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+	            	 content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","交易金额","交易时间","交易对象","加注站名称","加注站编号","会员账号","操作人"};
+	            }else{
+	            	content[0] = new String[]{"订单编号","交易流水号","交易类型","交易金额","交易时间","交易对象","会员账号","操作人"};
+	            }
+	           
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -860,8 +872,12 @@ public class GastationController extends BaseContoller{
 	                    }else{
 	                    	credit_account = "车队";
 	                    }
-
-	                    content[i] = new String[]{order_number,order_type,deal_number,deal_type,cash,order_date,credit_account,channel,channel_number,user_name,operator};
+	                    if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+	                    	content[i] = new String[]{order_number,order_type,deal_number,deal_type,cash,order_date,credit_account,channel,channel_number,user_name,operator};
+	                    }else{
+	                    	content[i] = new String[]{order_number,deal_number,deal_type,cash,order_date,credit_account,user_name,operator};
+	                    }
+	                    
 	                    i++;
 	                }
 	            }

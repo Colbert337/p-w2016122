@@ -90,7 +90,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="contact_phone"> 联系电话： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="contact_phone">联系电话： </label>
 
 										<div class="col-sm-4">
 											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15" value="${station.contact_phone}"/>
@@ -208,7 +208,7 @@
 										<label class="col-sm-3 control-label no-padding-right">工商注册号：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}" maxlength="15"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}" maxlength="18"/>
 										</div>
 									</div>
 									
@@ -234,7 +234,7 @@
 												<div class="widget-body">
 													<div class="widget-main">
 														<label for="indu_com_certif_select">
-															<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
+															<input type="file" name="image" class="projectfile" id="indu_com_certif_select" />
 														</label>
 														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
@@ -251,7 +251,7 @@
 										<label class="col-sm-3 control-label no-padding-right">税务注册号：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="tax_number" name="tax_number" class="form-control" value="${station.tax_number}" maxlength="15"/>
+											<input type="text" id="tax_number" name="tax_number" class="form-control" value="${station.tax_number}" maxlength="18"/>
 										</div>
 									</div>
 									
@@ -277,7 +277,7 @@
 												<div class="widget-body">
 													<div class="widget-main">
 														<label for="tax_certif_select">
-															<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
+															<input type="file" name="image" class="projectfile" id="tax_certif_select" />
 														</label>
 														<input type="hidden" id="tax_certif" name="tax_certif"/> 
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
@@ -291,7 +291,7 @@
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 运输公司状态： </label>
+										<label class="col-sm-3 control-label no-padding-right">运输公司状态：</label>
 
 										<div class="col-sm-4">
 											<select class="chosen-select " name="status" >
@@ -601,16 +601,16 @@
 		            indu_com_number: {
 						validators: {
 							stringLength: {
-								max: 15,
-								message: '工商注册号不能超过15位'
+								max: 18,
+								message: '工商注册号不能超过18位'
 							}
 		                    }
 		            },
 		            tax_number: {
 						validators: {
 		                    stringLength: {
-		                        max: 15,
-		                        message: '税务注册号不能超过15位'
+		                        max: 18,
+		                        message: '税务注册号不能超过18位'
 							}
 						}
 		           	}

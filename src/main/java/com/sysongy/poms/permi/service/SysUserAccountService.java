@@ -2,11 +2,20 @@ package com.sysongy.poms.permi.service;
 
 import java.math.BigDecimal;
 
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.permi.model.SysUserAccount;
 
 public interface SysUserAccountService {
-	
+
+	/**
+	 * 冻结账户和卡号
+	 * @param accountid
+	 * @param status 状态 0 冻结账户 1 冻结卡 2 解冻(全部解冻)
+	 * @param cardno
+	 * @return
+	 * @throws Exception
+	 */
 	int changeStatus(String accountid, String status, String cardno) throws Exception;
 
 	int deleteByPrimaryKey(String sysUserAccountId);

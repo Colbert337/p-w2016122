@@ -30,13 +30,13 @@ public class MobileRecordUtils extends MobileUtils {
 		}
 
 		if (record == null || StringUtils.isEmpty(record.getPageSize()) || StringUtils.isEmpty(record.getCurrentPage())) {
-			ret.setError(RET_ERROR);
+			/*ret.setError(RET_ERROR);*/
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
 		}
 
 		if (StringUtils.isEmpty(record.getRecordType()) || StringUtils.isEmpty(record.getTime())) {
-			ret.setError(RET_ERROR);
+			/*ret.setError(RET_ERROR);*/
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
 		}

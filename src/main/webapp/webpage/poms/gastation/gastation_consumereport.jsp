@@ -34,10 +34,12 @@
 							<label>订单编号：</label>
 							<input type="text" name="orderNumber" placeholder="请输入订单编号/订单流水号"  maxlength="20" value="${sysOrder.orderNumber}"/>
 						</div>
-						<div class="item">
-						    <label>加注站编号：</label>
-							<input type="text" name="channelNumber" placeholder="请输入加注站编号" maxlength="10" value="${sysOrder.channelNumber}"/>
-						</div>
+						<c:if test="${sessionScope.currUser.user.userType == 5}">
+							<div class="item">
+							    <label>加注站编号：</label>
+								<input type="text" name="channelNumber" placeholder="请输入加注站编号" maxlength="10" value="${sysOrder.channelNumber}"/>
+							</div>
+						</c:if>
 						<div class="item">
 							<label>交易类型：</label>
 							<select id="is_discharge" name="is_discharge">
@@ -91,14 +93,18 @@
 										</label>
 									</th>
 									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
-									<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">订单类型</th>
+									<c:if test="${sessionScope.currUser.user.userType == 5}">
+										<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">订单类型</th>
+									</c:if>
 									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">交易对象</th>
-									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
-									<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
+									<c:if test="${sessionScope.currUser.user.userType == 5}">
+										<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
+										<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
+									</c:if>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 									<th>商品详情</th>
@@ -117,7 +123,9 @@
 									</td>
 
 									<td>${list.order_number}</td>
-									<td><s:Code2Name mcode="${list.order_type}" gcode="ORDER_TYPE"></s:Code2Name></td>
+									<c:if test="${sessionScope.currUser.user.userType == 5}">
+										<td><s:Code2Name mcode="${list.order_type}" gcode="ORDER_TYPE"></s:Code2Name></td>
+									</c:if>
 									<td>${list.deal_number}</td>
 									<td><s:Code2Name mcode="${list.deal_type}" gcode="ORDER_DEAL_TYPE"></s:Code2Name></td>
 									<td>${list.cash}</td>
@@ -128,8 +136,10 @@
 									<c:if test="${fn:length(list.creditAccount) eq '10'}">
 										<td>车队</td>
 									</c:if>
-									<td>${list.channel}</td>
-									<td>${list.channel_number}</td>
+									<c:if test="${sessionScope.currUser.user.userType == 5}">
+										<td>${list.channel}</td>
+										<td>${list.channel_number}</td>
+									</c:if>
 									<td>${list.user_name}</td>
 									<td>${list.operator}</td>
 									<td class="text-center">

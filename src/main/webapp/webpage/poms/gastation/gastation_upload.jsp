@@ -90,15 +90,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right">工商注册号：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" maxlength="15" placeholder="输入工商注册号"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" maxlength="18" placeholder="输入工商注册号"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 工商注册证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">工商注册证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -121,15 +121,15 @@
 									</div>
 	
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right">税务注册号：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="tax_number" name="tax_number" class="col-xs-10 col-sm-5" maxlength="15" placeholder="输入税务注册号"/>
+											<input type="text" id="tax_number" name="tax_number" class="col-xs-10 col-sm-5" maxlength="18" placeholder="输入税务注册号"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 税务注册证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">税务注册证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -152,7 +152,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> LNG储装证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">LNG储装证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -174,7 +174,7 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 危化品证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">危化品证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -275,14 +275,14 @@
 		        fields: {
 		            indu_com_number: {
 		                    stringLength: {
-		                        max: 15,
-		                        message: '工商注册号不能超过15位'
+		                        max: 18,
+		                        message: '工商注册号不能超过18位'
 		                    }
 		                },
 		                tax_number: {
 			                    stringLength: {
-			                        max: 15,
-			                        message: '税务注册号不能超过15位'
+			                        max: 18,
+			                        message: '税务注册号不能超过18位'
 			                    }
 			            }
 		            }

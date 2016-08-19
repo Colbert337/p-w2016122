@@ -1,5 +1,8 @@
 package com.sysongy.util;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import sun.misc.BASE64Decoder;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
@@ -9,11 +12,11 @@ import java.security.Key;
 /**
  * @FileName : Decoder.java
  * @Encoding : UTF-8
- * @Package : com.hbkis.base.controller
- * @Link : http://www.hbkis.com
+ * @Package : com.sysongy.util
+ * @Link : http://www.sysnongy.com
  * @Created on : 2015年10月20日, 下午5:53:21
  * @Author : Dongqiang.Wang [wdq_2012@126.com]
- * @Copyright : Copyright(c) 2015 西安海贝信息科技有限公司
+ * @Copyright : Copyright(c) 2016 陕西司集能源科技有限公司
  * @Description : 解码（解密）工具
  *
  */
@@ -116,7 +119,11 @@ public class Decoder {
 		// Logger.getLogger(Decoder.class.getName()).log(Level.SEVERE, null,
 		// ex);
 		// }
-		// System.out.println(new String(Decoder.hexStringToByteArray("ced2")));
-		System.out.printf(symmetricDecrypto("974f8ed445d0785a"));
+		/* System.out.println(symmetricDecrypto("6cc16357def38d984e7c3971a76f3b21f9c4021dae4f59401c23e3be13a901bec012f6cade05f16590b2e20d2af19f2a06c7c54ff4f7679b"));
+		System.out.println("解密："+Decoder.symmetricDecrypto("eyJtYWluIjp7InVzZXJuYW1lIjoiMTc3OTIwMTMwNDIiLCJwYXNzd29yZCI6Ijk2ZTc5MjE4OTY1ZWI3MmM5MmE1NDlkZDVhMzMwMTEyIn0sImV4dGVuZCI6eyJ2ZXJzaW9uIjoiMSIsInRlcm1pbmFsIjoiU1lTT05HWU1PQklMRTIwMTY3MjYifX0="));*/
+		BASE64Decoder decoder = new BASE64Decoder();
+		String s = "eyJtYWluIjp7InVzZXJuYW1lIjoiMTc3OTIwMTMwNDIiLCJwYXNzd29yZCI6Ijk2ZTc5MjE4OTY1ZWI3MmM5MmE1NDlkZDVhMzMwMTEyIn0sImV4dGVuZCI6eyJ2ZXJzaW9uIjoiMSIsInRlcm1pbmFsIjoiU1lTT05HWU1PQklMRTIwMTY3MjYifX0=";
+		String decodeStr = new String(decoder.decodeBuffer(s));
+		System.out.println("解密："+decodeStr);
 	}
 }
