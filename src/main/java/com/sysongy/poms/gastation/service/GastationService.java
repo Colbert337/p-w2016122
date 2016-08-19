@@ -23,6 +23,8 @@ public interface GastationService {
 	
 	public List<Gastation> getAllStationByArea(String areacode) throws Exception;
 
+	public List<Gastation> getAllStationList(Gastation record) throws Exception;
+
 	public int updatedepositGastation(SysDepositLog log, String operation) throws Exception;
 
 	public String updatePrepayBalance(Gastation obj, BigDecimal addCash) throws Exception;

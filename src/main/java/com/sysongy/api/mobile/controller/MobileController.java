@@ -30,6 +30,8 @@ import com.sysongy.poms.base.model.DistCity;
 import com.sysongy.poms.base.service.DistrictService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.mobile.model.Suggest;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
@@ -84,6 +86,8 @@ public class MobileController {
 	SysOrderGoodsService sysOrderGoodsService;
 	@Autowired
 	DistrictService districtService;
+	@Autowired
+	GastationService gastationService;
 
 	/**
 	 * 用户登录
@@ -809,7 +813,8 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
-				List<DistCity> cityList = districtService.queryHotCityList();
+				/*Gastation gastation = new Gastation();
+				List<Gastation> cityList = gastationService.getAllStationList(gastation);
 				List<Map<String, Object>> listMap = new ArrayList<>();
 				if(cityList != null && cityList.size() > 0){
 					for(DistCity city:cityList){
@@ -818,7 +823,7 @@ public class MobileController {
 						listMap.add(cityMap);
 					}
 					result.setListMap(listMap);
-				}
+				}*/
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -829,12 +834,12 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
-			logger.error("登录成功： " + resultStr);
+			logger.error("查询地图信息成功： " + resultStr);
         } catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询城市失败！");
+			result.setMsg("查询地图信息失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询城市失败： " + e);
+			logger.error("查询地图信息失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
