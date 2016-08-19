@@ -28,7 +28,15 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	private GasCardService gasCardService;
 	@Autowired
 	private DriverService driverService;
-	
+
+	/**
+	 * 冻结账户和卡号
+	 * @param accountid
+	 * @param status 状态 0 冻结账户 1 冻结卡 2 解除挂失(全部解除挂失)
+	 * @param cardno
+	 * @return
+     * @throws Exception
+     */
 	@Override
 	public int changeStatus(String accountid, String status, String cardno) throws Exception{
 		

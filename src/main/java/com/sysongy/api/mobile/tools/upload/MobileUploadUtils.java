@@ -45,43 +45,16 @@ public class MobileUploadUtils extends MobileUtils{
 		return upload;
 	}
 	
-	public static String[] upload(HttpServletRequest request, Properties prop, CommonsMultipartFile[] files, String filePath, String realPath, MobileUpload upload) throws Exception{
-		
-		String []s = new String[2];
+	public static String upload(HttpServletRequest request, Properties prop, CommonsMultipartFile files, String filePath, String realPath) throws Exception{
 		
 		FileUtil.createIfNoExist(filePath);
-        
         long timeStamp = System.currentTimeMillis();
-
-        if(REQ_TYPE_DRIVER_HEAD.equals(upload.getReqType())){
-        	File heaDestFile = new File(filePath + timeStamp + files[0].getOriginalFilename());
-            
-            String contextPath = request.getContextPath();
-            String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-            
-            String headPath = basePath + (String) prop.get("show_images_path") + "/" + realPath + timeStamp + files[0].getOriginalFilename();
-            
-            FileUtils.copyInputStreamToFile(files[0].getInputStream(), heaDestFile);// 复制临时文件到指定目录下
-            
-            s[0] = headPath;
-        }else{
-        	File drivingLicedestFile = new File(filePath + timeStamp + files[0].getOriginalFilename());
-            File vehicleLiceFile = new File(filePath + timeStamp + files[1].getOriginalFilename());
-            
-            String contextPath = request.getContextPath();
-            String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-            
-            String drivingLicePath = basePath + (String) prop.get("show_images_path") + "/" + realPath + timeStamp + files[0].getOriginalFilename();
-            String vehicleLicePath = basePath + (String) prop.get("show_images_path") + "/" + realPath + timeStamp + files[1].getOriginalFilename();
-            
-            FileUtils.copyInputStreamToFile(files[0].getInputStream(), drivingLicedestFile);// 复制临时文件到指定目录下
-            FileUtils.copyInputStreamToFile(files[1].getInputStream(), vehicleLiceFile);
-            
-            s[0] = drivingLicePath;
-            s[1] = vehicleLicePath;
-        }
-        
-        return s;
+        File heaDestFile = new File(filePath + timeStamp + files.getOriginalFilename());
+        String contextPath = request.getContextPath();
+        String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
+        String headPath = basePath + (String) prop.get("show_images_path") + "/" + realPath + timeStamp + files.getOriginalFilename();
+        FileUtils.copyInputStreamToFile(files.getInputStream(), heaDestFile);// 复制临时文件到指定目录下
+        return headPath;
 	}
 
 }

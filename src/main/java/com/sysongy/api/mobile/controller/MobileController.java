@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.Data;
 import com.sysongy.api.mobile.model.base.MobileParams;
 import com.sysongy.api.mobile.model.base.MobileReturn;
+import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
 import com.sysongy.api.mobile.model.feedback.MobileFeedBack;
 import com.sysongy.api.mobile.model.loss.MobileLoss;
 import com.sysongy.api.mobile.model.record.MobileRecord;
@@ -23,12 +24,20 @@ import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
 import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.api.util.DESUtil;
+import com.sysongy.api.util.ParameterUtil;
+import com.sysongy.api.util.ShareCodeUtil;
+import com.sysongy.poms.base.model.DistCity;
+import com.sysongy.poms.base.service.DistrictService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.mobile.model.Suggest;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
+import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.util.GlobalConstant;
@@ -36,6 +45,7 @@ import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
 import net.sf.json.JSONObject;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +57,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @RequestMapping("/api/v1/mobile")
@@ -56,6 +68,7 @@ public class MobileController {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 	public final String keyStr = "sysongys";
+	String localPath = (String) prop.get("http_poms_path");
 
 	@Autowired
 	SysUserService sysUserService;
@@ -71,6 +84,10 @@ public class MobileController {
 	SysUserAccountService sysUserAccountService;
 	@Autowired
 	SysOrderGoodsService sysOrderGoodsService;
+	@Autowired
+	DistrictService districtService;
+	@Autowired
+	GastationService gastationService;
 
 	/**
 	 * 用户登录
@@ -116,10 +133,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-//			resultStr = Md5Util.base64encode(resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
-//			resultStr = DESUtil.encode(resultStr);
+
 			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -182,7 +197,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-//			resultStr = DESUtil.encode(resultStr);
+
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("发送失败！");
@@ -248,7 +263,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-//			resultStr = DESUtil.encode(resultStr);
+
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("注册失败！");
@@ -270,183 +285,365 @@ public class MobileController {
      */
 	@RequestMapping(value = {"/user/getUserInfo"})
 	@ResponseBody
-	public String getUserInfo(MobileParams params) {
-
-		MobileReturn ret = new MobileReturn();
-		MobileUserInfo userinfo = new MobileUserInfo();
+	public String getUserInfo(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取用户信息成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
 		
-		try {	
-			userinfo = MobileGetUserInfoUtils.checkGetUserInfoParam(params, ret);
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
 
-			SysDriver driver = new SysDriver();
-			driver.setSysDriverId(userinfo.getToken());
-			List<SysDriver> driverlist = driverService.queryeSingleList(driver);
-			
-			if(driverlist.size() != 1){
-				/*ret.setError(MobileUtils.RET_ERROR);
-				ret.setMsg(MobileGetUserInfoUtils.RET_USERINFO_ERROR);
-				
-				ArrayList<Data> listc = new ArrayList<Data>();
-				listc.add(new Data());
-				
-				ret.setData(listc);*/
-		        
-				throw new Exception(MobileGetUserInfoUtils.RET_USERINFO_ERROR);
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver driver = new SysDriver();
+				String sysDriverId = mainObj.optString("token");
+				if(sysDriverId != null && !sysDriverId.equals("")){
+					Map<String, Object> resultMap = new HashMap<>();
+					driver.setSysDriverId(sysDriverId);
+					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+					if(driverlist != null && driverlist.size() > 0){
+						List<Map<String, Object>> list = orderService.calcDriverCashBack(sysDriverId);
+						String cashBack = "0.00";
+						if(list != null && list.size() > 0 && list.get(0) != null && list.get(0).get("cash_back") != null){
+							cashBack = list.get(0).get("cash_back").toString();
+						}
+
+						driver = driverlist.get(0);
+						resultMap.put("nick",driver.getFullName());
+						resultMap.put("account",driver.getUserName());
+						resultMap.put("securityPhone",driver.getMobilePhone());
+						resultMap.put("isRealNameAuth",GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())?"true":"false");
+						resultMap.put("balance",driver.getAccount().getAccountBalance());
+
+						resultMap.put("cumulativeReturn",cashBack);
+						if(driver.getAvatarB() == null){
+							resultMap.put("photoUrl","");
+						}else{
+							resultMap.put("photoUrl",localPath+driver.getAvatarB());
+						}
+
+
+						String invitationCode = driver.getInvitationCode();//获取邀请码
+						if(invitationCode == null || "".equals(invitationCode)){
+							invitationCode = ShareCodeUtil.toSerialCode(driver.getDriver_number());
+							//更新当前司机邀请码
+							SysDriver driverCode = new SysDriver();
+							driverCode.setSysDriverId(driver.getSysDriverId());
+							driverCode.setInvitationCode(invitationCode);
+							driverService.saveDriver(driverCode,"update");
+						}
+						resultMap.put("invitationCode",invitationCode);
+						result.setData(resultMap);
+					}
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("登录失败！");
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			
-			driver = driverlist.get(0);
-			List<Map<String, Object>> list = orderService.calcDriverCashBack(driver.getSysDriverId());
-			
-	        Data data = new Data();
-	        data.setNick(driver.getFullName());
-	        data.setUsername(driver.getUserName());
-	        data.setSecurityPhone(driver.getMobilePhone());
-	        data.setBalance(driver.getAccount().getAccountBalance());
-	        data.setCumulativeReturn(list.size()!=1?"0":list.get(0).get("cash_back").toString());
-	        data.setIsRealNameAuth(GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())?"true":"false");			    
-	        
-	        ArrayList<Data> listd = new ArrayList<Data>();
-	        listd.add(data);
-        	
-	        ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileGetUserInfoUtils.RET_USERINFO_SUCCESS, listd);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			logger.error("查询成功： " + resultStr);
 		} catch (Exception e) {
-			if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
-			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-		}
-		finally {
-			return JSON.toJSONString(ret);
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
 	}
 
 	/**
 	 * 图片上传
-	 * @param params
-	 * @param files
 	 * @param request
      * @return
      */
-    @RequestMapping(value = "upload")
+	@RequestMapping(value = {"/img/imageUpload"})
     @ResponseBody
-    public String upload(MobileParams params, @RequestParam("file") CommonsMultipartFile[] files, HttpServletRequest request){
-    	
-    	MobileReturn ret = new MobileReturn();
-    	MobileUpload upload = new MobileUpload();
-    	
+    public String upload(@RequestParam("file") CommonsMultipartFile file, HttpServletRequest request){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("图片上传成功!");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		if (file.isEmpty()) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("上传图片为空！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("上传图片为空： ");
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		}
+
     	try {
-			upload = MobileUploadUtils.checkUploadParam(params, ret);
-			
-			String realPath =  upload.getToken() + "/" ;
-	        String filePath = (String) prop.get("images_upload_path") + "/" + realPath;
-	
-	        String []path = MobileUploadUtils.upload(request, prop, files, filePath, realPath, upload);
-            
-            SysDriver sysDriver = new SysDriver();
-            
-            sysDriver.setSysDriverId(upload.getToken());
-            sysDriver.setDrivingLice(path[0]);
-            sysDriver.setVehicleLice(path[1]);
-            sysDriver.setUpdatedDate(new Date());
+			String type = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));// 取文件格式后缀名
+			String filename = System.currentTimeMillis() + type;// 取当前时间戳作为文件名
 
-            driverService.saveDriver(sysDriver, "update");
-            
-            Data data = new Data();
-            data.setImageUrl(path.toString());
-            
-            ArrayList<Data> list = new ArrayList<Data>();
-        	list.add(data);
-            
-            ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileGetUserInfoUtils.RET_USERINFO_SUCCESS, list);
-
-        } catch (Exception e) {
-        	if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+			/**
+			 * 上传文件
+			 */
+			String realPath =  "/mobile/" ;
+			String path = (String) prop.get("images_upload_path");
+			String show_path = (String) prop.get("show_images_path");
+			String http_poms_path =  (String) prop.get("http_poms_path");
+			http_poms_path = http_poms_path + show_path;
+			path+= realPath + filename;//上传路径
+			show_path+= realPath + filename;//相对路径
+			http_poms_path += realPath + filename;//绝对路径（web访问路径）
+			File destFile = new File(path);
+			try {
+				FileUtils.copyInputStreamToFile(file.getInputStream(), destFile);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-        }
-        finally {
-			return JSON.toJSONString(ret);
+
+			/**
+			 * 封装返回数据
+			 */
+			Map<String, Object> tokenMap = new HashMap<>();
+			tokenMap.put("imageUrl",http_poms_path);
+			tokenMap.put("relativeUrl",show_path);
+			result.setData(tokenMap);
+
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			/*resultStr = DESUtil.encode(keyStr,resultStr);//参数加密*/
+
+			logger.error("图片上传成功： " + resultStr);
+        } catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("图片上传失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("图片上传失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
     }
 
-    /**
+	/**
+	 * 申请实名认证
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/user/realNameAuth")
+	@ResponseBody
+	public String realNameAuth(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("实名认证已提交审核，请耐心等待！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver driver = new SysDriver();
+				driver.setUserName(mainObj.optString("name"));
+				driver.setPlateNumber(mainObj.optString("plateNumber"));
+				driver.setFuelType(mainObj.optString("gasType"));
+				if(mainObj.optString("endTime") != null && !"".equals(mainObj.optString("endTime"))){
+					driver.setExpiryDate(new Date(mainObj.optString("endTime")));
+				}
+				driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
+				driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
+				driver.setSysDriverId(mainObj.optString("token"));
+
+				int resultVal = driverService.saveDriver(driver,"update");
+				if(resultVal <= 0){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("用户ID为空，申请失败！");
+				}
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+
+			logger.error("实名认证已提交审核，请耐心等待！： " + resultStr);
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("申请失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("申请失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+
+	/**
 	 * 意见反馈
 	 * @param params
 	 * @return
-     */
-    @RequestMapping(value = "Feedback")
-    @ResponseBody
-    public String feedback(MobileParams params){
-    	
-    	MobileReturn ret = new MobileReturn();
-    	MobileFeedBack feedback = new MobileFeedBack();
-    	
-    	try {
-    		feedback = MobileFeedBackUtils.checkFeedBackParam(params, ret);
+	 */
+	@RequestMapping(value = "/user/feedback")
+	@ResponseBody
+	public String feedback(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("感谢您的宝贵建议！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "！";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
 
-    		mbUserSuggestServices.saveSuggester(feedback);
-            
-    		Data data = new Data();
-        	
-        	ArrayList<Data> list = new ArrayList<Data>();
-        	list.add(data);
-            
-            ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileFeedBackUtils.RET_FEEDBACK_SAVE_MSG, list);
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				MbUserSuggest suggest = new MbUserSuggest();
+				suggest.setMbUserSuggestId(UUIDGenerator.getUUID());
+				suggest.setSysDriverId(mainObj.optString("token"));
+				suggest.setSuggest(mainObj.optString("content"));
+				suggest.setMobilePhone(mainObj.optString("mobilePhone"));
+				suggest.setCreatedDate(new Date());
+				suggest.setUpdatedDate(new Date());
 
-        } catch (Exception e) {
-        	if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+				int resultVal = mbUserSuggestServices.saveSuggester(suggest);
+				if(resultVal <= 0){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("提交失败！");
+				}else{
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-        }
-        finally {
-			return JSON.toJSONString(ret);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+
+			logger.error("提交建议成功！！： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("提交失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("提交失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
-    }
+	}
 
     /**
-	 * 挂失
+	 * 卡/账户挂失/解冻
 	 * @param params
 	 * @return
      */
-    @RequestMapping(value = "ReportTheLoss")
+    @RequestMapping(value = "/loss/reportTheLoss")
     @ResponseBody
-    public String reportTheLoss(MobileParams params){
-    	
-    	MobileReturn ret = new MobileReturn();
-    	MobileLoss loss = new MobileLoss();
+    public String reportTheLoss(String params){
+		MobileReturn result = new MobileReturn();
+		String failStr = "参数有误";
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
     	
     	try {
-    		loss = ReportLossUtil.checkReportTheLossParam(params, ret);
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
 
-    		SysDriver driver = driverService.queryDriverByPK(loss.getToken());
-    		int retvale = sysUserAccountService.changeStatus(driver.getAccount().getSysUserAccountId(), loss.getLossType(), driver.getCardInfo().getCard_no());
-            
-            
-            if(retvale >0 ){
-            	Data data = new Data();
-            	
-            	ArrayList<Data> list = new ArrayList<Data>();
-            	list.add(data);
-            	
-            	ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, ReportLossUtil.RET_LOSS_SUCESS_MSG, list);
-            }
-           
-        } catch (Exception e) {
-        	if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver driver = driverService.queryDriverByPK(mainObj.optString("token"));
+				String lossType = mainObj.optString("lossType");
+				String cardId = mainObj.optString("cardId");
+				int retvale = 0;//操作影响行数
+				if(lossType != null){//类型等于0 或者等于1
+					retvale = sysUserAccountService.changeStatus(driver.getAccount().getSysUserAccountId(), lossType, driver.getCardInfo().getCard_no());
+				}
+
+				if(retvale >0 ){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					if("2".equals(lossType)){
+						failStr = "解除挂失";
+					}else{
+						failStr = ("挂失失败");
+					}
+					result.setMsg(failStr+"成功！");
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-        }
-        finally {
-			return JSON.toJSONString(ret);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+
+			logger.error(failStr+"成功： " + resultStr);
+        } catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg(failStr+"失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error(failStr+"失败！" + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
     }
+
 
 	/**
 	 * 交易记录
@@ -529,41 +726,126 @@ public class MobileController {
 		}
     }
 
-    /**
+	/**
 	 * 获取开通城市列表
 	 * @param params
 	 * @return
+	 */
+	@RequestMapping(value = "/util/getCityList")
+	@ResponseBody
+	public String getCityList(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				List<DistCity> cityList = districtService.queryHotCityList();
+				List<Map<String, Object>> listMap = new ArrayList<>();
+				if(cityList != null && cityList.size() > 0){
+					for(DistCity city:cityList){
+						Map<String, Object> cityMap = new HashMap<>();
+						cityMap.put("cityName",city.getCityName());
+						listMap.add(cityMap);
+					}
+					result.setListMap(listMap);
+				}
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+
+			logger.error("登录成功： " + resultStr);
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询城市失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询城市失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+    /**
+	 * 获取气站/运输公司信息列表
+	 * @param params
+	 * @return
      */
-    @RequestMapping(value = "GetCitys")
+    @RequestMapping(value = "/map/queryStationList")
     @ResponseBody
-    public String getCitys(MobileParams params){
-    	
-    	MobileReturn ret = new MobileReturn();
+    public String queryStationList(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询地图信息成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
     	
     	try {
-    		GetCitysUtils.checkParam(params, ret);
-    		
-    		String opencity = (String) prop.get("opencity");
-            
-            if(opencity.split("~").length >0 ){
-            	Data data = new Data();
-            	data.setCity(opencity.split("~"));
-            	
-            	ArrayList<Data> list = new ArrayList<Data>();
-            	list.add(data);
-            	
-            	ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, GetCitysUtils.RET_QUERY_SUCCESS_MSG, list);
-            }
-           
-        } catch (Exception e) {
-        	if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				/*Gastation gastation = new Gastation();
+				List<Gastation> cityList = gastationService.getAllStationList(gastation);
+				List<Map<String, Object>> listMap = new ArrayList<>();
+				if(cityList != null && cityList.size() > 0){
+					for(DistCity city:cityList){
+						Map<String, Object> cityMap = new HashMap<>();
+						cityMap.put("cityName",city.getCityName());
+						listMap.add(cityMap);
+					}
+					result.setListMap(listMap);
+				}*/
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-        }
-        finally {
-			return JSON.toJSONString(ret);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+
+			logger.error("查询地图信息成功： " + resultStr);
+        } catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询地图信息失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询地图信息失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
     }
 

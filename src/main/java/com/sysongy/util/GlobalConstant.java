@@ -637,4 +637,8 @@ public class GlobalConstant {
 		public static final String TAILS = "1";//活动图
 	}
 
+	public interface HotCity{
+		public static final Integer HOT=2;
+		public static final Integer NOT_HOT=1;
+	}
 }

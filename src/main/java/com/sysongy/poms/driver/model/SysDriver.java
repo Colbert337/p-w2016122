@@ -96,6 +96,8 @@ public class SysDriver extends BaseModel{
 
     private int isLocked = 0;
 
+    private String invitationCode;
+
     public String getMemo() {
 		return memo;
 	}
@@ -439,5 +441,13 @@ public class SysDriver extends BaseModel{
 
     public void setAvatarB(String avatarB) {
         this.avatarB = avatarB;
+    }
+
+    public String getInvitationCode() {
+        return invitationCode;
+    }
+
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode;
     }
 }

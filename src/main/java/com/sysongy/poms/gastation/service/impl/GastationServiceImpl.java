@@ -71,6 +71,12 @@ public class GastationServiceImpl implements GastationService {
 	}
 
 	@Override
+	public List<Gastation> getAllStationList(Gastation record) throws Exception {
+		List<Gastation> list = gasStationMapper.queryForPage(record);
+		return list;
+	}
+
+	@Override
 	public String saveGastation(Gastation record, String operation) throws Exception {
 		
 		boolean statusChanged = false;
