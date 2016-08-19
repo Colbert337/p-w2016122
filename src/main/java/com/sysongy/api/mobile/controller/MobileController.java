@@ -12,6 +12,7 @@ import com.sysongy.api.mobile.model.record.MobileRecord;
 import com.sysongy.api.mobile.model.upload.MobileUpload;
 import com.sysongy.api.mobile.model.userinfo.MobileUserInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
+import com.sysongy.api.mobile.service.MbDealOrderService;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.api.mobile.tools.MobileUtils;
 import com.sysongy.api.mobile.tools.feedback.MobileFeedBackUtils;
@@ -60,6 +61,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RequestMapping("/api/v1/mobile")
@@ -91,6 +93,8 @@ public class MobileController {
 	GastationService gastationService;
 	@Autowired
 	GsGasPriceService gsGasPriceService;
+	@Autowired
+	MbDealOrderService mbDealOrderService;
 
 	/**
 	 * 用户登录
@@ -479,7 +483,9 @@ public class MobileController {
 				driver.setPlateNumber(mainObj.optString("plateNumber"));
 				driver.setFuelType(mainObj.optString("gasType"));
 				if(mainObj.optString("endTime") != null && !"".equals(mainObj.optString("endTime"))){
-					driver.setExpiryDate(new Date(mainObj.optString("endTime")));
+					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
+					Date date = sft.parse(mainObj.optString("endTime"));
+					driver.setExpiryDate(date);
 				}
 				driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
 				driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
@@ -862,38 +868,119 @@ public class MobileController {
 		}
     }
 
-    /**
-	 * 获取返现金额
+	/**
+	 * 个人转账
 	 * @param params
 	 * @return
-     */
-    @RequestMapping(value = "ReturnCash")
-    @ResponseBody
-    public String getReturnCash(MobileParams params){
-    	
-    	MobileReturn ret = new MobileReturn();
-    	
-    	try {
-    		ReturnCashUtil.checkParam(params, ret);
-    		
-            
-            Data data = new Data();
-            	
-            ArrayList<Data> list = new ArrayList<Data>();
-            list.add(data);
-            	
-            ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, GetCitysUtils.RET_QUERY_SUCCESS_MSG, list);
+	 */
+	@RequestMapping(value = "/deal/transferAccounts")
+	@ResponseBody
+	public String transferAccounts(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("转账成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
 
-           
-        } catch (Exception e) {
-        	if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				Map<String, Object> driverMap = new HashMap<>();
+				driverMap.put("token",mainObj.optString("token"));
+				driverMap.put("account",mainObj.optString("account"));
+				driverMap.put("name",mainObj.optString("name"));
+				driverMap.put("amount",mainObj.optString("amount"));
+				driverMap.put("remark",mainObj.optString("remark"));
+				driverMap.put("paycode",mainObj.optString("paycode"));
+
+				mbDealOrderService.transferDriverToDriver(driverMap);
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-        }
-        finally {
-			return JSON.toJSONString(ret);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+
+			logger.error("转账成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("转账失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("转账失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
-    }
+	}
+
+	/**
+	 * 在线充值
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/deal/returnCash")
+	@ResponseBody
+	public String getReturnCash(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询返现金额成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.decode(keyStr,resultStr);//参数解密
+
+			logger.error("查询翻新金额成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询翻新金额失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询翻新金额失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
 }
