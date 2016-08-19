@@ -28,7 +28,7 @@ public class MobileRegisterUtils extends MobileUtils {
 			throw e;
 		}
 		
-		if (register == null || StringUtils.isEmpty(register.getPhoneNum()) || register.getPhoneNum().length() != 11) {
+		/*if (register == null || StringUtils.isEmpty(register.getPhoneNum()) || register.getPhoneNum().length() != 11) {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
@@ -45,7 +45,7 @@ public class MobileRegisterUtils extends MobileUtils {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_VERIFICATION_ERROR);
 			throw new Exception(RET_VERIFICATION_ERROR);
-		}
+		}*/
 		
 		return register;
 	}

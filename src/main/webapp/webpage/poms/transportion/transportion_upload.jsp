@@ -63,23 +63,23 @@
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
 									<!-- #section:elements.form -->
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="sys_transportion_id"> 运输公司编号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="sys_transportion_id">运输公司编号： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="sys_transportion_id"  name="sys_transportion_id" value="${param.transportionid}" class="form-control" readonly="readonly"/>
+											<input type="text" id="sys_transportion_id" name="sys_transportion_id" value="${param.transportionid}" class="form-control" readonly="readonly"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 工商注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right">工商注册号：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" maxlength="15" placeholder="输入工商注册号"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" maxlength="18" placeholder="输入工商注册号"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 工商注册证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">工商注册证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -89,7 +89,7 @@
 												<div class="widget-body">
 													<div class="widget-main">
 														<!-- <input type="file" id="id-input-file-3"/>-->
-														<input type="file" name="image" class="projectfile"  id="indu_com_certif_select" />
+														<input type="file" name="image" class="projectfile" id="indu_com_certif_select" />
 														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
@@ -102,15 +102,15 @@
 									</div>
 	
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 税务注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right">税务注册号： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  id="tax_number" name="tax_number" class="form-control" maxlength="15" placeholder="输入税务注册号"/>
+											<input type="text"  id="tax_number" name="tax_number" class="form-control" maxlength="18" placeholder="输入税务注册号"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 税务注册证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">税务注册证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -120,7 +120,7 @@
 												<div class="widget-body">
 													<div class="widget-main">
 														<!-- <input type="file" id="id-input-file-31"/> -->
-														<input type="file" name="image" class="projectfile"  id="tax_certif_select" />
+														<input type="file" name="image" class="projectfile" id="tax_certif_select" />
 														<input type="hidden" id="tax_certif" name="tax_certif"/>
 														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
@@ -203,8 +203,8 @@
 		            indu_com_number: {
 						validators: {
 		                    stringLength: {
-		                        max: 15,
-		                        message: '工商注册号不能超过15位'
+		                        max: 18,
+		                        message: '工商注册号不能超过18位'
 							}
 		                }
 		             },
@@ -212,8 +212,8 @@
 			                message: 'The cardno is not valid',
 							validators: {
 				                    stringLength: {
-				                        max: 15,
-				                        message: '税务注册号不能超过15位'
+				                        max: 18,
+				                        message: '税务注册号不能超过18位'
 								}
 				            }
 			         }   

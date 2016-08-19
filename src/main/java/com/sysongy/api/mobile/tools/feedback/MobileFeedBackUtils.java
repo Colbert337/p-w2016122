@@ -31,11 +31,11 @@ public class MobileFeedBackUtils extends MobileUtils{
 		
 		checkApiKey(params.getApiKey(), ret);
 		
-		if (feedback == null || StringUtils.isEmpty(feedback.getToken()) || StringUtils.isEmpty(feedback.getMsg())) {
+		/*if (feedback == null || StringUtils.isEmpty(feedback.getToken()) || StringUtils.isEmpty(feedback.getMsg())) {
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
-		}
+		}*/
 		
 		return feedback;
 	}

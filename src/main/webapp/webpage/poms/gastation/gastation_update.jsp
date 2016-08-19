@@ -98,15 +98,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="contact_phone"> 联系电话： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="contact_phone">联系电话：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15" value="${station.contact_phone}"/>
+											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="18" value="${station.contact_phone}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">管理员账号（建议为11位手机号码）： </label>
+										<label class="col-sm-3 control-label no-padding-right">管理员账号（建议为11位手机号码）：</label>
 
 										<div class="col-sm-4">
 											<input class="form-control" name="admin_username" type="text" placeholder="输入管理员账号" maxlength="20" value="${station.admin_username}" readonly="readonly"/>
@@ -114,7 +114,7 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="expiry_date"> 平台有效期：</label>
+										<label class="col-sm-3 control-label no-padding-right" for="expiry_date">平台有效期：</label>
 										<div class="col-sm-4 datepicker-noicon">
 										<!-- #section:plugins/date-time.datepicker -->
 												<div class="input-group">
@@ -215,15 +215,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number">工商注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="indu_com_number">工商注册号：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}" maxlength="15"/>
+											<input type="text" id="indu_com_number" name="indu_com_number" class="form-control" value="${station.indu_com_number}" maxlength="18"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 工商注册证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">工商注册证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -258,15 +258,15 @@
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="tax_number"> 税务注册号： </label>
+										<label class="col-sm-3 control-label no-padding-right" for="tax_number">税务注册号：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="tax_number" name="tax_number" class="form-control" maxlength="15" value=" ${station.tax_number}"/>
+											<input type="text" id="tax_number" name="tax_number" class="form-control" maxlength="18" value=" ${station.tax_number}"/>
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right"> 税务注册证书： </label>
+										<label class="col-sm-3 control-label no-padding-right">税务注册证书：</label>
 										<div class="col-sm-4">
 											<div class="widget-box">
 												<div class="widget-header">
@@ -686,8 +686,8 @@
 		                message: 'The cardno is not valid',
 						validators: {
 							stringLength: {
-								max: 15,
-								message: '工商注册号不能超过15位'
+								max: 18,
+								message: '工商注册号不能超过18位'
 							}
 						}
 		                }
@@ -696,8 +696,8 @@
 		                message: 'The cardno is not valid',
 						validators: {
 							stringLength: {
-								max: 15,
-								message: '税务注册号不能超过15位'
+								max: 18,
+								message: '税务注册号不能超过18位'
 							}
 						}
 					}

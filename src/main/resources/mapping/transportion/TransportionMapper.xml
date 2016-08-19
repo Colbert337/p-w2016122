@@ -501,7 +501,7 @@
 	) consumecount
 	from tc_fleet tc
 	left join sys_transportion st on tc.station_id = st.sys_transportion_id
-	left join report_business rb on st.sys_transportion_id = rb.credit_account
+	left join report_business rb on st.sys_transportion_id = rb.credit_account and rb.order_type = '210'
 	where 1=1 
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >
@@ -543,7 +543,7 @@
 	) consumecount
 	from tc_fleet tc
 	left join sys_transportion st on tc.station_id = st.sys_transportion_id
-	left join report_business rb on st.sys_transportion_id = rb.credit_account
+	left join report_business rb on st.sys_transportion_id = rb.credit_account and rb.order_type = '210'
 	where 1=1 
     <trim>
       <if test="stationId != null &amp;&amp; stationId != ''" >

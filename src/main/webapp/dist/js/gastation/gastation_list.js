@@ -133,8 +133,11 @@
 		loadPage('#main', '../web/gastation/gastationList2');
 	}
 	
-	function showInnerModel(obj1,obj2,obj3,obj4){
-
+	function showInnerModel(obj1,obj2,obj3,obj4,tr){
+		var show=$("div[name='show']");
+		for(var i=0;i<show.length;i++){
+			show[i].innerHTML=tr.children('td').eq(i+1).text();
+		}
 		$("#innerimg1").attr("src",obj1);
 		$("#innerimg1").parent("a").attr("href",obj1);
 		$("#innerimg2").attr("src",obj2);
@@ -143,7 +146,6 @@
 		$("#innerimg3").parent("a").attr("href",obj3);
 		$("#innerimg4").attr("src",obj4);
 		$("#innerimg4").parent("a").attr("href",obj4);
-		
 		$("#innerModel").modal('show');
 	}
 	

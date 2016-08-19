@@ -26,6 +26,8 @@ public interface GasCardMapper {
     int updateByPrimaryKey(GasCard record);
     
     List<GasCard> queryForPage(GasCard record);
+    
+    List<GasCard> queryForList(GasCard record);
 
     List<GasCard> queryCardFor2StatusInfo(GasCard record);
 
