@@ -50,19 +50,19 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="userOldPassword"><span class="red_star">*</span> 原始密码： </label>
 									<div class="col-sm-7">
-										<input type="password" name="userOldPassword" id="userOldPassword" placeholder="原始密码" maxlength="6" class="col-xs-10 col-sm-12" />
+										<input type="password" name="userOldPassword" id="userOldPassword" placeholder="原始密码" maxlength="20" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="userNewPassword"><span class="red_star">*</span> 新密码： </label>
 									<div class="col-sm-7">
-										<input type="password" name="userNewPassword" id="userNewPassword" placeholder="新密码" maxlength="6" class="col-xs-10 col-sm-12" />
+										<input type="password" name="userNewPassword" id="userNewPassword" placeholder="新密码" maxlength="20" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="userRePassword"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-7">
-										<input type="password" id="userRePassword" name="userRePassword" placeholder="确认密码" maxlength="6" class="col-xs-10 col-sm-12" />
+										<input type="password" id="userRePassword" name="userRePassword" placeholder="确认密码" maxlength="20" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 							</form>
