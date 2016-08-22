@@ -403,6 +403,26 @@ public class GastationServiceImpl implements GastationService {
 	@Override
 	public void insert(Gastation gas) throws Exception {
 		// TODO Auto-generated method stub
+		
+		Usysparam param=new Usysparam();
+		List<Usysparam> list=new ArrayList<>();
+		param.setGcode("PROVINCE_CODE");
+		param.setMname(gas.getProvince_id());
+		list=usysparamService.queryAll(param);
+		if (list.size()>0) {
+			param=list.get(0);
+		}
+		gas.setProvince_id(param.getMcode());
+		param=new Usysparam();
+		list=new ArrayList<>();
+		param.setGcode("STATION_DATA_TYPE");
+		param.setMname(gas.getType());
+		list=usysparamService.queryAll(param);
+		if (list.size()>0) {
+			param=list.get(0);
+		}
+		gas.setType(param.getMcode());
+		
 		Gastation station = gasStationMapper
 				.findGastationid("GS" + 4+ gas.getProvince_id());
 		String newid;
@@ -415,25 +435,7 @@ public class GastationServiceImpl implements GastationService {
 					+ StringUtils.leftPad(tmp.toString(), 4, "0");
 		}
 		gas.setSys_gas_station_id(newid);
-		Usysparam param=new Usysparam();
-		List<Usysparam> list=new ArrayList<>();
-		param.setGcode("PROVINCE_CODE");
-		param.setMname(gas.getProvince_id());
-		list=usysparamService.queryAll(param);
-		if (list.size()>0) {
-			param=list.get(0);
-		}
-		
-		gas.setProvince_id(param.getMcode());
-		param=new Usysparam();
-		list=new ArrayList<>();
-		param.setGcode("STATION_DATA_TYPE");
-		param.setMname(gas.getType());
-		list=usysparamService.queryAll(param);
-		if (list.size()>0) {
-			param=list.get(0);
-		}
-		gas.setType(param.getMcode());
+		gas.setType("1");
 		gasStationMapper.insert(gas);
 	}
 

@@ -147,7 +147,7 @@
       indu_com_number, tax_number, indu_com_certif, 
       tax_certif, lng_certif, dcp_certif, 
       platform_type, status, created_time, 
-      updated_time,prepay_balance,prepay_version,sys_user_account_id)
+      updated_time,prepay_balance,prepay_version,sys_user_account_id,type)
     values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
       #{gas_station_name,jdbcType=VARCHAR}, 
       #{station_level,jdbcType=VARCHAR}, 
@@ -162,7 +162,7 @@
       #{indu_com_number,jdbcType=VARCHAR}, #{tax_number,jdbcType=VARCHAR}, #{indu_com_certif,jdbcType=VARCHAR}, 
       #{tax_certif,jdbcType=VARCHAR}, #{lng_certif,jdbcType=VARCHAR}, #{dcp_certif,jdbcType=VARCHAR}, 
       #{platform_type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{created_time,jdbcType=TIMESTAMP}, 
-      #{updated_time,jdbcType=TIMESTAMP},#{prepay_balance,jdbcType=DECIMAL}, #{prepay_version,jdbcType=INTEGER}, #{sys_user_account_id,jdbcType=VARCHAR})
+      #{updated_time,jdbcType=TIMESTAMP},#{prepay_balance,jdbcType=DECIMAL}, #{prepay_version,jdbcType=INTEGER}, #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR})
   </insert>
   
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >

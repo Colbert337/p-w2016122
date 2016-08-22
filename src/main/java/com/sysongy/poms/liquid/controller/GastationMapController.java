@@ -154,14 +154,15 @@ public class GastationMapController extends BaseContoller {
 					String platesNumber = "";
 					if (sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i))) {
 						Gastation gas = new Gastation();
-						if (sheet.getCell(0, i).getContents() != null
-								&& !"".equals(sheet.getCell(0, i).getContents().replace(" ", ""))) {
-							gas.setSys_gas_station_id(sheet.getCell(0, i).getContents());
-						} else {
-							message += "第" + (i + 1) + "行第1列（加注站编号不能为空）\n";
-							err++;
-							continue;
-						}
+						//id后台自动生成
+//						if (sheet.getCell(0, i).getContents() != null
+//								&& !"".equals(sheet.getCell(0, i).getContents().replace(" ", ""))) {
+//							gas.setSys_gas_station_id(sheet.getCell(0, i).getContents());
+//						} else {
+//							message += "第" + (i + 1) + "行第1列（加注站编号不能为空）\n";
+//							err++;
+//							continue;
+//						}
 
 						if (sheet.getCell(1, i) != null
 								&& !"".equals(sheet.getCell(1, i).getContents().replace(" ", ""))) {
@@ -188,7 +189,7 @@ public class GastationMapController extends BaseContoller {
 						}
 						if (sheet.getCell(4, i) != null
 								&& !"".equals(sheet.getCell(4, i).getContents().replace(" ", ""))) {
-							gas.setCity_id(sheet.getCell(4, i).getContents());
+//							gas.setCity_id(sheet.getCell(4, i).getContents());
 						} else {
 							message += "第" + (i + 1) + "行第5列（加注站所在市不能为空）\n";
 							err++;
@@ -196,7 +197,7 @@ public class GastationMapController extends BaseContoller {
 						}
 						if (sheet.getCell(5, i) != null
 								&& !"".equals(sheet.getCell(5, i).getContents().replace(" ", ""))) {
-							gas.setArea_id(sheet.getCell(5, i).getContents());
+//							gas.setArea_id(sheet.getCell(5, i).getContents());
 						} else {
 							message += "第" + (i + 1) + "行第6列（加注站所在区不能为空）\n";
 							err++;
@@ -218,8 +219,8 @@ public class GastationMapController extends BaseContoller {
 								&& (sheet.getCell(7, i).getContents().indexOf(",") != -1 || sheet.getCell(7, i).getContents().indexOf("，") != -1)) {
 							sheet.getCell(7, i).getContents().replace("，", ",");
 							String[] xy = sheet.getCell(7, i).getContents().split(",");
-							gas.setLongitude(xy[0].replace(",", ""));
-							gas.setLatitude(xy[1].replace(",", ""));
+							gas.setLongitude(xy[0]);
+							gas.setLatitude(xy[1]);
 						} else {
 							message += "第" + (i + 1) + "行第8列（加注站坐标不能为空）\n";
 							err++;
