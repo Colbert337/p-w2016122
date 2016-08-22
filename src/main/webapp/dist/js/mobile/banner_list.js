@@ -130,7 +130,8 @@ function clearDiv(){
 function showInnerModel(obj1,tr){
 	var show=$("label[name='show']");
 	for(var i=0;i<show.length;i++){
-		show[i].innerHTML=tr.children('td').eq(i).text();
+ 
+		show[i].innerHTML=tr.children('td').eq(i).text().replace(/(.{28})/g,'$1\n');
 	}
 	$("#innerimg1").attr("src",obj1);
 	$("#innerimg1").parent("a").attr("href",obj1);
