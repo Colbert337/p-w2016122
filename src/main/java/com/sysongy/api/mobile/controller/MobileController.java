@@ -1,6 +1,7 @@
 package com.sysongy.api.mobile.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.Data;
 import com.sysongy.api.mobile.model.base.MobileParams;
@@ -42,6 +43,8 @@ import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
@@ -95,6 +98,8 @@ public class MobileController {
 	GsGasPriceService gsGasPriceService;
 	@Autowired
 	MbDealOrderService mbDealOrderService;
+	@Autowired
+	SysCashBackService sysCashBackService;
 
 	/**
 	 * 用户登录
@@ -194,7 +199,7 @@ public class MobileController {
 				//设置短信有效期60秒
 				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 90);
 				Map<String, Object> tokenMap = new HashMap<>();
-				tokenMap.put("tokenMap",checkCode.toString());
+				tokenMap.put("verificationCode",checkCode.toString());
 				result.setData(tokenMap);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -904,11 +909,17 @@ public class MobileController {
 						gastationMap.put("name",gastationInfo.getGas_station_name());
 						gastationMap.put("longitude",gastationInfo.getLongitude());
 						gastationMap.put("latitude",gastationInfo.getLatitude());
+						gastationMap.put("service","");
 						//获取当前气站价格列表
 						List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
 						gastationMap.put("priceList",priceList);
 						gastationMap.put("phone",gastationInfo.getContact_phone());
-						gastationMap.put("state",gastationInfo.getStatus());
+						if(gastationInfo.getStatus().equals("0")){
+							gastationMap.put("state","开启");
+						}else{
+							gastationMap.put("state","关闭");
+						}
+						gastationMap.put("preferential","");
 						gastationMap.put("address",gastationInfo.getAddress());
 
 						gastationArray.add(gastationMap);
@@ -1018,12 +1029,12 @@ public class MobileController {
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "/deal/returnCash")
+	@RequestMapping(value = "/deal/cashBack")
 	@ResponseBody
-	public String getReturnCash(String params){
+	public String getCashBackList(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询返现金额成功！");
+		result.setMsg("查询返现规则列表成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 
@@ -1039,24 +1050,25 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
-
+				List<Map<String, Object>> cashBackList = sysCashBackService.queryCashBackList();
+				result.setListMap(cashBackList);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
 			}
 			resutObj = JSONObject.fromObject(result);
-			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
-			logger.error("查询翻新金额成功： " + resultStr);
+			logger.error("查询返现规则列表成功： " + resultStr);
 
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询翻新金额失败！");
+			result.setMsg("查询返现规则列表失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询翻新金额失败： " + e);
-			resutObj.remove("listMap");
+			logger.error("查询返现规则列表失败： " + e);
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			return resultStr;
@@ -1070,9 +1082,9 @@ public class MobileController {
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "/deal/cashBack")
+	@RequestMapping(value = "/deal/recharge")
 	@ResponseBody
-	public String getCashBackList(String params){
+	public String getRecharge(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("查询返现规则成功！");
@@ -1091,6 +1103,7 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
+
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);

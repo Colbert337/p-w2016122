@@ -1,6 +1,7 @@
 package com.sysongy.poms.system.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -12,6 +13,13 @@ import com.sysongy.poms.system.model.SysCashBack;
 public interface SysCashBackService {
 	
 	public PageInfo<SysCashBack> queryCashBack(SysCashBack obj) throws Exception;
+
+	/**
+	 * 查询司机返现规则列表
+	 * @return
+	 * @throws Exception
+     */
+	public List<Map<String, Object>> queryCashBackList() throws Exception;
 
 	public PageInfo<SysCashBack> queryCashBackForCRM(SysCashBack obj) throws Exception;
 	

@@ -121,10 +121,10 @@ public class DESUtil {
 
     public static void main(String args[]) throws Exception{
 //        String str = "王冬强";
-        String str = "{\"main\":{\"token\":\"5fbffec4494347199889322c3f488a14\",\"paycode\":\"5fbffec4494347199889322c3f488a14\",\"verificationCode\":\"5fbffec4494347199889322c3f488a14\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+        String str = "{\"main\":{},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
-        String resultStr = decode(keyStr,"DE5DCAF1F59506F07B57CB0B4682BDE4E37937690FAD4A12DD1BAC808743B074C4B3A46C3BC4778FEF1AABBA14414A5C404D8E2345579B43E0FBEA375DA36F2A77BEF0C2F30B3097A0B2872877EF37656315FC5B5791578F602AA351C3B6F847BF2B5E05785F07CFCBF86F644ED0EF6ECE92BC8CA1EA7A3770F1FEB677BB072FD0E8537E7C0E2A2ACFE4874CF1D3BDB04D3D3D906397C46440535E85EFE1746ED5A50A4D212FCCDD952898037D7B0A3B4E9BDAB3C10AD4F0");
+        String resultStr = decode(keyStr,"DE5DCAF1F59506F07B57CB0B4682BDE4E37937690FAD4A123FE7CEF9A7D55699C0A6D6052DA33A2A4909BA840947CC0CA06BAFCFBBD84F5892BBCE4C09B54C9DDC1E3624D00A91519D3C7D704E019F73");
 //        resultStr = new String(resultStr.getBytes("GB2312"),"ISO-8859-1");
         System.out.println("解密后:"+resultStr);
     }
