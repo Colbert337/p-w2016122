@@ -30,7 +30,7 @@
         </javaTypeResolver>  
           	
         <!-- 生成实体类地址 -->    
-        <javaModelGenerator targetPackage="com.sysongy.poms.base.model"
+        <javaModelGenerator targetPackage="com.sysongy.poms.message.model"
             targetProject="src/main/java" >  
             
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
@@ -41,14 +41,14 @@
         </javaModelGenerator>  
           
         <!-- 生成mapxml文件 -->  
-        <sqlMapGenerator targetPackage="base"
+        <sqlMapGenerator targetPackage="message"
             targetProject="src/main/resources/mapping" >  
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
             <property name="enableSubPackages" value="false" />  
         </sqlMapGenerator>  
           
         <!-- 生成mapxml对应client，也就是接口dao -->      
-        <javaClientGenerator targetPackage="com.sysongy.poms.base.dao"
+        <javaClientGenerator targetPackage="com.sysongy.poms.message.dao"
             targetProject="src/main/java" type="XMLMAPPER" >  
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
             <property name="enableSubPackages" value="false" />  
@@ -71,13 +71,13 @@
         </table>-->
 
 
-        <table schema="${jdbc.database}" tableName="dist_area" domainObjectName="DistArea"
+        <table schema="${jdbc.database}" tableName="sys_message" domainObjectName="SysMessage"
                enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
                enableUpdateByExample="false">
         </table>
-        <table schema="${jdbc.database}" tableName="dist_city" domainObjectName="DistCity"
+        <!--<table schema="${jdbc.database}" tableName="dist_city" domainObjectName="DistCity"
                enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
@@ -88,7 +88,7 @@
                enableDeleteByExample="false"
                enableSelectByExample="false"
                enableUpdateByExample="false">
-        </table>
+        </table>-->
         <!-- <table schema="${jdbc.database}" tableName="course_user_info" domainObjectName="CourseUserInfo"></table>  -->
         
   
