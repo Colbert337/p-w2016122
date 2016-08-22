@@ -26,13 +26,13 @@ public class ReportLossUtil extends MobileUtils{
 		}
 		
 		if (loss == null || StringUtils.isEmpty(loss.getToken()) || loss.getToken().length() != 32) {
-			ret.setError(RET_ERROR);
+			/*ret.setError(RET_ERROR);*/
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
 		}
 		
 		if (StringUtils.isEmpty(loss.getLossType()) || loss.getLossType().length() != 1) {
-			ret.setError(RET_ERROR);
+			/*ret.setError(RET_ERROR);*/
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
 		}

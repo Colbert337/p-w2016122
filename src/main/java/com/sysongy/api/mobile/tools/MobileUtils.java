@@ -23,19 +23,19 @@ public class MobileUtils {
 	public static final String RET_PARAM_ERROR_MSG = "请求参数格式不正确";
 
 	public static void checkApiKey(String apiKey, MobileReturn ret) throws Exception{
-		if(!API_KEY.equals(apiKey)){
+		/*if(!API_KEY.equals(apiKey)){
 			ret.setError(RET_ERROR);
 			ret.setMsg(RET_PARAM_ERROR_MSG);
 			throw new Exception(RET_PARAM_ERROR_MSG);
-		}
+		}*/
 	}
 	
 	public static MobileReturn packagingMobileReturn(String error, String msg, ArrayList<Data> data) throws Exception{
 
 		MobileReturn ret = new MobileReturn();
 
-		ret.setError(error);
-		ret.setData(data);
+		/*ret.setError(error);
+		ret.setData(data);*/
 		if(StringUtils.isEmpty(msg)){
 			switch (error) {
 			case RET_SUCCESS:
