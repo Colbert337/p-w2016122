@@ -23,6 +23,7 @@ public interface GastationMapper {
 	int updatePrepayBalance(Gastation record);
 	
 	List<Gastation> queryForPage(Gastation record);
+	List<Gastation> queryForPage2(Gastation record);
 	
 	Gastation findGastationid(String province_id);
 	
@@ -34,5 +35,9 @@ public interface GastationMapper {
     
     List<Map<String,Object>> gastionRechargeReport(SysOrder record);
     
-    List<Map<String,Object>> gastionRechargeReportTotal(SysOrder record);	
+    List<Map<String,Object>> gastionRechargeReportTotal(SysOrder record);
+
+	List<Gastation> exists(String gas);	
+	
+	int updateByPrimaryKeySelective2(Gastation gas);
 }
