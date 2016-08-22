@@ -29,13 +29,16 @@ import com.sysongy.api.util.DESUtil;
 import com.sysongy.api.util.ParameterUtil;
 import com.sysongy.api.util.ShareCodeUtil;
 import com.sysongy.poms.base.model.DistCity;
+import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.base.service.DistrictService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.model.Suggest;
+import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
@@ -100,6 +103,8 @@ public class MobileController {
 	MbDealOrderService mbDealOrderService;
 	@Autowired
 	SysCashBackService sysCashBackService;
+	@Autowired
+	MbBannerService mbBannerService;
 
 	/**
 	 * 用户登录
@@ -1088,10 +1093,10 @@ public class MobileController {
 	public String recharge(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询返现规则成功！");
+		result.setMsg("查询头条推广成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
-
+		MbBanner mbBanner = new MbBanner();
 		try {
 			/**
 			 * 解析参数
@@ -1104,7 +1109,37 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
+				PageBean bean = new PageBean();
+				String http_poms_path =  (String) prop.get("http_poms_path");
 
+				if(mbBanner.getPageNum() == null){
+					mbBanner.setPageNum(GlobalConstant.PAGE_NUM);
+					mbBanner.setPageSize(GlobalConstant.PAGE_SIZE);
+				}
+
+				if(mainObj.get("imgType") != null && !"".equals(mainObj.get("imgType").toString())){
+					mbBanner.setImgType(mainObj.get("imgType").toString());
+				}
+				if(StringUtils.isEmpty(mbBanner.getImgType())){
+					mbBanner.setImgType(GlobalConstant.ImgType.TOP);
+				}
+
+				PageInfo<MbBanner> pageInfo = mbBannerService.queryMbBannerListPage(mbBanner);
+				List<MbBanner> mbBannerList = pageInfo.getList();
+				List<Map<String, Object>> bannerList = new ArrayList<>();
+				if(mbBannerList != null && mbBannerList.size() > 0){
+					for (MbBanner banner:mbBannerList){
+						Map<String, Object> bannerMap = new HashMap<>();
+						bannerMap.put("title",banner.getTitle());
+						bannerMap.put("content","");
+						bannerMap.put("time",banner.getCreatedDate());
+						bannerMap.put("contentUrl","");
+						bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
+
+						bannerList.add(bannerMap);
+					}
+				}
+				result.setListMap(bannerList);
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1115,13 +1150,13 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
-			logger.error("查询翻新金额成功： " + resultStr);
+			logger.error("查询头条推广成功： " + resultStr);
 
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询翻新金额失败！");
+			result.setMsg("查询头条推广失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询翻新金额失败： " + e);
+			logger.error("查询头条推广失败： " + e);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
