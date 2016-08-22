@@ -906,6 +906,7 @@ public class MobileController {
 				if(gastationList != null && gastationList.size() > 0){
 					for (Gastation gastationInfo:gastationList){
 						Map<String, Object> gastationMap = new HashMap<>();
+						gastationMap.put("stationId",gastationInfo.getSys_gas_station_id());
 						gastationMap.put("name",gastationInfo.getGas_station_name());
 						gastationMap.put("longitude",gastationInfo.getLongitude());
 						gastationMap.put("latitude",gastationInfo.getLatitude());
