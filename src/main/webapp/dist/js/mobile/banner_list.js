@@ -38,7 +38,7 @@ function choose(obj){
 function addBanner(){
     $("#show_img").hide();
     clearDiv();
-    $("#editBanner").text("添加图片");
+    $("#editBanner").text("添加内容");
     /*密码输入框改为可编辑*/
     $("#pay_code").removeAttr("readonly");
     $("#re_password").removeAttr("readonly");
@@ -101,7 +101,7 @@ function editBanner(imgId){
             $("#remark").text(data.remark);
             $("#show_img").attr("src",localhostPaht+data.imgPath);
             $("#operator").val(data.operator);
-            $("#editBanner").text("修改图片");
+            $("#editBanner").text("修改内容");
         }
     })
     $("#editModel").modal('show');
