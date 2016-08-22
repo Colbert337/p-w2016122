@@ -378,6 +378,78 @@ public class MobileController {
 		}
 	}
 
+
+	/**
+	 * 设置支付密码
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/user/setPaycode")
+	@ResponseBody
+	public String setPaycode(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("支付密码设置成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver driver = new SysDriver();
+				String sysDriverId = mainObj.optString("token");
+				if(mainObj.optString("token") == null){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("用户ID为空！");
+				}else if(mainObj.optString("paycode") == null){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("支付密码为空！");
+				}else if(mainObj.optString("verificationCode") == null){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("验证码为空！");
+				}else{
+					Map<String, Object> resultMap = new HashMap<>();
+					driver.setSysDriverId(sysDriverId);
+					driver.setPayCode(mainObj.optString("paycode"));
+
+					driverService.saveDriver(driver,"update");//设置支付密码
+				}
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("支付密码设置成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("支付密码设置失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("支付密码设置失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
 	/**
 	 * 图片上传
 	 * @param request
