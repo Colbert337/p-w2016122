@@ -1083,7 +1083,7 @@ public class MobileController {
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "/deal/recharge")
+	@RequestMapping(value = "/deal/recharge2")
 	@ResponseBody
 	public String recharge(String params){
 		MobileReturn result = new MobileReturn();
