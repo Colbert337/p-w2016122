@@ -78,7 +78,7 @@ function changePassDiv(objOpen,objClose){
     $("#"+objClose).hide();
 }
 
-function savePassword(){
+function savePassword(){console.log("");
     var url = "";
     var fistDiv = $("#firstDiv").is(":visible");
     var updatePsDiv =  $("#updatePsDiv").is(":visible");
@@ -91,7 +91,6 @@ function savePassword(){
         if(!$('#passwordForm').data('bootstrapValidator').isValid()){
             return ;
         }
-
         url = "../web/transportion/update/password"
     }else if(lossPsDiv){
         url = "../web/transportion/update/setPasswordMail"
