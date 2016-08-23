@@ -98,6 +98,10 @@ public class SysDriver extends BaseModel{
 
     private String invitationCode;
 
+    private String isOpen;
+
+    private String deviceToken;
+
     public String getMemo() {
 		return memo;
 	}
@@ -449,5 +453,21 @@ public class SysDriver extends BaseModel{
 
     public void setInvitationCode(String invitationCode) {
         this.invitationCode = invitationCode;
+    }
+
+    public String getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(String isOpen) {
+        this.isOpen = isOpen;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

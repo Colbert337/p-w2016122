@@ -423,7 +423,8 @@ public class MobileController {
 					Map<String, Object> resultMap = new HashMap<>();
 					driver.setSysDriverId(sysDriverId);
 					driver.setFullName(mainObj.optString("name"));
-					/*driver.setFullName(mainObj.optString("gender"));*/
+					driver.setDeviceToken(mainObj.optString("deviceToken"));
+					driver.setIsOpen(mainObj.optString("isOpen"));
 					driver.setAvatarB(mainObj.optString("imgUrl"));
 					int resultVal = driverService.saveDriver(driver,"update");
 				}else{

@@ -347,6 +347,12 @@
       <if test="invitationCode!= null" >
         invitation_code,
       </if>
+      <if test="deviceToken!= null  &amp;&amp; deviceToken != ''" >
+        device_token,
+      </if>
+      <if test="isOpen!= null  &amp;&amp; isOpen != ''" >
+        is_open,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sysDriverId != null" >
@@ -432,6 +438,12 @@
       </if>
       <if test="invitationCode != null" >
         #{invitationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceToken!= null  &amp;&amp; deviceToken != ''" >
+        #{deviceToken,jdbcType=VARCHAR},
+      </if>
+      <if test="isOpen!= null  &amp;&amp; isOpen != ''" >
+        #{isOpen,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
