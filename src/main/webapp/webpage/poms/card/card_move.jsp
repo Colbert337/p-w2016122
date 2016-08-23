@@ -109,7 +109,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">操作人：</label>
 										<div class="col-sm-4">
-											<input type="text" id="operator" name="operator" class="form-control" maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
+											<input type="text" id="operator" name="operator" class="form-control" maxlength="20" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
 										</div>
 									</div>
 						

@@ -3,8 +3,6 @@ package com.sysongy.poms.gastation.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +30,6 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
-import com.sysongy.tcms.advance.model.TcTransferAccount;
 import com.sysongy.util.DateTimeHelper;
 import com.sysongy.util.ExportUtil;
 import com.sysongy.util.GlobalConstant;
@@ -146,7 +143,7 @@ public class GastationController extends BaseContoller{
 				deposit.setOrderby("optime desc");
 			}
 			
-			if(GlobalConstant.USER_TYPE_STATION == currUser.getUserType()){
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUser().getUserType()){
 				deposit.setStationId(currUser.getStationId());
 			}
 			
@@ -173,7 +170,7 @@ public class GastationController extends BaseContoller{
             
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
             	 content[0] = new String[]{"订单号","工作站编号","工作站名称","所属公司","转账时间","转账方式","操作员","操作时间","预存款金额"};
             }else{
             	 content[0] = new String[]{"订单号","工作站编号","工作站名称","所属公司","转账时间","充值方式 ","操作员","操作时间","预存款金额"};
@@ -190,7 +187,7 @@ public class GastationController extends BaseContoller{
                     String company = station.getCompany();
                     String depositTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(station.getDepositTime());
                     String depositType = station.getDepositType();
-                    if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+                    if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
                     	switch (station.getDepositType()) {
     					case "0":{
     						depositType = "公对公";
@@ -283,7 +280,7 @@ public class GastationController extends BaseContoller{
 				deposit.setOrderby("optime desc");
 			}
 			
-			if(GlobalConstant.USER_TYPE_STATION == currUser.getUserType()){
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUser().getUserType()){
 				deposit.setStationId(currUser.getStationId());
 			}
 			
@@ -506,7 +503,7 @@ public class GastationController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_rechargereport";
-
+		
 		try {
 			if(sysOrder.getPageNum() == null){
 				sysOrder.setPageNum(1);
@@ -515,7 +512,7 @@ public class GastationController extends BaseContoller{
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				sysOrder.setOrderby("order_date desc");
 			}
-			if(GlobalConstant.USER_TYPE_STATION == currUser.getUserType()){
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUser().getUserType()){
 				sysOrder.setChannelNumber(currUser.getStationId());
 			}
 
@@ -576,8 +573,8 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
-	            	content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","会员账号","支付方式","充值金额","返现金额","操作人"};
+	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
+	            	content[0] = new String[]{"订单编号","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","会员账号","支付方式","充值金额","返现金额","操作人"};
 	            }else{
 	            	content[0] = new String[]{"订单编号","交易流水号","交易时间","交易类型","客户姓名","会员账号","支付方式","充值金额","操作人"};
 	            }
@@ -713,8 +710,8 @@ public class GastationController extends BaseContoller{
 							break;
 						}
 
-	    	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
-	    	            	content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,deal_type,channel_number,channel,full_name,user_name,charge_type,cash,cash_back,operator};
+	    	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
+	    	            	content[i] = new String[]{order_number,deal_number,order_date,is_discharge,deal_type,channel_number,channel,full_name,user_name,charge_type,cash,cash_back,operator};
 	    	            }else{
 	    	            	content[i] = new String[]{order_number,deal_number,order_date,is_discharge,full_name,user_name,charge_type,cash,operator};	
 	    	            }
@@ -748,7 +745,7 @@ public class GastationController extends BaseContoller{
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				sysOrder.setOrderby("order_date desc");
 			}
-			if(GlobalConstant.USER_TYPE_STATION == currUser.getUserType()){
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUser().getUserType()){
 				sysOrder.setChannelNumber(currUser.getStationId());
 			}
 
@@ -808,7 +805,7 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
 	            	 content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","交易金额","交易时间","交易对象","加注站名称","加注站编号","会员账号","操作人"};
 	            }else{
 	            	content[0] = new String[]{"订单编号","交易流水号","交易类型","交易金额","交易时间","交易对象","会员账号","操作人"};
@@ -872,7 +869,7 @@ public class GastationController extends BaseContoller{
 	                    }else{
 	                    	credit_account = "车队";
 	                    }
-	                    if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUserType()){
+	                    if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
 	                    	content[i] = new String[]{order_number,order_type,deal_number,deal_type,cash,order_date,credit_account,channel,channel_number,user_name,operator};
 	                    }else{
 	                    	content[i] = new String[]{order_number,deal_number,deal_type,cash,order_date,credit_account,user_name,operator};
