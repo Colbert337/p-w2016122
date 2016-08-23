@@ -63,12 +63,12 @@
 						message: '原始密码不能为空'
 					},
 					regexp: {
-						regexp: '^[0-9]+$',
-						message: '密码只能包含数字'
+						regexp: '^[0-9a-zA-Z]+$',
+						message: '密码只能包含数字和字母'
 					},
 					stringLength: {
 						min: 6,
-						max: 6,
+						max: 20,
 						message: '密码不能小于6个数字，不能大于10个字符'
 					},
 					remote: {
@@ -90,13 +90,13 @@
 						message: '新密码不能为空'
 					},
 					regexp: {
-						regexp: '^[0-9]+$',
-						message: '密码只能包含数字'
+						regexp: '^[0-9a-zA-Z]+$',
+						message: '密码只能包含数字和字母'
 					},
 					stringLength: {
 						min: 6,
-						max: 6,
-						message: '密码不能小于6个数字，不能大于10个字符'
+						max: 20,
+						message: '密码不能小于6个数字，不能大于20个字符'
 					}
 				}
 			},
@@ -106,12 +106,12 @@
 						message: '确认密码不能为空'
 					},
 					regexp: {
-						regexp: '^[0-9]+$',
-						message: '密码只能包含数字'
+						regexp: '^[0-9a-zA-Z]+$',
+						message: '密码只能包含数字和字母'
 					},
 					stringLength: {
 						min: 6,
-						max: 6,
+						max: 20,
 						message: '密码不能小于6个数字，不能大于10个字符'
 					},
 					callback: {
