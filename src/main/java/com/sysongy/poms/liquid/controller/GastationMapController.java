@@ -89,35 +89,7 @@ public class GastationMapController extends BaseContoller {
 			return ret;
 		}
 	}
-
-	@RequestMapping("/execlDownload")
-	public String execlDownload(ModelMap map, HttpServletResponse response,
-			@ModelAttribute("currUser") CurrUser currUser) throws IOException {
-		String ret = "";
-		OutputStream os = response.getOutputStream();
-		PageBean bean = new PageBean();
-		try {
-
-			bean.setRetCode(100);
-			bean.setRetMsg("查询成功");
-			bean.setPageInfo(ret);
-
-			response.setHeader("Content-Disposition", "attachment; filename=gastation_temp.xls");
-			response.setContentType("application/octet-stream; charset=utf-8");
-			os.write(FileUtils.readFileToByteArray(new File((String) prop.get("gastation_temp"))));
-		} catch (Exception e) {
-			// TODO: handle exception
-			bean.setRetCode(5000);
-			bean.setRetMsg(e.getMessage());
-			map.addAttribute("ret", bean);
-			logger.error("", e);
-			throw e;
-		} finally {
-			os.close();
-			return null;
-		}
-
-	}
+ 
 /**
  * execl 导入数据
  * @param file

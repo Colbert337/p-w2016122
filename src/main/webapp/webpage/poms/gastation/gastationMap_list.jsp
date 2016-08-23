@@ -55,10 +55,9 @@
 							<button class="btn btn-sm btn-primary" type="button" onclick="openImportDiv();">
 								批量导入
 							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="download();">
-								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+							<a class="btn btn-sm btn-primary" href="<%=basePath %>/docs/template/gastation_temp.xls">
 								下载模板
-							</button>
+							</a>
 						</div>
 					</div>
 

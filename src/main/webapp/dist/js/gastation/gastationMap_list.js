@@ -64,11 +64,7 @@
 		loadPage('#main', '../webpage/poms/gastation/gastation_deposit.jsp?acconutid='+acconutid+'&gastationame='+stationame+'&gastationdeposit='+stationdeposit+'&stationid='+stationid);
 	}
 	
-	function download(){
-		alert("111");
-		location.href="../web/gastationMap/execlDownload";
-	}
-	
+	 
 	function openImportDiv(){
 	    $("#importDivModel").modal("show");
 	}
