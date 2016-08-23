@@ -5,10 +5,18 @@ import com.sysongy.poms.crm.model.CrmHelp;
 import com.sysongy.poms.crm.model.CrmHelpType;
 import com.sysongy.poms.crm.service.CrmHelpService;
 import com.sysongy.poms.crm.service.CrmHelpTypeService;
+import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.mobile.model.MbBanner;
+import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,6 +40,12 @@ public class CrmPortalController {
     private CrmHelpService crmHelpService;
     @Autowired
     private CrmHelpTypeService crmHelpTypeService;
+    @Autowired
+    GastationService gastationService;
+    @Autowired
+    GsGasPriceService gsGasPriceService;
+    @Autowired
+    MbBannerService mbBannerService;
 
     /**
      * 问题列表和分类查询
@@ -101,5 +115,46 @@ public class CrmPortalController {
     	model.addAttribute("noticeInfoList", noticeInfoList);
     	return "webpage/crm/hp_notice_info";
     	
+    }
+
+
+/****************************************APP分享H5页面******************************************/
+    /**
+     * 图文详情页
+     * @return
+     */
+    @RequestMapping("/content")
+    public String queryContentInfo(@RequestParam String contentId,ModelMap map) throws Exception{
+        MbBanner mbBanner = new MbBanner();
+        mbBanner.setMbBannerId(contentId);
+        mbBanner = mbBannerService.queryMbBanner(mbBanner);
+        map.addAttribute("mbBanner",mbBanner);
+        return "/webpage/crm/webapp-active-detail";
+    }
+
+    /**
+     * 货源详情页
+     * @return
+     */
+    @RequestMapping("/supply")
+    public String querySupplyInfo(@RequestParam String supplyId,ModelMap map) throws Exception{
+
+        return "redirect:/web/mobile/img/list/page?resultVal=";
+    }
+
+    /**
+     * 站点详情页
+     * @return
+     */
+    @RequestMapping("/station")
+    public String queryStationInfo(@RequestParam String stationId,ModelMap map) throws Exception{
+        //获取站点信息
+        Gastation gastation = gastationService.queryGastationByPK(stationId);
+        //获取当前气站价格列表
+        List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(stationId);
+        map.addAttribute("gastation",gastation);
+        map.addAttribute("priceList",priceList);
+
+        return "/webpage/crm/webapp-station-detail";
     }
 }

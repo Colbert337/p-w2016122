@@ -879,7 +879,7 @@ public class MobileController {
 	}
 
     /**
-	 * 获取气站信息列表
+	 * 获取地图信息列表
 	 * @param params
 	 * @return
      */

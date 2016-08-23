@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -8,16 +10,16 @@
 <html class="index" lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-	<title>司集APP</title>
+	<title>司集能源</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/webapp.css">
 </head>
 <body>
 	<div class="activ-detail-hd">
-		<h2>卡车司机每年被罚款4100多亿,才是真正的人民公仆！</h2>
+		<h2>${mbBanner.title}</h2>
 		<div class="date">
-			<span>2016-08-18 08:08:08</span>
+			<span><fmt:formatDate value="${mbBanner.createdDate}" type="both"/> </span>
 			<span>司集能源</span>
 			<span>阅读 11</span>
 		</div>

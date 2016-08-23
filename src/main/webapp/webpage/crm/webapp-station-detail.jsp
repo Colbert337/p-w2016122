@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -8,7 +10,7 @@
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-	<title>司集APP</title>
+	<title>司集能源</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/webapp.css">
@@ -18,27 +20,27 @@
 	<div class="pdp">
 		<div class="pdp-title">
 			<span class="type">加盟气站</span>
-			<div class="name">陕西汽车站</div>
+			<div class="name">${gastation.gas_station_name}</div>
 		</div>
 		<div class="pdp-item">
 			<div class="row">
 				<div class="col-value">气站地址:</div>
 				<div class="col-key">
 					<a href="navigation://sysongy.com" class="station-icon"><span class="icon-direction"></span></a>
-					陕西省西安市中心产业园
+					${gastation.address}
 				</div>
 			</div>
 			<div class="row address-end">
 				<div class="col-value">提供服务:</div>
-				<div class="col-key">住宿，加气，餐饮</div>
+				<div class="col-key"></div>
 			</div>
 		</div>
 		<div class="pdp-item">
 			<div class="row">
 				<div class="col-value">电话:</div>
 				<div class="col-key">
-					<a href="tel:15000045778" class="station-icon"><span class="icon-phone-1"></span></a>
-					15000045778
+					<a href="tel:${gastation.contact_phone}" class="station-icon"><span class="icon-phone-1"></span></a>
+					${gastation.contact_phone}
 				</div>
 			</div>
 		</div>
@@ -47,14 +49,12 @@
 				商品信息：
 			</div>
 			<div class="pdp-item-content">
-				<div class="row">
-					<div class="col-value">LNG单价:</div>
-					<div class="col-key">15元/kg</div>
-				</div>
-				<div class="row">
-					<div class="col-value">LNG单价:</div>
-					<div class="col-key">15元/kg</div>
-				</div>
+				<c:forEach items="${priceList}" var="price">
+					<div class="row">
+						<div class="col-value">${price.gasName}单价:</div>
+						<div class="col-key">${price.gasPrice}元/${price.unit}</div>
+					</div>
+				</c:forEach>
 			</div>
 		</div>
 		<div class="pdp-item">
