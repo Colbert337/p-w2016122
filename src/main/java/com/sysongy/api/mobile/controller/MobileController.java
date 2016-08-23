@@ -1152,7 +1152,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
 			logger.error("查询头条推广成功： " + resultStr);
 
