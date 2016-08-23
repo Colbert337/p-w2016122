@@ -388,6 +388,68 @@ public class MobileController {
 		}
 	}
 
+	/**
+	 * 修改用户信息
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = {"/user/updateUser"})
+	@ResponseBody
+	public String updateUser(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("修改用户信息成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver driver = new SysDriver();
+				String sysDriverId = mainObj.optString("token");
+				if(sysDriverId != null && !sysDriverId.equals("")){
+					Map<String, Object> resultMap = new HashMap<>();
+					driver.setSysDriverId(sysDriverId);
+					driver.setFullName(mainObj.optString("name"));
+					/*driver.setFullName(mainObj.optString("gender"));*/
+					driver.setAvatarB(mainObj.optString("imgUrl"));
+					int resultVal = driverService.saveDriver(driver,"update");
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("修改用户信息失败！");
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			logger.error("修改用户信息成功： " + resultStr);
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("修改用户信息失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("修改用户信息失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
 
 	/**
 	 * 设置支付密码
