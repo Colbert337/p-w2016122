@@ -1088,7 +1088,7 @@ public class MobileController {
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "/deal/recharge2")
+	@RequestMapping(value = "/msg/extension")
 	@ResponseBody
 	public String recharge(String params){
 		MobileReturn result = new MobileReturn();
@@ -1115,12 +1115,15 @@ public class MobileController {
 				if(mbBanner.getPageNum() == null){
 					mbBanner.setPageNum(GlobalConstant.PAGE_NUM);
 					mbBanner.setPageSize(GlobalConstant.PAGE_SIZE);
+				}else{
+					String asdf = mainObj.optString("pageSize");
+					mbBanner.setPageNum(mainObj.optInt("pageNum"));
+					mbBanner.setPageSize(mainObj.optInt("pageSize"));
 				}
 
-				if(mainObj.get("imgType") != null && !"".equals(mainObj.get("imgType").toString())){
-					mbBanner.setImgType(mainObj.get("imgType").toString());
-				}
-				if(StringUtils.isEmpty(mbBanner.getImgType())){
+				if(mainObj.get("extendType") != null && !"".equals(mainObj.get("extendType").toString())){
+					mbBanner.setImgType(mainObj.get("extendType").toString());
+				}else{
 					mbBanner.setImgType(GlobalConstant.ImgType.TOP);
 				}
 
@@ -1128,11 +1131,12 @@ public class MobileController {
 				List<MbBanner> mbBannerList = pageInfo.getList();
 				List<Map<String, Object>> bannerList = new ArrayList<>();
 				if(mbBannerList != null && mbBannerList.size() > 0){
+					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					for (MbBanner banner:mbBannerList){
 						Map<String, Object> bannerMap = new HashMap<>();
 						bannerMap.put("title",banner.getTitle());
 						bannerMap.put("content","");
-						bannerMap.put("time",banner.getCreatedDate());
+						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
 						bannerMap.put("contentUrl","");
 						bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
 
@@ -1146,9 +1150,9 @@ public class MobileController {
 				result.setMsg("参数有误！");
 			}
 			resutObj = JSONObject.fromObject(result);
-			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
 			logger.error("查询头条推广成功： " + resultStr);
 
@@ -1157,7 +1161,7 @@ public class MobileController {
 			result.setMsg("查询头条推广失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("查询头条推广失败： " + e);
-			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			return resultStr;
