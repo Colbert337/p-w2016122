@@ -2,94 +2,128 @@ package com.sysongy.poms.message.model;
 
 import java.util.Date;
 
-public class SysMessage {
-    private String id;
+import com.sysongy.poms.base.model.BaseModel;
 
-    private String messageTitle;
+public class SysMessage extends BaseModel {
 
-    private String messageBody;
+	private String id;
 
-    private String messageTicker;
+	private String messageTitle;
 
-    private String messageGroup;
+	private String messageBody;
 
-    private Date messageSendTime;
+	private String messageTicker;
 
-    private Date messageCreatedTime;
+	private String messageGroup;
 
-    private String operator;
+	private String messageType;
 
-    private String memo;
+	private Date messageSendTime;
 
-    public String getId() {
-        return id;
-    }
+	private Date messageCreatedTime;
 
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
-    }
+	private String message_created_time_before;
 
-    public String getMessageTitle() {
-        return messageTitle;
-    }
+	private String message_created_time_after;
 
-    public void setMessageTitle(String messageTitle) {
-        this.messageTitle = messageTitle == null ? null : messageTitle.trim();
-    }
+	private String operator;
 
-    public String getMessageBody() {
-        return messageBody;
-    }
+	private String memo;
 
-    public void setMessageBody(String messageBody) {
-        this.messageBody = messageBody == null ? null : messageBody.trim();
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getMessageTicker() {
-        return messageTicker;
-    }
+	public void setId(String id) {
+		this.id = id == null ? null : id.trim();
+	}
 
-    public void setMessageTicker(String messageTicker) {
-        this.messageTicker = messageTicker == null ? null : messageTicker.trim();
-    }
+	public String getMessageTitle() {
+		return messageTitle;
+	}
 
-    public String getMessageGroup() {
-        return messageGroup;
-    }
+	public void setMessageTitle(String messageTitle) {
+		this.messageTitle = messageTitle == null ? null : messageTitle.trim();
+	}
 
-    public void setMessageGroup(String messageGroup) {
-        this.messageGroup = messageGroup == null ? null : messageGroup.trim();
-    }
+	public String getMessageBody() {
+		return messageBody;
+	}
 
-    public Date getMessageSendTime() {
-        return messageSendTime;
-    }
+	public void setMessageBody(String messageBody) {
+		this.messageBody = messageBody == null ? null : messageBody.trim();
+	}
 
-    public void setMessageSendTime(Date messageSendTime) {
-        this.messageSendTime = messageSendTime;
-    }
+	public String getMessageTicker() {
+		return messageTicker;
+	}
 
-    public Date getMessageCreatedTime() {
-        return messageCreatedTime;
-    }
+	public void setMessageTicker(String messageTicker) {
+		this.messageTicker = messageTicker == null ? null : messageTicker.trim();
+	}
 
-    public void setMessageCreatedTime(Date messageCreatedTime) {
-        this.messageCreatedTime = messageCreatedTime;
-    }
+	public String getMessageGroup() {
+		return messageGroup;
+	}
 
-    public String getOperator() {
-        return operator;
-    }
+	public void setMessageGroup(String messageGroup) {
+		this.messageGroup = messageGroup == null ? null : messageGroup.trim();
+	}
 
-    public void setOperator(String operator) {
-        this.operator = operator == null ? null : operator.trim();
-    }
+	public Date getMessageSendTime() {
+		return messageSendTime;
+	}
 
-    public String getMemo() {
-        return memo;
-    }
+	public void setMessageSendTime(Date messageSendTime) {
+		this.messageSendTime = messageSendTime;
+	}
 
-    public void setMemo(String memo) {
-        this.memo = memo == null ? null : memo.trim();
-    }
+	public Date getMessageCreatedTime() {
+		return messageCreatedTime;
+	}
+
+	public void setMessageCreatedTime(Date messageCreatedTime) {
+		this.messageCreatedTime = messageCreatedTime;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator == null ? null : operator.trim();
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo == null ? null : memo.trim();
+	}
+
+	public String getMessage_created_time_before() {
+		return message_created_time_before;
+	}
+
+	public void setMessage_created_time_before(String message_created_time_before) {
+		this.message_created_time_before = message_created_time_before;
+	}
+
+	public String getMessage_created_time_after() {
+		return message_created_time_after;
+	}
+
+	public void setMessage_created_time_after(String message_created_time_after) {
+		this.message_created_time_after = message_created_time_after;
+	}
+
+	public String getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
+	}
+
 }

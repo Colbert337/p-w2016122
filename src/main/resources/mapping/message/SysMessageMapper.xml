@@ -12,10 +12,27 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
   </resultMap>
+  
   <sql id="Base_Column_List" >
     id, message_title, message_body, message_ticker, message_group, message_send_time, 
     message_created_time, operator, memo
   </sql>
+  
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  select 
+    <include refid="Base_Column_List" />
+    from sys_message
+    where 1=1
+  <trim>
+      <if test="messageTitle != null &amp;&amp; messageTitle != ''" >
+        and message_title LIKE CONCAT(CONCAT('%', #{messageTitle,jdbcType=VARCHAR}), '%')
+      </if>
+      <if test="message_created_time_after != null &amp;&amp; message_created_time_after != ''">
+        and message_send_time between CONCAT(#{message_created_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{message_created_time_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+  </select>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

@@ -58,13 +58,13 @@
 										</div>
 									</div>
 									
-									<div class="form-group">
+									<!-- <div class="form-group">
 										<label for="company" class="col-sm-3 control-label no-padding-right">企业名称：</label>
 
 										<div class="col-sm-4">
 											<input type="text" name="company" id="company" placeholder="输入企业名称" class="form-control" maxlength="20"/>
 										</div>
-									</div>
+									</div> -->
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="expiry_date">转账时间： </label>
@@ -82,7 +82,7 @@
 										<label for="operator" class="col-sm-3 control-label no-padding-right">操作人员：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="operator" name="operator" class="form-control"  maxlength="10" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
+											<input type="text" id="operator" name="operator" class="form-control" value="${sessionScope.currUser.user.userName}" readonly="readonly"/>
 										</div>
 									</div>
 									

@@ -32,9 +32,9 @@ public class Demo {
 	
 	public void sendAndroidBroadcast() throws Exception {
 		AndroidBroadcast broadcast = new AndroidBroadcast(appkey,appMasterSecret);
-		broadcast.setTicker( "Android broadcast ticker");
-		broadcast.setTitle(  "中文的title");
-		broadcast.setText(   "Android broadcast text");
+		broadcast.setTicker("哦也也");
+		broadcast.setTitle("小钻风");
+		broadcast.setText("大王派我来巡山");
 		broadcast.goAppAfterOpen();
 		broadcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
 		// TODO Set 'production_mode' to 'false' if it's a test device. 
@@ -48,10 +48,10 @@ public class Demo {
 	public void sendAndroidUnicast() throws Exception {
 		AndroidUnicast unicast = new AndroidUnicast(appkey,appMasterSecret);
 		// TODO Set your device token
-		unicast.setDeviceToken( "your device token");
+		unicast.setDeviceToken("ArCer1VzNUtZ3Rne3Lo1zKQarA6udICLAtKh_b7MWHxQ");
 		unicast.setTicker( "Android unicast ticker");
-		unicast.setTitle(  "中文的title");
-		unicast.setText(   "Android unicast text");
+		unicast.setTitle("中文的title");
+		unicast.setText("Android unicast text");
 		unicast.goAppAfterOpen();
 		unicast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
 		// TODO Set 'production_mode' to 'false' if it's a test device. 
@@ -237,9 +237,10 @@ public class Demo {
 	public static void main(String[] args) {
 		// TODO set your appkey and master secret here
 		Demo demo = new Demo("5782f28567e58ed4eb000f60", "rf0fxd7hpdr399ds5lx0qtuio8cm6ail");
-		try {
-			demo.sendAndroidUnicast();
+		try {		
+			demo.sendAndroidBroadcast();
 			/* TODO these methods are all available, just fill in some fields and do the test
+			 * demo.sendAndroidUnicast();
 			 * demo.sendAndroidCustomizedcastFile();
 			 * demo.sendAndroidBroadcast();
 			 * demo.sendAndroidGroupcast();
