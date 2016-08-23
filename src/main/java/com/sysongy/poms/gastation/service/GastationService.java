@@ -40,4 +40,12 @@ public interface GastationService {
 	public PageInfo<Map<String, Object>> gastionRechargeReport(SysOrder order)throws Exception;
     
 	public PageInfo<Map<String, Object>> gastionRechargeReportTotal(SysOrder record) throws Exception;
+
+	public PageInfo<Gastation> queryGastation2(Gastation record) throws Exception;
+	
+	public void insert(Gastation gas)throws Exception;
+
+	public void update(Gastation gas);
+
+	boolean exists(String gas) throws Exception;
 }

@@ -2,6 +2,7 @@ package com.sysongy.poms.gastation.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -387,5 +388,93 @@ public class GastationServiceImpl implements GastationService {
 		List<Map<String, Object>> list = gasStationMapper.gastionRechargeReportTotal(record);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
+	}
+
+	@Override
+	public PageInfo<Gastation> queryGastation2(Gastation record) throws Exception {
+
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Gastation> list = gasStationMapper.queryForPage2(record);
+		PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(list);
+
+		return pageInfo;
+	}
+
+	@Override
+	public void insert(Gastation gas) throws Exception {
+		// TODO Auto-generated method stub
+		
+		Usysparam param=new Usysparam();
+		List<Usysparam> list=new ArrayList<>();
+		param.setGcode("PROVINCE_CODE");
+		param.setMname(gas.getProvince_id());
+		list=usysparamService.queryAll(param);
+		if (list.size()>0) {
+			param=list.get(0);
+		}
+		gas.setProvince_id(param.getMcode());
+		param=new Usysparam();
+		list=new ArrayList<>();
+		param.setGcode("STATION_DATA_TYPE");
+		param.setMname(gas.getType());
+		list=usysparamService.queryAll(param);
+		if (list.size()>0) {
+			param=list.get(0);
+		}
+		gas.setType(param.getMcode());
+		
+		Gastation station = gasStationMapper
+				.findGastationid("GS" + 4+ gas.getProvince_id());
+		String newid;
+
+		if (station == null || StringUtils.isEmpty(station.getSys_gas_station_id())) {
+			newid = "GS" + 4 + gas.getProvince_id() + "0001";
+		} else {
+			Integer tmp = Integer.valueOf(station.getSys_gas_station_id().substring(6, 10)) + 1;
+			newid = "GS" + 4 + gas.getProvince_id()
+					+ StringUtils.leftPad(tmp.toString(), 4, "0");
+		}
+		gas.setSys_gas_station_id(newid);
+		gas.setType("1");
+		gasStationMapper.insert(gas);
+	}
+
+	@Override
+	public void update(Gastation gas) {
+		// TODO Auto-generated method stub
+		
+		Usysparam param=new Usysparam();
+		List<Usysparam> list=new ArrayList<>();
+		param.setGcode("PROVINCE_CODE");
+		param.setMname(gas.getProvince_id());
+		list=usysparamService.queryAll(param);
+		if (list.size()>0) {
+			param=list.get(0);
+		}
+		gas.setProvince_id(param.getMcode());
+		param=new Usysparam();
+		list=new ArrayList<>();
+		param.setGcode("STATION_DATA_TYPE");
+		param.setMname(gas.getType());
+		list=usysparamService.queryAll(param);
+		if (list.size()>0) {
+			param=list.get(0);
+		}
+		gas.setType(param.getMcode());
+		
+		gasStationMapper.updateByPrimaryKeySelective2(gas);
+	}
+
+	/**
+	 * 判断对象是否存在 适用于execl导入数据 数据表type为1
+	 */
+	@Override
+	public boolean exists(String gas) throws Exception {
+		// TODO Auto-generated method stub
+		List<Gastation> list = gasStationMapper.exists(gas);
+		if (list.size() != 0) {
+			return false;
+		}
+		return true;
 	}
 }

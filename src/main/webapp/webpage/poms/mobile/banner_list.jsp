@@ -170,7 +170,7 @@
 					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="editBanner">添加图片</h4>
+				<h4 class="modal-title" id="editBanner">添加内容</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid">
@@ -229,8 +229,36 @@
 									<label class="col-sm-3 control-label no-padding-right"
 										for="version">版本号： </label>
 									<div class="col-sm-8">
-										<input type="text" id="version" placeholder="版本号"
-											maxlength="11" name="version" class="col-xs-10 col-sm-12" />
+										<div class="row">
+											<div class="col-sm-5">
+												<div class="btn-group j-android-versions">
+													<span class="btn btn-primary btn-white dropdown-toggle" >选择安卓版本号<i class="ace-icon fa fa-angle-down icon-on-right"></i>
+													</span>
+													<ul class="dropdown-menu">
+														<li>
+															<div class="checkbox">
+																<label>
+																	<input name="form-field-checkbox" type="checkbox" class="ace">
+																	<span class="lbl"> choice 1</span>
+																</label>
+															</div>
+														</li>
+														<li>
+															<div class="checkbox">
+																<label>
+																	<input name="form-field-checkbox" type="checkbox" class="ace">
+																	<span class="lbl"> choice 2</span>
+																</label>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="col-sm-7">
+												<input type="text" id="version" placeholder="版本号"
+												maxlength="11" name="version" class="col-xs-10 col-sm-12" />
+											</div>
+										</div>
 									</div>
 								</div>
 								<div class="form-group">

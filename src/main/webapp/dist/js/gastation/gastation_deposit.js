@@ -53,13 +53,13 @@
 		                    }
 		                }
 		            },
-		            company: {
+		            /*company: {
 		                validators: {
 		                    notEmpty: {
 		                        message: '企业名称不能为空'
 		                    }
 		                }
-		            },
+		            },*/
 		            depositType: {
 		                validators: {
 		                    notEmpty: {
