@@ -359,6 +359,9 @@ public class MobileController {
 							driverService.saveDriver(driverCode,"update");
 						}
 						resultMap.put("invitationCode",invitationCode);
+						resultMap.put("company",driver.getStationId());
+						resultMap.put("cardId",driver.getCardId());
+						resultMap.put("isPayCode",(driver.getPayCode() == null || "".equals(driver.getPayCode())) ? "false":"true");
 						result.setData(resultMap);
 					}
 				}else{
