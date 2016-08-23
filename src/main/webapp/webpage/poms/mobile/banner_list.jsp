@@ -203,8 +203,8 @@
 											<div class="widget-body">
 												<div class="widget-main">
 													<img id="show_img" width="150" height="150" alt="150x150"
-														src="" /> <input type="file" name="image"
-														class="projectfile" id="indu_com_certif_select" /> <input
+														src="" /><div id="clear"> <input type="file" name="image"
+														class="projectfile" id="indu_com_certif_select" onchange='change();' /></div> <input
 														type="hidden" id="img_path" name="imgPath" />
 													<button class="btn btn-sm btn-primary btn-file-space"
 														type="button"

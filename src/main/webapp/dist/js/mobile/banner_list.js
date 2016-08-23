@@ -116,6 +116,12 @@ function closeDialog(divId){
     });
     $("#avatar_b").empty();
     $("#"+divId).modal('hide');
+//    $("#indu_com_certif_select").val("");
+    var html='<div class="file-input file-input-new"><div class="file-preview ">    <div class="close fileinput-remove">×</div>    <div class="file-drop-disabled">    <div class="file-preview-thumbnails">    </div>    <div class="clearfix"></div>    <div class="file-preview-status text-center text-success"></div>    <div class="kv-fileinput-error file-error-message" style="display: none;"></div>    </div></div><div class="kv-upload-progress hide"><div class="progress">    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">        0%     </div></div></div><div class="input-group file-caption-main">   <div tabindex="500" class="form-control file-caption  kv-fileinput-caption">   <div class="file-caption-name"></div></div>   <div class="input-group-btn">              <button type="button" tabindex="500" title="取消进行中的上传" class="btn btn-default hide fileinput-cancel fileinput-cancel-button"><i class="glyphicon glyphicon-ban-circle"></i>  <span class="hidden-xs">取消</span></button>              <div tabindex="500" class="btn btn-primary btn-file"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;  <span class="hidden-xs">选择 …</span><input type="file" name="image" class="projectfile" id="indu_com_certif_select" onchange="change();"></div>   </div></div></div>';
+//    $("#indu_com_certif_select").remove();
+    $("#clear").html("");
+    $("#clear").append(html);
+    
 }
 function clearDiv(){
     $("#editForm :input").each(function () {
@@ -252,11 +258,21 @@ function savePhoto(fileobj,obj,obj1){
             bootbox.alert("上传成功");
         }
     }
+    $("#indu_com_certif_select").val("");
     $("#editForm").ajaxSubmit(multipartOptions);
 }
 /**
  * 文件上传验证
  */
+function change(){
+	var text=$("#indu_com_certif_select").val();
+	if(text!=""){
+		$("#show_img").hide();
+	}else{
+		$("#show_img").show();
+	}
+}
+
 $('#importForm').bootstrapValidator({
     message: 'This value is not valid',
     feedbackIcons: {
