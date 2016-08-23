@@ -19,6 +19,15 @@
     from dist_city
     where city_id = #{cityId,jdbcType=VARCHAR}
   </select>
+  <select id="queryCityInfo" resultMap="BaseResultMap" parameterType="com.sysongy.poms.base.model.DistCity" >
+    select
+    <include refid="Base_Column_List" />
+    from dist_city
+    where 1 = 1
+    <if test="cityName != null  &amp;&amp; cityName != ''" >
+      and  city_name like CONCAT('%',CONCAT(#{cityName,jdbcType=VARCHAR},'%'))
+    </if>
+  </select>
   <select id="queryHotCityList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />

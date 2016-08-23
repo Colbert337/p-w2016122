@@ -1111,12 +1111,19 @@ public class MobileController {
 			if(mainObj != null){
 				PageBean bean = new PageBean();
 				String http_poms_path =  (String) prop.get("http_poms_path");
-
+				String cityName = mainObj.optString("cityName");
+				DistCity city = new DistCity();
+				city.setCityName(cityName);
+				city = districtService.queryCityInfo(city);
+				String cityId = "";
+				if(city != null){
+					cityId = city.getCityId();
+				}
+				mbBanner.setCityId(cityId);
 				if(mbBanner.getPageNum() == null){
 					mbBanner.setPageNum(GlobalConstant.PAGE_NUM);
 					mbBanner.setPageSize(GlobalConstant.PAGE_SIZE);
 				}else{
-					String asdf = mainObj.optString("pageSize");
 					mbBanner.setPageNum(mainObj.optInt("pageNum"));
 					mbBanner.setPageSize(mainObj.optInt("pageSize"));
 				}

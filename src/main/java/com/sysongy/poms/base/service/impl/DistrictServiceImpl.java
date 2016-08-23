@@ -28,4 +28,9 @@ public class DistrictServiceImpl implements DistrictService{
     public List<DistCity> queryHotCityList() {
         return distCityMapper.queryHotCityList(GlobalConstant.HotCity.HOT);
     }
+
+    @Override
+    public DistCity queryCityInfo(DistCity city) {
+        return distCityMapper.queryCityInfo(city);
+    }
 }

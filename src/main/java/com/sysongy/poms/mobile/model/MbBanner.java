@@ -28,6 +28,8 @@ public class MbBanner extends BaseModel{
     private Date createdDate;
 
     private Date updatedDate;
+
+    private String cityId;
     
     public String getOperator() {
 		return operator;
@@ -133,5 +135,13 @@ public class MbBanner extends BaseModel{
 
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
     }
 }

@@ -21,4 +21,11 @@ public interface DistrictService {
      * @return
      */
     List<DistCity> queryHotCityList();
+
+    /**
+     * 查询城市信息
+     * @param city 城市信息
+     * @return
+     */
+    DistCity queryCityInfo(DistCity city);
 }

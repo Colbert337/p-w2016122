@@ -49,6 +49,9 @@
     <if test="remark != null" >
       and remark = #{remark,jdbcType=VARCHAR}
     </if>
+    <if test="cityId != null" >
+      and city_id = #{cityId,jdbcType=INTEGER}
+    </if>
     <if test="createdDate != null" >
       and created_date = #{createdDate,jdbcType=TIMESTAMP}
     </if>
