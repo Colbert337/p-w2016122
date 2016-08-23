@@ -82,6 +82,7 @@
 									<th onclick="orderBy(this,'message_body');commitForm();" id="message_body_order">信息内容</th>
 									<th onclick="orderBy(this,'message_ticker');commitForm();" id="message_ticker_order">信息缩略</th>
 									<th onclick="orderBy(this,'message_group');commitForm();" id="message_group_order">发送信息组</th>
+									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">信息创建者</th>
 									<th onclick="orderBy(this,'message_send_time');commitForm();" id="message_send_time_order" class="td-w2"><i id="message_send_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>信息发送时间</th>
 									<th onclick="orderBy(this,'message_created_time');commitForm();" id="message_created_time_order" class="td-w2"><i id="message_created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>信息创建时间</th>
 									<th class="text-center td-w2">更多操作</th>
@@ -103,7 +104,8 @@
 									<td>${list.messageTitle}</td>
 								 	<td>${list.messageBody}</td> 
 									<td>${list.messageTicker}</td>
-									<td>${list.messageGroup}</td>
+									<td><s:Code2Name mcode="${list.messageGroup}" gcode="MSGGROUP"></s:Code2Name></td>
+									<td>${list.operator}</td>
 									<td><fmt:formatDate value="${list.messageSendTime}" type="both"/></td>
 									<td><fmt:formatDate value="${list.messageCreatedTime}" type="both"/></td>
 									<td class="text-center">

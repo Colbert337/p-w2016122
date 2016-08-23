@@ -49,9 +49,9 @@ public class Demo {
 		AndroidUnicast unicast = new AndroidUnicast(appkey,appMasterSecret);
 		// TODO Set your device token
 		unicast.setDeviceToken("ArCer1VzNUtZ3Rne3Lo1zKQarA6udICLAtKh_b7MWHxQ");
-		unicast.setTicker( "Android unicast ticker");
-		unicast.setTitle("中文的title");
-		unicast.setText("Android unicast text");
+		unicast.setTicker("这是一个Unicast类型的，擦");
+		unicast.setTitle("这是一个Unicast类型的，擦");
+		unicast.setText("这是一个Unicast类型的，擦");
 		unicast.goAppAfterOpen();
 		unicast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
 		// TODO Set 'production_mode' to 'false' if it's a test device. 
@@ -239,6 +239,7 @@ public class Demo {
 		Demo demo = new Demo("5782f28567e58ed4eb000f60", "rf0fxd7hpdr399ds5lx0qtuio8cm6ail");
 		try {		
 			demo.sendAndroidBroadcast();
+			//demo.sendAndroidUnicast();
 			/* TODO these methods are all available, just fill in some fields and do the test
 			 * demo.sendAndroidUnicast();
 			 * demo.sendAndroidCustomizedcastFile();

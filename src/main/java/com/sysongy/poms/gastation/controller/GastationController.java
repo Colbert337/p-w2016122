@@ -1004,7 +1004,7 @@ public class GastationController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"加注站编号","加注站名称","消费金额(包含冲红)","冲红金额","运管人员","销售人员"};
+	            content[0] = new String[]{"加注站编号","加注站名称","运管人员","销售人员","消费金额(包含冲红)","冲红金额","消费量","消费次数"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -1016,8 +1016,10 @@ public class GastationController extends BaseContoller{
 	            		String hedgefund = tmpMap.get("hedgefund")==null?"":tmpMap.get("hedgefund").toString();
 	            		String salesmen_name = tmpMap.get("salesmen_name")==null?"":tmpMap.get("salesmen_name").toString();
 	            		String operations_name = tmpMap.get("operations_name")==null?"":tmpMap.get("operations_name").toString();
-
-	                    content[i] = new String[]{sys_gas_station_id,gas_station_name,cash,hedgefund,operations_name,salesmen_name};
+	            		String summit = tmpMap.get("summit")==null?"":tmpMap.get("summit").toString();
+	            		String consumecount = tmpMap.get("consumecount")==null?"":tmpMap.get("consumecount").toString();
+	            		
+	                    content[i] = new String[]{sys_gas_station_id,gas_station_name,operations_name,salesmen_name,cash,hedgefund,summit,consumecount};
 	                    i++;
 	                }
 	            }
