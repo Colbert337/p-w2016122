@@ -106,9 +106,6 @@
 										</label>
 									</th>
 									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单编号</th>
-									<c:if test="${sessionScope.currUser.user.userType == 5}">
-										<th onclick="orderBy(this,'order_type');commitForm();" id="order_type_order">订单类型</th>
-									</c:if>
 									
 									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
@@ -142,9 +139,6 @@
 									</td>
 
 									<td>${list.order_number}</td>
-									<c:if test="${sessionScope.currUser.user.userType == 5}">
-										<td><s:Code2Name mcode="${list.order_type}" gcode="ORDER_TYPE"></s:Code2Name></td>
-									</c:if>
 									<td>${list.deal_number}</td>
 									<td><fmt:formatDate value="${list.order_date}" type="both"/></td>
 									<td>

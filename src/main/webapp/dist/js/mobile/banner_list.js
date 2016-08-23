@@ -319,4 +319,13 @@ jQuery(function($) {
 	$(document).one('ajaxloadstart.page', function(e) {
 		$('#colorbox, #cboxOverlay').remove();
    });
+
+    $('.j-android-versions .btn').on('click',function(){
+        var $parent = $(this).parent();
+        if($parent.hasClass('open')) {
+            $parent.removeClass('open');
+        } else {
+            $parent.addClass('open');
+        }
+    });
 })
