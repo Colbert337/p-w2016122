@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +52,15 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		PageInfo<SysCashBack> pageInfo = new PageInfo<SysCashBack>(list);
 		
 		return pageInfo;
+	}
+	/**
+	 * 查询司机返现规则列表
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<Map<String, Object>> queryCashBackList() throws Exception {
+		return cashBackMapper.queryCashBackList();
 	}
 
 	@Override

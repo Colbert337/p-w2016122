@@ -5,6 +5,7 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GsGasPriceMapper {
     int deleteByPrimaryKey(String gsGasPriceId);
@@ -22,4 +23,11 @@ public interface GsGasPriceMapper {
     List<GsGasPrice> queryForPage(GsGasPrice record);
 
     int isExists(GsGasPrice record);
+
+    /**
+     * 查询加注站价格列表
+     * @param stationId 加注站编号
+     * @return
+     */
+    List<Map<String, Object>> queryPriceList(String stationId);
 }

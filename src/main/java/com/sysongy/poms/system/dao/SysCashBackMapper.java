@@ -1,6 +1,7 @@
 package com.sysongy.poms.system.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sysongy.poms.system.model.SysCashBack;
 
@@ -19,6 +20,12 @@ public interface SysCashBackMapper {
     int updateByPrimaryKey(SysCashBack record);
     
     List<SysCashBack> queryForPage(SysCashBack record);
+    /**
+     * 查询司机返现规则列表
+     * @return
+     * @throws Exception
+     */
+    List<Map<String, Object>> queryCashBackList();
 
     List<SysCashBack> queryCashBackForCRM(SysCashBack record);
 

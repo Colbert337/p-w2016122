@@ -42,10 +42,28 @@ public class Gastation extends BaseModel {
 	private Date created_time;
 	private Date expiry_date;
 	private Date updated_time;
+	private String xy;
+	public String getXy() {
+		return longitude+","+latitude;
+	}
+
+	public void setXy(String xy) {
+		this.xy =longitude+","+latitude;;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	private String sys_user_account_id;
 	private SysUserAccount account;
 	private BigDecimal prepay_balance;
 	private Integer prepay_version;
+	private String type;
 
 	public Integer getPrepay_version() {
 		return prepay_version;
