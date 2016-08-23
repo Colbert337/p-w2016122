@@ -176,7 +176,7 @@
 									</div>
 									
 									<div class="row">
-										<label class="col-sm-3 control-label no-padding-right"> 注册地址： </label>
+										<label class="col-sm-3 control-label no-padding-right">注册地址： </label>
 										<div class="col-sm-4">
 											<div class="row">
 												<div class="col-sm-6">
@@ -617,8 +617,8 @@
 		                message: 'The cardno is not valid',
 						validators: {
 							stringLength: {
-								max: 15,
-								message: '工商注册号不能超过15位'
+								max: 18,
+								message: '工商注册号不能超过18位'
 							}
 						}
 		            },
@@ -626,8 +626,8 @@
 		                message: 'The cardno is not valid',
 						validators: {
 							stringLength: {
-								max: 15,
-								message: '税务注册号不能超过15位'
+								max: 18,
+								message: '税务注册号不能超过18位'
 							}
 						}
 					}
