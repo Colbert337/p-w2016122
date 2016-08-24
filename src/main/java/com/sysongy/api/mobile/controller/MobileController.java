@@ -424,7 +424,6 @@ public class MobileController {
 					driver.setSysDriverId(sysDriverId);
 					driver.setFullName(mainObj.optString("name"));
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
-					driver.setIsOpen(mainObj.optString("isOpen"));
 					driver.setAvatarB(mainObj.optString("imgUrl"));
 					int resultVal = driverService.saveDriver(driver,"update");
 				}else{
