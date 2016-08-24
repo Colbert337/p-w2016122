@@ -551,7 +551,7 @@
   </update>
   
   <select id="gastionConsumeReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-	select sgs.sys_gas_station_id, sgs.gas_station_name,
+    select sgs.sys_gas_station_id, sgs.gas_station_name,sgs.operations_name,sgs.salesmen_name,
 	(select ifnull(sum(cash),0) from report_business rb where sgs.sys_gas_station_id = rb.channel_number and rb.order_type in('210' ,'220')
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		 and rb.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -562,9 +562,18 @@
 		 and ra.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	) hedgefund,
-	sgs.operations_name,sgs.salesmen_name
+	(select ifnull(sum(goods_sum),0) from report_business rb1 where sgs.sys_gas_station_id = rb1.channel_number and rb1.been_discharged = '0' and rb1.order_type in('210' ,'220')
+	  <if test="startDate != null &amp;&amp; startDate != ''">
+		 and rb1.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+	  </if>
+	) summit,
+	(select ifnull(count(rb2.order_id),0) from report_business rb2 where sgs.sys_gas_station_id  = rb2.channel_number and rb2.been_discharged = '0' and rb2.order_type in('210' ,'220')
+	  <if test="startDate != null &amp;&amp; startDate != ''">
+		 and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+	  </if>
+	) consumecount
 	from sys_gas_station sgs where 1=1
-    <trim>
+	<trim>
       <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
         and sgs.sys_gas_station_id = #{channelNumber, jdbcType=VARCHAR} or sgs.gas_station_name = #{channelNumber, jdbcType=VARCHAR}
       </if>
@@ -573,7 +582,7 @@
   </select>
   
   <select id="gastionConsumeReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-  	select sum(cash) total from (select sgs.sys_gas_station_id, sgs.gas_station_name,
+  	select sum(cash) total from (select sgs.sys_gas_station_id, sgs.gas_station_name,sgs.operations_name,sgs.salesmen_name,
 	(select ifnull(sum(cash),0) from report_business rb where sgs.sys_gas_station_id = rb.channel_number and rb.order_type in('210' ,'220')
 	  <if test="startDate != null &amp;&amp; startDate != ''">
 		 and rb.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
@@ -584,9 +593,18 @@
 		 and ra.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	) hedgefund,
-	sgs.operations_name,sgs.salesmen_name
+	(select ifnull(sum(goods_sum),0) from report_business rb1 where sgs.sys_gas_station_id = rb1.channel_number and rb1.been_discharged = '0' and rb1.order_type in('210' ,'220')
+	  <if test="startDate != null &amp;&amp; startDate != ''">
+		 and rb1.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+	  </if>
+	) summit,
+	(select ifnull(count(rb2.order_id),0) from report_business rb2 where sgs.sys_gas_station_id  = rb2.channel_number and rb2.been_discharged = '0' and rb2.order_type in('210' ,'220')
+	  <if test="startDate != null &amp;&amp; startDate != ''">
+		 and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+	  </if>
+	) consumecount
 	from sys_gas_station sgs where 1=1
-    <trim>
+	<trim>
       <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
         and sgs.sys_gas_station_id = #{channelNumber, jdbcType=VARCHAR} or sgs.gas_station_name = #{channelNumber, jdbcType=VARCHAR}
       </if>

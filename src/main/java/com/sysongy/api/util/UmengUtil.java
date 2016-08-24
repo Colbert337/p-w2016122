@@ -35,19 +35,19 @@ public class UmengUtil {
 		}
 	}
 	
-	public void sendAndroidBroadcast(CommonParams params) throws Exception {
+	public int sendAndroidBroadcast(CommonParams params) throws Exception {
 		AndroidBroadcast broadcast = new AndroidBroadcast(appkey,appMasterSecret);
-		broadcast.setTicker( "Android broadcast ticker");
-		broadcast.setTitle(  "中文的title");
-		broadcast.setText(   "Android broadcast text");
+		broadcast.setTicker(params.getTicker());
+		broadcast.setTitle(params.getTitle());
+		broadcast.setText(params.getText());
 		broadcast.goAppAfterOpen();
 		broadcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
 		// TODO Set 'production_mode' to 'false' if it's a test device. 
 		// For how to register a test device, please see the developer doc.
 		broadcast.setProductionMode();
 		// Set customized fields
-		broadcast.setExtraField("test", "helloworld");
-		client.send(broadcast);
+		//broadcast.setExtraField("test", "helloworld"); 
+		return client.send(broadcast);
 	}
 	
 	public void sendAndroidUnicast(CommonParams params) throws Exception {

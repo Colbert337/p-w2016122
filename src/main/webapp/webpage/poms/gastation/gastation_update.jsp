@@ -261,7 +261,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="tax_number">税务注册号：</label>
 
 										<div class="col-sm-4">
-											<input type="text" id="tax_number" name="tax_number" class="form-control" maxlength="18" value=" ${station.tax_number}"/>
+											<input type="text" id="tax_number" name="tax_number" class="form-control" maxlength="18" value="${station.tax_number}"/>
 										</div>
 									</div>
 									

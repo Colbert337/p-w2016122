@@ -1,6 +1,7 @@
 package com.sysongy.api.mobile.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.Data;
 import com.sysongy.api.mobile.model.base.MobileParams;
@@ -12,6 +13,7 @@ import com.sysongy.api.mobile.model.record.MobileRecord;
 import com.sysongy.api.mobile.model.upload.MobileUpload;
 import com.sysongy.api.mobile.model.userinfo.MobileUserInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
+import com.sysongy.api.mobile.service.MbDealOrderService;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.api.mobile.tools.MobileUtils;
 import com.sysongy.api.mobile.tools.feedback.MobileFeedBackUtils;
@@ -27,12 +29,16 @@ import com.sysongy.api.util.DESUtil;
 import com.sysongy.api.util.ParameterUtil;
 import com.sysongy.api.util.ShareCodeUtil;
 import com.sysongy.poms.base.model.DistCity;
+import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.base.service.DistrictService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.model.Suggest;
+import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
@@ -40,6 +46,8 @@ import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
@@ -59,6 +67,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RequestMapping("/api/v1/mobile")
@@ -88,6 +97,14 @@ public class MobileController {
 	DistrictService districtService;
 	@Autowired
 	GastationService gastationService;
+	@Autowired
+	GsGasPriceService gsGasPriceService;
+	@Autowired
+	MbDealOrderService mbDealOrderService;
+	@Autowired
+	SysCashBackService sysCashBackService;
+	@Autowired
+	MbBannerService mbBannerService;
 
 	/**
 	 * 用户登录
@@ -187,7 +204,7 @@ public class MobileController {
 				//设置短信有效期60秒
 				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 90);
 				Map<String, Object> tokenMap = new HashMap<>();
-				tokenMap.put("tokenMap",checkCode.toString());
+				tokenMap.put("verificationCode",checkCode.toString());
 				result.setData(tokenMap);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -371,6 +388,78 @@ public class MobileController {
 		}
 	}
 
+
+	/**
+	 * 设置支付密码
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/user/setPaycode")
+	@ResponseBody
+	public String setPaycode(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("支付密码设置成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver driver = new SysDriver();
+				String sysDriverId = mainObj.optString("token");
+				if(mainObj.optString("token") == null){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("用户ID为空！");
+				}else if(mainObj.optString("paycode") == null){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("支付密码为空！");
+				}else if(mainObj.optString("verificationCode") == null){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("验证码为空！");
+				}else{
+					Map<String, Object> resultMap = new HashMap<>();
+					driver.setSysDriverId(sysDriverId);
+					driver.setPayCode(mainObj.optString("paycode"));
+
+					driverService.saveDriver(driver,"update");//设置支付密码
+				}
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("支付密码设置成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("支付密码设置失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("支付密码设置失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
 	/**
 	 * 图片上传
 	 * @param request
@@ -472,11 +561,13 @@ public class MobileController {
 			 */
 			if(mainObj != null){
 				SysDriver driver = new SysDriver();
-				driver.setUserName(mainObj.optString("name"));
+				driver.setFullName(mainObj.optString("name"));
 				driver.setPlateNumber(mainObj.optString("plateNumber"));
 				driver.setFuelType(mainObj.optString("gasType"));
 				if(mainObj.optString("endTime") != null && !"".equals(mainObj.optString("endTime"))){
-					driver.setExpiryDate(new Date(mainObj.optString("endTime")));
+					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
+					Date date = sft.parse(mainObj.optString("endTime"));
+					driver.setExpiryDate(date);
 				}
 				driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
 				driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
@@ -788,16 +879,16 @@ public class MobileController {
 	}
 
     /**
-	 * 获取气站/运输公司信息列表
+	 * 获取气站信息列表
 	 * @param params
 	 * @return
      */
-    @RequestMapping(value = "/map/queryStationList")
+    @RequestMapping(value = "/map/getStationList")
     @ResponseBody
     public String queryStationList(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询地图信息成功！");
+		result.setMsg("查询加注站信息成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
     	
@@ -813,18 +904,35 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
-				/*Gastation gastation = new Gastation();
-				List<Gastation> cityList = gastationService.getAllStationList(gastation);
-				List<Map<String, Object>> listMap = new ArrayList<>();
-				if(cityList != null && cityList.size() > 0){
-					for(DistCity city:cityList){
-						Map<String, Object> cityMap = new HashMap<>();
-						cityMap.put("cityName",city.getCityName());
-						listMap.add(cityMap);
-					}
-					result.setListMap(listMap);
-				}*/
+				//获取气站列表
+				Gastation gastation = new Gastation();
+				List<Map<String, Object>> gastationArray = new ArrayList<>();
+				List<Gastation> gastationList = gastationService.getAllStationList(gastation);
+				if(gastationList != null && gastationList.size() > 0){
+					for (Gastation gastationInfo:gastationList){
+						Map<String, Object> gastationMap = new HashMap<>();
+						gastationMap.put("stationId",gastationInfo.getSys_gas_station_id());
+						gastationMap.put("name",gastationInfo.getGas_station_name());
+						gastationMap.put("longitude",gastationInfo.getLongitude());
+						gastationMap.put("latitude",gastationInfo.getLatitude());
+						gastationMap.put("service","");
+						//获取当前气站价格列表
+						List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
+						gastationMap.put("priceList",priceList);
+						gastationMap.put("phone",gastationInfo.getContact_phone());
+						if(gastationInfo.getStatus().equals("0")){
+							gastationMap.put("state","开启");
+						}else{
+							gastationMap.put("state","关闭");
+						}
+						gastationMap.put("preferential","");
+						gastationMap.put("address",gastationInfo.getAddress());
 
+						gastationArray.add(gastationMap);
+					}
+
+					result.setListMap(gastationArray);
+				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -834,12 +942,12 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
-			logger.error("查询地图信息成功： " + resultStr);
+			logger.error("查询气站信息成功： " + resultStr);
         } catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询地图信息失败！");
+			result.setMsg("查询气站信息失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询地图信息失败： " + e);
+			logger.error("查询气站信息失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -849,38 +957,266 @@ public class MobileController {
 		}
     }
 
-    /**
-	 * 获取返现金额
+	/**
+	 * 个人转账
 	 * @param params
 	 * @return
-     */
-    @RequestMapping(value = "ReturnCash")
-    @ResponseBody
-    public String getReturnCash(MobileParams params){
-    	
-    	MobileReturn ret = new MobileReturn();
-    	
-    	try {
-    		ReturnCashUtil.checkParam(params, ret);
-    		
-            
-            Data data = new Data();
-            	
-            ArrayList<Data> list = new ArrayList<Data>();
-            list.add(data);
-            	
-            ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, GetCitysUtils.RET_QUERY_SUCCESS_MSG, list);
+	 */
+	@RequestMapping(value = "/deal/transferAccounts")
+	@ResponseBody
+	public String transferAccounts(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("转账成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
 
-           
-        } catch (Exception e) {
-        	if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				Map<String, Object> driverMap = new HashMap<>();
+				driverMap.put("token",mainObj.optString("token"));
+				driverMap.put("account",mainObj.optString("account"));
+				driverMap.put("name",mainObj.optString("name"));
+				driverMap.put("amount",mainObj.optString("amount"));
+				driverMap.put("remark",mainObj.optString("remark"));
+				driverMap.put("paycode",mainObj.optString("paycode"));
+
+				int resultVal = mbDealOrderService.transferDriverToDriver(driverMap);
+				if(resultVal < 0){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("账户余额不足,无法转账！");
+				}else if(resultVal == 1){
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("转账成功！");
+				}else if(resultVal == 2){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("账户不存在,无法转账！");
+				}else if(resultVal == 3){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("司机不存在,无法转账！");
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-        }
-        finally {
-			return JSON.toJSONString(ret);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("转账成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("转账失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("转账失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
 		}
-    }
+	}
+
+	/**
+	 * 返现规则列表
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/deal/cashBack")
+	@ResponseBody
+	public String getCashBackList(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询返现规则列表成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				List<Map<String, Object>> cashBackList = sysCashBackService.queryCashBackList();
+				result.setListMap(cashBackList);
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("查询返现规则列表成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询返现规则列表失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询返现规则列表失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
+	 * 头条推广
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/deal/recharge2")
+	@ResponseBody
+	public String recharge(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询头条推广成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		MbBanner mbBanner = new MbBanner();
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				PageBean bean = new PageBean();
+				String http_poms_path =  (String) prop.get("http_poms_path");
+
+				if(mbBanner.getPageNum() == null){
+					mbBanner.setPageNum(GlobalConstant.PAGE_NUM);
+					mbBanner.setPageSize(GlobalConstant.PAGE_SIZE);
+				}
+
+				if(mainObj.get("imgType") != null && !"".equals(mainObj.get("imgType").toString())){
+					mbBanner.setImgType(mainObj.get("imgType").toString());
+				}
+				if(StringUtils.isEmpty(mbBanner.getImgType())){
+					mbBanner.setImgType(GlobalConstant.ImgType.TOP);
+				}
+
+				PageInfo<MbBanner> pageInfo = mbBannerService.queryMbBannerListPage(mbBanner);
+				List<MbBanner> mbBannerList = pageInfo.getList();
+				List<Map<String, Object>> bannerList = new ArrayList<>();
+				if(mbBannerList != null && mbBannerList.size() > 0){
+					for (MbBanner banner:mbBannerList){
+						Map<String, Object> bannerMap = new HashMap<>();
+						bannerMap.put("title",banner.getTitle());
+						bannerMap.put("content","");
+						bannerMap.put("time",banner.getCreatedDate());
+						bannerMap.put("contentUrl","");
+						bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
+
+						bannerList.add(bannerMap);
+					}
+				}
+				result.setListMap(bannerList);
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("查询头条推广成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询头条推广失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询头条推广失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
+	 * 在线充值
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/deal/recharge")
+	@ResponseBody
+	public String getRecharge(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询返现规则成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("查询翻新金额成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询翻新金额失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询翻新金额失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
 }

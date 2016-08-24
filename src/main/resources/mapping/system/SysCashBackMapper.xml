@@ -18,6 +18,19 @@
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCashBackByMcode">
     </association>
   </resultMap>
+
+  <resultMap id="MapResultMap" type="java.util.Map" >
+    <result column="sys_cash_back_no" property="sys_cash_back_no" jdbcType="VARCHAR" />
+    <result column="threshold_min_value" property="threshold_min_value" jdbcType="VARCHAR" />
+    <result column="threshold_max_value" property="threshold_max_value" jdbcType="VARCHAR" />
+    <result column="cash_per" property="cash_per" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="start_date" property="start_date" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="end_date" jdbcType="TIMESTAMP" />
+    <result column="created_date" property="created_date" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updated_date" jdbcType="TIMESTAMP" />
+  </resultMap>
   
   <sql id="Base_Column_List" >
     sys_cash_back_id, sys_cash_back_no, threshold_min_value, threshold_max_value, cash_per, status, 
@@ -56,6 +69,11 @@
         and start_date between CONCAT(#{start_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{start_date_before,jdbcType=VARCHAR},' 23:59:59') 
       </if>
     </trim>
+  </select>
+
+  <select id="queryCashBackList" resultMap="MapResultMap"  >
+    select sys_cash_back_no as cashNo,threshold_min_value as minVal,threshold_max_value as maxVal,cash_per as cashPer
+    from sys_cash_back gc where sys_cash_back_no = '103' or sys_cash_back_no = '104' and status = '0'
   </select>
 
   <select id="queryCashBackForCRM" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCard" >

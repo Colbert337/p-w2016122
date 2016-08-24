@@ -119,6 +119,7 @@ public class GastationServiceImpl implements GastationService {
 			record.setDcp_certif(show_path);
 			record.setPrepay_balance(new BigDecimal(0));
 			record.setPrepay_version(1);
+			record.setType(GlobalConstant.StationType.UNION);
 			
 			gasStationMapper.insert(record);
 			//创建管理员

@@ -77,10 +77,12 @@
 									</th>
 									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
 									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
+									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
+ 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">消费金额(包含冲红)</th>
 									<th onclick="orderBy(this,'hedgefund');commitForm();" id="hedgefund_order">冲红金额</th>
- 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
- 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
+ 									<th onclick="orderBy(this,'summit');commitForm();" id="summit_order">消费量</th>
+									<th onclick="orderBy(this,'consumecount');commitForm();" id="consumecount_order">消费次数</th>
 								</tr>
 							</thead>
 
@@ -97,10 +99,12 @@
 
 									<td>${list.sys_gas_station_id}</td>
 									<td>${list.gas_station_name}</td>
-									<td>${list.cash}</td>
-									<td>${list.hedgefund}</td>
 									<td>${list.operations_name}</td>
 									<td>${list.salesmen_name}</td>
+									<td>${list.cash}</td>
+									<td>${list.hedgefund}</td>
+									<td>${list.summit}</td>
+									<td>${list.consumecount}</td>
 								</tr>
 							</c:forEach>
 							</tbody>
