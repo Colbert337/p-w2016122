@@ -80,9 +80,10 @@
 											id="threshold_max_value_order">缩略图</th> -->
 										<th onclick="orderBy(this,'target_url');commitForm();"
 											id="cash_per_order">链接地址</th>
-										<th onclick="orderBy(this,'version');commitForm();"
-											id="status">版本号</th>
+										<th onclick="orderBy(this,'content');commitForm();"
+											id="content_order">正文</th>
 										<th onclick="orderBy(this,'remark');commitForm();" id="level">备注</th>
+										<th onclick="orderBy(this,'city_id');commitForm();" id="city_id_order">城市</th>
 										<th onclick="orderBy(this,'created_date');commitForm();"
 											id="created_date_order" class="td-w2"><i
 											id="created_date"
@@ -102,8 +103,9 @@
 								<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 											<td>${list.targetUrl}</td>
-											<td>${list.version}</td>
+											<td>${list.content}</td>
 											<td>${list.remark}</td>
+											<td>${list.city_name}</td>
 											<td><fmt:formatDate value="${list.createdDate}"
 													type="both" /></td>
 											<td>${list.operator}</td>
@@ -192,6 +194,15 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right"
+										for="remark"> 正文： </label>
+									<div class="col-sm-8">
+										<textarea name="content" id="content" style="resize: none;"
+											maxlength="50" placeholder="正文"
+											class="col-xs-10 col-sm-12 limited form-control"></textarea>
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right"><span
 										class="red_star">*</span> 图片： </label>
 									<div class="col-sm-8">
@@ -225,41 +236,53 @@
 											placeholder="链接地址" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
+									<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right"
+										for="target_url"><span class="red_star">*</span>顺序
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="sort" placeholder="顺序"
+												maxlength="11" name="sort" class="col-xs-10 col-sm-12" />
+											</div>
+								</div>
+								
+								
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right"
 										for="version">版本号： </label>
-									<div class="col-sm-8">
+									<div class="col-sm-3">
 										<div class="row">
-											<div class="col-sm-5">
+											<div class="col-sm-3">
 												<div class="btn-group j-android-versions">
 													<span class="btn btn-primary btn-white dropdown-toggle" >选择安卓版本号<i class="ace-icon fa fa-angle-down icon-on-right"></i>
 													</span>
 													<ul class="dropdown-menu">
-														<li>
-															<div class="checkbox">
-																<label>
-																	<input name="form-field-checkbox" type="checkbox" class="ace">
-																	<span class="lbl"> choice 1</span>
-																</label>
-															</div>
-														</li>
-														<li>
-															<div class="checkbox">
-																<label>
-																	<input name="form-field-checkbox" type="checkbox" class="ace">
-																	<span class="lbl"> choice 2</span>
-																</label>
-															</div>
-														</li>
+														<%-- <c:forEach items="${datas}" var="one" >
+															<li>
+																<div class="checkbox">
+																	<label>
+																		<input name="form-field-checkbox" type="checkbox" id="c${one }" values="${one }"  checked="checkbox" class="ace">
+																		<span class="lbl"> ${one }</span>
+																	</label>
+																</div>
+															</li>
+														</c:forEach> --%>
+														 
 													</ul>
 												</div>
 											</div>
-											<div class="col-sm-7">
-												<input type="text" id="version" placeholder="版本号"
-												maxlength="11" name="version" class="col-xs-10 col-sm-12" />
-											</div>
+										
 										</div>
-									</div>
+									</div><label class="col-sm-2 control-label no-padding-right"
+										for="version">城市： </label>
+										<div class="col-sm-1">
+											<select id="city" class="combobox">
+											  <option></option>
+											 <c:forEach items="${city}" var="one" >
+											  <option value="${one.cityId }">${one.cityName }</option>
+											  </c:forEach>
+											</select>
+										</div>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right"
