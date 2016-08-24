@@ -833,7 +833,7 @@ public class MobileController {
 				}
 
 				if(retvale >0 ){
-					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					if("2".equals(lossType)){
 						failStr = "解除挂失";
 					}else{

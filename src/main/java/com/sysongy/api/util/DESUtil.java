@@ -125,7 +125,7 @@ public class DESUtil {
         String str = "{\"main\":{\"code\":\"FUEL_TYPE\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
-        String resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA567743E4E340487D48909B40B608809E778E86D98519BF816F8DDBBB7702AB0950133E39CD95610286DEC6F7A4BDDF79F57E29744AF304D49187");
+        String resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA56779A8EE272C9539ABB628364D52273FBB415C36726655D47D07B95ED393CB2B6AF88FAF3E7D7DA92C2");
 //        resultStr = new String(resultStr.getBytes("GB2312"),"ISO-8859-1");
         System.out.println("解密后:"+resultStr);
     }
