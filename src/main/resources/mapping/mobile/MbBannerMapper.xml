@@ -26,41 +26,41 @@
     select 
     <include refid="Base_Column_List" />
     from mb_banner a, dist_city b
-    where is_deleted = 1 and a.city_id=b.city_id 
+    where a.is_deleted = 1 and a.city_id=b.city_id
     <if test="title != null" >
-      and title = #{title,jdbcType=VARCHAR}
+      and a.title = #{title,jdbcType=VARCHAR}
     </if>
     <if test="imgPath != null" >
-      and img_path = #{imgPath,jdbcType=VARCHAR}
+      and a.img_path = #{imgPath,jdbcType=VARCHAR}
     </if>
     <if test="imgSmPath != null" >
-      and img_sm_path = #{imgSmPath,jdbcType=VARCHAR}
+      and a.img_sm_path = #{imgSmPath,jdbcType=VARCHAR}
     </if>
     <if test="targetUrl != null" >
-      and target_url = #{targetUrl,jdbcType=VARCHAR}
+      and a.target_url = #{targetUrl,jdbcType=VARCHAR}
     </if>
     <if test="version != null" >
-      and version = #{version,jdbcType=VARCHAR}
+      and a.version = #{version,jdbcType=VARCHAR}
     </if>
     <if test="imgType != null" >
-      and img_type = #{imgType,jdbcType=INTEGER}
+      and a.img_type = #{imgType,jdbcType=INTEGER}
     </if>
     <if test="sort != null" >
-      and sort = #{sort,jdbcType=INTEGER}
+      and a.sort = #{sort,jdbcType=INTEGER}
     </if>
     <if test="remark != null" >
-      and remark = #{remark,jdbcType=VARCHAR}
+      and a.remark = #{remark,jdbcType=VARCHAR}
     </if>
     <if test="cityId != null" >
-      and city_id = #{cityId,jdbcType=INTEGER}
+      and a.city_id = #{cityId,jdbcType=INTEGER}
     </if>
     <if test="createdDate != null" >
-      and created_date = #{createdDate,jdbcType=TIMESTAMP}
+      and a.created_date = #{createdDate,jdbcType=TIMESTAMP}
     </if>
     <if test="updatedDate != null" >
-      and updated_date = #{updatedDate,jdbcType=TIMESTAMP}
+      and a.updated_date = #{updatedDate,jdbcType=TIMESTAMP}
     </if>
-    order by sort asc
+    order by a.sort asc
   </select>
   <select id="queryMaxIndex" resultMap="BaseResultMap" >
     select * from mb_banner where is_deleted = 1 and img_type = #{0}

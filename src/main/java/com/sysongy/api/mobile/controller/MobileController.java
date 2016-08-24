@@ -1210,7 +1210,12 @@ public class MobileController {
 						bannerMap.put("content","");
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
 						bannerMap.put("contentUrl","");
-						bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
+						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
+							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
+						}else{
+							bannerMap.put("imageUrl","");
+						}
+
 
 						bannerList.add(bannerMap);
 					}
@@ -1224,7 +1229,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
 			logger.error("查询头条推广成功： " + resultStr);
 
@@ -1233,6 +1238,7 @@ public class MobileController {
 			result.setMsg("查询头条推广失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("查询头条推广失败： " + e);
+			e.printStackTrace();
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密

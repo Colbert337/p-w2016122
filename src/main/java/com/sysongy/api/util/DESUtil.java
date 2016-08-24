@@ -38,7 +38,7 @@ public class DESUtil {
         if (data == null)
             return null;
         try {
-            DESKeySpec dks = new DESKeySpec(key.getBytes());
+            DESKeySpec dks = new DESKeySpec(key.getBytes("UTF-8"));
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             // key的长度不能够小于8位字节
             Key secretKey = keyFactory.generateSecret(dks);
@@ -47,6 +47,7 @@ public class DESUtil {
             AlgorithmParameterSpec paramSpec = iv;
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, paramSpec);
             byte[] bytes = cipher.doFinal(data.getBytes("UTF-8"));
+            /*return new String(bytes,"UTF-8");*/
             return byte2String(bytes);
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,7 +70,7 @@ public class DESUtil {
         if (data == null)
             return null;
         try {
-            DESKeySpec dks = new DESKeySpec(key.getBytes());
+            DESKeySpec dks = new DESKeySpec(key.getBytes("UTF-8"));
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
             // key的长度不能够小于8位字节
             Key secretKey = keyFactory.generateSecret(dks);
@@ -77,7 +78,7 @@ public class DESUtil {
             IvParameterSpec iv = new IvParameterSpec("12345678".getBytes());
             AlgorithmParameterSpec paramSpec = iv;
             cipher.init(Cipher.DECRYPT_MODE, secretKey, paramSpec);
-            return new String(cipher.doFinal(byte2hex(data.getBytes("UTF-8"))));
+            return new String(cipher.doFinal(byte2hex(data.getBytes("UTF-8"))),"UTF-8");
         } catch (Exception e) {
             e.printStackTrace();
             return data;
@@ -124,7 +125,7 @@ public class DESUtil {
         String str = "{\"main\":{\"token\":\"5fbffec4494347199889322c3f488a14\",\"name\":\"asdf\",\"imgUrl\":\"5fbffec4494347199889322c3f488a14\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
-        String resultStr = decode(keyStr,"CDE0C6E42FF0D3D66277E0784D778DEDFBC0D068AF34D0C32394126D9B24A6282098BD202BDF10216C3C7253E795359D08C8484F81C1BE71DAB81833484A33DA18CCFE52349999C061CEC7F6891954F3AAD8C9D463A9CD46BB29531F74CAB8E11DF0BDD5477661B7667F137CA4FCE4C7E52DC1EF52F7ECDE");
+        String resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA567743E4E340487D48909B40B608809E778E86D98519BF816F8DDBBB7702AB0950133E39CD95610286DEC6F7A4BDDF79F57E29744AF304D49187");
 //        resultStr = new String(resultStr.getBytes("GB2312"),"ISO-8859-1");
         System.out.println("解密后:"+resultStr);
     }
