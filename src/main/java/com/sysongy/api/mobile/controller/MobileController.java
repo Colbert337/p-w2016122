@@ -399,6 +399,58 @@ public class MobileController {
 			return resultStr;
 		}
 	}
+	/**
+	 * 修改登录密码
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/user/updatePassword")
+	@ResponseBody
+	public String updatePassword(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("修改登录密码成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("修改登录密码成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("修改登录密码失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("修改登录密码失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 
 	/**
 	 * 修改用户信息
@@ -535,6 +587,59 @@ public class MobileController {
 	}
 
 	/**
+	 * 修改支付密码
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/user/updatePayCode")
+	@ResponseBody
+	public String updatePayCode(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("修改支付密码成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("修改支付密码成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("修改支付密码失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("修改支付密码失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
 	 * 图片上传
 	 * @param request
      * @return
@@ -647,6 +752,7 @@ public class MobileController {
 				driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
 				driver.setSysDriverId(mainObj.optString("token"));
 				driver.setCheckedStatus(GlobalConstant.DriverCheckedStatus.CERTIFICATING);
+				driver.setIdentityCard(mainObj.optString("idCard"));
 
 				int resultVal = driverService.saveDriver(driver,"update");
 				if(resultVal <= 0){
@@ -1314,16 +1420,16 @@ public class MobileController {
 	}
 
 	/**
-	 * 在线充值
+	 * 充值记录
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "/deal/paramList")
+	@RequestMapping(value = "/record/rechargeRecord")
 	@ResponseBody
-	public String getRecharge(String params){
+	public String rechargeRecord(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询成功！");
+		result.setMsg("查询充值记录成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 
@@ -1350,13 +1456,172 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
-			logger.error("查询返现金额成功： " + resultStr);
+			logger.error("查询充值记录成功： " + resultStr);
 
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询返现金额失败！");
+			result.setMsg("查询充值记录失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询返现金额失败： " + e);
+			logger.error("查询充值记录失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
+	 * 消费记录
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/record/consumeRecord")
+	@ResponseBody
+	public String consumeRecord(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询消费记录成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("查询消费记录成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询消费记录失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询消费记录失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
+	 * 转账记录
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/record/transferRecord")
+	@ResponseBody
+	public String transferRecord(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询转账记录成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("查询转账记录成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询转账记录失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询转账记录失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
+	 * 在线充值
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/deal/paramList")
+	@ResponseBody
+	public String getRecharge(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("充值成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("充值成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("充值失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("充值失败： " + e);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
