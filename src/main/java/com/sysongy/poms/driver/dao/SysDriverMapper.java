@@ -22,6 +22,13 @@ public interface SysDriverMapper {
 
     List<SysDriver> queryForPage(SysDriver record);
 
+    /**
+     * 查询司机信息列表，关联公司
+     * @param record
+     * @return
+     */
+    List<SysDriver> queryForPageList(SysDriver record);
+
     List<SysDriver> querySingleDriver(SysDriver record);
 
     List<SysDriver> ifExistDriver(SysDriver record);
