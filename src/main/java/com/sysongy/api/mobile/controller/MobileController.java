@@ -48,6 +48,8 @@ import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
@@ -105,6 +107,8 @@ public class MobileController {
 	SysCashBackService sysCashBackService;
 	@Autowired
 	MbBannerService mbBannerService;
+	@Autowired
+	UsysparamService usysparamService;
 
 	/**
 	 * 用户登录
@@ -347,7 +351,6 @@ public class MobileController {
 						}else{
 							resultMap.put("photoUrl",localPath+driver.getAvatarB());
 						}
-
 
 						String invitationCode = driver.getInvitationCode();//获取邀请码
 						if(invitationCode == null || "".equals(invitationCode)){
@@ -675,6 +678,61 @@ public class MobileController {
 		}
 	}
 
+	/**
+	 * 获取参数列表
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/util/paramList")
+	@ResponseBody
+	public String getParamList(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询返现规则成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				String gcode = mainObj.optString("code");
+				if(gcode != null && !"".equals(gcode)){
+					List<Map<String, Object>> usysparamList = usysparamService.queryUsysparamMapByGcode(gcode);
+					result.setListMap(usysparamList);
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("查询成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询列表失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询列表失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 
 	/**
 	 * 意见反馈
@@ -768,7 +826,7 @@ public class MobileController {
 			if(mainObj != null){
 				SysDriver driver = driverService.queryDriverByPK(mainObj.optString("token"));
 				String lossType = mainObj.optString("lossType");
-				String cardId = mainObj.optString("cardId");
+				/*String cardId = mainObj.optString("cardId");*/
 				int retvale = 0;//操作影响行数
 				if(lossType != null){//类型等于0 或者等于1
 					retvale = sysUserAccountService.changeStatus(driver.getAccount().getSysUserAccountId(), lossType, driver.getCardInfo().getCard_no());
@@ -779,7 +837,7 @@ public class MobileController {
 					if("2".equals(lossType)){
 						failStr = "解除挂失";
 					}else{
-						failStr = ("挂失失败");
+						failStr = ("挂失");
 					}
 					result.setMsg(failStr+"成功！");
 				}
@@ -1260,12 +1318,12 @@ public class MobileController {
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "/deal/recharge")
+	@RequestMapping(value = "/deal/paramList")
 	@ResponseBody
 	public String getRecharge(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询返现规则成功！");
+		result.setMsg("查询成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 
@@ -1292,13 +1350,13 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
-			logger.error("查询翻新金额成功： " + resultStr);
+			logger.error("查询返现金额成功： " + resultStr);
 
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询翻新金额失败！");
+			result.setMsg("查询返现金额失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询翻新金额失败： " + e);
+			logger.error("查询返现金额失败： " + e);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密

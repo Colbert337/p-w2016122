@@ -122,7 +122,7 @@ public class DESUtil {
 
     public static void main(String args[]) throws Exception{
 //        String str = "王冬强";
-        String str = "{\"main\":{\"token\":\"5fbffec4494347199889322c3f488a14\",\"name\":\"asdf\",\"imgUrl\":\"5fbffec4494347199889322c3f488a14\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+        String str = "{\"main\":{\"code\":\"FUEL_TYPE\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
         String resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA567743E4E340487D48909B40B608809E778E86D98519BF816F8DDBBB7702AB0950133E39CD95610286DEC6F7A4BDDF79F57E29744AF304D49187");
