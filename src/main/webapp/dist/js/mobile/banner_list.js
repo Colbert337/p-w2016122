@@ -40,7 +40,7 @@ function addBanner() {
 	$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
 		spCodesTemp = $(this).attr("checked", true);
 	});
-
+	photoType=0;
 	$("#show_img").hide();
 	clearDiv();
 	$("#editBanner").text("添加内容");
@@ -133,6 +133,18 @@ function editBanner(imgId) {
 	$("#editModel").modal('show');
 }
 
+$(document).keyup(function(event){
+
+	 switch(event.keyCode) {
+	 case 27:
+	 case 96:
+		 closeDialog('editModel')
+	 }
+	});
+
+function init(){
+	loadPage('#main', '../web/mobile/img/list/page');
+}
 /* 取消弹层方法 */
 function closeDialog(divId) {
 
@@ -141,7 +153,12 @@ function closeDialog(divId) {
 		$(this).val("");
 	});
 	$("#avatar_b").empty();
-	$("#" + divId).modal('hide');
+	
+	 $("#"+divId).modal('hide').removeClass('in');
+		$("body").removeClass('modal-open').removeAttr('style');
+		$(".modal-backdrop").remove();
+	    
+	    init();
 
 }
 function clearDiv() {
@@ -185,7 +202,12 @@ function saveBanner() {
 			spCodesTemp += ("," + $(this).attr("values"));
 		}
 	});
-
+//	var file=$("#indu_com_certif_select").val();
+	if (photoType!=1) {
+		bootbox.alert("请上传图片");
+		return;	
+	}
+	
 	var saveOptions = {
 		url : '../web/mobile/img/save',
 		type : 'post',
@@ -277,7 +299,9 @@ $('#editForm').bootstrapValidator({
 	}
 });
 
+var photoType=0;
 function savePhoto(fileobj, obj, obj1) {
+	
 	$(fileobj).parents("div").find("input[name=uploadfile]").each(function() {
 		$(this).attr("name", "");
 	});
@@ -286,6 +310,7 @@ function savePhoto(fileobj, obj, obj1) {
 		bootbox.alert("请先上传文件");
 		return;
 	}
+	photoType=1;
 	var stationId = "mobile";
 	var multipartOptions = {
 		url : '../crmInterface/crmBaseService/web/upload?stationid='
@@ -296,6 +321,7 @@ function savePhoto(fileobj, obj, obj1) {
 		success : function(data) {
 			var s = JSON.parse(data);
 			if (s.success == true) {
+				$("#show_img").hide();
 				bootbox.alert("上传成功");
 				$(obj1).val(s.obj);
 			}
@@ -305,21 +331,13 @@ function savePhoto(fileobj, obj, obj1) {
 			bootbox.alert("上传成功");
 		}
 	}
-	$("#indu_com_certif_select").val("");
 	$("#editForm").ajaxSubmit(multipartOptions);
+	
 }
 /**
  * 文件上传验证
  */
-function change() {
-	var text = $("#indu_com_certif_select").val();
-	if (text != "") {
-		$("#show_img").hide();
-	} else {
-		$("#show_img").show();
-	}
-}
-
+ 
 $('#importForm').bootstrapValidator({
 	message : 'This value is not valid',
 	feedbackIcons : {
