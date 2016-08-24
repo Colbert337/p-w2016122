@@ -641,4 +641,9 @@ public class GlobalConstant {
 		public static final Integer HOT=2;
 		public static final Integer NOT_HOT=1;
 	}
+	
+	public interface StationType{
+		public static final String UNION = "0"; //合作站
+		public static final String UN_UNION = "1"; //非合作站
+	}
 }

@@ -28,7 +28,7 @@ public class PushClient {
 	// The post path
 	protected static final String postPath = "/api/send";
 
-	public boolean send(UmengNotification msg) throws Exception {
+	public int send(UmengNotification msg) throws Exception {
 		String timestamp = Integer.toString((int)(System.currentTimeMillis() / 1000));
 		msg.setPredefinedKeyValue("timestamp", timestamp);
         String url = host + postPath;
@@ -55,7 +55,7 @@ public class PushClient {
         } else {
             System.out.println("Failed to send the notification!");
         }
-        return true;
+        return status;
     }
 
 	// Upload file with device_tokens to Umeng

@@ -12,19 +12,21 @@
     <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="city_id" property="city_id" jdbcType="VARCHAR" />
     <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
-    remark, is_deleted, created_date, updated_date,operator
+    remark, is_deleted, a.created_date, updated_date,operator,content,a.city_id,city_name
   </sql>
   <select id="queryMbBannerList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     select 
     <include refid="Base_Column_List" />
-    from mb_banner
-    where is_deleted = 1
+    from mb_banner a, dist_city b
+    where is_deleted = 1 and a.city_id=b.city_id 
     <if test="title != null" >
       and title = #{title,jdbcType=VARCHAR}
     </if>
@@ -122,6 +124,12 @@
        <if test="operator != null" >
         operator,
       </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="operator != null" >
+        city_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="mbBannerId != null" >
@@ -159,6 +167,12 @@
       </if>
       <if test="operator != null" >
         #{operator,jdbcType=VARCHAR},
+      </if>
+       <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+       <if test="city_id != null" >
+        #{city_id,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -199,6 +213,12 @@
       </if>
       <if test="createdDate != null" >
         created_date = #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+       <if test="content != null" >
+        content = #{content,jdbcType=TIMESTAMP},
+      </if>
+       <if test="city_id != null" >
+        city_id = #{city_id,jdbcType=TIMESTAMP},
       </if>
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},

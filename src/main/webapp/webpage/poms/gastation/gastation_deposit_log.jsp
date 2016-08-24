@@ -97,7 +97,7 @@
 									<th onclick="orderBy(this,'order_number');commitForm();" id="order_number_order">订单号</th>
 									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">工作站编号</th>
 									<th onclick="orderBy(this,'station_name');commitForm();" id="station_name_order">工作站名称</th>
-									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
+									<!-- <th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th> -->
 									<th onclick="orderBy(this,'deposit_time');commitForm();" id="deposit_time_order"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>转账时间</th>
 									<c:if test="${currUser.userType == 5}">
 										<th onclick="orderBy(this,'deposit_type');commitForm();" id="deposit_type_order">转账方式</th>
@@ -126,7 +126,7 @@
 									<td>${list.order_number}</td>
 									<td>${list.stationId}</td>
 								 	<td>${list.stationName}</td> 
-									<td>${list.company}</td>
+									<%-- <td>${list.company}</td> --%>
 									<td><fmt:formatDate value="${list.depositTime}" type="both"/></td>
 									<c:if test="${currUser.userType == 5}">
 										<td><s:Code2Name mcode="${list.depositType}" gcode="RECHARGE_TYPE"></s:Code2Name></td>

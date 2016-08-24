@@ -1,6 +1,8 @@
 package com.sysongy.poms.mobile.controller;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,13 +15,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.dao.DistCityMapper;
 import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.DistCity;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.UUIDGenerator;
 
 /**
@@ -37,7 +42,8 @@ import com.sysongy.util.UUIDGenerator;
 public class MbBannerController extends BaseContoller{
     @Autowired
     MbBannerService mbBannerService;
-    
+    @Autowired
+    DistCityMapper city;
     MbBanner mbBanner;
 
     /**
@@ -68,7 +74,12 @@ public class MbBannerController extends BaseContoller{
         bean.setRetCode(100);
 		bean.setRetMsg("查询成功");
 		bean.setPageInfo(ret);
-
+		Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+		String data=(String) prop.get("version");
+		String[] datas=data.split(",");
+		List<DistCity> list=city.queryHotCityList(2);
+		map.addAttribute("datas", datas);
+		map.addAttribute("city", list);
 		map.addAttribute("ret", bean);
 		map.addAttribute("pageInfo", pageinfo);
 		map.addAttribute("mbBanner",mbBanner);
@@ -146,12 +157,12 @@ public class MbBannerController extends BaseContoller{
 			}else{
 				
 				//查询当前图片最大序号
-	            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
-	            if(maxBannerIndex != null){
-	                mbBanner.setSort(maxBannerIndex.getSort()+1);
-	            }else{
-	                mbBanner.setSort("0");
-	            }
+//	            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
+//	            if(maxBannerIndex != null){
+//	                mbBanner.setSort(maxBannerIndex.getSort()+1);
+//	            }else{
+//	                mbBanner.setSort("0");
+//	            }
 
 	            mbBanner.setMbBannerId(UUIDGenerator.getUUID());
 	            mbBanner.setImgType(mbBanner.getImgType());
