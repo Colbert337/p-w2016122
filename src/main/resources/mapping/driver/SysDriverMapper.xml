@@ -32,6 +32,8 @@
     <result column="driver_type" property="driverType" jdbcType="INTEGER" />
     <result column="driver_number" property="driver_number" jdbcType="INTEGER" />
     <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR" />
+    <result column="transportion_name" property="transportionName" jdbcType="VARCHAR" />
+    <result column="gas_station_name" property="gasStationName" jdbcType="VARCHAR" />
     <association property="account" column="sys_user_account_id"
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -119,7 +121,46 @@
       </if>
     </trim>
   </select>
-
+  <select id="queryForPageList" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select sd.*,st.transportion_name,sgs.gas_station_name from sys_driver sd left join sys_transportion st on sd.station_id = st.sys_transportion_id
+    left join sys_gas_station sgs on sd.station_id = sgs.sys_gas_station_id
+    where 1=1
+    <trim>
+      <if test="sysDriverId != null &amp;&amp; sysDriverId != ''" >
+        and sd.sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+      </if>
+      <if test="fullName!= null &amp;&amp; fullName != ''" >
+        and sd.full_name = #{fullName,jdbcType=VARCHAR}
+      </if>
+      <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
+        and (sd.mobile_phone = #{mobilePhone,jdbcType=VARCHAR} or sd.full_name = #{mobilePhone,jdbcType=VARCHAR})
+      </if>
+      <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
+        and sd.checked_status = #{checkedStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="userName != null &amp;&amp; userName != ''">
+        and sd.user_name = #{userName,jdbcType=INTEGER}
+      </if>
+      <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">
+        and sd.sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
+      </if>
+      <if test="createdDate_after != null &amp;&amp; createdDate_after != ''">
+        and sd.created_date between CONCAT(#{createdDate_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{createdDate_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+      <if test="notin_checked_status != null" >
+        and sd.checked_status &lt;&gt; #{notin_checked_status,jdbcType=VARCHAR}
+      </if>
+      <if test="stationId!= null &amp;&amp; stationId != ''" >
+        and sd.station_id = #{stationId,jdbcType=VARCHAR}
+      </if>
+      <if test="driverType!= null &amp;&amp; driverType != ''" >
+        and sd.driver_type = #{driverType,jdbcType=INTEGER}
+      </if>
+      <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
+        and sd.plate_number like CONCAT(CONCAT('%',  #{plateNumber,jdbcType=VARCHAR}), '%')
+      </if>
+    </trim>
+  </select>
   <select id="querySingleDriver" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     *
