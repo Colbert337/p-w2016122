@@ -171,9 +171,9 @@ public class GastationController extends BaseContoller{
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
             if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
-            	 content[0] = new String[]{"订单号","工作站编号","工作站名称","所属公司","转账时间","转账方式","操作员","操作时间","预存款金额"};
+            	 content[0] = new String[]{"订单号","工作站编号","工作站名称","转账时间","转账方式","操作员","操作时间","预存款金额"};
             }else{
-            	 content[0] = new String[]{"订单号","工作站编号","工作站名称","所属公司","转账时间","充值方式 ","操作员","操作时间","预存款金额"};
+            	 content[0] = new String[]{"订单号","工作站编号","工作站名称","转账时间","充值方式 ","操作员","操作时间","预存款金额"};
             }
            
 
@@ -220,7 +220,7 @@ public class GastationController extends BaseContoller{
                     String optime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(station.getOptime());
                     String deposit_ = station.getDeposit().toString();
                    
-                    content[i] = new String[]{orderNumber,stationid,stationname,company,depositTime,depositType,operator,optime,deposit_};
+                    content[i] = new String[]{orderNumber,stationid,stationname,depositTime,depositType,operator,optime,deposit_};
                     i++;
                 }
             }

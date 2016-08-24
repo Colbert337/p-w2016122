@@ -507,7 +507,7 @@ public class TransportionController extends BaseContoller{
 
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            content[0] = new String[]{"订单号","工作站编号","工作站名称","所属公司","转账时间","转账方式","操作员","操作时间","充值金额"};
+            content[0] = new String[]{"订单号","工作站编号","工作站名称","转账时间","转账方式","操作员","操作时间","充值金额"};
 
             int i = 1;
             if(list != null && list.size() > 0){
@@ -547,7 +547,7 @@ public class TransportionController extends BaseContoller{
                     String optime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(station.getOptime());
                     String deposit_ = station.getDeposit().toString();
 
-                    content[i] = new String[]{orderNumber,stationid,stationname,company,depositTime,depositType,operator,optime,deposit_};
+                    content[i] = new String[]{orderNumber,stationid,stationname,depositTime,depositType,operator,optime,deposit_};
                     i++;
                 }
             }
