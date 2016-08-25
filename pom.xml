@@ -345,11 +345,11 @@
 			<artifactId>jrobin</artifactId>
 			<version>1.5.9</version>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 		    <groupId>org.json</groupId>
 		    <artifactId>json</artifactId>
 		    <version>20090211</version>
-	    </dependency>
+	    </dependency>-->
 	</dependencies>
 	
 	<build>
