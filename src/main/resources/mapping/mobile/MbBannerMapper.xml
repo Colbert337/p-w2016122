@@ -26,7 +26,7 @@
     select 
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
     remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name 
-    from mb_banner a
+    from mb_banner 
     where is_deleted = 1 
     <if test="title != null" >
       and title = #{title,jdbcType=VARCHAR}
