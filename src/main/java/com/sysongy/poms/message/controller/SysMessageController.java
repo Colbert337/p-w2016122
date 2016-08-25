@@ -1,3 +1,4 @@
+/*
 package com.sysongy.poms.message.controller;
 
 import org.apache.commons.lang.StringUtils;
@@ -23,13 +24,15 @@ public class SysMessageController extends BaseContoller{
 	
 	private SysMessage message;
 	
-	/**
+	*/
+/**
 	 * 加气站查询
 	 * @param map
 	 * @param gascard
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
+
 	@RequestMapping("/messageList")
 	public String queryAllMessageList(ModelMap map, SysMessage message) throws Exception{
 		
@@ -147,3 +150,4 @@ public class SysMessageController extends BaseContoller{
 	}
 	
 }
+*/
