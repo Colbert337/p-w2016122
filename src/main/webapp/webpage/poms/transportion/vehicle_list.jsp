@@ -76,13 +76,13 @@
 									</th>
 									<th onclick="orderBy(this,'tc_vehicle_id');commitForm();" id="tc_vehicle_id_order">车辆编号</th>
 									<th onclick="orderBy(this,'plates_number');commitForm();" id="plates_number_order">车牌号</th>
-									<th onclick="orderBy(this,'');commitForm();" id="_order">车队名称</th>
-									<th onclick="orderBy(this,'');commitForm();" id="_order">所属公司</th>
+									<th>车队名称</th>
+									<th>所属公司</th>
 									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">公司编号</th>
 									<th onclick="orderBy(this,'notice_phone');commitForm();" id="notice_phone_order">通知手机</th>
 									<th onclick="orderBy(this,'copy_phone');commitForm();" id="copy_phone_order">抄送手机</th>
 									<th onclick="orderBy(this,'card_no');commitForm();" id="card_no_order">实体卡号</th>
-									<th onclick="orderBy(this,'');commitForm();" id="_order">实体卡状态</th> 
+									<th>实体卡状态</th> 
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>									
 									<th class="text-center td-w3">更多操作</th>
 								</tr>
