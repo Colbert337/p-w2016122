@@ -189,8 +189,8 @@
 										for="title"><span class="red_star">*</span> 标题： </label>
 									<div class="col-sm-8">
 										<input type="text" name="title" id="title" data-onFlag=""
-											placeholder="标题"  maxlength="10" class="col-xs-10 col-sm-12" /> <input
-											type="hidden" name="mbBannerId" id="mb_banner_id" /> <input
+											placeholder="标题" maxlength="10" class="col-xs-10 col-sm-12" />
+										<input type="hidden" name="mbBannerId" id="mb_banner_id" /> <input
 											type="hidden" id="stationId" value="${stationId}" />
 									</div>
 								</div>
@@ -215,7 +215,7 @@
 												<div class="widget-main">
 													<img id="show_img" width="150" height="150" alt="150x150"
 														src="" /> <input type="file" name="image"
-														class="projectfile" id="indu_com_certif_select"  /> <input
+														class="projectfile" id="indu_com_certif_select" /> <input
 														type="hidden" id="img_path" name="imgPath" />
 													<button class="btn btn-sm btn-primary btn-file-space"
 														type="button"
@@ -237,9 +237,9 @@
 											</div>
 											<div class="widget-body">
 												<div class="widget-main">
-													<img id="show_sm_img" width="150" height="150" alt="150x150"
-														src="" /> <input type="file" name="image2"
-														class="projectfile" id="indu_com_sm_select"  /> <input
+													<img id="show_sm_img" width="150" height="150"
+														alt="150x150" src="" /> <input type="file" name="image2"
+														class="projectfile" id="indu_com_sm_select" /> <input
 														type="hidden" id="img_sm_path" name="imgSmPath" />
 													<button class="btn btn-sm btn-primary btn-file-space"
 														type="button"
@@ -297,41 +297,45 @@
 										
 										</div>
 									</div> --%>
-									
-									 <label class="col-sm-3 control-label no-padding-right"
+
+									<label class="col-sm-3 control-label no-padding-right"
 										for="version">版本号： </label>
 									<div class="col-sm-3">
 										<div class="row">
 											<div class="col-sm-3">
 												<div class="btn-group j-android-versions">
-													<span class="btn btn-primary btn-white dropdown-toggle" >城市列表<i class="ace-icon fa fa-angle-down icon-on-right"></i>
+													<span class="btn btn-primary btn-white dropdown-toggle">城市列表<i
+														class="ace-icon fa fa-angle-down icon-on-right"></i>
 													</span>
 													<ul class="dropdown-menu">
+														<li>
+															<div class="checkbox">
+																<label> <input name="" type="checkbox"
+																	id="allche" onchange="checkedchange(this)" class="ace">
+																	<span class="lbl"> 全选</span>
+																</label>
+															</div>
+														</li>
+														<c:forEach items="${city}" var="one">
 															<li>
 																<div class="checkbox">
-																	<label>
-																		<input name="" type="checkbox" id="allche"  onchange="checkedchange(this)" class="ace">
-																		<span class="lbl"> 全选</span>
-																	</label>
-																</div>
-															</li>
-														<c:forEach items="${city}" var="one" >
-															<li>
-																<div class="checkbox">
-																	<label>
-																		<input name="form-field-checkbox" type="checkbox" value2="${one.cityId }" id="c${one.cityId }"  values="${one.cityName }"  onclick="checkedclick( )"  class="ace checked"/>
-																		<span class="lbl"> ${one.cityName }</span>
+																	<label> <input name="form-field-checkbox"
+																		type="checkbox" value2="${one.cityId }"
+																		id="c${one.cityId }" values="${one.cityName }"
+																		onclick="checkedclick( )" class="ace checked" /> <span
+																		class="lbl"> ${one.cityName }</span>
 																	</label>
 																</div>
 															</li>
 														</c:forEach>
-														 
+
 													</ul>
 												</div>
 											</div>
-										
+
 										</div>
-									</div><%-- <label class="col-sm-3 control-label no-padding-right"
+									</div>
+									<%-- <label class="col-sm-3 control-label no-padding-right"
 										for="version">城市： </label>
 									<div class="col-sm-8">
 										<select id="city" class="combobox col-sm-8">
@@ -439,10 +443,10 @@
 										</a></li>
 									</ul>
 								</div>
-									<div class="col-xs-5">
-									<label class="control-label no-padding-right">缩略图</label>
+								<div class="col-xs-5">
+									<label class="control-label no-padding-right"></label>
 									<ul class="ace-thumbnails clearfix">
-										<li><a href="" data-rel="colorbox"> <img
+										<li><a href="" data-rel="colorbox"> 缩略图<img
 												class="img-responsive" src="" alt="" id="innerimg2">
 												<div class="text">
 													<div class="inner">点击放大</div>
