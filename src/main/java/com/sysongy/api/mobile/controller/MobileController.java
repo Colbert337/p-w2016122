@@ -435,7 +435,6 @@ public class MobileController {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("密码为空！");
 				}
-
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
