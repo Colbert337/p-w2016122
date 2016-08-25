@@ -1,4 +1,3 @@
-/*
 package com.sysongy.api.umeng.push;
 
 import java.io.BufferedReader;
@@ -80,4 +79,3 @@ public abstract class UmengNotification {
     }
 
 }
-*/

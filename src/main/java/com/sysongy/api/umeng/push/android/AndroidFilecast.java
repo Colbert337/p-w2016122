@@ -1,4 +1,3 @@
-/*
 package com.sysongy.api.umeng.push.android;
 
 import com.sysongy.api.umeng.push.AndroidNotification;
@@ -14,4 +13,4 @@ public class AndroidFilecast extends AndroidNotification {
 	public void setFileId(String fileId) throws Exception {
     	setPredefinedKeyValue("file_id", fileId);
     }
-}*/
+}

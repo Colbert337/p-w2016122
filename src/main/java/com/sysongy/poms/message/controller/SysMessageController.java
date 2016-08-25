@@ -1,4 +1,3 @@
-/*
 package com.sysongy.poms.message.controller;
 
 import org.apache.commons.lang.StringUtils;
@@ -21,21 +20,19 @@ public class SysMessageController extends BaseContoller{
 
 	@Autowired
 	private SysMessageService service;
-	
+
 	private SysMessage message;
-	
-	*/
-/**
+
+	/**
 	 * 加气站查询
 	 * @param map
 	 * @param gascard
 	 * @return
 	 * @throws Exception
-	 *//*
-
+	 */
 	@RequestMapping("/messageList")
 	public String queryAllMessageList(ModelMap map, SysMessage message) throws Exception{
-		
+
 		this.message = message;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/message/message_list";
@@ -70,12 +67,12 @@ public class SysMessageController extends BaseContoller{
 			return ret;
 		}
 	}
-	
+
 	@RequestMapping("/saveMessage")
 	public String saveMessage(ModelMap map, SysMessage message) throws Exception{
-		
+
 		PageBean bean = new PageBean();
-		
+
 		String ret = "webpage/poms/message/message_new";
 		String messageid = null;
 
@@ -92,7 +89,7 @@ public class SysMessageController extends BaseContoller{
 			}
 
 			bean.setRetCode(100);
-			
+
 			bean.setRetValue(messageid);
 			bean.setPageInfo(ret);
 
@@ -103,7 +100,7 @@ public class SysMessageController extends BaseContoller{
 
 			map.addAttribute("ret", bean);
 			map.addAttribute("message", messageid);
-			
+
 			logger.error("", e);
 		}
 		finally {
@@ -115,7 +112,7 @@ public class SysMessageController extends BaseContoller{
 	public String deleteMessage(ModelMap map, @RequestParam String messageid){
 
 		PageBean bean = new PageBean();
-		
+
 		String ret = "webpage/poms/message/message_list";
 		Integer rowcount = null;
 
@@ -148,6 +145,5 @@ public class SysMessageController extends BaseContoller{
 			return ret;
 		}
 	}
-	
+
 }
-*/

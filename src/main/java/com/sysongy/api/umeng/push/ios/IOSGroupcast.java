@@ -1,4 +1,3 @@
-/*
 package com.sysongy.api.umeng.push.ios;
 
 import org.json.JSONObject;
@@ -16,4 +15,3 @@ public class IOSGroupcast extends IOSNotification {
     	setPredefinedKeyValue("filter", filter);
     }
 }
-*/

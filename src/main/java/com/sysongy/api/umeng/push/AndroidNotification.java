@@ -1,4 +1,3 @@
-/*
 package com.sysongy.api.umeng.push;
 
 import java.util.Arrays;
@@ -198,4 +197,3 @@ public abstract class AndroidNotification extends UmengNotification {
 	}
 	
 }
-*/
