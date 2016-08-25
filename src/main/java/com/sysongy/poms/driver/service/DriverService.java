@@ -14,6 +14,12 @@ public interface DriverService {
 	public PageInfo<SysDriver> queryDrivers(SysDriver obj) throws Exception;
 	
 	public List<SysDriver> queryeSingleList(SysDriver record) throws Exception;
+	/**
+	 * 查询司机信息列表，关联公司
+	 * @param record
+	 * @return
+	 */
+	public List<SysDriver> queryForPageList(SysDriver record) throws Exception;
 
 	public PageInfo<SysDriver> querySingleDriver(SysDriver obj) throws Exception;
 

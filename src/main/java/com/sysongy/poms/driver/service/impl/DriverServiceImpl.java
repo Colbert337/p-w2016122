@@ -106,7 +106,12 @@ public class DriverServiceImpl implements DriverService {
     public List<SysDriver> queryeSingleList(SysDriver record) throws Exception {
          return sysDriverMapper.queryForPage(record);
     }
-    
+
+    @Override
+    public List<SysDriver> queryForPageList(SysDriver record) throws Exception {
+        return sysDriverMapper.queryForPageList(record);
+    }
+
     @Override
     public PageInfo<SysDriverReviewStr> queryDriversLog(SysDriverReviewStr record) throws Exception {
         PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());

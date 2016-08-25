@@ -102,6 +102,10 @@ public class SysDriver extends BaseModel{
 
     private String deviceToken;
 
+    private String transportionName;
+
+    private String gasStationName;
+
     public String getMemo() {
 		return memo;
 	}
@@ -469,5 +473,21 @@ public class SysDriver extends BaseModel{
 
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
+    }
+
+    public String getTransportionName() {
+        return transportionName;
+    }
+
+    public void setTransportionName(String transportionName) {
+        this.transportionName = transportionName;
+    }
+
+    public String getGasStationName() {
+        return gasStationName;
+    }
+
+    public void setGasStationName(String gasStationName) {
+        this.gasStationName = gasStationName;
     }
 }

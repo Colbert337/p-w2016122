@@ -326,7 +326,7 @@ public class MobileController {
 				if(sysDriverId != null && !sysDriverId.equals("")){
 					Map<String, Object> resultMap = new HashMap<>();
 					driver.setSysDriverId(sysDriverId);
-					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+					List<SysDriver> driverlist = driverService.queryForPageList(driver);
 					if(driverlist != null && driverlist.size() > 0){
 						List<Map<String, Object>> list = orderService.calcDriverCashBack(sysDriverId);
 						String cashBack = "0.00";
@@ -359,8 +359,14 @@ public class MobileController {
 							driverService.saveDriver(driverCode,"update");
 						}
 						resultMap.put("invitationCode",invitationCode);
-						resultMap.put("company",driver.getStationId());
-						resultMap.put("cardId",driver.getCardId());
+						if(driver.getTransportionName() != null && !"".equals(driver.getTransportionName().toString()) ){
+							resultMap.put("company",driver.getTransportionName());
+						}else if(driver.getGasStationName() != null && !"".equals(driver.getGasStationName().toString())){
+							resultMap.put("company",driver.getGasStationName());
+						}else{
+							resultMap.put("company","");
+						}
+						resultMap.put("cardId",(driver.getCardId() == null || "".equals(driver.getCardId())) ? "":driver.getCardId());
 						resultMap.put("isPayCode",(driver.getPayCode() == null || "".equals(driver.getPayCode())) ? "false":"true");
 						result.setData(resultMap);
 					}
@@ -637,6 +643,7 @@ public class MobileController {
 				driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
 				driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
 				driver.setSysDriverId(mainObj.optString("token"));
+				driver.setCheckedStatus(GlobalConstant.DriverCheckedStatus.CERTIFICATING);
 
 				int resultVal = driverService.saveDriver(driver,"update");
 				if(resultVal <= 0){
