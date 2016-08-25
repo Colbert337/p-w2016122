@@ -19,12 +19,12 @@ import com.sysongy.api.umeng.push.ios.IOSUnicast;
 import com.sysongy.api.umeng.push.model.CommonParams;
 
 public class UmengUtil {
-	
+
 	private String appkey = null;
 	private String appMasterSecret = null;
 	private String timestamp = null;
 	private PushClient client = new PushClient();
-	
+
 	public UmengUtil(String key, String secret) {
 		try {
 			appkey = key;
@@ -34,7 +34,7 @@ public class UmengUtil {
 			System.exit(1);
 		}
 	}
-	
+
 	public int sendAndroidBroadcast(CommonParams params) throws Exception {
 		AndroidBroadcast broadcast = new AndroidBroadcast(appkey,appMasterSecret);
 		broadcast.setTicker(params.getTicker());
@@ -42,14 +42,14 @@ public class UmengUtil {
 		broadcast.setText(params.getText());
 		broadcast.goAppAfterOpen();
 		broadcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
-		// TODO Set 'production_mode' to 'false' if it's a test device. 
+		// TODO Set 'production_mode' to 'false' if it's a test device.
 		// For how to register a test device, please see the developer doc.
 		broadcast.setProductionMode();
 		// Set customized fields
-		//broadcast.setExtraField("test", "helloworld"); 
+		//broadcast.setExtraField("test", "helloworld");
 		return client.send(broadcast);
 	}
-	
+
 	public void sendAndroidUnicast(CommonParams params) throws Exception {
 		AndroidUnicast unicast = new AndroidUnicast(appkey,appMasterSecret);
 		// TODO Set your device token
@@ -59,22 +59,22 @@ public class UmengUtil {
 		unicast.setText(params.getText());
 		unicast.goAppAfterOpen();
 		unicast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
-		// TODO Set 'production_mode' to 'false' if it's a test device. 
+		// TODO Set 'production_mode' to 'false' if it's a test device.
 		// For how to register a test device, please see the developer doc.
 		unicast.setProductionMode();
 		// Set customized fields
-		
+
 		//unicast.setExtraField("test", "helloworld");暂时不使用
 		client.send(unicast);
 	}
-	
+
 	public void sendAndroidGroupcast() throws Exception {
 		AndroidGroupcast groupcast = new AndroidGroupcast(appkey,appMasterSecret);
 		/*  TODO
 		 *  Construct the filter condition:
-		 *  "where": 
+		 *  "where":
 		 *	{
-    	 *		"and": 
+    	 *		"and":
     	 *		[
       	 *			{"tag":"test"},
       	 *			{"tag":"Test"}
@@ -93,23 +93,23 @@ public class UmengUtil {
 		whereJson.put("and", tagArray);
 		filterJson.put("where", whereJson);
 		System.out.println(filterJson.toString());
-		
+
 		groupcast.setFilter(filterJson);
 		groupcast.setTicker( "Android groupcast ticker");
 		groupcast.setTitle(  "中文的title");
 		groupcast.setText(   "Android groupcast text");
 		groupcast.goAppAfterOpen();
 		groupcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
-		// TODO Set 'production_mode' to 'false' if it's a test device. 
+		// TODO Set 'production_mode' to 'false' if it's a test device.
 		// For how to register a test device, please see the developer doc.
 		groupcast.setProductionMode();
 		client.send(groupcast);
 	}
-	
+
 	public void sendAndroidCustomizedcast() throws Exception {
 		AndroidCustomizedcast customizedcast = new AndroidCustomizedcast(appkey,appMasterSecret);
 		// TODO Set your alias here, and use comma to split them if there are multiple alias.
-		// And if you have many alias, you can also upload a file containing these alias, then 
+		// And if you have many alias, you can also upload a file containing these alias, then
 		// use file_id to send customized notification.
 		customizedcast.setAlias("alias", "alias_type");
 		customizedcast.setTicker( "Android customizedcast ticker");
@@ -117,16 +117,16 @@ public class UmengUtil {
 		customizedcast.setText(   "Android customizedcast text");
 		customizedcast.goAppAfterOpen();
 		customizedcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
-		// TODO Set 'production_mode' to 'false' if it's a test device. 
+		// TODO Set 'production_mode' to 'false' if it's a test device.
 		// For how to register a test device, please see the developer doc.
 		customizedcast.setProductionMode();
 		client.send(customizedcast);
 	}
-	
+
 	public void sendAndroidCustomizedcastFile() throws Exception {
 		AndroidCustomizedcast customizedcast = new AndroidCustomizedcast(appkey,appMasterSecret);
 		// TODO Set your alias here, and use comma to split them if there are multiple alias.
-		// And if you have many alias, you can also upload a file containing these alias, then 
+		// And if you have many alias, you can also upload a file containing these alias, then
 		// use file_id to send customized notification.
 		String fileId = client.uploadContents(appkey,appMasterSecret,"aa"+"\n"+"bb"+"\n"+"alias");
 		customizedcast.setFileId(fileId, "alias_type");
@@ -135,15 +135,15 @@ public class UmengUtil {
 		customizedcast.setText(   "Android customizedcast text");
 		customizedcast.goAppAfterOpen();
 		customizedcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
-		// TODO Set 'production_mode' to 'false' if it's a test device. 
+		// TODO Set 'production_mode' to 'false' if it's a test device.
 		// For how to register a test device, please see the developer doc.
 		customizedcast.setProductionMode();
 		client.send(customizedcast);
 	}
-	
+
 	public void sendAndroidFilecast() throws Exception {
 		AndroidFilecast filecast = new AndroidFilecast(appkey,appMasterSecret);
-		// TODO upload your device tokens, and use '\n' to split them if there are multiple tokens 
+		// TODO upload your device tokens, and use '\n' to split them if there are multiple tokens
 		String fileId = client.uploadContents(appkey,appMasterSecret,"aa"+"\n"+"bb");
 		filecast.setFileId( fileId);
 		filecast.setTicker( "Android filecast ticker");
@@ -153,7 +153,7 @@ public class UmengUtil {
 		filecast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
 		client.send(filecast);
 	}
-	
+
 	public void sendIOSBroadcast() throws Exception {
 		IOSBroadcast broadcast = new IOSBroadcast(appkey,appMasterSecret);
 
@@ -166,7 +166,7 @@ public class UmengUtil {
 		broadcast.setCustomizedField("test", "helloworld");
 		client.send(broadcast);
 	}
-	
+
 	public void sendIOSUnicast() throws Exception {
 		IOSUnicast unicast = new IOSUnicast(appkey,appMasterSecret);
 		// TODO Set your device token
@@ -180,14 +180,14 @@ public class UmengUtil {
 		unicast.setCustomizedField("test", "helloworld");
 		client.send(unicast);
 	}
-	
+
 	public void sendIOSGroupcast() throws Exception {
 		IOSGroupcast groupcast = new IOSGroupcast(appkey,appMasterSecret);
 		/*  TODO
 		 *  Construct the filter condition:
-		 *  "where": 
+		 *  "where":
 		 *	{
-    	 *		"and": 
+    	 *		"and":
     	 *		[
       	 *			{"tag":"iostest"}
     	 *		]
@@ -202,7 +202,7 @@ public class UmengUtil {
 		whereJson.put("and", tagArray);
 		filterJson.put("where", whereJson);
 		System.out.println(filterJson.toString());
-		
+
 		// Set filter condition into rootJson
 		groupcast.setFilter(filterJson);
 		groupcast.setAlert("IOS 组播测试");
@@ -212,11 +212,11 @@ public class UmengUtil {
 		groupcast.setTestMode();
 		client.send(groupcast);
 	}
-	
+
 	public void sendIOSCustomizedcast() throws Exception {
 		IOSCustomizedcast customizedcast = new IOSCustomizedcast(appkey,appMasterSecret);
 		// TODO Set your alias and alias_type here, and use comma to split them if there are multiple alias.
-		// And if you have many alias, you can also upload a file containing these alias, then 
+		// And if you have many alias, you can also upload a file containing these alias, then
 		// use file_id to send customized notification.
 		customizedcast.setAlias("alias", "alias_type");
 		customizedcast.setAlert("IOS 个性化测试");
@@ -226,10 +226,10 @@ public class UmengUtil {
 		customizedcast.setTestMode();
 		client.send(customizedcast);
 	}
-	
+
 	public void sendIOSFilecast() throws Exception {
 		IOSFilecast filecast = new IOSFilecast(appkey,appMasterSecret);
-		// TODO upload your device tokens, and use '\n' to split them if there are multiple tokens 
+		// TODO upload your device tokens, and use '\n' to split them if there are multiple tokens
 		String fileId = client.uploadContents(appkey,appMasterSecret,"aa"+"\n"+"bb");
 		filecast.setFileId( fileId);
 		filecast.setAlert("IOS 文件播测试");
@@ -239,7 +239,7 @@ public class UmengUtil {
 		filecast.setTestMode();
 		client.send(filecast);
 	}
-	
+
 	public static void main(String[] args) {
 		// TODO set your appkey and master secret here
 		UmengUtil demo = new UmengUtil("5782f28567e58ed4eb000f60", "rf0fxd7hpdr399ds5lx0qtuio8cm6ail");
@@ -256,7 +256,7 @@ public class UmengUtil {
 			 * demo.sendAndroidGroupcast();
 			 * demo.sendAndroidCustomizedcast();
 			 * demo.sendAndroidFilecast();
-			 * 
+			 *
 			 * demo.sendIOSBroadcast();
 			 * demo.sendIOSUnicast();
 			 * demo.sendIOSGroupcast();

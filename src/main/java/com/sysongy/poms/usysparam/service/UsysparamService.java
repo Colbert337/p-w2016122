@@ -1,6 +1,7 @@
 package com.sysongy.poms.usysparam.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sysongy.poms.usysparam.model.Usysparam;
 
@@ -22,6 +23,8 @@ public interface UsysparamService {
 	public Integer deleteUsysparam(Usysparam recode);
 
 	public List<Usysparam> queryUsysparamByGcode(String gcode);
+
+	public List<Map<String, Object>> queryUsysparamMapByGcode(String gcode);
 
 	public List<Usysparam> queryUsysparamChildByGcode(String gcode);
 

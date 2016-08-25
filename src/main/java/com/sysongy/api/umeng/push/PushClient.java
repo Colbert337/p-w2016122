@@ -12,19 +12,19 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 public class PushClient {
-	
+
 	// The user agent
 	protected final String USER_AGENT = "Mozilla/5.0";
 
 	// This object is used for sending the post request to Umeng
 	protected HttpClient client = new DefaultHttpClient();
-	
+
 	// The host
 	protected static final String host = "http://msg.umeng.com";
-	
+
 	// The upload path
 	protected static final String uploadPath = "/upload";
-	
+
 	// The post path
 	protected static final String postPath = "/api/send";
 
@@ -94,7 +94,7 @@ public class PushClient {
 		JSONObject data = respJson.getJSONObject("data");
 		String fileId = data.getString("file_id");
 		// Set file_id into rootJson using setPredefinedKeyValue
-		
+
 		return fileId;
 	}
 

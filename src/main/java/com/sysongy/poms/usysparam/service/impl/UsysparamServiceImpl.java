@@ -1,6 +1,7 @@
 package com.sysongy.poms.usysparam.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,11 @@ public class UsysparamServiceImpl implements UsysparamService {
 	@Override
 	public List<Usysparam> queryUsysparamByGcode(String gcode){
 		return usysparamMapper.queryUsysparamByGcode(gcode);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryUsysparamMapByGcode(String gcode) {
+		return usysparamMapper.queryUsysparamMapByGcode(gcode);
 	}
 
 	@Override

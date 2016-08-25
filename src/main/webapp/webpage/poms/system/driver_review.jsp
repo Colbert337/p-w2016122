@@ -84,15 +84,15 @@
 									</th>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
 									<th onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">认证姓名</th>
-									<th onclick="orderBy(this,'plate_number');commitForm();" id="salesmen_name_order">车牌号</th>
-									<th onclick="orderBy(this,'identity_card');commitForm();" id="operations_name_order">身份证号</th>
-									<th onclick="orderBy(this,'fuel_type');commitForm();" id="indu_com_number_order">燃料类型</th>
-									<th onclick="orderBy(this,'station_id_id');commitForm();" id="station_id_order">注册工作站编号</th>
+									<th onclick="orderBy(this,'plate_number');commitForm();" id="plate_number_order">车牌号</th>
+									<th onclick="orderBy(this,'identity_card');commitForm();" id="identity_card_order">身份证号</th>
+									<th onclick="orderBy(this,'fuel_type');commitForm();" id="fuel_type_order">燃料类型</th>
+									<th onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">注册工作站编号</th>
 									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册工作站名称</th>
 									<!--  <th onclick="orderBy(this,'is_ident');commitForm();" id="address_order">是否实名认证</th> -->
-									<th onclick="orderBy(this,'updatedDate');commitForm();" id="created_time_order" class="td-w2"><i id="updatedDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
-									<th onclick="orderBy(this,'checked_status');commitForm();" id="address_order">审核状态</th> 
-									<th onclick="orderBy(this,'checked_date');commitForm();" id="expiry_date_order" class="td-w2"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
+									<th onclick="orderBy(this,'updated_date');commitForm();" id="updated_date_order" class="td-w2"><i id="updated_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>申请时间</th>
+									<th onclick="orderBy(this,'checked_status');commitForm();" id="checked_status_order">审核状态</th> 
+									<th onclick="orderBy(this,'checked_date');commitForm();" id="checked_date_order" class="td-w2"><i id="checked_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>审核时间</th>
 									<th id="memoth" style="display:none">备注</th>
 									<th id="memoth" style="display:none">驾驶证</th>
 									<th id="memoth" style="display:none">行驶证</th>

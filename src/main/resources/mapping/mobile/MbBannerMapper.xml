@@ -20,14 +20,21 @@
   </resultMap>
   <sql id="Base_Column_List" >
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
-    remark, is_deleted, created_date, updated_date,operator,content
+    remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name
   </sql>
   <select id="queryMbBannerList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     select 
+<<<<<<< HEAD
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
     remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name 
     from mb_banner 
     where is_deleted = 1 
+=======
+    mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort,
+    remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name
+    from mb_banner a
+    where is_deleted = 1
+>>>>>>> c99350fcaf862b28a44675f5871fc0588021de26
     <if test="title != null" >
       and title = #{title,jdbcType=VARCHAR}
     </if>
