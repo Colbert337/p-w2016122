@@ -50,10 +50,7 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.RedisClientInterface;
-import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.*;
 import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -425,7 +422,19 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				String password = mainObj.optString("password");
+				if(password != null && !"".equals(password)){
+					password = Encoder.MD5Encode(password.getBytes());
+					sysDriver.setPassword(password);
+					sysDriver.setSysDriverId(mainObj.optString("token"));
 
+					driverService.saveDriver(sysDriver,"update");
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("密码为空！");
+				}
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -612,7 +621,25 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
-
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				String driverId = mainObj.optString("token");
+				String oldPayCode = mainObj.optString("oldPayCode");
+				oldPayCode = Encoder.MD5Encode(oldPayCode.getBytes());
+				SysDriver driver = driverService.queryDriverByPK(driverId);
+				String payCode = driver.getPayCode();
+				if(payCode.equals(oldPayCode)){
+					//判断原支付密码是否正确
+					String newPayCode = mainObj.optString("newPayCode");
+					if(newPayCode != null && !"".equals(newPayCode)){
+						newPayCode = Encoder.MD5Encode(newPayCode.getBytes());
+						sysDriver.setPassword(newPayCode);
+						driverService.saveDriver(sysDriver,"update");
+					}
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("原始密码错误！");
+				}
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
