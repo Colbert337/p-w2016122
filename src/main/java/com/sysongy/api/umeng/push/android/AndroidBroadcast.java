@@ -1,3 +1,4 @@
+/*
 package com.sysongy.api.umeng.push.android;
 
 import com.sysongy.api.umeng.push.AndroidNotification;
@@ -9,3 +10,4 @@ public class AndroidBroadcast extends AndroidNotification {
 			this.setPredefinedKeyValue("type", "broadcast");	
 	}
 }
+*/

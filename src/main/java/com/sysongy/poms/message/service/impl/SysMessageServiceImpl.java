@@ -1,3 +1,4 @@
+/*
 package com.sysongy.poms.message.service.impl;
 
 import java.util.Date;
@@ -72,3 +73,4 @@ public class SysMessageServiceImpl implements SysMessageService {
 	}
 
 }
+*/

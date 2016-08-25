@@ -1,3 +1,4 @@
+/*
 package com.sysongy.api.umeng.push.ios;
 
 import com.sysongy.api.umeng.push.IOSNotification;
@@ -13,3 +14,4 @@ public class IOSUnicast extends IOSNotification {
     	setPredefinedKeyValue("device_tokens", token);
     }
 }
+*/

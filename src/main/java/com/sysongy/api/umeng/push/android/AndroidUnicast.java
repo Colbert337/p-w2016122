@@ -1,3 +1,4 @@
+/*
 package com.sysongy.api.umeng.push.android;
 
 import com.sysongy.api.umeng.push.AndroidNotification;
@@ -13,4 +14,4 @@ public class AndroidUnicast extends AndroidNotification {
     	setPredefinedKeyValue("device_tokens", token);
     }
 
-}
+}*/

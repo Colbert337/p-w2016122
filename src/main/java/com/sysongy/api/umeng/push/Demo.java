@@ -1,3 +1,4 @@
+/*
 package com.sysongy.api.umeng.push;
 
 import org.json.JSONArray;
@@ -64,7 +65,8 @@ public class Demo {
 	
 	public void sendAndroidGroupcast() throws Exception {
 		AndroidGroupcast groupcast = new AndroidGroupcast(appkey,appMasterSecret);
-		/*  TODO
+		*/
+/*  TODO
 		 *  Construct the filter condition:
 		 *  "where": 
 		 *	{
@@ -74,7 +76,8 @@ public class Demo {
       	 *			{"tag":"Test"}
     	 *		]
 		 *	}
-		 */
+		 *//*
+
 		JSONObject filterJson = new JSONObject();
 		JSONObject whereJson = new JSONObject();
 		JSONArray tagArray = new JSONArray();
@@ -177,7 +180,8 @@ public class Demo {
 	
 	public void sendIOSGroupcast() throws Exception {
 		IOSGroupcast groupcast = new IOSGroupcast(appkey,appMasterSecret);
-		/*  TODO
+		*/
+/*  TODO
 		 *  Construct the filter condition:
 		 *  "where": 
 		 *	{
@@ -186,7 +190,8 @@ public class Demo {
       	 *			{"tag":"iostest"}
     	 *		]
 		 *	}
-		 */
+		 *//*
+
 		JSONObject filterJson = new JSONObject();
 		JSONObject whereJson = new JSONObject();
 		JSONArray tagArray = new JSONArray();
@@ -240,7 +245,8 @@ public class Demo {
 		try {		
 			demo.sendAndroidBroadcast();
 			//demo.sendAndroidUnicast();
-			/* TODO these methods are all available, just fill in some fields and do the test
+			*/
+/* TODO these methods are all available, just fill in some fields and do the test
 			 * demo.sendAndroidUnicast();
 			 * demo.sendAndroidCustomizedcastFile();
 			 * demo.sendAndroidBroadcast();
@@ -253,7 +259,8 @@ public class Demo {
 			 * demo.sendIOSGroupcast();
 			 * demo.sendIOSCustomizedcast();
 			 * demo.sendIOSFilecast();
-			 */
+			 *//*
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -261,3 +268,4 @@ public class Demo {
 	
 
 }
+*/

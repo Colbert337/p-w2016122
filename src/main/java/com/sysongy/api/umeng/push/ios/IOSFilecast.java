@@ -1,3 +1,4 @@
+/*
 package com.sysongy.api.umeng.push.ios;
 
 import com.sysongy.api.umeng.push.IOSNotification;
@@ -13,3 +14,4 @@ public class IOSFilecast extends IOSNotification {
     	setPredefinedKeyValue("file_id", fileId);
     }
 }
+*/

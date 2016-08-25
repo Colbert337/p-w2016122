@@ -20,7 +20,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
-    remark, is_deleted, a.created_date, updated_date,operator,content,a.city_id,city_name
+    remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name
   </sql>
   <select id="queryMbBannerList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     select 

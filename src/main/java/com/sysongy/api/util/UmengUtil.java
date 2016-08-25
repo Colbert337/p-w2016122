@@ -1,3 +1,4 @@
+/*
 package com.sysongy.api.util;
 
 import org.json.JSONArray;
@@ -70,7 +71,8 @@ public class UmengUtil {
 	
 	public void sendAndroidGroupcast() throws Exception {
 		AndroidGroupcast groupcast = new AndroidGroupcast(appkey,appMasterSecret);
-		/*  TODO
+		*/
+/*  TODO
 		 *  Construct the filter condition:
 		 *  "where": 
 		 *	{
@@ -80,7 +82,8 @@ public class UmengUtil {
       	 *			{"tag":"Test"}
     	 *		]
 		 *	}
-		 */
+		 *//*
+
 		JSONObject filterJson = new JSONObject();
 		JSONObject whereJson = new JSONObject();
 		JSONArray tagArray = new JSONArray();
@@ -183,7 +186,8 @@ public class UmengUtil {
 	
 	public void sendIOSGroupcast() throws Exception {
 		IOSGroupcast groupcast = new IOSGroupcast(appkey,appMasterSecret);
-		/*  TODO
+		*/
+/*  TODO
 		 *  Construct the filter condition:
 		 *  "where": 
 		 *	{
@@ -192,7 +196,8 @@ public class UmengUtil {
       	 *			{"tag":"iostest"}
     	 *		]
 		 *	}
-		 */
+		 *//*
+
 		JSONObject filterJson = new JSONObject();
 		JSONObject whereJson = new JSONObject();
 		JSONArray tagArray = new JSONArray();
@@ -250,7 +255,8 @@ public class UmengUtil {
 			params.setTitle("");
 			params.setText("");
 			demo.sendAndroidUnicast(params);
-			/* TODO these methods are all available, just fill in some fields and do the test
+			*/
+/* TODO these methods are all available, just fill in some fields and do the test
 			 * demo.sendAndroidCustomizedcastFile();
 			 * demo.sendAndroidBroadcast();
 			 * demo.sendAndroidGroupcast();
@@ -262,9 +268,11 @@ public class UmengUtil {
 			 * demo.sendIOSGroupcast();
 			 * demo.sendIOSCustomizedcast();
 			 * demo.sendIOSFilecast();
-			 */
+			 *//*
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 }
+*/

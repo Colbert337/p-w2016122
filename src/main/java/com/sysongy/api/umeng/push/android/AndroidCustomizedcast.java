@@ -1,3 +1,4 @@
+/*
 package com.sysongy.api.umeng.push.android;
 
 import com.sysongy.api.umeng.push.AndroidNotification;
@@ -21,3 +22,4 @@ public class AndroidCustomizedcast extends AndroidNotification {
     }
 
 }
+*/
