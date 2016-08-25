@@ -48,10 +48,9 @@ import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.RedisClientInterface;
-import com.sysongy.util.UUIDGenerator;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.poms.usysparam.service.UsysparamService;
+import com.sysongy.util.*;
 import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -105,6 +104,8 @@ public class MobileController {
 	SysCashBackService sysCashBackService;
 	@Autowired
 	MbBannerService mbBannerService;
+	@Autowired
+	UsysparamService usysparamService;
 
 	/**
 	 * 用户登录
@@ -326,7 +327,7 @@ public class MobileController {
 				if(sysDriverId != null && !sysDriverId.equals("")){
 					Map<String, Object> resultMap = new HashMap<>();
 					driver.setSysDriverId(sysDriverId);
-					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+					List<SysDriver> driverlist = driverService.queryForPageList(driver);
 					if(driverlist != null && driverlist.size() > 0){
 						List<Map<String, Object>> list = orderService.calcDriverCashBack(sysDriverId);
 						String cashBack = "0.00";
@@ -348,7 +349,6 @@ public class MobileController {
 							resultMap.put("photoUrl",localPath+driver.getAvatarB());
 						}
 
-
 						String invitationCode = driver.getInvitationCode();//获取邀请码
 						if(invitationCode == null || "".equals(invitationCode)){
 							invitationCode = ShareCodeUtil.toSerialCode(driver.getDriver_number());
@@ -359,8 +359,14 @@ public class MobileController {
 							driverService.saveDriver(driverCode,"update");
 						}
 						resultMap.put("invitationCode",invitationCode);
-						resultMap.put("company",driver.getStationId());
-						resultMap.put("cardId",driver.getCardId());
+						if(driver.getTransportionName() != null && !"".equals(driver.getTransportionName().toString()) ){
+							resultMap.put("company",driver.getTransportionName());
+						}else if(driver.getGasStationName() != null && !"".equals(driver.getGasStationName().toString())){
+							resultMap.put("company",driver.getGasStationName());
+						}else{
+							resultMap.put("company","");
+						}
+						resultMap.put("cardId",(driver.getCardId() == null || "".equals(driver.getCardId())) ? "":driver.getCardId());
 						resultMap.put("isPayCode",(driver.getPayCode() == null || "".equals(driver.getPayCode())) ? "false":"true");
 						result.setData(resultMap);
 					}
@@ -382,6 +388,69 @@ public class MobileController {
 			result.setMsg("查询失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("查询失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	/**
+	 * 修改登录密码
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/user/updatePassword")
+	@ResponseBody
+	public String updatePassword(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("修改登录密码成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				String password = mainObj.optString("password");
+				if(password != null && !"".equals(password)){
+					password = Encoder.MD5Encode(password.getBytes());
+					sysDriver.setPassword(password);
+					sysDriver.setSysDriverId(mainObj.optString("token"));
+
+					driverService.saveDriver(sysDriver,"update");
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("密码为空！");
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("修改登录密码成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("修改登录密码失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("修改登录密码失败： " + e);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -526,6 +595,77 @@ public class MobileController {
 	}
 
 	/**
+	 * 修改支付密码
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/user/updatePayCode")
+	@ResponseBody
+	public String updatePayCode(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("修改支付密码成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				String driverId = mainObj.optString("token");
+				String oldPayCode = mainObj.optString("oldPayCode");
+				oldPayCode = Encoder.MD5Encode(oldPayCode.getBytes());
+				SysDriver driver = driverService.queryDriverByPK(driverId);
+				String payCode = driver.getPayCode();
+				if(payCode.equals(oldPayCode)){
+					//判断原支付密码是否正确
+					String newPayCode = mainObj.optString("newPayCode");
+					if(newPayCode != null && !"".equals(newPayCode)){
+						newPayCode = Encoder.MD5Encode(newPayCode.getBytes());
+						sysDriver.setPassword(newPayCode);
+						driverService.saveDriver(sysDriver,"update");
+					}
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("原始密码错误！");
+				}
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("修改支付密码成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("修改支付密码失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("修改支付密码失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
 	 * 图片上传
 	 * @param request
      * @return
@@ -637,6 +777,8 @@ public class MobileController {
 				driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
 				driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
 				driver.setSysDriverId(mainObj.optString("token"));
+				driver.setCheckedStatus(GlobalConstant.DriverCheckedStatus.CERTIFICATING);
+				driver.setIdentityCard(mainObj.optString("idCard"));
 
 				int resultVal = driverService.saveDriver(driver,"update");
 				if(resultVal <= 0){
@@ -668,6 +810,61 @@ public class MobileController {
 		}
 	}
 
+	/**
+	 * 获取参数列表
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/util/paramList")
+	@ResponseBody
+	public String getParamList(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询返现规则成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				String gcode = mainObj.optString("code");
+				if(gcode != null && !"".equals(gcode)){
+					List<Map<String, Object>> usysparamList = usysparamService.queryUsysparamMapByGcode(gcode);
+					result.setListMap(usysparamList);
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("查询成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询列表失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询列表失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 
 	/**
 	 * 意见反馈
@@ -761,18 +958,18 @@ public class MobileController {
 			if(mainObj != null){
 				SysDriver driver = driverService.queryDriverByPK(mainObj.optString("token"));
 				String lossType = mainObj.optString("lossType");
-				String cardId = mainObj.optString("cardId");
+				/*String cardId = mainObj.optString("cardId");*/
 				int retvale = 0;//操作影响行数
 				if(lossType != null){//类型等于0 或者等于1
 					retvale = sysUserAccountService.changeStatus(driver.getAccount().getSysUserAccountId(), lossType, driver.getCardInfo().getCard_no());
 				}
 
 				if(retvale >0 ){
-					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					if("2".equals(lossType)){
 						failStr = "解除挂失";
 					}else{
-						failStr = ("挂失失败");
+						failStr = ("挂失");
 					}
 					result.setMsg(failStr+"成功！");
 				}
@@ -1210,7 +1407,12 @@ public class MobileController {
 						bannerMap.put("content","");
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
 						bannerMap.put("contentUrl","");
-						bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
+						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
+							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
+						}else{
+							bannerMap.put("imageUrl","");
+						}
+
 
 						bannerList.add(bannerMap);
 					}
@@ -1224,7 +1426,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
 			logger.error("查询头条推广成功： " + resultStr);
 
@@ -1233,6 +1435,7 @@ public class MobileController {
 			result.setMsg("查询头条推广失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("查询头条推广失败： " + e);
+			e.printStackTrace();
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -1243,16 +1446,16 @@ public class MobileController {
 	}
 
 	/**
-	 * 在线充值
+	 * 充值记录
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "/deal/recharge")
+	@RequestMapping(value = "/record/rechargeRecord")
 	@ResponseBody
-	public String getRecharge(String params){
+	public String rechargeRecord(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询返现规则成功！");
+		result.setMsg("查询充值记录成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 
@@ -1279,13 +1482,172 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
-			logger.error("查询翻新金额成功： " + resultStr);
+			logger.error("查询充值记录成功： " + resultStr);
 
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询翻新金额失败！");
+			result.setMsg("查询充值记录失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询翻新金额失败： " + e);
+			logger.error("查询充值记录失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
+	 * 消费记录
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/record/consumeRecord")
+	@ResponseBody
+	public String consumeRecord(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询消费记录成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("查询消费记录成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询消费记录失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询消费记录失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
+	 * 转账记录
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/record/transferRecord")
+	@ResponseBody
+	public String transferRecord(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询转账记录成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("查询转账记录成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询转账记录失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询转账记录失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+
+	/**
+	 * 在线充值
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/deal/paramList")
+	@ResponseBody
+	public String getRecharge(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("充值成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);//参数解密
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+
+
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("充值成功： " + resultStr);
+
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("充值失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("充值失败： " + e);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.page.dao.SysStaticPageMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.page.model.SysStaticPage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="page_title" property="pageTitle" jdbcType="VARCHAR" />
+    <result column="page_body" property="pageBody" jdbcType="VARCHAR" />
+    <result column="page_ticker" property="pageTicker" jdbcType="VARCHAR" />
+    <result column="page_status" property="pageStatus" jdbcType="VARCHAR" />
+    <result column="page_created_time" property="pageCreatedTime" jdbcType="TIMESTAMP" />
+    <result column="page_creator" property="pageCreator" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.sysongy.poms.page.model.SysStaticPage" extends="BaseResultMap" >
+    <result column="page_html" property="pageHtml" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, page_title, page_body, page_ticker, page_status, page_created_time, page_creator, 
+    memo
+  </sql>
+  <sql id="Blob_Column_List" >
+    page_html
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_static_page
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_static_page
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
+    insert into sys_static_page (id, page_title, page_body, 
+      page_ticker, page_status, page_created_time, 
+      page_creator, memo, page_html
+      )
+    values (#{id,jdbcType=VARCHAR}, #{pageTitle,jdbcType=VARCHAR}, #{pageBody,jdbcType=VARCHAR}, 
+      #{pageTicker,jdbcType=VARCHAR}, #{pageStatus,jdbcType=VARCHAR}, #{pageCreatedTime,jdbcType=TIMESTAMP}, 
+      #{pageCreator,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{pageHtml,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
+    insert into sys_static_page
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pageTitle != null" >
+        page_title,
+      </if>
+      <if test="pageBody != null" >
+        page_body,
+      </if>
+      <if test="pageTicker != null" >
+        page_ticker,
+      </if>
+      <if test="pageStatus != null" >
+        page_status,
+      </if>
+      <if test="pageCreatedTime != null" >
+        page_created_time,
+      </if>
+      <if test="pageCreator != null" >
+        page_creator,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="pageHtml != null" >
+        page_html,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="pageTitle != null" >
+        #{pageTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="pageBody != null" >
+        #{pageBody,jdbcType=VARCHAR},
+      </if>
+      <if test="pageTicker != null" >
+        #{pageTicker,jdbcType=VARCHAR},
+      </if>
+      <if test="pageStatus != null" >
+        #{pageStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="pageCreatedTime != null" >
+        #{pageCreatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pageCreator != null" >
+        #{pageCreator,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="pageHtml != null" >
+        #{pageHtml,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
+    update sys_static_page
+    <set >
+      <if test="pageTitle != null" >
+        page_title = #{pageTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="pageBody != null" >
+        page_body = #{pageBody,jdbcType=VARCHAR},
+      </if>
+      <if test="pageTicker != null" >
+        page_ticker = #{pageTicker,jdbcType=VARCHAR},
+      </if>
+      <if test="pageStatus != null" >
+        page_status = #{pageStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="pageCreatedTime != null" >
+        page_created_time = #{pageCreatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pageCreator != null" >
+        page_creator = #{pageCreator,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="pageHtml != null" >
+        page_html = #{pageHtml,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
+    update sys_static_page
+    set page_title = #{pageTitle,jdbcType=VARCHAR},
+      page_body = #{pageBody,jdbcType=VARCHAR},
+      page_ticker = #{pageTicker,jdbcType=VARCHAR},
+      page_status = #{pageStatus,jdbcType=VARCHAR},
+      page_created_time = #{pageCreatedTime,jdbcType=TIMESTAMP},
+      page_creator = #{pageCreator,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      page_html = #{pageHtml,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
+    update sys_static_page
+    set page_title = #{pageTitle,jdbcType=VARCHAR},
+      page_body = #{pageBody,jdbcType=VARCHAR},
+      page_ticker = #{pageTicker,jdbcType=VARCHAR},
+      page_status = #{pageStatus,jdbcType=VARCHAR},
+      page_created_time = #{pageCreatedTime,jdbcType=TIMESTAMP},
+      page_creator = #{pageCreator,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
