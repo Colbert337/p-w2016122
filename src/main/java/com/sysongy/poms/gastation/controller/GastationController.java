@@ -934,7 +934,7 @@ public class GastationController extends BaseContoller{
 	}
 	
 	@RequestMapping("/gastationConsumeReport")
-	public String gastationConsumeReport(ModelMap map, SysOrder order) throws Exception{
+	public String gastationConsumeReport(ModelMap map, SysOrder order, @ModelAttribute CurrUser currUser) throws Exception{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_consumecollectreport";
@@ -946,6 +946,9 @@ public class GastationController extends BaseContoller{
 			}
 			if(StringUtils.isEmpty(order.getOrderby())){
 				order.setOrderby("sys_gas_station_id desc");
+			}
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUser().getUserType()){
+				order.setChannelNumber(currUser.getStationId());
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = service.gastionConsumeReport(order);
@@ -1037,7 +1040,7 @@ public class GastationController extends BaseContoller{
    }
 	
 	@RequestMapping("/gastationRechargeReport")
-	public String gastationRechargeReport(ModelMap map, SysOrder order) throws Exception{
+	public String gastationRechargeReport(ModelMap map, SysOrder order, @ModelAttribute CurrUser currUser) throws Exception{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_rechargecollectreport";
@@ -1049,6 +1052,9 @@ public class GastationController extends BaseContoller{
 			}
 			if(StringUtils.isEmpty(order.getOrderby())){
 				order.setOrderby("sys_gas_station_id desc");
+			}
+			if(GlobalConstant.USER_TYPE_STATION == currUser.getUser().getUserType()){
+				order.setChannelNumber(currUser.getStationId());
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = service.gastionRechargeReport(order);
