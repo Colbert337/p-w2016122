@@ -416,8 +416,8 @@ public class GastationServiceImpl implements GastationService {
 		gas.setProvince_id(param.getMcode());
 		param=new Usysparam();
 		list=new ArrayList<>();
-		param.setGcode("STATION_DATA_TYPE");
-		param.setMname(gas.getType());
+		param.setGcode("STATION_MAP_TYPE");
+		param.setMname(gas.getMap_type());
 		list=usysparamService.queryAll(param);
 		if (list.size()>0) {
 			param=list.get(0);
@@ -455,8 +455,8 @@ public class GastationServiceImpl implements GastationService {
 		gas.setProvince_id(param.getMcode());
 		param=new Usysparam();
 		list=new ArrayList<>();
-		param.setGcode("STATION_DATA_TYPE");
-		param.setMname(gas.getType());
+		param.setGcode("STATION_MAP_TYPE");
+		param.setMname(gas.getMap_type());
 		list=usysparamService.queryAll(param);
 		if (list.size()>0) {
 			param=list.get(0);
@@ -480,7 +480,7 @@ public class GastationServiceImpl implements GastationService {
 	}
 
 	@Override
-	public int delete(Gastation gas) {
+	public int delete(String gas) {
 		// TODO Auto-generated method stub
 		
 		return gasStationMapper.delete(gas);
