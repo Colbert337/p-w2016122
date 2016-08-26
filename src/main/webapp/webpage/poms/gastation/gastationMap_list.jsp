@@ -89,7 +89,7 @@
 									<th onclick="orderBy(this,'type');commitForm();" id="type_order">合作类型</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"  class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
-								<!-- 	<th class="text-center td-w3">更多操作</th> -->
+								 	<th class="text-center td-w3">更多操作</th> 
 								</tr>
 							</thead>
 
@@ -114,17 +114,17 @@
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td style="display: none">${list.sys_user_account_id}</td>
-									<!-- <td class="text-center">
-											<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
+									<td class="text-center">
+											<!-- <a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a>
 											<a class="option-btn-m" href="javascript:void(0);" title="预付款额度" data-rel="tooltip">
 												<i class="ace-icon fa fa-credit-card bigger-130" onclick="preDeposit(this);"></i>
-											</a>
-											<a href="" class="logic-del" title="删除" data-rel="tooltip">
+											</a> -->
+											<a href="javascript:void(0);" onclick="deleteGasMap('${list.sys_gas_station_id}');" title="删除" data-rel="tooltip">
 											<i class="ace-icon fa fa-trash-o bigger-130"></i> 
 											</a>
-									</td> -->
+									</td> 
 								</tr>
 								</c:forEach>
 							</tbody>
