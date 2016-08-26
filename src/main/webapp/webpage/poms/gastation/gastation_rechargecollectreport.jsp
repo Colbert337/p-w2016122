@@ -27,10 +27,12 @@
 					</div>
 					
 					<div class="search-types">
-						<div class="item">
-							<label>加注站编号：</label>
-							<input type="text" name="channelNumber" placeholder="加注站编号/加注站名称" maxlength="20" value="${order.channelNumber}"/>
-						</div>
+						<c:if test="${sessionScope.currUser.user.userType == 5}">
+							<div class="item">
+								<label>加注站编号：</label>
+								<input type="text" name="channelNumber" placeholder="请输入加注站编号" maxlength="10" value="${sysOrder.channelNumber}"/>
+							</div>
+						</c:if>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
