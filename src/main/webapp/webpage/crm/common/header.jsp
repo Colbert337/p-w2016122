@@ -23,6 +23,7 @@ pageEncoding="UTF-8"%>
                 </li>
                 <li><a href="<%=basePath %>/webpage/crm/download-crm.jsp">产品下载</a></li>
                 <li><a href="<%=basePath %>/portal/crm/help/list/all">帮助中心</a></li>
+                <li><a href="http://www.sysongy.com" target="_blank">关于我们</a></li>
             </ul>
         </div>
     </header>
