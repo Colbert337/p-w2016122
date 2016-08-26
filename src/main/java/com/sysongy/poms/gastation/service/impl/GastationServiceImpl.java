@@ -478,4 +478,11 @@ public class GastationServiceImpl implements GastationService {
 		}
 		return true;
 	}
+
+	@Override
+	public int delete(Gastation gas) {
+		// TODO Auto-generated method stub
+		
+		return gasStationMapper.delete(gas);
+	}
 }

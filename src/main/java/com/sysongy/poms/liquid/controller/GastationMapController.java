@@ -27,9 +27,11 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.service.SysDepositLogService;
+import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 
@@ -298,6 +300,17 @@ public class GastationMapController extends BaseContoller {
 		}
 
 	}
+	
+	@RequestMapping("/delete")
+    public String deleteBanner( Gastation mbBanner,ModelMap map) throws Exception{
+        String resultVal = "删除成功！";
+        
+        resultVal = Encoder.symmetricEncrypto(resultVal);
+        
+        service.delete(mbBanner);
+        
+        return "redirect:/web/gastationMap/gastationMapList";
+    }
 
 	private boolean exists(Gastation gas) throws Exception {
 		// TODO Auto-generated method stub

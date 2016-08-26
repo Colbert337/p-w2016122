@@ -64,7 +64,27 @@
 		loadPage('#main', '../webpage/poms/gastation/gastation_deposit.jsp?acconutid='+acconutid+'&gastationame='+stationame+'&gastationdeposit='+stationdeposit+'&stationid='+stationid);
 	}
 	
-	 
+	function deleteGasMap(id){
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("确认要删除数据吗？", function(result) {
+			if (result) {
+				var deleteOptions = {
+					url : '../web/gastation/delete',
+					data : {
+						sys_gas_station_id : id
+					},
+					type : 'post',
+					dataType : 'text',
+					success : function(data) {
+						$("#main").html(data);
+						$("#modal-table").modal("show");
+						$('[data-rel="tooltip"]').tooltip();
+					}
+				}
+				$("#listForm").ajaxSubmit(deleteOptions);
+			}
+		})
+	}
 	function openImportDiv(){
 	    $("#importDivModel").modal("show");
 	}

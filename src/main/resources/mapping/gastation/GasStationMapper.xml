@@ -138,6 +138,11 @@
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </delete>
   
+  <delete id="delete" parameterType="com.sysongy.poms.gastation.model.Gastation" >
+    delete from sys_gas_station
+    where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR} and type<![CDATA[ <> ]]>0
+  </delete>
+  
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.Gastation" >
     insert into sys_gas_station (sys_gas_station_id, gas_station_name, station_level, contact_phone,admin_username, email,station_manager,
       area_id, province_id, 
