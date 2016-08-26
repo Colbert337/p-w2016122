@@ -66,6 +66,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -180,7 +182,7 @@ public class MobileController {
 		MobileVerification verification = new MobileVerification();
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("获取验证码成功！");
+		result.setMsg("验证码已发送,有效期10分钟！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 
@@ -202,8 +204,8 @@ public class MobileController {
 				verification.setReqType(MobileVerificationUtils.APP_DRIVER_REG);
 				MobileVerificationUtils.sendMSG(verification, checkCode.toString());
 
-				//设置短信有效期60秒
-				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 90);
+				//设置短信有效期10分钟
+				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
 				Map<String, Object> tokenMap = new HashMap<>();
 				tokenMap.put("verificationCode",checkCode.toString());
 				result.setData(tokenMap);
@@ -999,87 +1001,6 @@ public class MobileController {
 
 
 	/**
-	 * 交易记录
-	 * @param params
-	 * @return
-     */
-    @RequestMapping(value = "TransactionRecord")
-    @ResponseBody
-    public String transactionRecord(MobileParams params){
-    	
-    	MobileReturn ret = new MobileReturn();
-    	MobileRecord record = new MobileRecord();
-    	
-    	try {
-    		record = MobileRecordUtils.checkParam(params, ret);
-    		
-    		SysDriver driver = driverService.queryDriverByPK(record.getToken());
-			
-			SysOrder order = new SysOrder();
-			order.setSysDriver(driver);
-			order.setPageNum(Integer.valueOf(record.getCurrentPage()));
-			order.setPageSize(Integer.valueOf(record.getPageSize()));
-			
-			ArrayList<Data> listc = new ArrayList<Data>();
-    		
-    		if(MobileRecordUtils.METHOD_RECHARGE.equals(record.getRecordType())){
-
-    			PageInfo<Map<String, Object>> info = orderService.queryRechargeReport(order);
-    			List<Map<String, Object>> list = info.getList();			
-            	
-    			for(int i=0;i<list.size();i++){
-    				Data data = new Data();
-    				data.setTime(list.get(i).get("order_date").toString());
-    				data.setCashBack(list.get(i).get("cash_back").toString());
-    				data.setTitle(list.get(i).get("channel").toString());
-    				data.setAmount(list.get(i).get("cash").toString());
-    				data.setOrderCode(list.get(i).get("order_number").toString());
-    				data.setRechargePlatform(list.get(i).get("cash").toString());
-    				data.setAmount(list.get(i).get("cash").toString());
-    				
-    				listc.add(data);
-    			}
-    		}else if(MobileRecordUtils.METHOD_CONSUME.equals(record.getRecordType())){
-    			
-    			PageInfo<Map<String, Object>> info = orderService.queryRechargeDriverReport(order);
-    			
-    			List<Map<String, Object>> list = info.getList();			
-            	
-    			for(int i=0;i<list.size();i++){
-    				
-    				Data data = new Data();
-    				
-    				data.setTime(list.get(i).get("order_date").toString());
-    				data.setTitle(list.get(i).get("channel").toString());
-    				data.setAmount(list.get(i).get("cash").toString());
-    				data.setOrderCode(list.get(i).get("order_number").toString());
-    				data.setRechargePlatform(list.get(i).get("cash").toString());
-    				data.setAmount(list.get(i).get("cash").toString());
-    				
-    				List<SysOrderGoods> goods = sysOrderGoodsService.selectByOrderID(list.get(i).get("order_id").toString());
-    				data.setGoods(goods);
-    				
-    				listc.add(data);
-    			}
-    		}else if(MobileRecordUtils.METHOD_TRANSFER.equals(record.getRecordType())){
-
-    		}
-    		
-    		ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_SUCCESS, MobileRecordUtils.RET_SUCCESS_MSG, listc);
-    		
-        } catch (Exception e) {
-        	if(StringUtils.isEmpty(ret.getMsg())){
-				ret = MobileUtils.packagingMobileReturn(MobileUtils.RET_ERROR, null, null);
-			}
-			
-			logger.error("MobileController.Login ERROR： " + e);
-        }
-        finally {
-			return JSON.toJSONString(ret);
-		}
-    }
-
-	/**
 	 * 获取开通城市列表
 	 * @param params
 	 * @return
@@ -1466,12 +1387,63 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
+			SysOrder order = new SysOrder();
 
 			/**
 			 * 请求接口
 			 */
 			if(mainObj != null){
+				if(order.getPageNum() == null){
+					order.setPageNum(GlobalConstant.PAGE_NUM);
+					order.setPageSize(GlobalConstant.PAGE_SIZE);
+				}else{
+					order.setPageNum(mainObj.optInt("pageNum"));
+					order.setPageSize(mainObj.optInt("pageSize"));
+				}
 
+			 	PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverReChargePage(order);
+				List<Map<String,Object>> reChargeList = new ArrayList<>();
+				Map<String,Object> reCharge = new HashMap<>();
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+			 	if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
+
+					for(Map<String, Object> map:pageInfo.getList()){
+						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("orderNum",map.get("orderNumber"));
+						reChargeMap.put("amount",map.get("cash"));
+						reChargeMap.put("cashBack",map.get("cashBackDriver"));
+						reChargeMap.put("rechargePlatform",map.get("channel"));
+
+						String chargeType = "";
+						if(map.get("chargeType") != null && !"".equals(map.get("chargeType").toString())){
+							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
+						}
+						reChargeMap.put("paymentType",chargeType);
+						reChargeMap.put("remark",map.get("remark"));
+						String dateTime = "";
+						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
+							dateTime = sft.format(new Date());
+						}
+						reChargeMap.put("time",dateTime);
+
+						reChargeList.add(reChargeMap);
+
+						//汇总充值总额
+						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
+							totalCash = totalCash.add(new BigDecimal(reChargeMap.get("cash").toString()));
+						}
+						//汇总返现总额
+						if(reChargeMap.get("cashBackDriver") != null && !"".equals(reChargeMap.get("cashBackDriver").toString())){
+							totalBack = totalBack.add(new BigDecimal(reChargeMap.get("cashBackDriver").toString()));
+						}
+					}
+
+					reCharge.put("totalCash",totalCash);
+					reCharge.put("totalBack",totalBack);
+					reCharge.put("listMap",reChargeList);
+				}
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1519,17 +1491,66 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
+			SysOrder order = new SysOrder();
 
 			/**
 			 * 请求接口
 			 */
 			if(mainObj != null){
+				if(order.getPageNum() == null){
+					order.setPageNum(GlobalConstant.PAGE_NUM);
+					order.setPageSize(GlobalConstant.PAGE_SIZE);
+				}else{
+					order.setPageNum(mainObj.optInt("pageNum"));
+					order.setPageSize(mainObj.optInt("pageSize"));
+				}
 
+				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverConsumePage(order);
+				List<Map<String,Object>> reChargeList = new ArrayList<>();
+				Map<String,Object> reCharge = new HashMap<>();
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
+
+					for(Map<String, Object> map:pageInfo.getList()){
+						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("orderNum",map.get("orderNumber"));
+						reChargeMap.put("amount",map.get("cash"));
+						reChargeMap.put("gasStationName",map.get("channel"));
+						reChargeMap.put("gasStationId",map.get("channelNumber"));
+						reChargeMap.put("gasTotal",map.get("goodsSum"));
+						reChargeMap.put("payStatus","1");
+
+						String chargeType = "";
+						if(map.get("chargeType") != null && !"".equals(map.get("chargeType").toString())){
+							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
+						}
+						reChargeMap.put("paymentType",chargeType);
+						reChargeMap.put("remark",map.get("remark"));
+						String dateTime = "";
+						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
+							dateTime = sft.format(new Date());
+						}
+						reChargeMap.put("time",dateTime);
+
+						reChargeList.add(reChargeMap);
+
+						//汇总消费总额
+						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
+							totalCash = totalCash.add(new BigDecimal(reChargeMap.get("cash").toString()));
+						}
+					}
+
+					reCharge.put("totalCash",totalCash);
+					reCharge.put("listMap",reChargeList);
+				}
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
 			}
+
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
@@ -1564,7 +1585,7 @@ public class MobileController {
 		result.setMsg("查询转账记录成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
-
+		SysOrder order = new SysOrder();
 		try {
 			/**
 			 * 解析参数
@@ -1577,12 +1598,60 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
+				if(order.getPageNum() == null){
+					order.setPageNum(GlobalConstant.PAGE_NUM);
+					order.setPageSize(GlobalConstant.PAGE_SIZE);
+				}else{
+					order.setPageNum(mainObj.optInt("pageNum"));
+					order.setPageSize(mainObj.optInt("pageSize"));
+				}
 
+				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverTransferPage(order);
+				List<Map<String,Object>> reChargeList = new ArrayList<>();
+				Map<String,Object> reCharge = new HashMap<>();
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
+				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
+
+					for(Map<String, Object> map:pageInfo.getList()){
+						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("orderNum",map.get("orderNumber"));
+						reChargeMap.put("amount",map.get("cash"));
+						reChargeMap.put("operator",map.get("operator"));
+
+						reChargeMap.put("remark",map.get("remark"));
+						String dateTime = "";
+						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
+							dateTime = sft.format(new Date());
+						}
+						reChargeMap.put("time",dateTime);
+
+						reChargeList.add(reChargeMap);
+
+						//汇总转出/转入总额
+						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
+							BigDecimal tempVal = new BigDecimal(reChargeMap.get("cash").toString());
+
+							if(tempVal.compareTo(BigDecimal.ZERO) > 0){
+								totalCash = totalCash.add(tempVal);
+							}else{
+								totalBack = totalBack.add(tempVal);
+							}
+						}
+
+					}
+
+					reCharge.put("totalOut",totalCash);
+					reCharge.put("totalIn",totalBack);
+					reCharge.put("listMap",reChargeList);
+				}
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
 			}
+
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
