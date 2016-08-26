@@ -76,14 +76,15 @@
 											id="sys_cash_back_id_order">序号</th>
 										<th onclick="orderBy(this,'title');commitForm();"
 											id="threshold_min_value_order">标题</th>
-									<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
+										<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
 										<th onclick="orderBy(this,'target_url');commitForm();"
 											id="cash_per_order">链接地址</th>
 										<th onclick="orderBy(this,'content');commitForm();"
 											id="content_order">正文</th>
 										<th onclick="orderBy(this,'remark');commitForm();" id="level">备注</th>
-										<th onclick="orderBy(this,'city_id');commitForm();" id="city_id_order">城市</th>
+										<th onclick="orderBy(this,'city_id');commitForm();"
+											id="city_id_order">城市</th>
 										<th onclick="orderBy(this,'created_date');commitForm();"
 											id="created_date_order" class="td-w2"><i
 											id="created_date"
@@ -100,7 +101,7 @@
 										<tr id="${list.mbBannerId }">
 											<td>${list.sort}</td>
 											<td>${list.title}</td>
-								<%-- 		<td><img width="150" height="150" alt="150x150"
+											<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 											<td>${list.targetUrl}</td>
 											<td>${list.content}</td>
@@ -116,7 +117,7 @@
 											</a> <a class="option-btn-m" href="javascript:void(0);"
 												title="查看图片" data-rel="tooltip"> <i
 													class="ace-icon fa fa-search-plus bigger-130"
-													onclick="showInnerModel('${list.imgPath}',$('#${list.mbBannerId }'));"></i>
+													onclick="showInnerModel('${list.imgPath}','${list.imgSmPath}',$('#${list.mbBannerId }'));"></i>
 											</a> <a class="" href="javascript:void(0);"
 												onclick="deleteBanner('${list.mbBannerId}');" title="删除"
 												data-rel="tooltip"> <i
@@ -188,8 +189,8 @@
 										for="title"><span class="red_star">*</span> 标题： </label>
 									<div class="col-sm-8">
 										<input type="text" name="title" id="title" data-onFlag=""
-											placeholder="标题" class="col-xs-10 col-sm-12" /> <input
-											type="hidden" name="mbBannerId" id="mb_banner_id" /> <input
+											placeholder="标题" maxlength="10" class="col-xs-10 col-sm-12" />
+										<input type="hidden" name="mbBannerId" id="mb_banner_id" /> <input
 											type="hidden" id="stationId" value="${stationId}" />
 									</div>
 								</div>
@@ -210,16 +211,39 @@
 											<div class="widget-header">
 												<h4 class="widget-title">图片上传</h4>
 											</div>
-
 											<div class="widget-body">
 												<div class="widget-main">
 													<img id="show_img" width="150" height="150" alt="150x150"
-														src="" /><div id="clear"> <input type="file" name="image"
-														class="projectfile" id="indu_com_certif_select" onchange='change();' /></div> <input
+														src="" /> <input type="file" name="image"
+														class="projectfile" id="indu_com_certif_select" /> <input
 														type="hidden" id="img_path" name="imgPath" />
 													<button class="btn btn-sm btn-primary btn-file-space"
 														type="button"
-														onclick="savePhoto(this,'#indu_com_certif_select','#img_path');">
+														onclick="savePhoto(this,'#indu_com_certif_select','#img_path','#show_img');">
+														<i class="ace-icon fa fa-check bigger-110"></i> 图片上传
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right"><span
+										class="red_star">*</span> 图片： </label>
+									<div class="col-sm-8">
+										<div class="widget-box">
+											<div class="widget-header">
+												<h4 class="widget-title">图片上传</h4>
+											</div>
+											<div class="widget-body">
+												<div class="widget-main">
+													<img id="show_sm_img" width="150" height="150"
+														alt="150x150" src="" /> <input type="file" name="image2"
+														class="projectfile" id="indu_com_sm_select" /> <input
+														type="hidden" id="img_sm_path" name="imgSmPath" />
+													<button class="btn btn-sm btn-primary btn-file-space"
+														type="button"
+														onclick="savePhoto(this,'#indu_com_sm_select','#img_sm_path','#show_sm_img');">
 														<i class="ace-icon fa fa-check bigger-110"></i> 图片上传
 													</button>
 												</div>
@@ -236,19 +260,18 @@
 											placeholder="链接地址" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
-									<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right"
-										for="target_url"><span class="red_star">*</span>顺序
-									</label>
-									<div class="col-sm-8">
-										<input type="text" id="sort" placeholder="顺序"
-												maxlength="11" name="sort" class="col-xs-10 col-sm-12" />
-											</div>
-								</div>
-								
-								
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right"
+										for="target_url"><span class="red_star">*</span>顺序 </label>
+									<div class="col-sm-8">
+										<input type="text" id="sort" placeholder="顺序" maxlength="11"
+											name="sort" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+
+
+								<div class="form-group">
+									<%-- <label class="col-sm-3 control-label no-padding-right"
 										for="version">版本号： </label>
 									<div class="col-sm-3">
 										<div class="row">
@@ -257,7 +280,7 @@
 													<span class="btn btn-primary btn-white dropdown-toggle" >选择安卓版本号<i class="ace-icon fa fa-angle-down icon-on-right"></i>
 													</span>
 													<ul class="dropdown-menu">
-														<%-- <c:forEach items="${datas}" var="one" >
+														<c:forEach items="${datas}" var="one" >
 															<li>
 																<div class="checkbox">
 																	<label>
@@ -266,23 +289,62 @@
 																	</label>
 																</div>
 															</li>
-														</c:forEach> --%>
+														</c:forEach>
 														 
 													</ul>
 												</div>
 											</div>
 										
 										</div>
-									</div><label class="col-sm-2 control-label no-padding-right"
-										for="version">城市： </label>
-										<div class="col-sm-1">
-											<select id="city" class="combobox">
-											  <option></option>
-											 <c:forEach items="${city}" var="one" >
-											  <option value="${one.cityId }">${one.cityName }</option>
-											  </c:forEach>
-											</select>
+									</div> --%>
+
+									<label class="col-sm-3 control-label no-padding-right"
+										for="version">版本号： </label>
+									<div class="col-sm-3">
+										<div class="row">
+											<div class="col-sm-3">
+												<div class="btn-group j-android-versions">
+													<span class="btn btn-primary btn-white dropdown-toggle">城市列表<i
+														class="ace-icon fa fa-angle-down icon-on-right"></i>
+													</span>
+													<ul class="dropdown-menu">
+														<li>
+															<div class="checkbox">
+																<label> <input name="" type="checkbox"
+																	id="allche" onchange="checkedchange(this)" class="ace">
+																	<span class="lbl"> 全选</span>
+																</label>
+															</div>
+														</li>
+														<c:forEach items="${city}" var="one">
+															<li>
+																<div class="checkbox">
+																	<label> <input name="form-field-checkbox"
+																		type="checkbox" value2="${one.cityId }"
+																		id="c${one.cityId }" values="${one.cityName }"
+																		onclick="checkedclick( )" class="ace checked" /> <span
+																		class="lbl"> ${one.cityName }</span>
+																	</label>
+																</div>
+															</li>
+														</c:forEach>
+
+													</ul>
+												</div>
+											</div>
+
 										</div>
+									</div>
+									<%-- <label class="col-sm-3 control-label no-padding-right"
+										for="version">城市： </label>
+									<div class="col-sm-8">
+										<select id="city" class="combobox col-sm-8">
+											<option></option>
+											<c:forEach items="${city}" var="one">
+												<option value="${one.cityId }">${one.cityName }</option>
+											</c:forEach>
+										</select>
+									</div> --%>
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right"
@@ -340,9 +402,9 @@
 								</div>
 								<div class="col-xs-6">
 									<label class="control-label no-padding-right">标题:</label> <label
-										class="control-label no-padding-right" name="show"></label> 
+										class="control-label no-padding-right" name="show"></label>
 								</div>
-								 
+
 								<div class="col-xs-6">
 									<label class="control-label no-padding-right">链接地址:</label> <label
 										class="control-label no-padding-right" name="show"></label>
@@ -370,11 +432,22 @@
 						<div class="shenhe-items-hd">图片</div>
 						<div class="shenhe-items-bd">
 							<div class="row">
-								<div class="col-xs-8">
+								<div class="col-xs-5">
 									<label class="control-label no-padding-right"></label>
 									<ul class="ace-thumbnails clearfix">
-										<li><a href="" data-rel="colorbox"> <img
+										<li><a href="" data-rel="colorbox">图片<img
 												class="img-responsive" src="" alt="" id="innerimg1">
+												<div class="text">
+													<div class="inner">点击放大</div>
+												</div>
+										</a></li>
+									</ul>
+								</div>
+								<div class="col-xs-5">
+									<label class="control-label no-padding-right"></label>
+									<ul class="ace-thumbnails clearfix">
+										<li><a href="" data-rel="colorbox"> 缩略图<img
+												class="img-responsive" src="" alt="" id="innerimg2">
 												<div class="text">
 													<div class="inner">点击放大</div>
 												</div>

@@ -2,6 +2,7 @@
  * Created by Administrator on 2016/6/20. Author: wdq
  */
 /* 分页相关方法 start */
+
 window.onload = setCurrentPage();
 
 var listOptions = {
@@ -36,11 +37,12 @@ function choose(obj) {
 /* 分页相关方法 end */
 // 显示添加用户弹出层add
 function addBanner() {
-
-	$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
-		spCodesTemp = $(this).attr("checked", true);
-	});
-
+	type = 1;
+	$("#allche").attr("checked", true);
+	checkedchange('#allche');
+	photoType = 0;
+	photoTypeSm = 0;
+	$("#show_sm_img").hide();
 	$("#show_img").hide();
 	clearDiv();
 	$("#editBanner").text("添加内容");
@@ -96,9 +98,11 @@ var html;
 function editBanner(imgId) {
 	$("#show_img").show();
 	$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
-		spCodesTemp = $(this).attr("checked", false);
+		$(this).attr("checked", false);
 	});
-
+	photoType = 1;
+	phototypeSm = 1;
+	type = 1;
 	$.ajax({
 		url : "../web/mobile/img/info",
 		data : {
@@ -110,29 +114,79 @@ function editBanner(imgId) {
 			$("#mb_banner_id").val(data.mbBannerId);
 			$("#title").val(data.title);
 			$("#img_path").val(data.imgPath);
+			$("#img_sm_path").val(data.imgSmPath);
 			$("#target_url").val(data.targetUrl);
 			$("#sort").val(data.sort);
 			$("#remark").text(data.remark);
 			$("#show_img").attr("src", localhostPaht + data.imgPath);
+			$("#show_sm_img").attr("src", localhostPaht + data.imgSmPath);
 			$("#operator").val(data.operator);
-			$("#content").val(data.content);+
-			$('#city').val(data.city_id);
+			$("#content").val(data.content);
+			+$('#city').val(data.city_id);
 			$("#editBanner").text("修改内容");
-//			alert(data.version);
-//			if(data.version!=""){
-//			版本信息
-//			var datas = data.version.split(',');
-//			for (var i = 0; i < datas.length; i++) {
-//				eval("$('#c" + datas[i] + "').attr('checked',true);");
-//				// eval("alert($('#c"+datas[i]+"').attr('checked'));");
-//				// alert("$('#c"+datas[i]+"').attr('checked',true);");
-//			}
-//			}
+			// alert(data.city_id);
+			if (data.city_id != "") {
+				// 版本信息
+				var datas = data.city_id.split(',');
+				for (var i = 0; i < datas.length; i++) {
+					eval("$('#c" + datas[i] + "').attr('checked',true);");
+					// eval("alert($('#c"+datas[i]+"').attr('checked'));");
+					// alert("$('#c"+datas[i]+"').attr('checked',true);");
+				}
+			}
+			checkedclick();
 		}
 	})
 	$("#editModel").modal('show');
 }
+var type = 0;
+$(document).keyup(function(event) {
 
+	switch (event.keyCode) {
+	case 27:
+	case 96:
+		if (type != 0) {
+			if ($("#editModel").is(':visible')) {
+				type = 0;
+				$("#editModel").modal('hide').removeClass('in');
+				$("body").removeClass('modal-open').removeAttr('style');
+				$(".modal-backdrop").remove();
+				init();
+			}
+		}
+	}
+});
+function checkedchange(obj) {
+	// console.log( $(obj).is(":checked"))
+	$('.checked').each(function(index, obj1) {
+		if ($(obj).is(':checked')) {
+			$(obj1).prop("checked", true);
+		} else {
+			$(obj1).prop("checked", false);
+
+		}
+		// console.log( $(obj1).is("checked"))
+		// throw "11";
+	});
+}
+function checkedclick() {
+	var isok = true;
+	$('.checked').each(function(index, obj) {
+		if (!$(obj).is(':checked')) {
+			isok = false;
+		}
+	})
+	if (isok) {
+		$("#allche").prop("checked", true);
+	} else {
+		$("#allche").prop("checked", false);
+	}
+}
+
+function init() {
+	loadPage('#main', '../web/mobile/img/list/page?imgType='
+			+ $("[name=imgType]").val());
+}
 /* 取消弹层方法 */
 function closeDialog(divId) {
 
@@ -141,7 +195,11 @@ function closeDialog(divId) {
 		$(this).val("");
 	});
 	$("#avatar_b").empty();
-	$("#" + divId).modal('hide');
+
+	$("#" + divId).modal('hide').removeClass('in');
+	$("body").removeClass('modal-open').removeAttr('style');
+	$(".modal-backdrop").remove();
+	init();
 
 }
 function clearDiv() {
@@ -154,7 +212,7 @@ function clearDiv() {
 /**
  * 查看明细
  */
-function showInnerModel(obj1, tr) {
+function showInnerModel(obj1, obj2, tr) {
 	var show = $("label[name='show']");
 	for (var i = 0; i < show.length; i++) {
 
@@ -163,7 +221,8 @@ function showInnerModel(obj1, tr) {
 	}
 	$("#innerimg1").attr("src", obj1);
 	$("#innerimg1").parent("a").attr("href", obj1);
-
+	$("#innerimg2").attr("src", obj2);
+	$("#innerimg2").parent("a").attr("href", obj2);
 	$("#innerModel").modal('show');
 }
 /**
@@ -177,22 +236,37 @@ function saveBanner() {
 	}
 
 	// alert( $("#editForm").is(":visible")); //是否可见)
-	var spCodesTemp = "";
+	var cityName = "";
+	var cityId = "";
 	$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
 		if (0 == i) {
-			spCodesTemp = $(this).attr("values");
+			cityName = $(this).attr("values");
+			cityId = $(this).attr("value2");
 		} else {
-			spCodesTemp += ("," + $(this).attr("values"));
+			cityName += ("," + $(this).attr("values"));
+			cityId += ("," + $(this).attr("value2"));
 		}
 	});
+
+	// var file=$("#indu_com_certif_select").val();
+	if (photoType != 1) {
+		bootbox.alert("请上传图片");
+		return;
+	}
+	if (phototypeSm != 1) {
+		bootbox.alert("请上传缩略图图片");
+		return;
+	}
 
 	var saveOptions = {
 		url : '../web/mobile/img/save',
 		type : 'post',
 		dataType : 'html',
 		data : {
-//			version : spCodesTemp,// 版本号  目前不需要
-			city_id:$('#city').val()
+			// version : spCodesTemp,// 版本号 目前不需要
+			city_id : cityId,
+			city_name : cityName
+
 		},
 		success : function(data) {
 			$("#main").html(data);
@@ -207,17 +281,6 @@ function saveBanner() {
 	$("#editModel").modal('hide');
 	$(".modal-backdrop").css("display", "none");
 
-}
-/**
- * 判断文件格式
- */
-function fileFormat() {
-	var fileName = $("#file_import").val();
-	var suffix = fileName.substr(fileName.indexOf("."));
-	if (suffix != '.xls' && suffix != ".xlsx") {
-		bootbox.alert("导入文件格式错误，必须是excle格式！");
-		return false;
-	}
 }
 
 var projectfileoptions = {
@@ -277,7 +340,10 @@ $('#editForm').bootstrapValidator({
 	}
 });
 
-function savePhoto(fileobj, obj, obj1) {
+var photoType = 0;
+var phototypeSm = 0;
+function savePhoto(fileobj, obj, obj1, obj2) {
+
 	$(fileobj).parents("div").find("input[name=uploadfile]").each(function() {
 		$(this).attr("name", "");
 	});
@@ -286,6 +352,13 @@ function savePhoto(fileobj, obj, obj1) {
 		bootbox.alert("请先上传文件");
 		return;
 	}
+	if ("#img_path" == obj1) {
+		photoType = 1;
+	}
+	if ("#img_sm_path" == obj1) {
+		photoTypeSm = 1;
+	}
+
 	var stationId = "mobile";
 	var multipartOptions = {
 		url : '../crmInterface/crmBaseService/web/upload?stationid='
@@ -296,6 +369,7 @@ function savePhoto(fileobj, obj, obj1) {
 		success : function(data) {
 			var s = JSON.parse(data);
 			if (s.success == true) {
+				$(obj2).hide();
 				bootbox.alert("上传成功");
 				$(obj1).val(s.obj);
 			}
@@ -305,20 +379,12 @@ function savePhoto(fileobj, obj, obj1) {
 			bootbox.alert("上传成功");
 		}
 	}
-	$("#indu_com_certif_select").val("");
 	$("#editForm").ajaxSubmit(multipartOptions);
+
 }
 /**
  * 文件上传验证
  */
-function change() {
-	var text = $("#indu_com_certif_select").val();
-	if (text != "") {
-		$("#show_img").hide();
-	} else {
-		$("#show_img").show();
-	}
-}
 
 $('#importForm').bootstrapValidator({
 	message : 'This value is not valid',
@@ -378,10 +444,10 @@ jQuery(function($) {
 	$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
 	$("#cboxLoadingGraphic").html(
 			"<i class='ace-icon fa fa-spinner orange fa-spin'></i>");// let's
-																		// add a
-																		// custom
-																		// loading
-																		// icon
+	// add a
+	// custom
+	// loading
+	// icon
 
 	$(document).one('ajaxloadstart.page', function(e) {
 		$('#colorbox, #cboxOverlay').remove();

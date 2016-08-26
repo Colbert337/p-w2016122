@@ -20,13 +20,15 @@
   </resultMap>
   <sql id="Base_Column_List" >
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
-    remark, is_deleted, a.created_date, updated_date,operator,content,a.city_id,city_name
+    remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name
   </sql>
   <select id="queryMbBannerList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     select 
-    <include refid="Base_Column_List" />
-    from mb_banner a, dist_city b
-    where is_deleted = 1 and a.city_id=b.city_id 
+
+    mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
+    remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name 
+    from mb_banner 
+    where is_deleted = 1
     <if test="title != null" >
       and title = #{title,jdbcType=VARCHAR}
     </if>
@@ -127,8 +129,11 @@
       <if test="content != null" >
         content,
       </if>
-      <if test="operator != null" >
+      <if test="city_id != null" >
         city_id,
+      </if>
+      <if test="city_name != null" >
+        city_name,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -174,6 +179,9 @@
        <if test="city_id != null" >
         #{city_id,jdbcType=VARCHAR},
       </if>
+        <if test="city_name != null" >
+        #{city_name,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   
@@ -215,10 +223,13 @@
         created_date = #{createdDate,jdbcType=TIMESTAMP},
       </if>
        <if test="content != null" >
-        content = #{content,jdbcType=TIMESTAMP},
+        content = #{content,jdbcType=VARCHAR},
       </if>
        <if test="city_id != null" >
-        city_id = #{city_id,jdbcType=TIMESTAMP},
+        city_id = #{city_id,jdbcType=VARCHAR},
+      </if>
+        <if test="city_name != null" >
+        city_name = #{city_name,jdbcType=VARCHAR},
       </if>
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
