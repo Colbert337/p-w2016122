@@ -54,7 +54,7 @@
 						<div class="search-types">
 							<div class="item">
 								<button class="btn btn-sm btn-primary" type="button"
-									onclick="addBanner()">
+									onclick="bannerAdd('')">
 									<i class="ace-icon fa fa-flask align-top bigger-125"></i> 添加
 								</button>
 							</div>
@@ -113,7 +113,7 @@
 											<td class="text-center"><a class="option-btn-m"
 												href="javascript:void(0);" title="修改" data-rel="tooltip">
 													<i class="ace-icon fa fa-pencil bigger-130"
-													onclick="editBanner('${list.mbBannerId}');"></i>
+													onclick="bannerAdd('${list.mbBannerId}');"></i>
 											</a> <a class="option-btn-m" href="javascript:void(0);"
 												title="查看图片" data-rel="tooltip"> <i
 													class="ace-icon fa fa-search-plus bigger-130"
@@ -229,7 +229,7 @@
 								</div>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right"><span
-										class="red_star">*</span> 图片： </label>
+										class="red_star">*</span>缩略图： </label>
 									<div class="col-sm-8">
 										<div class="widget-box">
 											<div class="widget-header">
@@ -299,7 +299,7 @@
 									</div> --%>
 
 									<label class="col-sm-3 control-label no-padding-right"
-										for="version">版本号： </label>
+										for="version">城市列表： </label>
 									<div class="col-sm-3">
 										<div class="row">
 											<div class="col-sm-3">

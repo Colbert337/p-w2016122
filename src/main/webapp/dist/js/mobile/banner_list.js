@@ -134,7 +134,6 @@ function editBanner(imgId) {
 					// alert("$('#c"+datas[i]+"').attr('checked',true);");
 				}
 			}
-			checkedclick();
 		}
 	})
 	$("#editModel").modal('show');
@@ -169,20 +168,27 @@ function checkedchange(obj) {
 		// throw "11";
 	});
 }
-function checkedclick() {
-	var isok = true;
-	$('.checked').each(function(index, obj) {
-		if (!$(obj).is(':checked')) {
-			isok = false;
+
+function bannerAdd(imgId){
+	
+
+	photoType = 1;
+	phototypeSm = 1;
+	type = 1;
+	$.ajax({
+		url : "../web/mobile/img/fondone",
+		data : {
+			mbBannerId : imgId
+		},
+		async : false,
+		type : "POST",
+		success : function(data) {
+			$("#main").html(data);
 		}
 	})
-	if (isok) {
-		$("#allche").prop("checked", true);
-	} else {
-		$("#allche").prop("checked", false);
-	}
-}
+	 
 
+}
 function init() {
 	loadPage('#main', '../web/mobile/img/list/page?imgType='
 			+ $("[name=imgType]").val());
@@ -356,7 +362,7 @@ function savePhoto(fileobj, obj, obj1, obj2) {
 		photoType = 1;
 	}
 	if ("#img_sm_path" == obj1) {
-		photoTypeSm = 1;
+		phototypeSm = 1;
 	}
 
 	var stationId = "mobile";
