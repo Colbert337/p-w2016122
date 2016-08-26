@@ -23,7 +23,7 @@
 				<!-- PAGE CONTENT BEGINS -->
 				<div class="row">
 					<div class="col-sm-2">
-						<input type="hidden" name="imgType" value="${mbBanner.imgType}" />
+						<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
 						<div class="dd dd-draghandle">
 							<ol class="dd-list" id="cashbackol">
 								<li class='dd-item dd2-item' data-id='14'

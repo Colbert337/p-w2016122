@@ -226,12 +226,14 @@ public class MbBannerController extends BaseContoller {
 		String[] datas = data.split(",");
 		List<DistCity> list = city.queryHotCityList(2);
 		MbBanner mbBanner = mbBannerService.queryMbBanner(banner);
+		
 
 		PageBean bean = new PageBean();
 		bean.setRetCode(100);
 		bean.setRetMsg("查询成功");
 		bean.setPageInfo(ret);
 		map.addAttribute("datas", datas);
+		map.addAttribute("imgType", banner.getImgType());
 		map.addAttribute("ret", bean);
 		map.addAttribute("city", list);
 		map.addAttribute("mbBanner", mbBanner);

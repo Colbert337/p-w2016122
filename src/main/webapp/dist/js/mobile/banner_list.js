@@ -178,7 +178,8 @@ function bannerAdd(imgId){
 	$.ajax({
 		url : "../web/mobile/img/fondone",
 		data : {
-			mbBannerId : imgId
+			mbBannerId : imgId,
+			imgType:$("#imgType").val() 
 		},
 		async : false,
 		type : "POST",

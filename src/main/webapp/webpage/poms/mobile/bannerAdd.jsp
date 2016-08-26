@@ -99,7 +99,8 @@
 								<input type="text" name="title" id="title" data-onFlag=""
 									placeholder="标题" maxlength="10" class="col-xs-10 col-sm-12"
 									value="${mbBanner.title}" /> <input type="hidden"
-									id="mbBannerId" 	name="mbBannerId" value="${mbBanner.mbBannerId}" />
+									id="mbBannerId" name="mbBannerId"
+									value="${mbBanner.mbBannerId}" />
 							</div>
 						</div>
 						<div class="form-group">
@@ -124,7 +125,9 @@
 											<img id="show_img" width="150" height="150" alt="150x150"
 												src="" /> <input type="file" name="image"
 												class="projectfile" id="indu_com_certif_select" /> <input
-												type="hidden" id="img_path" value="${mbBanner.imgPath }" name="imgPath" />
+												type="hidden" id="img_path" value="${mbBanner.imgPath }"
+												name="imgPath" /> <input type="hidden" value="${imgType }"
+												name="imgType" />
 											<button class="btn btn-sm btn-primary btn-file-space"
 												type="button"
 												onclick="savePhoto(this,'#indu_com_certif_select','#img_path','#show_img');">
@@ -148,7 +151,8 @@
 											<img id="show_sm_img" width="150" height="150" alt="150x150"
 												src="" /> <input type="file" name="image2"
 												class="projectfile" id="indu_com_sm_select" /> <input
-												type="hidden" id="img_sm_path"  value="${mbBanner.imgSmPath }"  name="imgSmPath" />
+												type="hidden" id="img_sm_path"
+												value="${mbBanner.imgSmPath }" name="imgSmPath" />
 											<button class="btn btn-sm btn-primary btn-file-space"
 												type="button"
 												onclick="savePhoto(this,'#indu_com_sm_select','#img_sm_path','#show_sm_img');">
@@ -272,7 +276,6 @@
 									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.remark}</textarea>
 							</div>
 						</div>
-						<input type="hidden" name="imgType" value="${mbBanner.imgType}" />
 					</form>
 					<div class="modal-footer">
 						<button class="btn btn-primary btn-sm" onclick="saveBanner()">确定</button>
@@ -294,8 +297,8 @@
 </div>
 
 <script type="text/javascript">
-//获取主机地址，如： http://localhost:8080
-var localhostPaht = curWwwPath.substring(0, pos);
+	//获取主机地址，如： http://localhost:8080
+	var localhostPaht = curWwwPath.substring(0, pos);
 	var projectfileoptions = {
 		showUpload : false,
 		showRemove : false,
@@ -463,10 +466,11 @@ var localhostPaht = curWwwPath.substring(0, pos);
 				eval("$('#c" + datas[i] + "').attr('checked',true);");
 			}
 			checkedclick();
-			$("#show_img").attr("src", localhostPaht +'${mbBanner.imgPath}');
-			$("#show_sm_img").attr("src", localhostPaht +'${mbBanner.imgSmPath}');
-			photoType=1;
-			phototypeSm=1;
+			$("#show_img").attr("src", localhostPaht + '${mbBanner.imgPath}');
+			$("#show_sm_img").attr("src",
+					localhostPaht + '${mbBanner.imgSmPath}');
+			photoType = 1;
+			phototypeSm = 1;
 		}
 		var $overflow = '';
 		var colorbox_params = {
@@ -579,7 +583,7 @@ var localhostPaht = curWwwPath.substring(0, pos);
 			$("#allche").prop("checked", false);
 		}
 	}
-	
+
 	function init() {
 		loadPage('#main', '../web/mobile/img/list/page?imgType='
 				+ $("[name=imgType]").val());
