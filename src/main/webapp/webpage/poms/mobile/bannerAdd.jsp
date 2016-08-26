@@ -126,8 +126,7 @@
 												src="" /> <input type="file" name="image"
 												class="projectfile" id="indu_com_certif_select" /> <input
 												type="hidden" id="img_path" value="${mbBanner.imgPath }"
-												name="imgPath" /> <input type="hidden" value="${imgType }"
-												name="imgType" />
+												name="imgPath" /> 
 											<button class="btn btn-sm btn-primary btn-file-space"
 												type="button"
 												onclick="savePhoto(this,'#indu_com_certif_select','#img_path','#show_img');">
@@ -276,6 +275,7 @@
 									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.remark}</textarea>
 							</div>
 						</div>
+						<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
 					</form>
 					<div class="modal-footer">
 						<button class="btn btn-primary btn-sm" onclick="saveBanner()">确定</button>
@@ -458,6 +458,9 @@
 		if ("${mbBanner.mbBannerId}" == "") {
 			$("#show_img").hide();
 			$("#show_sm_img").hide();
+			$("#imgType").val("${imgType }");
+			
+			
 		} else {
 			$("#show_img").show();
 			$("#show_sm_img").show();
