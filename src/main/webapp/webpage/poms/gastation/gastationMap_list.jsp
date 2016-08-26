@@ -37,7 +37,7 @@
 						</div>
 						
 						<div class="item">
-							<label>加注站状态:</label>
+							<label>加注站类型:</label>
 							<select class="chosen-select " name="status" >
 								<s:option flag="true" gcode="STATION_DATA_TYPE" form="gastation" field="status" />
 							</select>

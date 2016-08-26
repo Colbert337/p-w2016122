@@ -220,7 +220,7 @@
 													<h5 class="widget-title">工商注册证书照片上传</h5>
 												</div>
 													
-												<ul class="ace-thumbnails file-space clearfix">
+												<ul id="ui1_img" class="ace-thumbnails file-space clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.indu_com_certif}" data-rel="colorbox">
 																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.indu_com_certif}" />
@@ -237,7 +237,7 @@
 															<input type="file" name="image" class="projectfile" id="indu_com_certif_select" />
 														</label>
 														<input type="hidden" id="indu_com_certif" name="indu_com_certif"/> 
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#indu_com_certif_select','#indu_com_certif','#ui1_img');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -263,7 +263,7 @@
 													<h5 class="widget-title">税务注册证书照片上传</h5>
 												</div>
 													
-													<ul class="ace-thumbnails file-space clearfix">
+													<ul id="ui2_img" class="ace-thumbnails file-space clearfix">
 														<li>
 															<a href="<%=imagePath %>${station.tax_certif}" data-rel="colorbox">
 																<img width="150" height="150" alt="150x150" src="<%=imagePath %>${station.tax_certif}" />
@@ -280,7 +280,7 @@
 															<input type="file" name="image" class="projectfile" id="tax_certif_select" />
 														</label>
 														<input type="hidden" id="tax_certif" name="tax_certif"/> 
-														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif');">
+														<button class="btn btn-sm btn-primary btn-file-space" type="button" onclick="save_photo(this,'#tax_certif_select','#tax_certif','#ui2_img');">
 															<i class="ace-icon fa fa-check bigger-110"></i>
 															图片上传
 														</button>
@@ -652,7 +652,7 @@
 			$("#operations_name").val($(obj).val());
 		}
 		
-function save_photo(fileobj,obj,obj1){
+function save_photo(fileobj,obj,obj1,obj2){
 			
 			$(fileobj).parents("div").find("input[name=uploadfile]").each(function(){
 				$(this).attr("name","");
@@ -673,6 +673,7 @@ function save_photo(fileobj,obj,obj1){
 		            success:function(data){
 		            	var s = JSON.parse(data);
 		            	if(s.success == true){
+		            		$(obj2).hide();
 		            		bootbox.alert("上传成功");
 		            		$(obj1).val(s.obj);
 		            	}
