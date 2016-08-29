@@ -48,5 +48,5 @@ public interface GastationService {
 	public void update(Gastation gas);
 
 	boolean exists(String gas) throws Exception;
-	public int delete(Gastation gas);
+	public int delete(String id);
 }

@@ -65,13 +65,14 @@
 	}
 	
 	function deleteGasMap(id){
+//		console.log(id);
 		bootbox.setLocale("zh_CN");
 		bootbox.confirm("确认要删除数据吗？", function(result) {
 			if (result) {
 				var deleteOptions = {
-					url : '../web/gastation/delete',
+					url : '../web/gastationMap/delete',
 					data : {
-						sys_gas_station_id : id
+						id : id
 					},
 					type : 'post',
 					dataType : 'text',
@@ -81,7 +82,7 @@
 						$('[data-rel="tooltip"]').tooltip();
 					}
 				}
-				$("#listForm").ajaxSubmit(deleteOptions);
+				$("#formgastation").ajaxSubmit(deleteOptions);
 			}
 		})
 	}
@@ -93,6 +94,11 @@
 	 *导入文件
 	 */
 	function saveTemplate(){
+		if ($("#file_import").val()=="") {
+			bootbox.alert("请选择文件");
+			return false;
+		}
+		
 	    var multipartOptions ={
 	        url:'../web/gastationMap/file',
 	        type:'post',
