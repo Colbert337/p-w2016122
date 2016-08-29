@@ -89,6 +89,7 @@
 	<mvc:resources mapping="/page/**"  location="/page/" />
     <mvc:resources mapping="/js/**"  location="/js/" />
     <mvc:resources mapping="/dist/**"  location="/dist/" />
+    <mvc:resources mapping="/umeditor-dev/**"  location="/umeditor-dev/" />
     
 	<!-- 配置多文件上传 -->
 	<bean id="multipartResolver"
