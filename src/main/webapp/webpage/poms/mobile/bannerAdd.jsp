@@ -174,7 +174,7 @@
 						<div class="form-group">
 							<label class="col-sm-10 control-label no-padding-right"
 								for="target_url">
-								链接地址如：http://localhost:8080/poms-web/web/page/showPage?pageid=<span
+								链接地址如：<%=basePath%>/web/page/showPage?pageid=<span
 								class="red_star">66b24d910a0f4ce68689682f497c0349</span>
 							</label>
 
