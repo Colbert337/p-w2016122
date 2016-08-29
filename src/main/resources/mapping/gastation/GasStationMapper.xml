@@ -62,7 +62,7 @@
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
-    updated_time,prepay_balance,prepay_version,sys_user_account_id,type
+    updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -90,11 +90,15 @@
   select 
     <include refid="Base_Column_List" />
     from sys_gas_station
-    where 1=1 and type=1  
+    where 1=1  and type=1 
   <trim>
   	  <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''" >
         and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
       </if>
+      
+       <if test="map_type != null &amp;&amp; map_type != ''" >
+        and map_type = #{map_type,jdbcType=VARCHAR}
+      </if> 
       <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
         and gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%')
       </if>
@@ -138,7 +142,7 @@
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </delete>
   
-  <delete id="delete" parameterType="com.sysongy.poms.gastation.model.Gastation" >
+  <delete id="delete" parameterType="java.lang.String" >
     delete from sys_gas_station
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR} and type<![CDATA[ <> ]]>0
   </delete>
@@ -152,7 +156,7 @@
       indu_com_number, tax_number, indu_com_certif, 
       tax_certif, lng_certif, dcp_certif, 
       platform_type, status, created_time, 
-      updated_time,prepay_balance,prepay_version,sys_user_account_id,type)
+      updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type)
     values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
       #{gas_station_name,jdbcType=VARCHAR}, 
       #{station_level,jdbcType=VARCHAR}, 
@@ -167,7 +171,7 @@
       #{indu_com_number,jdbcType=VARCHAR}, #{tax_number,jdbcType=VARCHAR}, #{indu_com_certif,jdbcType=VARCHAR}, 
       #{tax_certif,jdbcType=VARCHAR}, #{lng_certif,jdbcType=VARCHAR}, #{dcp_certif,jdbcType=VARCHAR}, 
       #{platform_type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{created_time,jdbcType=TIMESTAMP}, 
-      #{updated_time,jdbcType=TIMESTAMP},#{prepay_balance,jdbcType=DECIMAL}, #{prepay_version,jdbcType=INTEGER}, #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR})
+      #{updated_time,jdbcType=TIMESTAMP},#{prepay_balance,jdbcType=DECIMAL}, #{prepay_version,jdbcType=INTEGER}, #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{map_type,jdbcType=VARCHAR})
   </insert>
   
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
@@ -505,6 +509,13 @@
       
       <if test="created_time != null &amp;&amp; created_time != ''" >
         created_time = #{created_time,jdbcType=TIMESTAMP},
+      </if>
+      
+      <if test="type != null &amp;&amp; type != ''" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+       <if test="map_type != null &amp;&amp; map_type != ''" >
+        map_type = #{map_type,jdbcType=VARCHAR},
       </if>
       <if test="updated_time != null &amp;&amp; updated_time != ''" >
         updated_time = #{updated_time,jdbcType=TIMESTAMP},

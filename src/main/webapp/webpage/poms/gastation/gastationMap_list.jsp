@@ -38,8 +38,8 @@
 						
 						<div class="item">
 							<label>加注站类型:</label>
-							<select class="chosen-select " name="status" >
-								<s:option flag="true" gcode="STATION_DATA_TYPE" form="gastation" field="status" />
+							<select class="chosen-select " name="map_type" value="${gastation.map_type}" >
+								<s:option flag="true" gcode="STATION_MAP_TYPE" form="gastation" field="status" />
 							</select>
 						</div>
 
@@ -86,7 +86,7 @@
 									<th onclick="orderBy(this,'province_id');commitForm();" id="province_id_order">所在省</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">地址</th>
 									<th >坐标</th>
-									<th onclick="orderBy(this,'type');commitForm();" id="type_order">合作类型</th>
+									<th onclick="orderBy(this,'map_type');commitForm();" id="map_type_order">合作类型</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"  class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 								 	<th class="text-center td-w3">更多操作</th> 
@@ -109,7 +109,7 @@
 									<td><s:Code2Name mcode="${list.province_id}" gcode="PROVINCE_CODE"></s:Code2Name></td>
 									<td>${list.address}</td>
 									<td>${list.xy}</td>
-									<td><s:Code2Name mcode="${list.type}" gcode="STATION_DATA_TYPE"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.map_type}" gcode="STATION_MAP_TYPE"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>

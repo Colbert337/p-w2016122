@@ -43,6 +43,15 @@ public class Gastation extends BaseModel {
 	private Date expiry_date;
 	private Date updated_time;
 	private String xy;
+	private String map_type;
+	public String getMap_type() {
+		return map_type;
+	}
+
+	public void setMap_type(String map_type) {
+		this.map_type = map_type;
+	}
+
 	public String getXy() {
 		return longitude+","+latitude;
 	}

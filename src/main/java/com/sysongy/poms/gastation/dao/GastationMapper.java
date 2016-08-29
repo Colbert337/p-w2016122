@@ -41,5 +41,5 @@ public interface GastationMapper {
 	
 	int updateByPrimaryKeySelective2(Gastation gas);
 
-	int delete(Gastation gas);
+	int delete(String gas);
 }

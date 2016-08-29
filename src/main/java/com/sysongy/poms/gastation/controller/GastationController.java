@@ -976,13 +976,16 @@ public class GastationController extends BaseContoller{
 	}
 
 	@RequestMapping("/gastationConsumeReport/import")
-	public String transportionConsumeReportImport(ModelMap map, SysOrder order, HttpServletResponse response) throws IOException {
+	public String transportionConsumeReportImport(ModelMap map, SysOrder order, HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
 		 try {
 			 	order.setPageNum(1);
 			 	order.setPageSize(1048576);
 
 				if(StringUtils.isEmpty(order.getOrderby())){
 					order.setOrderby("sys_gas_station_id desc");
+				}
+				if(GlobalConstant.USER_TYPE_STATION == currUser.getUser().getUserType()){
+					order.setChannelNumber(currUser.getStationId());
 				}
 
 				PageInfo<Map<String, Object>> pageinfo = service.gastionConsumeReport(order);
@@ -1082,13 +1085,16 @@ public class GastationController extends BaseContoller{
 	}
 
 	@RequestMapping("/gastationRechargeReport/import")
-	public String gastationRechargeReportImport(ModelMap map, SysOrder order, HttpServletResponse response) throws IOException {
+	public String gastationRechargeReportImport(ModelMap map, SysOrder order, HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
 		 try {
 			 	order.setPageNum(1);
 			 	order.setPageSize(1048576);
 
 				if(StringUtils.isEmpty(order.getOrderby())){
 					order.setOrderby("sys_gas_station_id desc");
+				}
+				if(GlobalConstant.USER_TYPE_STATION == currUser.getUser().getUserType()){
+					order.setChannelNumber(currUser.getStationId());
 				}
 
 				PageInfo<Map<String, Object>> pageinfo = service.gastionRechargeReport(order);
