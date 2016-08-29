@@ -239,6 +239,7 @@ public class GastationMapController extends BaseContoller {
 							case "合作站(微信红包站)":
 							case "合作站":
 								gas.setMap_type("3");
+								break;
 							default:
 								gas.setMap_type("1");
 								break;

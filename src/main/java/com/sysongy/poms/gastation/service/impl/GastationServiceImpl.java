@@ -416,13 +416,13 @@ public class GastationServiceImpl implements GastationService {
 		gas.setProvince_id(param.getMcode());
 		param=new Usysparam();
 		list=new ArrayList<>();
-		param.setGcode("STATION_MAP_TYPE");
-		param.setMname(gas.getMap_type());
-		list=usysparamService.queryAll(param);
-		if (list.size()>0) {
-			param=list.get(0);
-		}
-		gas.setType(param.getMcode());
+//		param.setGcode("STATION_MAP_TYPE");
+//		param.setMname(gas.getMap_type());
+//		list=usysparamService.queryAll(param);
+//		if (list.size()>0) {
+//			param=list.get(0);
+//		}
+//		gas.setMap_type(param.getMcode());
 		
 		Gastation station = gasStationMapper
 				.findGastationid("GS" + 4+ gas.getProvince_id());
@@ -455,14 +455,14 @@ public class GastationServiceImpl implements GastationService {
 		gas.setProvince_id(param.getMcode());
 		param=new Usysparam();
 		list=new ArrayList<>();
-		param.setGcode("STATION_MAP_TYPE");
-		param.setMname(gas.getMap_type());
-		list=usysparamService.queryAll(param);
-		if (list.size()>0) {
-			param=list.get(0);
-		}
-		gas.setType(param.getMcode());
-		
+//		param.setGcode("STATION_MAP_TYPE");
+//		param.setMname(gas.getMap_type());
+//		list=usysparamService.queryAll(param);
+//		if (list.size()>0) {
+//			param=list.get(0);
+//		}
+//		gas.setMap_type(param.getMcode());
+		gas.setType("1");
 		gasStationMapper.updateByPrimaryKeySelective2(gas);
 	}
 
