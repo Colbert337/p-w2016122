@@ -14,17 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.github.abel533.sql.SqlMapper;
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.permi.model.SysUser;
-import com.sysongy.poms.permi.service.SysUserService;
-import com.sysongy.util.taglib.cache.UsysparamVO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.github.abel533.sql.SqlMapper;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.permi.service.SysUserService;
 
 public class SecurityServlet extends HttpServlet implements Filter {
 

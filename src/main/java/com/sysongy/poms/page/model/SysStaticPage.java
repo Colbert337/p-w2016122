@@ -2,7 +2,10 @@ package com.sysongy.poms.page.model;
 
 import java.util.Date;
 
-public class SysStaticPage {
+import com.sysongy.poms.base.model.BaseModel;
+
+public class SysStaticPage extends BaseModel{
+	
     private String id;
 
     private String pageTitle;
@@ -20,8 +23,38 @@ public class SysStaticPage {
     private String memo;
 
     private String pageHtml;
+    
+    private String page_created_time;
+    
+    private String page_created_time_after;
+    
+    private String page_created_time_before;
 
-    public String getId() {
+    public String getPage_created_time() {
+		return page_created_time;
+	}
+
+	public void setPage_created_time(String page_created_time) {
+		this.page_created_time = page_created_time;
+	}
+
+	public String getPage_created_time_before() {
+		return page_created_time_before;
+	}
+
+	public void setPage_created_time_before(String page_created_time_before) {
+		this.page_created_time_before = page_created_time_before;
+	}
+
+	public String getPage_created_time_after() {
+		return page_created_time_after;
+	}
+
+	public void setPage_created_time_after(String page_created_time_after) {
+		this.page_created_time_after = page_created_time_after;
+	}
+
+	public String getId() {
         return id;
     }
 
