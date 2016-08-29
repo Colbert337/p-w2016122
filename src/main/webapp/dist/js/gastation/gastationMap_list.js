@@ -94,6 +94,11 @@
 	 *导入文件
 	 */
 	function saveTemplate(){
+		if ($("#file_import").val()=="") {
+			bootbox.alert("请选择文件");
+			return false;
+		}
+		
 	    var multipartOptions ={
 	        url:'../web/gastationMap/file',
 	        type:'post',
