@@ -277,11 +277,32 @@
 						</div>
 						<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
 					</form>
-					<div class="modal-footer">
+					<div class="clearfix form-actions">
+										<div class="col-md-offset-3 col-md-9">
+											
+											<button class="btn btn-info" type="button" onclick="saveBanner();">
+												<i class="ace-icon fa fa-check bigger-110"></i>
+												保存
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											
+											<button class="btn" id="clear" type="button" onclick="clear1();">
+												<i class="ace-icon fa fa-repeat bigger-110"></i>
+												重置
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											
+											<button class="btn btn-success" type="button" onclick="init();">
+												<i class="ace-icon fa fa-undo bigger-110"></i>
+												返回
+											</button>
+										</div>
+									</div>
+					<!-- <div class="modal-footer">
 						<button class="btn btn-primary btn-sm" onclick="saveBanner()">确定</button>
 						<button class="btn btn-sm" i="close" onclick="init()">取 消</button>
 					</div>
-					<div class="modal-footer"></div>
+					<div class="modal-footer"></div> -->
 					<!-- /.col -->
 				</div>
 				<!-- /.row -->
@@ -453,17 +474,34 @@
 		$(".modal-backdrop").css("display", "none");
 
 	}
-
+	
+	function clear1(){
+	//	console.log('1111');
+	//	location.href=location.href;
+		$.ajax({
+			url : "../web/mobile/img/fondone",
+			data : {
+				imgType:$("[name=imgType]").val()
+			},
+			async : false,
+			type : "POST",
+			success : function(data) {
+				$("#main").html(data);
+			}
+		})
+	}
+	
 	jQuery(function($) {
 		if ("${mbBanner.mbBannerId}" == "") {
 			$("#show_img").hide();
 			$("#show_sm_img").hide();
 			$("#imgType").val("${imgType }");
-			
+			$("#clear").show();
 			
 		} else {
 			$("#show_img").show();
 			$("#show_sm_img").show();
+			$("#clear").hide();
 			var datas = '${mbBanner.city_id}'.split(',');
 			for (var i = 0; i < datas.length; i++) {
 				eval("$('#c" + datas[i] + "').attr('checked',true);");
@@ -591,4 +629,6 @@
 		loadPage('#main', '../web/mobile/img/list/page?imgType='
 				+ $("[name=imgType]").val());
 	}
+	
+	
 </script>
