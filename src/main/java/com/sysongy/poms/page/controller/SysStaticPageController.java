@@ -143,7 +143,9 @@ public class SysStaticPageController extends BaseContoller {
 			bean.setRetCode(100);
 			
 			//bean.setRetValue(pageid);
-			page.setPageCreatedTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(page.getPage_created_time()));
+			if(!StringUtils.isEmpty(page.getPage_created_time())){
+				page.setPageCreatedTime(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(page.getPage_created_time()));
+			}
 			bean.setPageInfo(ret);
 
 			map.addAttribute("page", page);
