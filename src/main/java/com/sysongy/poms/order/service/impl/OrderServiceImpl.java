@@ -1105,4 +1105,59 @@ public class OrderServiceImpl implements OrderService {
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
+
+
+	@Override
+	public String checkIfCanChargeToDriver(SysOrder order) throws Exception{
+		if (order ==null){
+			throw new Exception(GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
+		}
+
+		String orderType = order.getOrderType();
+		if(orderType == null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CHARGE_TO_DRIVER))){
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH);
+		}
+		String operatorTargetType = order.getOperatorTargetType();
+		if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER))){
+			throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER);
+		}
+		//检查订单
+		validAccount(order);
+
+		//TODO 判断此driver是否通过实名认证，如果没有，则取其累计充值，不能超过5000
+		String debitAccountId = order.getDebitAccount();
+		SysDriver driver =  driverService.queryDriverByPK(debitAccountId);
+		String checkedStatus = driver.getCheckedStatus();
+		if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(checkedStatus)){
+			//未认证，取得累计充值金额
+			HashMap<String,String> map = new HashMap<String,String>();
+			map.put("userId", debitAccountId);
+			map.put("CHARGE_TO_DRIVER", GlobalConstant.OrderType.CHARGE_TO_DRIVER);
+			Map returnMap = sysOrderMapper.querySumChargeByUserId(map);
+
+			BigDecimal sum = order.getCash();
+			if(returnMap != null){
+				sum = sum.add((BigDecimal)returnMap.get("sumcash"));
+			}
+
+			if(GlobalConstant.DRIVER_NOT_CERTIFICATE_LIMIT.compareTo(sum) < 0){
+				throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT);
+			}
+		}
+
+		String is_discharge = order.getIs_discharge();
+		//1.现金充值抵扣预付款。如果现金充值，取操作源operator_source_type，如果是加注站，则判断充值金额不能超过加注站预付款
+		String charge_type = order.getChargeType();
+		BigDecimal cash = order.getCash();
+		if(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE.equalsIgnoreCase(charge_type)){
+			//
+			String chargeToDriverUpdateGastationPrepay_success = gastationService.chargeToDriverUpdateGastationPrepay(order, is_discharge);
+			if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(chargeToDriverUpdateGastationPrepay_success)){
+				//如果出错直接返回错误代码退出
+				throw new Exception( chargeToDriverUpdateGastationPrepay_success);
+			}
+		}
+
+		return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
 }

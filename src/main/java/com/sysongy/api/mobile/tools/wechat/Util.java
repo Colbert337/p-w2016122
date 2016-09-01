@@ -51,11 +51,10 @@ public class Util {
 		}
 		
 		HttpClient httpClient = getNewHttpClient();
-		
 		HttpPost httpPost = new HttpPost(url);
 		
 		try {
-			StringEntity entityInfo = new StringEntity(entity);
+			StringEntity entityInfo = new StringEntity(entity, HTTP.UTF_8);
 			httpPost.setEntity(entityInfo);
 			httpPost.setHeader("Accept", "application/json");
 			httpPost.setHeader("Content-type", "application/json");
