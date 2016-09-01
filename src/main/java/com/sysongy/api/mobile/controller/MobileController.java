@@ -1104,7 +1104,7 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			String http_poms_path =  (String) prop.get("http_poms_path");
 			/**
 			 * 请求接口
 			 */
@@ -1132,6 +1132,8 @@ public class MobileController {
 						}
 						gastationMap.put("preferential","");
 						gastationMap.put("address",gastationInfo.getAddress());
+						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
+						gastationMap.put("infoUrl",infoUrl);
 
 						gastationArray.add(gastationMap);
 					}
@@ -1349,7 +1351,7 @@ public class MobileController {
 						bannerMap.put("title",banner.getTitle());
 						bannerMap.put("content","");
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
-						bannerMap.put("contentUrl","");
+						bannerMap.put("contentUrl",banner.getTargetUrl());
 						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
 							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
 						}else{
@@ -1779,7 +1781,6 @@ public class MobileController {
 					result.setData(data);
 				}
 
-
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -1802,7 +1803,29 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-	
+
+
+	/**
+	 * 在线支付回调方法
+	 */
+	@RequestMapping(value = "/deal/callBackPay")
+	@ResponseBody
+	public String callBackPay(String params) throws Exception{
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("支付成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+			try{
+				/*String orderCharge = orderService.chargeToDriver(record);
+				if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+					throw new Exception("订单充值错误：" + orderCharge);*/
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception("订单充值错误：" + e);
+			}
+		return null;
+	}
 	/**
 	 * 修改账号手机号/密保手机
 	 */
