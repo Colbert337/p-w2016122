@@ -1758,7 +1758,7 @@ public class MobileController {
 				} else if(payType.equalsIgnoreCase("1")){   //微信支付
 					sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE); //TODO充值成功后再去生成订单
 					orderService.checkIfCanChargeToDriver(sysOrder);
-					String entity = genProductArgs(orderID);
+					String entity = genProductArgs(orderID, feeCount);
 					byte[] buf = Util.httpPost(url, entity);
 					String content = new String(buf, "utf-8");
 					Map<String, String> orderHashs = decodeXml(content);
@@ -1770,7 +1770,8 @@ public class MobileController {
 						if(nCreateOrder < 1)
 							throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 					}
-					data.put("payReq", payReq);
+					JSONObject dataObj = JSONObject.fromObject(payReq);
+					data.put("payReq", dataObj);
 					result.setData(data);
 				}
 
@@ -2065,7 +2066,7 @@ public class MobileController {
 		return appSign;
 	}
 
-	private String genProductArgs(String orderID) {
+	private String genProductArgs(String orderID, String totalFee) {
 		try {
 			String nonceStr = genNonceStr();
 			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
@@ -2078,7 +2079,7 @@ public class MobileController {
 					"http://36.47.179.46:8090/jfinal_demo/rechargeOrder/wxRechargeOrder"));//接收微信支付异步通知回调地址，通知url必须为直接可访问的url，不能携带参数。
 			packageParams.add(new BasicNameValuePair("out_trade_no", orderID));//商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号
 			packageParams.add(new BasicNameValuePair("spbill_create_ip", "127.0.0.1"));//用户端实际ip
-			packageParams.add(new BasicNameValuePair("total_fee", "1"));//订单总金额，单位为分，详见支付金额
+			packageParams.add(new BasicNameValuePair("total_fee", totalFee));//订单总金额，单位为分，详见支付金额
 			packageParams.add(new BasicNameValuePair("trade_type", "APP"));
 			String sign = genPackageSign(packageParams);
 			packageParams.add(new BasicNameValuePair("sign", sign));//签名，详见签名生成算法
