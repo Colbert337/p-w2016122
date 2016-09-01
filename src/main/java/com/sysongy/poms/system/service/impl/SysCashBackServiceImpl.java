@@ -289,5 +289,10 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	public Integer delCashBack(String sysCashBackNo, String level) throws Exception {
 		return cashBackMapper.deleteByLevel(sysCashBackNo, level);
 	}
+	@Override
+	public List<SysCashBack> queryMaxCashBack() {
+		// TODO Auto-generated method stub
+		return cashBackMapper.queryMaxCashBack();
+	}
 	
 }

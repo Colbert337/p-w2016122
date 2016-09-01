@@ -40,4 +40,9 @@ public interface SysCashBackMapper {
     Integer deleteByLevel(String sysCashBackNo, String level);
 
     List<SysCashBack> queryForCRMPage(SysCashBack record);
+    
+    /**
+     * 最高返现规则列表
+     */
+    List<SysCashBack> queryMaxCashBack();
 }

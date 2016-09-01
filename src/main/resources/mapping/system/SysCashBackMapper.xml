@@ -272,4 +272,10 @@
       updated_date = #{updated_date,jdbcType=TIMESTAMP}
     where sys_cash_back_id = #{sys_cash_back_id,jdbcType=VARCHAR}
   </update>
+    <select id="queryMaxCashBack" resultMap="BaseResultMap">
+	SELECT sys_cash_back_no,MAX(cash_per+0)AS cash_per FROM sys_cash_back WHERE (sys_cash_back_no=101 OR sys_cash_back_no=103) AND `status`=0 AND 
+<!-- 	  <![CDATA[ start_date < NOW() AND end_date > NOW()  ]]> -->
+	   start_date &lt; NOW() AND end_date &gt; NOW()  
+	GROUP BY sys_cash_back_no;
+  </select>
 </mapper>
