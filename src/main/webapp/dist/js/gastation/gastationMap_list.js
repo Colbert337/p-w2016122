@@ -64,7 +64,28 @@
 		loadPage('#main', '../webpage/poms/gastation/gastation_deposit.jsp?acconutid='+acconutid+'&gastationame='+stationame+'&gastationdeposit='+stationdeposit+'&stationid='+stationid);
 	}
 	
-	 
+	function deleteGasMap(id){
+//		console.log(id);
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("确认要删除数据吗？", function(result) {
+			if (result) {
+				var deleteOptions = {
+					url : '../web/gastationMap/delete',
+					data : {
+						id : id
+					},
+					type : 'post',
+					dataType : 'text',
+					success : function(data) {
+						$("#main").html(data);
+						$("#modal-table").modal("show");
+						$('[data-rel="tooltip"]').tooltip();
+					}
+				}
+				$("#formgastation").ajaxSubmit(deleteOptions);
+			}
+		})
+	}
 	function openImportDiv(){
 	    $("#importDivModel").modal("show");
 	}
@@ -73,6 +94,11 @@
 	 *导入文件
 	 */
 	function saveTemplate(){
+		if ($("#file_import").val()=="") {
+			bootbox.alert("请选择文件");
+			return false;
+		}
+		
 	    var multipartOptions ={
 	        url:'../web/gastationMap/file',
 	        type:'post',

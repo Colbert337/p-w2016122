@@ -39,142 +39,151 @@ import com.sysongy.util.UUIDGenerator;
  */
 @RequestMapping("/web/mobile/img")
 @Controller
-public class MbBannerController extends BaseContoller{
-    @Autowired
-    MbBannerService mbBannerService;
-    @Autowired
-    DistCityMapper city;
-    MbBanner mbBanner;
+public class MbBannerController extends BaseContoller {
+	@Autowired
+	MbBannerService mbBannerService;
+	@Autowired
+	DistCityMapper city;
+	MbBanner mbBanner;
 
-    /**
-     * 查询图片列表
-     * @return
-     */
-    @RequestMapping("/list/page")
-    public String queryMbBannerListPage(MbBanner mbBanner, ModelMap map) throws Exception{
-    	
-    	this.mbBanner = mbBanner;
-    	String ret = "webpage/poms/mobile/banner_list";
-    	
-    	PageBean bean = new PageBean();
+	/**
+	 * 查询图片列表
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/list/page")
+	public String queryMbBannerListPage(MbBanner mbBanner, ModelMap map) throws Exception {
 
-    	if(mbBanner.getPageNum() == null){
-            mbBanner.setPageNum(GlobalConstant.PAGE_NUM);
-            mbBanner.setPageSize(GlobalConstant.PAGE_SIZE);
-        }
-    	
-    	if(StringUtils.isEmpty(mbBanner.getImgType())){
-    		mbBanner.setImgType(GlobalConstant.ImgType.TOP);
-    	}
-    	if(mbBanner.getImgType()==null||"".equals(mbBanner.getImgType())){
-    		mbBanner.setImgType("0");
-    	}
-        PageInfo<MbBanner> pageinfo = new PageInfo<MbBanner>();
-        
-        pageinfo = mbBannerService.queryMbBannerListPage(mbBanner);
-        
-        bean.setRetCode(100);
+		this.mbBanner = mbBanner;
+		String ret = "webpage/poms/mobile/banner_list";
+
+		PageBean bean = new PageBean();
+
+		if (mbBanner.getPageNum() == null) {
+			mbBanner.setPageNum(GlobalConstant.PAGE_NUM);
+			mbBanner.setPageSize(GlobalConstant.PAGE_SIZE);
+		}
+
+		if (StringUtils.isEmpty(mbBanner.getImgType())) {
+			mbBanner.setImgType(GlobalConstant.ImgType.TOP);
+		}
+		if (mbBanner.getImgType() == null || "".equals(mbBanner.getImgType())) {
+			mbBanner.setImgType("0");
+		}
+		PageInfo<MbBanner> pageinfo = new PageInfo<MbBanner>();
+
+		pageinfo = mbBannerService.queryMbBannerListPage(mbBanner);
+
+		bean.setRetCode(100);
 		bean.setRetMsg("查询成功");
 		bean.setPageInfo(ret);
 		Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
-		String data=(String) prop.get("version");
-		String[] datas=data.split(",");
-		List<DistCity> list=city.queryHotCityList(2);
+		String data = (String) prop.get("version");
+		String[] datas = data.split(",");
+		List<DistCity> list = city.queryHotCityList(2);
 		map.addAttribute("datas", datas);
 		map.addAttribute("city", list);
 		map.addAttribute("ret", bean);
 		map.addAttribute("pageInfo", pageinfo);
-		map.addAttribute("mbBanner",mbBanner);
-        
-        return ret;
-    }
+		map.addAttribute("mbBanner", mbBanner);
 
-    /**
-     * 跳转添加页面
-     * @return
-     */
-    @RequestMapping("/add")
-    public String addBanner( ModelMap map){
-        return "webpage/poms/mobile/banner_add";
-    }
-    /**
-     * 查询图片信息
-     * @param map
-     * @return
-     */
-    @RequestMapping("/info")
-    @ResponseBody
-    public MbBanner queryBanner(MbBanner banner, ModelMap map){
-        MbBanner mbBanner = mbBannerService.queryMbBanner(banner);
-        return mbBanner;
-    }
-    /**
-     * 添加图片
-     * @return
-     */
-    @RequestMapping("/save")
-    public String saveBanner(MbBanner mbBanner, ModelMap map,HttpSession session) throws Exception{
-//        String resultVal = "";
-//        
-//        if(mbBanner != null && mbBanner.getMbBannerId() !=  null && !"".equals(mbBanner.getMbBannerId())){
-//            //修改图片
-//            mbBanner.setUpdatedDate(new Date());
-//            mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-//            mbBannerService.updateBanner(mbBanner);
-//            resultVal = "修改成功！";
-//            resultVal = Encoder.symmetricEncrypto(resultVal);
-//        }else{
-//            //查询当前图片最大序号
-//            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
-//            if(maxBannerIndex != null){
-//                mbBanner.setSort(maxBannerIndex.getSort()+1);
-//            }else{
-//                mbBanner.setSort("0");
-//            }
-//            //添加图片
-//            mbBanner.setMbBannerId(UUIDGenerator.getUUID());
-//            mbBanner.setImgType(mbBanner.getImgType());
-//            mbBannerService.saveBanner(mbBanner);
-//            resultVal = "添加成功！";
-//            resultVal = Encoder.symmetricEncrypto(resultVal);
-//        }
-//        return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
-//    	mbBanner.setOperator();
-    	CurrUser user=(CurrUser)session.getAttribute("currUser");
-    	SysUser u=user.getUser();
-    	mbBanner.setOperator(u.getUserName());
-        PageBean bean = new PageBean();
+		return ret;
+	}
+
+	/**
+	 * 跳转添加页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/add")
+	public String addBanner(ModelMap map) {
+		return "webpage/poms/mobile/banner_add";
+	}
+
+	/**
+	 * 查询图片信息
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/info")
+	@ResponseBody
+	public MbBanner queryBanner(MbBanner banner, ModelMap map) {
+		MbBanner mbBanner = mbBannerService.queryMbBanner(banner);
+		return mbBanner;
+	}
+
+	/**
+	 * 添加图片
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/save")
+	public String saveBanner(MbBanner mbBanner, ModelMap map, HttpSession session) throws Exception {
+		// String resultVal = "";
+		//
+		// if(mbBanner != null && mbBanner.getMbBannerId() != null &&
+		// !"".equals(mbBanner.getMbBannerId())){
+		// //修改图片
+		// mbBanner.setUpdatedDate(new Date());
+		// mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+		// mbBannerService.updateBanner(mbBanner);
+		// resultVal = "修改成功！";
+		// resultVal = Encoder.symmetricEncrypto(resultVal);
+		// }else{
+		// //查询当前图片最大序号
+		// MbBanner maxBannerIndex =
+		// mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
+		// if(maxBannerIndex != null){
+		// mbBanner.setSort(maxBannerIndex.getSort()+1);
+		// }else{
+		// mbBanner.setSort("0");
+		// }
+		// //添加图片
+		// mbBanner.setMbBannerId(UUIDGenerator.getUUID());
+		// mbBanner.setImgType(mbBanner.getImgType());
+		// mbBannerService.saveBanner(mbBanner);
+		// resultVal = "添加成功！";
+		// resultVal = Encoder.symmetricEncrypto(resultVal);
+		// }
+		// return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
+		// mbBanner.setOperator();
+		CurrUser user = (CurrUser) session.getAttribute("currUser");
+		SysUser u = user.getUser();
+		mbBanner.setOperator(u.getUserName());
+		PageBean bean = new PageBean();
 		String ret = "webpage/poms/mobile/banner_list";
 
 		try {
-			if(mbBanner != null && mbBanner.getMbBannerId() !=  null && !"".equals(mbBanner.getMbBannerId())){
-				
-				mbBanner.setUpdatedDate(new Date());
-	            mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
-	            
-	            mbBannerService.updateBanner(mbBanner);
-	            
-				bean.setRetMsg("保存成功");
-				
-			}else{
-				
-				//查询当前图片最大序号
-//	            MbBanner maxBannerIndex = mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
-//	            if(maxBannerIndex != null){
-//	                mbBanner.setSort(maxBannerIndex.getSort()+1);
-//	            }else{
-//	                mbBanner.setSort("0");
-//	            }
+			if (mbBanner != null && mbBanner.getMbBannerId() != null && !"".equals(mbBanner.getMbBannerId())) {
 
-	            mbBanner.setMbBannerId(UUIDGenerator.getUUID());
-	            mbBanner.setImgType(mbBanner.getImgType());
-	            
-	            mbBannerService.saveBanner(mbBanner);
-	            
+				mbBanner.setUpdatedDate(new Date());
+				mbBanner.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
+
+				mbBannerService.updateBanner(mbBanner);
+
+				bean.setRetMsg("保存成功");
+
+			} else {
+
+				// 查询当前图片最大序号
+				// MbBanner maxBannerIndex =
+				// mbBannerService.queryMaxIndex(GlobalConstant.ImgType.TOP);
+				// if(maxBannerIndex != null){
+				// mbBanner.setSort(maxBannerIndex.getSort()+1);
+				// }else{
+				// mbBanner.setSort("0");
+				// }
+
+				mbBanner.setMbBannerId(UUIDGenerator.getUUID());
+				mbBanner.setImgType(mbBanner.getImgType());
+
+				mbBannerService.saveBanner(mbBanner);
+
 				bean.setRetMsg("新增成功");
 			}
-			
-			ret = this.queryMbBannerListPage(this.mbBanner==null?new MbBanner():this.mbBanner, map);
+
+			ret = this.queryMbBannerListPage(this.mbBanner == null ? new MbBanner() : this.mbBanner, map);
 
 			bean.setRetCode(100);
 			bean.setPageInfo(ret);
@@ -185,28 +194,50 @@ public class MbBannerController extends BaseContoller{
 			bean.setRetMsg(e.getMessage());
 
 			map.addAttribute("ret", bean);
-			
+
 			logger.error("", e);
-		}
-		finally {
+		} finally {
 			return ret;
 		}
-    }
+	}
 
-    /**
-     * 删除图片
-     * @return
-     */
-    @RequestMapping("/delete")
-    public String deleteBanner( MbBanner mbBanner,ModelMap map) throws Exception{
-        mbBanner.setIsDeleted(GlobalConstant.STATUS_DELETE);
-        String resultVal = "删除成功！";
-        
-        resultVal = Encoder.symmetricEncrypto(resultVal);
-        
-        mbBannerService.deleteBanner(mbBanner);
-        
-        return "redirect:/web/mobile/img/list/page?resultVal="+resultVal;
-    }
+	/**
+	 * 删除图片
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/delete")
+	public String deleteBanner(MbBanner mbBanner, ModelMap map) throws Exception {
+		mbBanner.setIsDeleted(GlobalConstant.STATUS_DELETE);
+		String resultVal = "删除成功！";
+
+		resultVal = Encoder.symmetricEncrypto(resultVal);
+
+		mbBannerService.deleteBanner(mbBanner);
+
+		return "redirect:/web/mobile/img/list/page?resultVal=" + resultVal;
+	}
+
+	@RequestMapping("/fondone")
+	public String fondone(MbBanner banner, ModelMap map) {
+		String ret = "webpage/poms/mobile/bannerAdd";
+		Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
+		String data = (String) prop.get("version");
+		String[] datas = data.split(",");
+		List<DistCity> list = city.queryHotCityList(2);
+		MbBanner mbBanner = mbBannerService.queryMbBanner(banner);
+		
+
+		PageBean bean = new PageBean();
+		bean.setRetCode(100);
+		bean.setRetMsg("查询成功");
+		bean.setPageInfo(ret);
+		map.addAttribute("datas", datas);
+		map.addAttribute("imgType", banner.getImgType());
+		map.addAttribute("ret", bean);
+		map.addAttribute("city", list);
+		map.addAttribute("mbBanner", mbBanner);
+		return ret;
+	}
 
 }

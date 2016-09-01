@@ -16,6 +16,7 @@ import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.service.MbDealOrderService;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.api.mobile.tools.MobileUtils;
+import com.sysongy.api.mobile.tools.ali.OrderInfoUtil2_0;
 import com.sysongy.api.mobile.tools.feedback.MobileFeedBackUtils;
 import com.sysongy.api.mobile.tools.getcitys.GetCitysUtils;
 import com.sysongy.api.mobile.tools.loss.ReportLossUtil;
@@ -25,6 +26,8 @@ import com.sysongy.api.mobile.tools.returncash.ReturnCashUtil;
 import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
 import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
+import com.sysongy.api.mobile.tools.wechat.MD5;
+import com.sysongy.api.mobile.tools.wechat.Util;
 import com.sysongy.api.util.DESUtil;
 import com.sysongy.api.util.ParameterUtil;
 import com.sysongy.api.util.ShareCodeUtil;
@@ -51,9 +54,12 @@ import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.*;
+import com.tencent.mm.sdk.modelpay.PayReq;
 import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +68,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -79,6 +88,17 @@ public class MobileController {
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 	public final String keyStr = "sysongys";
 	String localPath = (String) prop.get("http_poms_path");
+
+	/** 支付宝支付业务：入参app_id */
+	public static final String APPID = "2016011801102578"; //TODO 需要自定义常量类
+
+	/** 商户私钥，pkcs8格式 */
+	public static final String RSA_PRIVATE = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALMGuZtJV5TvfNZHvIYUVqo6Gy2lqvYZ0DP2Dr7Si5aPqd+sEhDy7TjWAUlYV86d3z+/oOrhap9iHJn80oJoQk3UTf/NM/XNF0PCjW1UiGORQyFiBYFIVfXSylFWQ5IFBmxQfgu5cPzZNeTcRsooPTrON0/OAItxsuGbgDlCMusjAgMBAAECgYA1HhiyB2fSC+C5X12DVsOEDGuF9rKsBGqvECG94pCCIqwfblmJ59oU1AJbtbeP2W2k54GiTzGoip673bTD9pU9LPdyelWlFBePGEHiREbno2fXB01Tb9ML/TrZG5JFZdv7IS7ekitWiiK1lKwFg3mujMDXrFAwBQd/kBd0eOG7cQJBAOikToenP7JgCYuWM7N5pKZ5GsfZJsKVqDRZyqDDih0gXTdafW49IlwMHVpoWV01PwiG5feQDjASXv+MDNUgwbsCQQDFAFCFwWFjjRiKShgRjZurYOvSc04XqACf1lROefLrKJ+BsrFQJAhWahHEmJiV2pNuYnSybx2e2AwFbyt8pJG5AkEA3wduFdS8VxiE7iJATIaI1+PwTbmb1B4/lHikrnzn8sZtNzz0VPQc9ZvTpDG3wojidh1FaJHdWC60jk9ImiZ+MwJBAIw07Bo2Bo0ml2ec0kJz6W3wngX64IJ/pGodzYTI0DXDhLp3JjEmY/S0qw6jmD1XAgTW970izg8GLpATjfy416kCQQChQUYwe76hdGA/60lCycBCwiwYV+aHxezFnC2PcUxMif/cbKIwJvR6nhQK1QTKL60ExlRSKXA9xbB2eH/QXRNj";
+
+	public static final String APP_ID = "wxbc6365b82bab3598";//Sysongy
+	private static final String MCH_ID = "1280581101";//Sysongy
+	private static final String API_KEY = "Gy325U2312T360o2312t2p23b212tR4a";//Sysongy
+	private static final String url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
 	@Autowired
 	SysUserService sysUserService;
@@ -1389,6 +1409,10 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
 
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
+
 			/**
 			 * 请求接口
 			 */
@@ -1493,6 +1517,10 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
 
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
+
 			/**
 			 * 请求接口
 			 */
@@ -1594,6 +1622,10 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
+
 			/**
 			 * 请求接口
 			 */
@@ -1680,7 +1712,7 @@ public class MobileController {
 	 */
 	@RequestMapping(value = "/deal/paramList")
 	@ResponseBody
-	public String getRecharge(String params){
+	public Object getRecharge(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("充值成功！");
@@ -1694,13 +1726,29 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
 			/**
 			 * 请求接口
 			 */
 			if(mainObj != null){
-
-
+				String payType = mainObj.optString("payType");
+				String feeCount = mainObj.optString("feeCount");
+				String driverID = mainObj.optString("token");
+				if(payType.equalsIgnoreCase("2")){           //支付宝支付
+					String orderID = createNewOrder(driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE);
+					Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
+							"司集云平台-会员充值", orderID);
+					String orderParam = OrderInfoUtil2_0.buildOrderParam(paramsApp);
+					String sign = OrderInfoUtil2_0.getSign(paramsApp, RSA_PRIVATE);
+					return orderParam + "&" + sign;
+				} else if(payType.equalsIgnoreCase("1")){   //微信支付
+					String orderID = createNewOrder(driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE);
+					String entity = genProductArgs(orderID);
+					byte[] buf = Util.httpPost(url, entity);
+					String content = new String(buf);
+					Map<String, String> orderHashs = decodeXml(content);
+					PayReq payReq = genPayReq(orderHashs);
+					return payReq;
+				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -1919,4 +1967,179 @@ public class MobileController {
 		}
 	}
 
+	private PayReq genPayReq(Map<String, String> resultunifiedorder ) {
+
+		/*
+		* 1、调用服务端获取支付信息
+		* {
+            "appid": "wxb4ba3c02aa476ea1",
+            "noncestr": "1bd2880eedbdd821a647bd56c45ad879",
+            "package": "Sign=WXPay",
+            "partnerid": "1305176001",
+            "prepayid": "wx201608250930356a8a94d8370901437288",
+            "sign": "AA994BB10D048C7F2EBE8D48514C0F4E",
+            "timestamp": 1472088635
+		  }
+		*
+		* */
+		PayReq payReq = new PayReq();
+		payReq.appId = APP_ID;
+		payReq.partnerId = MCH_ID;
+		payReq.prepayId = resultunifiedorder.get("prepay_id");
+		payReq.packageValue = "Sign=WXPay";
+		payReq.nonceStr = genNonceStr();
+		payReq.timeStamp = String.valueOf(genTimeStamp());
+		//生成签名
+		List<NameValuePair> signParams = new LinkedList<NameValuePair>();
+		signParams.add(new BasicNameValuePair("appid", payReq.appId));
+		signParams.add(new BasicNameValuePair("noncestr", payReq.nonceStr));
+		signParams.add(new BasicNameValuePair("package", payReq.packageValue));
+		signParams.add(new BasicNameValuePair("partnerid", payReq.partnerId));
+		signParams.add(new BasicNameValuePair("prepayid", payReq.prepayId));
+		signParams.add(new BasicNameValuePair("timestamp", payReq.timeStamp));
+		payReq.sign = genAppSign(signParams);
+		return payReq;
+	}
+
+	private long genTimeStamp() {
+		return System.currentTimeMillis() / 1000;
+	}
+
+	private String genAppSign(List<NameValuePair> params) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < params.size(); i++) {
+			sb.append(params.get(i).getName());
+			sb.append('=');
+			sb.append(params.get(i).getValue());
+			sb.append('&');
+		}
+		sb.append("key=");
+		sb.append(API_KEY);
+		String appSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
+		return appSign;
+	}
+
+	private String genProductArgs(String orderID) {
+		StringBuffer xml = new StringBuffer();
+		try {
+			String nonceStr = genNonceStr();
+			xml.append("</xml>");
+			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
+			packageParams.add(new BasicNameValuePair("appid", APP_ID));//应用ID
+			packageParams.add(new BasicNameValuePair("body", "司集云平台-会员充值"));//商品描述 商品描述交易字段格式根据不同的应用场景按照以下格式 APP——需传入应用市场上的APP名字-实际商品名称，天天爱消除-游戏充值。
+			packageParams.add(new BasicNameValuePair("detail", "司集云平台-会员充值"));//商品详情 	商品名称明细列表
+			packageParams.add(new BasicNameValuePair("mch_id", MCH_ID));//	微信支付分配的商户号
+			packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));//随机字符串
+			packageParams.add(new BasicNameValuePair("notify_url",
+					"http://36.47.179.46:8090/jfinal_demo/rechargeOrder/wxRechargeOrder"));//接收微信支付异步通知回调地址，通知url必须为直接可访问的url，不能携带参数。
+			packageParams.add(new BasicNameValuePair("out_trade_no", orderID));//商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号
+			packageParams.add(new BasicNameValuePair("spbill_create_ip", "127.0.0.1"));//用户端实际ip
+			packageParams.add(new BasicNameValuePair("total_fee", "1"));//订单总金额，单位为分，详见支付金额
+			packageParams.add(new BasicNameValuePair("trade_type", "APP"));
+			String sign = genPackageSign(packageParams);
+			packageParams.add(new BasicNameValuePair("sign", sign));//签名，详见签名生成算法
+			String xmlstring = toXml(packageParams);
+			// return xmlstring;
+			return new String(xmlstring.toString().getBytes(), "ISO8859-1");// 这句加上就可以了吧xml转码下
+		} catch (Exception e) {
+			return null;
+		}
+    }
+
+	private String genNonceStr() {
+		Random random = new Random();
+		return MD5.getMessageDigest(String.valueOf(random.nextInt(10000)).getBytes());
+	}
+
+	private String toXml(List<NameValuePair> params) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<xml>");
+		for (int i = 0; i < params.size(); i++) {
+			sb.append("<" + params.get(i).getName() + ">");
+
+			sb.append(params.get(i).getValue());
+			sb.append("</" + params.get(i).getName() + ">");
+		}
+		sb.append("</xml>");
+		return sb.toString();
+	}
+
+	private String genPackageSign(List<NameValuePair> params) {
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < params.size(); i++) {
+			sb.append(params.get(i).getName());
+			sb.append('=');
+			sb.append(params.get(i).getValue());
+			sb.append('&');
+		}
+		sb.append("key=");
+		sb.append(API_KEY);
+
+		String packageSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
+		return packageSign;
+	}
+
+	public Map<String, String> decodeXml(String content) {
+
+		try {
+			XmlPullParserFactory factory=XmlPullParserFactory.newInstance();
+			factory.setNamespaceAware(true);
+			Map<String, String> xml = new HashMap<String, String>();
+			XmlPullParser parser = factory.newPullParser();
+			parser.setInput(new StringReader(content));
+			int event = parser.getEventType();
+			while (event != XmlPullParser.END_DOCUMENT) {
+				String nodeName = parser.getName();
+				switch (event) {
+					case XmlPullParser.START_DOCUMENT:
+						break;
+					case XmlPullParser.START_TAG:
+						if ("xml".equals(nodeName) == false) {
+							// 实例化student对象
+							xml.put(nodeName, parser.nextText());
+						}
+						break;
+					case XmlPullParser.END_TAG:
+						break;
+				}
+				event = parser.next();
+			}
+			return xml;
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
+	private String createNewOrder(String driverID, String cash, String chargeType) throws Exception{
+		SysOrder record = new SysOrder();
+
+		record.setOrderId(UUIDGenerator.getUUID());
+		record.setDebitAccount(driverID);
+		record.setOperator(driverID);
+		record.setOperatorSourceId(driverID);
+
+		record.setCash(new BigDecimal(cash));
+		record.setChargeType(chargeType);
+
+		record.setIs_discharge("0");
+		record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
+		record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
+		record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+		record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
+
+		String orderCharge = orderService.chargeToDriver(record);
+		if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+			throw new Exception("订单充值错误：" + orderCharge);
+
+		Date curDate = new Date();
+		record.setOrderDate(curDate);
+		record.setChannel("司集能源APP");
+		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
+
+		int nCreateOrder = orderService.insert(record, null);
+		if(nCreateOrder < 1)
+			throw new Exception("订单生成错误：" + record.getOrderId());
+		return record.getOrderId();
+	}
 }

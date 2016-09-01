@@ -1,8 +1,6 @@
 package com.sysongy.poms.liquid.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,12 +9,12 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -231,20 +229,19 @@ public class GastationMapController extends BaseContoller {
 						if (sheet.getCell(12, i) != null
 								&& !"".equals(sheet.getCell(12, i).getContents().replace(" ", ""))) {
 							switch (sheet.getCell(12, i).getContents()) {
-							case "联盟站":
-								gas.setType("0");
+							 
+							case "未核实":
+								gas.setMap_type("1");
 								break;
 							case "已核实":
-								gas.setType("1");
-								break;
-							case "未核实":
-								gas.setType("2");
+								gas.setMap_type("2");
 								break;
 							case "合作站(微信红包站)":
 							case "合作站":
-								gas.setType("3");
+								gas.setMap_type("3");
+								break;
 							default:
-								gas.setType("1");
+								gas.setMap_type("1");
 								break;
 							}
 							gas.setType(sheet.getCell(12, i).getContents());
@@ -264,7 +261,7 @@ public class GastationMapController extends BaseContoller {
 						}
 						//生成id
 					
-		 
+						gas.setType("1");
 						// 去重判断
 						if (exists(gas)) {
 							service.insert(gas);
@@ -298,6 +295,14 @@ public class GastationMapController extends BaseContoller {
 		}
 
 	}
+	
+	@RequestMapping("/delete")
+    public String delete( String id,ModelMap map) throws Exception{
+               
+        service.delete(id);
+        
+        return "redirect:/web/gastationMap/gastationMapList";
+    }
 
 	private boolean exists(Gastation gas) throws Exception {
 		// TODO Auto-generated method stub

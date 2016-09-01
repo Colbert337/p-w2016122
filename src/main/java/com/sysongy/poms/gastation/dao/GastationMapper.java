@@ -40,4 +40,6 @@ public interface GastationMapper {
 	List<Gastation> exists(String gas);	
 	
 	int updateByPrimaryKeySelective2(Gastation gas);
+
+	int delete(String gas);
 }
