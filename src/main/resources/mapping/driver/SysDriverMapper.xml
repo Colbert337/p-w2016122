@@ -200,6 +200,9 @@
       <if test="cardId!= null &amp;&amp; cardId != ''" >
         and card_id = #{cardId, jdbcType=INTEGER}
       </if>
+      <if test="userName != null &amp;&amp; userName != ''" >
+        and user_name = #{userName, jdbcType=VARCHAR}
+      </if>
     </trim>
   </select>
 

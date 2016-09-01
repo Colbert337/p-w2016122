@@ -1,32 +1,38 @@
 package com.sysongy.api.mobile.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import com.github.pagehelper.PageInfo;
-import com.sysongy.api.mobile.model.base.Data;
-import com.sysongy.api.mobile.model.base.MobileParams;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
-import com.sysongy.api.mobile.model.feedback.MobileFeedBack;
-import com.sysongy.api.mobile.model.loss.MobileLoss;
-import com.sysongy.api.mobile.model.record.MobileRecord;
-import com.sysongy.api.mobile.model.upload.MobileUpload;
-import com.sysongy.api.mobile.model.userinfo.MobileUserInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.service.MbDealOrderService;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
-import com.sysongy.api.mobile.tools.MobileUtils;
-import com.sysongy.api.mobile.tools.feedback.MobileFeedBackUtils;
-import com.sysongy.api.mobile.tools.getcitys.GetCitysUtils;
-import com.sysongy.api.mobile.tools.loss.ReportLossUtil;
-import com.sysongy.api.mobile.tools.record.MobileRecordUtils;
 import com.sysongy.api.mobile.tools.register.MobileRegisterUtils;
-import com.sysongy.api.mobile.tools.returncash.ReturnCashUtil;
-import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
-import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.api.util.DESUtil;
-import com.sysongy.api.util.ParameterUtil;
 import com.sysongy.api.util.ShareCodeUtil;
 import com.sysongy.poms.base.model.DistCity;
 import com.sysongy.poms.base.model.PageBean;
@@ -37,39 +43,21 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.mobile.model.MbBanner;
-import com.sysongy.poms.mobile.model.Suggest;
 import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
-import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
-import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
-import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
-import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.*;
-import net.sf.json.JSONObject;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.UUIDGenerator;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import net.sf.json.JSONObject;
 
 @RequestMapping("/api/v1/mobile")
 @Controller
@@ -1388,6 +1376,11 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
+			SysDriver driver = new SysDriver();
+			
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
 
 			/**
 			 * 请求接口
@@ -1413,7 +1406,7 @@ public class MobileController {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum",map.get("orderNumber"));
 						reChargeMap.put("amount",map.get("cash"));
-						reChargeMap.put("cashBack",map.get("cashBackDriver"));
+						reChargeMap.put("cashBack",map.get("cash_back_driver"));
 						reChargeMap.put("rechargePlatform",map.get("channel"));
 
 						String chargeType = "";
@@ -1421,7 +1414,7 @@ public class MobileController {
 							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
 						}
 						reChargeMap.put("paymentType",chargeType);
-						reChargeMap.put("remark",map.get("remark"));
+						reChargeMap.put("remark",map.get("channel")+"充值");
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
 							dateTime = sft.format(new Date());
@@ -1431,19 +1424,24 @@ public class MobileController {
 						reChargeList.add(reChargeMap);
 
 						//汇总充值总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(reChargeMap.get("cash").toString()));
+						if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+							totalCash = totalCash.add(new BigDecimal(map.get("cash").toString()));
 						}
 						//汇总返现总额
-						if(reChargeMap.get("cashBackDriver") != null && !"".equals(reChargeMap.get("cashBackDriver").toString())){
-							totalBack = totalBack.add(new BigDecimal(reChargeMap.get("cashBackDriver").toString()));
+						if(map.get("cash_back_driver") != null && !"".equals(map.get("cash_back_driver").toString())){
+							totalBack = totalBack.add(new BigDecimal(map.get("cash_back_driver").toString()));
 						}
+						
+						driver = driverService.queryDriverByPK(mainObj.optString("token"));
 					}
 
 					reCharge.put("totalCash",totalCash);
 					reCharge.put("totalBack",totalBack);
 					reCharge.put("listMap",reChargeList);
+					reCharge.put("totalAmount", driver.getAccount().getAccountBalance());
 				}
+			 	
+			 	result.setData(reCharge);
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1492,6 +1490,10 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
+			
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
 
 			/**
 			 * 请求接口
@@ -1519,7 +1521,7 @@ public class MobileController {
 						reChargeMap.put("amount",map.get("cash"));
 						reChargeMap.put("gasStationName",map.get("channel"));
 						reChargeMap.put("gasStationId",map.get("channelNumber"));
-						reChargeMap.put("gasTotal",map.get("goodsSum"));
+						reChargeMap.put("gasTotal",map.get("goods_sum"));
 						reChargeMap.put("payStatus","1");
 
 						String chargeType = "";
@@ -1527,7 +1529,7 @@ public class MobileController {
 							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
 						}
 						reChargeMap.put("paymentType",chargeType);
-						reChargeMap.put("remark",map.get("remark"));
+						reChargeMap.put("remark", map.get("channel")+"消费");
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
 							dateTime = sft.format(new Date());
@@ -1537,14 +1539,16 @@ public class MobileController {
 						reChargeList.add(reChargeMap);
 
 						//汇总消费总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(reChargeMap.get("cash").toString()));
+						if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+							totalCash = totalCash.add(new BigDecimal(map.get("cash").toString()));
 						}
 					}
 
 					reCharge.put("totalCash",totalCash);
 					reCharge.put("listMap",reChargeList);
 				}
+				
+				result.setData(reCharge);
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1605,6 +1609,10 @@ public class MobileController {
 					order.setPageNum(mainObj.optInt("pageNum"));
 					order.setPageSize(mainObj.optInt("pageSize"));
 				}
+				
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				order.setSysDriver(sysDriver);
 
 				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverTransferPage(order);
 				List<Map<String,Object>> reChargeList = new ArrayList<>();
@@ -1630,8 +1638,8 @@ public class MobileController {
 						reChargeList.add(reChargeMap);
 
 						//汇总转出/转入总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							BigDecimal tempVal = new BigDecimal(reChargeMap.get("cash").toString());
+						if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+							BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
 
 							if(tempVal.compareTo(BigDecimal.ZERO) > 0){
 								totalCash = totalCash.add(tempVal);
@@ -1646,6 +1654,8 @@ public class MobileController {
 					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
 				}
+				
+				result.setData(reCharge);
 
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
