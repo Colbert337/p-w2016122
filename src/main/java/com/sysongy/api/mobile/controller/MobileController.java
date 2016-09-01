@@ -1238,7 +1238,7 @@ public class MobileController {
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "/deal/cashBack")
+	@RequestMapping(value = "/deal/backRule")
 	@ResponseBody
 	public String getCashBackList(String params){
 		MobileReturn result = new MobileReturn();
@@ -1952,7 +1952,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			logger.error("查询成功： " + resultStr);
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询失败！");
