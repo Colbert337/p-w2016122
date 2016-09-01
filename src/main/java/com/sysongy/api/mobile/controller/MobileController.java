@@ -1409,6 +1409,10 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
 
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
+
 			/**
 			 * 请求接口
 			 */
@@ -1513,6 +1517,10 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
 
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
+
 			/**
 			 * 请求接口
 			 */
@@ -1613,6 +1621,10 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
 
 			/**
 			 * 请求接口
