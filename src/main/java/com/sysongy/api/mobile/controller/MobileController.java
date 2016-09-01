@@ -281,7 +281,7 @@ public class MobileController {
 			if(mainObj != null){
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("phoneNum"));
-
+				driver.setMobilePhone(mainObj.optString("phoneNum"));
 				List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 				if(driverlist != null && driverlist.size() > 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1240,7 +1240,7 @@ public class MobileController {
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "/deal/cashBack")
+	@RequestMapping(value = "/deal/backRule")
 	@ResponseBody
 	public String getCashBackList(String params){
 		MobileReturn result = new MobileReturn();
@@ -1411,6 +1411,10 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
 
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
+
 			/**
 			 * 请求接口
 			 */
@@ -1515,6 +1519,10 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
 
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
+
 			/**
 			 * 请求接口
 			 */
@@ -1615,6 +1623,10 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
+
+			SysDriver sysDriver = new SysDriver();
+			sysDriver.setSysDriverId(mainObj.optString("token"));
+			order.setSysDriver(sysDriver);
 
 			/**
 			 * 请求接口
@@ -1782,6 +1794,199 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		}
+	}
+	
+	/**
+	 * 修改账号手机号/密保手机
+	 */
+	@RequestMapping(value = "/user/updatePhone")
+	@ResponseBody
+	public String updatePhone(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("修改成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				//创建对象
+				SysDriver sysDriver = new SysDriver();
+				String phoneType = mainObj.optString("phoneType");
+				//原电话号码赋值
+				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
+				//数据库查询
+				List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
+				if(!driver.isEmpty()){
+					//新电话号码
+					String newPhoneNum = mainObj.optString("newPhoneNum");
+					//修改账户手机
+					if("1".equals(phoneType)){
+						sysDriver.setUserName(newPhoneNum);
+						sysDriver.setMobilePhone(newPhoneNum);
+					}else{
+						sysDriver.setSecurityMobilePhone(newPhoneNum);
+					}
+					sysDriver.setDriverType(driver.get(0).getDriverType());
+					sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+					int resultVal = driverService.saveDriver(sysDriver,"update");
+					//返回大于0，成功
+					if(resultVal <= 0){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("修改账号手机号/密保手机失败！");
+					}
+					Map<String, Object> dataMap = new HashMap<>();
+					dataMap.put("resultVal","true");
+					result.setData(dataMap);
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("原始电话号码有误！");
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("修改账号手机号/密保手机成功： " + resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("修改账号手机号/密保手机失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("修改账号手机号/密保手机失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	
+	/**
+	 * 重置支付密码
+	 */
+	@RequestMapping(value = "/user/resetPayCode")
+	@ResponseBody
+	public String resetPayCode(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("重置支付密码成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		String initialPassword = "12345678";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr,params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 请求接口
+			 */
+			if(mainObj != null){
+				//创建对象
+				SysDriver sysDriver = new SysDriver();
+				//电话号码赋值
+				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
+				//数据库查询
+				List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
+				if(!driver.isEmpty()){
+					//初始密码加密、赋值
+					initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
+					sysDriver.setPayCode(initialPassword);
+					sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+					//更新初始密码
+					int resultVal = driverService.saveDriver(sysDriver,"update");
+					//返回大于0，成功
+					if(resultVal <= 0){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("重置支付密码失败！");
+					}
+					Map<String, Object> dataMap = new HashMap<>();
+					dataMap.put("resultVal","true");
+					result.setData(dataMap);
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("电话号码有误！");
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			
+			resultStr = resutObj.toString();
+			logger.error("重置支付密码成功： " + resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("重置支付密码失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("重置支付密码失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	
+	/**
+	 * 最高返现规则列表
+	 */
+	@RequestMapping(value = "/deal/maxCashBack")
+	@ResponseBody
+	public String maxCashBack(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 请求接口
+			 */
+			List<SysCashBack> list = sysCashBackService.queryMaxCashBack();
+			Map<String, Object> dataMap = new HashMap<>();
+			for(int i=0;i<list.size();i++){
+				if(list.get(i).getSys_cash_back_no().equals("101")){
+					dataMap.put("alipay",list.get(i).getCash_per());
+				}else{
+					dataMap.put("wechat",list.get(i).getCash_per());
+				}
+			}
+			result.setData(dataMap);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("查询成功： " + resultStr);
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
 			return resultStr;
 		}
 	}

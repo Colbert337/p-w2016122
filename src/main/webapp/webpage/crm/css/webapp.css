@@ -168,3 +168,14 @@ textarea { overflow: auto; }
 	color: #ccc;
     margin-top: -5px;
 }
+.bonus-rules-hd {
+	padding: 20px 23px 0 23px;
+	font-weight: bold;
+}
+.bonus-rules-bd {
+	padding-right: 23px;
+}
+.bonus-rules-bd li {
+	padding-top: 4px;
+	padding-bottom: 4px;
+}

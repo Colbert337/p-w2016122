@@ -80,6 +80,10 @@ header a:hover {
 	color: #fff;
 	padding: 2px 20px;
 }
+.nav > li > a:hover,
+.nav > li > a:focus {
+	background-color: transparent;
+}
 .nav > li > ul {
 	display: none;
 	position: absolute;

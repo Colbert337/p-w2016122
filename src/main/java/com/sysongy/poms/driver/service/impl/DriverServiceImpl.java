@@ -232,6 +232,10 @@ public class DriverServiceImpl implements DriverService {
 			chong = "转账";
 			orderDealType = GlobalConstant.OrderDealType.TRANSFER_TRANSPORTION_TO_DRIVER_INCREASE_DRIVER;
 		}
+		if(GlobalConstant.OrderType.TRANSFER_DRIVER_TO_DRIVER.equalsIgnoreCase(order.getOrderType())){
+			chong = "转账";
+			orderDealType = GlobalConstant.OrderDealType.TRANSFER_DRIVER_TO_DRIVER_DEDUCT_DRIVER;
+		}
 
         String remark = null;
         if(StringUtils.isEmpty(driver.getFullName())){
@@ -277,7 +281,7 @@ public class DriverServiceImpl implements DriverService {
 		String cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
 		//记录订单流水
 		String chong = "转账扣钱";
-		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_DRIVER_TO_DRIVER_DEDUCT_DRIVER;
+		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_DRIVER_TO_DRIVER_INCREASE_DRIVER;
 		
 		String orderType = order.getOrderType();
 		if(GlobalConstant.OrderType.CONSUME_BY_DRIVER.equalsIgnoreCase(orderType)){

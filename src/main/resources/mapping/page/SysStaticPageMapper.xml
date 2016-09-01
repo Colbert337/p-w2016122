@@ -7,6 +7,7 @@
     <result column="page_body" property="pageBody" jdbcType="VARCHAR" />
     <result column="page_ticker" property="pageTicker" jdbcType="VARCHAR" />
     <result column="page_status" property="pageStatus" jdbcType="VARCHAR" />
+    <result column="page_html" property="pageHtml" jdbcType="VARCHAR" />
     <result column="page_created_time" property="pageCreatedTime" jdbcType="TIMESTAMP" />
     <result column="page_creator" property="pageCreator" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
@@ -15,12 +16,28 @@
     <result column="page_html" property="pageHtml" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, page_title, page_body, page_ticker, page_status, page_created_time, page_creator, 
+    id, page_title, page_body, page_ticker, page_status, page_html, page_created_time, page_creator, 
     memo
   </sql>
   <sql id="Blob_Column_List" >
     page_html
   </sql>
+  
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  select 
+    <include refid="Base_Column_List" />
+    from sys_static_page
+    where 1=1
+  <trim>
+      <if test="pageTitle != null &amp;&amp; pageTitle != ''" >
+        and page_title LIKE CONCAT(CONCAT('%', #{pageTitle,jdbcType=VARCHAR}), '%')
+      </if>
+      <if test="page_created_time_after != null &amp;&amp; page_created_time_after != ''">
+        and page_created_time between CONCAT(#{page_created_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{page_created_time_before,jdbcType=VARCHAR},' 23:59:59')
+      </if>
+    </trim>
+  </select>
+  
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

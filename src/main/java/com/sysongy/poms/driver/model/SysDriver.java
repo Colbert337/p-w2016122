@@ -105,6 +105,8 @@ public class SysDriver extends BaseModel{
     private String transportionName;
 
     private String gasStationName;
+    
+    private String securityMobilePhone ;
 
     public String getMemo() {
 		return memo;
@@ -490,4 +492,12 @@ public class SysDriver extends BaseModel{
     public void setGasStationName(String gasStationName) {
         this.gasStationName = gasStationName;
     }
+
+	public String getSecurityMobilePhone() {
+		return securityMobilePhone;
+	}
+
+	public void setSecurityMobilePhone(String securityMobilePhone) {
+		this.securityMobilePhone = securityMobilePhone == null ? null : securityMobilePhone.trim();
+	}
 }

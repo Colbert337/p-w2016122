@@ -1,8 +1,13 @@
 package com.sysongy.poms.page.dao;
 
+import java.util.List;
+
 import com.sysongy.poms.page.model.SysStaticPage;
 
 public interface SysStaticPageMapper {
+	
+	List<SysStaticPage> queryForPage(SysStaticPage record);
+	
     int deleteByPrimaryKey(String id);
 
     int insert(SysStaticPage record);
