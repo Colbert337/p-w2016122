@@ -81,7 +81,9 @@ public class SysOrder extends BaseModel{
 
     private String consumeType;
 
-	public SysOrderDeal getOrder_deal() {
+    private int orderStatus;
+
+    public SysOrderDeal getOrder_deal() {
 		return order_deal;
 	}
 
@@ -354,5 +356,13 @@ public class SysOrder extends BaseModel{
 
     public void setConsumeType(String consumeType) {
         this.consumeType = consumeType;
+    }
+
+    public int getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }

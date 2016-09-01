@@ -21,6 +21,7 @@
     <result column="discharge_reason" property="discharge_reason" jdbcType="VARCHAR" />
     <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
     <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
     <association property="orderTypeInfo" column="order_type"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
@@ -67,6 +68,7 @@
 	  <result column="discharge_reason" property="discharge_reason" jdbcType="VARCHAR" />
 	  <result column="discharge_order_id" property="dischargeOrderId" jdbcType="VARCHAR" />
 	  <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
+      <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
   </resultMap>
   
   <resultMap id="HenryResultMap" type="java.util.Map" >
@@ -91,6 +93,7 @@
 	  <result column="operator" property="operator" jdbcType="VARCHAR" />
 	  <result column="transportion_name" property="transportion_name" jdbcType="VARCHAR" />
 	  <result column="cash_back_per" property="cash_back_per" jdbcType="VARCHAR" />
+      <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
   </resultMap>
   
   <resultMap id="HenryTotalMap" type="java.util.Map" >
@@ -104,7 +107,7 @@
 
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
-    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id, operator_source_id, operator_source_type, operator_target_type,consume_card
+    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id, operator_source_id, operator_source_type, operator_target_type,consume_card,order_status
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -182,12 +185,14 @@
       order_date, cash, credit_account, 
       debit_account, charge_type, channel, 
       channel_number, operator, is_discharge,discharge_reason,discharge_order_id,operator_target_type,operator_source_id,operator_source_type, consume_card
+      ,order_status
       )
     values (#{orderId,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
       #{orderDate,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL}, #{creditAccount,jdbcType=VARCHAR}, 
       #{debitAccount,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, 
       #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{discharge_reason,jdbcType=VARCHAR},#{dischargeOrderId,jdbcType=VARCHAR},
-      #{operatorTargetType,jdbcType=VARCHAR},#{operatorSourceId,jdbcType=VARCHAR}, #{operatorSourceType,jdbcType=VARCHAR},#{consume_card,jdbcType=VARCHAR}
+      #{operatorTargetType,jdbcType=VARCHAR},#{operatorSourceId,jdbcType=VARCHAR}, #{operatorSourceType,jdbcType=VARCHAR},#{consume_card,jdbcType=VARCHAR},
+      #{orderStatus,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysOrder" >
@@ -244,6 +249,9 @@
       <if test="consume_card != null" >
         consume_card,
       </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="orderId != null" >
@@ -296,6 +304,9 @@
       </if>
       <if test="consume_card != null" >
         #{consume_card,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -353,6 +364,9 @@
       <if test="consume_card != null" >
         consume_card = #{consume_card,jdbcType=VARCHAR},
       </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
     </set>
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
@@ -391,7 +405,8 @@
       operator_source_id = #{operatorSourceId,jdbcType=VARCHAR},
       operator_target_type = #{operatorTargetType,jdbcType=VARCHAR}
       operator_source_type = #{operatorSourceType,jdbcType=VARCHAR}
-      consume_card = #{consume_card,jdbcType=VARCHAR}
+      consume_card = #{consume_card,jdbcType=VARCHAR},
+      order_status = #{orderStatus,jdbcType=INTEGER}
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
 
