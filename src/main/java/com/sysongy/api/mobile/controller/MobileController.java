@@ -56,6 +56,7 @@ import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.*;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import net.sf.json.JSONObject;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
@@ -75,6 +76,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -1700,7 +1702,7 @@ public class MobileController {
 	 */
 	@RequestMapping(value = "/deal/paramList")
 	@ResponseBody
-	public Object getRecharge(String params){
+	public String getRecharge(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("充值成功！");
@@ -1721,22 +1723,46 @@ public class MobileController {
 				String payType = mainObj.optString("payType");
 				String feeCount = mainObj.optString("feeCount");
 				String driverID = mainObj.optString("token");
+				String orderID = UUIDGenerator.getUUID();
+				Map<String, Object> data = new HashedMap();
+				SysOrder sysOrder = null;
+				String thirdPartyID = null;
 				if(payType.equalsIgnoreCase("2")){           //支付宝支付
-					String orderID = createNewOrder(driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE);
+					sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE);  //TODO充值成功后再去生成订单
+					orderService.checkIfCanChargeToDriver(sysOrder);
 					Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
 							"司集云平台-会员充值", orderID);
 					String orderParam = OrderInfoUtil2_0.buildOrderParam(paramsApp);
 					String sign = OrderInfoUtil2_0.getSign(paramsApp, RSA_PRIVATE);
-					return orderParam + "&" + sign;
+					thirdPartyID = orderID;
+					if(sysOrder != null){
+						sysOrder.setThirdPartyOrderID(thirdPartyID);
+						int nCreateOrder = orderService.insert(sysOrder, null);
+						if(nCreateOrder < 1)
+							throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+					}
+					data.put("payReq", orderParam + "&" + sign);
+					result.setData(data);
 				} else if(payType.equalsIgnoreCase("1")){   //微信支付
-					String orderID = createNewOrder(driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE);
+					sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE); //TODO充值成功后再去生成订单
+					orderService.checkIfCanChargeToDriver(sysOrder);
 					String entity = genProductArgs(orderID);
 					byte[] buf = Util.httpPost(url, entity);
-					String content = new String(buf);
+					String content = new String(buf, "utf-8");
 					Map<String, String> orderHashs = decodeXml(content);
-					PayReq payReq = genPayReq(orderHashs);
-					return payReq;
+					String payReq = genPayReq(orderHashs);
+					thirdPartyID = orderHashs.get("prepay_id");
+					if(sysOrder != null){
+						sysOrder.setThirdPartyOrderID(thirdPartyID);
+						int nCreateOrder = orderService.insert(sysOrder, null);
+						if(nCreateOrder < 1)
+							throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+					}
+					data.put("payReq", payReq);
+					result.setData(data);
 				}
+
+
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -1747,22 +1773,20 @@ public class MobileController {
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
 			logger.error("充值成功： " + resultStr);
-
+			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("充值失败！");
+			result.setMsg("充值失败！" + e.getMessage());
 			resutObj = JSONObject.fromObject(result);
 			logger.error("充值失败： " + e);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			return resultStr;
-		} finally {
-			return resultStr;
 		}
 	}
 
-	private PayReq genPayReq(Map<String, String> resultunifiedorder ) {
+	private String genPayReq(Map<String, String> resultunifiedorder ) {
 
 		/*
 		* 1、调用服务端获取支付信息
@@ -1793,7 +1817,29 @@ public class MobileController {
 		signParams.add(new BasicNameValuePair("prepayid", payReq.prepayId));
 		signParams.add(new BasicNameValuePair("timestamp", payReq.timeStamp));
 		payReq.sign = genAppSign(signParams);
-		return payReq;
+		StringBuffer bRet = new StringBuffer();
+		bRet.append("{\"appId\":\"")
+			.append(APP_ID)
+			.append("\",")
+			.append("\"partnerId\":\"")
+			.append(MCH_ID)
+			.append("\",")
+			.append("\"prepayId\":\"")
+			.append(payReq.prepayId)
+			.append("\",")
+			.append("\"packageValue\":\"")
+			.append("Sign=WXPay")
+			.append("\",")
+			.append("\"nonceStr\":\"")
+			.append(payReq.nonceStr)
+			.append("\",")
+			.append("\"timeStamp\":\"")
+			.append(payReq.timeStamp)
+			.append("\",")
+			.append("\"sign\":\"")
+			.append(payReq.sign)
+			.append("\"}");
+		return bRet.toString();
 	}
 
 	private long genTimeStamp() {
@@ -1815,10 +1861,8 @@ public class MobileController {
 	}
 
 	private String genProductArgs(String orderID) {
-		StringBuffer xml = new StringBuffer();
 		try {
 			String nonceStr = genNonceStr();
-			xml.append("</xml>");
 			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
 			packageParams.add(new BasicNameValuePair("appid", APP_ID));//应用ID
 			packageParams.add(new BasicNameValuePair("body", "司集云平台-会员充值"));//商品描述 商品描述交易字段格式根据不同的应用场景按照以下格式 APP——需传入应用市场上的APP名字-实际商品名称，天天爱消除-游戏充值。
@@ -1835,7 +1879,7 @@ public class MobileController {
 			packageParams.add(new BasicNameValuePair("sign", sign));//签名，详见签名生成算法
 			String xmlstring = toXml(packageParams);
 			// return xmlstring;
-			return new String(xmlstring.toString().getBytes(), "ISO8859-1");// 这句加上就可以了吧xml转码下
+			return xmlstring;
 		} catch (Exception e) {
 			return null;
 		}
@@ -1871,14 +1915,19 @@ public class MobileController {
 		sb.append("key=");
 		sb.append(API_KEY);
 
-		String packageSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
+		String packageSign = null;
+		try {
+			packageSign = MD5.getMessageDigest(sb.toString().getBytes("UTF-8")).toUpperCase();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		return packageSign;
 	}
 
 	public Map<String, String> decodeXml(String content) {
 
 		try {
-			XmlPullParserFactory factory=XmlPullParserFactory.newInstance();
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 			factory.setNamespaceAware(true);
 			Map<String, String> xml = new HashMap<String, String>();
 			XmlPullParser parser = factory.newPullParser();
@@ -1902,14 +1951,15 @@ public class MobileController {
 			}
 			return xml;
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
 
-	private String createNewOrder(String driverID, String cash, String chargeType) throws Exception{
+	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType) throws Exception{
 		SysOrder record = new SysOrder();
 
-		record.setOrderId(UUIDGenerator.getUUID());
+		record.setOrderId(orderID);
 		record.setDebitAccount(driverID);
 		record.setOperator(driverID);
 		record.setOperatorSourceId(driverID);
@@ -1922,19 +1972,22 @@ public class MobileController {
 		record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 		record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
 		record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
-
-		String orderCharge = orderService.chargeToDriver(record);
-		if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
-			throw new Exception("订单充值错误：" + orderCharge);
-
+		record.setOrderStatus(0);
+		orderService.chargeToDriver(record);
+		/**该充值步骤要放到第三方回调接口里面
+		try{
+			String orderCharge = orderService.chargeToDriver(record);
+			if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+				throw new Exception("订单充值错误：" + orderCharge);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("订单充值错误：" + e);
+		}
+		 **/
 		Date curDate = new Date();
 		record.setOrderDate(curDate);
 		record.setChannel("司集能源APP");
 		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
-
-		int nCreateOrder = orderService.insert(record, null);
-		if(nCreateOrder < 1)
-			throw new Exception("订单生成错误：" + record.getOrderId());
-		return record.getOrderId();
+		return record;
 	}
 }

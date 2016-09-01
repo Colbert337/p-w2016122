@@ -239,7 +239,7 @@ public class DriverServiceImpl implements DriverService {
         } else {
             remark = "给"+ driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
         }
-		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
+		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark, cash_success);
 		return cash_success;
 	}
 	
