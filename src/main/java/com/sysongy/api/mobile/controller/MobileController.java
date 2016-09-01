@@ -1289,59 +1289,6 @@ public class MobileController {
 	}
 
 	/**
-	 * 返现规则H5地址
-	 * @param params
-	 * @return
-	 */
-	@RequestMapping(value = "/deal/backRulePage")
-	@ResponseBody
-	public String getCashBackPage(String params){
-		MobileReturn result = new MobileReturn();
-		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询返现规则页面成功！");
-		JSONObject resutObj = new JSONObject();
-		String resultStr = "";
-
-		try {
-			/**
-			 * 解析参数
-			 */
-			params = DESUtil.decode(keyStr,params);//参数解密
-			JSONObject paramsObj = JSONObject.fromObject(params);
-			JSONObject mainObj = paramsObj.optJSONObject("main");
-
-			/**
-			 * 请求接口
-			 */
-			if(mainObj != null){
-				List<Map<String, Object>> cashBackList = sysCashBackService.queryCashBackList();
-				result.setListMap(cashBackList);
-			}else{
-				result.setStatus(MobileReturn.STATUS_FAIL);
-				result.setMsg("参数有误！");
-			}
-			resutObj = JSONObject.fromObject(result);
-			resutObj.remove("data");
-			resultStr = resutObj.toString();
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询返现规则页面成功： " + resultStr);
-
-		} catch (Exception e) {
-			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询返现规则页面失败！");
-			resutObj = JSONObject.fromObject(result);
-			logger.error("查询返现规则页面失败： " + e);
-			resutObj.remove("data");
-			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-			return resultStr;
-		} finally {
-			return resultStr;
-		}
-	}
-
-	/**
 	 * 头条推广
 	 * @param params
 	 * @return
@@ -1463,6 +1410,7 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
+			SysDriver driver = new SysDriver();
 
 			SysDriver sysDriver = new SysDriver();
 			sysDriver.setSysDriverId(mainObj.optString("token"));
@@ -1517,13 +1465,16 @@ public class MobileController {
 						if(reChargeMap.get("cashBackDriver") != null && !"".equals(reChargeMap.get("cashBackDriver").toString())){
 							totalBack = totalBack.add(new BigDecimal(reChargeMap.get("cashBackDriver").toString()));
 						}
+
+						driver = driverService.queryDriverByPK(mainObj.optString("token"));
 					}
 
 					reCharge.put("totalCash",totalCash);
 					reCharge.put("totalBack",totalBack);
 					reCharge.put("listMap",reChargeList);
+					reCharge.put("totalAmount", driver.getAccount().getAccountBalance());
 				}
-
+				result.setData(reCharge);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -1531,7 +1482,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
 			logger.error("查询充值记录成功： " + resultStr);
 
@@ -1542,7 +1493,7 @@ public class MobileController {
 			logger.error("查询充值记录失败： " + e);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			return resultStr;
 		} finally {
 			return resultStr;
