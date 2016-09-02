@@ -68,7 +68,7 @@
 								for="title"><span class="red_star">*</span> 标题： </label>
 							<div class="col-sm-4">
 								<input type="text" name="title" id="title" data-onFlag=""
-									placeholder="标题" maxlength="10" class="form-control"
+									placeholder="请输入标题" maxlength="10" class="form-control"
 									value="${mbBanner.title}" /> <input type="hidden"
 									id="mbBannerId" name="mbBannerId"
 									value="${mbBanner.mbBannerId}" />
@@ -78,10 +78,9 @@
 							<label class="col-sm-3 control-label no-padding-right"
 								for="remark"> 正文： </label>
 							<div class="col-sm-4">
-								<textarea name="content" id="content" style="resize: none;"
-									maxlength="50" placeholder="正文"
+								<textarea name="content" id="content" style="resize: none;" placeholder="请输入正文"
 									class="form-control">${mbBanner.content }</textarea>
-								<div class="good-tip">提示：最多50个字符，即25个汉字。</div>
+								<%--<div class="good-tip">提示：最多50个字符，即25个汉字。</div>--%>
 							</div>
 						</div>
 						<div class="form-group">
@@ -140,7 +139,7 @@
 							<div class="col-sm-4">
 								<input type="text" id="target_url"
 									value="${mbBanner.targetUrl }" name="targetUrl"
-									placeholder="链接地址" class="form-control" />
+									placeholder="请输入链接地址，如：www.sysongy.com" class="form-control" />
 							</div>
 						</div>
 						<%--<div class="form-group">
@@ -156,7 +155,7 @@
 								for="target_url"><span class="red_star">*</span>顺序：</label>
 							<div class="col-sm-4">
 								<input type="text" id="sort" value="${mbBanner.sort }"
-									placeholder="顺序" maxlength="11" name="sort"
+									placeholder="请输入顺序，如：1" maxlength="11" name="sort"
 									class="form-control" />
 							</div>
 						</div>
@@ -237,7 +236,7 @@
 								for="remark"> 备注： </label>
 							<div class="col-sm-4">
 								<textarea name="remark" id="remark" style="resize: none;"
-									maxlength="50" placeholder="备注"
+									maxlength="50" placeholder="请输入备注信息"
 									class="form-control">${mbBanner.remark}</textarea>
 							</div>
 						</div>
