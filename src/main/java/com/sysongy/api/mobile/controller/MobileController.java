@@ -1816,20 +1816,27 @@ public class MobileController {
 	 */
 	@RequestMapping(value = "/deal/callBackPay")
 	@ResponseBody
-	public String callBackPay(String params) throws Exception{
+	public String callBackPay(@RequestParam String orderId) throws Exception{
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("支付成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
-			try{
-				/*String orderCharge = orderService.chargeToDriver(record);
-				if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
-					throw new Exception("订单充值错误：" + orderCharge);*/
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new Exception("订单充值错误：" + e);
-			}
+		//查询订单内容
+		SysOrder order = orderService.selectByPrimaryKey(orderId);
+		//修改订单状态
+		SysOrder sysOrder = new SysOrder();
+		sysOrder.setOrderId(orderId);
+		sysOrder.setOrderStatus(1);
+		orderService.updateByPrimaryKey(sysOrder);
+		try{
+			String orderCharge = orderService.chargeToDriver(order);
+			if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+				throw new Exception("订单充值错误：" + orderCharge);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("订单充值错误：" + e);
+		}
 		return null;
 	}
 	/**
@@ -1861,6 +1868,7 @@ public class MobileController {
 				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				//数据库查询
 				List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
+				String codeStr = mainObj.optString("phoneNum");
 				if(!driver.isEmpty()){
 					//新电话号码
 					String newPhoneNum = mainObj.optString("newPhoneNum");
@@ -2100,6 +2108,7 @@ public class MobileController {
 	}
 
 	private String genProductArgs(String orderID, String totalFee) {
+		String http_poms_path =  (String) prop.get("http_poms_path");
 		try {
 			String nonceStr = genNonceStr();
 			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
@@ -2108,8 +2117,7 @@ public class MobileController {
 			packageParams.add(new BasicNameValuePair("detail", "司集云平台-会员充值"));//商品详情 	商品名称明细列表
 			packageParams.add(new BasicNameValuePair("mch_id", MCH_ID));//	微信支付分配的商户号
 			packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));//随机字符串
-			packageParams.add(new BasicNameValuePair("notify_url",
-					"http://36.47.179.46:8090/jfinal_demo/rechargeOrder/wxRechargeOrder"));//接收微信支付异步通知回调地址，通知url必须为直接可访问的url，不能携带参数。
+			packageParams.add(new BasicNameValuePair("notify_url",http_poms_path+"/api/v1/mobile/deal/callBackPay"));//接收微信支付异步通知回调地址，通知url必须为直接可访问的url，不能携带参数。
 			packageParams.add(new BasicNameValuePair("out_trade_no", orderID));//商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号
 			packageParams.add(new BasicNameValuePair("spbill_create_ip", "127.0.0.1"));//用户端实际ip
 			packageParams.add(new BasicNameValuePair("total_fee", totalFee));//订单总金额，单位为分，详见支付金额
@@ -2212,7 +2220,6 @@ public class MobileController {
 		record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
 		record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
 		record.setOrderStatus(0);
-		orderService.chargeToDriver(record);
 		/**该充值步骤要放到第三方回调接口里面
 		try{
 			String orderCharge = orderService.chargeToDriver(record);
