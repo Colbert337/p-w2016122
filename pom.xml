@@ -356,6 +356,14 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/libammsdk.jar</systemPath>
 		</dependency>
+		<!--二维码生成-->
+		<dependency>
+			<groupId>qrcode-sdk</groupId>
+			<artifactId>qrcode-sdk</artifactId>
+			<version>1455</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/QRCode.jar</systemPath>
+		</dependency>
 		<!--tomcat项目检测依赖包-->
 		<dependency>
 			<groupId>net.bull.javamelody</groupId>
