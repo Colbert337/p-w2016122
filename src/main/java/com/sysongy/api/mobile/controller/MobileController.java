@@ -1467,14 +1467,17 @@ public class MobileController {
 						if(reChargeMap.get("cashBackDriver") != null && !"".equals(reChargeMap.get("cashBackDriver").toString())){
 							totalBack = totalBack.add(new BigDecimal(reChargeMap.get("cashBackDriver").toString()));
 						}
-
-						driver = driverService.queryDriverByPK(mainObj.optString("token"));
 					}
-
+					driver = driverService.queryDriverByPK(mainObj.optString("token"));
 					reCharge.put("totalCash",totalCash);
 					reCharge.put("totalBack",totalBack);
 					reCharge.put("listMap",reChargeList);
-					reCharge.put("totalAmount", driver.getAccount().getAccountBalance());
+					if(driver != null && driver.getAccount() != null){
+						reCharge.put("totalAmount", driver.getAccount().getAccountBalance());
+					}else{
+						reCharge.put("totalAmount", 0.00);
+					}
+
 				}
 				result.setData(reCharge);
 			}else{
@@ -1484,7 +1487,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
 			logger.error("查询充值记录成功： " + resultStr);
 
@@ -1492,10 +1495,11 @@ public class MobileController {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询充值记录失败！");
 			resutObj = JSONObject.fromObject(result);
+			e.printStackTrace();
 			logger.error("查询充值记录失败： " + e);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			return resultStr;
 		} finally {
 			return resultStr;
@@ -1580,6 +1584,7 @@ public class MobileController {
 
 					reCharge.put("totalCash",totalCash);
 					reCharge.put("listMap",reChargeList);
+					result.setData(reCharge);
 				}
 
 			}else{
@@ -1685,6 +1690,7 @@ public class MobileController {
 					reCharge.put("totalOut",totalCash);
 					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
+					result.setData(reCharge);
 				}
 
 			}else{
