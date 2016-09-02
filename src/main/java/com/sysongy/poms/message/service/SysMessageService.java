@@ -18,6 +18,6 @@ public interface SysMessageService {
 
 	public PageInfo<SysDriver> queryDriver1(SysDriver driver);
 
-	String saveMessage_New(SysMessage obj,  String token) throws Exception;
+	String saveMessage_New(SysMessage obj) throws Exception;
 
 }

@@ -167,6 +167,7 @@ function checkedchange(obj) {
 		// console.log( $(obj1).is("checked"))
 		// throw "11";
 	});
+	checkedclick();
 }
 
 function bannerAdd(imgId){

@@ -22,22 +22,22 @@ import com.sysongy.util.UUIDGenerator;
 
 @Service
 public class SysMessageServiceImpl implements SysMessageService {
-	
+
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 
 	@Autowired
 	private SysMessageMapper messageMapper;
-	
+
 	@Autowired
 	private SysDriverMapper driverMapper;
-	
+
 	@Override
 	public PageInfo<SysMessage> queryMessage(SysMessage record) throws Exception {
-		
+
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<SysMessage> list = messageMapper.queryForPage(record);
 		PageInfo<SysMessage> pageInfo = new PageInfo<SysMessage>(list);
-		
+
 		return pageInfo;
 	}
 
@@ -47,55 +47,57 @@ public class SysMessageServiceImpl implements SysMessageService {
 	}
 
 	@Override
-	public String saveMessage(SysMessage obj,String token) throws Exception {
-		
+	public String saveMessage(SysMessage obj, String token) throws Exception {
+
 		obj.setId(UUIDGenerator.getUUID());
 		obj.setMessageCreatedTime(new Date());
 		obj.setMessageSendTime(new Date());
-		
+
 		UmengUtil umeng = new UmengUtil(prop.get("app_key").toString(), prop.get("app_master_secret").toString());
-		
+
 		CommonParams params = new CommonParams();
-		
+
 		params.setTicker(obj.getMessageTicker());
 		params.setTitle(obj.getMessageTitle());
 		params.setText(obj.getMessageBody());
+		params.setContent(obj.getContent());
 		params.setDevice_tokens(token);
 		obj.setMessageGroup("1000");
 		int status = umeng.sendAndroidBroadcast(params);
 
 		if (status == 200) {
 			return String.valueOf(messageMapper.insert(obj));
-		}else{
+		} else {
 			throw new Exception("Umeng信息发送异常，请检查");
 		}
-		
+
 	}
 
 	@Override
-	public String saveMessage_New(SysMessage obj, String token) throws Exception {
-		
+	public String saveMessage_New(SysMessage obj) throws Exception {
+
 		obj.setId(UUIDGenerator.getUUID());
 		obj.setMessageCreatedTime(new Date());
 		obj.setMessageSendTime(new Date());
-		
-		UmengUtil umeng = new UmengUtil(prop.get("app_key").toString(), prop.get("app_master_secret").toString());
-		
-		CommonParams params = new CommonParams();
-		
-		params.setTicker(obj.getMessageTicker());
-		params.setTitle(obj.getMessageTitle());
-		params.setText(obj.getMessageBody());
-		params.setDevice_tokens(token);
-		obj.setMessageGroup("1000");
-		int status = umeng.sendAndroidUnicast(params);
-		if (status == 200) {
-			return String.valueOf(messageMapper.insert(obj));
-		}else{
-			throw new Exception("Umeng信息发送异常，请检查");
+		String token[] = obj.getDevice_token().split(",");
+		for (int i = 0; i < token.length; i++) {
+			UmengUtil umeng = new UmengUtil(prop.get("app_key").toString(), prop.get("app_master_secret").toString());
+
+			CommonParams params = new CommonParams();
+
+			params.setTicker(obj.getMessageTicker());
+			params.setTitle(obj.getMessageTitle());
+			params.setText(obj.getMessageBody());
+			params.setContent(obj.getContent());
+			params.setDevice_tokens(token[i]);
+			int status = umeng.sendAndroidUnicast(params);
+			if (status != 200) {
+				throw new Exception("Umeng信息发送异常，请检查");
+			}
 		}
-		
+		return String.valueOf(messageMapper.insert(obj));
 	}
+
 	@Override
 	public Integer delMessage(String messageid) throws Exception {
 		return messageMapper.deleteByPrimaryKey(messageid);
@@ -105,8 +107,8 @@ public class SysMessageServiceImpl implements SysMessageService {
 	public PageInfo<SysDriver> queryDriver(SysDriver message) {
 		// TODO Auto-generated method stub
 		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
-		List<SysDriver> list=driverMapper.queryForPage(message);
-		PageInfo<SysDriver> page=new PageInfo<>(list);
+		List<SysDriver> list = driverMapper.queryForPage(message);
+		PageInfo<SysDriver> page = new PageInfo<>(list);
 		return page;
 	}
 
@@ -114,8 +116,8 @@ public class SysMessageServiceImpl implements SysMessageService {
 	public PageInfo<SysDriver> queryDriver1(SysDriver message) {
 		// TODO Auto-generated method stub
 		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
-		List<SysDriver> list=driverMapper.queryForPage1(message);
-		PageInfo<SysDriver> page=new PageInfo<>(list);
+		List<SysDriver> list = driverMapper.queryForPage1(message);
+		PageInfo<SysDriver> page = new PageInfo<>(list);
 		return page;
 	}
 

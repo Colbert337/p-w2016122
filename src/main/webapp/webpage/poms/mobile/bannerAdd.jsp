@@ -108,7 +108,7 @@
 								for="remark"> 正文： </label>
 							<div class="col-sm-8">
 								<textarea name="content" id="content" style="resize: none;"
-									maxlength="50" placeholder="正文"
+									maxlength="500" placeholder="正文"
 									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.content }</textarea>
 							</div>
 						</div>
@@ -220,9 +220,9 @@
 
 							<label class="col-sm-3 control-label no-padding-right"
 								for="version">城市列表： </label>
-							<div class="col-sm-3">
+							<div class="col-sm-8">
 								<div class="row">
-									<div class="col-sm-3">
+									<div class="col-sm-8">
 										<div class="btn-group j-android-versions">
 											<span class="btn btn-primary btn-white dropdown-toggle">城市列表<i
 												class="ace-icon fa fa-angle-down icon-on-right"></i>
@@ -250,7 +250,10 @@
 												</c:forEach>
 
 											</ul>
+											
 										</div>
+										<div   id="cityNameList">
+											</div>
 									</div>
 
 								</div>
@@ -271,7 +274,7 @@
 								for="remark"> 备注： </label>
 							<div class="col-sm-8">
 								<textarea name="remark" id="remark" style="resize: none;"
-									maxlength="50" placeholder="备注"
+									maxlength="100" placeholder="备注"
 									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.remark}</textarea>
 							</div>
 						</div>
@@ -612,12 +615,20 @@
 	}
 
 	function checkedclick() {
+		console.log('checked')
 		var isok = true;
+		var cityNameList="";
 		$('.checked').each(function(index, obj) {
 			if (!$(obj).is(':checked')) {
 				isok = false;
+			}else{
+				cityNameList+=$(obj).attr('values')+",";
 			}
 		})
+		if(cityNameList.length!=0){
+			cityNameList=cityNameList.substring(0,cityNameList.length-1)
+			}
+		$('#cityNameList').text(cityNameList);
 		if (isok) {
 			$("#allche").prop("checked", true);
 		} else {

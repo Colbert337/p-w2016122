@@ -1,4 +1,5 @@
-	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
+
+$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 	
 	var listOptions ={   
             url:'../web/message/messageList',
@@ -18,15 +19,16 @@
 	
 	function del(obj){
 		
-		var tmp = confirm("是否删除该条数据?");
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("是否删除该条数据?", function(result) {
+			if(result){
+				var messageid = $(obj).parents("tr").find("td:first").find("input").val();
+				loadPage('#main', '../web/message/deleteMessage?messageid='+messageid);
+			}
+			
+		})
 		
-		if (!tmp) {
-			$('[data-rel=tooltip]').tooltip('hide');
-			return;
-		}
-		
-		var messageid = $(obj).parents("tr").find("td:first").find("input").val();
-		loadPage('#main', '../web/message/deleteMessage?messageid='+messageid);
+	
 	}
 	
 	function commitForm(obj){
