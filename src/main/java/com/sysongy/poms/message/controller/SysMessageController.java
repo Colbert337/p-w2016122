@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 
@@ -23,6 +24,50 @@ public class SysMessageController extends BaseContoller{
 
 	private SysMessage message;
 
+	/**
+	 * 加气站查询
+	 * @param map
+	 * @param gascard
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/driverList")
+	public String driver(ModelMap map,SysDriver driver) throws Exception{
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/message/dirverList";
+		driver.setPageSize(10);
+		try {
+			if(driver.getPageNum() == null){
+				driver.setPageNum(1);
+				
+			}
+			if(StringUtils.isEmpty(message.getOrderby())){
+				driver.setOrderby("created_date desc");
+			}
+
+			PageInfo<SysDriver> pageinfo = service.queryDriver1(driver);
+			
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("message",driver);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		}
+		finally {
+			return ret;
+		}
+	}
+	
+	
 	/**
 	 * 加气站查询
 	 * @param map
@@ -78,7 +123,11 @@ public class SysMessageController extends BaseContoller{
 
 		try {
 			if(StringUtils.isEmpty(message.getId())){
-				messageid = service.saveMessage(message,"insert");
+				String[] token=message.getDevice_token().split(",");
+				for (int i = 0; i < token.length; i++) {
+					messageid = service.saveMessage(message,"insert");
+				}
+				
 				bean.setRetMsg("新增成功");
 				ret = "webpage/poms/message/message_new";
 			}else{
@@ -108,6 +157,50 @@ public class SysMessageController extends BaseContoller{
 		}
 	}
 
+	@RequestMapping("/saveMessageNew")
+	public String saveMessageNew(ModelMap map, SysMessage message) throws Exception{
+
+		PageBean bean = new PageBean();
+
+		String ret = "webpage/poms/message/message_new";
+		String messageid = null;
+
+		try {
+			if(StringUtils.isEmpty(message.getId())){
+				String[] token=message.getDevice_token().split(",");
+				for (int i = 0; i < token.length; i++) {
+					messageid = service.saveMessage_New(message,token[i]);
+				}
+				
+				bean.setRetMsg("新增成功");
+				ret = "webpage/poms/message/message_new";
+			}else{
+				ret = "webpage/poms/gastation/gastation_update";
+				messageid = service.saveMessage_New(message,null);
+				bean.setRetMsg("保存成功");
+				ret = this.queryAllMessageList(map, this.message==null?new SysMessage():this.message);
+			}
+
+			bean.setRetCode(100);
+
+			bean.setRetValue(messageid);
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("message", messageid);
+
+			logger.error("", e);
+		}
+		finally {
+			return ret;
+		}
+	}
+	
 	@RequestMapping("/deleteMessage")
 	public String deleteMessage(ModelMap map, @RequestParam String messageid){
 

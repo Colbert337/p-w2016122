@@ -43,3 +43,14 @@
 	function init(){
 		loadPage('#main', '../web/message/messageList');
 	}
+	function addMessage(){
+		loadPage('#main','<%=basePath%>/webpage/poms/message/message_new.jsp');
+//		$.ajax({
+//			url : "../web/message/driverList",
+//			async : false,
+//			type : "POST",
+//			success : function(data) {
+//				$("#main").html(data);
+//			}
+//		})
+	}
