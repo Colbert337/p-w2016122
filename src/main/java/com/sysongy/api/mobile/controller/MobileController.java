@@ -799,7 +799,8 @@ public class MobileController {
 			 */
 			if(mainObj != null){
 				SysDriver driver = new SysDriver();
-				driver.setFullName(mainObj.optString("name"));
+				String fullName = mainObj.optString("name");
+				driver.setFullName(fullName);
 				driver.setPlateNumber(mainObj.optString("plateNumber"));
 				driver.setFuelType(mainObj.optString("gasType"));
 				if(mainObj.optString("endTime") != null && !"".equals(mainObj.optString("endTime"))){
@@ -812,7 +813,10 @@ public class MobileController {
 				driver.setSysDriverId(mainObj.optString("token"));
 				driver.setCheckedStatus(GlobalConstant.DriverCheckedStatus.CERTIFICATING);
 				driver.setIdentityCard(mainObj.optString("idCard"));
-
+				//获取用户电话号码
+				List<SysDriver> driverList = driverService.queryeSingleList(driver);
+				String driverQrcode=driverList.get(0).getMobilePhone()+"_"+fullName;
+				
 				int resultVal = driverService.saveDriver(driver,"update");
 				if(resultVal <= 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2258,5 +2262,12 @@ public class MobileController {
 		record.setChannel("司集能源APP");
 		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
 		return record;
+	}
+	
+	public static void main(String[] args) {
+		String str = "{\"main\":{\"name\":\"zangsan\",\"plateNumber\":\"shanA1231\",\"gasType\":\"1011\",\"endTime\":\"12111111111\",\"drivingLicenseImageUrl\":\"12111111111\",\"driverLicenseImageUrl\":\"12111111111\",\"idCard\":\"61025236621\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		str = DESUtil.encode("sysongys",str);//参数加密
+		System.out.println(str);
+	
 	}
 }

@@ -107,6 +107,8 @@ public class SysDriver extends BaseModel{
     private String gasStationName;
     
     private String securityMobilePhone ;
+    
+    private String driverQrcode;
 
     public String getMemo() {
 		return memo;
@@ -500,4 +502,13 @@ public class SysDriver extends BaseModel{
 	public void setSecurityMobilePhone(String securityMobilePhone) {
 		this.securityMobilePhone = securityMobilePhone == null ? null : securityMobilePhone.trim();
 	}
+
+	public String getDriverQrcode() {
+		return driverQrcode;
+	}
+
+	public void setDriverQrcode(String driverQrcode) {
+		this.driverQrcode = driverQrcode;
+	}
+
 }

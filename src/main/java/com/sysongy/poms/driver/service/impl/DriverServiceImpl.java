@@ -405,4 +405,9 @@ public class DriverServiceImpl implements DriverService {
         String provinceId = "%P%";
         return sysDriverMapper.queryMaxIndex(provinceId);
     }
+
+	@Override
+	public SysDriver queryByInvitationCode(String invitationCode) throws Exception {
+		return sysDriverMapper.queryByInvitationCode(invitationCode);
+	}
 }

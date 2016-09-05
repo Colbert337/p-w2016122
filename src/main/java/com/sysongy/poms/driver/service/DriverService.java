@@ -83,4 +83,9 @@ public interface DriverService {
 	 * @return
 	 */
 	SysDriver queryMaxIndex();
+	
+	/**
+     * 根據邀請碼查詢用戶  
+     */
+	public SysDriver queryByInvitationCode(String invitationCode) throws Exception;
 }
