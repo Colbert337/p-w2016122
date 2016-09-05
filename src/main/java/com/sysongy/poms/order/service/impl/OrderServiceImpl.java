@@ -1064,4 +1064,45 @@ public class OrderServiceImpl implements OrderService {
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
+
+
+	/********************************************APP报表接口*********************************/
+	/**
+	 * 充值记录
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public PageInfo<Map<String, Object>> queryDriverReChargePage(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryDriverReChargeList(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	/**
+	 * 消费记录
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public PageInfo<Map<String, Object>> queryDriverConsumePage(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryDriverConsumeList(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	/**
+	 * 转账记录
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public PageInfo<Map<String, Object>> queryDriverTransferPage(SysOrder record) {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysOrderMapper.queryDriverTransferList(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
 }

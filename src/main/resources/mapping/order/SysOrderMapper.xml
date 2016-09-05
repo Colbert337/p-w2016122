@@ -857,4 +857,27 @@
     </if>
   </select>
 
+  <!--     APP司机报表接口     -->
+  <!--查询充值记录-->
+  <select id="queryDriverReChargeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    select order_number,cash,cash_back_driver,charge_type,is_discharge,channel,
+    (select remark from sys_order_deal rc where rc.order_id = rb.order_number) as remark,order_date
+    from report_business rb
+    where order_type = '130'
+  </select>
+
+  <!--查询消费记录-->
+  <select id="queryDriverConsumeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    select order_number,cash,channel,channel_number,goods_sum,is_discharge,charge_type,
+    (select remark from sys_order_deal rc where rc.order_id = rb.order_number) as remark,
+    order_date from report_business rb
+    where order_type = '220'
+  </select>
+
+  <!--查询转账记录-->
+  <select id="queryDriverTransferList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    select order_number,operator,cash,(select remark from sys_order_deal rc where rc.order_id = rb.order_number) as remark,order_date
+    from report_business rb
+    where order_type = '320'
+  </select>
 </mapper>
