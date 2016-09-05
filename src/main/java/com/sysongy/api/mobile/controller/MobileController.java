@@ -1105,6 +1105,7 @@ public class MobileController {
 		result.setMsg("查询加注站信息成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
+		Gastation gastation = new Gastation();
     	
     	try {
 			/**
@@ -1118,10 +1119,18 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
+				if(gastation.getPageNum() == null){
+					gastation.setPageNum(GlobalConstant.PAGE_NUM);
+					gastation.setPageSize(GlobalConstant.PAGE_SIZE);
+				}else{
+					gastation.setPageNum(mainObj.optInt("pageNum"));
+					gastation.setPageSize(mainObj.optInt("pageSize"));
+				}
+
 				//获取气站列表
-				Gastation gastation = new Gastation();
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
-				List<Gastation> gastationList = gastationService.getAllStationList(gastation);
+				PageInfo<Gastation> pageInfo = gastationService.queryGastation(gastation);
+				List<Gastation> gastationList = pageInfo.getList();
 				if(gastationList != null && gastationList.size() > 0){
 					for (Gastation gastationInfo:gastationList){
 						Map<String, Object> gastationMap = new HashMap<>();
