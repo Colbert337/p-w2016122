@@ -142,7 +142,8 @@ public class TwoDimensionCode {
             // 设置设置二维码尺寸，取值范围1-40，值越大尺寸越大，可存储的信息越大  
             qrcodeHandler.setQrcodeVersion(size);
             // 获得内容的字节数组，设置编码格式  
-            byte[] contentBytes = content.toString().getBytes(codeType);  
+            /*byte[] contentBytes = content.toString().getBytes(codeType);*/
+            byte[] contentBytes = new String(content.getBytes(codeType),codeType).getBytes();
             // 图片尺寸  
             int imgSize = 67 + 12 * (size - 1);  
             bufImg = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_RGB);  
@@ -247,7 +248,7 @@ public class TwoDimensionCode {
         String imgPath = "d:/b.jpg";
         String centerImg = "d:/youku.jpg";
 //        String encoderContent = "http://www.baidu.com";
-        String encoderContent = "13663865897";
+        String encoderContent = "张三丰";
 //        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        encoderContent = br.readLine();
         TwoDimensionCode handler = new TwoDimensionCode();
