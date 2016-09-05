@@ -28,8 +28,8 @@
 				class="table table-striped table-bordered table-hover col-sm-10">
 				<thead>
 					<tr>
-						<th class="center td-w1"><label class="pos-rel"> <input
-								type="checkbox" class="ace" onclick="checkedAllRows(this);" />
+						<th class="center td-w1"><label class="pos-rel"> <!-- <input
+								type="checkbox" class="ace" onclick="checkedAllRows(this);" /> -->
 								<span class="lbl"></span>
 						</label></th>
 						<th onclick="orderBy(this,'sys_driver_id');commitForm();"
