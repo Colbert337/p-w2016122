@@ -284,8 +284,8 @@ public class MobileController {
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
 
-				ShortMessageInfoModel shortMessageInfo = (ShortMessageInfoModel)redisClientImpl.getFromCache(driver.getMobilePhone());
-				if(shortMessageInfo != null) {
+				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
+				if(veCode != null && !"".equals(veCode)) {
 					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
@@ -343,6 +343,7 @@ public class MobileController {
 			result.setMsg("注册失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("注册失败： " + e);
+			e.printStackTrace();
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -1938,8 +1939,8 @@ public class MobileController {
 				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				//获取验证码
 				String codePay = mainObj.optString("veCode");
-				ShortMessageInfoModel shortMessageInfo = (ShortMessageInfoModel)redisClientImpl.getFromCache(sysDriver.getMobilePhone());
-				if(shortMessageInfo != null){
+				String veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+				if(veCode != null && !"".equals(veCode)){
 					String phoneType = mainObj.optString("phoneType");
 					//数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
@@ -2023,8 +2024,8 @@ public class MobileController {
 				SysDriver sysDriver = new SysDriver();
 				//电话号码赋值
 				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
-				ShortMessageInfoModel shortMessageInfo = (ShortMessageInfoModel)redisClientImpl.getFromCache(sysDriver.getMobilePhone());
-				if(shortMessageInfo != null) {
+				String veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+				if(veCode != null && !"".equals(veCode)) {
 					//数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 					if (!driver.isEmpty()) {
