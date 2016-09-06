@@ -201,7 +201,6 @@ public class MobileController {
 	@RequestMapping(value = {"/user/getVerificationCode"})
 	@ResponseBody
 	public String getVerificationCode(String params) {
-
 		MobileVerification verification = new MobileVerification();
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -314,7 +313,7 @@ public class MobileController {
 						String show_path = (String) prop.get("show_images_path")+ "/driver/"+mainObj.optString("phoneNum")+"/"+mainObj.optString("phoneNum")+".jpg";
 						//生成二维码
 						driver.setDriverQrcode(show_path);
-						
+
 						Integer tmp = driverService.saveDriver(driver, "insert");
 						if(tmp > 0){
 							TwoDimensionCode handler = new TwoDimensionCode();
@@ -374,7 +373,7 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			String http_poms_path =  (String) prop.get("http_poms_path");
 			/**
 			 * 请求接口
 			 */
@@ -398,7 +397,7 @@ public class MobileController {
 						resultMap.put("securityPhone",driver.getMobilePhone());
 						resultMap.put("isRealNameAuth",GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())?"true":"false");
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
-						resultMap.put("QRCodeUrl",driverlist.get(0).getDriverQrcode());
+						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 
 						resultMap.put("cumulativeReturn",cashBack);
 						if(driver.getAvatarB() == null){
