@@ -10,6 +10,35 @@
 			+ path;
 	String imagePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 %>
+<script type="text/javascript"
+	src="<%=basePath%>/assets/js/date-time/moment.js"></script>
+<script type="text/javascript"
+	src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
+<script type="text/javascript"
+	src="<%=basePath%>/common/js/fileinput.js"></script>
+<script type="text/javascript" src="<%=basePath%>/common/js/zh.js"></script>
+<script type="text/javascript" src="<%=basePath%>/common/js/json2.js"></script>
+
+<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/font-awesome.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/jquery-ui.custom.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/chosen.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/bootstrap-timepicker.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/daterangepicker.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/bootstrap-datetimepicker.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/colorpicker.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/ace-fonts.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/ace.css"
+	class="ace-main-stylesheet" id="main-ace-style" />
+
+<link rel="stylesheet" href="<%=basePath%>/common/css/fileinput.css" />
+
 <!-- /section:basics/sidebar -->
 <div class="main-content">
 	<div class="main-content-inner">
@@ -58,17 +87,17 @@
 			<!-- /.page-header -->
 
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-xs-8">
 					<!-- PAGE CONTENT BEGINS -->
-					<form class="form-horizontal form-webapp-editor" id="editForm">
+					<form class="form-horizontal" id="editForm">
 						<!-- #section:elements.form -->
 						<%--<h5 class="header smaller lighter blue">基本信息</h5>--%>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
 								for="title"><span class="red_star">*</span> 标题： </label>
-							<div class="col-sm-4">
+							<div class="col-sm-8">
 								<input type="text" name="title" id="title" data-onFlag=""
-									placeholder="请输入标题" maxlength="10" class="form-control"
+									placeholder="标题" maxlength="10" class="col-xs-10 col-sm-12"
 									value="${mbBanner.title}" /> <input type="hidden"
 									id="mbBannerId" name="mbBannerId"
 									value="${mbBanner.mbBannerId}" />
@@ -77,16 +106,16 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
 								for="remark"> 正文： </label>
-							<div class="col-sm-4">
-								<textarea name="content" id="content" style="resize: none;" placeholder="请输入正文"
-									class="form-control">${mbBanner.content }</textarea>
-								<%--<div class="good-tip">提示：最多50个字符，即25个汉字。</div>--%>
+							<div class="col-sm-8">
+								<textarea name="content" id="content" style="resize: none;"
+									maxlength="500" placeholder="正文"
+									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.content }</textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"><span
 								class="red_star">*</span> 图片： </label>
-							<div class="col-sm-4">
+							<div class="col-sm-8">
 								<div class="widget-box">
 									<div class="widget-header">
 										<h4 class="widget-title">图片上传</h4>
@@ -111,7 +140,7 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"><span
 								class="red_star">*</span>缩略图： </label>
-							<div class="col-sm-4">
+							<div class="col-sm-8">
 								<div class="widget-box">
 									<div class="widget-header">
 										<h4 class="widget-title">图片上传</h4>
@@ -136,27 +165,27 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
 								for="target_url"><span class="red_star">*</span> 链接地址： </label>
-							<div class="col-sm-4">
+							<div class="col-sm-8">
 								<input type="text" id="target_url"
 									value="${mbBanner.targetUrl }" name="targetUrl"
-									placeholder="请输入链接地址，如：www.sysongy.com" class="form-control" />
+									placeholder="链接地址" class="col-xs-10 col-sm-12" />
 							</div>
 						</div>
-						<%--<div class="form-group">
+						<div class="form-group">
 							<label class="col-sm-10 control-label no-padding-right"
 								for="target_url">
-								链接地址如：<%=basePath%>/web/page/showPage?pageid=<span
+								链接地址如：/web/page/showPage?pageid=<span
 								class="red_star">66b24d910a0f4ce68689682f497c0349</span>
 							</label>
 
-						</div>--%>
+						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								for="target_url"><span class="red_star">*</span>顺序：</label>
-							<div class="col-sm-4">
+								for="target_url"><span class="red_star">*</span>顺序 </label>
+							<div class="col-sm-8">
 								<input type="text" id="sort" value="${mbBanner.sort }"
-									placeholder="请输入顺序，如：1" maxlength="11" name="sort"
-									class="form-control" />
+									placeholder="顺序" maxlength="11" name="sort"
+									class="col-xs-10 col-sm-12" />
 							</div>
 						</div>
 
@@ -189,35 +218,44 @@
 										</div>
 									</div> --%>
 
-							<label class="col-sm-3 control-label no-padding-right" >城市列表： </label>
-							<div class="col-sm-4">
-								<div class="btn-group j-android-versions">
-									<span class="btn btn-primary btn-white dropdown-toggle">城市列表<i
-										class="ace-icon fa fa-angle-down icon-on-right"></i>
-									</span>
-									<ul class="dropdown-menu">
-										<li>
-											<div class="checkbox">
-												<label> <input name="" type="checkbox" id="allche"
-													onchange="checkedchange(this)" class="ace"> <span
-													class="lbl"> 全选</span>
-												</label>
-											</div>
-										</li>
-										<c:forEach items="${city}" var="one">
-											<li>
-												<div class="checkbox">
-													<label> <input name="form-field-checkbox"
-														type="checkbox" value2="${one.cityId }"
-														id="c${one.cityId }" values="${one.cityName }"
-														onclick="checkedclick()" class="ace checked" /> <span
-														class="lbl"> ${one.cityName }</span>
-													</label>
-												</div>
-											</li>
-										</c:forEach>
+							<label class="col-sm-3 control-label no-padding-right"
+								for="version">城市列表： </label>
+							<div class="col-sm-8">
+								<div class="row">
+									<div class="col-sm-8">
+										<div class="btn-group j-android-versions">
+											<span class="btn btn-primary btn-white dropdown-toggle">城市列表<i
+												class="ace-icon fa fa-angle-down icon-on-right"></i>
+											</span>
+											<ul class="dropdown-menu">
+												<li>
+													<div class="checkbox">
+														<label> <input name="" type="checkbox" id="allche"
+															onchange="checkedchange(this)" class="ace"> <span
+															class="lbl"> 全选</span>
+														</label>
+													</div>
+												</li>
+												<c:forEach items="${city}" var="one">
+													<li>
+														<div class="checkbox">
+															<label> <input name="form-field-checkbox"
+																type="checkbox" value2="${one.cityId }"
+																id="c${one.cityId }" values="${one.cityName }"
+																onclick="checkedclick()" class="ace checked" /> <span
+																class="lbl"> ${one.cityName }</span>
+															</label>
+														</div>
+													</li>
+												</c:forEach>
 
-									</ul>
+											</ul>
+											
+										</div>
+										<div   id="cityNameList">
+											</div>
+									</div>
+
 								</div>
 							</div>
 							<%-- <label class="col-sm-3 control-label no-padding-right"
@@ -234,37 +272,52 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
 								for="remark"> 备注： </label>
-							<div class="col-sm-4">
+							<div class="col-sm-8">
 								<textarea name="remark" id="remark" style="resize: none;"
-									maxlength="50" placeholder="请输入备注信息"
-									class="form-control">${mbBanner.remark}</textarea>
+									maxlength="100" placeholder="备注"
+									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.remark}</textarea>
 							</div>
 						</div>
 						<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
 					</form>
-
 					<div class="clearfix form-actions">
-						<div class="col-md-offset-3 col-md-9">
-
-							<button class="btn btn-info" type="button" onclick="saveBanner();">
-								<i class="ace-icon fa fa-check bigger-110"></i>
-								保存
-							</button>
-
-							&nbsp; &nbsp; &nbsp;
-							<button class="btn btn-success" type="button" onclick="init();">
-								<i class="ace-icon fa fa-undo bigger-110"></i>
-								返回
-							</button>
-						</div>
+										<div class="col-md-offset-3 col-md-9">
+											
+											<button class="btn btn-info" type="button" onclick="saveBanner();">
+												<i class="ace-icon fa fa-check bigger-110"></i>
+												保存
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											
+											<button class="btn" id="clear" type="button" onclick="clear1();">
+												<i class="ace-icon fa fa-repeat bigger-110"></i>
+												重置
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											
+											<button class="btn btn-success" type="button" onclick="init();">
+												<i class="ace-icon fa fa-undo bigger-110"></i>
+												返回
+											</button>
+										</div>
+									</div>
+					<!-- <div class="modal-footer">
+						<button class="btn btn-primary btn-sm" onclick="saveBanner()">确定</button>
+						<button class="btn btn-sm" i="close" onclick="init()">取 消</button>
 					</div>
-
+					<div class="modal-footer"></div> -->
+					<!-- /.col -->
 				</div>
 				<!-- /.row -->
 			</div>
 			<!-- /.page-content -->
 		</div>
 	</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 <script type="text/javascript">
@@ -424,17 +477,34 @@
 		$(".modal-backdrop").css("display", "none");
 
 	}
-
+	
+	function clear1(){
+	//	console.log('1111');
+	//	location.href=location.href;
+		$.ajax({
+			url : "../web/mobile/img/fondone",
+			data : {
+				imgType:$("[name=imgType]").val()
+			},
+			async : false,
+			type : "POST",
+			success : function(data) {
+				$("#main").html(data);
+			}
+		})
+	}
+	
 	jQuery(function($) {
 		if ("${mbBanner.mbBannerId}" == "") {
 			$("#show_img").hide();
 			$("#show_sm_img").hide();
 			$("#imgType").val("${imgType }");
-			
+			$("#clear").show();
 			
 		} else {
 			$("#show_img").show();
 			$("#show_sm_img").show();
+			$("#clear").hide();
 			var datas = '${mbBanner.city_id}'.split(',');
 			for (var i = 0; i < datas.length; i++) {
 				eval("$('#c" + datas[i] + "').attr('checked',true);");
@@ -545,12 +615,20 @@
 	}
 
 	function checkedclick() {
+		console.log('checked')
 		var isok = true;
+		var cityNameList="";
 		$('.checked').each(function(index, obj) {
 			if (!$(obj).is(':checked')) {
 				isok = false;
+			}else{
+				cityNameList+=$(obj).attr('values')+",";
 			}
 		})
+		if(cityNameList.length!=0){
+			cityNameList=cityNameList.substring(0,cityNameList.length-1)
+			}
+		$('#cityNameList').text(cityNameList);
 		if (isok) {
 			$("#allche").prop("checked", true);
 		} else {
@@ -562,4 +640,6 @@
 		loadPage('#main', '../web/mobile/img/list/page?imgType='
 				+ $("[name=imgType]").val());
 	}
+	
+	
 </script>

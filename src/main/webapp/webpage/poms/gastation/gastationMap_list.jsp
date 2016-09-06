@@ -37,9 +37,9 @@
 						</div>
 						
 						<div class="item">
-							<label>加注站类型:</label>
-							<select class="chosen-select " name="map_type" value="${gastation.map_type}" >
-								<s:option flag="true" gcode="STATION_MAP_TYPE" form="gastation" field="status" />
+							<label>合作类型:</label>
+							<select class="chosen-select " id="select" name="map_type"  >
+								<s:option flag="true" gcode="STATION_MAP_TYPE" form="gastation" field="map_type" />
 							</select>
 						</div>
 

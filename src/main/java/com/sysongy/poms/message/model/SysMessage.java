@@ -8,6 +8,16 @@ public class SysMessage extends BaseModel {
 
 	private String id;
 
+	private String device_token; 
+	
+	public String getDevice_token() {
+		return device_token;
+	}
+
+	public void setDevice_token(String device_token) {
+		this.device_token = device_token;
+	}
+
 	private String messageTitle;
 
 	private String messageBody;
@@ -29,6 +39,16 @@ public class SysMessage extends BaseModel {
 	private String operator;
 
 	private String memo;
+	
+	private String content;
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
 
 	public String getId() {
 		return id;

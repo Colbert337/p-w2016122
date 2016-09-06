@@ -410,11 +410,15 @@
 										class="control-label no-padding-right" name="show"></label>
 								</div>
 								<div class="col-xs-6">
-									<label class="control-label no-padding-right">版本号:</label> <label
+									<label class="control-label no-padding-right">正文:</label> <label
 										class="control-label no-padding-right" name="show"></label>
 								</div>
 								<div class="col-xs-6">
 									<label class="control-label no-padding-right">备注:</label> <label
+										class="control-label no-padding-right" name="show"></label>
+								</div>
+								<div class="col-xs-6">
+									<label class="control-label no-padding-right">城市列表:</label> <label
 										class="control-label no-padding-right" name="show"></label>
 								</div>
 								<div class="col-xs-6">
