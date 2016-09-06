@@ -214,4 +214,5 @@ public interface OrderService {
      */
     PageInfo<Map<String,Object>> queryDriverTransferPage(SysOrder record);
 
+    String checkIfCanChargeToDriver(SysOrder order) throws Exception;
 }

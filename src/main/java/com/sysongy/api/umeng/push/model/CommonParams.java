@@ -13,6 +13,14 @@ public class CommonParams {
 	private String ticker;
 	private String title;
 	private String text;
+	private String content;
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
 
 	public String getAppkey() {
 		return appkey;

@@ -46,7 +46,11 @@
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/message/message_new.jsp');">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
-								新建
+								广播信息
+							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/message/messageNEW.jsp');">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								单发/群发
 							</button>
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
@@ -102,8 +106,8 @@
 									</td>
 
 									<td>${list.messageTitle}</td>
-								 	<td>${list.messageBody}</td> 
-									<td>${list.messageTicker}</td>
+								 	<td><div class="td-inner-warp">${list.messageBody}</div></td>
+									<td><div class="td-inner-warp">${list.messageTicker}</div></td>
 									<td><s:Code2Name mcode="${list.messageGroup}" gcode="MSGGROUP"></s:Code2Name></td>
 									<td>${list.operator}</td>
 									<td><fmt:formatDate value="${list.messageSendTime}" type="both"/></td>

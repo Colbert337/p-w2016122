@@ -62,4 +62,9 @@ public interface SysCashBackService {
 	public String disCashBackToAccount(SysOrder order, SysOrderDeal orderDealRecord,String accountId,String accountUserName, String orderDealType) throws Exception;
 	
 	public List<SysCashBack> gainProp(@RequestParam String sys_cash_back_no, @RequestParam String level);
+	
+	/**
+	 * 最高返现规则列表
+	 */
+	public List<SysCashBack> queryMaxCashBack()throws Exception;
 }

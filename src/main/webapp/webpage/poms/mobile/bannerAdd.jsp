@@ -108,7 +108,7 @@
 								for="remark"> 正文： </label>
 							<div class="col-sm-8">
 								<textarea name="content" id="content" style="resize: none;"
-									maxlength="50" placeholder="正文"
+									maxlength="500" placeholder="正文"
 									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.content }</textarea>
 							</div>
 						</div>
@@ -174,7 +174,7 @@
 						<div class="form-group">
 							<label class="col-sm-10 control-label no-padding-right"
 								for="target_url">
-								链接地址如：<%=basePath%>/web/page/showPage?pageid=<span
+								链接地址如：/web/page/showPage?pageid=<span
 								class="red_star">66b24d910a0f4ce68689682f497c0349</span>
 							</label>
 
@@ -220,9 +220,9 @@
 
 							<label class="col-sm-3 control-label no-padding-right"
 								for="version">城市列表： </label>
-							<div class="col-sm-3">
+							<div class="col-sm-8">
 								<div class="row">
-									<div class="col-sm-3">
+									<div class="col-sm-8">
 										<div class="btn-group j-android-versions">
 											<span class="btn btn-primary btn-white dropdown-toggle">城市列表<i
 												class="ace-icon fa fa-angle-down icon-on-right"></i>
@@ -250,7 +250,10 @@
 												</c:forEach>
 
 											</ul>
+											
 										</div>
+										<div   id="cityNameList">
+											</div>
 									</div>
 
 								</div>
@@ -271,17 +274,38 @@
 								for="remark"> 备注： </label>
 							<div class="col-sm-8">
 								<textarea name="remark" id="remark" style="resize: none;"
-									maxlength="50" placeholder="备注"
+									maxlength="100" placeholder="备注"
 									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.remark}</textarea>
 							</div>
 						</div>
 						<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
 					</form>
-					<div class="modal-footer">
+					<div class="clearfix form-actions">
+										<div class="col-md-offset-3 col-md-9">
+											
+											<button class="btn btn-info" type="button" onclick="saveBanner();">
+												<i class="ace-icon fa fa-check bigger-110"></i>
+												保存
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											
+											<button class="btn" id="clear" type="button" onclick="clear1();">
+												<i class="ace-icon fa fa-repeat bigger-110"></i>
+												重置
+											</button>
+											&nbsp; &nbsp; &nbsp;
+											
+											<button class="btn btn-success" type="button" onclick="init();">
+												<i class="ace-icon fa fa-undo bigger-110"></i>
+												返回
+											</button>
+										</div>
+									</div>
+					<!-- <div class="modal-footer">
 						<button class="btn btn-primary btn-sm" onclick="saveBanner()">确定</button>
 						<button class="btn btn-sm" i="close" onclick="init()">取 消</button>
 					</div>
-					<div class="modal-footer"></div>
+					<div class="modal-footer"></div> -->
 					<!-- /.col -->
 				</div>
 				<!-- /.row -->
@@ -453,17 +477,34 @@
 		$(".modal-backdrop").css("display", "none");
 
 	}
-
+	
+	function clear1(){
+	//	console.log('1111');
+	//	location.href=location.href;
+		$.ajax({
+			url : "../web/mobile/img/fondone",
+			data : {
+				imgType:$("[name=imgType]").val()
+			},
+			async : false,
+			type : "POST",
+			success : function(data) {
+				$("#main").html(data);
+			}
+		})
+	}
+	
 	jQuery(function($) {
 		if ("${mbBanner.mbBannerId}" == "") {
 			$("#show_img").hide();
 			$("#show_sm_img").hide();
 			$("#imgType").val("${imgType }");
-			
+			$("#clear").show();
 			
 		} else {
 			$("#show_img").show();
 			$("#show_sm_img").show();
+			$("#clear").hide();
 			var datas = '${mbBanner.city_id}'.split(',');
 			for (var i = 0; i < datas.length; i++) {
 				eval("$('#c" + datas[i] + "').attr('checked',true);");
@@ -574,12 +615,20 @@
 	}
 
 	function checkedclick() {
+		console.log('checked')
 		var isok = true;
+		var cityNameList="";
 		$('.checked').each(function(index, obj) {
 			if (!$(obj).is(':checked')) {
 				isok = false;
+			}else{
+				cityNameList+=$(obj).attr('values')+",";
 			}
 		})
+		if(cityNameList.length!=0){
+			cityNameList=cityNameList.substring(0,cityNameList.length-1)
+			}
+		$('#cityNameList').text(cityNameList);
 		if (isok) {
 			$("#allche").prop("checked", true);
 		} else {
@@ -591,4 +640,6 @@
 		loadPage('#main', '../web/mobile/img/list/page?imgType='
 				+ $("[name=imgType]").val());
 	}
+	
+	
 </script>
