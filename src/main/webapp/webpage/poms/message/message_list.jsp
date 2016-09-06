@@ -106,8 +106,8 @@
 									</td>
 
 									<td>${list.messageTitle}</td>
-								 	<td>${list.messageBody}</td> 
-									<td>${list.messageTicker}</td>
+								 	<td><div class="td-inner-warp">${list.messageBody}</div></td>
+									<td><div class="td-inner-warp">${list.messageTicker}</div></td>
 									<td><s:Code2Name mcode="${list.messageGroup}" gcode="MSGGROUP"></s:Code2Name></td>
 									<td>${list.operator}</td>
 									<td><fmt:formatDate value="${list.messageSendTime}" type="both"/></td>

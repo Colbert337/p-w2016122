@@ -81,7 +81,11 @@ public class SysOrder extends BaseModel{
 
     private String consumeType;
 
-	public SysOrderDeal getOrder_deal() {
+    private int orderStatus;
+
+    private String thirdPartyOrderID;   //微信或者支付宝的订单号
+
+    public SysOrderDeal getOrder_deal() {
 		return order_deal;
 	}
 
@@ -354,5 +358,21 @@ public class SysOrder extends BaseModel{
 
     public void setConsumeType(String consumeType) {
         this.consumeType = consumeType;
+    }
+
+    public int getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getThirdPartyOrderID() {
+        return thirdPartyOrderID;
+    }
+
+    public void setThirdPartyOrderID(String thirdPartyOrderID) {
+        this.thirdPartyOrderID = thirdPartyOrderID;
     }
 }

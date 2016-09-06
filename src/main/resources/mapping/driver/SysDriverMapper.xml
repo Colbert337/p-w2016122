@@ -35,6 +35,8 @@
     <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR" />
     <result column="transportion_name" property="transportionName" jdbcType="VARCHAR" />
     <result column="gas_station_name" property="gasStationName" jdbcType="VARCHAR" />
+    <result column="security_mobile_phone" property="securityMobilePhone" jdbcType="VARCHAR" />
+    <result column="driver_qrcode" property="driverQrcode" jdbcType="VARCHAR" />
     <association property="account" column="sys_user_account_id"
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -219,6 +221,9 @@
       </if>
       <if test="cardId!= null &amp;&amp; cardId != ''" >
         and card_id = #{cardId, jdbcType=INTEGER}
+      </if>
+      <if test="userName != null &amp;&amp; userName != ''" >
+        and user_name = #{userName, jdbcType=VARCHAR}
       </if>
     </trim>
   </select>
@@ -500,6 +505,9 @@
       <if test="deviceToken!= null  &amp;&amp; deviceToken != ''" >
         #{deviceToken,jdbcType=VARCHAR},
       </if>
+      <if test="driverQrcode != null" >
+        #{driverQrcode,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.driver.model.SysDriver" >
@@ -589,6 +597,12 @@
       <if test="invitationCode != null" >
         invitation_code = #{invitationCode,jdbcType=VARCHAR},
       </if>
+      <if test="securityMobilePhone != null" >
+        security_mobile_phone = #{securityMobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="driverQrcode != null" >
+        #{driverQrcode,jdbcType=VARCHAR},
+      </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
@@ -663,4 +677,14 @@
       #{item}
     </foreach>
   </update>
+  
+  <!-- 根据邀请码查询用户 -->
+  <select id="queryByInvitationCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+    where invitation_code = #{invitationCode,jdbcType=VARCHAR}
+	<!-- and user_status = 0 -->
+  </select>
+  
 </mapper>

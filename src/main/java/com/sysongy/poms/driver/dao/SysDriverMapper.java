@@ -61,4 +61,9 @@ public interface SysDriverMapper {
      * @return
      */
     SysDriver queryMaxIndex(String provinceId);
+    
+    /**
+     * 根據邀請碼查詢用戶  
+     */
+    SysDriver queryByInvitationCode(String invitationCode);
 }

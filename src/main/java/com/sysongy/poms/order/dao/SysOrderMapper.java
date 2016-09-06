@@ -91,4 +91,26 @@ public interface SysOrderMapper {
      */
     List<Map<String,Object>> queryTcFleetReport(SysOrder record);
 
+    /********************************************APP报表接口*********************************/
+    /**
+     * 充值记录
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryDriverReChargeList(SysOrder record);
+
+    /**
+     * 消费记录
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryDriverConsumeList(SysOrder record);
+
+    /**
+     * 转账记录
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryDriverTransferList(SysOrder record);
+
 }
