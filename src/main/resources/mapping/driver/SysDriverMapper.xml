@@ -416,6 +416,9 @@
       <if test="deviceToken!= null  &amp;&amp; deviceToken != ''" >
         device_token,
       </if>
+      <if test="driverQrcode!= null" >
+        driver_qrcode,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sysDriverId != null" >
@@ -506,7 +509,7 @@
         #{deviceToken,jdbcType=VARCHAR},
       </if>
       <if test="driverQrcode != null" >
-        #{driverQrcode,jdbcType=VARCHAR},
+        #{driverQrcode,jdbcType=VARCHAR}
       </if>
     </trim>
   </insert>
@@ -601,7 +604,7 @@
         security_mobile_phone = #{securityMobilePhone,jdbcType=VARCHAR},
       </if>
       <if test="driverQrcode != null" >
-        #{driverQrcode,jdbcType=VARCHAR},
+        driver_qrcode = #{driverQrcode,jdbcType=VARCHAR},
       </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
@@ -684,6 +687,17 @@
     <include refid="Base_Column_List" />
     from sys_driver
     where invitation_code = #{invitationCode,jdbcType=VARCHAR}
+	<!-- and user_status = 0 -->
+  </select>
+   <!-- 用户登录 -->
+  <select id="queryByUserNameAndPassword" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+    where 
+    user_name = #{userName,jdbcType=VARCHAR}
+    and
+    password = #{password,jdbcType=VARCHAR}
 	<!-- and user_status = 0 -->
   </select>
   

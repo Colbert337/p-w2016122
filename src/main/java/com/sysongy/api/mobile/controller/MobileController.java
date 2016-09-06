@@ -160,10 +160,10 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("username"));
 				driver.setPassword(mainObj.optString("password"));
-				List<SysDriver> driverlist = driverService.queryeSingleList(driver);
-				if(driverlist != null && driverlist.size() > 0){
+				SysDriver queryDriver = driverService.queryByUserNameAndPassword(driver);
+				if(queryDriver != null ){
 					Map<String, Object> tokenMap = new HashMap<>();
-					tokenMap.put("token",driverlist.get(0).getSysDriverId());
+					tokenMap.put("token",queryDriver.getSysDriverId());
 					result.setData(tokenMap);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -295,8 +295,31 @@ public class MobileController {
 						String sysDriverId = UUIDGenerator.getUUID();
 						driver.setPassword(mainObj.optString("password"));
 						driver.setSysDriverId(sysDriverId);
+						String encoderContent=mainObj.optString("phoneNum");
+						//图片路径
+						String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+				        File file =new File(rootPath);    
+						//如果根文件夹不存在则创建    
+						if  (!file.exists()  && !file.isDirectory()){       
+						    file.mkdir();    
+						}
+						String path = rootPath+mainObj.optString("phoneNum")+"/";
+						File file1 =new File(path);    
+						//如果用户文件夹不存在则创建    
+						if  (!file1.exists()  && !file1.isDirectory()){       
+						    file1.mkdir();    
+						}
+						//二维码路径
+						String imgPath = path+mainObj.optString("phoneNum")+".jpg";
+						String show_path = (String) prop.get("show_images_path")+ "/driver/"+mainObj.optString("phoneNum")+"/"+mainObj.optString("phoneNum")+".jpg";
+						//生成二维码
+						driver.setDriverQrcode(show_path);
+						
 						Integer tmp = driverService.saveDriver(driver, "insert");
-
+						if(tmp > 0){
+							TwoDimensionCode handler = new TwoDimensionCode();
+							handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+						}
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", sysDriverId);
 						result.setData(tokenMap);
@@ -374,6 +397,7 @@ public class MobileController {
 						resultMap.put("securityPhone",driver.getMobilePhone());
 						resultMap.put("isRealNameAuth",GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())?"true":"false");
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
+						resultMap.put("QRCodeUrl",driverlist.get(0).getDriverQrcode());
 
 						resultMap.put("cumulativeReturn",cashBack);
 						if(driver.getAvatarB() == null){
@@ -779,7 +803,7 @@ public class MobileController {
 	 */
 	@RequestMapping(value = "/user/realNameAuth")
 	@ResponseBody
-	public String realNameAuth(String params){
+	public String realNameAuth(String params,HttpServletRequest request){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("实名认证已提交审核，请耐心等待！");
@@ -800,6 +824,9 @@ public class MobileController {
 			if(mainObj != null){
 				SysDriver driver = new SysDriver();
 				String fullName = mainObj.optString("name");
+				driver.setSysDriverId(mainObj.optString("token"));
+				//获取用户电话
+				List<SysDriver> driverList = driverService.queryeSingleList(driver);
 				driver.setFullName(fullName);
 				driver.setPlateNumber(mainObj.optString("plateNumber"));
 				driver.setFuelType(mainObj.optString("gasType"));
@@ -810,19 +837,36 @@ public class MobileController {
 				}
 				driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
 				driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
-				driver.setSysDriverId(mainObj.optString("token"));
+				
 				driver.setCheckedStatus(GlobalConstant.DriverCheckedStatus.CERTIFICATING);
 				driver.setIdentityCard(mainObj.optString("idCard"));
-				//获取用户电话号码
-				List<SysDriver> driverList = driverService.queryeSingleList(driver);
-				String driverQrcode=driverList.get(0).getMobilePhone()+"_"+fullName;
-				
+				String encoderContent=driverList.get(0).getMobilePhone()+"_"+fullName;
+				//图片路径
+				String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+		        File file =new File(rootPath);    
+				//如果根文件夹不存在则创建    
+				if  (!file.exists()  && !file.isDirectory()){       
+				    file.mkdir();    
+				}
+				String path = rootPath+driverList.get(0).getMobilePhone()+"/";
+				File file1 =new File(path);    
+				//如果用户文件夹不存在则创建    
+				if  (!file1.exists()  && !file1.isDirectory()){       
+				    file1.mkdir();    
+				}
+				//二维码路径
+				String imgPath = path+driverList.get(0).getMobilePhone()+".jpg";
+				String show_path = (String) prop.get("show_images_path")+ "/driver/"+driverList.get(0).getMobilePhone()+"/"+driverList.get(0).getMobilePhone()+".jpg";
+				//生成二维码
+				driver.setDriverQrcode(show_path);
 				int resultVal = driverService.saveDriver(driver,"update");
 				if(resultVal <= 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("用户ID为空，申请失败！");
+				}else{
+					TwoDimensionCode handler = new TwoDimensionCode();
+					handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
 				}
-
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -831,7 +875,6 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-
 			logger.error("实名认证已提交审核，请耐心等待！： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1606,9 +1649,11 @@ public class MobileController {
 
 					reCharge.put("totalCash",totalCash);
 					reCharge.put("listMap",reChargeList);
-					result.setData(reCharge);
+					
+				}else{
+					reCharge.put("msg","无记录");
 				}
-
+				result.setData(reCharge);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -1712,9 +1757,11 @@ public class MobileController {
 					reCharge.put("totalOut",totalCash);
 					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
-					result.setData(reCharge);
+					
+				}else{
+					reCharge.put("msg","无记录");
 				}
-
+				result.setData(reCharge);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -2274,9 +2321,8 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String str = "{\"main\":{\"name\":\"zangsan\",\"plateNumber\":\"shanA1231\",\"gasType\":\"1011\",\"endTime\":\"12111111111\",\"drivingLicenseImageUrl\":\"12111111111\",\"driverLicenseImageUrl\":\"12111111111\",\"idCard\":\"61025236621\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		String str ="{\"main\":{\"phoneNum\":\"13474294206\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"5\"}}"; 
 		str = DESUtil.encode("sysongys",str);//参数加密
 		System.out.println(str);
-	
 	}
 }
