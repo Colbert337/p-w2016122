@@ -51,6 +51,7 @@
 	  <result column="hedgefund" property="hedgefund" jdbcType="VARCHAR" />
 	  <result column="summit" property="summit" jdbcType="VARCHAR" />
 	  <result column="consumecount" property="consumecount" jdbcType="VARCHAR" />
+	 
   </resultMap>
   
   <resultMap id="HenryTotalMap" type="java.util.Map" >
@@ -62,7 +63,7 @@
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
-    updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type
+    updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server,LNG_price,promotions
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -156,7 +157,7 @@
       indu_com_number, tax_number, indu_com_certif, 
       tax_certif, lng_certif, dcp_certif, 
       platform_type, status, created_time, 
-      updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type)
+      updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server ,LNG_price ,promotions )
     values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
       #{gas_station_name,jdbcType=VARCHAR}, 
       #{station_level,jdbcType=VARCHAR}, 
@@ -171,7 +172,9 @@
       #{indu_com_number,jdbcType=VARCHAR}, #{tax_number,jdbcType=VARCHAR}, #{indu_com_certif,jdbcType=VARCHAR}, 
       #{tax_certif,jdbcType=VARCHAR}, #{lng_certif,jdbcType=VARCHAR}, #{dcp_certif,jdbcType=VARCHAR}, 
       #{platform_type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{created_time,jdbcType=TIMESTAMP}, 
-      #{updated_time,jdbcType=TIMESTAMP},#{prepay_balance,jdbcType=DECIMAL}, #{prepay_version,jdbcType=INTEGER}, #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{map_type,jdbcType=VARCHAR})
+      #{updated_time,jdbcType=TIMESTAMP},#{prepay_balance,jdbcType=DECIMAL}, #{prepay_version,jdbcType=INTEGER},
+       #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{map_type,jdbcType=VARCHAR},
+        #{gas_server ,jdbcType=VARCHAR}, #{lng_price ,jdbcType=VARCHAR}, #{promotions ,jdbcType=VARCHAR})
   </insert>
   
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
@@ -255,6 +258,15 @@
       <if test="updated_time != null" >
         updated_time,
       </if>
+        <if test="gas_server != null" >
+        gas_server,
+      </if>
+        <if test="lng_price != null" >
+        LNG_price,
+      </if>
+        <if test="promotions != null" >
+        promotions,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sys_gasStation_id != null" >
@@ -334,6 +346,15 @@
       </if>
       <if test="updatedDate != null" >
         #{updated_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gas_server != null" >
+        #{gas_server,jdbcType=VARCHAR},
+      </if>
+      <if test="lng_price != null" >
+        #{lng_price,jdbcType=VARCHAR},
+      </if>
+      <if test="promotions != null" >
+        #{promotions,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -422,6 +443,15 @@
       </if>
       <if test="updated_time != null &amp;&amp; updated_time != ''" >
         updated_time = #{updated_time,jdbcType=TIMESTAMP},
+      </if>
+         <if test="gas_server != null &amp;&amp; gas_server != ''" >
+        gas_server = #{gas_server,jdbcType=VARCHAR},
+      </if>
+         <if test="lng_price != null &amp;&amp; lng_price != ''" >
+        lng_price = #{lng_price,jdbcType=VARCHAR},
+      </if>
+         <if test="promotions != null &amp;&amp; promotions != ''" >
+        promotions = #{promotions,jdbcType=VARCHAR},
       </if>
     </set>
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
@@ -519,6 +549,15 @@
       </if>
       <if test="updated_time != null &amp;&amp; updated_time != ''" >
         updated_time = #{updated_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="promotions  != null &amp;&amp; promotions  != ''" >
+        promotions  = #{promotions ,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gas_server  != null &amp;&amp; gas_server  != ''" >
+        gas_server  = #{gas_server ,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lng_price != null &amp;&amp; lng_price != ''" >
+        lng_price = #{lng_price,jdbcType=TIMESTAMP},
       </if>
       <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''" >
         sys_gas_station_id = #{sys_gas_station_id,jdbcType=TIMESTAMP},

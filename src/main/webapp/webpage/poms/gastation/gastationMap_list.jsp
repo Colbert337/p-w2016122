@@ -88,6 +88,9 @@
 									<th >坐标</th>
 									<th onclick="orderBy(this,'map_type');commitForm();" id="map_type_order">合作类型</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
+									<th onclick="orderBy(this,'gas_server');commitForm();" id="gas_server_order">提供服务</th>
+									<th onclick="orderBy(this,'LNG_price');commitForm();" id="LNG_price_order">商品信息</th>
+									<th onclick="orderBy(this,'promotions');commitForm();" id="promotions_order">优惠活动</th>
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order"  class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 								 	<th class="text-center td-w3">更多操作</th> 
 								</tr>
@@ -111,7 +114,9 @@
 									<td>${list.xy}</td>
 									<td><s:Code2Name mcode="${list.map_type}" gcode="STATION_MAP_TYPE"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
-									<%-- <td>${list.batch_no}</td>  --%>
+									<td>${list.gas_server}</td>
+									<td>${list.lng_price}</td>
+									<td>${list.promotions}</td>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">

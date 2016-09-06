@@ -379,6 +379,50 @@
 											</select>										
 										</div>
 									</div>
+									<div class="row">
+										<label class="col-sm-3 control-label no-padding-right">提供服务： </label>
+										<div class="col-sm-4">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group nospace">
+														<textarea name="gas_server" id="gas_server" style="resize: none;"
+									maxlength="500" placeholder="提供服务"
+									class="col-xs-10 col-sm-12 limited form-control">${station.gas_server }</textarea>
+													</div>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+									
+									<div class="row">
+										<label class="col-sm-3 control-label no-padding-right">商品信息： </label>
+										<div class="col-sm-4">
+											<div class="row">
+												<div class="col-sm-12">
+												<textarea name="lng_price" id="lng_price" style="resize: none;"
+									maxlength="500" placeholder="商品信息"
+									class="col-xs-10 col-sm-12 limited form-control">${station.lng_price }</textarea>
+											</div>
+										</div>
+										</div>
+									</div>
+									<br/>
+									<div class="row">
+										<label class="col-sm-3 control-label no-padding-right">优惠活动： </label>
+										<div class="col-sm-4">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group nospace">
+														<textarea name="promotions" id="promotions" style="resize: none;"
+									maxlength="500" placeholder="优惠活动"
+									class="col-xs-10 col-sm-12 limited form-control">${station.promotions }</textarea>
+													</div>
+												</div>
+												
+											</div>
+										</div>
+									</div>
 									
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
