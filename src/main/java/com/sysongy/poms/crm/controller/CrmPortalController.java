@@ -10,6 +10,8 @@ import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import org.apache.commons.lang.StringUtils;
@@ -20,6 +22,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +49,8 @@ public class CrmPortalController {
     GsGasPriceService gsGasPriceService;
     @Autowired
     MbBannerService mbBannerService;
+    @Autowired
+    SysCashBackService sysCashBackService;
 
     /**
      * 问题列表和分类查询
@@ -156,5 +161,38 @@ public class CrmPortalController {
         map.addAttribute("priceList",priceList);
 
         return "/webpage/crm/webapp-station-detail";
+    }
+
+    /**
+     * 返现规则
+     * @return
+     */
+    @RequestMapping("/deal/backRulePage")
+    public String queryBackRulePage(SysCashBack sysCashBack, ModelMap map) throws Exception{
+
+        List<SysCashBack> cashBackList = new ArrayList<>();
+
+        sysCashBack.setPageSize(10);
+        sysCashBack.setPageNum(1);
+        //查询微信返现规则
+        sysCashBack.setSys_cash_back_no(GlobalConstant.CashBackNumber.CASHBACK_WEICHAT_CHARGE);
+        sysCashBack.setStatus("0");
+        PageInfo<SysCashBack> pageinfo = sysCashBackService.queryCashBack(sysCashBack);
+        if(pageinfo != null && pageinfo.getList() != null){
+            cashBackList = pageinfo.getList();
+        }
+        map.addAttribute("wechatCashBack",cashBackList);
+
+        //查询支付宝返现规则
+        sysCashBack.setSys_cash_back_no(GlobalConstant.CashBackNumber.CASHBACK_ALIPAY_CHARGE);
+        sysCashBack.setStatus("0");
+        PageInfo<SysCashBack> pageInfoList = sysCashBackService.queryCashBack(sysCashBack);
+        if(pageInfoList != null && pageInfoList.getList() != null){
+            cashBackList = pageInfoList.getList();
+        }
+
+        map.addAttribute("aliPayCashBack",cashBackList);
+
+        return "/webpage/crm/webapp-bonus-rules";
     }
 }

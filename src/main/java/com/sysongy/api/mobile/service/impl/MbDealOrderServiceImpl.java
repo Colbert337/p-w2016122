@@ -4,6 +4,7 @@ import com.sysongy.api.mobile.service.MbDealOrderService;
 import com.sysongy.poms.driver.dao.SysDriverMapper;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.driver.service.impl.DriverServiceImpl;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUserAccount;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,7 +72,18 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
 
                     order.setCash(cash);
                     order.setCreditAccount(driverId);
-                    order.setDebitAccount(driverMap.get("account").toString());
+                    
+                    SysDriver driver1 = new SysDriver();
+                    driver1.setUserName(driverMap.get("account").toString());
+                    
+                    List<SysDriver> list = driverService.querySingleDriver(driver1).getList();
+                    if(list.size() != 1){
+                    	throw new Exception("找不到对应的唯一司机用户");
+                    }
+                    
+                    driver1 = list.get(0);
+                    
+                    order.setDebitAccount(driver1.getSysDriverId());
                     order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_TRANSFER_CHARGE);
                     order.setOperator(driverId);
                     order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.DRIVER);
@@ -80,7 +93,7 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
 
                     //添加订单
                     orderService.insert(order, null);
-                    //运输公司往个人转账
+                    //个人往个人转账
                     orderService.transferDriverToDriver(order);
                     resultVal = 1;
                     return resultVal;
