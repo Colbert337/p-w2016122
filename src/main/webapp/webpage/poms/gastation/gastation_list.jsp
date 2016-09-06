@@ -98,6 +98,9 @@
 									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
+									<th onclick="orderBy(this,'gas_server');commitForm();" id="status_order">提供服务</th>
+									<th onclick="orderBy(this,'lng_price');commitForm();" id="status_order">商品信息</th>
+									<th onclick="orderBy(this,'promotions');commitForm();" id="status_order">优惠活动</th>
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order" class="td-w2"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
 									<th onclick="orderBy(this,'prepay_balance');commitForm();" id="prepay_balance_order">预付款额度</th>
@@ -126,6 +129,9 @@
 									<td>${list.indu_com_number}</td>
 									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
 									<td>${list.address}</td> 
+									<td>${list.gas_server}</td> 
+									<td>${list.lng_price}</td> 
+									<td>${list.promotions}</td> 
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
@@ -219,12 +225,21 @@
 							<td><div id="address" name="show"> </div></td>
 						</tr>
 						<tr>
-							<th>注册日期</th>
-							<td><div id="created_time" name="show"> </div></td>
-							<th>平台有效期</th>
-							<td><div id="expiry_date" name="show"> </div></td>
+							<th>提供服务</th>
+							<td><div id="gas_server" name="show"> </div></td>
+							<th>商品信息</th>
+							<td><div id="lng_price" name="show"> </div></td>
 						</tr>
 						<tr>
+							<th>优惠活动</th>
+							<td><div id="promotions" name="show"> </div></td>
+							<th>注册日期</th>
+							<td><div id="created_time" name="show"> </div></td>
+						
+						</tr>
+						<tr>
+							<th>平台有效期</th>
+							<td><div id="expiry_date" name="show"> </div></td>
 							<th>预付款额度</th>
 							<td colspan="3"><div id="prepay_balance" name="show"> </div></td>
 						</tr>

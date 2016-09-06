@@ -44,6 +44,34 @@ public class Gastation extends BaseModel {
 	private Date updated_time;
 	private String xy;
 	private String map_type;
+	private String gas_server;
+	private String lng_price;
+	private String promotions;
+	
+	public String getLng_price() {
+		return lng_price;
+	}
+
+	public void setLng_price(String lng_price) {
+		this.lng_price = lng_price;
+	}
+
+	public String getPromotions() {
+		return promotions;
+	}
+
+	public void setPromotions(String promotions) {
+		this.promotions = promotions;
+	}
+
+	public String getGas_server() {
+		return gas_server;
+	}
+
+	public void setGas_server(String gas_server) {
+		this.gas_server = gas_server;
+	}
+
 	public String getMap_type() {
 		return map_type;
 	}

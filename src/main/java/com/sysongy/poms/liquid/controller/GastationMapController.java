@@ -87,15 +87,16 @@ public class GastationMapController extends BaseContoller {
 			return ret;
 		}
 	}
- 
-/**
- * execl 导入数据
- * @param file
- * @param currUser
- * @param response
- * @return
- * @throws IOException
- */
+
+	/**
+	 * execl 导入数据
+	 * 
+	 * @param file
+	 * @param currUser
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping("/file")
 	public String file(@RequestParam("fileImport") MultipartFile file, @ModelAttribute("currUser") CurrUser currUser,
 			HttpServletResponse response) throws IOException {
@@ -117,22 +118,24 @@ public class GastationMapController extends BaseContoller {
 				int rows = sheet.getRows();
 				int columns = sheet.getColumns();
 				int err = 0;
-				//循环从2（第三行开示） 前两行是表头
-				for (int i =2; i < rows; i++) {
+				// 循环从2（第三行开示） 前两行是表头
+				for (int i = 2; i < rows; i++) {
 
 					Integer gender = 0;
 					String platesNumber = "";
 					if (sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i))) {
 						Gastation gas = new Gastation();
-						//id后台自动生成
-//						if (sheet.getCell(0, i).getContents() != null
-//								&& !"".equals(sheet.getCell(0, i).getContents().replace(" ", ""))) {
-//							gas.setSys_gas_station_id(sheet.getCell(0, i).getContents());
-//						} else {
-//							message += "第" + (i + 1) + "行第1列（加注站编号不能为空）\n";
-//							err++;
-//							continue;
-//						}
+						// id后台自动生成
+						// if (sheet.getCell(0, i).getContents() != null
+						// && !"".equals(sheet.getCell(0,
+						// i).getContents().replace(" ", ""))) {
+						// gas.setSys_gas_station_id(sheet.getCell(0,
+						// i).getContents());
+						// } else {
+						// message += "第" + (i + 1) + "行第1列（加注站编号不能为空）\n";
+						// err++;
+						// continue;
+						// }
 
 						if (sheet.getCell(1, i) != null
 								&& !"".equals(sheet.getCell(1, i).getContents().replace(" ", ""))) {
@@ -159,7 +162,8 @@ public class GastationMapController extends BaseContoller {
 						}
 						if (sheet.getCell(4, i) != null
 								&& !"".equals(sheet.getCell(4, i).getContents().replace(" ", ""))) {
-//							gas.setCity_id(sheet.getCell(4, i).getContents());
+							// gas.setCity_id(sheet.getCell(4,
+							// i).getContents());
 						} else {
 							message += "第" + (i + 1) + "行第5列（加注站所在市不能为空）\n";
 							err++;
@@ -167,7 +171,8 @@ public class GastationMapController extends BaseContoller {
 						}
 						if (sheet.getCell(5, i) != null
 								&& !"".equals(sheet.getCell(5, i).getContents().replace(" ", ""))) {
-//							gas.setArea_id(sheet.getCell(5, i).getContents());
+							// gas.setArea_id(sheet.getCell(5,
+							// i).getContents());
 						} else {
 							message += "第" + (i + 1) + "行第6列（加注站所在区不能为空）\n";
 							err++;
@@ -186,7 +191,8 @@ public class GastationMapController extends BaseContoller {
 
 						if (sheet.getCell(7, i) != null
 								&& !"".equals(sheet.getCell(7, i).getContents().replace(" ", ""))
-								&& (sheet.getCell(7, i).getContents().indexOf(",") != -1 || sheet.getCell(7, i).getContents().indexOf("，") != -1)) {
+								&& (sheet.getCell(7, i).getContents().indexOf(",") != -1
+										|| sheet.getCell(7, i).getContents().indexOf("，") != -1)) {
 							sheet.getCell(7, i).getContents().replace("，", ",");
 							String[] xy = sheet.getCell(7, i).getContents().split(",");
 							gas.setLongitude(xy[0]);
@@ -197,13 +203,10 @@ public class GastationMapController extends BaseContoller {
 							continue;
 						}
 						// 提供服务字段 目前空缺
-						// if (sheet.getCell(8, i) != null
-						// && !"".equals(sheet.getCell(8,
-						// i).getContents().replace(" ", ""))) {
-						// gas.setProvince_id(sheet.getCell(8,
-						// i).getContents());
-						// }
-						//
+						if (sheet.getCell(8, i) != null
+								&& !"".equals(sheet.getCell(8, i).getContents().replace(" ", ""))) {
+							gas.setGas_server(sheet.getCell(8, i).getContents());
+						}
 
 						if (sheet.getCell(9, i) != null
 								&& !"".equals(sheet.getCell(9, i).getContents().replace(" ", ""))) {
@@ -214,22 +217,20 @@ public class GastationMapController extends BaseContoller {
 							continue;
 						}
 
-						// if (sheet.getCell(10,
-						// i)!=null&&!"".equals(sheet.getCell(10,i).getContents().replace("
-						// ", ""))) {
-						// gas.setProvince_id(sheet.getCell(10,i).getContents());
-						// }
-						//
-						// if (sheet.getCell(11,
-						// i)!=null&&!"".equals(sheet.getCell(11,i).getContents().replace("
-						// ", ""))) {
-						// gas.setProvince_id(sheet.getCell(11,i).getContents());
-						// }
+						if (sheet.getCell(10, i) != null
+								&& !"".equals(sheet.getCell(10, i).getContents().replace(" ", ""))) {
+							gas.setLng_price(sheet.getCell(10, i).getContents());
+						}
+
+						if (sheet.getCell(11, i) != null
+								&& !"".equals(sheet.getCell(11, i).getContents().replace(" ", ""))) {
+							gas.setPromotions(sheet.getCell(11, i).getContents());
+						}
 
 						if (sheet.getCell(12, i) != null
 								&& !"".equals(sheet.getCell(12, i).getContents().replace(" ", ""))) {
 							switch (sheet.getCell(12, i).getContents()) {
-							 
+
 							case "未核实":
 								gas.setMap_type("1");
 								break;
@@ -253,14 +254,14 @@ public class GastationMapController extends BaseContoller {
 
 						if (sheet.getCell(13, i) != null
 								&& !"".equals(sheet.getCell(13, i).getContents().replace(" ", ""))) {
-							gas.setStatus(sheet.getCell(13, i).getContents().equals("正常运营")?"1":"0");
+							gas.setStatus(sheet.getCell(13, i).getContents().equals("正常运营") ? "1" : "0");
 						} else {
 							message += "第" + (i + 1) + "行第14列（状态不能为空）\n";
 							err++;
 							continue;
 						}
-						//生成id
-					
+						// 生成id
+
 						gas.setType("1");
 						// 去重判断
 						if (exists(gas)) {
@@ -295,17 +296,17 @@ public class GastationMapController extends BaseContoller {
 		}
 
 	}
-	
+
 	@RequestMapping("/delete")
-    public String delete( String id,ModelMap map) throws Exception{
-               
-        service.delete(id);
-        
-        return "redirect:/web/gastationMap/gastationMapList";
-    }
+	public String delete(String id, ModelMap map) throws Exception {
+
+		service.delete(id);
+
+		return "redirect:/web/gastationMap/gastationMapList";
+	}
 
 	private boolean exists(Gastation gas) throws Exception {
 		// TODO Auto-generated method stub
-		return service.exists(gas.getLongitude()+","+gas.getLatitude());
+		return service.exists(gas.getLongitude() + "," + gas.getLatitude());
 	}
 }

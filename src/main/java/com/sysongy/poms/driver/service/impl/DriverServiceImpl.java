@@ -410,4 +410,11 @@ public class DriverServiceImpl implements DriverService {
 	public SysDriver queryByInvitationCode(String invitationCode) throws Exception {
 		return sysDriverMapper.queryByInvitationCode(invitationCode);
 	}
+	/**
+	 * 用户登录
+	 */
+	@Override
+	public SysDriver queryByUserNameAndPassword(SysDriver record) throws Exception {
+		return sysDriverMapper.queryByUserNameAndPassword(record);
+	}
 }
