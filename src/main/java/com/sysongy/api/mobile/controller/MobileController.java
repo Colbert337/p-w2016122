@@ -1651,7 +1651,8 @@ public class MobileController {
 					reCharge.put("listMap",reChargeList);
 					
 				}else{
-					reCharge.put("msg","无记录");
+					reCharge.put("totalCash","");
+					reCharge.put("listMap",new ArrayList<>());
 				}
 				result.setData(reCharge);
 			}else{
@@ -1724,7 +1725,7 @@ public class MobileController {
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
-				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
+				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() == 0) {
 
 					for(Map<String, Object> map:pageInfo.getList()){
 						Map<String, Object> reChargeMap = new HashMap<>();
@@ -1757,9 +1758,10 @@ public class MobileController {
 					reCharge.put("totalOut",totalCash);
 					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
-					
 				}else{
-					reCharge.put("msg","无记录");
+					reCharge.put("totalOut","");
+					reCharge.put("totalIn","");
+					reCharge.put("listMap",new ArrayList<>());
 				}
 				result.setData(reCharge);
 			}else{
