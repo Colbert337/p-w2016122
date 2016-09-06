@@ -65,4 +65,9 @@ public interface SysDriverMapper {
      * 根據邀請碼查詢用戶  
      */
     SysDriver queryByInvitationCode(String invitationCode);
+    
+    /**
+	 * 用户登录
+	 */
+	SysDriver queryByUserNameAndPassword(SysDriver record);
 }

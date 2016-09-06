@@ -88,4 +88,9 @@ public interface DriverService {
      * 根據邀請碼查詢用戶  
      */
 	public SysDriver queryByInvitationCode(String invitationCode) throws Exception;
+	
+	/**
+	 * 用户登录
+	 */
+	public SysDriver queryByUserNameAndPassword(SysDriver record) throws Exception;
 }
