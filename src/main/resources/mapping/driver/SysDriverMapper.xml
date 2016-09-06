@@ -31,6 +31,7 @@
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="driver_type" property="driverType" jdbcType="INTEGER" />
     <result column="driver_number" property="driver_number" jdbcType="INTEGER" />
+    <result column="device_token" property="deviceToken" jdbcType="VARCHAR" />
     <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR" />
     <result column="transportion_name" property="transportionName" jdbcType="VARCHAR" />
     <result column="gas_station_name" property="gasStationName" jdbcType="VARCHAR" />
@@ -123,6 +124,25 @@
       </if>
     </trim>
   </select>
+  
+  
+  <select id="queryForPage1" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+     *
+    from sys_driver
+    where 1=1
+    <trim>
+       
+      <if test="fullName!= null &amp;&amp; fullName != ''" >
+        and full_name like CONCAT('%',#{fullName,jdbcType=VARCHAR},'%' ) 
+      </if>
+      <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
+        and mobile_phone like CONCAT('%',#{mobilePhone,jdbcType=VARCHAR},'%' ) 
+      </if>
+     
+    </trim>
+  </select>
+  
   <select id="queryForPageList" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select sd.*,st.transportion_name,sgs.gas_station_name from sys_driver sd left join sys_transportion st on sd.station_id = st.sys_transportion_id
     left join sys_gas_station sgs on sd.station_id = sgs.sys_gas_station_id

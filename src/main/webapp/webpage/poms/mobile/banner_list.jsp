@@ -103,8 +103,8 @@
 											<td>${list.title}</td>
 											<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
-											<td>${list.targetUrl}</td>
-											<td>${list.content}</td>
+											<td><div class="td-inner-warp">${list.targetUrl}</div></td>
+											<td><div class="td-inner-warp">${list.content}</div></td>
 											<td>${list.remark}</td>
 											<td>${list.city_name}</td>
 											<td><fmt:formatDate value="${list.createdDate}"
@@ -410,11 +410,15 @@
 										class="control-label no-padding-right" name="show"></label>
 								</div>
 								<div class="col-xs-6">
-									<label class="control-label no-padding-right">版本号:</label> <label
+									<label class="control-label no-padding-right">正文:</label> <label
 										class="control-label no-padding-right" name="show"></label>
 								</div>
 								<div class="col-xs-6">
 									<label class="control-label no-padding-right">备注:</label> <label
+										class="control-label no-padding-right" name="show"></label>
+								</div>
+								<div class="col-xs-6">
+									<label class="control-label no-padding-right">城市列表:</label> <label
 										class="control-label no-padding-right" name="show"></label>
 								</div>
 								<div class="col-xs-6">
