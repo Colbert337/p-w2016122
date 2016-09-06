@@ -191,4 +191,28 @@ public interface OrderService {
      */
     List<Map<String,Object>> queryTcFleetMgList(SysOrder record);
 
+    /********************************************APP报表接口*********************************/
+
+    /**
+     * 充值记录
+     * @param record
+     * @return
+     */
+    PageInfo<Map<String,Object>> queryDriverReChargePage(SysOrder record);
+
+    /**
+     * 消费记录
+     * @param record
+     * @return
+     */
+    PageInfo<Map<String,Object>> queryDriverConsumePage(SysOrder record);
+
+    /**
+     * 转账记录
+     * @param record
+     * @return
+     */
+    PageInfo<Map<String,Object>> queryDriverTransferPage(SysOrder record);
+
+    String checkIfCanChargeToDriver(SysOrder order) throws Exception;
 }

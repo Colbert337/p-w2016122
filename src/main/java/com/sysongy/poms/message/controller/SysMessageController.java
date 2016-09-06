@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 
-
 @RequestMapping("/web/message")
 @Controller
-public class SysMessageController extends BaseContoller{
+public class SysMessageController extends BaseContoller {
 
 	@Autowired
 	private SysMessageService service;
@@ -25,24 +25,68 @@ public class SysMessageController extends BaseContoller{
 
 	/**
 	 * 加气站查询
+	 * 
+	 * @param map
+	 * @param gascard
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/driverList")
+	public String driver(ModelMap map, SysDriver driver) throws Exception {
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/message/dirverList";
+		driver.setPageSize(10);
+		try {
+			if (driver.getPageNum() == null) {
+				driver.setPageNum(1);
+
+			}
+			if (StringUtils.isEmpty(message.getOrderby())) {
+				driver.setOrderby("created_date desc");
+			}
+
+			PageInfo<SysDriver> pageinfo = service.queryDriver1(driver);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("message", driver);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		} finally {
+			return ret;
+		}
+	}
+
+	/**
+	 * 加气站查询
+	 * 
 	 * @param map
 	 * @param gascard
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/messageList")
-	public String queryAllMessageList(ModelMap map, SysMessage message) throws Exception{
+	public String queryAllMessageList(ModelMap map, SysMessage message) throws Exception {
 
 		this.message = message;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/message/message_list";
 
 		try {
-			if(message.getPageNum() == null){
+			if (message.getPageNum() == null) {
 				message.setPageNum(1);
 				message.setPageSize(10);
 			}
-			if(StringUtils.isEmpty(message.getOrderby())){
+			if (StringUtils.isEmpty(message.getOrderby())) {
 				message.setOrderby("message_created_time desc");
 			}
 
@@ -54,7 +98,7 @@ public class SysMessageController extends BaseContoller{
 
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
-			map.addAttribute("message",message);
+			map.addAttribute("message", message);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
@@ -62,14 +106,13 @@ public class SysMessageController extends BaseContoller{
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
-		}
-		finally {
+		} finally {
 			return ret;
 		}
 	}
 
 	@RequestMapping("/saveMessage")
-	public String saveMessage(ModelMap map, SysMessage message) throws Exception{
+	public String saveMessage(ModelMap map, SysMessage message) throws Exception {
 
 		PageBean bean = new PageBean();
 
@@ -77,15 +120,17 @@ public class SysMessageController extends BaseContoller{
 		String messageid = null;
 
 		try {
-			if(StringUtils.isEmpty(message.getId())){
-				messageid = service.saveMessage(message,"insert");
+			if (StringUtils.isEmpty(message.getId())) {
+
+				messageid = service.saveMessage(message, "insert");
+
 				bean.setRetMsg("新增成功");
 				ret = "webpage/poms/message/message_new";
-			}else{
+			} else {
 				ret = "webpage/poms/gastation/gastation_update";
-				messageid = service.saveMessage(message,"update");
+				messageid = service.saveMessage(message, "update");
 				bean.setRetMsg("保存成功");
-				ret = this.queryAllMessageList(map, this.message==null?new SysMessage():this.message);
+				ret = this.queryAllMessageList(map, this.message == null ? new SysMessage() : this.message);
 			}
 
 			bean.setRetCode(100);
@@ -102,14 +147,46 @@ public class SysMessageController extends BaseContoller{
 			map.addAttribute("message", messageid);
 
 			logger.error("", e);
+		} finally {
+			return ret;
 		}
-		finally {
+	}
+
+	@RequestMapping("/saveMessageNew")
+	public String saveMessageNew(ModelMap map, SysMessage message) throws Exception {
+
+		PageBean bean = new PageBean();
+
+		String ret = "webpage/poms/message/messageNEW";
+		String messageid = null;
+		message.setMessageGroup("999");// 指定用户组
+		try {
+
+			messageid = service.saveMessage_New(message);
+			bean.setRetMsg("新增成功");
+			ret = "webpage/poms/message/message_new";
+
+			bean.setRetCode(100);
+
+			bean.setRetValue(messageid);
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("message", messageid);
+
+			logger.error("", e);
+		} finally {
 			return ret;
 		}
 	}
 
 	@RequestMapping("/deleteMessage")
-	public String deleteMessage(ModelMap map, @RequestParam String messageid){
+	public String deleteMessage(ModelMap map, @RequestParam String messageid) {
 
 		PageBean bean = new PageBean();
 
@@ -117,31 +194,29 @@ public class SysMessageController extends BaseContoller{
 		Integer rowcount = null;
 
 		try {
-				if(messageid != null && !"".equals(messageid)){
-					rowcount = service.delMessage(messageid);
-				}
+			if (messageid != null && !"".equals(messageid)) {
+				rowcount = service.delMessage(messageid);
+			}
 
-				ret = this.queryAllMessageList(map, this.message==null?new SysMessage():this.message);
+			ret = this.queryAllMessageList(map, this.message == null ? new SysMessage() : this.message);
 
-				bean.setRetCode(100);
-				bean.setRetMsg("删除成功");
-				bean.setRetValue(rowcount.toString());
-				bean.setPageInfo(ret);
+			bean.setRetCode(100);
+			bean.setRetMsg("删除成功");
+			bean.setRetValue(rowcount.toString());
+			bean.setPageInfo(ret);
 
-				map.addAttribute("ret", bean);
-
+			map.addAttribute("ret", bean);
 
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 
-			ret = this.queryAllMessageList(map, this.message==null?new SysMessage():this.message);
+			ret = this.queryAllMessageList(map, this.message == null ? new SysMessage() : this.message);
 
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
-		}
-		finally {
+		} finally {
 			return ret;
 		}
 	}

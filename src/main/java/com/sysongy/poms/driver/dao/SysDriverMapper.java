@@ -21,6 +21,7 @@ public interface SysDriverMapper {
     int updateByPrimaryKey(SysDriver record);
 
     List<SysDriver> queryForPage(SysDriver record);
+    List<SysDriver> queryForPage1(SysDriver record);
 
     /**
      * 查询司机信息列表，关联公司
@@ -60,4 +61,9 @@ public interface SysDriverMapper {
      * @return
      */
     SysDriver queryMaxIndex(String provinceId);
+    
+    /**
+     * 根據邀請碼查詢用戶  
+     */
+    SysDriver queryByInvitationCode(String invitationCode);
 }
