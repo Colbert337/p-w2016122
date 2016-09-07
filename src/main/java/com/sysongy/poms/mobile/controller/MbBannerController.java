@@ -52,7 +52,7 @@ public class MbBannerController extends BaseContoller {
 	 * @return
 	 */
 	@RequestMapping("/list/page")
-	public String queryMbBannerListPage(MbBanner mbBanner, ModelMap map) throws Exception {
+	public String queryMbBannerListPage(MbBanner mbBanner, ModelMap map,String resultVal) throws Exception {
 
 		this.mbBanner = mbBanner;
 		String ret = "webpage/poms/mobile/banner_list";
@@ -73,10 +73,15 @@ public class MbBannerController extends BaseContoller {
 		PageInfo<MbBanner> pageinfo = new PageInfo<MbBanner>();
 
 		pageinfo = mbBannerService.queryMbBannerListPage(mbBanner);
-
+		if(resultVal!=null && !"".equals(resultVal)){
+			bean.setRetCode(100);
+			bean.setRetMsg("删除成功");
+			bean.setPageInfo(ret);
+		}else{
 		bean.setRetCode(100);
 		bean.setRetMsg("查询成功");
 		bean.setPageInfo(ret);
+		}
 		Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 		String data = (String) prop.get("version");
 		String[] datas = data.split(",");
@@ -183,7 +188,7 @@ public class MbBannerController extends BaseContoller {
 				bean.setRetMsg("新增成功");
 			}
 
-			ret = this.queryMbBannerListPage(this.mbBanner == null ? new MbBanner() : this.mbBanner, map);
+			ret = this.queryMbBannerListPage(this.mbBanner == null ? new MbBanner() : this.mbBanner, map,null);
 
 			bean.setRetCode(100);
 			bean.setPageInfo(ret);

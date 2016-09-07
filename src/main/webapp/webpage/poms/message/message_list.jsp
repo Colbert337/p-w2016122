@@ -29,7 +29,7 @@
 					<div class="search-types">
 						<div class="item">
 						    <label>消息标题:</label>
-							<input type="text" name="messageTitle" placeholder="输入消息标题"  maxlength="10" value="${message.messageTitle}"/>
+							<input type="text" name="messageTitle" placeholder="输入消息标题"  maxlength="32" value="${message.messageTitle}"/>
 						</div>
 
 						<div class="item">

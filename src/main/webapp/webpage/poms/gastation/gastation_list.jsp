@@ -129,9 +129,9 @@
 									<td>${list.indu_com_number}</td>
 									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
 									<td>${list.address}</td> 
-									<td>${list.gas_server}</td> 
-									<td>${list.lng_price}</td> 
-									<td>${list.promotions}</td> 
+									<td><div class="td-inner-warp">${list.gas_server}</div></td> 
+									<td><div class="td-inner-warp">${list.lng_price}</div></td> 
+									<td><div class="td-inner-warp">${list.promotions}</div></td> 
 									<%-- <td>${list.batch_no}</td>  --%>
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
