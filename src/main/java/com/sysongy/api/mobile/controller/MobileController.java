@@ -395,10 +395,20 @@ public class MobileController {
 						resultMap.put("nick",driver.getFullName());
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
-						resultMap.put("isRealNameAuth",GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())?"true":"false");
+						//获取用户审核状态
+						String driverStstus = driver.getCheckedStatus();
+						if("0".equals(driverStstus)){
+							driverStstus = "新注册";
+						}else if("1".equals(driverStstus)){
+							driverStstus = "待审核";
+						}else if("2".equals(driverStstus)){
+							driverStstus = "已通过";
+						}else if("3".equals(driverStstus)){
+							driverStstus = "未通过";
+						}
+						resultMap.put("isRealNameAuth",driverStstus);
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
-
 						resultMap.put("cumulativeReturn",cashBack);
 						if(driver.getAvatarB() == null){
 							resultMap.put("photoUrl","");
@@ -1436,7 +1446,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
 			logger.error("查询头条推广成功： " + resultStr);
 
