@@ -201,7 +201,6 @@ public class MobileController {
 	@RequestMapping(value = {"/user/getVerificationCode"})
 	@ResponseBody
 	public String getVerificationCode(String params) {
-
 		MobileVerification verification = new MobileVerification();
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -284,8 +283,8 @@ public class MobileController {
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
 
-				ShortMessageInfoModel shortMessageInfo = (ShortMessageInfoModel)redisClientImpl.getFromCache(driver.getMobilePhone());
-				if(shortMessageInfo != null) {
+				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
+				if(veCode != null && !"".equals(veCode)) {
 					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
@@ -314,7 +313,7 @@ public class MobileController {
 						String show_path = (String) prop.get("show_images_path")+ "/driver/"+mainObj.optString("phoneNum")+"/"+mainObj.optString("phoneNum")+".jpg";
 						//生成二维码
 						driver.setDriverQrcode(show_path);
-						
+
 						Integer tmp = driverService.saveDriver(driver, "insert");
 						if(tmp > 0){
 							TwoDimensionCode handler = new TwoDimensionCode();
@@ -343,6 +342,7 @@ public class MobileController {
 			result.setMsg("注册失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("注册失败： " + e);
+			e.printStackTrace();
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -373,7 +373,7 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			String http_poms_path =  (String) prop.get("http_poms_path");
 			/**
 			 * 请求接口
 			 */
@@ -397,7 +397,7 @@ public class MobileController {
 						resultMap.put("securityPhone",driver.getMobilePhone());
 						resultMap.put("isRealNameAuth",GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())?"true":"false");
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
-						resultMap.put("QRCodeUrl",driverlist.get(0).getDriverQrcode());
+						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 
 						resultMap.put("cumulativeReturn",cashBack);
 						if(driver.getAvatarB() == null){
@@ -1651,7 +1651,8 @@ public class MobileController {
 					reCharge.put("listMap",reChargeList);
 					
 				}else{
-					reCharge.put("msg","无记录");
+					reCharge.put("totalCash","");
+					reCharge.put("listMap",new ArrayList<>());
 				}
 				result.setData(reCharge);
 			}else{
@@ -1724,7 +1725,7 @@ public class MobileController {
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
-				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
+				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() == 0) {
 
 					for(Map<String, Object> map:pageInfo.getList()){
 						Map<String, Object> reChargeMap = new HashMap<>();
@@ -1757,9 +1758,10 @@ public class MobileController {
 					reCharge.put("totalOut",totalCash);
 					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
-					
 				}else{
-					reCharge.put("msg","无记录");
+					reCharge.put("totalOut","");
+					reCharge.put("totalIn","");
+					reCharge.put("listMap",new ArrayList<>());
 				}
 				result.setData(reCharge);
 			}else{
@@ -1936,8 +1938,8 @@ public class MobileController {
 				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				//获取验证码
 				String codePay = mainObj.optString("veCode");
-				ShortMessageInfoModel shortMessageInfo = (ShortMessageInfoModel)redisClientImpl.getFromCache(sysDriver.getMobilePhone());
-				if(shortMessageInfo != null){
+				String veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+				if(veCode != null && !"".equals(veCode)){
 					String phoneType = mainObj.optString("phoneType");
 					//数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
@@ -2021,8 +2023,8 @@ public class MobileController {
 				SysDriver sysDriver = new SysDriver();
 				//电话号码赋值
 				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
-				ShortMessageInfoModel shortMessageInfo = (ShortMessageInfoModel)redisClientImpl.getFromCache(sysDriver.getMobilePhone());
-				if(shortMessageInfo != null) {
+				String veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+				if(veCode != null && !"".equals(veCode)) {
 					//数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 					if (!driver.isEmpty()) {

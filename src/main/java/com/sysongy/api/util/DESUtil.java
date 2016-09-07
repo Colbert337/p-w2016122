@@ -122,11 +122,11 @@ public class DESUtil {
 
     public static void main(String args[]) throws Exception{
 //        String str = "王冬强";
-        String str = "{\"main\":{\"longitude\":\"13474294206\",\"latitude\":\"688556\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"5\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+        String str = "{\"main\":{\"phoneNum\":\"13474294206\",\"verificationCode\":\"688556\",\"password\":\"96e79218965eb72c92a549dd5a330112\",\"invitationCode\":\"12111111111\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
         String resultStr;
-        resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA56779A8EE272C9539ABB628364D52273FBB415C36726655D47D07B95ED393CB2B6AF88FAF3E7D7DA92C2");
+        resultStr = decode(keyStr,"DE5DCAF1F59506F07B57CB0B4682BDE4E37937690FAD4A12A9C689DF71E915E84BDD1EA2FDF5F3ED88A156AF8C8D548B561467EC7042003A4E1731AE30E41E549BFA0CF93901F2FE8B2804305F108DA69E441E271A5DCF9164BD51E6F43794372E3FBE2763AE21B9");
 //        resultStr = new String(resultStr.getBytes("GB2312"),"ISO-8859-1");
         System.out.println("解密后:"+resultStr);
     }
