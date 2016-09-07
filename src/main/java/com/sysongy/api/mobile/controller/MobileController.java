@@ -397,7 +397,7 @@ public class MobileController {
 						resultMap.put("securityPhone",driver.getMobilePhone());
 						//获取用户审核状态
 						String driverStstus = driver.getCheckedStatus();
-						if("0".equals(driverStstus)){
+						/*if("0".equals(driverStstus)){
 							driverStstus = "未认证";
 						}else if("1".equals(driverStstus)){
 							driverStstus = "审核中";
@@ -405,7 +405,7 @@ public class MobileController {
 							driverStstus = "已认证";
 						}else if("3".equals(driverStstus)){
 							driverStstus = "未通过";
-						}
+						}*/
 						resultMap.put("isRealNameAuth",driverStstus);
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
