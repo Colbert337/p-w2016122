@@ -122,7 +122,7 @@ public class DESUtil {
 
     public static void main(String args[]) throws Exception{
 //        String str = "王冬强";
-        String str = "{\"main\":{\"phoneNum\":\"1222222222\",\"templateType\":\"1\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+        String str = "{\"main\":{\"longitude\":\"107.935106\",\"latitude\":\"34.22836\",\"radius\":\"8000\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"20\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
         String resultStr;

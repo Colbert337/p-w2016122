@@ -30,6 +30,7 @@ import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.api.mobile.tools.wechat.MD5;
 import com.sysongy.api.mobile.tools.wechat.Util;
 import com.sysongy.api.util.DESUtil;
+import com.sysongy.api.util.DistCnvter;
 import com.sysongy.api.util.ParameterUtil;
 import com.sysongy.api.util.ShareCodeUtil;
 import com.sysongy.poms.base.model.DistCity;
@@ -1184,6 +1185,14 @@ public class MobileController {
 					gastation.setPageSize(mainObj.optInt("pageSize"));
 				}
 
+				String longitudeStr = mainObj.optString("longitude");
+				String latitudeStr = mainObj.optString("latitude");
+				String radius = mainObj.optString("radius");
+				Double longitude = new Double(0);
+				Double latitude = new Double(0);
+				Double radiusDb = new Double(0);
+
+
 				//获取气站列表
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
 				PageInfo<Gastation> pageInfo = gastationService.queryGastation(gastation);
@@ -1210,8 +1219,32 @@ public class MobileController {
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
 
-						gastationArray.add(gastationMap);
+						if(longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr) && radius != null && !"".equals(radius)){
+							longitude = new Double(longitudeStr);
+							latitude = new Double(latitudeStr);
+							radiusDb = new Double(radius);
+
+							String longStr = gastationInfo.getLongitude();
+							String langStr = gastationInfo.getLatitude();
+							Double longDb = new Double(0);
+							Double langDb = new Double(0);
+							if(longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)){
+								longDb = new Double(longStr);
+								langDb = new Double(langStr);
+							}
+
+							//计算当前加注站离指定坐标距离
+							Double dist = DistCnvter.getDistance(longitude,latitude,longDb,langDb);
+							if(dist <= radiusDb){//在指定范围内，则返回当前加注站信息
+								gastationArray.add(gastationMap);
+							}
+						}else{//目标坐标及范围半径未传参，则返回所有加注站信息
+							gastationArray.add(gastationMap);
+						}
+
 					}
+
+
 
 					result.setListMap(gastationArray);
 				}
@@ -1222,7 +1255,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
 			logger.error("查询气站信息成功： " + resultStr);
         } catch (Exception e) {
