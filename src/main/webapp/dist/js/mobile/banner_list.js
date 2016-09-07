@@ -100,6 +100,7 @@ function editBanner(imgId) {
 	$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
 		$(this).attr("checked", false);
 	});
+	
 	photoType = 1;
 	phototypeSm = 1;
 	type = 1;
@@ -111,10 +112,11 @@ function editBanner(imgId) {
 		async : false,
 		type : "POST",
 		success : function(data) {
+			
 			$("#mb_banner_id").val(data.mbBannerId);
 			$("#title").val(data.title);
-			$("#img_path").val(data.imgPath);
-			$("#img_sm_path").val(data.imgSmPath);
+			$("#img_path").val(projectName+data.imgPath);
+			$("#img_sm_path").val(projectName+data.imgSmPath);
 			$("#target_url").val(data.targetUrl);
 			$("#sort").val(data.sort);
 			$("#remark").text(data.remark);
@@ -227,10 +229,10 @@ function showInnerModel(obj1, obj2, tr) {
 		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{28})/g,
 				'$1\n');
 	}
-	$("#innerimg1").attr("src", obj1);
-	$("#innerimg1").parent("a").attr("href", obj1);
-	$("#innerimg2").attr("src", obj2);
-	$("#innerimg2").parent("a").attr("href", obj2);
+	$("#innerimg1").attr("src", projectName+obj1);
+	$("#innerimg1").parent("a").attr("href",projectName+ obj1);
+	$("#innerimg2").attr("src",projectName+ obj2);
+	$("#innerimg2").parent("a").attr("href", projectName+obj2);
 	$("#innerModel").modal('show');
 }
 /**
