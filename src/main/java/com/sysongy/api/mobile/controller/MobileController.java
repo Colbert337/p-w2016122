@@ -832,7 +832,8 @@ public class MobileController {
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(mainObj != null && mainObj.optString("driverLicenseImageUrl") != null && !"".equals(mainObj.optString("driverLicenseImageUrl"))
+					&& mainObj.optString("name") != null && !"".equals(mainObj.optString("name"))){
 				SysDriver driver = new SysDriver();
 				String fullName = mainObj.optString("name");
 				driver.setSysDriverId(mainObj.optString("token"));
