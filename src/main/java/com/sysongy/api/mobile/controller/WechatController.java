@@ -226,7 +226,7 @@ public class WechatController {
 				if(driverlist != null && driverlist.size() > 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("该手机号已注册！");
-					throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
+					//throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
 				}else{
 					String sysDriverId = UUIDGenerator.getUUID();
 					driver.setPassword(mainObj.optString("password"));
