@@ -398,11 +398,11 @@ public class MobileController {
 						//获取用户审核状态
 						String driverStstus = driver.getCheckedStatus();
 						if("0".equals(driverStstus)){
-							driverStstus = "新注册";
+							driverStstus = "未认证";
 						}else if("1".equals(driverStstus)){
-							driverStstus = "待审核";
+							driverStstus = "审核中";
 						}else if("2".equals(driverStstus)){
-							driverStstus = "已通过";
+							driverStstus = "已认证";
 						}else if("3".equals(driverStstus)){
 							driverStstus = "未通过";
 						}
