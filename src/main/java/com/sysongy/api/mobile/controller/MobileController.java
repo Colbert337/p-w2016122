@@ -370,10 +370,12 @@ public class MobileController {
 						}
 
 						//获取用户审核状态
-						String driverStstus = driver.getCheckedStatus();
 						driver = driverlist.get(0);
+						String driverStstus = driver.getCheckedStatus();
 						if("2".equals(driverStstus)){
 							resultMap.put("nick",driver.getFullName());
+						}else{
+							resultMap.put("nick","");
 						}
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
@@ -1185,6 +1187,8 @@ public class MobileController {
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
 				String radius = mainObj.optString("radius");
+				String name = mainObj.optString("name");
+				gastation.setGas_station_name(name);
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
 				Double radiusDb = new Double(0);
@@ -1252,7 +1256,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
 			logger.error("查询气站信息成功： " + resultStr);
         } catch (Exception e) {
@@ -2363,7 +2367,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String str ="{\"main\":{\"phoneNum\":\"13474294206\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"5\"}}"; 
+		String str ="{\"main\":{\"name\":\"2\",\"longitude\":\"107.935106\",\"latitude\":\"34.22836\",\"radius\":\"\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"20\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
 		str = DESUtil.encode("sysongys",str);//参数加密
 		System.out.println(str);
 	}
