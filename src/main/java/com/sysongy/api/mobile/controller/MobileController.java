@@ -368,12 +368,15 @@ public class MobileController {
 							cashBack = list.get(0).get("cash_back").toString();
 						}
 
-						driver = driverlist.get(0);
-						resultMap.put("nick",driver.getFullName());
-						resultMap.put("account",driver.getUserName());
-						resultMap.put("securityPhone",driver.getMobilePhone());
 						//获取用户审核状态
 						String driverStstus = driver.getCheckedStatus();
+						driver = driverlist.get(0);
+						if("2".equals(driverStstus)){
+							resultMap.put("nick",driver.getFullName());
+						}
+						resultMap.put("account",driver.getUserName());
+						resultMap.put("securityPhone",driver.getMobilePhone());
+
 						/*if("0".equals(driverStstus)){
 							driverStstus = "未认证";
 						}else if("1".equals(driverStstus)){
