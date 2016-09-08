@@ -77,7 +77,7 @@
                enableSelectByExample="false"
                enableUpdateByExample="false">
         </table>-->
-        <table schema="${jdbc.database}" tableName="sys_road_condition" domainObjectName="SysRoadCondition"
+        <!--<table schema="${jdbc.database}" tableName="sys_road_condition" domainObjectName="SysRoadCondition"
                enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
@@ -88,7 +88,7 @@
                enableDeleteByExample="false"
                enableSelectByExample="false"
                enableUpdateByExample="false">
-        </table>
+        </table>-->
         <!-- <table schema="${jdbc.database}" tableName="course_user_info" domainObjectName="CourseUserInfo"></table>  -->
         
   
