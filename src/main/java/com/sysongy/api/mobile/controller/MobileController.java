@@ -373,6 +373,8 @@ public class MobileController {
 						driver = driverlist.get(0);
 						if("2".equals(driverStstus)){
 							resultMap.put("nick",driver.getFullName());
+						}else{
+							resultMap.put("nick","");
 						}
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
