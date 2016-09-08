@@ -1,36 +1,18 @@
 package com.sysongy.api.mobile.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
-import com.sysongy.api.client.controller.model.ShortMessageInfoModel;
-import com.sysongy.api.mobile.model.base.Data;
-import com.sysongy.api.mobile.model.base.MobileParams;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
-import com.sysongy.api.mobile.model.feedback.MobileFeedBack;
-import com.sysongy.api.mobile.model.loss.MobileLoss;
-import com.sysongy.api.mobile.model.record.MobileRecord;
-import com.sysongy.api.mobile.model.upload.MobileUpload;
-import com.sysongy.api.mobile.model.userinfo.MobileUserInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.service.MbDealOrderService;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
-import com.sysongy.api.mobile.tools.MobileUtils;
 import com.sysongy.api.mobile.tools.ali.OrderInfoUtil2_0;
-import com.sysongy.api.mobile.tools.feedback.MobileFeedBackUtils;
-import com.sysongy.api.mobile.tools.getcitys.GetCitysUtils;
-import com.sysongy.api.mobile.tools.loss.ReportLossUtil;
-import com.sysongy.api.mobile.tools.record.MobileRecordUtils;
 import com.sysongy.api.mobile.tools.register.MobileRegisterUtils;
-import com.sysongy.api.mobile.tools.returncash.ReturnCashUtil;
-import com.sysongy.api.mobile.tools.upload.MobileUploadUtils;
-import com.sysongy.api.mobile.tools.userinfo.MobileGetUserInfoUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.api.mobile.tools.wechat.MD5;
 import com.sysongy.api.mobile.tools.wechat.Util;
 import com.sysongy.api.util.DESUtil;
-import com.sysongy.api.util.ParameterUtil;
+import com.sysongy.api.util.DistCnvter;
 import com.sysongy.api.util.ShareCodeUtil;
 import com.sysongy.poms.base.model.DistCity;
 import com.sysongy.poms.base.model.PageBean;
@@ -41,25 +23,20 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.mobile.model.MbBanner;
-import com.sysongy.poms.mobile.model.Suggest;
 import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
-import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
-import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
-import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.*;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -391,14 +368,29 @@ public class MobileController {
 							cashBack = list.get(0).get("cash_back").toString();
 						}
 
+						//获取用户审核状态
 						driver = driverlist.get(0);
-						resultMap.put("nick",driver.getFullName());
+						String driverStstus = driver.getCheckedStatus();
+						if("2".equals(driverStstus)){
+							resultMap.put("nick",driver.getFullName());
+						}else{
+							resultMap.put("nick","");
+						}
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
-						resultMap.put("isRealNameAuth",GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())?"true":"false");
+
+						/*if("0".equals(driverStstus)){
+							driverStstus = "未认证";
+						}else if("1".equals(driverStstus)){
+							driverStstus = "审核中";
+						}else if("2".equals(driverStstus)){
+							driverStstus = "已认证";
+						}else if("3".equals(driverStstus)){
+							driverStstus = "未通过";
+						}*/
+						resultMap.put("isRealNameAuth",driverStstus);
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
-
 						resultMap.put("cumulativeReturn",cashBack);
 						if(driver.getAvatarB() == null){
 							resultMap.put("photoUrl","");
@@ -821,55 +813,71 @@ public class MobileController {
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(mainObj != null && mainObj.optString("driverLicenseImageUrl") != null && !"".equals(mainObj.optString("driverLicenseImageUrl"))
+					&& mainObj.optString("name") != null && !"".equals(mainObj.optString("name"))){
 				SysDriver driver = new SysDriver();
 				String fullName = mainObj.optString("name");
 				driver.setSysDriverId(mainObj.optString("token"));
 				//获取用户电话
 				List<SysDriver> driverList = driverService.queryeSingleList(driver);
-				driver.setFullName(fullName);
-				driver.setPlateNumber(mainObj.optString("plateNumber"));
-				driver.setFuelType(mainObj.optString("gasType"));
-				if(mainObj.optString("endTime") != null && !"".equals(mainObj.optString("endTime"))){
-					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
-					Date date = sft.parse(mainObj.optString("endTime"));
-					driver.setExpiryDate(date);
-				}
-				driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
-				driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
-				
-				driver.setCheckedStatus(GlobalConstant.DriverCheckedStatus.CERTIFICATING);
-				driver.setIdentityCard(mainObj.optString("idCard"));
-				String encoderContent=driverList.get(0).getMobilePhone()+"_"+fullName;
-				//图片路径
-				String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
-		        File file =new File(rootPath);    
-				//如果根文件夹不存在则创建    
-				if  (!file.exists()  && !file.isDirectory()){       
-				    file.mkdir();    
-				}
-				String path = rootPath+driverList.get(0).getMobilePhone()+"/";
-				File file1 =new File(path);    
-				//如果用户文件夹不存在则创建    
-				if  (!file1.exists()  && !file1.isDirectory()){       
-				    file1.mkdir();    
-				}
-				//二维码路径
-				String imgPath = path+driverList.get(0).getMobilePhone()+".jpg";
-				String show_path = (String) prop.get("show_images_path")+ "/driver/"+driverList.get(0).getMobilePhone()+"/"+driverList.get(0).getMobilePhone()+".jpg";
-				//生成二维码
-				driver.setDriverQrcode(show_path);
-				int resultVal = driverService.saveDriver(driver,"update");
-				if(resultVal <= 0){
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("用户ID为空，申请失败！");
+				if(driverList != null && driverList.size() > 0){
+					driver.setFullName(fullName);
+					driver.setPlateNumber(mainObj.optString("plateNumber"));
+					driver.setFuelType(mainObj.optString("gasType"));
+					if(mainObj.optString("endTime") != null && !"".equals(mainObj.optString("endTime"))){
+						SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
+						Date date = sft.parse(mainObj.optString("endTime"));
+						driver.setExpiryDate(date);
+					}
+					driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
+					driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
+
+					driver.setCheckedStatus(GlobalConstant.DriverCheckedStatus.CERTIFICATING);
+					driver.setIdentityCard(mainObj.optString("idCard"));
+					String encoderContent=driverList.get(0).getMobilePhone()+"_"+fullName;
+					//图片路径
+					String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+					File file =new File(rootPath);
+					//如果根文件夹不存在则创建
+					if  (!file.exists()  && !file.isDirectory()){
+						file.mkdir();
+					}
+					String path = rootPath+driverList.get(0).getMobilePhone()+"/";
+					File file1 =new File(path);
+					//如果用户文件夹不存在则创建
+					if  (!file1.exists()  && !file1.isDirectory()){
+						file1.mkdir();
+					}
+					//二维码路径
+					String imgPath = path+driverList.get(0).getMobilePhone()+".jpg";
+					String show_path = (String) prop.get("show_images_path")+ "/driver/"+driverList.get(0).getMobilePhone()+"/"+driverList.get(0).getMobilePhone()+".jpg";
+					//生成二维码
+					driver.setDriverQrcode(show_path);
+					int resultVal = driverService.saveDriver(driver,"update");
+					if(resultVal <= 0){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("用户ID为空，申请失败！");
+					}else{
+						TwoDimensionCode handler = new TwoDimensionCode();
+						handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+					}
 				}else{
-					TwoDimensionCode handler = new TwoDimensionCode();
-					handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("当前用户不存在！");
+					resutObj = JSONObject.fromObject(result);
+					resutObj.remove("listMap");
+					resultStr = resutObj.toString();
+					resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+					return resultStr;
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
+				resutObj = JSONObject.fromObject(result);
+				resutObj.remove("listMap");
+				resultStr = resutObj.toString();
+				resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+				return resultStr;
 			}
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
@@ -881,6 +889,7 @@ public class MobileController {
 			result.setMsg("申请失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("申请失败： " + e);
+			e.printStackTrace();
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -1174,6 +1183,16 @@ public class MobileController {
 					gastation.setPageSize(mainObj.optInt("pageSize"));
 				}
 
+				String longitudeStr = mainObj.optString("longitude");
+				String latitudeStr = mainObj.optString("latitude");
+				String radius = mainObj.optString("radius");
+				String name = mainObj.optString("name");
+				gastation.setGas_station_name(name);
+				Double longitude = new Double(0);
+				Double latitude = new Double(0);
+				Double radiusDb = new Double(0);
+
+
 				//获取气站列表
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
 				PageInfo<Gastation> pageInfo = gastationService.queryGastation(gastation);
@@ -1200,8 +1219,32 @@ public class MobileController {
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
 
-						gastationArray.add(gastationMap);
+						if(longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr) && radius != null && !"".equals(radius)){
+							longitude = new Double(longitudeStr);
+							latitude = new Double(latitudeStr);
+							radiusDb = new Double(radius);
+
+							String longStr = gastationInfo.getLongitude();
+							String langStr = gastationInfo.getLatitude();
+							Double longDb = new Double(0);
+							Double langDb = new Double(0);
+							if(longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)){
+								longDb = new Double(longStr);
+								langDb = new Double(langStr);
+							}
+
+							//计算当前加注站离指定坐标距离
+							Double dist = DistCnvter.getDistance(longitude,latitude,longDb,langDb);
+							if(dist <= radiusDb){//在指定范围内，则返回当前加注站信息
+								gastationArray.add(gastationMap);
+							}
+						}else{//目标坐标及范围半径未传参，则返回所有加注站信息
+							gastationArray.add(gastationMap);
+						}
+
 					}
+
+
 
 					result.setListMap(gastationArray);
 				}
@@ -1436,7 +1479,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 
 			logger.error("查询头条推广成功： " + resultStr);
 
@@ -2323,7 +2366,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String str ="{\"main\":{\"phoneNum\":\"13474294206\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"5\"}}"; 
+		String str ="{\"main\":{\"name\":\"2\",\"longitude\":\"107.935106\",\"latitude\":\"34.22836\",\"radius\":\"\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"20\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
 		str = DESUtil.encode("sysongys",str);//参数加密
 		System.out.println(str);
 	}

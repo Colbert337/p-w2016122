@@ -226,7 +226,7 @@ public class WechatController {
 				if(driverlist != null && driverlist.size() > 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("该手机号已注册！");
-					throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
+					//throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
 				}else{
 					String sysDriverId = UUIDGenerator.getUUID();
 					driver.setPassword(mainObj.optString("password"));
@@ -336,7 +336,7 @@ public class WechatController {
 				String sysDriverId = mainObj.optString("phoneNum");
 				if(sysDriverId != null && !sysDriverId.equals("")){
 					Map<String, Object> resultMap = new HashMap<>();
-					driver.setSysDriverId(sysDriverId);
+					driver.setUserName(sysDriverId);
 					List<SysDriver> driverlist = driverService.queryForPageList(driver);
 					if(driverlist != null && driverlist.size() > 0){
 						List<Map<String, Object>> list = orderService.calcDriverCashBack(sysDriverId);
@@ -382,10 +382,14 @@ public class WechatController {
 						resultMap.put("isPayCode",(driver.getPayCode() == null || "".equals(driver.getPayCode())) ? "false":"true");
 						
 						result.setData(resultMap);
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("该用户尚未注册");
+						result.setData(null);
 					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("登录失败！");
+					result.setMsg("查询失败！");
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -434,13 +438,13 @@ public class WechatController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
-				String mobile = mainObj.optString("mobile");
+				String mobile = mainObj.optString("phoneNum");
 				if(mobile != null && !"".equals(mobile)){
 					//查询当前token是否注册
 					SysDriver driver = new SysDriver();
 					driver.setUserName(mobile);
 					List<SysDriver>  sysDriver = driverService.queryeSingleList(driver);
-					if(sysDriver !=null){
+					if(sysDriver !=null && sysDriver.size() > 0){
 						//新用户订单对象
 						SysOrder driverOrder = new SysOrder();
 						String driverOrderID = UUIDGenerator.getUUID();//新用户订单ID
@@ -457,9 +461,13 @@ public class WechatController {
 						driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
 						driverOrder.setOrderStatus(0);//订单初始化
 						orderService.chargeToDriver(driverOrder);
+						dataMap.put("resultVal","true");
+						result.setData(dataMap);
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("该用户尚未注册");
+						result.setData(null);
 					}
-					dataMap.put("resultVal","true");
-					result.setData(dataMap);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("充值失败！");

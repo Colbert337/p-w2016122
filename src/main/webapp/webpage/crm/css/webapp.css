@@ -82,6 +82,10 @@ textarea { overflow: auto; }
 	line-height: 2em;
 	background-color: #fff;
 }
+.activ-detail-bd img {
+	display: block;
+	max-width: 100%;
+}
 .user-agreement-hd {
 	text-align: center;
 	font-weight: bold;

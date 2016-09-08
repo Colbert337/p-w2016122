@@ -53,8 +53,8 @@
     <if test="remark != null" >
       and remark = #{remark,jdbcType=VARCHAR}
     </if>
-    <if test="cityId != null" >
-      and city_id = #{cityId,jdbcType=INTEGER}
+    <if test="cityId != null &amp;&amp; cityId != ''" >
+      and city_id LIKE CONCAT(CONCAT('%',  #{cityId,jdbcType=VARCHAR}), '%')
     </if>
     <if test="createdDate != null" >
       and created_date = #{createdDate,jdbcType=TIMESTAMP}
