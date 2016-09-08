@@ -2050,7 +2050,6 @@ public class MobileController {
 		result.setMsg("重置支付密码成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
-		String initialPassword = "12345678";
 		try {
 			/**
 			 * 解析参数
@@ -2071,6 +2070,7 @@ public class MobileController {
 					//数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 					if (!driver.isEmpty()) {
+						String initialPassword = mainObj.optString("newPassword");
 						//初始密码加密、赋值
 						initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
 						sysDriver.setPayCode(initialPassword);
@@ -2160,6 +2160,54 @@ public class MobileController {
 			return resultStr;
 		}
 	}
+	
+	/**
+	 * 上报路况
+	 */
+	@RequestMapping(value = "/road/reportRoadInfo")
+	@ResponseBody
+	public String reportRoadInfo(String params){
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 请求接口
+			 */
+			List<SysCashBack> list = sysCashBackService.queryMaxCashBack();
+			Map<String, Object> dataMap = new HashMap<>();
+			for(int i=0;i<list.size();i++){
+				if(list.get(i).getSys_cash_back_no().equals("101")){
+					dataMap.put("alipay",list.get(i).getCash_per());
+				}else{
+					dataMap.put("wechat",list.get(i).getCash_per());
+				}
+			}
+			result.setData(dataMap);
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("查询成功： " + resultStr);
+//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("查询失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("查询失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	
+	
+	
+	
 
 	private String genPayReq(Map<String, String> resultunifiedorder ) {
 
