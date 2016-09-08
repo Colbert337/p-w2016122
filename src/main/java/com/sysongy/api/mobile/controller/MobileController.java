@@ -369,10 +369,12 @@ public class MobileController {
 						}
 
 						//获取用户审核状态
-						String driverStstus = driver.getCheckedStatus();
 						driver = driverlist.get(0);
+						String driverStstus = driver.getCheckedStatus();
 						if("2".equals(driverStstus)){
 							resultMap.put("nick",driver.getFullName());
+						}else{
+							resultMap.put("nick","");
 						}
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
