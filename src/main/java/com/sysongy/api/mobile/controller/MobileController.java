@@ -1253,7 +1253,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 
 			logger.error("查询气站信息成功： " + resultStr);
         } catch (Exception e) {
