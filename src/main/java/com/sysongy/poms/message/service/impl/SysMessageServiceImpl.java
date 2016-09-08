@@ -1,8 +1,11 @@
 package com.sysongy.poms.message.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
+import javax.mail.search.MessageIDTerm;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,7 +95,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 			params.setDevice_tokens(token[i]);
 			int status = umeng.sendAndroidUnicast(params);
 			if (status != 200) {
-				throw new Exception("Umeng信息发送异常，请检查");
+				throw new Exception("Umeng信息发送异常，请检查,code:" + status);
 			}
 		}
 		return String.valueOf(messageMapper.insert(obj));
@@ -119,6 +122,27 @@ public class SysMessageServiceImpl implements SysMessageService {
 		List<SysDriver> list = driverMapper.queryForPage1(message);
 		PageInfo<SysDriver> page = new PageInfo<>(list);
 		return page;
+	}
+
+	@Override
+	public PageInfo<SysDriver> queryDriver2(SysMessage message) throws Exception {
+		// TODO Auto-generated method stub
+		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
+		SysMessage mes = queryMessageByPK(message.getId());
+		if (mes.getDriver_name() != null) {
+			List<String> str=new ArrayList<>();
+			String mesId[] = mes.getDriver_name().split(",");
+			
+			for (int i = 0; i < mesId.length; i++) {
+				str.add(mesId[i]);
+			}
+			 
+
+			List<SysDriver> list = driverMapper.queryForPage2(str);
+			PageInfo<SysDriver> page = new PageInfo<>(list);
+			return page;
+		}
+		return null;
 	}
 
 }

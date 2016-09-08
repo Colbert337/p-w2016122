@@ -41,7 +41,13 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 		
 		$("#formessage").ajaxSubmit(listOptions);
 	}
-	
+	function closeDialog(obj){
+		$("#" + obj).modal('hide').removeClass('in');
+		$("body").removeClass('modal-open').removeAttr('style');
+		$(".modal-backdrop").remove();
+//		init();
+		
+	}
 	function init(){
 		loadPage('#main', '../web/message/messageList');
 	}
@@ -55,4 +61,10 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 //				$("#main").html(data);
 //			}
 //		})
+	}
+	
+	function showUser(id){
+ 
+		 loadPage('#content', '../web/message/showUser?id='+id);
+			$("#editModel").modal('show');
 	}

@@ -8,8 +8,8 @@ public class SysMessage extends BaseModel {
 
 	private String id;
 
-	private String device_token; 
-	
+	private String device_token;
+
 	public String getDevice_token() {
 		return device_token;
 	}
@@ -18,7 +18,16 @@ public class SysMessage extends BaseModel {
 		this.device_token = device_token;
 	}
 
+	private String driver_name;
 	private String messageTitle;
+
+	public String getDriver_name() {
+		return driver_name;
+	}
+
+	public void setDriver_name(String driver_name) {
+		this.driver_name = driver_name;
+	}
 
 	private String messageBody;
 
@@ -39,7 +48,7 @@ public class SysMessage extends BaseModel {
 	private String operator;
 
 	private String memo;
-	
+
 	private String content;
 
 	public String getContent() {

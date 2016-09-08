@@ -9,29 +9,20 @@
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path;
 %>
-<script src="<%=basePath %>/dist/js/message/dirverList.js"></script>
+
 <form id="formgastation">
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 	<div class="row">
-		<div class="item">
-			<label>手机号码:</label> <input type="text" name="mobilePhone"
-				placeholder="手机号码" maxlength="10" value="${message.mobilePhone}" />
-			<label>姓名:</label> <input type="text" name="fullName"
-				placeholder="姓名" maxlength="10" value="${message.fullName}" />
-			<button class="btn btn-sm btn-primary" type="button"
-				onclick="scher();">
-				<i class="ace-icon fa fa-flask align-top bigger-125"></i> 查询
-			</button>
-		</div>
+	 
 		<div class="sjny-table-responsive">
 			<table id="dynamic-table"
 				class="table table-striped table-bordered table-hover col-sm-10">
 				<thead>
 					<tr>
-					<%-- 	<th class="center td-w1"><label class="pos-rel"> <!-- <input
+						<th class="center td-w1"><label class="pos-rel"> <!-- <input
 								type="checkbox" class="ace" onclick="checkedAllRows(this);" /> -->
 								<span class="lbl"></span>
-						</label></th> --%>
+						</label></th>
 						<th onclick="orderBy(this,'sys_driver_id');commitForm();"
 							id="sys_driver_id_order">账号</th>
 						<th onclick="orderBy(this,'full_name');commitForm();"
@@ -53,11 +44,11 @@
 
 					<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 						<tr id="${list.sysDriverId }">
-							<%-- <td class="center"><label class="pos-rel"> <input
+							<td class="center"><label class="pos-rel"> <input
 									type="checkbox" class="ace checkbox"
 									onchange="checkchange(this)" value1="${list.userName}" value="${list.deviceToken}"  id="${list.deviceToken}" /> <span
 									class="lbl"></span>
-							</label></td> --%>
+							</label></td>
 							<td>${list.userName}</td>
 							<td>${list.fullName}</td>
 							<%-- 		<td><img width="150" height="150" alt="150x150"
@@ -101,6 +92,51 @@
 	</div>
 	<jsp:include page="/common/message.jsp"></jsp:include>
 </form>
+<script type="text/javascript">
 
+var listOptions = {
+	url : '../web/message/showUser?id=${message.id}',
+	type : 'post',
+	dataType : 'html',
+	success : function(data) {
+		// console.log("这里分页之后");
+		$("#content").html(data);
+		
+		$("#editModel").modal('show');
+		if ($("#retCode").val() != "100") {
+
+		}
+		$('[data-rel="tooltip"]').tooltip();
+	},
+	error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+	}
+}
+function scher() {
+	$("#formgastation").ajaxSubmit(listOptions);
+}
+
+function commitForm(obj) {
+	// 设置当前页的值
+	if (typeof obj == "undefined") {
+		$("#pageNum").val("1");
+	} else {
+		$("#pageNum").val($(obj).text());
+	}
+
+	$("#formgastation").ajaxSubmit(listOptions);
+}
+function oncheck() {
+	if (device_token != '') {
+		var token = device_token.split(',')
+		for (var i = 0; i < token.length; i++) {
+			eval('$("#' + token[i] + '").prop("checked", true);')
+		}
+	}
+}
+
+window.onload = setCurrentPage();
+
+</script>
 
 

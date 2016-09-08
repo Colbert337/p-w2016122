@@ -3,7 +3,6 @@ package com.sysongy.poms.driver.dao;
 import java.util.List;
 
 import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.tcms.advance.model.TcFleet;
 
 public interface SysDriverMapper {
     int deleteByPrimaryKey(String sysDriverId);
@@ -66,4 +65,6 @@ public interface SysDriverMapper {
      * 根據邀請碼查詢用戶  
      */
     SysDriver queryByInvitationCode(String invitationCode);
+
+	List<SysDriver> queryForPage2(List list);
 }

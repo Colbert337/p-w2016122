@@ -118,7 +118,7 @@
 							<div class="col-sm-8">
 								<div class="widget-box">
 									<div class="widget-header">
-										<h4 class="widget-title">图片上传</h4>
+										<h4 class="widget-title">图片上传 <font size="2" color="red" >图片比例：16:9，图片大小100k以内</font></h4>
 									</div>
 									<div class="widget-body">
 										<div class="widget-main">
@@ -143,7 +143,7 @@
 							<div class="col-sm-8">
 								<div class="widget-box">
 									<div class="widget-header">
-										<h4 class="widget-title">图片上传</h4>
+										<h4 class="widget-title">图片上传<font size="2" color="red" >图片比例：1:1，图片大小50k以内</font></h4>
 									</div>
 									<div class="widget-body">
 										<div class="widget-main">
@@ -394,12 +394,21 @@
 			return;
 		}
 		if ("#img_path" == obj1) {
+			if($(obj)[0].files[0].size/1024>100){
+				bootbox.alert("图片大小过大，请重新上传");
+				return;
+			}
 			photoType = 1;
 		}
 		if ("#img_sm_path" == obj1) {
+			if($(obj)[0].files[0].size/1024>50){
+				bootbox.alert("图片大小过大，请重新上传");
+				return;
+			}
 			phototypeSm = 1;
 		}
-
+		
+console.log('savePhoto');
 		var stationId = "mobile";
 		var multipartOptions = {
 			url : '../crmInterface/crmBaseService/web/upload?stationid='

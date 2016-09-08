@@ -113,6 +113,13 @@
 									<td><fmt:formatDate value="${list.messageSendTime}" type="both"/></td>
 									<td><fmt:formatDate value="${list.messageCreatedTime}" type="both"/></td>
 									<td class="text-center">
+										<c:if test="${list.messageGroup=='999'}">
+											<a class="option-btn-m" href="javascript:void(0);"
+												title="查看发送用户" data-rel="tooltip"> <i
+													class="ace-icon fa fa-search-plus bigger-130"
+													onclick="showUser('${list.id}');"></i>
+											</a> 
+											</c:if>
 										<a class="logic-del" href="javascript:void(0);" title="删除" data-rel="tooltip">
 											<i class="ace-icon fa fa-trash-o bigger-130" onclick="del(this);"></i>
 										</a>
@@ -239,4 +246,37 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div id="editModel" class="modal fade" role="dialog"
+	aria-labelledby="gridSystemModalLabel" data-backdrop="static"
+	tabindex="-1">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="editBanner">查看用户列表</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid" id="content">
+					<%--两行表单 开始--%>
+					
+					<!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="closeDialog('editModel')">确
+					定</button>
+				<!-- <button class="btn btn-sm" i="close"
+					onclick="closeDialog('editModel')">取 消</button> -->
+			</div>
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 </div>

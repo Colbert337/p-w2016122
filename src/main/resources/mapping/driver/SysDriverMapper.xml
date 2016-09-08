@@ -143,6 +143,14 @@
     </trim>
   </select>
   
+  <select id="queryForPage2" resultMap="BaseResultMap" parameterType="java.util.ArrayList" >
+    select
+     *
+    from sys_driver
+    where 1=1 and user_name IN <foreach collection="list" item="item" index="index" 
+open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
+  </select>
+  
   <select id="queryForPageList" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select sd.*,st.transportion_name,sgs.gas_station_name from sys_driver sd left join sys_transportion st on sd.station_id = st.sys_transportion_id
     left join sys_gas_station sgs on sd.station_id = sgs.sys_gas_station_id
