@@ -67,4 +67,6 @@ public interface SysDriverMapper {
     SysDriver queryByInvitationCode(String invitationCode);
 
 	List<SysDriver> queryForPage2(List list);
+
+	SysDriver queryByUserNameAndPassword(SysDriver record);
 }
