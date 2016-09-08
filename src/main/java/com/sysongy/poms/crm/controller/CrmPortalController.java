@@ -1,6 +1,7 @@
 package com.sysongy.poms.crm.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.crm.model.CrmHelp;
 import com.sysongy.poms.crm.model.CrmHelpType;
 import com.sysongy.poms.crm.service.CrmHelpService;
@@ -10,6 +11,8 @@ import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.poms.page.model.SysStaticPage;
+import com.sysongy.poms.page.service.SysStaticPageService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.util.Encoder;
@@ -51,6 +54,8 @@ public class CrmPortalController {
     MbBannerService mbBannerService;
     @Autowired
     SysCashBackService sysCashBackService;
+    @Autowired
+    SysStaticPageService service;
 
     /**
      * 问题列表和分类查询
@@ -195,4 +200,29 @@ public class CrmPortalController {
 
         return "/webpage/crm/webapp-bonus-rules";
     }
+
+    @RequestMapping("/showPage")
+    public String showPage(ModelMap map, @RequestParam String pageid) throws Exception{
+        PageBean bean = new PageBean();
+        String ret = "webpage/poms/page/page";
+
+        try {
+            SysStaticPage page = service.queryPageByPK(pageid);
+            bean.setRetCode(100);
+            bean.setRetValue(pageid);
+            bean.setPageInfo(ret);
+            map.addAttribute("page", page);
+            map.addAttribute("ret", bean);
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+            map.addAttribute("ret", bean);
+            map.addAttribute("message", pageid);
+            e.printStackTrace();
+        }
+        finally {
+            return ret;
+        }
+    }
+
 }

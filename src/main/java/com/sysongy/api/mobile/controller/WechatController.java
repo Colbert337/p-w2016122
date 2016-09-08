@@ -333,7 +333,7 @@ public class WechatController {
 			 */
 			if(mainObj != null){
 				SysDriver driver = new SysDriver();
-				String sysDriverId = mainObj.optString("token");
+				String sysDriverId = mainObj.optString("phoneNum");
 				if(sysDriverId != null && !sysDriverId.equals("")){
 					Map<String, Object> resultMap = new HashMap<>();
 					driver.setSysDriverId(sysDriverId);

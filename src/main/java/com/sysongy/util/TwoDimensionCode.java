@@ -21,8 +21,8 @@ import com.swetake.util.Qrcode;
 
 public class TwoDimensionCode {
 
-	private static String imgType = "png";//二维码图片格式
-	private static int size = 7;//二维码尺寸
+	public static String imgType = "png";//二维码图片格式
+	public static int size = 7;//二维码尺寸
 	private String codeType = "utf-8";
 	
 	//设置二维码中间图片的宽高
