@@ -815,49 +815,64 @@ public class MobileController {
 				driver.setSysDriverId(mainObj.optString("token"));
 				//获取用户电话
 				List<SysDriver> driverList = driverService.queryeSingleList(driver);
-				driver.setFullName(fullName);
-				driver.setPlateNumber(mainObj.optString("plateNumber"));
-				driver.setFuelType(mainObj.optString("gasType"));
-				if(mainObj.optString("endTime") != null && !"".equals(mainObj.optString("endTime"))){
-					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
-					Date date = sft.parse(mainObj.optString("endTime"));
-					driver.setExpiryDate(date);
-				}
-				driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
-				driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
-				
-				driver.setCheckedStatus(GlobalConstant.DriverCheckedStatus.CERTIFICATING);
-				driver.setIdentityCard(mainObj.optString("idCard"));
-				String encoderContent=driverList.get(0).getMobilePhone()+"_"+fullName;
-				//图片路径
-				String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
-		        File file =new File(rootPath);    
-				//如果根文件夹不存在则创建    
-				if  (!file.exists()  && !file.isDirectory()){       
-				    file.mkdir();    
-				}
-				String path = rootPath+driverList.get(0).getMobilePhone()+"/";
-				File file1 =new File(path);    
-				//如果用户文件夹不存在则创建    
-				if  (!file1.exists()  && !file1.isDirectory()){       
-				    file1.mkdir();    
-				}
-				//二维码路径
-				String imgPath = path+driverList.get(0).getMobilePhone()+".jpg";
-				String show_path = (String) prop.get("show_images_path")+ "/driver/"+driverList.get(0).getMobilePhone()+"/"+driverList.get(0).getMobilePhone()+".jpg";
-				//生成二维码
-				driver.setDriverQrcode(show_path);
-				int resultVal = driverService.saveDriver(driver,"update");
-				if(resultVal <= 0){
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("用户ID为空，申请失败！");
+				if(driverList != null && driverList.size() > 0){
+					driver.setFullName(fullName);
+					driver.setPlateNumber(mainObj.optString("plateNumber"));
+					driver.setFuelType(mainObj.optString("gasType"));
+					if(mainObj.optString("endTime") != null && !"".equals(mainObj.optString("endTime"))){
+						SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
+						Date date = sft.parse(mainObj.optString("endTime"));
+						driver.setExpiryDate(date);
+					}
+					driver.setDrivingLice(mainObj.optString("drivingLicenseImageUrl"));
+					driver.setVehicleLice(mainObj.optString("driverLicenseImageUrl"));
+
+					driver.setCheckedStatus(GlobalConstant.DriverCheckedStatus.CERTIFICATING);
+					driver.setIdentityCard(mainObj.optString("idCard"));
+					String encoderContent=driverList.get(0).getMobilePhone()+"_"+fullName;
+					//图片路径
+					String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+					File file =new File(rootPath);
+					//如果根文件夹不存在则创建
+					if  (!file.exists()  && !file.isDirectory()){
+						file.mkdir();
+					}
+					String path = rootPath+driverList.get(0).getMobilePhone()+"/";
+					File file1 =new File(path);
+					//如果用户文件夹不存在则创建
+					if  (!file1.exists()  && !file1.isDirectory()){
+						file1.mkdir();
+					}
+					//二维码路径
+					String imgPath = path+driverList.get(0).getMobilePhone()+".jpg";
+					String show_path = (String) prop.get("show_images_path")+ "/driver/"+driverList.get(0).getMobilePhone()+"/"+driverList.get(0).getMobilePhone()+".jpg";
+					//生成二维码
+					driver.setDriverQrcode(show_path);
+					int resultVal = driverService.saveDriver(driver,"update");
+					if(resultVal <= 0){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("用户ID为空，申请失败！");
+					}else{
+						TwoDimensionCode handler = new TwoDimensionCode();
+						handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+					}
 				}else{
-					TwoDimensionCode handler = new TwoDimensionCode();
-					handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("当前用户不存在！");
+					resutObj = JSONObject.fromObject(result);
+					resutObj.remove("listMap");
+					resultStr = resutObj.toString();
+					resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+					return resultStr;
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
+				resutObj = JSONObject.fromObject(result);
+				resutObj.remove("listMap");
+				resultStr = resutObj.toString();
+				resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+				return resultStr;
 			}
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
@@ -869,6 +884,7 @@ public class MobileController {
 			result.setMsg("申请失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("申请失败： " + e);
+			e.printStackTrace();
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
