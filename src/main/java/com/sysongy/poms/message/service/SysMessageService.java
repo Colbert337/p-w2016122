@@ -20,4 +20,6 @@ public interface SysMessageService {
 
 	String saveMessage_New(SysMessage obj) throws Exception;
 
+	PageInfo<SysDriver> queryDriver2(SysMessage message) throws Exception;
+
 }

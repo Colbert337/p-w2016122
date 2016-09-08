@@ -24,7 +24,8 @@ function scher() {
 function checkchange(obj) {
 	console.log('check');
 	if ($(obj).is(':checked')) {
-		device_token += $(obj).val() + ","
+		device_token += $(obj).val() + ",";
+		driver_name+=$(obj).attr('value1')+',';
 	} else {
 		if (device_token.indexOf($(obj).val() + ',') != -1) {
 			device_token = device_token.substring(0, device_token
@@ -33,6 +34,14 @@ function checkchange(obj) {
 							+ ',')
 							+ $(obj).val().length + 1, device_token.length);
 		}
+		if (driver_name.indexOf($(obj).val() + ',') != -1) {
+			driver_name = driver_name.substring(0, driver_name
+					.indexOf($(obj).val()))
+					+ driver_name.substring(driver_name.indexOf($(obj).val()
+							+ ',')
+							+ $(obj).val().length + 1, driver_name.length);
+		}
+		
 
 	}
 	// alert(device_token);

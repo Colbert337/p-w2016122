@@ -24,7 +24,7 @@ public class SysMessageController extends BaseContoller {
 	private SysMessage message;
 
 	/**
-	 * 加气站查询
+	 * 加载司机列表
 	 * 
 	 * @param map
 	 * @param gascard
@@ -65,7 +65,47 @@ public class SysMessageController extends BaseContoller {
 			return ret;
 		}
 	}
+	/**
+	 * 查询已发生信息的司机
+	 * @param map
+	 * @param driver
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/showUser")
+	public String showUser(ModelMap map, SysMessage message) throws Exception {
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/message/dirverList2";
+		message.setPageSize(10);
+		try {
+			if (message.getPageNum() == null) {
+				message.setPageNum(1);
 
+			}
+			if (StringUtils.isEmpty(message.getOrderby())) {
+				message.setOrderby("message_created_time desc");
+			}
+
+			PageInfo<SysDriver> pageinfo = service.queryDriver2(message);
+
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("message", message);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		} finally {
+			return ret;
+		}
+	}
 	/**
 	 * 加气站查询
 	 * 

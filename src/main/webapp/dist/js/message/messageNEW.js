@@ -43,7 +43,8 @@
 	            url:'../web/message/saveMessageNew',   
 	            type:'post',
 	            data:{
-	            	device_token:device_token
+	            	device_token:device_token,
+	            	driver_name:driver_name
 	            },
 	            dataType:'text',
 	            success:function(data){
@@ -62,6 +63,7 @@
 		
 	}
 	var device_token = '';
+	var driver_name = '';
 	function addUser(){
 		
 	
