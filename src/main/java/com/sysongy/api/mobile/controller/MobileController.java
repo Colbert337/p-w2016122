@@ -909,7 +909,7 @@ public class MobileController {
 	public String getParamList(String params){
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询返现规则成功！");
+		result.setMsg("查询成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 
@@ -943,9 +943,9 @@ public class MobileController {
 
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询列表失败！");
+			result.setMsg("查询失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询列表失败： " + e);
+			logger.error("查询失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -1028,7 +1028,7 @@ public class MobileController {
     @ResponseBody
     public String reportTheLoss(String params){
 		MobileReturn result = new MobileReturn();
-		String failStr = "参数有误";
+		String failStr = "操作成功！";
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
@@ -1050,7 +1050,11 @@ public class MobileController {
 				/*String cardId = mainObj.optString("cardId");*/
 				int retvale = 0;//操作影响行数
 				if(lossType != null){//类型等于0 或者等于1
-					retvale = sysUserAccountService.changeStatus(driver.getAccount().getSysUserAccountId(), lossType, driver.getCardInfo().getCard_no());
+					String cardNo = "";
+					if(driver.getCardInfo() != null){
+						cardNo = driver.getCardInfo().getCard_no();
+					}
+					retvale = sysUserAccountService.changeStatus(driver.getAccount().getSysUserAccountId(), lossType, cardNo);
 				}
 
 				if(retvale >0 ){
@@ -1074,9 +1078,10 @@ public class MobileController {
 			logger.error(failStr+"成功： " + resultStr);
         } catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg(failStr+"失败！");
+			result.setMsg("操作失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error(failStr+"失败！" + e);
+			logger.error("操作失败！" + e);
+			e.printStackTrace();
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
