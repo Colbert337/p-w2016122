@@ -1202,9 +1202,11 @@ public class MobileController {
 						Map<String, Object> gastationMap = new HashMap<>();
 						gastationMap.put("stationId",gastationInfo.getSys_gas_station_id());
 						gastationMap.put("name",gastationInfo.getGas_station_name());
+						gastationMap.put("type",gastationInfo.getType());
 						gastationMap.put("longitude",gastationInfo.getLongitude());
 						gastationMap.put("latitude",gastationInfo.getLatitude());
-						gastationMap.put("service","");
+						gastationMap.put("service",gastationInfo.getGas_server());//提供服务
+						gastationMap.put("preferential",gastationInfo.getPromotions());//优惠活动
 						//获取当前气站价格列表
 						List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
 						gastationMap.put("priceList",priceList);
