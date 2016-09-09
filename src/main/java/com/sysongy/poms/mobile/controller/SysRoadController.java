@@ -1,8 +1,9 @@
 package com.sysongy.poms.mobile.controller;
 
-import com.sysongy.poms.base.controller.BaseContoller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.sysongy.poms.base.controller.BaseContoller;
 
 /**
  * @FileName: SysRoadController
