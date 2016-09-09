@@ -1267,12 +1267,12 @@ public class MobileController {
 						}else{//目标坐标及范围半径未传参，则返回所有加注站信息
 							gastationArray.add(gastationMap);
 						}
-
 					}
-
-
-
 					result.setListMap(gastationArray);
+				}else{
+					result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+					result.setMsg("暂无数据！");
+					result.setListMap(new ArrayList<Map<String, Object>>());
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2408,7 +2408,6 @@ public class MobileController {
 				roadCondition.setPublisherName(mainObj.optString("publisherName"));
 				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
 				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
-				System.out.println(roadCondition.getConditionStatus());
 				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
 				if (tmp > 0) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -2648,7 +2647,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String str ="{\"main\":{\"name\":\"2\",\"longitude\":\"107.935106\",\"latitude\":\"34.22836\",\"radius\":\"\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"20\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		String str ="{\"main\":{\"name\":\"3\",\"longitude\":\"108.8827\",\"latitude\":\"34.185835\",\"radius\":\"2000000\",\"infoType\":\"\",\"pageNum\":\"0\",\"pageSize\":\"20\"},\"extend\":{\"version\":2,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
 		str = DESUtil.encode("sysongys",str);//参数加密
 		System.out.println(str);
 	}
