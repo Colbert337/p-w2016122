@@ -400,19 +400,20 @@ public class MobileController {
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
 
-						/*if("0".equals(driverStstus)){
-							driverStstus = "未认证";
+						if("0".equals(driverStstus)){
+							driverStstus = "0";
 						}else if("1".equals(driverStstus)){
-							driverStstus = "审核中";
+							driverStstus = "1";
 						}else if("2".equals(driverStstus)){
-							driverStstus = "已认证";
+							driverStstus = "2";
 						}else if("3".equals(driverStstus)){
-							driverStstus = "未通过";
-						}*/
+							driverStstus = "3";
+						}
 						resultMap.put("isRealNameAuth",driverStstus);
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn",cashBack);
+						resultMap.put("userStatus",driverStstus);
 						if(driver.getAvatarB() == null){
 							resultMap.put("photoUrl","");
 						}else{
