@@ -34,14 +34,8 @@ import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.RedisClientInterface;
-import com.sysongy.util.TwoDimensionCode;
-import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.*;
 import com.tencent.mm.sdk.modelpay.PayReq;
-
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
