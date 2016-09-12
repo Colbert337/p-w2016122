@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<<<<<<< HEAD
 <mapper namespace="com.sysongy.poms.mobile.dao.SysRoadConditionMapper" >
   <resultMap id="BaseResultMap" type="com.sysongy.poms.mobile.model.SysRoadCondition" >
     <id column="id" property="id" jdbcType="VARCHAR" />
@@ -26,6 +25,31 @@
     <result column="auditor_phone" property="auditorPhone" jdbcType="VARCHAR" />
     <result column="auditor_time" property="auditorTime" jdbcType="TIMESTAMP" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="MapResultMap" type="java.util.Map" >
+      <id column="id" property="id" jdbcType="VARCHAR" />
+      <result column="condition_type" property="conditionType" jdbcType="VARCHAR" />
+      <result column="condition_status" property="conditionStatus" jdbcType="VARCHAR" />
+      <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+      <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+      <result column="capture_longitude" property="captureLongitude" jdbcType="VARCHAR" />
+      <result column="capture_latitude" property="captureLatitude" jdbcType="VARCHAR" />
+      <result column="capture_time" property="captureTime" jdbcType="TIMESTAMP" />
+      <result column="condition_msg" property="conditionMsg" jdbcType="VARCHAR" />
+      <result column="condition_img" property="conditionImg" jdbcType="VARCHAR" />
+      <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+      <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+      <result column="province" property="province" jdbcType="VARCHAR" />
+      <result column="address" property="address" jdbcType="VARCHAR" />
+      <result column="direction" property="direction" jdbcType="VARCHAR" />
+      <result column="useful_count" property="usefulCount" jdbcType="VARCHAR" />
+      <result column="publisher_name" property="publisherName" jdbcType="VARCHAR" />
+      <result column="publisher_phone" property="publisherPhone" jdbcType="VARCHAR" />
+      <result column="publisher_time" property="publisherTime" jdbcType="TIMESTAMP" />
+      <result column="auditor" property="auditor" jdbcType="VARCHAR" />
+      <result column="auditor_phone" property="auditorPhone" jdbcType="VARCHAR" />
+      <result column="auditor_time" property="auditorTime" jdbcType="TIMESTAMP" />
+      <result column="memo" property="memo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, condition_type, condition_status, longitude, latitude, capture_longitude, capture_latitude, 
@@ -311,104 +335,6 @@
       memo = #{memo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-=======
-<mapper namespace="com.sysongy.poms.mobile.dao.SysRoadConditionMapper">
-	<resultMap id="BaseResultMap" type="com.sysongy.poms.mobile.model.SysRoadCondition">
-		<id column="id" property="id" jdbcType="VARCHAR" />
-		<result column="condition_type" property="conditionType" jdbcType="VARCHAR" />
-		<result column="condition_status" property="conditionStatus" jdbcType="VARCHAR" />
-		<result column="longitude" property="longitude" jdbcType="VARCHAR" />
-		<result column="latitude" property="latitude" jdbcType="VARCHAR" />
-		<result column="capture_longitude" property="captureLongitude" jdbcType="VARCHAR" />
-		<result column="capture_latitude" property="captureLatitude" jdbcType="VARCHAR" />
-		<result column="capture_time" property="captureTime" jdbcType="TIMESTAMP" />
-		<result column="condition_msg" property="conditionMsg" jdbcType="VARCHAR" />
-		<result column="condition_img" property="conditionImg" jdbcType="VARCHAR" />
-		<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
-		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
-		<result column="province" property="province" jdbcType="VARCHAR" />
-		<result column="address" property="address" jdbcType="VARCHAR" />
-		<result column="direction" property="direction" jdbcType="VARCHAR" />
-		<result column="useful_count" property="usefulCount" jdbcType="VARCHAR" />
-		<result column="publisher_name" property="publisherName" jdbcType="VARCHAR" />
-		<result column="publisher_phone" property="publisherPhone" jdbcType="VARCHAR" />
-		<result column="publisher_time" property="publisherTime" jdbcType="TIMESTAMP" />
-		<result column="auditor" property="auditor" jdbcType="VARCHAR" />
-		<result column="auditor_phone" property="auditorPhone" jdbcType="VARCHAR" />
-		<result column="auditor_time" property="auditorTime" jdbcType="TIMESTAMP" />
-		<result column="memo" property="memo" jdbcType="VARCHAR" />
-	</resultMap>
-	
-	<resultMap id="MapResultMap" type="java.util.Map" >
-		<id column="id" property="id" jdbcType="VARCHAR" />
-		<result column="condition_type" property="conditionType" jdbcType="VARCHAR" />
-		<result column="condition_status" property="conditionStatus" jdbcType="VARCHAR" />
-		<result column="longitude" property="longitude" jdbcType="VARCHAR" />
-		<result column="latitude" property="latitude" jdbcType="VARCHAR" />
-		<result column="capture_longitude" property="captureLongitude" jdbcType="VARCHAR" />
-		<result column="capture_latitude" property="captureLatitude" jdbcType="VARCHAR" />
-		<result column="capture_time" property="captureTime" jdbcType="TIMESTAMP" />
-		<result column="condition_msg" property="conditionMsg" jdbcType="VARCHAR" />
-		<result column="condition_img" property="conditionImg" jdbcType="VARCHAR" />
-		<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
-		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
-		<result column="province" property="province" jdbcType="VARCHAR" />
-		<result column="address" property="address" jdbcType="VARCHAR" />
-		<result column="direction" property="direction" jdbcType="VARCHAR" />
-		<result column="useful_count" property="usefulCount" jdbcType="VARCHAR" />
-		<result column="publisher_name" property="publisherName" jdbcType="VARCHAR" />
-		<result column="publisher_phone" property="publisherPhone" jdbcType="VARCHAR" />
-		<result column="publisher_time" property="publisherTime" jdbcType="TIMESTAMP" />
-		<result column="auditor" property="auditor" jdbcType="VARCHAR" />
-		<result column="auditor_phone" property="auditorPhone" jdbcType="VARCHAR" />
-		<result column="auditor_time" property="auditorTime" jdbcType="TIMESTAMP" />
-		<result column="memo" property="memo" jdbcType="VARCHAR" />
-	</resultMap>
-	
-	<sql id="Base_Column_List">
-		id, condition_type, condition_status, longitude, latitude,
-		capture_longitude, capture_latitude,
-		capture_time, condition_msg, condition_img, start_time, end_time, province,
-		address,
-		direction, useful_count, publisher_name, publisher_phone, publisher_time,
-		auditor,
-		auditor_phone, auditor_time, memo
-	</sql>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from sys_road_condition
-		where id = #{id,jdbcType=VARCHAR}
-	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		delete from sys_road_condition
-		where id = #{id,jdbcType=VARCHAR}
-	</delete>
-	<insert id="insert" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition">
-		insert into sys_road_condition (id, condition_type, condition_status,
-		longitude, latitude, capture_longitude,
-		capture_latitude, capture_time, condition_msg,
-		condition_img, start_time, end_time,
-		province, address, direction,
-		useful_count, publisher_name, publisher_phone,
-		publisher_time, auditor, auditor_phone,
-		auditor_time, memo)
-		values (#{id,jdbcType=VARCHAR}, #{conditionType,jdbcType=VARCHAR},
-		#{conditionStatus,jdbcType=VARCHAR},
-		#{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{captureLongitude,jdbcType=VARCHAR},
-		#{captureLatitude,jdbcType=VARCHAR},
-		#{captureTime,jdbcType=TIMESTAMP}, #{conditionMsg,jdbcType=VARCHAR},
-		#{conditionImg,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP},
-		#{endTime,jdbcType=TIMESTAMP},
-		#{province,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{direction,jdbcType=VARCHAR},
-		#{usefulCount,jdbcType=VARCHAR}, #{publisherName,jdbcType=VARCHAR},
-		#{publisherPhone,jdbcType=VARCHAR},
-		#{publisherTime,jdbcType=TIMESTAMP}, #{auditor,jdbcType=VARCHAR},
-		#{auditorPhone,jdbcType=VARCHAR},
-		#{auditorTime,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR})
-	</insert>
-
 	<!-- 上報路況 -->
 	<insert id="reportSysRoadCondition" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition">
 		insert into sys_road_condition
@@ -555,106 +481,9 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition">
-		update sys_road_condition
-		<set>
-			<if test="conditionType != null">
-				condition_type = #{conditionType,jdbcType=VARCHAR},
-			</if>
-			<if test="conditionStatus != null">
-				condition_status = #{conditionStatus,jdbcType=VARCHAR},
-			</if>
-			<if test="longitude != null">
-				longitude = #{longitude,jdbcType=VARCHAR},
-			</if>
-			<if test="latitude != null">
-				latitude = #{latitude,jdbcType=VARCHAR},
-			</if>
-			<if test="captureLongitude != null">
-				capture_longitude = #{captureLongitude,jdbcType=VARCHAR},
-			</if>
-			<if test="captureLatitude != null">
-				capture_latitude = #{captureLatitude,jdbcType=VARCHAR},
-			</if>
-			<if test="captureTime != null">
-				capture_time = #{captureTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="conditionMsg != null">
-				condition_msg = #{conditionMsg,jdbcType=VARCHAR},
-			</if>
-			<if test="conditionImg != null">
-				condition_img = #{conditionImg,jdbcType=VARCHAR},
-			</if>
-			<if test="startTime != null">
-				start_time = #{startTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="endTime != null">
-				end_time = #{endTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="province != null">
-				province = #{province,jdbcType=VARCHAR},
-			</if>
-			<if test="address != null">
-				address = #{address,jdbcType=VARCHAR},
-			</if>
-			<if test="direction != null">
-				direction = #{direction,jdbcType=VARCHAR},
-			</if>
-			<if test="usefulCount != null">
-				useful_count = #{usefulCount,jdbcType=VARCHAR},
-			</if>
-			<if test="publisherName != null">
-				publisher_name = #{publisherName,jdbcType=VARCHAR},
-			</if>
-			<if test="publisherPhone != null">
-				publisher_phone = #{publisherPhone,jdbcType=VARCHAR},
-			</if>
-			<if test="publisherTime != null">
-				publisher_time = #{publisherTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="auditor != null">
-				auditor = #{auditor,jdbcType=VARCHAR},
-			</if>
-			<if test="auditorPhone != null">
-				auditor_phone = #{auditorPhone,jdbcType=VARCHAR},
-			</if>
-			<if test="auditorTime != null">
-				auditor_time = #{auditorTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="memo != null">
-				memo = #{memo,jdbcType=VARCHAR},
-			</if>
-		</set>
-		where id = #{id,jdbcType=VARCHAR}
-	</update>
-	<update id="updateByPrimaryKey" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition">
-		update sys_road_condition
-		set condition_type = #{conditionType,jdbcType=VARCHAR},
-		condition_status = #{conditionStatus,jdbcType=VARCHAR},
-		longitude = #{longitude,jdbcType=VARCHAR},
-		latitude = #{latitude,jdbcType=VARCHAR},
-		capture_longitude = #{captureLongitude,jdbcType=VARCHAR},
-		capture_latitude = #{captureLatitude,jdbcType=VARCHAR},
-		capture_time = #{captureTime,jdbcType=TIMESTAMP},
-		condition_msg = #{conditionMsg,jdbcType=VARCHAR},
-		condition_img = #{conditionImg,jdbcType=VARCHAR},
-		start_time = #{startTime,jdbcType=TIMESTAMP},
-		end_time = #{endTime,jdbcType=TIMESTAMP},
-		province = #{province,jdbcType=VARCHAR},
-		address = #{address,jdbcType=VARCHAR},
-		direction = #{direction,jdbcType=VARCHAR},
-		useful_count = #{usefulCount,jdbcType=VARCHAR},
-		publisher_name = #{publisherName,jdbcType=VARCHAR},
-		publisher_phone = #{publisherPhone,jdbcType=VARCHAR},
-		publisher_time = #{publisherTime,jdbcType=TIMESTAMP},
-		auditor = #{auditor,jdbcType=VARCHAR},
-		auditor_phone = #{auditorPhone,jdbcType=VARCHAR},
-		auditor_time = #{auditorTime,jdbcType=TIMESTAMP},
-		memo = #{memo,jdbcType=VARCHAR}
-		where id = #{id,jdbcType=VARCHAR}
-	</update>
+
 <!-- 获取路况列表 -->
-	<select id="queryForPage" resultMap="MapResultMap" parameterType="java.lang.String">
+	<select id="queryForPageMap" resultMap="MapResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from sys_road_condition
@@ -822,5 +651,4 @@
 			</if>
 		</trim>
 	</insert>
->>>>>>> f08cca1e3cf4b4393d26f8c6ee574d69698f8055
 </mapper>

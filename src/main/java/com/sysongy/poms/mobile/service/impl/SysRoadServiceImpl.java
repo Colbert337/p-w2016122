@@ -1,10 +1,7 @@
 package com.sysongy.poms.mobile.service.impl;
 
 import java.util.List;
-<<<<<<< HEAD
-=======
 import java.util.Map;
->>>>>>> f08cca1e3cf4b4393d26f8c6ee574d69698f8055
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,13 +25,12 @@ import com.sysongy.poms.mobile.service.SysRoadService;
 @Service
 public class SysRoadServiceImpl implements SysRoadService{
 	@Autowired
-<<<<<<< HEAD
-	SysRoadConditionMapper sysroadMapper;
+	SysRoadConditionMapper sysRoadConditionMapper;
 	@Override
 	public PageInfo< SysRoadCondition> queryRoadList(SysRoadCondition road) {
 		// TODO Auto-generated method stub
 		 PageHelper.startPage(road.getPageNum(), road.getPageSize(), road.getOrderby());
-		List<SysRoadCondition> list=sysroadMapper.queryForPage(road);
+		List<SysRoadCondition> list=sysRoadConditionMapper.queryForPage(road);
 		PageInfo<SysRoadCondition> page=new PageInfo<>(list);
 		return page;
 	}
@@ -42,9 +38,8 @@ public class SysRoadServiceImpl implements SysRoadService{
 	public int saveRoad(SysRoadCondition road) {
 		// TODO Auto-generated method stub
 //		sysroadMapper.insert(road);
-		return sysroadMapper.insert(road);;
-=======
-	private SysRoadConditionMapper sysRoadConditionMapper;
+		return sysRoadConditionMapper.insertSelective(road);
+	}
 	/**
 	 * 上報路況
 	 */
@@ -58,7 +53,7 @@ public class SysRoadServiceImpl implements SysRoadService{
 	@Override
 	public PageInfo<Map<String, Object>> queryForPage(SysRoadCondition record) throws Exception {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
-		List<Map<String, Object>> list = sysRoadConditionMapper.queryForPage(record);
+		List<Map<String, Object>> list = sysRoadConditionMapper.queryForPageMap(record);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
@@ -69,7 +64,6 @@ public class SysRoadServiceImpl implements SysRoadService{
 	@Override
 	public int cancelSysRoadCondition(SysRoadCondition record) throws Exception {
 		return sysRoadConditionMapper.cancelSysRoadCondition(record);
->>>>>>> f08cca1e3cf4b4393d26f8c6ee574d69698f8055
 	}
 
 }
