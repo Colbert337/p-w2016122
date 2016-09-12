@@ -38,6 +38,13 @@
     from sys_road_condition
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  
+   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_road_condition 
+  </select> 
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_road_condition
     where id = #{id,jdbcType=VARCHAR}

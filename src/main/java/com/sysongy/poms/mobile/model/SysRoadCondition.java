@@ -2,7 +2,9 @@ package com.sysongy.poms.mobile.model;
 
 import java.util.Date;
 
-public class SysRoadCondition {
+import com.sysongy.poms.base.model.BaseModel;
+
+public class SysRoadCondition  extends BaseModel {
     private String id;
 
     private String conditionType;

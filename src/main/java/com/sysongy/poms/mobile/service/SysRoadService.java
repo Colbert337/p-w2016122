@@ -1,5 +1,9 @@
 package com.sysongy.poms.mobile.service;
 
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.mobile.model.Suggest;
+import com.sysongy.poms.mobile.model.SysRoadCondition;
+
 /**
  * @FileName: SysRoadService
  * @Encoding: UTF-8
@@ -11,4 +15,8 @@ package com.sysongy.poms.mobile.service;
  * @Description:
  */
 public interface SysRoadService {
+
+	PageInfo<SysRoadCondition> queryRoadList(SysRoadCondition road);
+
+	int saveRoad(SysRoadCondition road);
 }

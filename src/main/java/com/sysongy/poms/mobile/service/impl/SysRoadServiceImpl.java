@@ -1,7 +1,15 @@
 package com.sysongy.poms.mobile.service.impl;
 
-import com.sysongy.poms.mobile.service.SysRoadService;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.mobile.dao.SysRoadConditionMapper;
+import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.mobile.service.SysRoadService;
 
 /**
  * @FileName: SysRoadServiceImpl
@@ -15,5 +23,21 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysRoadServiceImpl implements SysRoadService{
+	@Autowired
+	SysRoadConditionMapper sysroadMapper;
+	@Override
+	public PageInfo< SysRoadCondition> queryRoadList(SysRoadCondition road) {
+		// TODO Auto-generated method stub
+		 PageHelper.startPage(road.getPageNum(), road.getPageSize(), road.getOrderby());
+		List<SysRoadCondition> list=sysroadMapper.queryForPage(road);
+		PageInfo<SysRoadCondition> page=new PageInfo<>(list);
+		return page;
+	}
+	@Override
+	public int saveRoad(SysRoadCondition road) {
+		// TODO Auto-generated method stub
+//		sysroadMapper.insert(road);
+		return sysroadMapper.insert(road);;
+	}
 
 }

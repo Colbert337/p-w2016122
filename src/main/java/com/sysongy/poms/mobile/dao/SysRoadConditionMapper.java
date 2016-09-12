@@ -1,5 +1,7 @@
 package com.sysongy.poms.mobile.dao;
 
+import java.util.List;
+
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 
 public interface SysRoadConditionMapper {
@@ -14,4 +16,6 @@ public interface SysRoadConditionMapper {
     int updateByPrimaryKeySelective(SysRoadCondition record);
 
     int updateByPrimaryKey(SysRoadCondition record);
+    
+    List< SysRoadCondition> queryForPage(SysRoadCondition record);
 }
