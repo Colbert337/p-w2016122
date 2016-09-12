@@ -122,11 +122,11 @@ public class DESUtil {
 
     public static void main(String args[]) throws Exception{
 //        String str = "王冬强";
-        String str = "{\"main\":{\"longitude\":\"107.935106\",\"latitude\":\"34.22836\",\"radius\":\"8000\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"20\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+        String str = "{\"main\":{\"username\":\"14444444444\",\"password\":\"96e79218965eb72c92a549dd5a330112\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
         String resultStr;
-        resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA56779A8EE272C9539ABB628364D52273FBB4C21F412ED2E9C5E033752B67A311EAE35329D7D0B6D681F0187019F5E70B2669");
+        resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA56779A8EE272C9539ABB628364D52273FBB4BC4C24881FBC147549810D27364E43C6BDDA3617DFF0B09E");
 //        resultStr = new String(resultStr.getBytes("GB2312"),"ISO-8859-1");
         System.out.println("解密后:"+resultStr);
     }

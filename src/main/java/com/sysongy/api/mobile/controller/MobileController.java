@@ -166,6 +166,7 @@ public class MobileController {
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("登录失败！");
+					logger.error("登录失败： " + resultStr);
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -175,8 +176,6 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("登录失败！");
