@@ -66,6 +66,7 @@ import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
@@ -2431,6 +2432,74 @@ public class MobileController {
 			logger.error("取消路况失败： " + e);
 			resutObj.remove("listMap");
 			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	
+	/**
+	 * 获取实名认证信息
+	 */
+	@RequestMapping(value = "/user/getRealNameAuth")
+	@ResponseBody
+	public String getRealNameAuth(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 请求接口
+			 */
+			if (mainObj != null) {
+				// 创建对象
+				SysDriver driver = driverService.queryDriverByPK(mainObj.optString("token"));
+				if(driver != null){
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("获取实名认证信息成功！");
+					List<Usysparam> list =  usysparamService.query("FUEL_TYPE", driver.getFuelType());
+					String gasType = "类型不存在";
+					if(list!=null && list.size() > 0 ){
+						gasType=list.get(0).getMname();
+					}
+					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					Map<String, Object> dataMap = new HashMap<>();
+					dataMap.put("name", driver.getFullName());
+					dataMap.put("plateNumber", driver.getPlateNumber());
+					dataMap.put("gasType", gasType);//燃气类型字典表
+					dataMap.put("endTime", sft.format(driver.getExpiryDate()));
+					dataMap.put("drivingLicenseImageUrl", driver.getVehicleLice());
+					dataMap.put("driverLicenseImageUrl", driver.getDrivingLice());
+					result.setData(dataMap);
+				}else{
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("无此用户！");
+				}
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("获取成功： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取失败： " + e);
+			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 			return resultStr;
