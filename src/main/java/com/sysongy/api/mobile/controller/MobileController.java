@@ -165,7 +165,7 @@ public class MobileController {
 					result.setData(tokenMap);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("登录失败！");
+					result.setMsg("用户名或密码错误！");
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -287,7 +287,7 @@ public class MobileController {
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("该手机号已注册！");
-						throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
+						//throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
 					} else {
 						String sysDriverId = UUIDGenerator.getUUID();
 						driver.setPassword(mainObj.optString("password"));
@@ -2718,7 +2718,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String str ="{\"main\":{\"name\":\"3\",\"longitude\":\"108.8827\",\"latitude\":\"34.185835\",\"radius\":\"2000000\",\"infoType\":\"\",\"pageNum\":\"0\",\"pageSize\":\"20\"},\"extend\":{\"version\":2,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
+		String str ="{\"main\":{\"phoneNum\":\"13474294206\",\"verificationCode\":\"955824\",\"password\":\"96e79218965eb72c92a549dd5a330112\",\"invitationCode\":\"12111111111\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
 		str = DESUtil.encode("sysongys",str);//参数加密
 		System.out.println(str);
 	}
