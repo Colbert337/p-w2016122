@@ -2,7 +2,6 @@ package com.sysongy.poms.mobile.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 
 public interface SysRoadConditionMapper {
@@ -13,6 +12,7 @@ public interface SysRoadConditionMapper {
     int updateByPrimaryKeySelective(SysRoadCondition record);
 
     int updateByPrimaryKey(SysRoadCondition record);
+    List< SysRoadCondition> queryForPage(SysRoadCondition record);
     /**
      * 上报路况 
      */
@@ -20,7 +20,7 @@ public interface SysRoadConditionMapper {
     /**
      * 获取路况列表 
      */
-    List<Map<String, Object>> queryForPage(SysRoadCondition record);
+    List<Map<String, Object>> queryForPageMap(SysRoadCondition record);
     /**
      * 根据ID查询
      */
