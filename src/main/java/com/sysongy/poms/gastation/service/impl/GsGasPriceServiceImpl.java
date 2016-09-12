@@ -59,6 +59,7 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 			ret = gsGasPriceMapper.insert(record);
 		}else{
 			ret = gsGasPriceMapper.updateByPrimaryKeySelective(record);
+			gsGasPriceMapper.updateSysGasStation(record);
 		}
 		return ret;
 	}

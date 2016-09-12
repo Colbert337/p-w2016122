@@ -25,7 +25,21 @@ import com.sysongy.poms.mobile.service.SysRoadService;
 @Service
 public class SysRoadServiceImpl implements SysRoadService{
 	@Autowired
-	private SysRoadConditionMapper sysRoadConditionMapper;
+	SysRoadConditionMapper sysRoadConditionMapper;
+	@Override
+	public PageInfo< SysRoadCondition> queryRoadList(SysRoadCondition road) {
+		// TODO Auto-generated method stub
+		 PageHelper.startPage(road.getPageNum(), road.getPageSize(), road.getOrderby());
+		List<SysRoadCondition> list=sysRoadConditionMapper.queryForPage(road);
+		PageInfo<SysRoadCondition> page=new PageInfo<>(list);
+		return page;
+	}
+	@Override
+	public int saveRoad(SysRoadCondition road) {
+		// TODO Auto-generated method stub
+//		sysroadMapper.insert(road);
+		return sysRoadConditionMapper.insertSelective(road);
+	}
 	/**
 	 * 上報路況
 	 */
@@ -39,7 +53,7 @@ public class SysRoadServiceImpl implements SysRoadService{
 	@Override
 	public PageInfo<Map<String, Object>> queryForPage(SysRoadCondition record) throws Exception {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
-		List<Map<String, Object>> list = sysRoadConditionMapper.queryForPage(record);
+		List<Map<String, Object>> list = sysRoadConditionMapper.queryForPageMap(record);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}

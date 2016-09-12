@@ -206,6 +206,25 @@
     </set>
     where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
   </update>
+  <update id="updateSysGasStation" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
+   UPDATE 
+  sys_gas_station  c
+SET
+  LNG_price = 
+  (SELECT 
+    GROUP_CONCAT(d.`mname`, '-', b.product_price) 
+  FROM
+    gs_gas_price a,
+    `product_price` b,
+    
+    usysparam d 
+  WHERE b.product_id = a.gs_gas_price_id 
+    AND b.`product_price_status` = 1 
+    AND a.sys_gas_station_id = c.sys_gas_station_id 
+    AND a.`gas_name` = d.`mcode` 
+  GROUP BY c.sys_gas_station_id) where c.sys_gas_station_id= #{gsGasPriceId,jdbcType=VARCHAR} 
+    
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
     update gs_gas_price
     set sys_gas_station_id = #{sysGasStationId,jdbcType=VARCHAR},

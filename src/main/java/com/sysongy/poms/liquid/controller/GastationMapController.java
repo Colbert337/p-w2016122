@@ -195,8 +195,22 @@ public class GastationMapController extends BaseContoller {
 										|| sheet.getCell(7, i).getContents().indexOf("，") != -1)) {
 							sheet.getCell(7, i).getContents().replace("，", ",");
 							String[] xy = sheet.getCell(7, i).getContents().split(",");
-							gas.setLongitude(xy[0]);
-							gas.setLatitude(xy[1]);
+							if(xy.length==2){
+								gas.setLongitude(xy[0]);
+								gas.setLatitude(xy[1]);
+								
+							}else{
+								xy=sheet.getCell(7,i).getContents().split("E");
+								if(xy.length==2){
+									gas.setLongitude(xy[0].substring(1, xy[0].length()));
+									gas.setLatitude(xy[1]);
+									
+								}else{
+									message += "第" + (i + 1) + "行第8列（加注站坐标不对）\n";
+									err++;
+									continue;
+								}
+							}
 						} else {
 							message += "第" + (i + 1) + "行第8列（加注站坐标不能为空）\n";
 							err++;

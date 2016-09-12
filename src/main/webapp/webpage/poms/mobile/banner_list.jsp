@@ -22,7 +22,7 @@
 			<div class="col-xs-12">
 				<!-- PAGE CONTENT BEGINS -->
 				<div class="row">
-					<div class="col-sm-2">
+					<%-- <div class="col-sm-2">
 						<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
 						<div class="dd dd-draghandle">
 							<ol class="dd-list" id="cashbackol">
@@ -44,8 +44,8 @@
 								</li>
 							</ol>
 						</div>
-					</div>
-
+					</div> --%>
+					<input type="text" id="imgType" name="imgType" value="${mbBanner.imgType}" />
 					<div class="col-sm-10">
 						<div class="page-header">
 							<h1>图片列表</h1>
