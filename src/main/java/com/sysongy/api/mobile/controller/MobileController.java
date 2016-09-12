@@ -1,5 +1,38 @@
 package com.sysongy.api.mobile.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.io.FileUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
@@ -23,7 +56,9 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.mobile.model.MbBanner;
+import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
@@ -32,33 +67,15 @@ import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.*;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.TwoDimensionCode;
+import com.sysongy.util.UUIDGenerator;
 import com.tencent.mm.sdk.modelpay.PayReq;
-import net.sf.json.JSONObject;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.io.FileUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import net.sf.json.JSONObject;
 
 @RequestMapping("/api/v1/mobile")
 @Controller
@@ -71,6 +88,7 @@ public class MobileController {
 
 	/** 支付宝支付业务：入参app_id */
 	public static final String APPID = "2016011801102578"; //TODO 需要自定义常量类
+	public static final String ss ="123123";
 
 	/** 商户私钥，pkcs8格式 */
 	public static final String RSA_PRIVATE = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALMGuZtJV5TvfNZHvIYUVqo6Gy2lqvYZ0DP2Dr7Si5aPqd+sEhDy7TjWAUlYV86d3z+/oOrhap9iHJn80oJoQk3UTf/NM/XNF0PCjW1UiGORQyFiBYFIVfXSylFWQ5IFBmxQfgu5cPzZNeTcRsooPTrON0/OAItxsuGbgDlCMusjAgMBAAECgYA1HhiyB2fSC+C5X12DVsOEDGuF9rKsBGqvECG94pCCIqwfblmJ59oU1AJbtbeP2W2k54GiTzGoip673bTD9pU9LPdyelWlFBePGEHiREbno2fXB01Tb9ML/TrZG5JFZdv7IS7ekitWiiK1lKwFg3mujMDXrFAwBQd/kBd0eOG7cQJBAOikToenP7JgCYuWM7N5pKZ5GsfZJsKVqDRZyqDDih0gXTdafW49IlwMHVpoWV01PwiG5feQDjASXv+MDNUgwbsCQQDFAFCFwWFjjRiKShgRjZurYOvSc04XqACf1lROefLrKJ+BsrFQJAhWahHEmJiV2pNuYnSybx2e2AwFbyt8pJG5AkEA3wduFdS8VxiE7iJATIaI1+PwTbmb1B4/lHikrnzn8sZtNzz0VPQc9ZvTpDG3wojidh1FaJHdWC60jk9ImiZ+MwJBAIw07Bo2Bo0ml2ec0kJz6W3wngX64IJ/pGodzYTI0DXDhLp3JjEmY/S0qw6jmD1XAgTW970izg8GLpATjfy416kCQQChQUYwe76hdGA/60lCycBCwiwYV+aHxezFnC2PcUxMif/cbKIwJvR6nhQK1QTKL60ExlRSKXA9xbB2eH/QXRNj";
@@ -108,6 +126,8 @@ public class MobileController {
 	MbBannerService mbBannerService;
 	@Autowired
 	UsysparamService usysparamService;
+	@Autowired
+	SysRoadService sysRoadService;
 
 	/**
 	 * 用户登录
@@ -1248,12 +1268,12 @@ public class MobileController {
 						}else{//目标坐标及范围半径未传参，则返回所有加注站信息
 							gastationArray.add(gastationMap);
 						}
-
 					}
-
-
-
 					result.setListMap(gastationArray);
+				}else{
+					result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+					result.setMsg("暂无数据！");
+					result.setListMap(new ArrayList<Map<String, Object>>());
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2211,6 +2231,213 @@ public class MobileController {
 			return resultStr;
 		}
 	}
+	/**
+	 * 获取路况
+	 */
+	@RequestMapping(value = "/road/getRoadList")
+	@ResponseBody
+	public String getRoadList(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取路况成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 请求接口
+			 */
+			if (mainObj != null) {
+				int pageNum = mainObj.optInt("pageNum");
+				int pageSize = mainObj.optInt("pageSize");
+				// 创建对象
+				SysRoadCondition roadCondition = new SysRoadCondition();
+				roadCondition.setPageNum(pageNum);
+				roadCondition.setPageSize(pageSize);
+				roadCondition.setLongitude(mainObj.optString("longitude"));
+				roadCondition.setLatitude(mainObj.optString("latitude"));
+				roadCondition.setProvince(mainObj.optString("province"));
+				roadCondition.setConditionType(mainObj.optString("conditionType"));
+				PageInfo<Map<String, Object>> pageInfo = sysRoadService.queryForPage(roadCondition);
+				List<Map<String, Object>> reChargeList = new ArrayList<>();
+				Map<String, Object> reCharge = new HashMap<>();
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
+					for (Map<String, Object> map : pageInfo.getList()) {
+						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("conditionType", map.get("conditionType"));
+						reChargeMap.put("longitude", map.get("longitude"));
+						reChargeMap.put("latitude", map.get("latitude"));
+						reChargeMap.put("conditionImg", map.get("conditionImg"));
+						reChargeMap.put("address", map.get("address"));
+						reChargeMap.put("publisherName", map.get("publisherName"));
+						reChargeMap.put("publisherPhone", map.get("publisherPhone"));
+						reChargeMap.put("contentUrl", map.get("contentUrl"));
+						String publisherTime = "";
+						if (map.get("publisherTime") != null && !"".equals(map.get("publisherTime").toString())) {
+							publisherTime = sft.format(new Date());
+						}
+						reChargeMap.put("publisherTime", publisherTime);
+						reChargeList.add(reChargeMap);
+					}
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					reCharge.put("listMap", reChargeList);
+				} else {
+					reCharge.put("listMap", new ArrayList<>());
+				}
+				result.setListMap(reChargeList);
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
+			logger.error("获取路况成功： " + resultStr);
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取路况失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取路况失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	
+	/**
+	 * 路况有用统计
+	 */
+	@RequestMapping(value = "/road/updateUseful")
+	@ResponseBody
+	public String updateUseful(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("统计成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 请求接口
+			 */
+			if (mainObj != null) {
+				// 创建对象
+				SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(mainObj.optString("roadId"));
+				if(roadCondition!=null){
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("统计成功！");
+					Map<String, Object> dataMap = new HashMap<>();
+					dataMap.put("count", roadCondition.getUsefulCount());
+					result.setData(dataMap);
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("无此路况！");
+				}
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
+			logger.error("统计成功： " + resultStr);
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("统计失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("统计失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	
+	/**
+	 * 取消路况
+	 */
+	@RequestMapping(value = "/road/cancelRoadInfo")
+	@ResponseBody
+	public String cancelRoadInfo(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("取消路况成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 请求接口
+			 */
+			if (mainObj != null) {
+				// 创建对象
+				SysRoadCondition roadCondition = new SysRoadCondition();
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				roadCondition.setId(mainObj.optString("token"));
+				roadCondition.setConditionImg(mainObj.optString("condition_img"));
+				roadCondition.setConditionType(mainObj.optString("conditionType"));
+				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
+				roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
+				roadCondition.setCaptureTime(sft.parse(mainObj.optString("flashTime")));
+				roadCondition.setConditionMsg(mainObj.optString("conditionMsg"));
+				roadCondition.setLongitude(mainObj.optString("longitude"));
+				roadCondition.setLatitude(mainObj.optString("latitude"));
+				roadCondition.setAddress(mainObj.optString("address"));
+				roadCondition.setPublisherName(mainObj.optString("publisherName"));
+				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
+				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
+				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
+				if (tmp > 0) {
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("取消路况成功！");
+				}
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			logger.error("取消路况成功： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("取消路况失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("取消路况失败： " + e);
+			resutObj.remove("listMap");
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 	
 	
 	
@@ -2421,7 +2648,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String str ="{\"main\":{\"name\":\"2\",\"longitude\":\"107.935106\",\"latitude\":\"34.22836\",\"radius\":\"\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"20\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		String str ="{\"main\":{\"name\":\"3\",\"longitude\":\"108.8827\",\"latitude\":\"34.185835\",\"radius\":\"2000000\",\"infoType\":\"\",\"pageNum\":\"0\",\"pageSize\":\"20\"},\"extend\":{\"version\":2,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
 		str = DESUtil.encode("sysongys",str);//参数加密
 		System.out.println(str);
 	}
