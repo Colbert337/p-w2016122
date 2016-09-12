@@ -4,7 +4,11 @@ import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
 
+<<<<<<< HEAD
 public class SysRoadCondition  extends BaseModel {
+=======
+public class SysRoadCondition extends BaseModel{
+>>>>>>> f08cca1e3cf4b4393d26f8c6ee574d69698f8055
     private String id;
 
     private String conditionType;

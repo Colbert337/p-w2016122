@@ -1,10 +1,14 @@
 package com.sysongy.poms.mobile.controller;
 
+<<<<<<< .merge_file_a09596
 import org.springframework.beans.factory.annotation.Autowired;
+=======
+>>>>>>> .merge_file_a06228
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+<<<<<<< .merge_file_a09596
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
@@ -12,6 +16,9 @@ import com.sysongy.poms.mobile.model.Suggest;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.util.GlobalConstant;
+=======
+import com.sysongy.poms.base.controller.BaseContoller;
+>>>>>>> .merge_file_a06228
 
 /**
  * @FileName: SysRoadController
