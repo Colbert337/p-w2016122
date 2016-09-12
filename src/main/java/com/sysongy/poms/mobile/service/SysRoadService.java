@@ -1,11 +1,9 @@
 package com.sysongy.poms.mobile.service;
 
-import java.util.List;
-import java.util.Map;
 
+import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
-import com.sysongy.poms.order.model.SysOrder;
 
 /**
  * @FileName: SysRoadService
@@ -18,6 +16,10 @@ import com.sysongy.poms.order.model.SysOrder;
  * @Description:
  */
 public interface SysRoadService {
+
+	PageInfo<SysRoadCondition> queryRoadList(SysRoadCondition road);
+
+	int saveRoad(SysRoadCondition road);
 	/**
 	 * 上報路況
 	 */

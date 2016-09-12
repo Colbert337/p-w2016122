@@ -19,6 +19,8 @@ public interface GsGasPriceMapper {
     int updateByPrimaryKeySelective(GsGasPrice record);
 
     int updateByPrimaryKey(GsGasPrice record);
+    
+    int updateSysGasStation(GsGasPrice record);
 
     List<GsGasPrice> queryForPage(GsGasPrice record);
 
