@@ -115,6 +115,8 @@ public class MobileController {
 	UsysparamService usysparamService;
 	@Autowired
 	SysRoadService sysRoadService;
+	@Autowired
+	SysMessageService sysMessageService;
 
 	/**
 	 * 用户登录
