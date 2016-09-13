@@ -233,6 +233,9 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
       <if test="userName != null &amp;&amp; userName != ''" >
         and user_name = #{userName, jdbcType=VARCHAR}
       </if>
+      <if test="payCode != null &amp;&amp; payCode != ''" >
+        and pay_code = #{payCode, jdbcType=VARCHAR}
+      </if>
     </trim>
   </select>
 

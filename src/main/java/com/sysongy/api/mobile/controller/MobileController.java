@@ -1367,6 +1367,12 @@ public class MobileController {
 				}else if(resultVal == 3){
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("司机不存在,无法转账！");
+				}else if(resultVal == 4){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("支付密码错误！");
+				}else if(resultVal == 5){
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("账户和用户名不匹配！");
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1375,10 +1381,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
 			logger.error("转账成功： " + resultStr);
-
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("转账失败！");
@@ -2738,7 +2742,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String s ="{\"main\": {\"token\": \"127a95b528154d4293f9f429a970bb6a\",\"account\": \"18137079106\",\"name\": \"程云生\",\"amount\": \"0.01\",\"remark\": \"测试\",\"paycode\": \"21218cca77804d2ba1922c33e0151106\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		String s ="{\"main\": {\"conditionType\": \"1\",\"latitude\": \"34.185827\",\"longitude\": \"108.882686\",\"pageNum\": \"1\",\"pageSize\": \"100\",\"province\": \"陕西省\",\"radius\": \"2000000\",\"token\": \"2d7645c55f4d45519a1e460661564f8b\"},\"extend\": {\"terminal\": \"SYSONGYMOBILE2016726\",\"version\": \"3\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 	}
