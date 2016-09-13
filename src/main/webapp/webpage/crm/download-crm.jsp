@@ -41,7 +41,7 @@
                         16.5M
                     </li>--%>
                     <li>
-                        <a href="http://download.sysongy.net/setup.exe" class="btn btn-block btn-primary btn-lg">下载</a>
+                        <a href="http://download.sysongy.net/司集CRM安装包.exe" class="btn btn-block btn-primary btn-lg">下载</a>
                     </li>
                 </ul>
             </div>
