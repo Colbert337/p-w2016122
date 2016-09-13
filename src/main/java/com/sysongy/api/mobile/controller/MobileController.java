@@ -155,18 +155,36 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
+				String type = mainObj.optString("type");
 				SysDriver driver = new SysDriver();
-				driver.setUserName(mainObj.optString("username"));
-				driver.setPassword(mainObj.optString("password"));
-				SysDriver queryDriver = driverService.queryByUserNameAndPassword(driver);
-				if(queryDriver != null ){
-					Map<String, Object> tokenMap = new HashMap<>();
-					tokenMap.put("token",queryDriver.getSysDriverId());
-					result.setData(tokenMap);
-				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("登录失败！");
-					logger.error("登录失败： " + resultStr);
+				SysDriver queryDriver = null;
+				//賬號密碼登錄
+				if("1".equals(type)){
+					driver.setUserName(mainObj.optString("username"));
+					driver.setPassword(mainObj.optString("password"));
+					queryDriver = driverService.queryByUserNameAndPassword(driver);
+					if(queryDriver != null ){
+						Map<String, Object> tokenMap = new HashMap<>();
+						tokenMap.put("token",queryDriver.getSysDriverId());
+						result.setData(tokenMap);
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("用户名或密码错误！");
+					}
+				}else{//用戶名驗證碼登錄
+					driver.setUserName(mainObj.optString("username"));
+					driver.setMobilePhone(mainObj.optString("username"));
+					String verificationCode = mainObj.optString("verificationCode");
+					String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
+					if(verificationCode.equals(veCode)){
+						queryDriver = driverService.queryByUserName(driver);
+						Map<String, Object> tokenMap = new HashMap<>();
+						tokenMap.put("token",queryDriver.getSysDriverId());
+						result.setData(tokenMap);
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("驗證碼無效！");
+					}
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -176,6 +194,8 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+
+			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("登录失败！");
@@ -286,7 +306,7 @@ public class MobileController {
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("该手机号已注册！");
-						throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
+						//throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
 					} else {
 						String sysDriverId = UUIDGenerator.getUUID();
 						driver.setPassword(mainObj.optString("password"));
@@ -398,7 +418,7 @@ public class MobileController {
 						}
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
-
+						/*
 						if("0".equals(driverStstus)){
 							driverStstus = "0";
 						}else if("1".equals(driverStstus)){
@@ -407,7 +427,7 @@ public class MobileController {
 							driverStstus = "2";
 						}else if("3".equals(driverStstus)){
 							driverStstus = "3";
-						}
+						}*/
 						resultMap.put("isRealNameAuth",driverStstus);
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
@@ -2480,6 +2500,7 @@ public class MobileController {
 					dataMap.put("endTime", sft.format(driver.getExpiryDate()));
 					dataMap.put("drivingLicenseImageUrl", driver.getVehicleLice());
 					dataMap.put("driverLicenseImageUrl", driver.getDrivingLice());
+					dataMap.put("idCard", driver.getIdentityCard());
 					result.setData(dataMap);
 				}else{
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -2717,8 +2738,10 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String str ="{\"main\":{\"name\":\"3\",\"longitude\":\"108.8827\",\"latitude\":\"34.185835\",\"radius\":\"2000000\",\"infoType\":\"\",\"pageNum\":\"0\",\"pageSize\":\"20\"},\"extend\":{\"version\":2,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
-		str = DESUtil.encode("sysongys",str);//参数加密
-		System.out.println(str);
+		String s ="{\"main\":{\"username\":\"12111111111\",\"verificationCode\":\"930384\",\"type\":\"2\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		//String s = "{\"main\":{\"phoneNum\":\"12111111111\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+
+		s = DESUtil.encode("sysongys",s);//参数加密
+		System.out.println(s);
 	}
 }
