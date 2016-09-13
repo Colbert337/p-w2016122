@@ -314,6 +314,7 @@ public class MobileController {
 						String sysDriverId = UUIDGenerator.getUUID();
 						driver.setPassword(mainObj.optString("password"));
 						driver.setSysDriverId(sysDriverId);
+						driver.setRegisSource("APP");
 						String encoderContent=mainObj.optString("phoneNum");
 						//图片路径
 						String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
