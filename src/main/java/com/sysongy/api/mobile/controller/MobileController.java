@@ -7,7 +7,6 @@ import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.service.MbDealOrderService;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.api.mobile.tools.ali.OrderInfoUtil2_0;
-import com.sysongy.api.mobile.tools.register.MobileRegisterUtils;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.api.mobile.tools.wechat.MD5;
 import com.sysongy.api.mobile.tools.wechat.Util;
@@ -22,6 +21,8 @@ import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.message.model.SysMessage;
+import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.service.MbBannerService;
@@ -37,6 +38,7 @@ import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.*;
 import com.tencent.mm.sdk.modelpay.PayReq;
+
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
@@ -2322,7 +2324,7 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-
+	
 	/**
 	 * 路况有用统计
 	 */
@@ -2379,7 +2381,7 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-
+	
 	/**
 	 * 取消路况
 	 */
@@ -2447,7 +2449,7 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-
+	
 	/**
 	 * 获取实名认证信息
 	 */
@@ -2517,6 +2519,87 @@ public class MobileController {
 		}
 	}
 
+	/**
+	 * 获取消息列表
+	 */
+	@RequestMapping(value = "/msg/getMsgList")
+	@ResponseBody
+	public String getMsgList(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 请求接口
+			 */
+			if (mainObj != null) {
+				int pageNum = mainObj.optInt("pageNum");
+				int pageSize = mainObj.optInt("pageSize");
+				SysMessage sysMessage = new SysMessage();
+				String msgType = mainObj.optString("msgType");
+				sysMessage.setMessageType(msgType);
+				sysMessage.setPageNum(pageNum);
+				sysMessage.setPageSize(pageSize);
+				PageInfo<Map<String, Object>> pageInfo = sysMessageService.queryMsgListForPage(sysMessage);
+				List<Map<String, Object>> reChargeList = new ArrayList<>();
+				Map<String, Object> reCharge = new HashMap<>();
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
+					for (Map<String, Object> map : pageInfo.getList()) {
+						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("messageTitle", map.get("messageTitle"));
+						reChargeMap.put("messageBody", map.get("messageBody"));
+						reChargeMap.put("messageTicker", map.get("messageTicker"));
+						reChargeMap.put("messageType", map.get("messageType").toString());
+						reChargeMap.put("createdTime", sft.format(map.get("messageCreatedTime")));
+						String driverName = map.get("driverName").toString();
+						SysDriver driver = new SysDriver();
+						driver.setUserName(driverName);
+						SysDriver driverInfo = driverService.queryByUserName(driver);
+						if(driverInfo !=null){
+							reChargeMap.put("driverName", driverInfo.getFullName());
+						}else{
+							reChargeMap.put("driverName", null);
+						}
+						reChargeList.add(reChargeMap);
+					}
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					reCharge.put("listMap", reChargeList);
+				} else {
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					reCharge.put("listMap", new ArrayList<>());
+				}
+				result.setListMap(reChargeList);
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			logger.error("获取成功： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 	
 	
 	
@@ -2726,7 +2809,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String s ="{\"main\": {\"conditionType\": \"1\",\"latitude\": \"34.185827\",\"longitude\": \"108.882686\",\"pageNum\": \"1\",\"pageSize\": \"100\",\"province\": \"陕西省\",\"radius\": \"2000000\",\"token\": \"2d7645c55f4d45519a1e460661564f8b\"},\"extend\": {\"terminal\": \"SYSONGYMOBILE2016726\",\"version\": \"3\"}}";
+		String s ="{\"main\": {\"msgType\": \"1\",\"pageNum\": \"1\",\"pageSize\": \"20\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 	}
