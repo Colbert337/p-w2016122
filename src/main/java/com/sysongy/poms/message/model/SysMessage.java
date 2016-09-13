@@ -9,26 +9,7 @@ public class SysMessage extends BaseModel {
 	private String id;
 
 	private String device_token;
-
-	public String getDevice_token() {
-		return device_token;
-	}
-
-	public void setDevice_token(String device_token) {
-		this.device_token = device_token;
-	}
-
-	private String driver_name;
-	private String messageTitle;
-
-	public String getDriver_name() {
-		return driver_name;
-	}
-
-	public void setDriver_name(String driver_name) {
-		this.driver_name = driver_name;
-	}
-
+	
 	private String messageBody;
 
 	private String messageTicker;
@@ -50,7 +31,30 @@ public class SysMessage extends BaseModel {
 	private String memo;
 
 	private String content;
+	
+	private String driverName;
 
+
+	public String getDevice_token() {
+		return device_token;
+	}
+
+	public void setDevice_token(String device_token) {
+		this.device_token = device_token;
+	}
+
+	private String driver_name;
+	private String messageTitle;
+
+	public String getDriver_name() {
+		return driver_name;
+	}
+
+	public void setDriver_name(String driver_name) {
+		this.driver_name = driver_name;
+	}
+
+	
 	public String getContent() {
 		return content;
 	}
@@ -155,4 +159,11 @@ public class SysMessage extends BaseModel {
 		this.messageType = messageType;
 	}
 
+	public String getDriverName() {
+		return driverName;
+	}
+
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
 }
