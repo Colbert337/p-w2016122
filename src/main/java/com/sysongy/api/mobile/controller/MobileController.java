@@ -421,17 +421,8 @@ public class MobileController {
 						}
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
-						/*
-						if("0".equals(driverStstus)){
-							driverStstus = "0";
-						}else if("1".equals(driverStstus)){
-							driverStstus = "1";
-						}else if("2".equals(driverStstus)){
-							driverStstus = "2";
-						}else if("3".equals(driverStstus)){
-							driverStstus = "3";
-						}*/
-						resultMap.put("isRealNameAuth",driver.getIsIdent().toString());
+
+						resultMap.put("isRealNameAuth",driver.getCheckedStatus());
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn",cashBack);
