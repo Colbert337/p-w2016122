@@ -155,17 +155,36 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
+				String type = mainObj.optString("type");
 				SysDriver driver = new SysDriver();
-				driver.setUserName(mainObj.optString("username"));
-				driver.setPassword(mainObj.optString("password"));
-				SysDriver queryDriver = driverService.queryByUserNameAndPassword(driver);
-				if(queryDriver != null ){
-					Map<String, Object> tokenMap = new HashMap<>();
-					tokenMap.put("token",queryDriver.getSysDriverId());
-					result.setData(tokenMap);
-				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("用户名或密码错误！");
+				SysDriver queryDriver = null;
+				//賬號密碼登錄
+				if("1".equals(type)){
+					driver.setUserName(mainObj.optString("username"));
+					driver.setPassword(mainObj.optString("password"));
+					queryDriver = driverService.queryByUserNameAndPassword(driver);
+					if(queryDriver != null ){
+						Map<String, Object> tokenMap = new HashMap<>();
+						tokenMap.put("token",queryDriver.getSysDriverId());
+						result.setData(tokenMap);
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("用户名或密码错误！");
+					}
+				}else{//用戶名驗證碼登錄
+					driver.setUserName(mainObj.optString("username"));
+					driver.setMobilePhone(mainObj.optString("username"));
+					String verificationCode = mainObj.optString("verificationCode");
+					String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
+					if(verificationCode.equals(veCode)){
+						queryDriver = driverService.queryByUserName(driver);
+						Map<String, Object> tokenMap = new HashMap<>();
+						tokenMap.put("token",queryDriver.getSysDriverId());
+						result.setData(tokenMap);
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("驗證碼無效！");
+					}
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2718,8 +2737,10 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String str ="{\"main\":{\"phoneNum\":\"13474294206\",\"verificationCode\":\"955824\",\"password\":\"96e79218965eb72c92a549dd5a330112\",\"invitationCode\":\"12111111111\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
-		str = DESUtil.encode("sysongys",str);//参数加密
-		System.out.println(str);
+		String s ="{\"main\":{\"username\":\"12111111111\",\"verificationCode\":\"930384\",\"type\":\"2\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		//String s = "{\"main\":{\"phoneNum\":\"12111111111\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		
+		s = DESUtil.encode("sysongys",s);//参数加密
+		System.out.println(s);
 	}
 }

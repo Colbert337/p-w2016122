@@ -417,4 +417,9 @@ public class DriverServiceImpl implements DriverService {
 	public SysDriver queryByUserNameAndPassword(SysDriver record) throws Exception {
 		return sysDriverMapper.queryByUserNameAndPassword(record);
 	}
+
+	@Override
+	public SysDriver queryByUserName(SysDriver record) throws Exception {
+		return sysDriverMapper.queryByUserName(record);
+	}
 }
