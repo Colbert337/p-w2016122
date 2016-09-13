@@ -2500,6 +2500,7 @@ public class MobileController {
 					dataMap.put("endTime", sft.format(driver.getExpiryDate()));
 					dataMap.put("drivingLicenseImageUrl", driver.getVehicleLice());
 					dataMap.put("driverLicenseImageUrl", driver.getDrivingLice());
+					dataMap.put("idCard", driver.getIdentityCard());
 					result.setData(dataMap);
 				}else{
 					result.setStatus(MobileReturn.STATUS_SUCCESS);

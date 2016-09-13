@@ -702,10 +702,8 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
     select
     <include refid="Base_Column_List" />
     from sys_driver
-    where 
-    user_name = #{userName,jdbcType=VARCHAR}
-    and
-    password = #{password,jdbcType=VARCHAR}
+    where (user_name = #{userName,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR})
+    or (mobile_phone = #{userName,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR})
 	<!-- and user_status = 0 -->
   </select>
   <select id="queryByUserName" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
