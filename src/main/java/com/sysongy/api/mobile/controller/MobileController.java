@@ -410,7 +410,7 @@ public class MobileController {
 
 						//获取用户审核状态
 						driver = driverlist.get(0);
-						String driverStstus = driver.getCheckedStatus();
+						String driverStstus = driver.getUserStatus();
 						if("2".equals(driverStstus)){
 							resultMap.put("nick",driver.getFullName());
 						}else{
@@ -2738,7 +2738,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String s ="{\"main\":{\"username\":\"12111111111\",\"verificationCode\":\"930384\",\"type\":\"2\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		String s ="{\"main\":{\"token\":\"2d7645c55f4d45519a1e460661564f8b\"},\"extend\":{\"version\":3,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
 		//String s = "{\"main\":{\"phoneNum\":\"12111111111\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
 
 		s = DESUtil.encode("sysongys",s);//参数加密
