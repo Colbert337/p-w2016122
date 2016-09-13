@@ -428,7 +428,7 @@ public class MobileController {
 						}else if("3".equals(driverStstus)){
 							driverStstus = "3";
 						}*/
-						resultMap.put("isRealNameAuth",driverStstus);
+						resultMap.put("isRealNameAuth",driver.getIsIdent());
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn",cashBack);
@@ -2738,9 +2738,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String s ="{\"main\":{\"token\":\"2d7645c55f4d45519a1e460661564f8b\"},\"extend\":{\"version\":3,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
-		//String s = "{\"main\":{\"phoneNum\":\"12111111111\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
-
+		String s ="{\"main\": {\"token\": \"127a95b528154d4293f9f429a970bb6a\",\"account\": \"18137079106\",\"name\": \"程云生\",\"amount\": \"0.01\",\"remark\": \"测试\",\"paycode\": \"21218cca77804d2ba1922c33e0151106\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 	}
