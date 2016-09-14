@@ -438,7 +438,7 @@ public class WechatController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
-				String mobile = mainObj.optString("mobile");
+				String mobile = mainObj.optString("phoneNum");
 				if(mobile != null && !"".equals(mobile)){
 					//查询当前token是否注册
 					SysDriver driver = new SysDriver();
@@ -489,7 +489,7 @@ public class WechatController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			logger.error("充值成功： " + resultStr);
+			logger.error("返回信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
