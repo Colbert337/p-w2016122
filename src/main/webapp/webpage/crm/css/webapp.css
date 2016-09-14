@@ -42,7 +42,7 @@ textarea { overflow: auto; }
 
 .clearfix:before,
 .clearfix:after,
-.row:before
+.row:before,
 .row:after {
   display: table;
   content: " ";
