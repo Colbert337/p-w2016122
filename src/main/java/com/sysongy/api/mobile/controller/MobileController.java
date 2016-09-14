@@ -709,14 +709,12 @@ public class MobileController {
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				String driverId = mainObj.optString("token");
 				String oldPayCode = mainObj.optString("oldPayCode");
-				oldPayCode = Encoder.MD5Encode(oldPayCode.getBytes());
 				SysDriver driver = driverService.queryDriverByPK(driverId);
 				String payCode = driver.getPayCode();
 				if(payCode.equals(oldPayCode)){
 					//判断原支付密码是否正确
 					String newPayCode = mainObj.optString("newPayCode");
 					if(newPayCode != null && !"".equals(newPayCode)){
-						newPayCode = Encoder.MD5Encode(newPayCode.getBytes());
 						sysDriver.setPassword(newPayCode);
 						driverService.saveDriver(sysDriver,"update");
 					}
