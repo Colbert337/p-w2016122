@@ -2487,10 +2487,16 @@ public class MobileController {
 				if(driver != null){
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("获取实名认证信息成功！");
-					List<Usysparam> list =  usysparamService.query("FUEL_TYPE", driver.getFuelType());
-					String gasType = "类型不存在";
-					if(list!=null && list.size() > 0 ){
-						gasType=list.get(0).getMname();
+					String gasType = "";
+					if(!"".equals(driver.getFuelType())){
+						List<Usysparam> list =  usysparamService.query("FUEL_TYPE", driver.getFuelType());
+						if(list!=null && list.size() > 0 ){
+							for(int i=0;i< list.size();i++){
+								if(driver.getFuelType().equals(list.get(i).getMcode())){
+									gasType=list.get(i).getMname();
+								}
+							}
+						}
 					}
 					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Map<String, Object> dataMap = new HashMap<>();
@@ -2511,8 +2517,8 @@ public class MobileController {
 					dataMap.put("plateNumber", driver.getPlateNumber());
 					dataMap.put("gasType", gasType);//燃气类型字典表
 					dataMap.put("endTime", sft.format(driver.getExpiryDate()));
-					dataMap.put("drivingLicenseImageUrl", vehicleLice);
-					dataMap.put("driverLicenseImageUrl", drivingLice);
+					dataMap.put("drivingLicenseImageUrl", drivingLice);
+					dataMap.put("driverLicenseImageUrl", vehicleLice);
 					dataMap.put("idCard", driver.getIdentityCard());
 					result.setData(dataMap);
 				}else{
