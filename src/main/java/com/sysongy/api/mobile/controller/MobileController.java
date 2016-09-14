@@ -2497,8 +2497,6 @@ public class MobileController {
 					String url= "http://192.168.1.202:8080/poms-web";
 					String vehicleLice="";
 					String drivingLice="";
-					System.out.println(driver.getVehicleLice());
-					System.out.println(driver.getDrivingLice());
 					if(driver.getVehicleLice()==null || "".equals(driver.getVehicleLice())){
 						vehicleLice="";
 					}else{
