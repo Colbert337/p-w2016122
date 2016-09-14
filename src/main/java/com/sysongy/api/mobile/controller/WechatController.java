@@ -448,7 +448,6 @@ public class WechatController {
 						//新用户订单对象
 						SysOrder driverOrder = new SysOrder();
 						String driverOrderID = UUIDGenerator.getUUID();//新用户订单ID
-						logger.error("订单ID： " + driverOrderID);
 						driverOrder.setOrderId(driverOrderID);//订单ID
 						driverOrder.setDebitAccount(sysDriver.get(0).getSysDriverId());//增加的账户ID
 						driverOrder.setOperator(sysDriver.get(0).getSysDriverId());//操作人ID
@@ -461,6 +460,7 @@ public class WechatController {
 						driverOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);//操作对象类型
 						driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
 						driverOrder.setOrderStatus(0);//订单初始化
+						driverOrder.setChannel("微信充值");
 						int nCreateOrder = orderService.insert(driverOrder, null);
 						if(nCreateOrder>0){
 							orderService.chargeToDriver(driverOrder);
