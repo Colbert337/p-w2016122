@@ -461,6 +461,7 @@ public class WechatController {
 						driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
 						driverOrder.setOrderStatus(0);//订单初始化
 						driverOrder.setChannel("微信充值");
+						driverOrder.setOrderDate(new Date());
 						int nCreateOrder = orderService.insert(driverOrder, null);
 						if(nCreateOrder>0){
 							orderService.chargeToDriver(driverOrder);
