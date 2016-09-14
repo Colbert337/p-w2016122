@@ -2494,12 +2494,27 @@ public class MobileController {
 					}
 					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Map<String, Object> dataMap = new HashMap<>();
+					String url= "http://192.168.1.202:8080/poms-web";
+					String vehicleLice="";
+					String drivingLice="";
+					System.out.println(driver.getVehicleLice());
+					System.out.println(driver.getDrivingLice());
+					if(driver.getVehicleLice()==null || "".equals(driver.getVehicleLice())){
+						vehicleLice="";
+					}else{
+						vehicleLice = url+driver.getVehicleLice();
+					}
+					if(driver.getDrivingLice()==null || "".equals(driver.getDrivingLice())){
+						drivingLice="";
+					}else{
+						drivingLice = url+driver.getDrivingLice();
+					}
 					dataMap.put("name", driver.getFullName());
 					dataMap.put("plateNumber", driver.getPlateNumber());
 					dataMap.put("gasType", gasType);//燃气类型字典表
 					dataMap.put("endTime", sft.format(driver.getExpiryDate()));
-					dataMap.put("drivingLicenseImageUrl", driver.getVehicleLice());
-					dataMap.put("driverLicenseImageUrl", driver.getDrivingLice());
+					dataMap.put("drivingLicenseImageUrl", vehicleLice);
+					dataMap.put("driverLicenseImageUrl", drivingLice);
 					dataMap.put("idCard", driver.getIdentityCard());
 					result.setData(dataMap);
 				}else{
@@ -2819,7 +2834,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String s ="{\"main\": {\"token\": \"127a95b528154d4293f9f429a970bb6a\",\"feeCount\": \"10.1\",\"payType\": \"1\"}, \"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		String s ="{\"main\":{\"token\":\"3163b26594804f3e9aea6c4b0d579c6d\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 	}
