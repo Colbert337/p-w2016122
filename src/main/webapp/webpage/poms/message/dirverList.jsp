@@ -28,10 +28,10 @@
 				class="table table-striped table-bordered table-hover col-sm-10">
 				<thead>
 					<tr>
-					<%-- 	<th class="center td-w1"><label class="pos-rel"> <!-- <input
+						<th class="center td-w1"><label class="pos-rel"> <!-- <input
 								type="checkbox" class="ace" onclick="checkedAllRows(this);" /> -->
 								<span class="lbl"></span>
-						</label></th> --%>
+						</label></th> 
 						<th onclick="orderBy(this,'sys_driver_id');commitForm();"
 							id="sys_driver_id_order">账号</th>
 						<th onclick="orderBy(this,'full_name');commitForm();"
@@ -53,11 +53,11 @@
 
 					<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 						<tr id="${list.sysDriverId }">
-							<%-- <td class="center"><label class="pos-rel"> <input
+							 <td class="center"><label class="pos-rel"> <input
 									type="checkbox" class="ace checkbox"
 									onchange="checkchange(this)" value1="${list.userName}" value="${list.deviceToken}"  id="${list.deviceToken}" /> <span
 									class="lbl"></span>
-							</label></td> --%>
+							</label></td> 
 							<td>${list.userName}</td>
 							<td>${list.fullName}</td>
 							<%-- 		<td><img width="150" height="150" alt="150x150"
