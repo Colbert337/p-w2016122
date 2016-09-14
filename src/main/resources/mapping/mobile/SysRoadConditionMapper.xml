@@ -64,10 +64,34 @@
     where id = #{id,jdbcType=VARCHAR}
   </select>
   
+  
+  
+   <select id="queryRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    id
+    from sys_road_condition  where 1=1 and condition_status='2'
+  </select> 
+  
+  
    <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from sys_road_condition 
+    from sys_road_condition  where 1=1 
+    <trim>
+	    <if test="conditionMsg != null &amp;&amp; conditionMsg != ''">
+			and condition_msg like CONCAT('%',CONCAT( #{conditionMsg,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="conditionType != null &amp;&amp; conditionType != ''">
+			and condition_type = #{conditionType,jdbcType=VARCHAR}
+		</if>
+		<if test="conditionStatus != null &amp;&amp; conditionStatus != ''">
+			and condition_status = #{conditionStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="publisherTime_str != null &amp;&amp; publisherTime_str != ''">
+			and publisher_time between CONCAT(#{publisherTime_str,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{auditorTime_str,jdbcType=VARCHAR},' 23:59:59')
+		</if>
+		 
+		</trim>
   </select> 
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
@@ -309,6 +333,29 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  
+  <!-- 审核 -->
+  <update id="updateByPrimaryKeyToCheck" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition" >
+    update sys_road_condition
+    <set >
+  
+      <if test="conditionStatus != null" >
+        condition_status = #{conditionStatus,jdbcType=VARCHAR},
+      </if> 
+      <if test="auditor != null" >
+        auditor = #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorPhone != null" >
+        auditor_phone = #{auditorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorTime != null" >
+        auditor_time = #{auditorTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition" >
     update sys_road_condition
     set condition_type = #{conditionType,jdbcType=VARCHAR},

@@ -1,11 +1,12 @@
 package com.sysongy.poms.mobile.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.sysongy.poms.base.model.BaseModel;
 
 
-public class SysRoadCondition extends BaseModel{
+public class SysRoadCondition extends BaseModel implements Serializable{
     private String id;
 
     private String conditionType;
@@ -25,10 +26,25 @@ public class SysRoadCondition extends BaseModel{
     private String conditionMsg;
 
     private String conditionImg;
+    private String publisherTime_str;
+   
+    
+    public String getPublisherTime_str() {
+		return publisherTime_str;
+	}
 
-    private Date startTime;
+	public void setPublisherTime_str(String publisherTime_str) {
+		this.publisherTime_str = publisherTime_str;
+	}
+
+	private Date startTime;
 
     private Date endTime;
+
+    private String captureTime_str;
+    private String auditorTime_str;
+    private String startTime_str;
+    private String endTime_str;
 
     private String province;
 
@@ -52,7 +68,39 @@ public class SysRoadCondition extends BaseModel{
 
     private String memo;
 
-    public String getId() {
+    public String getCaptureTime_str() {
+		return captureTime_str;
+	}
+
+	public void setCaptureTime_str(String captureTime_str) {
+		this.captureTime_str = captureTime_str;
+	}
+
+	public String getAuditorTime_str() {
+		return auditorTime_str;
+	}
+
+	public void setAuditorTime_str(String auditorTime_str) {
+		this.auditorTime_str = auditorTime_str;
+	}
+
+	public String getStartTime_str() {
+		return startTime_str;
+	}
+
+	public void setStartTime_str(String startTime_str) {
+		this.startTime_str = startTime_str;
+	}
+
+	public String getEndTime_str() {
+		return endTime_str;
+	}
+
+	public void setEndTime_str(String endTime_str) {
+		this.endTime_str = endTime_str;
+	}
+
+	public String getId() {
         return id;
     }
 

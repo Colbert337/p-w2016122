@@ -13,7 +13,7 @@
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formessage">
+	<form id="formRoad">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -28,18 +28,36 @@
 
 					<div class="search-types">
 						<div class="item">
-						    <label>消息标题:</label>
-							<input type="text" name="messageTitle" placeholder="输入消息标题"  maxlength="32" value="${message.messageTitle}"/>
+						    <label>路况说明:</label>
+							<input type="text" name="conditionMsg" placeholder="输入路况说明"  maxlength="200" value="${road.conditionMsg}"/>
 						</div>
-
+						<div class="item">
+							<label>路况类型</label>
+								<select 
+									name="conditionType" value="${road.conditionType}">
+									<s:option flag="true" gcode="CONDITION_TYPE"  form="road"
+										field="conditionType" />
+								</select>
+						</div>
+						<div class="item">
+							<label>路况类型</label>
+								<select 
+									name="conditionStatus"  id="conditionStatus" >
+									<option value="">--请选择--</option>
+									<option value="0" >已失效</option>
+									<option value="1" >未审核</option>
+									<option value="2" >已审核</option>
+									<option value="3" >未通过</option>
+								</select>
+						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>消息创建时间:</label>
-								<input type="text" class="" name="message_created_time_after" value="${message.message_created_time_after}" readonly="readonly"/>
+								<label>发布日期:</label>
+								<input type="text" class="timebox" name="publisherTime_str" value="${road.publisherTime_str}"  readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="message_created_time_before" value="${message.message_created_time_before}" readonly="readonly"/>
+								<input type="text" class="timebox" name="auditorTime_str" value="${road.auditorTime_str}" readonly="readonly"/>
 							</div>
 						</div>
 
@@ -88,20 +106,26 @@
 											<th onclick="orderBy(this,'end_time');commitForm();"
 											id="end_time_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
 										
-										<th onclick="orderBy(this,'operator');commitForm();"
+										<th onclick="orderBy(this,'publisher_name');commitForm();"
 											id="operator_orber">创建人</th>
-										<th onclick="orderBy(this,'operator');commitForm();"
+										<th onclick="orderBy(this,'publisher_phone');commitForm();"
 											id="operator_orber">创建人电话</th>
-										<th onclick="orderBy(this,'created_date');commitForm();"
+										<th onclick="orderBy(this,'publisher_time');commitForm();"
 											id="created_date_order" class="td-w2"><i
 											id="created_date"
 											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>发布时间</th>
-										<th onclick="orderBy(this,'operator');commitForm();"
+										<th onclick="orderBy(this,'auditor');commitForm();"
 											id="operator_orber">审核人</th>
-										<th onclick="orderBy(this,'operator');commitForm();"
+										<th onclick="orderBy(this,'auditor_phone');commitForm();"
 											id="operator_orber">审核人电话</th>
-										<th onclick="orderBy(this,'operator');commitForm();"
+										<th onclick="orderBy(this,'auditor_time');commitForm();"
 											id="operator_orber">审核时间</th>
+										<th onclick="orderBy(this,'province');commitForm();"
+											id="operator_orber">省份信息</th>
+										<th onclick="orderBy(this,'useful_count');commitForm();"
+											id="operator_orber">点赞数量</th>
+										<th onclick="orderBy(this,'memo');commitForm();"
+											id="operator_orber">备注</th>
 										<th class="text-center td-w3">操作</th>
 									</tr>
 								</thead>
@@ -112,7 +136,7 @@
 										<tr id="${list.id }">
 											<td><s:Code2Name mcode="${list.conditionType}"
 											gcode="CONDITION_TYPE"></s:Code2Name></td>
-											<td>${list.conditionStatus}</td>
+											<td>　　<c:if test="${list.conditionStatus == '0' }">已失效</c:if><c:if test="${list.conditionStatus == '1' }">待审核</c:if><c:if test="${list.conditionStatus == '2' }">已审核</c:if><c:if test="${list.conditionStatus == '3' }">未通过</c:if></td>
 											<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 											<td><div class="td-inner-warp">${list.captureLongitude},${list.captureLatitude }</div></td>
@@ -127,19 +151,30 @@
 											<td>${list.auditorPhone}</td>
 											<td><fmt:formatDate value="${list.auditorTime}" type="both" /></td>
 											<%-- <td>${list.operator}</td> --%>
-											<td class="text-center"><a class="option-btn-m"
+											<td>${list.province}</td>
+											<td>${list.usefulCount}</td>
+											<td>${list.memo}</td>
+											<td class="text-center">
+											
+											<c:if test="${list.conditionStatus == '1' }"><a class="option-btn-m"
 												href="javascript:void(0);" title="审核" data-rel="tooltip">
 													<i class="ace-icon fa fa-pencil bigger-130"
-													onclick="updateCheck('${list.conditionImg}',$('#${list.id }'));"></i>
-											</a> <a class="option-btn-m" href="javascript:void(0);"
+													onclick="updateCheck('${list.conditionImg}',$('#${list.id }'),'${list.id }');"></i>
+											</a> </c:if><a class="option-btn-m" href="javascript:void(0);"
 												title="查看图片" data-rel="tooltip"> <i
 													class="ace-icon fa fa-search-plus bigger-130"
-													onclick="showInnerModel('${list.conditionImg}',$('#${list.id }'));"></i>
+													onclick="updateCheck('${list.conditionImg}',$('#${list.id }'));"></i>
 											</a> <a class="" href="javascript:void(0);"
-												onclick="deleteBanner('${list.id}');" title="删除"
+												onclick="deleteRoad('${list.id}');" title="删除"
 												data-rel="tooltip"> <i
 													class="ace-icon fa fa-trash-o bigger-130"></i>
-											</a></td>
+											</a>
+											
+											<c:if test="${list.conditionStatus == '2' }"><a class="option-btn-m"
+												href="javascript:void(0);" title="失效" data-rel="tooltip">
+													<i class="glyphicon glyphicon-eye-close  bigger-130"
+													onclick="shixiao('${list.id}');"></i>
+											</a> </c:if></td>
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -155,12 +190,12 @@
 					<nav>
 						<ul id="ulhandle" class="pagination pull-right no-margin">
 							<li id="previous">
-								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formessage');">
+								<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formRoad');">
 									<span aria-hidden="true">上一页</span>
 								</a>
 							</li>
 							<li id="next">
-								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formessage');">
+								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formRoad');">
 									<span aria-hidden="true">下一页</span>
 								</a>
 							</li>  
@@ -215,7 +250,7 @@
 						</tr>
 							</tbody>
 				</table>
-				<div class="shenhe-items-hd">路况信息</div>
+				<div class="shenhe-items-hd">创建信息</div>
 				<table class="table">
 					<tbody>
 						<tr>
@@ -223,9 +258,15 @@
 							<td><div id="address" name="show"> </div></td>
 							<th>创建人电话</th>
 							<td><div id="created_time" name="show"> </div></td>
-							<th>创建时间</th>
-							<td><div id="expiry_date" name="show"> </div></td>
 						</tr>
+						<tr>
+							<th>创建时间</th>
+							<td colspan="3"><div id="created_time" name="show"> </div></td>			
+						</tr>
+						</tbody>
+				</table>
+				<div class="shenhe-items-hd">审核信息</div>
+				<table class="table">
 						<tr>
 							<th>审核人</th>
 							<td><div id="prepay_balance" name="show"> </div></td>
@@ -233,8 +274,8 @@
 							<td ><div id="prepay_phone" name="show"> </div></td>
 						</tr>
 						<tr>
-							<th>时间</th>
-							<td colspan="3"><div id="prepay_balance" name="show"> </div></td>
+							<th>审核时间</th>
+							<td colspan="3" ><div id="prepay_balance" name="show"> </div></td>
 							
 						</tr>
 					</tbody>
@@ -243,51 +284,32 @@
 				<div class="shenhe-items-hd">证件照片</div>
 				<div class="row">
 					<div class="col-sm-3">
-						<a class="gastation-log-colorbox" href="" data-rel="colorbox">
-							<img class="img-responsive" src="" alt="" id="innerimg1">
-							<div class="title">路况照片</div>
-						</a>
+						<ul class="ace-thumbnails clearfix">
+							<li>
+								<a class="" href="" data-rel="colorbox">
+									<img class="img-responsive" src="" alt="" id="innerimg1" />
+									<div class="text">
+										<div class="inner">点击放大</div>
+									</div>
+								</a>
+							</li>
+						</ul>
 					</div>
 				</div>
 
 			</div>
-
-			<div class="modal-footer">
+			<input type="hidden" id="roadId"/>
+			<div class="modal-footer" id="buttonList">
+				<button class="btn btn-primary btn-sm" onclick="updateRoad('2')">审核通过</button>
+			<button class="btn btn-primary btn-sm" onclick="updateRoad('3')">审核不通过</button>
 				<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div id="editModel" class="modal fade" role="dialog"
-	aria-labelledby="gridSystemModalLabel" data-backdrop="static"
-	tabindex="-1">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title" id="editBanner">查看用户列表</h4>
-			</div>
-			<div class="modal-body">
-				<div class="container-fluid" id="content">
-					<%--两行表单 开始--%>
-					
-					<!-- /.row -->
-					<%--两行表单 结束--%>
-				</div>
-			</div>
-			<!-- /.modal-content -->
-			<div class="modal-footer">
-				<button class="btn btn-primary btn-sm" onclick="closeDialog('editModel')">确
-					定</button>
-				<!-- <button class="btn btn-sm" i="close"
-					onclick="closeDialog('editModel')">取 消</button> -->
-			</div>
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
-	<!-- /.modal -->
-</div>
+
+<script>
+	$("#conditionStatus").val("${road.conditionStatus}");
+
+</script>

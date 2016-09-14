@@ -1,6 +1,5 @@
-$('.timebox').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 
-//bootstrap验证控件		
+
 	    $('#roadform').bootstrapValidator({
 	        message: 'This value is not valid',
 	        feedbackIcons: {
@@ -65,13 +64,6 @@ $('.timebox').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'})
 	                    }
 	                }
 	            },
-	            endTime: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '结束时间不能为空'
-	                    }
-	                }
-	            },
 	            address: {
 	                validators: {
 	                    notEmpty: {
@@ -81,8 +73,9 @@ $('.timebox').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'})
 	            }
 	         }
 	    });
+	  
 
-	    $('#date-timepicker1').datetimepicker({
+	    $('.timebox').datetimepicker({
 			 icons: {
 				time: 'fa fa-clock-o',
 				date: 'fa fa-calendar',
@@ -97,20 +90,23 @@ $('.timebox').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'})
 			}).next().on(ace.click_event, function(){
 				$(this).prev().focus();
 			});
+	  
 	function saveRoad(){
 		/*手动验证表单，当是普通按钮时。*/
+		if($("#conditionType").val()*1>5){
+			if($("#endTime_str").val()==""){
+				bootbox.alert("请选择结束时间");
+			}
+			
+		}
 		$('#roadform').data('bootstrapValidator').validate();
 		if(!$('#roadform').data('bootstrapValidator').isValid()){
 			return ;
 		}
 		
 		var options ={   
-	            url:'..//web/mobile/road',   
+	            url:'../web/mobile/road/saveRoad',   
 	            type:'post',
-	            data:{
-	            	device_token:device_token,
-	            	driver_name:driver_name
-	            },
 	            dataType:'text',
 	            success:function(data){
 	            	$("#main").html(data);
@@ -161,13 +157,70 @@ $('.timebox').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'})
 //		init();
 		
 	}
-	function saveBanner(){
-		//alert(device_token);
-		$("#editModel").modal('hide').removeClass('in');
-		$("body").removeClass('modal-open').removeAttr('style');
-		$(".modal-backdrop").remove();
+	var projectfileoptions = {
+			showUpload : false,
+			showRemove : false,
+			language : 'zh',
+			allowedPreviewTypes : [ 'image' ],
+			allowedFileExtensions : [ 'jpg', 'png', 'gif', 'jepg' ],
+			maxFileSize : 1000,
+		}
+		// 文件上传框
+		$('input[class=projectfile]').each(function() {
+			var imageurl = $(this).attr("value");
+
+			if (imageurl) {
+				var op = $.extend({
+					initialPreview : [ // 预览图片的设置
+					"<img src='" + imageurl + "' class='file-preview-image'>", ]
+				}, projectfileoptions);
+
+				$(this).fileinput(op);
+			} else {
+				$(this).fileinput(projectfileoptions);
+			}
+		});
+	function savePhoto(fileobj, obj, obj1, obj2) {
+
+		$(fileobj).parents("div").find("input[name=uploadfile]").each(
+				function() {
+					$(this).attr("name", "");
+				});
+		$(fileobj).parent("div").find("input:first").attr("name", "uploadfile");
+		if ($(obj).val() == null || $(obj).val() == "") {
+			bootbox.alert("请先上传文件");
+			return;
+		}
 		
+		
+		console.log('savePhoto');
+		var stationId = "mobile";
+		var multipartOptions = {
+			url : '../crmInterface/crmBaseService/web/upload?stationid='
+					+ stationId,
+			type : 'post',
+			dataType : 'text',
+			enctype : "multipart/form-data",
+			success : function(data) {
+				var s = JSON.parse(data);
+				if (s.success == true) {
+					var a=s.obj.substring(s.obj.indexOf('/')+1,s.obj.length);
+					
+					bootbox.alert("上传成功");
+					$(obj1).val(a.substring(a.indexOf('/'),a.length));
+				}
+
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				bootbox.alert("上传成功");
+			}
+		}
+		$("#roadform").ajaxSubmit(multipartOptions);
+
 	}
+
+
+	
 	function returnpage(){
 		loadPage('#main', '../web/message/messageList');
 	}

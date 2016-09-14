@@ -12,6 +12,7 @@ public interface SysRoadConditionMapper {
     int updateByPrimaryKeySelective(SysRoadCondition record);
 
     int updateByPrimaryKey(SysRoadCondition record);
+    
     List< SysRoadCondition> queryForPage(SysRoadCondition record);
     /**
      * 上报路况 
@@ -29,4 +30,8 @@ public interface SysRoadConditionMapper {
      * 取消路况 
      */
     int cancelSysRoadCondition(SysRoadCondition record);
+
+	int updateByPrimaryKeyToCheck(SysRoadCondition road);
+
+	List<SysRoadCondition> queryRoadId();
 }
