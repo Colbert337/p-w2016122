@@ -438,7 +438,7 @@ public class WechatController {
 			 * 请求接口
 			 */
 			if(mainObj != null){
-				String mobile = mainObj.optString("phoneNum");
+				String mobile = mainObj.optString("mobile");
 				if(mobile != null && !"".equals(mobile)){
 					//查询当前token是否注册
 					SysDriver driver = new SysDriver();
@@ -460,9 +460,18 @@ public class WechatController {
 						driverOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);//操作对象类型
 						driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
 						driverOrder.setOrderStatus(0);//订单初始化
-						orderService.chargeToDriver(driverOrder);
-						dataMap.put("resultVal","true");
-						result.setData(dataMap);
+						driverOrder.setChannel("微信充值");
+						int nCreateOrder = orderService.insert(driverOrder, null);
+						if(nCreateOrder>0){
+							orderService.chargeToDriver(driverOrder);
+							dataMap.put("resultVal","true");
+							result.setData(dataMap);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("订单生成错误！");
+							result.setData(null);
+						}
+						
 					}else{
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("该用户尚未注册");
@@ -479,8 +488,8 @@ public class WechatController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			logger.error("充值成功： " + resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("充值失败！");
@@ -495,5 +504,39 @@ public class WechatController {
 		} finally {
 			return resultStr;
 		}
+	}
+	
+	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType) throws Exception{
+		SysOrder record = new SysOrder();
+
+		record.setOrderId(orderID);
+		record.setDebitAccount(driverID);
+		record.setOperator(driverID);
+		record.setOperatorSourceId(driverID);
+
+		record.setCash(new BigDecimal(cash));
+		record.setChargeType(chargeType);
+
+		record.setIs_discharge("0");
+		record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
+		record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
+		record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+		record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
+		record.setOrderStatus(0);
+		/**该充值步骤要放到第三方回调接口里面
+		try{
+			String orderCharge = orderService.chargeToDriver(record);
+			if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+				throw new Exception("订单充值错误：" + orderCharge);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("订单充值错误：" + e);
+		}
+		 **/
+		Date curDate = new Date();
+		record.setOrderDate(curDate);
+		record.setChannel("司集能源APP");
+		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
+		return record;
 	}
 }

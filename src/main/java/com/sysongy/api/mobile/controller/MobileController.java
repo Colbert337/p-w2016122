@@ -314,6 +314,7 @@ public class MobileController {
 						String sysDriverId = UUIDGenerator.getUUID();
 						driver.setPassword(mainObj.optString("password"));
 						driver.setSysDriverId(sysDriverId);
+						driver.setRegisSource("APP");
 						String encoderContent=mainObj.optString("phoneNum");
 						//图片路径
 						String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
@@ -2818,7 +2819,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String s ="{\"main\": {\"msgType\": \"1\",\"pageNum\": \"1\",\"pageSize\": \"20\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		String s ="{\"main\": {\"token\": \"127a95b528154d4293f9f429a970bb6a\",\"feeCount\": \"10.1\",\"payType\": \"1\"}, \"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 	}
