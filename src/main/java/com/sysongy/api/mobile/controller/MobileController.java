@@ -703,14 +703,12 @@ public class MobileController {
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				String driverId = mainObj.optString("token");
 				String oldPayCode = mainObj.optString("oldPayCode");
-				oldPayCode = Encoder.MD5Encode(oldPayCode.getBytes());
 				SysDriver driver = driverService.queryDriverByPK(driverId);
 				String payCode = driver.getPayCode();
 				if(payCode.equals(oldPayCode)){
 					//判断原支付密码是否正确
 					String newPayCode = mainObj.optString("newPayCode");
 					if(newPayCode != null && !"".equals(newPayCode)){
-						newPayCode = Encoder.MD5Encode(newPayCode.getBytes());
 						sysDriver.setPassword(newPayCode);
 						driverService.saveDriver(sysDriver,"update");
 					}
@@ -2480,19 +2478,38 @@ public class MobileController {
 				if(driver != null){
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("获取实名认证信息成功！");
-					List<Usysparam> list =  usysparamService.query("FUEL_TYPE", driver.getFuelType());
-					String gasType = "类型不存在";
-					if(list!=null && list.size() > 0 ){
-						gasType=list.get(0).getMname();
+					String gasType = "";
+					if(!"".equals(driver.getFuelType())){
+						List<Usysparam> list =  usysparamService.query("FUEL_TYPE", driver.getFuelType());
+						if(list!=null && list.size() > 0 ){
+							for(int i=0;i< list.size();i++){
+								if(driver.getFuelType().equals(list.get(i).getMcode())){
+									gasType=list.get(i).getMname();
+								}
+							}
+						}
 					}
 					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Map<String, Object> dataMap = new HashMap<>();
+					String url= "http://192.168.1.202:8080/poms-web";
+					String vehicleLice="";
+					String drivingLice="";
+					if(driver.getVehicleLice()==null || "".equals(driver.getVehicleLice())){
+						vehicleLice="";
+					}else{
+						vehicleLice = url+driver.getVehicleLice();
+					}
+					if(driver.getDrivingLice()==null || "".equals(driver.getDrivingLice())){
+						drivingLice="";
+					}else{
+						drivingLice = url+driver.getDrivingLice();
+					}
 					dataMap.put("name", driver.getFullName());
 					dataMap.put("plateNumber", driver.getPlateNumber());
 					dataMap.put("gasType", gasType);//燃气类型字典表
 					dataMap.put("endTime", sft.format(driver.getExpiryDate()));
-					dataMap.put("drivingLicenseImageUrl", driver.getVehicleLice());
-					dataMap.put("driverLicenseImageUrl", driver.getDrivingLice());
+					dataMap.put("drivingLicenseImageUrl", drivingLice);
+					dataMap.put("driverLicenseImageUrl", vehicleLice);
 					dataMap.put("idCard", driver.getIdentityCard());
 					result.setData(dataMap);
 				}else{
@@ -2812,7 +2829,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String s ="{\"main\": {\"token\": \"127a95b528154d4293f9f429a970bb6a\",\"feeCount\": \"10.1\",\"payType\": \"1\"}, \"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		String s ="{\"main\":{\"token\":\"3163b26594804f3e9aea6c4b0d579c6d\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 	}
