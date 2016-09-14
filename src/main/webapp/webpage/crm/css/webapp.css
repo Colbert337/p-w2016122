@@ -42,7 +42,7 @@ textarea { overflow: auto; }
 
 .clearfix:before,
 .clearfix:after,
-.row:before
+.row:before,
 .row:after {
   display: table;
   content: " ";
@@ -157,14 +157,17 @@ textarea { overflow: auto; }
 }
 .station-special-more {
 	padding: 0 15px 10px;
-	text-align: center;
 }
-.station-special-more .btn {
+.station-special-more .btn,
+.btn-app-primary {
 	display: block;
 	background-color: #669e31;
 	padding: 10px 0;
 	color: #fff;
-	border-radius: 6px;
+	border-radius: 3px;
+	text-align: center;
+	border: 0;
+	width: 100%;
 }
 .station-icon {
 	float: right;
@@ -182,4 +185,98 @@ textarea { overflow: auto; }
 .bonus-rules-bd li {
 	padding-top: 4px;
 	padding-bottom: 4px;
+}
+.share {
+	max-width: 768px;
+	margin: 0 auto;
+	padding: 20px;
+}
+.share-hd {
+	background: url(../images/yqmfx.png) center top no-repeat;
+	background-size: 100px;
+	padding: 120px 0 50px 0;
+	margin-top: 20px;
+}
+.share-hd .info {
+	font-size: 16px;
+}
+.share-hd .info p {
+	text-align: center;
+	margin: 0;
+	padding-bottom: 8px;
+}
+.share-hd .subinfo {
+	color: #666;
+	padding-top: 10px;
+}
+.share-invite-code {
+	text-align: center;
+	padding-bottom: 15px;
+	font-size: 16px;
+}
+.share-invite-code .label {
+	color: #669e31;
+}
+.share-sendto-sms {
+	font-size: 16px;
+}
+.share-sendto-sns {
+	text-align: center;
+}
+.share-sendto-sns h4 {
+	font-weight: normal;
+	font-size: 16px;
+	margin: 40px 0 10px 0;
+}
+.share-sendto-sns ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.share-sendto-sns ul li {
+	width: 25%;
+	float: left;
+}
+.share-sendto-sns .icon{
+	display: block;
+	font-size: 30px;
+	color: #666;
+}
+.share-sendto-sns .name{
+	font-size: 12px;
+}
+.df-item {
+	position: relative;
+	margin-bottom: 10px;
+}
+.df-item .txt {
+	border: 1px solid #cddeba;
+	background-color: #fff;
+	padding: 3%;
+	width: 94%;
+	border-radius: 3px;
+	outline: none;
+}
+.df-item .txt:focus {
+	border-color: #afd78e;
+	background-color: #e2fccc;
+}
+.get-code-info {
+	position: absolute;
+	right: -1px;
+	top: 1px;
+	border: 1px solid #cddeba;
+	border-width: 0 0 0 1px;
+	padding: 3%;
+	background: none;
+}
+.df-item-btn {
+	padding-top: 20px;
+	font-size: 16px;
+}
+
+form label.error {
+	display: block;
+	color: #f00;
+	padding: 2px 0 0 3%;
 }
