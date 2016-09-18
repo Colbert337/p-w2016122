@@ -22,7 +22,7 @@
 			<div class="col-xs-12">
 				<!-- PAGE CONTENT BEGINS -->
 				<div class="row">
-					<div class="col-sm-2">
+					<%-- <div class="col-sm-2">
 						<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
 						<div class="dd dd-draghandle">
 							<ol class="dd-list" id="cashbackol">
@@ -44,8 +44,8 @@
 								</li>
 							</ol>
 						</div>
-					</div>
-
+					</div> --%>
+					<input type="text" id="imgType" name="imgType" value="${mbBanner.imgType}" />
 					<div class="col-sm-10">
 						<div class="page-header">
 							<h1>图片列表</h1>
@@ -73,16 +73,16 @@
 								<thead>
 									<tr>
 										<th onclick="orderBy(this,'sort');commitForm();"
-											id="sys_cash_back_id_order">序号</th>
+											id="sort_order">序号</th>
 										<th onclick="orderBy(this,'title');commitForm();"
-											id="threshold_min_value_order">标题</th>
+											id="title_order">标题</th>
 										<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
 										<th onclick="orderBy(this,'target_url');commitForm();"
-											id="cash_per_order">链接地址</th>
+											id="target_url_order">链接地址</th>
 										<th onclick="orderBy(this,'content');commitForm();"
 											id="content_order">正文</th>
-										<th onclick="orderBy(this,'remark');commitForm();" id="level">备注</th>
+										<th id="level">备注</th>
 										<th onclick="orderBy(this,'city_id');commitForm();"
 											id="city_id_order">城市</th>
 										<th onclick="orderBy(this,'created_date');commitForm();"

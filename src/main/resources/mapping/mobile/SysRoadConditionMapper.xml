@@ -26,6 +26,31 @@
     <result column="auditor_time" property="auditorTime" jdbcType="TIMESTAMP" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="MapResultMap" type="java.util.Map" >
+      <id column="id" property="id" jdbcType="VARCHAR" />
+      <result column="condition_type" property="conditionType" jdbcType="VARCHAR" />
+      <result column="condition_status" property="conditionStatus" jdbcType="VARCHAR" />
+      <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+      <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+      <result column="capture_longitude" property="captureLongitude" jdbcType="VARCHAR" />
+      <result column="capture_latitude" property="captureLatitude" jdbcType="VARCHAR" />
+      <result column="capture_time" property="captureTime" jdbcType="TIMESTAMP" />
+      <result column="condition_msg" property="conditionMsg" jdbcType="VARCHAR" />
+      <result column="condition_img" property="conditionImg" jdbcType="VARCHAR" />
+      <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+      <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+      <result column="province" property="province" jdbcType="VARCHAR" />
+      <result column="address" property="address" jdbcType="VARCHAR" />
+      <result column="direction" property="direction" jdbcType="VARCHAR" />
+      <result column="useful_count" property="usefulCount" jdbcType="VARCHAR" />
+      <result column="publisher_name" property="publisherName" jdbcType="VARCHAR" />
+      <result column="publisher_phone" property="publisherPhone" jdbcType="VARCHAR" />
+      <result column="publisher_time" property="publisherTime" jdbcType="TIMESTAMP" />
+      <result column="auditor" property="auditor" jdbcType="VARCHAR" />
+      <result column="auditor_phone" property="auditorPhone" jdbcType="VARCHAR" />
+      <result column="auditor_time" property="auditorTime" jdbcType="TIMESTAMP" />
+      <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, condition_type, condition_status, longitude, latitude, capture_longitude, capture_latitude, 
     capture_time, condition_msg, condition_img, start_time, end_time, province, address, 
@@ -38,6 +63,37 @@
     from sys_road_condition
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  
+  
+  
+   <select id="queryRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    id
+    from sys_road_condition  where 1=1 and condition_status='2'
+  </select> 
+  
+  
+   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_road_condition  where 1=1 
+    <trim>
+	    <if test="conditionMsg != null &amp;&amp; conditionMsg != ''">
+			and condition_msg like CONCAT('%',CONCAT( #{conditionMsg,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="conditionType != null &amp;&amp; conditionType != ''">
+			and condition_type = #{conditionType,jdbcType=VARCHAR}
+		</if>
+		<if test="conditionStatus != null &amp;&amp; conditionStatus != ''">
+			and condition_status = #{conditionStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="publisherTime_str != null &amp;&amp; publisherTime_str != ''">
+			and publisher_time between CONCAT(#{publisherTime_str,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{auditorTime_str,jdbcType=VARCHAR},' 23:59:59')
+		</if>
+		 
+		</trim>
+  </select> 
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_road_condition
     where id = #{id,jdbcType=VARCHAR}
@@ -277,6 +333,29 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  
+  <!-- 审核 -->
+  <update id="updateByPrimaryKeyToCheck" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition" >
+    update sys_road_condition
+    <set >
+  
+      <if test="conditionStatus != null" >
+        condition_status = #{conditionStatus,jdbcType=VARCHAR},
+      </if> 
+      <if test="auditor != null" >
+        auditor = #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorPhone != null" >
+        auditor_phone = #{auditorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="auditorTime != null" >
+        auditor_time = #{auditorTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition" >
     update sys_road_condition
     set condition_type = #{conditionType,jdbcType=VARCHAR},
@@ -303,4 +382,320 @@
       memo = #{memo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+	<!-- 上報路況 -->
+	<insert id="reportSysRoadCondition" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition">
+		insert into sys_road_condition
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="conditionType != null">
+				condition_type,
+			</if>
+			<if test="conditionStatus != null">
+				condition_status,
+			</if>
+			<if test="longitude != null">
+				longitude,
+			</if>
+			<if test="latitude != null">
+				latitude,
+			</if>
+			<if test="captureLongitude != null">
+				capture_longitude,
+			</if>
+			<if test="captureLatitude != null">
+				capture_latitude,
+			</if>
+			<if test="captureTime != null">
+				capture_time,
+			</if>
+			<if test="conditionMsg != null">
+				condition_msg,
+			</if>
+			<if test="conditionImg != null">
+				condition_img,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="direction != null">
+				direction,
+			</if>
+			<if test="usefulCount != null">
+				useful_count,
+			</if>
+			<if test="publisherName != null">
+				publisher_name,
+			</if>
+			<if test="publisherPhone != null">
+				publisher_phone,
+			</if>
+			<if test="publisherTime != null">
+				publisher_time,
+			</if>
+			<if test="auditor != null">
+				auditor,
+			</if>
+			<if test="auditorPhone != null">
+				auditor_phone,
+			</if>
+			<if test="auditorTime != null">
+				auditor_time,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="conditionType != null">
+				#{conditionType,jdbcType=VARCHAR},
+			</if>
+			<if test="conditionStatus != null">
+				#{conditionStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="longitude != null">
+				#{longitude,jdbcType=VARCHAR},
+			</if>
+			<if test="latitude != null">
+				#{latitude,jdbcType=VARCHAR},
+			</if>
+			<if test="captureLongitude != null">
+				#{captureLongitude,jdbcType=VARCHAR},
+			</if>
+			<if test="captureLatitude != null">
+				#{captureLatitude,jdbcType=VARCHAR},
+			</if>
+			<if test="captureTime != null">
+				#{captureTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="conditionMsg != null">
+				#{conditionMsg,jdbcType=VARCHAR},
+			</if>
+			<if test="conditionImg != null">
+				#{conditionImg,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="direction != null">
+				#{direction,jdbcType=VARCHAR},
+			</if>
+			<if test="usefulCount != null">
+				#{usefulCount,jdbcType=VARCHAR},
+			</if>
+			<if test="publisherName != null">
+				#{publisherName,jdbcType=VARCHAR},
+			</if>
+			<if test="publisherPhone != null">
+				#{publisherPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="publisherTime != null">
+				#{publisherTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditor != null">
+				#{auditor,jdbcType=VARCHAR},
+			</if>
+			<if test="auditorPhone != null">
+				#{auditorPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="auditorTime != null">
+				#{auditorTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+<!-- 获取路况列表 -->
+	<select id="queryForPageMap" resultMap="MapResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sys_road_condition
+		where 1=1
+		<trim>
+			<if test="longitude != null &amp;&amp; longitude != ''">
+				and longitude = #{longitude,jdbcType=VARCHAR}
+			</if>
+			<if test="latitude!= null &amp;&amp; latitude != ''">
+				and latitude = #{latitude,jdbcType=VARCHAR}
+			</if>
+			<if test="province!= null &amp;&amp; province != ''">
+				and province = #{province,jdbcType=VARCHAR}
+			</if>
+			<if test="conditionType!= null &amp;&amp; conditionType != ''">
+				and condition_type = #{conditionType,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</select>
+	
+	
+	<!-- 取消路況 -->
+	<insert id="cancelSysRoadCondition" parameterType="com.sysongy.poms.mobile.model.SysRoadCondition">
+		insert into sys_road_condition_str
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="conditionType != null">
+				condition_type,
+			</if>
+			<if test="conditionStatus != null">
+				condition_status,
+			</if>
+			<if test="longitude != null">
+				longitude,
+			</if>
+			<if test="latitude != null">
+				latitude,
+			</if>
+			<if test="captureLongitude != null">
+				capture_longitude,
+			</if>
+			<if test="captureLatitude != null">
+				capture_latitude,
+			</if>
+			<if test="captureTime != null">
+				capture_time,
+			</if>
+			<if test="conditionMsg != null">
+				condition_msg,
+			</if>
+			<if test="conditionImg != null">
+				condition_img,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="direction != null">
+				direction,
+			</if>
+			<if test="usefulCount != null">
+				useful_count,
+			</if>
+			<if test="publisherName != null">
+				publisher_name,
+			</if>
+			<if test="publisherPhone != null">
+				publisher_phone,
+			</if>
+			<if test="publisherTime != null">
+				publisher_time,
+			</if>
+			<if test="auditor != null">
+				auditor,
+			</if>
+			<if test="auditorPhone != null">
+				auditor_phone,
+			</if>
+			<if test="auditorTime != null">
+				auditor_time,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="conditionType != null">
+				#{conditionType,jdbcType=VARCHAR},
+			</if>
+			<if test="conditionStatus != null">
+				#{conditionStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="longitude != null">
+				#{longitude,jdbcType=VARCHAR},
+			</if>
+			<if test="latitude != null">
+				#{latitude,jdbcType=VARCHAR},
+			</if>
+			<if test="captureLongitude != null">
+				#{captureLongitude,jdbcType=VARCHAR},
+			</if>
+			<if test="captureLatitude != null">
+				#{captureLatitude,jdbcType=VARCHAR},
+			</if>
+			<if test="captureTime != null">
+				#{captureTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="conditionMsg != null">
+				#{conditionMsg,jdbcType=VARCHAR},
+			</if>
+			<if test="conditionImg != null">
+				#{conditionImg,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="direction != null">
+				#{direction,jdbcType=VARCHAR},
+			</if>
+			<if test="usefulCount != null">
+				#{usefulCount,jdbcType=VARCHAR},
+			</if>
+			<if test="publisherName != null">
+				#{publisherName,jdbcType=VARCHAR},
+			</if>
+			<if test="publisherPhone != null">
+				#{publisherPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="publisherTime != null">
+				#{publisherTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="auditor != null">
+				#{auditor,jdbcType=VARCHAR},
+			</if>
+			<if test="auditorPhone != null">
+				#{auditorPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="auditorTime != null">
+				#{auditorTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
 </mapper>

@@ -3,6 +3,7 @@ package com.sysongy.poms.message.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.search.MessageIDTerm;
@@ -143,6 +144,14 @@ public class SysMessageServiceImpl implements SysMessageService {
 			return page;
 		}
 		return null;
+	}
+
+	@Override
+	public PageInfo<Map<String, Object>> queryMsgListForPage(SysMessage record) throws Exception {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = messageMapper.queryMsgListForPage(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
 	}
 
 }

@@ -1,5 +1,11 @@
 package com.sysongy.poms.mobile.service;
 
+
+import java.util.List;
+import java.util.Map;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.mobile.model.SysRoadCondition;
+
 /**
  * @FileName: SysRoadService
  * @Encoding: UTF-8
@@ -11,4 +17,34 @@ package com.sysongy.poms.mobile.service;
  * @Description:
  */
 public interface SysRoadService {
+
+	PageInfo<SysRoadCondition> queryRoadList(SysRoadCondition road);
+
+	int saveRoad(SysRoadCondition road);
+	/**
+	 * 上報路況
+	 */
+	public int reportSysRoadCondition(SysRoadCondition record) throws Exception;
+
+	/**
+	 * 获取路况列表
+	 */
+	public PageInfo<Map<String,Object>> queryForPage(SysRoadCondition record) throws Exception;
+	
+	/**
+	 * 根据ID查询
+	 */
+	public SysRoadCondition selectByPrimaryKey(String id) throws Exception;
+	
+	/**
+	 * 取消路況
+	 */
+	public int cancelSysRoadCondition(SysRoadCondition record) throws Exception;
+
+	int updateRoad(SysRoadCondition road);
+
+	int deleteRoad(SysRoadCondition road);
+
+	List<SysRoadCondition> queryRoadIDList();
+	
 }
