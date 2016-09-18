@@ -2222,8 +2222,7 @@ public class MobileController {
 			if (mainObj != null) {
 				// 创建对象
 				SysRoadCondition roadCondition = new SysRoadCondition();
-//				String conditionType = mainObj.optString("conditionType");
-				String conditionType ="02";
+				String conditionType = mainObj.optString("conditionType");
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date start = sft.parse(mainObj.optString("flashTime"));
 				roadCondition.setId(UUIDGenerator.getUUID());
