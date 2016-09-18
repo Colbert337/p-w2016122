@@ -6,8 +6,10 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -2220,7 +2222,8 @@ public class MobileController {
 			if (mainObj != null) {
 				// 创建对象
 				SysRoadCondition roadCondition = new SysRoadCondition();
-				String conditionType = mainObj.optString("conditionType");
+//				String conditionType = mainObj.optString("conditionType");
+				String conditionType ="02";
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date start = sft.parse(mainObj.optString("flashTime"));
 				roadCondition.setId(UUIDGenerator.getUUID());
@@ -2230,17 +2233,18 @@ public class MobileController {
 				roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
 				roadCondition.setCaptureTime(start);//拍照时间
 				roadCondition.setStartTime(start);//开始时间
-				//计算结束时间01-60min、02-120min、05-240min，其他为0
-				Date end = sft.parse(mainObj.optString("flashTime"));
+				//计算结束时间01-60min、02-120min、05-240min，其他为null
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(start);
 				if("01".equals(conditionType)){
-					end.setMinutes(start.getMinutes()+60);
-					roadCondition.setEndTime(end);
+					cal.add(Calendar.HOUR,1);
+					roadCondition.setEndTime(cal.getTime());
 				}else if("02".equals(conditionType)){
-					end.setMinutes(start.getMinutes()+120);
-					roadCondition.setEndTime(end);
+					cal.add(Calendar.HOUR,2);
+					roadCondition.setEndTime(cal.getTime());
 				}else if("05".equals(conditionType)){
-					end.setMinutes(start.getMinutes()+240);
-					roadCondition.setEndTime(end);
+					cal.add(Calendar.HOUR,4);
+					roadCondition.setEndTime(cal.getTime());
 				}else{
 					roadCondition.setEndTime(null);
 				}
@@ -2867,9 +2871,20 @@ public class MobileController {
 		return record;
 	}
 	
-	public static void main(String[] args) {
-		String s ="{\"main\":{\"token\":\"23f95863865a46ccb9b5482323e50485\",\"condition_img\":\"13474294206.jpg\",\"conditionType\":\"01\",\"flashLongitude\":\"108.956178\",\"flashLatitude\":\"34.258905\",\"flashTime\":\"2010-07-25 12:12:12\",\"conditionMsg\":\"路况说明\",\"longitude\":\"108.956187\",\"latitude\":\"34.258905\",\"address\":\"路况地址\",\"direction\":\"1\",\"publisherName\":\"13474294208\",\"publisherPhone\":\"13474294208\",\"publisherTime\":\"2010-07-25 12:12:12\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+	public static void main(String[] args) throws ParseException {
+		/*String s ="{\"main\":{\"token\":\"23f95863865a46ccb9b5482323e50485\",\"condition_img\":\"13474294206.jpg\",\"conditionType\":\"01\",\"flashLongitude\":\"108.956178\",\"flashLatitude\":\"34.258905\",\"flashTime\":\"2010-07-25 12:12:12\",\"conditionMsg\":\"路况说明\",\"longitude\":\"108.956187\",\"latitude\":\"34.258905\",\"address\":\"路况地址\",\"direction\":\"1\",\"publisherName\":\"13474294208\",\"publisherPhone\":\"13474294208\",\"publisherTime\":\"2010-07-25 12:12:12\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
+		SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+		String str = "2016-09-18 12:38:38";
+		Calendar cal = Calendar.getInstance();
+		Date date = sft.parse(str);
+		cal.setTime(date);
+		System.out.println("date = "+sft.format(date));
+        cal.setTime(date);
+        cal.add(Calendar.HOUR,1);
+        Date date1 = cal.getTime();
+        String d4 = sft.format(date1);
+        System.out.println(d4);*/
 	}
 }
