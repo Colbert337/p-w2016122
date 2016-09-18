@@ -1640,10 +1640,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("查询充值记录信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询充值记录成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询充值记录失败！");
@@ -1747,14 +1745,11 @@ public class MobileController {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
 			}
-
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("查询消费记录信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询消费记录成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询消费记录失败！");
@@ -1840,9 +1835,7 @@ public class MobileController {
 								totalBack = totalBack.add(tempVal);
 							}
 						}
-
 					}
-
 					reCharge.put("totalOut",totalCash);
 					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
@@ -1860,10 +1853,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("查询转账记录信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询转账记录成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询转账记录失败！");
@@ -1953,9 +1944,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("充值信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("充值成功： " + resultStr);
 			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2068,7 +2058,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			logger.error("修改账号手机号/密保手机成功： " + resultStr);
+			logger.error("修改账号手机号/密保手机信息 ： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2146,7 +2136,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			
 			resultStr = resutObj.toString();
-			logger.error("重置支付密码成功： " + resultStr);
+			logger.error("重置支付密码信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2190,8 +2180,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			logger.error("查询成功： " + resultStr);
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			logger.error("查询信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询失败！");
@@ -2211,39 +2201,64 @@ public class MobileController {
 	 */
 	@RequestMapping(value = "/road/reportRoadInfo")
 	@ResponseBody
-	public String reportRoadInfo(String params){
+	public String reportRoadInfo(String params) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询成功！");
+		result.setMsg("上报成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 		try {
 			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
 			 * 请求接口
 			 */
-			List<SysCashBack> list = sysCashBackService.queryMaxCashBack();
-			Map<String, Object> dataMap = new HashMap<>();
-			for(int i=0;i<list.size();i++){
-				if(list.get(i).getSys_cash_back_no().equals("101")){
-					dataMap.put("alipay",list.get(i).getCash_per());
-				}else{
-					dataMap.put("wechat",list.get(i).getCash_per());
+			if (mainObj != null) {
+				// 创建对象
+				SysRoadCondition roadCondition = new SysRoadCondition();
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				roadCondition.setId(mainObj.optString("token"));
+				roadCondition.setConditionImg(mainObj.optString("condition_img"));
+				roadCondition.setConditionType(mainObj.optString("conditionType"));
+				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
+				roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
+				roadCondition.setCaptureTime(sft.parse(mainObj.optString("flashTime")));
+				roadCondition.setConditionMsg(mainObj.optString("conditionMsg"));
+				roadCondition.setLongitude(mainObj.optString("longitude"));
+				roadCondition.setLatitude(mainObj.optString("latitude"));
+				roadCondition.setAddress(mainObj.optString("address"));
+				roadCondition.setDirection(mainObj.optString("direction"));
+				roadCondition.setPublisherName(mainObj.optString("publisherName"));
+				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
+				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
+				int tmp = sysRoadService.reportSysRoadCondition(roadCondition);
+				if (tmp > 0) {
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("上报成功！");
 				}
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			result.setData(dataMap);
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("查询成功： " + resultStr);
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			logger.error("上报路况信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询失败！");
+			result.setMsg("上报路況失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询失败： " + e);
+			logger.error("上报路況失败： " + e);
 			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 			return resultStr;
 		} finally {
 			return resultStr;
@@ -2317,8 +2332,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
+			logger.error("获取路况欣喜： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
-			logger.error("获取路况成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("获取路况失败！");
@@ -2374,8 +2389,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("统计信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
-			logger.error("统计成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("统计失败！");
@@ -2441,7 +2456,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("取消路况成功： " + resultStr);
+			logger.error("取消路况信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2530,7 +2545,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			logger.error("获取成功： " + resultStr);
+			logger.error("获取实名认证信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2612,7 +2627,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("获取成功： " + resultStr);
+			logger.error("获取信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2836,7 +2851,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String s ="{\"main\":{\"token\":\"3163b26594804f3e9aea6c4b0d579c6d\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		String s ="{\"main\":{\"token\":\"23f95863865a46ccb9b5482323e50485\",\"condition_img\":\"13474294206.jpg\",\"conditionType\":\"01\",\"flashLongitude\":\"108.956178\",\"flashLatitude\":\"34.258905\",\"flashTime\":\"2010-07-25 00:00:00\",\"conditionMsg\":\"路况说明\",\"longitude\":\"108.956187\",\"latitude\":\"34.258905\",\"address\":\"路况地址\",\"direction\":\"向东\",\"publisherName\":\"13474294208\",\"publisherPhone\":\"13474294208\",\"publisherTime\":\"2010-07-25 00:00:00\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 	}
