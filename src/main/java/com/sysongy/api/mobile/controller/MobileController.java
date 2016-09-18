@@ -2221,7 +2221,7 @@ public class MobileController {
 				// 创建对象
 				SysRoadCondition roadCondition = new SysRoadCondition();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				roadCondition.setId(mainObj.optString("token"));
+				roadCondition.setId(UUIDGenerator.getUUID());
 				roadCondition.setConditionImg(mainObj.optString("condition_img"));
 				roadCondition.setConditionType(mainObj.optString("conditionType"));
 				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
@@ -2851,7 +2851,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) {
-		String s ="{\"main\":{\"token\":\"23f95863865a46ccb9b5482323e50485\",\"condition_img\":\"13474294206.jpg\",\"conditionType\":\"01\",\"flashLongitude\":\"108.956178\",\"flashLatitude\":\"34.258905\",\"flashTime\":\"2010-07-25 00:00:00\",\"conditionMsg\":\"路况说明\",\"longitude\":\"108.956187\",\"latitude\":\"34.258905\",\"address\":\"路况地址\",\"direction\":\"向东\",\"publisherName\":\"13474294208\",\"publisherPhone\":\"13474294208\",\"publisherTime\":\"2010-07-25 00:00:00\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		String s ="{\"main\":{\"token\":\"23f95863865a46ccb9b5482323e50485\",\"condition_img\":\"13474294206.jpg\",\"conditionType\":\"01\",\"flashLongitude\":\"108.956178\",\"flashLatitude\":\"34.258905\",\"flashTime\":\"2010-07-25 00:00:00\",\"conditionMsg\":\"路况说明\",\"longitude\":\"108.956187\",\"latitude\":\"34.258905\",\"address\":\"路况地址\",\"direction\":\"1\",\"publisherName\":\"13474294208\",\"publisherPhone\":\"13474294208\",\"publisherTime\":\"2010-07-25 00:00:00\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 	}
