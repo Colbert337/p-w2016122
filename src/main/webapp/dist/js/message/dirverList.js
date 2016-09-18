@@ -23,6 +23,10 @@ function scher() {
 
 function checkchange(obj) {
 	console.log('check');
+	if(driver_name.split(",")>20){		
+		bootbox.alert("单次发送不能超过20个人");
+		return;
+	}
 	if ($(obj).is(':checked')) {
 		device_token += $(obj).val() + ",";
 		driver_name+=$(obj).attr('value1')+',';

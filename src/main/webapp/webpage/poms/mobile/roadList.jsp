@@ -97,7 +97,7 @@
 											id="condition_status_order">路况状态</th>
 										<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
-										<th>坐标</th>
+										<th >坐标</th>
 										<th onclick="orderBy(this,'capture_time');commitForm();"
 											id="capture_time_order">拍照时间</th>
 										<th onclick="orderBy(this,'condition_msg');commitForm();" id="condition_msg_order">路况说明</th>
@@ -107,25 +107,25 @@
 											id="end_time_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
 										
 										<th onclick="orderBy(this,'publisher_name');commitForm();"
-											id="operator_orber">创建人</th>
+											id="publisher_name_orber">创建人</th>
 										<th onclick="orderBy(this,'publisher_phone');commitForm();"
-											id="operator_orber">创建人电话</th>
+											id="publisher_phone_orber">创建人电话</th>
 										<th onclick="orderBy(this,'publisher_time');commitForm();"
-											id="created_date_order" class="td-w2"><i
+											id="publisher_time_order" class="td-w2"><i
 											id="created_date"
 											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>发布时间</th>
 										<th onclick="orderBy(this,'auditor');commitForm();"
-											id="operator_orber">审核人</th>
+											id="auditor_orber">审核人</th>
 										<th onclick="orderBy(this,'auditor_phone');commitForm();"
-											id="operator_orber">审核人电话</th>
+											id="auditor_phone_orber">审核人电话</th>
 										<th onclick="orderBy(this,'auditor_time');commitForm();"
-											id="operator_orber">审核时间</th>
+											id="auditor_time_orber">审核时间</th>
 										<th onclick="orderBy(this,'province');commitForm();"
-											id="operator_orber">省份信息</th>
+											id="province_orber">省份信息</th>
 										<th onclick="orderBy(this,'useful_count');commitForm();"
-											id="operator_orber">点赞数量</th>
+											id="useful_count_orber">点赞数量</th>
 										<th onclick="orderBy(this,'memo');commitForm();"
-											id="operator_orber">备注</th>
+											id="memo_orber">备注</th>
 										<th class="text-center td-w3">操作</th>
 									</tr>
 								</thead>
