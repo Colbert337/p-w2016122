@@ -308,8 +308,13 @@ form label.error {
 	text-align: center;
 	font-size: 16px;
 }
+.traffic-detail-bd .btn-app-primary,
 .download-app-bd .btn-app-primary {
 	font-size: 16px;
+}
+.traffic-detail-bd .btn-app-primary [class^="icon-"],
+.download-app-bd .btn-app-primary [class^="icon-"]{
+	font-size: 20px;
 }
 .download-app-fd {
 	position: fixed;

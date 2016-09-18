@@ -11,6 +11,7 @@
 	<title>司集APP</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/webapp.css">
 </head>
 <body>
@@ -28,7 +29,7 @@
 			<div class="img">
 				<img class="img-responsive" src="images/ys1.jpg" alt="">
 			</div>
-			<a href="" class="btn-app-primary">下载司集APP给您提供更多优质服务</a>
+			<a href="" class="btn-app-primary"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
 		</div>
 	</div>
 </body>

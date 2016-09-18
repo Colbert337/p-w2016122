@@ -11,6 +11,7 @@
 	<title>司集APP</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/webapp.css">
 </head>
 <body>
@@ -27,7 +28,7 @@
 					<p>更新于 2016-09-18</p>
 				</div>
 				<div class="download-app-bd">
-					<a class="btn-app-primary logic-download-app">下载安卓</a>
+					<a class="btn-app-primary logic-download-app"><span class="icon-android"></span>下载安卓</a>
 				</div>
 			</div>
 
