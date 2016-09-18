@@ -2572,7 +2572,7 @@ public class MobileController {
 				int pageSize = mainObj.optInt("pageSize");
 				SysMessage sysMessage = new SysMessage();
 				String msgType = mainObj.optString("msgType");
-				sysMessage.setMessageType(msgType);
+				sysMessage.setMessageType(Integer.valueOf(msgType));
 				sysMessage.setPageNum(pageNum);
 				sysMessage.setPageSize(pageSize);
 				PageInfo<Map<String, Object>> pageInfo = sysMessageService.queryMsgListForPage(sysMessage);
