@@ -8,7 +8,7 @@
 <html class="white" lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-	<title>司集APP</title>
+	<title>路况详情-司集APP</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
@@ -17,7 +17,7 @@
 <body>
 	<div class="share">
 		<div class="traffic-detail-hd">
-			缓行 路况详情标题
+			缓行
 		</div>
 		<div class="traffic-detail-bd">
 			<div class="date">

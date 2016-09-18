@@ -8,7 +8,7 @@
 <html class="white" lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-	<title>司集APP</title>
+	<title>应用下载-司集APP</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
