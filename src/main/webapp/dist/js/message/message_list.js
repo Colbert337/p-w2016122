@@ -67,7 +67,6 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 	}
 	
 	function showUser(id){
-		console.log("showuser");
 		 loadPage('#content', '../web/message/showUser?id='+id);
 			$("#editModel").modal('show');
 	}
