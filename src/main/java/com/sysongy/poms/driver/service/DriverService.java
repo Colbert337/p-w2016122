@@ -93,4 +93,6 @@ public interface DriverService {
 	 * 用户登录
 	 */
 	public SysDriver queryByUserNameAndPassword(SysDriver record) throws Exception;
+	
+	public SysDriver queryByUserName(SysDriver record) throws Exception;
 }

@@ -1,5 +1,7 @@
 package com.sysongy.poms.message.service;
 
+import java.util.Map;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.message.model.SysMessage;
@@ -21,6 +23,8 @@ public interface SysMessageService {
 	String saveMessage_New(SysMessage obj) throws Exception;
 
 	PageInfo<SysDriver> queryDriver2(SysMessage message) throws Exception;
+	
+	public PageInfo<Map<String, Object>> queryMsgListForPage(SysMessage obj) throws Exception;
 
 	SysMessage queryMessageByPK(SysMessage message) throws Exception;
 

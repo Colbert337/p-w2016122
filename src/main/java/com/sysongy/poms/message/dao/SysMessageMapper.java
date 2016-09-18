@@ -1,6 +1,7 @@
 package com.sysongy.poms.message.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sysongy.poms.message.model.SysMessage;
 
@@ -19,4 +20,6 @@ public interface SysMessageMapper {
     int updateByPrimaryKeySelective(SysMessage record);
 
     int updateByPrimaryKey(SysMessage record);
+    
+    List<Map<String, Object>> queryMsgListForPage(SysMessage record);
 }

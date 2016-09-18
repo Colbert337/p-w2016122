@@ -18,7 +18,7 @@
 </head>
 <body>
 	<div class="pdp">
-		<div class="pdp-title">
+		<div class="pdp-title clearfix">
 			<span class="type">加盟气站</span>
 			<div class="name">${gastation.gas_station_name}</div>
 		</div>

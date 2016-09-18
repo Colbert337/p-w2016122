@@ -69,4 +69,6 @@ public interface SysDriverMapper {
 	List<SysDriver> queryForPage2(List list);
 
 	SysDriver queryByUserNameAndPassword(SysDriver record);
+	
+	SysDriver queryByUserName(SysDriver record);
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
@@ -124,7 +125,7 @@ public class MbBannerController extends BaseContoller {
 	 * @return
 	 */
 	@RequestMapping("/save")
-	public String saveBanner(MbBanner mbBanner, ModelMap map, HttpSession session) throws Exception {
+	public String saveBanner(MbBanner mbBanner, ModelMap map, HttpServletRequest request, HttpSession session) throws Exception {
 		// String resultVal = "";
 		//
 		// if(mbBanner != null && mbBanner.getMbBannerId() != null &&
@@ -160,6 +161,8 @@ public class MbBannerController extends BaseContoller {
 		String ret = "webpage/poms/mobile/banner_list";
 
 		try {
+			mbBanner.setTargetUrl(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath() + mbBanner.getTargetUrl());
+			
 			if (mbBanner != null && mbBanner.getMbBannerId() != null && !"".equals(mbBanner.getMbBannerId())) {
 
 				mbBanner.setUpdatedDate(new Date());
