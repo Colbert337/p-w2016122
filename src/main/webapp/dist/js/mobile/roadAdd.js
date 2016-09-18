@@ -93,6 +93,7 @@
 	  
 	function saveRoad(){
 		/*手动验证表单，当是普通按钮时。*/
+		
 		if($("#conditionType").val()*1>5){
 			if($("#endTime_str").val()==""){
 				bootbox.alert("请选择结束时间");
@@ -118,7 +119,19 @@
 					
 		$("#roadform").ajaxSubmit(options);
 	}
-	
+	 $("#end").hide();
+	function changeType(obj){
+		if($('#'+obj).val()=='01'){
+			 $("#end").hide();
+		}else if($('#'+obj).val()=='02'){
+			$("#end").hide();
+		}else if($('#'+obj).val()=='05'){
+			$("#end").hide();
+		}else{
+			 $("#end").show();
+		}
+		
+	}
 	function init(){
 		loadPage('#main', '../webpage/poms/mobile/roadAdd.jsp');
 		
@@ -193,7 +206,6 @@
 		}
 		
 		
-		console.log('savePhoto');
 		var stationId = "mobile";
 		var multipartOptions = {
 			url : '../crmInterface/crmBaseService/web/upload?stationid='

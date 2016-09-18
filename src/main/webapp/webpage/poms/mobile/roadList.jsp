@@ -103,8 +103,7 @@
 										<th onclick="orderBy(this,'condition_msg');commitForm();" id="condition_msg_order">路况说明</th>
 										<th onclick="orderBy(this,'start_time');commitForm();"
 											id="start_time_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>开始时间</th>
-											<th onclick="orderBy(this,'end_time');commitForm();"
-											id="end_time_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
+											<th onclick="orderBy(this,'end_time');commitForm();" id="end_time_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
 										
 										<th onclick="orderBy(this,'publisher_name');commitForm();"
 											id="publisher_name_orber">创建人</th>

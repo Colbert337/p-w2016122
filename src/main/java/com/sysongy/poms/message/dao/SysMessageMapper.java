@@ -14,7 +14,7 @@ public interface SysMessageMapper {
 
     int insertSelective(SysMessage record);
 
-    SysMessage selectByPrimaryKey(String id);
+    SysMessage selectByPrimaryKey(SysMessage message);
 
     int updateByPrimaryKeySelective(SysMessage record);
 

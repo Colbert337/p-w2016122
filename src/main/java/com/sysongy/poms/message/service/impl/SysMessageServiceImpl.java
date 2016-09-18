@@ -45,8 +45,8 @@ public class SysMessageServiceImpl implements SysMessageService {
 	}
 
 	@Override
-	public SysMessage queryMessageByPK(String messageid) throws Exception {
-		return messageMapper.selectByPrimaryKey(messageid);
+	public SysMessage queryMessageByPK(SysMessage message) throws Exception {
+		return messageMapper.selectByPrimaryKey(message);
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 	public PageInfo<SysDriver> queryDriver2(SysMessage message) throws Exception {
 		// TODO Auto-generated method stub
 		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
-		SysMessage mes = queryMessageByPK(message.getId());
+		SysMessage mes = queryMessageByPK(message);
 		if (mes.getDriver_name() != null) {
 			List<String> str=new ArrayList<>();
 			String mesId[] = mes.getDriver_name().split(",");
@@ -144,5 +144,6 @@ public class SysMessageServiceImpl implements SysMessageService {
 		}
 		return null;
 	}
+
 
 }

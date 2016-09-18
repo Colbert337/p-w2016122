@@ -40,7 +40,7 @@
 
 					<div class="col-sm-4">
 					<select class="chosen-select col-sm-6"
-							name="conditionType" name="conditionType">
+							name="conditionType" id="conditionType"  onchange="changeType('conditionType')" >
 							<s:option flag="true" gcode="CONDITION_TYPE" form="road"
 								field="status" />
 						</select>
@@ -116,14 +116,14 @@
 					</label>
 					
 					<div class="input-group col-sm-4">
-					<input type="text" name="startTime_str" class="form-control col-sm-4 timebox" />
+					<input type="text" name="startTime_str" id="startTime_str" class="form-control col-sm-4 timebox" />
 					<span class="input-group-addon">
 						<i class="fa fa-clock-o bigger-110"></i>
 					</span>
 					</div>
 				 
 				</div>
-					<div class="form-group">
+					<div class="form-group" id="end">
 					<label for="email" class="col-sm-3 control-label no-padding-right">结束时间：
 					</label>
 
@@ -160,10 +160,8 @@
 					<div class="col-sm-4">
 						<select class="chosen-select col-sm-6"
 							name="direction" >
-							<option value="东">东</option>
-							<option value="南">南</option>
-							<option value="西">西</option>
-							<option value="北">北</option>
+							<s:option flag="true" gcode="DIRECTION_CODE" form="road"
+								field="status" />
 						</select>
 					</div>
 				</div>

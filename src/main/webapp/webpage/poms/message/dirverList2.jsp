@@ -11,7 +11,14 @@
 %>
 
 <form id="formgastation">
-	<jsp:include page="/common/page_param.jsp"></jsp:include>
+		<input id="pageNum1" type="hidden"   value="${pageInfo.pageNum}" />
+	<input id="pageSize1" type="hidden"  value="${pageInfo.pageSize}" />
+	<input id="pageNumMax1" type="hidden"  value="${pageInfo.pages}" />
+	<input id="total1" type="hidden"  value="${pageInfo.total}" />
+	<input id="orderBy2" type="hidden"  value="${pageInfo.orderBy}" />
+	<input id="retValue" type="hidden" value="${ret.retValue}" />
+	<input id="retCode" type="hidden" value="${ret.retCode}" />
+	<input id="retMsg" type="hidden" value="${ret.retMsg}" />
 	<div class="row">
 	 
 		<div class="sjny-table-responsive">
@@ -23,18 +30,13 @@
 								type="checkbox" class="ace" onclick="checkedAllRows(this);" /> -->
 								<span class="lbl"></span>
 						</label></th> --%>
-						<th onclick="orderBy(this,'sys_driver_id');commitForm();"
-							id="sys_driver_id_order">账号</th>
-						<th onclick="orderBy(this,'full_name');commitForm();"
-							id="full_name_order">姓名</th>
-						<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
+						<th >账号</th>
+						<th>姓名</th>
+						<!-- 	<th onclick="orderBy1(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
-						<th onclick="orderBy(this,'mobile_phone');commitForm();"
-							id="mobile_phone_order">电话号码</th>
-						<th onclick="orderBy(this,'plate_number');commitForm();"
-							id="plate_number_order">车牌号</th>
-						<th onclick="orderBy(this,'expiry_date');commitForm();"
-							id="expiry_date_order">年检有效期</th>
+						<th>电话号码</th>
+						<th>车牌号</th>
+						<th >年检有效期</th>
 
 
 					</tr>
@@ -77,12 +79,12 @@
 		</div>
 		<div class="col-sm-6">
 			<nav>
-				<ul id="ulhandle" class="pagination pull-right no-margin">
-					<li id="previous"><a href="javascript:void(0);"
+				<ul id="ulhandle1" class="pagination pull-right no-margin">
+					<li id="previous1"><a href="javascript:void(0);"
 						aria-label="Previous" onclick="prepage('#formgastation');"> <span
 							aria-hidden="true">上一页</span>
 					</a></li>
-					<li id="next"><a id="nexthandle" href="javascript:void(0);"
+					<li id="next1"><a id="nexthandle" href="javascript:void(0);"
 						aria-label="Next" onclick="nextpage('#formgastation');"> <span
 							aria-hidden="true">下一页</span>
 					</a></li>
@@ -94,9 +96,16 @@
 </form>
 <script type="text/javascript">
 
-var listOptions = {
+var listOptions2 = {
 	url : '../web/message/showUser?id=${message.id}',
 	type : 'post',
+	data:{
+		pageNum:$("#pageNum1").val(),
+		pageSize:$("#pageSize1").val(),
+		pageNumMax:$("#pageNumMax1").val(),
+		total:$("#total1").val(),
+		orderby:$("#orderBy2").val()
+	},
 	dataType : 'html',
 	success : function(data) {
 		// console.log("这里分页之后");
@@ -113,30 +122,85 @@ var listOptions = {
 	}
 }
 function scher() {
-	$("#formgastation").ajaxSubmit(listOptions);
+	$("#formgastation").ajaxSubmit(listOptions2);
 }
 
-function commitForm(obj) {
+function commitForm1(obj) {
 	// 设置当前页的值
 	if (typeof obj == "undefined") {
-		$("#pageNum").val("1");
+		$("#pageNum1").val("1");
 	} else {
-		$("#pageNum").val($(obj).text());
+		$("#pageNum1").val($(obj).text());
 	}
 
-	$("#formgastation").ajaxSubmit(listOptions);
+	$("#formgastation").ajaxSubmit(listOptions2);
 }
-function oncheck() {
-	if (device_token != '') {
-		var token = device_token.split(',')
-		for (var i = 0; i < token.length; i++) {
-			eval('$("#' + token[i] + '").prop("checked", true);')
+ 
+function nextpage(formid){
+	//如果是最后一页
+	if(parseInt($("#pageNum").val()) >= parseInt($("#pageNumMax").val())){
+		return ;
+	}
+	//设置当前页+1
+	$("#pageNum1").val(parseInt($("#pageNum1").val())+1);
+	$(formid).ajaxSubmit(listOptions2);
+}
+function prepage(formid){
+	//如果是第一页
+	if(parseInt($("#pageNum1").val()) <= 1){
+		return ;
+	}
+
+	//设置当前页-1
+	$("#pageNum1").val(parseInt($("#pageNum1").val())-1);
+
+	$(formid).ajaxSubmit(listOptions2);
+} 
+window.onload = setCurrentPage1();
+
+
+function setCurrentPage1(){
+	var pagenum = parseInt($("#pageNum1").val());
+	var pageNumMax = parseInt($("#pageNumMax1").val());
+
+	if(pagenum == 1){
+		$("#previous1").attr("class","disabled");
+	}else if(pagenum == pageNumMax){
+		$("#next1").attr("class","disabled");
+	}else{
+		$("#previous1").removeClass("disabled");
+		$("#next1").removeClass("disabled");
+	}
+	//动态加载分页按钮并设定页数
+	for(var i='${pageInfo.total}';i>0;i--){
+		var num = pagenum%5==0?pagenum-5+i:pagenum-(pagenum%5)+i;
+		$("li[id=previous1]").after("<li id='navigator'><a href='javascript:void(0);' onclick='commitForm1(this)'>"+num+"</a></li>");
+	}
+	//设置当前页按钮样式
+	$("li[id=navigator1]").removeClass("active");
+	$("li[id=navigator1]").each(function(){
+		if($("#pageNum").val() == $(this).find("a").html()){
+			$(this).attr("class","active");
 		}
+
+		if(parseInt($(this).find("a").text())>pageNumMax){
+			$(this).find("a").attr("style","display:none");
+		}
+	});
+
+	//设置orderby箭头样式
+	if($("#orderby1").val() !="" && $("#orderby1").val() != null){
+		var tmp = $("#orderby1").val().split(" ");
+		if(tmp.length == 2){
+			if(tmp[1] == "asc"){
+				$("#"+tmp[0]+"_order").append("<i id='card_status' class='glyphicon glyphicon-chevron-up'>");
+			}else{
+				$("#"+tmp[0]+"_order").append("<i id='card_status' class='glyphicon glyphicon-chevron-down'>");
+			}
+		}
+
 	}
 }
-
-window.onload = setCurrentPage();
-
 </script>
 
 

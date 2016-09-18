@@ -15,9 +15,9 @@
 	<div class="row">
 		<div class="item">
 			<label>手机号码:</label> <input type="text" name="mobilePhone"
-				placeholder="手机号码" maxlength="10" value="${message.mobilePhone}" />
+				placeholder="手机号码" maxlength="10" value="${driver.mobilePhone}" />
 			<label>姓名:</label> <input type="text" name="fullName"
-				placeholder="姓名" maxlength="10" value="${message.fullName}" />
+				placeholder="姓名" maxlength="10" value="${driver.fullName}" />
 			<button class="btn btn-sm btn-primary" type="button"
 				onclick="scher();">
 				<i class="ace-icon fa fa-flask align-top bigger-125"></i> 查询
@@ -32,8 +32,8 @@
 								type="checkbox" class="ace" onclick="checkedAllRows(this);" /> -->
 								<span class="lbl"></span>
 						</label></th> 
-						<th onclick="orderBy(this,'sys_driver_id');commitForm();"
-							id="sys_driver_id_order">账号</th>
+						<th onclick="orderBy(this,'user_name');commitForm();"
+							id="user_name_order">账号</th>
 						<th onclick="orderBy(this,'full_name');commitForm();"
 							id="full_name_order">姓名</th>
 						<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"

@@ -176,15 +176,33 @@ public class SysRoadController extends BaseContoller {
 
 	private int sumTime(SysRoadCondition road) {
 		// TODO Auto-generated method stub
-		if (Integer.parseInt(road.getConditionType()) < 5) {
-			int h = Integer.parseInt(road.getConditionType());
+		int h=0;
+		switch (road.getConditionType()) {
+		case "01":
+			h=1;
+			break;
+		case "02":
+			h=2;
+			break;
+		case "05":
+			h=4;
+			break;
+		default:
+			break;
+		}
+		
+		if (h!=0) {
+			
 			long a = road.getStartTime().getTime() - new Date().getTime();
-			int time = h * 60 * 80 + (int) a / 1000;
+			int time = h * 60 * 60 + (int) a / 1000;
+			road.setEndTime(new Date(h * 60 * 60 +  a));
 			return time;
-		} else {
+		} else if(road.getEndTime()!=null){
 			long a = road.getAuditorTime().getTime() - road.getEndTime().getTime();
 			int time = (int) a / 1000;
 			return time;
+		}else{
+			return -1;
 		}
 	}
 
@@ -328,7 +346,7 @@ public class SysRoadController extends BaseContoller {
 		try {
 
 			sysRoadService.deleteRoad(road);
-
+			redisClientImpl.deleteFromCache(road.getId());
 			bean.setRetCode(100);
 			bean.setRetMsg("删除成功");
 			msg = "删除成功";
