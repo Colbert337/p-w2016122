@@ -62,15 +62,7 @@
 				优惠活动：
 			</div>
 			<ul class="station-special">
-				<li>
-					陕西省西安市中心产业园 陕西省西安市中心产业园 陕西省西
-				</li>
-				<li>
-					陕西省西安市中心产业园 陕西省西安市中心产业园 陕西省西
-				</li>
-				<li>
-					陕西省西安市中心产业园 陕西省西安市中心产业园 陕西省西
-				</li>
+				<li>${gastation.promotions}</li>
 			</ul>
 		</div>
 		<div class="station-special-more">

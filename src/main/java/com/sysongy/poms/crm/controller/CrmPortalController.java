@@ -263,4 +263,32 @@ public class CrmPortalController {
     		return "/webpage/crm/webapp-download-app";
     	}
     }
+    /**
+     * 图文分享详情页
+     * @return
+     */
+    @RequestMapping("/share/content")
+    public String queryShareContentInfo(@RequestParam String contentId,ModelMap map) throws Exception{
+        MbBanner mbBanner = new MbBanner();
+        mbBanner.setMbBannerId(contentId);
+        mbBanner = mbBannerService.queryMbBanner(mbBanner);
+        map.addAttribute("mbBanner",mbBanner);
+        return "/webpage/crm/webapp-active-share";
+    }
+
+    /**
+     * 站点分享详情页
+     * @return
+     */
+    @RequestMapping("/share/station")
+    public String queryShareStationInfo(@RequestParam String stationId,ModelMap map) throws Exception{
+        //获取站点信息
+        Gastation gastation = gastationService.queryGastationByPK(stationId);
+        //获取当前气站价格列表
+        List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(stationId);
+        map.addAttribute("gastation",gastation);
+        map.addAttribute("priceList",priceList);
+
+        return "/webpage/crm/webapp-station-share";
+    }
 }
