@@ -1,6 +1,19 @@
 package com.sysongy.poms.crm.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.github.pagehelper.PageInfo;
+import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
+import com.sysongy.api.mobile.service.MbUserSuggestServices;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.crm.model.CrmHelp;
 import com.sysongy.poms.crm.model.CrmHelpType;
@@ -10,24 +23,17 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.mobile.model.MbBanner;
+import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.page.model.SysStaticPage;
 import com.sysongy.poms.page.service.SysStaticPageService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
-import com.sysongy.util.Encoder;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.sysongy.util.UUIDGenerator;
 
 /**
  * @FileName: CrmPortalController
@@ -56,6 +62,12 @@ public class CrmPortalController {
     SysCashBackService sysCashBackService;
     @Autowired
     SysStaticPageService service;
+    @Autowired
+    SysRoadService sysRoadService;
+    @Autowired
+    UsysparamService usysparamService;
+    @Autowired
+    MbUserSuggestServices mbUserSuggestServices;
 
     /**
      * 问题列表和分类查询
@@ -224,5 +236,31 @@ public class CrmPortalController {
             return ret;
         }
     }
-
+    /**
+     * 路况详情
+     */
+    @RequestMapping("/trafficDetail")
+    public String trafficDetail(@RequestParam String trafficId,ModelMap map) throws Exception{
+    	SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+    	Usysparam usysparam = usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
+        map.addAttribute("roadCondition", roadCondition);
+        map.addAttribute("ConditionType", usysparam.getMname());
+        return "/webpage/crm/webapp-traffic-detail";
+    }
+    /**
+     * 反馈信息
+     */
+    @RequestMapping("/suggest")
+    public String suggest(@RequestParam String title,@RequestParam String info) throws Exception{
+    	MbUserSuggest ms = new MbUserSuggest ();
+    	ms.setMbUserSuggestId(UUIDGenerator.getUUID());
+    	ms.setMobilePhone(title);
+    	ms.setSuggest(info);
+    	int rs = mbUserSuggestServices.saveSuggester(ms);
+    	if(rs > 0){
+    		return "/webpage/crm/webapp-download-app";
+    	}else{
+    		return "/webpage/crm/webapp-download-app";
+    	}
+    }
 }

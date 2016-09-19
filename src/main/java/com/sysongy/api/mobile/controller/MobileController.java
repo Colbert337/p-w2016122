@@ -2352,7 +2352,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("获取路况欣喜： " + resultStr);
+			logger.error("获取路况信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2871,10 +2871,10 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) throws ParseException {
-		/*String s ="{\"main\":{\"token\":\"23f95863865a46ccb9b5482323e50485\",\"condition_img\":\"13474294206.jpg\",\"conditionType\":\"01\",\"flashLongitude\":\"108.956178\",\"flashLatitude\":\"34.258905\",\"flashTime\":\"2010-07-25 12:12:12\",\"conditionMsg\":\"路况说明\",\"longitude\":\"108.956187\",\"latitude\":\"34.258905\",\"address\":\"路况地址\",\"direction\":\"1\",\"publisherName\":\"13474294208\",\"publisherPhone\":\"13474294208\",\"publisherTime\":\"2010-07-25 12:12:12\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		String s ="{\"main\":{\"conditionType\":\"1\",\"latitude\":\"34.185692\",\"longitude\":\"108.882897\",\"province\":\"陕西省\",\"radius\":\"2000000\",\"pageNum\":\"1\",\"pageSize\":\"100\"},\"extend\":{\"version\":10,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
-		SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
 		String str = "2016-09-18 12:38:38";
 		Calendar cal = Calendar.getInstance();
 		Date date = sft.parse(str);
