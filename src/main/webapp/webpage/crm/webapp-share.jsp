@@ -20,6 +20,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="info">
 				<p>您已获得¥10优惠券，快去领取吧！</p>
 				<p>请输入您的电话号码并下载司集应用程序完成注册</p>
+				<p class="code-style">邀请码：${param.invitationCode}</p>
 			</div>
 			<div class="subinfo">邀请码优惠，完成下载注册，20元平台代金券；心动不如行动！为了感谢您一路以来的支持，司集特别定制的红包大礼活动回馈广大用户。
 			</div>
@@ -33,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<button class="get-code-info">获取验证码</button>
 			</div>
 			<div class="df-item-btn">
-				<button type="submit" class="btn-app-primary">下载应用程序</button>
+				<button type="submit" class="btn-app-primary">立即使用</button>
 			</div>
 		</form>
 	</div>
