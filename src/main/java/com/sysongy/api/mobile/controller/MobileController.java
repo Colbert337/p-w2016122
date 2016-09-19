@@ -2323,6 +2323,7 @@ public class MobileController {
 				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("roadId", map.get("id"));
 						reChargeMap.put("conditionType", map.get("conditionType"));
 						reChargeMap.put("longitude", map.get("longitude"));
 						reChargeMap.put("latitude", map.get("latitude"));
