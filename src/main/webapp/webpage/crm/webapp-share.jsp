@@ -25,13 +25,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="subinfo">邀请码优惠，完成下载注册，20元平台代金券；心动不如行动！为了感谢您一路以来的支持，司集特别定制的红包大礼活动回馈广大用户。
 			</div>
 		</div>
-		<form class="download-form" action="" method="post" id="shareInviteCode">
+		<form class="download-form" action="<%=basePath %>/user/register" method="post" id="shareInviteCode">
 			<div class="df-item">
 				<input id="phone" name="phone" tabIndex="1" class="txt required" type="text" placeholder="请输入手机号码">
 			</div>
 			<div class="df-item">
 				<input id="vcode" name="vcode" tabIndex="2" class="txt code required" type="text" placeholder="请输入验证码">
 				<button class="get-code-info">获取验证码</button>
+				<input type="hidden" id="invitationCode" name="invitationCode" value="${param.invitationCode}">
 			</div>
 			<div class="df-item-btn">
 				<button type="submit" class="btn-app-primary">立即使用</button>
