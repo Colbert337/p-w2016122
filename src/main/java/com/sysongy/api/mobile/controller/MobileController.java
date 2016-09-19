@@ -1951,7 +1951,7 @@ public class MobileController {
 			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("充值失败！" + e.getMessage());
+			result.setMsg("充值失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("充值失败： " + e);
 			resutObj.remove("listMap");
@@ -2535,17 +2535,25 @@ public class MobileController {
 					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Map<String, Object> dataMap = new HashMap<>();
 					String url= "http://192.168.1.202:8080/poms-web";
-					String vehicleLice="";
-					String drivingLice="";
+					String vehicleLice="";//驾驶证
+					String drivingLice="";//行驶证
 					if(driver.getVehicleLice()==null || "".equals(driver.getVehicleLice())){
 						vehicleLice="";
 					}else{
-						vehicleLice = url+driver.getVehicleLice();
+						if(driver.getVehicleLice().indexOf("http") != -1){
+							vehicleLice = driver.getVehicleLice();
+						}else{
+							vehicleLice = url+driver.getVehicleLice();
+						}
 					}
 					if(driver.getDrivingLice()==null || "".equals(driver.getDrivingLice())){
 						drivingLice="";
 					}else{
-						drivingLice = url+driver.getDrivingLice();
+						if(driver.getDrivingLice().indexOf("http") != -1){
+							drivingLice = driver.getDrivingLice();
+						}else{
+							drivingLice = url+driver.getDrivingLice();
+						}
 					}
 					dataMap.put("name", driver.getFullName());
 					dataMap.put("plateNumber", driver.getPlateNumber());
@@ -2872,7 +2880,7 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) throws ParseException {
-		String s ="{\"main\":{\"conditionType\":\"1\",\"latitude\":\"34.185692\",\"longitude\":\"108.882897\",\"province\":\"陕西省\",\"radius\":\"2000000\",\"pageNum\":\"1\",\"pageSize\":\"100\"},\"extend\":{\"version\":10,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
+		String s ="{\"main\":{\"token\":\"a0b6ff5f23f642f990bdad01b5341f10\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
