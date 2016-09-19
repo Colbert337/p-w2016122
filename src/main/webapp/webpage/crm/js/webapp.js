@@ -88,15 +88,28 @@ $(function(){
 	    });
 	}
 
-	$('.logic-download-app').on('click',function(){
-		var html = '';
-		html += '<div class="download-app-help">'
-		html += '<img class="img" src="images/download-app-help.png" alt="">'
-		html += '<div class="transparent"></div>'
-		html += '</div>'
-		$('body').append(html);
-		setTimeout(function(){
-			$('.download-app-help').remove();
-		},3000)
-	});
+	//是否在微信里面打开H5页面
+	var $windowHeight = $(document).height();
+	if(window.navigator.userAgent.match(/MicroMessenger/i) == "MicroMessenger") {
+		$('.logic-download-app').on('click',function(event){
+			event.preventDefault();
+
+			var html = '';
+			html += '<div class="download-app-help">'
+			html += '<img class="img" src="images/download-app-help.png" alt="">'
+			html += '<div class="transparent"></div>'
+			html += '</div>'
+			$('body').append(html);
+
+			$('.transparent').height($(document).height());
+
+			if($(window).scrollTop()>0) {
+				$('body,html').animate({scrollTop:0},500);
+			}
+			
+			setTimeout(function(){
+				$('.download-app-help').remove();
+			},3000);
+		});
+	}
 });
