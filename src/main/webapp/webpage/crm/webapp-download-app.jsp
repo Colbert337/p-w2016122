@@ -31,11 +31,6 @@
 					<a class="btn-app-primary logic-download-app"><span class="icon-android"></span>下载安卓</a>
 				</div>
 			</div>
-
-			<div class="download-app-help">
-				<img class="img" src="images/download-app-help.png" alt="">
-				<div class="transparent"></div>
-			</div>
 		</div>
 		<div class="section">
 			<div class="share">
