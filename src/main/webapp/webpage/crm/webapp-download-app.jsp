@@ -8,7 +8,7 @@
 <html class="white" lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-	<title>司集APP</title>
+	<title>应用下载-司集APP</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
@@ -36,7 +36,7 @@
 			<div class="share">
 				<div class="app-intro-hd">介绍</div>
 				<div class="app-intro-bd">因为司集，所以司集！</div>
-				<form class="app-intro-form" action="" method="post" id="appIntroFrom">
+				<form class="app-intro-form" action="<%=basePath %>/portal/crm/help/suggest" method="post" id="appIntroFrom">
 					<div class="item">
 						<input id="title" name="title" tabIndex="1" class="txt required" type="text" class="txt" placeholder="Email / QQ / 微信 / 电话">
 					</div>

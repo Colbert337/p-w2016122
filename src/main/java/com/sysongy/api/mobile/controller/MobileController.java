@@ -1951,7 +1951,7 @@ public class MobileController {
 			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("充值失败！" + e.getMessage());
+			result.setMsg("充值失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("充值失败： " + e);
 			resutObj.remove("listMap");
@@ -2323,6 +2323,7 @@ public class MobileController {
 				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("roadId", map.get("id"));
 						reChargeMap.put("conditionType", map.get("conditionType"));
 						reChargeMap.put("longitude", map.get("longitude"));
 						reChargeMap.put("latitude", map.get("latitude"));
@@ -2352,7 +2353,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("获取路况欣喜： " + resultStr);
+			logger.error("获取路况信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2534,17 +2535,25 @@ public class MobileController {
 					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Map<String, Object> dataMap = new HashMap<>();
 					String url= "http://192.168.1.202:8080/poms-web";
-					String vehicleLice="";
-					String drivingLice="";
+					String vehicleLice="";//驾驶证
+					String drivingLice="";//行驶证
 					if(driver.getVehicleLice()==null || "".equals(driver.getVehicleLice())){
 						vehicleLice="";
 					}else{
-						vehicleLice = url+driver.getVehicleLice();
+						if(driver.getVehicleLice().indexOf("http") != -1){
+							vehicleLice = driver.getVehicleLice();
+						}else{
+							vehicleLice = url+driver.getVehicleLice();
+						}
 					}
 					if(driver.getDrivingLice()==null || "".equals(driver.getDrivingLice())){
 						drivingLice="";
 					}else{
-						drivingLice = url+driver.getDrivingLice();
+						if(driver.getDrivingLice().indexOf("http") != -1){
+							drivingLice = driver.getDrivingLice();
+						}else{
+							drivingLice = url+driver.getDrivingLice();
+						}
 					}
 					dataMap.put("name", driver.getFullName());
 					dataMap.put("plateNumber", driver.getPlateNumber());
@@ -2871,10 +2880,10 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) throws ParseException {
-		/*String s ="{\"main\":{\"token\":\"23f95863865a46ccb9b5482323e50485\",\"condition_img\":\"13474294206.jpg\",\"conditionType\":\"01\",\"flashLongitude\":\"108.956178\",\"flashLatitude\":\"34.258905\",\"flashTime\":\"2010-07-25 12:12:12\",\"conditionMsg\":\"路况说明\",\"longitude\":\"108.956187\",\"latitude\":\"34.258905\",\"address\":\"路况地址\",\"direction\":\"1\",\"publisherName\":\"13474294208\",\"publisherPhone\":\"13474294208\",\"publisherTime\":\"2010-07-25 12:12:12\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		String s ="{\"main\":{\"token\":\"a0b6ff5f23f642f990bdad01b5341f10\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
-		SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
 		String str = "2016-09-18 12:38:38";
 		Calendar cal = Calendar.getInstance();
 		Date date = sft.parse(str);
