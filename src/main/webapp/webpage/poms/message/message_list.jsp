@@ -28,10 +28,17 @@
 
 					<div class="search-types">
 						<div class="item">
-						    <label>消息标题:</label>
+						    <label>消息标题：</label>
 							<input type="text" name="messageTitle" placeholder="输入消息标题"  maxlength="32" value="${message.messageTitle}"/>
 						</div>
-
+						<div class="item">
+							<label>消息类型：</label>
+							<select class="chosen-select" name="messageType"  >
+								<option value=""  <c:if test="${message.messageType==''}">selected="seleceted"</c:if> >请选择</option>
+								<option value="1" <c:if test="${message.messageType=='1'}">selected="seleceted"</c:if>>系统消息</option>
+								<option value="2" <c:if test="${message.messageType=='2'}">selected="seleceted"</c:if>>路况消息</option>
+							</select>
+						</div>
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>消息创建时间:</label>
@@ -85,6 +92,8 @@
 									<th onclick="orderBy(this,'message_title');commitForm();" id="message_title_order">信息标题</th>
 									<th onclick="orderBy(this,'message_body');commitForm();" id="message_body_order">信息内容</th>
 									<th onclick="orderBy(this,'message_ticker');commitForm();" id="message_ticker_order">信息缩略</th>
+									<th onclick="orderBy(this,'message_type');commitForm();" id="message_type_order">消息类型</th>
+									<th onclick="orderBy(this,'province_name');commitForm();" id="province_name_order">发送范围</th>
 									<th onclick="orderBy(this,'message_group');commitForm();" id="message_group_order">发送信息组</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">信息创建者</th>
 									<th onclick="orderBy(this,'message_send_time');commitForm();" id="message_send_time_order" class="td-w2"><i id="message_send_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>信息发送时间</th>
@@ -108,6 +117,8 @@
 									<td>${list.messageTitle}</td>
 								 	<td><div class="td-inner-warp">${list.messageBody}</div></td>
 									<td><div class="td-inner-warp">${list.messageTicker}</div></td>
+									<td><div class="td-inner-warp"><s:Code2Name mcode="${list.messageType}" gcode="MESSAGE_TYPE"></s:Code2Name></div></td>
+									<td><div class="td-inner-warp">${list.province_name}</div></td>
 									<td><s:Code2Name mcode="${list.messageGroup}" gcode="MSGGROUP"></s:Code2Name></td>
 									<td>${list.operator}</td>
 									<td><fmt:formatDate value="${list.messageSendTime}" type="both"/></td>

@@ -53,7 +53,7 @@ public class SysMessageController extends BaseContoller {
 
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
-			map.addAttribute("message", driver);
+			map.addAttribute("driver", driver);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());

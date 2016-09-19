@@ -4,6 +4,7 @@
 	<resultMap id="BaseResultMap" type="com.sysongy.poms.message.model.SysMessage">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 		<result column="message_title" property="messageTitle" jdbcType="VARCHAR" />
+		<result column="message_type" property="messageType" jdbcType="INTEGER" />
 		<result column="message_body" property="messageBody" jdbcType="VARCHAR" />
 		<result column="message_ticker" property="messageTicker" jdbcType="VARCHAR" />
 		<result column="message_group" property="messageGroup" jdbcType="VARCHAR" />
@@ -31,7 +32,7 @@
 
 	<sql id="Base_Column_List">
 		id, message_title, message_body, message_ticker, message_group,
-		message_send_time,
+		message_send_time,province_name,
 		message_created_time, operator, memo,message_type,driver_name
 	</sql>
 
@@ -80,16 +81,16 @@
 	</delete>
 	<insert id="insert" parameterType="com.sysongy.poms.message.model.SysMessage">
 		insert into sys_message (id, message_title, message_body,
-		message_ticker, message_group, message_send_time,
-		message_created_time, operator, memo,device_token,driver_name
+		message_ticker,message_type, message_group, message_send_time,
+		message_created_time, operator, memo,device_token,driver_name,province_id,province_name
 		)
 		values (#{id,jdbcType=VARCHAR}, #{messageTitle,jdbcType=VARCHAR},
 		#{messageBody,jdbcType=VARCHAR},
-		#{messageTicker,jdbcType=VARCHAR}, #{messageGroup,jdbcType=VARCHAR},
+		#{messageTicker,jdbcType=VARCHAR},#{messageType,jdbcType=INTEGER}, #{messageGroup,jdbcType=VARCHAR},
 		#{messageSendTime,jdbcType=TIMESTAMP},
 		#{messageCreatedTime,jdbcType=TIMESTAMP},
 		#{operator,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR},
-		#{device_token,jdbcType=VARCHAR},#{driver_name,jdbcType=VARCHAR}
+		#{device_token,jdbcType=VARCHAR},#{driver_name,jdbcType=VARCHAR},#{province_id,jdbcType=VARCHAR},#{province_name,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.sysongy.poms.message.model.SysMessage">

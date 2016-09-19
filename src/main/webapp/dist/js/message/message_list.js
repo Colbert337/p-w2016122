@@ -49,6 +49,9 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 		
 	}
 	function init(){
+//		$("#" + obj).modal('hide').removeClass('in');
+		$("body").removeClass('modal-open').removeAttr('style');
+		$(".modal-backdrop").remove();
 		loadPage('#main', '../web/message/messageList');
 	}
 	function addMessage(){
@@ -64,7 +67,6 @@ $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', la
 	}
 	
 	function showUser(id){
- 
 		 loadPage('#content', '../web/message/showUser?id='+id);
 			$("#editModel").modal('show');
 	}

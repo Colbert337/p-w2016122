@@ -1,5 +1,40 @@
 package com.sysongy.api.mobile.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.io.FileUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
@@ -36,34 +71,15 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.*;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.TwoDimensionCode;
+import com.sysongy.util.UUIDGenerator;
 import com.tencent.mm.sdk.modelpay.PayReq;
 
 import net.sf.json.JSONObject;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.io.FileUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 @RequestMapping("/api/v1/mobile")
 @Controller
@@ -76,6 +92,7 @@ public class MobileController {
 
 	/** 支付宝支付业务：入参app_id */
 	public static final String APPID = "2016011801102578"; //TODO 需要自定义常量类
+	public static final String ss ="123123";
 
 	/** 商户私钥，pkcs8格式 */
 	public static final String RSA_PRIVATE = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALMGuZtJV5TvfNZHvIYUVqo6Gy2lqvYZ0DP2Dr7Si5aPqd+sEhDy7TjWAUlYV86d3z+/oOrhap9iHJn80oJoQk3UTf/NM/XNF0PCjW1UiGORQyFiBYFIVfXSylFWQ5IFBmxQfgu5cPzZNeTcRsooPTrON0/OAItxsuGbgDlCMusjAgMBAAECgYA1HhiyB2fSC+C5X12DVsOEDGuF9rKsBGqvECG94pCCIqwfblmJ59oU1AJbtbeP2W2k54GiTzGoip673bTD9pU9LPdyelWlFBePGEHiREbno2fXB01Tb9ML/TrZG5JFZdv7IS7ekitWiiK1lKwFg3mujMDXrFAwBQd/kBd0eOG7cQJBAOikToenP7JgCYuWM7N5pKZ5GsfZJsKVqDRZyqDDih0gXTdafW49IlwMHVpoWV01PwiG5feQDjASXv+MDNUgwbsCQQDFAFCFwWFjjRiKShgRjZurYOvSc04XqACf1lROefLrKJ+BsrFQJAhWahHEmJiV2pNuYnSybx2e2AwFbyt8pJG5AkEA3wduFdS8VxiE7iJATIaI1+PwTbmb1B4/lHikrnzn8sZtNzz0VPQc9ZvTpDG3wojidh1FaJHdWC60jk9ImiZ+MwJBAIw07Bo2Bo0ml2ec0kJz6W3wngX64IJ/pGodzYTI0DXDhLp3JjEmY/S0qw6jmD1XAgTW970izg8GLpATjfy416kCQQChQUYwe76hdGA/60lCycBCwiwYV+aHxezFnC2PcUxMif/cbKIwJvR6nhQK1QTKL60ExlRSKXA9xbB2eH/QXRNj";
@@ -171,7 +188,7 @@ public class MobileController {
 						result.setData(tokenMap);
 					}else{
 						result.setStatus(MobileReturn.STATUS_FAIL);
-						result.setMsg("驗證碼無效！");
+						result.setMsg("验证码无效！");
 					}
 				}
 			}else{
@@ -407,17 +424,8 @@ public class MobileController {
 						}
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
-						/*
-						if("0".equals(driverStstus)){
-							driverStstus = "0";
-						}else if("1".equals(driverStstus)){
-							driverStstus = "1";
-						}else if("2".equals(driverStstus)){
-							driverStstus = "2";
-						}else if("3".equals(driverStstus)){
-							driverStstus = "3";
-						}*/
-						resultMap.put("isRealNameAuth",driver.getIsIdent());
+
+						resultMap.put("isRealNameAuth",driver.getCheckedStatus());
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn",cashBack);
@@ -1634,10 +1642,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("查询充值记录信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询充值记录成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询充值记录失败！");
@@ -1741,14 +1747,11 @@ public class MobileController {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
 			}
-
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("查询消费记录信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询消费记录成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询消费记录失败！");
@@ -1834,9 +1837,7 @@ public class MobileController {
 								totalBack = totalBack.add(tempVal);
 							}
 						}
-
 					}
-
 					reCharge.put("totalOut",totalCash);
 					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
@@ -1854,10 +1855,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("查询转账记录信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询转账记录成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询转账记录失败！");
@@ -1947,13 +1946,12 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("充值信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("充值成功： " + resultStr);
 			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("充值失败！" + e.getMessage());
+			result.setMsg("充值失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("充值失败： " + e);
 			resutObj.remove("listMap");
@@ -2062,7 +2060,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			logger.error("修改账号手机号/密保手机成功： " + resultStr);
+			logger.error("修改账号手机号/密保手机信息 ： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2140,7 +2138,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			
 			resultStr = resutObj.toString();
-			logger.error("重置支付密码成功： " + resultStr);
+			logger.error("重置支付密码信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2184,8 +2182,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			logger.error("查询成功： " + resultStr);
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			logger.error("查询信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询失败！");
@@ -2205,39 +2203,82 @@ public class MobileController {
 	 */
 	@RequestMapping(value = "/road/reportRoadInfo")
 	@ResponseBody
-	public String reportRoadInfo(String params){
+	public String reportRoadInfo(String params) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询成功！");
+		result.setMsg("上报成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 		try {
 			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
 			 * 请求接口
 			 */
-			List<SysCashBack> list = sysCashBackService.queryMaxCashBack();
-			Map<String, Object> dataMap = new HashMap<>();
-			for(int i=0;i<list.size();i++){
-				if(list.get(i).getSys_cash_back_no().equals("101")){
-					dataMap.put("alipay",list.get(i).getCash_per());
+			if (mainObj != null) {
+				// 创建对象
+				SysRoadCondition roadCondition = new SysRoadCondition();
+				String conditionType = mainObj.optString("conditionType");
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date start = sft.parse(mainObj.optString("flashTime"));
+				roadCondition.setId(UUIDGenerator.getUUID());
+				roadCondition.setConditionImg(mainObj.optString("condition_img"));
+				roadCondition.setConditionType(conditionType);
+				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
+				roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
+				roadCondition.setCaptureTime(start);//拍照时间
+				roadCondition.setStartTime(start);//开始时间
+				//计算结束时间01-60min、02-120min、05-240min，其他为null
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(start);
+				if("01".equals(conditionType)){
+					cal.add(Calendar.HOUR,1);
+					roadCondition.setEndTime(cal.getTime());
+				}else if("02".equals(conditionType)){
+					cal.add(Calendar.HOUR,2);
+					roadCondition.setEndTime(cal.getTime());
+				}else if("05".equals(conditionType)){
+					cal.add(Calendar.HOUR,4);
+					roadCondition.setEndTime(cal.getTime());
 				}else{
-					dataMap.put("wechat",list.get(i).getCash_per());
+					roadCondition.setEndTime(null);
 				}
+				roadCondition.setConditionMsg(mainObj.optString("conditionMsg"));
+				roadCondition.setLongitude(mainObj.optString("longitude"));
+				roadCondition.setLatitude(mainObj.optString("latitude"));
+				roadCondition.setAddress(mainObj.optString("address"));
+				roadCondition.setDirection(mainObj.optString("direction"));
+				roadCondition.setPublisherName(mainObj.optString("publisherName"));
+				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
+				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
+				int tmp = sysRoadService.reportSysRoadCondition(roadCondition);
+				if (tmp > 0) {
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("上报成功！");
+				}
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
 			}
-			result.setData(dataMap);
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("查询成功： " + resultStr);
-//			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			logger.error("上报路况信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("查询失败！");
+			result.setMsg("上报路況失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("查询失败： " + e);
+			logger.error("上报路況失败： " + e);
 			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 			return resultStr;
 		} finally {
 			return resultStr;
@@ -2282,6 +2323,7 @@ public class MobileController {
 				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("roadId", map.get("id"));
 						reChargeMap.put("conditionType", map.get("conditionType"));
 						reChargeMap.put("longitude", map.get("longitude"));
 						reChargeMap.put("latitude", map.get("latitude"));
@@ -2300,6 +2342,7 @@ public class MobileController {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					reCharge.put("listMap", reChargeList);
 				} else {
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					reCharge.put("listMap", new ArrayList<>());
 				}
 				result.setListMap(reChargeList);
@@ -2310,8 +2353,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
+			logger.error("获取路况信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
-			logger.error("获取路况成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("获取路况失败！");
@@ -2367,8 +2410,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("统计信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
-			logger.error("统计成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("统计失败！");
@@ -2434,7 +2477,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("取消路况成功： " + resultStr);
+			logger.error("取消路况信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2492,17 +2535,25 @@ public class MobileController {
 					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Map<String, Object> dataMap = new HashMap<>();
 					String url= "http://192.168.1.202:8080/poms-web";
-					String vehicleLice="";
-					String drivingLice="";
+					String vehicleLice="";//驾驶证
+					String drivingLice="";//行驶证
 					if(driver.getVehicleLice()==null || "".equals(driver.getVehicleLice())){
 						vehicleLice="";
 					}else{
-						vehicleLice = url+driver.getVehicleLice();
+						if(driver.getVehicleLice().indexOf("http") != -1){
+							vehicleLice = driver.getVehicleLice();
+						}else{
+							vehicleLice = url+driver.getVehicleLice();
+						}
 					}
 					if(driver.getDrivingLice()==null || "".equals(driver.getDrivingLice())){
 						drivingLice="";
 					}else{
-						drivingLice = url+driver.getDrivingLice();
+						if(driver.getDrivingLice().indexOf("http") != -1){
+							drivingLice = driver.getDrivingLice();
+						}else{
+							drivingLice = url+driver.getDrivingLice();
+						}
 					}
 					dataMap.put("name", driver.getFullName());
 					dataMap.put("plateNumber", driver.getPlateNumber());
@@ -2523,7 +2574,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			logger.error("获取成功： " + resultStr);
+			logger.error("获取实名认证信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2538,7 +2589,7 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-
+	
 	/**
 	 * 获取消息列表
 	 */
@@ -2565,7 +2616,7 @@ public class MobileController {
 				int pageSize = mainObj.optInt("pageSize");
 				SysMessage sysMessage = new SysMessage();
 				String msgType = mainObj.optString("msgType");
-				sysMessage.setMessageType(msgType);
+				sysMessage.setMessageType(Integer.valueOf(msgType));
 				sysMessage.setPageNum(pageNum);
 				sysMessage.setPageSize(pageSize);
 				PageInfo<Map<String, Object>> pageInfo = sysMessageService.queryMsgListForPage(sysMessage);
@@ -2605,7 +2656,7 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("获取成功： " + resultStr);
+			logger.error("获取信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2828,9 +2879,20 @@ public class MobileController {
 		return record;
 	}
 	
-	public static void main(String[] args) {
-		String s ="{\"main\":{\"token\":\"3163b26594804f3e9aea6c4b0d579c6d\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+	public static void main(String[] args) throws ParseException {
+		String s ="{\"main\":{\"token\":\"a0b6ff5f23f642f990bdad01b5341f10\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
+		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+		String str = "2016-09-18 12:38:38";
+		Calendar cal = Calendar.getInstance();
+		Date date = sft.parse(str);
+		cal.setTime(date);
+		System.out.println("date = "+sft.format(date));
+        cal.setTime(date);
+        cal.add(Calendar.HOUR,1);
+        Date date1 = cal.getTime();
+        String d4 = sft.format(date1);
+        System.out.println(d4);*/
 	}
 }

@@ -26,6 +26,9 @@ import com.sysongy.poms.mobile.service.SysRoadService;
 public class SysRoadServiceImpl implements SysRoadService{
 	@Autowired
 	SysRoadConditionMapper sysRoadConditionMapper;
+	/**
+	 * 路况列表
+	 */
 	@Override
 	public PageInfo< SysRoadCondition> queryRoadList(SysRoadCondition road) {
 		// TODO Auto-generated method stub
@@ -35,6 +38,9 @@ public class SysRoadServiceImpl implements SysRoadService{
 		return page;
 	}
 	@Override
+	/**
+	 * 保存路况-pc
+	 */
 	public int saveRoad(SysRoadCondition road) {
 		// TODO Auto-generated method stub
 //		sysroadMapper.insert(road);
@@ -57,6 +63,7 @@ public class SysRoadServiceImpl implements SysRoadService{
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
 	}
+	
 	@Override
 	public SysRoadCondition selectByPrimaryKey(String id) throws Exception {
 		return sysRoadConditionMapper.selectByPrimaryKey(id);
@@ -64,6 +71,30 @@ public class SysRoadServiceImpl implements SysRoadService{
 	@Override
 	public int cancelSysRoadCondition(SysRoadCondition record) throws Exception {
 		return sysRoadConditionMapper.cancelSysRoadCondition(record);
+	}
+	/**
+	 * 修改（审核）-pc
+	 */
+	@Override
+	public int updateRoad(SysRoadCondition road) {
+		// TODO Auto-generated method stub
+		return sysRoadConditionMapper.updateByPrimaryKeyToCheck(road);
+	}
+	/**
+	 * 删除-pc
+	 */
+	@Override
+	public int deleteRoad(SysRoadCondition road) {
+		// TODO Auto-generated method stub
+		return sysRoadConditionMapper.deleteByPrimaryKey(road.getId());
+	}
+	/**
+	 * 查看生效id 用于取缓存
+	 */
+	@Override
+	public List<SysRoadCondition> queryRoadIDList() {
+		// TODO Auto-generated method stub
+		return sysRoadConditionMapper.queryRoadId();
 	}
 
 }

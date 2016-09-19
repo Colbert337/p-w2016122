@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.mail.search.MessageIDTerm;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +44,8 @@ public class SysMessageServiceImpl implements SysMessageService {
 	}
 
 	@Override
-	public SysMessage queryMessageByPK(String messageid) throws Exception {
-		return messageMapper.selectByPrimaryKey(messageid);
+	public SysMessage queryMessageByPK(SysMessage message) throws Exception {
+		return messageMapper.selectByPrimaryKey(message);
 	}
 
 	@Override
@@ -129,7 +127,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 	public PageInfo<SysDriver> queryDriver2(SysMessage message) throws Exception {
 		// TODO Auto-generated method stub
 		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
-		SysMessage mes = queryMessageByPK(message.getId());
+		SysMessage mes = queryMessageByPK(message);
 		if (mes.getDriver_name() != null) {
 			List<String> str=new ArrayList<>();
 			String mesId[] = mes.getDriver_name().split(",");
@@ -145,8 +143,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 		}
 		return null;
 	}
-
-	@Override
+@Override
 	public PageInfo<Map<String, Object>> queryMsgListForPage(SysMessage record) throws Exception {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Map<String, Object>> list = messageMapper.queryMsgListForPage(record);

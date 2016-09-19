@@ -49,13 +49,35 @@
 											<textarea type="text" name="content" placeholder="输入信息内容" class="form-control" maxlength="500"></textarea>
 										</div>
 									</div>
-									
-									
 									<div class="form-group">
 										<label for="email" class="col-sm-3 control-label no-padding-right">信息缩略： </label>
 
 										<div class="col-sm-4">
 											<input type="text" name="messageTicker" placeholder="输入信息缩略" class="form-control" maxlength="30"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">消息类型：</label>
+										<div class="col-sm-4">
+											<div class="radio">
+												<label>
+													<input name="messageType"  type="radio" class="ace" value="1" checked="checked" onclick="changeMessageType(this)">
+													<span class="lbl">系统消息</span>
+												</label>
+												<label>
+													<input name="messageType"  type="radio" class="ace" value="2" onclick="changeMessageType(this)">
+													<span class="lbl">路况消息</span>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group" id="province" style="display:none">
+										<label for="province_id" class="col-sm-3 control-label no-padding-right"> 发送范围： </label>
+										<div class="col-sm-4">
+											<select class="form-control" name="province_id" onchange="changeProvince(this);">
+												<s:option flag="true" gcode="PROVINCE_CODE" form="messageform" field="province_id" />
+											</select>
+											<input type="hidden" name="province_name"/>
 										</div>
 									</div>
 									
@@ -66,7 +88,7 @@
 											<input type="text" name="messageGroup" class="form-control" readonly="readonly" value="1000"/>
 										</div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">发送方式：</label>
 										

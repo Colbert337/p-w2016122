@@ -70,7 +70,13 @@
 		</div>
 	</div>
 
-	<script src="<%=basePath %>/webpage/crm/js/zepto.min.js"></script>
+	<div class="btn-more-info">
+		<div class="inner">
+			<a href="" class="btn-app-primary logic-download-app"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
+		</div>
+	</div>
+
+	<script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
 	<script src="<%=basePath %>/webpage/crm/js/webapp.js"></script>
 </body>
 </html>

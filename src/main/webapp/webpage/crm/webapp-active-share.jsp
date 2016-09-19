@@ -21,11 +21,20 @@
 		<div class="date">
 			<span><fmt:formatDate value="${mbBanner.createdDate}" type="both"/> </span>
 			<span>司集能源</span>
-			<span>阅读 ${mbBanner.viewCount}</span>
+			<span>阅读  ${mbBanner.viewCount}</span>
 		</div>
 	</div>
 	<div class="activ-detail-bd">
 		${mbBanner.content}
 	</div>
+
+	<div class="btn-more-info">
+		<div class="inner">
+			<a href="" class="btn-app-primary logic-download-app"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
+		</div>
+	</div>
+
+	<script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
+	<script src="<%=basePath %>/webpage/crm/js/webapp.js"></script>
 </body>
 </html>

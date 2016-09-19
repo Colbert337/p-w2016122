@@ -1,4 +1,4 @@
-	//bootstrap验证控件		
+		//bootstrap验证控件
 	    $('#messageform').bootstrapValidator({
 	        message: 'This value is not valid',
 	        feedbackIcons: {
@@ -27,17 +27,30 @@
 	                        message: '消息缩略不能为空'
 	                    }
 	                }
-	            }
+	            },
+				province_id: {
+					validators: {
+						callback: {
+							message: '发送范围不能为空',
+							callback: function(value, validator) {
+								var messageType = $('input:radio[name="messageType"]:checked').val();
+								if (value.length==0 && messageType =='2') {
+									return false;
+								}
+									return true;
+							}
+						}
+					}
+				}
 	         }
 	    });
-		    
 	function save(){
 		/*手动验证表单，当是普通按钮时。*/
 		$('#messageform').data('bootstrapValidator').validate();
 		if(!$('#messageform').data('bootstrapValidator').isValid()){
 			return ;
 		}
-		
+
 		var options ={   
 	            url:'../web/message/saveMessage',   
 	            type:'post',                    
@@ -60,4 +73,20 @@
 	function returnpage(){
 		loadPage('#main', '../web/message/messageList');
 	}
-		
+
+	function changeMessageType(messageType){
+		var type = messageType.value;
+		if(type=='2' && $("#province").css("display")=='none'){
+			$("#province").css("display","");
+			$("select[name='province_id']").trigger("change");
+		}else{
+			$("#province").css("display","none");
+			$("select[name='province_id']").val("");
+			$("input[name='province_name']").val("");
+		}
+	}
+
+	function changeProvince(province){
+		var provincename = $(province).find("option:selected").text();
+		$("input[name='province_name']").val(provincename);
+	}

@@ -1,6 +1,7 @@
 package com.sysongy.poms.mobile.service;
 
 
+import java.util.List;
 import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
@@ -39,5 +40,11 @@ public interface SysRoadService {
 	 * 取消路況
 	 */
 	public int cancelSysRoadCondition(SysRoadCondition record) throws Exception;
+
+	int updateRoad(SysRoadCondition road);
+
+	int deleteRoad(SysRoadCondition road);
+
+	List<SysRoadCondition> queryRoadIDList();
 	
 }

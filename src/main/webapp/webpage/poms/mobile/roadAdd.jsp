@@ -10,6 +10,13 @@
 			+ path;
 %>
 
+
+
+<link rel="stylesheet" href="<%=basePath%>/common/css/fileinput.css" />
+<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
+<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datetimepicker.css" />
+<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
+
 <script src="<%=basePath%>/dist/js/mobile/roadAdd.js"></script>
 
 <div class="">
@@ -33,7 +40,7 @@
 
 					<div class="col-sm-4">
 					<select class="chosen-select col-sm-6"
-							name="conditionType">
+							name="conditionType" id="conditionType"  onchange="changeType('conditionType')" >
 							<s:option flag="true" gcode="CONDITION_TYPE" form="road"
 								field="status" />
 						</select>
@@ -48,7 +55,30 @@
 							class="form-control" maxlength="500"></input>
 					</div>
 				</div>
-
+				<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"><span
+								class="red_star">*</span> 图片： </label>
+							<div class="col-sm-4">
+								<div class="widget-box">
+									<div class="widget-header">
+										<h4 class="widget-title">图片上传 <font size="2" color="red" ></font></h4>
+									</div>
+									<div class="widget-body">
+										<div class="widget-main">
+										<input type="file" name="image"
+												class="projectfile" id="indu_com_certif_select" /> <input
+												type="hidden" id="img_path" value=""
+												name="conditionImg" /> 
+											<button class="btn btn-sm btn-primary btn-file-space"
+												type="button"
+												onclick="savePhoto(this,'#indu_com_certif_select','#img_path','#show_img');">
+												<i class="ace-icon fa fa-check bigger-110"></i> 图片上传
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">拍照时坐标：</label>
 
@@ -62,15 +92,15 @@
 				<div class="form-group">
 					<label  class="col-sm-3 control-label no-padding-right">拍照时间：
 					</label>
-					<div class="col-sm-4">
-						<div class="item col-sm-4">
-							<div class="input-daterange top" id="j-input-daterange-top">
-								<input type="text" class="form-control  timebox" name="captureTime"
-									readonly="readonly" />
-							</div>
-						</div>
-						
-					</div>
+			<!-- #section:plugins/date-time.datetimepicker -->
+				<div class="input-group col-sm-4">
+					<input type="text" name="captureTime_str" class="form-control col-sm-4 timebox" />
+					<span class="input-group-addon">
+						<i class="fa fa-clock-o bigger-110"></i>
+					</span>
+				</div>
+				<!-- /section:plugins/date-time.datetimepicker -->
+				 
 				</div>
 
 				<div class="form-group">
@@ -84,28 +114,24 @@
 					<div class="form-group">
 					<label for="email" class="col-sm-3 control-label no-padding-right">开始时间：
 					</label>
-
-					<div class="col-sm-1">
-						<div class="item">
-							<div class="input-daterange top" id="j-input-daterange-top">
-								<input type="text"  class="form-control timebox" name="startTime"
-									readonly="readonly" />
-							</div>
-						</div>
-						
+					
+					<div class="input-group col-sm-4">
+					<input type="text" name="startTime_str" id="startTime_str" class="form-control col-sm-4 timebox" />
+					<span class="input-group-addon">
+						<i class="fa fa-clock-o bigger-110"></i>
+					</span>
 					</div>
-				
-					<label for="email" class="col-sm-1 control-label no-padding-right">结束时间：
+				 
+				</div>
+					<div class="form-group" id="end">
+					<label for="email" class="col-sm-3 control-label no-padding-right">结束时间：
 					</label>
 
-					<div class="col-sm-1">
-						<div class="item">
-							<div class="input-daterange top" id="j-input-daterange-top">
-								<input type="text" class="form-control timebox" name="endTime"
-									readonly="readonly" />
-							</div>
-						</div>
-						
+					<div class="input-group col-sm-4">
+					<input type="text" name="endTime_str" id="endTime_str"  class="form-control col-sm-4 timebox" />
+					<span class="input-group-addon">
+						<i class="fa fa-clock-o bigger-110"></i>
+					</span>
 					</div>
 				</div>
 
@@ -122,22 +148,31 @@
 					<label class="col-sm-3 control-label no-padding-right">省份信息：</label>
 
 					<div class="col-sm-4">
-						<input type="text" name="captureLongitude" placeholder="输入信息内容"
+						<input type="text" name="province" placeholder="输入信息内容"
 							class="form-control" maxlength="500"></input>
 						</select>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">省份信息：</label>
+					<label class="col-sm-3 control-label no-padding-right">方向：</label>
 
 					<div class="col-sm-4">
-						<input type="text" name="captureLongitude" placeholder="输入信息内容"
-							class="form-control" maxlength="500"></input>
+						<select class="chosen-select col-sm-6"
+							name="direction" >
+							<s:option flag="true" gcode="DIRECTION_CODE" form="road"
+								field="status" />
 						</select>
 					</div>
 				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">备注：</label>
 
+					<div class="col-sm-4">
+						<textarea name="memo" placeholder="备注"
+							class="form-control"></textarea>
+					</div>
+				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">发布人/操作人：</label>
 
@@ -178,36 +213,4 @@
 		<!-- /.col -->
 	</div>
 	<!-- /.row -->
-</div>
-<div id="editModel" class="modal fade" role="dialog"
-	aria-labelledby="gridSystemModalLabel" data-backdrop="static"
-	tabindex="-1">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title" id="editBanner">添加内容</h4>
-			</div>
-			<div class="modal-body">
-				<div class="container-fluid" id="content">
-					<%--两行表单 开始--%>
-
-					<!-- /.row -->
-					<%--两行表单 结束--%>
-				</div>
-			</div>
-			<!-- /.modal-content -->
-			<div class="modal-footer">
-				<button class="btn btn-primary btn-sm" onclick="saveRoad()">确
-					定</button>
-				<button class="btn btn-sm" i="close"
-					onclick="closeDialog('editModel')">取 消</button>
-			</div>
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
-	<!-- /.modal -->
 </div>
