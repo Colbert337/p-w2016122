@@ -229,7 +229,9 @@ public class WechatController {
 					//throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
 				}else{
 					String sysDriverId = UUIDGenerator.getUUID();
-					driver.setPassword(mainObj.optString("password"));
+					String payCode = mainObj.optString("payCode");
+					payCode = Encoder.MD5Encode(payCode.getBytes());
+					driver.setPayCode(payCode);
 					driver.setSysDriverId(sysDriverId);
 					driver.setInvitationCode(newInvitationCode);//生成邀请码
 					Integer tmp = driverService.saveDriver(driver, "insert");
