@@ -97,7 +97,7 @@
 								for="title"><span class="red_star">*</span> 标题： </label>
 							<div class="col-sm-8">
 								<input type="text" name="title" id="title" data-onFlag=""
-									placeholder="标题" maxlength="10" class="col-xs-10 col-sm-12"
+									placeholder="标题" maxlength="50" class="col-xs-10 col-sm-12"
 									value="${mbBanner.title}" /> <input type="hidden"
 									id="mbBannerId" name="mbBannerId"
 									value="${mbBanner.mbBannerId}" />
