@@ -1508,7 +1508,7 @@ public class MobileController {
 						bannerMap.put("title",banner.getTitle());
 						bannerMap.put("content","");
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
-						bannerMap.put("contentUrl",http_poms_path+banner.getTargetUrl());
+						bannerMap.put("contentUrl",banner.getTargetUrl());
 						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
 							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
 						}else{
