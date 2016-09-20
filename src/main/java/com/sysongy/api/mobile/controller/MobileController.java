@@ -1263,7 +1263,7 @@ public class MobileController {
 						gastationMap.put("address",gastationInfo.getAddress());
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
-
+						gastationMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/station?stationId="+ gastationInfo.getSys_gas_station_id());
 						if(longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr) && radius != null && !"".equals(radius)){
 							longitude = new Double(longitudeStr);
 							latitude = new Double(latitudeStr);
@@ -1509,6 +1509,7 @@ public class MobileController {
 						bannerMap.put("content","");
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
 						bannerMap.put("contentUrl",banner.getTargetUrl());
+						bannerMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/content?contentId="+ banner.getMbBannerId());
 						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
 							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
 						}else{
@@ -2322,6 +2323,7 @@ public class MobileController {
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				String http_poms_path =  (String) prop.get("http_poms_path");
 				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
@@ -2333,7 +2335,7 @@ public class MobileController {
 						reChargeMap.put("address", map.get("address"));
 						reChargeMap.put("publisherName", map.get("publisherName"));
 						reChargeMap.put("publisherPhone", map.get("publisherPhone"));
-						reChargeMap.put("contentUrl", map.get("contentUrl"));
+						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ map.get("id"));
 						String publisherTime = "";
 						if (map.get("publisherTime") != null && !"".equals(map.get("publisherTime").toString())) {
 							publisherTime = sft.format(new Date());
