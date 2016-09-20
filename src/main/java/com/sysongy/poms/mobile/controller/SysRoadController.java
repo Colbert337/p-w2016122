@@ -218,7 +218,11 @@ public class SysRoadController extends BaseContoller {
 		List<SysRoadCondition> list = sysRoadService.queryRoadIDList();
 		List<SysRoadCondition> redis = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
-			redis.add((SysRoadCondition) redisClientImpl.getFromCache("Road" + list.get(i).getId()));
+			SysRoadCondition one=(SysRoadCondition)redisClientImpl.getFromCache("Road" + list.get(i).getId());
+			if (one!=null) {
+				redis.add( one);
+			}
+			
 		}
 		try {
 			/**
@@ -272,7 +276,7 @@ public class SysRoadController extends BaseContoller {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
+//			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
 			logger.error("获取路况成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
