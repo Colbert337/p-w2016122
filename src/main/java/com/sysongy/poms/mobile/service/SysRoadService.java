@@ -29,7 +29,7 @@ public interface SysRoadService {
 	/**
 	 * 获取路况列表
 	 */
-	public PageInfo<Map<String,Object>> queryForPage(SysRoadCondition record) throws Exception;
+	public PageInfo<SysRoadCondition> queryForPage(SysRoadCondition record) throws Exception;
 	
 	/**
 	 * 根据ID查询
