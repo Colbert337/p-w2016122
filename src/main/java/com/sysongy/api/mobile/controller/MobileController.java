@@ -315,7 +315,6 @@ public class MobileController {
 						//throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
 					} else {
 						String sysDriverId = UUIDGenerator.getUUID();
-						System.out.println("sysDriverId = "+sysDriverId);
 						driver.setPassword(mainObj.optString("password"));
 						driver.setSysDriverId(sysDriverId);
 						driver.setRegisSource("APP");
@@ -405,7 +404,6 @@ public class MobileController {
 			if(mainObj != null){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
-				System.out.println("获取用户信息ID  = "+sysDriverId);
 				if(sysDriverId != null && !sysDriverId.equals("")){
 					Map<String, Object> resultMap = new HashMap<>();
 					driver.setSysDriverId(sysDriverId);
@@ -2884,8 +2882,8 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) throws ParseException {
-		String s ="DE5DCAF1F59506F07B57CB0B4682BDE41E47232EA90CEBC471568575B89130A4BCC1B9C7CFECDB5E733A5F3F9815007471F93B59AE919183B080730D59BFB677A16ABDCEC5E02A57";
-		s = DESUtil.decode("sysongys",s);//参数加密
+		String s ="{\"main\": {\"id\": \"1427c38591e54a50a127fc94fc2953f0\",\"operation\": \"1\",\"type\": \"1\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
 		String str = "2016-09-18 12:38:38";
