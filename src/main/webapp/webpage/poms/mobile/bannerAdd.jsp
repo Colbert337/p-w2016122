@@ -97,7 +97,7 @@
 								for="title"><span class="red_star">*</span> 标题： </label>
 							<div class="col-sm-8">
 								<input type="text" name="title" id="title" data-onFlag=""
-									placeholder="标题" maxlength="50" class="col-xs-10 col-sm-12"
+									placeholder="标题(最大长度为12个汉字)" maxlength="12" class="col-xs-10 col-sm-12"
 									value="${mbBanner.title}" /> <input type="hidden"
 									id="mbBannerId" name="mbBannerId"
 									value="${mbBanner.mbBannerId}" />
@@ -105,11 +105,11 @@
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								for="remark"> 正文： </label>
+								for="remark"> <span class="red_star">*</span> 正文： </label>
 							<div class="col-sm-8">
-								<textarea name="content" id="content" style="resize: none;"
-									maxlength="500" placeholder="正文"
-									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.content }</textarea>
+								<input name="content" id="content" style="resize: none;"
+									maxlength="32" placeholder="正文(最大长度为32个汉字)" value="${mbBanner.content }"
+									class="col-xs-10 col-sm-12 limited form-control"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -360,6 +360,13 @@
 				validators : {
 					notEmpty : {
 						message : '标题不能为空'
+					}
+				}
+			},
+			content : {
+				validators : {
+					notEmpty : {
+						message : '正文不能为空'
 					}
 				}
 			},
