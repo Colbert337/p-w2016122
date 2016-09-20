@@ -1502,7 +1502,7 @@ public class MobileController {
 					for (MbBanner banner:mbBannerList){
 						Map<String, Object> bannerMap = new HashMap<>();
 						bannerMap.put("title",banner.getTitle());
-						bannerMap.put("content","");
+						bannerMap.put("content",banner.getContent());
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
 						bannerMap.put("contentUrl",banner.getTargetUrl());
 						bannerMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/content?contentId="+ banner.getMbBannerId());
