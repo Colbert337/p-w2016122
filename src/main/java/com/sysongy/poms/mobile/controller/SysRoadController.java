@@ -276,7 +276,7 @@ public class SysRoadController extends BaseContoller {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-//			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
 			logger.error("获取路况成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
