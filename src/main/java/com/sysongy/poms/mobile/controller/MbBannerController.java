@@ -68,9 +68,9 @@ public class MbBannerController extends BaseContoller {
 		if (StringUtils.isEmpty(mbBanner.getImgType())) {
 			mbBanner.setImgType(GlobalConstant.ImgType.TOP);
 		}
-		if (mbBanner.getImgType() == null || "".equals(mbBanner.getImgType())) {
-			mbBanner.setImgType("0");
-		}
+//		if (mbBanner.getImgType() == null || "".equals(mbBanner.getImgType())) {
+			mbBanner.setImgType("1");
+//		}
 		PageInfo<MbBanner> pageinfo = new PageInfo<MbBanner>();
 
 		pageinfo = mbBannerService.queryMbBannerListPage(mbBanner);

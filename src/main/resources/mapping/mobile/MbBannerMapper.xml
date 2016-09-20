@@ -29,8 +29,11 @@
     remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name 
     from mb_banner 
     where is_deleted = 1
-    <if test="title != null" >
-      and title = #{title,jdbcType=VARCHAR}
+    <if test="title != null &amp;&amp; title != ''" >
+      and title like CONCAT(CONCAT('%',   #{title,jdbcType=VARCHAR}), '%') 
+    </if>
+    <if test="operator != null &amp;&amp; operator != ''" >
+      and operator like CONCAT(CONCAT('%',   #{operator,jdbcType=VARCHAR}), '%') 
     </if>
     <if test="imgPath != null" >
       and img_path = #{imgPath,jdbcType=VARCHAR}
@@ -56,12 +59,10 @@
     <if test="cityId != null &amp;&amp; cityId != ''" >
       and city_id LIKE CONCAT(CONCAT('%',  #{cityId,jdbcType=VARCHAR}), '%')
     </if>
-    <if test="createdDate != null" >
-      and created_date = #{createdDate,jdbcType=TIMESTAMP}
+    <if test="createdDate_str != null &amp;&amp; createdDate_str != ''"  >
+      and DATE_FORMAT(created_date,"%Y/%m/%d")   <![CDATA[   >=  ]]> #{createdDate_str,jdbcType=VARCHAR} and   DATE_FORMAT(created_date,"%Y/%m/%d")  <![CDATA[   <=  ]]> #{updatedDate_str,jdbcType=VARCHAR}
     </if>
-    <if test="updatedDate != null" >
-      and updated_date = #{updatedDate,jdbcType=TIMESTAMP}
-    </if>
+
     order by sort asc
   </select>
   <select id="queryMaxIndex" resultMap="BaseResultMap" >
