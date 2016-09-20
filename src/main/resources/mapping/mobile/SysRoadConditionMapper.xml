@@ -37,6 +37,7 @@
       <result column="capture_time" property="captureTime" jdbcType="TIMESTAMP" />
       <result column="condition_msg" property="conditionMsg" jdbcType="VARCHAR" />
       <result column="condition_img" property="conditionImg" jdbcType="VARCHAR" />
+       <result column="invalid_count" property="invalid_count" jdbcType="VARCHAR" />
       <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
       <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
       <result column="province" property="province" jdbcType="VARCHAR" />
@@ -55,7 +56,7 @@
     id, condition_type, condition_status, longitude, latitude, capture_longitude, capture_latitude, 
     capture_time, condition_msg, condition_img, start_time, end_time, province, address, 
     direction, useful_count, publisher_name, publisher_phone, publisher_time, auditor, 
-    auditor_phone, auditor_time, memo
+    auditor_phone, auditor_time, memo,invalid_count
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -69,7 +70,7 @@
    <select id="queryRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     id
-    from sys_road_condition  where 1=1 and condition_status='2'
+    from sys_road_condition  where 1=1 and condition_status='2' ORDER BY publisher_time DESC
   </select> 
   
   
