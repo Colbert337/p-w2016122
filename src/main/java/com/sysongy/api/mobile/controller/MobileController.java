@@ -65,6 +65,7 @@ import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
+import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
@@ -314,6 +315,7 @@ public class MobileController {
 						//throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
 					} else {
 						String sysDriverId = UUIDGenerator.getUUID();
+						System.out.println("sysDriverId = "+sysDriverId);
 						driver.setPassword(mainObj.optString("password"));
 						driver.setSysDriverId(sysDriverId);
 						driver.setRegisSource("APP");
@@ -358,8 +360,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("注册信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("注册失败！");
@@ -403,6 +405,7 @@ public class MobileController {
 			if(mainObj != null){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
+				System.out.println("获取用户信息ID  = "+sysDriverId);
 				if(sysDriverId != null && !sysDriverId.equals("")){
 					Map<String, Object> resultMap = new HashMap<>();
 					driver.setSysDriverId(sysDriverId);
@@ -416,20 +419,21 @@ public class MobileController {
 
 						//获取用户审核状态
 						driver = driverlist.get(0);
-						String driverStstus = driver.getUserStatus();
-						if("2".equals(driverStstus)){
+						SysUserAccount sysUserAccount = sysUserAccountService.queryUserAccountByDriverId(driver.getSysDriverId());
+						
+						String driverCheckedStstus = driver.getCheckedStatus();
+						if("2".equals(driverCheckedStstus)){
 							resultMap.put("nick",driver.getFullName());
 						}else{
 							resultMap.put("nick","");
 						}
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
-
 						resultMap.put("isRealNameAuth",driver.getCheckedStatus());
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn",cashBack);
-						resultMap.put("userStatus",driverStstus);
+						resultMap.put("userStatus",sysUserAccount.getAccount_status());
 						if(driver.getAvatarB() == null){
 							resultMap.put("photoUrl","");
 						}else{
@@ -468,8 +472,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("查询用户信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-			logger.error("查询成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询失败！");
@@ -1951,9 +1955,9 @@ public class MobileController {
 			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("充值失败！");
+			result.setMsg("充值失败！"+e.getMessage());
 			resutObj = JSONObject.fromObject(result);
-			logger.error("充值失败： " + e);
+			logger.error("充值失败： " + e.getMessage());
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -2880,8 +2884,8 @@ public class MobileController {
 	}
 	
 	public static void main(String[] args) throws ParseException {
-		String s ="{\"main\":{\"token\":\"a0b6ff5f23f642f990bdad01b5341f10\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
-		s = DESUtil.encode("sysongys",s);//参数加密
+		String s ="DE5DCAF1F59506F07B57CB0B4682BDE41E47232EA90CEBC471568575B89130A4BCC1B9C7CFECDB5E733A5F3F9815007471F93B59AE919183B080730D59BFB677A16ABDCEC5E02A57";
+		s = DESUtil.decode("sysongys",s);//参数加密
 		System.out.println(s);
 		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
 		String str = "2016-09-18 12:38:38";
