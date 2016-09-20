@@ -2287,6 +2287,7 @@ public class MobileController {
 			return resultStr;
 		}
 	}
+
 	/**
 	 * 获取路况
 	 */
@@ -2311,45 +2312,46 @@ public class MobileController {
 			if (mainObj != null) {
 				int pageNum = mainObj.optInt("pageNum");
 				int pageSize = mainObj.optInt("pageSize");
-				// 创建对象
-				SysRoadCondition roadCondition = new SysRoadCondition();
-				roadCondition.setPageNum(pageNum);
-				roadCondition.setPageSize(pageSize);
-				roadCondition.setLongitude(mainObj.optString("longitude"));
-				roadCondition.setLatitude(mainObj.optString("latitude"));
-				roadCondition.setProvince(mainObj.optString("province"));
-				roadCondition.setConditionType(mainObj.optString("conditionType"));
-				PageInfo<Map<String, Object>> pageInfo = sysRoadService.queryForPage(roadCondition);
+				// 获取数据库所有数据
+				List<SysRoadCondition> list = sysRoadService.queryAll();
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
-				Map<String, Object> reCharge = new HashMap<>();
+				List<Map<String, Object>> rsList = new ArrayList<>();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				double longitude = mainObj.optDouble("longitude");
+				double latitude = mainObj.optDouble("latitude");
+				double radius = mainObj.optDouble("radius");
 				String http_poms_path =  (String) prop.get("http_poms_path");
-				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
-					for (Map<String, Object> map : pageInfo.getList()) {
+				for(int i=0;i<list.size();i++){
+					double distance =GetDistance(longitude, latitude, Double.parseDouble(list.get(i).getLongitude()), Double.parseDouble(list.get(i).getLatitude()));
+					if(distance > radius){
 						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("roadId", map.get("id"));
-						reChargeMap.put("conditionType", map.get("conditionType"));
-						reChargeMap.put("longitude", map.get("longitude"));
-						reChargeMap.put("latitude", map.get("latitude"));
-						reChargeMap.put("conditionImg", map.get("conditionImg"));
-						reChargeMap.put("address", map.get("address"));
-						reChargeMap.put("publisherName", map.get("publisherName"));
-						reChargeMap.put("publisherPhone", map.get("publisherPhone"));
-						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ map.get("id"));
+						reChargeMap.put("roadId", list.get(i).getId());
+						reChargeMap.put("conditionType", list.get(i).getConditionType());
+						reChargeMap.put("longitude", list.get(i).getLongitude());
+						reChargeMap.put("latitude", list.get(i).getLatitude());
+						reChargeMap.put("conditionImg", http_poms_path+list.get(i).getConditionImg());
+						reChargeMap.put("address", list.get(i).getAddress());
+						reChargeMap.put("publisherName", list.get(i).getPublisherName());
+						reChargeMap.put("publisherPhone", list.get(i).getPublisherPhone());
+						reChargeMap.put("usefulCount", list.get(i).getUsefulCount());
+						reChargeMap.put("contentUrl", http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ list.get(i).getId());
 						String publisherTime = "";
-						if (map.get("publisherTime") != null && !"".equals(map.get("publisherTime").toString())) {
+						if (list.get(i).getPublisherTime() != null && !"".equals(list.get(i).getPublisherTime().toString())) {
 							publisherTime = sft.format(new Date());
 						}
 						reChargeMap.put("publisherTime", publisherTime);
 						reChargeList.add(reChargeMap);
 					}
-					result.setStatus(MobileReturn.STATUS_SUCCESS);
-					reCharge.put("listMap", reChargeList);
-				} else {
-					result.setStatus(MobileReturn.STATUS_SUCCESS);
-					reCharge.put("listMap", new ArrayList<>());
 				}
-				result.setListMap(reChargeList);
+				if(pageSize > reChargeList.size()){
+					pageSize =reChargeList.size()-1;
+				}
+				if(pageNum==1){
+					rsList = reChargeList.subList(0, pageSize);
+				}else{
+					rsList = reChargeList.subList(pageSize*pageNum-pageSize, pageSize*pageNum);
+				}
+				result.setListMap(rsList);
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -2372,6 +2374,7 @@ public class MobileController {
 			return resultStr;
 		}
 	}
+	
 	
 	/**
 	 * 路况有用统计
@@ -2883,6 +2886,32 @@ public class MobileController {
 		return record;
 	}
 	
+	private static final double EARTH_RADIUS = 6371000;// 赤道半径(单位m)
+	/**
+	 * 转化为弧度(rad)
+	 */
+
+	private static double rad(double d){
+		return d * Math.PI / 180.0;
+	}
+	/**
+	 * 基于googleMap中的算法得到两经纬度之间的距离,计算精度与谷歌地图的距离精度差不多，相差范围在0.2米以下
+	 * @param lon1 第一点的精度
+	 * @param lat1 第一点的纬度
+	 * @param lon2 第二点的精度
+	 * @param lat3 第二点的纬度
+	 * @return 返回的距离，单位m
+	 */
+	public static double GetDistance(double lon1, double lat1, double lon2, double lat2) {
+		double radLat1 = rad(lat1);
+		double radLat2 = rad(lat2);
+		double a = radLat1 - radLat2;
+		double b = rad(lon1) - rad(lon2);
+		double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+		s = s * EARTH_RADIUS;
+		s = Math.round(s * 10000) / 10000;
+		return s;
+	}
 	public static void main(String[] args) throws ParseException {
 		String s ="{\"main\": {\"id\": \"1427c38591e54a50a127fc94fc2953f0\",\"operation\": \"1\",\"type\": \"1\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密

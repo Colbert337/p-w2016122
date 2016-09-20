@@ -485,4 +485,10 @@ public class GastationServiceImpl implements GastationService {
 		
 		return gasStationMapper.delete(gas);
 	}
+
+	@Override
+	public int updateByPrimaryKeySelective(Gastation record) throws Exception {
+		// TODO Auto-generated method stub
+		return gasStationMapper.updateByPrimaryKey(record);
+	}
 }

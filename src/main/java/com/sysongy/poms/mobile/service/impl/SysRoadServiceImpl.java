@@ -96,5 +96,10 @@ public class SysRoadServiceImpl implements SysRoadService{
 		// TODO Auto-generated method stub
 		return sysRoadConditionMapper.queryRoadId();
 	}
+	@Override
+	public List<SysRoadCondition> queryAll() throws Exception {
+		// TODO Auto-generated method stub
+		return sysRoadConditionMapper.queryAll();
+	}
 
 }

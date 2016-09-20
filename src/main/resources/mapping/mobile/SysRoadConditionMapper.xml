@@ -25,6 +25,8 @@
     <result column="auditor_phone" property="auditorPhone" jdbcType="VARCHAR" />
     <result column="auditor_time" property="auditorTime" jdbcType="TIMESTAMP" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
+    <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="MapResultMap" type="java.util.Map" >
       <id column="id" property="id" jdbcType="VARCHAR" />
@@ -50,12 +52,14 @@
       <result column="auditor_phone" property="auditorPhone" jdbcType="VARCHAR" />
       <result column="auditor_time" property="auditorTime" jdbcType="TIMESTAMP" />
       <result column="memo" property="memo" jdbcType="VARCHAR" />
+      <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
+      <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, condition_type, condition_status, longitude, latitude, capture_longitude, capture_latitude, 
     capture_time, condition_msg, condition_img, start_time, end_time, province, address, 
     direction, useful_count, publisher_name, publisher_phone, publisher_time, auditor, 
-    auditor_phone, auditor_time, memo
+    auditor_phone, auditor_time, memo,view_count,share_count
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -63,7 +67,11 @@
     from sys_road_condition
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  
+  <select id="queryAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_road_condition
+  </select>
   
   
    <select id="queryRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -350,6 +358,12 @@
       </if>
       <if test="auditorTime != null" >
         auditor_time = #{auditorTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="viewCount != null" >
+        view_count = #{viewCount,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shareCount != null" >
+        share_count = #{shareCount,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}

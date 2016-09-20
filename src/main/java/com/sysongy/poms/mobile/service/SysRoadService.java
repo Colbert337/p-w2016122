@@ -47,4 +47,6 @@ public interface SysRoadService {
 
 	List<SysRoadCondition> queryRoadIDList();
 	
+	List<SysRoadCondition> queryAll() throws Exception;
+	
 }

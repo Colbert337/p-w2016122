@@ -47,6 +47,9 @@ public class Gastation extends BaseModel {
 	private String gas_server;
 	private String lng_price;
 	private String promotions;
+    private String viewCount;
+    
+    private String shareCount;
 	
 	public String getLng_price() {
 		return lng_price;
@@ -404,5 +407,21 @@ public class Gastation extends BaseModel {
 
 	public void setExpiry_date(Date expiry_date) {
 		this.expiry_date = expiry_date;
+	}
+
+	public String getViewCount() {
+		return viewCount;
+	}
+
+	public void setViewCount(String viewCount) {
+		this.viewCount = viewCount;
+	}
+
+	public String getShareCount() {
+		return shareCount;
+	}
+
+	public void setShareCount(String shareCount) {
+		this.shareCount = shareCount;
 	}
 }

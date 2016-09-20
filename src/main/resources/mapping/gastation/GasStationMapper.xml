@@ -32,6 +32,10 @@
     <result column="sys_user_account_id" property="sys_user_account_id" jdbcType="VARCHAR" />
     <result column="prepay_balance" property="prepay_balance" jdbcType="DECIMAL" />
     <result column="prepay_version" property="prepay_version" jdbcType="INTEGER" />
+    
+    <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
+    <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
+    
     <association column="sys_user_account_id" property="account" javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
     </association>
@@ -51,7 +55,8 @@
 	  <result column="hedgefund" property="hedgefund" jdbcType="VARCHAR" />
 	  <result column="summit" property="summit" jdbcType="VARCHAR" />
 	  <result column="consumecount" property="consumecount" jdbcType="VARCHAR" />
-	 
+	  <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
+      <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
   </resultMap>
   
   <resultMap id="HenryTotalMap" type="java.util.Map" >
@@ -63,7 +68,7 @@
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
-    updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server,LNG_price,promotions
+    updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server,LNG_price,promotions,view_count,share_count
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
