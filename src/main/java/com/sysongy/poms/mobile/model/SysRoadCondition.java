@@ -72,6 +72,8 @@ public class SysRoadCondition extends BaseModel implements Serializable{
 
     private String memo;
 
+    private String roadId;
+
     public String getCaptureTime_str() {
 		return captureTime_str;
 	}
@@ -303,4 +305,12 @@ public class SysRoadCondition extends BaseModel implements Serializable{
 	public void setShareCount(String shareCount) {
 		this.shareCount = shareCount;
 	}
+
+    public String getRoadId() {
+        return roadId;
+    }
+
+    public void setRoadId(String roadId) {
+        this.roadId = roadId;
+    }
 }

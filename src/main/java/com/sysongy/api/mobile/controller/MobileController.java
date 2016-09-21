@@ -2458,7 +2458,7 @@ public class MobileController {
 				// 创建对象
 				SysRoadCondition roadCondition = new SysRoadCondition();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				roadCondition.setId(mainObj.optString("token"));
+				roadCondition.setId(UUIDGenerator.getUUID());
 				roadCondition.setConditionImg(mainObj.optString("condition_img"));
 				roadCondition.setConditionType(mainObj.optString("conditionType"));
 				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
@@ -2471,6 +2471,7 @@ public class MobileController {
 				roadCondition.setPublisherName(mainObj.optString("publisherName"));
 				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
 				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
+				roadCondition.setRoadId(mainObj.optString("token"));
 				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
 				if (tmp > 0) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
