@@ -41,7 +41,7 @@
 							</div>
 						</div>
 
-						<div class="item">
+						<div class="item">s
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
@@ -99,7 +99,7 @@
 									</td>
 
 									<%-- <td>${list.sysDriverId}</td> --%>
-								 	<td>${list.userName}</td> 
+								 	<td>${list.userName}</td>
 								 	<td id="sysUserAccountId" style="display: none;">${list.sysUserAccountId}</td>
 									<td>${list.cardId}</td>
 									<c:choose>
@@ -108,6 +108,12 @@
 										</c:when>
 										<c:when test="${fn:contains(list.stationId, 'T')}">
 											<td>运输公司</td>
+										</c:when>
+										<c:when test="${fn:contains(list.regisSource, 'APP')}">
+											<td>安卓终端APP</td>
+										</c:when>
+										<c:when test="${fn:contains(list.regisSource, 'WeChat')}">
+											<td>微信服务号</td>
 										</c:when>
 										<c:otherwise>
 											<td></td>
