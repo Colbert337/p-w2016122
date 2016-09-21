@@ -2424,7 +2424,10 @@ public class MobileController {
 			if (mainObj != null) {
 				// 创建对象
 				SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(mainObj.optString("roadId"));
-				if(roadCondition!=null){
+				int count = Integer.parseInt(roadCondition.getUsefulCount());
+				roadCondition.setUsefulCount(String.valueOf(count+1));
+				int rs = sysRoadService.updateRoad(roadCondition);
+				if(rs > 0){
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("统计成功！");
 					Map<String, Object> dataMap = new HashMap<>();
