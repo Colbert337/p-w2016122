@@ -161,6 +161,12 @@ public class CrmPortalController {
         mbBanner.setMbBannerId(contentId);
         mbBanner = mbBannerService.queryMbBanner(mbBanner);
         map.addAttribute("mbBanner",mbBanner);
+
+        //统计活动阅读数
+        String viewCount = mbBanner.getViewCount();
+        viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+        mbBanner.setViewCount(viewCount);
+        mbBannerService.updateBanner(mbBanner);
         return "/webpage/crm/webapp-active-detail";
     }
 
@@ -187,6 +193,11 @@ public class CrmPortalController {
         map.addAttribute("gastation",gastation);
         map.addAttribute("priceList",priceList);
 
+        //统计分享数
+        String viewCount = gastation.getViewCount();
+        viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+        gastation.setViewCount(viewCount);
+        gastationService.updateByPrimaryKeySelective(gastation);
         return "/webpage/crm/webapp-station-detail";
     }
 
@@ -283,6 +294,12 @@ public class CrmPortalController {
         mbBanner.setMbBannerId(contentId);
         mbBanner = mbBannerService.queryMbBanner(mbBanner);
         map.addAttribute("mbBanner",mbBanner);
+
+        //统计活动阅读数
+        String viewCount = mbBanner.getViewCount();
+        viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+        mbBanner.setViewCount(viewCount);
+        mbBannerService.updateBanner(mbBanner);
         return "/webpage/crm/webapp-active-share";
     }
 
@@ -299,6 +316,11 @@ public class CrmPortalController {
         map.addAttribute("gastation",gastation);
         map.addAttribute("priceList",priceList);
 
+        //统计分享数
+        String viewCount = gastation.getViewCount();
+        viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+        gastation.setViewCount(viewCount);
+        gastationService.updateByPrimaryKeySelective(gastation);
         return "/webpage/crm/webapp-station-share";
     }
 
