@@ -3046,7 +3046,7 @@ public class MobileController {
 		return record;
 	}
 	public static void main(String[] args) throws ParseException {
-		String s ="{\"main\": {\"id\": \"1427c38591e54a50a127fc94fc2953f0\",\"operation\": \"1\",\"type\": \"1\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		String s ="{\"main\": {\"id\": \"1581aadac636468182d8a9579232e846\",\"operation\": \"2\",\"type\": \"3\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");

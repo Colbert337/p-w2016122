@@ -460,6 +460,12 @@
          <if test="promotions != null &amp;&amp; promotions != ''" >
         promotions = #{promotions,jdbcType=VARCHAR},
       </if>
+         <if test="viewCount != null &amp;&amp; viewCount != ''" >
+        view_count = #{viewCount,jdbcType=VARCHAR},
+      </if>
+         <if test="shareCount != null &amp;&amp; shareCount != ''" >
+        share_count = #{shareCount,jdbcType=VARCHAR},
+      </if>
     </set>
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </update>

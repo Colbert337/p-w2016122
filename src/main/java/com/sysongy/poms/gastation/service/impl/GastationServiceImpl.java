@@ -489,6 +489,6 @@ public class GastationServiceImpl implements GastationService {
 	@Override
 	public int updateByPrimaryKeySelective(Gastation record) throws Exception {
 		// TODO Auto-generated method stub
-		return gasStationMapper.updateByPrimaryKey(record);
+		return gasStationMapper.updateByPrimaryKeySelective(record);
 	}
 }

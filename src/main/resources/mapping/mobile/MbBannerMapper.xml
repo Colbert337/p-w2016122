@@ -27,6 +27,7 @@
   </sql>
   
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
     <include refid="Base_Column_List" />
     from mb_banner
     where mb_banner_id = #{mbBannerId,jdbcType=VARCHAR}
@@ -242,6 +243,12 @@
       </if>
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="viewCount != null &amp;&amp; viewCount != ''" >
+        view_count = #{viewCount,jdbcType=VARCHAR},
+      </if>
+      <if test="shareCount != null &amp;&amp; shareCount != ''" >
+        share_count = #{shareCount,jdbcType=VARCHAR},
       </if>
     </set>
     where mb_banner_id = #{mbBannerId,jdbcType=VARCHAR}
