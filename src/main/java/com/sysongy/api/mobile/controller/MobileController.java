@@ -1511,6 +1511,7 @@ public class MobileController {
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
 						bannerMap.put("contentUrl",banner.getTargetUrl());
 						bannerMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/content?contentId="+ banner.getMbBannerId());
+						bannerMap.put("imgSmPath",http_poms_path+banner.getImgSmPath());
 						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
 							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
 						}else{
