@@ -2341,6 +2341,7 @@ public class MobileController {
 						reChargeMap.put("address", roadConditionInfo.getAddress());
 						reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
 						reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
+						reChargeMap.put("usefulCount", roadConditionInfo.getUsefulCount());
 						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ roadConditionInfo.getId());
 						String publisherTime = "";
 						if (roadConditionInfo.getPublisherTime() != null && !"".equals(roadConditionInfo.getPublisherTime().toString())) {
@@ -2730,10 +2731,10 @@ public class MobileController {
 				int rs;
 				if("1".equals(type)){//路况
 					SysRoadCondition sysRoadCondition = sysRoadService.selectByPrimaryKey(id);
+					sysRoadCondition.setId(sysRoadCondition.getId());
 					if("1".equals(operation)){//阅读
 						String viewCount = sysRoadCondition.getViewCount();
 						viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
-						sysRoadCondition.setId(sysRoadCondition.getId());
 						sysRoadCondition.setViewCount(viewCount);
 						rs = sysRoadService.updateRoad(sysRoadCondition);
 						if(rs > 0){
@@ -2745,7 +2746,6 @@ public class MobileController {
 					}else{//分享
 						String shareCount = sysRoadCondition.getShareCount();
 						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
-						sysRoadCondition.setId(sysRoadCondition.getId());
 						sysRoadCondition.setShareCount(shareCount);
 						rs = sysRoadService.updateRoad(sysRoadCondition);
 						if(rs > 0){
@@ -2757,40 +2757,59 @@ public class MobileController {
 					}
 				}else if("2".equals(type)){//商家
 					Gastation gastation = gastationService.queryGastationByPK(id);
+					gastation.setSys_user_account_id(gastation.getSys_gas_station_id());
 					if("1".equals(operation)){//阅读
 						String viewCount = gastation.getViewCount();
 						viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
-						gastation.setSys_user_account_id(gastation.getSys_gas_station_id());
 						gastation.setViewCount(viewCount);
-						//rs = gastationService.updatePrepayBalance(obj, addCash)(gastation);
-//						if(rs > 0){
-//							result.setStatus(MobileReturn.STATUS_SUCCESS);
-//						}else{
-//							result.setStatus(MobileReturn.STATUS_FAIL);
-//							result.setMsg("操作失败！");
-//						}
+						rs = gastationService.updateByPrimaryKeySelective(gastation);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
 					}else{//分享
-//						String shareCount = sysRoadCondition.getShareCount();
-//						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
-//						sysRoadCondition.setId(sysRoadCondition.getId());
-//						sysRoadCondition.setShareCount(shareCount);
-//						rs = sysRoadService.updateRoad(sysRoadCondition);
-//						if(rs > 0){
-//							result.setStatus(MobileReturn.STATUS_SUCCESS);
-//						}else{
-//							result.setStatus(MobileReturn.STATUS_FAIL);
-//							result.setMsg("操作失败！");
-//						}
+						String shareCount = gastation.getShareCount();
+						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
+						gastation.setShareCount(shareCount);
+						rs = gastationService.updateByPrimaryKeySelective(gastation);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
 					}
 				}else if("3".equals(type)){//活动
+					MbBanner mbBanner = mbBannerService.selectByPrimaryKey(id);
+					mbBanner.setMbBannerId(mbBanner.getMbBannerId());
 					if("1".equals(operation)){//阅读
-						
+						String viewCount = mbBanner.getViewCount();
+						viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+						mbBanner.setViewCount(viewCount);
+						rs = mbBannerService.updateBanner(mbBanner);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
 					}else{//分享
-						
+						String shareCount = mbBanner.getShareCount();
+						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
+						mbBanner.setShareCount(shareCount);
+						rs = mbBannerService.updateBanner(mbBanner);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
 					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("类型有误！");
+					result.setMsg("类型有误！(1路况、2活动、3商家)");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
