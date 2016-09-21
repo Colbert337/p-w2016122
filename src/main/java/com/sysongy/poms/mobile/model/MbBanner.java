@@ -36,6 +36,9 @@ public class MbBanner extends BaseModel{
     private String city_id;
     
     private String city_name;
+    private String viewCount;
+    
+    private String shareCount;
     public String getCity_name() {
 		return city_name;
 	}
@@ -175,4 +178,20 @@ public class MbBanner extends BaseModel{
     public void setCityId(String cityId) {
         this.cityId = cityId;
     }
+
+	public String getViewCount() {
+		return viewCount;
+	}
+
+	public void setViewCount(String viewCount) {
+		this.viewCount = viewCount;
+	}
+
+	public String getShareCount() {
+		return shareCount;
+	}
+
+	public void setShareCount(String shareCount) {
+		this.shareCount = shareCount;
+	}
 }

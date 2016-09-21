@@ -27,6 +27,7 @@
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
     <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
+    <result column="road_id" property="roadId" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="MapResultMap" type="java.util.Map" >
       <id column="id" property="id" jdbcType="VARCHAR" />
@@ -54,6 +55,7 @@
       <result column="memo" property="memo" jdbcType="VARCHAR" />
       <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
       <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
+      <result column="road_id" property="roadId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, condition_type, condition_status, longitude, latitude, capture_longitude, capture_latitude, 
@@ -639,6 +641,9 @@
 			<if test="memo != null">
 				memo,
 			</if>
+            <if test="roadId != null">
+                road_id,
+            </if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -710,6 +715,9 @@
 			<if test="memo != null">
 				#{memo,jdbcType=VARCHAR},
 			</if>
+            <if test="roadId != null">
+                #{roadId,jdbcType=VARCHAR},
+            </if>
 		</trim>
 	</insert>
 </mapper>
