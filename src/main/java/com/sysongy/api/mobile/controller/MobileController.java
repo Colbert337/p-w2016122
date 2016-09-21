@@ -35,6 +35,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
@@ -1246,11 +1247,13 @@ public class MobileController {
 						gastationMap.put("type",gastationInfo.getType());
 						gastationMap.put("longitude",gastationInfo.getLongitude());
 						gastationMap.put("latitude",gastationInfo.getLatitude());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_MAP_TYPE", gastationInfo.getMap_type());
+						gastationMap.put("stationType",usysparam.getMname());
 						gastationMap.put("service",gastationInfo.getGas_server());//提供服务
 						gastationMap.put("preferential",gastationInfo.getPromotions());//优惠活动
 						//获取当前气站价格列表
-						List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
-						gastationMap.put("priceList",priceList);
+						//List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
+						gastationMap.put("priceList",gastationInfo.getLng_price());
 						gastationMap.put("phone",gastationInfo.getContact_phone());
 						if(gastationInfo.getStatus().equals("0")){
 							gastationMap.put("state","开启");
@@ -1501,6 +1504,7 @@ public class MobileController {
 					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					for (MbBanner banner:mbBannerList){
 						Map<String, Object> bannerMap = new HashMap<>();
+						bannerMap.put("bannerId",banner.getMbBannerId());
 						bannerMap.put("title",banner.getTitle());
 						bannerMap.put("content",banner.getContent());
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
@@ -2317,7 +2321,6 @@ public class MobileController {
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
 				String radius = mainObj.optString("radius");
-				String name = mainObj.optString("name");
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
 				Double radiusDb = new Double(0);
@@ -2325,7 +2328,15 @@ public class MobileController {
 				roadCondition.setLatitude(latitudeStr);
 				roadCondition.setProvince(mainObj.optString("province"));
 				roadCondition.setConditionType(mainObj.optString("conditionType"));
-				PageInfo<SysRoadCondition> pageInfo = sysRoadService.queryForPage(roadCondition);
+				//获取所有ID(redis中的键为Road+id)
+				List<SysRoadCondition> roadIdList = sysRoadService.queryRoadIDList();
+				List<SysRoadCondition> redisList = new ArrayList<>();
+				for (int i = 0; i < roadIdList.size(); i++) {
+					redisList.add((SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId()));
+				}
+				//设置页码
+				PageHelper.startPage(roadCondition.getPageNum(), roadCondition.getPageSize(), roadCondition.getOrderby());
+				PageInfo<SysRoadCondition> pageInfo = new PageInfo<SysRoadCondition>(redisList);
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -2341,6 +2352,7 @@ public class MobileController {
 						reChargeMap.put("address", roadConditionInfo.getAddress());
 						reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
 						reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
+						reChargeMap.put("usefulCount", roadConditionInfo.getUsefulCount());
 						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ roadConditionInfo.getId());
 						String publisherTime = "";
 						if (roadConditionInfo.getPublisherTime() != null && !"".equals(roadConditionInfo.getPublisherTime().toString())) {
@@ -2423,7 +2435,10 @@ public class MobileController {
 			if (mainObj != null) {
 				// 创建对象
 				SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(mainObj.optString("roadId"));
-				if(roadCondition!=null){
+				int count = Integer.parseInt(roadCondition.getUsefulCount());
+				roadCondition.setUsefulCount(String.valueOf(count+1));
+				int rs = sysRoadService.updateRoad(roadCondition);
+				if(rs > 0){
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("统计成功！");
 					Map<String, Object> dataMap = new HashMap<>();
@@ -2731,10 +2746,10 @@ public class MobileController {
 				int rs;
 				if("1".equals(type)){//路况
 					SysRoadCondition sysRoadCondition = sysRoadService.selectByPrimaryKey(id);
+					sysRoadCondition.setId(sysRoadCondition.getId());
 					if("1".equals(operation)){//阅读
 						String viewCount = sysRoadCondition.getViewCount();
 						viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
-						sysRoadCondition.setId(sysRoadCondition.getId());
 						sysRoadCondition.setViewCount(viewCount);
 						rs = sysRoadService.updateRoad(sysRoadCondition);
 						if(rs > 0){
@@ -2746,7 +2761,6 @@ public class MobileController {
 					}else{//分享
 						String shareCount = sysRoadCondition.getShareCount();
 						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
-						sysRoadCondition.setId(sysRoadCondition.getId());
 						sysRoadCondition.setShareCount(shareCount);
 						rs = sysRoadService.updateRoad(sysRoadCondition);
 						if(rs > 0){
@@ -2758,40 +2772,59 @@ public class MobileController {
 					}
 				}else if("2".equals(type)){//商家
 					Gastation gastation = gastationService.queryGastationByPK(id);
+					gastation.setSys_user_account_id(gastation.getSys_gas_station_id());
 					if("1".equals(operation)){//阅读
 						String viewCount = gastation.getViewCount();
 						viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
-						gastation.setSys_user_account_id(gastation.getSys_gas_station_id());
 						gastation.setViewCount(viewCount);
-						//rs = gastationService.updatePrepayBalance(obj, addCash)(gastation);
-//						if(rs > 0){
-//							result.setStatus(MobileReturn.STATUS_SUCCESS);
-//						}else{
-//							result.setStatus(MobileReturn.STATUS_FAIL);
-//							result.setMsg("操作失败！");
-//						}
+						rs = gastationService.updateByPrimaryKeySelective(gastation);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
 					}else{//分享
-//						String shareCount = sysRoadCondition.getShareCount();
-//						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
-//						sysRoadCondition.setId(sysRoadCondition.getId());
-//						sysRoadCondition.setShareCount(shareCount);
-//						rs = sysRoadService.updateRoad(sysRoadCondition);
-//						if(rs > 0){
-//							result.setStatus(MobileReturn.STATUS_SUCCESS);
-//						}else{
-//							result.setStatus(MobileReturn.STATUS_FAIL);
-//							result.setMsg("操作失败！");
-//						}
+						String shareCount = gastation.getShareCount();
+						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
+						gastation.setShareCount(shareCount);
+						rs = gastationService.updateByPrimaryKeySelective(gastation);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
 					}
 				}else if("3".equals(type)){//活动
+					MbBanner mbBanner = mbBannerService.selectByPrimaryKey(id);
+					mbBanner.setMbBannerId(mbBanner.getMbBannerId());
 					if("1".equals(operation)){//阅读
-						
+						String viewCount = mbBanner.getViewCount();
+						viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+						mbBanner.setViewCount(viewCount);
+						rs = mbBannerService.updateBanner(mbBanner);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
 					}else{//分享
-						
+						String shareCount = mbBanner.getShareCount();
+						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
+						mbBanner.setShareCount(shareCount);
+						rs = mbBannerService.updateBanner(mbBanner);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
 					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("类型有误！");
+					result.setMsg("类型有误！(1路况、2活动、3商家)");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3023,7 +3056,7 @@ public class MobileController {
 		return record;
 	}
 	public static void main(String[] args) throws ParseException {
-		String s ="{\"main\":{\"name\":\"\",\"longitude\":\"108.882898\",\"latitude\":\"34.185694\",\"radius\":\"2000000\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"100\"},\"extend\":{\"version\":10,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
+		String s ="{\"main\": {\"id\": \"1581aadac636468182d8a9579232e846\",\"operation\": \"2\",\"type\": \"3\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");

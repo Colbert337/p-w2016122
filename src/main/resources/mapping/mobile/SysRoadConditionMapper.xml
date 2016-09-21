@@ -367,6 +367,9 @@
       <if test="shareCount != null" >
         share_count = #{shareCount,jdbcType=TIMESTAMP},
       </if>
+      <if test="usefulCount != null" >
+        useful_count = #{usefulCount,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>

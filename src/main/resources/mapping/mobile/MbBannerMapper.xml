@@ -17,14 +17,24 @@
     <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
     <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
+    <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
+    
   </resultMap>
   <sql id="Base_Column_List" >
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
-    remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name
+    remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name,view_count,share_count
   </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from mb_banner
+    where mb_banner_id = #{mbBannerId,jdbcType=VARCHAR}
+  </select>
+  
   <select id="queryMbBannerList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     select 
-
     mb_banner_id, title, img_path, img_sm_path, target_url, version, img_type, sort, 
     remark, is_deleted, created_date, updated_date,operator,content,city_id,city_name 
     from mb_banner 
@@ -233,6 +243,12 @@
       </if>
       <if test="updatedDate != null" >
         updated_date = #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="viewCount != null &amp;&amp; viewCount != ''" >
+        view_count = #{viewCount,jdbcType=VARCHAR},
+      </if>
+      <if test="shareCount != null &amp;&amp; shareCount != ''" >
+        share_count = #{shareCount,jdbcType=VARCHAR},
       </if>
     </set>
     where mb_banner_id = #{mbBannerId,jdbcType=VARCHAR}
