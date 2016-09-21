@@ -1501,6 +1501,7 @@ public class MobileController {
 					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					for (MbBanner banner:mbBannerList){
 						Map<String, Object> bannerMap = new HashMap<>();
+						bannerMap.put("bannerId",banner.getMbBannerId());
 						bannerMap.put("title",banner.getTitle());
 						bannerMap.put("content",banner.getContent());
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
@@ -3045,7 +3046,7 @@ public class MobileController {
 		return record;
 	}
 	public static void main(String[] args) throws ParseException {
-		String s ="{\"main\":{\"name\":\"\",\"longitude\":\"108.882898\",\"latitude\":\"34.185694\",\"radius\":\"2000000\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"100\"},\"extend\":{\"version\":10,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
+		String s ="{\"main\": {\"id\": \"1427c38591e54a50a127fc94fc2953f0\",\"operation\": \"1\",\"type\": \"1\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
