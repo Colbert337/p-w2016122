@@ -35,6 +35,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
@@ -1246,11 +1247,13 @@ public class MobileController {
 						gastationMap.put("type",gastationInfo.getType());
 						gastationMap.put("longitude",gastationInfo.getLongitude());
 						gastationMap.put("latitude",gastationInfo.getLatitude());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_MAP_TYPE", gastationInfo.getMap_type());
+						gastationMap.put("stationType",usysparam.getMname());
 						gastationMap.put("service",gastationInfo.getGas_server());//提供服务
 						gastationMap.put("preferential",gastationInfo.getPromotions());//优惠活动
 						//获取当前气站价格列表
-						List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
-						gastationMap.put("priceList",priceList);
+						//List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
+						gastationMap.put("priceList",gastationInfo.getLng_price());
 						gastationMap.put("phone",gastationInfo.getContact_phone());
 						if(gastationInfo.getStatus().equals("0")){
 							gastationMap.put("state","开启");
@@ -2318,7 +2321,6 @@ public class MobileController {
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
 				String radius = mainObj.optString("radius");
-				String name = mainObj.optString("name");
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
 				Double radiusDb = new Double(0);
@@ -2326,7 +2328,15 @@ public class MobileController {
 				roadCondition.setLatitude(latitudeStr);
 				roadCondition.setProvince(mainObj.optString("province"));
 				roadCondition.setConditionType(mainObj.optString("conditionType"));
-				PageInfo<SysRoadCondition> pageInfo = sysRoadService.queryForPage(roadCondition);
+				//获取所有ID(redis中的键为Road+id)
+				List<SysRoadCondition> roadIdList = sysRoadService.queryRoadIDList();
+				List<SysRoadCondition> redisList = new ArrayList<>();
+				for (int i = 0; i < roadIdList.size(); i++) {
+					redisList.add((SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId()));
+				}
+				//设置页码
+				PageHelper.startPage(roadCondition.getPageNum(), roadCondition.getPageSize(), roadCondition.getOrderby());
+				PageInfo<SysRoadCondition> pageInfo = new PageInfo<SysRoadCondition>(redisList);
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");

@@ -233,6 +233,7 @@ public class WechatController {
 					payCode = Encoder.MD5Encode(payCode.getBytes());
 					driver.setPayCode(payCode);
 					driver.setSysDriverId(sysDriverId);
+					driver.setPlateNumber(mainObj.optString("plateNumber"));
 					driver.setRegisSource("WeChat");//注册来源
 					driver.setInvitationCode(newInvitationCode);//生成邀请码
 					Integer tmp = driverService.saveDriver(driver, "insert");
