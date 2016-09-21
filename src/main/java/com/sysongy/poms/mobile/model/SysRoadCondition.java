@@ -26,8 +26,12 @@ public class SysRoadCondition extends BaseModel implements Serializable{
     private String conditionMsg;
 
     private String conditionImg;
+    
     private String publisherTime_str;
-   
+    
+    private String viewCount;
+    
+    private String shareCount;
     
     public String getPublisherTime_str() {
 		return publisherTime_str;
@@ -67,6 +71,8 @@ public class SysRoadCondition extends BaseModel implements Serializable{
     private Date auditorTime;
 
     private String memo;
+
+    private String roadId;
 
     public String getCaptureTime_str() {
 		return captureTime_str;
@@ -282,5 +288,29 @@ public class SysRoadCondition extends BaseModel implements Serializable{
 
     public void setMemo(String memo) {
         this.memo = memo == null ? null : memo.trim();
+    }
+
+	public String getViewCount() {
+		return viewCount;
+	}
+
+	public void setViewCount(String viewCount) {
+		this.viewCount = viewCount;
+	}
+
+	public String getShareCount() {
+		return shareCount;
+	}
+
+	public void setShareCount(String shareCount) {
+		this.shareCount = shareCount;
+	}
+
+    public String getRoadId() {
+        return roadId;
+    }
+
+    public void setRoadId(String roadId) {
+        this.roadId = roadId;
     }
 }

@@ -34,4 +34,6 @@ public interface SysRoadConditionMapper {
 	int updateByPrimaryKeyToCheck(SysRoadCondition road);
 
 	List<SysRoadCondition> queryRoadId();
+	
+	List<SysRoadCondition> queryAll();
 }

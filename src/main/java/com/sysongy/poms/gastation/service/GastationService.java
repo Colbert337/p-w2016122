@@ -49,4 +49,6 @@ public interface GastationService {
 
 	boolean exists(String gas) throws Exception;
 	public int delete(String id);
+	
+	public int updateByPrimaryKeySelective(Gastation record) throws Exception;
 }

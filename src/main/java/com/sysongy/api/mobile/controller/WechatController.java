@@ -233,6 +233,7 @@ public class WechatController {
 					payCode = Encoder.MD5Encode(payCode.getBytes());
 					driver.setPayCode(payCode);
 					driver.setSysDriverId(sysDriverId);
+					driver.setRegisSource("WeChat");//注册来源
 					driver.setInvitationCode(newInvitationCode);//生成邀请码
 					Integer tmp = driverService.saveDriver(driver, "insert");
 					//大于0注册成功
@@ -292,8 +293,8 @@ public class WechatController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("注册信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-			logger.error("注册成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("注册失败！");

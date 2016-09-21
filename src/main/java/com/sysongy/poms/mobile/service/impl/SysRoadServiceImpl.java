@@ -57,10 +57,10 @@ public class SysRoadServiceImpl implements SysRoadService{
 	 * 获取路况列表
 	 */
 	@Override
-	public PageInfo<Map<String, Object>> queryForPage(SysRoadCondition record) throws Exception {
+	public PageInfo<SysRoadCondition> queryForPage(SysRoadCondition record) throws Exception {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
-		List<Map<String, Object>> list = sysRoadConditionMapper.queryForPageMap(record);
-		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		List<SysRoadCondition> list = sysRoadConditionMapper.queryForPage(record);
+		PageInfo<SysRoadCondition> pageInfo = new PageInfo<SysRoadCondition>(list);
 		return pageInfo;
 	}
 	
@@ -95,6 +95,11 @@ public class SysRoadServiceImpl implements SysRoadService{
 	public List<SysRoadCondition> queryRoadIDList() {
 		// TODO Auto-generated method stub
 		return sysRoadConditionMapper.queryRoadId();
+	}
+	@Override
+	public List<SysRoadCondition> queryAll() throws Exception {
+		// TODO Auto-generated method stub
+		return sysRoadConditionMapper.queryAll();
 	}
 
 }

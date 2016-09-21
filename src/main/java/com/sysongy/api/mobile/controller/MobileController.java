@@ -65,6 +65,7 @@ import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
+import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
@@ -358,8 +359,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("注册信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("注册失败！");
@@ -416,20 +417,21 @@ public class MobileController {
 
 						//获取用户审核状态
 						driver = driverlist.get(0);
-						String driverStstus = driver.getUserStatus();
-						if("2".equals(driverStstus)){
+						SysUserAccount sysUserAccount = sysUserAccountService.queryUserAccountByDriverId(driver.getSysDriverId());
+						
+						String driverCheckedStstus = driver.getCheckedStatus();
+						if("2".equals(driverCheckedStstus)){
 							resultMap.put("nick",driver.getFullName());
 						}else{
 							resultMap.put("nick","");
 						}
 						resultMap.put("account",driver.getUserName());
 						resultMap.put("securityPhone",driver.getMobilePhone());
-
 						resultMap.put("isRealNameAuth",driver.getCheckedStatus());
 						resultMap.put("balance",driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn",cashBack);
-						resultMap.put("userStatus",driverStstus);
+						resultMap.put("userStatus",sysUserAccount.getAccount_status());
 						if(driver.getAvatarB() == null){
 							resultMap.put("photoUrl","");
 						}else{
@@ -468,8 +470,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("查询用户信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-			logger.error("查询成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询失败！");
@@ -1232,8 +1234,6 @@ public class MobileController {
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
 				Double radiusDb = new Double(0);
-
-
 				//获取气站列表
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
 				PageInfo<Gastation> pageInfo = gastationService.queryGastation(gastation);
@@ -1261,7 +1261,7 @@ public class MobileController {
 						gastationMap.put("address",gastationInfo.getAddress());
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
-
+						gastationMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/station?stationId="+ gastationInfo.getSys_gas_station_id());
 						if(longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr) && radius != null && !"".equals(radius)){
 							longitude = new Double(longitudeStr);
 							latitude = new Double(latitudeStr);
@@ -1275,7 +1275,6 @@ public class MobileController {
 								longDb = new Double(longStr);
 								langDb = new Double(langStr);
 							}
-
 							//计算当前加注站离指定坐标距离
 							Double dist = DistCnvter.getDistance(longitude,latitude,longDb,langDb);
 							if(dist <= radiusDb){//在指定范围内，则返回当前加注站信息
@@ -1298,9 +1297,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
+			logger.error("查询气站信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-
-			logger.error("查询气站信息成功： " + resultStr);
         } catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询气站信息失败！");
@@ -1504,9 +1502,10 @@ public class MobileController {
 					for (MbBanner banner:mbBannerList){
 						Map<String, Object> bannerMap = new HashMap<>();
 						bannerMap.put("title",banner.getTitle());
-						bannerMap.put("content","");
+						bannerMap.put("content",banner.getContent());
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
-						bannerMap.put("contentUrl",http_poms_path+banner.getTargetUrl());
+						bannerMap.put("contentUrl",banner.getTargetUrl());
+						bannerMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/content?contentId="+ banner.getMbBannerId());
 						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
 							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
 						}else{
@@ -1951,9 +1950,9 @@ public class MobileController {
 			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("充值失败！");
+			result.setMsg("充值失败！"+e.getMessage());
 			resutObj = JSONObject.fromObject(result);
-			logger.error("充值失败： " + e);
+			logger.error("充值失败： " + e.getMessage());
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -2302,42 +2301,73 @@ public class MobileController {
 			params = DESUtil.decode(keyStr, params);
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
+			// 创建对象
+			SysRoadCondition roadCondition = new SysRoadCondition();
 			/**
 			 * 请求接口
 			 */
 			if (mainObj != null) {
-				int pageNum = mainObj.optInt("pageNum");
-				int pageSize = mainObj.optInt("pageSize");
-				// 创建对象
-				SysRoadCondition roadCondition = new SysRoadCondition();
-				roadCondition.setPageNum(pageNum);
-				roadCondition.setPageSize(pageSize);
-				roadCondition.setLongitude(mainObj.optString("longitude"));
-				roadCondition.setLatitude(mainObj.optString("latitude"));
+				if(roadCondition.getPageNum() == null){
+					roadCondition.setPageNum(GlobalConstant.PAGE_NUM);
+					roadCondition.setPageSize(GlobalConstant.PAGE_SIZE);
+				}else{
+					roadCondition.setPageNum(mainObj.optInt("pageNum"));
+					roadCondition.setPageSize(mainObj.optInt("pageSize"));
+				}
+				String longitudeStr = mainObj.optString("longitude");
+				String latitudeStr = mainObj.optString("latitude");
+				String radius = mainObj.optString("radius");
+				String name = mainObj.optString("name");
+				Double longitude = new Double(0);
+				Double latitude = new Double(0);
+				Double radiusDb = new Double(0);
+				roadCondition.setLongitude(longitudeStr);
+				roadCondition.setLatitude(latitudeStr);
 				roadCondition.setProvince(mainObj.optString("province"));
 				roadCondition.setConditionType(mainObj.optString("conditionType"));
-				PageInfo<Map<String, Object>> pageInfo = sysRoadService.queryForPage(roadCondition);
+				PageInfo<SysRoadCondition> pageInfo = sysRoadService.queryForPage(roadCondition);
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				String http_poms_path =  (String) prop.get("http_poms_path");
 				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
-					for (Map<String, Object> map : pageInfo.getList()) {
+					for (SysRoadCondition roadConditionInfo : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("roadId", map.get("id"));
-						reChargeMap.put("conditionType", map.get("conditionType"));
-						reChargeMap.put("longitude", map.get("longitude"));
-						reChargeMap.put("latitude", map.get("latitude"));
-						reChargeMap.put("conditionImg", map.get("conditionImg"));
-						reChargeMap.put("address", map.get("address"));
-						reChargeMap.put("publisherName", map.get("publisherName"));
-						reChargeMap.put("publisherPhone", map.get("publisherPhone"));
-						reChargeMap.put("contentUrl", map.get("contentUrl"));
+						reChargeMap.put("roadId", roadConditionInfo.getId());
+						reChargeMap.put("conditionType", roadConditionInfo.getConditionType());
+						reChargeMap.put("longitude", roadConditionInfo.getLongitude());
+						reChargeMap.put("latitude", roadConditionInfo.getLatitude());
+						reChargeMap.put("conditionImg", http_poms_path+roadConditionInfo.getConditionImg());
+						reChargeMap.put("address", roadConditionInfo.getAddress());
+						reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
+						reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
+						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ roadConditionInfo.getId());
 						String publisherTime = "";
-						if (map.get("publisherTime") != null && !"".equals(map.get("publisherTime").toString())) {
+						if (roadConditionInfo.getPublisherTime() != null && !"".equals(roadConditionInfo.getPublisherTime().toString())) {
 							publisherTime = sft.format(new Date());
 						}
 						reChargeMap.put("publisherTime", publisherTime);
-						reChargeList.add(reChargeMap);
+						if(longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr) && radius != null && !"".equals(radius)){
+							longitude = new Double(longitudeStr);
+							latitude = new Double(latitudeStr);
+							radiusDb = new Double(radius);
+
+							String longStr = roadConditionInfo.getLongitude();
+							String langStr = roadConditionInfo.getLatitude();
+							Double longDb = new Double(0);
+							Double langDb = new Double(0);
+							if(longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)){
+								longDb = new Double(longStr);
+								langDb = new Double(langStr);
+							}
+							//计算当前加注站离指定坐标距离
+							Double dist = DistCnvter.getDistance(longitude,latitude,longDb,langDb);
+							if(dist <= radiusDb){//在指定范围内
+								reChargeList.add(reChargeMap);
+							}
+						}else{//目标坐标及范围半径未传参
+							reChargeList.add(reChargeMap);
+						}
 					}
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					reCharge.put("listMap", reChargeList);
@@ -2451,7 +2481,7 @@ public class MobileController {
 				// 创建对象
 				SysRoadCondition roadCondition = new SysRoadCondition();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				roadCondition.setId(mainObj.optString("token"));
+				roadCondition.setId(UUIDGenerator.getUUID());
 				roadCondition.setConditionImg(mainObj.optString("condition_img"));
 				roadCondition.setConditionType(mainObj.optString("conditionType"));
 				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
@@ -2464,6 +2494,7 @@ public class MobileController {
 				roadCondition.setPublisherName(mainObj.optString("publisherName"));
 				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
 				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
+				roadCondition.setRoadId(mainObj.optString("token"));
 				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
 				if (tmp > 0) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -2534,7 +2565,7 @@ public class MobileController {
 					}
 					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Map<String, Object> dataMap = new HashMap<>();
-					String url= "http://192.168.1.202:8080/poms-web";
+					String url= (String) prop.get("http_poms_path");
 					String vehicleLice="";//驾驶证
 					String drivingLice="";//行驶证
 					if(driver.getVehicleLice()==null || "".equals(driver.getVehicleLice())){
@@ -2672,6 +2703,119 @@ public class MobileController {
 		}
 	}
 	
+	/**
+	 * 记录统计数据
+	 */
+	@RequestMapping(value = "/statistics/record")
+	@ResponseBody
+	public String record(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("操作成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 请求接口
+			 */
+			if (mainObj != null) {
+				String id = mainObj.optString("id");
+				String operation = mainObj.optString("operation");
+				String type = mainObj.optString("type");
+				int rs;
+				if("1".equals(type)){//路况
+					SysRoadCondition sysRoadCondition = sysRoadService.selectByPrimaryKey(id);
+					if("1".equals(operation)){//阅读
+						String viewCount = sysRoadCondition.getViewCount();
+						viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+						sysRoadCondition.setId(sysRoadCondition.getId());
+						sysRoadCondition.setViewCount(viewCount);
+						rs = sysRoadService.updateRoad(sysRoadCondition);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
+					}else{//分享
+						String shareCount = sysRoadCondition.getShareCount();
+						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
+						sysRoadCondition.setId(sysRoadCondition.getId());
+						sysRoadCondition.setShareCount(shareCount);
+						rs = sysRoadService.updateRoad(sysRoadCondition);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("操作失败！");
+						}
+					}
+				}else if("2".equals(type)){//商家
+					Gastation gastation = gastationService.queryGastationByPK(id);
+					if("1".equals(operation)){//阅读
+						String viewCount = gastation.getViewCount();
+						viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+						gastation.setSys_user_account_id(gastation.getSys_gas_station_id());
+						gastation.setViewCount(viewCount);
+						//rs = gastationService.updatePrepayBalance(obj, addCash)(gastation);
+//						if(rs > 0){
+//							result.setStatus(MobileReturn.STATUS_SUCCESS);
+//						}else{
+//							result.setStatus(MobileReturn.STATUS_FAIL);
+//							result.setMsg("操作失败！");
+//						}
+					}else{//分享
+//						String shareCount = sysRoadCondition.getShareCount();
+//						shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
+//						sysRoadCondition.setId(sysRoadCondition.getId());
+//						sysRoadCondition.setShareCount(shareCount);
+//						rs = sysRoadService.updateRoad(sysRoadCondition);
+//						if(rs > 0){
+//							result.setStatus(MobileReturn.STATUS_SUCCESS);
+//						}else{
+//							result.setStatus(MobileReturn.STATUS_FAIL);
+//							result.setMsg("操作失败！");
+//						}
+					}
+				}else if("3".equals(type)){//活动
+					if("1".equals(operation)){//阅读
+						
+					}else{//分享
+						
+					}
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("类型有误！");
+				}
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("记录统计数据信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("操作失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("记录统计数据： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 	
 	
 
@@ -2878,9 +3022,8 @@ public class MobileController {
 		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
 		return record;
 	}
-	
 	public static void main(String[] args) throws ParseException {
-		String s ="{\"main\":{\"token\":\"a0b6ff5f23f642f990bdad01b5341f10\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+		String s ="{\"main\":{\"name\":\"\",\"longitude\":\"108.882898\",\"latitude\":\"34.185694\",\"radius\":\"2000000\",\"infoType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"100\"},\"extend\":{\"version\":10,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
