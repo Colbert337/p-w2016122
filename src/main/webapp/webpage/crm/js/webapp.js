@@ -8,7 +8,7 @@ $(function(){
 		}
 	});
 
-	if($(".form-validator").length){
+	/*if($(".form-validator").length){*/
 		// 手机号码验证    
 		jQuery.validator.addMethod("isMobile", function(value, element) {    
 		  var length = value.length;    
@@ -19,7 +19,7 @@ $(function(){
 		jQuery.validator.addMethod("isDigits", function(value, element) {       
 		     return this.optional(element) || /^\d+$/.test(value);       
 		}, "只能输入0-9数字"); 
-	}
+	//}
 
     //提交表单验证
     if($("#shareInviteCode").length){
@@ -113,3 +113,70 @@ $(function(){
 		});
 	}
 });
+
+//邀请用户发送验证码
+var countdown=60;
+//显示添加用户弹出层
+function addDriver(){
+	countdown = 0;
+	var obj = $("#sendMsgA");
+	obj.removeAttr("disabled");
+	obj.attr("onclick","sendMessage()");
+	obj.text("发送验证码");
+
+	$("#driverModel").modal('show').on('hidden.bs.modal', function() {
+		$('#driverForm').bootstrapValidator('resetForm',true);
+	});
+}
+
+function settime() {
+	var obj = $("#sendMsgA");
+	if (countdown == 0) {
+		obj.removeAttr("disabled");
+		obj.attr("onclick","sendMessage()");
+		obj.text("发送验证码");
+		countdown = 60;
+		return true
+	} else {
+		obj.removeAttr("onclick");
+		obj.attr("disabled",true);
+		obj.text("重新发送(" + countdown + ")");
+		countdown--;
+		setTimeout(function() {
+			settime()
+		},1000)
+	}
+}
+
+/**
+ * 发送验证码
+ */
+function sendMessage(){
+	var hasError = $("#mobile_phone").parents(".form-group").hasClass("has-error");
+	console.log("hasError:"+hasError);
+	if(hasError){
+		$("#sendMsgA").off("click");
+		return false;
+	}else{
+		$("#sendMsgA").on("click",function(){sendMessage()});
+	}
+
+	var mobilePhone = $("#phone").val();
+	alert(mobilePhone);
+	if(mobilePhone == ""){
+		return false;
+	}else{
+		countdown=60;
+		settime();
+		$.ajax({
+			url:"../crmInterface/crmCustomerService/web/sendMsg/api",
+			data:{mobilePhone:mobilePhone,msgType:'register'},
+			async:false,
+			type: "POST",
+			success: function(data){
+				bootbox.alert(data.msg);
+			}
+		})
+	}
+
+}

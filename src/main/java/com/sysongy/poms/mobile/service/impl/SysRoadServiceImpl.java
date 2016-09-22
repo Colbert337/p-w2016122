@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.dao.SysRoadConditionMapper;
+import com.sysongy.poms.mobile.dao.SysRoadConditionStrMapper;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.mobile.model.SysRoadConditionStr;
 import com.sysongy.poms.mobile.service.SysRoadService;
 
 /**
@@ -26,6 +28,9 @@ import com.sysongy.poms.mobile.service.SysRoadService;
 public class SysRoadServiceImpl implements SysRoadService{
 	@Autowired
 	SysRoadConditionMapper sysRoadConditionMapper;
+
+	@Autowired
+	SysRoadConditionStrMapper sysRoadConditionStrMapper;
 	/**
 	 * 路况列表
 	 */
@@ -57,13 +62,21 @@ public class SysRoadServiceImpl implements SysRoadService{
 	 * 获取路况列表
 	 */
 	@Override
+	public PageInfo<Map<String, Object>> queryForPageMap(SysRoadCondition record) throws Exception {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Map<String, Object>> list = sysRoadConditionMapper.queryForPageMap(record);
+		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
+		return pageInfo;
+	}
+
+	@Override
 	public PageInfo<SysRoadCondition> queryForPage(SysRoadCondition record) throws Exception {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<SysRoadCondition> list = sysRoadConditionMapper.queryForPage(record);
 		PageInfo<SysRoadCondition> pageInfo = new PageInfo<SysRoadCondition>(list);
 		return pageInfo;
 	}
-	
+
 	@Override
 	public SysRoadCondition selectByPrimaryKey(String id) throws Exception {
 		return sysRoadConditionMapper.selectByPrimaryKey(id);
@@ -101,5 +114,12 @@ public class SysRoadServiceImpl implements SysRoadService{
 		// TODO Auto-generated method stub
 		return sysRoadConditionMapper.queryAll();
 	}
-
+	@Override
+	public PageInfo<SysRoadConditionStr> queryRoadListStr(SysRoadCondition road) {
+		// TODO Auto-generated method stub
+		PageHelper.startPage(road.getPageNum(), road.getPageSize(), road.getOrderby());
+		List<SysRoadConditionStr> list = sysRoadConditionStrMapper.queryForPageForRoadId(road.getId());
+		PageInfo<SysRoadConditionStr> pageInfo = new PageInfo<SysRoadConditionStr>(list);
+		return pageInfo;
+	}
 }

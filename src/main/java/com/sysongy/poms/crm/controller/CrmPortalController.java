@@ -382,4 +382,35 @@ public class CrmPortalController {
 
         return "/webpage/crm/webapp-download-app";
     }
+
+    /**
+     * 邀请用户页面内容
+     * @return
+     */
+    @RequestMapping("/user/invitation")
+    public String queryUserInvitation(@RequestParam String token,  ModelMap map) throws Exception{
+        SysDriver sysDriver = new SysDriver();
+        try {
+            if(token != null){
+                sysDriver = driverService.queryDriverByPK(token);
+                if(sysDriver != null){
+                    String fullName = sysDriver.getFullName();
+                    if(fullName != null && !"".equals(fullName)){
+                        map.addAttribute("name",fullName);
+                    }else{
+                        String phoneNum = sysDriver.getMobilePhone();
+                        if(phoneNum != null && !"".equals(phoneNum)){
+                            phoneNum = phoneNum.substring(0,3) + "****" + phoneNum.substring(8,phoneNum.length());
+                        }
+                        map.addAttribute("name",phoneNum);
+                        map.addAttribute("invitationCode",sysDriver.getInvitationCode());
+                    }
+                }
+                map.addAttribute("sysDriver",sysDriver);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "/webpage/crm/webapp-share";
+    }
 }

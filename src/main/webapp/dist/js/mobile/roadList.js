@@ -77,21 +77,7 @@ jQuery(function($) {
 
 window.onload = setCurrentPage();
 
-function del(obj) {
-
-	bootbox.setLocale("zh_CN");
-	bootbox.confirm("是否删除该条数据?", function(result) {
-		if (result) {
-			var messageid = $(obj).parents("tr").find("td:first").find("input")
-					.val();
-			loadPage('#main', '../web/message/deleteMessage?messageid='
-					+ messageid);
-		}
-
-	})
-
-}
-		
+	
 function commitForm(obj) {
 	// 设置当前页的值
 	if (typeof obj == "undefined") {
@@ -209,9 +195,4 @@ function deleteRoad(id){
 	})
 
 
-}
-function showUser(id) {
-
-	loadPage('#content', '../web/message/showUser?id=' + id);
-	$("#editModel").modal('show');
 }
