@@ -81,11 +81,11 @@
 			<nav>
 				<ul id="ulhandle1" class="pagination pull-right no-margin">
 					<li id="previous1"><a href="javascript:void(0);"
-						aria-label="Previous" onclick="prepage('#formgastation');"> <span
+						aria-label="Previous" onclick="prepage1('#formgastation');"> <span
 							aria-hidden="true">上一页</span>
 					</a></li>
 					<li id="next1"><a id="nexthandle" href="javascript:void(0);"
-						aria-label="Next" onclick="nextpage('#formgastation');"> <span
+						aria-label="Next" onclick="nextpage1('#formgastation');"> <span
 							aria-hidden="true">下一页</span>
 					</a></li>
 				</ul>
@@ -136,7 +136,7 @@ function commitForm1(obj) {
 	$("#formgastation").ajaxSubmit(listOptions2);
 }
  
-function nextpage(formid){
+function nextpage1(formid){
 	//如果是最后一页
 	if(parseInt($("#pageNum").val()) >= parseInt($("#pageNumMax").val())){
 		return ;
@@ -145,7 +145,7 @@ function nextpage(formid){
 	$("#pageNum1").val(parseInt($("#pageNum1").val())+1);
 	$(formid).ajaxSubmit(listOptions2);
 }
-function prepage(formid){
+function prepage1(formid){
 	//如果是第一页
 	if(parseInt($("#pageNum1").val()) <= 1){
 		return ;

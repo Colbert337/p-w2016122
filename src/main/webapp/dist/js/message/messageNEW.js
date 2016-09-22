@@ -44,7 +44,8 @@
 	            type:'post',
 	            data:{
 	            	device_token:device_token,
-	            	driver_name:driver_name
+	            	driver_name:driver_name,
+	            	messageType:1
 	            },
 	            dataType:'text',
 	            success:function(data){

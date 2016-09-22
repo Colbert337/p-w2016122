@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.dao.SysRoadConditionMapper;
+import com.sysongy.poms.mobile.dao.SysRoadConditionStrMapper;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.mobile.model.SysRoadConditionStr;
 import com.sysongy.poms.mobile.service.SysRoadService;
 
 /**
@@ -26,6 +28,9 @@ import com.sysongy.poms.mobile.service.SysRoadService;
 public class SysRoadServiceImpl implements SysRoadService{
 	@Autowired
 	SysRoadConditionMapper sysRoadConditionMapper;
+	
+	@Autowired
+	SysRoadConditionStrMapper sysRoadConditionStrMapper;
 	/**
 	 * 路况列表
 	 */
@@ -95,6 +100,14 @@ public class SysRoadServiceImpl implements SysRoadService{
 	public List<SysRoadCondition> queryRoadIDList() {
 		// TODO Auto-generated method stub
 		return sysRoadConditionMapper.queryRoadId();
+	}
+	@Override
+	public PageInfo<SysRoadConditionStr> queryRoadListStr(SysRoadCondition road) {
+		// TODO Auto-generated method stub
+		PageHelper.startPage(road.getPageNum(), road.getPageSize(), road.getOrderby());
+		List<SysRoadConditionStr> list = sysRoadConditionStrMapper.queryForPageForRoadId(road.getId());
+		PageInfo<SysRoadConditionStr> pageInfo = new PageInfo<SysRoadConditionStr>(list);
+		return pageInfo;
 	}
 
 }

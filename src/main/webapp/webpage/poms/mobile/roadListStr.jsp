@@ -10,7 +10,7 @@
 	String imagePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 %>
 
-<script src="<%=basePath%>/dist/js/mobile/roadList.js"></script>
+<script src="<%=basePath%>/dist/js/mobile/roadListStr.js"></script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -22,66 +22,106 @@
 			<div class="col-xs-12">
 
 				<div class="page-header">
-					<h1>路况管理</h1>
+					<h1>路况失效查看</h1>
 				</div>
-
-				<div class="search-types">
-					<div class="item">
-						<label>路况说明:</label> <input type="text" name="conditionMsg"
-							placeholder="输入路况说明" maxlength="200" value="${road.conditionMsg}" />
-					</div>
-					<div class="item">
-						<label>路况类型</label> <select name="conditionType"
-							value="${road.conditionType}">
-							<s:option flag="true" gcode="CONDITION_TYPE" form="road"
-								field="conditionType" />
-						</select>
-					</div>
-					<div class="item">
-						<label>路况类型</label> <select name="conditionStatus"
-							id="conditionStatus">
-							<option value="">--请选择--</option>
-							<option value="0">已失效</option>
-							<option value="1">未审核</option>
-							<option value="2">审核通过</option>
-							<option value="3">未通过</option>
-						</select>
-					</div>
-					<div class="item">
-						<div class="input-daterange top" id="j-input-daterange-top">
-							<label>发布日期:</label> <input type="text" class="timebox"
-								name="publisherTime_str" value="${road.publisherTime_str}"
-								readonly="readonly" /> <span class=""> <i
-								class="fa fa-exchange"></i>
-							</span> <input type="text" class="timebox" name="auditorTime_str"
-								value="${road.auditorTime_str}" readonly="readonly" />
-						</div>
-					</div>
-
-					<div class="item">
-						<button class="btn btn-sm btn-primary" type="button"
-							onclick="loadPage('#main','<%=basePath%>/webpage/poms/mobile/roadAdd.jsp');">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 添加
-						</button>
-						<button class="btn btn-sm btn-primary" type="button"
-							onclick="commitForm();">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 查询
-						</button>
-						<button class="btn btn-sm" type="button" onclick="init();">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 重置
-						</button>
-					</div>
-				</div>
-
 				<div class="clearfix">
 					<div class="pull-right tableTools-container"></div>
 				</div>
+				<div class="modal-body">
+					<div class="shenhe-items-hd">路况信息</div>
+					<table class="table">
+						<tbody>
+							<tr>
+								<th width="15%">路况类型</th>
+								<td><div id="gas_station_name" >
+										<s:Code2Name mcode="${road.conditionType}"
+											gcode="CONDITION_TYPE"></s:Code2Name></td>
+								<th width="15%">路况类型</th>
+								<td><div id="gas_station_name" >
+										<c:if test="${road.conditionStatus == '0' }">已失效</c:if>
+										<c:if test="${road.conditionStatus == '1' }">待审核</c:if>
+										<c:if test="${road.conditionStatus == '2' }">已审核</c:if>
+										<c:if test="${road.conditionStatus == '3' }">未通过</c:if></td>
 
-				<div class="table-header">APP信息发送列表</div>
+								<th>坐标</th>
+								<td><div id="salesmen_name" >
+										${road.longitude},${road.longitude}</div></td>
+													<input type="hidden" name="id" value="${road.id }" />
+							</tr>
+							<tr>
+								<th>拍照时间</th>
 
-				<!-- div.table-responsive -->
+								<td><div id="operations_name" >
+										<fmt:formatDate value="${road.captureTime}" type="both" />
+									</div></td>
 
-				<!-- div.dataTables_borderWrap -->
+
+								<th>开始时间</th>
+								<td><div id="indu_com_number" >
+										<fmt:formatDate value="${road.startTime}" type="both" />
+									</div></td>
+								<th>结束时间</th>
+								<td><div id="status" >
+										<fmt:formatDate value="${road.endTime}" type="both" />
+									</div></td>
+							</tr>
+							<tr>
+								<th>方向</th>
+								<td><div >
+										<s:Code2Name mcode="${road.conditionType}"
+											gcode="DIRECTION_CODE"></s:Code2Name>
+									</div></td>
+
+								<th>坐标</th>
+								<td><div id="salesmen_name" >
+										${road.longitude},${road.longitude}</div></td>
+
+								<th>省份信息</th>
+								<td><div >${road.province}</div></td>
+							</tr>
+							<tr>
+								<th>路况说明</th>
+								<td colspan="7"><div id="admin_username" >${road.conditionMsg}
+									</div></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="shenhe-items-hd">创建信息</div>
+					<table class="table">
+						<tbody>
+							<tr>
+								<th>创建人</th>
+								<td><div id="address" >${road.publisherName}
+									</div></td>
+								<th>创建人电话</th>
+								<td><div id="created_time" >
+										${road.publisherPhone}</div></td>
+
+								<th>创建时间</th>
+								<td><div id="created_time" >
+										<fmt:formatDate value="${list.publisherTime}" type="both" />
+									</div></td>
+							</tr>
+						</tbody>
+					</table>
+
+
+					<div class="shenhe-items-hd">路况图片</div>
+					<div class="row">
+						<div class="col-sm-3">
+							<ul class="ace-thumbnails clearfix">
+								<li><a class="" href="" data-rel="colorbox"> <img
+										class="img-responsive" src="${list.conditionImg}" alt=""
+										id="innerimg1" />
+										<div class="text">
+											<div class="inner">点击放大</div>
+										</div>
+								</a></li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
 				<div class="sjny-table-responsive">
 					<table id="dynamic-table"
 						class="table table-striped table-bordered table-hover">
@@ -89,8 +129,7 @@
 							<tr>
 								<th onclick="orderBy(this,'condition_type');commitForm();"
 									id="condition_type_order">路况类型</th>
-								<th onclick="orderBy(this,'condition_status');commitForm();"
-									id="condition_status_order">路况状态</th>
+
 								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
 								<th>坐标</th>
@@ -113,19 +152,9 @@
 									id="publisher_time_order" class="td-w2"><i
 									id="created_date"
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>发布时间</th>
-								<th onclick="orderBy(this,'auditor');commitForm();"
-									id="auditor_orber">审核人</th>
-								<th onclick="orderBy(this,'auditor_phone');commitForm();"
-									id="auditor_phone_orber">审核人电话</th>
-								<th onclick="orderBy(this,'auditor_time');commitForm();"
-									id="auditor_time_orber">审核时间</th>
+
 								<th onclick="orderBy(this,'province');commitForm();"
 									id="province_orber">省份信息</th>
-								<th onclick="orderBy(this,'useful_count');commitForm();"
-									id="useful_count_orber">点赞数量</th>
-								<th onclick="orderBy(this,'memo');commitForm();" id="memo_orber">备注</th>
-								<th onclick="orderBy(this,'invalid_count');commitForm();"
-									id="invalid_count_orber">失效请求</th>
 								<th class="text-center td-w3">操作</th>
 							</tr>
 						</thead>
@@ -136,64 +165,32 @@
 								<tr id="${list.id }">
 									<td><s:Code2Name mcode="${list.conditionType}"
 											gcode="CONDITION_TYPE"></s:Code2Name></td>
-									<td><c:if test="${list.conditionStatus == '0' }">已失效</c:if>
-										<c:if test="${list.conditionStatus == '1' }">待审核</c:if>
-										<c:if test="${list.conditionStatus == '2' }">审核通过</c:if>
-										<c:if test="${list.conditionStatus == '3' }">未通过</c:if></td>
-									<%-- 		<td><img width="150" height="150" alt="150x150"
-												src="<%=imagePath %>${list.imgPath}" /></td> --%>
+
 									<td><div class="td-inner-warp">${list.captureLongitude},${list.captureLatitude }</div></td>
 									<td><fmt:formatDate value="${list.captureTime}"
 											type="both" /></td>
-									<td><div class="td-inner-warp">${list.conditionMsg}</div></td>
+									<td>${list.conditionMsg}</td>
 									<td><fmt:formatDate value="${list.startTime}" type="both" /></td>
 									<td><fmt:formatDate value="${list.endTime}" type="both" /></td>
 									<td>${list.publisherName}</td>
 									<td>${list.publisherPhone}</td>
 									<td><fmt:formatDate value="${list.publisherTime}"
 											type="both" /></td>
-									<td>${list.auditor}</td>
-									<td>${list.auditorPhone}</td>
-									<td><fmt:formatDate value="${list.auditorTime}"
-											type="both" /></td>
+
 									<%-- <td>${list.operator}</td> --%>
 									<td>${list.province}</td>
-									<td>${list.usefulCount}</td>
-									<td>${list.memo}</td>
-									<td><c:if test="${list.conditionStatus == '2'}">
-											<c:if
-												test="${list.invalid_count != '' and list.invalid_count!='0' }">
-												<a class="option-btn-m" href="javascript:void(0);"
-													title="查看失效请求"
-													onclick="loadPage('#main', '../web/mobile/road/roadListStr?id=${list.id }');"
-													data-rel="tooltip"> --${list.invalid_count}-- </a>
-											</c:if>
-											<c:if
-												test="${list.invalid_count == '' or list.invalid_count=='0' }">
-											0
-											</c:if>
-										</c:if></td>
-									<td class="text-center"><c:if
-											test="${list.conditionStatus == '1' }">
-											<a class="option-btn-m" href="javascript:void(0);" title="审核"
-												data-rel="tooltip"> <i
-												class="ace-icon fa fa-pencil bigger-130"
-												onclick="updateCheck('${list.conditionImg}',$('#${list.id }'),'${list.id }');"></i>
-											</a>
-										</c:if><a class="option-btn-m" href="javascript:void(0);"
+								 
+									<td class="text-center"><a class="option-btn-m" href="javascript:void(0);"
 										title="查看图片" data-rel="tooltip"> <i
 											class="ace-icon fa fa-search-plus bigger-130"
 											onclick="updateCheck('${list.conditionImg}',$('#${list.id }'));"></i>
-									</a> <a class="" href="javascript:void(0);"
-										onclick="deleteRoad('${list.id}');" title="删除"
-										data-rel="tooltip"> <i
-											class="ace-icon fa fa-trash-o bigger-130"></i>
-									</a></td>
+									</a>  </td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
 				</div>
+
 
 
 				<div class="row">
@@ -220,7 +217,21 @@
 						</nav>
 					</div>
 				</div>
+				<div class="col-md-offset-3 col-md-9">
 
+					<button class="btn btn-info" type="button"
+						onclick="shixiao();">
+						<i class="ace-icon fa fa-check bigger-110"></i> 失效
+					</button>
+					&nbsp; &nbsp; &nbsp;
+
+
+
+					<button class="btn" id="clear" type="button" onclick="init();">
+						<i class="ace-icon fa fa-repeat bigger-110"></i> 取消
+					</button>
+
+				</div>
 				<jsp:include page="/common/message.jsp"></jsp:include>
 
 			</div>
@@ -229,7 +240,6 @@
 		<!-- /.row -->
 	</form>
 </div>
-
 
 <div id="innerModel" class="modal fade" role="dialog"
 	aria-labelledby="gridSystemModalLabel" data-backdrop="static"
@@ -284,29 +294,14 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="shenhe-items-hd">审核信息</div>
-				<table class="table">
-					<tr>
-						<th>审核人</th>
-						<td><div id="prepay_balance" name="show"></div></td>
-						<th>审核人电话</th>
-						<td><div id="prepay_phone" name="show"></div></td>
-					</tr>
-					<tr>
-						<th>审核时间</th>
-						<td colspan="3"><div id="prepay_balance" name="show">
-							</div></td>
+				 
 
-					</tr>
-					</tbody>
-				</table>
-
-				<div class="shenhe-items-hd">证件照片</div>
+				<div class="shenhe-items-hd">路况照片</div>
 				<div class="row">
 					<div class="col-sm-3">
 						<ul class="ace-thumbnails clearfix">
 							<li><a class="" href="" data-rel="colorbox"> <img
-									class="img-responsive" src="" alt="" id="innerimg1" />
+									class="img-responsive" src="" alt="" id="innerimg2" />
 									<div class="text">
 										<div class="inner">点击放大</div>
 									</div>
@@ -316,7 +311,7 @@
 				</div>
 
 			</div>
-			<input type="hidden" id="roadId" />
+
 			<div class="modal-footer" id="buttonList">
 				<button class="btn btn-primary btn-sm" onclick="updateRoad('2')">审核通过</button>
 				<button class="btn btn-primary btn-sm" onclick="updateRoad('3')">审核不通过</button>
@@ -327,8 +322,15 @@
 </div>
 
 
+
 <script>
+	//获取带"/"的项目名，如：/Tmall
+	var projectName = pathName
+			.substring(0, pathName.substr(1).indexOf('/') + 1);
 	$("#conditionStatus").val("${road.conditionStatus}");
+	$("#innerimg1").attr("src", projectName + '${road.conditionImg}');
+	$("#innerimg1").parent("a").attr("href",
+			projectName + '${road.conditionImg}');
 
 	
 </script>

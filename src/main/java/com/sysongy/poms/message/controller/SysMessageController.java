@@ -200,11 +200,12 @@ public class SysMessageController extends BaseContoller {
 		String ret = "webpage/poms/message/messageNEW";
 		String messageid = null;
 		message.setMessageGroup("999");// 指定用户组
+		message.setMessageType(1);
 		try {
 
 			messageid = service.saveMessage_New(message);
 			bean.setRetMsg("新增成功");
-			ret = "webpage/poms/message/message_new";
+//			ret = "webpage/poms/message/message_new";
 
 			bean.setRetCode(100);
 

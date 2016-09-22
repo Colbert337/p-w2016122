@@ -3,8 +3,10 @@ package com.sysongy.poms.mobile.service;
 
 import java.util.List;
 import java.util.Map;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.mobile.model.SysRoadConditionStr;
 
 /**
  * @FileName: SysRoadService
@@ -46,5 +48,7 @@ public interface SysRoadService {
 	int deleteRoad(SysRoadCondition road);
 
 	List<SysRoadCondition> queryRoadIDList();
+
+	PageInfo<SysRoadConditionStr> queryRoadListStr(SysRoadCondition road);
 	
 }

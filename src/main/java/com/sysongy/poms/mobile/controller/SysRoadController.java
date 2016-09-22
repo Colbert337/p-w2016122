@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,6 +24,7 @@ import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.mobile.model.SysRoadConditionStr;
 import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.RedisClientInterface;
@@ -60,11 +62,61 @@ public class SysRoadController extends BaseContoller {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
 				road.setPageSize(GlobalConstant.PAGE_SIZE);
 			}
+			if(StringUtils.isEmpty(road.getOrderby())){
+				road.setOrderby(" start_time desc");
+            }
 
 			PageInfo<SysRoadCondition> pageinfo = new PageInfo<SysRoadCondition>();
-
 			pageinfo = sysRoadService.queryRoadList(road);
+			bean.setRetCode(100);
+			if (type != null && !"".equals(type)) {
+				bean.setRetMsg(msg);
+			} else {
+				bean.setRetMsg("查询成功");
+			}
+			bean.setPageInfo(ret);
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("road", road);
+			// map.addAttribute("current_module",
+			// "/web/mobile/suggest/suggestList");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
 
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		} finally {
+			return ret;
+		}
+
+	}
+	
+	@RequestMapping("/roadListStr")
+	public String roadListStr(SysRoadCondition road, ModelMap map, String type) {
+		String ret = "webpage/poms/mobile/roadListStr";
+
+		PageBean bean = new PageBean();
+		try {
+			int pageNum=1;
+			if (road.getPageNum() == null) {
+				road.setPageNum(GlobalConstant.PAGE_NUM);
+				road.setPageSize(5);
+			}
+			if(StringUtils.isEmpty(road.getOrderby())){
+				road.setOrderby(" publisher_time desc");
+            }
+			pageNum=road.getPageNum();
+			PageInfo<SysRoadConditionStr> pageinfo = new PageInfo<SysRoadConditionStr>();
+			road=sysRoadService.selectByPrimaryKey(road.getId());
+			if(road==null){
+				throw new Exception("路况不存在");
+			}
+			road.setPageSize(5);
+			road.setPageNum(pageNum);
+			pageinfo = sysRoadService.queryRoadListStr(road);
 			bean.setRetCode(100);
 			if (type != null && !"".equals(type)) {
 				bean.setRetMsg(msg);
@@ -370,5 +422,11 @@ public class SysRoadController extends BaseContoller {
 		} finally {
 			return ret;// TODO: handle finally clause
 		}
+	}
+	@RequestMapping("/seachInvalid")
+	public String seachInvalid(){
+		String ret = "redirect:/web/mobile/road/roadList?type=delete";
+		PageBean bean = new PageBean();
+		return ret;
 	}
 }

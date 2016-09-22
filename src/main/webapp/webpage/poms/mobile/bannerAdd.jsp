@@ -167,7 +167,7 @@
 								for="target_url"><span class="red_star">*</span> 链接地址： </label>
 							<div class="col-sm-8">
 								<input type="text" id="target_url"
-									value="${mbBanner.targetUrl }" name="targetUrl"
+									value="${mbBanner.targetUrl }" maxlength="100" name="targetUrl"
 									placeholder="链接地址" class="col-xs-10 col-sm-12" />
 							</div>
 						</div>

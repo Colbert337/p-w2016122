@@ -267,16 +267,21 @@
 									</div>
 									
 									<div class="row">
-										<label class="col-sm-3 control-label no-padding-right">商品信息： </label>
+										<label class="col-sm-3 control-label no-padding-right">商品价格： </label>
 										<div class="col-sm-4">
 											<div class="row">
 												<div class="col-sm-12">
 												<textarea name="lng_price" id="lng_price" style="resize: none;"
-									maxlength="500" placeholder="商品信息"
+									maxlength="500" placeholder="商品信息如：LNG：3.2元/KG，LCG：3.2元/KG"
 									class="col-xs-10 col-sm-12 limited form-control">${station.lng_price }</textarea>
 											</div>
 										</div>
 										</div>
+										<div class="form-group"><span
+								class="red_star">商品价格格式如：LNG：3.2元/KG，LCG：3.2元/KG</span>
+							</label>
+
+						 
 									</div>
 									<br/>
 									<div class="row">
