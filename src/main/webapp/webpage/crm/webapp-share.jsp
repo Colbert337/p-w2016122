@@ -31,7 +31,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 			<div class="df-item">
 				<input id="vcode" name="vcode" tabIndex="2" class="txt code required" type="text" placeholder="请输入验证码">
-				<button class="get-code-info">获取验证码</button>
+				<button class="get-code-info" id="sendMsgA" onclick="sendMessage()">获取验证码</button>
 				<input type="hidden" id="invitationCode" name="invitationCode" value="${invitationCode}">
 			</div>
 			<div class="df-item-btn">
