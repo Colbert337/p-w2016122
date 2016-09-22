@@ -206,12 +206,9 @@ public class SysMessageController extends BaseContoller {
 			messageid = service.saveMessage_New(message);
 			bean.setRetMsg("新增成功");
 //			ret = "webpage/poms/message/message_new";
-
 			bean.setRetCode(100);
-
 			bean.setRetValue(messageid);
 			bean.setPageInfo(ret);
-
 			map.addAttribute("ret", bean);
 		} catch (Exception e) {
 			bean.setRetCode(5000);

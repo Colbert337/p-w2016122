@@ -31,6 +31,8 @@ import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
 
 import net.sf.json.JSONObject;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisSentinelPool;
 
 /**
  * @FileName: SysRoadController
@@ -194,6 +196,7 @@ public class SysRoadController extends BaseContoller {
 			map.addAttribute("suggest", road);
 			// 保存readis
 			int time = sumTime(road);
+			road.setUsefulCount("0");
 			redisClientImpl.addToCache("Road" + road.getId(), road, time);
 			// map.addAttribute("current_module",
 			// "/web/mobile/suggest/suggestList");
@@ -376,6 +379,7 @@ public class SysRoadController extends BaseContoller {
 			if ("2".equals(road.getConditionStatus())) {
 				// 放到redis
 				int time = sumTime(road);
+				road.setUsefulCount("0");
 				redisClientImpl.addToCache("Road" + road.getId(), road, time);
 			}
 
