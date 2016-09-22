@@ -47,10 +47,15 @@
 		                    notEmpty: {
 		                        message: '加注站保证金不能为空'
 		                    },
-		                    regexp: {
-		                        regexp: '^[-+]?[0-9]+(\.[0-9]+)?$',
-		                        message: '加注站保证必须是数字'
-		                    }
+							callback: {
+								message: '加注站保证金必须是正数',
+								callback: function(value, validator) {
+									if (value<=0||isNaN(value)) {
+										return false;
+									}
+									return true;
+								}
+							}
 		                }
 		            },
 		            /*company: {
