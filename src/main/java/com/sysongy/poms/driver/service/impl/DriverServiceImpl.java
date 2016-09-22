@@ -355,7 +355,7 @@ public class DriverServiceImpl implements DriverService {
 		return cashTo_success_specific_type;
 	}
 	
-	public String cashBackForRegister(SysDriver driver, String invitationCode) throws Exception{
+	public void cashBackForRegister(SysDriver driver, String invitationCode) throws Exception{
 		
 		SysDriver invitation = new SysDriver();
 		invitation.setInvitationCode(invitationCode);
@@ -368,10 +368,8 @@ public class DriverServiceImpl implements DriverService {
 			invitation = invitationList.get(0);
 		}
 		
-    	sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(10.00), null);
-    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(10.00), null);
-    	
-    	return null;
+    	sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.REGISTER_CASHBACK);
+    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.INVITED_CASHBACK);
 	}
 	
     public Integer isExists(SysDriver obj) throws Exception {
@@ -379,7 +377,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception {
-        SysDriver sysDriver =  sysDriverMapper.queryDriverByMobilePhone(record);
+        SysDriver sysDriver = sysDriverMapper.queryDriverByMobilePhone(record);
         return sysDriver;
     }
 
