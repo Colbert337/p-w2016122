@@ -1254,7 +1254,22 @@ public class MobileController {
 						gastationMap.put("preferential",gastationInfo.getPromotions());//优惠活动
 						//获取当前气站价格列表
 						//List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
-						gastationMap.put("priceList",gastationInfo.getLng_price());
+						String price = gastationInfo.getLng_price();
+						price = price.replaceAll("，",",");
+						price = price.replaceAll("：",":");
+						String strArray[] = price.split(",");
+						Map[] map = new Map[strArray.length];
+						for(int i = 0;i<strArray.length;i++){
+							String strInfo = strArray[i].trim();
+							String strArray1[] = strInfo.split(":");
+							String strArray2[] = strArray1[1].split("/");
+							Map<String, Object> dataMap = new HashMap<>();
+							dataMap.put("gasName",strArray1[0]);
+							dataMap.put("gasPrice",strArray2[0]);
+							dataMap.put("gasUnit",strArray2[1]);
+							map[i] = dataMap;
+						}
+						gastationMap.put("priceList",map);
 						gastationMap.put("phone",gastationInfo.getContact_phone());
 						if(gastationInfo.getStatus().equals("0")){
 							gastationMap.put("state","开启");
@@ -2854,9 +2869,57 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-	
-	
-
+	/**
+	 * 获取邀请用户页面信息
+	 */
+	@RequestMapping(value = "/user/invitation")
+	@ResponseBody
+	public String invitation(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("操作成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 请求接口
+			 */
+			if (mainObj != null) {
+				Map<String, Object> tokenMap = new HashMap<>();
+				tokenMap.put("inviteContent","将此链接或邀请码分享给好友，好友通过您的邀请链接或邀请码完成注册并登录后，您的账户即可获得￥10现金充值。");
+				tokenMap.put("msgContent","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，注册成功之后您的账户即可获得￥10现金充值，详情请访问：https://www.sysongy.net:8448/invite/SJ2016");
+				tokenMap.put("title","注册即享司集现金充值");
+				tokenMap.put("content","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，完成注册并下载司集APP，您即可获得￥10账户充值，可在任意司集联盟站使用！");
+				tokenMap.put("imgUrl","默认图片路径");
+				result.setData(tokenMap);
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 	private String genPayReq(Map<String, String> resultunifiedorder ) {
 
 		/*
@@ -3061,10 +3124,10 @@ public class MobileController {
 		return record;
 	}
 	public static void main(String[] args) throws ParseException {
-		String s ="{\"main\":{\"token\":\"67d23142415a4d73ba56e64156a6749b\",\"name\":\"齐天大圣\",\"plateNumber\":\"陕q12346\",\"gasType\":\"LNG\",\"endTime\":\"\",\"driverLicenseImageUrl\":\"/image/mobile/1474447909033.jpg\",\"idCard\":\"\"},\"extend\":{\"version\":12,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
+		/*String s ="{\"main\":{\"publisherPhone\":\"\",\"publisherName\":\"\",\"publisherTime\":\"2016-09-22 10:34:46\",\"token\":\"2ba429c6f6d7426692f8e5c816f590d7\",\"address\":\"陕西省西安市雁塔区傅东巷靠近中兴产业园A座\",\"flashLatitude\":\"34.1857\",\"flashLongitude\":\"108.882899\",\"latitude\":\"34.1857\",\"longitude\":\"108.882899\",\"conditionMsg\":\"这边封路了A，大家不要过来了\",\"flashTime\":\"2016-09-22 10:34:38\",\"condition_img\":\"/image/mobile/1474511710202.jpg\",\"conditionType\":\"03\",\"direction\":\"2\"},\"extend\":{\"version\":12,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
-		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+		SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
 		String str = "2016-09-18 12:38:38";
 		Calendar cal = Calendar.getInstance();
 		Date date = sft.parse(str);
@@ -3075,5 +3138,23 @@ public class MobileController {
         Date date1 = cal.getTime();
         String d4 = sft.format(date1);
         System.out.println(d4);*/
+		String str = "LNG1：3.51元/KG，LNG2：3.52元/KG  ,LNG3：3.53元/KG ";
+		str = str.replaceAll("，",",");
+		str = str.replaceAll("：",":");
+		String strArray[] = str.split(",");
+		Map[] map = new Map[strArray.length];
+		for(int i = 0;i<strArray.length;i++){
+			String strInfo = strArray[i].trim();
+			System.out.println(strInfo);
+			String strArray1[] = strInfo.split(":");
+			String strArray2[] = strArray1[1].split("/");
+			Map<String, Object> dataMap = new HashMap<>();
+			dataMap.put("gasName",strArray1[0]);
+			dataMap.put("gasPrice",strArray2[0]);
+			map[i] = dataMap;
+		}
+		for(int x = 0;x<map.length;x++){
+			System.out.println(map[x]);
+		}
 	}
 }
