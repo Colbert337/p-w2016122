@@ -368,7 +368,7 @@ public class CrmPortalController {
                     //生成二维码
                     driver.setDriverQrcode(show_path);
 
-                    Integer tmp = driverService.saveDriver(driver, "insert");
+                    Integer tmp = driverService.saveDriver(driver, "insert", null);
                     if(tmp > 0){
                         TwoDimensionCode handler = new TwoDimensionCode();
                         handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);

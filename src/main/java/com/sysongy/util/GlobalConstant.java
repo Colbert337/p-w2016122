@@ -319,6 +319,9 @@ public class GlobalConstant {
 		public static final String CHARGE_TO_TRANSPORTION_CHARGE ="111";//车队充值
 		public static final String CHARGE_TO_GASTATION_CHARGE ="121";//加注站预付款充值
 		
+		public static final String DRIVER_REGISTER_CASHBACK = "410";//被邀请人返现
+		public static final String DRIVER_INVITE_CASHBACK = "420";//邀请人返现
+		
 		public static final String CONSUME_DRIVER_DEDUCT ="221";//个人消费
 		public static final String DISCONSUME_DRIVER_DEDUCT ="222";//冲红
 		public static final String CONSUME_TRANSPORTION_DEDUCT ="211";//车队消费

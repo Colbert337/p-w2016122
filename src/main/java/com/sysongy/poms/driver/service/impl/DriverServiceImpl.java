@@ -121,13 +121,20 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Integer saveDriver(SysDriver record, String operation) throws Exception {
+    public Integer saveDriver(SysDriver record, String operation, String invitationCode) throws Exception {
         if("insert".equals(operation)){
             SysUserAccount sysUserAccount = initWalletForDriver();
             record.setSysUserAccountId(sysUserAccount.getSysUserAccountId());
             sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
             record.setCreatedDate(new Date());
-            return sysDriverMapper.insertSelective(record);
+            
+            int count = sysDriverMapper.insertSelective(record);
+            //如果有要邀请码，要进行返现，现在先写死，以后走订单
+            if(!StringUtils.isEmpty(invitationCode)){
+            	this.cashBackForRegister(record, invitationCode);
+            }
+            
+            return count;
         }else{
             return sysDriverMapper.updateByPrimaryKeySelective(record);
         }
@@ -346,6 +353,25 @@ public class DriverServiceImpl implements DriverService {
     		throw new Exception( cashTo_success_specific_type);
     	}
 		return cashTo_success_specific_type;
+	}
+	
+	public String cashBackForRegister(SysDriver driver, String invitationCode) throws Exception{
+		
+		SysDriver invitation = new SysDriver();
+		invitation.setInvitationCode(invitationCode);
+		
+		List<SysDriver> invitationList = sysDriverMapper.queryForPage(invitation);
+		
+		if(invitationList.size() != 1){
+			throw new Exception("通过邀请码找不到对应的司机用户");
+		}else{
+			invitation = invitationList.get(0);
+		}
+		
+    	sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(10.00), null);
+    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(10.00), null);
+    	
+    	return null;
 	}
 	
     public Integer isExists(SysDriver obj) throws Exception {

@@ -306,6 +306,7 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
+				String invitationCode = mainObj.optString("invitationCode");
 
 				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
 				if(veCode != null && !"".equals(veCode)) {
@@ -339,7 +340,7 @@ public class MobileController {
 						//生成二维码
 						driver.setDriverQrcode(show_path);
 
-						Integer tmp = driverService.saveDriver(driver, "insert");
+						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
 						if(tmp > 0){
 							TwoDimensionCode handler = new TwoDimensionCode();
 							handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
@@ -446,7 +447,7 @@ public class MobileController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode,"update");
+							driverService.saveDriver(driverCode,"update",null);
 						}
 						resultMap.put("invitationCode",invitationCode);
 						if(driver.getTransportionName() != null && !"".equals(driver.getTransportionName().toString()) ){
@@ -520,7 +521,7 @@ public class MobileController {
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
 
-					driverService.saveDriver(sysDriver,"update");
+					driverService.saveDriver(sysDriver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("密码为空！");
@@ -584,7 +585,7 @@ public class MobileController {
 					driver.setFullName(mainObj.optString("name"));
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
 					driver.setAvatarB(mainObj.optString("imgUrl"));
-					int resultVal = driverService.saveDriver(driver,"update");
+					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("修改用户信息失败！");
@@ -655,7 +656,7 @@ public class MobileController {
 					driver.setSysDriverId(sysDriverId);
 					driver.setPayCode(mainObj.optString("paycode"));
 
-					driverService.saveDriver(driver,"update");//设置支付密码
+					driverService.saveDriver(driver,"update",null);//设置支付密码
 				}
 
 			}else{
@@ -721,7 +722,7 @@ public class MobileController {
 					String newPayCode = mainObj.optString("newPayCode");
 					if(newPayCode != null && !"".equals(newPayCode)){
 						sysDriver.setPassword(newPayCode);
-						driverService.saveDriver(sysDriver,"update");
+						driverService.saveDriver(sysDriver,"update",null);
 					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -892,7 +893,7 @@ public class MobileController {
 					String show_path = (String) prop.get("show_images_path")+ "/driver/"+driverList.get(0).getMobilePhone()+"/"+driverList.get(0).getMobilePhone()+".jpg";
 					//生成二维码
 					driver.setDriverQrcode(show_path);
-					int resultVal = driverService.saveDriver(driver,"update");
+					int resultVal = driverService.saveDriver(driver,"update",null);
 					if(resultVal <= 0){
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("用户ID为空，申请失败！");
@@ -2041,7 +2042,7 @@ public class MobileController {
 						}
 						sysDriver.setDriverType(driver.get(0).getDriverType());
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						int resultVal = driverService.saveDriver(sysDriver,"update");
+						int resultVal = driverService.saveDriver(sysDriver,"update",null);
 						//返回大于0，成功
 						if(resultVal <= 0){
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2118,7 +2119,7 @@ public class MobileController {
 						sysDriver.setPayCode(initialPassword);
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 						//更新初始密码
-						int resultVal = driverService.saveDriver(sysDriver, "update");
+						int resultVal = driverService.saveDriver(sysDriver, "update", null);
 						//返回大于0，成功
 						if (resultVal <= 0) {
 							result.setStatus(MobileReturn.STATUS_FAIL);
