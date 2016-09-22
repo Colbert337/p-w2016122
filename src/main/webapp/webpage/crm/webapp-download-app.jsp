@@ -24,11 +24,11 @@
 		<div class="section">
 			<div class="share">
 				<div class="download-app-hd">
-					<p>1.0.0.6 ( build 6 ) </p>
-					<p>更新于 2016-09-18</p>
+					<p>1.0.0.13 ( build 6 ) </p>
+					<p>更新于 2016-09-22</p>
 				</div>
 				<div class="download-app-bd">
-					<a class="btn-app-primary logic-download-app"><span class="icon-android"></span>下载安卓</a>
+					<a class="btn-app-primary logic-download-app" href="<%=basePath %>/docs/app/sysongy-sysongy-release-1.0.0.13.apk"><span class="icon-android"></span>下载安卓</a>
 				</div>
 			</div>
 		</div>

@@ -720,7 +720,7 @@ public class MobileController {
 					//判断原支付密码是否正确
 					String newPayCode = mainObj.optString("newPayCode");
 					if(newPayCode != null && !"".equals(newPayCode)){
-						sysDriver.setPassword(newPayCode);
+						sysDriver.setPayCode(newPayCode);
 						driverService.saveDriver(sysDriver,"update");
 					}
 				}else{
