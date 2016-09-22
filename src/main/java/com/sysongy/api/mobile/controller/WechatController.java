@@ -459,7 +459,7 @@ public class WechatController {
 						driverOrder.setCash(new BigDecimal(mainObj.optString("amount")));//交易金额
 						driverOrder.setChargeType("103");//充值方式 103代表微信支付
 						driverOrder.setIs_discharge("0");//是否红冲
-						driverOrder.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);//操作者发起人类型
+						driverOrder.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.WECHAT);//操作者发起人类型
 						driverOrder.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);//订单类型
 						driverOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);//操作对象类型
 						driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
