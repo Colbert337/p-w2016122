@@ -40,6 +40,7 @@
       <result column="capture_time" property="captureTime" jdbcType="TIMESTAMP" />
       <result column="condition_msg" property="conditionMsg" jdbcType="VARCHAR" />
       <result column="condition_img" property="conditionImg" jdbcType="VARCHAR" />
+       <result column="invalid_count" property="invalid_count" jdbcType="VARCHAR" />
       <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
       <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
       <result column="province" property="province" jdbcType="VARCHAR" />
@@ -61,7 +62,7 @@
     id, condition_type, condition_status, longitude, latitude, capture_longitude, capture_latitude, 
     capture_time, condition_msg, condition_img, start_time, end_time, province, address, 
     direction, useful_count, publisher_name, publisher_phone, publisher_time, auditor, 
-    auditor_phone, auditor_time, memo,view_count,share_count
+    auditor_phone, auditor_time, memo,view_count,share_count,invalid_count
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -70,7 +71,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <select id="queryAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from sys_road_condition
   </select>
@@ -79,7 +80,7 @@
    <select id="queryRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     id
-    from sys_road_condition  where 1=1 and condition_status='2'
+    from sys_road_condition  where 1=1 and condition_status='2' ORDER BY publisher_time DESC
   </select> 
   
   
@@ -361,15 +362,6 @@
       <if test="auditorTime != null" >
         auditor_time = #{auditorTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="viewCount != null" >
-        view_count = #{viewCount,jdbcType=TIMESTAMP},
-      </if>
-      <if test="shareCount != null" >
-        share_count = #{shareCount,jdbcType=TIMESTAMP},
-      </if>
-      <if test="usefulCount != null" >
-        useful_count = #{usefulCount,jdbcType=TIMESTAMP},
-      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -644,9 +636,6 @@
 			<if test="memo != null">
 				memo,
 			</if>
-            <if test="roadId != null">
-                road_id,
-            </if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -718,9 +707,6 @@
 			<if test="memo != null">
 				#{memo,jdbcType=VARCHAR},
 			</if>
-            <if test="roadId != null">
-                #{roadId,jdbcType=VARCHAR},
-            </if>
 		</trim>
 	</insert>
 </mapper>

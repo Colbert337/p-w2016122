@@ -49,8 +49,16 @@ public class SysRoadCondition extends BaseModel implements Serializable{
     private String auditorTime_str;
     private String startTime_str;
     private String endTime_str;
+    private String invalid_count;
+    public String getInvalid_count() {
+		return invalid_count;
+	}
 
-    private String province;
+	public void setInvalid_count(String invalid_count) {
+		this.invalid_count = invalid_count;
+	}
+
+	private String province;
 
     private String address;
 

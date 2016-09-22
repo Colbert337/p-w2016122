@@ -11,7 +11,7 @@ var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
 $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 
 var listOptions = {
-	url : '../web/mobile/road/roadList',
+	url : '../web/mobile/road/roadListStr',
 	type : 'post',
 	dataType : 'html',
 	success : function(data) {
@@ -100,30 +100,24 @@ function init() {
 }
 
 function updateCheck(obj1, tr, id) {
-	if (id != undefined) {
-		$('#buttonList')
-				.html(
-						'	<button class="btn btn-primary btn-sm" onclick="updateRoad(\'2\')">审核通过</button>					<button class="btn btn-primary btn-sm" onclick="updateRoad(\'3\')">审核不通过</button>					<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>')
-
-	} else {
-		$('#buttonList')
+	console.log('updateCheck');
+	 $('#buttonList')
 				.html(
 						'	<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>');
-	}
+	
 	var show = $("div[name='show']");
 	for (var i = 0; i < show.length; i++) {
 		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{28})/g,
 				'$1\n');
 	}
-	$("#innerimg1").attr("src", projectName + obj1);
-	$("#innerimg1").parent("a").attr("href", projectName + obj1);
+	$("#innerimg2").attr("src", projectName + obj1);
+	$("#innerimg2").parent("a").attr("href", projectName + obj1);
 	$("#innerModel").modal('show');
 	$("#roadId").val(id)
 
 }
 function shixiao(id){
 	$("#roadId").val(id);
-	$("#conditionStatus").val('0');
 	bootbox.setLocale("zh_CN");
 	bootbox.confirm("确认要失效路况信息吗？", function(result) {
 		if (result) {
@@ -131,7 +125,8 @@ function shixiao(id){
 				url : '../web/mobile/road/updateRoad',
 				type : 'post',
 				data : {
-					id : $('#roadId').val()
+					id :id,
+					conditionStatus:'0'
 				},
 				dataType : 'text',
 				success : function(data) {
