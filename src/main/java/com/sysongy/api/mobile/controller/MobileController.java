@@ -920,9 +920,10 @@ public class MobileController {
 			}
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			logger.error("实名认证已提交审核，请耐心等待！： " + resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("申请失败！");
@@ -1510,6 +1511,7 @@ public class MobileController {
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
 						bannerMap.put("contentUrl",banner.getTargetUrl());
 						bannerMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/content?contentId="+ banner.getMbBannerId());
+						bannerMap.put("imgSmPath",http_poms_path+banner.getImgSmPath());
 						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
 							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
 						}else{
@@ -2332,7 +2334,10 @@ public class MobileController {
 				List<SysRoadCondition> roadIdList = sysRoadService.queryRoadIDList();
 				List<SysRoadCondition> redisList = new ArrayList<>();
 				for (int i = 0; i < roadIdList.size(); i++) {
-					redisList.add((SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId()));
+					SysRoadCondition sysRoadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId());
+					if(sysRoadCondition !=null){
+						redisList.add(sysRoadCondition);
+					}
 				}
 				//设置页码
 				PageHelper.startPage(roadCondition.getPageNum(), roadCondition.getPageSize(), roadCondition.getOrderby());
@@ -3056,7 +3061,7 @@ public class MobileController {
 		return record;
 	}
 	public static void main(String[] args) throws ParseException {
-		String s ="{\"main\": {\"id\": \"1581aadac636468182d8a9579232e846\",\"operation\": \"2\",\"type\": \"3\"},\"extend\": {\"version\": \"1.0\",\"terminal\": \"1\"}}";
+		String s ="{\"main\":{\"token\":\"67d23142415a4d73ba56e64156a6749b\",\"name\":\"齐天大圣\",\"plateNumber\":\"陕q12346\",\"gasType\":\"LNG\",\"endTime\":\"\",\"driverLicenseImageUrl\":\"/image/mobile/1474447909033.jpg\",\"idCard\":\"\"},\"extend\":{\"version\":12,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
 		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
