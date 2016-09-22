@@ -24,6 +24,10 @@ public class SysUserAccountStr {
 
     private String haveConsume;
 
+    private String resouceCode;
+
+    private String resouce;
+
     public String getSysUserAccountId() {
         return sysUserAccountId;
     }
@@ -102,5 +106,21 @@ public class SysUserAccountStr {
 
     public void setHaveConsume(String haveConsume) {
         this.haveConsume = haveConsume == null ? null : haveConsume.trim();
+    }
+
+    public String getResouceCode() {
+        return resouceCode;
+    }
+
+    public void setResouceCode(String resouceCode) {
+        this.resouceCode = resouceCode == null ? null : resouceCode.trim();
+    }
+
+    public String getResouce() {
+        return resouce;
+    }
+
+    public void setResouce(String resouce) {
+        this.resouce = resouce == null ? null : resouce.trim();
     }
 }
