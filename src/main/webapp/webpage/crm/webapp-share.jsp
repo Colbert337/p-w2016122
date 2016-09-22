@@ -18,7 +18,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div class="share">
 		<div class="share-hd">
 			<div class="info">
-				<p>您已从${name}处获得￥10现金充值，快快注册体验吧！</p>
+				<p>您已从<span style="color: green">&nbsp;${name}&nbsp;</span>处获得<span style="color: #F40;font-weight: 400;">&nbsp;￥10&nbsp;</span>现金充值，快快注册体验吧！</p>
 				<p>请输入您的电话号码并下载司集应用程序完成注册</p>
 				<%--<p class="code-style">邀请码：${param.invitationCode}</p>--%>
 			</div>
