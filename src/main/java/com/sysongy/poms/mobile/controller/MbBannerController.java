@@ -68,9 +68,9 @@ public class MbBannerController extends BaseContoller {
 		if (StringUtils.isEmpty(mbBanner.getImgType())) {
 			mbBanner.setImgType(GlobalConstant.ImgType.TOP);
 		}
-		if (mbBanner.getImgType() == null || "".equals(mbBanner.getImgType())) {
-			mbBanner.setImgType("0");
-		}
+//		if (mbBanner.getImgType() == null || "".equals(mbBanner.getImgType())) {
+			mbBanner.setImgType("1");
+//		}
 		PageInfo<MbBanner> pageinfo = new PageInfo<MbBanner>();
 
 		pageinfo = mbBannerService.queryMbBannerListPage(mbBanner);
@@ -161,7 +161,10 @@ public class MbBannerController extends BaseContoller {
 		String ret = "webpage/poms/mobile/banner_list";
 
 		try {
-			mbBanner.setTargetUrl(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath() + mbBanner.getTargetUrl());
+			if (mbBanner.getTargetUrl().indexOf("http:")==-1) {
+				mbBanner.setTargetUrl(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath() + mbBanner.getTargetUrl());
+			}
+//			mbBanner.setTargetUrl(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath() + mbBanner.getTargetUrl());
 			
 			if (mbBanner != null && mbBanner.getMbBannerId() != null && !"".equals(mbBanner.getMbBannerId())) {
 
