@@ -8,7 +8,7 @@ $(function(){
 		}
 	});
 
-	if($(".form-validator").length){
+	/*if($(".form-validator").length){*/
 		// 手机号码验证    
 		jQuery.validator.addMethod("isMobile", function(value, element) {    
 		  var length = value.length;    
@@ -19,7 +19,7 @@ $(function(){
 		jQuery.validator.addMethod("isDigits", function(value, element) {       
 		     return this.optional(element) || /^\d+$/.test(value);       
 		}, "只能输入0-9数字"); 
-	}
+	//}
 
     //提交表单验证
     if($("#shareInviteCode").length){
