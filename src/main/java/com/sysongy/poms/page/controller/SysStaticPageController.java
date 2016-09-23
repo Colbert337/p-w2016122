@@ -25,12 +25,17 @@ public class SysStaticPageController extends BaseContoller {
 	private SysStaticPage page;
 
 	@RequestMapping("/pageList")
-	public String queryAllPageList(ModelMap map, SysStaticPage page) throws Exception {
+	public String queryAllPageList(ModelMap map, SysStaticPage page,String type) throws Exception {
 
 		this.page = page;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/page/page_list";
-
+		String message="";
+		if ("1".equals(type)) {
+			message="失效成功";
+		}else{
+			message="查询成功";
+		}
 		try {
 			if (page.getPageNum() == null) {
 				page.setPageNum(1);
@@ -43,7 +48,7 @@ public class SysStaticPageController extends BaseContoller {
 			PageInfo<SysStaticPage> pageinfo = service.queryForPage(page);
 
 			bean.setRetCode(100);
-			bean.setRetMsg("查询成功");
+//			bean.setRetMsg("查询成功");
 			bean.setPageInfo(ret);
 
 			map.addAttribute("ret", bean);
@@ -65,7 +70,7 @@ public class SysStaticPageController extends BaseContoller {
 	public String delete(SysStaticPage page, ModelMap map) {
 		PageBean bean = new PageBean();
 
-		String ret = "webpage/poms/page/page_new";
+		String ret = "redirect:/web/page/pageList?type=1";
 		String pageid = null;
 		try {
 			service.delForStatus(page);
