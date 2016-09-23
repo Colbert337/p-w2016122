@@ -64,9 +64,9 @@ public class SysRoadController extends BaseContoller {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
 				road.setPageSize(GlobalConstant.PAGE_SIZE);
 			}
-			if(StringUtils.isEmpty(road.getOrderby())){
+			if (StringUtils.isEmpty(road.getOrderby())) {
 				road.setOrderby(" start_time desc");
-            }
+			}
 
 			PageInfo<SysRoadCondition> pageinfo = new PageInfo<SysRoadCondition>();
 			pageinfo = sysRoadService.queryRoadList(road);
@@ -95,25 +95,25 @@ public class SysRoadController extends BaseContoller {
 		}
 
 	}
-	
+
 	@RequestMapping("/roadListStr")
 	public String roadListStr(SysRoadCondition road, ModelMap map, String type) {
 		String ret = "webpage/poms/mobile/roadListStr";
 
 		PageBean bean = new PageBean();
 		try {
-			int pageNum=1;
+			int pageNum = 1;
 			if (road.getPageNum() == null) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
 				road.setPageSize(5);
 			}
-			if(StringUtils.isEmpty(road.getOrderby())){
+			if (StringUtils.isEmpty(road.getOrderby())) {
 				road.setOrderby(" publisher_time desc");
-            }
-			pageNum=road.getPageNum();
+			}
+			pageNum = road.getPageNum();
 			PageInfo<SysRoadConditionStr> pageinfo = new PageInfo<SysRoadConditionStr>();
-			road=sysRoadService.selectByPrimaryKey(road.getId());
-			if(road==null){
+			road = sysRoadService.selectByPrimaryKey(road.getId());
+			if (road == null) {
 				throw new Exception("路况不存在");
 			}
 			road.setPageSize(5);
@@ -196,8 +196,12 @@ public class SysRoadController extends BaseContoller {
 			map.addAttribute("suggest", road);
 			// 保存readis
 			int time = sumTime(road);
-			road.setUsefulCount("0");
-			redisClientImpl.addToCache("Road" + road.getId(), road, time);
+			
+			if (time == -1 || time > 0) {
+				road.setUsefulCount("0");
+				redisClientImpl.addToCache("Road" + road.getId(), road, time);
+			}
+
 			// map.addAttribute("current_module",
 			// "/web/mobile/suggest/suggestList");
 		} catch (Exception e) {
@@ -231,32 +235,32 @@ public class SysRoadController extends BaseContoller {
 
 	public static int sumTime(SysRoadCondition road) {
 		// TODO Auto-generated method stub
-		int h=0;
+		int h = 0;
 		switch (road.getConditionType()) {
 		case "01":
-			h=1;
+			h = 1;
 			break;
 		case "02":
-			h=2;
+			h = 2;
 			break;
 		case "05":
-			h=4;
+			h = 4;
 			break;
 		default:
 			break;
 		}
-		
-		if (h!=0) {
-			
+
+		if (h != 0) {
+
 			long a = road.getStartTime().getTime() - new Date().getTime();
 			int time = h * 60 * 60 + (int) a / 1000;
-			road.setEndTime(new Date(h * 60 * 60 +  a));
+			road.setEndTime(new Date(new Date().getTime() + h * 60 * 60 + a));
 			return time;
-		} else if(road.getEndTime()!=null){
+		} else if (road.getEndTime() != null) {
 			long a = road.getAuditorTime().getTime() - road.getEndTime().getTime();
 			int time = (int) a / 1000;
 			return time;
-		}else{
+		} else {
 			return -1;
 		}
 	}
@@ -273,11 +277,11 @@ public class SysRoadController extends BaseContoller {
 		List<SysRoadCondition> list = sysRoadService.queryRoadIDList();
 		List<SysRoadCondition> redis = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
-			SysRoadCondition one=(SysRoadCondition)redisClientImpl.getFromCache("Road" + list.get(i).getId());
-			if (one!=null) {
-				redis.add( one);
+			SysRoadCondition one = (SysRoadCondition) redisClientImpl.getFromCache("Road" + list.get(i).getId());
+			if (one != null) {
+				redis.add(one);
 			}
-			
+
 		}
 		try {
 			/**
@@ -379,8 +383,10 @@ public class SysRoadController extends BaseContoller {
 			if ("2".equals(road.getConditionStatus())) {
 				// 放到redis
 				int time = sumTime(road);
-				road.setUsefulCount("0");
-				redisClientImpl.addToCache("Road" + road.getId(), road, time);
+				if (time == -1 || time > 0) {
+					road.setUsefulCount("0");
+					redisClientImpl.addToCache("Road" + road.getId(), road, time);
+				}
 			}
 
 			// map.addAttribute("current_module",
@@ -427,8 +433,9 @@ public class SysRoadController extends BaseContoller {
 			return ret;// TODO: handle finally clause
 		}
 	}
+
 	@RequestMapping("/seachInvalid")
-	public String seachInvalid(){
+	public String seachInvalid() {
 		String ret = "redirect:/web/mobile/road/roadList?type=delete";
 		PageBean bean = new PageBean();
 		return ret;

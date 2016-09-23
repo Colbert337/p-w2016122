@@ -12,4 +12,6 @@ public interface SysStaticPageService {
 	public String savePage(SysStaticPage obj, String operation) throws Exception;
 	
 	public Integer delMessage(String pageid) throws Exception;
+
+	public Integer delForStatus(SysStaticPage page);
 }

@@ -29,6 +29,9 @@
     from sys_static_page
     where 1=1
   <trim>
+  		<if test="pageStatus != null &amp;&amp; pageStatus != ''" >
+  	 and  page_status=#{pageStatus,jdbcType=VARCHAR} 
+  		</if> 
       <if test="pageTitle != null &amp;&amp; pageTitle != ''" >
         and page_title LIKE CONCAT(CONCAT('%', #{pageTitle,jdbcType=VARCHAR}), '%')
       </if>
@@ -148,6 +151,17 @@
       <if test="pageHtml != null" >
         page_html = #{pageHtml,jdbcType=LONGVARCHAR},
       </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="delForStatus" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
+    update sys_static_page
+    <set > 
+      
+        page_status = '1',
+ 
+     
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
