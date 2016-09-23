@@ -4,9 +4,17 @@ import java.io.File;
 import java.util.*;
 
 import com.sysongy.api.mobile.model.base.MobileReturn;
+import com.sysongy.api.mobile.model.verification.MobileVerification;
+import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
+import com.sysongy.api.util.DESUtil;
+import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.util.*;
+import com.sysongy.util.pojo.AliShortMessageBean;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +45,7 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @FileName: CrmPortalController
@@ -368,7 +377,7 @@ public class CrmPortalController {
                     //生成二维码
                     driver.setDriverQrcode(show_path);
 
-                    Integer tmp = driverService.saveDriver(driver, "insert");
+                    Integer tmp = driverService.saveDriver(driver, "insert", null);
                     if(tmp > 0){
                         TwoDimensionCode handler = new TwoDimensionCode();
                         handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
@@ -412,5 +421,46 @@ public class CrmPortalController {
             e.printStackTrace();
         }
         return "/webpage/crm/webapp-share";
+    }
+
+    /**
+     * 获取短信验证码
+     * @return
+     */
+    @RequestMapping(value = {"/user/getCode"})
+    @ResponseBody
+    public AjaxJson getVerificationCode(@RequestParam String mobilePhone, @RequestParam String msgType) {
+        AjaxJson ajaxJson = new AjaxJson();
+        try {
+            /**
+             * 请求接口
+             */
+            if(mobilePhone != null && msgType != null){
+                Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
+                AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+                aliShortMessageBean.setSendNumber(mobilePhone);
+                aliShortMessageBean.setCode(checkCode.toString());
+                aliShortMessageBean.setProduct("司集能源科技平台");
+                String key = GlobalConstant.MSG_PREFIX + mobilePhone;
+                redisClientImpl.addToCache(key, checkCode.toString(), InterfaceConstants.SHORT_MSEEAGE_CODE_EXPIRE_TIME);
+
+                if(msgType.equalsIgnoreCase("changePassword")){
+                    AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
+                } else {
+                    AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER);
+                }
+                ajaxJson.setMsg("验证码发送成功！");
+            }else{
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("手机号为空！！！");
+                    return ajaxJson;
+            }
+
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_SEND_MSG_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+        }
+        return ajaxJson;
     }
 }

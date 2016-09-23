@@ -169,7 +169,7 @@ function sendMessage(){
 		countdown=60;
 		settime();
 		$.ajax({
-			url:"../crmInterface/crmCustomerService/web/sendMsg/api",
+			url:"../help/user/getCode",
 			data:{mobilePhone:mobilePhone,msgType:'register'},
 			async:false,
 			type: "POST",

@@ -59,6 +59,7 @@ import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
+import com.sysongy.poms.mobile.controller.SysRoadController;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.service.MbBannerService;
@@ -306,9 +307,10 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
+				String invitationCode = mainObj.optString("invitationCode");
 
 				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
-				if(veCode != null && !"".equals(veCode)) {
+//				if(veCode != null && !"".equals(veCode)) {
 					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
@@ -339,7 +341,7 @@ public class MobileController {
 						//生成二维码
 						driver.setDriverQrcode(show_path);
 
-						Integer tmp = driverService.saveDriver(driver, "insert");
+						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
 						if(tmp > 0){
 							TwoDimensionCode handler = new TwoDimensionCode();
 							handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
@@ -348,10 +350,10 @@ public class MobileController {
 						tokenMap.put("token", sysDriverId);
 						result.setData(tokenMap);
 					}
-				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("验证码无效！");
-				}
+//				}else{
+//					result.setStatus(MobileReturn.STATUS_FAIL);
+//					result.setMsg("验证码无效！");
+//				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -446,7 +448,7 @@ public class MobileController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode,"update");
+							driverService.saveDriver(driverCode,"update",null);
 						}
 						resultMap.put("invitationCode",invitationCode);
 						if(driver.getTransportionName() != null && !"".equals(driver.getTransportionName().toString()) ){
@@ -520,7 +522,7 @@ public class MobileController {
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
 
-					driverService.saveDriver(sysDriver,"update");
+					driverService.saveDriver(sysDriver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("密码为空！");
@@ -584,7 +586,7 @@ public class MobileController {
 					driver.setFullName(mainObj.optString("name"));
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
 					driver.setAvatarB(mainObj.optString("imgUrl"));
-					int resultVal = driverService.saveDriver(driver,"update");
+					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("修改用户信息失败！");
@@ -655,7 +657,7 @@ public class MobileController {
 					driver.setSysDriverId(sysDriverId);
 					driver.setPayCode(mainObj.optString("paycode"));
 
-					driverService.saveDriver(driver,"update");//设置支付密码
+					driverService.saveDriver(driver,"update",null);//设置支付密码
 				}
 
 			}else{
@@ -721,7 +723,7 @@ public class MobileController {
 					String newPayCode = mainObj.optString("newPayCode");
 					if(newPayCode != null && !"".equals(newPayCode)){
 						sysDriver.setPayCode(newPayCode);
-						driverService.saveDriver(sysDriver,"update");
+						driverService.saveDriver(sysDriver,"update",null);
 					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -892,7 +894,7 @@ public class MobileController {
 					String show_path = (String) prop.get("show_images_path")+ "/driver/"+driverList.get(0).getMobilePhone()+"/"+driverList.get(0).getMobilePhone()+".jpg";
 					//生成二维码
 					driver.setDriverQrcode(show_path);
-					int resultVal = driverService.saveDriver(driver,"update");
+					int resultVal = driverService.saveDriver(driver,"update",null);
 					if(resultVal <= 0){
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("用户ID为空，申请失败！");
@@ -2056,7 +2058,7 @@ public class MobileController {
 						}
 						sysDriver.setDriverType(driver.get(0).getDriverType());
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						int resultVal = driverService.saveDriver(sysDriver,"update");
+						int resultVal = driverService.saveDriver(sysDriver,"update",null);
 						//返回大于0，成功
 						if(resultVal <= 0){
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2133,7 +2135,7 @@ public class MobileController {
 						sysDriver.setPayCode(initialPassword);
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 						//更新初始密码
-						int resultVal = driverService.saveDriver(sysDriver, "update");
+						int resultVal = driverService.saveDriver(sysDriver, "update", null);
 						//返回大于0，成功
 						if (resultVal <= 0) {
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2350,7 +2352,7 @@ public class MobileController {
 				List<SysRoadCondition> redisList = new ArrayList<>();
 				for (int i = 0; i < roadIdList.size(); i++) {
 					SysRoadCondition sysRoadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId());
-					if(sysRoadCondition !=null){
+					if(sysRoadCondition != null){
 						redisList.add(sysRoadCondition);
 					}
 				}
@@ -2457,10 +2459,13 @@ public class MobileController {
 				SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(mainObj.optString("roadId"));
 				int count = Integer.parseInt(roadCondition.getUsefulCount());
 				roadCondition.setUsefulCount(String.valueOf(count+1));
-				int rs = sysRoadService.updateRoad(roadCondition);
+				roadCondition.setId(mainObj.optString("roadId"));
+				int rs = sysRoadService.updateByPrimaryKey(roadCondition);
 				if(rs > 0){
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("统计成功！");
+					int time = SysRoadController.sumTime(roadCondition);
+					redisClientImpl.addToCache("Road" + roadCondition.getId(), roadCondition, time);
 					Map<String, Object> dataMap = new HashMap<>();
 					dataMap.put("count", roadCondition.getUsefulCount());
 					result.setData(dataMap);
@@ -3124,10 +3129,10 @@ public class MobileController {
 		return record;
 	}
 	public static void main(String[] args) throws ParseException {
-		/*String s ="{\"main\":{\"publisherPhone\":\"\",\"publisherName\":\"\",\"publisherTime\":\"2016-09-22 10:34:46\",\"token\":\"2ba429c6f6d7426692f8e5c816f590d7\",\"address\":\"陕西省西安市雁塔区傅东巷靠近中兴产业园A座\",\"flashLatitude\":\"34.1857\",\"flashLongitude\":\"108.882899\",\"latitude\":\"34.1857\",\"longitude\":\"108.882899\",\"conditionMsg\":\"这边封路了A，大家不要过来了\",\"flashTime\":\"2016-09-22 10:34:38\",\"condition_img\":\"/image/mobile/1474511710202.jpg\",\"conditionType\":\"03\",\"direction\":\"2\"},\"extend\":{\"version\":12,\"terminal\":\"SYSONGYMOBILE2016726\"}}";
+		String s ="{\"main\":{\"roadId\":\"e34b5ad514d9435481a40819278ca91b\"},\"extend\":{\"version\": \"1.0\",\"terminal\": \"1\"}}";
 		s = DESUtil.encode("sysongys",s);//参数加密
 		System.out.println(s);
-		SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
 		String str = "2016-09-18 12:38:38";
 		Calendar cal = Calendar.getInstance();
 		Date date = sft.parse(str);
@@ -3137,7 +3142,7 @@ public class MobileController {
         cal.add(Calendar.HOUR,1);
         Date date1 = cal.getTime();
         String d4 = sft.format(date1);
-        System.out.println(d4);*/
+        System.out.println(d4);
 		String str = "LNG1：3.51元/KG，LNG2：3.52元/KG  ,LNG3：3.53元/KG ";
 		str = str.replaceAll("，",",");
 		str = str.replaceAll("：",":");
@@ -3155,6 +3160,6 @@ public class MobileController {
 		}
 		for(int x = 0;x<map.length;x++){
 			System.out.println(map[x]);
-		}
+		}*/
 	}
 }

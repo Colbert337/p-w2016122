@@ -83,7 +83,20 @@ public class SysRoadServiceImpl implements SysRoadService{
 	}
 	@Override
 	public int cancelSysRoadCondition(SysRoadCondition record) throws Exception {
-		return sysRoadConditionMapper.cancelSysRoadCondition(record);
+		int result = sysRoadConditionMapper.cancelSysRoadCondition(record);
+		SysRoadCondition sysRoadCondition = sysRoadConditionMapper.selectByPrimaryKey(record.getId());
+		if(sysRoadCondition != null){
+			int count = Integer.parseInt(sysRoadCondition.getInvalid_count());
+			count++;
+
+			SysRoadCondition roadCondition = new SysRoadCondition();
+			roadCondition.setRoadId(record.getRoadId());
+			roadCondition.setInvalid_count(count+"");
+
+			//修改取消数
+			sysRoadConditionMapper.updateByPrimaryKey(roadCondition);
+		}
+		return result;
 	}
 	/**
 	 * 修改（审核）-pc
@@ -121,5 +134,10 @@ public class SysRoadServiceImpl implements SysRoadService{
 		List<SysRoadConditionStr> list = sysRoadConditionStrMapper.queryForPageForRoadId(road.getId());
 		PageInfo<SysRoadConditionStr> pageInfo = new PageInfo<SysRoadConditionStr>(list);
 		return pageInfo;
+	}
+	@Override
+	public int updateByPrimaryKey(SysRoadCondition record) throws Exception {
+		// TODO Auto-generated method stub
+		return sysRoadConditionMapper.updateByPrimaryKey(record);
 	}
 }
