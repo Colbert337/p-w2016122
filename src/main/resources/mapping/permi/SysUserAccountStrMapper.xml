@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.permi.dao.SysUserAccountStrMapper" >
+  <resultMap id="BaseResultMap" type="com.sysongy.poms.permi.model.SysUserAccountStr" >
+    <result column="sys_user_account_id" property="sysUserAccountId" jdbcType="VARCHAR" />
+    <result column="account_code" property="accountCode" jdbcType="VARCHAR" />
+    <result column="account_type" property="accountType" jdbcType="VARCHAR" />
+    <result column="account_balance" property="accountBalance" jdbcType="VARCHAR" />
+    <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="updated_date" property="updatedDate" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="account_status" property="accountStatus" jdbcType="CHAR" />
+    <result column="deposit" property="deposit" jdbcType="DECIMAL" />
+    <result column="have_consume" property="haveConsume" jdbcType="VARCHAR" />
+    <result column="resouce_code" property="resouceCode" jdbcType="VARCHAR" />
+    <result column="resouce" property="resouce" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.sysongy.poms.permi.model.SysUserAccountStr" >
+    insert into sys_user_account_str (sys_user_account_id, account_code, account_type, 
+      account_balance, created_date, updated_date, 
+      version, account_status, deposit, 
+      have_consume, resouce_code, resouce
+      )
+    values (#{sysUserAccountId,jdbcType=VARCHAR}, #{accountCode,jdbcType=VARCHAR}, #{accountType,jdbcType=VARCHAR}, 
+      #{accountBalance,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP}, 
+      #{version,jdbcType=INTEGER}, #{accountStatus,jdbcType=CHAR}, #{deposit,jdbcType=DECIMAL}, 
+      #{haveConsume,jdbcType=VARCHAR}, #{resouceCode,jdbcType=VARCHAR}, #{resouce,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sysongy.poms.permi.model.SysUserAccountStr" >
+    insert into sys_user_account_str
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysUserAccountId != null" >
+        sys_user_account_id,
+      </if>
+      <if test="accountCode != null" >
+        account_code,
+      </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
+      <if test="accountBalance != null" >
+        account_balance,
+      </if>
+      <if test="createdDate != null" >
+        created_date,
+      </if>
+      <if test="updatedDate != null" >
+        updated_date,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="accountStatus != null" >
+        account_status,
+      </if>
+      <if test="deposit != null" >
+        deposit,
+      </if>
+      <if test="haveConsume != null" >
+        have_consume,
+      </if>
+      <if test="resouceCode != null" >
+        resouce_code,
+      </if>
+      <if test="resouce != null" >
+        resouce,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysUserAccountId != null" >
+        #{sysUserAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCode != null" >
+        #{accountCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBalance != null" >
+        #{accountBalance,jdbcType=VARCHAR},
+      </if>
+      <if test="createdDate != null" >
+        #{createdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedDate != null" >
+        #{updatedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="accountStatus != null" >
+        #{accountStatus,jdbcType=CHAR},
+      </if>
+      <if test="deposit != null" >
+        #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="haveConsume != null" >
+        #{haveConsume,jdbcType=VARCHAR},
+      </if>
+      <if test="resouceCode != null" >
+        #{resouceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resouce != null" >
+        #{resouce,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

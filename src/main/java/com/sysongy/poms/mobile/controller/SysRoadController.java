@@ -233,7 +233,7 @@ public class SysRoadController extends BaseContoller {
 		return null;
 	}
 
-	private int sumTime(SysRoadCondition road) {
+	public static int sumTime(SysRoadCondition road) {
 		// TODO Auto-generated method stub
 		int h = 0;
 		switch (road.getConditionType()) {

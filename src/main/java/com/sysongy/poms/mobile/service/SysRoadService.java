@@ -56,5 +56,6 @@ public interface SysRoadService {
 	PageInfo<SysRoadConditionStr> queryRoadListStr(SysRoadCondition road);
 	
 	List<SysRoadCondition> queryAll() throws Exception;
+	public int updateByPrimaryKey(SysRoadCondition record)throws Exception;
 	
 }

@@ -122,4 +122,9 @@ public class SysRoadServiceImpl implements SysRoadService{
 		PageInfo<SysRoadConditionStr> pageInfo = new PageInfo<SysRoadConditionStr>(list);
 		return pageInfo;
 	}
+	@Override
+	public int updateByPrimaryKey(SysRoadCondition record) throws Exception {
+		// TODO Auto-generated method stub
+		return sysRoadConditionMapper.updateByPrimaryKey(record);
+	}
 }
