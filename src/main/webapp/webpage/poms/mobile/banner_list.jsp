@@ -46,7 +46,7 @@
 						</div>
 					</div> --%>
 					<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
-					<div class="col-sm-10">
+					<div class="col-sm-15">
 					<!-- 	<div class="page-header">
 							<h1>图片列表</h1>
 						</div> -->
