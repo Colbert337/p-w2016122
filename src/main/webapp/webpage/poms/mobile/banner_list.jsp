@@ -136,8 +136,8 @@
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 											<td><div class="td-inner-warp">${list.targetUrl}</div></td>
 											<td><div class="td-inner-warp">${list.content}</div></td>
-											<td>${list.remark}</td>
-											<td>${list.city_name}</td>
+											<td><div class="td-inner-warp">${list.remark}</div></td>
+											<td><div class="td-inner-warp">${list.city_name}</div></td>
 											<td><fmt:formatDate value="${list.createdDate}"
 													type="both" /></td>
 											<td>${list.operator}</td>

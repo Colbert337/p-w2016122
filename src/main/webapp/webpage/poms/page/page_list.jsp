@@ -90,6 +90,8 @@
 								<!-- <th onclick="orderBy(this,'page_body');commitForm();" id="page_body_order">页面内容</th> -->
 								<th onclick="orderBy(this,'page_ticker');commitForm();"
 									id="page_ticker_order">页面缩略</th>
+									<th  
+									id="page_ticker_order">状态</th>
 								<th onclick="orderBy(this,'page_creator');commitForm();"
 									id="page_creator_order">页面创建者</th>
 								<th onclick="orderBy(this,'message_created_time');commitForm();"
@@ -114,6 +116,7 @@
 									<td>${list.pageTitle}</td>
 									<%-- <td>${list.pageBody}</td>  --%>
 									<td>${list.pageTicker}</td>
+									<td><c:if test="${list.pageStatus == '0'}">生效</c:if><c:if test="${list.pageStatus == '1'}"><span style="color:red">失效</span></c:if></td>
 									<td>${list.pageCreator}</td>
 									<td><fmt:formatDate value="${list.pageCreatedTime}"
 											type="both" /></td>
