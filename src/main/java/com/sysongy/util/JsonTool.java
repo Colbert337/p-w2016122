@@ -15,7 +15,7 @@ public class JsonTool {
 	 * @param strings 要校验的键
 	 * @return result
 	 */
-	public static boolean checkJson(String mainObj, String... strings) {
+	public static boolean checkJson(JSONObject mainObj, String... strings) {
 		boolean result = false;
 		HashMap<String, String> map = toHashMap(mainObj);
 		for(int i = 0;i<strings.length;i++){
@@ -31,13 +31,12 @@ public class JsonTool {
 		}
 		return result;
 	}
-	private static HashMap<String, String> toHashMap(String mainObj) {
+	private static HashMap<String, String> toHashMap(JSONObject mainObj) {
 		HashMap<String, String> data = new HashMap<String, String>();
-		JSONObject jsonObject = JSONObject.fromObject(mainObj);
-		Iterator it = jsonObject.keys();
+		Iterator it = mainObj.keys();
 		while (it.hasNext()) {
 			String key = String.valueOf(it.next());
-			String value = (String) jsonObject.get(key);
+			String value = (String) mainObj.get(key);
 			data.put(key, value);
 		}
 		return data;
