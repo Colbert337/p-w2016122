@@ -286,6 +286,7 @@ public class CrmPortalController {
     	ms.setMbUserSuggestId(UUIDGenerator.getUUID());
     	ms.setMobilePhone(title);
     	ms.setSuggest(info);
+    	ms.setSuggestRes("来自APP");
     	int rs = mbUserSuggestServices.saveSuggester(ms);
     	if(rs > 0){
     		return "/webpage/crm/webapp-download-app";
