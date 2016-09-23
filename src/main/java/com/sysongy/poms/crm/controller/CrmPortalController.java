@@ -3,6 +3,8 @@ package com.sysongy.poms.crm.controller;
 import java.io.File;
 import java.util.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
@@ -244,15 +246,18 @@ public class CrmPortalController {
     }
 
     @RequestMapping("/showPage")
-    public String showPage(ModelMap map, @RequestParam String pageid) throws Exception{
+    public String showPage(ModelMap map, @RequestParam String pageid, HttpServletRequest request) throws Exception{
         PageBean bean = new PageBean();
         String ret = "webpage/poms/page/page";
-
+        
         try {
             SysStaticPage page = service.queryPageByPK(pageid);
+            page.setShow_download_button(request.getParameter("show_down_load"));
+            
             bean.setRetCode(100);
             bean.setRetValue(pageid);
             bean.setPageInfo(ret);
+            
             map.addAttribute("page", page);
             map.addAttribute("ret", bean);
         } catch (Exception e) {
