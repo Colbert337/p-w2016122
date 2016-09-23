@@ -1278,7 +1278,6 @@ public class MobileController {
 						}else{
 							gastationMap.put("state","关闭");
 						}
-						gastationMap.put("preferential","");
 						gastationMap.put("address",gastationInfo.getAddress());
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
