@@ -137,9 +137,9 @@
 									<td><s:Code2Name mcode="${list.conditionType}"
 											gcode="CONDITION_TYPE"></s:Code2Name></td>
 									<td><c:if test="${list.conditionStatus == '0' }">已失效</c:if>
-										<c:if test="${list.conditionStatus == '1' }">待审核</c:if>
-										<c:if test="${list.conditionStatus == '2' }">审核通过</c:if>
-										<c:if test="${list.conditionStatus == '3' }">未通过</c:if></td>
+										<c:if test="${list.conditionStatus == '1' }">待审核</c:if> <c:if
+											test="${list.conditionStatus == '2' }">审核通过</c:if> <c:if
+											test="${list.conditionStatus == '3' }">未通过</c:if></td>
 									<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 									<td><div class="td-inner-warp">${list.captureLongitude},${list.captureLatitude }</div></td>
@@ -161,17 +161,14 @@
 									<td>${list.usefulCount}</td>
 									<td>${list.memo}</td>
 									<td><c:if test="${list.conditionStatus == '2'}">
-											<c:if
-												test="${list.invalid_count != '' and list.invalid_count!='0' }">
-												<a class="option-btn-m" href="javascript:void(0);"
-													title="查看失效请求"
-													onclick="loadPage('#main', '../web/mobile/road/roadListStr?id=${list.id }');"
-													data-rel="tooltip"> --${list.invalid_count}-- </a>
-											</c:if>
-											<c:if
-												test="${list.invalid_count == '' or list.invalid_count=='0' }">
-											0
-											</c:if>
+
+											<a class="option-btn-m" href="javascript:void(0);"
+												title="查看失效请求"
+												onclick="loadPage('#main', '../web/mobile/road/roadListStr?id=${list.id }');"
+												data-rel="tooltip"> --${list.invalid_count}-- </a>
+
+
+
 										</c:if></td>
 									<td class="text-center"><c:if
 											test="${list.conditionStatus == '1' }">
@@ -294,8 +291,7 @@
 					</tr>
 					<tr>
 						<th>审核时间</th>
-						<td colspan="3"><div id="prepay_balance" name="show">
-							</div></td>
+						<td colspan="3"><div id="prepay_balance" name="show"></div></td>
 
 					</tr>
 					</tbody>

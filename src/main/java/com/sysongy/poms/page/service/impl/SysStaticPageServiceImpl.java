@@ -47,4 +47,10 @@ public class SysStaticPageServiceImpl implements SysStaticPageService {
 		return pageMapper.deleteByPrimaryKey(pageid);
 	}
 
+	@Override
+	public Integer delForStatus(SysStaticPage page) {
+		// TODO Auto-generated method stub
+		return pageMapper.delForStatus(page.getId());
+	}
+
 }
