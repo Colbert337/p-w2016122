@@ -2377,6 +2377,8 @@ public class MobileController {
 						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ roadConditionInfo.getId());
 						String publisherTime = "";
 						if (roadConditionInfo.getPublisherTime() != null && !"".equals(roadConditionInfo.getPublisherTime().toString())) {
+							publisherTime = sft.format(roadConditionInfo.getPublisherTime());
+						}else{
 							publisherTime = sft.format(new Date());
 						}
 						reChargeMap.put("publisherTime", publisherTime);
