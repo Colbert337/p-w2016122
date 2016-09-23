@@ -57,6 +57,7 @@
 	  <result column="consumecount" property="consumecount" jdbcType="VARCHAR" />
 	  <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
       <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
+      <result column="promotions" property="promotions" jdbcType="VARCHAR" />
   </resultMap>
   
   <resultMap id="HenryTotalMap" type="java.util.Map" >
