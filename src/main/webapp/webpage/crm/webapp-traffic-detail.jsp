@@ -25,18 +25,18 @@
 				<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm:ss" />
 			</div>
 			<div class="info">
-				“2010年3月公安部公布的货车保有量为1368”
-				${roadCondition.conditionMsg}
+				${roadCondition.conditionType}
 			</div>
 			<div class="img">
-				<img class="img-responsive" src="images/ys1.jpg" alt="">
+				<img class="img-responsive" src="${conditionMsg}" alt="">
 			</div>
 		</div>
 	</div>
 
 	<div class="btn-more-info">
 		<div class="inner">
-			<a href="" class="btn-app-primary logic-download-app"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
+			<%--<span class="icon-sy">--%>
+			<a href="" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
 		</div>
 	</div>
 
