@@ -60,7 +60,7 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                 if(queryReceiveDriver !=null && queryReceiveDriver.size()>0){
                 	driverId = driverMap.get("token").toString();
                 	paycode = driverMap.get("paycode").toString();
-                    SysDriver driver = new SysDriver();
+                    SysDriver driver = sysDriverMapper.selectByPrimaryKey(driverId);
                     driver.setSysDriverId(driverId);
                     driver.setPayCode(paycode);
                     //校验支付密码
