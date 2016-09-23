@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -160,6 +160,7 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		SysUserAccountStr str = new SysUserAccountStr();
 		BeanUtils.copyProperties(sysUserAccount, str);
 		str.setResouceCode(order_type);
+		str.setAccountStatus(sysUserAccount.getAccount_status());
 		sysUserAccountStrMapper.insert(str);
 		
 		if(upRow==1){

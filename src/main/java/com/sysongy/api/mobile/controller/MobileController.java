@@ -310,7 +310,7 @@ public class MobileController {
 				String invitationCode = mainObj.optString("invitationCode");
 
 				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
-				if(veCode != null && !"".equals(veCode)) {
+//				if(veCode != null && !"".equals(veCode)) {
 					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
@@ -350,10 +350,10 @@ public class MobileController {
 						tokenMap.put("token", sysDriverId);
 						result.setData(tokenMap);
 					}
-				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("验证码无效！");
-				}
+//				}else{
+//					result.setStatus(MobileReturn.STATUS_FAIL);
+//					result.setMsg("验证码无效！");
+//				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");

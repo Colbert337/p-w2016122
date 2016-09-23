@@ -363,13 +363,13 @@ public class DriverServiceImpl implements DriverService {
 		List<SysDriver> invitationList = sysDriverMapper.queryForPage(invitation);
 		
 		if(invitationList.size() != 1){
-			throw new Exception("通过邀请码找不到对应的司机用户");
+			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败");
 		}else{
 			invitation = invitationList.get(0);
+	
+	    	sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.REGISTER_CASHBACK);
+	    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.INVITED_CASHBACK);
 		}
-		
-    	sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.REGISTER_CASHBACK);
-    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.INVITED_CASHBACK);
 	}
 	
     public Integer isExists(SysDriver obj) throws Exception {
