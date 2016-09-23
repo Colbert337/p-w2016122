@@ -2373,6 +2373,8 @@ public class MobileController {
 						reChargeMap.put("address", roadConditionInfo.getAddress());
 						reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
 						reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
+						reChargeMap.put("direction", roadConditionInfo.getDirection());
+						reChargeMap.put("conditionMsg", roadConditionInfo.getConditionMsg());
 						reChargeMap.put("usefulCount", roadConditionInfo.getUsefulCount());
 						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ roadConditionInfo.getId());
 						String publisherTime = "";
