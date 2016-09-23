@@ -2874,8 +2874,15 @@ public class MobileController {
 			if (b) {
 				pageNum = mainObj.optString("pageNum");
 				pageSize = mainObj.optString("pageSize");
-				SysMessage sysMessage = new SysMessage();
 				msgType = mainObj.optString("msgType");
+				SysMessage sysMessage = new SysMessage();
+				String province = mainObj.optString("province");
+				if("2".equals(msgType)){
+					if("全国".equals(province)){
+						province="";
+					}
+					sysMessage.setProvince_name(province);
+				}
 				sysMessage.setMessageType(Integer.valueOf(msgType));
 				sysMessage.setPageNum(Integer.valueOf(pageNum));
 				sysMessage.setPageSize(Integer.valueOf(pageSize));
