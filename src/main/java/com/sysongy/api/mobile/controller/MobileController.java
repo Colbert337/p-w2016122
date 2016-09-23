@@ -2490,6 +2490,7 @@ public class MobileController {
 						reChargeMap.put("conditionMsg", roadConditionInfo.getConditionMsg());
 						reChargeMap.put("usefulCount", roadConditionInfo.getUsefulCount());
 						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ roadConditionInfo.getId());
+						reChargeMap.put("shareUrl",http_poms_path+"/portal/crm/help/trafficShare?trafficId="+ roadConditionInfo.getId());
 						String publisherTime = "";
 						if (roadConditionInfo.getPublisherTime() != null && !"".equals(roadConditionInfo.getPublisherTime().toString())) {
 							publisherTime = sft.format(roadConditionInfo.getPublisherTime());
