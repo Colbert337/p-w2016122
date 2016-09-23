@@ -35,12 +35,12 @@
 		</div>
 	</div>
 
-	<%--<div class="btn-more-info">
+	<div class="btn-more-info">
 		<div class="inner">
-			&lt;%&ndash;<span class="icon-sy">&ndash;%&gt;
+			<%--<span class="icon-sy">--%>
 			<a href="" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
 		</div>
-	</div>--%>
+	</div>
 
 	<script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
 	<script src="<%=basePath %>/webpage/crm/js/webapp.js"></script>
