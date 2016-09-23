@@ -2229,40 +2229,56 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			String veCode = "veCode";
+			String newPassword = "newPassword";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum,veCode,newPassword);
+			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
-				//创建对象
-				SysDriver sysDriver = new SysDriver();
-				//电话号码赋值
-				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
-				String veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
-				if(veCode != null && !"".equals(veCode)) {
-					//数据库查询
-					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
-					if (!driver.isEmpty()) {
-						String initialPassword = mainObj.optString("newPassword");
-						//初始密码加密、赋值
-						initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
-						sysDriver.setPayCode(initialPassword);
-						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						//更新初始密码
-						int resultVal = driverService.saveDriver(sysDriver, "update", null);
-						//返回大于0，成功
-						if (resultVal <= 0) {
+			if(b){
+				newPassword = mainObj.optString("newPassword");
+				//校验密码
+				boolean format = newPassword.matches("^[0-9]*$");
+				boolean length = newPassword.matches("^.{6}$");
+				if(format & length){
+					//创建对象
+					SysDriver sysDriver = new SysDriver();
+					//电话号码赋值
+					sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
+					veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+					if(veCode != null && !"".equals(veCode)) {
+						//数据库查询
+						List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
+						if (!driver.isEmpty()) {
+							String initialPassword = mainObj.optString("newPassword");
+							//初始密码加密、赋值
+							initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
+							sysDriver.setPayCode(initialPassword);
+							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+							//更新初始密码
+							int resultVal = driverService.saveDriver(sysDriver, "update", null);
+							//返回大于0，成功
+							if (resultVal <= 0) {
+								result.setStatus(MobileReturn.STATUS_FAIL);
+								result.setMsg("重置支付密码失败！");
+							}
+							Map<String, Object> dataMap = new HashMap<>();
+							dataMap.put("resultVal", "true");
+							result.setData(dataMap);
+						} else {
 							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("重置支付密码失败！");
+							result.setMsg("电话号码有误！");
 						}
-						Map<String, Object> dataMap = new HashMap<>();
-						dataMap.put("resultVal", "true");
-						result.setData(dataMap);
-					} else {
+					}else {
 						result.setStatus(MobileReturn.STATUS_FAIL);
-						result.setMsg("电话号码有误！");
+						result.setMsg("验证码无效！");
 					}
-				}else {
+				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("验证码无效！");
+					result.setMsg("密码格式有误！");
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2351,12 +2367,29 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String Token = "Token";
+			String condition_img = "condition_img";
+			String conditionType = "conditionType";
+			String flashLongitude = "flashLongitude";
+			String flashLatitude = "flashLatitude";
+			String flashTime = "flashTime";
+			String longitude = "longitude";
+			String latitude = "latitude";
+			String address = "address";
+			String publisherName = "publisherName";
+			String publisherPhone = "publisherPhone";
+			String publisherTime = "publisherTime";
+			String direction = "direction";
+			boolean b = JsonTool.checkJson(mainObj,Token,condition_img,conditionType,flashLongitude,flashLatitude,flashTime,longitude,latitude,address,publisherName,publisherPhone,publisherTime,direction);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+			if (b) {
 				// 创建对象
 				SysRoadCondition roadCondition = new SysRoadCondition();
-				String conditionType = mainObj.optString("conditionType");
+				conditionType = mainObj.optString("conditionType");
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date start = sft.parse(mainObj.optString("flashTime"));
 				roadCondition.setId(UUIDGenerator.getUUID());
@@ -2439,9 +2472,15 @@ public class MobileController {
 			// 创建对象
 			SysRoadCondition roadCondition = new SysRoadCondition();
 			/**
+			 * 必填参数
+			 */
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,pageNum,pageSize);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+			if (b) {
 				if(roadCondition.getPageNum() == null){
 					roadCondition.setPageNum(GlobalConstant.PAGE_NUM);
 					roadCondition.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -2569,9 +2608,14 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String roadId = "roadId";
+			boolean b = JsonTool.checkJson(mainObj,roadId);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+			if (b) {
 				// 创建对象
 				SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(mainObj.optString("roadId"));
 				int count = Integer.parseInt(roadCondition.getUsefulCount());
@@ -2632,9 +2676,25 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String roadId = "roadId";
+			String condition_img = "condition_img";
+			String conditionType = "conditionType";
+			String flashLongitude = "flashLongitude";
+			String flashLatitude = "flashLatitude";
+			String flashTime = "flashTime";
+			String longitude = "longitude";
+			String latitude = "latitude";
+			String address = "address";
+			String publisherName = "publisherName";
+			String publisherPhone = "publisherPhone";
+			String publisherTime = "publisherTime";
+			boolean b = JsonTool.checkJson(mainObj,roadId,condition_img,conditionType,flashLongitude,flashLatitude,flashTime,longitude,latitude,address,publisherName,publisherPhone,publisherTime);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+			if (b) {
 				// 创建对象
 				SysRoadCondition roadCondition = new SysRoadCondition();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -2701,9 +2761,14 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			boolean b = JsonTool.checkJson(mainObj,token);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+			if (b) {
 				// 创建对象
 				SysDriver driver = driverService.queryDriverByPK(mainObj.optString("token"));
 				if(driver != null){
