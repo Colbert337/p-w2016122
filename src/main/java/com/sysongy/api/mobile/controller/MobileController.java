@@ -76,6 +76,7 @@ import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.JsonTool;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.TwoDimensionCode;
@@ -158,12 +159,17 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String username = "username";
+			String type = "type";
+			boolean b = JsonTool.checkJson(mainObj,username,type);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
-				String type = mainObj.optString("type");
+			if(b){
+				type = mainObj.optString("type");
 				SysDriver driver = new SysDriver();
 				SysDriver queryDriver = null;
 				//賬號密碼登錄
@@ -240,11 +246,16 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			String templateType = "templateType";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum,templateType);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				//发送短信
 				Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
 				verification.setPhoneNum(mainObj.optString("phoneNum"));
@@ -299,18 +310,23 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			String verificationCode = "verificationCode";
+			String password = "password";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum,verificationCode,password);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
 				String invitationCode = mainObj.optString("invitationCode");
-
 				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
-//				if(veCode != null && !"".equals(veCode)) {
+				if(veCode != null && !"".equals(veCode)) {
 					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
@@ -350,10 +366,10 @@ public class MobileController {
 						tokenMap.put("token", sysDriverId);
 						result.setData(tokenMap);
 					}
-//				}else{
-//					result.setStatus(MobileReturn.STATUS_FAIL);
-//					result.setMsg("验证码无效！");
-//				}
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("验证码无效！");
+				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -402,9 +418,14 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			String http_poms_path =  (String) prop.get("http_poms_path");
 			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			boolean b = JsonTool.checkJson(mainObj,token);
+			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(sysDriverId != null && !sysDriverId.equals("")){
@@ -509,14 +530,20 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String password = "password";
+			String verificationCode = "verificationCode";
+			boolean b = JsonTool.checkJson(mainObj,token,password,verificationCode);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver sysDriver = new SysDriver();
 				sysDriver.setSysDriverId(mainObj.optString("token"));
-				String password = mainObj.optString("password");
+				password = mainObj.optString("password");
 				if(password != null && !"".equals(password)){
 					password = Encoder.MD5Encode(password.getBytes());
 					sysDriver.setPassword(password);
@@ -573,11 +600,18 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String name = "name";
+			String imgUrl = "imgUrl";
+			String deviceToken = "deviceToken";
+			boolean b = JsonTool.checkJson(mainObj,token,name,imgUrl,deviceToken);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(sysDriverId != null && !sysDriverId.equals("")){
@@ -636,11 +670,17 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String paycode = "paycode";
+			String verificationCode = "verificationCode";
+			boolean b = JsonTool.checkJson(mainObj,token,paycode,verificationCode);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(mainObj.optString("token") == null){
@@ -707,20 +747,26 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String oldPayCode = "oldPayCode";
+			String newPayCode = "newPayCode";
+			boolean b = JsonTool.checkJson(mainObj,token,oldPayCode,newPayCode);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver sysDriver = new SysDriver();
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				String driverId = mainObj.optString("token");
-				String oldPayCode = mainObj.optString("oldPayCode");
+				oldPayCode = mainObj.optString("oldPayCode");
 				SysDriver driver = driverService.queryDriverByPK(driverId);
 				String payCode = driver.getPayCode();
 				if(payCode.equals(oldPayCode)){
 					//判断原支付密码是否正确
-					String newPayCode = mainObj.optString("newPayCode");
+					newPayCode = mainObj.optString("newPayCode");
 					if(newPayCode != null && !"".equals(newPayCode)){
 						sysDriver.setPayCode(newPayCode);
 						driverService.saveDriver(sysDriver,"update",null);
@@ -850,12 +896,22 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String name = "name";
+			String plateNumber = "plateNumber";
+			String gasType = "gasType";
+			String endTime = "endTime";
+			String drivingLicenseImageUrl = "drivingLicenseImageUrl";
+			String driverLicenseImageUrl = "driverLicenseImageUrl";
+			String idCard = "idCard";
+			boolean b = JsonTool.checkJson(mainObj,token,name,plateNumber,gasType,endTime,drivingLicenseImageUrl,driverLicenseImageUrl,idCard);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null && mainObj.optString("driverLicenseImageUrl") != null && !"".equals(mainObj.optString("driverLicenseImageUrl"))
-					&& mainObj.optString("name") != null && !"".equals(mainObj.optString("name"))){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String fullName = mainObj.optString("name");
 				driver.setSysDriverId(mainObj.optString("token"));
@@ -962,11 +1018,15 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String code = "code";
+			boolean b = JsonTool.checkJson(mainObj,code);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				String gcode = mainObj.optString("code");
 				if(gcode != null && !"".equals(gcode)){
 					List<Map<String, Object>> usysparamList = usysparamService.queryUsysparamMapByGcode(gcode);
@@ -1017,11 +1077,17 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String mobilePhone = "mobilePhone";
+			String content = "content";
+			boolean b = JsonTool.checkJson(mainObj,token,mobilePhone,content);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				MbUserSuggest suggest = new MbUserSuggest();
 				suggest.setMbUserSuggestId(UUIDGenerator.getUUID());
 				suggest.setSysDriverId(mainObj.optString("token"));
@@ -1082,13 +1148,21 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String idCard = "idCard";
+			String verificationCode = "verificationCode";
+			String payCode = "payCode";
+			String lossType = "lossType";
+			boolean b = JsonTool.checkJson(mainObj,token,idCard,verificationCode,payCode,lossType);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = driverService.queryDriverByPK(mainObj.optString("token"));
-				String lossType = mainObj.optString("lossType");
+				lossType = mainObj.optString("lossType");
 				/*String cardId = mainObj.optString("cardId");*/
 				int retvale = 0;//操作影响行数
 				if(lossType != null){//类型等于0 或者等于1
@@ -1218,6 +1292,12 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			String http_poms_path =  (String) prop.get("http_poms_path");
+			/**
+			 * 必填参数
+			 */
+			String code = "code";
+			boolean b = JsonTool.checkJson(mainObj,code);
+			
 			/**
 			 * 请求接口
 			 */
@@ -1366,7 +1446,6 @@ public class MobileController {
 				driverMap.put("amount",mainObj.optString("amount"));
 				driverMap.put("remark",mainObj.optString("remark"));
 				driverMap.put("paycode",mainObj.optString("paycode"));
-
 				int resultVal = mbDealOrderService.transferDriverToDriver(driverMap);
 				if(resultVal < 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1393,6 +1472,7 @@ public class MobileController {
 			}
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			logger.error("转账成功： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
@@ -2684,16 +2764,23 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String msgType = "msgType";
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,msgType,pageNum,pageSize);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
-				int pageNum = mainObj.optInt("pageNum");
-				int pageSize = mainObj.optInt("pageSize");
+			if (b) {
+				pageNum = mainObj.optString("pageNum");
+				pageSize = mainObj.optString("pageSize");
 				SysMessage sysMessage = new SysMessage();
-				String msgType = mainObj.optString("msgType");
+				msgType = mainObj.optString("msgType");
 				sysMessage.setMessageType(Integer.valueOf(msgType));
-				sysMessage.setPageNum(pageNum);
-				sysMessage.setPageSize(pageSize);
+				sysMessage.setPageNum(Integer.valueOf(pageNum));
+				sysMessage.setPageSize(Integer.valueOf(pageSize));
 				PageInfo<Map<String, Object>> pageInfo = sysMessageService.queryMsgListForPage(sysMessage);
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
