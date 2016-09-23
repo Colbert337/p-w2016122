@@ -25,7 +25,7 @@
 				<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm:ss" />
 			</div>
 			<div class="info">
-				${roadCondition.}
+				${roadCondition.conditionType}
 			</div>
 			<div class="img">
 				<img class="img-responsive" src="${conditionMsg}" alt="">
