@@ -19,7 +19,7 @@
 <body>
 	<div class="pdp">
 		<div class="pdp-title clearfix">
-			<span class="type">加盟气站</span>
+			<span class="type"><c:if test="${gastation.type == '0'}">联盟站</c:if></span>
 			<div class="name">${gastation.gas_station_name}</div>
 		</div>
 		<div class="pdp-item">
@@ -32,7 +32,7 @@
 			</div>
 			<div class="row address-end">
 				<div class="col-value">提供服务:</div>
-				<div class="col-key"></div>
+				<div class="col-key">${gastation.gas_server}</div>
 			</div>
 		</div>
 		<div class="pdp-item">
