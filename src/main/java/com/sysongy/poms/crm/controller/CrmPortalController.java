@@ -272,8 +272,10 @@ public class CrmPortalController {
     @RequestMapping("/trafficDetail")
     public String trafficDetail(@RequestParam String trafficId,ModelMap map) throws Exception{
     	SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+        String http_poms_path =  (String) prop.get("http_poms_path");
     	Usysparam usysparam = usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
         map.addAttribute("roadCondition", roadCondition);
+        map.addAttribute("conditionMsg",http_poms_path+roadCondition.getConditionImg());
         map.addAttribute("ConditionType", usysparam.getMname());
         return "/webpage/crm/webapp-traffic-detail";
     }
@@ -286,6 +288,7 @@ public class CrmPortalController {
     	ms.setMbUserSuggestId(UUIDGenerator.getUUID());
     	ms.setMobilePhone(title);
     	ms.setSuggest(info);
+    	ms.setSuggestRes("来自APP");
     	int rs = mbUserSuggestServices.saveSuggester(ms);
     	if(rs > 0){
     		return "/webpage/crm/webapp-download-app";
