@@ -52,7 +52,7 @@
 
 					<div class="col-sm-4">
 						<input type="text" name="longitude" placeholder="输入信息内容"
-							class="form-control" maxlength="500"></input>
+							class="form-control" maxlength="40"></input>
 					</div>
 				</div>
 				<div class="form-group">
@@ -84,7 +84,7 @@
 
 					<div class="col-sm-4">
 						<input type="text" name="captureLongitude" placeholder="输入信息内容"
-							class="form-control" maxlength="500"></input>
+							class="form-control" maxlength="40"></input>
 					</div>
 				</div>
  
@@ -108,7 +108,7 @@
 
 					<div class="col-sm-4">
 						<textarea name="conditionMsg" placeholder="路况说明"
-							class="form-control"></textarea>
+							class="form-control" maxlength="200"></textarea>
 					</div>
 				</div>
 					<div class="form-group">
@@ -140,7 +140,7 @@
 					</label>
 
 					<div class="col-sm-4">
-						<textarea name="address" placeholder="路况说明" class="form-control"></textarea>
+						<textarea name="address" placeholder="路况说明" class="form-control" maxlength="200"></textarea>
 					</div>
 				</div>
 
@@ -149,7 +149,7 @@
 
 					<div class="col-sm-4">
 						<input type="text" name="province" placeholder="输入信息内容"
-							class="form-control" maxlength="500"></input>
+							class="form-control" maxlength="20"></input>
 						</select>
 					</div>
 				</div>
@@ -170,7 +170,7 @@
 
 					<div class="col-sm-4">
 						<textarea name="memo" placeholder="备注"
-							class="form-control"></textarea>
+							class="form-control" maxlength="2000"></textarea>
 					</div>
 				</div>
 				<div class="form-group">

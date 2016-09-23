@@ -46,7 +46,7 @@
 						</div>
 					</div> --%>
 					<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
-					<div class="col-sm-10">
+					<div class="col-sm-15">
 					<!-- 	<div class="page-header">
 							<h1>图片列表</h1>
 						</div> -->
@@ -136,8 +136,8 @@
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 											<td><div class="td-inner-warp">${list.targetUrl}</div></td>
 											<td><div class="td-inner-warp">${list.content}</div></td>
-											<td>${list.remark}</td>
-											<td>${list.city_name}</td>
+											<td><div class="td-inner-warp">${list.remark}</div></td>
+											<td><div class="td-inner-warp">${list.city_name}</div></td>
 											<td><fmt:formatDate value="${list.createdDate}"
 													type="both" /></td>
 											<td>${list.operator}</td>
