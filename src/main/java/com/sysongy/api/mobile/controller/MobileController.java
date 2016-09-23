@@ -1278,7 +1278,6 @@ public class MobileController {
 						}else{
 							gastationMap.put("state","关闭");
 						}
-						gastationMap.put("preferential","");
 						gastationMap.put("address",gastationInfo.getAddress());
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
@@ -2374,10 +2373,14 @@ public class MobileController {
 						reChargeMap.put("address", roadConditionInfo.getAddress());
 						reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
 						reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
+						reChargeMap.put("direction", roadConditionInfo.getDirection());
+						reChargeMap.put("conditionMsg", roadConditionInfo.getConditionMsg());
 						reChargeMap.put("usefulCount", roadConditionInfo.getUsefulCount());
 						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ roadConditionInfo.getId());
 						String publisherTime = "";
 						if (roadConditionInfo.getPublisherTime() != null && !"".equals(roadConditionInfo.getPublisherTime().toString())) {
+							publisherTime = sft.format(roadConditionInfo.getPublisherTime());
+						}else{
 							publisherTime = sft.format(new Date());
 						}
 						reChargeMap.put("publisherTime", publisherTime);
