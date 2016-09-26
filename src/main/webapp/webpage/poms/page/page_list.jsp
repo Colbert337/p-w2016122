@@ -90,8 +90,7 @@
 								<!-- <th onclick="orderBy(this,'page_body');commitForm();" id="page_body_order">页面内容</th> -->
 								<th onclick="orderBy(this,'page_ticker');commitForm();"
 									id="page_ticker_order">页面缩略</th>
-									<th  
-									id="page_ticker_order">状态</th>
+									
 								<th onclick="orderBy(this,'page_creator');commitForm();"
 									id="page_creator_order">页面创建者</th>
 								<th onclick="orderBy(this,'message_created_time');commitForm();"
@@ -100,6 +99,8 @@
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>页面创建时间</th>
 								<th onclick="orderBy(this,'page_html');commitForm();"
 									id="page_html_order" style="display: none;">编辑内容</th>
+								<th  
+									id="page_ticker_order">状态</th>
 								<th class="text-center td-w2">更多操作</th>
 							</tr>
 						</thead>
@@ -116,11 +117,12 @@
 									<td>${list.pageTitle}</td>
 									<%-- <td>${list.pageBody}</td>  --%>
 									<td>${list.pageTicker}</td>
-									<td><c:if test="${list.pageStatus == '0'}">生效</c:if><c:if test="${list.pageStatus == '1'}"><span style="color:red">失效</span></c:if></td>
+									
 									<td>${list.pageCreator}</td>
 									<td><fmt:formatDate value="${list.pageCreatedTime}"
 											type="both" /></td>
 									<td style="display: none;"><xmp>${list.pageHtml}</xmp></td>
+									<td><c:if test="${list.pageStatus == '0'}">生效</c:if><c:if test="${list.pageStatus == '1'}"><span style="color:red">失效</span></c:if></td>
 									<td class="text-center"><a class="logic-del"
 										href="javascript:void(0);" title="页面预览" data-rel="tooltip">
 											<i class="ace-icon fa fa-eye bigger-130"
