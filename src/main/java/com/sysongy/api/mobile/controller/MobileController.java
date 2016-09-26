@@ -2886,6 +2886,7 @@ public class MobileController {
 				sysMessage.setMessageType(Integer.valueOf(msgType));
 				sysMessage.setPageNum(Integer.valueOf(pageNum));
 				sysMessage.setPageSize(Integer.valueOf(pageSize));
+				sysMessage.setOrderby("message_send_time desc");
 				PageInfo<Map<String, Object>> pageInfo = sysMessageService.queryMsgListForPage(sysMessage);
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
