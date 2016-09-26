@@ -97,19 +97,21 @@
 								for="title"><span class="red_star">*</span> 标题： </label>
 							<div class="col-sm-8">
 								<input type="text" name="title" id="title" data-onFlag=""
-									placeholder="标题(最大长度为12个汉字)" maxlength="12" class="col-xs-10 col-sm-12"
-									value="${mbBanner.title}" /> <input type="hidden"
-									id="mbBannerId" name="mbBannerId"
+									placeholder="标题(最大长度为12个汉字)" maxlength="12"
+									class="col-xs-10 col-sm-12" value="${mbBanner.title}" /> <input
+									type="hidden" id="mbBannerId" name="mbBannerId"
 									value="${mbBanner.mbBannerId}" />
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								for="remark"> <span class="red_star">*</span> 正文： </label>
+								for="remark"> <span class="red_star">*</span> 正文：
+							</label>
 							<div class="col-sm-8">
 								<input name="content" id="content" style="resize: none;"
-									maxlength="32" placeholder="正文(最大长度为32个汉字)" value="${mbBanner.content }"
-									class="col-xs-10 col-sm-12 limited form-control"/>
+									maxlength="32" placeholder="正文(最大长度为32个汉字)"
+									value="${mbBanner.content }"
+									class="col-xs-10 col-sm-12 limited form-control" />
 							</div>
 						</div>
 						<div class="form-group">
@@ -118,7 +120,9 @@
 							<div class="col-sm-8">
 								<div class="widget-box">
 									<div class="widget-header">
-										<h4 class="widget-title">图片上传 <font size="2" color="red" >图片比例：16:9，图片大小100k以内</font></h4>
+										<h4 class="widget-title">
+											图片上传 <font size="2" color="red">图片比例：16:9，图片大小100k以内</font>
+										</h4>
 									</div>
 									<div class="widget-body">
 										<div class="widget-main">
@@ -126,7 +130,7 @@
 												src="" /> <input type="file" name="image"
 												class="projectfile" id="indu_com_certif_select" /> <input
 												type="hidden" id="img_path" value="${mbBanner.imgPath }"
-												name="imgPath" /> 
+												name="imgPath" />
 											<button class="btn btn-sm btn-primary btn-file-space"
 												type="button"
 												onclick="savePhoto(this,'#indu_com_certif_select','#img_path','#show_img');">
@@ -143,7 +147,9 @@
 							<div class="col-sm-8">
 								<div class="widget-box">
 									<div class="widget-header">
-										<h4 class="widget-title">图片上传<font size="2" color="red" >图片比例：1:1，图片大小50k以内</font></h4>
+										<h4 class="widget-title">
+											图片上传<font size="2" color="red">图片比例：1:1，图片大小50k以内</font>
+										</h4>
 									</div>
 									<div class="widget-body">
 										<div class="widget-main">
@@ -166,16 +172,14 @@
 							<label class="col-sm-3 control-label no-padding-right"
 								for="target_url"><span class="red_star">*</span> 链接地址： </label>
 							<div class="col-sm-8">
-								<input type="text" id="target_url"
-									value="${mbBanner.targetUrl }" maxlength="100" name="targetUrl"
-									placeholder="链接地址" class="col-xs-10 col-sm-12" />
+								<input type="text" id="target_url"  maxlength="150"
+									name="targetUrl" placeholder="链接地址" class="col-xs-10 col-sm-12" />
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-10 control-label no-padding-right"
 								for="target_url">
-								链接地址如：/portal/crm/help/showPage?pageid=<span
-								class="red_star">66b24d910a0f4ce68689682f497c0349</span>
+								链接地址如：/portal/crm/help/showPage?pageid=<span class="red_star">66b24d910a0f4ce68689682f497c0349</span>
 							</label>
 
 						</div>
@@ -250,10 +254,9 @@
 												</c:forEach>
 
 											</ul>
-											
+
 										</div>
-										<div   id="cityNameList">
-											</div>
+										<div id="cityNameList"></div>
 									</div>
 
 								</div>
@@ -278,29 +281,28 @@
 									class="col-xs-10 col-sm-12 limited form-control">${mbBanner.remark}</textarea>
 							</div>
 						</div>
-						<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
+						<input type="hidden" id="imgType" name="imgType"
+							value="${mbBanner.imgType}" />
 					</form>
 					<div class="clearfix form-actions">
-										<div class="col-md-offset-3 col-md-9">
-											
-											<button class="btn btn-info" type="button" onclick="saveBanner();">
-												<i class="ace-icon fa fa-check bigger-110"></i>
-												保存
-											</button>
-											&nbsp; &nbsp; &nbsp;
-											
-											<button class="btn" id="clear" type="button" onclick="clear1();">
-												<i class="ace-icon fa fa-repeat bigger-110"></i>
-												重置
-											</button>
-											&nbsp; &nbsp; &nbsp;
-											
-											<button class="btn btn-success" type="button" onclick="init();">
-												<i class="ace-icon fa fa-undo bigger-110"></i>
-												返回
-											</button>
-										</div>
-									</div>
+						<div class="col-md-offset-3 col-md-9">
+
+							<button class="btn btn-info" type="button"
+								onclick="saveBanner();">
+								<i class="ace-icon fa fa-check bigger-110"></i> 保存
+							</button>
+							&nbsp; &nbsp; &nbsp;
+
+							<button class="btn" id="clear" type="button" onclick="clear1();">
+								<i class="ace-icon fa fa-repeat bigger-110"></i> 重置
+							</button>
+							&nbsp; &nbsp; &nbsp;
+
+							<button class="btn btn-success" type="button" onclick="init();">
+								<i class="ace-icon fa fa-undo bigger-110"></i> 返回
+							</button>
+						</div>
+					</div>
 					<!-- <div class="modal-footer">
 						<button class="btn btn-primary btn-sm" onclick="saveBanner()">确定</button>
 						<button class="btn btn-sm" i="close" onclick="init()">取 消</button>
@@ -415,7 +417,7 @@
 			phototypeSm = 1;
 		}
 		
-console.log('savePhoto');
+
 		var stationId = "mobile";
 		var multipartOptions = {
 			url : '../crmInterface/crmBaseService/web/upload?stationid='
@@ -528,10 +530,16 @@ console.log('savePhoto');
 			}
 			checkedclick();
 			$("#show_img").attr("src", '<%=basePath%>' + '${mbBanner.imgPath}');
-			$("#show_sm_img").attr("src",
-					'<%=basePath%>'  + '${mbBanner.imgSmPath}');
+			$("#show_sm_img").attr("src",'<%=basePath%>' + '${mbBanner.imgSmPath}');
 			photoType = 1;
 			phototypeSm = 1;
+		}
+		if ('${mbBanner.targetUrl }' != '') {
+			$('#target_url').val(
+					'${mbBanner.targetUrl }'.substr('${mbBanner.targetUrl }'
+							.indexOf('/portal/crm/help/showPage?pageid='),
+							'${mbBanner.targetUrl }'.length));
+			
 		}
 		var $overflow = '';
 		var colorbox_params = {
@@ -634,17 +642,17 @@ console.log('savePhoto');
 	function checkedclick() {
 		console.log('checked')
 		var isok = true;
-		var cityNameList="";
+		var cityNameList = "";
 		$('.checked').each(function(index, obj) {
 			if (!$(obj).is(':checked')) {
 				isok = false;
-			}else{
-				cityNameList+=$(obj).attr('values')+",";
+			} else {
+				cityNameList += $(obj).attr('values') + ",";
 			}
 		})
-		if(cityNameList.length!=0){
-			cityNameList=cityNameList.substring(0,cityNameList.length-1)
-			}
+		if (cityNameList.length != 0) {
+			cityNameList = cityNameList.substring(0, cityNameList.length - 1)
+		}
 		$('#cityNameList').text(cityNameList);
 		if (isok) {
 			$("#allche").prop("checked", true);
@@ -657,6 +665,4 @@ console.log('savePhoto');
 		loadPage('#main', '../web/mobile/img/list/page?imgType='
 				+ $("[name=imgType]").val());
 	}
-	
-	
 </script>
