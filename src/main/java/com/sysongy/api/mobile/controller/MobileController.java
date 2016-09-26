@@ -3098,7 +3098,7 @@ public class MobileController {
 			if (b) {
 				Map<String, Object> tokenMap = new HashMap<>();
 				tokenMap.put("inviteContent","将此链接或邀请码分享给好友，好友通过您的邀请链接或邀请码完成注册并登录后，您的账户即可获得￥10现金充值。");
-				tokenMap.put("msgContent","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，注册成功之后您的账户即可获得￥10现金充值，详情请访问：https://www.sysongy.net:8448/invite/SJ2016");
+				tokenMap.put("msgContent","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，注册成功之后您的账户即可获得￥10现金充值，详情请访问：http://www.sysongy.net:8448/invite/SJ2016");
 				tokenMap.put("title","注册即享司集现金充值");
 				tokenMap.put("content","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，完成注册并下载司集APP，您即可获得￥10账户充值，可在任意司集联盟站使用！");
 				tokenMap.put("imgUrl","默认图片路径");
