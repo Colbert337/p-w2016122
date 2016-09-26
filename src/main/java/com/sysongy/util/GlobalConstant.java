@@ -197,6 +197,7 @@ public class GlobalConstant {
 	
 	/*
 	 * 	110运输公司预付款充值  120 加油站预付款充值 130个人充值 210运输公司消费 220 司机消费 310 运输公司对个人转账 320个人对个人转账
+	 * 	410注册返现 420邀请返现
 	 */
 	public interface OrderType{
 		public static final String CHARGE_TO_TRANSPORTION ="110";
@@ -206,6 +207,8 @@ public class GlobalConstant {
 		public static final String CONSUME_BY_DRIVER ="220";
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER ="310";
 		public static final String TRANSFER_DRIVER_TO_DRIVER ="320";
+		public static final String REGISTER_CASHBACK ="410";
+		public static final String INVITED_CASHBACK ="420";
 	}
 
 	/**
@@ -318,6 +321,9 @@ public class GlobalConstant {
 		
 		public static final String CHARGE_TO_TRANSPORTION_CHARGE ="111";//车队充值
 		public static final String CHARGE_TO_GASTATION_CHARGE ="121";//加注站预付款充值
+		
+		public static final String DRIVER_REGISTER_CASHBACK = "410";//被邀请人返现
+		public static final String DRIVER_INVITE_CASHBACK = "420";//邀请人返现
 		
 		public static final String CONSUME_DRIVER_DEDUCT ="221";//个人消费
 		public static final String DISCONSUME_DRIVER_DEDUCT ="222";//冲红

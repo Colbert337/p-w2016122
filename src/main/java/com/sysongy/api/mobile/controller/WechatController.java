@@ -236,7 +236,7 @@ public class WechatController {
 					driver.setPlateNumber(mainObj.optString("plateNumber"));
 					driver.setRegisSource("WeChat");//注册来源
 					driver.setInvitationCode(newInvitationCode);//生成邀请码
-					Integer tmp = driverService.saveDriver(driver, "insert");
+					Integer tmp = driverService.saveDriver(driver, "insert", null);
 					//大于0注册成功
 					if(tmp > 0 ){
 						//获取邀请码并查询用户
@@ -371,7 +371,7 @@ public class WechatController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode,"update");
+							driverService.saveDriver(driverCode,"update", null);
 						}
 						resultMap.put("invitationCode",invitationCode);
 						/**关联公司

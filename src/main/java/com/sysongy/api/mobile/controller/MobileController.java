@@ -307,9 +307,10 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
+				String invitationCode = mainObj.optString("invitationCode");
 
 				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
-				if(veCode != null && !"".equals(veCode)) {
+//				if(veCode != null && !"".equals(veCode)) {
 					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
@@ -340,7 +341,7 @@ public class MobileController {
 						//生成二维码
 						driver.setDriverQrcode(show_path);
 
-						Integer tmp = driverService.saveDriver(driver, "insert");
+						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
 						if(tmp > 0){
 							TwoDimensionCode handler = new TwoDimensionCode();
 							handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
@@ -349,10 +350,10 @@ public class MobileController {
 						tokenMap.put("token", sysDriverId);
 						result.setData(tokenMap);
 					}
-				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("验证码无效！");
-				}
+//				}else{
+//					result.setStatus(MobileReturn.STATUS_FAIL);
+//					result.setMsg("验证码无效！");
+//				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -447,7 +448,7 @@ public class MobileController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode,"update");
+							driverService.saveDriver(driverCode,"update",null);
 						}
 						resultMap.put("invitationCode",invitationCode);
 						if(driver.getTransportionName() != null && !"".equals(driver.getTransportionName().toString()) ){
@@ -521,7 +522,7 @@ public class MobileController {
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
 
-					driverService.saveDriver(sysDriver,"update");
+					driverService.saveDriver(sysDriver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("密码为空！");
@@ -585,7 +586,7 @@ public class MobileController {
 					driver.setFullName(mainObj.optString("name"));
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
 					driver.setAvatarB(mainObj.optString("imgUrl"));
-					int resultVal = driverService.saveDriver(driver,"update");
+					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("修改用户信息失败！");
@@ -656,7 +657,7 @@ public class MobileController {
 					driver.setSysDriverId(sysDriverId);
 					driver.setPayCode(mainObj.optString("paycode"));
 
-					driverService.saveDriver(driver,"update");//设置支付密码
+					driverService.saveDriver(driver,"update",null);//设置支付密码
 				}
 
 			}else{
@@ -722,7 +723,7 @@ public class MobileController {
 					String newPayCode = mainObj.optString("newPayCode");
 					if(newPayCode != null && !"".equals(newPayCode)){
 						sysDriver.setPayCode(newPayCode);
-						driverService.saveDriver(sysDriver,"update");
+						driverService.saveDriver(sysDriver,"update",null);
 					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -893,7 +894,7 @@ public class MobileController {
 					String show_path = (String) prop.get("show_images_path")+ "/driver/"+driverList.get(0).getMobilePhone()+"/"+driverList.get(0).getMobilePhone()+".jpg";
 					//生成二维码
 					driver.setDriverQrcode(show_path);
-					int resultVal = driverService.saveDriver(driver,"update");
+					int resultVal = driverService.saveDriver(driver,"update",null);
 					if(resultVal <= 0){
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("用户ID为空，申请失败！");
@@ -1277,7 +1278,6 @@ public class MobileController {
 						}else{
 							gastationMap.put("state","关闭");
 						}
-						gastationMap.put("preferential","");
 						gastationMap.put("address",gastationInfo.getAddress());
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
@@ -1526,7 +1526,7 @@ public class MobileController {
 						bannerMap.put("content",banner.getContent());
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
 						bannerMap.put("contentUrl",banner.getTargetUrl());
-						bannerMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/content?contentId="+ banner.getMbBannerId());
+						bannerMap.put("shareUrl",banner.getTargetUrl()+"&show_download_button=1");
 						bannerMap.put("imgSmPath",http_poms_path+banner.getImgSmPath());
 						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
 							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
@@ -2057,7 +2057,7 @@ public class MobileController {
 						}
 						sysDriver.setDriverType(driver.get(0).getDriverType());
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						int resultVal = driverService.saveDriver(sysDriver,"update");
+						int resultVal = driverService.saveDriver(sysDriver,"update",null);
 						//返回大于0，成功
 						if(resultVal <= 0){
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2134,7 +2134,7 @@ public class MobileController {
 						sysDriver.setPayCode(initialPassword);
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 						//更新初始密码
-						int resultVal = driverService.saveDriver(sysDriver, "update");
+						int resultVal = driverService.saveDriver(sysDriver, "update", null);
 						//返回大于0，成功
 						if (resultVal <= 0) {
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2373,10 +2373,14 @@ public class MobileController {
 						reChargeMap.put("address", roadConditionInfo.getAddress());
 						reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
 						reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
+						reChargeMap.put("direction", roadConditionInfo.getDirection());
+						reChargeMap.put("conditionMsg", roadConditionInfo.getConditionMsg());
 						reChargeMap.put("usefulCount", roadConditionInfo.getUsefulCount());
 						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ roadConditionInfo.getId());
 						String publisherTime = "";
 						if (roadConditionInfo.getPublisherTime() != null && !"".equals(roadConditionInfo.getPublisherTime().toString())) {
+							publisherTime = sft.format(roadConditionInfo.getPublisherTime());
+						}else{
 							publisherTime = sft.format(new Date());
 						}
 						reChargeMap.put("publisherTime", publisherTime);

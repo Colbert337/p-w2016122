@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,9 @@ import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
+import com.sysongy.poms.permi.dao.SysUserAccountStrMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.model.SysUserAccountStr;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.util.AliShortMessage;
 import com.sysongy.util.GlobalConstant;
@@ -24,6 +27,8 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	
 	@Autowired
 	private SysUserAccountMapper sysUserAccountMapper;
+	@Autowired
+	private SysUserAccountStrMapper sysUserAccountStrMapper;
 	@Autowired
 	private GasCardService gasCardService;
 	@Autowired
@@ -151,6 +156,13 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 		sysUserAccount.setVersion(ver+1);
 		//更新此account对象则保存到db中
 		int upRow = sysUserAccountMapper.updateAccountBalance(sysUserAccount);
+		//添加轨迹信息
+		SysUserAccountStr str = new SysUserAccountStr();
+		BeanUtils.copyProperties(sysUserAccount, str);
+		str.setResouceCode(order_type);
+		str.setAccountStatus(sysUserAccount.getAccount_status());
+		sysUserAccountStrMapper.insert(str);
+		
 		if(upRow==1){
 			return GlobalConstant.OrderProcessResult.SUCCESS;	
 		}else{

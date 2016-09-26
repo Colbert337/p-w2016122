@@ -41,7 +41,7 @@
 							</div>
 						</div>
 
-						<div class="item">s
+						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询

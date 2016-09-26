@@ -481,7 +481,7 @@ public class CRMCustomerContoller {
             sysDriver.setRegisSource(gastation.getGas_station_name());
 
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
-            int renum = driverService.saveDriver(sysDriver, "insert");
+            int renum = driverService.saveDriver(sysDriver, "insert",null);
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
             if(renum < 1){
@@ -636,7 +636,7 @@ public class CRMCustomerContoller {
             }
 
             orgSysDriver.setUpdatedDate(new Date());
-            int renum = driverService.saveDriver(orgSysDriver, "update");
+            int renum = driverService.saveDriver(orgSysDriver, "update", null);
             if(renum > 0){
                 return orgSysDriver;
             }
@@ -693,7 +693,7 @@ public class CRMCustomerContoller {
             }
             sysDriver.setCheckedStatus("1");
             sysDriver.setUpdatedDate(new Date());
-            driverService.saveDriver(sysDriver, "update");
+            driverService.saveDriver(sysDriver, "update", null);
             SysDriver sysDriverNew = driverService.queryDriverByPK(sysDriver.getSysDriverId());
             attributes.put("driver", sysDriverNew);
             ajaxJson.setAttributes(attributes);

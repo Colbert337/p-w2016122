@@ -222,8 +222,6 @@ public class OrderServiceImpl implements OrderService {
 		   throw new Exception( success_charge);
 	   }
 	   //3.调用返现--在返现里面判断是否首次返现，是则增加调用首次返现规则，然后再继续调用返现
-	   System.out.println("111111111111111111111111"+order.getOperatorSourceType());
-	   System.out.println("222222222222222222222222"+!GlobalConstant.OrderOperatorSourceType.WECHAT.equals(order.getOperatorSourceType()));
 	   if(!GlobalConstant.OrderOperatorSourceType.WECHAT.equals(order.getOperatorSourceType())){
 		   String success_cashback = driverService.cashBackToDriver(order);
 		   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_cashback)){

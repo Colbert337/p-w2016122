@@ -32,7 +32,7 @@
     <result column="sys_user_account_id" property="sys_user_account_id" jdbcType="VARCHAR" />
     <result column="prepay_balance" property="prepay_balance" jdbcType="DECIMAL" />
     <result column="prepay_version" property="prepay_version" jdbcType="INTEGER" />
-    
+    <result column="promotions" property="promotions" jdbcType="VARCHAR" />
     <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
     <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
     
@@ -57,6 +57,7 @@
 	  <result column="consumecount" property="consumecount" jdbcType="VARCHAR" />
 	  <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
       <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
+      <result column="promotions" property="promotions" jdbcType="VARCHAR" />
   </resultMap>
   
   <resultMap id="HenryTotalMap" type="java.util.Map" >
