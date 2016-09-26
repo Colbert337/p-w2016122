@@ -9,11 +9,10 @@
     <result column="content_id" property="contentId" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
-    <result column="Column_8" property="column8" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     mb_statistics_id, sys_driver_id, operation_type, content_type, content_id, memo, 
-    created_date, Column_8
+    created_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -28,10 +27,10 @@
   <insert id="insert" parameterType="com.sysongy.poms.mobile.model.MbStatistics" >
     insert into mb_statistics (mb_statistics_id, sys_driver_id, operation_type, 
       content_type, content_id, memo, 
-      created_date, Column_8)
+      created_date)
     values (#{mbStatisticsId,jdbcType=VARCHAR}, #{sysDriverId,jdbcType=VARCHAR}, #{operationType,jdbcType=VARCHAR}, 
       #{contentType,jdbcType=VARCHAR}, #{contentId,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
-      #{createdDate,jdbcType=TIMESTAMP}, #{column8,jdbcType=CHAR})
+      #{createdDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.mobile.model.MbStatistics" >
     insert into mb_statistics
@@ -57,9 +56,6 @@
       <if test="createdDate != null" >
         created_date,
       </if>
-      <if test="column8 != null" >
-        Column_8,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="mbStatisticsId != null" >
@@ -82,9 +78,6 @@
       </if>
       <if test="createdDate != null" >
         #{createdDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="column8 != null" >
-        #{column8,jdbcType=CHAR},
       </if>
     </trim>
   </insert>
@@ -109,9 +102,6 @@
       <if test="createdDate != null" >
         created_date = #{createdDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="column8 != null" >
-        Column_8 = #{column8,jdbcType=CHAR},
-      </if>
     </set>
     where mb_statistics_id = #{mbStatisticsId,jdbcType=VARCHAR}
   </update>
@@ -123,7 +113,27 @@
       content_id = #{contentId,jdbcType=VARCHAR},
       memo = #{memo,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP},
-      Column_8 = #{column8,jdbcType=CHAR}
     where mb_statistics_id = #{mbStatisticsId,jdbcType=VARCHAR}
   </update>
+  
+  <select id="queryMbStatistics" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbStatistics" >
+    select 
+    <include refid="Base_Column_List" />
+    from mb_statistics
+    where 1=1
+      <if test="sysDriverId != null" >
+       and  sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+      </if>
+      <if test="operationType != null" >
+        and operation_type = #{operationType,jdbcType=VARCHAR}
+      </if>
+      <if test="contentType != null" >
+        and content_type = #{contentType,jdbcType=VARCHAR}
+      </if>
+      <if test="contentId != null" >
+        and content_id = #{contentId,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  
 </mapper>
