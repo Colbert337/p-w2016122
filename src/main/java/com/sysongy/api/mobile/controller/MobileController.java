@@ -94,6 +94,15 @@ public class MobileController {
 	public final String keyStr = "sysongys";
 	String localPath = (String) prop.get("http_poms_path");
 
+	/**
+	 * 新浪短网址API
+	 * source:应用的appkey(3271760578)
+	 * url_long:需要转换的长链接
+	 * 示例：xml:http://api.t.sina.com.cn/short_url/shorten.xml?source=3271760578&url_long=http://www.douban.com/note/249723561/
+	 */
+	String XML_API = "http://api.t.sina.com.cn/short_url/shorten.xml";
+	String JSON_API = "http://api.t.sina.com.cn/short_url/shorten.json";
+
 	/** 支付宝支付业务：入参app_id */
 	public static final String APPID = "2016011801102578"; //TODO 需要自定义常量类
 	public static final String ss ="123123";
@@ -1388,6 +1397,7 @@ public class MobileController {
 			result.setMsg("查询气站信息失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("查询气站信息失败： " + e);
+			e.printStackTrace();
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -3095,10 +3105,17 @@ public class MobileController {
 			/**
 			 * 请求接口
 			 */
+
 			if (b) {
 				Map<String, Object> tokenMap = new HashMap<>();
+				token = mainObj.optString("token");
+				String http_poms_path =  (String) prop.get("http_poms_path");
+				String inviteUrl = http_poms_path+"/portal/crm/help/user/invitation?token="+token;
+				/*生成短连接*/
+
+
 				tokenMap.put("inviteContent","将此链接或邀请码分享给好友，好友通过您的邀请链接或邀请码完成注册并登录后，您的账户即可获得￥10现金充值。");
-				tokenMap.put("msgContent","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，注册成功之后您的账户即可获得￥10现金充值，详情请访问：http://www.sysongy.net:8448/invite/SJ2016");
+				tokenMap.put("msgContent","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，注册成功之后您的账户即可获得￥10现金充值，详情请访问："+inviteUrl);
 				tokenMap.put("title","注册即享司集现金充值");
 				tokenMap.put("content","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，完成注册并下载司集APP，您即可获得￥10账户充值，可在任意司集联盟站使用！");
 				tokenMap.put("imgUrl","默认图片路径");
