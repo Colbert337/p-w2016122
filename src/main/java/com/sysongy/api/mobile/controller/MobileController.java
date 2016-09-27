@@ -2678,7 +2678,7 @@ public class MobileController {
 						result.setMsg("无此路况！");
 					}
 				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("已点击过啦！");
 				}
 			} else {
