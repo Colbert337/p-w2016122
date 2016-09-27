@@ -1950,11 +1950,7 @@ public class MobileController {
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
-				System.out.println(pageInfo);
-				System.out.println(pageInfo.getList());
-				System.out.println(pageInfo.getList().size());
 				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
-					System.out.println("213");
 					for(Map<String, Object> map:pageInfo.getList()){
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum",map.get("orderNumber"));
