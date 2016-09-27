@@ -347,11 +347,13 @@ public class CRMCustomerContoller {
             return ajaxJson;
         }
 
+        //不作重复性判断
+        /**
         if(checkIfFrequent(request, sysDriver)){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("您发送短信的次数过于频繁，请稍后再试！！！");
             return ajaxJson;
-        }
+        }**/
 
         try
         {
