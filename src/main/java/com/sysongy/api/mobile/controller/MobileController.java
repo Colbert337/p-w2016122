@@ -2265,10 +2265,6 @@ public class MobileController {
 			 */
 			if(b){
 				newPassword = mainObj.optString("newPassword");
-				//校验密码
-				boolean format = newPassword.matches("^[0-9]*$");
-				boolean length = newPassword.matches("^.{6}$");
-				if(format & length){
 					//创建对象
 					SysDriver sysDriver = new SysDriver();
 					//电话号码赋值
@@ -2301,10 +2297,6 @@ public class MobileController {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("验证码无效！");
 					}
-				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("密码格式有误！");
-				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
