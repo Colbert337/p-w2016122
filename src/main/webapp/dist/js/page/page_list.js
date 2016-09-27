@@ -44,6 +44,19 @@
 		}
 	}
 	
+	
+	function del(obj){
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm("是否失效该条数据?", function(result) {
+			if(result){
+
+				loadPage('#main', '../web/page/delete?id='+obj);
+			}
+			
+		})
+		
+	
+	}
 	function openSpecfiyWindown(windowName){
 	    window.open('about:blank',windowName,'width=700,height=400,menubar=no,scrollbars=no');   
 	} 

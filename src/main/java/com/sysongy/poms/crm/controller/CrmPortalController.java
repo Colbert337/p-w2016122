@@ -277,11 +277,54 @@ public class CrmPortalController {
     @RequestMapping("/trafficDetail")
     public String trafficDetail(@RequestParam String trafficId,ModelMap map) throws Exception{
     	SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+        String name = roadCondition.getPublisherName();
+        String phone = roadCondition.getPublisherPhone();
+        String conditionType = roadCondition.getConditionType();
+        conditionType = GlobalConstant.getConditionType(conditionType);
+        if(name == null || name.equals("")){
+            if(phone != null && phone.length() == 11){
+                phone = phone.substring(0,2) + "****" + phone.substring(7,phone.length());
+            }
+            name = phone;
+        }
+
+        String http_poms_path =  (String) prop.get("http_poms_path");
     	Usysparam usysparam = usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
         map.addAttribute("roadCondition", roadCondition);
+        map.addAttribute("name",name);
+        map.addAttribute("conditionType",conditionType);
+        map.addAttribute("conditionMsg",http_poms_path+roadCondition.getConditionImg());
         map.addAttribute("ConditionType", usysparam.getMname());
         return "/webpage/crm/webapp-traffic-detail";
     }
+
+    /**
+     * 路况分享
+     */
+    @RequestMapping("/trafficShare")
+    public String trafficShare(@RequestParam String trafficId,ModelMap map) throws Exception{
+        SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+        String name = roadCondition.getPublisherName();
+        String phone = roadCondition.getPublisherPhone();
+        String conditionType = roadCondition.getConditionType();
+        conditionType = GlobalConstant.getConditionType(conditionType);
+        if(name == null || name.equals("")){
+            if(phone != null && phone.length() == 11){
+                phone = phone.substring(0,2) + "****" + phone.substring(7,phone.length());
+            }
+            name = phone;
+        }
+
+        String http_poms_path =  (String) prop.get("http_poms_path");
+        Usysparam usysparam = usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
+        map.addAttribute("roadCondition", roadCondition);
+        map.addAttribute("name",name);
+        map.addAttribute("conditionType",conditionType);
+        map.addAttribute("conditionMsg",http_poms_path+roadCondition.getConditionImg());
+        map.addAttribute("ConditionType", usysparam.getMname());
+        return "/webpage/crm/webapp-traffic-share";
+    }
+
     /**
      * 反馈信息
      */
@@ -291,6 +334,7 @@ public class CrmPortalController {
     	ms.setMbUserSuggestId(UUIDGenerator.getUUID());
     	ms.setMobilePhone(title);
     	ms.setSuggest(info);
+    	ms.setSuggestRes("来自APP");
     	int rs = mbUserSuggestServices.saveSuggester(ms);
     	if(rs > 0){
     		return "/webpage/crm/webapp-download-app";
@@ -382,7 +426,7 @@ public class CrmPortalController {
                     //生成二维码
                     driver.setDriverQrcode(show_path);
 
-                    Integer tmp = driverService.saveDriver(driver, "insert");
+                    Integer tmp = driverService.saveDriver(driver, "insert", null);
                     if(tmp > 0){
                         TwoDimensionCode handler = new TwoDimensionCode();
                         handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);

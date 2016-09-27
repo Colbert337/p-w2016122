@@ -84,19 +84,19 @@ public class SysUserAccountStr {
         this.version = version;
     }
 
-    public String getAccountStatus() {
-        return accountStatus;
-    }
-
-    public void setAccountStatus(String accountStatus) {
-        this.accountStatus = accountStatus == null ? null : accountStatus.trim();
-    }
-
-    public BigDecimal getDeposit() {
+	public BigDecimal getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(BigDecimal deposit) {
+    public String getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(String accountStatus) {
+		this.accountStatus = accountStatus;
+	}
+
+	public void setDeposit(BigDecimal deposit) {
         this.deposit = deposit;
     }
 

@@ -65,6 +65,9 @@
 			<if test="messageType != null &amp;&amp; messageType != ''">
 				and message_type = #{messageType,jdbcType=VARCHAR}
 			</if>
+			<if test="province_name != null &amp;&amp; province_name != ''">
+				and province_name like concat(concat('%',#{province_name,jdbcType=VARCHAR}),'%')    
+			</if>
 		</trim>
 	</select>
 

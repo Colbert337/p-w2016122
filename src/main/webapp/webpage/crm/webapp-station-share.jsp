@@ -19,7 +19,7 @@
 <body>
 	<div class="pdp">
 		<div class="pdp-title clearfix">
-			<span class="type">加盟气站</span>
+			<span class="type"><c:if test="${gastation.type == '0'}">联盟站</c:if></span>
 			<div class="name">${gastation.gas_station_name}</div>
 		</div>
 		<div class="pdp-item">
@@ -32,7 +32,7 @@
 			</div>
 			<div class="row address-end">
 				<div class="col-value">提供服务:</div>
-				<div class="col-key"></div>
+				<div class="col-key">${gastation.gas_server}</div>
 			</div>
 		</div>
 		<div class="pdp-item">
@@ -72,7 +72,7 @@
 
 	<div class="btn-more-info">
 		<div class="inner">
-			<a href="" class="btn-app-primary logic-download-app"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
+			<a href="" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
 		</div>
 	</div>
 

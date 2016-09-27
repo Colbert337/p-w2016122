@@ -30,7 +30,7 @@
 
 	<div class="btn-more-info">
 		<div class="inner">
-			<a href="" class="btn-app-primary logic-download-app"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
+			<a href="" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
 		</div>
 	</div>
 

@@ -30,7 +30,7 @@
         </javaTypeResolver>  
           	
         <!-- 生成实体类地址 -->    
-        <javaModelGenerator targetPackage="com.sysongy.poms.permi.model"
+        <javaModelGenerator targetPackage="com.sysongy.poms.mobile.model"
             targetProject="src/main/java" >  
             
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
@@ -41,14 +41,14 @@
         </javaModelGenerator>  
           
         <!-- 生成mapxml文件 -->  
-        <sqlMapGenerator targetPackage="permi"
+        <sqlMapGenerator targetPackage="mobile"
             targetProject="src/main/resources/mapping" >  
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
             <property name="enableSubPackages" value="false" />  
         </sqlMapGenerator>  
           
         <!-- 生成mapxml对应client，也就是接口dao -->      
-        <javaClientGenerator targetPackage="com.sysongy.poms.permi.dao"
+        <javaClientGenerator targetPackage="com.sysongy.poms.mobile.dao"
             targetProject="src/main/java" type="XMLMAPPER" >  
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->  
             <property name="enableSubPackages" value="false" />  
@@ -63,7 +63,7 @@
 	        ignoreColumn 		忽略列，不生成bean 字段	EP:
 	        columnOverride		指定列的java数据类型		EP：<columnOverride column="LONG_VARCHAR_FIELD" javaType="int" />   
         -->
-        <table schema="${jdbc.database}" tableName="sys_user_account_str" domainObjectName="SysUserAccountStr"
+        <table schema="${jdbc.database}" tableName="mb_statistics" domainObjectName="MbStatistics"
             enableCountByExample="false"
             enableDeleteByExample="false"
             enableSelectByExample="false"

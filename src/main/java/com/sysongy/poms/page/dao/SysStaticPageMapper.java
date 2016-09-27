@@ -21,4 +21,6 @@ public interface SysStaticPageMapper {
     int updateByPrimaryKeyWithBLOBs(SysStaticPage record);
 
     int updateByPrimaryKey(SysStaticPage record);
+
+	Integer delForStatus(String id);
 }

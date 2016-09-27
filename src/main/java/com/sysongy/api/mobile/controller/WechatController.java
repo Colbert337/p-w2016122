@@ -152,11 +152,16 @@ public class WechatController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String username = "username";
+			String password = "password";
+			boolean b = JsonTool.checkJson(mainObj,username,password);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("username"));
 				driver.setPassword(mainObj.optString("password"));
@@ -176,8 +181,7 @@ public class WechatController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -213,11 +217,18 @@ public class WechatController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			String openId = "openId";
+			String payCode = "payCode";
+			String plateNumber = "plateNumber";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum,openId,payCode,plateNumber);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
@@ -229,14 +240,14 @@ public class WechatController {
 					//throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
 				}else{
 					String sysDriverId = UUIDGenerator.getUUID();
-					String payCode = mainObj.optString("payCode");
+					payCode = mainObj.optString("payCode");
 					payCode = Encoder.MD5Encode(payCode.getBytes());
 					driver.setPayCode(payCode);
 					driver.setSysDriverId(sysDriverId);
 					driver.setPlateNumber(mainObj.optString("plateNumber"));
 					driver.setRegisSource("WeChat");//注册来源
 					driver.setInvitationCode(newInvitationCode);//生成邀请码
-					Integer tmp = driverService.saveDriver(driver, "insert");
+					Integer tmp = driverService.saveDriver(driver, "insert", null);
 					//大于0注册成功
 					if(tmp > 0 ){
 						//获取邀请码并查询用户
@@ -331,11 +342,15 @@ public class WechatController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("phoneNum");
 				if(sysDriverId != null && !sysDriverId.equals("")){
@@ -371,7 +386,7 @@ public class WechatController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode,"update");
+							driverService.saveDriver(driverCode,"update", null);
 						}
 						resultMap.put("invitationCode",invitationCode);
 						/**关联公司
@@ -439,9 +454,15 @@ public class WechatController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String amount = "amount";
+			String username = "username";
+			boolean b = JsonTool.checkJson(mainObj,amount,username);
+			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				String mobile = mainObj.optString("phoneNum");
 				if(mobile != null && !"".equals(mobile)){
 					//查询当前token是否注册

@@ -6,7 +6,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,8 +60,10 @@ import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.controller.SysRoadController;
 import com.sysongy.poms.mobile.model.MbBanner;
+import com.sysongy.poms.mobile.model.MbStatistics;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
@@ -76,6 +77,7 @@ import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.JsonTool;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.TwoDimensionCode;
@@ -92,6 +94,15 @@ public class MobileController {
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 	public final String keyStr = "sysongys";
 	String localPath = (String) prop.get("http_poms_path");
+
+	/**
+	 * 新浪短网址API
+	 * source:应用的appkey(3271760578)
+	 * url_long:需要转换的长链接
+	 * 示例：xml:http://api.t.sina.com.cn/short_url/shorten.xml?source=3271760578&url_long=http://www.douban.com/note/249723561/
+	 */
+	String XML_API = "http://api.t.sina.com.cn/short_url/shorten.xml";
+	String JSON_API = "http://api.t.sina.com.cn/short_url/shorten.json";
 
 	/** 支付宝支付业务：入参app_id */
 	public static final String APPID = "2016011801102578"; //TODO 需要自定义常量类
@@ -137,7 +148,8 @@ public class MobileController {
 	SysRoadService sysRoadService;
 	@Autowired
 	SysMessageService sysMessageService;
-
+	@Autowired
+	MbStatisticsService mbStatisticsService;
 	/**
 	 * 用户登录
 	 * @param params
@@ -158,12 +170,17 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String username = "username";
+			String type = "type";
+			boolean b = JsonTool.checkJson(mainObj,username,type);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
-				String type = mainObj.optString("type");
+			if(b){
+				type = mainObj.optString("type");
 				SysDriver driver = new SysDriver();
 				SysDriver queryDriver = null;
 				//賬號密碼登錄
@@ -201,14 +218,13 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("登录信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("登录失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("登录失败： " + e);
+			logger.error("登录信息： " + e);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -232,7 +248,6 @@ public class MobileController {
 		result.setMsg("验证码已发送,有效期10分钟！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
-
 		try {
 			/**
 			 * 解析参数
@@ -240,17 +255,21 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			String templateType = "templateType";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum,templateType);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				//发送短信
 				Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
 				verification.setPhoneNum(mainObj.optString("phoneNum"));
 				verification.setReqType(MobileVerificationUtils.APP_DRIVER_REG);
 				MobileVerificationUtils.sendMSG(verification, checkCode.toString());
-
 				//设置短信有效期10分钟
 				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
 				Map<String, Object> tokenMap = new HashMap<>();
@@ -263,8 +282,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("验证码信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("发送失败！");
@@ -299,15 +318,21 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			String verificationCode = "verificationCode";
+			String password = "password";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum,verificationCode,password);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
-
+				String invitationCode = mainObj.optString("invitationCode");
 				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
 				if(veCode != null && !"".equals(veCode)) {
 					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
@@ -340,7 +365,7 @@ public class MobileController {
 						//生成二维码
 						driver.setDriverQrcode(show_path);
 
-						Integer tmp = driverService.saveDriver(driver, "insert");
+						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
 						if(tmp > 0){
 							TwoDimensionCode handler = new TwoDimensionCode();
 							handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
@@ -401,9 +426,14 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			String http_poms_path =  (String) prop.get("http_poms_path");
 			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			boolean b = JsonTool.checkJson(mainObj,token);
+			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(sysDriverId != null && !sysDriverId.equals("")){
@@ -447,7 +477,7 @@ public class MobileController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode,"update");
+							driverService.saveDriver(driverCode,"update",null);
 						}
 						resultMap.put("invitationCode",invitationCode);
 						if(driver.getTransportionName() != null && !"".equals(driver.getTransportionName().toString()) ){
@@ -508,20 +538,26 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String password = "password";
+			String verificationCode = "verificationCode";
+			boolean b = JsonTool.checkJson(mainObj,token,password,verificationCode);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver sysDriver = new SysDriver();
 				sysDriver.setSysDriverId(mainObj.optString("token"));
-				String password = mainObj.optString("password");
+				password = mainObj.optString("password");
 				if(password != null && !"".equals(password)){
 					password = Encoder.MD5Encode(password.getBytes());
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
 
-					driverService.saveDriver(sysDriver,"update");
+					driverService.saveDriver(sysDriver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("密码为空！");
@@ -533,10 +569,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("修改登录密码信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("修改登录密码成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("修改登录密码失败！");
@@ -572,11 +606,18 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String name = "name";
+			String imgUrl = "imgUrl";
+			String deviceToken = "deviceToken";
+			boolean b = JsonTool.checkJson(mainObj,token,name,imgUrl,deviceToken);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(sysDriverId != null && !sysDriverId.equals("")){
@@ -585,7 +626,7 @@ public class MobileController {
 					driver.setFullName(mainObj.optString("name"));
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
 					driver.setAvatarB(mainObj.optString("imgUrl"));
-					int resultVal = driverService.saveDriver(driver,"update");
+					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("修改用户信息失败！");
@@ -597,8 +638,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("修改用户信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-			logger.error("修改用户信息成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("修改用户信息失败！");
@@ -635,11 +676,17 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String paycode = "paycode";
+			String verificationCode = "verificationCode";
+			boolean b = JsonTool.checkJson(mainObj,token,paycode,verificationCode);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(mainObj.optString("token") == null){
@@ -656,7 +703,7 @@ public class MobileController {
 					driver.setSysDriverId(sysDriverId);
 					driver.setPayCode(mainObj.optString("paycode"));
 
-					driverService.saveDriver(driver,"update");//设置支付密码
+					driverService.saveDriver(driver,"update",null);//设置支付密码
 				}
 
 			}else{
@@ -667,10 +714,8 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
+			logger.error("支付密码设置信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("支付密码设置成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("支付密码设置失败！");
@@ -706,23 +751,29 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String oldPayCode = "oldPayCode";
+			String newPayCode = "newPayCode";
+			boolean b = JsonTool.checkJson(mainObj,token,oldPayCode,newPayCode);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver sysDriver = new SysDriver();
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				String driverId = mainObj.optString("token");
-				String oldPayCode = mainObj.optString("oldPayCode");
+				oldPayCode = mainObj.optString("oldPayCode");
 				SysDriver driver = driverService.queryDriverByPK(driverId);
 				String payCode = driver.getPayCode();
 				if(payCode.equals(oldPayCode)){
 					//判断原支付密码是否正确
-					String newPayCode = mainObj.optString("newPayCode");
+					newPayCode = mainObj.optString("newPayCode");
 					if(newPayCode != null && !"".equals(newPayCode)){
 						sysDriver.setPayCode(newPayCode);
-						driverService.saveDriver(sysDriver,"update");
+						driverService.saveDriver(sysDriver,"update",null);
 					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -736,10 +787,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("修改支付密码信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("修改支付密码成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("修改支付密码失败！");
@@ -811,9 +860,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("图片上传信息： " + resultStr);
 			/*resultStr = DESUtil.encode(keyStr,resultStr);//参数加密*/
-
-			logger.error("图片上传成功： " + resultStr);
         } catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("图片上传失败！");
@@ -849,12 +897,22 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String name = "name";
+			String plateNumber = "plateNumber";
+			String gasType = "gasType";
+			String endTime = "endTime";
+			String drivingLicenseImageUrl = "drivingLicenseImageUrl";
+			String driverLicenseImageUrl = "driverLicenseImageUrl";
+			String idCard = "idCard";
+			boolean b = JsonTool.checkJson(mainObj,token,name,plateNumber,gasType,endTime,drivingLicenseImageUrl,driverLicenseImageUrl,idCard);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null && mainObj.optString("driverLicenseImageUrl") != null && !"".equals(mainObj.optString("driverLicenseImageUrl"))
-					&& mainObj.optString("name") != null && !"".equals(mainObj.optString("name"))){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String fullName = mainObj.optString("name");
 				driver.setSysDriverId(mainObj.optString("token"));
@@ -893,7 +951,7 @@ public class MobileController {
 					String show_path = (String) prop.get("show_images_path")+ "/driver/"+driverList.get(0).getMobilePhone()+"/"+driverList.get(0).getMobilePhone()+".jpg";
 					//生成二维码
 					driver.setDriverQrcode(show_path);
-					int resultVal = driverService.saveDriver(driver,"update");
+					int resultVal = driverService.saveDriver(driver,"update",null);
 					if(resultVal <= 0){
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("用户ID为空，申请失败！");
@@ -961,11 +1019,15 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String code = "code";
+			boolean b = JsonTool.checkJson(mainObj,code);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				String gcode = mainObj.optString("code");
 				if(gcode != null && !"".equals(gcode)){
 					List<Map<String, Object>> usysparamList = usysparamService.queryUsysparamMapByGcode(gcode);
@@ -978,10 +1040,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
+			logger.error("查询信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询失败！");
@@ -1016,11 +1076,17 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String mobilePhone = "mobilePhone";
+			String content = "content";
+			boolean b = JsonTool.checkJson(mainObj,token,mobilePhone,content);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				MbUserSuggest suggest = new MbUserSuggest();
 				suggest.setMbUserSuggestId(UUIDGenerator.getUUID());
 				suggest.setSysDriverId(mainObj.optString("token"));
@@ -1042,10 +1108,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("提交建议信息！： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-
-			logger.error("提交建议成功！！： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("提交失败！");
@@ -1081,13 +1145,21 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String idCard = "idCard";
+			String verificationCode = "verificationCode";
+			String payCode = "payCode";
+			String lossType = "lossType";
+			boolean b = JsonTool.checkJson(mainObj,token,idCard,verificationCode,payCode,lossType);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = driverService.queryDriverByPK(mainObj.optString("token"));
-				String lossType = mainObj.optString("lossType");
+				lossType = mainObj.optString("lossType");
 				/*String cardId = mainObj.optString("cardId");*/
 				int retvale = 0;//操作影响行数
 				if(lossType != null){//类型等于0 或者等于1
@@ -1114,9 +1186,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error(failStr+"信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-
-			logger.error(failStr+"成功： " + resultStr);
         } catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("操作失败！");
@@ -1177,9 +1248,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
+			logger.error("查询信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-
-			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询城市失败！");
@@ -1218,9 +1288,21 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			String http_poms_path =  (String) prop.get("http_poms_path");
 			/**
+			 * 必填参数
+			 */
+			String longitudeIn = "longitude";
+			String latitudeIn = "latitude";
+			String radius = "radius";
+			String name = "name";
+			String infoType = "infoType";
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,longitudeIn,latitudeIn,radius,name,infoType,pageNum,pageSize);
+			
+			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				if(gastation.getPageNum() == null){
 					gastation.setPageNum(GlobalConstant.PAGE_NUM);
 					gastation.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -1231,8 +1313,8 @@ public class MobileController {
 
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
-				String radius = mainObj.optString("radius");
-				String name = mainObj.optString("name");
+				radius = mainObj.optString("radius");
+				name = mainObj.optString("name");
 				gastation.setGas_station_name(name);
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
@@ -1249,7 +1331,7 @@ public class MobileController {
 						gastationMap.put("type",gastationInfo.getType());
 						gastationMap.put("longitude",gastationInfo.getLongitude());
 						gastationMap.put("latitude",gastationInfo.getLatitude());
-						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_MAP_TYPE", gastationInfo.getMap_type());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE", gastationInfo.getType());
 						gastationMap.put("stationType",usysparam.getMname());
 						gastationMap.put("service",gastationInfo.getGas_server());//提供服务
 						gastationMap.put("preferential",gastationInfo.getPromotions());//优惠活动
@@ -1258,26 +1340,29 @@ public class MobileController {
 						String price = gastationInfo.getLng_price();
 						price = price.replaceAll("，",",");
 						price = price.replaceAll("：",":");
-						String strArray[] = price.split(",");
-						Map[] map = new Map[strArray.length];
-						for(int i = 0;i<strArray.length;i++){
-							String strInfo = strArray[i].trim();
-							String strArray1[] = strInfo.split(":");
-							String strArray2[] = strArray1[1].split("/");
-							Map<String, Object> dataMap = new HashMap<>();
-							dataMap.put("gasName",strArray1[0]);
-							dataMap.put("gasPrice",strArray2[0]);
-							dataMap.put("gasUnit",strArray2[1]);
-							map[i] = dataMap;
+						if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1){
+							String strArray[] = price.split(",");
+							Map[] map = new Map[strArray.length];
+							for(int i = 0;i<strArray.length;i++){
+								String strInfo = strArray[i].trim();
+								String strArray1[] = strInfo.split(":");
+								String strArray2[] = strArray1[1].split("/");
+								Map<String, Object> dataMap = new HashMap<>();
+								dataMap.put("gasName",strArray1[0]);
+								dataMap.put("gasPrice",strArray2[0]);
+								dataMap.put("gasUnit",strArray2[1]);
+								map[i] = dataMap;
+							}
+							gastationMap.put("priceList",map);
+						}else{
+							gastationMap.put("priceList",new ArrayList());
 						}
-						gastationMap.put("priceList",map);
 						gastationMap.put("phone",gastationInfo.getContact_phone());
 						if(gastationInfo.getStatus().equals("0")){
 							gastationMap.put("state","开启");
 						}else{
 							gastationMap.put("state","关闭");
 						}
-						gastationMap.put("preferential","");
 						gastationMap.put("address",gastationInfo.getAddress());
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
@@ -1324,6 +1409,7 @@ public class MobileController {
 			result.setMsg("查询气站信息失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("查询气站信息失败： " + e);
+			e.printStackTrace();
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
@@ -1354,11 +1440,20 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String account = "account";
+			String name = "name";
+			String amount = "amount";
+			String remark = "remark";
+			String paycode = "paycode";
+			boolean b = JsonTool.checkJson(mainObj,token,account,name,amount,remark,paycode);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				Map<String, Object> driverMap = new HashMap<>();
 				driverMap.put("token",mainObj.optString("token"));
 				driverMap.put("account",mainObj.optString("account"));
@@ -1366,7 +1461,6 @@ public class MobileController {
 				driverMap.put("amount",mainObj.optString("amount"));
 				driverMap.put("remark",mainObj.optString("remark"));
 				driverMap.put("paycode",mainObj.optString("paycode"));
-
 				int resultVal = mbDealOrderService.transferDriverToDriver(driverMap);
 				if(resultVal < 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1393,8 +1487,9 @@ public class MobileController {
 			}
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("转账成功： " + resultStr);
+			logger.error("转账信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1445,10 +1540,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
+			logger.error("查询返现规则列表信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询返现规则列表成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询返现规则列表失败！");
@@ -1484,14 +1577,21 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String cityName = "cityName";
+			String extendType = "extendType";
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,cityName,extendType,pageNum,pageSize);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				PageBean bean = new PageBean();
 				String http_poms_path =  (String) prop.get("http_poms_path");
-				String cityName = mainObj.optString("cityName");
+				cityName = mainObj.optString("cityName");
 				DistCity city = new DistCity();
 				city.setCityName(cityName);
 				city = districtService.queryCityInfo(city);
@@ -1526,7 +1626,7 @@ public class MobileController {
 						bannerMap.put("content",banner.getContent());
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
 						bannerMap.put("contentUrl",banner.getTargetUrl());
-						bannerMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/content?contentId="+ banner.getMbBannerId());
+						bannerMap.put("shareUrl",banner.getTargetUrl()+"&show_download_button=1");
 						bannerMap.put("imgSmPath",http_poms_path+banner.getImgSmPath());
 						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
 							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
@@ -1547,10 +1647,8 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
+			logger.error("查询头条推广信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
-			logger.error("查询头条推广成功： " + resultStr);
-
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("查询头条推广失败！");
@@ -1593,11 +1691,18 @@ public class MobileController {
 			SysDriver sysDriver = new SysDriver();
 			sysDriver.setSysDriverId(mainObj.optString("token"));
 			order.setSysDriver(sysDriver);
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String time = "time";
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,token,time,pageNum,pageSize);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				if(order.getPageNum() == null){
 					order.setPageNum(GlobalConstant.PAGE_NUM);
 					order.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -1706,11 +1811,18 @@ public class MobileController {
 			SysDriver sysDriver = new SysDriver();
 			sysDriver.setSysDriverId(mainObj.optString("token"));
 			order.setSysDriver(sysDriver);
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String time = "time";
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,token,time,pageNum,pageSize);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				if(order.getPageNum() == null){
 					order.setPageNum(GlobalConstant.PAGE_NUM);
 					order.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -1812,11 +1924,18 @@ public class MobileController {
 			SysDriver sysDriver = new SysDriver();
 			sysDriver.setSysDriverId(mainObj.optString("token"));
 			order.setSysDriver(sysDriver);
-
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String time = "time";
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,token,time,pageNum,pageSize);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				if(order.getPageNum() == null){
 					order.setPageNum(GlobalConstant.PAGE_NUM);
 					order.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -1914,11 +2033,18 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String feeCount = "feeCount";
+			String payType = "payType";
+			boolean b = JsonTool.checkJson(mainObj,token,feeCount,payType);
+			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
-				String payType = mainObj.optString("payType");
-				String feeCount = mainObj.optString("feeCount");
+			if(b){
+				payType = mainObj.optString("payType");
+				feeCount = mainObj.optString("feeCount");
 				String driverID = mainObj.optString("token");
 				String orderID = UUIDGenerator.getUUID();
 				Map<String, Object> data = new HashedMap();
@@ -2030,24 +2156,33 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String phoneType = "phoneType";
+			String phoneNum = "phoneNum";
+			String veCode = "veCode";
+			String newPhoneNum = "newPhoneNum";
+			String newCode = "newCode";
+			boolean b = JsonTool.checkJson(mainObj,phoneType,phoneNum,veCode,newPhoneNum,newCode);
+			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				//创建对象
 				SysDriver sysDriver = new SysDriver();
 				//原电话号码赋值
 				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				//获取验证码
 				String codePay = mainObj.optString("veCode");
-				String veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+				veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
 				if(veCode != null && !"".equals(veCode)){
-					String phoneType = mainObj.optString("phoneType");
+					phoneType = mainObj.optString("phoneType");
 					//数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 					String codeStr = mainObj.optString("phoneNum");
 					if(!driver.isEmpty()){
 						//新电话号码
-						String newPhoneNum = mainObj.optString("newPhoneNum");
+						newPhoneNum = mainObj.optString("newPhoneNum");
 						//修改账户手机
 						if("1".equals(phoneType)){
 							sysDriver.setUserName(newPhoneNum);
@@ -2057,7 +2192,7 @@ public class MobileController {
 						}
 						sysDriver.setDriverType(driver.get(0).getDriverType());
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						int resultVal = driverService.saveDriver(sysDriver,"update");
+						int resultVal = driverService.saveDriver(sysDriver,"update",null);
 						//返回大于0，成功
 						if(resultVal <= 0){
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2116,40 +2251,56 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			String veCode = "veCode";
+			String newPassword = "newPassword";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum,veCode,newPassword);
+			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
-				//创建对象
-				SysDriver sysDriver = new SysDriver();
-				//电话号码赋值
-				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
-				String veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
-				if(veCode != null && !"".equals(veCode)) {
-					//数据库查询
-					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
-					if (!driver.isEmpty()) {
-						String initialPassword = mainObj.optString("newPassword");
-						//初始密码加密、赋值
-						initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
-						sysDriver.setPayCode(initialPassword);
-						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						//更新初始密码
-						int resultVal = driverService.saveDriver(sysDriver, "update");
-						//返回大于0，成功
-						if (resultVal <= 0) {
+			if(b){
+				newPassword = mainObj.optString("newPassword");
+				//校验密码
+				boolean format = newPassword.matches("^[0-9]*$");
+				boolean length = newPassword.matches("^.{6}$");
+				if(format & length){
+					//创建对象
+					SysDriver sysDriver = new SysDriver();
+					//电话号码赋值
+					sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
+					veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+					if(veCode != null && !"".equals(veCode)) {
+						//数据库查询
+						List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
+						if (!driver.isEmpty()) {
+							String initialPassword = mainObj.optString("newPassword");
+							//初始密码加密、赋值
+							initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
+							sysDriver.setPayCode(initialPassword);
+							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+							//更新初始密码
+							int resultVal = driverService.saveDriver(sysDriver, "update", null);
+							//返回大于0，成功
+							if (resultVal <= 0) {
+								result.setStatus(MobileReturn.STATUS_FAIL);
+								result.setMsg("重置支付密码失败！");
+							}
+							Map<String, Object> dataMap = new HashMap<>();
+							dataMap.put("resultVal", "true");
+							result.setData(dataMap);
+						} else {
 							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("重置支付密码失败！");
+							result.setMsg("电话号码有误！");
 						}
-						Map<String, Object> dataMap = new HashMap<>();
-						dataMap.put("resultVal", "true");
-						result.setData(dataMap);
-					} else {
+					}else {
 						result.setStatus(MobileReturn.STATUS_FAIL);
-						result.setMsg("电话号码有误！");
+						result.setMsg("验证码无效！");
 					}
-				}else {
+				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("验证码无效！");
+					result.setMsg("密码格式有误！");
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2238,12 +2389,29 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String Token = "Token";
+			String condition_img = "condition_img";
+			String conditionType = "conditionType";
+			String flashLongitude = "flashLongitude";
+			String flashLatitude = "flashLatitude";
+			String flashTime = "flashTime";
+			String longitude = "longitude";
+			String latitude = "latitude";
+			String address = "address";
+			String publisherName = "publisherName";
+			String publisherPhone = "publisherPhone";
+			String publisherTime = "publisherTime";
+			String direction = "direction";
+			boolean b = JsonTool.checkJson(mainObj,Token,condition_img,conditionType,flashLongitude,flashLatitude,flashTime,longitude,latitude,address,publisherName,publisherPhone,publisherTime,direction);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+			if (b) {
 				// 创建对象
 				SysRoadCondition roadCondition = new SysRoadCondition();
-				String conditionType = mainObj.optString("conditionType");
+				conditionType = mainObj.optString("conditionType");
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				Date start = sft.parse(mainObj.optString("flashTime"));
 				roadCondition.setId(UUIDGenerator.getUUID());
@@ -2326,9 +2494,15 @@ public class MobileController {
 			// 创建对象
 			SysRoadCondition roadCondition = new SysRoadCondition();
 			/**
+			 * 必填参数
+			 */
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,pageNum,pageSize);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+			if (b) {
 				if(roadCondition.getPageNum() == null){
 					roadCondition.setPageNum(GlobalConstant.PAGE_NUM);
 					roadCondition.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -2373,10 +2547,15 @@ public class MobileController {
 						reChargeMap.put("address", roadConditionInfo.getAddress());
 						reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
 						reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
+						reChargeMap.put("direction", roadConditionInfo.getDirection());
+						reChargeMap.put("conditionMsg", roadConditionInfo.getConditionMsg());
 						reChargeMap.put("usefulCount", roadConditionInfo.getUsefulCount());
 						reChargeMap.put("contentUrl",http_poms_path+"/portal/crm/help/trafficDetail?trafficId="+ roadConditionInfo.getId());
+						reChargeMap.put("shareUrl",http_poms_path+"/portal/crm/help/trafficShare?trafficId="+ roadConditionInfo.getId());
 						String publisherTime = "";
 						if (roadConditionInfo.getPublisherTime() != null && !"".equals(roadConditionInfo.getPublisherTime().toString())) {
+							publisherTime = sft.format(roadConditionInfo.getPublisherTime());
+						}else{
 							publisherTime = sft.format(new Date());
 						}
 						reChargeMap.put("publisherTime", publisherTime);
@@ -2451,26 +2630,56 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String roadId = "roadId";
+			String token = "token";
+			boolean b = JsonTool.checkJson(mainObj,roadId,token);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
-				// 创建对象
-				SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(mainObj.optString("roadId"));
-				int count = Integer.parseInt(roadCondition.getUsefulCount());
-				roadCondition.setUsefulCount(String.valueOf(count+1));
-				roadCondition.setId(mainObj.optString("roadId"));
-				int rs = sysRoadService.updateByPrimaryKey(roadCondition);
-				if(rs > 0){
-					result.setStatus(MobileReturn.STATUS_SUCCESS);
-					result.setMsg("统计成功！");
-					int time = SysRoadController.sumTime(roadCondition);
-					redisClientImpl.addToCache("Road" + roadCondition.getId(), roadCondition, time);
-					Map<String, Object> dataMap = new HashMap<>();
-					dataMap.put("count", roadCondition.getUsefulCount());
-					result.setData(dataMap);
+			if (b) {
+				MbStatistics mbStatistics =new MbStatistics();
+				mbStatistics.setSysDriverId(mainObj.optString("token"));
+				mbStatistics.setOperationType("3");
+				mbStatistics.setContentType("1");
+				mbStatistics.setContentId(mainObj.optString("roadId"));
+				//判断是否点过有用
+				MbStatistics temp = mbStatisticsService.queryMbStatistics(mbStatistics);
+				if(temp == null){
+					SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(mainObj.optString("roadId"));
+					if(roadCondition !=null){
+						int count = Integer.parseInt(roadCondition.getUsefulCount());
+						roadCondition.setUsefulCount(String.valueOf(count+1));
+						roadCondition.setId(mainObj.optString("roadId"));
+						int rs = sysRoadService.updateByPrimaryKey(roadCondition);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("统计成功！");
+							int time = SysRoadController.sumTime(roadCondition);
+							redisClientImpl.addToCache("Road" + roadCondition.getId(), roadCondition, time);
+							Map<String, Object> dataMap = new HashMap<>();
+							dataMap.put("count", roadCondition.getUsefulCount());
+							result.setData(dataMap);
+							//添加记录信息
+							mbStatistics.setMbStatisticsId(UUIDGenerator.getUUID());
+							int rs1 = mbStatisticsService.insertSelective(mbStatistics);
+							if(rs1 > 0){
+								logger.error("记录点赞成功");
+							}else{
+								logger.error("记录点赞失败");
+							}
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("统计失败！");
+						}
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("无此路况！");
+					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("无此路况！");
+					result.setMsg("已点击过啦！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2514,9 +2723,26 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String roadId = "roadId";
+			String token = "token";
+			String condition_img = "condition_img";
+			String conditionType = "conditionType";
+			String flashLongitude = "flashLongitude";
+			String flashLatitude = "flashLatitude";
+			String flashTime = "flashTime";
+			String longitude = "longitude";
+			String latitude = "latitude";
+			String address = "address";
+			String publisherName = "publisherName";
+			String publisherPhone = "publisherPhone";
+			String publisherTime = "publisherTime";
+			boolean b = JsonTool.checkJson(mainObj,roadId,token,condition_img,conditionType,flashLongitude,flashLatitude,flashTime,longitude,latitude,address,publisherName,publisherPhone,publisherTime);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+			if (b) {
 				// 创建对象
 				SysRoadCondition roadCondition = new SysRoadCondition();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -2538,6 +2764,26 @@ public class MobileController {
 				if (tmp > 0) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("取消路况成功！");
+					//添加记录
+					MbStatistics mbStatistics =new MbStatistics();
+					mbStatistics.setSysDriverId(mainObj.optString("token"));
+					mbStatistics.setOperationType("4");
+					mbStatistics.setContentType("1");
+					mbStatistics.setContentId(mainObj.optString("roadId"));
+					//判断是否点过
+					MbStatistics temp = mbStatisticsService.queryMbStatistics(mbStatistics);
+					if(temp==null){
+						mbStatistics.setMbStatisticsId(UUIDGenerator.getUUID());
+						int rs1 = mbStatisticsService.insertSelective(mbStatistics);
+						if(rs1 > 0){
+							logger.error("记录取消成功");
+						}else{
+							logger.error("记录取消失败");
+						}
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("已取消过啦！");
+					}
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2583,9 +2829,14 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			boolean b = JsonTool.checkJson(mainObj,token);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+			if (b) {
 				// 创建对象
 				SysDriver driver = driverService.queryDriverByPK(mainObj.optString("token"));
 				if(driver != null){
@@ -2679,16 +2930,31 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String msgType = "msgType";
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,msgType,pageNum,pageSize);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
-				int pageNum = mainObj.optInt("pageNum");
-				int pageSize = mainObj.optInt("pageSize");
+			if (b) {
+				pageNum = mainObj.optString("pageNum");
+				pageSize = mainObj.optString("pageSize");
+				msgType = mainObj.optString("msgType");
 				SysMessage sysMessage = new SysMessage();
-				String msgType = mainObj.optString("msgType");
+				String province = mainObj.optString("province");
+				if("2".equals(msgType)){
+					if("全国".equals(province)){
+						province="";
+					}
+					sysMessage.setProvince_name(province);
+				}
 				sysMessage.setMessageType(Integer.valueOf(msgType));
-				sysMessage.setPageNum(pageNum);
-				sysMessage.setPageSize(pageSize);
+				sysMessage.setPageNum(Integer.valueOf(pageNum));
+				sysMessage.setPageSize(Integer.valueOf(pageSize));
+				sysMessage.setOrderby("message_send_time desc");
 				PageInfo<Map<String, Object>> pageInfo = sysMessageService.queryMsgListForPage(sysMessage);
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
@@ -2701,15 +2967,6 @@ public class MobileController {
 						reChargeMap.put("messageTicker", map.get("messageTicker"));
 						reChargeMap.put("messageType", map.get("messageType").toString());
 						reChargeMap.put("createdTime", sft.format(map.get("messageCreatedTime")));
-						String driverName = map.get("driverName").toString();
-						SysDriver driver = new SysDriver();
-						driver.setUserName(driverName);
-						SysDriver driverInfo = driverService.queryByUserName(driver);
-						if(driverInfo !=null){
-							reChargeMap.put("driverName", driverInfo.getFullName());
-						}else{
-							reChargeMap.put("driverName", null);
-						}
 						reChargeList.add(reChargeMap);
 					}
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -2761,12 +3018,19 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String id = "id";
+			String operation = "operation";
+			String type = "type";
+			boolean b = JsonTool.checkJson(mainObj,id,operation,type);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
-				String id = mainObj.optString("id");
-				String operation = mainObj.optString("operation");
-				String type = mainObj.optString("type");
+			if (b) {
+				id = mainObj.optString("id");
+				operation = mainObj.optString("operation");
+				type = mainObj.optString("type");
 				int rs;
 				if("1".equals(type)){//路况
 					SysRoadCondition sysRoadCondition = sysRoadService.selectByPrimaryKey(id);
@@ -2892,12 +3156,24 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			boolean b = JsonTool.checkJson(mainObj,token);
+			/**
 			 * 请求接口
 			 */
-			if (mainObj != null) {
+
+			if (b) {
 				Map<String, Object> tokenMap = new HashMap<>();
+				token = mainObj.optString("token");
+				String http_poms_path =  (String) prop.get("http_poms_path");
+				String inviteUrl = http_poms_path+"/portal/crm/help/user/invitation?token="+token;
+				/*生成短连接*/
+
+
 				tokenMap.put("inviteContent","将此链接或邀请码分享给好友，好友通过您的邀请链接或邀请码完成注册并登录后，您的账户即可获得￥10现金充值。");
-				tokenMap.put("msgContent","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，注册成功之后您的账户即可获得￥10现金充值，详情请访问：https://www.sysongy.net:8448/invite/SJ2016");
+				tokenMap.put("msgContent","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，注册成功之后您的账户即可获得￥10现金充值，详情请访问："+inviteUrl);
 				tokenMap.put("title","注册即享司集现金充值");
 				tokenMap.put("content","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，完成注册并下载司集APP，您即可获得￥10账户充值，可在任意司集联盟站使用！");
 				tokenMap.put("imgUrl","默认图片路径");
@@ -3126,39 +3402,5 @@ public class MobileController {
 		record.setChannel("司集能源APP");
 		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
 		return record;
-	}
-	public static void main(String[] args) throws ParseException {
-		String s ="{\"main\":{\"roadId\":\"e34b5ad514d9435481a40819278ca91b\"},\"extend\":{\"version\": \"1.0\",\"terminal\": \"1\"}}";
-		s = DESUtil.encode("sysongys",s);//参数加密
-		System.out.println(s);
-		/*SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
-		String str = "2016-09-18 12:38:38";
-		Calendar cal = Calendar.getInstance();
-		Date date = sft.parse(str);
-		cal.setTime(date);
-		System.out.println("date = "+sft.format(date));
-        cal.setTime(date);
-        cal.add(Calendar.HOUR,1);
-        Date date1 = cal.getTime();
-        String d4 = sft.format(date1);
-        System.out.println(d4);
-		String str = "LNG1：3.51元/KG，LNG2：3.52元/KG  ,LNG3：3.53元/KG ";
-		str = str.replaceAll("，",",");
-		str = str.replaceAll("：",":");
-		String strArray[] = str.split(",");
-		Map[] map = new Map[strArray.length];
-		for(int i = 0;i<strArray.length;i++){
-			String strInfo = strArray[i].trim();
-			System.out.println(strInfo);
-			String strArray1[] = strInfo.split(":");
-			String strArray2[] = strArray1[1].split("/");
-			Map<String, Object> dataMap = new HashMap<>();
-			dataMap.put("gasName",strArray1[0]);
-			dataMap.put("gasPrice",strArray2[0]);
-			map[i] = dataMap;
-		}
-		for(int x = 0;x<map.length;x++){
-			System.out.println(map[x]);
-		}*/
 	}
 }
