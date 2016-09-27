@@ -30,7 +30,7 @@ pageEncoding="UTF-8"%>
 
 	<div class="container-fluid app" style="margin:0 auto;position:relative;">
 		<img class="img-responsive" src="images/down-app.png" alt="">
-		<div class="fl-r" style="right: 31%; bottom: 17%; width: 350px;height: 90px;position: absolute;z-index: 1; ">下载地址</div>
+		<div class="fl-r down-style" onclick="window.location.href='<%=basePath %>/docs/app/sysongy-sysongy-release-1.0.0.13.apk'"></div>
 	</div>
     <script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
     <script src="<%=basePath %>/webpage/crm/js/main.js"></script>
