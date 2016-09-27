@@ -29,7 +29,7 @@ pageEncoding="UTF-8"%>
 	</div>
 
 	<div class="container-fluid app">
-		<img class="img-responsive" src="images/down_app.jpg" alt="">
+		<img class="img-responsive" src="images/show_app.jpg" alt="">
 	</div>
 
     <script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
