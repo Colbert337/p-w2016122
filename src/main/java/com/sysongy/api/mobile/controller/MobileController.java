@@ -1331,7 +1331,7 @@ public class MobileController {
 						gastationMap.put("type",gastationInfo.getType());
 						gastationMap.put("longitude",gastationInfo.getLongitude());
 						gastationMap.put("latitude",gastationInfo.getLatitude());
-						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_MAP_TYPE", gastationInfo.getMap_type());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE", gastationInfo.getType());
 						gastationMap.put("stationType",usysparam.getMname());
 						gastationMap.put("service",gastationInfo.getGas_server());//提供服务
 						gastationMap.put("preferential",gastationInfo.getPromotions());//优惠活动
@@ -1340,19 +1340,23 @@ public class MobileController {
 						String price = gastationInfo.getLng_price();
 						price = price.replaceAll("，",",");
 						price = price.replaceAll("：",":");
-						String strArray[] = price.split(",");
-						Map[] map = new Map[strArray.length];
-						for(int i = 0;i<strArray.length;i++){
-							String strInfo = strArray[i].trim();
-							String strArray1[] = strInfo.split(":");
-							String strArray2[] = strArray1[1].split("/");
-							Map<String, Object> dataMap = new HashMap<>();
-							dataMap.put("gasName",strArray1[0]);
-							dataMap.put("gasPrice",strArray2[0]);
-							dataMap.put("gasUnit",strArray2[1]);
-							map[i] = dataMap;
+						if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1){
+							String strArray[] = price.split(",");
+							Map[] map = new Map[strArray.length];
+							for(int i = 0;i<strArray.length;i++){
+								String strInfo = strArray[i].trim();
+								String strArray1[] = strInfo.split(":");
+								String strArray2[] = strArray1[1].split("/");
+								Map<String, Object> dataMap = new HashMap<>();
+								dataMap.put("gasName",strArray1[0]);
+								dataMap.put("gasPrice",strArray2[0]);
+								dataMap.put("gasUnit",strArray2[1]);
+								map[i] = dataMap;
+							}
+							gastationMap.put("priceList",map);
+						}else{
+							gastationMap.put("priceList",new ArrayList());
 						}
-						gastationMap.put("priceList",map);
 						gastationMap.put("phone",gastationInfo.getContact_phone());
 						if(gastationInfo.getStatus().equals("0")){
 							gastationMap.put("state","开启");
