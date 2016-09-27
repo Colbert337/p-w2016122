@@ -19,6 +19,8 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.sysongy.util.*;
+import net.sf.json.JSONArray;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.NameValuePair;
@@ -75,13 +77,6 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.JsonTool;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.RedisClientInterface;
-import com.sysongy.util.TwoDimensionCode;
-import com.sysongy.util.UUIDGenerator;
 import com.tencent.mm.sdk.modelpay.PayReq;
 
 import net.sf.json.JSONObject;
@@ -3137,7 +3132,7 @@ public class MobileController {
 	 */
 	@RequestMapping(value = "/user/invitation")
 	@ResponseBody
-	public String invitation(String params) {
+	public String invitation(String params,HttpServletRequest request) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("操作成功！");
@@ -3163,12 +3158,33 @@ public class MobileController {
 				Map<String, Object> tokenMap = new HashMap<>();
 				token = mainObj.optString("token");
 				String http_poms_path =  (String) prop.get("http_poms_path");
-				String inviteUrl = http_poms_path+"/portal/crm/help/user/invitation?token="+token;
+				String path = request.getContextPath();
+				String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+				String inviteUrl = basePath+"/portal/crm/help/user/invitation?token="+token;
 				/*生成短连接*/
+				String shortStr = "";
+				String shortUrl = "http://api.t.sina.com.cn/short_url/shorten.json?source=3271760578&url_long="+inviteUrl;
+				try{
+					shortStr = HttpUtil.sendGet(shortUrl,"UTF-8");
+					JSONArray array = new JSONArray();
+					if(shortStr != null){
+						array = JSONArray.fromObject(shortStr);
+						JSONObject object = array.getJSONObject(0);
+						if(object != null && object.get("url_short") != null){
+							shortStr = object.getString("url_short");
+						}else {
+							shortStr = inviteUrl;
+						}
+					}else{
+						shortStr = inviteUrl;
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 
 
 				tokenMap.put("inviteContent","将此链接或邀请码分享给好友，好友通过您的邀请链接或邀请码完成注册并登录后，您的账户即可获得￥10现金充值。");
-				tokenMap.put("msgContent","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，注册成功之后您的账户即可获得￥10现金充值，详情请访问："+inviteUrl);
+				tokenMap.put("msgContent","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，注册成功之后您的账户即可获得￥10现金充值，详情请访问："+shortStr);
 				tokenMap.put("title","注册即享司集现金充值");
 				tokenMap.put("content","司集专为3000多万卡车司机提供导航、实时路况、气站、油站、会员及周边服务，完成注册并下载司集APP，您即可获得￥10账户充值，可在任意司集联盟站使用！");
 				tokenMap.put("imgUrl","默认图片路径");
@@ -3181,7 +3197,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			logger.error("信息： " + resultStr);
-			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+//			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("获取失败！");
