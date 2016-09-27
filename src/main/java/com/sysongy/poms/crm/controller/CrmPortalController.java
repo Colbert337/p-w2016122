@@ -317,11 +317,12 @@ public class CrmPortalController {
 
         String http_poms_path =  (String) prop.get("http_poms_path");
         Usysparam usysparam = usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
+        Usysparam usysparam1 = usysparamService.queryUsysparamByCode("DIRECTION_CODE", roadCondition.getDirection());
         map.addAttribute("roadCondition", roadCondition);
         map.addAttribute("name",name);
-        map.addAttribute("conditionType",conditionType);
         map.addAttribute("conditionMsg",http_poms_path+roadCondition.getConditionImg());
-        map.addAttribute("ConditionType", usysparam.getMname());
+        map.addAttribute("conditionType", usysparam.getMname());
+        map.addAttribute("direction", usysparam1.getMname());
         return "/webpage/crm/webapp-traffic-share";
     }
 
