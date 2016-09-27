@@ -610,22 +610,26 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String token = "token";
-			String name = "name";
-			String imgUrl = "imgUrl";
 			String deviceToken = "deviceToken";
-			boolean b = JsonTool.checkJson(mainObj,token,name,imgUrl,deviceToken);
+			boolean b = JsonTool.checkJson(mainObj,token,deviceToken);
 			/**
 			 * 请求接口
 			 */
 			if(b){
+				String name = mainObj.optString("name");
+				String imgUrl = mainObj.optString("imgUrl");
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(sysDriverId != null && !sysDriverId.equals("")){
 					Map<String, Object> resultMap = new HashMap<>();
+					if(name !=null && !"".equals(name)){
+						driver.setFullName(name);
+					}
+					if(imgUrl !=null && !"".equals(imgUrl)){
+						driver.setAvatarB(imgUrl);
+					}
 					driver.setSysDriverId(sysDriverId);
-					driver.setFullName(mainObj.optString("name"));
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
-					driver.setAvatarB(mainObj.optString("imgUrl"));
 					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1950,8 +1954,7 @@ public class MobileController {
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
-				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() == 0) {
-
+				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 					for(Map<String, Object> map:pageInfo.getList()){
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum",map.get("orderNumber"));
@@ -2262,10 +2265,6 @@ public class MobileController {
 			 */
 			if(b){
 				newPassword = mainObj.optString("newPassword");
-				//校验密码
-				boolean format = newPassword.matches("^[0-9]*$");
-				boolean length = newPassword.matches("^.{6}$");
-				if(format & length){
 					//创建对象
 					SysDriver sysDriver = new SysDriver();
 					//电话号码赋值
@@ -2298,10 +2297,6 @@ public class MobileController {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("验证码无效！");
 					}
-				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("密码格式有误！");
-				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -2678,8 +2673,8 @@ public class MobileController {
 						result.setMsg("无此路况！");
 					}
 				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("已点击过啦！");
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("已统计过啦！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2712,7 +2707,7 @@ public class MobileController {
 	public String cancelRoadInfo(String params) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("取消路况成功！");
+		result.setMsg("取消路况提交成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 		try {
@@ -2763,7 +2758,7 @@ public class MobileController {
 				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
 				if (tmp > 0) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
-					result.setMsg("取消路况成功！");
+					result.setMsg("取消路况提交成功！");
 					//添加记录
 					MbStatistics mbStatistics =new MbStatistics();
 					mbStatistics.setSysDriverId(mainObj.optString("token"));
@@ -2781,8 +2776,8 @@ public class MobileController {
 							logger.error("记录取消失败");
 						}
 					}else{
-						result.setStatus(MobileReturn.STATUS_FAIL);
-						result.setMsg("已取消过啦！");
+						result.setStatus(MobileReturn.STATUS_SUCCESS);
+						result.setMsg("已提交过啦！");
 					}
 				}
 			} else {
@@ -2793,13 +2788,13 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("取消路况信息： " + resultStr);
+			logger.error("取消路况提交信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("取消路况失败！");
+			result.setMsg("取消路况提交失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("取消路况失败： " + e);
+			logger.error("取消路况提交失败： " + e);
 			resutObj.remove("listMap");
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
