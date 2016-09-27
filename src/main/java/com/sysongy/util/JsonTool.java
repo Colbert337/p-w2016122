@@ -16,20 +16,32 @@ public class JsonTool {
 	 * @return result
 	 */
 	public static boolean checkJson(JSONObject mainObj, String... strings) {
-		boolean result = false;
-		HashMap<String, String> map = toHashMap(mainObj);
-		for(int i = 0;i<strings.length;i++){
-			for (String str : map.keySet()) {
-				if(strings[i].equals(str)){
-					if(map.get(str)==null ||"".equals(map.get(str))){
-						return result;
-					}else{
-						result = true;
+		boolean rs = false;
+		boolean temp= true; 
+		if(mainObj!=null){
+			HashMap<String, String> map = toHashMap(mainObj);
+			for(int x = 0;x<strings.length;x++){
+				temp= map.containsKey(strings[x]);
+				if(!temp){
+					break;
+				}
+			}
+			if(temp){
+				for(int i = 0;i<strings.length;i++){
+					for (String str : map.keySet()) {
+						if(strings[i].equals(str)){
+							if(map.get(str)==null ||"".equals(map.get(str))){
+								rs = false;
+								return rs;
+							}else{
+								rs = true;
+							}
+						}
 					}
 				}
 			}
 		}
-		return result;
+		return rs;
 	}
 	private static HashMap<String, String> toHashMap(JSONObject mainObj) {
 		HashMap<String, String> data = new HashMap<String, String>();
