@@ -260,8 +260,7 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String phoneNum = "phoneNum";
-			String templateType = "templateType";
-			boolean b = JsonTool.checkJson(mainObj,phoneNum,templateType);
+			boolean b = JsonTool.checkJson(mainObj,phoneNum);
 			/**
 			 * 请求接口
 			 */
