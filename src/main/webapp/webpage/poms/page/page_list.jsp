@@ -127,7 +127,11 @@
 										href="javascript:void(0);" title="页面预览" data-rel="tooltip">
 											<i class="ace-icon fa fa-eye bigger-130"
 											onclick="preview(this);"></i>
-									</a> <c:if test="${list.pageStatus == '0'}">
+									</a><a class="option-btn-m"
+												href="javascript:void(0);" title="修改" data-rel="tooltip">
+													<i class="ace-icon fa fa-pencil bigger-130"
+													onclick="loadPage('#main', '../web/page/fondOne?id=${list.id}');"></i>
+											</a> <c:if test="${list.pageStatus == '0'}">
 											<a class="logic-del" href="javascript:void(0);" title="失效"
 												data-rel="tooltip"> <i
 												class="ace-icon fa fa-trash-o bigger-130"
