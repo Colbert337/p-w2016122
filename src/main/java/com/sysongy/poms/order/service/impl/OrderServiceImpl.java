@@ -42,6 +42,7 @@ import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.RealNameException;
 import com.sysongy.util.UUIDGenerator;
 
 /**
@@ -834,7 +835,7 @@ public class OrderServiceImpl implements OrderService {
 	 * 3.不返现
 	 * @return
 	 */
-	public String transferDriverToDriver(SysOrder order) throws Exception{
+	public String transferDriverToDriver(SysOrder order) throws RealNameException,Exception{
 	   if (order ==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
 	   }
@@ -856,11 +857,11 @@ public class OrderServiceImpl implements OrderService {
 	   //增加逻辑：个人未实名认证：不能转入：
 	   SysDriver driver = driverService.queryDriverByPK(debit_account);
 	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())){
-		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+		   throw new RealNameException(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
 	   }
 	   SysDriver driver2 = driverService.queryDriverByPK(credit_account);
 	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver2.getCheckedStatus())){
-		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+		   throw new RealNameException(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
 	   }
 
 	   //1.扣除credit_account账户钱

@@ -77,6 +77,14 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.JsonTool;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RealNameException;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.TwoDimensionCode;
+import com.sysongy.util.UUIDGenerator;
 import com.tencent.mm.sdk.modelpay.PayReq;
 
 import net.sf.json.JSONObject;
@@ -3197,7 +3205,7 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			logger.error("信息： " + resultStr);
-//			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("获取失败！");
