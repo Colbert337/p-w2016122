@@ -958,3 +958,6 @@ nav {
 	0%{opacity: 0;}
 	100%{opacity: 1}
 }
+.fl-l{float: left;}
+.fl-r{float: right;}
+.clear{clear:both;}
