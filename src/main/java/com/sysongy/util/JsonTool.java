@@ -10,14 +10,12 @@ import net.sf.json.JSONObject;
  */
 public class JsonTool {
 	/**
-	 * 
 	 * @param mainObj Json格式字符串
 	 * @param strings 要校验的键
 	 * @return result
 	 */
 	public static boolean checkJson(JSONObject mainObj, String... strings) {
-		boolean rs = false;
-		boolean temp= true; 
+		boolean temp= false; 
 		if(mainObj!=null){
 			HashMap<String, String> map = toHashMap(mainObj);
 			for(int x = 0;x<strings.length;x++){
@@ -31,17 +29,15 @@ public class JsonTool {
 					for (String str : map.keySet()) {
 						if(strings[i].equals(str)){
 							if(map.get(str)==null ||"".equals(map.get(str))){
-								rs = false;
-								return rs;
-							}else{
-								rs = true;
+								temp = false;
+								break;
 							}
 						}
 					}
 				}
 			}
 		}
-		return rs;
+		return temp;
 	}
 	private static HashMap<String, String> toHashMap(JSONObject mainObj) {
 		HashMap<String, String> data = new HashMap<String, String>();
