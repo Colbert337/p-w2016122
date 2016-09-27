@@ -34,6 +34,9 @@ public class JsonTool {
 							}
 						}
 					}
+					if(!temp){
+						break;
+					}
 				}
 			}
 		}
