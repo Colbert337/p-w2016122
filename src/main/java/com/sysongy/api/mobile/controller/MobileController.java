@@ -6,7 +6,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,8 +60,10 @@ import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.controller.SysRoadController;
 import com.sysongy.poms.mobile.model.MbBanner;
+import com.sysongy.poms.mobile.model.MbStatistics;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
@@ -147,7 +148,8 @@ public class MobileController {
 	SysRoadService sysRoadService;
 	@Autowired
 	SysMessageService sysMessageService;
-
+	@Autowired
+	MbStatisticsService mbStatisticsService;
 	/**
 	 * 用户登录
 	 * @param params
@@ -1288,13 +1290,19 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
-			String code = "code";
-			boolean b = JsonTool.checkJson(mainObj,code);
+			String longitudeIn = "longitude";
+			String latitudeIn = "latitude";
+			String radius = "radius";
+			String name = "name";
+			String infoType = "infoType";
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,longitudeIn,latitudeIn,radius,name,infoType,pageNum,pageSize);
 			
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				if(gastation.getPageNum() == null){
 					gastation.setPageNum(GlobalConstant.PAGE_NUM);
 					gastation.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -1305,8 +1313,8 @@ public class MobileController {
 
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
-				String radius = mainObj.optString("radius");
-				String name = mainObj.optString("name");
+				radius = mainObj.optString("radius");
+				name = mainObj.optString("name");
 				gastation.setGas_station_name(name);
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
@@ -1323,7 +1331,7 @@ public class MobileController {
 						gastationMap.put("type",gastationInfo.getType());
 						gastationMap.put("longitude",gastationInfo.getLongitude());
 						gastationMap.put("latitude",gastationInfo.getLatitude());
-						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_MAP_TYPE", gastationInfo.getMap_type());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE", gastationInfo.getType());
 						gastationMap.put("stationType",usysparam.getMname());
 						gastationMap.put("service",gastationInfo.getGas_server());//提供服务
 						gastationMap.put("preferential",gastationInfo.getPromotions());//优惠活动
@@ -1332,19 +1340,23 @@ public class MobileController {
 						String price = gastationInfo.getLng_price();
 						price = price.replaceAll("，",",");
 						price = price.replaceAll("：",":");
-						String strArray[] = price.split(",");
-						Map[] map = new Map[strArray.length];
-						for(int i = 0;i<strArray.length;i++){
-							String strInfo = strArray[i].trim();
-							String strArray1[] = strInfo.split(":");
-							String strArray2[] = strArray1[1].split("/");
-							Map<String, Object> dataMap = new HashMap<>();
-							dataMap.put("gasName",strArray1[0]);
-							dataMap.put("gasPrice",strArray2[0]);
-							dataMap.put("gasUnit",strArray2[1]);
-							map[i] = dataMap;
+						if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1){
+							String strArray[] = price.split(",");
+							Map[] map = new Map[strArray.length];
+							for(int i = 0;i<strArray.length;i++){
+								String strInfo = strArray[i].trim();
+								String strArray1[] = strInfo.split(":");
+								String strArray2[] = strArray1[1].split("/");
+								Map<String, Object> dataMap = new HashMap<>();
+								dataMap.put("gasName",strArray1[0]);
+								dataMap.put("gasPrice",strArray2[0]);
+								dataMap.put("gasUnit",strArray2[1]);
+								map[i] = dataMap;
+							}
+							gastationMap.put("priceList",map);
+						}else{
+							gastationMap.put("priceList",new ArrayList());
 						}
-						gastationMap.put("priceList",map);
 						gastationMap.put("phone",gastationInfo.getContact_phone());
 						if(gastationInfo.getStatus().equals("0")){
 							gastationMap.put("state","开启");
@@ -2621,28 +2633,53 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String roadId = "roadId";
-			boolean b = JsonTool.checkJson(mainObj,roadId);
+			String token = "token";
+			boolean b = JsonTool.checkJson(mainObj,roadId,token);
 			/**
 			 * 请求接口
 			 */
 			if (b) {
-				// 创建对象
-				SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(mainObj.optString("roadId"));
-				int count = Integer.parseInt(roadCondition.getUsefulCount());
-				roadCondition.setUsefulCount(String.valueOf(count+1));
-				roadCondition.setId(mainObj.optString("roadId"));
-				int rs = sysRoadService.updateByPrimaryKey(roadCondition);
-				if(rs > 0){
-					result.setStatus(MobileReturn.STATUS_SUCCESS);
-					result.setMsg("统计成功！");
-					int time = SysRoadController.sumTime(roadCondition);
-					redisClientImpl.addToCache("Road" + roadCondition.getId(), roadCondition, time);
-					Map<String, Object> dataMap = new HashMap<>();
-					dataMap.put("count", roadCondition.getUsefulCount());
-					result.setData(dataMap);
+				MbStatistics mbStatistics =new MbStatistics();
+				mbStatistics.setSysDriverId(mainObj.optString("token"));
+				mbStatistics.setOperationType("3");
+				mbStatistics.setContentType("1");
+				mbStatistics.setContentId(mainObj.optString("roadId"));
+				//判断是否点过有用
+				MbStatistics temp = mbStatisticsService.queryMbStatistics(mbStatistics);
+				if(temp == null){
+					SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(mainObj.optString("roadId"));
+					if(roadCondition !=null){
+						int count = Integer.parseInt(roadCondition.getUsefulCount());
+						roadCondition.setUsefulCount(String.valueOf(count+1));
+						roadCondition.setId(mainObj.optString("roadId"));
+						int rs = sysRoadService.updateByPrimaryKey(roadCondition);
+						if(rs > 0){
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("统计成功！");
+							int time = SysRoadController.sumTime(roadCondition);
+							redisClientImpl.addToCache("Road" + roadCondition.getId(), roadCondition, time);
+							Map<String, Object> dataMap = new HashMap<>();
+							dataMap.put("count", roadCondition.getUsefulCount());
+							result.setData(dataMap);
+							//添加记录信息
+							mbStatistics.setMbStatisticsId(UUIDGenerator.getUUID());
+							int rs1 = mbStatisticsService.insertSelective(mbStatistics);
+							if(rs1 > 0){
+								logger.error("记录点赞成功");
+							}else{
+								logger.error("记录点赞失败");
+							}
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("统计失败！");
+						}
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("无此路况！");
+					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("无此路况！");
+					result.setMsg("已点击过啦！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2689,6 +2726,7 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String roadId = "roadId";
+			String token = "token";
 			String condition_img = "condition_img";
 			String conditionType = "conditionType";
 			String flashLongitude = "flashLongitude";
@@ -2700,7 +2738,7 @@ public class MobileController {
 			String publisherName = "publisherName";
 			String publisherPhone = "publisherPhone";
 			String publisherTime = "publisherTime";
-			boolean b = JsonTool.checkJson(mainObj,roadId,condition_img,conditionType,flashLongitude,flashLatitude,flashTime,longitude,latitude,address,publisherName,publisherPhone,publisherTime);
+			boolean b = JsonTool.checkJson(mainObj,roadId,token,condition_img,conditionType,flashLongitude,flashLatitude,flashTime,longitude,latitude,address,publisherName,publisherPhone,publisherTime);
 			/**
 			 * 请求接口
 			 */
@@ -2726,6 +2764,26 @@ public class MobileController {
 				if (tmp > 0) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("取消路况成功！");
+					//添加记录
+					MbStatistics mbStatistics =new MbStatistics();
+					mbStatistics.setSysDriverId(mainObj.optString("token"));
+					mbStatistics.setOperationType("4");
+					mbStatistics.setContentType("1");
+					mbStatistics.setContentId(mainObj.optString("roadId"));
+					//判断是否点过
+					MbStatistics temp = mbStatisticsService.queryMbStatistics(mbStatistics);
+					if(temp==null){
+						mbStatistics.setMbStatisticsId(UUIDGenerator.getUUID());
+						int rs1 = mbStatisticsService.insertSelective(mbStatistics);
+						if(rs1 > 0){
+							logger.error("记录取消成功");
+						}else{
+							logger.error("记录取消失败");
+						}
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("已取消过啦！");
+					}
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);

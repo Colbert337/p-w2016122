@@ -14,4 +14,6 @@ public interface MbStatisticsMapper {
     int updateByPrimaryKeySelective(MbStatistics record);
 
     int updateByPrimaryKey(MbStatistics record);
+    
+    MbStatistics queryMbStatistics(MbStatistics record);
 }

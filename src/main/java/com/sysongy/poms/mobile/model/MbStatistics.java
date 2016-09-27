@@ -2,7 +2,9 @@ package com.sysongy.poms.mobile.model;
 
 import java.util.Date;
 
-public class MbStatistics {
+import com.sysongy.poms.base.model.BaseModel;
+
+public class MbStatistics extends BaseModel{
     private String mbStatisticsId;
 
     private String sysDriverId;
@@ -16,8 +18,6 @@ public class MbStatistics {
     private String memo;
 
     private Date createdDate;
-
-    private String column8;
 
     public String getMbStatisticsId() {
         return mbStatisticsId;
@@ -75,11 +75,4 @@ public class MbStatistics {
         this.createdDate = createdDate;
     }
 
-    public String getColumn8() {
-        return column8;
-    }
-
-    public void setColumn8(String column8) {
-        this.column8 = column8 == null ? null : column8.trim();
-    }
 }
