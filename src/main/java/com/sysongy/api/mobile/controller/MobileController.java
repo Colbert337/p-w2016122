@@ -610,22 +610,26 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String token = "token";
-			String name = "name";
-			String imgUrl = "imgUrl";
 			String deviceToken = "deviceToken";
-			boolean b = JsonTool.checkJson(mainObj,token,name,imgUrl,deviceToken);
+			boolean b = JsonTool.checkJson(mainObj,token,deviceToken);
 			/**
 			 * 请求接口
 			 */
 			if(b){
+				String name = mainObj.optString("name");
+				String imgUrl = mainObj.optString("imgUrl");
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(sysDriverId != null && !sysDriverId.equals("")){
 					Map<String, Object> resultMap = new HashMap<>();
+					if(name !=null && !"".equals(name)){
+						driver.setFullName(name);
+					}
+					if(imgUrl !=null && !"".equals(imgUrl)){
+						driver.setAvatarB(imgUrl);
+					}
 					driver.setSysDriverId(sysDriverId);
-					driver.setFullName(mainObj.optString("name"));
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
-					driver.setAvatarB(mainObj.optString("imgUrl"));
 					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
