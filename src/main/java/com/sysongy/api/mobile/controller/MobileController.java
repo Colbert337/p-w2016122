@@ -2678,7 +2678,7 @@ public class MobileController {
 					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
-					result.setMsg("已点击过啦！");
+					result.setMsg("已统计过啦！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2711,7 +2711,7 @@ public class MobileController {
 	public String cancelRoadInfo(String params) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("取消路况成功！");
+		result.setMsg("取消路况提交成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 		try {
@@ -2762,7 +2762,7 @@ public class MobileController {
 				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
 				if (tmp > 0) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
-					result.setMsg("取消路况成功！");
+					result.setMsg("取消路况提交成功！");
 					//添加记录
 					MbStatistics mbStatistics =new MbStatistics();
 					mbStatistics.setSysDriverId(mainObj.optString("token"));
@@ -2781,7 +2781,7 @@ public class MobileController {
 						}
 					}else{
 						result.setStatus(MobileReturn.STATUS_SUCCESS);
-						result.setMsg("已取消过啦！");
+						result.setMsg("已提交过啦！");
 					}
 				}
 			} else {
@@ -2792,13 +2792,13 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
-			logger.error("取消路况信息： " + resultStr);
+			logger.error("取消路况提交信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("取消路况失败！");
+			result.setMsg("取消路况提交失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("取消路况失败： " + e);
+			logger.error("取消路况提交失败： " + e);
 			resutObj.remove("listMap");
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
