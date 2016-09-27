@@ -654,4 +654,54 @@ public class GlobalConstant {
 		public static final String UNION = "0"; //合作站
 		public static final String UN_UNION = "1"; //非合作站
 	}
+
+ /*
+ * 	路况类型
+ */
+	public interface ConditionType{
+		public static final String  HUAN_XING = "01"; //缓行
+		public static final String SHI_GU ="02"; //事故
+		public static final String FENG_LU ="03"; //封路
+		public static final String ZAI_HAI ="04"; //自然灾害
+		public static final String JIAN_CHA ="05"; //检查
+		public static final String SHI_GONG ="06"; //施工
+		public static final String XIAN_GAO ="07"; //限高
+		public static final String XIAN_ZHONG ="08"; //限重
+	}
+
+	/**
+	 * 获取路况
+	 * @param key
+	 * @return
+	 */
+	public static String getConditionType(String key){
+		String value = "";
+		switch (key){
+			case ConditionType.HUAN_XING:
+				value = "缓行";
+				break;
+			case ConditionType.SHI_GU:
+				value = "事故";
+				break;
+			case ConditionType.FENG_LU:
+				value = "封路";
+				break;
+			case ConditionType.ZAI_HAI:
+				value = "自然灾害";
+				break;
+			case ConditionType.JIAN_CHA:
+				value = "检查";
+				break;
+			case ConditionType.SHI_GONG:
+				value = "施工";
+				break;
+			case ConditionType.XIAN_GAO:
+				value = "限高";
+				break;
+			case ConditionType.XIAN_ZHONG:
+				value = "限重";
+				break;
+		}
+		return value;
+	}
 }

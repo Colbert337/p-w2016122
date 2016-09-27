@@ -3,6 +3,8 @@ package com.sysongy.poms.crm.controller;
 import java.io.File;
 import java.util.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
@@ -244,15 +246,18 @@ public class CrmPortalController {
     }
 
     @RequestMapping("/showPage")
-    public String showPage(ModelMap map, @RequestParam String pageid) throws Exception{
+    public String showPage(ModelMap map, @RequestParam String pageid, HttpServletRequest request) throws Exception{
         PageBean bean = new PageBean();
         String ret = "webpage/poms/page/page";
-
+        
         try {
             SysStaticPage page = service.queryPageByPK(pageid);
+            page.setShow_download_button(request.getParameter("show_down_load"));
+            
             bean.setRetCode(100);
             bean.setRetValue(pageid);
             bean.setPageInfo(ret);
+            
             map.addAttribute("page", page);
             map.addAttribute("ret", bean);
         } catch (Exception e) {
@@ -272,13 +277,54 @@ public class CrmPortalController {
     @RequestMapping("/trafficDetail")
     public String trafficDetail(@RequestParam String trafficId,ModelMap map) throws Exception{
     	SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+        String name = roadCondition.getPublisherName();
+        String phone = roadCondition.getPublisherPhone();
+        String conditionType = roadCondition.getConditionType();
+        conditionType = GlobalConstant.getConditionType(conditionType);
+        if(name == null || name.equals("")){
+            if(phone != null && phone.length() == 11){
+                phone = phone.substring(0,2) + "****" + phone.substring(7,phone.length());
+            }
+            name = phone;
+        }
+
         String http_poms_path =  (String) prop.get("http_poms_path");
     	Usysparam usysparam = usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
         map.addAttribute("roadCondition", roadCondition);
+        map.addAttribute("name",name);
+        map.addAttribute("conditionType",conditionType);
         map.addAttribute("conditionMsg",http_poms_path+roadCondition.getConditionImg());
         map.addAttribute("ConditionType", usysparam.getMname());
         return "/webpage/crm/webapp-traffic-detail";
     }
+
+    /**
+     * 路况分享
+     */
+    @RequestMapping("/trafficShare")
+    public String trafficShare(@RequestParam String trafficId,ModelMap map) throws Exception{
+        SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+        String name = roadCondition.getPublisherName();
+        String phone = roadCondition.getPublisherPhone();
+        String conditionType = roadCondition.getConditionType();
+        conditionType = GlobalConstant.getConditionType(conditionType);
+        if(name == null || name.equals("")){
+            if(phone != null && phone.length() == 11){
+                phone = phone.substring(0,2) + "****" + phone.substring(7,phone.length());
+            }
+            name = phone;
+        }
+
+        String http_poms_path =  (String) prop.get("http_poms_path");
+        Usysparam usysparam = usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
+        map.addAttribute("roadCondition", roadCondition);
+        map.addAttribute("name",name);
+        map.addAttribute("conditionType",conditionType);
+        map.addAttribute("conditionMsg",http_poms_path+roadCondition.getConditionImg());
+        map.addAttribute("ConditionType", usysparam.getMname());
+        return "/webpage/crm/webapp-traffic-share";
+    }
+
     /**
      * 反馈信息
      */

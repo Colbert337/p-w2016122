@@ -36,7 +36,7 @@ public class JsonTool {
 		Iterator it = mainObj.keys();
 		while (it.hasNext()) {
 			String key = String.valueOf(it.next());
-			String value = (String) mainObj.get(key);
+			String value = mainObj.get(key).toString();
 			data.put(key, value);
 		}
 		return data;

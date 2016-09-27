@@ -10,11 +10,14 @@
 <!DOCTYPE html>
 <html class="index" lang="zh-CN">
 <head>
-	<meta charset="UTF-8">
 	<title>司集能源</title>
+	
+	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
+	
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/webapp.css">
+	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
 </head>
 <body>
 	<div class="activ-detail-hd">
@@ -25,8 +28,17 @@
 			<span><fmt:formatDate value="${page.pageCreatedTime}" type="both"/></span>
 		</div>
 	</div>
+	
 	<div class="activ-detail-bd">
 		${page.pageHtml}
 	</div>
+	
+	<c:if test="${page.show_download_button eq '1'}">
+		<div class="btn-more-info">
+			<div class="inner">
+				<a href="" class="btn-app-primary logic-download-app"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
+			</div>
+		</div>
+	</c:if>
 </body>
 </html>
