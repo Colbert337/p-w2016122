@@ -79,6 +79,7 @@ import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.JsonTool;
 import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RealNameException;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.TwoDimensionCode;
 import com.sysongy.util.UUIDGenerator;
@@ -1297,11 +1298,10 @@ public class MobileController {
 			String longitudeIn = "longitude";
 			String latitudeIn = "latitude";
 			String radius = "radius";
-			String name = "name";
 			String infoType = "infoType";
 			String pageNum = "pageNum";
 			String pageSize = "pageSize";
-			boolean b = JsonTool.checkJson(mainObj,longitudeIn,latitudeIn,radius,name,infoType,pageNum,pageSize);
+			boolean b = JsonTool.checkJson(mainObj,longitudeIn,latitudeIn,radius,infoType,pageNum,pageSize);
 			
 			/**
 			 * 请求接口
@@ -1318,7 +1318,7 @@ public class MobileController {
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
 				radius = mainObj.optString("radius");
-				name = mainObj.optString("name");
+				String name = mainObj.optString("name");
 				gastation.setGas_station_name(name);
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
@@ -1495,11 +1495,21 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			logger.error("转账信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-		} catch (Exception e) {
+		} catch (RealNameException e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("未实名认证！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("转账失败： " + e.getMessage());
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("转账失败： " + resultStr);
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
+		}catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("转账失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("转账失败： " + e);
+			logger.error("转账失败： " + e.getMessage());
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
