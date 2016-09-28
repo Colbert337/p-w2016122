@@ -39,7 +39,7 @@
 											<input type="text" name="pageTitle" value="${page.pageTitle }" placeholder="输入页面标题" class="form-control" maxlength="30"/>
 										</div>
 									</div>
-									
+
 									<!-- <div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">信息内容：</label>
 
@@ -53,6 +53,17 @@
 
 										<div class="col-sm-4">
 											<input type="text" name="pageTicker"  value="${page.pageTicker }" placeholder="输入信息缩略" class="form-control" maxlength="30"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">显示标题：</label>
+
+										<div class="col-sm-4">
+											<select name="show_title">
+												<option value="0">不显示</option>
+												<option value="1">显示</option>
+											</select>
 										</div>
 									</div>
 									

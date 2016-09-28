@@ -31,8 +31,18 @@ public class SysStaticPage extends BaseModel{
     private String page_created_time_before;
     
     private String show_download_button;
+    
+    private String show_title;
 
-    public String getShow_download_button() {
+    public String getShow_title() {
+		return show_title;
+	}
+
+	public void setShow_title(String show_title) {
+		this.show_title = show_title;
+	}
+
+	public String getShow_download_button() {
 		return show_download_button;
 	}
 
