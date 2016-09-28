@@ -15,7 +15,14 @@
 	                    }
 	                }
 	            },
-	            captureTime: {
+	            captureTime_str: {
+	                validators: {
+	                    notEmpty: {
+	                        message: '拍照时间不能为空'
+	                    }
+	                }
+	            },
+	            startTime_str: {
 	                validators: {
 	                    notEmpty: {
 	                        message: '拍照时间不能为空'
