@@ -390,6 +390,9 @@ public class SysRoadController extends BaseContoller {
 					redisClientImpl.addToCache("Road" + road.getId(), road, time);
 				}
 			}
+			if ("3".equals(road.getConditionStatus())) {
+				msg = "审核成功";
+			}
 
 			// map.addAttribute("current_module",
 			// "/web/mobile/suggest/suggestList");
