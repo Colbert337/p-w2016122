@@ -909,13 +909,8 @@ public class MobileController {
 			 */
 			String token = "token";
 			String name = "name";
-			String plateNumber = "plateNumber";
-			String gasType = "gasType";
-			String endTime = "endTime";
-			String drivingLicenseImageUrl = "drivingLicenseImageUrl";
 			String driverLicenseImageUrl = "driverLicenseImageUrl";
-			String idCard = "idCard";
-			boolean b = JsonTool.checkJson(mainObj,token,name,plateNumber,gasType,endTime,drivingLicenseImageUrl,driverLicenseImageUrl,idCard);
+			boolean b = JsonTool.checkJson(mainObj,token,name,driverLicenseImageUrl);
 			/**
 			 * 请求接口
 			 */
