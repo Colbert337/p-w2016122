@@ -2388,7 +2388,7 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
-			String Token = "Token";
+			String token = "token";
 			String condition_img = "condition_img";
 			String conditionType = "conditionType";
 			String flashLongitude = "flashLongitude";
@@ -2401,7 +2401,7 @@ public class MobileController {
 			String publisherPhone = "publisherPhone";
 			String publisherTime = "publisherTime";
 			String direction = "direction";
-			boolean b = JsonTool.checkJson(mainObj,Token,condition_img,conditionType,flashLongitude,flashLatitude,flashTime,longitude,latitude,address,publisherName,publisherPhone,publisherTime,direction);
+			boolean b = JsonTool.checkJson(mainObj,token,condition_img,conditionType,flashLongitude,flashLatitude,flashTime,longitude,latitude,address,publisherName,publisherPhone,publisherTime,direction);
 			/**
 			 * 请求接口
 			 */
