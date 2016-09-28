@@ -636,7 +636,7 @@
 			<if test="memo != null">
 				memo,
 			</if>
-			<if test="road_id != null">
+			<if test="roadId != null">
 				road_id,
 			</if>
 		</trim>

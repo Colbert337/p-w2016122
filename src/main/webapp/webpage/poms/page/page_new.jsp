@@ -70,7 +70,14 @@
 										<label class="col-sm-3 control-label no-padding-right">创建人：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="pageCreator" class="form-control" readonly="readonly" value="${sessionScope.currUser.user.userName}"/>
+											<c:choose>
+												<c:when test="${sessionScope.currUser.user.realName != null}">
+													<input type="text" name="pageCreator" class="form-control" readonly="readonly" value="${sessionScope.currUser.user.realName}"/>
+												</c:when>
+												<c:when test="${sessionScope.currUser.user.realName == null}">
+													<input type="text" name="pageCreator" class="form-control" readonly="readonly" value="${sessionScope.currUser.user.userName}"/>
+												</c:when>
+											</c:choose>
 										</div>
 									</div>
 
