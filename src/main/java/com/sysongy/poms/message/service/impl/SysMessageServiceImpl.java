@@ -128,9 +128,9 @@ public class SysMessageServiceImpl implements SysMessageService {
 		// TODO Auto-generated method stub
 		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
 		SysMessage mes = queryMessageByPK(message);
-		if (mes.getDriver_name() != null) {
+		if (mes.getDriverName() != null) {
 			List<String> str=new ArrayList<>();
-			String mesId[] = mes.getDriver_name().split(",");
+			String mesId[] = mes.getDriverName().split(",");
 			
 			for (int i = 0; i < mesId.length; i++) {
 				str.add(mesId[i]);
