@@ -958,3 +958,10 @@ nav {
 	0%{opacity: 0;}
 	100%{opacity: 1}
 }
+.fl-l{float: left;}
+.fl-r{float: right;}
+.clear{clear:both;}
+.down-style{
+	right: 31%; bottom: 17%; width: 350px;height: 90px;position: absolute;z-index: 1;
+}
+.down-style:hover{cursor:pointer;}

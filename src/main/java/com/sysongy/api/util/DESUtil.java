@@ -122,11 +122,11 @@ public class DESUtil {
 
     public static void main(String args[]) throws Exception{
 //        String str = "王冬强";
-        String str = "{\"main\":{\"cityName\":\"\",\"extendType\":\"1\",\"pageNum\":\"1\",\"pageSize\":\"5\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
+        String str = "{\"main\":{\"token\":\"c64c4fa96a3b4373838f0dc4fe374712\"},\"extend\":{\"version\":\"1.0\",\"terminal\": \"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
         String resultStr;
-        resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA567743E4E340487D48909B40B608809E778E86D98519BF816F8DDBBB7702AB0950133E39CD95610286DEC6F7A4BDDF79F57E29744AF304D49187");
+        resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA567743E4E340487D4890EEB8457E3BE297E5A4C77C8B2260528137D6FCC38A4658832397A534CEBD8F3E8E8519CAEE9DA3857AA7E7A139161505");
 //        resultStr = new String(resultStr.getBytes("GB2312"),"ISO-8859-1");
         System.out.println("解密后:"+resultStr);
     }

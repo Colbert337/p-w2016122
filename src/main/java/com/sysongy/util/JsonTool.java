@@ -10,26 +10,37 @@ import net.sf.json.JSONObject;
  */
 public class JsonTool {
 	/**
-	 * 
 	 * @param mainObj Json格式字符串
 	 * @param strings 要校验的键
 	 * @return result
 	 */
 	public static boolean checkJson(JSONObject mainObj, String... strings) {
-		boolean result = false;
-		HashMap<String, String> map = toHashMap(mainObj);
-		for(int i = 0;i<strings.length;i++){
-			for (String str : map.keySet()) {
-				if(strings[i].equals(str)){
-					if(map.get(str)==null ||"".equals(map.get(str))){
-						return result;
-					}else{
-						result = true;
+		boolean temp= false; 
+		if(mainObj!=null){
+			HashMap<String, String> map = toHashMap(mainObj);
+			for(int x = 0;x<strings.length;x++){
+				temp= map.containsKey(strings[x]);
+				if(!temp){
+					break;
+				}
+			}
+			if(temp){
+				for(int i = 0;i<strings.length;i++){
+					for (String str : map.keySet()) {
+						if(strings[i].equals(str)){
+							if(map.get(str)==null ||"".equals(map.get(str))){
+								temp = false;
+								break;
+							}
+						}
+					}
+					if(!temp){
+						break;
 					}
 				}
 			}
 		}
-		return result;
+		return temp;
 	}
 	private static HashMap<String, String> toHashMap(JSONObject mainObj) {
 		HashMap<String, String> data = new HashMap<String, String>();

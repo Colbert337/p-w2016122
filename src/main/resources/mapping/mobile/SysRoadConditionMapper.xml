@@ -636,6 +636,9 @@
 			<if test="memo != null">
 				memo,
 			</if>
+			<if test="road_id != null">
+				road_id,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -706,6 +709,9 @@
 			</if>
 			<if test="memo != null">
 				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="roadId != null">
+				#{roadId,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>

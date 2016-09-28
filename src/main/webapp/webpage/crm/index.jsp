@@ -60,11 +60,11 @@
 						<div class="col-sm-4">
 							<div class="key-item">
 								<span class="icon icon-car"></span>
-								<a href="<%=basePath %>/webpage/crm/download-app.jsp">
+								<a href="<%=basePath %>/webpage/crm/show-app.jsp">
 									我是个人司机
 								</a>
 							</div>
-							<a class="key-item-xs" href="<%=basePath %>/webpage/crm/download-app.jsp">
+							<a class="key-item-xs" href="<%=basePath %>/webpage/crm/show-app.jsp">
 								<span class="icon icon-car"></span>
 								我是个人司机
 							</a>

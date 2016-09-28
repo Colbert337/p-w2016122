@@ -28,10 +28,10 @@ pageEncoding="UTF-8"%>
 		</div>
 	</div>
 
-	<div class="container-fluid app" style="margin:0 auto;position:relative;">
-		<img class="img-responsive" src="images/down-app.png" alt="">
-		<div class="fl-r down-style" onclick="window.location.href='<%=basePath %>/docs/app/sysongy-sysongy-release-1.0.0.13.apk'"></div>
+	<div class="container-fluid app">
+		<img class="img-responsive" src="images/show_app.jpg" alt="">
 	</div>
+
     <script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
     <script src="<%=basePath %>/webpage/crm/js/main.js"></script>
 </body>

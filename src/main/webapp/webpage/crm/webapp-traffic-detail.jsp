@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -17,7 +18,7 @@
 <body>
 	<div class="share">
 		<div class="traffic-detail-hd">
-			${ConditionType}
+			${conditionType}
 		</div>
 		<div class="traffic-detail-bd">
 			<div class="date">
@@ -25,9 +26,9 @@
 				<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm:ss" />
 			</div>
 			<div class="info">
-				${roadCondition.conditionType}
-				${name}于<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm" />前提供了${roadCondition.address}附近的${roadCondition.direction}的${roadCondition.conditionType}路况，请注意路况信息变化！
-				<c:if test="${!roadCondition.memo eq null} " ><br>路况详情如下：<br>${roadCondition.memo}</c:if>
+				${conditionType}
+				${name}于<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm" />前提供了${roadCondition.address}附近的${direction}的${conditionType}路况，请注意路况信息变化！
+				<c:if test="${!roadCondition.memo eq null}" ><br>路况详情如下：<br>${roadCondition.memo}</c:if>
 			</div>
 			<div class="img">
 				<img class="img-responsive" src="${conditionMsg}" alt="">

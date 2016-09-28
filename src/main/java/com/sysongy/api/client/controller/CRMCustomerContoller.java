@@ -116,6 +116,14 @@ public class CRMCustomerContoller {
                 ajaxJson.setMsg("没有查询到所需内容！！！");
                 return ajaxJson;
             }
+
+            List<SysDriver> sysDriverNew = new ArrayList<SysDriver>();
+            for(SysDriver sysDriverInfo : drivers.getList()){
+                sysDriverInfo = updateDriverPicturePath(sysDriverInfo, request);
+                sysDriverNew.add(sysDriverInfo);
+            }
+
+            drivers.setList(sysDriverNew);
             attributes.put("PageInfo", drivers);
             attributes.put("drivers", drivers.getList());
         } catch (Exception e) {
@@ -126,6 +134,19 @@ public class CRMCustomerContoller {
         }
         ajaxJson.setAttributes(attributes);
     	return ajaxJson;
+    }
+
+    private SysDriver updateDriverPicturePath(SysDriver sysDriverInfo, HttpServletRequest request){
+        String contextPath = request.getContextPath();
+        String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
+
+        if(StringUtils.isEmpty(sysDriverInfo.getDrivingLice())){
+            sysDriverInfo.setDrivingLice(basePath + sysDriverInfo.getDrivingLice());
+        }
+        if(StringUtils.isEmpty(sysDriverInfo.getVehicleLice())){
+            sysDriverInfo.setVehicleLice(basePath + sysDriverInfo.getVehicleLice());
+        }
+        return sysDriverInfo;
     }
 
     private boolean isLock24Hours(String id){
@@ -206,6 +227,13 @@ public class CRMCustomerContoller {
                 return ajaxJson;
             }
 
+            List<SysDriver> sysDriverNew = new ArrayList<SysDriver>();
+            for(SysDriver sysDriverInfo : drivers.getList()){
+                sysDriverInfo = updateDriverPicturePath(sysDriverInfo, request);
+                sysDriverNew.add(sysDriverInfo);
+            }
+
+            drivers.setList(sysDriverNew);
             attributes.put("PageInfo", drivers);
             attributes.put("drivers", drivers.getList());
         } catch (Exception e) {
@@ -319,11 +347,13 @@ public class CRMCustomerContoller {
             return ajaxJson;
         }
 
+        //不作重复性判断
+        /**
         if(checkIfFrequent(request, sysDriver)){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("您发送短信的次数过于频繁，请稍后再试！！！");
             return ajaxJson;
-        }
+        }**/
 
         try
         {
@@ -462,10 +492,7 @@ public class CRMCustomerContoller {
 
             Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
             String show_path = (String) prop.get("default_img");
-            String contextPath = request.getContextPath();
-            String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-            String basePathDefault = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort();
-            String httpPath = basePathDefault + show_path;
+            String httpPath = show_path;
             sysDriver.setDrivingLice(httpPath);
             sysDriver.setVehicleLice(httpPath);
 
@@ -675,9 +702,7 @@ public class CRMCustomerContoller {
                 long timeStamp = System.currentTimeMillis();
                 String path = filePath + timeStamp + files[i].getOriginalFilename();
                 File destFile = new File(path);
-                String contextPath = request.getContextPath();
-                String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
-                String httpPath = basePath + (String) prop.get("show_images_path") + "/" + realPath + timeStamp + files[i].getOriginalFilename();
+                String httpPath =  (String) prop.get("show_images_path") + "/" + realPath + timeStamp + files[i].getOriginalFilename();
                 String fileNum = String.valueOf(i);
                 attributes.put(imgTag + fileNum, httpPath);
                 FileUtils.copyInputStreamToFile(files[i].getInputStream(), destFile);// 复制临时文件到指定目录下
