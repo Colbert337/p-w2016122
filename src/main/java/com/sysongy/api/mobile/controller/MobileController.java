@@ -2756,7 +2756,7 @@ public class MobileController {
 				roadCondition.setPublisherName(mainObj.optString("publisherName"));
 				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
 				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
-				roadCondition.setRoadId(mainObj.optString("token"));
+				roadCondition.setRoadId(mainObj.optString("roadId"));
 				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
 				if (tmp > 0) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
