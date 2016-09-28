@@ -31,6 +31,10 @@
 							<input type="text" name="sysDriver.userName" placeholder="请输入会员账号"  maxlength="20" value="${sysOrder.sysDriver.userName}"/>
 						</div>
 						<div class="item">
+						    <label>手机号：</label>
+							<input type="text" name="sysDriver.mobilePhone" placeholder="请输入手机号"  maxlength="20" value="${sysOrder.sysDriver.mobilePhone}"/>
+						</div>
+						<div class="item">
 							<label>订单编号：</label>
 							<input type="text" name="orderNumber" placeholder="请输入订单编号/订单流水号"  maxlength="20" value="${sysOrder.orderNumber}"/>
 						</div>
@@ -98,6 +102,7 @@
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
+									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">电话号码 </th>
 									<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
 									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
 									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">关联运输公司</th>
@@ -128,6 +133,7 @@
 									</td>
 									<td>${list.cash}</td>
 									<td>${list.user_name}</td>
+									<td>${list.mobile_phone}</td>
 									<td>${list.channel_number}</td>
 									<td>${list.channel}</td>
 									<td>${list.transportion_name}</td>

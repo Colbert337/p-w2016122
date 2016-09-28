@@ -704,7 +704,7 @@
   </select>
   
   <select id="queryRechargeDriverReport" resultMap="HenryResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-    select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name operator
+    select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name operator,  sd.mobile_phone
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id 
 	left join sys_driver sd on so.credit_account=sd.sys_driver_id
@@ -717,6 +717,10 @@
       </if>
 	  <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
         and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
+      </if>
+      
+       <if test="sysDriver!= null &amp;&amp; sysDriver.mobilePhone != null &amp;&amp;  sysDriver.mobilePhone != ''" >
+         and sd.mobile_phone = #{sysDriver.mobilePhone, jdbcType=VARCHAR}
       </if>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
@@ -751,7 +755,7 @@
   </select>
   
   <select id="queryRechargeDriverReportTotal" resultMap="HenryTotalMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-  	select sum(cash) total from (select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name operator
+  	select sum(cash) total from (select so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name operator,  sd.mobile_phone
 	from sys_order so
 	inner join sys_order_deal sod on so.order_id = sod.order_id 
 	left join sys_driver sd on so.credit_account=sd.sys_driver_id
@@ -764,6 +768,9 @@
       </if>
 	  <if test="sysDriver != null &amp;&amp; sysDriver.userName != null &amp;&amp;  sysDriver.userName != ''" >
         and sd.user_name = #{sysDriver.userName, jdbcType=VARCHAR}
+      </if>
+        <if test="sysDriver!= null &amp;&amp; sysDriver.mobilePhone != null &amp;&amp;  sysDriver.mobilePhone != ''" >
+         and sd.mobile_phon= #{sysDriver.mobile_phone, jdbcType=VARCHAR}
       </if>
       <if test="is_discharge != null &amp;&amp; is_discharge != ''" >
         and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
