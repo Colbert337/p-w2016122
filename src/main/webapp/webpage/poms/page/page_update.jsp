@@ -15,13 +15,13 @@
     <script type="text/javascript" charset="utf-8" src="<%=basePath%>/umeditor-dev/_examples/editor_api.js"></script>
     <script type="text/javascript" charset="utf-8" src="<%=basePath%>/umeditor-dev/lang/zh-cn/zh-cn.js"></script>
     
-    <script src="<%=basePath %>/dist/js/page/page_new.js"></script> 
+    <script src="<%=basePath %>/dist/js/page/page_update.js"></script> 
 
 					<div class="">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								新建页面
+								修改页面
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -36,7 +36,7 @@
 										<label class="col-sm-3 control-label no-padding-right">页面标题：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="pageTitle" value="${page.pageTitle }" placeholder="输入页面标题" class="form-control" maxlength="30"/>
+											<input type="text" name="pageTitle" placeholder="输入页面标题" value="${page.pageTitle }" class="form-control" maxlength="30"/>
 										</div>
 									</div>
 									
@@ -52,7 +52,7 @@
 										<label for="email" class="col-sm-3 control-label no-padding-right">信息缩略：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="pageTicker"  value="${page.pageTicker }" placeholder="输入信息缩略" class="form-control" maxlength="30"/>
+											<input type="text" name="pageTicker" value="${page.pageTicker }" placeholder="输入信息缩略" class="form-control" maxlength="30"/>
 										</div>
 									</div>
 									
@@ -60,9 +60,9 @@
 										<label class="col-sm-3 control-label no-padding-right">页面编辑：</label>
 
 										<div class="col-sm-4">
-											<script type="text/plain" id="myEditor" style="width:1000px;height:240px;">
+											<script type="text/plain" id="myEditor"  style="width:1000px;height:240px;">
 											</script>
-											<input type="hidden" name="pageHtml"/>
+											<input type="hidden"  name="pageHtml"/>
 										</div>
 									</div>
 									
@@ -103,11 +103,14 @@
 									</div>
 
 									<jsp:include page="/common/message.jsp"></jsp:include>
-										
+										<input type="hidden" id="page_html" value='${page.pageHtml }' /> 
+							<input type="hidden" id="page_html" name="id" value='${page.id }' />
+							<input type="hidden" id="page_html" name="pageStatus" value='${page.pageStatus }' />  
 								</form>
 								
 								<form id="previewForm" name="previewForm" method="post" action="../web/page/preview" target="colors123" onsubmit="openSpecfiyWindown('colors123')">   
 								  <input type="hidden" id="pageHtml" name="pageHtml"/>  
+								  	
 								</form> 						
 							</div><!-- /.col -->
 						</div><!-- /.row -->

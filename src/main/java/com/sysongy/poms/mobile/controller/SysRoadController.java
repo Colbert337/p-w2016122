@@ -364,6 +364,7 @@ public class SysRoadController extends BaseContoller {
 			}
 			CurrUser user = (CurrUser) session.getAttribute("currUser");
 			if ("0".equals(road.getConditionStatus())) {
+				msg="失效成功";
 				redisClientImpl.deleteFromCache(road.getId());
 			} else {
 				road.setAuditor(user.getUser().getUserName());
@@ -374,7 +375,7 @@ public class SysRoadController extends BaseContoller {
 
 			bean.setRetCode(100);
 			bean.setRetMsg("审核成功");
-			msg = "审核成功";
+//			msg = "审核成功";
 			bean.setPageInfo(ret);
 			map.addAttribute("ret", bean);
 			map.addAttribute("road", road);
@@ -382,6 +383,7 @@ public class SysRoadController extends BaseContoller {
 			road = sysRoadService.selectByPrimaryKey(road.getId());
 			if ("2".equals(road.getConditionStatus())) {
 				// 放到redis
+				msg = "审核成功";
 				int time = sumTime(road);
 				if (time == -1 || time > 0) {
 					road.setUsefulCount("0");

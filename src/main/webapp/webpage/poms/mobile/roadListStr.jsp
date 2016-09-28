@@ -127,8 +127,7 @@
 						class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
-								<th onclick="orderBy(this,'condition_type');commitForm();"
-									id="condition_type_order">路况类型</th>
+								 
 
 								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
@@ -137,12 +136,7 @@
 									id="capture_time_order">拍照时间</th>
 								<th onclick="orderBy(this,'condition_msg');commitForm();"
 									id="condition_msg_order">路况说明</th>
-								<th onclick="orderBy(this,'start_time');commitForm();"
-									id="start_time_order"><i
-									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>开始时间</th>
-								<th onclick="orderBy(this,'end_time');commitForm();"
-									id="end_time_order"><i
-									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
+								 
 
 								<th onclick="orderBy(this,'publisher_name');commitForm();"
 									id="publisher_name_orber">创建人</th>
@@ -152,9 +146,7 @@
 									id="publisher_time_order" class="td-w2"><i
 									id="created_date"
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>发布时间</th>
-
-								<th onclick="orderBy(this,'province');commitForm();"
-									id="province_orber">省份信息</th>
+ 
 								<th class="text-center td-w3">操作</th>
 							</tr>
 						</thead>
@@ -163,23 +155,18 @@
 
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="${list.id }">
-									<td><s:Code2Name mcode="${list.conditionType}"
-											gcode="CONDITION_TYPE"></s:Code2Name></td>
-
-									<td><div class="td-inner-warp">${list.captureLongitude},${list.captureLatitude }</div></td>
+								  	<td><div class="td-inner-warp">${list.captureLongitude},${list.captureLatitude }</div></td>
 									<td><fmt:formatDate value="${list.captureTime}"
 											type="both" /></td>
 									<td>${list.conditionMsg}</td>
-									<td><fmt:formatDate value="${list.startTime}" type="both" /></td>
-									<td><fmt:formatDate value="${list.endTime}" type="both" /></td>
+								 
 									<td>${list.publisherName}</td>
 									<td>${list.publisherPhone}</td>
 									<td><fmt:formatDate value="${list.publisherTime}"
 											type="both" /></td>
 
 									<%-- <td>${list.operator}</td> --%>
-									<td>${list.province}</td>
-								 
+							 
 									<td class="text-center"><a class="option-btn-m" href="javascript:void(0);"
 										title="查看图片" data-rel="tooltip"> <i
 											class="ace-icon fa fa-search-plus bigger-130"

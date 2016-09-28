@@ -170,7 +170,7 @@
 
 					<div class="col-sm-4">
 						<textarea name="memo" placeholder="备注"
-							class="form-control" maxlength="2000"></textarea>
+							class="form-control" maxlength="500"></textarea>
 					</div>
 				</div>
 				<div class="form-group">

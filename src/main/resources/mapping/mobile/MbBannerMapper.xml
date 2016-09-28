@@ -84,10 +84,10 @@
     select * from mb_banner
     where is_deleted = 1 and mb_banner_id = #{mbBannerId}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from mb_banner
+  <update id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update mb_banner set  is_deleted =0
     where mb_banner_id = #{mbBannerId,jdbcType=VARCHAR}
-  </delete>
+  </update>
   <insert id="insert" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     insert into mb_banner (mb_banner_id, title, img_path, 
       img_sm_path, target_url, version, 
@@ -196,9 +196,14 @@
     </trim>
   </insert>
   
-  <delete id="deleteBanner" parameterType="java.lang.String" >
-   DELETE FROM mb_banner WHERE mb_banner_id  = #{mbBannerId,jdbcType=VARCHAR}
-  </delete>
+  <update id="deleteBanner" parameterType="java.lang.String" >
+   update  mb_banner set  is_deleted = 0   WHERE mb_banner_id  = #{mbBannerId,jdbcType=VARCHAR}
+  </update>
+  
+   <update id="deleteByPrimaryPageKey" parameterType="java.lang.String" >
+   update mb_banner  set  is_deleted = 0  WHERE target_url like CONCAT('%',   #{id,jdbcType=VARCHAR})
+  </update>
+  
   
   <update id="updateBanner" parameterType="com.sysongy.poms.mobile.model.MbBanner" >
     update mb_banner

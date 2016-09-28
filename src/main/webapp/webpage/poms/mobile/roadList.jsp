@@ -38,7 +38,7 @@
 						</select>
 					</div>
 					<div class="item">
-						<label>路况类型</label> <select name="conditionStatus"
+						<label>路况状态</label> <select name="conditionStatus"
 							id="conditionStatus">
 							<option value="">--请选择--</option>
 							<option value="0">已失效</option>
