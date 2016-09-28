@@ -281,7 +281,12 @@ nav {
 .ys2 {
 	background: #4f8284 url(../images/ys2.jpg) center bottom no-repeat;
 }
-
+.app1 {
+	background: #378ccd url(../images/app_info_1.jpg) center bottom no-repeat;
+}
+.app2 {
+	background: #4f8284 url(../images/app_info_2.jpg) center bottom no-repeat;
+}
 .squares {
 	width: 237px;
 	height: 182px;
