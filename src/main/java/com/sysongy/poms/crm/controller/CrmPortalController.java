@@ -252,7 +252,7 @@ public class CrmPortalController {
         
         try {
             SysStaticPage page = service.queryPageByPK(pageid);
-            page.setShow_download_button(request.getParameter("show_down_load"));
+            page.setShow_download_button(request.getParameter("show_download_button"));
             
             bean.setRetCode(100);
             bean.setRetValue(pageid);
