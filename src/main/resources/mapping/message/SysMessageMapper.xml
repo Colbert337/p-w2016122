@@ -53,6 +53,9 @@
 				and CONCAT(#{message_created_time_before,jdbcType=VARCHAR},'
 				23:59:59')
 			</if>
+			<if test="messageType != null &amp;&amp; messageType != ''">
+				and message_type = #{messageType,jdbcType=VARCHAR}
+			</if>
 		</trim>
 	</select>
 	<!-- 获取消息列表 -->

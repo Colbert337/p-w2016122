@@ -33,7 +33,7 @@
 	    
 	//实例化编辑器
 	var um = UM.getEditor('myEditor');
-
+	um.setContent($('#page_html').val())
 	function save(){
 		$("[name=pageHtml]").val(getContent());
 
@@ -44,7 +44,7 @@
 		}
 		
 		var options ={   
-	            url:'../web/page/savePage',   
+	            url:'../web/page/update',   
 	            type:'post',                    
 	            dataType:'text',
 	            success:function(data){

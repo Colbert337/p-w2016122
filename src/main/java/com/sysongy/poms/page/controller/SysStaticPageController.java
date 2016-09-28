@@ -25,16 +25,16 @@ public class SysStaticPageController extends BaseContoller {
 	private SysStaticPage page;
 
 	@RequestMapping("/pageList")
-	public String queryAllPageList(ModelMap map, SysStaticPage page,String type) throws Exception {
+	public String queryAllPageList(ModelMap map, SysStaticPage page, String type) throws Exception {
 
 		this.page = page;
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/page/page_list";
-		String message="";
+		String message = "查询成功";
 		if ("1".equals(type)) {
-			message="失效成功";
-		}else{
-			message="查询成功";
+			message = "失效成功";
+		} else if("2".equals(type)) {
+			message = "修改成功";
 		}
 		try {
 			if (page.getPageNum() == null) {
@@ -48,9 +48,9 @@ public class SysStaticPageController extends BaseContoller {
 			PageInfo<SysStaticPage> pageinfo = service.queryForPage(page);
 
 			bean.setRetCode(100);
-//			bean.setRetMsg("查询成功");
+			// bean.setRetMsg("查询成功");
 			bean.setPageInfo(ret);
-
+			bean.setRetMsg(message);
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
 			map.addAttribute("page", page);
@@ -184,4 +184,50 @@ public class SysStaticPageController extends BaseContoller {
 		}
 	}
 
+	@RequestMapping("/fondOne")
+	public String fondOne(ModelMap map, SysStaticPage page) {
+
+		PageBean bean = new PageBean();
+
+		String ret = "webpage/poms/page/page_update";
+		try {
+			page = service.queryPageByPK(page.getId());
+			bean.setRetCode(100);
+			map.addAttribute("page", page);
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			// TODO: handle exception
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+		} finally {
+			return ret;
+		}
+	}
+
+	@RequestMapping("/update")
+	public String update(ModelMap map, SysStaticPage page) {
+		PageBean bean = new PageBean();
+		String ret = "redirect:/web/page/pageList?type=2";
+
+		try {
+			service.update(page);
+			bean.setRetCode(100);
+			bean.setRetMsg("修改成功");
+			map.addAttribute("page", page);
+			map.addAttribute("ret", bean);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			//e.printStackTrace();
+		} finally {
+
+			return ret;
+		}
+
+	}
 }

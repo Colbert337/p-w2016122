@@ -9,6 +9,7 @@ import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.RealNameException;
 import com.sysongy.util.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
      * @return
      */
     @Override
-    public int transferDriverToDriver(Map<String, Object> driverMap) throws Exception{
+    public int transferDriverToDriver(Map<String, Object> driverMap) throws RealNameException,Exception{
 
         String driverId = "";
         String paycode = "";
@@ -125,6 +126,9 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
             }else{
                 return resultVal = 3;//司机不存在
             }
+        }catch (RealNameException e){
+            e.printStackTrace();
+            throw new RealNameException("未实名认证");
         }catch (Exception e){
             e.printStackTrace();
             return resultVal = -1;//账户不存在

@@ -110,7 +110,7 @@
 								 	<td>${list.gas_station_name}</td> 
 								 	<td>${list.contact_phone}</td> 
 									<td><s:Code2Name mcode="${list.province_id}" gcode="PROVINCE_CODE"></s:Code2Name></td>
-									<td>${list.address}</td>
+									<td><div class="td-inner-warp">${list.address}</div></td>
 									<td>${list.xy}</td>
 									<td><s:Code2Name mcode="${list.map_type}" gcode="STATION_MAP_TYPE"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.status}" gcode="STATION_STATUS"></s:Code2Name></td>
