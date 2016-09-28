@@ -185,8 +185,8 @@ public class SysRoadController extends BaseContoller {
 			road.setPublisherName(user.getUser().getUserName());
 			road.setConditionStatus("2");
 			road.setPublisherPhone(user.getUser().getMobilePhone());
+			int time = sumTime(road);
 			int a = sysRoadService.saveRoad(road);
-
 			bean.setRetCode(100);
 			bean.setRetMsg("保存成功");
 			msg = "保存成功";
@@ -195,7 +195,7 @@ public class SysRoadController extends BaseContoller {
 			map.addAttribute("road", road);
 			map.addAttribute("suggest", road);
 			// 保存readis
-			int time = sumTime(road);
+
 			
 			if (time == -1 || time > 0) {
 				road.setUsefulCount("0");
