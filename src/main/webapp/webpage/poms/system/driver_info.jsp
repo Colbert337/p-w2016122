@@ -25,11 +25,11 @@
 					</div>
 
 					<div class="search-types">	
+						 
 						<div class="item">
-						    <label>会员账号:</label>
-							<input type="text" name="userName" placeholder="输入会员账号" maxlength="20" value="${driver.userName}"/>
+							<label>会员账号/手机号码：</label>
+							<input type="text" name="fullName" placeholder="会员账号/手机号码"  maxlength="11" value="${driver.fullName}"/>
 						</div>
-
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>创建时间:</label>
@@ -75,6 +75,7 @@
 									<!-- <th onclick="orderBy(this,'sys_driver_id');commitForm();" id="sys_driver_id_order">个人用户编号</th> -->
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
 									<th onclick="orderBy(this,'card_id');commitForm();" id="card_id_order">实体卡号</th>
+									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">电话号码</th>
 									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册来源</th>
 									<th onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册公司</th>
 									<th onclick="orderBy(this,'sys_transport_id');commitForm();" id="sys_transport_id_order">关联运输公司</th>
@@ -102,6 +103,7 @@
 								 	<td>${list.userName}</td>
 								 	<td id="sysUserAccountId" style="display: none;">${list.sysUserAccountId}</td>
 									<td>${list.cardId}</td>
+									<td>${list.mobilePhone}</td>
 									<c:choose>
 										<c:when test="${fn:contains(list.stationId, 'GS')}">
 											<td>加注站</td>
