@@ -20,14 +20,16 @@
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
 </head>
 <body>
-	<div class="activ-detail-hd">
-		<h2>${page.pageTitle}</h2>
-		<div class="date">
-			<span>${page.pageBody}</span>
-			<span>${page.pageCreator}</span>
-			<span><fmt:formatDate value="${page.pageCreatedTime}" type="both"/></span>
+	<c:if test="${page.show_title eq '1'}">
+		<div class="activ-detail-hd">
+			<h2>${page.pageTitle}</h2>
+			<div class="date">
+				<span>${page.pageBody}</span>
+				<span>${page.pageCreator}</span>
+				<span><fmt:formatDate value="${page.pageCreatedTime}" type="both"/></span>
+			</div>
 		</div>
-	</div>
+	</c:if>
 	
 	<div class="activ-detail-bd">
 		${page.pageHtml}
