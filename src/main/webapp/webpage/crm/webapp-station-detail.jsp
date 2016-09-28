@@ -65,9 +65,9 @@
 				<li>${gastation.promotions}</li>
 			</ul>
 		</div>
-		<div class="station-special-more">
-			<a class="btn">查看更多优惠</a>
-		</div>
+<%-- 		<div class="station-special-more"> --%>
+<%-- 			<a class="btn">查看更多优惠</a> --%>
+<%-- 		</div> --%>
 	</div>
 
 	<script src="<%=basePath %>/webpage/crm/js/zepto.min.js"></script>

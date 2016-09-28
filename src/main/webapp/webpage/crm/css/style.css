@@ -961,3 +961,7 @@ nav {
 .fl-l{float: left;}
 .fl-r{float: right;}
 .clear{clear:both;}
+.down-style{
+	right: 31%; bottom: 17%; width: 350px;height: 90px;position: absolute;z-index: 1;
+}
+.down-style:hover{cursor:pointer;}
