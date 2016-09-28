@@ -1300,11 +1300,10 @@ public class MobileController {
 			String longitudeIn = "longitude";
 			String latitudeIn = "latitude";
 			String radius = "radius";
-			String name = "name";
 			String infoType = "infoType";
 			String pageNum = "pageNum";
 			String pageSize = "pageSize";
-			boolean b = JsonTool.checkJson(mainObj,longitudeIn,latitudeIn,radius,name,infoType,pageNum,pageSize);
+			boolean b = JsonTool.checkJson(mainObj,longitudeIn,latitudeIn,radius,infoType,pageNum,pageSize);
 			
 			/**
 			 * 请求接口
@@ -1321,7 +1320,7 @@ public class MobileController {
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
 				radius = mainObj.optString("radius");
-				name = mainObj.optString("name");
+				String name = mainObj.optString("name");
 				gastation.setGas_station_name(name);
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
