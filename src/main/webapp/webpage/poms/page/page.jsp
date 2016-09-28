@@ -25,7 +25,7 @@
 		<div class="date">
 			<span>${page.pageBody}</span>
 			<span>${page.pageCreator}</span>
-			<span><fmt:formatDate value="${page.pageCreatedTime}" type="both"/></span>
+			<span><fmt:formatDate value="${page.pageCreatedTime}" pattern="yyyy-MM-dd-HH:mm:ss"/></span>
 		</div>
 	</div>
 	
