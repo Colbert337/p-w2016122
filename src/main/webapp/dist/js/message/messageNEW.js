@@ -38,13 +38,16 @@
 		if(!$('#messageform').data('bootstrapValidator').isValid()){
 			return ;
 		}
-		
+		if(device_token.split(",")==0){	
+			bootbox.alert("请选择发送对象！");
+			return;
+		}
 		var options ={   
 	            url:'../web/message/saveMessageNew',   
 	            type:'post',
 	            data:{
 	            	device_token:device_token,
-	            	driver_name:driver_name,
+	            	driver_name:device_token,
 	            	messageType:1
 	            },
 	            dataType:'text',

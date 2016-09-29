@@ -87,17 +87,18 @@
 						</select> <input type="hidden" name="province_name" />
 					</div>
 				</div>
-<!-- 
+				<!-- 
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">发送用户组：
 					</label>
  -->
+				<div class="form-group">
 					<div class="col-sm-4">
 						<input type="hidden" name="messageGroup" class="form-control"
 							readonly="readonly" value="1000" />
 					</div>
-			<!-- 	</div> -->
-
+					<!-- 	</div> -->
+				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">发送方式：</label>
 
