@@ -60,7 +60,7 @@ public class SysStaticPageServiceImpl implements SysStaticPageService {
 	@Override
 	public Integer update(SysStaticPage page)throws Exception {
 		// TODO Auto-generated method stub
-		return pageMapper.updateByPrimaryKey(page);
+		return pageMapper.updateByPrimaryKeySelective(page);
 	}
 
 }
