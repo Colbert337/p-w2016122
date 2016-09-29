@@ -109,6 +109,7 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                             order.setOperator(usr.getSysUserId());
                             order.setChannel("APP");
                             order.setChannelNumber("APP");
+                            order.setOrderRemark(driverMap.get("remark").toString());
                             order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.DRIVER);
                             order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);
                             order.setOrderNumber(orderNum);
