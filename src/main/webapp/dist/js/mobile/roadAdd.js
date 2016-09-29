@@ -183,7 +183,7 @@
 			language : 'zh',
 			allowedPreviewTypes : [ 'image' ],
 			allowedFileExtensions : [ 'jpg', 'png', 'gif', 'jepg' ],
-			maxFileSize : 1000,
+			maxFileSize : 10000,
 		}
 		// 文件上传框
 		$('input[class=projectfile]').each(function() {
