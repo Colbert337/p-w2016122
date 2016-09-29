@@ -86,6 +86,8 @@ public class SysOrder extends BaseModel{
     private String thirdPartyOrderID;   //微信或者支付宝的订单号
     
     private String orderRemark; 
+    
+    private String type;//查询个人转账记录时，转入转出表示列，不对应数据库字段 
 
     public SysOrderDeal getOrder_deal() {
 		return order_deal;
@@ -384,5 +386,13 @@ public class SysOrder extends BaseModel{
 
 	public void setOrderRemark(String orderRemark) {
 		this.orderRemark = orderRemark;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

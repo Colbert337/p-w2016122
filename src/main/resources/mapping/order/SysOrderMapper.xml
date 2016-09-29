@@ -905,9 +905,42 @@
   </select>
 
   <!--查询转账记录-->
+  <!-- 
   <select id="queryDriverTransferList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     select order_number,operator,cash,(select remark from sys_order_deal rc where rc.order_id = rb.order_number) as remark,order_date
     from report_business rb
     where order_type = '320' and (sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR} or debit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR})
+  </select>
+  -->  
+  <select id="queryDriverTransferList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
+    SELECT distinct temp.order_number,temp.cash,temp.order_date,temp.type,
+	(SELECT order_remark  FROM sys_order WHERE order_number=temp.order_number) as remark,
+	( 
+	CASE temp.type
+	WHEN '0' THEN
+	(SELECT full_name FROM sys_driver WHERE sys_driver_id=( SELECT debit_account FROM sys_order WHERE order_number = temp.order_number))
+	WHEN '1' THEN
+	(SELECT full_name FROM sys_driver WHERE sys_driver_id=(SELECT credit_account FROM sys_order WHERE order_number = temp.order_number))
+	END)AS operator
+	FROM 
+	(
+	SELECT
+		order_number,
+		cash,
+		order_date,
+		(
+			CASE #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+			WHEN credit_account THEN
+				'0'
+			WHEN debit_account THEN
+				'1'
+			END
+		) AS type
+	FROM
+		report_business
+	WHERE order_type='320' AND (
+		credit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+	OR debit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR})
+	)AS temp
   </select>
 </mapper>

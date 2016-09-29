@@ -1981,8 +1981,8 @@ public class MobileController {
 						reChargeMap.put("orderNum",map.get("orderNumber"));
 						reChargeMap.put("amount",map.get("cash"));
 						reChargeMap.put("operator",map.get("operator"));
-
 						reChargeMap.put("remark",map.get("remark"));
+						reChargeMap.put("type",map.get("type"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
 							dateTime = sft.format(new Date());
@@ -1990,15 +1990,23 @@ public class MobileController {
 						reChargeMap.put("time",dateTime);
 
 						reChargeList.add(reChargeMap);
+						if("0".equals(map.get("type"))){
+							//汇总转出总额
+							if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+								BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
 
-						//汇总转出/转入总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							BigDecimal tempVal = new BigDecimal(reChargeMap.get("cash").toString());
+								if(tempVal.compareTo(BigDecimal.ZERO) > 0){
+									totalCash = totalCash.add(tempVal);
+								}
+							}
+						}else{
+							//汇总转入总额
+							if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+								BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
 
-							if(tempVal.compareTo(BigDecimal.ZERO) > 0){
-								totalCash = totalCash.add(tempVal);
-							}else{
-								totalBack = totalBack.add(tempVal);
+								if(tempVal.compareTo(BigDecimal.ZERO) > 0){
+									totalBack = totalBack.add(tempVal);
+								}
 							}
 						}
 					}
