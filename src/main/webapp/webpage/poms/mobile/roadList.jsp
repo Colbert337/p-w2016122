@@ -312,7 +312,7 @@
 					</tbody>
 				</table>
 
-				<div class="shenhe-items-hd">证件照片</div>
+				<div class="shenhe-items-hd">路况照片</div>
 				<div class="row">
 					<div class="col-sm-3">
 						<ul class="ace-thumbnails clearfix">
@@ -350,7 +350,7 @@
 							class="form-control" maxlength="200"></textarea>
 			</div>
 			<div class="modal-footer" id="buttonList">
-				<button class="btn btn-primary btn-sm" onclick="upda/teRoad('3')">确定</button>
+				<button class="btn btn-primary btn-sm" onclick="updateRoad('3')">确定</button>
 				 <button class="btn btn-primary btn-sm" data-dismiss="modal">关闭</button>
 			</div>
 		</div>

@@ -158,6 +158,9 @@ public class SysMessageServiceImpl implements SysMessageService {
 		driver = driverMapper.queryDriverByMobilePhone(driver);
 		SysMessage message=new SysMessage();
 		message.setContent(content);
+		if (null==driver.getDeviceToken()||"".equals(driver.getDeviceToken())) {
+			throw new Exception("用户Token为空，发送消息失败！");
+		}
 		message.setDevice_token(driver.getDeviceToken());
 		message.setDriver_name(driver.getDeviceToken());
 		message.setDriverName(driver.getDeviceToken());
