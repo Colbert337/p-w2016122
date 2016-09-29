@@ -112,8 +112,8 @@ function updateCheck(obj1, tr, id) {
 	}
 	var show = $("div[name='show']");
 	for (var i = 0; i < show.length; i++) {
-		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{28})/g,
-				'$1\n');
+		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{50})/g,
+				'$1<br\>');
 	}
 	$("#innerimg1").attr("src", projectName + obj1);
 	$("#innerimg1").parent("a").attr("href", projectName + obj1);
