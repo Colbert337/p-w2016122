@@ -254,7 +254,7 @@ public class SysRoadController extends BaseContoller {
 
 			long a = road.getStartTime().getTime() - new Date().getTime();
 			int time = h * 60 * 60 + (int) a / 1000;
-			road.setEndTime(new Date(new Date().getTime() + h * 60 * 60 + a));
+			road.setEndTime(new Date(new Date().getTime() + h * 60 * 60*1000 + a));
 			return time;
 		} else if (road.getEndTime() != null) {
 			long a = road.getAuditorTime().getTime() - road.getEndTime().getTime();

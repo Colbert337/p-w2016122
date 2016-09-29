@@ -172,9 +172,9 @@ function setCurrentPage1(){
 		$("#next1").removeClass("disabled");
 	}
 	//动态加载分页按钮并设定页数
-	for(var i='${pageInfo.total}';i>0;i--){
+	for(var i='${pageInfo.pages}';i>0;i--){
 		var num = pagenum%5==0?pagenum-5+i:pagenum-(pagenum%5)+i;
-		$("li[id=previous1]").after("<li id='navigator'><a href='javascript:void(0);' onclick='commitForm1(this)'>"+num+"</a></li>");
+		$("li[id=previous1]").after("<li id='navigator'><a href='javascript:void(0);' onclick='commitForm1(this)'>"+num*1+"</a></li>");
 	}
 	//设置当前页按钮样式
 	$("li[id=navigator1]").removeClass("active");
