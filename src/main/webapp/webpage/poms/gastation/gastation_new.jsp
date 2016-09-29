@@ -79,6 +79,16 @@
 								<form class="form-horizontal"  id="gastationform">
 								
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
+									<div class="form-group">
+										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 所属公司： </label>
+
+										<div class="col-sm-4">
+											<input type="text" id="company"  name="company" placeholder="输入所属公司" class="form-control" maxlength="20" value="${station.company}"/>
+											
+										</div>
+									</div>
+
+
 
 									<div class="form-group">
 										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 加注站名称： </label>
@@ -477,7 +487,20 @@
 		            validating: 'glyphicon glyphicon-refresh'
 		        },
 		        fields: {
-		        	gas_station_name: {
+		        	company: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '所属公司不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 1,
+		                        max: 20,
+		                        message: '加注站名称不能超过20个汉字'
+		                    }
+		                }
+		            },
+		            gas_station_name: {
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {

@@ -43,6 +43,7 @@ public class Gastation extends BaseModel {
 	private Date expiry_date;
 	private Date updated_time;
 	private String xy;
+	private String company;
 	private String map_type;
 	private String gas_server;
 	private String lng_price;
@@ -51,6 +52,14 @@ public class Gastation extends BaseModel {
     
     private String shareCount;
 	
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
 	public String getLng_price() {
 		return lng_price;
 	}
