@@ -98,7 +98,7 @@
 									id="capture_time_order">拍照时间</th>
 								<th onclick="orderBy(this,'condition_msg');commitForm();"
 									id="condition_msg_order">路况说明</th>
-								<th onclick="orderBy(this,'start_time');commitForm();"
+								<th onclick="orderBy(this,';commitForm();"
 									id="start_time_order"><i
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>开始时间</th>
 								<th onclick="orderBy(this,'end_time');commitForm();"
@@ -300,7 +300,7 @@
 				<table class="table">
 					<tr>
 						<th>省份信息</th>
-						<td><div  name="show"></div></td>
+						<td><div name="show"></div></td>
 						<th>点赞数量</th>
 						<td><div id="prepay_phone" name="show"></div></td>
 					</tr>
@@ -330,8 +330,28 @@
 			<input type="hidden" id="roadId" />
 			<div class="modal-footer" id="buttonList">
 				<button class="btn btn-primary btn-sm" onclick="updateRoad('2')">审核通过</button>
-				<button class="btn btn-primary btn-sm" onclick="updateRoad('3')">审核不通过</button>
+				<button class="btn btn-primary btn-sm" onclick="showContent('3')">审核不通过</button>
 				<button class="btn btn-primary btn-sm" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="content" class="modal fade" role="dialog"
+	aria-labelledby="gridSystemModalLabel" data-backdrop="static"
+	tabindex="-1">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<%--<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
+			</div>--%>
+			<div class="modal-body">
+			<textarea id="contentmes" placeholder="请输入原因"
+							class="form-control" maxlength="200"></textarea>
+			</div>
+			<div class="modal-footer" id="buttonList">
+				<button class="btn btn-primary btn-sm" onclick="upda/teRoad('3')">确定</button>
+				 <button class="btn btn-primary btn-sm" data-dismiss="modal">关闭</button>
 			</div>
 		</div>
 	</div>

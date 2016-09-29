@@ -34,9 +34,9 @@
 						</div>
 						
 						<div class="item">
-						    <label>用户卡类型:</label>
-							<select class="chosen-select " name="card_type" >
-									<s:option flag="true" gcode="CARDTYPE" form="gascard" field="card_type"/>
+						    <label>用户卡属性:</label>
+							<select class="chosen-select " name="card_property" id="card_property"  >
+									<s:option flag="true" gcode="CARDPROPERTY" form="gascard" field="card_property"/>
 							</select>
 						</div>
 

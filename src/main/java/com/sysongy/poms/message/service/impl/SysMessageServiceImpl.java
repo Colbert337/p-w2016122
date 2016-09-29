@@ -129,13 +129,12 @@ public class SysMessageServiceImpl implements SysMessageService {
 		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
 		SysMessage mes = queryMessageByPK(message);
 		if (mes.getDriverName() != null) {
-			List<String> str=new ArrayList<>();
+			List<String> str = new ArrayList<>();
 			String mesId[] = mes.getDriverName().split(",");
-			
+
 			for (int i = 0; i < mesId.length; i++) {
 				str.add(mesId[i]);
 			}
-			 
 
 			List<SysDriver> list = driverMapper.queryForPage2(str);
 			PageInfo<SysDriver> page = new PageInfo<>(list);
@@ -143,12 +142,32 @@ public class SysMessageServiceImpl implements SysMessageService {
 		}
 		return null;
 	}
-@Override
+
+	@Override
 	public PageInfo<Map<String, Object>> queryMsgListForPage(SysMessage record) throws Exception {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Map<String, Object>> list = messageMapper.queryMsgListForPage(record);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
+	}
+
+	@Override
+	public String  saveMessage_New_Road(String content, String publisherPhone) throws Exception {
+		SysDriver driver = new SysDriver();
+		driver.setMobilePhone(publisherPhone);
+		driver = driverMapper.queryDriverByMobilePhone(driver);
+		SysMessage message=new SysMessage();
+		message.setContent(content);
+		message.setDevice_token(driver.getDeviceToken());
+		message.setDriver_name(driver.getDeviceToken());
+		message.setDriverName(driver.getDeviceToken());
+		message.setMemo("路况审核失败提提醒");
+		message.setMessageTicker("路况审核失败提提醒");
+		message.setMessageTitle("路况审核失败提提醒");
+		message.setMessageType(1);
+		return saveMessage_New(message);
+		// TODO Auto-generated method stub
+
 	}
 
 }
