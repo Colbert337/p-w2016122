@@ -159,7 +159,7 @@
 									<%-- <td>${list.operator}</td> --%>
 									<td>${list.province}</td>
 									<td>${list.usefulCount}</td>
-									<td>${list.memo}</td>
+									<td><div class="td-inner-warp">${list.memo}</div></td>
 									<td><c:if test="${list.conditionStatus == '2'}">
 
 											<a class="option-btn-m" href="javascript:void(0);"
@@ -291,6 +291,21 @@
 					</tr>
 					<tr>
 						<th>审核时间</th>
+						<td colspan="3"><div id="prepay_balance" name="show"></div></td>
+
+					</tr>
+					</tbody>
+				</table>
+				<div class="shenhe-items-hd">其他信息</div>
+				<table class="table">
+					<tr>
+						<th>省份信息</th>
+						<td><div  name="show"></div></td>
+						<th>点赞数量</th>
+						<td><div id="prepay_phone" name="show"></div></td>
+					</tr>
+					<tr>
+						<th>备注</th>
 						<td colspan="3"><div id="prepay_balance" name="show"></div></td>
 
 					</tr>

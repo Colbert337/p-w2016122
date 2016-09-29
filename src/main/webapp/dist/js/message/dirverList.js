@@ -29,7 +29,7 @@ function checkchange(obj) {
 	}
 	if ($(obj).is(':checked')) {
 		device_token += $(obj).val() + ",";
-		driver_name+=$(obj).attr('value1')+',';
+		driver_name+=$(obj).attr('value1')+',';	
 	} else {
 		if (device_token.indexOf($(obj).val() + ',') != -1) {
 			device_token = device_token.substring(0, device_token
@@ -38,16 +38,15 @@ function checkchange(obj) {
 							+ ',')
 							+ $(obj).val().length + 1, device_token.length);
 		}
-		if (driver_name.indexOf($(obj).val() + ',') != -1) {
+		if (driver_name.indexOf($(obj).attr('value1') + ',') != -1) {
 			driver_name = driver_name.substring(0, driver_name
-					.indexOf($(obj).val()))
-					+ driver_name.substring(driver_name.indexOf($(obj).val()
+					.indexOf( $(obj).attr('value1')))
+					+ driver_name.substring(driver_name.indexOf( $(obj).attr('value1')
 							+ ',')
-							+ $(obj).val().length + 1, driver_name.length);
+							+ $(obj).attr('value1').length + 1, driver_name.length);
 		}
-		
-
 	}
+	$("#text").text(driver_name);
 	// alert(device_token);
 	/*
 	 * $('.checkbox').each(function(i,obj){ console.log('11')
@@ -56,6 +55,16 @@ function checkchange(obj) {
 	 * alert(device_token);
 	 */
 }
+function checkedAllRows(){
+	
+	$(".checkbox").prop("checked", !$(".checkbox").prop("checked"));
+	for(var i=0;i<$(".checkbox").length;i++){
+		checkchange($(".checkbox")[i]);
+	}
+	
+}
+
+
 function commitForm(obj) {
 	// 设置当前页的值
 	if (typeof obj == "undefined") {
@@ -68,10 +77,16 @@ function commitForm(obj) {
 }
 function oncheck() {
 	if (device_token != '') {
+		$("#allcheckbox").prop("checked",true);
 		var token = device_token.split(',')
 		for (var i = 0; i < token.length; i++) {
 			eval('$("#' + token[i] + '").prop("checked", true);')
+			if($("#"+ token[i] + "").prop("checked")==false){
+				$("#allcheckbox").prop("checked",false);
+			}
 		}
+		
+		
 	}
 }
 
