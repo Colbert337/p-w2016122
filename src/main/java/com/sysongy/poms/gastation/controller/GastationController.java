@@ -574,7 +574,7 @@ public class GastationController extends BaseContoller{
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
 	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
-	            	content[0] = new String[]{"订单编号","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","会员账号","支付方式","充值金额","返现金额","操作人"};
+	            	content[0] = new String[]{"订单编号","交易流水号","交易时间","交易类型","订单类型","加注站编号","加注站名称","客户姓名","会员账号","手机号","支付方式","充值金额","返现金额","操作人"};
 	            }else{
 	            	content[0] = new String[]{"订单编号","交易流水号","交易时间","交易类型","客户姓名","会员账号","支付方式","充值金额","操作人"};
 	            }
@@ -593,6 +593,7 @@ public class GastationController extends BaseContoller{
 	            		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
 	            		String full_name = tmpMap.get("full_name")==null?"":tmpMap.get("full_name").toString();
 	            		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
+						 String mobile_phone = tmpMap.get("mobile_phone")==null?"":tmpMap.get("mobile_phone").toString();
 	            		String charge_type;
 	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
 	            		String cash_back = tmpMap.get("cash_back")==null?"0.00":tmpMap.get("cash_back").toString();
@@ -711,9 +712,9 @@ public class GastationController extends BaseContoller{
 						}
 
 	    	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
-	    	            	content[i] = new String[]{order_number,deal_number,order_date,is_discharge,deal_type,channel_number,channel,full_name,user_name,charge_type,cash,cash_back,operator};
+	    	            	content[i] = new String[]{order_number,deal_number,order_date,is_discharge,deal_type,channel_number,channel,full_name,user_name,mobile_phone,charge_type,cash,cash_back,operator};
 	    	            }else{
-	    	            	content[i] = new String[]{order_number,deal_number,order_date,is_discharge,full_name,user_name,charge_type,cash,operator};	
+	    	            	content[i] = new String[]{order_number,deal_number,order_date,is_discharge,full_name,user_name,mobile_phone,charge_type,cash,operator};
 	    	            }
 	                    i++;
 	                }

@@ -524,7 +524,7 @@ public class DriverController extends BaseContoller{
 
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","会员账号","加注站编号","加注站名称","关联运输公司","备注","操作人"};
+            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","会员账号","电话号码","加注站编号","加注站名称","关联运输公司","备注","操作人"};
 
             int i = 1;
             if(list != null && list.size() > 0){
@@ -537,6 +537,7 @@ public class DriverController extends BaseContoller{
             		String is_discharge = tmpMap.get("is_discharge")==null?"":"0".equals(tmpMap.get("is_discharge").toString())?"消费":"冲红";
             		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
             		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
+					 String mobile_phone = tmpMap.get("mobile_phone")==null?"":tmpMap.get("mobile_phone").toString();
             		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
             		String channel_number = tmpMap.get("channel_number")==null?"":tmpMap.get("channel_number").toString();
             		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
@@ -559,7 +560,7 @@ public class DriverController extends BaseContoller{
 					}
 
 
-                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,user_name,channel_number,channel,transportion_name,remark,operator};
+                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,user_name,mobile_phone,channel_number,channel,transportion_name,remark,operator};
                     i++;
                 }
             }
