@@ -624,7 +624,6 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(sysDriverId != null && !sysDriverId.equals("")){
-					Map<String, Object> resultMap = new HashMap<>();
 					if(name !=null && !"".equals(name)){
 						driver.setFullName(name);
 					}
@@ -633,6 +632,9 @@ public class MobileController {
 					}
 					driver.setSysDriverId(sysDriverId);
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
+					SysDriver oldDriver = driverService.queryByDeviceToken(mainObj.optString("deviceToken"));
+					oldDriver.setDeviceToken("");
+					int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
 					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);

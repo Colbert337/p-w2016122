@@ -446,4 +446,9 @@ public class DriverServiceImpl implements DriverService {
 	public SysDriver queryByUserName(SysDriver record) throws Exception {
 		return sysDriverMapper.queryByUserName(record);
 	}
+
+	@Override
+	public SysDriver queryByDeviceToken(String deviceToken) throws Exception {
+		return sysDriverMapper.queryByDeviceToken(deviceToken);
+	}
 }
