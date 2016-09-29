@@ -268,11 +268,33 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(b){
+				String msgType = mainObj.optString("templateType");
 				//发送短信
 				Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
 				verification.setPhoneNum(mainObj.optString("phoneNum"));
 				verification.setReqType(MobileVerificationUtils.APP_DRIVER_REG);
-				MobileVerificationUtils.sendMSG(verification, checkCode.toString());
+
+				AliShortMessage.SHORT_MESSAGE_TYPE msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER;
+				switch (msgType){
+					case "1":
+						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER;
+						verification.setContent("司集");
+						break;
+					case "2":
+						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PROFILE;
+						verification.setContent("登录手机号码");
+						break;
+					case "3":
+						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PROFILE;
+						verification.setContent("密保手机号码");
+						break;
+					case "4":
+						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_LOGIN_CONFIRM;
+						verification.setContent("司集APP");
+						break;
+				}
+
+				MobileVerificationUtils.sendMSGType(verification, checkCode.toString(),msgTypeaTemp);
 				//设置短信有效期10分钟
 				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
 				Map<String, Object> tokenMap = new HashMap<>();
@@ -624,7 +646,6 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(sysDriverId != null && !sysDriverId.equals("")){
-					Map<String, Object> resultMap = new HashMap<>();
 					if(name !=null && !"".equals(name)){
 						driver.setFullName(name);
 					}
@@ -633,6 +654,9 @@ public class MobileController {
 					}
 					driver.setSysDriverId(sysDriverId);
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
+					SysDriver oldDriver = driverService.queryByDeviceToken(mainObj.optString("deviceToken"));
+					oldDriver.setDeviceToken("");
+					int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
 					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -909,13 +933,8 @@ public class MobileController {
 			 */
 			String token = "token";
 			String name = "name";
-			String plateNumber = "plateNumber";
-			String gasType = "gasType";
-			String endTime = "endTime";
-			String drivingLicenseImageUrl = "drivingLicenseImageUrl";
 			String driverLicenseImageUrl = "driverLicenseImageUrl";
-			String idCard = "idCard";
-			boolean b = JsonTool.checkJson(mainObj,token,name,plateNumber,gasType,endTime,drivingLicenseImageUrl,driverLicenseImageUrl,idCard);
+			boolean b = JsonTool.checkJson(mainObj,token,name,driverLicenseImageUrl);
 			/**
 			 * 请求接口
 			 */
