@@ -290,7 +290,8 @@ public class CrmPortalController {
      */
     @RequestMapping("/trafficDetail")
     public String trafficDetail(@RequestParam String trafficId,ModelMap map) throws Exception{
-    	SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+    	//SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+    	SysRoadCondition roadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + trafficId);
         String name = roadCondition.getPublisherName();
         String phone = roadCondition.getPublisherPhone();
         String conditionType = roadCondition.getConditionType();
