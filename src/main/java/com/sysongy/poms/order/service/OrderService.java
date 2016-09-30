@@ -216,5 +216,5 @@ public interface OrderService {
 
     String checkIfCanChargeToDriver(SysOrder order) throws Exception;
 
-	int updateByPrimaryKeySelective(SysOrder record);
+	int updateByPrimaryKey(SysOrder record);
 }

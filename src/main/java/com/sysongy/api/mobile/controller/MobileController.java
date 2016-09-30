@@ -7,15 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -3489,91 +3481,6 @@ public class MobileController {
 		return record;
 	}
 
-
-
-	/*@SuppressWarnings("rawtypes")
-	private Transaction weChat_notify() {
-		// 获取微信POST过来反馈信息
-		System.out.print("微信支付回调获取数据开始");
-		logger.debug("微信支付回调获取数据开始");
-		HttpServletRequest request = getRequest();
-		String inputLine;
-		String notityXml = "";
-		try {
-
-			while ((inputLine = request.getReader().readLine()) != null) {
-				notityXml += inputLine;
-			}
-			request.getReader().close();
-		} catch (Exception e) {
-			logger.debug("xml获取失败：" + e);
-			throw new ServiceException(39, "xml获取失败！");
-
-		}
-		System.out.println("接收到的报文：" + notityXml);
-		logger.debug("收到微信异步回调：");
-		logger.debug(notityXml);
-		if(StringUtils.isEmpty(notityXml)){
-			logger.debug("xml为空：");
-			throw new ServiceException(39, "xml为空！");
-
-		}
-		Map m = parseXmlToList2(notityXml);
-
-		String appid = m.get("appid").toString();
-		String bank_type = m.get("bank_type").toString();
-		String cash_fee = m.get("cash_fee").toString();
-		String fee_type = m.get("fee_type").toString();
-		String is_subscribe = m.get("is_subscribe").toString();
-		String mch_id = m.get("mch_id").toString();
-		String nonce_str = m.get("nonce_str").toString();
-		String openid = m.get("openid").toString();
-		String out_trade_no = m.get("out_trade_no").toString();
-		String result_code = m.get("result_code").toString();
-		String return_code = m.get("return_code").toString();
-		String sign = m.get("sign").toString();
-		String time_end = m.get("time_end").toString();
-		String total_fee = m.get("total_fee").toString();
-		String trade_type = m.get("trade_type").toString();
-		String transaction_id = m.get("transaction_id").toString();
-
-		SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
-
-		parameters.put("appid", appid);
-		parameters.put("bank_type", bank_type);
-		parameters.put("cash_fee", cash_fee);
-		parameters.put("fee_type", fee_type);
-		parameters.put("is_subscribe", is_subscribe);
-		parameters.put("mch_id", mch_id);
-		parameters.put("nonce_str", nonce_str);
-		parameters.put("openid", openid);
-		parameters.put("out_trade_no", out_trade_no);
-		parameters.put("result_code", result_code);
-		parameters.put("return_code", return_code);
-		parameters.put("time_end", time_end);
-		parameters.put("total_fee", total_fee);
-		parameters.put("trade_type", trade_type);
-		parameters.put("transaction_id", transaction_id);
-		String characterEncoding = "UTF-8";
-		String mySign = createSign(characterEncoding, parameters);
-		System.out.println("我     的签名是：" + mySign);
-		logger.debug("我     的签名是：" + mySign);
-		logger.debug("WeChat     的签名是：" + sign);
-		if (sign.equals(mySign)) {
-			System.out.println("签名一致");
-			logger.debug("签名一致");
-
-		} else {
-			System.out.println("签名不一致");
-			logger.debug("签名不一致");
-			throw new ServiceException(39, "签名不一致！");
-		}
-		if (!"SUCCESS".equals(result_code)) {
-			throw new ServiceException(31, "微信返回的交易状态不正确（result_code=" + result_code + "）");
-		}
-		return common_Transaction(out_trade_no, RechargeState.SUCC);
-	}
-*/
 	/**
 	 * 遍历当前节点元素下面的所有(元素的)子节点
 	 *
