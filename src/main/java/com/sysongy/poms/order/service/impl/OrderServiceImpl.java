@@ -141,7 +141,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public int updateByPrimaryKey(SysOrder record) {
-		return sysOrderMapper.updateByPrimaryKey(record);
+		return sysOrderMapper.updateByPrimaryKeySelective(record);
 	}
 
     /**
