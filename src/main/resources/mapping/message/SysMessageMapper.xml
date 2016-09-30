@@ -88,7 +88,7 @@
 	<insert id="insert" parameterType="com.sysongy.poms.message.model.SysMessage">
 		insert into sys_message (id, message_title, message_body,
 		message_ticker,message_type, message_group, message_send_time,
-		message_created_time, operator, memo,device_token,driver_name,province_id,province_name
+		message_created_time, operator, memo,device_token,driver_name,province_id,province_name,content
 		)
 		values (#{id,jdbcType=VARCHAR}, #{messageTitle,jdbcType=VARCHAR},
 		#{messageBody,jdbcType=VARCHAR},
@@ -96,7 +96,7 @@
 		#{messageSendTime,jdbcType=TIMESTAMP},
 		#{messageCreatedTime,jdbcType=TIMESTAMP},
 		#{operator,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR},
-		#{device_token,jdbcType=VARCHAR},#{driver_name,jdbcType=VARCHAR},#{province_id,jdbcType=VARCHAR},#{province_name,jdbcType=VARCHAR}
+		#{device_token,jdbcType=VARCHAR},#{driver_name,jdbcType=VARCHAR},#{province_id,jdbcType=VARCHAR},#{province_name,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.sysongy.poms.message.model.SysMessage">

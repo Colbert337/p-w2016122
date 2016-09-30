@@ -70,7 +70,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 		if (status == 200) {
 			return String.valueOf(messageMapper.insert(obj));
 		} else {
-			throw new Exception("Umeng信息发送异常，请检查");
+			throw new Exception("Umeng信息发送异常，请检查,code:" + status);
 		}
 
 	}

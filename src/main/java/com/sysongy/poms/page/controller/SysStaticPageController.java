@@ -1,6 +1,7 @@
 package com.sysongy.poms.page.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,6 +213,7 @@ public class SysStaticPageController extends BaseContoller {
 		String ret = "redirect:/web/page/pageList?type=2";
 
 		try {
+			page.setPageCreatedTime(new Date());
 			service.update(page);
 			bean.setRetCode(100);
 			bean.setRetMsg("修改成功");
