@@ -1972,7 +1972,8 @@ public class MobileController {
 					order.setPageNum(mainObj.optInt("pageNum"));
 					order.setPageSize(mainObj.optInt("pageSize"));
 				}
-
+				SimpleDateFormat sftime = new SimpleDateFormat("yyyy-MM");
+				order.setOrderDate(sftime.parse(mainObj.optString(time)));
 				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverTransferPage(order);
 				List<Map<String,Object>> reChargeList = new ArrayList<>();
 				Map<String,Object> reCharge = new HashMap<>();
