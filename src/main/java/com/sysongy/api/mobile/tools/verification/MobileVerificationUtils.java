@@ -51,7 +51,19 @@ public class MobileVerificationUtils extends MobileUtils{
 		
 		AliShortMessage.sendShortMessage(aliShortMessageBean, msgType);
 	}
-	
+
+	/*根据模板类型发送短信*/
+	public static void sendMSGType(MobileVerification verification, String checkCode,SHORT_MESSAGE_TYPE msgType) throws Exception{
+
+		AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+
+		aliShortMessageBean.setSendNumber(verification.getPhoneNum());
+		aliShortMessageBean.setProduct(verification.getContent());
+		aliShortMessageBean.setCode(checkCode.toString());
+
+		AliShortMessage.sendShortMessage(aliShortMessageBean, msgType);
+	}
+
 	private static String createMSGProductStr(String reqType) throws Exception{
 		
 		String productStr = "";

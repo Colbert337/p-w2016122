@@ -241,12 +241,7 @@
 				<div class="shenhe-items-hd">路况信息</div>
 				<table class="table">
 					<tbody>
-						<tr>
-							<th width="15%">路况类型</th>
-							<td><div id="sys_gas_station_id" name="show"></div></td>
-							<th width="15%">路况状态</th>
-							<td><div id="gas_station_name" name="show"></div></td>
-						</tr>
+						 
 						<tr>
 							<th>坐标</th>
 							<td><div id="salesmen_name" name="show"></div></td>
@@ -254,15 +249,8 @@
 							<td><div id="operations_name" name="show"></div></td>
 						</tr>
 						<tr>
-							<th>路况说明</th>
+							<th>拍照说明</th>
 							<td><div id="admin_username" name="show"></div></td>
-							<th>开始时间</th>
-							<td><div id="indu_com_number" name="show"></div></td>
-						</tr>
-						<tr>
-							<th>结束时间</th>
-							<td colspan="3"><div id="status" name="show"></div></td>
-
 						</tr>
 					</tbody>
 				</table>

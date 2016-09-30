@@ -70,7 +70,7 @@
       and city_id LIKE CONCAT(CONCAT('%',  #{cityId,jdbcType=VARCHAR}), '%')
     </if>
     <if test="createdDate_str != null &amp;&amp; createdDate_str != ''"  >
-      and DATE_FORMAT(created_date,"%Y/%m/%d")   <![CDATA[   >=  ]]> #{createdDate_str,jdbcType=VARCHAR} and   DATE_FORMAT(created_date,"%Y/%m/%d")  <![CDATA[   <=  ]]> #{updatedDate_str,jdbcType=VARCHAR}
+      and DATE_FORMAT(updated_date,"%Y/%m/%d")   <![CDATA[   >=  ]]> #{createdDate_str,jdbcType=VARCHAR} and   DATE_FORMAT(updated_date,"%Y/%m/%d")  <![CDATA[   <=  ]]> #{updatedDate_str,jdbcType=VARCHAR}
     </if>
 
     order by sort asc

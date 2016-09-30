@@ -89,17 +89,17 @@ public class SysRoadServiceImpl implements SysRoadService {
 	@Override
 	public int cancelSysRoadCondition(SysRoadCondition record) throws Exception {
 		int result = sysRoadConditionMapper.cancelSysRoadCondition(record);
-		SysRoadCondition sysRoadCondition = sysRoadConditionMapper.selectByPrimaryKey(record.getId());
+		SysRoadCondition sysRoadCondition = sysRoadConditionMapper.selectByPrimaryKey(record.getRoadId());
 		if(sysRoadCondition != null){
 			int count = Integer.parseInt(sysRoadCondition.getInvalid_count());
 			count++;
 
 			SysRoadCondition roadCondition = new SysRoadCondition();
-			roadCondition.setRoadId(record.getRoadId());
+			roadCondition.setId(record.getRoadId());
 			roadCondition.setInvalid_count(count+"");
 
 			//修改取消数
-			sysRoadConditionMapper.updateByPrimaryKey(roadCondition);
+			sysRoadConditionMapper.updateByPrimaryKeySelective(roadCondition);
 		}
 		return result;
 	}

@@ -32,10 +32,9 @@
 						</div>
 						
 						<div class="item">
-						    <label>加注站名称:</label>
-							<input type="text" name="gas_station_name" placeholder="输入加注站名称" maxlength="20" value="${gastation.gas_station_name}"/>
+						    <label>加注站名称/所属公司:</label>
+							<input type="text" name="gas_station_name" placeholder="输入加注站名称/所属公司"  maxlength="20" value="${gastation.gas_station_name}"/>
 						</div>
-						
 						<div class="item">
 							<label>合作类型:</label>
 							<select class="chosen-select " id="select" name="map_type"  >
@@ -82,6 +81,7 @@
 									</th>
 									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
 									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
+									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
 									<th onclick="orderBy(this,'contact_phone');commitForm();" id="contact_phone_order">电话号码</th>
 									<th onclick="orderBy(this,'province_id');commitForm();" id="province_id_order">所在省</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">地址</th>
@@ -108,6 +108,7 @@
 									</td>
 									<td>${list.sys_gas_station_id}</td>
 								 	<td>${list.gas_station_name}</td> 
+								 	<td>${list.company}</td> 
 								 	<td>${list.contact_phone}</td> 
 									<td><s:Code2Name mcode="${list.province_id}" gcode="PROVINCE_CODE"></s:Code2Name></td>
 									<td><div class="td-inner-warp">${list.address}</div></td>

@@ -62,7 +62,7 @@
 						
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>消息创建时间:</label>
+								<label>修改时间:</label>
 								<input type="text" class="" name="createdDate_str" value="${mbBanner.createdDate_str}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
@@ -120,6 +120,10 @@
 											id="created_date_order" class="td-w2"><i
 											id="created_date"
 											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
+										<th onclick="orderBy(this,'updated_date');commitForm();" 	id="updated_date_order"
+											 class="td-w2"><i
+										
+											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间时间</th>
 										<th onclick="orderBy(this,'operator');commitForm();"
 											id="operator_orber">创建人</th>
 										<th class="text-center td-w3">操作</th>
@@ -139,6 +143,8 @@
 											<td><div class="td-inner-warp">${list.remark}</div></td>
 											<td><div class="td-inner-warp">${list.city_name}</div></td>
 											<td><fmt:formatDate value="${list.createdDate}"
+													type="both" /></td>
+											<td><fmt:formatDate value="${list.updatedDate}"
 													type="both" /></td>
 											<td>${list.operator}</td>
 											<td class="text-center"><a class="option-btn-m"

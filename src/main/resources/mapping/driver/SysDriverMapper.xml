@@ -94,7 +94,7 @@
         and sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
       </if>
       <if test="fullName!= null &amp;&amp; fullName != ''" >
-        and (user_name like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%'))
+        and (user_name	 like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%'))
         or  mobile_phone like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%')))
       </if>
       <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
@@ -132,7 +132,7 @@
     select
      *
     from sys_driver
-    where 1=1
+    where 1=1 and  device_token is not null 
     <trim>
        
       <if test="fullName!= null &amp;&amp; fullName != ''" >
@@ -149,7 +149,7 @@
     select
      *
     from sys_driver
-    where 1=1 and user_name IN <foreach collection="list" item="item" index="index" 
+    where 1=1 and device_token IN <foreach collection="list" item="item" index="index" 
 open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
   </select>
   
@@ -619,6 +619,9 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
       <if test="driverQrcode != null" >
         driver_qrcode = #{driverQrcode,jdbcType=VARCHAR},
       </if>
+      <if test="deviceToken != null" >
+        device_token = #{deviceToken,jdbcType=VARCHAR},
+      </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
@@ -718,5 +721,11 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
     where 
     user_name = #{userName,jdbcType=VARCHAR}
   </select>
-  
+  <select id="queryByDeviceToken" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+    where 
+    device_token = #{deviceToken,jdbcType=VARCHAR}
+  </select>   
 </mapper>

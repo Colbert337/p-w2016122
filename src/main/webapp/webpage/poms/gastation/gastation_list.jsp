@@ -33,8 +33,8 @@
 						</div>
 						
 						<div class="item">
-						    <label>加注站名称:</label>
-							<input type="text" name="gas_station_name" placeholder="输入加注站名称"  maxlength="20" value="${gastation.gas_station_name}"/>
+						    <label>加注站名称/所属公司:</label>
+							<input type="text" name="gas_station_name" placeholder="输入加注站名称/所属公司"  maxlength="20" value="${gastation.gas_station_name}"/>
 						</div>
 						
 						<div class="item">
@@ -92,6 +92,7 @@
 									</th>
 									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
 									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
+									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
 									<th onclick="orderBy(this,'admin_username');commitForm();" id="admin_username_order">管理员账号</th>
@@ -123,6 +124,7 @@
 
 									<td>${list.sys_gas_station_id}</td>
 								 	<td>${list.gas_station_name}</td> 
+								 	<td>${list.company}</td>
 									<td>${list.salesmen_name}</td>
 									<td>${list.operations_name}</td>
 									<td>${list.admin_username}</td>

@@ -43,7 +43,7 @@
 					</div>
 					<div class="item">
 						<div class="input-daterange top" id="j-input-daterange-top">
-							<label>页面创建时间:</label> <input type="text" class=""
+							<label>页面修改时间:</label> <input type="text" class=""
 								name="page_created_time_after"
 								value="${page.page_created_time_after}" readonly="readonly" />
 							<span class=""> <i class="fa fa-exchange"></i>
@@ -93,10 +93,10 @@
 									
 								<th onclick="orderBy(this,'page_creator');commitForm();"
 									id="page_creator_order">页面创建者</th>
-								<th onclick="orderBy(this,'message_created_time');commitForm();"
-									id="message_created_time_order" class="td-w2"><i
+								<th onclick="orderBy(this,'page_created_time');commitForm();"
+									id="page_created_time_order" class="td-w2"><i
 									id="message_created_time"
-									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>页面创建时间</th>
+									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>页面修改时间</th>
 								<th onclick="orderBy(this,'page_html');commitForm();"
 									id="page_html_order" style="display: none;">编辑内容</th>
 								<th  
@@ -127,11 +127,12 @@
 										href="javascript:void(0);" title="页面预览" data-rel="tooltip">
 											<i class="ace-icon fa fa-eye bigger-130"
 											onclick="preview(this);"></i>
-									</a><a class="option-btn-m"
+									</a><c:if test="${list.pageStatus == '0'}">
+									<a class="option-btn-m"
 												href="javascript:void(0);" title="修改" data-rel="tooltip">
 													<i class="ace-icon fa fa-pencil bigger-130"
 													onclick="loadPage('#main', '../web/page/fondOne?id=${list.id}');"></i>
-											</a> <c:if test="${list.pageStatus == '0'}">
+											</a> 
 											<a class="logic-del" href="javascript:void(0);" title="失效"
 												data-rel="tooltip"> <i
 												class="ace-icon fa fa-trash-o bigger-130"

@@ -6,29 +6,29 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.sysongy.util.*;
 import net.sf.json.JSONArray;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.dom4j.Attribute;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -268,11 +268,33 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(b){
+				String msgType = mainObj.optString("templateType");
 				//发送短信
 				Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
 				verification.setPhoneNum(mainObj.optString("phoneNum"));
 				verification.setReqType(MobileVerificationUtils.APP_DRIVER_REG);
-				MobileVerificationUtils.sendMSG(verification, checkCode.toString());
+
+				AliShortMessage.SHORT_MESSAGE_TYPE msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER;
+				switch (msgType){
+					case "1":
+						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER;
+						verification.setContent("司集");
+						break;
+					case "2":
+						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PROFILE;
+						verification.setContent("登录手机号码");
+						break;
+					case "3":
+						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_CHANGE_PROFILE;
+						verification.setContent("密保手机号码");
+						break;
+					case "4":
+						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_LOGIN_CONFIRM;
+						verification.setContent("司集APP");
+						break;
+				}
+
+				MobileVerificationUtils.sendMSGType(verification, checkCode.toString(),msgTypeaTemp);
 				//设置短信有效期10分钟
 				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
 				Map<String, Object> tokenMap = new HashMap<>();
@@ -624,7 +646,6 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if(sysDriverId != null && !sysDriverId.equals("")){
-					Map<String, Object> resultMap = new HashMap<>();
 					if(name !=null && !"".equals(name)){
 						driver.setFullName(name);
 					}
@@ -633,6 +654,9 @@ public class MobileController {
 					}
 					driver.setSysDriverId(sysDriverId);
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
+					SysDriver oldDriver = driverService.queryByDeviceToken(mainObj.optString("deviceToken"));
+					oldDriver.setDeviceToken("");
+					int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
 					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -909,13 +933,8 @@ public class MobileController {
 			 */
 			String token = "token";
 			String name = "name";
-			String plateNumber = "plateNumber";
-			String gasType = "gasType";
-			String endTime = "endTime";
-			String drivingLicenseImageUrl = "drivingLicenseImageUrl";
 			String driverLicenseImageUrl = "driverLicenseImageUrl";
-			String idCard = "idCard";
-			boolean b = JsonTool.checkJson(mainObj,token,name,plateNumber,gasType,endTime,drivingLicenseImageUrl,driverLicenseImageUrl,idCard);
+			boolean b = JsonTool.checkJson(mainObj,token,name,driverLicenseImageUrl);
 			/**
 			 * 请求接口
 			 */
@@ -1631,8 +1650,8 @@ public class MobileController {
 						bannerMap.put("title",banner.getTitle());
 						bannerMap.put("content",banner.getContent());
 						bannerMap.put("time",sft.format(banner.getCreatedDate()) );
-						bannerMap.put("contentUrl",banner.getTargetUrl());
-						bannerMap.put("shareUrl",banner.getTargetUrl()+"&show_download_button=1");
+						bannerMap.put("contentUrl",http_poms_path+banner.getTargetUrl());
+						bannerMap.put("shareUrl",http_poms_path+banner.getTargetUrl()+"&show_download_button=1");
 						bannerMap.put("imgSmPath",http_poms_path+banner.getImgSmPath());
 						if(banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())){
 							bannerMap.put("imageUrl",http_poms_path+banner.getImgPath());
@@ -1962,8 +1981,8 @@ public class MobileController {
 						reChargeMap.put("orderNum",map.get("orderNumber"));
 						reChargeMap.put("amount",map.get("cash"));
 						reChargeMap.put("operator",map.get("operator"));
-
 						reChargeMap.put("remark",map.get("remark"));
+						reChargeMap.put("type",map.get("type"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
 							dateTime = sft.format(new Date());
@@ -1971,15 +1990,23 @@ public class MobileController {
 						reChargeMap.put("time",dateTime);
 
 						reChargeList.add(reChargeMap);
+						if("0".equals(map.get("type"))){
+							//汇总转出总额
+							if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+								BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
 
-						//汇总转出/转入总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							BigDecimal tempVal = new BigDecimal(reChargeMap.get("cash").toString());
+								if(tempVal.compareTo(BigDecimal.ZERO) > 0){
+									totalCash = totalCash.add(tempVal);
+								}
+							}
+						}else{
+							//汇总转入总额
+							if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+								BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
 
-							if(tempVal.compareTo(BigDecimal.ZERO) > 0){
-								totalCash = totalCash.add(tempVal);
-							}else{
-								totalBack = totalBack.add(tempVal);
+								if(tempVal.compareTo(BigDecimal.ZERO) > 0){
+									totalBack = totalBack.add(tempVal);
+								}
 							}
 						}
 					}
@@ -2029,6 +2056,7 @@ public class MobileController {
 		result.setMsg("充值成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
+		String http_poms_path =  (String) prop.get("http_poms_path");
 
 		try {
 			/**
@@ -2058,8 +2086,9 @@ public class MobileController {
 				if(payType.equalsIgnoreCase("2")){           //支付宝支付
 					sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE);  //TODO充值成功后再去生成订单
 					orderService.checkIfCanChargeToDriver(sysOrder);
+					String notifyUrl = http_poms_path+"/api/v1/mobile/deal/callBackPay";
 					Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
-							"司集云平台-会员充值", orderID);
+							"司集云平台-会员充值", orderID , notifyUrl);
 					String orderParam = OrderInfoUtil2_0.buildOrderParam(paramsApp);
 					String sign = OrderInfoUtil2_0.getSign(paramsApp, RSA_PRIVATE);
 					thirdPartyID = orderID;
@@ -2119,28 +2148,59 @@ public class MobileController {
 	 */
 	@RequestMapping(value = "/deal/callBackPay")
 	@ResponseBody
-	public String callBackPay(@RequestParam String orderId) throws Exception{
-		MobileReturn result = new MobileReturn();
-		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("支付成功！");
-		JSONObject resutObj = new JSONObject();
-		String resultStr = "";
-		//查询订单内容
-		SysOrder order = orderService.selectByPrimaryKey(orderId);
-		//修改订单状态
-		SysOrder sysOrder = new SysOrder();
-		sysOrder.setOrderId(orderId);
-		sysOrder.setOrderStatus(1);
-		orderService.updateByPrimaryKey(sysOrder);
-		try{
-			String orderCharge = orderService.chargeToDriver(order);
-			if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
-				throw new Exception("订单充值错误：" + orderCharge);
+	public String callBackPay(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String orderId = "";
+		logger.debug("微信支付回调获取数据开始");
+		String inputLine;
+		String notityXml = "";
+		try {
+
+			while ((inputLine = request.getReader().readLine()) != null) {
+				notityXml += inputLine;
+			}
+			request.getReader().close();
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("订单充值错误：" + e);
+			logger.debug("xml获取失败：" + e);
+			throw new ServiceException("xml获取失败！");
+
 		}
-		return null;
+		System.out.println("接收到的报文：" + notityXml);
+		logger.debug("收到微信异步回调：");
+		logger.debug(notityXml);
+		if(StringUtils.isEmpty(notityXml)){
+			logger.debug("xml为空：");
+			throw new ServiceException("xml为空！");
+		}else{
+			Document document = DocumentHelper.parseText(notityXml);
+			Element node = document.getRootElement();
+			listNodes(node);
+			Element element = node.element("out_trade_no");
+			orderId = element.getText();
+		}
+
+		if(orderId != null && !"".equals(orderId)){
+			MobileReturn result = new MobileReturn();
+			result.setStatus(MobileReturn.STATUS_SUCCESS);
+			result.setMsg("支付成功！");
+			JSONObject resutObj = new JSONObject();
+			String resultStr = "";
+			//查询订单内容
+			SysOrder order = orderService.selectByPrimaryKey(orderId);
+			//修改订单状态
+			SysOrder sysOrder = new SysOrder();
+			sysOrder.setOrderId(orderId);
+			sysOrder.setOrderStatus(1);
+			orderService.updateByPrimaryKey(sysOrder);
+			try{
+				String orderCharge = orderService.chargeToDriver(order);
+				if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
+					throw new Exception("订单充值错误：" + orderCharge);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception("订单充值错误：" + e);
+			}
+		}
+		return "";
 	}
 	/**
 	 * 修改账号手机号/密保手机
@@ -3390,7 +3450,12 @@ public class MobileController {
 
 	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType) throws Exception{
 		SysOrder record = new SysOrder();
-
+		if(chargeType.equals(GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE)){//微信支付，将金额转换为以元为单位
+			BigDecimal cashBd = new BigDecimal(cash);
+			BigDecimal num = new BigDecimal(100);
+			cashBd = cashBd.divide(num, 2, RoundingMode.HALF_UP);
+			cash = cashBd.toString();
+		}
 		record.setOrderId(orderID);
 		record.setDebitAccount(driverID);
 		record.setOperator(driverID);
@@ -3420,5 +3485,35 @@ public class MobileController {
 		record.setChannel("司集能源APP");
 		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
 		return record;
+	}
+
+	/**
+	 * 遍历当前节点元素下面的所有(元素的)子节点
+	 *
+	 * @param node
+	 */
+	public void listNodes(Element node) {
+		System.out.println("当前节点的名称：：" + node.getName());
+		// 获取当前节点的所有属性节点
+		List<Attribute> list = node.attributes();
+		// 遍历属性节点
+		for (Attribute attr : list) {
+			System.out.println(attr.getText() + "-----" + attr.getName()
+					+ "---" + attr.getValue());
+		}
+
+		if (!(node.getTextTrim().equals(""))) {
+			System.out.println("文本内容：：：：" + node.getText());
+		}
+
+		// 当前节点下面子节点迭代器
+		Iterator<Element> it = node.elementIterator();
+		// 遍历
+		while (it.hasNext()) {
+			// 获取某个子节点对象
+			Element e = it.next();
+			// 对子节点进行遍历
+			listNodes(e);
+		}
 	}
 }

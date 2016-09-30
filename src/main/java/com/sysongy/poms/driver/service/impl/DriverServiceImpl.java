@@ -169,6 +169,7 @@ public class DriverServiceImpl implements DriverService {
         SysUserAccount sysUserAccount = new SysUserAccount();       //初始化钱袋信息
         sysUserAccount.setSysUserAccountId(UUIDGenerator.getUUID());
         sysUserAccount.setAccountCode("DR"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+//        sysUserAccount.setAccountCode("DR"+UUIDGenerator.getUUID());
         sysUserAccount.setAccountType(GlobalConstant.AccounType.DRIVER);
         sysUserAccount.setAccountBalance("0.0");
         sysUserAccount.setCreatedDate(new Date());
@@ -445,5 +446,10 @@ public class DriverServiceImpl implements DriverService {
 	@Override
 	public SysDriver queryByUserName(SysDriver record) throws Exception {
 		return sysDriverMapper.queryByUserName(record);
+	}
+
+	@Override
+	public SysDriver queryByDeviceToken(String deviceToken) throws Exception {
+		return sysDriverMapper.queryByDeviceToken(deviceToken);
 	}
 }

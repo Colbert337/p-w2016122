@@ -70,7 +70,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 		if (status == 200) {
 			return String.valueOf(messageMapper.insert(obj));
 		} else {
-			throw new Exception("Umeng信息发送异常，请检查");
+			throw new Exception("Umeng信息发送异常，请检查,code:" + status);
 		}
 
 	}
@@ -128,14 +128,13 @@ public class SysMessageServiceImpl implements SysMessageService {
 		// TODO Auto-generated method stub
 		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
 		SysMessage mes = queryMessageByPK(message);
-		if (mes.getDriver_name() != null) {
-			List<String> str=new ArrayList<>();
-			String mesId[] = mes.getDriver_name().split(",");
-			
+		if (mes.getDriverName() != null) {
+			List<String> str = new ArrayList<>();
+			String mesId[] = mes.getDriverName().split(",");
+
 			for (int i = 0; i < mesId.length; i++) {
 				str.add(mesId[i]);
 			}
-			 
 
 			List<SysDriver> list = driverMapper.queryForPage2(str);
 			PageInfo<SysDriver> page = new PageInfo<>(list);
@@ -143,12 +142,35 @@ public class SysMessageServiceImpl implements SysMessageService {
 		}
 		return null;
 	}
-@Override
+
+	@Override
 	public PageInfo<Map<String, Object>> queryMsgListForPage(SysMessage record) throws Exception {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Map<String, Object>> list = messageMapper.queryMsgListForPage(record);
 		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
 		return pageInfo;
+	}
+
+	@Override
+	public String  saveMessage_New_Road(String content, String publisherPhone) throws Exception {
+		SysDriver driver = new SysDriver();
+		driver.setMobilePhone(publisherPhone);
+		driver = driverMapper.queryDriverByMobilePhone(driver);
+		SysMessage message=new SysMessage();
+		message.setContent(content);
+		if (null==driver.getDeviceToken()||"".equals(driver.getDeviceToken())) {
+			throw new Exception("用户Token为空，发送消息失败！");
+		}
+		message.setDevice_token(driver.getDeviceToken());
+		message.setDriver_name(driver.getDeviceToken());
+		message.setDriverName(driver.getDeviceToken());
+		message.setMemo("路况审核失败提提醒");
+		message.setMessageTicker("路况审核失败提提醒");
+		message.setMessageTitle("路况审核失败提提醒");
+		message.setMessageType(1);
+		return saveMessage_New(message);
+		// TODO Auto-generated method stub
+
 	}
 
 }

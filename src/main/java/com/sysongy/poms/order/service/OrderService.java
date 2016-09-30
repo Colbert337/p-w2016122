@@ -26,7 +26,7 @@ public interface OrderService {
 
     SysOrder selectByPrimaryKey(String orderId);
 
-    int updateByPrimaryKey(SysOrder record);
+    //int updateByPrimaryKey(SysOrder record);
     
     PageInfo<OrderLog> queryOrderLogs(OrderLog obj) throws Exception;
 
@@ -215,4 +215,6 @@ public interface OrderService {
     PageInfo<Map<String,Object>> queryDriverTransferPage(SysOrder record);
 
     String checkIfCanChargeToDriver(SysOrder order) throws Exception;
+
+	int updateByPrimaryKey(SysOrder record);
 }

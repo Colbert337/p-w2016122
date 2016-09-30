@@ -24,7 +24,11 @@ var listOptions = {
 
 	}
 }
-
+function showContent(){
+	closeDialog('innerModel');
+	$("#content").modal('show');
+	
+}
 
 jQuery(function($) {
 	var $overflow = '';
@@ -80,12 +84,12 @@ window.onload = setCurrentPage();
 	
 function commitForm(obj) {
 	// 设置当前页的值
+	console.log(obj)
 	if (typeof obj == "undefined") {
 		$("#pageNum").val("1");
 	} else {
 		$("#pageNum").val($(obj).text());
 	}
-
 	$("#formRoad").ajaxSubmit(listOptions);
 }
 function closeDialog(obj) {
@@ -103,7 +107,7 @@ function updateCheck(obj1, tr, id) {
 	if (id != undefined) {
 		$('#buttonList')
 				.html(
-						'	<button class="btn btn-primary btn-sm" onclick="updateRoad(\'2\')">审核通过</button>					<button class="btn btn-primary btn-sm" onclick="updateRoad(\'3\')">审核不通过</button>					<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>')
+						'	<button class="btn btn-primary btn-sm" onclick="updateRoad(\'2\')">审核通过</button>					<button class="btn btn-primary btn-sm" onclick="showContent(\'3\')">审核不通过</button>					<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>')
 
 	} else {
 		$('#buttonList')
@@ -112,8 +116,8 @@ function updateCheck(obj1, tr, id) {
 	}
 	var show = $("div[name='show']");
 	for (var i = 0; i < show.length; i++) {
-		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{28})/g,
-				'$1\n');
+		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{50})/g,
+				'$1<br\>');
 	}
 	$("#innerimg1").attr("src", projectName + obj1);
 	$("#innerimg1").parent("a").attr("href", projectName + obj1);
@@ -155,7 +159,8 @@ function updateRoad(type) {
 		url : '../web/mobile/road/updateRoad',
 		type : 'post',
 		data : {
-			id : $('#roadId').val()
+			id : $('#roadId').val(),
+			content: $('#contentmes').val()
 		},
 		dataType : 'text',
 		success : function(data) {
