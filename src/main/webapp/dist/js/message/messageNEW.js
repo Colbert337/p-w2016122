@@ -46,8 +46,8 @@
 	            url:'../web/message/saveMessageNew',   
 	            type:'post',
 	            data:{
-	            	device_token:device_token,
-	            	driver_name:device_token,
+	            	device_token:device_token.replace(/\#/g, ""),
+	            	driver_name:device_token.replace(/\#/g, ""),
 	            	messageType:1
 	            },
 	            dataType:'text',

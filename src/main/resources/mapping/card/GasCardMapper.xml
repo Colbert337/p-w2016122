@@ -58,6 +58,9 @@
       <if test="card_status != null &amp;&amp; card_status != ''" >
         and card_status = #{card_status,jdbcType=VARCHAR}
       </if>
+       <if test="card_property != null &amp;&amp; card_property != ''" >
+        and card_property = #{card_property,jdbcType=VARCHAR}
+      </if>
       <if test="operator != null &amp;&amp; operator != ''">
         and operator LIKE CONCAT(CONCAT('%',  #{operator,jdbcType=VARCHAR}), '%')
       </if>

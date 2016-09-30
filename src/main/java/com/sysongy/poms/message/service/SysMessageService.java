@@ -28,4 +28,8 @@ public interface SysMessageService {
 
 	SysMessage queryMessageByPK(SysMessage message) throws Exception;
 
+
+
+	public String saveMessage_New_Road(String content, String publisherPhone) throws Exception;
+
 }

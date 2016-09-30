@@ -26,6 +26,7 @@
     <result column="lng_certif" property="lng_certif" jdbcType="VARCHAR" />
     <result column="dcp_certif" property="dcp_certif" jdbcType="VARCHAR" />
     <result column="platform_type" property="platform_type" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="created_time" property="created_time" jdbcType="TIMESTAMP" />
     <result column="updated_time" property="updated_time" jdbcType="TIMESTAMP" />
@@ -65,7 +66,7 @@
   </resultMap>
   
   <sql id="Base_Column_List" >
-    sys_gas_station_id, gas_station_name, station_level, contact_phone, admin_username, admin_username, email,station_manager,
+    sys_gas_station_id,gas_station_name,company, station_level, contact_phone, admin_username, admin_username, email,station_manager,
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
@@ -82,8 +83,7 @@
         and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
       </if>
       <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
-        and (gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%')
-        	or address  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') )
+        and (gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') or company LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') )
       </if>
       <if test="status!= null &amp;&amp; status != ''" >
         and status = #{status,jdbcType=VARCHAR}
@@ -107,8 +107,8 @@
        <if test="map_type != null &amp;&amp; map_type != ''" >
         and map_type = #{map_type,jdbcType=VARCHAR}
       </if> 
-      <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
-        and gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%')
+     <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
+        and (gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') or company LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') )
       </if>
       <if test="status!= null &amp;&amp; status != ''" >
         and status = #{status,jdbcType=VARCHAR}
@@ -158,7 +158,7 @@
   </delete>
   
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.Gastation" >
-    insert into sys_gas_station (sys_gas_station_id, gas_station_name, station_level, contact_phone,admin_username, email,station_manager,
+    insert into sys_gas_station (company,sys_gas_station_id, gas_station_name, station_level, contact_phone,admin_username, email,station_manager,
       area_id, province_id, 
       city_id, address, longitude, 
       latitude, expiry_date, salesmen_id, 
@@ -167,7 +167,8 @@
       tax_certif, lng_certif, dcp_certif, 
       platform_type, status, created_time, 
       updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server ,LNG_price ,promotions )
-    values (#{sys_gas_station_id,jdbcType=VARCHAR}, 
+    values (#{company,jdbcType=VARCHAR},
+    #{sys_gas_station_id,jdbcType=VARCHAR},
       #{gas_station_name,jdbcType=VARCHAR}, 
       #{station_level,jdbcType=VARCHAR}, 
       #{contact_phone,jdbcType=VARCHAR}, 
@@ -191,6 +192,9 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="sys_gas_station_id != null" >
         sys_gas_station_id,
+      </if>
+      <if test="company != null" >
+        company,
       </if>
       <if test="gas_station_name != null" >
         gas_station_name,
@@ -280,6 +284,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sys_gasStation_id != null" >
         #{sys_gasStation_id,jdbcType=VARCHAR},
+      </if>
+       <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
       </if>
       <if test="gas_station_name != null" >
         #{gasStation_name,jdbcType=VARCHAR},
@@ -373,6 +380,9 @@
     <set>
       <if test="gas_station_name != null &amp;&amp; gas_station_name != ''">
         gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null &amp;&amp; company != ''">
+        company = #{company,jdbcType=VARCHAR},
       </if>
       <if test="station_level != null &amp;&amp; station_level != ''">
         station_level = #{station_level,jdbcType=VARCHAR},
@@ -478,6 +488,9 @@
     <set>
       <if test="gas_station_name != null &amp;&amp; gas_station_name != ''">
         gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null &amp;&amp; company != ''">
+        company = #{company,jdbcType=VARCHAR},
       </if>
       <if test="station_level != null &amp;&amp; station_level != ''">
         station_level = #{station_level,jdbcType=VARCHAR},
@@ -590,7 +603,7 @@
   
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.gastation.model.Gastation" >
     update sys_gas_station
-    set gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
+    set company=#{company,jdbcType=VARCHAR}, gas_station_name = #{gas_station_name,jdbcType=VARCHAR},
       contact_phone = #{contact_phone,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       station_manager = #{station_manager,jdbcType=VARCHAR},
