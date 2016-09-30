@@ -188,6 +188,7 @@
       page_created_time = #{pageCreatedTime,jdbcType=TIMESTAMP},
       page_creator = #{pageCreator,jdbcType=VARCHAR},
       memo = #{memo,jdbcType=VARCHAR},
+      page_html = #{pageHtml,jdbcType=LONGVARCHAR},
       show_title = #{show_title,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
