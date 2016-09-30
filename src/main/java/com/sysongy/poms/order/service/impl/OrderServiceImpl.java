@@ -1164,9 +1164,9 @@ public class OrderServiceImpl implements OrderService {
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
-	@Override
-	public int updateByPrimaryKey(SysOrder record) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+//	@Override
+//	public int updateByPrimaryKey(SysOrder record) {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
 }
