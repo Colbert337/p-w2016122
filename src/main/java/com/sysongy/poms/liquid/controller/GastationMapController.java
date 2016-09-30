@@ -140,6 +140,7 @@ public class GastationMapController extends BaseContoller {
 						if (sheet.getCell(1, i) != null
 								&& !"".equals(sheet.getCell(1, i).getContents().replace(" ", ""))) {
 							gas.setGas_station_name(sheet.getCell(1, i).getContents());
+							gas.setCompany(sheet.getCell(1, i).getContents());
 						} else {
 							message += "第" + (i + 1) + "行第2列（加注站名称不能为空）\n";
 							err++;

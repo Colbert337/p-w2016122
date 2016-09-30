@@ -75,7 +75,9 @@
 											<input type="text" name="messageGroup" class="form-control" readonly="readonly" value="1000"/>
 										</div> -->
 									</div>
-									
+									<div class="form-group">
+									<label class="col-sm-3" ></label> 
+										<label class=" control-label" id="text"</label></div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">发送方式：</label>
 										
@@ -149,6 +151,8 @@
 			<div class="modal-footer">
 				<button class="btn btn-primary btn-sm" onclick="saveBanner()">确
 					定</button>
+					<button class="btn btn-sm" i="close"
+					onclick="checkedAllRows()">全选</button>
 				<button class="btn btn-sm" i="close"
 					onclick="closeDialog('editModel')">取 消</button>
 			</div>

@@ -15,9 +15,9 @@
 	<div class="row">
 		<div class="item">
 			<label>手机号码:</label> <input type="text" name="mobilePhone"
-				placeholder="手机号码" maxlength="10" value="${driver.mobilePhone}" />
+				placeholder="手机号码" maxlength="11" value="${driver.mobilePhone}" />
 			<label>姓名:</label> <input type="text" name="fullName"
-				placeholder="姓名" maxlength="10" value="${driver.fullName}" />
+				placeholder="姓名" maxlength="20" value="${driver.fullName}" />
 			<button class="btn btn-sm btn-primary" type="button"
 				onclick="scher();">
 				<i class="ace-icon fa fa-flask align-top bigger-125"></i> 查询

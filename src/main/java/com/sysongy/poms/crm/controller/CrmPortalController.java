@@ -10,11 +10,19 @@ import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.api.util.DESUtil;
 import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.tcms.advance.model.TcVehicle;
+import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
+import jxl.Sheet;
+import jxl.Workbook;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -23,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -48,6 +57,7 @@ import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @FileName: CrmPortalController
@@ -86,6 +96,10 @@ public class CrmPortalController {
     RedisClientInterface redisClientImpl;
     @Autowired
     DriverService driverService;
+    @Autowired
+    TransportionService transportionService;
+    @Autowired
+    TcVehicleService tcVehicleService;
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
@@ -277,6 +291,7 @@ public class CrmPortalController {
     @RequestMapping("/trafficDetail")
     public String trafficDetail(@RequestParam String trafficId,ModelMap map) throws Exception{
     	SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+//    	SysRoadCondition roadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + trafficId);
         String name = roadCondition.getPublisherName();
         String phone = roadCondition.getPublisherPhone();
         String conditionType = roadCondition.getConditionType();
@@ -305,7 +320,8 @@ public class CrmPortalController {
      */
     @RequestMapping("/trafficShare")
     public String trafficShare(@RequestParam String trafficId,ModelMap map) throws Exception{
-        SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+    	SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
+//      SysRoadCondition roadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + trafficId);
         String name = roadCondition.getPublisherName();
         String phone = roadCondition.getPublisherPhone();
         String conditionType = roadCondition.getConditionType();
@@ -514,5 +530,45 @@ public class CrmPortalController {
             logger.error("queryCardInfo error： " + e);
         }
         return ajaxJson;
+    }
+
+    /**
+     * 批量导入司集
+     * @param currUser
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/info/file")
+    public String saveDriver(HttpServletRequest request, @ModelAttribute("currUser") CurrUser currUser, ModelMap map) throws Exception{
+        SysDriver driver = new SysDriver();
+        String stationId = "TC59000001";//"郑州上运"
+
+        int resultInt = 0;
+        int intiVal = 110001301;
+        for (intiVal = 110001301;intiVal <= 110001400;intiVal++){
+            String operation = "insert";
+            String payCode = "111111";
+
+            String cardNum = intiVal+"";
+            driver.setUserName(cardNum);
+            driver.setMobilePhone(cardNum);
+            driver.setCardId(cardNum);
+            driver.setFullName(cardNum);
+            driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
+            driver.setUserStatus("0");//0 使用中 1 已冻结
+            driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
+            driver.setStationId(stationId);//站点编号
+//            Transportion transportion = transportionService.queryTransportionByPK(stationId);
+            driver.setRegisSource("郑州上运货物运输有限公司");//司机注册来源（运输公司名称）
+
+            driver.setSysDriverId(UUIDGenerator.getUUID());
+            driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
+            driver.setMemo("芈程程特殊业务 2016-9-29 脚本添加100个司机(卡号：110001301~110001400)");
+
+            driverService.saveDriver(driver,operation, null);
+
+        }
+        return "/webpage/crm/show-import";
     }
 }
