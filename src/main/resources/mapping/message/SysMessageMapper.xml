@@ -12,6 +12,7 @@
 		<result column="message_created_time" property="messageCreatedTime" jdbcType="TIMESTAMP" />
 		<result column="operator" property="operator" jdbcType="VARCHAR" />
 		<result column="memo" property="memo" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
 		<result column="message_type" property="messageType" jdbcType="VARCHAR" />
 		<result column="driver_name" property="driverName" jdbcType="VARCHAR" />
 	</resultMap>
@@ -33,7 +34,7 @@
 	<sql id="Base_Column_List">
 		id, message_title, message_body, message_ticker, message_group,
 		message_send_time,province_name,
-		message_created_time, operator, memo,message_type,driver_name
+		message_created_time, operator, memo,message_type,driver_name,content
 	</sql>
 
 	<select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
