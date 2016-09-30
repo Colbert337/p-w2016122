@@ -1516,6 +1516,15 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			logger.error("转账信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+		} catch (RealNameException e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("未认证司机无法接受转账！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("转账失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("转账失败！");
