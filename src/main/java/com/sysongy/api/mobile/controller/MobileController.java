@@ -6,6 +6,7 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -2085,7 +2086,7 @@ public class MobileController {
 				if(payType.equalsIgnoreCase("2")){           //支付宝支付
 					sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE);  //TODO充值成功后再去生成订单
 					orderService.checkIfCanChargeToDriver(sysOrder);
-					String notifyUrl = http_poms_path+"/api/v1/mobile/deal/callBackAliPay";
+					String notifyUrl = http_poms_path+"/api/v1/mobile/deal/callBackPay";
 					Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
 							"司集云平台-会员充值", orderID , notifyUrl);
 					String orderParam = OrderInfoUtil2_0.buildOrderParam(paramsApp);
@@ -2143,7 +2144,7 @@ public class MobileController {
 
 
 	/**
-	 * 微信在线支付回调方法
+	 * 在线支付回调方法
 	 */
 	@RequestMapping(value = "/deal/callBackPay")
 	@ResponseBody
@@ -3449,7 +3450,12 @@ public class MobileController {
 
 	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType) throws Exception{
 		SysOrder record = new SysOrder();
-
+		if(chargeType.equals(GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE)){//微信支付，将金额转换为以元为单位
+			BigDecimal cashBd = new BigDecimal(cash);
+			BigDecimal num = new BigDecimal(100);
+			cashBd = cashBd.divide(num, 2, RoundingMode.HALF_UP);
+			cash = cashBd.toString();
+		}
 		record.setOrderId(orderID);
 		record.setDebitAccount(driverID);
 		record.setOperator(driverID);
