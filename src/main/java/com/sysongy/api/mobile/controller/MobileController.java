@@ -1752,7 +1752,7 @@ public class MobileController {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum",map.get("orderNumber"));
 						reChargeMap.put("amount",map.get("cash"));
-						reChargeMap.put("cashBack",map.get("cashBackDriver"));
+						reChargeMap.put("cashBack",map.get("cash_back_driver"));
 						reChargeMap.put("rechargePlatform",map.get("channel"));
 
 						String chargeType = "";
@@ -1760,7 +1760,7 @@ public class MobileController {
 							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
 						}
 						reChargeMap.put("paymentType",chargeType);
-						reChargeMap.put("remark",map.get("remark"));
+						//reChargeMap.put("remark",map.get("remark"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
 							dateTime = sft.format(new Date());
@@ -1770,17 +1770,17 @@ public class MobileController {
 						reChargeList.add(reChargeMap);
 
 						//汇总充值总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(reChargeMap.get("cash").toString()));
+						if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+							totalCash = totalCash.add(new BigDecimal(map.get("cash").toString()));
 						}
 						//汇总返现总额
-						if(reChargeMap.get("cashBackDriver") != null && !"".equals(reChargeMap.get("cashBackDriver").toString())){
-							totalBack = totalBack.add(new BigDecimal(reChargeMap.get("cashBackDriver").toString()));
+						if(map.get("cash_back_driver") != null && !"".equals(map.get("cash_back_driver").toString())){
+							totalBack = totalBack.add(new BigDecimal(map.get("cash_back_driver").toString()));
 						}
 					}
 					driver = driverService.queryDriverByPK(mainObj.optString("token"));
-					reCharge.put("totalCash",totalCash);
-					reCharge.put("totalBack",totalBack);
+					reCharge.put("totalCash",totalCash);//累计入账
+					reCharge.put("totalBack",totalBack);//累计返现
 					reCharge.put("listMap",reChargeList);
 					if(driver != null && driver.getAccount() != null){
 						reCharge.put("totalAmount", driver.getAccount().getAccountBalance());
