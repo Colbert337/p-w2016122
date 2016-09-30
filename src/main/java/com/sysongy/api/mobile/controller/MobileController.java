@@ -655,8 +655,10 @@ public class MobileController {
 					driver.setSysDriverId(sysDriverId);
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
 					SysDriver oldDriver = driverService.queryByDeviceToken(mainObj.optString("deviceToken"));
-					oldDriver.setDeviceToken("");
-					int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
+					if(oldDriver != null){
+						oldDriver.setDeviceToken("");
+						int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
+					}
 					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -991,6 +993,7 @@ public class MobileController {
 					resutObj = JSONObject.fromObject(result);
 					resutObj.remove("listMap");
 					resultStr = resutObj.toString();
+					logger.error("实名认证已提交审核，请耐心等待！： " + resultStr);
 					resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 					return resultStr;
 				}
@@ -1000,6 +1003,7 @@ public class MobileController {
 				resutObj = JSONObject.fromObject(result);
 				resutObj.remove("listMap");
 				resultStr = resutObj.toString();
+				logger.error("实名认证已提交审核，请耐心等待！： " + resultStr);
 				resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 				return resultStr;
 			}
