@@ -23,6 +23,7 @@ import com.sysongy.api.util.DESUtil;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.model.SysRoadConditionStr;
 import com.sysongy.poms.mobile.service.SysRoadService;
@@ -53,6 +54,10 @@ public class SysRoadController extends BaseContoller {
 
 	@Autowired
 	RedisClientInterface redisClientImpl;
+	
+	
+	@Autowired
+	SysMessageService messageService;
 
 	@RequestMapping("/roadList")
 	public String roadList(SysRoadCondition road, ModelMap map, String type) {
@@ -65,7 +70,7 @@ public class SysRoadController extends BaseContoller {
 				road.setPageSize(GlobalConstant.PAGE_SIZE);
 			}
 			if (StringUtils.isEmpty(road.getOrderby())) {
-				road.setOrderby(" start_time desc");
+				road.setOrderby("start_time desc");
 			}
 
 			PageInfo<SysRoadCondition> pageinfo = new PageInfo<SysRoadCondition>();
@@ -254,7 +259,7 @@ public class SysRoadController extends BaseContoller {
 
 			long a = road.getStartTime().getTime() - new Date().getTime();
 			int time = h * 60 * 60 + (int) a / 1000;
-			road.setEndTime(new Date(new Date().getTime() + h * 60 * 60 + a));
+			road.setEndTime(new Date(new Date().getTime() + h * 60 * 60*1000 + a));
 			return time;
 		} else if (road.getEndTime() != null) {
 			long a = road.getAuditorTime().getTime() - road.getEndTime().getTime();
@@ -353,7 +358,7 @@ public class SysRoadController extends BaseContoller {
 	}
 
 	@RequestMapping("/updateRoad")
-	public String updateRoad(SysRoadCondition road, ModelMap map, HttpSession session) {
+	public String updateRoad(SysRoadCondition road, ModelMap map, HttpSession session,String content) {
 		String ret = "redirect:/web/mobile/road/roadList?type=update";
 		PageBean bean = new PageBean();
 		msg = "";
@@ -392,6 +397,7 @@ public class SysRoadController extends BaseContoller {
 			}
 			if ("3".equals(road.getConditionStatus())) {
 				msg = "审核成功";
+				messageService.saveMessage_New_Road(content,road.getPublisherPhone());
 			}
 
 			// map.addAttribute("current_module",

@@ -77,7 +77,7 @@
 									</div>
 									<div class="form-group">
 									<label class="col-sm-3" ></label> 
-										<label class=" control-label no-padding-right" id="text"</label></div>
+										<label class=" control-label" id="text"</label></div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">发送方式：</label>
 										
