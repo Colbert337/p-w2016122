@@ -20,17 +20,17 @@
 
 
 	<div class="bonus-rules-hd" align="center">
-		<img alt="" src="<%=basePath %>/webpage/crm/images/fxz.png">
+		<img alt="" src="<%=basePath %>/webpage/crm/images/fxz.png" style="width: 20%;">
 		</br>
-		<span style="font-size:30px;font-family:微软雅黑;color:#669f31">使用司集APP</span>
+		<span style="font-size:30px;font-family:微软雅黑;color:#669f31;font-weight: lighter;">使用司集APP</span>
 		</br>
-		<img alt="" src="<%=basePath %>/webpage/crm/images/fxgz.png">
+		<img alt="" src="<%=basePath %>/webpage/crm/images/fxgz.png" style="width: 100%;">
 	</div>
 	
 	<div class="bonus-rules-hd" align="center">
 		<c:forEach items="${aliPayCashBack}" var="cashBack">
-			<div style="text-align:center;font-family: 微软雅黑 Light; font-weight:bold; font-size: 18px; color: #545252; padding:20px; ">充值<span style="font-size:24px; font-weight:bold;margin-left:10px; margin-right:10px;">${cashBack.threshold_min_value} - ${cashBack.threshold_max_value}</span>元<br>
-			用户即可获得<span style="font-size:36px; font-weight:bold; color:#669f31; margin-left:15px; margin-right:15px;"><fmt:formatNumber value="${cashBack.cash_per}" type="percent"/></span>的充值充值
+			<div style="text-align:center;font-family: 微软雅黑 Light; font-weight:lighter; font-size: 18px; color: #545252; padding:20px; ">充值<span style="font-size:24px; font-weight:bold;margin-left:10px; margin-right:10px;">${cashBack.threshold_min_value} - ${cashBack.threshold_max_value}</span>元<br>
+			用户即可获得<span style="font-size:36px; font-weight:lighter; color:#669f31; margin-left:15px; margin-right:15px;"><fmt:formatNumber value="${cashBack.cash_per}" type="percent"/></span>的充值充值
 			</div>
 		</c:forEach>
 	</div>
