@@ -1760,7 +1760,7 @@ public class MobileController {
 							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
 						}
 						reChargeMap.put("paymentType",chargeType);
-						//reChargeMap.put("remark",map.get("remark"));
+						reChargeMap.put("remark",map.get("remark"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
 							dateTime = sft.format(new Date());
