@@ -2162,7 +2162,7 @@ public class MobileController {
 		SysOrder sysOrder = new SysOrder();
 		sysOrder.setOrderId(orderId);
 		sysOrder.setOrderStatus(1);
-		orderService.updateByPrimaryKey(sysOrder);
+		orderService.updateByPrimaryKeySelective(sysOrder);
 		try{
 			String orderCharge = orderService.chargeToDriver(order);
 			if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))

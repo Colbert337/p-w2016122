@@ -140,8 +140,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public int updateByPrimaryKey(SysOrder record) {
-		return sysOrderMapper.updateByPrimaryKey(record);
+	public int updateByPrimaryKeySelective(SysOrder record) {
+		return sysOrderMapper.updateByPrimaryKeySelective(record);
 	}
 
     /**
@@ -1162,5 +1162,11 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
+
+	@Override
+	public int updateByPrimaryKey(SysOrder record) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
