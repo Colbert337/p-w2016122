@@ -17,25 +17,23 @@
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/webapp.css">
 </head>
 <body>
-	<div class="bonus-rules-hd">
-		微信返现规则
+
+
+	<div class="bonus-rules-hd" align="center">
+		<img alt="" src="<%=basePath %>/webpage/crm/images/fxz.png">
+		</br>
+		<span style="font-size:30px;font-family:微软雅黑;color:#669f31">使用司集APP</span>
+		</br>
+		<img alt="" src="<%=basePath %>/webpage/crm/images/fxgz.png">
 	</div>
-	<ul class="bonus-rules-bd">
-		<c:forEach items="${wechatCashBack}" var="cashBack">
-			<li>
-				${cashBack.threshold_min_value} < ${cashBack.threshold_max_value},返点系数${cashBack.cash_per}
-			</li>
-		</c:forEach>
-	</ul>
-	<div class="bonus-rules-hd">
-		支付宝返现规则
-	</div>
-	<ul class="bonus-rules-bd">
+	
+	<div class="bonus-rules-hd" align="center">
 		<c:forEach items="${aliPayCashBack}" var="cashBack">
-			<li>
-				${cashBack.threshold_min_value} < ${cashBack.threshold_max_value},返点系数${cashBack.cash_per}
-			</li>
+			<div style="text-align:center;font-family: 微软雅黑 Light; font-weight:bold; font-size: 18px; color: #545252; padding:20px; ">充值<span style="font-size:24px; font-weight:bold;margin-left:10px; margin-right:10px;">${cashBack.threshold_min_value} - ${cashBack.threshold_max_value}</span>元<br>
+			用户即可获得<span style="font-size:36px; font-weight:bold; color:#669f31; margin-left:15px; margin-right:15px;"><fmt:formatNumber value="${cashBack.cash_per}" type="percent"/></span>的充值充值
+			</div>
 		</c:forEach>
-	</ul>
+	</div>
+	
 </body>
 </html>
