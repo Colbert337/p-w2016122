@@ -1762,6 +1762,8 @@ public class MobileController {
 						reChargeMap.put("remark",map.get("remark"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
+							dateTime = map.get("orderDate").toString().substring(0, 19);
+						}else{
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
@@ -1884,6 +1886,8 @@ public class MobileController {
 						reChargeMap.put("remark",map.get("remark"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
+							dateTime = map.get("orderDate").toString().substring(0, 19);
+						}else{
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
@@ -1988,6 +1992,8 @@ public class MobileController {
 						reChargeMap.put("type",map.get("type"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
+							dateTime = map.get("orderDate").toString().substring(0, 19);
+						}else{
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
@@ -2341,7 +2347,7 @@ public class MobileController {
 						if (!driver.isEmpty()) {
 							String initialPassword = mainObj.optString("newPassword");
 							//初始密码加密、赋值
-							initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
+							//initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
 							sysDriver.setPayCode(initialPassword);
 							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 							//更新初始密码
@@ -3295,9 +3301,9 @@ public class MobileController {
 		try {
 			Map<String, Object> tokenMap = new HashMap<>();
 			String localPath = (String) prop.get("http_poms_path");
-			tokenMap.put("lastVersion","26");
+			tokenMap.put("lastVersion","13");
 			tokenMap.put("downUrl",localPath+"/docs/app/sysongy-sysongy-release-1.0.0.13.apk");
-			tokenMap.put("isUpdate","2");
+			tokenMap.put("isUpdate","1");
 			result.setData(tokenMap);
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
