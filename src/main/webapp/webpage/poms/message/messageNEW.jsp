@@ -42,13 +42,13 @@
 										</div>
 									</div>
 									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">详情（content）：</label>
+					<!-- 				<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">详情：</label>
 
 										<div class="col-sm-4">
 											<textarea type="text" name="content" placeholder="输入信息内容" class="form-control" maxlength="500"></textarea>
 										</div>
-									</div>
+									</div> -->
 									
 									<div class="form-group">
 										<label for="email" class="col-sm-3 control-label no-padding-right">信息缩略： </label>
@@ -76,8 +76,8 @@
 										</div> -->
 									</div>
 									<div class="form-group">
-									<label class="col-sm-3" ></label> 
-										<label class=" control-label" id="text"</label></div>
+									<label class="col-sm-3" style="float:left" ></label> 
+										<label id="text"</label></div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">发送方式：</label>
 										

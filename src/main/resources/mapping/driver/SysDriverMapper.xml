@@ -679,7 +679,7 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
 
   <select id="queryDriverByMobilePhone" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
     select
-    <include refid="Base_Column_List" />
+    *
     from sys_driver
     where mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
     and user_status = 0
