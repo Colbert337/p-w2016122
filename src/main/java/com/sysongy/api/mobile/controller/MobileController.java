@@ -2818,7 +2818,7 @@ public class MobileController {
 				roadCondition.setAddress(mainObj.optString("address"));
 				roadCondition.setPublisherName(mainObj.optString("publisherName"));
 				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
-				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
+				roadCondition.setPublisherTime(sft.parse(mainObj.optString("publisherTime")));
 				roadCondition.setRoadId(mainObj.optString("roadId"));
 				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
 				if (tmp > 0) {
