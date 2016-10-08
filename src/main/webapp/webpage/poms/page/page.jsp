@@ -38,7 +38,7 @@
 	<c:if test="${page.show_download_button eq '1'}">
 		<div class="btn-more-info">
 			<div class="inner">
-				<a href="" class="btn-app-primary logic-download-app"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
+				<a href="<%=basePath %>/docs/app/sysongy-sysongy-release-1.0.0.13.apk" class="btn-app-primary logic-download-app"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
 			</div>
 		</div>
 	</c:if>
