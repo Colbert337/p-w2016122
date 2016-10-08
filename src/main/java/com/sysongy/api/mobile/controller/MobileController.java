@@ -484,7 +484,7 @@ public class MobileController {
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn",cashBack);
 						resultMap.put("userStatus",sysUserAccount.getAccount_status());
-						if(driver.getAvatarB() == null){
+						if(driver.getAvatarB() == null || "".equals(driver.getAvatarB())){
 							resultMap.put("photoUrl","");
 						}else{
 							resultMap.put("photoUrl",localPath+driver.getAvatarB());
