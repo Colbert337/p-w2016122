@@ -484,7 +484,7 @@ public class MobileController {
 						resultMap.put("QRCodeUrl",http_poms_path+driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn",cashBack);
 						resultMap.put("userStatus",sysUserAccount.getAccount_status());
-						if(driver.getAvatarB() == null){
+						if(driver.getAvatarB() == null || "".equals(driver.getAvatarB())){
 							resultMap.put("photoUrl","");
 						}else{
 							resultMap.put("photoUrl",localPath+driver.getAvatarB());
@@ -630,13 +630,13 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String token = "token";
-			String deviceToken = "deviceToken";
-			boolean b = JsonTool.checkJson(mainObj,token,deviceToken);
+			boolean b = JsonTool.checkJson(mainObj,token);
 			/**
 			 * 请求接口
 			 */
 			if(b){
 				String name = mainObj.optString("name");
+				String deviceToken = mainObj.optString("deviceToken");
 				String imgUrl = mainObj.optString("imgUrl");
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
@@ -649,9 +649,13 @@ public class MobileController {
 					}
 					driver.setSysDriverId(sysDriverId);
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
-					SysDriver oldDriver = driverService.queryByDeviceToken(mainObj.optString("deviceToken"));
-					oldDriver.setDeviceToken("");
-					int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
+					if(deviceToken !=null && !"".equals(deviceToken)){
+						SysDriver oldDriver = driverService.queryByDeviceToken(deviceToken);
+						if(oldDriver!=null){
+							oldDriver.setDeviceToken("");
+							int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
+						}
+					}
 					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1170,11 +1174,8 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String token = "token";
-			String idCard = "idCard";
-			String verificationCode = "verificationCode";
-			String payCode = "payCode";
 			String lossType = "lossType";
-			boolean b = JsonTool.checkJson(mainObj,token,idCard,verificationCode,payCode,lossType);
+			boolean b = JsonTool.checkJson(mainObj,token,lossType);
 			/**
 			 * 请求接口
 			 */
@@ -1763,6 +1764,8 @@ public class MobileController {
 						reChargeMap.put("remark",map.get("remark"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
+							dateTime = map.get("orderDate").toString().substring(0, 19);
+						}else{
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
@@ -1885,6 +1888,8 @@ public class MobileController {
 						reChargeMap.put("remark",map.get("remark"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
+							dateTime = map.get("orderDate").toString().substring(0, 19);
+						}else{
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
@@ -1989,6 +1994,8 @@ public class MobileController {
 						reChargeMap.put("type",map.get("type"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
+							dateTime = map.get("orderDate").toString().substring(0, 19);
+						}else{
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
@@ -2334,15 +2341,15 @@ public class MobileController {
 					//创建对象
 					SysDriver sysDriver = new SysDriver();
 					//电话号码赋值
-					sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
-					veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+					sysDriver.setUserName(mainObj.optString("phoneNum"));
+					veCode = (String) redisClientImpl.getFromCache(sysDriver.getUserName());
 					if(veCode != null && !"".equals(veCode)) {
 						//数据库查询
 						List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 						if (!driver.isEmpty()) {
 							String initialPassword = mainObj.optString("newPassword");
 							//初始密码加密、赋值
-							initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
+							//initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
 							sysDriver.setPayCode(initialPassword);
 							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 							//更新初始密码
@@ -2819,7 +2826,7 @@ public class MobileController {
 				roadCondition.setAddress(mainObj.optString("address"));
 				roadCondition.setPublisherName(mainObj.optString("publisherName"));
 				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
-				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
+				roadCondition.setPublisherTime(sft.parse(mainObj.optString("publisherTime")));
 				roadCondition.setRoadId(mainObj.optString("roadId"));
 				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
 				if (tmp > 0) {
@@ -3264,6 +3271,42 @@ public class MobileController {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
 			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	/**
+	 * 获取获取APP版本信息
+	 */
+	@RequestMapping(value = "/util/getAPPInfo")
+	@ResponseBody
+	public String getAPPInfo() {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		JSONObject resutObj = new JSONObject();
+		result.setMsg("获取成功！");
+		String resultStr = "";
+		try {
+			Map<String, Object> tokenMap = new HashMap<>();
+			String localPath = (String) prop.get("http_poms_path");
+			tokenMap.put("lastVersion","13");
+			tokenMap.put("downUrl",localPath+"/docs/app/sysongy-sysongy-release-1.0.0.13.apk");
+			tokenMap.put("isUpdate","1");
+			result.setData(tokenMap);
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
