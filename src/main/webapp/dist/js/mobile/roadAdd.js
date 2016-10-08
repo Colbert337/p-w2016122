@@ -97,10 +97,13 @@
 			}).next().on(ace.click_event, function(){
 				$(this).prev().focus();
 			});
-	  
+	  var imgupload=0;
 	function saveRoad(){
 		/*手动验证表单，当是普通按钮时。*/
-		
+		if(imgupload==0){
+			bootbox.alert("请上传图片");
+			return ;
+		}
 		if($("#conditionType").val()*1>5){
 			if($("#endTime_str").val()==""){
 				bootbox.alert("请选择结束时间");
@@ -141,7 +144,7 @@
 	}
 	function init(){
 		loadPage('#main', '../webpage/poms/mobile/roadAdd.jsp');
-		
+		 imgupload=0;
 	}
 	var device_token = '';
 	var driver_name = '';
@@ -227,6 +230,7 @@
 					
 					bootbox.alert("上传成功");
 					$(obj1).val(a.substring(a.indexOf('/'),a.length));
+					imgupload=1;
 				}
 
 			},

@@ -139,10 +139,11 @@ function shixiao(id){
 				},
 				dataType : 'text',
 				success : function(data) {
-					$("body").removeClass('modal-open').removeAttr('style');
+					 init();
+					/*$("body").removeClass('modal-open').removeAttr('style');
 					$(".modal-backdrop").remove();
 					$("#main").html(data);
-					$("#modal-table").modal("show");
+					$("#modal-table").modal("show");*/
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
 
