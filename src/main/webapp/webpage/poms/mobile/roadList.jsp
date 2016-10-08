@@ -347,7 +347,7 @@
 			</div>--%>
 			<div class="modal-body">
 			<textarea id="contentmes" placeholder="请输入原因"
-							class="form-control" maxlength="200"></textarea>
+							class="form-control" maxlength="150"></textarea>
 			</div>
 			<div class="modal-footer" id="buttonList">
 				<button class="btn btn-primary btn-sm" onclick="updateRoad('3')">确定</button>

@@ -397,7 +397,7 @@ public class SysRoadController extends BaseContoller {
 			}
 			if ("3".equals(road.getConditionStatus())) {
 				msg = "审核成功";
-				messageService.saveMessage_New_Road(content,road.getPublisherPhone());
+				messageService.saveMessage_New_Road(content,road);
 			}
 
 			// map.addAttribute("current_module",

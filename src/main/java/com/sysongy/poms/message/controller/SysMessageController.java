@@ -158,13 +158,13 @@ public class SysMessageController extends BaseContoller {
 
 		String ret = "webpage/poms/message/message_new";
 		String messageid = null;
-
+		message.setContent(message.getMessageBody());
 		try {
 			if (StringUtils.isEmpty(message.getId())) {
 
 				messageid = service.saveMessage(message, "insert");
-
-				bean.setRetMsg("新增成功");
+				
+				bean.setRetMsg("发送成功");
 				ret = "webpage/poms/message/message_new";
 			} else {
 				ret = "webpage/poms/gastation/gastation_update";
@@ -196,7 +196,7 @@ public class SysMessageController extends BaseContoller {
 	public String saveMessageNew(ModelMap map, SysMessage message) throws Exception {
 
 		PageBean bean = new PageBean();
-
+		message.setContent(message.getMessageBody());
 		String ret = "webpage/poms/message/messageNEW";
 		String messageid = null;
 		message.setMessageGroup("999");// 指定用户组
@@ -204,7 +204,7 @@ public class SysMessageController extends BaseContoller {
 		try {
 
 			messageid = service.saveMessage_New(message);
-			bean.setRetMsg("新增成功");
+			bean.setRetMsg("发送成功");
 //			ret = "webpage/poms/message/message_new";
 			bean.setRetCode(100);
 			bean.setRetValue(messageid);
