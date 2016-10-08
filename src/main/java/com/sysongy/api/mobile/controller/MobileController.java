@@ -650,8 +650,10 @@ public class MobileController {
 					driver.setSysDriverId(sysDriverId);
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
 					SysDriver oldDriver = driverService.queryByDeviceToken(mainObj.optString("deviceToken"));
-					oldDriver.setDeviceToken("");
-					int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
+					if(oldDriver!=null){
+						oldDriver.setDeviceToken("");
+						int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
+					}
 					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3295,8 +3297,9 @@ public class MobileController {
 		String resultStr = "";
 		try {
 			Map<String, Object> tokenMap = new HashMap<>();
+			String localPath = (String) prop.get("http_poms_path");
 			tokenMap.put("lastVersion","1.0.3");
-			tokenMap.put("downUrl","http://www.sysongy.net/app/down");
+			tokenMap.put("downUrl",localPath+"/docs/app/sysongy-sysongy-release-1.0.0.13.apk");
 			tokenMap.put("isUpdate","1");
 			result.setData(tokenMap);
 			resutObj = JSONObject.fromObject(result);
