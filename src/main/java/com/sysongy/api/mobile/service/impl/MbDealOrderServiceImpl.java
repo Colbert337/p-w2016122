@@ -109,7 +109,7 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                             }
                             driver1 = list.get(0);
                             order.setDebitAccount(driver1.getSysDriverId());
-                            order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_TRANSFER_CHARGE);
+                            order.setChargeType(GlobalConstant.OrderType.TRANSFER_DRIVER_TO_DRIVER);
                             SysUser user = new SysUser();
                             user.setUserName("13000000000");
                             SysUser usr = sysUserMapper.queryUser(user);
