@@ -11,11 +11,11 @@
 %>
 
 <form id="formgastation">
-		<input id="pageNum1" type="hidden"   value="${pageInfo.pageNum}" />
-	<input id="pageSize1" type="hidden"  value="${pageInfo.pageSize}" />
-	<input id="pageNumMax1" type="hidden"  value="${pageInfo.pages}" />
-	<input id="total1" type="hidden"  value="${pageInfo.total}" />
-	<input id="orderBy2" type="hidden"  value="${pageInfo.orderBy}" />
+		<input id="pageNum1" type="hidden"   value="${pageInfo1.pageNum}" />
+	<input id="pageSize1" type="hidden"  value="${pageInfo1.pageSize}" />
+	<input id="pageNumMax1" type="hidden"  value="${pageInfo1.pages}" />
+	<input id="total1" type="hidden"  value="${pageInfo1.total}" />
+	<input id="orderBy2" type="hidden"  value="${pageInfo1.orderBy}" />
 	<input id="retValue" type="hidden" value="${ret.retValue}" />
 	<input id="retCode" type="hidden" value="${ret.retCode}" />
 	<input id="retMsg" type="hidden" value="${ret.retMsg}" />
@@ -44,7 +44,7 @@
 
 				<tbody>
 
-					<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
+					<c:forEach items="${pageInfo1.list}" var="list" varStatus="s">
 						<tr id="${list.sysDriverId }">
 							<%-- <td class="center"><label class="pos-rel"> <input
 									type="checkbox" class="ace checkbox"
@@ -72,8 +72,8 @@
 		<div class="col-sm-6">
 			<div class="dataTables_info sjny-page" id="dynamic-table_info"
 				role="status" aria-live="polite">
-				每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共
-				${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages}
+				每页 ${pageInfo1.pageSize} 条 <span class="line">|</span> 共
+				${pageInfo1.total} 条 <span class="line">|</span> 共 ${pageInfo1.pages}
 				页
 			</div>
 		</div>
@@ -163,7 +163,8 @@ function commitForm1(obj) {
  
 function nextpage1(formid){
 	//如果是最后一页
-	if(parseInt($("#pageNum").val()) >= parseInt($("#pageNumMax").val())){
+	console.log(parseInt($("#pageNum1").val()) +"----"+ parseInt($("#pageNumMax1").val()));
+	if(parseInt($("#pageNum1").val()) >= parseInt($("#pageNumMax1").val())){
 		return ;
 	}
 	//设置当前页+1
@@ -245,7 +246,7 @@ function setCurrentPage1(){
 		$("#next1").removeClass("disabled");
 	}
 	//动态加载分页按钮并设定页数
-	for(var i='${pageInfo.pages}';i>0;i--){
+	for(var i='${pageInfo1.pages}';i>0;i--){
 		var num = pagenum%5==0?pagenum-5+i:pagenum-(pagenum%5)+i;
 		$("li[id=previous1]").after("<li id='navigator'><a href='javascript:void(0);' onclick='commitForm1(this)'>"+num*1+"</a></li>");
 	}

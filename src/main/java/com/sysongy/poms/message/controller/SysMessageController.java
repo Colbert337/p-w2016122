@@ -93,7 +93,7 @@ public class SysMessageController extends BaseContoller {
 			bean.setPageInfo(ret);
 
 			map.addAttribute("ret", bean);
-			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("pageInfo1", pageinfo);
 			map.addAttribute("message", message);
 		} catch (Exception e) {
 			bean.setRetCode(5000);
