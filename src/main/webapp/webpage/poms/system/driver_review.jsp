@@ -249,7 +249,7 @@
 							<ul class="ace-thumbnails clearfix">
 								<li>
 									<a href="" data-rel="colorbox">
-										<img width="150" height="150" alt="150x150" src="" id="driving_lice"/>
+										<img width="150" height="150" alt="150x150" src="" id="vehicle_lice"/>
 										<div class="text">
 											<div class="inner">点击放大</div>
 										</div>
@@ -262,7 +262,7 @@
 							<ul class="ace-thumbnails clearfix">
 								<li>
 									<a href="" data-rel="colorbox">
-										<img width="150" height="150" alt="150x150" src="" id="vehicle_lice"/>
+										<img width="150" height="150" alt="150x150" src="" id="driving_lice"/>
 										<div class="text">
 											<div class="inner">点击放大</div>
 										</div>
