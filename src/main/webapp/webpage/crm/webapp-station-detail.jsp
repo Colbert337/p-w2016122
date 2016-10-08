@@ -51,8 +51,8 @@
 			<div class="pdp-item-content">
 				<c:forEach items="${priceList}" var="price">
 					<div class="row">
-						<div class="col-value">${price.gasName}单价:</div>
-						<div class="col-key">${price.gasPrice}元/${price.unit}</div>
+						<div class="col-value">${price.priceName}</div>
+						<%--<div class="col-key">${price.gasPrice}元/${price.unit}</div>--%>
 					</div>
 				</c:forEach>
 			</div>

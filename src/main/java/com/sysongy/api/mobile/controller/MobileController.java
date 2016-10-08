@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.sysongy.util.*;
+import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
+
 import net.sf.json.JSONArray;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.commons.collections.map.HashedMap;
@@ -77,14 +79,7 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.JsonTool;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.RealNameException;
-import com.sysongy.util.RedisClientInterface;
-import com.sysongy.util.TwoDimensionCode;
-import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
 import com.tencent.mm.sdk.modelpay.PayReq;
 
 import net.sf.json.JSONObject;
@@ -1516,6 +1511,15 @@ public class MobileController {
 			resultStr = resutObj.toString();
 			logger.error("转账信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
+		} catch (RealNameException e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("未认证司机无法接受转账！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("转账失败： " + e);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
+			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("转账失败！");

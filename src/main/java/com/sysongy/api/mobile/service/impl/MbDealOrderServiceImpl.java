@@ -1,6 +1,7 @@
 package com.sysongy.api.mobile.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,13 @@ import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.dao.SysUserMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.RealNameException;
 import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
 /**
  * @FileName: DealOrderService
@@ -41,6 +46,8 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
     OrderService orderService;
     @Autowired
     SysUserMapper sysUserMapper;
+    @Autowired
+    SysUserAccountService sysUserAccountService;
 
     /**
      * 个人对个人转账
@@ -119,6 +126,7 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                             //个人往个人转账
                             orderService.transferDriverToDriver(order);
                             resultVal = 1;
+                            sendTransferMessage(order,account);
                             return resultVal;
                         }else{
                             return resultVal = 2;//账户不存在
@@ -143,4 +151,25 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
         }
 
     }
+	/**
+	 * 转账成功后发送短信提醒
+	 */
+	private void sendTransferMessage(SysOrder order,String receiverNum){
+		 /*发送转账通知短信*/
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        SimpleDateFormat sfm = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+        String time = sfm.format(new Date());
+        aliShortMessageBean.setTime(time);
+        aliShortMessageBean.setString("转入");
+        aliShortMessageBean.setMoney(order.getCash().toString());
+        aliShortMessageBean.setSendNumber(receiverNum);
+        /*查询账户余额*/
+        SysUserAccount sysUserAccount = sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+        if(sysUserAccount != null){
+            aliShortMessageBean.setMoney1(sysUserAccount.getAccountBalance());
+        }else{
+            aliShortMessageBean.setMoney1("0.00");
+        }
+		AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+	}
 }
