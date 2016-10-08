@@ -630,13 +630,13 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String token = "token";
-			String deviceToken = "deviceToken";
-			boolean b = JsonTool.checkJson(mainObj,token,deviceToken);
+			boolean b = JsonTool.checkJson(mainObj,token);
 			/**
 			 * 请求接口
 			 */
 			if(b){
 				String name = mainObj.optString("name");
+				String deviceToken = mainObj.optString("deviceToken");
 				String imgUrl = mainObj.optString("imgUrl");
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
@@ -649,10 +649,12 @@ public class MobileController {
 					}
 					driver.setSysDriverId(sysDriverId);
 					driver.setDeviceToken(mainObj.optString("deviceToken"));
-					SysDriver oldDriver = driverService.queryByDeviceToken(mainObj.optString("deviceToken"));
-					if(oldDriver!=null){
-						oldDriver.setDeviceToken("");
-						int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
+					if(deviceToken !=null && !"".equals(deviceToken)){
+						SysDriver oldDriver = driverService.queryByDeviceToken(deviceToken);
+						if(oldDriver!=null){
+							oldDriver.setDeviceToken("");
+							int resultoldVal = driverService.saveDriver(oldDriver,"update",null);
+						}
 					}
 					int resultVal = driverService.saveDriver(driver,"update",null);
 				}else{
