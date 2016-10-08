@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -126,7 +127,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 	@Override
 	public PageInfo<SysDriver> queryDriver2(SysMessage message) throws Exception {
 		// TODO Auto-generated method stub
-		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
+		
 		SysMessage mes = queryMessageByPK(message);
 		if (mes.getDriverName() != null) {
 			List<String> str = new ArrayList<>();
@@ -135,7 +136,13 @@ public class SysMessageServiceImpl implements SysMessageService {
 			for (int i = 0; i < mesId.length; i++) {
 				str.add(mesId[i]);
 			}
-
+			mes.setPageNum(message.getPageNum());
+			mes.setPageSize(message.getPageSize());
+			if (StringUtils.isEmpty(mes.getOrderby())) {
+				mes.setOrderby("updated_date desc");
+			}
+			
+			PageHelper.startPage(mes.getPageNum(), mes.getPageSize(), mes.getOrderby());
 			List<SysDriver> list = driverMapper.queryForPage2(str);
 			PageInfo<SysDriver> page = new PageInfo<>(list);
 			return page;

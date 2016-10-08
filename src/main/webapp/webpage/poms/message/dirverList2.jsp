@@ -96,44 +96,69 @@
 </form>
 <script type="text/javascript">
 
-var listOptions2 = {
-	url : '../web/message/showUser?id=${message.id}',
-	type : 'post',
-	data:{
-		pageNum:$("#pageNum1").val(),
-		pageSize:$("#pageSize1").val(),
-		pageNumMax:$("#pageNumMax1").val(),
-		total:$("#total1").val(),
-		orderby:$("#orderBy2").val()
-	},
-	dataType : 'html',
-	success : function(data) {
-		// console.log("这里分页之后");
-		$("#content").html(data);
-		
-		$("#editModel").modal('show');
-		if ($("#retCode").val() != "100") {
+
+function scher() {
+	$("#formgastation").ajaxSubmit({
+		url : '../web/message/showUser?id=${message.id}',
+		type : 'post',
+		data:{
+			pageNum:$("#pageNum1").val(),
+			pageSize:$("#pageSize1").val(),
+			pageNumMax:$("#pageNumMax1").val(),
+			total:$("#total1").val(),
+			orderby:$("#orderBy2").val()
+		},
+		dataType : 'html',
+		success : function(data) {
+			// console.log("这里分页之后");
+			$("#content").html(data);
+			
+			$("#editModel").modal('show');
+			if ($("#retCode").val() != "100") {
+
+			}
+			$('[data-rel="tooltip"]').tooltip();
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
 
 		}
-		$('[data-rel="tooltip"]').tooltip();
-	},
-	error : function(XMLHttpRequest, textStatus, errorThrown) {
-
-	}
-}
-function scher() {
-	$("#formgastation").ajaxSubmit(listOptions2);
+	});
 }
 
 function commitForm1(obj) {
 	// 设置当前页的值
+	console.log('commitForm1');
 	if (typeof obj == "undefined") {
 		$("#pageNum1").val("1");
 	} else {
 		$("#pageNum1").val($(obj).text());
 	}
 
-	$("#formgastation").ajaxSubmit(listOptions2);
+	$("#formgastation").ajaxSubmit({
+		url : '../web/message/showUser?id=${message.id}',
+		type : 'post',
+		data:{
+			pageNum:$("#pageNum1").val(),
+			pageSize:$("#pageSize1").val(),
+			pageNumMax:$("#pageNumMax1").val(),
+			total:$("#total1").val(),
+			orderby:$("#orderBy2").val()
+		},
+		dataType : 'html',
+		success : function(data) {
+			// console.log("这里分页之后");
+			$("#content").html(data);
+			
+			$("#editModel").modal('show');
+			if ($("#retCode").val() != "100") {
+
+			}
+			$('[data-rel="tooltip"]').tooltip();
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+		}
+	});
 }
  
 function nextpage1(formid){
@@ -143,7 +168,31 @@ function nextpage1(formid){
 	}
 	//设置当前页+1
 	$("#pageNum1").val(parseInt($("#pageNum1").val())+1);
-	$(formid).ajaxSubmit(listOptions2);
+	$(formid).ajaxSubmit({
+		url : '../web/message/showUser?id=${message.id}',
+		type : 'post',
+		data:{
+			pageNum:$("#pageNum1").val(),
+			pageSize:$("#pageSize1").val(),
+			pageNumMax:$("#pageNumMax1").val(),
+			total:$("#total1").val(),
+			orderby:$("#orderBy2").val()
+		},
+		dataType : 'html',
+		success : function(data) {
+			// console.log("这里分页之后");
+			$("#content").html(data);
+			
+			$("#editModel").modal('show');
+			if ($("#retCode").val() != "100") {
+
+			}
+			$('[data-rel="tooltip"]').tooltip();
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+		}
+	});
 }
 function prepage1(formid){
 	//如果是第一页
@@ -154,7 +203,31 @@ function prepage1(formid){
 	//设置当前页-1
 	$("#pageNum1").val(parseInt($("#pageNum1").val())-1);
 
-	$(formid).ajaxSubmit(listOptions2);
+	$(formid).ajaxSubmit({
+		url : '../web/message/showUser?id=${message.id}',
+		type : 'post',
+		data:{
+			pageNum:$("#pageNum1").val(),
+			pageSize:$("#pageSize1").val(),
+			pageNumMax:$("#pageNumMax1").val(),
+			total:$("#total1").val(),
+			orderby:$("#orderBy2").val()
+		},
+		dataType : 'html',
+		success : function(data) {
+			// console.log("这里分页之后");
+			$("#content").html(data);
+			
+			$("#editModel").modal('show');
+			if ($("#retCode").val() != "100") {
+
+			}
+			$('[data-rel="tooltip"]').tooltip();
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+		}
+	});
 } 
 window.onload = setCurrentPage1();
 

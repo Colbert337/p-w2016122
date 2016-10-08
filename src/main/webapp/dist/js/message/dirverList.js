@@ -22,9 +22,10 @@ function scher() {
 }
 
 function checkchange(obj) {
-//	console.log('check');
-	if (driver_name.split(",") > 20) {
+	console.log('check');
+	if (driver_name.split(",").length == 21) {
 		bootbox.alert("单次发送不能超过20个人");
+		$( obj).prop("checked", false);
 		return;
 	}
 
@@ -62,11 +63,16 @@ function checkchange(obj) {
 	 */
 }
 function checkedAllRows() {
-
-	$(".checkbox").prop("checked", !$(".checkbox").prop("checked"));
-	for (var i = 0; i < $(".checkbox").length; i++) {
-		checkchange($(".checkbox")[i]);
+	if (driver_name.split(",").length >= 20) {
+		bootbox.alert("单次发送不能超过20个人");
+		return;
+	}else{
+		$(".checkbox").prop("checked", !$(".checkbox").prop("checked"));
+		for (var i = 0; i < $(".checkbox").length; i++) {
+			checkchange($(".checkbox")[i]);
+		}
 	}
+	
 //	console.log($(".checkbox"));
 }
 
