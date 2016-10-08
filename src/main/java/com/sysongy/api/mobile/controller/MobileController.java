@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.sysongy.util.*;
+import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
+
 import net.sf.json.JSONArray;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.commons.collections.map.HashedMap;
@@ -77,14 +79,7 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.JsonTool;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.RealNameException;
-import com.sysongy.util.RedisClientInterface;
-import com.sysongy.util.TwoDimensionCode;
-import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
 import com.tencent.mm.sdk.modelpay.PayReq;
 
 import net.sf.json.JSONObject;
