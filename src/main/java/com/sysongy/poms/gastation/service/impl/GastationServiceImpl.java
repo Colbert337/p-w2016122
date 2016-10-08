@@ -65,7 +65,7 @@ public class GastationServiceImpl implements GastationService {
 	public PageInfo<Gastation> queryGastation(Gastation record) throws Exception {
 		
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
-		List<Gastation> list = gasStationMapper.queryForPage(record);
+		List<Gastation> list = gasStationMapper.queryForPage3(record);
 		PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(list);
 		
 		return pageInfo;
