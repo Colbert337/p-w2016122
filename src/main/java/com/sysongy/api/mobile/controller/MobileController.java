@@ -1172,11 +1172,8 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String token = "token";
-			String idCard = "idCard";
-			String verificationCode = "verificationCode";
-			String payCode = "payCode";
 			String lossType = "lossType";
-			boolean b = JsonTool.checkJson(mainObj,token,idCard,verificationCode,payCode,lossType);
+			boolean b = JsonTool.checkJson(mainObj,token,lossType);
 			/**
 			 * 请求接口
 			 */
