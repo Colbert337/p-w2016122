@@ -2333,8 +2333,8 @@ public class MobileController {
 					//创建对象
 					SysDriver sysDriver = new SysDriver();
 					//电话号码赋值
-					sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
-					veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+					sysDriver.setUserName(mainObj.optString("phoneNum"));
+					veCode = (String) redisClientImpl.getFromCache(sysDriver.getUserName());
 					if(veCode != null && !"".equals(veCode)) {
 						//数据库查询
 						List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
@@ -2818,7 +2818,7 @@ public class MobileController {
 				roadCondition.setAddress(mainObj.optString("address"));
 				roadCondition.setPublisherName(mainObj.optString("publisherName"));
 				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
-				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
+				roadCondition.setPublisherTime(sft.parse(mainObj.optString("publisherTime")));
 				roadCondition.setRoadId(mainObj.optString("roadId"));
 				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
 				if (tmp > 0) {
