@@ -44,15 +44,15 @@
 							class="form-control" maxlength="500"></textarea>
 					</div>
 				</div>
-
+<!-- 
 				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">详情（content）：</label>
+					<label class="col-sm-3 control-label no-padding-right">详情：</label>
 
 					<div class="col-sm-4">
 						<textarea type="text" name="content" placeholder="输入信息内容"
 							class="form-control" maxlength="500"></textarea>
 					</div>
-				</div>
+				</div> -->
 				<div class="form-group">
 					<label for="email" class="col-sm-3 control-label no-padding-right">信息缩略：
 					</label>

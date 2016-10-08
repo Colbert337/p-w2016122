@@ -249,7 +249,7 @@
 							<td><div id="operations_name" name="show"></div></td>
 						</tr>
 						<tr>
-							<th>拍照说明</th>
+							<th>路况说明</th>
 							<td><div id="admin_username" name="show"></div></td>
 						</tr>
 					</tbody>

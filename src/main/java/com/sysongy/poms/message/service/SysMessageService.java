@@ -5,6 +5,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.message.model.SysMessage;
+import com.sysongy.poms.mobile.model.SysRoadCondition;
 
 public interface SysMessageService {
 	
@@ -30,6 +31,10 @@ public interface SysMessageService {
 
 
 
-	public String saveMessage_New_Road(String content, String publisherPhone) throws Exception;
+	public String saveMessage_New_Road(String content, SysRoadCondition publisherPhone) throws Exception;
+
+
+
+
 
 }

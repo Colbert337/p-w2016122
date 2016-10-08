@@ -93,7 +93,7 @@
 									<th onclick="orderBy(this,'message_body');commitForm();" id="message_body_order">信息内容</th>
 									<th onclick="orderBy(this,'message_ticker');commitForm();" id="message_ticker_order">信息缩略</th>
 									<th onclick="orderBy(this,'message_type');commitForm();" id="message_type_order">消息类型</th>
-									<th onclick="orderBy(this,'content');commitForm();" id="content_order">内容</th>
+									<!-- <th onclick="orderBy(this,'content');commitForm();" id="content_order">详情</th> -->
 									<th onclick="orderBy(this,'province_name');commitForm();" id="province_name_order">发送范围</th>
 									<th onclick="orderBy(this,'message_group');commitForm();" id="message_group_order">发送信息组</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">信息创建者</th>
@@ -119,7 +119,7 @@
 								 	<td><div class="td-inner-warp">${list.messageBody}</div></td>
 									<td><div class="td-inner-warp">${list.messageTicker}</div></td>
 									<td><div class="td-inner-warp"><s:Code2Name mcode="${list.messageType}" gcode="MESSAGE_TYPE"></s:Code2Name></div></td>
-									<td><div class="td-inner-warp">${list.content}</div></td>
+									<%-- <td><div class="td-inner-warp">${list.content}</div></td> --%>
 									<td><div class="td-inner-warp">${list.province_name}</div></td>
 									<td><s:Code2Name mcode="${list.messageGroup}" gcode="MSGGROUP"></s:Code2Name></td>
 									<td>${list.operator}</td>
