@@ -3297,9 +3297,9 @@ public class MobileController {
 		try {
 			Map<String, Object> tokenMap = new HashMap<>();
 			String localPath = (String) prop.get("http_poms_path");
-			tokenMap.put("lastVersion","13");
+			tokenMap.put("lastVersion","26");
 			tokenMap.put("downUrl",localPath+"/docs/app/sysongy-sysongy-release-1.0.0.13.apk");
-			tokenMap.put("isUpdate","1");
+			tokenMap.put("isUpdate","2");
 			result.setData(tokenMap);
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
