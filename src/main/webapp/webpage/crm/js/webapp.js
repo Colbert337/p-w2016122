@@ -162,14 +162,14 @@ function sendMessage(){
 	}
 
 	var mobilePhone = $("#phone").val();
-	alert(mobilePhone);
+	/*alert("123");*/
 	if(mobilePhone == ""){
 		return false;
 	}else{
 		countdown=60;
 		settime();
 		$.ajax({
-			url:"../help/user/getCode",
+			url:"../../help/user/getCode",
 			data:{mobilePhone:mobilePhone,msgType:'register'},
 			async:false,
 			type: "POST",
