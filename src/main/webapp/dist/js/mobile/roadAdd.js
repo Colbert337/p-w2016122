@@ -1,5 +1,5 @@
 
-
+ 
 	    $('#roadform').bootstrapValidator({
 	        message: 'This value is not valid',
 	        feedbackIcons: {
@@ -15,20 +15,7 @@
 	                    }
 	                }
 	            },
-	            captureTime_str: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '拍照时间不能为空'
-	                    }
-	                }
-	            },
-	            startTime_str: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '拍照时间不能为空'
-	                    }
-	                }
-	            },
+	             
 	            longitude: {
 	                validators: {
 	                    notEmpty: {
@@ -43,20 +30,7 @@
 	                    }
 	                }
 	            },
-	            captureLongitude: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '拍照时坐标不能为空'
-	                    }
-	                }
-	            },
-	            captureTime: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '拍照时时间不能为空'
-	                    }
-	                }
-	            },
+	             
 	            conditionMsg: {
 	                validators: {
 	                    notEmpty: {
@@ -64,13 +38,7 @@
 	                    }
 	                }
 	            },
-	            startTime: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '开始时间不能为空'
-	                    }
-	                }
-	            },
+	            
 	            address: {
 	                validators: {
 	                    notEmpty: {
@@ -82,21 +50,7 @@
 	    });
 	  
 
-	    $('.timebox').datetimepicker({
-			 icons: {
-				time: 'fa fa-clock-o',
-				date: 'fa fa-calendar',
-				up: 'fa fa-chevron-up',
-				down: 'fa fa-chevron-down',
-				previous: 'fa fa-chevron-left',
-				next: 'fa fa-chevron-right',
-				today: 'fa fa-arrows ',
-				clear: 'fa fa-trash',
-				close: 'fa fa-times'
-			 }
-			}).next().on(ace.click_event, function(){
-				$(this).prev().focus();
-			});
+	 
 	  var imgupload=0;
 	function saveRoad(){
 		/*手动验证表单，当是普通按钮时。*/
@@ -104,9 +58,19 @@
 			bootbox.alert("请上传图片");
 			return ;
 		}
+		if($("#captureTime_str")==0){
+			bootbox.alert("拍照时间不能为空");
+			return ;
+		}
+		if($("#startTime_str")==""){
+			bootbox.alert("开始日期不能为空");
+			return ;
+		}
+		
 		if($("#conditionType").val()*1>5){
 			if($("#endTime_str").val()==""){
 				bootbox.alert("请选择结束时间");
+				return ;
 			}
 			
 		}

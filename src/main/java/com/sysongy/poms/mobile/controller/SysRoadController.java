@@ -225,15 +225,9 @@ public class SysRoadController extends BaseContoller {
 
 	private Date stringToDate(String time) throws ParseException {
 		if (!"".equals(time)) {
-			time = time.replace("凌晨", "上午");
-			time = time.replace("早上", "上午");
-			time = time.replace("晚上", "下午");
-			time = time.replace("中午", "下午");
-			String tr = "2016-09-14 下午12点00分";
-			String ti = "2016-09-14 01:00:00";
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ahh点mm分 ".replace(" ", ""));
-
-			return sdf.parse(time.replace(" ", ""));
+			 
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+			return sdf.parse(time);
 		}
 		return null;
 	}
