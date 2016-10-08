@@ -23,18 +23,20 @@ function scher() {
 
 function checkchange(obj) {
 	console.log('check');
-	if (driver_name.split(",").length == 21) {
-		bootbox.alert("单次发送不能超过20个人");
-		$( obj).prop("checked", false);
-		return;
+	if ($(obj).prop("checked")) {
+		if (driver_name.split(",").length == 21) {
+			bootbox.alert("单次发送不能超过20个人");
+			$(obj).prop("checked", false);
+			return;
+		}
 	}
 
-	while (device_token.indexOf("#"+$(obj).val() + ',') != -1) {
-		if (device_token.indexOf("#"+$(obj).val() + ',') != -1) {
-			device_token = device_token.substring(0, device_token
-					.indexOf("#"+$(obj).val()))
-					+ device_token.substring(device_token.indexOf("#"+$(obj).val()
-							+ ',')
+	while (device_token.indexOf("#" + $(obj).val() + ',') != -1) {
+		if (device_token.indexOf("#" + $(obj).val() + ',') != -1) {
+			device_token = device_token.substring(0, device_token.indexOf("#"
+					+ $(obj).val()))
+					+ device_token.substring(device_token.indexOf("#"
+							+ $(obj).val() + ',')
 							+ $(obj).val().length + 2, device_token.length);
 		}
 	}
@@ -50,7 +52,7 @@ function checkchange(obj) {
 		}
 	}
 	if ($(obj).is(':checked')) {
-		device_token +="#"+ $(obj).val() + ",";
+		device_token += "#" + $(obj).val() + ",";
 		driver_name += $(obj).attr('value1') + ',';
 	}
 	$("#text").html(driver_name.replace(/(.{120})/g, '$1<br\>'));
@@ -63,17 +65,24 @@ function checkchange(obj) {
 	 */
 }
 function checkedAllRows() {
-	if (driver_name.split(",").length >= 20) {
-		bootbox.alert("单次发送不能超过20个人");
-		return;
+
+	if (!$(".checkbox").prop("checked")) {
+		if (driver_name.split(",").length >= 20) {
+			bootbox.alert("单次发送不能超过20个人");
+			return;
+		} else {
+			$(".checkbox").prop("checked", !$(".checkbox").prop("checked"));
+			for (var i = 0; i < $(".checkbox").length; i++) {
+				checkchange($(".checkbox")[i]);
+			}
+		}
 	}else{
 		$(".checkbox").prop("checked", !$(".checkbox").prop("checked"));
 		for (var i = 0; i < $(".checkbox").length; i++) {
 			checkchange($(".checkbox")[i]);
 		}
 	}
-	
-//	console.log($(".checkbox"));
+	// console.log($(".checkbox"));
 }
 
 function commitForm(obj) {
@@ -90,10 +99,10 @@ function oncheck() {
 	if (device_token != '') {
 		$("#allcheckbox").prop("checked", true);
 		var token = device_token.split(',')
-//		console.log(token);
+		// console.log(token);
 		for (var i = 0; i < token.length; i++) {
 			eval('$( token[i] ).prop("checked", true);')
-			
+
 		}
 
 	}
