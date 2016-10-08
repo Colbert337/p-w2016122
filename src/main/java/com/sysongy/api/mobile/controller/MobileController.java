@@ -2347,7 +2347,7 @@ public class MobileController {
 						if (!driver.isEmpty()) {
 							String initialPassword = mainObj.optString("newPassword");
 							//初始密码加密、赋值
-							initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
+							//initialPassword = Encoder.MD5Encode(initialPassword.getBytes());
 							sysDriver.setPayCode(initialPassword);
 							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 							//更新初始密码
