@@ -1762,7 +1762,7 @@ public class MobileController {
 						reChargeMap.put("remark",map.get("remark"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
-							dateTime = map.get("orderDate").toString();
+							dateTime = map.get("orderDate").toString().substring(0, 19);
 						}else{
 							dateTime = sft.format(new Date());
 						}
@@ -1886,7 +1886,7 @@ public class MobileController {
 						reChargeMap.put("remark",map.get("remark"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
-							dateTime = map.get("orderDate").toString();
+							dateTime = map.get("orderDate").toString().substring(0, 19);
 						}else{
 							dateTime = sft.format(new Date());
 						}
@@ -1992,7 +1992,7 @@ public class MobileController {
 						reChargeMap.put("type",map.get("type"));
 						String dateTime = "";
 						if(map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())){
-							dateTime = map.get("orderDate").toString();
+							dateTime = map.get("orderDate").toString().substring(0, 19);
 						}else{
 							dateTime = sft.format(new Date());
 						}
