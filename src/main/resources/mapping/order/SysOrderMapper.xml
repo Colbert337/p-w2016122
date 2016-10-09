@@ -893,11 +893,12 @@
   <!--     APP司机报表接口     -->
   <!--查询充值记录-->
   <select id="queryDriverReChargeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-    select order_number,cash,cash_back_driver,charge_type,is_discharge,channel,
+    select DISTINCT order_number,cash,cash_back_driver,charge_type,is_discharge,channel,
 <!--     (select remark from sys_order rc where rc.order_id = rb.order_number) as remark, -->
     order_date
     from report_business rb
-    where order_type = '130' and cash_back_per is not null and sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+    where order_type = '130' and sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+    <!-- where order_type = '130' and cash_back_per is not null and sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}-->
     <if test="orderDate != null" >
        and  order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
     </if>
