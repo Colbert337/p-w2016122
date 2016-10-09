@@ -1420,9 +1420,10 @@ public class MobileController {
 				}
 				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationList.subList((pNum-1)*pSize,x));
 				List<Gastation> gastationList1 = pageInfo.getList();
+				System.out.println(gastationList1.size());
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
-				if(gastationList1 != null && gastationList.size() > 0){
-					for (Gastation gastationInfo:gastationList){
+				if(gastationList1 != null && gastationList1.size() > 0){
+					for (Gastation gastationInfo:gastationList1){
 						Map<String, Object> gastationMap = new HashMap<>();
 						gastationMap.put("stationId",gastationInfo.getSys_gas_station_id());
 						gastationMap.put("name",gastationInfo.getGas_station_name());
