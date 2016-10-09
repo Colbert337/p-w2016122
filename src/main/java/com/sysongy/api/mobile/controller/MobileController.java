@@ -1342,6 +1342,7 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			String http_poms_path =  (String) prop.get("http_poms_path");
+			System.out.println(mainObj);
 			/**
 			 * 必填参数
 			 */
@@ -1374,10 +1375,43 @@ public class MobileController {
 				Double latitude = new Double(0);
 				Double radiusDb = new Double(0);
 				//获取气站列表
+				List<Gastation> gastationList = new ArrayList<Gastation>();
+				List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
+				for(int i=0;i<gastationAllList.size();i++){
+					if(longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr) && radius != null && !"".equals(radius)){
+						longitude = new Double(longitudeStr);
+						latitude = new Double(latitudeStr);
+						radiusDb = new Double(radius);
+
+						String longStr = gastationAllList.get(i).getLongitude();
+						String langStr = gastationAllList.get(i).getLatitude();
+						Double longDb = new Double(0);
+						Double langDb = new Double(0);
+						if(longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)){
+							longDb = new Double(longStr);
+							langDb = new Double(langStr);
+						}
+						//计算当前加注站离指定坐标距离
+						Double dist = DistCnvter.getDistance(longitude,latitude,longDb,langDb);
+						if(dist <= radiusDb){//在指定范围内，则返回当前加注站信息
+							gastationList.add(gastationAllList.get(i));
+						}
+					}
+				}
+				List<Gastation> rsList = new ArrayList<Gastation>();
+				int pNum = mainObj.optInt("pageNum");
+				int pSize = mainObj.optInt("pageSize");
+				if(pNum==0){
+					pNum=1;
+				}
+				int x = pNum*pSize;
+				if(x>gastationList.size()){
+					x=gastationList.size();
+				}
+				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationList.subList((pNum-1)*pSize,x));
+				List<Gastation> gastationList1 = pageInfo.getList();
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
-				PageInfo<Gastation> pageInfo = gastationService.queryGastation(gastation);
-				List<Gastation> gastationList = pageInfo.getList();
-				if(gastationList != null && gastationList.size() > 0){
+				if(gastationList1 != null && gastationList.size() > 0){
 					for (Gastation gastationInfo:gastationList){
 						Map<String, Object> gastationMap = new HashMap<>();
 						gastationMap.put("stationId",gastationInfo.getSys_gas_station_id());
@@ -1421,27 +1455,27 @@ public class MobileController {
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
 						gastationMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/station?stationId="+ gastationInfo.getSys_gas_station_id());
-						if(longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr) && radius != null && !"".equals(radius)){
-							longitude = new Double(longitudeStr);
-							latitude = new Double(latitudeStr);
-							radiusDb = new Double(radius);
-
-							String longStr = gastationInfo.getLongitude();
-							String langStr = gastationInfo.getLatitude();
-							Double longDb = new Double(0);
-							Double langDb = new Double(0);
-							if(longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)){
-								longDb = new Double(longStr);
-								langDb = new Double(langStr);
-							}
-							//计算当前加注站离指定坐标距离
-							Double dist = DistCnvter.getDistance(longitude,latitude,longDb,langDb);
-							if(dist <= radiusDb){//在指定范围内，则返回当前加注站信息
+//						if(longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr) && radius != null && !"".equals(radius)){
+//							longitude = new Double(longitudeStr);
+//							latitude = new Double(latitudeStr);
+//							radiusDb = new Double(radius);
+//
+//							String longStr = gastationInfo.getLongitude();
+//							String langStr = gastationInfo.getLatitude();
+//							Double longDb = new Double(0);
+//							Double langDb = new Double(0);
+//							if(longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)){
+//								longDb = new Double(longStr);
+//								langDb = new Double(langStr);
+//							}
+//							//计算当前加注站离指定坐标距离
+//							Double dist = DistCnvter.getDistance(longitude,latitude,longDb,langDb);
+//							if(dist <= radiusDb){//在指定范围内，则返回当前加注站信息
 								gastationArray.add(gastationMap);
-							}
-						}else{//目标坐标及范围半径未传参，则返回所有加注站信息
-							gastationArray.add(gastationMap);
-						}
+//							}
+//						}else{//目标坐标及范围半径未传参，则返回所有加注站信息
+//							gastationArray.add(gastationMap);
+//						}
 					}
 					result.setListMap(gastationArray);
 				}else{
