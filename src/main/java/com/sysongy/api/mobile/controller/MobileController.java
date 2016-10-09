@@ -209,6 +209,39 @@ public class MobileController {
 						result.setMsg("验证码无效！");
 					}
 				}
+				//判断二维码是否为空
+				if(queryDriver.getDriverQrcode()==null ||"".equals(queryDriver.getDriverQrcode())){
+					//图片路径
+					String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+			        File file =new File(rootPath);    
+					//如果根文件夹不存在则创建    
+					if  (!file.exists()  && !file.isDirectory()){       
+					    file.mkdir();    
+					}
+					String path = rootPath+mainObj.optString("username")+"/";
+					File file1 =new File(path);    
+					//如果用户文件夹不存在则创建    
+					if  (!file1.exists()  && !file1.isDirectory()){       
+					    file1.mkdir();    
+					}
+					//二维码路径
+					String imgPath = path+mainObj.optString("username")+".jpg";
+					String show_path = (String) prop.get("show_images_path")+ "/driver/"+mainObj.optString("username")+"/"+mainObj.optString("username")+".jpg";
+					//生成二维码
+					driver.setDriverQrcode(show_path);
+					driver.setSysDriverId(queryDriver.getSysDriverId());
+					Integer tmp = driverService.saveDriver(driver, "update", null);
+					String encoderContent=null;
+					if(queryDriver.getFullName()==null||"".equals(queryDriver.getFullName())){
+						encoderContent=mainObj.optString("username");
+					}else{
+						encoderContent=mainObj.optString("username")+"_"+queryDriver.getFullName();
+					}
+					if(tmp > 0){
+						TwoDimensionCode handler = new TwoDimensionCode();
+						handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+					}
+				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -285,7 +318,7 @@ public class MobileController {
 						break;
 					case "4":
 						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_LOGIN_CONFIRM;
-						verification.setContent("司集APP");
+						verification.setContent("APP");
 						break;
 				}
 
@@ -1119,7 +1152,7 @@ public class MobileController {
 				suggest.setMobilePhone(mainObj.optString("mobilePhone"));
 				suggest.setCreatedDate(new Date());
 				suggest.setUpdatedDate(new Date());
-
+				suggest.setSuggestRes("来自APP");
 				int resultVal = mbUserSuggestServices.saveSuggester(suggest);
 				if(resultVal <= 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1719,8 +1752,6 @@ public class MobileController {
 			SysDriver driver = new SysDriver();
 
 			SysDriver sysDriver = new SysDriver();
-			sysDriver.setSysDriverId(mainObj.optString("token"));
-			order.setSysDriver(sysDriver);
 			/**
 			 * 必填参数
 			 */
@@ -1733,6 +1764,8 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(b){
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				order.setSysDriver(sysDriver);
 				if(order.getPageNum() == null){
 					order.setPageNum(GlobalConstant.PAGE_NUM);
 					order.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -1740,20 +1773,32 @@ public class MobileController {
 					order.setPageNum(mainObj.optInt("pageNum"));
 					order.setPageSize(mainObj.optInt("pageSize"));
 				}
-
-			 	PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverReChargePage(order);
-				List<Map<String,Object>> reChargeList = new ArrayList<>();
-				Map<String,Object> reCharge = new HashMap<>();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sft1 = new SimpleDateFormat("yyyy-MM");
+				order.setOrderDate(sft1.parse(mainObj.optString("time")));
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+			 	PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverReChargePage(order);
+			 	List<Map<String, Object>> list = orderService.queryDriverReCharge(order);
+			 	for(Map<String, Object> data:list){
+			 		//汇总充值总额
+					if(data.get("cash") != null && !"".equals(data.get("cash").toString())){
+						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString())).add(new BigDecimal(data.get("cash_back_driver").toString()));
+					}
+					//汇总返现总额
+					if(data.get("cashBackDriver") != null && !"".equals(data.get("cashBackDriver").toString())){
+						totalBack = totalBack.add(new BigDecimal(data.get("cashBackDriver").toString()));
+					}
+			 	}
+			 	List<Map<String,Object>> reChargeList = new ArrayList<>();
+				Map<String,Object> reCharge = new HashMap<>();
 			 	if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 
 					for(Map<String, Object> map:pageInfo.getList()){
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum",map.get("orderNumber"));
 						reChargeMap.put("amount",map.get("cash"));
-						reChargeMap.put("cashBack",map.get("cashBackDriver"));
+						reChargeMap.put("cashBack",map.get("cash_back_driver"));
 						reChargeMap.put("rechargePlatform",map.get("channel"));
 
 						String chargeType = "";
@@ -1769,21 +1814,9 @@ public class MobileController {
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
-
 						reChargeList.add(reChargeMap);
-
-						//汇总充值总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(reChargeMap.get("cash").toString()));
-						}
-						//汇总返现总额
-						if(reChargeMap.get("cashBackDriver") != null && !"".equals(reChargeMap.get("cashBackDriver").toString())){
-							totalBack = totalBack.add(new BigDecimal(reChargeMap.get("cashBackDriver").toString()));
-						}
 					}
 					driver = driverService.queryDriverByPK(mainObj.optString("token"));
-					reCharge.put("totalCash",totalCash);
-					reCharge.put("totalBack",totalBack);
 					reCharge.put("listMap",reChargeList);
 					if(driver != null && driver.getAccount() != null){
 						reCharge.put("totalAmount", driver.getAccount().getAccountBalance());
@@ -1792,6 +1825,8 @@ public class MobileController {
 					}
 
 				}
+			 	reCharge.put("totalCash",totalCash);
+				reCharge.put("totalBack",totalBack);
 				result.setData(reCharge);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1839,10 +1874,6 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
-
-			SysDriver sysDriver = new SysDriver();
-			sysDriver.setSysDriverId(mainObj.optString("token"));
-			order.setSysDriver(sysDriver);
 			/**
 			 * 必填参数
 			 */
@@ -1862,13 +1893,25 @@ public class MobileController {
 					order.setPageNum(mainObj.optInt("pageNum"));
 					order.setPageSize(mainObj.optInt("pageSize"));
 				}
-
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sft1 = new SimpleDateFormat("yyyy-MM");
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				order.setSysDriver(sysDriver);
+				order.setOrderDate(sft1.parse(mainObj.optString("time")));
 				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverConsumePage(order);
 				List<Map<String,Object>> reChargeList = new ArrayList<>();
 				Map<String,Object> reCharge = new HashMap<>();
-				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+			 	List<Map<String, Object>> list = orderService.queryDriverConsume(order);
+			 	for(Map<String, Object> data:list){
+					//汇总消费总额
+					if(data.get("cash") != null && !"".equals(data.get("cash").toString())){
+						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString()));
+					}
+			 	}
+				
 				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 
 					for(Map<String, Object> map:pageInfo.getList()){
@@ -1877,8 +1920,8 @@ public class MobileController {
 						reChargeMap.put("amount",map.get("cash"));
 						reChargeMap.put("gasStationName",map.get("channel"));
 						reChargeMap.put("gasStationId",map.get("channelNumber"));
-						reChargeMap.put("gasTotal",map.get("goodsSum"));
-						reChargeMap.put("payStatus","1");
+						reChargeMap.put("gasTotal",map.get("goods_sum"));
+						reChargeMap.put("payStatus","支付成功");
 
 						String chargeType = "";
 						if(map.get("chargeType") != null && !"".equals(map.get("chargeType").toString())){
@@ -1895,20 +1938,13 @@ public class MobileController {
 						reChargeMap.put("time",dateTime);
 
 						reChargeList.add(reChargeMap);
-
-						//汇总消费总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(reChargeMap.get("cash").toString()));
-						}
 					}
-
-					reCharge.put("totalCash",totalCash);
 					reCharge.put("listMap",reChargeList);
-					
 				}else{
-					reCharge.put("totalCash","");
+					reCharge.put("totalCash","0");
 					reCharge.put("listMap",new ArrayList<>());
 				}
+				reCharge.put("totalCash",totalCash);
 				result.setData(reCharge);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1954,10 +1990,6 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
-			SysDriver sysDriver = new SysDriver();
-			sysDriver.setSysDriverId(mainObj.optString("token"));
-			order.setSysDriver(sysDriver);
 			/**
 			 * 必填参数
 			 */
@@ -1970,6 +2002,8 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(b){
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sft1 = new SimpleDateFormat("yyyy-MM");
 				if(order.getPageNum() == null){
 					order.setPageNum(GlobalConstant.PAGE_NUM);
 					order.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -1977,13 +2011,36 @@ public class MobileController {
 					order.setPageNum(mainObj.optInt("pageNum"));
 					order.setPageSize(mainObj.optInt("pageSize"));
 				}
-
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				order.setSysDriver(sysDriver);
+				order.setOrderDate(sft1.parse(mainObj.optString("time")));
 				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverTransferPage(order);
 				List<Map<String,Object>> reChargeList = new ArrayList<>();
 				Map<String,Object> reCharge = new HashMap<>();
-				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+			 	List<Map<String, Object>> list = orderService.queryDriverTransfer(order);
+			 	for(Map<String, Object> data:list){
+			 		if("0".equals(data.get("type"))){
+						//汇总转出总额
+						if(data.get("cash") != null && !"".equals(data.get("cash").toString())){
+							BigDecimal tempVal = new BigDecimal(data.get("cash").toString());
+
+							if(tempVal.compareTo(BigDecimal.ZERO) > 0){
+								totalCash = totalCash.add(tempVal);
+							}
+						}
+					}else{
+						//汇总转入总额
+						if(data.get("cash") != null && !"".equals(data.get("cash").toString())){
+							BigDecimal tempVal = new BigDecimal(data.get("cash").toString());
+							if(tempVal.compareTo(BigDecimal.ZERO) > 0){
+								totalBack = totalBack.add(tempVal);
+							}
+						}
+					}
+			 	}
 				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 					for(Map<String, Object> map:pageInfo.getList()){
 						Map<String, Object> reChargeMap = new HashMap<>();
@@ -1999,36 +2056,14 @@ public class MobileController {
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
-
 						reChargeList.add(reChargeMap);
-						if("0".equals(map.get("type"))){
-							//汇总转出总额
-							if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
-								BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
-
-								if(tempVal.compareTo(BigDecimal.ZERO) > 0){
-									totalCash = totalCash.add(tempVal);
-								}
-							}
-						}else{
-							//汇总转入总额
-							if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
-								BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
-
-								if(tempVal.compareTo(BigDecimal.ZERO) > 0){
-									totalBack = totalBack.add(tempVal);
-								}
-							}
-						}
 					}
-					reCharge.put("totalOut",totalCash);
-					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
 				}else{
-					reCharge.put("totalOut","");
-					reCharge.put("totalIn","");
 					reCharge.put("listMap",new ArrayList<>());
 				}
+				reCharge.put("totalOut",totalCash);
+				reCharge.put("totalIn",totalBack);
 				result.setData(reCharge);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3607,7 +3642,7 @@ public class MobileController {
 		 **/
 		Date curDate = new Date();
 		record.setOrderDate(curDate);
-		record.setChannel("司集能源APP");
+		record.setChannel("APP");
 		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
 		return record;
 	}
@@ -3639,6 +3674,48 @@ public class MobileController {
 			Element e = it.next();
 			// 对子节点进行遍历
 			listNodes(e);
+		}
+	}
+	@RequestMapping(value = "/QR")
+	@ResponseBody
+	public void getQR() {
+		try {
+			List<SysDriver> list = driverService.queryAll();
+			System.out.println(list.size());
+			//图片路径
+			String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+			System.out.println(rootPath);
+	        File file =new File(rootPath);    
+			//如果根文件夹不存在则创建    
+			if  (!file.exists()  && !file.isDirectory()){       
+			    file.mkdir();    
+			}
+			for(int i=0;i<list.size();i++){
+				String path = rootPath+list.get(i).getUserName()+"/";
+				File file1 =new File(path);    
+				//如果用户文件夹不存在则创建    
+				if  (!file1.exists()  && !file1.isDirectory()){       
+				    file1.mkdir();    
+				}
+				//二维码路径
+				String imgPath = path+list.get(i).getUserName()+".jpg";
+				String show_path = (String) prop.get("show_images_path")+ "/driver/"+list.get(i).getUserName()+"/"+list.get(i).getUserName()+".jpg";
+				TwoDimensionCode handler = new TwoDimensionCode();
+				String encoderContent=null;
+				if(list.get(0).getFullName()!=null && !"".equals(list.get(i).getFullName())){
+					encoderContent=list.get(i).getUserName()+"_"+list.get(i).getFullName();
+				}else{
+					encoderContent=list.get(i).getUserName();
+				}
+				SysDriver driver = new SysDriver();
+				driver.setSysDriverId(list.get(i).getSysDriverId());
+				driver.setDriverQrcode(show_path);
+				int resultVal = driverService.saveDriver(driver,"update",null);
+				handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

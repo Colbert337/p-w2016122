@@ -64,10 +64,11 @@ public class SysRoadController extends BaseContoller {
 		String ret = "webpage/poms/mobile/roadList";
 
 		PageBean bean = new PageBean();
+		road.setPageSize(20);
 		try {
-			if (road.getPageNum() == null) {
+			if (road.getPageNum() == null||"".equals(road.getPageNum())) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
-				road.setPageSize(GlobalConstant.PAGE_SIZE);
+				road.setPageSize(20);
 			}
 			if (StringUtils.isEmpty(road.getOrderby())) {
 				road.setOrderby("start_time desc");

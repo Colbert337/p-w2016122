@@ -898,16 +898,20 @@
     order_date
     from report_business rb
     where order_type = '130' and cash_back_per is not null and sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+    <if test="orderDate != null" >
+       and  order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
+    </if>
   </select>
-
   <!--查询消费记录-->
   <select id="queryDriverConsumeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     select order_number,cash,channel,channel_number,goods_sum,is_discharge,charge_type,
     (select remark from sys_order_deal rc where rc.order_id = rb.order_number) as remark,
     order_date from report_business rb
     where order_type = '220' and sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+    <if test="orderDate != null" >
+       and  order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
+    </if>
   </select>
-
   <!--查询转账记录-->
   <!-- 
   <select id="queryDriverTransferList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
@@ -942,7 +946,7 @@
 		) AS type
 	FROM
 		report_business
-	WHERE order_type='320' AND (
+	WHERE (order_type='320' or order_type='310') AND (
 		credit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
 	OR debit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR})
 	)AS temp where 1=1 

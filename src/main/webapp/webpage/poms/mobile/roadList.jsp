@@ -42,7 +42,7 @@
 							id="conditionStatus">
 							<option value="">--请选择--</option>
 							<option value="0">已失效</option>
-							<option value="1">未审核</option>
+							<option value="1">待审核</option>
 							<option value="2">审核通过</option>
 							<option value="3">未通过</option>
 						</select>
@@ -164,7 +164,7 @@
 
 											<a class="option-btn-m" href="javascript:void(0);"
 												title="查看失效请求"
-												onclick="loadPage('#main', '../web/mobile/road/roadListStr?id=${list.id }');"
+												onclick="showShixiao('../web/mobile/road/roadListStr?id=${list.id }')"
 												data-rel="tooltip"> --${list.invalid_count}-- </a>
 
 

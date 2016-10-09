@@ -97,4 +97,6 @@ public interface DriverService {
 	public SysDriver queryByUserName(SysDriver record) throws Exception;
 	
 	public SysDriver queryByDeviceToken(String deviceToken) throws Exception;
+	
+	public List<SysDriver> queryAll() throws Exception;
 }
