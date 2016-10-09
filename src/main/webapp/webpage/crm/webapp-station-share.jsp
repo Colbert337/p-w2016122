@@ -51,8 +51,8 @@
 			<div class="pdp-item-content">
 				<c:forEach items="${priceList}" var="price">
 					<div class="row">
-						<div class="col-value">${price.gasName}单价:</div>
-						<div class="col-key">${price.gasPrice}元/${price.unit}</div>
+						<div class="col-value">${price.priceName}</div>
+							<%--<div class="col-key">${price.gasPrice}元/${price.unit}</div>--%>
 					</div>
 				</c:forEach>
 			</div>
@@ -72,7 +72,7 @@
 
 	<div class="btn-more-info">
 		<div class="inner">
-			<a href="<%=basePath %>/docs/app/sysongy-sysongy-release-1.0.0.13.apk" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
+			<a href="<%=basePath %>/webpage/crm/webapp-download-app.jsp" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
 		</div>
 	</div>
 
