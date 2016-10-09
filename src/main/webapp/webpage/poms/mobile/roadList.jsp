@@ -42,7 +42,7 @@
 							id="conditionStatus">
 							<option value="">--请选择--</option>
 							<option value="0">已失效</option>
-							<option value="1">未审核</option>
+							<option value="1">待审核</option>
 							<option value="2">审核通过</option>
 							<option value="3">未通过</option>
 						</select>
