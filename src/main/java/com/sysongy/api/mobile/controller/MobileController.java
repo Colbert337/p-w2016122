@@ -1787,7 +1787,7 @@ public class MobileController {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum",map.get("orderNumber"));
 						reChargeMap.put("amount",map.get("cash"));
-						reChargeMap.put("cashBack",map.get("cashBackDriver"));
+						reChargeMap.put("cashBack",map.get("cash_back_driver"));
 						reChargeMap.put("rechargePlatform",map.get("channel"));
 
 						String chargeType = "";
@@ -1808,7 +1808,7 @@ public class MobileController {
 
 						//汇总充值总额
 						if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(map.get("cash").toString()));
+							totalCash = totalCash.add(new BigDecimal(map.get("cash").toString())).add(new BigDecimal(map.get("cash_back_driver").toString()));
 						}
 						//汇总返现总额
 						if(map.get("cashBackDriver") != null && !"".equals(map.get("cashBackDriver").toString())){
@@ -1911,7 +1911,7 @@ public class MobileController {
 						reChargeMap.put("amount",map.get("cash"));
 						reChargeMap.put("gasStationName",map.get("channel"));
 						reChargeMap.put("gasStationId",map.get("channelNumber"));
-						reChargeMap.put("gasTotal",map.get("goodsSum"));
+						reChargeMap.put("gasTotal",map.get("goods_sum"));
 						reChargeMap.put("payStatus","1");
 
 						String chargeType = "";
@@ -1931,8 +1931,8 @@ public class MobileController {
 						reChargeList.add(reChargeMap);
 
 						//汇总消费总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(reChargeMap.get("cash").toString()));
+						if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+							totalCash = totalCash.add(new BigDecimal(map.get("cash").toString()));
 						}
 					}
 

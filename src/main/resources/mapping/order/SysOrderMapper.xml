@@ -948,7 +948,7 @@
 		) AS type
 	FROM
 		report_business
-	WHERE order_type='320' AND (
+	WHERE (order_type='320' or order_type='310') AND (
 		credit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
 	OR debit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR})
 	)AS temp where 1=1 
