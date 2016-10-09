@@ -1786,8 +1786,8 @@ public class MobileController {
 						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString())).add(new BigDecimal(data.get("cash_back_driver").toString()));
 					}
 					//汇总返现总额
-					if(data.get("cashBackDriver") != null && !"".equals(data.get("cashBackDriver").toString())){
-						totalBack = totalBack.add(new BigDecimal(data.get("cashBackDriver").toString()));
+					if(data.get("cash_back_driver") != null && !"".equals(data.get("cash_back_driver").toString())){
+						totalBack = totalBack.add(new BigDecimal(data.get("cash_back_driver").toString()));
 					}
 			 	}
 			 	List<Map<String,Object>> reChargeList = new ArrayList<>();
