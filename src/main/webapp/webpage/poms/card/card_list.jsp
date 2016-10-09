@@ -8,11 +8,16 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
+<script type="text/javascript">
 
+	function importReport(){
+		$("#formcard").submit();
+	}
+</script>
 <div class="">
 
 	<!-- /.page-header -->
-	<form id="formcard">
+	<form id="formcard" action="<%=basePath%>/web/card/cardListReport">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -80,6 +85,7 @@
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
 							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="importReport()">导出报表</button>
 						</div>
 
 					</div>
