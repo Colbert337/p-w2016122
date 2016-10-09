@@ -48,6 +48,44 @@ public class DateUtil {
 	public final static int MINUTE = Calendar.MINUTE;
 	public final static int SECOND = Calendar.SECOND;
 
+	public static String longDatePattern = "yyyy-MM-dd HH:mm:ss";
+
+	/**
+	 * 获得默认的 date pattern
+	 */
+	public static String getDatePattern() {
+		return longDatePattern;
+	}
+
+	/**
+	 * 返回预设Format的当前日期字符串
+	 */
+	public static String getToday() {
+		Date today = new Date();
+		return format(today);
+	}
+
+	/**
+	 * 使用预设Format格式化Date成字符串
+	 */
+	public static String format(Date date) {
+		return format(date, getDatePattern());
+	}
+
+	/**
+	 * 使用参数Format格式化Date成字符串
+	 */
+	public static String format(Date date, String pattern) {
+		String returnValue = "";
+
+		if (date != null) {
+			SimpleDateFormat df = new SimpleDateFormat(pattern);
+			returnValue = df.format(date);
+		}
+
+		return (returnValue);
+	}
+
 	/**
 	 * 构造函数.
 	 */
