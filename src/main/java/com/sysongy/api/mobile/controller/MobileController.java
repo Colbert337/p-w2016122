@@ -1912,7 +1912,7 @@ public class MobileController {
 						reChargeMap.put("gasStationName",map.get("channel"));
 						reChargeMap.put("gasStationId",map.get("channelNumber"));
 						reChargeMap.put("gasTotal",map.get("goods_sum"));
-						reChargeMap.put("payStatus","1");
+						reChargeMap.put("payStatus","支付成功");
 
 						String chargeType = "";
 						if(map.get("chargeType") != null && !"".equals(map.get("chargeType").toString())){
@@ -1940,7 +1940,7 @@ public class MobileController {
 					reCharge.put("listMap",reChargeList);
 					
 				}else{
-					reCharge.put("totalCash","");
+					reCharge.put("totalCash","0");
 					reCharge.put("listMap",new ArrayList<>());
 				}
 				result.setData(reCharge);
@@ -2033,7 +2033,6 @@ public class MobileController {
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
-
 						reChargeList.add(reChargeMap);
 						if("0".equals(map.get("type"))){
 							//汇总转出总额
@@ -2048,7 +2047,6 @@ public class MobileController {
 							//汇总转入总额
 							if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
 								BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
-
 								if(tempVal.compareTo(BigDecimal.ZERO) > 0){
 									totalBack = totalBack.add(tempVal);
 								}
@@ -2059,8 +2057,8 @@ public class MobileController {
 					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
 				}else{
-					reCharge.put("totalOut","");
-					reCharge.put("totalIn","");
+					reCharge.put("totalOut","0");
+					reCharge.put("totalIn","0");
 					reCharge.put("listMap",new ArrayList<>());
 				}
 				result.setData(reCharge);
