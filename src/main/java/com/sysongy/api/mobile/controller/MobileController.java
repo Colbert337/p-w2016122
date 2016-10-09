@@ -3562,7 +3562,7 @@ public class MobileController {
 		 **/
 		Date curDate = new Date();
 		record.setOrderDate(curDate);
-		record.setChannel("司集能源APP");
+		record.setChannel("APP");
 		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
 		return record;
 	}
