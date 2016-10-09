@@ -51,9 +51,17 @@ function checkchange(obj) {
 							driver_name.length);
 		}
 	}
+	while (user_id.indexOf($(obj).attr('value2') + ',') != -1) {
+		if (user_id.indexOf($(obj).attr('value2') + ',') != -1) {
+			user_id = user_id.substring(0, user_id.indexOf( $(obj).attr('value2')))
+					+ user_id.substring(user_id.indexOf( $(obj).attr('value2') + ',')
+							+ $(obj).attr('value2').length + 2, user_id.length);
+		}
+	}
 	if ($(obj).is(':checked')) {
 		device_token += "#" + $(obj).val() + ",";
 		driver_name += $(obj).attr('value1') + ',';
+		user_id+=$(obj).attr('value2') + ',';
 	}
 	$("#text").html(driver_name.replace(/(.{120})/g, '$1<br\>'));
 	// alert(device_token);

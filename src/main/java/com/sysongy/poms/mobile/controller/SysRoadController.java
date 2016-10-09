@@ -352,10 +352,11 @@ public class SysRoadController extends BaseContoller {
 	}
 
 	@RequestMapping("/updateRoad")
-	public String updateRoad(SysRoadCondition road, ModelMap map, HttpSession session,String content) {
+	public String updateRoad(SysRoadCondition road, ModelMap map, HttpSession session,String content,String status) {
 		String ret = "redirect:/web/mobile/road/roadList?type=update";
 		PageBean bean = new PageBean();
 		msg = "";
+		road.setConditionStatus(status);
 		try {
 			if (road.getPageNum() == null) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
@@ -364,7 +365,7 @@ public class SysRoadController extends BaseContoller {
 			CurrUser user = (CurrUser) session.getAttribute("currUser");
 			if ("0".equals(road.getConditionStatus())) {
 				msg="失效成功";
-				redisClientImpl.deleteFromCache(road.getId());
+				redisClientImpl.deleteFromCache("Road"+road.getId());
 			} else {
 				road.setAuditor(user.getUser().getUserName());
 				road.setAuditorPhone(user.getUser().getMobilePhone());
@@ -377,6 +378,7 @@ public class SysRoadController extends BaseContoller {
 //			msg = "审核成功";
 			bean.setPageInfo(ret);
 			map.addAttribute("ret", bean);
+			
 			map.addAttribute("road", road);
 			map.addAttribute("suggest", road);
 			road = sysRoadService.selectByPrimaryKey(road.getId());

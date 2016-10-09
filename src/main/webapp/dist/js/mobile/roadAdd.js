@@ -112,6 +112,7 @@
 	}
 	var device_token = '';
 	var driver_name = '';
+	var user_id = '';
 	function addUser(){
 		
 	
