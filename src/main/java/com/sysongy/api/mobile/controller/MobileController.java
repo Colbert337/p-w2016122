@@ -2041,7 +2041,6 @@ public class MobileController {
 						}
 					}
 			 	}
-				
 				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 					for(Map<String, Object> map:pageInfo.getList()){
 						Map<String, Object> reChargeMap = new HashMap<>();
@@ -2061,8 +2060,6 @@ public class MobileController {
 					}
 					reCharge.put("listMap",reChargeList);
 				}else{
-					reCharge.put("totalOut","0");
-					reCharge.put("totalIn","0");
 					reCharge.put("listMap",new ArrayList<>());
 				}
 				reCharge.put("totalOut",totalCash);
