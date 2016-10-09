@@ -38,7 +38,7 @@
 	<div class="btn-more-info">
 		<div class="inner">
 			<%--<span class="icon-sy">--%>
-			<a href="<%=basePath %>/docs/app/sysongy-sysongy-release-1.0.0.13.apk" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
+			<a href="<%=basePath %>/webpage/crm/webapp-download-app.jsp" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
 		</div>
 	</div>
 

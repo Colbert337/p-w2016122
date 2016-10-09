@@ -55,7 +55,7 @@
 						<tr id="${list.sysDriverId }">
 							 <td class="center"><label class="pos-rel"> <input
 									type="checkbox" class="ace checkbox"
-									onchange="checkchange(this)" value1="${list.userName}" value="${list.deviceToken}"  id="${list.deviceToken}" /> <span
+									onchange="checkchange(this)" value1="${list.userName}" value2="${list.sysDriverId}" value="${list.deviceToken}"  id="${list.deviceToken}" /> <span
 									class="lbl"></span>
 							</label></td> 
 							<td>${list.userName}</td>

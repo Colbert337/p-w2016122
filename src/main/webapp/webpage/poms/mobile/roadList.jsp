@@ -27,11 +27,11 @@
 
 				<div class="search-types">
 					<div class="item">
-						<label>路况说明:</label> <input type="text" name="conditionMsg"
+						<label>路况说明:</label> <input type="text" name="conditionMsg" id="msg"
 							placeholder="输入路况说明" maxlength="200" value="${road.conditionMsg}" />
 					</div>
 					<div class="item">
-						<label>路况类型</label> <select name="conditionType"
+						<label>路况类型</label> <select name="conditionType" id="type"
 							value="${road.conditionType}">
 							<s:option flag="true" gcode="CONDITION_TYPE" form="road"
 								field="conditionType" />
@@ -50,10 +50,10 @@
 					<div class="item">
 						<div class="input-daterange top" id="j-input-daterange-top">
 							<label>发布日期:</label> <input type="text" class="timebox"
-								name="publisherTime_str" value="${road.publisherTime_str}"
+								name="publisherTime_str" id="publisherTime_str" value="${road.publisherTime_str}"
 								readonly="readonly" /> <span class=""> <i
 								class="fa fa-exchange"></i>
-							</span> <input type="text" class="timebox" name="auditorTime_str"
+							</span> <input type="text" class="timebox" name="auditorTime_str" id="auditorTime_str"
 								value="${road.auditorTime_str}" readonly="readonly" />
 						</div>
 					</div>
