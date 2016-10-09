@@ -1987,10 +1987,6 @@ public class MobileController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
-			SysDriver sysDriver = new SysDriver();
-			sysDriver.setSysDriverId(mainObj.optString("token"));
-			order.setSysDriver(sysDriver);
 			/**
 			 * 必填参数
 			 */
@@ -2003,6 +1999,8 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(b){
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sft1 = new SimpleDateFormat("yyyy-MM");
 				if(order.getPageNum() == null){
 					order.setPageNum(GlobalConstant.PAGE_NUM);
 					order.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -2010,11 +2008,13 @@ public class MobileController {
 					order.setPageNum(mainObj.optInt("pageNum"));
 					order.setPageSize(mainObj.optInt("pageSize"));
 				}
-
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				order.setSysDriver(sysDriver);
+				order.setOrderDate(sft1.parse(mainObj.optString("time")));
 				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverTransferPage(order);
 				List<Map<String,Object>> reChargeList = new ArrayList<>();
 				Map<String,Object> reCharge = new HashMap<>();
-				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
 				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
