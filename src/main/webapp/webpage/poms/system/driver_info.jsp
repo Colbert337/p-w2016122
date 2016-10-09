@@ -8,10 +8,16 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 <script src="<%=basePath %>/dist/js/sysparam/driver_info.js"></script>
+<script type="text/javascript">
+
+	function importReport(){
+		$("#formdriver").submit();
+	}
+</script>
 
 <div class="">
 	<!-- /.page-header -->
-	<form id="formdriver">
+	<form id="formdriver" action="<%=basePath%>/web/driver/driverInfoListReport">
 
 	<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -50,6 +56,7 @@
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								重置
 							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="importReport()">导出报表</button>
 						</div>
 					</div>
 
