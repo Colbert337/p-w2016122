@@ -2582,7 +2582,7 @@ public class MobileController {
 				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
 				roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
 				roadCondition.setCaptureTime(start);//拍照时间
-				roadCondition.setStartTime(start);//开始时间
+				roadCondition.setStartTime(sft.parse(mainObj.optString("publisherTime")));//开始时间
 				//计算结束时间01-60min、02-120min、05-240min，其他为null
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(start);
