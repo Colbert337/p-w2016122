@@ -1163,4 +1163,19 @@ public class OrderServiceImpl implements OrderService {
 
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
+
+	@Override
+	public List<Map<String, Object>> queryDriverReCharge(SysOrder record) {
+		return sysOrderMapper.queryDriverReChargeList(record);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryDriverConsume(SysOrder record) {
+		return sysOrderMapper.queryDriverConsumeList(record);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryDriverTransfer(SysOrder record) {
+		return sysOrderMapper.queryDriverTransferList(record);
+	}
 }

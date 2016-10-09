@@ -18,6 +18,7 @@ import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcFleetQuota;
+import com.sysongy.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,12 +39,6 @@ import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.system.model.SysDepositLog;
-import com.sysongy.util.DateTimeHelper;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.ExportUtil;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.RedisClientInterface;
-import com.sysongy.util.UUIDGenerator;
 
 import net.sf.json.JSONObject;
 
@@ -492,18 +487,16 @@ public class DriverController extends BaseContoller{
 		}
 	}
 	
-	@RequestMapping("/consumeReport")
-    public String queryConsumeReport(ModelMap map, SysOrder sysOrder, HttpServletRequest request,HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
+	@RequestMapping("/driverInfoListReport")
+    public String queryConsumeReport(ModelMap map, SysDriver sysDriver, HttpServletRequest request,HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
         try {
-        	sysOrder.setPageNum(1);
-        	sysOrder.setPageSize(1048576);
 
-			if(StringUtils.isEmpty(sysOrder.getOrderby())){
-				sysOrder.setOrderby("order_date desc");
+			if(StringUtils.isEmpty(sysDriver.getOrderby())){
+				sysDriver.setOrderby("order_date desc");
 			}
 
-			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeDriverReport(sysOrder);
-			List<Map<String, Object>> list = pageinfo.getList();
+			PageInfo<SysDriver> pageinfo = driverService.queryDrivers(sysDriver);
+			List<SysDriver> list = pageinfo.getList();
 
             int cells = 0 ; // 记录条数
 
@@ -514,7 +507,7 @@ public class DriverController extends BaseContoller{
             ExportUtil reportExcel = new ExportUtil();
 
             String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
-            downLoadFileName = "个人司机消费_" + downLoadFileName;
+            downLoadFileName = "会员信息_" + downLoadFileName;
 
             try {
                 response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));  
@@ -524,50 +517,97 @@ public class DriverController extends BaseContoller{
 
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","会员账号","电话号码","加注站编号","加注站名称","关联运输公司","备注","操作人"};
+            content[0] = new String[]{"会员账号","实体卡号","电话号码","注册来源","注册公司","关联运输公司","可用余额","创建时间","实体卡状态","审核状态","用户状态"};
 
             int i = 1;
             if(list != null && list.size() > 0){
-            	 for (Map<String, Object> tmpMap:pageinfo.getList()) {
+            	 for (SysDriver tmpMap:pageinfo.getList()) {
             		 
-            		String order_number = tmpMap.get("order_number")==null?"":tmpMap.get("order_number").toString();
-            		String order_type;
-            		String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
-            		String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
-            		String is_discharge = tmpMap.get("is_discharge")==null?"":"0".equals(tmpMap.get("is_discharge").toString())?"消费":"冲红";
-            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
-            		String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
-					 String mobile_phone = tmpMap.get("mobile_phone")==null?"":tmpMap.get("mobile_phone").toString();
-            		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
-            		String channel_number = tmpMap.get("channel_number")==null?"":tmpMap.get("channel_number").toString();
-            		String transportion_name = tmpMap.get("transportion_name")==null?"":tmpMap.get("transportion_name").toString();
-            		String remark = tmpMap.get("remark")==null?"":tmpMap.get("remark").toString();
-            		String operator = tmpMap.get("operator")==null?"":tmpMap.get("operator").toString();
+            	//	String sysDriverId = tmpMap.getSysDriverId()==null?"":tmpMap.getSysDriverId().toString();
+					 String userName = tmpMap.getUserName()==null?"":tmpMap.getUserName().toString();
+					 String cardId = tmpMap.getCardId()==null?"":tmpMap.getCardId().toString();
+					 String mobilePhone = tmpMap.getMobilePhone()==null?"":tmpMap.getMobilePhone().toString();
+					 String regisCompany = null;//注册来源 这个注册公司的属性木有值
+					 if(tmpMap.getRegisSource()!=null) {
+						 switch (tmpMap.getRegisSource().toString()) {
+							 case "APP": {
+								 regisCompany = "安卓终端APP";
+								 break;
+							 }
+							 case "WeChat": {
+								 regisCompany = "微信服务号";
+								 break;
+							 }
+							 default:
+								 regisCompany = "";
+								 break;
+						 }
+					 }
+					 if(tmpMap.getStationId()!=null) {
 
+							if(tmpMap.getStationId().contains("T")){
+								 regisCompany = "运输公司";
+							 }
+							if(tmpMap.getStationId().contains("GS")) {
+								 regisCompany = "加注站";
+							 }
+					 }
+					 String regisSource = tmpMap.getRegisSource()==null?"":tmpMap.getRegisSource().toString();//注册公司
+					 String stationId = tmpMap.getStationId()==null?"":tmpMap.getStationId().toString();
+					 String accountBalance = tmpMap.getAccount()==null?"":tmpMap.getAccount().getAccountBalance();
+					 String createdDate = tmpMap.getCreatedDate()==null?"": DateUtil.format(tmpMap.getCreatedDate());
+					 String cardStatus = tmpMap.getCardInfo()==null?"":tmpMap.getIsIdentInfo().getMname();//0-已冻结,1-已入库，2-已出库 3-未发放 4-使用中 5-已失效
+					 String checkedStatus;//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
+					 String account_status;// 0 使用中 1 已冻结 2 已离职
 
-                    switch (tmpMap.get("order_type")==null?"":tmpMap.get("order_type").toString()) {
-					case "210":{
-						order_type = "运输公司消费";
-						break;
-					}
-					case "220":{
-						order_type = "司机消费";
-						break;
-					}
-					default:
-						order_type = "";
-						break;
-					}
+					 switch (tmpMap.getCheckedStatus().toString()) {
+						 case "0":{
+							 checkedStatus = "未认证";
+							 break;
+						 }
+						 case "1":{
+							 checkedStatus = "审核中";
+							 break;
+						 }
+						 case "2":{
+							 checkedStatus = "已认证";
+							 break;
+						 }
+						 case "3":{
+							 checkedStatus = "未通过";
+							 break;
+						 }
+						 default:
+							 checkedStatus = "";
+							 break;
+					 }
+					 switch (tmpMap.getAccount().getAccount_status().toString()) {
+						 case "0":{
+							 account_status = "用户冻结";
+							 break;
+						 }
+						 case "1":{
+							 account_status = "卡冻结";
+							 break;
+						 }
+						 case "2":{
+							 account_status = "正常";
+							 break;
+						 }
+						 default:
+							 account_status = "";
+							 break;
+					 }
 
-
-                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,user_name,mobile_phone,channel_number,channel,transportion_name,remark,operator};
+                    content[i] = new String[]{userName,
+							cardId,mobilePhone,regisCompany,regisSource,stationId,accountBalance,createdDate,cardStatus,checkedStatus,account_status};
                     i++;
                 }
             }
 
             String [] mergeinfo = new String []{"0,0,0,0"};
             //单元格默认宽度
-            String sheetName = "消费报表";
+            String sheetName = "会员信息报表";
             reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
 
         } catch (Exception e) {

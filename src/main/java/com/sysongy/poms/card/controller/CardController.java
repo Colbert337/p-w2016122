@@ -1,12 +1,19 @@
 package com.sysongy.poms.card.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -479,4 +486,73 @@ public class CardController extends BaseContoller {
 			return ret;
 		}
 	}
+
+	@RequestMapping("/cardListReport")
+	public String cardListReport(ModelMap map, GasCard gascard, HttpServletRequest request,HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
+		try {
+
+			if(StringUtils.isEmpty(gascard.getOrderby())){
+				gascard.setOrderby("order_date desc");
+			}
+
+			PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
+			List<GasCard> list = pageinfo.getList();
+
+			int cells = 0 ; // 记录条数
+
+			if(list != null && list.size() > 0){
+				cells += list.size();
+			}
+			OutputStream os = response.getOutputStream();
+			ExportUtil reportExcel = new ExportUtil();
+
+			String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(), DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+			downLoadFileName = "用户卡信息_" + downLoadFileName;
+
+			try {
+				response.addHeader("Content-Disposition","attachment;filename="+ new String(downLoadFileName.getBytes("GB2312"),"ISO-8859-1"));
+			} catch (UnsupportedEncodingException e1) {
+				response.setHeader("Content-Disposition","attachment;filename=" + downLoadFileName);
+			}
+
+			String[][] content = new String[cells+1][9];//[行数][列数]
+			//第一列
+			content[0] = new String[]{"用户卡号","用户卡类型","用户卡状态","用户卡属性","所属工作站","工作站领取人","操作员","入库批次号","入库时间","出库时间"};
+
+			int i = 1;
+			if(list != null && list.size() > 0){
+				for (GasCard tmpMap:pageinfo.getList()) {
+
+					String card_no = tmpMap.getCard_no()==null?"":tmpMap.getCard_no().toString();
+
+					String card_type = tmpMap.getCard_type()==null?"":tmpMap.getCard_type_info().getMname().toString();
+					String card_status = tmpMap.getCard_status()==null?"":tmpMap.getCardStatusInfo().getMname().toString();
+					String card_property = tmpMap.getCard_property()==null?"":tmpMap.getCard_property_info().getMname().toString();
+
+					String workstation = tmpMap.getWorkstation()==null?"":tmpMap.getWorkstation().toString();
+					String workstation_resp = tmpMap.getWorkstation_resp()==null?"":tmpMap.getWorkstation_resp().toString();
+					String operator = tmpMap.getOperator()==null?"":tmpMap.getOperator();
+					String batch_no = tmpMap.getBatch_no()==null?"":  tmpMap.getBatch_no();
+					String storage_time = tmpMap.getStorage_time()==null?"":DateUtil.format(tmpMap.getStorage_time());
+					String release_time = tmpMap.getRelease_time()==null?"":DateUtil.format(tmpMap.getRelease_time());
+
+					content[i] = new String[]{card_no,
+							card_type,card_status,card_property,workstation,workstation_resp,operator,batch_no,storage_time,release_time};
+					i++;
+				}
+			}
+
+			String [] mergeinfo = new String []{"0,0,0,0"};
+			//单元格默认宽度
+			String sheetName = "用户卡信息报表";
+			reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		return null;
+	}
+
+
 }

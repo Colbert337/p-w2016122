@@ -30,7 +30,7 @@
 
 						<div class="search-types">
 							<div class="item">
-								<label>内容/来源/备注:</label> <input type="text" id="text" name="suggest"
+								<label>关键字:</label> <input type="text" id="text" name="suggest"
 									placeholder="输入内容/来源/备注" maxlength="11" value="${suggest.suggest}" />
 							</div>
 
