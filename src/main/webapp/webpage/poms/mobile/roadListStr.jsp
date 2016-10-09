@@ -129,20 +129,20 @@
 							<tr>
 								 
 
-								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
+								<!-- 	<th onclick="orderBy(this,'img_path');commitForm1();"
 											id="threshold_max_value_order">缩略图</th> -->
 								<th>坐标</th>
-								<th onclick="orderBy(this,'capture_time');commitForm();"
+								<th onclick="orderBy(this,'capture_time');commitForm1();"
 									id="capture_time_order">拍照时间</th>
-								<th onclick="orderBy(this,'condition_msg');commitForm();"
+								<th onclick="orderBy(this,'condition_msg');commitForm1();"
 									id="condition_msg_order">路况说明</th>
 								 
 
-								<th onclick="orderBy(this,'publisher_name');commitForm();"
+								<th onclick="orderBy(this,'publisher_name');commitForm1();"
 									id="publisher_name_orber">创建人</th>
-								<th onclick="orderBy(this,'publisher_phone');commitForm();"
+								<th onclick="orderBy(this,'publisher_phone');commitForm1();"
 									id="publisher_phone_orber">创建人电话</th>
-								<th onclick="orderBy(this,'publisher_time');commitForm();"
+								<th onclick="orderBy(this,'publisher_time');commitForm1();"
 									id="publisher_time_order" class="td-w2"><i
 									id="created_date"
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>发布时间</th>
@@ -214,7 +214,7 @@
 
 
 
-					<button class="btn" id="clear" type="button" onclick="init();">
+					<button class="btn" id="clear" type="button" onclick="returnPage();">
 						<i class="ace-icon fa fa-repeat bigger-110"></i> 取消
 					</button>
 
