@@ -8,9 +8,13 @@ var localhostPaht = curWwwPath.substring(0, pos);
 // 获取带"/"的项目名，如：/Tmall
 var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
 
-$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
+$('#j-input-daterange-top').datepicker({
+	autoclose : true,
+	format : 'yyyy/mm/dd',
+	language : 'cn'
+});
 
-var listOptions = {
+var listOptions1 = {
 	url : '../web/mobile/road/roadListStr',
 	type : 'post',
 	dataType : 'html',
@@ -24,7 +28,6 @@ var listOptions = {
 
 	}
 }
-
 
 jQuery(function($) {
 	var $overflow = '';
@@ -74,19 +77,23 @@ jQuery(function($) {
 	});
 })
 
-
 window.onload = setCurrentPage();
 
-	
-function commitForm(obj) {
+function returnPage() {
+	$("#pageNum").val("");
+	$("#pageSize").val("");
+	commitForm('return');
+}
+function commitForm1(obj) {
 	// 设置当前页的值
+
 	if (typeof obj == "undefined") {
 		$("#pageNum").val("1");
 	} else {
 		$("#pageNum").val($(obj).text());
 	}
 
-	$("#formRoad").ajaxSubmit(listOptions);
+	$("#formRoad").ajaxSubmit(listOptions1);
 }
 function closeDialog(obj) {
 	$("#" + obj).modal('hide').removeClass('in');
@@ -101,10 +108,10 @@ function init() {
 
 function updateCheck(obj1, tr, id) {
 	console.log('updateCheck');
-	 $('#buttonList')
-				.html(
-						'	<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>');
-	
+	$('#buttonList')
+			.html(
+					'	<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>');
+
 	var show = $("div[name='show']");
 	for (var i = 0; i < show.length; i++) {
 		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{50})/g,
@@ -116,33 +123,36 @@ function updateCheck(obj1, tr, id) {
 	$("#roadId").val(id)
 
 }
-function shixiao(id){
+function shixiao(id) {
 	$("#roadId").val(id);
 	bootbox.setLocale("zh_CN");
 	bootbox.confirm("确认要失效路况信息吗？", function(result) {
 		if (result) {
-		var options = {
+			var options = {
 				url : '../web/mobile/road/updateRoad',
 				type : 'post',
 				data : {
-					id :id,
-					conditionStatus:'0'
+					id : id,
+					conditionStatus : '3'
 				},
 				dataType : 'text',
 				success : function(data) {
 					$("body").removeClass('modal-open').removeAttr('style');
 					$(".modal-backdrop").remove();
-					$("#main").html(data);
-					$("#modal-table").modal("show");
+					/*
+					 * $("#main").html(data); $("#modal-table").modal("show");
+					 */
+					returnPage();
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
 
 				}
 			}
 
-			$("#formRoad").ajaxSubmit(options);}
+			$("#formRoad").ajaxSubmit(options);
+		}
 	})
-	
+
 }
 function updateRoad(type) {
 	$("#conditionStatus").val(type);
@@ -167,7 +177,7 @@ function updateRoad(type) {
 	$("#formRoad").ajaxSubmit(options);
 
 }
-function deleteRoad(id){
+function deleteRoad(id) {
 
 	bootbox.setLocale("zh_CN");
 	bootbox.confirm("确认要删除路况信息吗？", function(result) {
@@ -188,6 +198,5 @@ function deleteRoad(id){
 			$("#formRoad").ajaxSubmit(deleteOptions);
 		}
 	})
-
 
 }

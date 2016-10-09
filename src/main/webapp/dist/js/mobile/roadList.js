@@ -24,6 +24,7 @@ var listOptions = {
 
 	}
 }
+
 function showContent(){
 	closeDialog('innerModel');
 	$("#content").modal('show');
@@ -84,11 +85,37 @@ window.onload = setCurrentPage();
 	
 function commitForm(obj) {
 	// 设置当前页的值
-	console.log(obj)
-	if (typeof obj == "undefined") {
-		$("#pageNum").val("1");
-	} else {
-		$("#pageNum").val($(obj).text());
+	console.log(roadType)
+	if(obj=='return'){
+	
+		$("#formRoad").ajaxSubmit( {
+			url : '../web/mobile/road/roadList',
+			type : 'post',
+			dataType : 'html',
+			data:{
+				conditionMsg:roadmsg,       
+				conditionStatus:roadStatus,
+				conditionType:roadType,
+				publisherTime_str:roadPT,
+				auditorTime_str:roadAT
+			},
+			success : function(data) {
+				$("#main").html(data);
+				if ($("#retCode").val() != "100") {
+					$("#modal-table").modal("show");
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+		return;
+	}else{
+		if (typeof obj == "undefined") {
+			$("#pageNum").val("1");
+		} else {
+			$("#pageNum").val($(obj).text());
+		}
 	}
 	$("#formRoad").ajaxSubmit(listOptions);
 }
@@ -99,6 +126,21 @@ function closeDialog(obj) {
 	// init();
 
 }
+var roadmsg;
+var roadStatus;
+var roadType;
+var roadPT;
+var roadAT;
+function showShixiao(url){
+	roadmsg=$('#msg').val();
+	roadStatus=$('#conditionStatus').val();
+	roadType=$('#type').val();
+	roadPT=$('#publisherTime_str').val();
+	roadAT=$('#auditorTime_str').val();
+	loadPage('#main', url);
+}
+
+
 function init() {
 	loadPage('#main', '../web/mobile/road/roadList');
 }

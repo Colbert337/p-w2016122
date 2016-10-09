@@ -51,6 +51,12 @@ public class Gastation extends BaseModel {
     private String viewCount;
     
     private String shareCount;
+    
+	private String sys_user_account_id;
+	private SysUserAccount account;
+	private BigDecimal prepay_balance;
+	private Integer prepay_version;
+	private String type;
 	
 	public String getCompany() {
 		return company;
@@ -107,12 +113,6 @@ public class Gastation extends BaseModel {
 	public void setType(String type) {
 		this.type = type;
 	}
-
-	private String sys_user_account_id;
-	private SysUserAccount account;
-	private BigDecimal prepay_balance;
-	private Integer prepay_version;
-	private String type;
 
 	public Integer getPrepay_version() {
 		return prepay_version;
