@@ -92,6 +92,7 @@ public class MobileController {
 	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 	public final String keyStr = "sysongys";
 	String localPath = (String) prop.get("http_poms_path");
+	public final String appOperatorId = "8aa4ba67855a11e6a356000c291aa9e3";
 
 	/**
 	 * 新浪短网址API
@@ -201,16 +202,22 @@ public class MobileController {
 					String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
 					if(verificationCode.equals(veCode)){
 						queryDriver = driverService.queryByUserName(driver);
-						Map<String, Object> tokenMap = new HashMap<>();
-						tokenMap.put("token",queryDriver.getSysDriverId());
-						result.setData(tokenMap);
+						if(queryDriver == null){
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("手机号码不存在！");
+						}else{
+							Map<String, Object> tokenMap = new HashMap<>();
+							tokenMap.put("token",queryDriver.getSysDriverId());
+							result.setData(tokenMap);
+						}
+
 					}else{
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("验证码无效！");
 					}
 				}
 				//判断二维码是否为空
-				if(queryDriver.getDriverQrcode()==null ||"".equals(queryDriver.getDriverQrcode())){
+				if(queryDriver != null && (queryDriver.getDriverQrcode()==null ||"".equals(queryDriver.getDriverQrcode()))){
 					//图片路径
 					String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
 			        File file =new File(rootPath);    
@@ -241,6 +248,9 @@ public class MobileController {
 						TwoDimensionCode handler = new TwoDimensionCode();
 						handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
 					}
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("手机号码不存在！");
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3618,8 +3628,8 @@ public class MobileController {
 		}
 		record.setOrderId(orderID);
 		record.setDebitAccount(driverID);
-		record.setOperator(driverID);
-		record.setOperatorSourceId(driverID);
+		record.setOperator(appOperatorId);
+		record.setOperatorSourceId(appOperatorId);
 
 		record.setCash(new BigDecimal(cash));
 		record.setChargeType(chargeType);
@@ -3643,7 +3653,7 @@ public class MobileController {
 		Date curDate = new Date();
 		record.setOrderDate(curDate);
 		record.setChannel("APP");
-		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
+		record.setChannelNumber("APP");   //建立一个虚拟的APP气站，方便后期统计
 		return record;
 	}
 
