@@ -135,15 +135,18 @@ function shixiao(id){
 				url : '../web/mobile/road/updateRoad',
 				type : 'post',
 				data : {
-					id : $('#roadId').val()
+					id : $('#roadId').val(),
+					status:$("#conditionStatus").val()
 				},
 				dataType : 'text',
 				success : function(data) {
-					 init();
-					/*$("body").removeClass('modal-open').removeAttr('style');
+					
+					$("body").removeClass('modal-open').removeAttr('style');
 					$(".modal-backdrop").remove();
-					$("#main").html(data);
-					$("#modal-table").modal("show");*/
+//					$("#main").html(data);
+//					$("#modal-table").modal("show");
+					bootbox.alert("失效成功");
+					commitForm();
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
 
@@ -155,20 +158,24 @@ function shixiao(id){
 	
 }
 function updateRoad(type) {
-	$("#conditionStatus").val(type);
+//	$("#conditionStatus").val(type);
 	var options = {
 		url : '../web/mobile/road/updateRoad',
 		type : 'post',
 		data : {
 			id : $('#roadId').val(),
-			content: $('#contentmes').val()
+			content: $('#contentmes').val(),
+			status:type
+//			conditionStatus:type
 		},
 		dataType : 'text',
 		success : function(data) {
 			$("body").removeClass('modal-open').removeAttr('style');
 			$(".modal-backdrop").remove();
-			$("#main").html(data);
-			$("#modal-table").modal("show");
+//			$("#main").html(data);
+//			$("#modal-table").modal("show");
+			bootbox.alert("审核成功");
+			commitForm();
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
 
@@ -191,9 +198,11 @@ function deleteRoad(id){
 				type : 'post',
 				dataType : 'text',
 				success : function(data) {
-					$("#main").html(data);
-					$("#modal-table").modal("show");
-					$('[data-rel="tooltip"]').tooltip();
+//					$("#main").html(data);
+					$("body").removeClass('modal-open').removeAttr('style');
+					$(".modal-backdrop").remove();
+					bootbox.alert("删除成功");
+					commitForm();
 				}
 			}
 			$("#formRoad").ajaxSubmit(deleteOptions);

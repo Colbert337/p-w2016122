@@ -2135,7 +2135,7 @@ public class MobileController {
 				if(payType.equalsIgnoreCase("2")){           //支付宝支付
 					sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE);  //TODO充值成功后再去生成订单
 					orderService.checkIfCanChargeToDriver(sysOrder);
-					String notifyUrl = http_poms_path+"/api/v1/mobile/deal/callBackPay";
+					String notifyUrl = http_poms_path+"/api/v1/mobile/deal/alipayCallBackPay";
 					Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
 							"司集云平台-会员充值", orderID , notifyUrl);
 					String orderParam = OrderInfoUtil2_0.buildOrderParam(paramsApp);
@@ -2193,11 +2193,12 @@ public class MobileController {
 
 
 	/**
-	 * 在线支付回调方法
+	 * 微信在线支付回调方法
 	 */
-	@RequestMapping(value = "/deal/callBackPay")
+	@RequestMapping(value = "/deal/wechatCallBackPay")
 	@ResponseBody
-	public String callBackPay(HttpServletRequest request,HttpServletResponse response) throws Exception{
+	public String wechatCallBackPay(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String resultStr = "";
 		String orderId = "";
 		logger.debug("微信支付回调获取数据开始");
 		String inputLine;
@@ -2232,25 +2233,83 @@ public class MobileController {
 			result.setStatus(MobileReturn.STATUS_SUCCESS);
 			result.setMsg("支付成功！");
 			JSONObject resutObj = new JSONObject();
+
+			//查询订单内容
+			SysOrder order = orderService.selectByPrimaryKey(orderId);
+			if(order != null && order.getOrderStatus() == 0 ){// 0 初始化 1 成功 2 失败 3 待支付
+				//修改订单状态
+				SysOrder sysOrder = new SysOrder();
+				sysOrder.setOrderId(orderId);
+				sysOrder.setOrderStatus(1);
+				orderService.updateByPrimaryKey(sysOrder);
+				try{
+					String orderCharge = orderService.chargeToDriver(order);
+					if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
+						throw new Exception("订单充值错误：" + orderCharge);
+					}else{
+						resultStr = getWechatResult();//返回通知微信支付成功
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new Exception("订单充值错误：" + e);
+				}
+			}
+
+		}
+		return resultStr;
+	}
+
+	/**
+	 * 支付宝在线支付回调方法
+	 */
+	@RequestMapping(value = "/deal/alipayCallBackPay")
+	@ResponseBody
+	public String alipayCallBackPay(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		String orderId = "";
+		logger.debug("支付宝支付回调获取数据开始");
+		try {
+			orderId = request.getParameter("out_trade_no");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(StringUtils.isEmpty(orderId)){
+			logger.debug("订单号为空");
+			throw new ServiceException("订单号为空！");
+		}
+
+		if(orderId != null && !"".equals(orderId)){
+			MobileReturn result = new MobileReturn();
+			result.setStatus(MobileReturn.STATUS_SUCCESS);
+			result.setMsg("支付成功！");
+			JSONObject resutObj = new JSONObject();
 			String resultStr = "";
 			//查询订单内容
 			SysOrder order = orderService.selectByPrimaryKey(orderId);
-			//修改订单状态
-			SysOrder sysOrder = new SysOrder();
-			sysOrder.setOrderId(orderId);
-			sysOrder.setOrderStatus(1);
-			orderService.updateByPrimaryKey(sysOrder);
-			try{
-				String orderCharge = orderService.chargeToDriver(order);
-				if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS))
-					throw new Exception("订单充值错误：" + orderCharge);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new Exception("订单充值错误：" + e);
+			if(order != null && order.getOrderStatus() == 0){//当订单状态是初始化时，做状态更新
+				//修改订单状态
+				SysOrder sysOrder = new SysOrder();
+				sysOrder.setOrderId(orderId);
+				sysOrder.setOrderStatus(1);
+				orderService.updateByPrimaryKey(sysOrder);
+				try{
+					String orderCharge = orderService.chargeToDriver(order);
+
+					if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
+						throw new Exception("订单充值错误：" + orderCharge);
+					}else{
+						response.getOutputStream().print("success");//返回通知支付宝支付成功
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new Exception("订单充值错误：" + e);
+				}
 			}
+
 		}
 		return "";
 	}
+
 	/**
 	 * 修改账号手机号/密保手机
 	 */
@@ -3447,7 +3506,7 @@ public class MobileController {
 			packageParams.add(new BasicNameValuePair("detail", "司集云平台-会员充值"));//商品详情 	商品名称明细列表
 			packageParams.add(new BasicNameValuePair("mch_id", MCH_ID));//	微信支付分配的商户号
 			packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));//随机字符串
-			packageParams.add(new BasicNameValuePair("notify_url",http_poms_path+"/api/v1/mobile/deal/callBackPay"));//接收微信支付异步通知回调地址，通知url必须为直接可访问的url，不能携带参数。
+			packageParams.add(new BasicNameValuePair("notify_url",http_poms_path+"/api/v1/mobile/deal/wechatCallBackPay"));//接收微信支付异步通知回调地址，通知url必须为直接可访问的url，不能携带参数。
 			packageParams.add(new BasicNameValuePair("out_trade_no", orderID));//商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号
 			packageParams.add(new BasicNameValuePair("spbill_create_ip", "127.0.0.1"));//用户端实际ip
 			packageParams.add(new BasicNameValuePair("total_fee", totalFee));//订单总金额，单位为分，详见支付金额
@@ -3461,6 +3520,25 @@ public class MobileController {
 			return null;
 		}
     }
+
+	/**
+	 * 构造微信支付成功返回结果
+     * @return
+     */
+	private String getWechatResult() {
+		String http_poms_path =  (String) prop.get("http_poms_path");
+		try {
+			String nonceStr = genNonceStr();
+			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
+			packageParams.add(new BasicNameValuePair("return_code", "SUCCESS"));//应用ID
+			packageParams.add(new BasicNameValuePair("return_msg", "支付成功"));//商品描述 商品描述交易字段格式根据不同的应用场景按照以下格式 APP——需传入应用市场上的APP名字-实际商品名称，天天爱消除-游戏充值。
+			String xmlstring = toXml(packageParams);
+			// return xmlstring;
+			return xmlstring;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	private String genNonceStr() {
 		Random random = new Random();

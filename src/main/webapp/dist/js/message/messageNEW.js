@@ -47,7 +47,7 @@
 	            type:'post',
 	            data:{
 	            	device_token:device_token.replace(/\#/g, ""),
-	            	driver_name:device_token.replace(/\#/g, ""),
+	            	driver_name:user_id.replace(/\#/g, ""),
 	            	messageType:1
 	            },
 	            dataType:'text',
@@ -68,6 +68,7 @@
 	}
 	var device_token = '';
 	var driver_name = '';
+	var user_id='';
 	function addUser(){
 		
 	
