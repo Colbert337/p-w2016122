@@ -1752,8 +1752,6 @@ public class MobileController {
 			SysDriver driver = new SysDriver();
 
 			SysDriver sysDriver = new SysDriver();
-			sysDriver.setSysDriverId(mainObj.optString("token"));
-			order.setSysDriver(sysDriver);
 			/**
 			 * 必填参数
 			 */
@@ -1766,6 +1764,8 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if(b){
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				order.setSysDriver(sysDriver);
 				if(order.getPageNum() == null){
 					order.setPageNum(GlobalConstant.PAGE_NUM);
 					order.setPageSize(GlobalConstant.PAGE_SIZE);
@@ -1773,11 +1773,12 @@ public class MobileController {
 					order.setPageNum(mainObj.optInt("pageNum"));
 					order.setPageSize(mainObj.optInt("pageSize"));
 				}
-
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sft1 = new SimpleDateFormat("yyyy-MM");
+				order.setOrderDate(sft1.parse(mainObj.optString("time")));
 			 	PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverReChargePage(order);
 				List<Map<String,Object>> reChargeList = new ArrayList<>();
 				Map<String,Object> reCharge = new HashMap<>();
-				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
 			 	if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
@@ -1872,10 +1873,6 @@ public class MobileController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			SysOrder order = new SysOrder();
-
-			SysDriver sysDriver = new SysDriver();
-			sysDriver.setSysDriverId(mainObj.optString("token"));
-			order.setSysDriver(sysDriver);
 			/**
 			 * 必填参数
 			 */
@@ -1895,11 +1892,15 @@ public class MobileController {
 					order.setPageNum(mainObj.optInt("pageNum"));
 					order.setPageSize(mainObj.optInt("pageSize"));
 				}
-
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sft1 = new SimpleDateFormat("yyyy-MM");
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setSysDriverId(mainObj.optString("token"));
+				order.setSysDriver(sysDriver);
+				order.setOrderDate(sft1.parse(mainObj.optString("time")));
 				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverConsumePage(order);
 				List<Map<String,Object>> reChargeList = new ArrayList<>();
 				Map<String,Object> reCharge = new HashMap<>();
-				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
 				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
