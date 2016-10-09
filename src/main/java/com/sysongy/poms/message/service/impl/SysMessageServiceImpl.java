@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.message.dao.SysMessageMapper;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
+import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.usysparam.dao.UsysparamMapper;
+import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.UUIDGenerator;
@@ -32,6 +36,9 @@ public class SysMessageServiceImpl implements SysMessageService {
 
 	@Autowired
 	private SysDriverMapper driverMapper;
+
+	@Autowired
+	private UsysparamService paramservice;
 
 	@Override
 	public PageInfo<SysMessage> queryMessage(SysMessage record) throws Exception {
@@ -86,7 +93,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 			UmengUtil umeng = new UmengUtil(prop.get("app_key").toString(), prop.get("app_master_secret").toString());
 
 			CommonParams params = new CommonParams();
-
+			params.setText(obj.getMessageBody());
 			params.setTicker(obj.getMessageTicker());
 			params.setTitle(obj.getMessageTitle());
 			params.setText(obj.getMessageBody());
@@ -126,7 +133,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 	@Override
 	public PageInfo<SysDriver> queryDriver2(SysMessage message) throws Exception {
 		// TODO Auto-generated method stub
-		PageHelper.startPage(message.getPageNum(), message.getPageSize(), message.getOrderby());
+
 		SysMessage mes = queryMessageByPK(message);
 		if (mes.getDriverName() != null) {
 			List<String> str = new ArrayList<>();
@@ -135,7 +142,13 @@ public class SysMessageServiceImpl implements SysMessageService {
 			for (int i = 0; i < mesId.length; i++) {
 				str.add(mesId[i]);
 			}
+			mes.setPageNum(message.getPageNum());
+			mes.setPageSize(message.getPageSize());
+			if (StringUtils.isEmpty(mes.getOrderby())) {
+				mes.setOrderby("updated_date desc");
+			}
 
+			PageHelper.startPage(mes.getPageNum(), mes.getPageSize(), mes.getOrderby());
 			List<SysDriver> list = driverMapper.queryForPage2(str);
 			PageInfo<SysDriver> page = new PageInfo<>(list);
 			return page;
@@ -152,19 +165,27 @@ public class SysMessageServiceImpl implements SysMessageService {
 	}
 
 	@Override
-	public String  saveMessage_New_Road(String content, String publisherPhone) throws Exception {
+	public String saveMessage_New_Road(String content, SysRoadCondition road) throws Exception {
 		SysDriver driver = new SysDriver();
-		driver.setMobilePhone(publisherPhone);
+		driver.setMobilePhone(road.getPublisherPhone());
 		driver = driverMapper.queryDriverByMobilePhone(driver);
-		SysMessage message=new SysMessage();
-		message.setContent(content);
-		if (null==driver.getDeviceToken()||"".equals(driver.getDeviceToken())) {
+		SysMessage message = new SysMessage();
+
+		if (null == driver.getDeviceToken() || "".equals(driver.getDeviceToken())) {
 			throw new Exception("用户Token为空，发送消息失败！");
 		}
+		message.setOperator("admin");
+		message.setMessageType(1);
+
+		message.setMessageBody("路况类型：" + paramservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType()).getMname()
+				+ ",路况位置：" + road.getAddress() + ",<span style='color:red'>审核:" + content+"</span>");
+		message.setContent("路况类型：" + paramservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType()).getMname()
+				+ ",路况位置：" + road.getAddress() + ",审核:" + content);
 		message.setDevice_token(driver.getDeviceToken());
 		message.setDriver_name(driver.getDeviceToken());
 		message.setDriverName(driver.getDeviceToken());
-		message.setMemo("路况审核失败提提醒");
+		message.setMessageGroup("999");
+		message.setMemo("路况位置：" + road.getAddress() + "。路况详情：" + road.getConditionMsg());
 		message.setMessageTicker("路况审核失败提提醒");
 		message.setMessageTitle("路况审核失败提提醒");
 		message.setMessageType(1);
