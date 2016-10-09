@@ -1773,12 +1773,12 @@ public class MobileController {
 						reChargeList.add(reChargeMap);
 
 						//汇总充值总额
-						if(reChargeMap.get("cash") != null && !"".equals(reChargeMap.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(reChargeMap.get("cash").toString()));
+						if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
+							totalCash = totalCash.add(new BigDecimal(map.get("cash").toString()));
 						}
 						//汇总返现总额
-						if(reChargeMap.get("cashBackDriver") != null && !"".equals(reChargeMap.get("cashBackDriver").toString())){
-							totalBack = totalBack.add(new BigDecimal(reChargeMap.get("cashBackDriver").toString()));
+						if(map.get("cashBackDriver") != null && !"".equals(map.get("cashBackDriver").toString())){
+							totalBack = totalBack.add(new BigDecimal(map.get("cashBackDriver").toString()));
 						}
 					}
 					driver = driverService.queryDriverByPK(mainObj.optString("token"));
