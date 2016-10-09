@@ -266,9 +266,6 @@ public class CrmPortalController {
         if(pageInfoList != null && pageInfoList.getList() != null){
             cashBackList = pageInfoList.getList();
         }
-
-        map.addAttribute("aliPayCashBack",cashBackList);
-
         return "/webpage/crm/webapp-bonus-rules";
     }
 
