@@ -178,16 +178,16 @@ public class SysMessageServiceImpl implements SysMessageService {
 		message.setMessageType(1);
 
 		message.setMessageBody("路况类型：" + paramservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType()).getMname()
-				+ ",路况位置：" + road.getAddress() + ",<span style='color:red'>审核:" + content+"</span>");
+				+ "\n路况位置：" + road.getAddress() + "\n审核:" + content+"");
 		message.setContent("路况类型：" + paramservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType()).getMname()
-				+ ",路况位置：" + road.getAddress() + ",审核:" + content);
+				+ "\n路况位置：" + road.getAddress() + "\n审核:" + content);
 		message.setDevice_token(driver.getDeviceToken());
 		message.setDriver_name(driver.getDeviceToken());
 		message.setDriverName(driver.getDeviceToken());
 		message.setMessageGroup("999");
 		message.setMemo("路况位置：" + road.getAddress() + "。路况详情：" + road.getConditionMsg());
-		message.setMessageTicker("路况审核失败提提醒");
-		message.setMessageTitle("路况审核失败提提醒");
+		message.setMessageTicker("路况审核未通过提醒");
+		message.setMessageTitle("路况审核未通过提醒");
 		message.setMessageType(1);
 		return saveMessage_New(message);
 		// TODO Auto-generated method stub
