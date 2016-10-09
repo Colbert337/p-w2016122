@@ -1786,8 +1786,8 @@ public class MobileController {
 						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString())).add(new BigDecimal(data.get("cash_back_driver").toString()));
 					}
 					//汇总返现总额
-					if(data.get("cashBackDriver") != null && !"".equals(data.get("cashBackDriver").toString())){
-						totalBack = totalBack.add(new BigDecimal(data.get("cashBackDriver").toString()));
+					if(data.get("cash_back_driver") != null && !"".equals(data.get("cash_back_driver").toString())){
+						totalBack = totalBack.add(new BigDecimal(data.get("cash_back_driver").toString()));
 					}
 			 	}
 			 	List<Map<String,Object>> reChargeList = new ArrayList<>();
@@ -2582,7 +2582,7 @@ public class MobileController {
 				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
 				roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
 				roadCondition.setCaptureTime(start);//拍照时间
-				roadCondition.setStartTime(start);//开始时间
+				roadCondition.setStartTime(sft.parse(mainObj.optString("publisherTime")));//开始时间
 				//计算结束时间01-60min、02-120min、05-240min，其他为null
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(start);
