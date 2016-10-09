@@ -528,8 +528,15 @@ public class CardController extends BaseContoller {
 					String card_type = tmpMap.getCard_type()==null?"":tmpMap.getCard_type_info().getMname().toString();
 					String card_status = tmpMap.getCard_status()==null?"":tmpMap.getCardStatusInfo().getMname().toString();
 					String card_property = tmpMap.getCard_property()==null?"":tmpMap.getCard_property_info().getMname().toString();
+					String workstation="";
+					if(tmpMap.getTransportion()!=null){
+						workstation =	tmpMap.getTransportion().getTransportion_name();
+					}
+					if(tmpMap.getGasStationInfo()!=null){
+						workstation =	tmpMap.getGasStationInfo().getStation_manager();
+					}
+				//	String workstation = tmpMap.getWorkstation()==null?"":tmpMap.getTransportion().getTransportion_name();
 
-					String workstation = tmpMap.getWorkstation()==null?"":tmpMap.getWorkstation().toString();
 					String workstation_resp = tmpMap.getWorkstation_resp()==null?"":tmpMap.getWorkstation_resp().toString();
 					String operator = tmpMap.getOperator()==null?"":tmpMap.getOperator();
 					String batch_no = tmpMap.getBatch_no()==null?"":  tmpMap.getBatch_no();

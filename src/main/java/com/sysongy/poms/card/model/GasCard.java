@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sysongy.poms.base.model.BaseModel;
+import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.permi.model.SysUser;
+import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
 @JsonIgnoreProperties
@@ -67,6 +69,26 @@ public class GasCard extends BaseModel{
 	private String card_no_start;
 	
 	private String card_no_end;
+
+ 	private Transportion transportion;
+
+	public Gastation getGasStationInfo() {
+		return gasStationInfo;
+	}
+
+	public void setGasStationInfo(Gastation gasStationInfo) {
+		this.gasStationInfo = gasStationInfo;
+	}
+
+	private Gastation gasStationInfo;
+
+	public Transportion getTransportion() {
+		return transportion;
+	}
+
+	public void setTransportion(Transportion transportion) {
+		this.transportion = transportion;
+	}
 
 	public String getCard_no_start() {
 		return card_no_start;

@@ -353,11 +353,11 @@ public class SysRoadController extends BaseContoller {
 	}
 
 	@RequestMapping("/updateRoad")
-	public String updateRoad(SysRoadCondition road, ModelMap map, HttpSession session,String content,String status) {
+	public String updateRoad(SysRoadCondition road, ModelMap map, HttpSession session,String content) {
 		String ret = "redirect:/web/mobile/road/roadList?type=update";
 		PageBean bean = new PageBean();
 		msg = "";
-		road.setConditionStatus(status);
+//		road.setConditionStatus(status);
 		try {
 			if (road.getPageNum() == null) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
