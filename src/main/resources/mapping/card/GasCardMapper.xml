@@ -33,6 +33,16 @@
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderPropertyByMcode">
     </association>
+
+    <association property="transportion" column="workstation"
+                 javaType="com.sysongy.poms.transportion.model.Transportion"
+                 select="com.sysongy.poms.transportion.dao.TransportionMapper.selectByPrimaryKey">
+    </association>
+    <association property="gasStationInfo" column="workstation"
+                 javaType="com.sysongy.poms.gastation.model.Gastation"
+                 select="com.sysongy.poms.gastation.dao.GastationMapper.selectByPrimaryKey">
+    </association>
+
   </resultMap>
 
   <sql id="Base_Column_List" >
