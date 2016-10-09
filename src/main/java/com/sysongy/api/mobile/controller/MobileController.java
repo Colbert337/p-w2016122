@@ -2259,7 +2259,7 @@ public class MobileController {
 					if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
 						throw new Exception("订单充值错误：" + orderCharge);
 					}else{
-						response.getWriter().print("success");//返回通知支付宝支付成功
+						response.getOutputStream().print("success");//返回通知支付宝支付成功
 					}
 
 				} catch (Exception e) {
