@@ -10,7 +10,7 @@ var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
 
 $('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 
-var listOptions = {
+var listOptions1 = {
 	url : '../web/mobile/road/roadListStr',
 	type : 'post',
 	dataType : 'html',
@@ -77,16 +77,21 @@ jQuery(function($) {
 
 window.onload = setCurrentPage();
 
-	
-function commitForm(obj) {
+function returnPage(){
+	$("#pageNum").val("");
+	$("#pageSize").val("");
+	commitForm('return');
+}
+function commitForm1(obj) {
 	// 设置当前页的值
+	
 	if (typeof obj == "undefined") {
 		$("#pageNum").val("1");
 	} else {
 		$("#pageNum").val($(obj).text());
 	}
 
-	$("#formRoad").ajaxSubmit(listOptions);
+	$("#formRoad").ajaxSubmit(listOptions1);
 }
 function closeDialog(obj) {
 	$("#" + obj).modal('hide').removeClass('in');
@@ -132,8 +137,9 @@ function shixiao(id){
 				success : function(data) {
 					$("body").removeClass('modal-open').removeAttr('style');
 					$(".modal-backdrop").remove();
-					$("#main").html(data);
-					$("#modal-table").modal("show");
+				/*	$("#main").html(data);
+					$("#modal-table").modal("show");*/
+					returnPage();
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
 

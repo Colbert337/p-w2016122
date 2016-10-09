@@ -164,7 +164,7 @@
 
 											<a class="option-btn-m" href="javascript:void(0);"
 												title="查看失效请求"
-												onclick="loadPage('#main', '../web/mobile/road/roadListStr?id=${list.id }');"
+												onclick="showShixiao('../web/mobile/road/roadListStr?id=${list.id }')"
 												data-rel="tooltip"> --${list.invalid_count}-- </a>
 
 
