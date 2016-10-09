@@ -1119,7 +1119,7 @@ public class MobileController {
 				suggest.setMobilePhone(mainObj.optString("mobilePhone"));
 				suggest.setCreatedDate(new Date());
 				suggest.setUpdatedDate(new Date());
-
+				suggest.setSuggestRes("来自APP");
 				int resultVal = mbUserSuggestServices.saveSuggester(suggest);
 				if(resultVal <= 0){
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3561,6 +3561,44 @@ public class MobileController {
 			Element e = it.next();
 			// 对子节点进行遍历
 			listNodes(e);
+		}
+	}
+	@RequestMapping(value = "/QR")
+	@ResponseBody
+	public void getQR() {
+		try {
+			List<SysDriver> list = driverService.queryAll();
+			System.out.println(list.size());
+			//图片路径
+			String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+			System.out.println(rootPath);
+	        File file =new File(rootPath);    
+			//如果根文件夹不存在则创建    
+			if  (!file.exists()  && !file.isDirectory()){       
+			    file.mkdir();    
+			}
+			for(int i=0;i<list.size();i++){
+				String path = rootPath+list.get(i).getUserName()+"/";
+				File file1 =new File(path);    
+				//如果用户文件夹不存在则创建    
+				if  (!file1.exists()  && !file1.isDirectory()){       
+				    file1.mkdir();    
+				}
+				//二维码路径
+				String imgPath = path+list.get(i).getUserName()+".jpg";
+				String show_path = (String) prop.get("show_images_path")+ "/driver/"+list.get(i).getUserName()+"/"+list.get(i).getUserName()+".jpg";
+				TwoDimensionCode handler = new TwoDimensionCode();
+				String encoderContent=null;
+				if(list.get(0).getFullName()!=null && !"".equals(list.get(i).getFullName())){
+					encoderContent=list.get(i).getUserName()+"_"+list.get(i).getFullName();
+				}else{
+					encoderContent=list.get(i).getUserName();
+				}
+				handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
