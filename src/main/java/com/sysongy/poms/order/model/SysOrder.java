@@ -88,7 +88,7 @@ public class SysOrder extends BaseModel{
     private String orderRemark; 
     
     private String type;//查询个人转账记录时，转入转出表示列，不对应数据库字段 
-
+    
     public SysOrderDeal getOrder_deal() {
 		return order_deal;
 	}

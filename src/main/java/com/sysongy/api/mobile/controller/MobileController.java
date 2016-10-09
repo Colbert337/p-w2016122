@@ -1776,11 +1776,22 @@ public class MobileController {
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				SimpleDateFormat sft1 = new SimpleDateFormat("yyyy-MM");
 				order.setOrderDate(sft1.parse(mainObj.optString("time")));
-			 	PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverReChargePage(order);
-				List<Map<String,Object>> reChargeList = new ArrayList<>();
-				Map<String,Object> reCharge = new HashMap<>();
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+			 	PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverReChargePage(order);
+			 	List<Map<String, Object>> list = orderService.queryDriverReCharge(order);
+			 	for(Map<String, Object> data:list){
+			 		//汇总充值总额
+					if(data.get("cash") != null && !"".equals(data.get("cash").toString())){
+						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString())).add(new BigDecimal(data.get("cash_back_driver").toString()));
+					}
+					//汇总返现总额
+					if(data.get("cashBackDriver") != null && !"".equals(data.get("cashBackDriver").toString())){
+						totalBack = totalBack.add(new BigDecimal(data.get("cashBackDriver").toString()));
+					}
+			 	}
+			 	List<Map<String,Object>> reChargeList = new ArrayList<>();
+				Map<String,Object> reCharge = new HashMap<>();
 			 	if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 
 					for(Map<String, Object> map:pageInfo.getList()){
@@ -1803,21 +1814,9 @@ public class MobileController {
 							dateTime = sft.format(new Date());
 						}
 						reChargeMap.put("time",dateTime);
-
 						reChargeList.add(reChargeMap);
-
-						//汇总充值总额
-						if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(map.get("cash").toString())).add(new BigDecimal(map.get("cash_back_driver").toString()));
-						}
-						//汇总返现总额
-						if(map.get("cashBackDriver") != null && !"".equals(map.get("cashBackDriver").toString())){
-							totalBack = totalBack.add(new BigDecimal(map.get("cashBackDriver").toString()));
-						}
 					}
 					driver = driverService.queryDriverByPK(mainObj.optString("token"));
-					reCharge.put("totalCash",totalCash);
-					reCharge.put("totalBack",totalBack);
 					reCharge.put("listMap",reChargeList);
 					if(driver != null && driver.getAccount() != null){
 						reCharge.put("totalAmount", driver.getAccount().getAccountBalance());
@@ -1826,6 +1825,8 @@ public class MobileController {
 					}
 
 				}
+			 	reCharge.put("totalCash",totalCash);
+				reCharge.put("totalBack",totalBack);
 				result.setData(reCharge);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1903,6 +1904,14 @@ public class MobileController {
 				Map<String,Object> reCharge = new HashMap<>();
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+			 	List<Map<String, Object>> list = orderService.queryDriverConsume(order);
+			 	for(Map<String, Object> data:list){
+					//汇总消费总额
+					if(data.get("cash") != null && !"".equals(data.get("cash").toString())){
+						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString()));
+					}
+			 	}
+				
 				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 
 					for(Map<String, Object> map:pageInfo.getList()){
@@ -1929,20 +1938,13 @@ public class MobileController {
 						reChargeMap.put("time",dateTime);
 
 						reChargeList.add(reChargeMap);
-
-						//汇总消费总额
-						if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
-							totalCash = totalCash.add(new BigDecimal(map.get("cash").toString()));
-						}
 					}
-
-					reCharge.put("totalCash",totalCash);
 					reCharge.put("listMap",reChargeList);
-					
 				}else{
 					reCharge.put("totalCash","0");
 					reCharge.put("listMap",new ArrayList<>());
 				}
+				reCharge.put("totalCash",totalCash);
 				result.setData(reCharge);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2018,6 +2020,28 @@ public class MobileController {
 				Map<String,Object> reCharge = new HashMap<>();
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
 				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+			 	List<Map<String, Object>> list = orderService.queryDriverTransfer(order);
+			 	for(Map<String, Object> data:list){
+			 		if("0".equals(data.get("type"))){
+						//汇总转出总额
+						if(data.get("cash") != null && !"".equals(data.get("cash").toString())){
+							BigDecimal tempVal = new BigDecimal(data.get("cash").toString());
+
+							if(tempVal.compareTo(BigDecimal.ZERO) > 0){
+								totalCash = totalCash.add(tempVal);
+							}
+						}
+					}else{
+						//汇总转入总额
+						if(data.get("cash") != null && !"".equals(data.get("cash").toString())){
+							BigDecimal tempVal = new BigDecimal(data.get("cash").toString());
+							if(tempVal.compareTo(BigDecimal.ZERO) > 0){
+								totalBack = totalBack.add(tempVal);
+							}
+						}
+					}
+			 	}
+				
 				if(pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 					for(Map<String, Object> map:pageInfo.getList()){
 						Map<String, Object> reChargeMap = new HashMap<>();
@@ -2034,33 +2058,15 @@ public class MobileController {
 						}
 						reChargeMap.put("time",dateTime);
 						reChargeList.add(reChargeMap);
-						if("0".equals(map.get("type"))){
-							//汇总转出总额
-							if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
-								BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
-
-								if(tempVal.compareTo(BigDecimal.ZERO) > 0){
-									totalCash = totalCash.add(tempVal);
-								}
-							}
-						}else{
-							//汇总转入总额
-							if(map.get("cash") != null && !"".equals(map.get("cash").toString())){
-								BigDecimal tempVal = new BigDecimal(map.get("cash").toString());
-								if(tempVal.compareTo(BigDecimal.ZERO) > 0){
-									totalBack = totalBack.add(tempVal);
-								}
-							}
-						}
 					}
-					reCharge.put("totalOut",totalCash);
-					reCharge.put("totalIn",totalBack);
 					reCharge.put("listMap",reChargeList);
 				}else{
 					reCharge.put("totalOut","0");
 					reCharge.put("totalIn","0");
 					reCharge.put("listMap",new ArrayList<>());
 				}
+				reCharge.put("totalOut",totalCash);
+				reCharge.put("totalIn",totalBack);
 				result.setData(reCharge);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);

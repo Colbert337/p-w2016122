@@ -902,7 +902,6 @@
        and  order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
     </if>
   </select>
-
   <!--查询消费记录-->
   <select id="queryDriverConsumeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     select order_number,cash,channel,channel_number,goods_sum,is_discharge,charge_type,
@@ -913,7 +912,6 @@
        and  order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
     </if>
   </select>
-
   <!--查询转账记录-->
   <!-- 
   <select id="queryDriverTransferList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
