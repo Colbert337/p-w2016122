@@ -36,6 +36,7 @@
     <result column="promotions" property="promotions" jdbcType="VARCHAR" />
     <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
     <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
     
     <association column="sys_user_account_id" property="account" javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -108,6 +109,9 @@
       </if>
       <if test="status!= null &amp;&amp; status != ''" >
         and status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="type!= null &amp;&amp; type != ''" >
+        and type = #{type,jdbcType=VARCHAR}
       </if>
       <if test="expiry_date_after != null &amp;&amp; expiry_date_after != ''">
         and expiry_date between CONCAT(#{expiry_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{expiry_date_before,jdbcType=VARCHAR},' 23:59:59')
@@ -676,7 +680,7 @@
 		 and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	) consumecount
-	from sys_gas_station sgs where 1=1
+	from sys_gas_station sgs where 1=1 and sgs.type = '0'
 	<trim>
       <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
         and sgs.sys_gas_station_id = #{channelNumber, jdbcType=VARCHAR} or sgs.gas_station_name = #{channelNumber, jdbcType=VARCHAR}
@@ -707,7 +711,7 @@
 		 and rb2.order_date between CONCAT(#{startDate,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 	  </if>
 	) consumecount
-	from sys_gas_station sgs where 1=1
+	from sys_gas_station sgs where 1=1 and sgs.type = '0'
 	<trim>
       <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
         and sgs.sys_gas_station_id = #{channelNumber, jdbcType=VARCHAR} or sgs.gas_station_name = #{channelNumber, jdbcType=VARCHAR}
@@ -729,7 +733,7 @@
 	  </if>
 	) hedgefund,
 	sgs.operations_name,sgs.salesmen_name
-	from sys_gas_station sgs where 1=1
+	from sys_gas_station sgs where 1=1 and sgs.type = '0'
     <trim>
       <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
         and sgs.sys_gas_station_id = #{channelNumber, jdbcType=VARCHAR} or sgs.gas_station_name = #{channelNumber, jdbcType=VARCHAR}
@@ -751,7 +755,7 @@
 	  </if>
 	) hedgefund,
 	sgs.operations_name,sgs.salesmen_name
-	from sys_gas_station sgs where 1=1
+	from sys_gas_station sgs where 1=1 and sgs.type = '0'
     <trim>
       <if test="channelNumber != null &amp;&amp; channelNumber != ''" >
         and sgs.sys_gas_station_id = #{channelNumber, jdbcType=VARCHAR} or sgs.gas_station_name = #{channelNumber, jdbcType=VARCHAR}
