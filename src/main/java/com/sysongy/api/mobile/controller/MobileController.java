@@ -209,6 +209,39 @@ public class MobileController {
 						result.setMsg("验证码无效！");
 					}
 				}
+				//判断二维码是否为空
+				if(queryDriver.getDriverQrcode()==null ||"".equals(queryDriver.getDriverQrcode())){
+					//图片路径
+					String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+			        File file =new File(rootPath);    
+					//如果根文件夹不存在则创建    
+					if  (!file.exists()  && !file.isDirectory()){       
+					    file.mkdir();    
+					}
+					String path = rootPath+mainObj.optString("username")+"/";
+					File file1 =new File(path);    
+					//如果用户文件夹不存在则创建    
+					if  (!file1.exists()  && !file1.isDirectory()){       
+					    file1.mkdir();    
+					}
+					//二维码路径
+					String imgPath = path+mainObj.optString("username")+".jpg";
+					String show_path = (String) prop.get("show_images_path")+ "/driver/"+mainObj.optString("username")+"/"+mainObj.optString("username")+".jpg";
+					//生成二维码
+					driver.setDriverQrcode(show_path);
+					driver.setSysDriverId(queryDriver.getSysDriverId());
+					Integer tmp = driverService.saveDriver(driver, "update", null);
+					String encoderContent=null;
+					if(queryDriver.getFullName()==null||"".equals(queryDriver.getFullName())){
+						encoderContent=mainObj.optString("username");
+					}else{
+						encoderContent=mainObj.optString("username")+"_"+queryDriver.getFullName();
+					}
+					if(tmp > 0){
+						TwoDimensionCode handler = new TwoDimensionCode();
+						handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+					}
+				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
