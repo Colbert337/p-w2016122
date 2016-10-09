@@ -72,6 +72,8 @@ public class GastationController extends BaseContoller{
 			if(StringUtils.isEmpty(gastation.getOrderby())){
 				gastation.setOrderby("created_time desc");
 			}
+			
+			gastation.setType("0");//联盟气站
 
 			PageInfo<Gastation> pageinfo = service.queryGastation(gastation);
 
@@ -110,6 +112,8 @@ public class GastationController extends BaseContoller{
 			if(StringUtils.isEmpty(gastation.getOrderby())){
 				gastation.setOrderby("created_time desc");
 			}
+			
+			gastation.setType("0");//联盟气站
 
 			PageInfo<Gastation> pageinfo = service.queryGastation(gastation);
 

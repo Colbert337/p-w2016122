@@ -15,20 +15,6 @@
 	                    }
 	                }
 	            },
-	            captureTime_str: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '拍照时间不能为空'
-	                    }
-	                }
-	            },
-	            startTime_str: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '拍照时间不能为空'
-	                    }
-	                }
-	            },
 	            longitude: {
 	                validators: {
 	                    notEmpty: {
@@ -40,20 +26,6 @@
 	                validators: {
 	                    notEmpty: {
 	                        message: '坐标不能为空'
-	                    }
-	                }
-	            },
-	            captureLongitude: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '拍照时坐标不能为空'
-	                    }
-	                }
-	            },
-	            captureTime: {
-	                validators: {
-	                    notEmpty: {
-	                        message: '拍照时时间不能为空'
 	                    }
 	                }
 	            },

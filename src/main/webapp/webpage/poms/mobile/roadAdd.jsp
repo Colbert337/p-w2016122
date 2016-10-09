@@ -56,8 +56,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right"><span
-								class="red_star">*</span> 图片： </label>
+						<label class="col-sm-3 control-label no-padding-right">图片：</label>
 							<div class="col-sm-4">
 								<div class="widget-box">
 									<div class="widget-header">
