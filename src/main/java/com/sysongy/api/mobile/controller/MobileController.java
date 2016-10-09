@@ -285,7 +285,7 @@ public class MobileController {
 						break;
 					case "4":
 						msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_LOGIN_CONFIRM;
-						verification.setContent("司集APP");
+						verification.setContent("APP");
 						break;
 				}
 
@@ -3594,6 +3594,10 @@ public class MobileController {
 				}else{
 					encoderContent=list.get(i).getUserName();
 				}
+				SysDriver driver = new SysDriver();
+				driver.setSysDriverId(list.get(i).getSysDriverId());
+				driver.setDriverQrcode(show_path);
+				int resultVal = driverService.saveDriver(driver,"update",null);
 				handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
 			}
 		} catch (Exception e) {

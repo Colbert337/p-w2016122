@@ -728,4 +728,9 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
     where 
     device_token = #{deviceToken,jdbcType=VARCHAR}
   </select>   
+  <select id="queryAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+  </select>  
 </mapper>
