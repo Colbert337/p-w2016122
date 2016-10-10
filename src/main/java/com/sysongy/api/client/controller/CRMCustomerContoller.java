@@ -140,10 +140,10 @@ public class CRMCustomerContoller {
         String contextPath = request.getContextPath();
         String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
 
-        if(StringUtils.isEmpty(sysDriverInfo.getDrivingLice())){
+        if(!StringUtils.isEmpty(sysDriverInfo.getDrivingLice())){
             sysDriverInfo.setDrivingLice(basePath + sysDriverInfo.getDrivingLice());
         }
-        if(StringUtils.isEmpty(sysDriverInfo.getVehicleLice())){
+        if(!StringUtils.isEmpty(sysDriverInfo.getVehicleLice())){
             sysDriverInfo.setVehicleLice(basePath + sysDriverInfo.getVehicleLice());
         }
         return sysDriverInfo;
