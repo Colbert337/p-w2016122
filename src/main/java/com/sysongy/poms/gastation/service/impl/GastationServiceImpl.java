@@ -73,7 +73,7 @@ public class GastationServiceImpl implements GastationService {
 
 	@Override
 	public List<Gastation> getAllStationList(Gastation record) throws Exception {
-		List<Gastation> list = gasStationMapper.queryForPage(record);
+		List<Gastation> list = gasStationMapper.queryForPage3(record);
 		return list;
 	}
 
