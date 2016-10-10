@@ -1828,7 +1828,7 @@ public class MobileController {
 			 	for(Map<String, Object> data:list){
 			 		//汇总充值总额
 					if(data.get("cash") != null && !"".equals(data.get("cash").toString())){
-						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString())).add(new BigDecimal(data.get("cash_back_driver").toString()));
+						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString()));
 					}
 					//汇总返现总额
 					if(data.get("cash_back_driver") != null && !"".equals(data.get("cash_back_driver").toString())){
