@@ -2,6 +2,7 @@ package com.sysongy.poms.mobile.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -46,7 +47,9 @@ public class SuggestController extends BaseContoller {
 				suggest.setPageNum(GlobalConstant.PAGE_NUM);
 				suggest.setPageSize(GlobalConstant.PAGE_SIZE);
 			}
-
+			if (StringUtils.isEmpty(suggest.getOrderby())) {
+				suggest.setOrderby("created_date desc");
+			}
 			PageInfo<Suggest> pageinfo = new PageInfo<Suggest>();
 
 			pageinfo = suggestService.querySuggest(suggest);
