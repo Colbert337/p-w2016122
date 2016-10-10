@@ -85,7 +85,7 @@ window.onload = setCurrentPage();
 	
 function commitForm(obj) {
 	// 设置当前页的值
-	console.log(roadType)
+	
 	if(obj=='return'){
 	
 		$("#formRoad").ajaxSubmit( {
@@ -146,6 +146,7 @@ function init() {
 }
 
 function updateCheck(obj1, tr, id) {
+	
 	if (id != undefined) {
 		$('#buttonList')
 				.html(
@@ -160,6 +161,9 @@ function updateCheck(obj1, tr, id) {
 	for (var i = 0; i < show.length; i++) {
 		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{50})/g,
 				'$1<br\>');
+	}
+	if(obj1==""){
+		obj1="/common/images/default_productBig.jpg"
 	}
 	$("#innerimg1").attr("src", projectName + obj1);
 	$("#innerimg1").parent("a").attr("href", projectName + obj1);

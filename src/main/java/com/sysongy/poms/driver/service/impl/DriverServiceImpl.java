@@ -127,7 +127,10 @@ public class DriverServiceImpl implements DriverService {
             record.setSysUserAccountId(sysUserAccount.getSysUserAccountId());
             sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
             record.setCreatedDate(new Date());
-			record.setRegisCompany(invitationCode);//存储邀请人邀请码
+			if(invitationCode != null && !"".equals(invitationCode)){
+				record.setRegisCompany(invitationCode);//存储邀请人邀请码
+			}
+
             int count = sysDriverMapper.insertSelective(record);
             //如果有要邀请码，要进行返现，现在先写死，以后走订单
             if(!StringUtils.isEmpty(invitationCode)){
