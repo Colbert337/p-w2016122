@@ -446,7 +446,7 @@ public class CrmPortalController {
                     driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
                     driver.setSysDriverId(sysDriverId);
                     driver.setRegisSource("APP");
-                    driver.setMemo(invitationCode);
+                    driver.setRegisCompany(invitationCode);
                     String encoderContent=phone;
                     //图片路径
                     String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
@@ -502,9 +502,9 @@ public class CrmPortalController {
                             phoneNum = phoneNum.substring(0,3) + "****" + phoneNum.substring(8,phoneNum.length());
                         }
                         map.addAttribute("name",phoneNum);
-                        map.addAttribute("invitationCode",sysDriver.getInvitationCode());
                     }
                 }
+                map.addAttribute("invitationCode",sysDriver.getInvitationCode());
                 map.addAttribute("sysDriver",sysDriver);
             }
         }catch (Exception e){
