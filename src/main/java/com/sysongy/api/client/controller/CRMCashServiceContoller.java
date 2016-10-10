@@ -418,6 +418,7 @@ public class CRMCashServiceContoller {
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单消费错误：" + e.getMessage());
+            e.printStackTrace();
             return ajaxJson;
         }
     }
