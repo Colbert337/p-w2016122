@@ -42,6 +42,7 @@
 			bootbox.alert("请选择发送对象！");
 			return;
 		}
+		$('#div').showLoading();
 		var options ={   
 	            url:'../web/message/saveMessageNew',   
 	            type:'post',
@@ -54,8 +55,9 @@
 	            success:function(data){
 	            	$("#main").html(data);
 	            	$("#modal-table").modal("show");
+	            	$('#div').hideLoading();
 	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-	            	
+	            	$('#div').hideLoading();
 	 	       }
 		}
 					

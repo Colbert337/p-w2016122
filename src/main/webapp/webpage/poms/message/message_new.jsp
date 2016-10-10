@@ -9,12 +9,15 @@
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path;
 %>
-
+<script src="<%=basePath%>/dist/js/message/jquery.shCircleLoader.js" type="text/javascript"></script>
 <script src="<%=basePath%>/dist/js/message/message_new.js"></script>
-
-<div class="">
+<link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
+<script src="<%=basePath%>/dist/js/message/show.js"></script>
+</style>
+<div class="" id="div">
 	<!-- /section:settings.box -->
 	<div class="page-header">
+	<div id="loader"></div>
 		<h1>新建信息</h1>
 	</div>
 	<!-- /.page-header -->
