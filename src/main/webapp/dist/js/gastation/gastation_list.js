@@ -136,7 +136,7 @@
 	function showInnerModel(obj1,obj2,obj3,obj4,tr){
 		var show=$("div[name='show']");
 		for(var i=0;i<show.length;i++){
-			show[i].innerHTML=tr.children('td').eq(i+1).text();
+			show[i].innerHTML=tr.children('td').eq(i+2).text();
 		}
 		$("#innerimg1").attr("src",obj1);
 		$("#innerimg1").parent("a").attr("href",obj1);
@@ -150,7 +150,7 @@
 	}
 	
 	function resetPassword(obj){
-		var userName = $(obj).parents("tr").children("td").eq(5).text();
+		var userName = $(obj).parents("tr").children("td").eq(6).text();
 		var station = $(obj).parents("tr").children("td").eq(1).text();
 		
 		bootbox.setLocale("zh_CN");
