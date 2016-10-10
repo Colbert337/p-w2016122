@@ -228,6 +228,10 @@ public class CrmPortalController {
                 priceArray.add(dataMap);
             }
         }
+        String info = gastation.getPromotions();
+        if(info==null||"".equals(info)){
+        	gastation.setPromotions("暂无");
+        }
         map.addAttribute("gastation",gastation);
         map.addAttribute("priceList",priceArray);
 
