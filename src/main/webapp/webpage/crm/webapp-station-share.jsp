@@ -46,7 +46,7 @@
 		</div>
 		<div class="pdp-item">
 			<div class="pdp-item-title">
-				商品信息：bbb
+				商品信息：
 			</div>
 			<div class="pdp-item-content">
 				<c:forEach items="${priceList}" var="price">
