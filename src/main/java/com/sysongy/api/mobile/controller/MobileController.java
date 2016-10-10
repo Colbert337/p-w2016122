@@ -1408,7 +1408,6 @@ public class MobileController {
 						}
 					}
 				}
-				List<Gastation> rsList = new ArrayList<Gastation>();
 				int pNum = mainObj.optInt("pageNum");
 				int pSize = mainObj.optInt("pageSize");
 				if(pNum==0){
