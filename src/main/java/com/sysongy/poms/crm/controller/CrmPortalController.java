@@ -216,18 +216,22 @@ public class CrmPortalController {
         //获取当前气站价格列表
         /*List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(stationId);*/
         String price = gastation.getLng_price();
-        price = price.replaceAll("，",",");
-        price = price.replaceAll("：",":");
         List<Map<String,Object>> priceArray = new ArrayList<>();
-        if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1) {
-            String strArray[] = price.split(",");
+        if(price != null && !"".equals(price)){
+            price = price.replaceAll("，",",");
+            price = price.replaceAll("：",":");
 
-            for (int i = 0; i < strArray.length; i++) {
-                Map<String, Object> dataMap = new HashMap<>();
-                dataMap.put("priceName", strArray[i]);
-                priceArray.add(dataMap);
+            if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1) {
+                String strArray[] = price.split(",");
+
+                for (int i = 0; i < strArray.length; i++) {
+                    Map<String, Object> dataMap = new HashMap<>();
+                    dataMap.put("priceName", strArray[i]);
+                    priceArray.add(dataMap);
+                }
             }
         }
+
         String info = gastation.getPromotions();
         if(info==null||"".equals(info)){
         	gastation.setPromotions("暂无");
