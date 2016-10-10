@@ -99,13 +99,15 @@
 									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
-									<th onclick="orderBy(this,'gas_server');commitForm();" id="status_order">提供服务</th>
-									<th onclick="orderBy(this,'lng_price');commitForm();" id="status_order">商品信息</th>
-									<th onclick="orderBy(this,'promotions');commitForm();" id="status_order">优惠活动</th>
+									<th onclick="orderBy(this,'gas_server');commitForm();" id="lng_price_order">提供服务</th>
+									<th onclick="orderBy(this,'lng_price');commitForm();" id="lng_price_order">商品信息</th>
+									<th onclick="orderBy(this,'promotions');commitForm();" id="promotions_order">优惠活动</th>
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order" class="td-w2"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
 									<th onclick="orderBy(this,'prepay_balance');commitForm();" id="prepay_balance_order">预付款额度</th>
 									<th style="display: none">钱袋编号</th>
+				 				<th onclick="orderBy(this,'price_effective_time');commitForm();" id="price_effective_order">价格生效时间</th>
+									<th onclick="orderBy(this,'fixed_discount');commitForm();" id="fixed_discount_order">固定折扣</th>
 									<th class="text-center td-w2">更多操作</th>
 								</tr>
 							</thead>
@@ -138,6 +140,8 @@
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 									<td>${list.prepay_balance}</td>
+								 	<td>${list.price_effective_time}</td>
+									<td>${list.fixed_discount}</td>
 									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">
 										<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
@@ -253,7 +257,14 @@
 								</tr>
 						<tr>
 							<th>预付款额度</th>
-							<td colspan="3"><div id="prepay_balance" name="show"> </div></td>
+							<td><div id="prepay_balance" name="show"> </div></td>
+							<th>价格生效时间</th>
+							<td><div id="price_effective_time" name="show"> </div></td>
+						</tr>
+						<tr>
+
+							<th>固定折扣</th>
+							<td colspan="3"><div id="fixed_discount" name="show"> </div></td>
 						</tr>
 					</tbody>
 				</table>

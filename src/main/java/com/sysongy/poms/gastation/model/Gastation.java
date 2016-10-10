@@ -51,13 +51,30 @@ public class Gastation extends BaseModel {
     private String viewCount;
     
     private String shareCount;
-    
 	private String sys_user_account_id;
 	private SysUserAccount account;
 	private BigDecimal prepay_balance;
 	private Integer prepay_version;
 	private String type;
-	
+	private String price_effective_time;
+	private Float fixed_discount;
+
+	public String getPrice_effective_time() {
+		return price_effective_time;
+	}
+
+	public void setPrice_effective_time(String price_effective_time) {
+		this.price_effective_time = price_effective_time;
+	}
+
+	public Float getFixed_discount() {
+		return fixed_discount;
+	}
+
+	public void setFixed_discount(Float fixed_discount) {
+		this.fixed_discount = fixed_discount;
+	}
+
 	public String getCompany() {
 		return company;
 	}
@@ -113,6 +130,8 @@ public class Gastation extends BaseModel {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+
 
 	public Integer getPrepay_version() {
 		return prepay_version;
