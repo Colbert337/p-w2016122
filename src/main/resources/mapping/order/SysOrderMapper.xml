@@ -893,11 +893,12 @@
   <!--     APP司机报表接口     -->
   <!--查询充值记录-->
   <select id="queryDriverReChargeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-    select DISTINCT rb.order_number,rb.cash,rb.cash_back_driver,rb.charge_type,rb.channel,report_callback.is_discharge,
-<!--     (select remark from sys_order rc where rc.order_id = rb.order_number) as remark, -->
-    rb.order_date
-    from report_business rb LEFT JOIN report_callback  on rb.order_number = report_callback.order_number
-    where rb.order_type = '130' AND report_callback.is_discharge IS NULL and rb.sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+    select DISTINCT rb.order_number,rb.cash,rb.cash_back_driver,rb.charge_type,rb.channel,rb.is_discharge,rb.been_discharged,
+	<!--(select remark from sys_order rc where rc.order_id = rb.order_number) as remark, -->
+    rb.order_date,sys_order.order_status
+    from report_business rb  LEFT JOIN sys_order ON rb.order_number = sys_order.order_number
+    where rb.order_type = '130' AND rb.is_discharge = '0' and rb.been_discharged='0'
+	AND sys_order.order_status = '1' and rb.sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
     <!-- where order_type = '130' and cash_back_per is not null and sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}-->
     <if test="orderDate != null" >
        and  rb.order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
@@ -906,13 +907,14 @@
   </select>
   <!--查询消费记录-->
   <select id="queryDriverConsumeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-    select order_number,cash,channel,channel_number,goods_sum,is_discharge,charge_type,
+    select rb.order_number,rb.cash,rb.channel,rb.channel_number,rb.goods_sum,rb.is_discharge,rb.charge_type,
     (select remark from sys_order_deal rc where rc.order_id = rb.order_number) as remark,
-    order_date from report_business rb
-    where order_type = '220' and sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+    rb.order_date,sys_order.order_status,rb.is_discharge,rb.been_discharged from report_business rb LEFT JOIN sys_order ON rb.order_number = sys_order.order_number
+    where rb.order_type = '220' and sys_order.order_status = '1' AND rb.is_discharge = '0' and rb.been_discharged='0' AND rb.sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
     <if test="orderDate != null" >
-       and  order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
+       and  rb.order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
     </if>
+    ORDER BY rb.order_date DESC
   </select>
   <!--查询转账记录-->
   <!-- 
@@ -931,7 +933,7 @@
 	(SELECT full_name FROM sys_driver WHERE sys_driver_id=( SELECT debit_account FROM sys_order WHERE order_number = temp.order_number))
 	WHEN '1' THEN
 	(SELECT full_name FROM sys_driver WHERE sys_driver_id=(SELECT credit_account FROM sys_order WHERE order_number = temp.order_number))
-	END)AS operator
+	END)AS operator ,sys_order.order_status
 	FROM 
 	(
 	SELECT
@@ -951,9 +953,10 @@
 	WHERE (order_type='320' or order_type='310') AND (
 		credit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
 	OR debit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR})
-	)AS temp where 1=1 
+	)AS temp  LEFT JOIN sys_order ON temp.order_number = sys_order.order_number	
+	where 1=1 AND sys_order.order_status = '1'
 	<if test="orderDate != null" >
-       and  order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
+       and  temp.order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
     </if>
   </select>
 </mapper>

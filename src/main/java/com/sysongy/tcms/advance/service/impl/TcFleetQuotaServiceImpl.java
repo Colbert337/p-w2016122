@@ -237,6 +237,7 @@ public class TcFleetQuotaServiceImpl implements TcFleetQuotaService{
                             order.setChannel(transportion.getTransportion_name());
                             order.setChannelNumber(stationId);
                             order.setIs_discharge(GlobalConstant.ORDER_BEEN_DISCHARGED_NO);
+                            order.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);//设置订单状态为成功
 
                             //添加订单
                             resultVal = orderService.insert(order, null);

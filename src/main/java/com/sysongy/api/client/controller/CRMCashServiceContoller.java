@@ -277,6 +277,12 @@ public class CRMCashServiceContoller {
                     return ajaxJson;
                 }
 
+                if(StringUtils.isEmpty(sysDriver.getPayCode())){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("支付密码为空，请先设置支付密码！");
+                    return ajaxJson;
+                }
+
                 if(!(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
                     addWrongTimes(sysDriver.getAccount().getSysUserAccountId());
                     if(isWrong4Times(sysDriver.getAccount().getSysUserAccountId())){
@@ -418,6 +424,7 @@ public class CRMCashServiceContoller {
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单消费错误：" + e.getMessage());
+            e.printStackTrace();
             return ajaxJson;
         }
     }
