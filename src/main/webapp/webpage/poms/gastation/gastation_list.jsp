@@ -207,41 +207,51 @@
 							<td><div id="sys_gas_station_id" name="show"></div></td>
 							<th width="15%">加注站名称</th>
 							<td><div id="gas_station_name" name="show"> </div></td>
-						</tr>
+							</tr>
 						<tr>
+							<th width="15%">所属公司</th>
+							<td><div id="gas_station_name" name="show"> </div></td>
+						
 							<th>销售人员</th>
 							<td><div id="salesmen_name" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>运营人员</th>
 							<td><div id="operations_name" name="show"> </div></td>
-						</tr>
-						<tr>
+						 
 							<th>管理员账号</th>
 							<td><div id="admin_username" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>工商注册号</th>
 							<td><div id="indu_com_number" name="show"> </div></td>
-						</tr>
-						<tr>
+						
 							<th>状态</th>
 							<td><div id="status" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>注册地址</th>
 							<td><div id="address" name="show"> </div></td>
-						</tr>
-						<tr>
+						
 							<th>提供服务</th>
 							<td><div id="gas_server" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>商品信息</th>
 							<td><div id="lng_price" name="show"> </div></td>
-						</tr>
-						<tr>
+						
 							<th>优惠活动</th>
 							<td><div id="promotions" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>注册日期</th>
 							<td><div id="created_time" name="show"> </div></td>
 						
-						</tr>
-						<tr>
+					
 							<th>平台有效期</th>
 							<td><div id="expiry_date" name="show"> </div></td>
+								</tr>
+						<tr>
 							<th>预付款额度</th>
 							<td colspan="3"><div id="prepay_balance" name="show"> </div></td>
 						</tr>
