@@ -30,9 +30,11 @@
 				${name}于<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm" />前提供了${roadCondition.address}附近的${direction}的${conditionType}路况，请注意路况信息变化！
 				<c:if test="${!roadCondition.memo eq null}" ><br>路况详情如下：<br>${roadCondition.memo}</c:if>
 			</div>
+			<c:if test="${!conditionMsg eq null}" >
 			<div class="img">
 				<img class="img-responsive" src="${conditionMsg}" alt="">
 			</div>
+			</c:if>
 		</div>
 	</div>
 
