@@ -181,7 +181,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     if(userQuota.compareTo(userAccount.getAccountBalanceBigDecimal()) <= 0){
 
                         //计算运输公司剩余额度
-                        if(userAccount != null){
+                            if(userAccount != null){
                             BigDecimal banlance = userAccount.getAccountBalanceBigDecimal();
                             userQuota = banlance.subtract(userQuota);
 
