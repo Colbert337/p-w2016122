@@ -1435,7 +1435,7 @@ public class MobileController {
 						//获取当前气站价格列表
 						//List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
 						String price = gastationInfo.getLng_price();
-						if(price!=null&&"".equals(price)){
+						if(price != null && !"".equals(price)){
 							price = price.replaceAll("，",",");
 							price = price.replaceAll("：",":");
 							if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1){
