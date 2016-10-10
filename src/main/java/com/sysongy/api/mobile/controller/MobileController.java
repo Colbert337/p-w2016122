@@ -1420,7 +1420,6 @@ public class MobileController {
 				}
 				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationList.subList((pNum-1)*pSize,x));
 				List<Gastation> gastationList1 = pageInfo.getList();
-				System.out.println(gastationList1.size());
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
 				if(gastationList1 != null && gastationList1.size() > 0){
 					for (Gastation gastationInfo:gastationList1){
@@ -1432,29 +1431,31 @@ public class MobileController {
 						gastationMap.put("latitude",gastationInfo.getLatitude());
 						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE", gastationInfo.getType());
 						gastationMap.put("stationType",usysparam.getMname());
-						gastationMap.put("service",gastationInfo.getGas_server());//提供服务
-						gastationMap.put("preferential",gastationInfo.getPromotions());//优惠活动
+						gastationMap.put("service",gastationInfo.getGas_server()==null?"暂无服务":gastationInfo.getGas_server());//提供服务
+						gastationMap.put("preferential",gastationInfo.getPromotions()==null?"暂无优惠":gastationInfo.getPromotions());//优惠活动
 						//获取当前气站价格列表
 						//List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
 						String price = gastationInfo.getLng_price();
-						price = price.replaceAll("，",",");
-						price = price.replaceAll("：",":");
-						if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1){
-							String strArray[] = price.split(",");
-							Map[] map = new Map[strArray.length];
-							for(int i = 0;i<strArray.length;i++){
-								String strInfo = strArray[i].trim();
-								String strArray1[] = strInfo.split(":");
-								String strArray2[] = strArray1[1].split("/");
-								Map<String, Object> dataMap = new HashMap<>();
-								dataMap.put("gasName",strArray1[0]);
-								dataMap.put("gasPrice",strArray2[0]);
-								dataMap.put("gasUnit",strArray2[1]);
-								map[i] = dataMap;
+						if(price!=null&&"".equals(price)){
+							price = price.replaceAll("，",",");
+							price = price.replaceAll("：",":");
+							if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1){
+								String strArray[] = price.split(",");
+								Map[] map = new Map[strArray.length];
+								for(int i = 0;i<strArray.length;i++){
+									String strInfo = strArray[i].trim();
+									String strArray1[] = strInfo.split(":");
+									String strArray2[] = strArray1[1].split("/");
+									Map<String, Object> dataMap = new HashMap<>();
+									dataMap.put("gasName",strArray1[0]);
+									dataMap.put("gasPrice",strArray2[0]);
+									dataMap.put("gasUnit",strArray2[1]);
+									map[i] = dataMap;
+								}
+								gastationMap.put("priceList",map);
+							}else{
+								gastationMap.put("priceList",new ArrayList());
 							}
-							gastationMap.put("priceList",map);
-						}else{
-							gastationMap.put("priceList",new ArrayList());
 						}
 						gastationMap.put("phone",gastationInfo.getContact_phone());
 						if(gastationInfo.getStatus().equals("0")){
@@ -1466,27 +1467,7 @@ public class MobileController {
 						String infoUrl = http_poms_path+"/portal/crm/help/station?stationId="+gastationInfo.getSys_gas_station_id();
 						gastationMap.put("infoUrl",infoUrl);
 						gastationMap.put("shareUrl",http_poms_path+"/portal/crm/help/share/station?stationId="+ gastationInfo.getSys_gas_station_id());
-//						if(longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr) && radius != null && !"".equals(radius)){
-//							longitude = new Double(longitudeStr);
-//							latitude = new Double(latitudeStr);
-//							radiusDb = new Double(radius);
-//
-//							String longStr = gastationInfo.getLongitude();
-//							String langStr = gastationInfo.getLatitude();
-//							Double longDb = new Double(0);
-//							Double langDb = new Double(0);
-//							if(longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)){
-//								longDb = new Double(longStr);
-//								langDb = new Double(langStr);
-//							}
-//							//计算当前加注站离指定坐标距离
-//							Double dist = DistCnvter.getDistance(longitude,latitude,longDb,langDb);
-//							if(dist <= radiusDb){//在指定范围内，则返回当前加注站信息
-								gastationArray.add(gastationMap);
-//							}
-//						}else{//目标坐标及范围半径未传参，则返回所有加注站信息
-//							gastationArray.add(gastationMap);
-//						}
+						gastationArray.add(gastationMap);
 					}
 					result.setListMap(gastationArray);
 				}else{
