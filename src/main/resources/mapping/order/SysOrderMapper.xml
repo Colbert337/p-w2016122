@@ -893,15 +893,16 @@
   <!--     APP司机报表接口     -->
   <!--查询充值记录-->
   <select id="queryDriverReChargeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
-    select DISTINCT order_number,cash,cash_back_driver,charge_type,is_discharge,channel,
+    select DISTINCT rb.order_number,rb.cash,rb.cash_back_driver,rb.charge_type,rb.channel,report_callback.is_discharge,
 <!--     (select remark from sys_order rc where rc.order_id = rb.order_number) as remark, -->
-    order_date
-    from report_business rb
-    where order_type = '130' and sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+    rb.order_date
+    from report_business rb LEFT JOIN report_callback  on rb.order_number = report_callback.order_number
+    where rb.order_type = '130' AND report_callback.is_discharge IS NULL and rb.sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
     <!-- where order_type = '130' and cash_back_per is not null and sys_driver_id = #{sysDriver.sysDriverId, jdbcType=VARCHAR}-->
     <if test="orderDate != null" >
-       and  order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
+       and  rb.order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
     </if>
+    ORDER BY rb.order_date DESC
   </select>
   <!--查询消费记录-->
   <select id="queryDriverConsumeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >

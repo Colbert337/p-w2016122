@@ -704,4 +704,11 @@ public class GlobalConstant {
 		}
 		return value;
 	}
+
+	public interface ORDER_STATUS{
+		public static final int ORDER_INIT = 0; 			//订单初始化
+		public static final int ORDER_SUCCESS = 1; 			//订单生成成功
+		public static final int ORDER_FAILED = 2; 			//订单失败
+		public static final int ORDER_WAIT_FOR_PAY = 3; 	//订单待支付
+	}
 }
