@@ -43,13 +43,7 @@ $('#roadform').bootstrapValidator({
 				}
 			}
 		},
-		captureTime_str: {
-			validators: {
-				notEmpty: {
-					message: '开始时间不能为空'
-				}
-			}
-		},
+		 
 		address: {
 			validators: {
 				notEmpty: {
