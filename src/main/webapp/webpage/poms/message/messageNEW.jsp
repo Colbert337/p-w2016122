@@ -10,8 +10,9 @@
 %>
 
 	<script src="<%=basePath %>/dist/js/message/messageNEW.js"></script>
-
-					<div class="">
+<link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
+<script src="<%=basePath%>/dist/js/message/show.js"></script>
+					<div class="" id="div">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>

@@ -266,6 +266,8 @@ public class CrmPortalController {
         if(pageInfoList != null && pageInfoList.getList() != null){
             cashBackList = pageInfoList.getList();
         }
+
+        map.addAttribute("aliPayCashBack",cashBackList);
         return "/webpage/crm/webapp-bonus-rules";
     }
 
@@ -314,12 +316,18 @@ public class CrmPortalController {
         }
 
         String http_poms_path =  (String) prop.get("http_poms_path");
+        String url = roadCondition.getConditionImg();
+        if(url!=null ||!"".equals(url)){
+        	url = http_poms_path+url;
+        }else{
+        	url=null;
+        }
     	Usysparam usysparam = usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
     	Usysparam usysparam1 = usysparamService.queryUsysparamByCode("DIRECTION_CODE", roadCondition.getDirection());
     	map.addAttribute("roadCondition", roadCondition);
         map.addAttribute("name",name);
         map.addAttribute("conditionType",conditionType);
-        map.addAttribute("conditionMsg",http_poms_path+roadCondition.getConditionImg());
+        map.addAttribute("conditionMsg",url);
         map.addAttribute("conditionType", usysparam.getMname());
         map.addAttribute("direction", usysparam1.getMname());
         return "/webpage/crm/webapp-traffic-detail";
@@ -331,7 +339,6 @@ public class CrmPortalController {
     @RequestMapping("/trafficShare")
     public String trafficShare(@RequestParam String trafficId,ModelMap map) throws Exception{
     	SysRoadCondition roadCondition = sysRoadService.selectByPrimaryKey(trafficId);
-//      SysRoadCondition roadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + trafficId);
         String name = roadCondition.getPublisherName();
         String phone = roadCondition.getPublisherPhone();
         String conditionType = roadCondition.getConditionType();
