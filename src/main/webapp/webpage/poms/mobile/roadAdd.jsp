@@ -13,12 +13,34 @@
 
 
 <link rel="stylesheet" href="<%=basePath%>/common/css/fileinput.css" />
-<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datetimepicker.css" />
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript"
+		src="<%=basePath%>/assets/js/global/jedate.js"></script>
 
 <script src="<%=basePath%>/dist/js/mobile/roadAdd.js"></script>
+<script type="text/javascript">
 
+	jeDate({
+		dateCell : "#startTime_str",
+		format : "YYYY-MM-DD hh:mm",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#endTime_str",
+		format : "YYYY-MM-DD hh:mm",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#captureTime_str",
+		format : "YYYY-MM-DD hh:mm",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+</script>
 <div class="">
 	<!-- /section:settings.box -->
 	<div class="page-header">
@@ -93,7 +115,7 @@
 					</label>
 					<!-- #section:plugins/date-time.datetimepicker -->
 					<div class="input-group col-sm-4">
-						<input type="text" name="captureTime_str" class="form-control col-sm-4 timebox" />
+						<input type="text" name="captureTime_str" id="captureTime_str" class="form-control col-sm-4 timebox" readonly/>
 					<span class="input-group-addon">
 						<i class="fa fa-clock-o bigger-110"></i>
 					</span>
@@ -115,7 +137,7 @@
 					</label>
 
 					<div class="input-group col-sm-4">
-						<input type="text" name="startTime_str" id="startTime_str" class="form-control col-sm-4 timebox" />
+						<input type="text" name="startTime_str" id="startTime_str" class="form-control col-sm-4 timebox" readonly/>
 					<span class="input-group-addon">
 						<i class="fa fa-clock-o bigger-110"></i>
 					</span>
@@ -127,7 +149,7 @@
 					</label>
 
 					<div class="input-group col-sm-4">
-						<input type="text" name="endTime_str" id="endTime_str"  class="form-control col-sm-4 timebox" />
+						<input type="text" name="endTime_str" id="endTime_str"  class="form-control col-sm-4 timebox" readonly/>
 					<span class="input-group-addon">
 						<i class="fa fa-clock-o bigger-110"></i>
 					</span>
