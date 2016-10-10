@@ -122,11 +122,11 @@ public class DESUtil {
 
     public static void main(String args[]) throws Exception{
 //        String str = "王冬强";
-        String str = "{\"main\":{\"token\":\"c64c4fa96a3b4373838f0dc4fe374712\"},\"extend\":{\"version\":\"1.0\",\"terminal\": \"1\"}}";
+        String str = "{\"main\":{\"token\":\"5fae1ee2efbf45098a9e5b4a08c89e9a\",\"time\":\"2016-10\",\"pageNum\":\"1\",\"pageSize\":\"20\"},\"extend\":{\"version\":\"1.0\",\"terminal\":\"1\"}}";
         String keyStr = "sysongys";
         System.out.println("加密后:"+encode(keyStr,str));
         String resultStr;
-        resultStr = decode(keyStr,"DE5DCAF1F59506F0B016F29A40EA567743E4E340487D4890EEB8457E3BE297E5A4C77C8B2260528137D6FCC38A4658832397A534CEBD8F3E8E8519CAEE9DA3857AA7E7A139161505");
+        resultStr = decode(keyStr,"CDE0C6E42FF0D3D68E51DAC1709EDEC4D8AF570B92537519A9E47E8EF0D575151A9E07A640C9591D92A8C657A3FA461BC7B1CA419479B5E920A7417AD3E19BED127887666B19052819D6D8BB617A393F0415FB20EB9219A579381E06C109159EB82DBAB5B79D19EE72CE0EEED0C970E0F6B7B93916A5F845A3402FAAD51A4FF452BA012443A4B8A10F7F007F9959971A");
 //        resultStr = new String(resultStr.getBytes("GB2312"),"ISO-8859-1");
         System.out.println("解密后:"+resultStr);
     }
