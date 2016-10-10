@@ -204,7 +204,7 @@ public class MobileController {
 						queryDriver = driverService.queryByUserName(driver);
 						if(queryDriver == null){
 							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("手机号码不存在！");
+							result.setMsg("用户名或密码错误！");
 						}else{
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token",queryDriver.getSysDriverId());
@@ -250,7 +250,7 @@ public class MobileController {
 					}
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("手机号码不存在！");
+					result.setMsg("用户名或密码错误！");
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1408,7 +1408,6 @@ public class MobileController {
 						}
 					}
 				}
-				List<Gastation> rsList = new ArrayList<Gastation>();
 				int pNum = mainObj.optInt("pageNum");
 				int pSize = mainObj.optInt("pageSize");
 				if(pNum==0){
@@ -1431,12 +1430,12 @@ public class MobileController {
 						gastationMap.put("latitude",gastationInfo.getLatitude());
 						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE", gastationInfo.getType());
 						gastationMap.put("stationType",usysparam.getMname());
-						gastationMap.put("service",gastationInfo.getGas_server()==null?"暂无服务":gastationInfo.getGas_server());//提供服务
-						gastationMap.put("preferential",gastationInfo.getPromotions()==null?"暂无优惠":gastationInfo.getPromotions());//优惠活动
+						gastationMap.put("service",gastationInfo.getGas_server()==null?"暂无":gastationInfo.getGas_server());//提供服务
+						gastationMap.put("preferential",gastationInfo.getPromotions()==null?"暂无":gastationInfo.getPromotions());//优惠活动
 						//获取当前气站价格列表
 						//List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
 						String price = gastationInfo.getLng_price();
-						if(price!=null&&"".equals(price)){
+						if(price != null && !"".equals(price)){
 							price = price.replaceAll("，",",");
 							price = price.replaceAll("：",":");
 							if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1){
