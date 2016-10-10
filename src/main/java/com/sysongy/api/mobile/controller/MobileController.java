@@ -1455,6 +1455,8 @@ public class MobileController {
 							}else{
 								gastationMap.put("priceList",new ArrayList());
 							}
+						}else{
+							gastationMap.put("priceList",new ArrayList());
 						}
 						gastationMap.put("phone",gastationInfo.getContact_phone());
 						if(gastationInfo.getStatus().equals("0")){
@@ -3728,8 +3730,11 @@ public class MobileController {
 				TwoDimensionCode handler = new TwoDimensionCode();
 				String encoderContent=null;
 				if(list.get(i).getFullName()!=null && !"".equals(list.get(i).getFullName())){
+					String name = list.get(i).getFullName();
+//					name = new String(list.get(i).getFullName().getBytes("GB2312"),"UTF-8");
+//					name = new String(list.get(i).getFullName().getBytes("UTF-8"),"GB2312");
 					//encoderContent=list.get(i).getUserName()+"_"+ new String(new String(list.get(i).getFullName().getBytes("UTF-8"),"GBK").getBytes("GBK"),"UTF-8");
-					encoderContent=list.get(i).getUserName()+"_"+list.get(i).getFullName();
+					encoderContent=list.get(i).getUserName()+"_"+name;
 				}else{
 					encoderContent=list.get(i).getUserName();
 				}

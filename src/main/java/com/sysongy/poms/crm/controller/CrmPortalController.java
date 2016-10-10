@@ -233,8 +233,12 @@ public class CrmPortalController {
         }
 
         String info = gastation.getPromotions();
+        String server = gastation.getGas_server();
         if(info==null||"".equals(info)){
         	gastation.setPromotions("暂无");
+        }
+        if(server==null||"".equals(server)){
+        	gastation.setGas_server("暂无");
         }
         map.addAttribute("gastation",gastation);
         map.addAttribute("priceList",priceArray);
