@@ -9,7 +9,7 @@
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path;
 %>
-<script src="<%=basePath%>/dist/js/message/jquery.shCircleLoader.js" type="text/javascript"></script>
+
 <script src="<%=basePath%>/dist/js/message/message_new.js"></script>
 <link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
 <script src="<%=basePath%>/dist/js/message/show.js"></script>

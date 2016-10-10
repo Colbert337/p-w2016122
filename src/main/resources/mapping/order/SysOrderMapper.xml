@@ -917,11 +917,12 @@
   <!--查询消费记录-->
   <select id="queryDriverConsumeList" resultMap="MapResultMap" parameterType="com.sysongy.poms.order.model.SysOrder" >
     SELECT
-	order_number,
+	B.order_number,
+	(SELECT sys_order_goods.number FROM sys_order_goods WHERE sys_order_goods.order_id = (SELECT a.order_id FROM sys_order AS a WHERE a.order_number = B.order_number)) AS goods_sum,
 	cash,
-	channel,
-	channel_number,
-	is_discharge,
+	B.channel,
+	B.channel_number,
+	B.is_discharge,
 	charge_type,
 	(
 		SELECT
@@ -931,19 +932,19 @@
 		WHERE
 			rc.order_id = order_number
 	) AS remark,
-	order_date,
-	order_status,
-	been_discharged
-	FROM sys_order
-	WHERE order_type = '220'
-	AND sys_order.order_status = '1'
-	AND is_discharge = '0'
-	AND been_discharged = '0'
-	AND credit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
+	B.order_date,
+	B.order_status,
+	B.been_discharged
+	FROM sys_order AS B
+	WHERE B.order_type = '220'
+	AND B.order_status = '1'
+	AND B.is_discharge = '0'
+	AND B.been_discharged = '0'
+	AND B.credit_account = #{sysDriver.sysDriverId, jdbcType=VARCHAR}
 	<if test="orderDate != null" >
-		AND order_date LIKE CONCAT('%', SUBSTR(#{orderDate,jdbcType=VARCHAR}, 1, 7), '%')
+		AND B.order_date LIKE CONCAT('%', SUBSTR(#{orderDate,jdbcType=VARCHAR}, 1, 7), '%')
 	</if>
-	ORDER BY order_date DESC 
+	ORDER BY B.order_date DESC 
   </select>
   <!--查询转账记录-->
   <!-- 

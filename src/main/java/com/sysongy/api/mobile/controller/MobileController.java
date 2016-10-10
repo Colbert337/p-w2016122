@@ -1430,8 +1430,8 @@ public class MobileController {
 						gastationMap.put("latitude",gastationInfo.getLatitude());
 						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE", gastationInfo.getType());
 						gastationMap.put("stationType",usysparam.getMname());
-						gastationMap.put("service",gastationInfo.getGas_server()==null?"暂无服务":gastationInfo.getGas_server());//提供服务
-						gastationMap.put("preferential",gastationInfo.getPromotions()==null?"暂无优惠":gastationInfo.getPromotions());//优惠活动
+						gastationMap.put("service",gastationInfo.getGas_server()==null?"暂无":gastationInfo.getGas_server());//提供服务
+						gastationMap.put("preferential",gastationInfo.getPromotions()==null?"暂无":gastationInfo.getPromotions());//优惠活动
 						//获取当前气站价格列表
 						//List<Map<String, Object>> priceList = gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
 						String price = gastationInfo.getLng_price();
