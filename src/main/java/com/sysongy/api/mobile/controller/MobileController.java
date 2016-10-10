@@ -3727,7 +3727,8 @@ public class MobileController {
 				String show_path = (String) prop.get("show_images_path")+ "/driver/"+list.get(i).getUserName()+"/"+list.get(i).getUserName()+".jpg";
 				TwoDimensionCode handler = new TwoDimensionCode();
 				String encoderContent=null;
-				if(list.get(0).getFullName()!=null && !"".equals(list.get(i).getFullName())){
+				if(list.get(i).getFullName()!=null && !"".equals(list.get(i).getFullName())){
+					//encoderContent=list.get(i).getUserName()+"_"+ new String(new String(list.get(i).getFullName().getBytes("UTF-8"),"GBK").getBytes("GBK"),"UTF-8");
 					encoderContent=list.get(i).getUserName()+"_"+list.get(i).getFullName();
 				}else{
 					encoderContent=list.get(i).getUserName();
