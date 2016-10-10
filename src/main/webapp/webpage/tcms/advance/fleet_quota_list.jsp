@@ -39,8 +39,8 @@
 							</button>
 							<button class="btn btn-sm" type="button" onclick="init();">
 								重置
-							</button>--%>
-							<div class="item"></div>
+							</button>
+							<div class="item"></div>--%>
 							<%--<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
 								充值
 							</button>--%>
