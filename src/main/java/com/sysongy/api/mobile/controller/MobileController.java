@@ -1406,7 +1406,7 @@ public class MobileController {
 
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
-				radius = mainObj.optString("radius");
+				radius = GlobalConstant.ConditionType.STATION_RADIUS;
 				String name = mainObj.optString("name");
 				gastation.setGas_station_name(name);
 				Double longitude = new Double(0);
@@ -1438,6 +1438,7 @@ public class MobileController {
 							}
 						}
 					}
+					System.out.println(gastationList.size());
 					int pNum = mainObj.optInt("pageNum");
 					int pSize = mainObj.optInt("pageSize");
 					if (pNum == 0) {
@@ -2755,7 +2756,7 @@ public class MobileController {
 				}
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
-				String radius = mainObj.optString("radius");
+				String radius = GlobalConstant.ConditionType.ROAD_RADIUS;
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
 				Double radiusDb = new Double(0);

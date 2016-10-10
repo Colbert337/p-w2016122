@@ -667,6 +667,8 @@ public class GlobalConstant {
 		public static final String SHI_GONG ="06"; //施工
 		public static final String XIAN_GAO ="07"; //限高
 		public static final String XIAN_ZHONG ="08"; //限重
+		public static final String ROAD_RADIUS ="500000"; //路况范围半径
+		public static final String STATION_RADIUS ="500000"; //气站范围半径
 	}
 
 	/**
