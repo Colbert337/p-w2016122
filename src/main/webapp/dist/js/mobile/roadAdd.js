@@ -36,7 +36,14 @@ $('#roadform').bootstrapValidator({
 				}
 			}
 		},
-		startTime: {
+		startTime_str: {
+			validators: {
+				notEmpty: {
+					message: '开始时间不能为空'
+				}
+			}
+		},
+		captureTime_str: {
 			validators: {
 				notEmpty: {
 					message: '开始时间不能为空'
@@ -74,10 +81,7 @@ function saveRoad(){
 	/*手动验证表单，当是普通按钮时。*/
 
 	if($("#conditionType").val()*1>5){
-		if($("#endTime_str").val()==""){
-			bootbox.alert("请选择结束时间");
-		}
-
+		 
 	}
 	$('#roadform').data('bootstrapValidator').validate();
 	if(!$('#roadform').data('bootstrapValidator').isValid()){
