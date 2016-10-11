@@ -36,9 +36,14 @@ $('#roadform').bootstrapValidator({
 				}
 			}
 		},
-		 
-		 
 		address: {
+			validators: {
+				notEmpty: {
+					message: '详细地址不能为空'
+				}
+			}
+		},
+		direction: {
 			validators: {
 				notEmpty: {
 					message: '详细地址不能为空'
