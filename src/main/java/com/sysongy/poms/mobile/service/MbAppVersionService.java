@@ -1,11 +1,12 @@
-package com.sysongy.poms.mobile.dao;
+package com.sysongy.poms.mobile.service;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.model.MbAppVersion;
+import com.sysongy.poms.mobile.model.MbBanner;
 
-import java.util.List;
 
-public interface MbAppVersionMapper {
+public interface MbAppVersionService {
+
     int deleteByPrimaryKey(String appVersionId);
 
     int insert(MbAppVersion record);
@@ -18,5 +19,6 @@ public interface MbAppVersionMapper {
 
     int updateByPrimaryKey(MbAppVersion record);
 
-    List<MbAppVersion> queryAppVersionList(MbAppVersion record);
-}
+    PageInfo<MbAppVersion> queryAppVersionListPage(MbAppVersion record) throws Exception;
+
+    }

@@ -1,0 +1,499 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="s" uri="/WEB-INF/sysongytag.tld"%>
+
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path;
+	String imagePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+%>
+<script type="text/javascript"
+	src="<%=basePath%>/assets/js/date-time/moment.js"></script>
+<script type="text/javascript"
+	src="<%=basePath%>/assets/js/date-time/bootstrap-datepicker.js"></script>
+<script type="text/javascript"
+	src="<%=basePath%>/common/js/fileinput.js"></script>
+<script type="text/javascript" src="<%=basePath%>/common/js/zh.js"></script>
+<script type="text/javascript" src="<%=basePath%>/common/js/json2.js"></script>
+
+<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/font-awesome.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/jquery-ui.custom.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/chosen.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/bootstrap-datepicker3.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/bootstrap-timepicker.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/daterangepicker.css" />
+<link rel="stylesheet"
+	href="<%=basePath%>/assets/css/bootstrap-datetimepicker.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/colorpicker.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/ace-fonts.css" />
+<link rel="stylesheet" href="<%=basePath%>/assets/css/ace.css"
+	class="ace-main-stylesheet" id="main-ace-style" />
+
+<link rel="stylesheet" href="<%=basePath%>/common/css/fileinput.css" />
+
+<!-- /section:basics/sidebar -->
+<div class="main-content">
+	<div class="main-content-inner">
+		<!-- #section:basics/content.breadcrumbs -->
+		<div class="breadcrumbs" id="breadcrumbs">
+			<script type="text/javascript">
+				try {
+					ace.settings.check('breadcrumbs', 'fixed')
+				} catch (e) {
+				}
+			</script>
+
+			<ul class="breadcrumb">
+				<li><i class="ace-icon fa fa-home home-icon"></i> <a href="#">主页</a>
+				</li>
+
+				<li><a href="#">APP版本管理</a></li>
+				<li class="active">APP版本管理</li>
+			</ul>
+			<!-- /.breadcrumb -->
+
+			<!-- #section:basics/content.searchbox -->
+			<div class="nav-search" id="nav-search">
+				<form class="form-search">
+
+					<input id="retCode" type="hidden" value=" ${ret.retCode}" /> <input
+						id="retMsg" type="hidden" value=" ${ret.retMsg}" /> <span
+						class="input-icon"> <input type="text"
+						placeholder="Search ..." class="nav-search-input"
+						id="nav-search-input" autocomplete="off" /> <i
+						class="ace-icon fa fa-search nav-search-icon"></i>
+					</span>
+				</form>
+			</div>
+			<!-- /.nav-search -->
+
+			<!-- /section:basics/content.searchbox -->
+		</div>
+
+		<!-- /section:basics/content.breadcrumbs -->
+		<div class="page-content">
+			<!-- /section:settings.box -->
+			<div class="page-header">
+				<h1>APP版本管理</h1>
+			</div>
+			<!-- /.page-header -->
+
+			<div class="row">
+				<div class="col-xs-8">
+					<!-- PAGE CONTENT BEGINS -->
+					<form class="form-horizontal" id="editForm">
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right"
+								for="url"> <span class="red_star">*</span> 下载地址：
+							</label>
+							<div class="col-sm-8">
+								<input name="url" id="url" style="resize: none;"
+
+									value="${mbAppVersion.url }"
+									class="col-xs-10 col-sm-12 limited form-control" />
+							</div>
+						</div>
+
+
+
+
+
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right"
+								for="remark"> 备注： </label>
+							<div class="col-sm-8">
+								<textarea name="remark" id="remark" style="resize: none;"
+									maxlength="100" placeholder="备注"
+									class="col-xs-10 col-sm-12 limited form-control">${mbAppVersion.remark}</textarea>
+							</div>
+						</div>
+						<input type="hidden" id="appVersionId" name="appVersionId"
+							value="${mbAppVersion.appVersionId}" />
+					</form>
+					<div class="clearfix form-actions">
+						<div class="col-md-offset-3 col-md-9">
+
+							<button class="btn btn-info" type="button"
+								onclick="saveAppVersion();">
+								<i class="ace-icon fa fa-check bigger-110"></i> 保存
+							</button>
+							&nbsp; &nbsp; &nbsp;
+
+							<button class="btn" id="clear" type="button" onclick="clear1();">
+								<i class="ace-icon fa fa-repeat bigger-110"></i> 重置
+							</button>
+							&nbsp; &nbsp; &nbsp;
+
+							<button class="btn btn-success" type="button" onclick="init();">
+								<i class="ace-icon fa fa-undo bigger-110"></i> 返回
+							</button>
+						</div>
+					</div>
+
+				</div>
+				<!-- /.row -->
+			</div>
+			<!-- /.page-content -->
+		</div>
+	</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+	//获取主机地址，如： http://localhost:8080
+	var localhostPaht = curWwwPath.substring(0, pos);
+	var projectfileoptions = {
+		showUpload : false,
+		showRemove : false,
+		language : 'zh',
+		allowedPreviewTypes : [ 'image' ],
+		allowedFileExtensions : [ 'jpg', 'png', 'gif', 'jepg' ],
+		maxFileSize : 1000,
+	}
+	// 文件上传框
+	$('input[class=projectfile]').each(function() {
+		var imageurl = $(this).attr("value");
+
+		if (imageurl) {
+			var op = $.extend({
+				initialPreview : [ // 预览图片的设置
+				"<img src='" + imageurl + "' class='file-preview-image'>", ]
+			}, projectfileoptions);
+
+			$(this).fileinput(op);
+		} else {
+			$(this).fileinput(projectfileoptions);
+		}
+	});
+
+	// bootstrap验证控件
+	$('#editForm').bootstrapValidator({
+		message : 'This value is not valid',
+		feedbackIcons : {
+			valid : 'glyphicon glyphicon-ok',
+			invalid : 'glyphicon glyphicon-remove',
+			validating : 'glyphicon glyphicon-refresh'
+		},
+		fields : {
+			title : {
+				validators : {
+					notEmpty : {
+						message : '标题不能为空'
+					}
+				}
+			},
+			content : {
+				validators : {
+					notEmpty : {
+						message : '正文不能为空'
+					}
+				}
+			},
+			targetUrl : {
+				validators : {
+					notEmpty : {
+						message : '链接地址不能为空'
+					}
+				}
+			},
+			sort : {
+				validators : {
+					notEmpty : {
+						message : '顺序不能为空'
+					}
+				}
+			}
+		}
+	});
+
+	var photoType = 0;
+	var phototypeSm = 0;
+	function savePhoto(fileobj, obj, obj1, obj2) {
+
+		$(fileobj).parents("div").find("input[name=uploadfile]").each(
+				function() {
+					$(this).attr("name", "");
+				});
+		$(fileobj).parent("div").find("input:first").attr("name", "uploadfile");
+		if ($(obj).val() == null || $(obj).val() == "") {
+			bootbox.alert("请先上传文件");
+			return;
+		}
+		if ("#img_path" == obj1) {
+			if($(obj)[0].files[0].size/1024>100){
+				bootbox.alert("图片大小过大，请重新上传");
+				return;
+			}
+			photoType = 1;
+		}
+		if ("#img_sm_path" == obj1) {
+			if($(obj)[0].files[0].size/1024>50){
+				bootbox.alert("图片大小过大，请重新上传");
+				return;
+			}
+			phototypeSm = 1;
+		}
+		
+
+		var stationId = "mobile";
+		var multipartOptions = {
+			url : '../crmInterface/crmBaseService/web/upload?stationid='
+					+ stationId,
+			type : 'post',
+			dataType : 'text',
+			enctype : "multipart/form-data",
+			success : function(data) {
+				var s = JSON.parse(data);
+				if (s.success == true) {
+					var a=s.obj.substring(s.obj.indexOf('/')+1,s.obj.length);
+					$(obj2).hide();
+					bootbox.alert("上传成功");
+					$(obj1).val(a.substring(a.indexOf('/'),a.length));
+				}
+
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				bootbox.alert("上传成功");
+			}
+		}
+		$("#editForm").ajaxSubmit(multipartOptions);
+
+	}
+
+	function saveBanner() {
+		$('#editForm').data('bootstrapValidator').validate();
+		if (!$('#editForm').data('bootstrapValidator').isValid()) {
+			return;
+		}
+
+		// alert( $("#editForm").is(":visible")); //是否可见)
+		var cityName = "";
+		var cityId = "";
+		$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
+			if (0 == i) {
+				cityName = $(this).attr("values");
+				cityId = $(this).attr("value2");
+			} else {
+				cityName += ("," + $(this).attr("values"));
+				cityId += ("," + $(this).attr("value2"));
+			}
+		});
+
+		// var file=$("#indu_com_certif_select").val();
+		if (photoType != 1) {
+			bootbox.alert("请上传图片");
+			return;
+		}
+		if (phototypeSm != 1) {
+			bootbox.alert("请上传缩略图图片");
+			return;
+		}
+
+		var saveOptions = {
+			url : '../web/mobile/img/save',
+			type : 'post',
+			dataType : 'html',
+			data : {
+				// version : spCodesTemp,// 版本号 目前不需要
+				city_id : cityId,
+				city_name : cityName
+
+			},
+			success : function(data) {
+				$("#main").html(data);
+				$("#modal-table").modal("show");
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				bootbox.alert("操作失败！");
+			}
+		}
+		$("#editForm").ajaxSubmit(saveOptions);
+
+		$("#editModel").modal('hide');
+		$(".modal-backdrop").css("display", "none");
+
+	}
+	
+	function clear1(){
+	//	console.log('1111');
+	//	location.href=location.href;
+		$.ajax({
+			url : "../web/mobile/img/fondone",
+			data : {
+				imgType:$("[name=imgType]").val()
+			},
+			async : false,
+			type : "POST",
+			success : function(data) {
+				$("#main").html(data);
+			}
+		})
+	}
+	
+	jQuery(function($) {
+		if ("${mbBanner.mbBannerId}" == "") {
+			$("#show_img").hide();
+			$("#show_sm_img").hide();
+			$("#imgType").val("${imgType }");
+			$("#clear").show();
+			
+		} else {
+			$("#show_img").show();
+			$("#show_sm_img").show();
+			$("#clear").hide();
+			var datas = '${mbBanner.city_id}'.split(',');
+			for (var i = 0; i < datas.length; i++) {
+				eval("$('#c" + datas[i] + "').attr('checked',true);");
+			}
+			checkedclick();
+			$("#show_img").attr("src", '<%=basePath%>' + '${mbBanner.imgPath}');
+			$("#show_sm_img").attr("src",'<%=basePath%>' + '${mbBanner.imgSmPath}');
+			photoType = 1;
+			phototypeSm = 1;
+		}
+		if ('${mbBanner.targetUrl }' != '') {
+			$('#target_url').val(
+					'${mbBanner.targetUrl }'.substr('${mbBanner.targetUrl }'
+							.indexOf('/portal/crm/help/showPage?pageid='),
+							'${mbBanner.targetUrl }'.length));
+			
+		}
+		var $overflow = '';
+		var colorbox_params = {
+			rel : 'colorbox',
+			reposition : true,
+			scalePhotos : true,
+			scrolling : false,
+			previous : '<i class="ace-icon fa fa-arrow-left"></i>',
+			next : '<i class="ace-icon fa fa-arrow-right"></i>',
+			close : '&times;',
+			current : '{current} of {total}',
+			maxWidth : '100%',
+			maxHeight : '100%',
+			onOpen : function() {
+				"'--"
+				$overflow = document.body.style.overflow;
+				document.body.style.overflow = 'hidden';
+			},
+			onClosed : function() {
+				document.body.style.overflow = $overflow;
+			},
+			onComplete : function() {
+				$.colorbox.resize();
+			}
+		};
+
+		$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+		$("#cboxLoadingGraphic").html(
+				"<i class='ace-icon fa fa-spinner orange fa-spin'></i>");// let's
+		// add a
+		// custom
+		// loading
+		// icon
+
+		$(document).one('ajaxloadstart.page', function(e) {
+			$('#colorbox, #cboxOverlay').remove();
+		});
+
+		$('.j-android-versions .btn').on('click', function() {
+			var $parent = $(this).parent();
+			if ($parent.hasClass('open')) {
+				$parent.removeClass('open');
+			} else {
+				$parent.addClass('open');
+			}
+		});
+	})
+
+	function saveBanner() {
+		$('#editForm').data('bootstrapValidator').validate();
+		if (!$('#editForm').data('bootstrapValidator').isValid()) {
+			return;
+		}
+
+		// alert( $("#editForm").is(":visible")); //是否可见)
+		var cityName = "";
+		var cityId = "";
+		$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
+			if (0 == i) {
+				cityName = $(this).attr("values");
+				cityId = $(this).attr("value2");
+			} else {
+				cityName += ("," + $(this).attr("values"));
+				cityId += ("," + $(this).attr("value2"));
+			}
+		});
+
+		// var file=$("#indu_com_certif_select").val();
+		if (photoType != 1) {
+			bootbox.alert("请上传图片");
+			return;
+		}
+		if (phototypeSm != 1) {
+			bootbox.alert("请上传缩略图图片");
+			return;
+		}
+
+		var saveOptions = {
+			url : '../web/mobile/img/save',
+			type : 'post',
+			dataType : 'html',
+			data : {
+				// version : spCodesTemp,// 版本号 目前不需要
+				city_id : cityId,
+				city_name : cityName
+
+			},
+			success : function(data) {
+				$("#main").html(data);
+				$("#modal-table").modal("show");
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				bootbox.alert("操作失败！");
+			}
+		}
+		$("#editForm").ajaxSubmit(saveOptions);
+		init();
+	}
+
+	function checkedclick() {
+		console.log('checked')
+		var isok = true;
+		var cityNameList = "";
+		$('.checked').each(function(index, obj) {
+			if (!$(obj).is(':checked')) {
+				isok = false;
+			} else {
+				cityNameList += $(obj).attr('values') + ",";
+			}
+		})
+		if (cityNameList.length != 0) {
+			cityNameList = cityNameList.substring(0, cityNameList.length - 1)
+		}
+		$('#cityNameList').text(cityNameList);
+		if (isok) {
+			$("#allche").prop("checked", true);
+		} else {
+			$("#allche").prop("checked", false);
+		}
+	}
+
+	function init() {
+		loadPage('#main', '../web/mobile/img/list/page?imgType='
+				+ $("[name=imgType]").val());
+	}
+</script>

@@ -1,8 +1,10 @@
 package com.sysongy.poms.mobile.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.util.Date;
 
-public class MbAppVersion {
+public class MbAppVersion  extends BaseModel {
     private String appVersionId;
 
     private String url;
