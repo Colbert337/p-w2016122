@@ -165,8 +165,8 @@ function updateCheck(obj1, tr, id) {
 	if(obj1==""){
 		obj1="/common/images/default_productBig.jpg"
 	}
-	$("#innerimg1").attr("src", projectName + obj1);
-	$("#innerimg1").parent("a").attr("href", projectName + obj1);
+	$("#innerimg1").attr("src", obj1);
+	$("#innerimg1").parent("a").attr("href",  obj1);
 	$("#innerModel").modal('show');
 	$("#roadId").val(id)
 
@@ -204,7 +204,8 @@ function shixiao(id){
 	
 }
 function updateRoad(type) {
-//	$("#conditionStatus").val(type);
+	var oldtype=$("#conditionStatus").val();
+	$("#conditionStatus").val(type);
 	var options = {
 		url : '../web/mobile/road/updateRoad',
 		type : 'post',
@@ -214,6 +215,7 @@ function updateRoad(type) {
 			status:type
 //			conditionStatus:type
 		},
+		
 		dataType : 'text',
 		success : function(data) {
 			$("body").removeClass('modal-open').removeAttr('style');
@@ -221,7 +223,9 @@ function updateRoad(type) {
 //			$("#main").html(data);
 //			$("#modal-table").modal("show");
 			bootbox.alert("审核成功");
+			$("#conditionStatus").val(oldtype);
 			commitForm();
+			
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
 

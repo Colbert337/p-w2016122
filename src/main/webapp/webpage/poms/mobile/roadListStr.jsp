@@ -306,13 +306,13 @@
 	
 	if("${road.conditionImg}"==""){
 	
-		$("#innerimg1").attr('src',projectName+"/common/images/default_productBig.jpg");
+		$("#innerimg1").attr('src',"/common/images/default_productBig.jpg");
 		$("#innerimg1").parent("a").attr("href",
-				projectName +"/common/images/default_productBig.jpg");
+				"/common/images/default_productBig.jpg");
 	}else{
-		$("#innerimg1").attr("src", projectName + '${road.conditionImg}');
+		$("#innerimg1").attr("src",  '${road.conditionImg}');
 		$("#innerimg1").parent("a").attr("href",
-				projectName + '${road.conditionImg}');
+				 '${road.conditionImg}');
 	}
 	
 </script>
