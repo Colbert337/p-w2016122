@@ -14,4 +14,10 @@ public interface MbAppVersionMapper {
     int updateByPrimaryKeySelective(MbAppVersion record);
 
     int updateByPrimaryKey(MbAppVersion record);
+
+    /**
+     * 更新APP下载量
+     * @return
+     */
+    int updateDownCount();
 }
