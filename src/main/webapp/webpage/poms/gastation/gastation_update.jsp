@@ -409,7 +409,7 @@
 											<div class="row">
 												<div class="col-sm-12">
 												<textarea name="lng_price" id="lng_price" style="resize: none;"
-									maxlength="500" placeholder="商品信息"
+									maxlength="500" placeholder="商品价格格式如：LNG：3.2元/KG，LCG：3.2元/KG"
 									class="col-xs-10 col-sm-12 limited form-control">${station.lng_price }</textarea>
 											</div>
 										</div>
