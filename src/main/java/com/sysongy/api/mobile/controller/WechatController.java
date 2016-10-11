@@ -459,8 +459,8 @@ public class WechatController {
 			 * 必填参数
 			 */
 			String amount = "amount";
-			String username = "username";
-			boolean b = JsonTool.checkJson(mainObj,amount,username);
+			String phoneNum = "phoneNum";
+			boolean b = JsonTool.checkJson(mainObj,amount,phoneNum);
 			/**
 			 * 请求接口
 			 */
