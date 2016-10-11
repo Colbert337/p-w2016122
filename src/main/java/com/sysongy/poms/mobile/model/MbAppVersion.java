@@ -13,6 +13,10 @@ public class MbAppVersion  extends BaseModel {
 
     private String code;
 
+    private int status;
+
+    private int downCount;
+
     private String isPublish;
 
     private String remark;
@@ -73,5 +77,21 @@ public class MbAppVersion  extends BaseModel {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getDownCount() {
+        return downCount;
+    }
+
+    public void setDownCount(int downCount) {
+        this.downCount = downCount;
     }
 }

@@ -19,4 +19,10 @@ public interface MbAppVersionMapper {
     int updateByPrimaryKey(MbAppVersion record);
 
     List<MbAppVersion> queryAppVersionList(MbAppVersion record);
+
+    /**
+     * 更新APP下载量
+     * @return
+     */
+    int updateDownCount();
 }
