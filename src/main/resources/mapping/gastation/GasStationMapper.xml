@@ -103,7 +103,7 @@
   select 
     <include refid="Base_Column_List" />
     from sys_gas_station
-    where 1=1 
+    where 1=1 and sys_gas_station_id !='GS12900004'
   <trim>
   	  <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''" >
         and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}

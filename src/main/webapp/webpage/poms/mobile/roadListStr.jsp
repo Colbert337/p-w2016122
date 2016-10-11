@@ -303,9 +303,16 @@
 	var projectName = pathName
 			.substring(0, pathName.substr(1).indexOf('/') + 1);
 	$("#conditionStatus").val("${road.conditionStatus}");
-	$("#innerimg1").attr("src", projectName + '${road.conditionImg}');
-	$("#innerimg1").parent("a").attr("href",
-			projectName + '${road.conditionImg}');
-
+	
+	if("${road.conditionImg}"==""){
+	
+		$("#innerimg1").attr('src',"/common/images/default_productBig.jpg");
+		$("#innerimg1").parent("a").attr("href",
+				"/common/images/default_productBig.jpg");
+	}else{
+		$("#innerimg1").attr("src",  '${road.conditionImg}');
+		$("#innerimg1").parent("a").attr("href",
+				 '${road.conditionImg}');
+	}
 	
 </script>

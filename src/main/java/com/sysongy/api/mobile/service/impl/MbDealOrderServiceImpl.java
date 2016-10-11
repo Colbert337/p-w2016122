@@ -121,6 +121,7 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                             order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);
                             order.setOrderNumber(orderNum);
                             order.setIs_discharge(GlobalConstant.ORDER_BEEN_DISCHARGED_NO);
+                            order.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
                             //添加订单
                             orderService.insert(order, null);
                             //个人往个人转账
