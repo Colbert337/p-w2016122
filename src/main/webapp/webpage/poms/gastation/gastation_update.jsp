@@ -413,7 +413,12 @@
 									class="col-xs-10 col-sm-12 limited form-control">${station.lng_price }</textarea>
 											</div>
 										</div>
-										</div>
+										</div><div class="form-group"><span
+								class="red_star">商品价格格式如：LNG：3.2元/KG，LCG：3.2元/KG</span>
+							</label>
+
+						 
+									</div>
 									</div>
 									<br/>
 									<div class="row">
