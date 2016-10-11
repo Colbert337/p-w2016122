@@ -498,7 +498,7 @@ public class CrmPortalController {
             }
         }
 
-        return "/webpage/crm/webapp-download-app";
+        return "redirect:/webpage/crm/webapp-download-app.jsp";
     }
 
     /**
@@ -511,7 +511,9 @@ public class CrmPortalController {
         try {
             if(token != null){
                 sysDriver = driverService.queryDriverByPK(token);
+                String invitationCode = "";
                 if(sysDriver != null){
+                    invitationCode = sysDriver.getInvitationCode();
                     String fullName = sysDriver.getFullName();
                     if(fullName != null && !"".equals(fullName)){
                         map.addAttribute("name",fullName);
@@ -523,7 +525,7 @@ public class CrmPortalController {
                         map.addAttribute("name",phoneNum);
                     }
                 }
-                map.addAttribute("invitationCode",sysDriver.getInvitationCode());
+                map.addAttribute("invitationCode",invitationCode);
                 map.addAttribute("sysDriver",sysDriver);
             }
         }catch (Exception e){
