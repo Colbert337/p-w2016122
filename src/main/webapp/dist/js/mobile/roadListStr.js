@@ -133,7 +133,7 @@ function shixiao(id) {
 				type : 'post',
 				data : {
 					id : id,
-					conditionStatus : '3'
+					conditionStatus : '0'
 				},
 				dataType : 'text',
 				success : function(data) {

@@ -34,8 +34,14 @@
 		</div>
 		<div class="section">
 			<div class="share">
-				<div class="app-intro-hd">介绍</div>
-				<div class="app-intro-bd">因为司集，所以司集！</div>
+				<div class="app-intro-bd">APP介绍：司集APP，货车出行必备神器。</br></br>
+					APP摘要：司集APP，全国三千万货车司机出行必备神器，提供最贴心的全国油气站导航、实时路况查询、加油加气优惠活动服务。</br></br>
+					APP特点：</br>
+					一、精准地图导航</br>
+					二、实时路况上报</br>
+					三、优惠活动</br>
+					四、账户安全管理</br>
+				</div>
 				<form class="app-intro-form" action="<%=basePath %>/portal/crm/help/suggest" method="post" id="appIntroFrom">
 					<div class="item">
 						<input id="title" name="title" tabIndex="1" class="txt required" type="text" class="txt" placeholder="Email / QQ / 微信 / 电话">
@@ -54,6 +60,16 @@
 <script src="<%=basePath %>/webpage/crm/js/jquery.easings.min.js"></script>
 <script src="<%=basePath %>/assets/js/jquery.validate.js"></script>
 <script src="<%=basePath %>/webpage/crm/js/webapp.js"></script>
-
+<script>
+	$.ajax({
+		url:"../../portal/crm/help/app/down",
+		data:{},
+		async:false,
+		type: "POST",
+		success: function(data){
+			console.log("APP下载统计成功！");
+		}
+	})
+</script>
 </body>
 </html>
