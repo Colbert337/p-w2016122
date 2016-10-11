@@ -94,11 +94,12 @@
 								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
 								<th>坐标</th>
+								<th>方向</th>
 								<th onclick="orderBy(this,'capture_time');commitForm();"
 									id="capture_time_order">拍照时间</th>
 								<th onclick="orderBy(this,'condition_msg');commitForm();"
 									id="condition_msg_order">路况说明</th>
-								<th onclick="orderBy(this,';commitForm();"
+								<th onclick="orderBy(this,'start_time');commitForm();"
 									id="start_time_order"><i
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>开始时间</th>
 								<th onclick="orderBy(this,'end_time');commitForm();"
@@ -142,7 +143,9 @@
 											test="${list.conditionStatus == '3' }">未通过</c:if></td>
 									<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
-									<td><div class="td-inner-warp">${list.captureLongitude},${list.captureLatitude }</div></td>
+									<td><div class="td-inner-warp">${list.longitude},${list.latitude }</div></td>
+									<td><s:Code2Name mcode="${list.direction}"
+											gcode="DIRECTION_CODE"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.captureTime}"
 											type="both" /></td>
 									<td><div class="td-inner-warp">${list.conditionMsg}</div></td>
@@ -250,16 +253,18 @@
 						<tr>
 							<th>坐标</th>
 							<td><div id="salesmen_name" name="show"></div></td>
+							<th>方向</th>
+							<td><div id="salesmen_name" name="show"></div></td>
+						</tr>
+						<tr>
 							<th>拍照时间</th>
 							<td><div id="operations_name" name="show"></div></td>
-						</tr>
-						<tr>
 							<th>路况说明</th>
 							<td><div id="admin_username" name="show"></div></td>
-							<th>开始时间</th>
-							<td><div id="indu_com_number" name="show"></div></td>
 						</tr>
 						<tr>
+							<th>开始时间</th>
+							<td><div id="indu_com_number" name="show"></div></td>
 							<th>结束时间</th>
 							<td colspan="3"><div id="status" name="show"></div></td>
 
