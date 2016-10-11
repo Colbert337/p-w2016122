@@ -15,6 +15,7 @@ import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.mobile.dao.MbAppVersionMapper;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcVehicle;
@@ -100,6 +101,8 @@ public class CrmPortalController {
     TransportionService transportionService;
     @Autowired
     TcVehicleService tcVehicleService;
+    @Autowired
+    MbAppVersionMapper mbAppVersionMapper;
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
@@ -497,10 +500,20 @@ public class CrmPortalController {
                 logger.info("验证码无效！");
             }
         }
-
+        mbAppVersionMapper.updateDownCount();//更新APP下载数
         return "redirect:/webpage/crm/webapp-download-app.jsp";
     }
 
+    /**
+     * 更新APP下载数
+     * @return
+     */
+    @RequestMapping("/app/down")
+    @ResponseBody
+    public String appDownCount(ModelMap map) throws Exception {
+        mbAppVersionMapper.updateDownCount();//更新APP下载数
+        return null;
+    }
     /**
      * 邀请用户页面内容
      * @return
