@@ -6,12 +6,14 @@
     <result column="url" property="url" jdbcType="VARCHAR" />
     <result column="version" property="version" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="down_count" property="downCount" jdbcType="INTEGER" />
     <result column="is_publish" property="isPublish" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    app_version_id, url, version, code, is_publish, remark, created_date
+    app_version_id, url, version, code, is_publish, remark, created_date ,status, down_count
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -82,26 +84,7 @@
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
     update mb_app_version
-    <set >
-      <if test="url != null" >
-        url = #{url,jdbcType=VARCHAR},
-      </if>
-      <if test="version != null" >
-        version = #{version,jdbcType=VARCHAR},
-      </if>
-      <if test="code != null" >
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="isPublish != null" >
-        is_publish = #{isPublish,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="createdDate != null" >
-        created_date = #{createdDate,jdbcType=TIMESTAMP},
-      </if>
-    </set>
+
     where app_version_id = #{appVersionId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
@@ -113,5 +96,10 @@
       remark = #{remark,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP}
     where app_version_id = #{appVersionId,jdbcType=VARCHAR}
+  </update>
+  <!--更新APP下载量-->
+  <update id="updateDownCount" >
+    update mb_app_version set down_count = down_count + 1
+    where status = 2
   </update>
 </mapper>

@@ -36,14 +36,14 @@ $('#roadform').bootstrapValidator({
 				}
 			}
 		},
-		startTime: {
+		address: {
 			validators: {
 				notEmpty: {
-					message: '开始时间不能为空'
+					message: '详细地址不能为空'
 				}
 			}
 		},
-		address: {
+		direction: {
 			validators: {
 				notEmpty: {
 					message: '详细地址不能为空'
@@ -72,13 +72,11 @@ $('.timebox').datetimepicker({
 
 function saveRoad(){
 	/*手动验证表单，当是普通按钮时。*/
-
-	if($("#conditionType").val()*1>5){
-		if($("#endTime_str").val()==""){
-			bootbox.alert("请选择结束时间");
-		}
-
+	if($("#startTime_str").val()==''){
+		bootbox.alert("开始日期不能为空！");
+		return;
 	}
+	
 	$('#roadform').data('bootstrapValidator').validate();
 	if(!$('#roadform').data('bootstrapValidator').isValid()){
 		return ;
