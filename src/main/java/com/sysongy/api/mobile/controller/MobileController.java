@@ -2870,7 +2870,12 @@ public class MobileController {
 						reChargeMap.put("conditionType", roadConditionInfo.getConditionType());
 						reChargeMap.put("longitude", roadConditionInfo.getLongitude());
 						reChargeMap.put("latitude", roadConditionInfo.getLatitude());
-						reChargeMap.put("conditionImg", http_poms_path + roadConditionInfo.getConditionImg());
+						String url = roadConditionInfo.getConditionImg();
+						//没有上传图片添加默认图片
+						if(url==null || "".equals(url)){
+							url = prop.get("default_img").toString();
+						}
+						reChargeMap.put("conditionImg", http_poms_path + url);
 						reChargeMap.put("address", roadConditionInfo.getAddress());
 						reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
 						reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
