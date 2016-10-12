@@ -68,7 +68,7 @@
 							<tr>
 								<th>方向</th>
 								<td><div >
-										<s:Code2Name mcode="${road.conditionType}"
+										<s:Code2Name mcode="${road.direction}"
 											gcode="DIRECTION_CODE"></s:Code2Name>
 									</div></td>
 

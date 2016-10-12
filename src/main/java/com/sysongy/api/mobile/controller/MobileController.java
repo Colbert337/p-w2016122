@@ -1386,139 +1386,231 @@ public class MobileController {
 			 */
 			String longitudeIn = "longitude";
 			String latitudeIn = "latitude";
-			String radius = "radius";
 			String infoType = "infoType";
-			String pageNum = "pageNum";
-			String pageSize = "pageSize";
-			boolean b = JsonTool.checkJson(mainObj, longitudeIn, latitudeIn, radius, infoType, pageNum, pageSize);
+			boolean b = JsonTool.checkJson(mainObj, longitudeIn, latitudeIn, infoType);
 
 			/**
 			 * 请求接口
 			 */
 			if (b) {
-				if (gastation.getPageNum() == null) {
-					gastation.setPageNum(GlobalConstant.PAGE_NUM);
-					gastation.setPageSize(GlobalConstant.PAGE_SIZE);
-				} else {
-					gastation.setPageNum(mainObj.optInt("pageNum"));
-					gastation.setPageSize(mainObj.optInt("pageSize"));
-				}
-
+				String radius = mainObj.optString("radius");
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
-				radius = GlobalConstant.ConditionType.STATION_RADIUS;
 				String name = mainObj.optString("name");
-				gastation.setGas_station_name(name);
-				Double longitude = new Double(0);
-				Double latitude = new Double(0);
-				Double radiusDb = new Double(0);
-				// 获取气站列表
-				List<Gastation> gastationList = new ArrayList<Gastation>();
-				List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
-				if (gastationAllList != null && gastationAllList.size() > 0) {
-					for (int i = 0; i < gastationAllList.size(); i++) {
-						if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null
-								&& !"".equals(latitudeStr) && radius != null && !"".equals(radius)) {
-							longitude = new Double(longitudeStr);
-							latitude = new Double(latitudeStr);
-							radiusDb = new Double(radius);
-
-							String longStr = gastationAllList.get(i).getLongitude();
-							String langStr = gastationAllList.get(i).getLatitude();
-							Double longDb = new Double(0);
-							Double langDb = new Double(0);
-							if (longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)) {
-								longDb = new Double(longStr);
-								langDb = new Double(langStr);
-							}
-							// 计算当前加注站离指定坐标距离
-							Double dist = DistCnvter.getDistance(longitude, latitude, longDb, langDb);
-							if (dist <= radiusDb) {// 在指定范围内，则返回当前加注站信息
-								gastationList.add(gastationAllList.get(i));
+				//范围为空，列表显示加分也
+				if(radius == null || "".equals(radius)){
+					if (gastation.getPageNum() == null) {
+						gastation.setPageNum(GlobalConstant.PAGE_NUM);
+						gastation.setPageSize(GlobalConstant.PAGE_SIZE);
+					} else {
+						gastation.setPageNum(mainObj.optInt("pageNum"));
+						gastation.setPageSize(mainObj.optInt("pageSize"));
+					}
+					gastation.setGas_station_name(name);
+					Double longitude = new Double(0);
+					Double latitude = new Double(0);
+					// 获取气站列表
+					List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
+					if (gastationAllList != null && gastationAllList.size() > 0) {
+						for (int i = 0; i < gastationAllList.size(); i++) {
+							if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+								longitude = new Double(longitudeStr);
+								latitude = new Double(latitudeStr);
+								String longStr = gastationAllList.get(i).getLongitude();
+								String langStr = gastationAllList.get(i).getLatitude();
+								Double longDb = new Double(0);
+								Double langDb = new Double(0);
+								if (longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)) {
+									longDb = new Double(longStr);
+									langDb = new Double(langStr);
+								}
+								// 计算当前加注站离指定坐标距离
+								Double dist = DistCnvter.getDistance(longitude, latitude, longDb, langDb);
+								gastationAllList.get(i).setDistance(dist);
 							}
 						}
-					}
-					System.out.println(gastationList.size());
-					int pNum = mainObj.optInt("pageNum");
-					int pSize = mainObj.optInt("pageSize");
-					if (pNum == 0) {
-						pNum = 1;
-					}
-					int x = pNum * pSize;
-					if (x > gastationList.size()) {
-						x = gastationList.size();
-					}
-					PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(
-							gastationList.subList((pNum - 1) * pSize, x));
-					List<Gastation> gastationList1 = pageInfo.getList();
-					List<Map<String, Object>> gastationArray = new ArrayList<>();
-					if (gastationList1 != null && gastationList1.size() > 0) {
-						for (Gastation gastationInfo : gastationList1) {
-							Map<String, Object> gastationMap = new HashMap<>();
-							gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
-							gastationMap.put("name", gastationInfo.getGas_station_name());
-							gastationMap.put("type", gastationInfo.getType());
-							gastationMap.put("longitude", gastationInfo.getLongitude());
-							gastationMap.put("latitude", gastationInfo.getLatitude());
-							Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",
-									gastationInfo.getType());
-							gastationMap.put("stationType", usysparam.getMname());
-							gastationMap.put("service",
-									gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
-							gastationMap.put("preferential",
-									gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
-							// 获取当前气站价格列表
-							// List<Map<String, Object>> priceList =
-							// gsGasPriceService.queryPriceList(gastationInfo.getSys_gas_station_id());
-							String price = gastationInfo.getLng_price();
-							if (price != null && !"".equals(price)) {
-								price = price.replaceAll("，", ",");
-								price = price.replaceAll("：", ":");
-								if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
-									String strArray[] = price.split(",");
-									Map[] map = new Map[strArray.length];
-									for (int i = 0; i < strArray.length; i++) {
-										String strInfo = strArray[i].trim();
-										String strArray1[] = strInfo.split(":");
-										String strArray2[] = strArray1[1].split("/");
-										Map<String, Object> dataMap = new HashMap<>();
-										dataMap.put("gasName", strArray1[0]);
-										dataMap.put("gasPrice", strArray2[0]);
-										dataMap.put("gasUnit", strArray2[1]);
-										map[i] = dataMap;
+						//按距离重新排序gastationAllList
+						Collections.sort(gastationAllList);
+						int pNum = mainObj.optInt("pageNum");
+						int pSize = mainObj.optInt("pageSize");
+						if (pNum == 0) {
+							pNum = 1;
+						}
+						int x = pNum * pSize;
+						if (x > gastationAllList.size()) {
+							x = gastationAllList.size();
+						}
+						PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList((pNum - 1) * pSize, x));
+						List<Gastation> gastationList1 = pageInfo.getList();
+						List<Map<String, Object>> gastationArray = new ArrayList<>();
+						if (gastationList1 != null && gastationList1.size() > 0) {
+							for (Gastation gastationInfo : gastationList1) {
+								Map<String, Object> gastationMap = new HashMap<>();
+								gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
+								gastationMap.put("name", gastationInfo.getGas_station_name());
+								gastationMap.put("type", gastationInfo.getType());
+								gastationMap.put("longitude", gastationInfo.getLongitude());
+								gastationMap.put("latitude", gastationInfo.getLatitude());
+								Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",
+										gastationInfo.getType());
+								gastationMap.put("stationType", usysparam.getMname());
+								gastationMap.put("service",
+										gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
+								gastationMap.put("preferential",
+										gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
+								// 获取当前气站价格列表
+								String price = gastationInfo.getLng_price();
+								if (price != null && !"".equals(price)) {
+									price = price.replaceAll("，", ",");
+									price = price.replaceAll("：", ":");
+									if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+										String strArray[] = price.split(",");
+										Map[] map = new Map[strArray.length];
+										for (int i = 0; i < strArray.length; i++) {
+											String strInfo = strArray[i].trim();
+											String strArray1[] = strInfo.split(":");
+											String strArray2[] = strArray1[1].split("/");
+											Map<String, Object> dataMap = new HashMap<>();
+											dataMap.put("gasName", strArray1[0]);
+											dataMap.put("gasPrice", strArray2[0]);
+											dataMap.put("gasUnit", strArray2[1]);
+											map[i] = dataMap;
+										}
+										gastationMap.put("priceList", map);
+									} else {
+										gastationMap.put("priceList", new ArrayList());
 									}
-									gastationMap.put("priceList", map);
 								} else {
 									gastationMap.put("priceList", new ArrayList());
 								}
-							} else {
-								gastationMap.put("priceList", new ArrayList());
+								gastationMap.put("phone", gastationInfo.getContact_phone());
+								if (gastationInfo.getStatus().equals("0")) {
+									gastationMap.put("state", "开启");
+								} else {
+									gastationMap.put("state", "关闭");
+								}
+								gastationMap.put("address", gastationInfo.getAddress());
+								String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="
+										+ gastationInfo.getSys_gas_station_id();
+								gastationMap.put("infoUrl", infoUrl);
+								gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="
+										+ gastationInfo.getSys_gas_station_id());
+								gastationArray.add(gastationMap);
 							}
-							gastationMap.put("phone", gastationInfo.getContact_phone());
-							if (gastationInfo.getStatus().equals("0")) {
-								gastationMap.put("state", "开启");
-							} else {
-								gastationMap.put("state", "关闭");
-							}
-							gastationMap.put("address", gastationInfo.getAddress());
-							String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="
-									+ gastationInfo.getSys_gas_station_id();
-							gastationMap.put("infoUrl", infoUrl);
-							gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="
-									+ gastationInfo.getSys_gas_station_id());
-							gastationArray.add(gastationMap);
-						}
-						result.setListMap(gastationArray);
+							result.setListMap(gastationArray);
 
+						} else {
+							result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
 					} else {
 						result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
 						result.setMsg("暂无数据！");
 						result.setListMap(new ArrayList<Map<String, Object>>());
 					}
-				} else {
-					result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
-					result.setMsg("暂无数据！");
-					result.setListMap(new ArrayList<Map<String, Object>>());
+				}else{//范围不为空，地图显示，不加分页
+					int inRadius = Integer.parseInt(radius.trim());
+					if(inRadius < 100000){
+						inRadius = 100000;
+					}
+					gastation.setGas_station_name(name);
+					Double longitude = new Double(0);
+					Double latitude = new Double(0);
+					Double radiusDb = new Double(0);
+					// 获取气站列表
+					List<Gastation> gastationList = new ArrayList<Gastation>();
+					List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
+					if (gastationAllList != null && gastationAllList.size() > 0) {
+						for (int i = 0; i < gastationAllList.size(); i++) {
+							if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null
+									&& !"".equals(latitudeStr) && radius != null && !"".equals(radius)) {
+								longitude = new Double(longitudeStr);
+								latitude = new Double(latitudeStr);
+								radiusDb = new Double(radius);
+								String longStr = gastationAllList.get(i).getLongitude();
+								String langStr = gastationAllList.get(i).getLatitude();
+								Double longDb = new Double(0);
+								Double langDb = new Double(0);
+								if (longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)) {
+									longDb = new Double(longStr);
+									langDb = new Double(langStr);
+								}
+								// 计算当前加注站离指定坐标距离
+								Double dist = DistCnvter.getDistance(longitude, latitude, longDb, langDb);
+								if (dist <= radiusDb) {// 在指定范围内，则返回当前加注站信息
+									gastationList.add(gastationAllList.get(i));
+								}
+							}
+						}
+						PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationList);
+						List<Gastation> gastationList1 = pageInfo.getList();
+						List<Map<String, Object>> gastationArray = new ArrayList<>();
+						if (gastationList1 != null && gastationList1.size() > 0) {
+							for (Gastation gastationInfo : gastationList1) {
+								Map<String, Object> gastationMap = new HashMap<>();
+								gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
+								gastationMap.put("name", gastationInfo.getGas_station_name());
+								gastationMap.put("type", gastationInfo.getType());
+								gastationMap.put("longitude", gastationInfo.getLongitude());
+								gastationMap.put("latitude", gastationInfo.getLatitude());
+								Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",
+										gastationInfo.getType());
+								gastationMap.put("stationType", usysparam.getMname());
+								gastationMap.put("service",
+										gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
+								gastationMap.put("preferential",
+										gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
+								// 获取当前气站价格列表
+								String price = gastationInfo.getLng_price();
+								if (price != null && !"".equals(price)) {
+									price = price.replaceAll("，", ",");
+									price = price.replaceAll("：", ":");
+									if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+										String strArray[] = price.split(",");
+										Map[] map = new Map[strArray.length];
+										for (int i = 0; i < strArray.length; i++) {
+											String strInfo = strArray[i].trim();
+											String strArray1[] = strInfo.split(":");
+											String strArray2[] = strArray1[1].split("/");
+											Map<String, Object> dataMap = new HashMap<>();
+											dataMap.put("gasName", strArray1[0]);
+											dataMap.put("gasPrice", strArray2[0]);
+											dataMap.put("gasUnit", strArray2[1]);
+											map[i] = dataMap;
+										}
+										gastationMap.put("priceList", map);
+									} else {
+										gastationMap.put("priceList", new ArrayList());
+									}
+								} else {
+									gastationMap.put("priceList", new ArrayList());
+								}
+								gastationMap.put("phone", gastationInfo.getContact_phone());
+								if (gastationInfo.getStatus().equals("0")) {
+									gastationMap.put("state", "开启");
+								} else {
+									gastationMap.put("state", "关闭");
+								}
+								gastationMap.put("address", gastationInfo.getAddress());
+								String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="
+										+ gastationInfo.getSys_gas_station_id();
+								gastationMap.put("infoUrl", infoUrl);
+								gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="
+										+ gastationInfo.getSys_gas_station_id());
+								gastationArray.add(gastationMap);
+							}
+							result.setListMap(gastationArray);
+						} else {
+							result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
+					} else {
+						result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+						result.setMsg("暂无数据！");
+						result.setListMap(new ArrayList<Map<String, Object>>());
+					}
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2737,26 +2829,20 @@ public class MobileController {
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			// 创建对象
 			SysRoadCondition roadCondition = new SysRoadCondition();
-			/**
-			 * 必填参数
-			 */
-			String pageNum = "pageNum";
-			String pageSize = "pageSize";
-			boolean b = JsonTool.checkJson(mainObj, pageNum, pageSize);
+			boolean b = false;
+			if(mainObj != null && !"".equals(mainObj)){
+				b=true;
+			}
 			/**
 			 * 请求接口
 			 */
 			if (b) {
-				if (roadCondition.getPageNum() == null) {
-					roadCondition.setPageNum(GlobalConstant.PAGE_NUM);
-					roadCondition.setPageSize(GlobalConstant.PAGE_SIZE);
-				} else {
-					roadCondition.setPageNum(mainObj.optInt("pageNum"));
-					roadCondition.setPageSize(mainObj.optInt("pageSize"));
-				}
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
-				String radius = GlobalConstant.ConditionType.ROAD_RADIUS;
+				String radius = mainObj.optString("radius");
+				if(Integer.parseInt(radius)<100000){
+					radius="100000";
+				}
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
 				Double radiusDb = new Double(0);
@@ -2768,22 +2854,17 @@ public class MobileController {
 				List<SysRoadCondition> roadIdList = sysRoadService.queryRoadIDList();
 				List<SysRoadCondition> redisList = new ArrayList<>();
 				for (int i = 0; i < roadIdList.size(); i++) {
-					SysRoadCondition sysRoadCondition = (SysRoadCondition) redisClientImpl
-							.getFromCache("Road" + roadIdList.get(i).getId());
+					SysRoadCondition sysRoadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId());
 					if (sysRoadCondition != null) {
 						redisList.add(sysRoadCondition);
 					}
 				}
-				// 设置页码
-				PageHelper.startPage(roadCondition.getPageNum(), roadCondition.getPageSize(),
-						roadCondition.getOrderby());
-				PageInfo<SysRoadCondition> pageInfo = new PageInfo<SysRoadCondition>(redisList);
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
 				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				String http_poms_path = (String) prop.get("http_poms_path");
-				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
-					for (SysRoadCondition roadConditionInfo : pageInfo.getList()) {
+				if (redisList != null && redisList.size() > 0) {
+					for (SysRoadCondition roadConditionInfo : redisList) {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("roadId", roadConditionInfo.getId());
 						reChargeMap.put("conditionType", roadConditionInfo.getConditionType());
