@@ -549,7 +549,7 @@ public class GlobalConstant {
 		public static final String ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN = "账号已冻结！";
 		public static final String ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN = "该卡已冻结！";
 		
-		public static final String DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT = "该司机未实名认证，并且累计充值已经大于"+DRIVER_NOT_CERTIFICATE_LIMIT.toString();
+		public static final String DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT = "该司机未实名认证，充值金额不能大于"+DRIVER_NOT_CERTIFICATE_LIMIT.toString();
 		public static final String DRIVER_NOT_CERTIFICATE = "该司机未实名认证。";
 		
 		public static final String ORDER_ACCOUNT_VERSION_HAVE_CHANGED = "ORDER_ACCOUNT_VERSION_HAVE_CHANGED";
