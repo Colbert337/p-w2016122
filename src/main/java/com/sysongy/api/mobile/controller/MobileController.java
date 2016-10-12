@@ -634,7 +634,6 @@ public class MobileController {
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				password = mainObj.optString("password");
 				if (password != null && !"".equals(password)) {
-					password = Encoder.MD5Encode(password.getBytes());
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
 
