@@ -233,8 +233,12 @@ public class CrmPortalController {
         }
 
         String info = gastation.getPromotions();
+        String server = gastation.getGas_server();
         if(info==null||"".equals(info)){
         	gastation.setPromotions("暂无");
+        }
+        if(server==null||"".equals(server)){
+        	gastation.setGas_server("暂无");
         }
         map.addAttribute("gastation",gastation);
         map.addAttribute("priceList",priceArray);
@@ -415,21 +419,21 @@ public class CrmPortalController {
         Gastation gastation = gastationService.queryGastationByPK(stationId);
         //获取当前气站价格列表
         String price = gastation.getLng_price();
-        price = price.replaceAll("，",",");
-        price = price.replaceAll("：",":");
         List<Map<String,Object>> priceArray = new ArrayList<>();
-        if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1) {
-            String strArray[] = price.split(",");
-
-            for (int i = 0; i < strArray.length; i++) {
-                Map<String, Object> dataMap = new HashMap<>();
-                dataMap.put("priceName", strArray[i]);
-                priceArray.add(dataMap);
-            }
+        if(price != null && !"".equals(price)){
+	        price = price.replaceAll("，",",");
+	        price = price.replaceAll("：",":");
+	        if(price.indexOf(":")!=-1 && price.indexOf("/")!=-1) {
+	            String strArray[] = price.split(",");
+	            for (int i = 0; i < strArray.length; i++) {
+	                Map<String, Object> dataMap = new HashMap<>();
+	                dataMap.put("priceName", strArray[i]);
+	                priceArray.add(dataMap);
+	            }
+	        }
         }
         map.addAttribute("gastation",gastation);
         map.addAttribute("priceList",priceArray);
-
         //统计分享数
         String viewCount = gastation.getViewCount();
         viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
@@ -494,7 +498,7 @@ public class CrmPortalController {
             }
         }
 
-        return "/webpage/crm/webapp-download-app";
+        return "redirect:/webpage/crm/webapp-download-app.jsp";
     }
 
     /**
@@ -507,7 +511,9 @@ public class CrmPortalController {
         try {
             if(token != null){
                 sysDriver = driverService.queryDriverByPK(token);
+                String invitationCode = "";
                 if(sysDriver != null){
+                    invitationCode = sysDriver.getInvitationCode();
                     String fullName = sysDriver.getFullName();
                     if(fullName != null && !"".equals(fullName)){
                         map.addAttribute("name",fullName);
@@ -519,7 +525,7 @@ public class CrmPortalController {
                         map.addAttribute("name",phoneNum);
                     }
                 }
-                map.addAttribute("invitationCode",sysDriver.getInvitationCode());
+                map.addAttribute("invitationCode",invitationCode);
                 map.addAttribute("sysDriver",sysDriver);
             }
         }catch (Exception e){
