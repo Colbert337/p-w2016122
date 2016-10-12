@@ -332,7 +332,8 @@ public class CrmPortalController {
 
         String http_poms_path =  (String) prop.get("http_poms_path");
         String url = roadCondition.getConditionImg();
-        if(url!=null ||!"".equals(url)){
+        String msg = roadCondition.getConditionMsg();
+        if(url!=null && !"".equals(url) && !prop.get("default_img").toString().equals(url)){
         	url = http_poms_path+url;
         }else{
         	url=null;
@@ -342,7 +343,8 @@ public class CrmPortalController {
     	map.addAttribute("roadCondition", roadCondition);
         map.addAttribute("name",name);
         map.addAttribute("conditionType",conditionType);
-        map.addAttribute("conditionMsg",url);
+        map.addAttribute("conditionMsg",msg);
+        map.addAttribute("conditionImg",url);
         map.addAttribute("conditionType", usysparam.getMname());
         map.addAttribute("direction", usysparam1.getMname());
         return "/webpage/crm/webapp-traffic-detail";
