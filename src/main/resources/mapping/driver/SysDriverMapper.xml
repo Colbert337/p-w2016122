@@ -101,7 +101,7 @@
         and checked_status = #{checkedStatus,jdbcType=VARCHAR}
       </if>
       <if test="userName != null &amp;&amp; userName != ''">
-        and user_name = #{userName,jdbcType=INTEGER}
+        and user_name = #{userName,jdbcType=VARCHAR}
       </if>
       <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">
         and sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
@@ -171,7 +171,7 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
         and sd.checked_status = #{checkedStatus,jdbcType=VARCHAR}
       </if>
       <if test="userName != null &amp;&amp; userName != ''">
-        and sd.user_name = #{userName,jdbcType=INTEGER}
+        and sd.user_name = #{userName,jdbcType=VARCHAR}
       </if>
       <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">
         and sd.sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
