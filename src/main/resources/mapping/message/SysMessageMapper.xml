@@ -64,7 +64,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from sys_message
-		where 1=1  and is_delete='1'
+		where 1=1  and is_delete='1' and message_group ='1000'
 		<trim>
 			<if test="messageType != null &amp;&amp; messageType != ''">
 				and message_type = #{messageType,jdbcType=VARCHAR}
