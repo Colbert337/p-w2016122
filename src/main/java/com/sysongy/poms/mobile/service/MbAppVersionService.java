@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.model.MbAppVersion;
 import com.sysongy.poms.mobile.model.MbBanner;
 
+import java.text.ParseException;
+
 
 public interface MbAppVersionService {
 
@@ -17,7 +19,7 @@ public interface MbAppVersionService {
 
     int updateByPrimaryKeySelective(MbAppVersion record);
 
-    int updateByPrimaryKey(MbAppVersion record);
+    int updateByPrimaryKey(MbAppVersion record) throws ParseException;
 
     PageInfo<MbAppVersion> queryAppVersionListPage(MbAppVersion record) throws Exception;
 

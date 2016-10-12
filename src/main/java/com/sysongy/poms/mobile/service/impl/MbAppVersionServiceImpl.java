@@ -11,6 +11,8 @@ import com.sysongy.poms.mobile.service.MbBannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -34,14 +36,20 @@ public class MbAppVersionServiceImpl implements MbAppVersionService {
     }
 
     public  MbAppVersion selectByPrimaryKey(String appVersionId){
-        return mbAppVersionMapper.selectByPrimaryKey(appVersionId);
+        MbAppVersion  m= mbAppVersionMapper.selectByPrimaryKey(appVersionId);
+        if(m==null){
+            return  m;
+        }
+        m.setCreatedDateStr(new SimpleDateFormat("yyyy-MM-dd").format(m.getCreatedDate()));
+        return m;
     }
 
     public  int updateByPrimaryKeySelective(MbAppVersion record){
         return  mbAppVersionMapper.updateByPrimaryKeySelective(record);
     }
 
-    public int updateByPrimaryKey(MbAppVersion record){
+    public int updateByPrimaryKey(MbAppVersion record) throws ParseException {
+        record.setCreatedDate(new SimpleDateFormat("yyyy-MM-dd").parse(record.getCreatedDateStr()));
         return  mbAppVersionMapper.updateByPrimaryKey(record);
     }
 
@@ -51,6 +59,9 @@ public class MbAppVersionServiceImpl implements MbAppVersionService {
         if(record != null){
             PageHelper.startPage(record.getPageNum(),record.getPageSize(),record.getOrderby());
             List<MbAppVersion> MbAppVersionList = mbAppVersionMapper.queryAppVersionList(record);
+            for(MbAppVersion mv:MbAppVersionList){
+                mv.setCreatedDateStr(new SimpleDateFormat("yyyy-MM-dd").format(mv.getCreatedDate()));
+            }
             PageInfo<MbAppVersion> fleetPageInfo = new PageInfo<>(MbAppVersionList);
             return fleetPageInfo;
         }else{

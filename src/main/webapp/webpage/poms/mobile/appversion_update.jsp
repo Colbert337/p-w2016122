@@ -10,6 +10,11 @@
 			+ path;
 	String imagePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 %>
+
+<link href="<%=basePath%>/common/uploadify/uploadify.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<%=basePath%>/common/uploadify/swfobject.js"></script>
+<script type="text/javascript" src="<%=basePath%>/common/uploadify/jquery.uploadify.v2.1.4.min.js"/>
+
 <script type="text/javascript"
 	src="<%=basePath%>/assets/js/date-time/moment.js"></script>
 <script type="text/javascript"
@@ -38,6 +43,9 @@
 	class="ace-main-stylesheet" id="main-ace-style" />
 
 <link rel="stylesheet" href="<%=basePath%>/common/css/fileinput.css" />
+
+
+
 
 <!-- /section:basics/sidebar -->
 <div class="main-content">
@@ -93,7 +101,7 @@
 
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								for="url"> <span class="red_star">*</span> 下载地址：
+								for="url">   下载地址：
 							</label>
 							<div class="col-sm-8">
 								<input name="url" id="url" style="resize: none;"
@@ -102,24 +110,78 @@
 									class="col-xs-10 col-sm-12 limited form-control" />
 							</div>
 						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right"
+								   for="version">   版本信息：
+							</label>
+							<div class="col-sm-8">
+								<input name="version" id="version" style="resize: none;"
 
+									   value="${mbAppVersion.version }"
+									   class="col-xs-10 col-sm-12 limited form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right"
+								   for="code">   版本号：
+							</label>
+							<div class="col-sm-8">
+								<input name="code" id="code" style="resize: none;"
 
+									   value="${mbAppVersion.code }"
+									   class="col-xs-10 col-sm-12 limited form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right"
+								   for="isPublish">   是否发布：
+							</label>
+							<div class="col-sm-8">
+								<%--<input name="isPublish" id="isPublish" style="resize: none;"
 
-
-
+									   value="${mbAppVersion.isPublish }"
+									   class="col-xs-10 col-sm-12 limited form-control" />--%>
+								<select name="isPublish" title="状态">
+									<option value="1" <c:if test="${mbAppVersion.isPublish == '1' }">selected</c:if> >是</option>
+									<option value="0" <c:if test="${mbAppVersion.isPublish == '0' }">selected</c:if> >否</option>
+								</select>
+							</div>
+						</div>
 
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								for="remark"> 备注： </label>
+								   for="remark"> 备注： </label>
 							<div class="col-sm-8">
 								<textarea name="remark" id="remark" style="resize: none;"
-									maxlength="100" placeholder="备注"
-									class="col-xs-10 col-sm-12 limited form-control">${mbAppVersion.remark}</textarea>
+										  maxlength="100" placeholder="备注"
+										  class="col-xs-10 col-sm-12 limited form-control">${mbAppVersion.remark}</textarea>
 							</div>
 						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="createdDateStr">添加时间： </label>
+							<div class="col-sm-4 datepicker-noicon">
+								<div class="input-group">
+									<input class="form-control date-picker" name="createdDateStr" id="createdDateStr" type="text" readonly="readonly" data-date-format="yyyy-mm-dd"  value="${mbAppVersion.createdDateStr}"/>
+													<span class="input-group-addon">
+														<i class="fa fa-calendar bigger-110"></i>
+													</span>
+								</div>
+							</div>
+						</div>
+
 						<input type="hidden" id="appVersionId" name="appVersionId"
 							value="${mbAppVersion.appVersionId}" />
 					</form>
+
+				<%--	<div class="showImg">
+						<img class="showImgs" width="100" height="100" alt="" src="easy/js/uploadify/default_image.gif">
+					</div>--%>
+					<input type="file" name="uploadify" id="uploadify" style="width:200px;"/>
+					<p><a href="javascript: jQuery('#uploadify').uploadifyUpload()">开始上传</a></p>
+
+
+
 					<div class="clearfix form-actions">
 						<div class="col-md-offset-3 col-md-9">
 
@@ -129,11 +191,11 @@
 							</button>
 							&nbsp; &nbsp; &nbsp;
 
-							<button class="btn" id="clear" type="button" onclick="clear1();">
+						<%--	<button class="btn" id="clear" type="button" onclick="clear1();">
 								<i class="ace-icon fa fa-repeat bigger-110"></i> 重置
 							</button>
 							&nbsp; &nbsp; &nbsp;
-
+--%>
 							<button class="btn btn-success" type="button" onclick="init();">
 								<i class="ace-icon fa fa-undo bigger-110"></i> 返回
 							</button>
@@ -154,34 +216,10 @@
 </div>
 
 <script type="text/javascript">
-	//获取主机地址，如： http://localhost:8080
-	var localhostPaht = curWwwPath.substring(0, pos);
-	var projectfileoptions = {
-		showUpload : false,
-		showRemove : false,
-		language : 'zh',
-		allowedPreviewTypes : [ 'image' ],
-		allowedFileExtensions : [ 'jpg', 'png', 'gif', 'jepg' ],
-		maxFileSize : 1000,
-	}
-	// 文件上传框
-	$('input[class=projectfile]').each(function() {
-		var imageurl = $(this).attr("value");
 
-		if (imageurl) {
-			var op = $.extend({
-				initialPreview : [ // 预览图片的设置
-				"<img src='" + imageurl + "' class='file-preview-image'>", ]
-			}, projectfileoptions);
-
-			$(this).fileinput(op);
-		} else {
-			$(this).fileinput(projectfileoptions);
-		}
-	});
 
 	// bootstrap验证控件
-	$('#editForm').bootstrapValidator({
+	/*$('#editForm').bootstrapValidator({
 		message : 'This value is not valid',
 		feedbackIcons : {
 			valid : 'glyphicon glyphicon-ok',
@@ -189,7 +227,7 @@
 			validating : 'glyphicon glyphicon-refresh'
 		},
 		fields : {
-			title : {
+			/!*title : {
 				validators : {
 					notEmpty : {
 						message : '标题不能为空'
@@ -216,103 +254,25 @@
 						message : '顺序不能为空'
 					}
 				}
-			}
+			}*!/
 		}
 	});
+*/
 
-	var photoType = 0;
-	var phototypeSm = 0;
-	function savePhoto(fileobj, obj, obj1, obj2) {
 
-		$(fileobj).parents("div").find("input[name=uploadfile]").each(
-				function() {
-					$(this).attr("name", "");
-				});
-		$(fileobj).parent("div").find("input:first").attr("name", "uploadfile");
-		if ($(obj).val() == null || $(obj).val() == "") {
-			bootbox.alert("请先上传文件");
-			return;
-		}
-		if ("#img_path" == obj1) {
-			if($(obj)[0].files[0].size/1024>100){
-				bootbox.alert("图片大小过大，请重新上传");
-				return;
-			}
-			photoType = 1;
-		}
-		if ("#img_sm_path" == obj1) {
-			if($(obj)[0].files[0].size/1024>50){
-				bootbox.alert("图片大小过大，请重新上传");
-				return;
-			}
-			phototypeSm = 1;
-		}
-		
-
-		var stationId = "mobile";
-		var multipartOptions = {
-			url : '../crmInterface/crmBaseService/web/upload?stationid='
-					+ stationId,
-			type : 'post',
-			dataType : 'text',
-			enctype : "multipart/form-data",
-			success : function(data) {
-				var s = JSON.parse(data);
-				if (s.success == true) {
-					var a=s.obj.substring(s.obj.indexOf('/')+1,s.obj.length);
-					$(obj2).hide();
-					bootbox.alert("上传成功");
-					$(obj1).val(a.substring(a.indexOf('/'),a.length));
-				}
-
-			},
-			error : function(XMLHttpRequest, textStatus, errorThrown) {
-				bootbox.alert("上传成功");
-			}
-		}
-		$("#editForm").ajaxSubmit(multipartOptions);
-
-	}
-
-	function saveBanner() {
-		$('#editForm').data('bootstrapValidator').validate();
+	function saveAppVersion() {
+		/*$('#editForm').data('bootstrapValidator').validate();
 		if (!$('#editForm').data('bootstrapValidator').isValid()) {
 			return;
-		}
+		}*/
 
-		// alert( $("#editForm").is(":visible")); //是否可见)
-		var cityName = "";
-		var cityId = "";
-		$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
-			if (0 == i) {
-				cityName = $(this).attr("values");
-				cityId = $(this).attr("value2");
-			} else {
-				cityName += ("," + $(this).attr("values"));
-				cityId += ("," + $(this).attr("value2"));
-			}
-		});
 
-		// var file=$("#indu_com_certif_select").val();
-		if (photoType != 1) {
-			bootbox.alert("请上传图片");
-			return;
-		}
-		if (phototypeSm != 1) {
-			bootbox.alert("请上传缩略图图片");
-			return;
-		}
+
 
 		var saveOptions = {
-			url : '../web/mobile/img/save',
+			url : '../web/mobile/appversion/save',
 			type : 'post',
 			dataType : 'html',
-			data : {
-				// version : spCodesTemp,// 版本号 目前不需要
-				city_id : cityId,
-				city_name : cityName
-
-			},
 			success : function(data) {
 				$("#main").html(data);
 				$("#modal-table").modal("show");
@@ -328,172 +288,54 @@
 
 	}
 	
-	function clear1(){
-	//	console.log('1111');
-	//	location.href=location.href;
-		$.ajax({
-			url : "../web/mobile/img/fondone",
-			data : {
-				imgType:$("[name=imgType]").val()
-			},
-			async : false,
-			type : "POST",
-			success : function(data) {
-				$("#main").html(data);
-			}
-		})
-	}
+
 	
-	jQuery(function($) {
-		if ("${mbBanner.mbBannerId}" == "") {
-			$("#show_img").hide();
-			$("#show_sm_img").hide();
-			$("#imgType").val("${imgType }");
-			$("#clear").show();
-			
-		} else {
-			$("#show_img").show();
-			$("#show_sm_img").show();
-			$("#clear").hide();
-			var datas = '${mbBanner.city_id}'.split(',');
-			for (var i = 0; i < datas.length; i++) {
-				eval("$('#c" + datas[i] + "').attr('checked',true);");
-			}
-			checkedclick();
-			$("#show_img").attr("src", '<%=basePath%>' + '${mbBanner.imgPath}');
-			$("#show_sm_img").attr("src",'<%=basePath%>' + '${mbBanner.imgSmPath}');
-			photoType = 1;
-			phototypeSm = 1;
-		}
-		if ('${mbBanner.targetUrl }' != '') {
-			$('#target_url').val(
-					'${mbBanner.targetUrl }'.substr('${mbBanner.targetUrl }'
-							.indexOf('/portal/crm/help/showPage?pageid='),
-							'${mbBanner.targetUrl }'.length));
-			
-		}
-		var $overflow = '';
-		var colorbox_params = {
-			rel : 'colorbox',
-			reposition : true,
-			scalePhotos : true,
-			scrolling : false,
-			previous : '<i class="ace-icon fa fa-arrow-left"></i>',
-			next : '<i class="ace-icon fa fa-arrow-right"></i>',
-			close : '&times;',
-			current : '{current} of {total}',
-			maxWidth : '100%',
-			maxHeight : '100%',
-			onOpen : function() {
-				"'--"
-				$overflow = document.body.style.overflow;
-				document.body.style.overflow = 'hidden';
-			},
-			onClosed : function() {
-				document.body.style.overflow = $overflow;
-			},
-			onComplete : function() {
-				$.colorbox.resize();
-			}
-		};
 
-		$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-		$("#cboxLoadingGraphic").html(
-				"<i class='ace-icon fa fa-spinner orange fa-spin'></i>");// let's
-		// add a
-		// custom
-		// loading
-		// icon
 
-		$(document).one('ajaxloadstart.page', function(e) {
-			$('#colorbox, #cboxOverlay').remove();
-		});
 
-		$('.j-android-versions .btn').on('click', function() {
-			var $parent = $(this).parent();
-			if ($parent.hasClass('open')) {
-				$parent.removeClass('open');
-			} else {
-				$parent.addClass('open');
-			}
-		});
-	})
 
-	function saveBanner() {
-		$('#editForm').data('bootstrapValidator').validate();
-		if (!$('#editForm').data('bootstrapValidator').isValid()) {
-			return;
-		}
-
-		// alert( $("#editForm").is(":visible")); //是否可见)
-		var cityName = "";
-		var cityId = "";
-		$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
-			if (0 == i) {
-				cityName = $(this).attr("values");
-				cityId = $(this).attr("value2");
-			} else {
-				cityName += ("," + $(this).attr("values"));
-				cityId += ("," + $(this).attr("value2"));
-			}
-		});
-
-		// var file=$("#indu_com_certif_select").val();
-		if (photoType != 1) {
-			bootbox.alert("请上传图片");
-			return;
-		}
-		if (phototypeSm != 1) {
-			bootbox.alert("请上传缩略图图片");
-			return;
-		}
-
-		var saveOptions = {
-			url : '../web/mobile/img/save',
-			type : 'post',
-			dataType : 'html',
-			data : {
-				// version : spCodesTemp,// 版本号 目前不需要
-				city_id : cityId,
-				city_name : cityName
-
-			},
-			success : function(data) {
-				$("#main").html(data);
-				$("#modal-table").modal("show");
-			},
-			error : function(XMLHttpRequest, textStatus, errorThrown) {
-				bootbox.alert("操作失败！");
-			}
-		}
-		$("#editForm").ajaxSubmit(saveOptions);
-		init();
-	}
-
-	function checkedclick() {
-		console.log('checked')
-		var isok = true;
-		var cityNameList = "";
-		$('.checked').each(function(index, obj) {
-			if (!$(obj).is(':checked')) {
-				isok = false;
-			} else {
-				cityNameList += $(obj).attr('values') + ",";
-			}
-		})
-		if (cityNameList.length != 0) {
-			cityNameList = cityNameList.substring(0, cityNameList.length - 1)
-		}
-		$('#cityNameList').text(cityNameList);
-		if (isok) {
-			$("#allche").prop("checked", true);
-		} else {
-			$("#allche").prop("checked", false);
-		}
-	}
 
 	function init() {
-		loadPage('#main', '../web/mobile/img/list/page?imgType='
-				+ $("[name=imgType]").val());
+		loadPage('#main', '../web/mobile/appversion/list/page');
 	}
+
+
+	//datepicker plugin
+	$('.date-picker').datepicker({
+		autoclose: true,
+		todayHighlight: true,
+		language: 'cn'
+	}).next().on(ace.click_event, function(){
+		$(this).prev().focus();
+	});
+
+
+
+
+//官方网址：http://www.uploadify.com/
+			$(document).ready(function(){
+				$("#uploadify").uploadify({
+					'uploader' : "<%=basePath%>/common/uploadify/uploadify.swf",
+					'script'    : "<%=basePath%>/web/mobile/appversion/uploadFile",
+					'cancelImg' : "<%=basePath%>/common/uploadify/cancel.png",
+					'folder' : "<%=basePath%>/null/",//上传文件存放的路径,请保持与uploadFile.jsp中PATH的值相同
+					'queueId' : "fileQueue",
+					'queueSizeLimit' : 10,//限制上传文件的数量
+					'fileExt' : "*.apk,*.apk",
+					'fileDesc' : "APK *.apk",//限制文件类型
+					'auto'  : false,
+					'multi'  : true,//是否允许多文件上传
+					'simUploadLimit': 2,//同时运行上传的进程数量
+					'buttonText': " select files",
+					'onComplete': function(event, ID, fileObj, response, data) {
+						//response返回值：重命名后的文件名称,文件保存路径
+						var resultArray = response.split(",");
+						var realName = resultArray[0];//图片现在的名称，前面加上时间的图片名称，带扩展名
+						realName = $.trim(realName);
+						var p = "<%=basePath%>/null/"+realName;
+						$(".showImgs").attr("src",p);
+					}
+				});
+			});
+
 </script>

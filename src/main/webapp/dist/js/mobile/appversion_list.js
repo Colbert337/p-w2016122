@@ -34,6 +34,23 @@ function choose(obj) {
 	commitForm();
 }
 
+
+function mbAppVersionAdd(imgId){
+
+
+
+	$.ajax({
+		url : "../web/mobile/appversion/findoneForUpdate",
+		async : false,
+		type : "POST",
+		success : function(data) {
+			$("#main").html(data);
+		}
+	})
+
+
+}
+
 /* 分页相关方法 end */
 // 显示添加用户弹出层add
 function addBanner() {
@@ -60,16 +77,16 @@ function addBanner() {
 }
 
 /**
- * 删除图片
+ * 删除版本信息
  */
-function deleteBanner(imgId) {
+function deleteAppVersion (appVersionId) {
 	bootbox.setLocale("zh_CN");
-	bootbox.confirm("确认要删除图片吗？", function(result) {
+	bootbox.confirm("确认要删除吗？", function(result) {
 		if (result) {
 			var deleteOptions = {
 				url : '../web/mobile/appversion/delete',
 				data : {
-					mbBannerId : imgId
+					appVersionId : appVersionId
 				},
 				type : 'post',
 				dataType : 'text',
@@ -173,15 +190,11 @@ function checkedchange(obj) {
 }
 
 function versionUpdate(appVersionId){
-	
-
-	photoType = 1;
-	phototypeSm = 1;
-	type = 1;
+	var appVersionId=appVersionId;
 	$.ajax({
 		url : "../web/mobile/appversion/findoneForUpdate",
 		data : {
-			appVersionId : appVersionId
+			appVersionId: appVersionId
 		},
 		async : false,
 		type : "POST",
@@ -237,34 +250,13 @@ function showInnerModel(obj1, obj2, tr) {
  * 保存图片信息
  */
 
-function saveBanner() {
+/*function saveBanner() {
 	$('#editForm').data('bootstrapValidator').validate();
 	if (!$('#editForm').data('bootstrapValidator').isValid()) {
 		return;
 	}
 
-	// alert( $("#editForm").is(":visible")); //是否可见)
-	var cityName = "";
-	var cityId = "";
-	$('input:checkbox[name=form-field-checkbox]:checked').each(function(i) {
-		if (0 == i) {
-			cityName = $(this).attr("values");
-			cityId = $(this).attr("value2");
-		} else {
-			cityName += ("," + $(this).attr("values"));
-			cityId += ("," + $(this).attr("value2"));
-		}
-	});
 
-	// var file=$("#indu_com_certif_select").val();
-	if (photoType != 1) {
-		bootbox.alert("请上传图片");
-		return;
-	}
-	if (phototypeSm != 1) {
-		bootbox.alert("请上传缩略图图片");
-		return;
-	}
 
 	var saveOptions = {
 		url : '../web/mobile/appversion/save',
@@ -289,7 +281,7 @@ function saveBanner() {
 	$("#editModel").modal('hide');
 	$(".modal-backdrop").css("display", "none");
 
-}
+}*/
 
 var projectfileoptions = {
 	showUpload : false,
@@ -348,7 +340,7 @@ $('#editForm').bootstrapValidator({
 	}
 });
 
-var photoType = 0;
+/*var photoType = 0;
 var phototypeSm = 0;
 function savePhoto(fileobj, obj, obj1, obj2) {
 
@@ -389,7 +381,7 @@ function savePhoto(fileobj, obj, obj1, obj2) {
 	}
 	$("#editForm").ajaxSubmit(multipartOptions);
 
-}
+}*/
 /**
  * 文件上传验证
  */

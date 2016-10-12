@@ -23,6 +23,35 @@ public class MbAppVersion  extends BaseModel {
 
     private Date createdDate;
 
+    private String createdDateStr;
+
+    private String created_date_sel;//用于查询的虚拟字段
+    private String updated_date_sel;//用于查询的虚拟字段
+
+    public String getCreated_date_sel() {
+        return created_date_sel;
+    }
+
+    public void setCreated_date_sel(String created_date_sel) {
+        this.created_date_sel = created_date_sel;
+    }
+
+    public String getUpdated_date_sel() {
+        return updated_date_sel;
+    }
+
+    public void setUpdated_date_sel(String updated_date_sel) {
+        this.updated_date_sel = updated_date_sel;
+    }
+
+    public String getCreatedDateStr() {
+        return createdDateStr;
+    }
+
+    public void setCreatedDateStr(String createdDateStr) {
+        this.createdDateStr = createdDateStr;
+    }
+
     public String getAppVersionId() {
         return appVersionId;
     }
