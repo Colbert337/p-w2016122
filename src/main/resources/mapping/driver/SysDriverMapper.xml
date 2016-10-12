@@ -132,7 +132,7 @@
     select
      *
     from sys_driver
-    where 1=1 and  device_token is not null 
+    where 1=1 and  device_token is not null and device_token <![CDATA[<>]]> ""
     <trim>
        
       <if test="fullName!= null &amp;&amp; fullName != ''" >
