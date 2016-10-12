@@ -790,13 +790,17 @@ public class MobileController {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("验证码为空！");
 				} else {
-					Map<String, Object> resultMap = new HashMap<>();
-					driver.setSysDriverId(sysDriverId);
-					driver.setPayCode(mainObj.optString("paycode"));
-
-					driverService.saveDriver(driver, "update", null);// 设置支付密码
+					String	veCode = (String) redisClientImpl.getFromCache(mainObj.optString("token"));
+					if (veCode != null && !"".equals(veCode)) {
+						Map<String, Object> resultMap = new HashMap<>();
+						driver.setSysDriverId(sysDriverId);
+						driver.setPayCode(mainObj.optString("paycode"));
+						driverService.saveDriver(driver, "update", null);// 设置支付密码
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("验证码无效！");
+					}
 				}
-
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
