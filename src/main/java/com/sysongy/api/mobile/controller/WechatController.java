@@ -488,7 +488,8 @@ public class WechatController {
 						driverOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);//操作对象类型
 						driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
 						driverOrder.setOrderStatus(0);//订单初始化
-						driverOrder.setChannel("微信充值");
+						driverOrder.setChannel("微信VIP充值");
+						driverOrder.setChannelNumber("微信VIP充值");
 						driverOrder.setOrderDate(new Date());
 						int nCreateOrder = orderService.insert(driverOrder, null);
 						if(nCreateOrder>0){
@@ -564,8 +565,8 @@ public class WechatController {
 		 **/
 		Date curDate = new Date();
 		record.setOrderDate(curDate);
-		record.setChannel("司集能源APP");
-		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
+		record.setChannel("微信VIP充值");
+		record.setChannelNumber("微信VIP充值");   //建立一个虚拟的APP气站，方便后期统计
 		return record;
 	}
 }
