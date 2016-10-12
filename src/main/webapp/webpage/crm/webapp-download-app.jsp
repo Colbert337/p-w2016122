@@ -60,6 +60,16 @@
 <script src="<%=basePath %>/webpage/crm/js/jquery.easings.min.js"></script>
 <script src="<%=basePath %>/assets/js/jquery.validate.js"></script>
 <script src="<%=basePath %>/webpage/crm/js/webapp.js"></script>
-
+<script>
+	$.ajax({
+		url:"../../portal/crm/help/app/down",
+		data:{},
+		async:false,
+		type: "POST",
+		success: function(data){
+			console.log("APP下载统计成功！");
+		}
+	})
+</script>
 </body>
 </html>

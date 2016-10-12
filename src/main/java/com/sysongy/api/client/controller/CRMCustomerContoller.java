@@ -137,8 +137,7 @@ public class CRMCustomerContoller {
     }
 
     private SysDriver updateDriverPicturePath(SysDriver sysDriverInfo, HttpServletRequest request){
-        String contextPath = request.getContextPath();
-        String basePath = request.getScheme() + "://" + request.getServerName()+ ":" + request.getServerPort() + contextPath;
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
         if(!StringUtils.isEmpty(sysDriverInfo.getDrivingLice())){
             sysDriverInfo.setDrivingLice(basePath + sysDriverInfo.getDrivingLice());
@@ -317,6 +316,13 @@ public class CRMCustomerContoller {
         try
         {
             PageInfo<SysDriver> drivers = driverService.queryDrivers(sysDriver);
+            List<SysDriver> sysDriverNew = new ArrayList<SysDriver>();
+            for(SysDriver sysDriverInfo : drivers.getList()){
+                sysDriverInfo = updateDriverPicturePath(sysDriverInfo, request);
+                sysDriverNew.add(sysDriverInfo);
+            }
+
+            drivers.setList(sysDriverNew);
             attributes.put("PageInfo", drivers);
             attributes.put("drivers", drivers.getList());
             if((drivers == null) || (drivers.getList().size() > 1)){

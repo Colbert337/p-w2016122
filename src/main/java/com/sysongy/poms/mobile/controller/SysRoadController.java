@@ -54,8 +54,7 @@ public class SysRoadController extends BaseContoller {
 
 	@Autowired
 	RedisClientInterface redisClientImpl;
-	
-	
+
 	@Autowired
 	SysMessageService messageService;
 
@@ -66,7 +65,7 @@ public class SysRoadController extends BaseContoller {
 		PageBean bean = new PageBean();
 		road.setPageSize(20);
 		try {
-			if (road.getPageNum() == null||"".equals(road.getPageNum())) {
+			if (road.getPageNum() == null || "".equals(road.getPageNum())) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
 				road.setPageSize(20);
 			}
@@ -171,13 +170,15 @@ public class SysRoadController extends BaseContoller {
 				throw new Exception("坐标格式有误，请输入经纬度并用“,”隔开");
 
 			}
-			xy = road.getCaptureLongitude().split(",");
-			if (xy.length == 2) {
-				road.setCaptureLongitude(xy[0]);
-				road.setCaptureLatitude(xy[1]);
-			} else {
-				throw new Exception("拍照坐标格式有误，请输入经纬度并用“,”隔开");
+			if (!"".equals(road.getCaptureLongitude()) && null != road.getCaptureLongitude()) {
+				xy = road.getCaptureLongitude().split(",");
+				if (xy.length == 2) {
+					road.setCaptureLongitude(xy[0]);
+					road.setCaptureLatitude(xy[1]);
+				} else {
+					throw new Exception("拍照坐标格式有误，请输入经纬度并用“,”隔开");
 
+				}
 			}
 			road.setStartTime(stringToDate(road.getStartTime_str()));
 			road.setEndTime(stringToDate(road.getEndTime_str()));
@@ -202,7 +203,6 @@ public class SysRoadController extends BaseContoller {
 			map.addAttribute("suggest", road);
 			// 保存readis
 
-			
 			if (time == -1 || time > 0) {
 				road.setUsefulCount("0");
 				redisClientImpl.addToCache("Road" + road.getId(), road, time);
@@ -214,7 +214,7 @@ public class SysRoadController extends BaseContoller {
 			// TODO Auto-generated catch block
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
-			msg = "保存错误";
+			msg = "保存错误："+e.getMessage();
 			map.addAttribute("ret", bean);
 			logger.error("", e);
 			throw e;
@@ -226,7 +226,7 @@ public class SysRoadController extends BaseContoller {
 
 	private Date stringToDate(String time) throws ParseException {
 		if (!"".equals(time)) {
-			 
+
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 			return sdf.parse(time);
 		}
@@ -254,7 +254,7 @@ public class SysRoadController extends BaseContoller {
 
 			long a = road.getStartTime().getTime() - new Date().getTime();
 			int time = h * 60 * 60 + (int) a / 1000;
-			road.setEndTime(new Date(new Date().getTime() + h * 60 * 60*1000 + a));
+			road.setEndTime(new Date(new Date().getTime() + h * 60 * 60 * 1000 + a));
 			return time;
 		} else if (road.getEndTime() != null) {
 			long a = road.getAuditorTime().getTime() - road.getEndTime().getTime();
@@ -353,11 +353,11 @@ public class SysRoadController extends BaseContoller {
 	}
 
 	@RequestMapping("/updateRoad")
-	public String updateRoad(SysRoadCondition road, ModelMap map, HttpSession session,String content) {
+	public String updateRoad(SysRoadCondition road, ModelMap map, HttpSession session, String content) {
 		String ret = "redirect:/web/mobile/road/roadList?type=update";
 		PageBean bean = new PageBean();
 		msg = "";
-//		road.setConditionStatus(status);
+		// road.setConditionStatus(status);
 		try {
 			if (road.getPageNum() == null) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
@@ -365,8 +365,8 @@ public class SysRoadController extends BaseContoller {
 			}
 			CurrUser user = (CurrUser) session.getAttribute("currUser");
 			if ("0".equals(road.getConditionStatus())) {
-				msg="失效成功";
-				redisClientImpl.deleteFromCache("Road"+road.getId());
+				msg = "失效成功";
+				redisClientImpl.deleteFromCache("Road" + road.getId());
 			} else {
 				road.setAuditor(user.getUser().getUserName());
 				road.setAuditorPhone(user.getUser().getMobilePhone());
@@ -376,10 +376,10 @@ public class SysRoadController extends BaseContoller {
 
 			bean.setRetCode(100);
 			bean.setRetMsg("审核成功");
-//			msg = "审核成功";
+			// msg = "审核成功";
 			bean.setPageInfo(ret);
 			map.addAttribute("ret", bean);
-			
+
 			map.addAttribute("road", road);
 			map.addAttribute("suggest", road);
 			road = sysRoadService.selectByPrimaryKey(road.getId());
@@ -394,7 +394,7 @@ public class SysRoadController extends BaseContoller {
 			}
 			if ("3".equals(road.getConditionStatus())) {
 				msg = "审核成功";
-				messageService.saveMessage_New_Road(content,road);
+				messageService.saveMessage_New_Road(content, road);
 			}
 
 			// map.addAttribute("current_module",
