@@ -46,7 +46,7 @@ $('#roadform').bootstrapValidator({
 		direction: {
 			validators: {
 				notEmpty: {
-					message: '详细地址不能为空'
+					message: '方向不能为空'
 				}
 			}
 		}
