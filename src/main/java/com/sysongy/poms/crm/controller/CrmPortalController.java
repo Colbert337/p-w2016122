@@ -333,7 +333,7 @@ public class CrmPortalController {
         String http_poms_path =  (String) prop.get("http_poms_path");
         String url = roadCondition.getConditionImg();
         String msg = roadCondition.getConditionMsg();
-        if(url!=null || !"".equals(url) || !prop.get("default_img").toString().equals(url)){
+        if(url!=null && !"".equals(url) && !prop.get("default_img").toString().equals(url)){
         	url = http_poms_path+url;
         }else{
         	url=null;
