@@ -6,7 +6,7 @@ import java.util.Date;
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.permi.model.SysUserAccount;
 
-public class Gastation extends BaseModel {
+public class Gastation extends BaseModel implements Comparable {
 
 	private String sys_gas_station_id;
 	private String gas_station_name;
@@ -51,6 +51,7 @@ public class Gastation extends BaseModel {
     private String viewCount;
     
     private String shareCount;
+    
 	private String sys_user_account_id;
 	private SysUserAccount account;
 	private BigDecimal prepay_balance;
@@ -75,6 +76,9 @@ public class Gastation extends BaseModel {
 		this.fixed_discount = fixed_discount;
 	}
 
+	
+	private Double distance;//虚拟距离字段，列表显示时计算距离后排序
+	
 	public String getCompany() {
 		return company;
 	}
@@ -130,8 +134,6 @@ public class Gastation extends BaseModel {
 	public void setType(String type) {
 		this.type = type;
 	}
-
-
 
 	public Integer getPrepay_version() {
 		return prepay_version;
@@ -451,5 +453,21 @@ public class Gastation extends BaseModel {
 
 	public void setShareCount(String shareCount) {
 		this.shareCount = shareCount;
+	}
+
+	public Double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+
+	@Override
+	public int compareTo(Object obj) {
+		int i = 0;
+		Gastation gastation = (Gastation)obj;
+		i = this.distance.compareTo(gastation.distance);
+			return i;
 	}
 }

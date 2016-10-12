@@ -103,7 +103,7 @@
   select 
     <include refid="Base_Column_List" />
     from sys_gas_station
-    where 1=1 and sys_gas_station_id !='GS12900004'
+    where 1=1 
   <trim>
   	  <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''" >
         and sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
@@ -150,7 +150,10 @@
   <select id="queryAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
   	select 
     <include refid="Base_Column_List" />
-    from sys_gas_station
+    from sys_gas_station where sys_gas_station_id !='GS12900004'
+    <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
+        and (gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}),'%') or company LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') or address LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') )
+    </if>
   </select> 
    <select id="exists" resultMap="BaseResultMap" parameterType="java.lang.String" >
   select 

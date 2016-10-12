@@ -137,7 +137,7 @@ public class CRMCustomerContoller {
     }
 
     private SysDriver updateDriverPicturePath(SysDriver sysDriverInfo, HttpServletRequest request){
-        String basePath = request.getScheme() + "://" + request.getServerName();
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
         if(!StringUtils.isEmpty(sysDriverInfo.getDrivingLice())){
             sysDriverInfo.setDrivingLice(basePath + sysDriverInfo.getDrivingLice());
