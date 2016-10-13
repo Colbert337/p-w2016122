@@ -219,7 +219,7 @@
 							</tr>
 						<tr>
 							<th width="15%">所属公司</th>
-							<td><div id="gas_station_name" name="show"> </div></td>
+							<td><div id="company" name="show"> </div></td>
 						
 							<th>销售人员</th>
 							<td><div id="salesmen_name" name="show"> </div></td>
