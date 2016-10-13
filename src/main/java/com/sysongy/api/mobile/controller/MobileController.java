@@ -1515,8 +1515,9 @@ public class MobileController {
 				}else{//范围不为空，地图显示，不加分页
 					int inRadius = Integer.parseInt(radius.trim());
 					if(inRadius < 100000){
-						inRadius = 100000;
+						inRadius = 800000;
 					}
+					radius = String.valueOf(inRadius);
 					gastation.setGas_station_name(name);
 					Double longitude = new Double(0);
 					Double latitude = new Double(0);
@@ -2906,8 +2907,10 @@ public class MobileController {
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
 				String radius = mainObj.optString("radius");
-				if(Integer.parseInt(radius)<100000){
-					radius="100000";
+				if(radius!=null &&!"".equals(radius)){
+					if(Integer.parseInt(radius)<100000){
+						radius="100000";
+					}
 				}
 				Double longitude = new Double(0);
 				Double latitude = new Double(0);
