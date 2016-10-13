@@ -3,28 +3,25 @@ package com.sysongy.poms.mobile.controller;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.dao.DistCityMapper;
+import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.DistCity;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.mobile.model.MbAppVersion;
-import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.service.MbAppVersionService;
-import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import com.sysongy.util.UUIDGenerator;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -177,63 +174,45 @@ public class MbAppVersionController extends BaseContoller {
 	}
 
 
+	/**
+	 * apk上传
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	@RequestMapping("uploadFile")
 	@ResponseBody
-	public String uploadifyStart(HttpServletRequest request, HttpServletResponse response)
+	public AjaxJson uploadifyStart(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		MultipartHttpServletRequest multipartRequest =(MultipartHttpServletRequest) request;
+		List<MultipartFile> fileList = multipartRequest.getFiles("Filedata");
+		MultipartFile uploadify=fileList.get(0);
+		AjaxJson ajaxJson = new AjaxJson();
+		if (uploadify.isEmpty()) {
+			ajaxJson.setMsg("上传文件为空！！！");
+			ajaxJson.setSuccess(false);
+			return ajaxJson;
+		}
 		String savePath = request.getSession().getServletContext().getRealPath("/");
-		String PATH =   (String) prop.get("app_download_path");
-		savePath = savePath + PATH;
+		String PATH =  "docs/app/";
+		savePath = savePath + PATH;//保存的服务器目录
 		File f1 = new File(savePath);
-		//System.out.println(savePath);
 		if (!f1.exists()) {
 			f1.mkdirs();
 		}
-
-		DiskFileItemFactory fac = new DiskFileItemFactory();
-		ServletFileUpload upload = new ServletFileUpload(fac);
-		upload.setHeaderEncoding("utf-8");
-		List fileList = null;
+		//String type = uploadify.getOriginalFilename().substring(uploadify.getOriginalFilename().indexOf("."));
+		File	destFile = new File(savePath + uploadify.getOriginalFilename());//保存在目录下的文件
 		try {
-			fileList = upload.parseRequest(request);
-		} catch (FileUploadException ex) {
-			return "";
+			FileUtils.copyInputStreamToFile(uploadify.getInputStream(), destFile);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		Iterator<FileItem> it = fileList.iterator();
-		String name = "";
-		String extName = "";
-		while (it.hasNext()) {
-			FileItem item = it.next();
-			if (!item.isFormField()) {
-				name = item.getName();
-				long size = item.getSize();
-				String type = item.getContentType();
-				//System.out.println(size + " " + type);
-				if (name == null || name.trim().equals("")) {
-					continue;
-				}
-
-				// 扩展名格式：
-				if (name.lastIndexOf(".") >= 0) {
-					extName = name.substring(name.lastIndexOf("."));
-				}
-
-				File file = null;
-				do {
-					// 生成文件名：
-					name = UUID.randomUUID().toString();
-					file = new File(savePath + name + extName);
-				} while (file.exists());
-
-				File saveFile = new File(savePath + name + extName);
-				try {
-					item.write(saveFile);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return name + extName;
+		String localPath = (String) prop.get("http_poms_path");//当前服务器域名地址
+		ajaxJson.setObj(localPath+"/"+PATH+uploadify.getOriginalFilename());//返回给前台下载目录
+		return ajaxJson;
 	}
 
 }

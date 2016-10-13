@@ -105,8 +105,8 @@
 							</label>
 							<div class="col-sm-8">
 								<input name="url" id="url" style="resize: none;"
-
-									value="${mbAppVersion.url }"
+									   placeholder="请先上传程序包"
+									value="${mbAppVersion.url }" readonly="readonly"
 									class="col-xs-10 col-sm-12 limited form-control" />
 							</div>
 						</div>
@@ -170,6 +170,17 @@
 							</div>
 						</div>
 
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="createdDateStr">上传安装包： </label>
+							<div class="col-sm-8">
+								<div class="input-group">
+									<input type="file" name="uploadify" id="uploadify" style="width:200px;"/>
+
+
+								</div>
+							</div>
+						</div>
+
 						<input type="hidden" id="appVersionId" name="appVersionId"
 							value="${mbAppVersion.appVersionId}" />
 					</form>
@@ -177,8 +188,10 @@
 				<%--	<div class="showImg">
 						<img class="showImgs" width="100" height="100" alt="" src="easy/js/uploadify/default_image.gif">
 					</div>--%>
-					<input type="file" name="uploadify" id="uploadify" style="width:200px;"/>
-					<p><a href="javascript: jQuery('#uploadify').uploadifyUpload()">开始上传</a></p>
+
+
+
+					<%--<p><a href="javascript: jQuery('#uploadify').uploadifyUpload()">开始上传</a></p>--%>
 
 
 
@@ -318,22 +331,26 @@
 					'uploader' : "<%=basePath%>/common/uploadify/uploadify.swf",
 					'script'    : "<%=basePath%>/web/mobile/appversion/uploadFile",
 					'cancelImg' : "<%=basePath%>/common/uploadify/cancel.png",
-					'folder' : "<%=basePath%>/null/",//上传文件存放的路径,请保持与uploadFile.jsp中PATH的值相同
+					'folder' : "<%=basePath%>/null",//上传文件存放的路径,请保持与uploadFile.jsp中PATH的值相同
 					'queueId' : "fileQueue",
 					'queueSizeLimit' : 10,//限制上传文件的数量
 					'fileExt' : "*.apk,*.apk",
 					'fileDesc' : "APK *.apk",//限制文件类型
 					'auto'  : false,
-					'multi'  : true,//是否允许多文件上传
+					'multi'  : false,//是否允许多文件上传
 					'simUploadLimit': 2,//同时运行上传的进程数量
 					'buttonText': " select files",
+					'auto': true,
 					'onComplete': function(event, ID, fileObj, response, data) {
-						//response返回值：重命名后的文件名称,文件保存路径
-						var resultArray = response.split(",");
-						var realName = resultArray[0];//图片现在的名称，前面加上时间的图片名称，带扩展名
-						realName = $.trim(realName);
-						var p = "<%=basePath%>/null/"+realName;
-						$(".showImgs").attr("src",p);
+						console.log(response);
+						var obj = JSON.parse(response);
+						var isSuccess=obj.success;
+						 if(isSuccess){
+							console.log(obj.obj);
+							 $("#url").val(obj.obj);
+							 $("#url").html(obj.obj);
+						 }
+						return false;
 					}
 				});
 			});
