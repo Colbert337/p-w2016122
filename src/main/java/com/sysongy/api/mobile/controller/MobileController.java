@@ -1515,7 +1515,7 @@ public class MobileController {
 				}else{//范围不为空，地图显示，不加分页
 					int inRadius = Integer.parseInt(radius.trim());
 					if(inRadius < 100000){
-						inRadius = 800000;
+						inRadius = 500000;
 					}
 					radius = String.valueOf(inRadius);
 					gastation.setGas_station_name(name);
