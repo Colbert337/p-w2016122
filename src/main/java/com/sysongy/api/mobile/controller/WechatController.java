@@ -242,7 +242,6 @@ public class WechatController {
 				}else{
 					String sysDriverId = UUIDGenerator.getUUID();
 					payCode = mainObj.optString("payCode");
-					payCode = Encoder.MD5Encode(payCode.getBytes());
 					driver.setPayCode(payCode);
 					driver.setSysDriverId(sysDriverId);
 					driver.setPlateNumber(mainObj.optString("plateNumber"));
