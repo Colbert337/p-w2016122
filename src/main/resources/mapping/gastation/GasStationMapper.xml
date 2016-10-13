@@ -39,7 +39,7 @@
     <result column="type" property="type" jdbcType="VARCHAR" />
     
 
-    <result column="price_effective_time" property="price_effective_time" jdbcType="DATE" />
+    <result column="price_effective_time" property="price_effective_time" jdbcType="VARCHAR" />
     <result column="fixed_discount" property="fixed_discount" jdbcType="FLOAT" />
 
     <association column="sys_user_account_id" property="account" javaType="com.sysongy.poms.permi.model.SysUserAccount"
@@ -217,7 +217,7 @@
       #{updated_time,jdbcType=TIMESTAMP},#{prepay_balance,jdbcType=DECIMAL}, #{prepay_version,jdbcType=INTEGER},
        #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{map_type,jdbcType=VARCHAR},
         #{gas_server ,jdbcType=VARCHAR}, #{lng_price ,jdbcType=VARCHAR}, #{promotions ,jdbcType=VARCHAR},
-        #{price_effective_time,jdbcType=DATE},
+        #{price_effective_time,jdbcType=VARCHAR},
          #{fixed_discount ,jdbcType=FLOAT})
   </insert>
   
@@ -513,7 +513,7 @@
         share_count = #{shareCount,jdbcType=VARCHAR},
       </if>
     <if test="price_effective_time != null &amp;&amp; price_effective_time != ''" >
-      price_effective_time = #{price_effective_time,jdbcType=DATE},
+      price_effective_time = #{price_effective_time,jdbcType=VARCHAR},
     </if>
     <if test="fixed_discount != null &amp;&amp; fixed_discount != ''" >
       fixed_discount = #{fixed_discount,jdbcType=FLOAT}
@@ -671,7 +671,7 @@
       prepay_version = #{prepay_version,jdbcType=INTEGER},
       prepay_balance = #{prepay_balance,jdbcType=DECIMAL},
 
-      price_effective_time = #{price_effective_time,jdbcType=DATE},
+      price_effective_time = #{price_effective_time,jdbcType=VARCHAR},
       fixed_discount = #{fixed_discount,jdbcType=FLOAT}
 
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}

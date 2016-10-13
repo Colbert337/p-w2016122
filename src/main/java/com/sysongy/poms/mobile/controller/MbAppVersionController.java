@@ -197,7 +197,7 @@ public class MbAppVersionController extends BaseContoller {
 			return ajaxJson;
 		}
 		String savePath = request.getSession().getServletContext().getRealPath("/");
-		String PATH =  "docs/app/";
+		String PATH = (String) prop.get("downloadDir");
 		savePath = savePath + PATH;//保存的服务器目录
 		File f1 = new File(savePath);
 		if (!f1.exists()) {
@@ -211,7 +211,7 @@ public class MbAppVersionController extends BaseContoller {
 			e.printStackTrace();
 		}
 		String localPath = (String) prop.get("http_poms_path");//当前服务器域名地址
-		ajaxJson.setObj(localPath+"/"+PATH+uploadify.getOriginalFilename());//返回给前台下载目录
+		ajaxJson.setObj(localPath+PATH+uploadify.getOriginalFilename());//返回给前台下载目录
 		return ajaxJson;
 	}
 

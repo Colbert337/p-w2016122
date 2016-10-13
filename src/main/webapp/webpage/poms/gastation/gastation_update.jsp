@@ -441,11 +441,12 @@
 										<label for="fixed_discount" class="col-sm-3 control-label no-padding-right"> 固定折扣： </label>
 
 										<div class="col-sm-4">
-											<input type="text" id="fixed_discount"  name="fixed_discount" placeholder="固定折扣" class="form-control" maxlength="15" value="${station.fixed_discount}"/>
+											<input type="text"  id="fixed_discount" onKeyUp="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"  name="fixed_discount" placeholder="固定折扣" class="form-control" maxlength="5" value="${station.fixed_discount}"/>
 										</div>
+										<div class="form-group">	<span class="red_star">固定折扣格式如：7.5 &nbsp(7.5代表7.5折)</span></div>
 									</div>
 
-									<div class="form-group">
+									<%--<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="price_effective_time"> 价格生效时间： </label>
 										<div class="col-sm-4 datepicker-noicon">
 											<div class="input-group">
@@ -454,6 +455,22 @@
 														<i class="fa fa-calendar bigger-110"></i>
 													</span>
 											</div>
+										</div>
+									</div>--%>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="price_effective_time"> 价格生效时间： </label>
+										<%--	<div class="col-sm-4 datepicker-noicon">
+												<div class="input-group">
+													<input class="form-control date-picker" name="price_effective_time" id="price_effective_time" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value=""/>
+													<span class="input-group-addon">
+														<i class="fa fa-calendar bigger-110"></i>
+													</span>
+												</div>
+											</div>--%>
+										<div class="col-sm-4">
+											<select class="form-control" id="price_effective_time" name="price_effective_time">
+												<s:option flag="true" gcode="price_effective_time" form="station" field="price_effective_time"/>
+											</select>
 										</div>
 									</div>
 									

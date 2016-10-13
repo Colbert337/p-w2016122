@@ -140,7 +140,12 @@
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 									<td>${list.prepay_balance}</td>
-								 	<td>${list.price_effective_time}</td>
+
+								 	<td>
+									<c:if test="${list.price_effective_time == '0' }">立即生效</c:if>
+										<c:if test="${list.price_effective_time == '12' }">12小时后生效</c:if>
+										<c:if test="${list.price_effective_time == '24' }">24小时后生效</c:if>
+									</td>
 									<td>${list.fixed_discount}</td>
 									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">
