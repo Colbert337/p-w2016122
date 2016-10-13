@@ -790,7 +790,8 @@ public class MobileController {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("验证码为空！");
 				} else {
-					String	veCode = (String) redisClientImpl.getFromCache(mainObj.optString("token"));
+					driver = driverService.queryDriverByPK(mainObj.optString("token"));
+					String	veCode = (String) redisClientImpl.getFromCache(driver.getUserName());
 					if (veCode != null && !"".equals(veCode)) {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
