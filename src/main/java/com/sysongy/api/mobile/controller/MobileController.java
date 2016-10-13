@@ -1858,8 +1858,8 @@ public class MobileController {
 						bannerMap.put("title", banner.getTitle());
 						bannerMap.put("content", banner.getContent());
 						bannerMap.put("time", sft.format(banner.getCreatedDate()));
-						bannerMap.put("contentUrl", http_poms_path + banner.getTargetUrl());
-						bannerMap.put("shareUrl", http_poms_path + banner.getTargetUrl() + "&show_download_button=1");
+						bannerMap.put("contentUrl", http_poms_path + banner.getTargetUrl() + "&view="+banner.getMbBannerId());
+						bannerMap.put("shareUrl", http_poms_path + banner.getTargetUrl() + "&show_download_button=1" + "&view="+banner.getMbBannerId());
 						bannerMap.put("imgSmPath", http_poms_path + banner.getImgSmPath());
 						if (banner.getImgPath() != null && !"".equals(banner.getImgPath().toString())) {
 							bannerMap.put("imageUrl", http_poms_path + banner.getImgPath());
