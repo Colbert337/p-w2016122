@@ -28,11 +28,12 @@
 			<div class="info">
 				${conditionType}
 				${name}于<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm" />前提供了${roadCondition.address}附近的${direction}的${conditionType}路况，请注意路况信息变化！
-				<c:if test="${!roadCondition.memo eq null}" ><br>路况详情如下：<br>${roadCondition.memo}</c:if>
+				<c:if test="${conditionMsg != null}" ><br>路况详情如下：<br>${conditionMsg}</c:if>
+				<c:if test="${roadCondition.memo ne null && roadCondition.memo ne ''}" ><br>备注：<br>${roadCondition.memo}</c:if>
 			</div>
-			<c:if test="${!conditionMsg eq null}" >
+			<c:if test="${conditionImg != null}" >
 			<div class="img">
-				<img class="img-responsive" src="${conditionMsg}" alt="">
+				<img class="img-responsive" src="${conditionImg}" alt="">
 			</div>
 			</c:if>
 		</div>

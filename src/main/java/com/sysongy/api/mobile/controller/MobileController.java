@@ -634,7 +634,6 @@ public class MobileController {
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				password = mainObj.optString("password");
 				if (password != null && !"".equals(password)) {
-					password = Encoder.MD5Encode(password.getBytes());
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
 
@@ -791,13 +790,17 @@ public class MobileController {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("验证码为空！");
 				} else {
-					Map<String, Object> resultMap = new HashMap<>();
-					driver.setSysDriverId(sysDriverId);
-					driver.setPayCode(mainObj.optString("paycode"));
-
-					driverService.saveDriver(driver, "update", null);// 设置支付密码
+					String	veCode = (String) redisClientImpl.getFromCache(mainObj.optString("token"));
+					if (veCode != null && !"".equals(veCode)) {
+						Map<String, Object> resultMap = new HashMap<>();
+						driver.setSysDriverId(sysDriverId);
+						driver.setPayCode(mainObj.optString("paycode"));
+						driverService.saveDriver(driver, "update", null);// 设置支付密码
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("验证码无效！");
+					}
 				}
-
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -2607,34 +2610,97 @@ public class MobileController {
 				SysDriver sysDriver = new SysDriver();
 				// 电话号码赋值
 				sysDriver.setUserName(mainObj.optString("phoneNum"));
-				veCode = (String) redisClientImpl.getFromCache(sysDriver.getUserName());
-				if (veCode != null && !"".equals(veCode)) {
-					// 数据库查询
-					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
-					if (!driver.isEmpty()) {
-						String initialPassword = mainObj.optString("newPassword");
-						// 初始密码加密、赋值
-						// initialPassword =
-						// Encoder.MD5Encode(initialPassword.getBytes());
-						sysDriver.setPayCode(initialPassword);
-						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						// 更新初始密码
-						int resultVal = driverService.saveDriver(sysDriver, "update", null);
-						// 返回大于0，成功
-						if (resultVal <= 0) {
-							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("重置支付密码失败！");
+				veCode = mainObj.optString("veCode");//原手机验证码
+				String newCode = mainObj.optString("newCode");//密保手机验证码
+				String newPhoneNum = mainObj.optString("newPhoneNum");//密保手机号
+				phoneNum = mainObj.optString("phoneNum");//原手机号
+				String redisVeCode = (String) redisClientImpl.getFromCache(sysDriver.getUserName());
+				//验证密保手机和密保手机短信验证码
+				if(newCode !=null && !"".equals(newCode) && newPhoneNum !=null && !"".equals(newPhoneNum)){
+					String redisNewCode = (String) redisClientImpl.getFromCache(newPhoneNum);
+					if(newCode.equals(redisNewCode)){//验证密保手机短信验证码
+						if(phoneNum.equals(newPhoneNum)){//密保手机和原手机相同时，直接修改
+							// 数据库查询
+							List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
+							if (!driver.isEmpty()) {
+								String initialPassword = mainObj.optString("newPassword");
+								// 初始密码加密、赋值
+								sysDriver.setPayCode(initialPassword);
+								sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+								// 更新初始密码
+								int resultVal = driverService.saveDriver(sysDriver, "update", null);
+								// 返回大于0，成功
+								if (resultVal <= 0) {
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("重置支付密码失败！");
+								}
+								Map<String, Object> dataMap = new HashMap<>();
+								dataMap.put("resultVal", "true");
+								result.setData(dataMap);
+							} else {
+								result.setStatus(MobileReturn.STATUS_FAIL);
+								result.setMsg("电话号码有误！");
+							}
+						}else{//密保手机和原手机不同时，验证原手机验证码
+							if (veCode.equals(redisVeCode)) {
+								// 数据库查询
+								List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
+								if (!driver.isEmpty()) {
+									String initialPassword = mainObj.optString("newPassword");
+									// 初始密码加密、赋值
+									sysDriver.setPayCode(initialPassword);
+									sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+									// 更新初始密码
+									int resultVal = driverService.saveDriver(sysDriver, "update", null);
+									// 返回大于0，成功
+									if (resultVal <= 0) {
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("重置支付密码失败！");
+									}
+									Map<String, Object> dataMap = new HashMap<>();
+									dataMap.put("resultVal", "true");
+									result.setData(dataMap);
+								} else {
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("电话号码有误！");
+								}
+							} else {
+								result.setStatus(MobileReturn.STATUS_FAIL);
+								result.setMsg("原手机验证码无效！");
+							}
 						}
-						Map<String, Object> dataMap = new HashMap<>();
-						dataMap.put("resultVal", "true");
-						result.setData(dataMap);
+
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("密保手机验证码无效！");
+					}
+				}else{//没有密保手机和密保手机短信验证码的情况，验证原手机和原手机验证码
+					if (veCode.equals(redisVeCode)) {
+						// 数据库查询
+						List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
+						if (!driver.isEmpty()) {
+							String initialPassword = mainObj.optString("newPassword");
+							// 初始密码加密、赋值
+							sysDriver.setPayCode(initialPassword);
+							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+							// 更新初始密码
+							int resultVal = driverService.saveDriver(sysDriver, "update", null);
+							// 返回大于0，成功
+							if (resultVal <= 0) {
+								result.setStatus(MobileReturn.STATUS_FAIL);
+								result.setMsg("重置支付密码失败！");
+							}
+							Map<String, Object> dataMap = new HashMap<>();
+							dataMap.put("resultVal", "true");
+							result.setData(dataMap);
+						} else {
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("电话号码有误！");
+						}
 					} else {
 						result.setStatus(MobileReturn.STATUS_FAIL);
-						result.setMsg("电话号码有误！");
+						result.setMsg("验证码无效！");
 					}
-				} else {
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("验证码无效！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2870,7 +2936,12 @@ public class MobileController {
 						reChargeMap.put("conditionType", roadConditionInfo.getConditionType());
 						reChargeMap.put("longitude", roadConditionInfo.getLongitude());
 						reChargeMap.put("latitude", roadConditionInfo.getLatitude());
-						reChargeMap.put("conditionImg", http_poms_path + roadConditionInfo.getConditionImg());
+						String url = roadConditionInfo.getConditionImg();
+						//没有上传图片添加默认图片
+						if(url==null || "".equals(url)){
+							url = prop.get("default_img").toString();
+						}
+						reChargeMap.put("conditionImg", http_poms_path + url);
 						reChargeMap.put("address", roadConditionInfo.getAddress());
 						reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
 						reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
