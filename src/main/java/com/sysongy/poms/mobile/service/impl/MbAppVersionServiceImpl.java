@@ -8,6 +8,8 @@ import com.sysongy.poms.mobile.model.MbAppVersion;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.service.MbAppVersionService;
 import com.sysongy.poms.mobile.service.MbBannerService;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,7 @@ import java.util.List;
 public class MbAppVersionServiceImpl implements MbAppVersionService {
     @Autowired
     MbAppVersionMapper mbAppVersionMapper;
-
+    String PATH = (String) PropertyUtil.read(GlobalConstant.CONF_PATH).get("http_poms_path");//域名端口
 
 
     public   int deleteByPrimaryKey(String appVersionId){
@@ -28,6 +30,7 @@ public class MbAppVersionServiceImpl implements MbAppVersionService {
     }
 
     public  int insert(MbAppVersion record){
+        record.setRemark(addStrN(record.getRemark()));
         return mbAppVersionMapper.insert(record);
     }
 
@@ -40,7 +43,9 @@ public class MbAppVersionServiceImpl implements MbAppVersionService {
         if(m==null){
             return  m;
         }
-        m.setCreatedDateStr(new SimpleDateFormat("yyyy-MM-dd").format(m.getCreatedDate()));
+        m.setRemark(m.getRemark().replace('\n',' '));
+        m.setUrl(PATH + m.getUrl());
+        m.setCreatedDateStr(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(m.getCreatedDate()));
         return m;
     }
 
@@ -49,24 +54,38 @@ public class MbAppVersionServiceImpl implements MbAppVersionService {
     }
 
     public int updateByPrimaryKey(MbAppVersion record) throws ParseException {
-        record.setCreatedDate(new SimpleDateFormat("yyyy-MM-dd").parse(record.getCreatedDateStr()));
+        record.setCreatedDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(record.getCreatedDateStr()));
+        record.setRemark(addStrN(record.getRemark()));
         return  mbAppVersionMapper.updateByPrimaryKey(record);
     }
 
     @Override
     public PageInfo<MbAppVersion> queryAppVersionListPage(MbAppVersion record)  throws Exception{
-
         if(record != null){
             PageHelper.startPage(record.getPageNum(),record.getPageSize(),record.getOrderby());
             List<MbAppVersion> MbAppVersionList = mbAppVersionMapper.queryAppVersionList(record);
             for(MbAppVersion mv:MbAppVersionList){
-                mv.setCreatedDateStr(new SimpleDateFormat("yyyy-MM-dd").format(mv.getCreatedDate()));
+                mv.setUrl(PATH+mv.getUrl());
+                mv.setCreatedDateStr(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(mv.getCreatedDate()));
+                mv.setRemark(mv.getRemark().replace("\n",""));
             }
             PageInfo<MbAppVersion> fleetPageInfo = new PageInfo<>(MbAppVersionList);
             return fleetPageInfo;
         }else{
             return null;
         }
+    }
+
+    /**
+     * 给版本说明加上换行符，用于APP版本展示说明
+     */
+    public String addStrN(String remark){
+        String s[]=remark.split("。");
+        String str="";
+        for(int i=0;i<s.length;i++){
+            str=str+s[i]+"。\n";
+        }
+        return  str;
     }
 
 
