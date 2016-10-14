@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
@@ -26,6 +27,7 @@ import jxl.Sheet;
 import jxl.Workbook;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -505,58 +507,62 @@ public class CrmPortalController {
      * @return
      */
     @RequestMapping("/user/register")
-    public String savaUser(@RequestParam String phone,@RequestParam String vcode, @RequestParam String invitationCode,  ModelMap map) throws Exception{
+    public String savaUser(@RequestParam String phone,@RequestParam String vcode, @RequestParam String invitationCode,  ModelMap map,HttpServletResponse hsr) throws Exception{
 
         if(phone != null){
             SysDriver driver = new SysDriver();
             driver.setUserName(phone);
             driver.setMobilePhone(phone);
-
             String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
-            if(vcode != null && !"".equals(veCode)) {
-                List<SysDriver> driverlist = driverService.queryeSingleList(driver);
-                if (driverlist != null && driverlist.size() > 0) {
-                    logger.info("该手机号已注册！");
-                    //throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
-                } else {
-                    String sysDriverId = UUIDGenerator.getUUID();
-                    driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
-                    driver.setSysDriverId(sysDriverId);
-                    driver.setRegisSource("APP");
-                    driver.setRegisCompany(invitationCode);
-                    String encoderContent=phone;
-                    //图片路径
-                    String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
-                    File file =new File(rootPath);
-                    //如果根文件夹不存在则创建
-                    if  (!file.exists()  && !file.isDirectory()){
-                        file.mkdir();
-                    }
-                    String path = rootPath+phone+"/";
-                    File file1 =new File(path);
-                    //如果用户文件夹不存在则创建
-                    if  (!file1.exists()  && !file1.isDirectory()){
-                        file1.mkdir();
-                    }
-                    //二维码路径
-                    String imgPath = path+phone+".jpg";
-                    String show_path = (String) prop.get("show_images_path")+ "/driver/"+phone+"/"+phone+".jpg";
-                    //生成二维码
-                    driver.setDriverQrcode(show_path);
+            if(veCode != null && !"".equals(veCode)) {
+            	if(vcode.equals(veCode)){
+            		List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+                    if (driverlist != null && driverlist.size() > 0) {
+                    	hsr.getWriter().println("<script type='text/javascript'>alert('该手机号已注册！');</script>");
+                        logger.info("该手机号已注册！");
+                    } else {
+                        String sysDriverId = UUIDGenerator.getUUID();
+                        driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
+                        driver.setSysDriverId(sysDriverId);
+                        driver.setRegisSource("APP");
+                        driver.setRegisCompany(invitationCode);
+                        String encoderContent=phone;
+                        //图片路径
+                        String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+                        File file =new File(rootPath);
+                        //如果根文件夹不存在则创建
+                        if  (!file.exists()  && !file.isDirectory()){
+                            file.mkdir();
+                        }
+                        String path = rootPath+phone+"/";
+                        File file1 =new File(path);
+                        //如果用户文件夹不存在则创建
+                        if  (!file1.exists()  && !file1.isDirectory()){
+                            file1.mkdir();
+                        }
+                        //二维码路径
+                        String imgPath = path+phone+".jpg";
+                        String show_path = (String) prop.get("show_images_path")+ "/driver/"+phone+"/"+phone+".jpg";
+                        //生成二维码
+                        driver.setDriverQrcode(show_path);
 
-                    Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
-                    if(tmp > 0){
-                        TwoDimensionCode handler = new TwoDimensionCode();
-                        handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+                        Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
+                        if(tmp > 0){
+                            TwoDimensionCode handler = new TwoDimensionCode();
+                            handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+                        }
                     }
-
-                }
+            	}else{
+            		logger.info("验证码无效！");
+            		hsr.getWriter().println("<script type='text/javascript'>alert('验证码无效！');</script>");
+            	}
             }else{
+            	hsr.getWriter().println("<script type='text/javascript'>alert('验证码无效！');</script>");
                 logger.info("验证码无效！");
             }
         }
         mbAppVersionMapper.updateDownCount();//更新APP下载数
-        return "redirect:/webpage/crm/webapp-download-app.jsp";
+        return "/webpage/crm/webapp-download-app";
     }
 
     /**
