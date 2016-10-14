@@ -385,8 +385,8 @@ public class CrmPortalController {
 
         //统计阅读数
         SysRoadCondition rction = new SysRoadCondition();
-        String viewCount = roadCondition.getViewCount();
-        viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+        int viewCount = roadCondition.getViewCount();
+        viewCount = viewCount+1;
         rction.setViewCount(viewCount);
         rction.setId(roadCondition.getId());
         sysRoadService.updateByPrimaryKey(rction);
@@ -421,8 +421,8 @@ public class CrmPortalController {
 
         //统计分享数
         SysRoadCondition rction = new SysRoadCondition();
-        String shareCount = roadCondition.getShareCount();
-        shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
+        int shareCount = roadCondition.getShareCount();
+        shareCount = shareCount+1;
         rction.setShareCount(shareCount);
         rction.setId(roadCondition.getId());
         sysRoadService.updateByPrimaryKey(rction);
