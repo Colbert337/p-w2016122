@@ -28,9 +28,9 @@ public class SysRoadCondition extends BaseModel implements Serializable {
 
 	private String publisherTime_str;
 
-	private int viewCount;
+	private String viewCount;
 
-	private int shareCount;
+	private String shareCount;
 	
 	private Date startTime;
 
@@ -302,19 +302,19 @@ public class SysRoadCondition extends BaseModel implements Serializable {
 		this.memo = memo == null ? null : memo.trim();
 	}
 
-	public int getViewCount() {
+	public String getViewCount() {
 		return viewCount;
 	}
 
-	public void setViewCount(int viewCount) {
+	public void setViewCount(String viewCount) {
 		this.viewCount = viewCount;
 	}
 
-	public int getShareCount() {
+	public String getShareCount() {
 		return shareCount;
 	}
 
-	public void setShareCount(int shareCount) {
+	public void setShareCount(String shareCount) {
 		this.shareCount = shareCount;
 	}
 
