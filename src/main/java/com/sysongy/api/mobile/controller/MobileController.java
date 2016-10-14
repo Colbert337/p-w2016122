@@ -3895,14 +3895,19 @@ public class MobileController {
 		String resultStr = "";
 		try {
 			MbAppVersion appVersion = mbAppVersionService.queryNewest();
-			Map<String, Object> tokenMap = new HashMap<>();
-			String localPath = (String) prop.get("http_poms_path");
-			tokenMap.put("lastVersion", appVersion.getCode());//对内版本号
-			tokenMap.put("downUrl", localPath + appVersion.getUrl());
-			tokenMap.put("isUpdate", appVersion.getIsUpdate());
-			tokenMap.put("appSize", appVersion.getAppSize());
-			tokenMap.put("remark", appVersion.getRemark());
-			result.setData(tokenMap);
+			if(appVersion!=null){
+				Map<String, Object> tokenMap = new HashMap<>();
+				String localPath = (String) prop.get("http_poms_path");
+				tokenMap.put("lastVersion", appVersion.getCode());//对内版本号
+				tokenMap.put("downUrl", localPath + appVersion.getUrl());
+				tokenMap.put("isUpdate", appVersion.getIsUpdate());
+				tokenMap.put("appSize", appVersion.getAppSize());
+				tokenMap.put("remark", appVersion.getRemark());
+				result.setData(tokenMap);
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("暂无版本！");
+			}
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
