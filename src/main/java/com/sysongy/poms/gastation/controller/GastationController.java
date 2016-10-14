@@ -53,7 +53,7 @@ public class GastationController extends BaseContoller{
 	/**
 	 * 加气站查询
 	 * @param map
-	 * @param gascard
+	 * @param
 	 * @return
 	 * @throws Exception
 	 */
@@ -313,7 +313,7 @@ public class GastationController extends BaseContoller{
 	/**
 	 * 用户卡入库
 	 * @param map
-	 * @param gascard
+	 * @param
 	 * @return
 	 * @throws Exception
 	 */

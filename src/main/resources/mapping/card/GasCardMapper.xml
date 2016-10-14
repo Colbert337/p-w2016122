@@ -53,7 +53,7 @@
     driver.sys_driver_id as driverID, driver.full_name as dName, driver.mobile_phone as mPhone, card_no, card_type, card_status, card_property, operator, storage_time, release_time, gc.memo as memo, workstation, workstation_resp, batch_no, card_flag_id, sysUserId, station_receive_time
   </sql>
 
-  <select id="queryForPage" resultMap="BaseResultList"  parameterType="com.sysongy.poms.card.model.GasCard" >
+  <select id="queryForPage" resultMap="BaseResultList"   parameterType="com.sysongy.poms.card.model.GasCard" >
   	 select <include refid="Base_Column_List1" />
     from gas_card gc
      left outer join sys_driver driver on gc.card_no = driver.card_id
