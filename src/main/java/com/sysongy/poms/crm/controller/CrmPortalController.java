@@ -246,10 +246,12 @@ public class CrmPortalController {
         map.addAttribute("gastation",gastation);
         map.addAttribute("priceList",priceArray);
 
-        //统计分享数
+        //统计阅读数
+        Gastation gs = new Gastation();
         String viewCount = gastation.getViewCount();
         viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
-        gastation.setViewCount(viewCount);
+        gs.setViewCount(viewCount);
+        gs.setSys_gas_station_id(gastation.getSys_gas_station_id());
         gastationService.updateByPrimaryKeySelective(gastation);
         return "/webpage/crm/webapp-station-detail";
     }
@@ -292,6 +294,39 @@ public class CrmPortalController {
         String ret = "webpage/poms/page/page";
         
         try {
+            String share = request.getParameter("show_download_button");
+            String view = request.getParameter("view");
+            if(share != null && !"".equals(share)){
+                //记录活动分享数
+                MbBanner mb = new MbBanner();
+                mb.setMbBannerId(view);
+                mb = mbBannerService.queryMbBanner(mb);
+                if(mb != null){
+                    String shareCountStr = mb.getShareCount();
+                    int shareCount = Integer.parseInt(shareCountStr);
+                    shareCount = shareCount + 1;
+                    MbBanner mbc = new MbBanner();
+                    mbc.setMbBannerId(mb.getMbBannerId());
+                    mbc.setShareCount(shareCount+"");
+                    mbc.setIsDeleted(1);
+                    mbBannerService.updateBanner(mbc);
+                }
+            }else if(view != null && !"".equals(view)){
+                //记录活动阅读数
+                MbBanner mb = new MbBanner();
+                mb.setMbBannerId(view);
+                mb = mbBannerService.queryMbBanner(mb);
+                if(mb != null){
+                    String viewStr = mb.getViewCount();
+                    int viewCount = Integer.parseInt(viewStr);
+                    viewCount = viewCount + 1;
+                    MbBanner mbc = new MbBanner();
+                    mbc.setMbBannerId(mb.getMbBannerId());
+                    mbc.setViewCount(viewCount+"");
+                    mbc.setIsDeleted(1);
+                    mbBannerService.updateBanner(mbc);
+                }
+            }
             SysStaticPage page = service.queryPageByPK(pageid);
             page.setShow_download_button(request.getParameter("show_download_button"));
             
@@ -332,7 +367,8 @@ public class CrmPortalController {
 
         String http_poms_path =  (String) prop.get("http_poms_path");
         String url = roadCondition.getConditionImg();
-        if(url!=null ||!"".equals(url)){
+        String msg = roadCondition.getConditionMsg();
+        if(url!=null && !"".equals(url) && !prop.get("default_img").toString().equals(url)){
         	url = http_poms_path+url;
         }else{
         	url=null;
@@ -342,9 +378,18 @@ public class CrmPortalController {
     	map.addAttribute("roadCondition", roadCondition);
         map.addAttribute("name",name);
         map.addAttribute("conditionType",conditionType);
-        map.addAttribute("conditionMsg",url);
+        map.addAttribute("conditionMsg",msg);
+        map.addAttribute("conditionImg",url);
         map.addAttribute("conditionType", usysparam.getMname());
         map.addAttribute("direction", usysparam1.getMname());
+
+        //统计阅读数
+        SysRoadCondition rction = new SysRoadCondition();
+        String viewCount = roadCondition.getViewCount();
+        viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
+        rction.setViewCount(viewCount);
+        rction.setId(roadCondition.getId());
+        sysRoadService.updateByPrimaryKey(rction);
         return "/webpage/crm/webapp-traffic-detail";
     }
 
@@ -373,6 +418,14 @@ public class CrmPortalController {
         map.addAttribute("conditionMsg",http_poms_path+roadCondition.getConditionImg());
         map.addAttribute("conditionType", usysparam.getMname());
         map.addAttribute("direction", usysparam1.getMname());
+
+        //统计分享数
+        SysRoadCondition rction = new SysRoadCondition();
+        String shareCount = roadCondition.getShareCount();
+        shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
+        rction.setShareCount(shareCount);
+        rction.setId(roadCondition.getId());
+        sysRoadService.updateByPrimaryKey(rction);
         return "/webpage/crm/webapp-traffic-share";
     }
 
@@ -404,7 +457,7 @@ public class CrmPortalController {
         mbBanner = mbBannerService.queryMbBanner(mbBanner);
         map.addAttribute("mbBanner",mbBanner);
 
-        //统计活动阅读数
+        //统计活动分享数
         String viewCount = mbBanner.getViewCount();
         viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
         mbBanner.setViewCount(viewCount);
@@ -438,9 +491,11 @@ public class CrmPortalController {
         map.addAttribute("gastation",gastation);
         map.addAttribute("priceList",priceArray);
         //统计分享数
-        String viewCount = gastation.getViewCount();
-        viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
-        gastation.setViewCount(viewCount);
+        Gastation gs = new Gastation();
+        String shareCount = gastation.getShareCount();
+        shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
+        gs.setShareCount(shareCount);
+        gs.setSys_gas_station_id(gastation.getSys_gas_station_id());
         gastationService.updateByPrimaryKeySelective(gastation);
         return "/webpage/crm/webapp-station-share";
     }

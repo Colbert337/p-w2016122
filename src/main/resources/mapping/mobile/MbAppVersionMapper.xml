@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sysongy.poms.mobile.dao.MbAppVersionMapper" >
+
   <resultMap id="BaseResultMap" type="com.sysongy.poms.mobile.model.MbAppVersion" >
     <id column="app_version_id" property="appVersionId" jdbcType="VARCHAR" />
     <result column="url" property="url" jdbcType="VARCHAR" />
@@ -12,9 +13,44 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
   </resultMap>
+
+
   <sql id="Base_Column_List" >
     app_version_id, url, version, code, is_publish, remark, created_date ,status, down_count
   </sql>
+
+  <select id="queryAppVersionList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
+    select
+  <include refid="Base_Column_List"/>
+    from mb_app_version
+    where
+    1=1
+    <if test="appVersionId != null" >
+      and app_version_id = #{appVersionId,jdbcType=VARCHAR}
+    </if>
+    <if test="url != null" >
+      and url = #{url,jdbcType=VARCHAR}
+    </if>
+    <if test="version != null" >
+      and version = #{version,jdbcType=VARCHAR}
+    </if>
+    <if test="code != null" >
+      and code = #{code,jdbcType=VARCHAR}
+    </if>
+    <if test="isPublish != null" >
+      and is_publish = #{isPublish,jdbcType=INTEGER}
+    </if>
+    <if test="remark != null" >
+      and remark = #{remark,jdbcType=VARCHAR}
+    </if>
+    <if test="created_date_sel != null &amp;&amp; created_date_sel != '' &amp;&amp;  updated_date_sel != null &amp;&amp; updated_date_sel != ''"  >
+      and DATE_FORMAT(created_date,"%Y/%m/%d")   <![CDATA[   >=  ]]> #{created_date_sel,jdbcType=VARCHAR} and   DATE_FORMAT(created_date,"%Y/%m/%d")  <![CDATA[   <=  ]]> #{updated_date_sel,jdbcType=VARCHAR}
+    </if>
+
+
+  </select>
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
