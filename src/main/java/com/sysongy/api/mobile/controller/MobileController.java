@@ -3897,7 +3897,7 @@ public class MobileController {
 			MbAppVersion appVersion = mbAppVersionService.queryNewest();
 			Map<String, Object> tokenMap = new HashMap<>();
 			String localPath = (String) prop.get("http_poms_path");
-			tokenMap.put("lastVersion", appVersion.getVersion());
+			tokenMap.put("lastVersion", appVersion.getCode());//对内版本号
 			tokenMap.put("downUrl", localPath + appVersion.getUrl());
 			tokenMap.put("isUpdate", appVersion.getIsUpdate());
 			tokenMap.put("appSize", appVersion.getAppSize());
