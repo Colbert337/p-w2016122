@@ -1,0 +1,4 @@
+使用说明：
+	将uploadify.jsp页面引入上传文件的页面即可，
+	修改配置时修改uploadify.jsp 和 uploadFile.jsp 两个文件即可
+	其他请参考官网：http://www.uploadify.com/

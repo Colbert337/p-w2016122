@@ -1,8 +1,10 @@
 package com.sysongy.poms.mobile.model;
 
+import com.sysongy.poms.base.model.BaseModel;
+
 import java.util.Date;
 
-public class MbAppVersion {
+public class MbAppVersion  extends BaseModel {
     private String appVersionId;
 
     private String url;
@@ -20,6 +22,35 @@ public class MbAppVersion {
     private String remark;
 
     private Date createdDate;
+
+    private String createdDateStr;
+
+    private String created_date_sel;//用于查询的虚拟字段
+    private String updated_date_sel;//用于查询的虚拟字段
+
+    public String getCreated_date_sel() {
+        return created_date_sel;
+    }
+
+    public void setCreated_date_sel(String created_date_sel) {
+        this.created_date_sel = created_date_sel;
+    }
+
+    public String getUpdated_date_sel() {
+        return updated_date_sel;
+    }
+
+    public void setUpdated_date_sel(String updated_date_sel) {
+        this.updated_date_sel = updated_date_sel;
+    }
+
+    public String getCreatedDateStr() {
+        return createdDateStr;
+    }
+
+    public void setCreatedDateStr(String createdDateStr) {
+        this.createdDateStr = createdDateStr;
+    }
 
     public String getAppVersionId() {
         return appVersionId;

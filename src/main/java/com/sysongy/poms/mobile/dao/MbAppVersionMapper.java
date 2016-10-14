@@ -1,6 +1,9 @@
 package com.sysongy.poms.mobile.dao;
 
+import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.model.MbAppVersion;
+
+import java.util.List;
 
 public interface MbAppVersionMapper {
     int deleteByPrimaryKey(String appVersionId);
@@ -14,6 +17,8 @@ public interface MbAppVersionMapper {
     int updateByPrimaryKeySelective(MbAppVersion record);
 
     int updateByPrimaryKey(MbAppVersion record);
+
+    List<MbAppVersion> queryAppVersionList(MbAppVersion record);
 
     /**
      * 更新APP下载量
