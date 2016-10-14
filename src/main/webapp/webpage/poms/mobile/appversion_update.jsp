@@ -232,7 +232,7 @@
 
 
 	// bootstrap验证控件
-	/*$('#editForm').bootstrapValidator({
+	$('#editForm').bootstrapValidator({
 		message : 'This value is not valid',
 		feedbackIcons : {
 			valid : 'glyphicon glyphicon-ok',
@@ -240,44 +240,37 @@
 			validating : 'glyphicon glyphicon-refresh'
 		},
 		fields : {
-			/!*title : {
+			url : {
 				validators : {
 					notEmpty : {
-						message : '标题不能为空'
+						message : '下载地址不能为空，请上传包'
 					}
 				}
 			},
-			content : {
+			version : {
 				validators : {
 					notEmpty : {
-						message : '正文不能为空'
+						message : '请填写版本信息描述'
 					}
 				}
 			},
-			targetUrl : {
+			code : {
 				validators : {
 					notEmpty : {
-						message : '链接地址不能为空'
+						message : '请填写版本号'
 					}
 				}
-			},
-			sort : {
-				validators : {
-					notEmpty : {
-						message : '顺序不能为空'
-					}
-				}
-			}*!/
+			}
 		}
 	});
-*/
+
 
 
 	function saveAppVersion() {
-		/*$('#editForm').data('bootstrapValidator').validate();
+		$('#editForm').data('bootstrapValidator').validate();
 		if (!$('#editForm').data('bootstrapValidator').isValid()) {
 			return;
-		}*/
+		}
 
 
 
