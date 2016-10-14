@@ -69,5 +69,8 @@ public class MbAppVersionServiceImpl implements MbAppVersionService {
         }
     }
 
-
+	@Override
+	public MbAppVersion queryNewest() {
+		return mbAppVersionMapper.queryNewest();
+	}
 }

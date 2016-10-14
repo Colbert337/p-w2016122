@@ -8,15 +8,21 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sysongy.util.*;
-import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
-
-import net.sf.json.JSONArray;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
@@ -38,7 +44,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
@@ -63,9 +68,11 @@ import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.controller.SysRoadController;
+import com.sysongy.poms.mobile.model.MbAppVersion;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.model.MbStatistics;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.mobile.service.MbAppVersionService;
 import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
@@ -79,9 +86,18 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.pojo.AliShortMessageBean;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.HttpUtil;
+import com.sysongy.util.JsonTool;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RealNameException;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.TwoDimensionCode;
+import com.sysongy.util.UUIDGenerator;
 import com.tencent.mm.sdk.modelpay.PayReq;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @RequestMapping("/api/v1/mobile")
@@ -148,6 +164,8 @@ public class MobileController {
 	SysMessageService sysMessageService;
 	@Autowired
 	MbStatisticsService mbStatisticsService;
+	@Autowired
+	MbAppVersionService mbAppVersionService;
 
 	/**
 	 * 用户登录
@@ -3876,11 +3894,14 @@ public class MobileController {
 		result.setMsg("获取成功！");
 		String resultStr = "";
 		try {
+			MbAppVersion appVersion = mbAppVersionService.queryNewest();
 			Map<String, Object> tokenMap = new HashMap<>();
 			String localPath = (String) prop.get("http_poms_path");
-			tokenMap.put("lastVersion", "13");
-			tokenMap.put("downUrl", localPath + "/docs/app/sysongy-sysongy-release-1.0.0.13.apk");
-			tokenMap.put("isUpdate", "1");
+			tokenMap.put("lastVersion", appVersion.getVersion());
+			tokenMap.put("downUrl", localPath + appVersion.getUrl());
+			tokenMap.put("isUpdate", appVersion.getIsUpdate());
+			tokenMap.put("appSize", appVersion.getAppSize());
+			tokenMap.put("remark", appVersion.getRemark());
 			result.setData(tokenMap);
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
