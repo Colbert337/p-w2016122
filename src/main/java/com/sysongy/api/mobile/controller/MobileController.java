@@ -3675,8 +3675,8 @@ public class MobileController {
 					SysRoadCondition sysRoadCondition = sysRoadService.selectByPrimaryKey(id);
 					sysRoadCondition.setId(sysRoadCondition.getId());
 					if ("1".equals(operation)) {// 阅读
-						String viewCount = sysRoadCondition.getViewCount();
-						viewCount = String.valueOf(Integer.parseInt(viewCount) + 1);
+						int viewCount = sysRoadCondition.getViewCount();
+						viewCount = viewCount + 1;
 						sysRoadCondition.setViewCount(viewCount);
 						rs = sysRoadService.updateRoad(sysRoadCondition);
 						if (rs > 0) {
@@ -3686,8 +3686,8 @@ public class MobileController {
 							result.setMsg("操作失败！");
 						}
 					} else {// 分享
-						String shareCount = sysRoadCondition.getShareCount();
-						shareCount = String.valueOf(Integer.parseInt(shareCount) + 1);
+						int shareCount = sysRoadCondition.getShareCount();
+						shareCount = shareCount + 1;
 						sysRoadCondition.setShareCount(shareCount);
 						rs = sysRoadService.updateRoad(sysRoadCondition);
 						if (rs > 0) {

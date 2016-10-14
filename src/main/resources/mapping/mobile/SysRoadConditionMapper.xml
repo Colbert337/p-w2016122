@@ -25,8 +25,8 @@
     <result column="auditor_phone" property="auditorPhone" jdbcType="VARCHAR" />
     <result column="auditor_time" property="auditorTime" jdbcType="TIMESTAMP" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
-    <result column="view_count" property="viewCount" jdbcType="VARCHAR" />
-    <result column="share_count" property="shareCount" jdbcType="VARCHAR" />
+    <result column="view_count" property="viewCount" jdbcType="INTEGER" />
+    <result column="share_count" property="shareCount" jdbcType="INTEGER" />
     <result column="road_id" property="roadId" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="MapResultMap" type="java.util.Map" >
@@ -344,6 +344,12 @@
      <if test="invalid_count != null" >
         invalid_count = #{invalid_count,jdbcType=VARCHAR},
       </if>
+    <if test="viewCount != null" >
+        view_count = #{viewCount,jdbcType=VARCHAR},
+    </if>
+    <if test="shareCount != null" >
+        share_count = #{shareCount,jdbcType=VARCHAR},
+    </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
