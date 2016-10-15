@@ -78,9 +78,9 @@
 										<th
 												id="appSize_order">App大小</th>
 										<th
-											id="version_order">版本信息</th>
+											id="version_order">外部版本号</th>
 										<th
-											id="code_order">版本号</th>
+											id="code_order">内部版本号</th>
 										<th
 											id="isPublish_order">是否发布</th>
 										<th

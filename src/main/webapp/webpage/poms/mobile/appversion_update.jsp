@@ -180,35 +180,35 @@
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group" id="urldiv" STYLE="display: none">
 							<label class="col-sm-3 control-label no-padding-right"
 								   for="url">   下载地址：
 							</label>
 							<div class="col-sm-8">
-								<input name="url" id="url" style="resize: none;"
+								<input name="url" id="url" style="resize: none;border:none;"
 									   placeholder="请先上传程序包"
 									   value="${mbAppVersion.url }" readonly="readonly"
 									   class="col-xs-10 col-sm-12 limited form-control" />
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group" id="appSizediv" STYLE="display: none">
 							<label class="col-sm-3 control-label no-padding-right"
-								   for="url">   App包大小：
+								   for="appSize">   App包大小：
 							</label>
 							<div class="col-sm-8">
-								<input name="appSize" id="appSize" style="resize: none;"
+								<input name="appSize" id="appSize" style="resize: none;border:none;"
 									   placeholder="请先上传程序包"
 									   value="${mbAppVersion.appSize }" readonly="readonly"
 									   class="col-xs-10 col-sm-12 limited form-control" />
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group" id="createdDateStrdiv"  STYLE="display: none">
 							<label class="col-sm-3 control-label no-padding-right" for="createdDateStr">添加时间： </label>
 							<div class="col-sm-8">
 								<input class="col-xs-10 col-sm-12 limited form-control"   placeholder="请先上传程序包" name="createdDateStr"
-									   id="createdDateStr" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" style="resize: none;"
+									   id="createdDateStr" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" style="resize: none;border:none;"
 									   value="${mbAppVersion.createdDateStr}"/>
 							</div>
 						</div>
@@ -378,6 +378,9 @@
 							 $("#appSize").html(obj.attributes.appSize);
 							 $("#createdDateStr").val(obj.attributes.createDate);
 							 $("#createdDateStr").html(obj.attributes.createDate);
+							 $('#urldiv').css('display','block');
+							 $('#appSizediv').css('display','block');
+							 $('#createdDateStrdiv').css('display','block');
 						 }
 						return false;
 					}
