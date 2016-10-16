@@ -112,6 +112,7 @@
 											if($('#minus_money').val()!=''&&$('#fixed_discount').val()!=''){alert('选择固定折扣就不能再选择立减金额');$('#minus_money').val('');}"
 												   name="fixed_discount" placeholder="固定折扣" class="form-control" maxlength="4" value="${gsGasPrice.fixed_discount}"/>
 										</div>
+										<div class="form-group">	<span class="red_star">固定折扣格式如：0.75 &nbsp(0.75代表75折),选择固定折扣后，就不能再选择立减金额</span></div>
 									</div>
 									
 									<div class="form-group">
@@ -123,6 +124,7 @@
 												   onblur="javascript:if($('#fixed_discount').val()!=''&&$('#minus_money').val()!=''){alert('选择立减金额就不能再选择固定折扣');$('#fixed_discount').val('');}"
 												   maxlength="20" value="${gsGasPrice.minus_money}" />
 										</div>
+										<div class="form-group">	<span class="red_star">选择立减金额后，就不能再选择固定折扣</span></div>
 									</div>
 
 									<div class="form-group">

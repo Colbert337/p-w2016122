@@ -148,7 +148,7 @@
 									   class="col-xs-10 col-sm-12 limited form-control" />--%>
 								<select name="isUpdate" title="状态">
 									<option value="1" <c:if test="${mbAppVersion.isUpdate == '1' }">selected</c:if> >是</option>
-									<option value="0" <c:if test="${mbAppVersion.isUpdate == '0' }">selected</c:if> >否</option>
+									<option value="2" <c:if test="${mbAppVersion.isUpdate == '2' }">selected</c:if> >否</option>
 								</select>
 							</div>
 						</div>
@@ -215,6 +215,7 @@
 
 						<input type="hidden" id="appVersionId" name="appVersionId"
 							value="${mbAppVersion.appVersionId}" />
+
 					</form>
 
 				<%--	<div class="showImg">
@@ -292,6 +293,13 @@
 						message : '请填写内部版本号'
 					}
 				}
+			},
+			remark : {
+				validators : {
+					notEmpty : {
+						message : '请填写本次更新的说明。（以中文句号结束内容填写）'
+					}
+				}
 			}
 		}
 	});
@@ -303,7 +311,10 @@
 		if (!$('#editForm').data('bootstrapValidator').isValid()) {
 			return;
 		}
-
+		if($('#url').val()==''){
+			alert('请上传文件');
+			return false;
+		}
 
 
 
@@ -381,6 +392,7 @@
 							 $('#urldiv').css('display','block');
 							 $('#appSizediv').css('display','block');
 							 $('#createdDateStrdiv').css('display','block');
+
 						 }
 						return false;
 					}
