@@ -4,6 +4,7 @@ import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.liquid.model.SysGasSource;
 import com.sysongy.poms.usysparam.model.Usysparam;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class GsGasPrice extends BaseModel {
@@ -47,6 +48,25 @@ public class GsGasPrice extends BaseModel {
     private int is_deleted;
 
     private String productType = "1";
+
+    private BigDecimal minus_money; //立减金额
+    private Float fixed_discount;//固定折扣
+
+    public BigDecimal getMinus_money() {
+        return minus_money;
+    }
+
+    public void setMinus_money(BigDecimal minus_money) {
+        this.minus_money = minus_money;
+    }
+
+    public Float getFixed_discount() {
+        return fixed_discount;
+    }
+
+    public void setFixed_discount(Float fixed_discount) {
+        this.fixed_discount = fixed_discount;
+    }
 
     public String getCreated_date_before() {
 		return created_date_before;

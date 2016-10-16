@@ -58,7 +58,7 @@ public class Gastation extends BaseModel implements Comparable {
 	private Integer prepay_version;
 	private String type;
 	private String price_effective_time;
-	private Float fixed_discount;
+	/*private Float fixed_discount;*/
 
 	public String getPrice_effective_time() {
 		return price_effective_time;
@@ -68,14 +68,14 @@ public class Gastation extends BaseModel implements Comparable {
 		this.price_effective_time = price_effective_time;
 	}
 
-	public Float getFixed_discount() {
+	/*public Float getFixed_discount() {
 		return fixed_discount;
 	}
 
 	public void setFixed_discount(Float fixed_discount) {
 		this.fixed_discount = fixed_discount;
 	}
-
+*/
 	
 	private Double distance;//虚拟距离字段，列表显示时计算距离后排序
 	

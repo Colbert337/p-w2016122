@@ -85,15 +85,18 @@
 									<th>当前单价</th>
 									<th onclick="orderBy(this,'gas_num');commitForm();" id="gas_num_order">气品类型</th>
 									<th onclick="orderBy(this,'gas_name');commitForm();" id="gas_name_order">气品子类型</th>
+									<th onclick="orderBy(this,'fixed_discount');commitForm();" id="fixed_discount_order">固定折扣</th>
+									<th onclick="orderBy(this,'minus_money');commitForm();" id="minus_money_order">立减金额</th>
 									<th onclick="orderBy(this,'created_date');commitForm();" id="created_date_order" class="td-w2"><i id="createdDate" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
 									<!-- <th class="td-w2"><i id="createTime" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>更新时间</th> -->
 									<th class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
 
-							<tbody>
+							<tr>
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
+
 								<tr id="listobj">
 									<td class="center">
 										<label class="pos-rel"> 
@@ -108,10 +111,17 @@
 									<td><s:Code2Name mcode="${list.gasNum}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.gasName}" gcode="CARDTYPE"></s:Code2Name></td>
 									<%-- <td><fmt:formatDate value="${list.createdDate}" type="both"/></td> --%>
+									<td>
+										${list.fixed_discount}
+									</td>
+									<td>${list.minus_money}</td>
 									<td><fmt:formatDate value="${list.productPriceInfo.createTime}" type="both"/></td>
 									<td class="text-center">
 										<a class="option-btn-m" href="javascript:void(0);" title="查看历史价格" data-rel="tooltip">
 											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showPriceLog(this);"></i>
+										</a>
+										<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
+											<i class="ace-icon fa fa-pencil bigger-130" onclick="getUpdatePage(this);"></i>
 										</a>
 									</td>
 								</tr>
