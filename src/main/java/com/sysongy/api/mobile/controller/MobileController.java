@@ -551,7 +551,7 @@ public class MobileController {
 							resultMap.put("nick", "");
 						}
 						resultMap.put("account", driver.getUserName());
-						resultMap.put("securityPhone", driver.getMobilePhone());
+						resultMap.put("securityPhone", driver.getSecurityMobilePhone());
 						resultMap.put("isRealNameAuth", driver.getCheckedStatus());
 						resultMap.put("balance", driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl", http_poms_path + driverlist.get(0).getDriverQrcode());
