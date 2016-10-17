@@ -2553,8 +2553,7 @@ public class MobileController {
 				SysOrder sysOrder = null;
 				String thirdPartyID = null;
 				if (payType.equalsIgnoreCase("2")) { // 支付宝支付
-					sysOrder = createNewOrder(orderID, driverID, feeCount,
-							GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE); // TODO充值成功后再去生成订单
+					sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE); // TODO充值成功后再去生成订单
 					orderService.checkIfCanChargeToDriver(sysOrder);
 					String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayCallBackPay";
 					Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
@@ -4105,20 +4104,22 @@ public class MobileController {
 
 	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType) throws Exception {
 		SysOrder record = new SysOrder();
+		record.setChannel("APP-支付宝充值");
+		record.setChannelNumber("APP-支付宝充值"); // 建立一个虚拟的APP气站，方便后期统计
 		if (chargeType.equals(GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE)) {// 微信支付，将金额转换为以元为单位
 			BigDecimal cashBd = new BigDecimal(cash);
 			BigDecimal num = new BigDecimal(100);
 			cashBd = cashBd.divide(num, 2, RoundingMode.HALF_UP);
 			cash = cashBd.toString();
+			record.setChannel("APP-微信充值");
+			record.setChannelNumber("APP-微信充值"); // 建立一个虚拟的APP气站，方便后期统计
 		}
 		record.setOrderId(orderID);
 		record.setDebitAccount(driverID);
 		record.setOperator(appOperatorId);
 		record.setOperatorSourceId(appOperatorId);
-
 		record.setCash(new BigDecimal(cash));
 		record.setChargeType(chargeType);
-
 		record.setIs_discharge("0");
 		record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
 		record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
@@ -4135,8 +4136,6 @@ public class MobileController {
 		 **/
 		Date curDate = new Date();
 		record.setOrderDate(curDate);
-		record.setChannel("APP");
-		record.setChannelNumber("APP"); // 建立一个虚拟的APP气站，方便后期统计
 		return record;
 	}
 
