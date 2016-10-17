@@ -102,7 +102,16 @@
 											<input type="text" id="gasName"  name="gasName" readOnly="true" class="form-control" maxlength="20" value="<s:Code2Name mcode="${gsGasPrice.gasName}" gcode="CARDTYPE"></s:Code2Name>"/>
 										</div>
 									</div>
-									
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">优惠方式：</label>
+
+										<div class="col-sm-4">
+											<input type="radio" value="0" name="preferential_type" class="preferential_type" onclick="changetype('0'); " <c:if test="${gsGasPrice.preferential_type=='0'}">checked="checked"</c:if> />立减金额
+											<input type="radio" value="1" name="preferential_type" class="preferential_type"  onclick="changetype('1');" <c:if test="${gsGasPrice.preferential_type=='1'}">checked="checked"</c:if>/>固定折扣
+										</div>
+									</div>
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="fixed_discount">固定折扣：</label>
 
@@ -114,7 +123,7 @@
 										</div>
 										<div class="form-group">	<span class="red_star">固定折扣格式如：0.75 &nbsp(0.75代表75折),选择固定折扣后，就不能再选择立减金额</span></div>
 									</div>
-									
+
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">立减金额：</label>
 
@@ -344,7 +353,10 @@
 		    });
 			    
 		function save(){
-
+			if($('#fixed_discount').val()=='' &&
+			$('#minus_money').val()==''){
+				$('.preferential_type').attr("checked",false);
+			}
 			
 			/*手动验证表单，当是普通按钮时。*/
 			/*	$('#gastationform').data('bootstrapValidator').validate();
@@ -408,4 +420,14 @@
 				$('#colorbox, #cboxOverlay').remove();
 		   });
 		})
+
+		function changetype(type){
+			if(type==0){
+				$('#fixed_discount').attr('disabled',true);
+				$('#minus_money').attr('disabled',false);
+			}else{
+				$('#minus_money').attr('disabled',true);
+				$('#fixed_discount').attr('disabled',false);
+			}
+		}
 		</script>

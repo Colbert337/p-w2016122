@@ -51,6 +51,15 @@ public class GsGasPrice extends BaseModel {
 
     private BigDecimal minus_money; //立减金额
     private Float fixed_discount;//固定折扣
+    private Integer preferential_type;//优惠类型
+
+    public Integer getPreferential_type() {
+        return preferential_type;
+    }
+
+    public void setPreferential_type(Integer preferential_type) {
+        this.preferential_type = preferential_type;
+    }
 
     public BigDecimal getMinus_money() {
         return minus_money;

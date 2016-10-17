@@ -16,6 +16,7 @@
 
     <result column="fixed_discount" property="fixed_discount" jdbcType="FLOAT" />
     <result column="minus_money" property="minus_money" jdbcType="DECIMAL" />
+    <result column="preferential_type" property="preferential_type" jdbcType="INTEGER" />
 
     <association property="gasNumInfo" column="gas_num"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
@@ -59,7 +60,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     gs_gas_price_id, sys_gas_station_id, gas_num, gas_name, price_id, unit, remark, created_date,
-    updated_date, gs_gas_source_id,fixed_discount,minus_money
+    updated_date, gs_gas_source_id,fixed_discount,minus_money,preferential_type
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
@@ -103,14 +104,15 @@
   <insert id="insert" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
     insert into gs_gas_price (gs_gas_price_id, sys_gas_station_id, gas_num, 
       gas_name, price_id, unit,
-      remark, created_date, updated_date, gs_gas_source_id, is_deleted ,fixed_discount,minus_money
+      remark, created_date, updated_date, gs_gas_source_id, is_deleted ,fixed_discount,minus_money,preferential_type
       )
     values (#{gsGasPriceId,jdbcType=VARCHAR}, #{sysGasStationId,jdbcType=VARCHAR}, #{gasNum,jdbcType=VARCHAR}, 
       #{gasName,jdbcType=VARCHAR}, #{price_id,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{updatedDate,jdbcType=TIMESTAMP},
       #{gs_gas_source_id,jdbcType=VARCHAR}, 0,
       #{fixed_discount ,jdbcType=FLOAT},
-       #{minus_money,jdbcType=DECIMAL}
+       #{minus_money,jdbcType=DECIMAL},
+       #{preferential_type,jdbcType=INTEGER}
 
       )
   </insert>
@@ -228,6 +230,7 @@
 
 
         minus_money=  #{minus_money ,jdbcType=DECIMAL},
+      preferential_type =  #{preferential_type ,jdbcType=INTEGER}
 
     </set>
     where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
@@ -264,7 +267,8 @@ SET
       created_date = #{createdDate,jdbcType=TIMESTAMP},
       updated_date = #{updatedDate,jdbcType=TIMESTAMP},
       fixed_discount=#{fixed_discount,jdbcType=FLOAT},
-      minus_money=#{minus_money,jdbcType=DECIMAL}
+      minus_money=#{minus_money,jdbcType=DECIMAL},
+      preferential_type=#{preferential_type ,jdbcType=INTEGER}
     where gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
   </update>
 
