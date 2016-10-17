@@ -107,8 +107,8 @@
 										<label class="col-sm-3 control-label no-padding-right">优惠方式：</label>
 
 										<div class="col-sm-4">
-											<input type="radio" value="0" name="preferential_type" class="preferential_type" onclick="changetype('0'); " <c:if test="${gsGasPrice.preferential_type=='0'}">checked="checked"</c:if> />立减金额
-											<input type="radio" value="1" name="preferential_type" class="preferential_type"  onclick="changetype('1');" <c:if test="${gsGasPrice.preferential_type=='1'}">checked="checked"</c:if>/>固定折扣
+											<input type="radio" value="0" id="minus_money_preferential_type" name="preferential_type" class="preferential_type" onclick="changetype('0'); " <c:if test="${gsGasPrice.preferential_type=='0'}">checked="checked"</c:if> />立减金额
+											<input type="radio" value="1" id="fixed_discount_preferential_type"  name="preferential_type" class="preferential_type"  onclick="changetype('1');" <c:if test="${gsGasPrice.preferential_type=='1'}">checked="checked"</c:if>/>固定折扣
 										</div>
 									</div>
 
@@ -118,10 +118,12 @@
 										<div class="col-sm-4">
 
 											<input type="text"  id="fixed_discount" onKeyUp="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" onblur="javascript:if(parseFloat(value) >= 1){value='';alert('值不能大于1');}
-											if($('#minus_money').val()!=''&&$('#fixed_discount').val()!=''){alert('选择固定折扣就不能再选择立减金额');$('#minus_money').val('');}"
+											if($('#minus_money').val()!=''&&$('#fixed_discount').val()!=''){alert('选择固定折扣就不能再选择立减金额');$('#minus_money').val('');}
+											<%--if($('#fixed_discount').val()!=''&&$('#fixed_discount_preferential_type').isChecked()==false){alert('请先选择优惠方式');$('#fixed_discount').val('');}--%>"
 												   name="fixed_discount" placeholder="固定折扣" class="form-control" maxlength="4" value="${gsGasPrice.fixed_discount}"/>
 										</div>
-										<div class="form-group">	<span class="red_star">固定折扣格式如：0.75 &nbsp(0.75代表75折),选择固定折扣后，就不能再选择立减金额</span></div>
+										<input id="fixed_discount_temp" type="hidden" value="" />
+										<div     class="form-group">	<span class="red_star">固定折扣格式如：0.75 &nbsp(0.75代表75折),选择固定折扣后，就不能再选择立减金额</span></div>
 									</div>
 
 									<div class="form-group">
@@ -130,10 +132,12 @@
 										<div class="col-sm-4">
 											<input class="form-control" id="minus_money" name="minus_money" type="text" placeholder="输入立减金额"
 												   onKeyUp="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"
-												   onblur="javascript:if($('#fixed_discount').val()!=''&&$('#minus_money').val()!=''){alert('选择立减金额就不能再选择固定折扣');$('#fixed_discount').val('');}"
-												   maxlength="20" value="${gsGasPrice.minus_money}" />
+												   onblur="javascript:if($('#fixed_discount').val()!=''&&$('#minus_money').val()!=''){alert('选择立减金额就不能再选择固定折扣');$('#fixed_discount').val('');}
+												<%--if($('#minus_money').val()!=''&&$('#minus_money_preferential_type').isChecked()==false){$('#minus_money_preferential_type').attr('checked',true);}--%>"
+												  maxlength="20" value="${gsGasPrice.minus_money}" />
 										</div>
-										<div class="form-group">	<span class="red_star">选择立减金额后，就不能再选择固定折扣</span></div>
+										<input id="minus_money_temp" type="hidden" value="" />
+										<div  class="form-group">	<span class="red_star">选择立减金额后，就不能再选择固定折扣</span></div>
 									</div>
 
 									<div class="form-group">
@@ -353,7 +357,20 @@
 		    });
 			    
 		function save(){
-			if($('#fixed_discount').val()=='' &&
+
+			if($('#minus_money').val()!=''&&$('#fixed_discount').val()==''){$('#minus_money_preferential_type').attr('checked',true);}
+			if($('#fixed_discount').val()!=''&&$('#minus_money').val()==''){$('#fixed_discount_preferential_type').attr('checked',true);}
+
+		/*	if($("#fixed_discount_preferential_type").attr('checked') && $('#fixed_discount').val()==''){//如果选中
+				alert('请输入优惠折扣');
+			return false;
+			}
+			if($("#minus_money_preferential_type").attr('checked') && $('#minus_money').val()==''){//如果选中
+				alert('请输入立减金额');
+				return false;
+			}*/
+
+				if($('#fixed_discount').val()=='' &&
 			$('#minus_money').val()==''){
 				$('.preferential_type').attr("checked",false);
 			}
@@ -419,15 +436,53 @@
 			$(document).one('ajaxloadstart.page', function(e) {
 				$('#colorbox, #cboxOverlay').remove();
 		   });
+
+			if($('#minus_money').val()==''&&$('#fixed_discount').val()==''){
+				$('#fixed_discount').attr('disabled',true);
+				$('#minus_money').attr('disabled',true);
+				}
+			if($('#minus_money').val()!=''&&$('#fixed_discount').val()==''){
+				$('#fixed_discount').attr('disabled',true);
+			}
+			if($('#fixed_discount').val()!=''&&$('#minus_money').val()==''){
+				$('#minus_money').attr('disabled',true);
+			}
 		})
 
 		function changetype(type){
 			if(type==0){
 				$('#fixed_discount').attr('disabled',true);
+
+				if($('#fixed_discount').val()!=''){
+				var n=$('#fixed_discount').val();
+				$('#fixed_discount_temp').val(n);
+				}
+				if($('#minus_money_temp').val()!=''&&$('#minus_money').val()==''){
+					var n=$('#minus_money_temp').val();
+					$('#minus_money').val(n);
+				}
+
+
+				$('#fixed_discount').val('');
 				$('#minus_money').attr('disabled',false);
+
 			}else{
 				$('#minus_money').attr('disabled',true);
+
+				if($('#minus_money').val()!=''){
+					var n=$('#minus_money').val();
+					$('#minus_money_temp').val(n);
+				}
+				if($('#fixed_discount_temp').val()!=''&&$('#fixed_discount').val()==''){
+					var n=	$('#fixed_discount_temp').val()
+					$('#fixed_discount').val(n);
+				}
+
+
+
+				$('#minus_money').val('');
 				$('#fixed_discount').attr('disabled',false);
+
 			}
 		}
 		</script>
