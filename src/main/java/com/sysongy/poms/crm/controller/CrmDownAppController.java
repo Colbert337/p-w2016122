@@ -44,7 +44,6 @@ public class CrmDownAppController {
 	@RequestMapping("/webapp-download-app")
 	public String webappDownloadApp(ModelMap map) throws Exception {
 		MbAppVersion mbAppVersion = mbAppVersionMapper.queryNewest();
-		map.addAttribute("img", "images/down-app.png");
 		map.addAttribute("version", mbAppVersion.getCode());//整数
 		map.addAttribute("url", mbAppVersion.getUrl());
 		return "/webpage/crm/webapp-download-app";
