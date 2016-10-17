@@ -387,9 +387,9 @@ public class CrmPortalController {
 
         //统计阅读数
         SysRoadCondition rction = new SysRoadCondition();
-        int viewCount = roadCondition.getViewCount();
-        viewCount = viewCount+1;
-        rction.setViewCount(viewCount);
+        String viewCount = roadCondition.getViewCount();
+        int viewCountInt = Integer.parseInt(viewCount)+1;
+        rction.setViewCount(viewCountInt+"");
         rction.setId(roadCondition.getId());
         sysRoadService.updateByPrimaryKey(rction);
         return "/webpage/crm/webapp-traffic-detail";
@@ -423,9 +423,9 @@ public class CrmPortalController {
 
         //统计分享数
         SysRoadCondition rction = new SysRoadCondition();
-        int shareCount = roadCondition.getShareCount();
-        shareCount = shareCount+1;
-        rction.setShareCount(shareCount);
+        String shareCount = roadCondition.getShareCount();
+        int shareCountInt = Integer.parseInt(shareCount)+1;
+        rction.setShareCount(shareCountInt+"");
         rction.setId(roadCondition.getId());
         sysRoadService.updateByPrimaryKey(rction);
         return "/webpage/crm/webapp-traffic-share";
