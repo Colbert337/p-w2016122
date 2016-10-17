@@ -1,33 +1,15 @@
 package com.sysongy.poms.crm.controller;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sysongy.api.mobile.model.base.MobileReturn;
-import com.sysongy.api.mobile.model.verification.MobileVerification;
-import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
-import com.sysongy.api.util.DESUtil;
-import com.sysongy.poms.base.model.AjaxJson;
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.base.model.InterfaceConstants;
-import com.sysongy.poms.card.model.GasCard;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.driver.service.DriverService;
-import com.sysongy.poms.mobile.dao.MbAppVersionMapper;
-import com.sysongy.poms.transportion.model.Transportion;
-import com.sysongy.poms.transportion.service.TransportionService;
-import com.sysongy.tcms.advance.model.TcVehicle;
-import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.*;
-import com.sysongy.util.pojo.AliShortMessageBean;
-import jxl.Sheet;
-import jxl.Workbook;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,18 +19,26 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
+import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.crm.model.CrmHelp;
 import com.sysongy.poms.crm.model.CrmHelpType;
 import com.sysongy.poms.crm.service.CrmHelpService;
 import com.sysongy.poms.crm.service.CrmHelpTypeService;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.mobile.dao.MbAppVersionMapper;
+import com.sysongy.poms.mobile.model.MbAppVersion;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.service.MbBannerService;
@@ -57,10 +47,18 @@ import com.sysongy.poms.page.model.SysStaticPage;
 import com.sysongy.poms.page.service.SysStaticPageService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+import com.sysongy.tcms.advance.service.TcVehicleService;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.TwoDimensionCode;
+import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
 /**
  * @FileName: CrmPortalController
@@ -561,7 +559,6 @@ public class CrmPortalController {
                 logger.info("验证码无效！");
             }
         }
-        mbAppVersionMapper.updateDownCount();//更新APP下载数
         return "/webpage/crm/webapp-download-app";
     }
 
@@ -571,8 +568,10 @@ public class CrmPortalController {
      */
     @RequestMapping("/app/down")
     @ResponseBody
-    public String appDownCount(ModelMap map) throws Exception {
-        mbAppVersionMapper.updateDownCount();//更新APP下载数
+    public String appDownCount(@RequestParam String appVersion,ModelMap map) throws Exception {
+    	MbAppVersion mbAppVersion = new MbAppVersion();
+    	mbAppVersion.setCode(appVersion);
+        mbAppVersionMapper.updateDownCount(mbAppVersion);//更新APP下载数
         return null;
     }
     /**
