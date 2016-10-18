@@ -22,5 +22,8 @@ public interface MbAppVersionService {
     int updateByPrimaryKey(MbAppVersion record) throws ParseException;
 
     PageInfo<MbAppVersion> queryAppVersionListPage(MbAppVersion record) throws Exception;
-
+    /**
+     * 获取最新版本
+     */
+    MbAppVersion queryNewest();
     }

@@ -132,6 +132,7 @@
 
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
     update mb_app_version
+
     where app_version_id = #{appVersionId,jdbcType=VARCHAR}
   </update>
 
@@ -150,9 +151,14 @@
   </update>
 
   <!--更新APP下载量-->
-  <update id="updateDownCount" >
+  <update id="updateDownCount" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
     update mb_app_version set down_count = down_count + 1
-    where status = 2
+    where code = #{code,jdbcType=VARCHAR}
   </update>
-
+  <!-- 获取最新版本 -->
+  <select id="queryNewest" resultMap="BaseResultMap">
+    select
+   	<include refid="Base_Column_List"/>
+    FROM mb_app_version where is_publish = '1' ORDER BY created_date DESC LIMIT 1
+  </select>
 </mapper>

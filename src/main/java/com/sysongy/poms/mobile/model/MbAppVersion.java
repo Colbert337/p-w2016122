@@ -24,31 +24,11 @@ public class MbAppVersion  extends BaseModel {
     private Date createdDate;
 
     private String createdDateStr;
-
     private String created_date_sel;//用于查询的虚拟字段
     private String updated_date_sel;//用于查询的虚拟字段
 
     private  String appSize;
     private  String isUpdate; //1强制 2不强制
-    public String getAppSize() {
-        return appSize;
-    }
-
-    public void setAppSize(String appSize) {
-        this.appSize = appSize;
-    }
-
-    public String getIsUpdate() {
-        return isUpdate;
-    }
-
-    public void setIsUpdate(String isUpdate) {
-        this.isUpdate = isUpdate;
-    }
-
-
-
-
 
     public String getCreated_date_sel() {
         return created_date_sel;
@@ -145,4 +125,20 @@ public class MbAppVersion  extends BaseModel {
     public void setDownCount(int downCount) {
         this.downCount = downCount;
     }
+
+	public String getAppSize() {
+		return appSize;
+	}
+
+	public void setAppSize(String appSize) {
+		this.appSize = appSize;
+	}
+
+	public String getIsUpdate() {
+		return isUpdate;
+	}
+
+	public void setIsUpdate(String isUpdate) {
+		this.isUpdate = isUpdate;
+	}
 }

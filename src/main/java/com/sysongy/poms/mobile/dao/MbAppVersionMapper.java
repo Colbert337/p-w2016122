@@ -24,5 +24,9 @@ public interface MbAppVersionMapper {
      * 更新APP下载量
      * @return
      */
-    int updateDownCount();
+    int updateDownCount(MbAppVersion record);
+    /**
+     * 获取最新版本
+     */
+    MbAppVersion queryNewest();
 }

@@ -344,6 +344,12 @@
      <if test="invalid_count != null" >
         invalid_count = #{invalid_count,jdbcType=VARCHAR},
       </if>
+    <if test="viewCount != null" >
+        view_count = #{viewCount,jdbcType=VARCHAR},
+    </if>
+    <if test="shareCount != null" >
+        share_count = #{shareCount,jdbcType=VARCHAR},
+    </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
