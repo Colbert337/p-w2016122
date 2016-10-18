@@ -50,7 +50,7 @@
 							<label>交易类型：</label>
 							<select id="is_discharge" name="is_discharge">
 								<option value="">全部</option>
-								<option value="0">消费</option>
+								<option value="0">充值</option>
 								<option value="1">冲红</option>
 							</select>
 						</div>	
