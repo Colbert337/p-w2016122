@@ -350,7 +350,7 @@ public class CouponController extends BaseContoller {
 							continue;
 						}
 						SysDriver driver = driverInfo.get(0);
-						userCoupon.setUser_id(driver.getSysDriverId());
+						userCoupon.setSys_driver_id(driver.getSysDriverId());
 						driverList.add(driver);
 						PageInfo<UserCoupon> userCouponInfo = service.queryUserCoupon(userCoupon);
 						if (userCouponInfo.getSize() > 0) {
@@ -411,7 +411,7 @@ public class CouponController extends BaseContoller {
 			for(int i=0;i<sysDriverId.length;i++){
 				UserCoupon userCoupon = new UserCoupon();
 				userCoupon.setCoupon_id(coupon_id);
-				userCoupon.setUser_id(sysDriverId[i]);
+				userCoupon.setSys_driver_id(sysDriverId[i]);
 				 service.addUserCoupon(userCoupon, currUser.getUserId());
 			}
 			bean.setRetMsg("" + sysDriverId.length + "名司机导入成功");
