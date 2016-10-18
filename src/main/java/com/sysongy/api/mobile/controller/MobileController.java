@@ -4089,7 +4089,64 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-
+	/**
+	 * 获取消费订单详情
+	 */
+	@RequestMapping(value = "/deal/getOrderInfo")
+	@ResponseBody
+	public String getOrderInfo(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取消费订单详情成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 必填参数
+			 */
+			String orderId = "orderId";
+			boolean b = JsonTool.checkJson(mainObj,orderId);
+			if(b){
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				orderId = mainObj.optString("orderId");
+				SysOrder order = orderService.queryById(orderId);
+				Map<String, Object> tokenMap = new HashMap<>();
+				tokenMap.put("cash",order.getCash());
+				tokenMap.put("gastationName",order.getGas_station_name());
+				tokenMap.put("orderStatus",order.getOrderStatus());
+				tokenMap.put("dealTime",sft.format(order.getOrderDate()));
+				tokenMap.put("chargeType",order.getChargeType());
+				tokenMap.put("orderId",orderId);
+				tokenMap.put("gastationId",order.getDebitAccount());
+				result.setData(tokenMap);
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("暂无消费订单！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取消费订单详情失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取消费订单详情失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 	private String genPayReq(Map<String, String> resultunifiedorder) {
 
 		/*

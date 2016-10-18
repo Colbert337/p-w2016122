@@ -89,6 +89,8 @@ public class SysOrder extends BaseModel{
     
     private String type;//查询个人转账记录时，转入转出表示列，不对应数据库字段 
     
+    private String gas_station_name;//虚拟字段气站名，查询消费订单用
+    
     public SysOrderDeal getOrder_deal() {
 		return order_deal;
 	}
@@ -394,5 +396,13 @@ public class SysOrder extends BaseModel{
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getGas_station_name() {
+		return gas_station_name;
+	}
+
+	public void setGas_station_name(String gas_station_name) {
+		this.gas_station_name = gas_station_name;
 	}
 }
