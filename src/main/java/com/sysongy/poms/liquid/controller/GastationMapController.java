@@ -110,6 +110,7 @@ public class GastationMapController extends BaseContoller {
 		PrintWriter pw = response.getWriter();
 		int count = 0;
 		int update = 0;
+		int i=0;
 		try {
 
 			if (file != null && !"".equals(file)) {
@@ -119,7 +120,7 @@ public class GastationMapController extends BaseContoller {
 				int columns = sheet.getColumns();
 				int err = 0;
 				// 循环从2（第三行开示） 前两行是表头
-				for (int i = 2; i < rows; i++) {
+				for (i = 2; i < rows; i++) {
 
 					Integer gender = 0;
 					String platesNumber = "";
@@ -140,6 +141,7 @@ public class GastationMapController extends BaseContoller {
 						if (sheet.getCell(1, i) != null
 								&& !"".equals(sheet.getCell(1, i).getContents().replace(" ", ""))) {
 							gas.setGas_station_name(sheet.getCell(1, i).getContents());
+							gas.setCompany(sheet.getCell(1, i).getContents());
 						} else {
 							message += "第" + (i + 1) + "行第2列（加注站名称不能为空）\n";
 							err++;
@@ -153,15 +155,15 @@ public class GastationMapController extends BaseContoller {
 							continue;
 						}
 						if (sheet.getCell(3, i) != null
-								&& !"".equals(sheet.getCell(3, i).getContents().replace(" ", ""))) {
-							gas.setProvince_id(sheet.getCell(3, i).getContents());
+								&& !"".equals(sheet.getCell(3, i).getContents().replaceAll(" ", ""))) {
+							gas.setProvince_id(sheet.getCell(3, i).getContents().replaceAll(" ", ""));
 						} else {
 							message += "第" + (i + 1) + "行第4列（加注站所在省不能为空）\n";
 							err++;
 							continue;
 						}
 						if (sheet.getCell(4, i) != null
-								&& !"".equals(sheet.getCell(4, i).getContents().replace(" ", ""))) {
+								&& !"".equals(sheet.getCell(4, i).getContents().replaceAll(" ", ""))) {
 							// gas.setCity_id(sheet.getCell(4,
 							// i).getContents());
 						} else {
@@ -170,7 +172,7 @@ public class GastationMapController extends BaseContoller {
 							continue;
 						}
 						if (sheet.getCell(5, i) != null
-								&& !"".equals(sheet.getCell(5, i).getContents().replace(" ", ""))) {
+								&& !"".equals(sheet.getCell(5, i).getContents().replaceAll(" ", ""))) {
 							// gas.setArea_id(sheet.getCell(5,
 							// i).getContents());
 						} else {
@@ -224,7 +226,7 @@ public class GastationMapController extends BaseContoller {
 
 						if (sheet.getCell(9, i) != null
 								&& !"".equals(sheet.getCell(9, i).getContents().replace(" ", ""))) {
-							gas.setContact_phone(sheet.getCell(9, i).getContents());
+							gas.setContact_phone(sheet.getCell(9, i).getContents().replaceAll(" ", ""));
 						} else {
 							message += "第" + (i + 1) + "行第10列（联系电话不能为空）\n";
 							err++;
@@ -299,7 +301,7 @@ public class GastationMapController extends BaseContoller {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			bean.setRetCode(500);
-			bean.setRetMsg(e.getMessage());
+			bean.setRetMsg(i+e.getMessage());
 			logger.error("", e);
 		} finally {
 			response.setContentType("text/xml; charset=utf-8");

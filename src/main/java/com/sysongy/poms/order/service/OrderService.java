@@ -26,7 +26,7 @@ public interface OrderService {
 
     SysOrder selectByPrimaryKey(String orderId);
 
-    int updateByPrimaryKey(SysOrder record);
+    //int updateByPrimaryKey(SysOrder record);
     
     PageInfo<OrderLog> queryOrderLogs(OrderLog obj) throws Exception;
 
@@ -213,6 +213,28 @@ public interface OrderService {
      * @return
      */
     PageInfo<Map<String,Object>> queryDriverTransferPage(SysOrder record);
+    /**
+     * 充值记录
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryDriverReCharge(SysOrder record);
+
+    /**
+     * 消费记录
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryDriverConsume(SysOrder record);
+
+    /**
+     * 转账记录
+     * @param record
+     * @return
+     */
+    List<Map<String,Object>> queryDriverTransfer(SysOrder record);
 
     String checkIfCanChargeToDriver(SysOrder order) throws Exception;
+
+	int updateByPrimaryKey(SysOrder record);
 }

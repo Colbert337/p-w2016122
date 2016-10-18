@@ -54,4 +54,11 @@ public interface MbBannerService {
      * @return
      */
     MbBanner queryMbBanner(MbBanner banner);
+    
+    /**
+     * 根据ID查询
+     * @param mbBannerId
+     * @return
+     */
+    MbBanner selectByPrimaryKey(String mbBannerId);
 }

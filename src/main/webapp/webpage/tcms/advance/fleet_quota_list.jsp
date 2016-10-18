@@ -28,19 +28,19 @@
 				<div class="col-xs-12">
 					<%--顶部条件搜索及按钮--%>
 					<div class="search-types">
-						<div class="item">
+						<%--<div class="item">
 							<label>车队名称/队长姓名：</label>
 							<input type="text" name="fleetName" placeholder="车队名称/队长姓名"  maxlength="11" value="${fleetQuota.fleetName}"/>
-						</div>
+						</div>--%>
 						<div class="item">
-							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+							<%--<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
 							</button>
 							<button class="btn btn-sm" type="button" onclick="init();">
 								重置
 							</button>
-							<div class="item"></div>
+							<div class="item"></div>--%>
 							<%--<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
 								充值
 							</button>--%>

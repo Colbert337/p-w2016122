@@ -56,4 +56,6 @@ public interface MbBannerMapper {
      */
     MbBanner queryMbBanner(MbBanner banner);
 
+	int deleteByPrimaryPageKey(String id);
+
 }

@@ -10,8 +10,9 @@
 %>
 
 	<script src="<%=basePath %>/dist/js/message/messageNEW.js"></script>
-
-					<div class="">
+<link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
+<script src="<%=basePath%>/dist/js/message/show.js"></script>
+					<div class="" id="div">
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
@@ -42,13 +43,13 @@
 										</div>
 									</div>
 									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">详情（content）：</label>
+					<!-- 				<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">详情：</label>
 
 										<div class="col-sm-4">
 											<textarea type="text" name="content" placeholder="输入信息内容" class="form-control" maxlength="500"></textarea>
 										</div>
-									</div>
+									</div> -->
 									
 									<div class="form-group">
 										<label for="email" class="col-sm-3 control-label no-padding-right">信息缩略： </label>
@@ -75,7 +76,9 @@
 											<input type="text" name="messageGroup" class="form-control" readonly="readonly" value="1000"/>
 										</div> -->
 									</div>
-									
+									<div class="form-group">
+									<label class="col-sm-3" style="float:left" ></label> 
+										<label id="text"</label></div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">发送方式：</label>
 										
@@ -149,6 +152,8 @@
 			<div class="modal-footer">
 				<button class="btn btn-primary btn-sm" onclick="saveBanner()">确
 					定</button>
+					<button class="btn btn-sm" i="close"
+					onclick="checkedAllRows()">全选</button>
 				<button class="btn btn-sm" i="close"
 					onclick="closeDialog('editModel')">取 消</button>
 			</div>

@@ -33,8 +33,8 @@
 						</div>
 						
 						<div class="item">
-						    <label>加注站名称:</label>
-							<input type="text" name="gas_station_name" placeholder="输入加注站名称"  maxlength="20" value="${gastation.gas_station_name}"/>
+						    <label>加注站名称/所属公司:</label>
+							<input type="text" name="gas_station_name" placeholder="输入加注站名称/所属公司"  maxlength="20" value="${gastation.gas_station_name}"/>
 						</div>
 						
 						<div class="item">
@@ -92,19 +92,22 @@
 									</th>
 									<th onclick="orderBy(this,'sys_gas_station_id');commitForm();" id="sys_gas_station_id_order">加注站编号</th>
 									<th onclick="orderBy(this,'gas_station_name');commitForm();" id="gas_station_name_order">加注站名称</th>
+									<th onclick="orderBy(this,'company');commitForm();" id="company_order">所属公司</th>
 									<th onclick="orderBy(this,'salesmen_name');commitForm();" id="salesmen_name_order">销售人员</th>
 									<th onclick="orderBy(this,'operations_name');commitForm();" id="operations_name_order">运营人员</th>
 									<th onclick="orderBy(this,'admin_username');commitForm();" id="admin_username_order">管理员账号</th>
 									<th onclick="orderBy(this,'indu_com_number');commitForm();" id="indu_com_number_order">工商注册号</th>
 									<th onclick="orderBy(this,'status');commitForm();" id="status_order">平台状态</th>
 									<th onclick="orderBy(this,'address');commitForm();" id="address_order">注册地址</th> 
-									<th onclick="orderBy(this,'gas_server');commitForm();" id="status_order">提供服务</th>
-									<th onclick="orderBy(this,'lng_price');commitForm();" id="status_order">商品信息</th>
-									<th onclick="orderBy(this,'promotions');commitForm();" id="status_order">优惠活动</th>
+									<th onclick="orderBy(this,'gas_server');commitForm();" id="lng_price_order">提供服务</th>
+									<th onclick="orderBy(this,'lng_price');commitForm();" id="lng_price_order">商品信息</th>
+									<th onclick="orderBy(this,'promotions');commitForm();" id="promotions_order">优惠活动</th>
 									<th onclick="orderBy(this,'created_time');commitForm();" id="created_time_order" class="td-w2"><i id="created_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>注册日期</th>
 									<th onclick="orderBy(this,'expiry_date');commitForm();" id="expiry_date_order" class="td-w2"><i id="expiry_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>平台有效期</th>
 									<th onclick="orderBy(this,'prepay_balance');commitForm();" id="prepay_balance_order">预付款额度</th>
 									<th style="display: none">钱袋编号</th>
+				 				<th onclick="orderBy(this,'price_effective_time');commitForm();" id="price_effective_order">价格生效时间</th>
+									<%--<th onclick="orderBy(this,'fixed_discount');commitForm();" id="fixed_discount_order">固定折扣</th>--%>
 									<th class="text-center td-w2">更多操作</th>
 								</tr>
 							</thead>
@@ -123,6 +126,7 @@
 
 									<td>${list.sys_gas_station_id}</td>
 								 	<td>${list.gas_station_name}</td> 
+								 	<td>${list.company}</td>
 									<td>${list.salesmen_name}</td>
 									<td>${list.operations_name}</td>
 									<td>${list.admin_username}</td>
@@ -136,6 +140,13 @@
 									<td><fmt:formatDate value="${list.created_time}" type="both"/></td>
 									<td><fmt:formatDate value="${list.expiry_date}" type="both"/></td>
 									<td>${list.prepay_balance}</td>
+
+								 	<td>
+									<c:if test="${list.price_effective_time == '0' }">立即生效</c:if>
+										<c:if test="${list.price_effective_time == '12' }">12小时后生效</c:if>
+										<c:if test="${list.price_effective_time == '24' }">24小时后生效</c:if>
+									</td>
+									<%--<td>${list.fixed_discount}</td>--%>
 									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">
 										<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
@@ -205,44 +216,61 @@
 							<td><div id="sys_gas_station_id" name="show"></div></td>
 							<th width="15%">加注站名称</th>
 							<td><div id="gas_station_name" name="show"> </div></td>
-						</tr>
+							</tr>
 						<tr>
+							<th width="15%">所属公司</th>
+							<td><div id="company" name="show"> </div></td>
+						
 							<th>销售人员</th>
 							<td><div id="salesmen_name" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>运营人员</th>
 							<td><div id="operations_name" name="show"> </div></td>
-						</tr>
-						<tr>
+						 
 							<th>管理员账号</th>
 							<td><div id="admin_username" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>工商注册号</th>
 							<td><div id="indu_com_number" name="show"> </div></td>
-						</tr>
-						<tr>
+						
 							<th>状态</th>
 							<td><div id="status" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>注册地址</th>
 							<td><div id="address" name="show"> </div></td>
-						</tr>
-						<tr>
+						
 							<th>提供服务</th>
 							<td><div id="gas_server" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>商品信息</th>
 							<td><div id="lng_price" name="show"> </div></td>
-						</tr>
-						<tr>
+						
 							<th>优惠活动</th>
 							<td><div id="promotions" name="show"> </div></td>
+							</tr>
+						<tr>
 							<th>注册日期</th>
 							<td><div id="created_time" name="show"> </div></td>
 						
-						</tr>
-						<tr>
+					
 							<th>平台有效期</th>
 							<td><div id="expiry_date" name="show"> </div></td>
+								</tr>
+						<tr>
 							<th>预付款额度</th>
-							<td colspan="3"><div id="prepay_balance" name="show"> </div></td>
+							<td><div id="prepay_balance" name="show"> </div></td>
+							<th>价格生效时间</th>
+							<td><div id="price_effective_time" name="show"> </div></td>
 						</tr>
+						<%--<tr>
+
+							<th>固定折扣</th>
+							<td colspan="3"><div id="fixed_discount" name="show"> </div></td>
+						</tr>--%>
 					</tbody>
 				</table>
 

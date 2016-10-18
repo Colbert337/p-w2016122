@@ -101,6 +101,7 @@ public class WechatController {
 	private static final String MCH_ID = "1280581101";//Sysongy
 	private static final String API_KEY = "Gy325U2312T360o2312t2p23b212tR4a";//Sysongy
 	private static final String url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	public final String wechatOperatorId = "553c248d906611e6b41c3497f629c5bd";
 
 	@Autowired
 	SysUserService sysUserService;
@@ -152,11 +153,16 @@ public class WechatController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String username = "username";
+			String password = "password";
+			boolean b = JsonTool.checkJson(mainObj,username,password);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("username"));
 				driver.setPassword(mainObj.optString("password"));
@@ -176,8 +182,7 @@ public class WechatController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr,resultStr);//参数解密
-
+			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
 			logger.error("登录成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
@@ -213,11 +218,18 @@ public class WechatController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			String openId = "openId";
+			String payCode = "payCode";
+			String plateNumber = "plateNumber";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum,openId,payCode,plateNumber);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
@@ -229,14 +241,20 @@ public class WechatController {
 					//throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
 				}else{
 					String sysDriverId = UUIDGenerator.getUUID();
-					driver.setPassword(mainObj.optString("password"));
+					payCode = mainObj.optString("payCode");
+					payCode = Encoder.MD5Encode(payCode.getBytes());
+					driver.setPayCode(payCode);
 					driver.setSysDriverId(sysDriverId);
+					driver.setPlateNumber(mainObj.optString("plateNumber"));
+					driver.setRegisSource("WeChat");//注册来源
 					driver.setInvitationCode(newInvitationCode);//生成邀请码
-					Integer tmp = driverService.saveDriver(driver, "insert");
+
+					//获取邀请码并查询用户
+					String invitationCode = mainObj.optString("invitationCode");
+					driver.setRegisCompany(invitationCode);
+					Integer tmp = driverService.saveDriver(driver, "insert", null);
 					//大于0注册成功
 					if(tmp > 0 ){
-						//获取邀请码并查询用户
-						String invitationCode = mainObj.optString("invitationCode");
 						if(invitationCode !=null && !"".equals(invitationCode)){
 							SysDriver oldDriver = driverService.queryByInvitationCode(invitationCode);
 							//如果用户不为空，则为原用户和新用户账户充值，创建订单进行充值
@@ -249,8 +267,8 @@ public class WechatController {
 								SysOrder oldDriverOrder = new SysOrder();//原用户订单对象
 								oldDriverOrder.setOrderId(oldDriverOrderID);//订单ID
 								oldDriverOrder.setDebitAccount(oldDriver.getSysDriverId());//增加的账户ID
-								oldDriverOrder.setOperator(sysDriverId);//操作人ID
-								oldDriverOrder.setOperatorSourceId(oldDriver.getSysDriverId());//被操作人ID
+								oldDriverOrder.setOperator(wechatOperatorId);//操作人ID
+								oldDriverOrder.setOperatorSourceId(wechatOperatorId);//被操作人ID
 								oldDriverOrder.setCash(new BigDecimal(usysparam.getData()));//交易金额
 								oldDriverOrder.setChargeType("0");//充值方式
 								oldDriverOrder.setIs_discharge("0");//是否红冲
@@ -264,8 +282,8 @@ public class WechatController {
 								SysOrder driverOrder = new SysOrder();
 								driverOrder.setOrderId(driverOrderID);//订单ID
 								driverOrder.setDebitAccount(sysDriverId);//增加的账户ID
-								driverOrder.setOperator(sysDriverId);//操作人ID
-								driverOrder.setOperatorSourceId(sysDriverId);//被操作人ID
+								driverOrder.setOperator(wechatOperatorId);//操作人ID
+								driverOrder.setOperatorSourceId(wechatOperatorId);//被操作人ID
 								driverOrder.setCash(new BigDecimal(usysparam.getData()));//交易金额
 								driverOrder.setChargeType("0");//充值方式
 								driverOrder.setIs_discharge("0");//是否红冲
@@ -290,8 +308,8 @@ public class WechatController {
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
+			logger.error("注册信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr,resultStr);//参数加密
-			logger.error("注册成功： " + resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("注册失败！");
@@ -327,11 +345,15 @@ public class WechatController {
 			params = DESUtil.decode(keyStr,params);//参数解密
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
-
+			/**
+			 * 必填参数
+			 */
+			String phoneNum = "phoneNum";
+			boolean b = JsonTool.checkJson(mainObj,phoneNum);
 			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("phoneNum");
 				if(sysDriverId != null && !sysDriverId.equals("")){
@@ -367,7 +389,7 @@ public class WechatController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode,"update");
+							driverService.saveDriver(driverCode,"update", null);
 						}
 						resultMap.put("invitationCode",invitationCode);
 						/**关联公司
@@ -435,9 +457,15 @@ public class WechatController {
 			JSONObject paramsObj = JSONObject.fromObject(params);
 			JSONObject mainObj = paramsObj.optJSONObject("main");
 			/**
+			 * 必填参数
+			 */
+			String amount = "amount";
+			String phoneNum = "phoneNum";
+			boolean b = JsonTool.checkJson(mainObj,amount,phoneNum);
+			/**
 			 * 请求接口
 			 */
-			if(mainObj != null){
+			if(b){
 				String mobile = mainObj.optString("phoneNum");
 				if(mobile != null && !"".equals(mobile)){
 					//查询当前token是否注册
@@ -450,17 +478,18 @@ public class WechatController {
 						String driverOrderID = UUIDGenerator.getUUID();//新用户订单ID
 						driverOrder.setOrderId(driverOrderID);//订单ID
 						driverOrder.setDebitAccount(sysDriver.get(0).getSysDriverId());//增加的账户ID
-						driverOrder.setOperator(sysDriver.get(0).getSysDriverId());//操作人ID
-						driverOrder.setOperatorSourceId(sysDriver.get(0).getSysDriverId());//被操作人ID
+						driverOrder.setOperator(wechatOperatorId);//操作人ID
+						driverOrder.setOperatorSourceId(wechatOperatorId);//被操作人ID
 						driverOrder.setCash(new BigDecimal(mainObj.optString("amount")));//交易金额
 						driverOrder.setChargeType("103");//充值方式 103代表微信支付
 						driverOrder.setIs_discharge("0");//是否红冲
-						driverOrder.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);//操作者发起人类型
+						driverOrder.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.WECHAT);//操作者发起人类型
 						driverOrder.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);//订单类型
 						driverOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);//操作对象类型
 						driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
 						driverOrder.setOrderStatus(0);//订单初始化
-						driverOrder.setChannel("微信充值");
+						driverOrder.setChannel("微信VIP充值");
+						driverOrder.setChannelNumber("微信VIP充值");
 						driverOrder.setOrderDate(new Date());
 						int nCreateOrder = orderService.insert(driverOrder, null);
 						if(nCreateOrder>0){
@@ -512,8 +541,8 @@ public class WechatController {
 
 		record.setOrderId(orderID);
 		record.setDebitAccount(driverID);
-		record.setOperator(driverID);
-		record.setOperatorSourceId(driverID);
+		record.setOperator(wechatOperatorId);
+		record.setOperatorSourceId(wechatOperatorId);
 
 		record.setCash(new BigDecimal(cash));
 		record.setChargeType(chargeType);
@@ -536,8 +565,8 @@ public class WechatController {
 		 **/
 		Date curDate = new Date();
 		record.setOrderDate(curDate);
-		record.setChannel("司集能源APP");
-		record.setChannelNumber("");   //建立一个虚拟的APP气站，方便后期统计
+		record.setChannel("微信VIP充值");
+		record.setChannelNumber("微信VIP充值");   //建立一个虚拟的APP气站，方便后期统计
 		return record;
 	}
 }

@@ -281,7 +281,12 @@ nav {
 .ys2 {
 	background: #4f8284 url(../images/ys2.jpg) center bottom no-repeat;
 }
-
+.app1 {
+	background: #378ccd url(../images/app_info_1.jpg) center bottom no-repeat;
+}
+.app2 {
+	background: #4f8284 url(../images/app_info_2.jpg) center bottom no-repeat;
+}
 .squares {
 	width: 237px;
 	height: 182px;
@@ -958,3 +963,10 @@ nav {
 	0%{opacity: 0;}
 	100%{opacity: 1}
 }
+.fl-l{float: left;}
+.fl-r{float: right;}
+.clear{clear:both;}
+.down-style{
+	right: 31%; bottom: 17%; width: 350px;height: 90px;position: absolute;z-index: 1;
+}
+.down-style:hover{cursor:pointer;}

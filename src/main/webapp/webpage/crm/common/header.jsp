@@ -6,7 +6,7 @@ pageEncoding="UTF-8"%>
 %>
 	<header>
         <div class="inner clearfix">
-            <a href="index.jsp" class="logo"></a>
+            <a href="<%=basePath %>/webpage/crm/index.jsp" class="logo"></a>
             <button class="navbar-toggle" type="button">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
@@ -14,6 +14,7 @@ pageEncoding="UTF-8"%>
                 <span class="icon-bar"></span>
             </button>
             <ul class="nav">
+                <li><a class="nav-login" href="<%=basePath %>/webpage/crm/index.jsp">首页</a></li>
                 <li>
                     <a class="nav-login" href="#">登 录</a>
                     <ul>

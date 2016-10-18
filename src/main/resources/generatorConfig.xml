@@ -63,12 +63,12 @@
 	        ignoreColumn 		忽略列，不生成bean 字段	EP:
 	        columnOverride		指定列的java数据类型		EP：<columnOverride column="LONG_VARCHAR_FIELD" javaType="int" />   
         -->
-        <!--<table schema="${jdbc.database}" tableName="crm_help" domainObjectName="CrmHelp"
+        <table schema="${jdbc.database}" tableName="mb_app_version" domainObjectName="MbAppVersion"
             enableCountByExample="false"
             enableDeleteByExample="false"
             enableSelectByExample="false"
             enableUpdateByExample="false" >
-        </table>-->
+        </table>
 
 
         <!--<table schema="${jdbc.database}" tableName="sys_static_page" domainObjectName="SysStaticPage"

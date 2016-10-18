@@ -31,7 +31,7 @@
 						<div class="search-types">
 							<div class="item">
 								<label>关键字:</label> <input type="text" id="text" name="suggest"
-									placeholder="输入用关键字" maxlength="9" value="${suggest.suggest}" />
+									placeholder="输入内容/来源/备注" maxlength="11" value="${suggest.suggest}" />
 							</div>
 
 							<div class="item">
@@ -78,18 +78,18 @@
 												onclick="checkedAllRows(this);" /> <span class="lbl"></span>
 										</label></th>
 										<th onclick="orderBy(this,'user_name');commitForm();"
-											id="user_name_order">司机名称</th>
+											id="user_name_order">司机账号</th>
 										<th onclick="orderBy(this,'mobile_phone');commitForm();"
 											id="mobile_phone_order">司机电话</th>
 										<th onclick="orderBy(this,'suggest');commitForm();" id="suggest_order">内容</th>
 										<th onclick="orderBy(this,'suggest_res');commitForm();"
 											id="suggest_res_order">来源</th>
-										<th onclick="orderBy(this,'follow_up');commitForm();"
-											id="follow_up_order">跟进人</th>
+									<!-- 	<th onclick="orderBy(this,'follow_up');commitForm();"
+											id="follow_up_order">跟进人</th> -->
 										<th onclick="orderBy(this,'created_date');commitForm();"
 											id="created_date_order" class="td-w2"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>投诉时间</th>
-										<th onclick="orderBy(this,'updated_date');commitForm();"
-											id="updated_date_order" class="td-w2"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th>
+										<!-- <th onclick="orderBy(this,'updated_date');commitForm();"
+											id="updated_date_order" class="td-w2"><i id="storage_time" class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间</th> -->
 										<th onclick="orderBy(this,'memo');commitForm();" id="memo_order">备注</th>
 									</tr>
 								</thead>
@@ -106,9 +106,9 @@
 											<td>${list.mobile_phone}</td>
 											<td>${list.suggest}</td>
 											<td>${list.suggest_res}</td>
-											<td>${list.follow_up}</td>
+											<%-- <td>${list.follow_up}</td> --%>
 											<td><fmt:formatDate value="${list.created_date}" type="both" /></td>
-											<td><fmt:formatDate value="${list.updated_date}" type="both" /></td>
+											<%-- <td><fmt:formatDate value="${list.updated_date}" type="both" /></td> --%>
 											<td>${list.memo}</td>
 										</tr>
 									</c:forEach>

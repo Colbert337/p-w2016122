@@ -79,6 +79,16 @@
 								<form class="form-horizontal"  id="gastationform">
 								
 								<jsp:include page="/common/page_param.jsp"></jsp:include>
+									<div class="form-group">
+										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 所属公司： </label>
+
+										<div class="col-sm-4">
+											<input type="text" id="company"  name="company" placeholder="输入所属公司" class="form-control" maxlength="20" value="${station.company}"/>
+											
+										</div>
+									</div>
+
+
 
 									<div class="form-group">
 										<label for="gas_station_name" class="col-sm-3 control-label no-padding-right"> 加注站名称： </label>
@@ -267,16 +277,21 @@
 									</div>
 									
 									<div class="row">
-										<label class="col-sm-3 control-label no-padding-right">商品信息： </label>
+										<label class="col-sm-3 control-label no-padding-right">商品价格： </label>
 										<div class="col-sm-4">
 											<div class="row">
 												<div class="col-sm-12">
 												<textarea name="lng_price" id="lng_price" style="resize: none;"
-									maxlength="500" placeholder="商品信息"
+									maxlength="500" placeholder="商品信息如：LNG：3.2元/KG，LCG：3.2元/KG"
 									class="col-xs-10 col-sm-12 limited form-control">${station.lng_price }</textarea>
 											</div>
 										</div>
 										</div>
+										<div class="form-group"><span
+								class="red_star">商品价格格式如：LNG：3.2元/KG，LCG：3.2元/KG</span>
+							</label>
+
+						 
 									</div>
 									<br/>
 									<div class="row">
@@ -294,7 +309,34 @@
 											</div>
 										</div>
 									</div>
-									
+
+										<%--<div class="form-group">
+											<label for="fixed_discount" class="col-sm-3 control-label no-padding-right"> 固定折扣： </label>
+
+											<div class="col-sm-4">
+												<input type="text" onKeyUp="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"  id="fixed_discount"  name="fixed_discount" placeholder="固定折扣" class="form-control"  maxlength="4" value=""  />
+
+											</div>
+											<div class="form-group">	<span class="red_star">固定折扣格式如：7.5 &nbsp(7.5代表7.5折)</span></div>
+										</div>--%>
+
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="price_effective_time"> 价格生效时间： </label>
+										<%--	<div class="col-sm-4 datepicker-noicon">
+												<div class="input-group">
+													<input class="form-control date-picker" name="price_effective_time" id="price_effective_time" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" value=""/>
+													<span class="input-group-addon">
+														<i class="fa fa-calendar bigger-110"></i>
+													</span>
+												</div>
+											</div>--%>
+											<div class="col-sm-4">
+												<select class="form-control" id="price_effective_time" name="price_effective_time">
+													<s:option flag="true" gcode="price_effective_time" />
+												</select>
+											</div>
+										</div>
+
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											
@@ -472,7 +514,20 @@
 		            validating: 'glyphicon glyphicon-refresh'
 		        },
 		        fields: {
-		        	gas_station_name: {
+		        	company: {
+		                message: 'The cardno is not valid',
+		                validators: {
+		                    notEmpty: {
+		                        message: '所属公司不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 1,
+		                        max: 20,
+		                        message: '加注站名称不能超过20个汉字'
+		                    }
+		                }
+		            },
+		            gas_station_name: {
 		                message: 'The cardno is not valid',
 		                validators: {
 		                    notEmpty: {
@@ -725,4 +780,8 @@
 		function init(){
 			loadPage('#main', '../webpage/poms/gastation/gastation_new.jsp');
 		}
+
+
+
+
 		</script>

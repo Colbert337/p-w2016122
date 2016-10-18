@@ -28,10 +28,10 @@ public interface DriverService {
 	public PageInfo<SysDriver> queryForPageSingleList(SysDriver obj) throws Exception;
 	
 	public SysDriver queryDriverByPK(String sysDriverId) throws Exception;
-	
-	public Integer saveDriver(SysDriver obj,  String operation) throws Exception;
-	
+		
 	public Integer delDriver(String sysDriverId) throws Exception;
+	
+	public Integer saveDriver(SysDriver record, String operation, String invitationCode) throws Exception;
 
 	/**
 	 * 给司机充钱
@@ -95,4 +95,8 @@ public interface DriverService {
 	public SysDriver queryByUserNameAndPassword(SysDriver record) throws Exception;
 	
 	public SysDriver queryByUserName(SysDriver record) throws Exception;
+	
+	public SysDriver queryByDeviceToken(String deviceToken) throws Exception;
+	
+	public List<SysDriver> queryAll() throws Exception;
 }

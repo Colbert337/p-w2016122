@@ -46,11 +46,13 @@
 	    });
 	function save(){
 		/*手动验证表单，当是普通按钮时。*/
+		
+		
 		$('#messageform').data('bootstrapValidator').validate();
 		if(!$('#messageform').data('bootstrapValidator').isValid()){
 			return ;
 		}
-
+		$('#div').showLoading();
 		var options ={   
 	            url:'../web/message/saveMessage',   
 	            type:'post',                    
@@ -58,8 +60,9 @@
 	            success:function(data){
 	            	$("#main").html(data);
 	            	$("#modal-table").modal("show");
+	            	$('#div').hideLoading();
 	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-	            	
+	            	$('#div').hideLoading();
 	 	       }
 		}
 					

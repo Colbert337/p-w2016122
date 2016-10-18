@@ -33,6 +33,10 @@
 							<input type="text" name="sysDriver.userName" placeholder="请输入会员账号"  maxlength="20" value="${sysOrder.sysDriver.userName}"/>
 						</div>
 						<div class="item">
+							<label>手机号：</label>
+							<input type="text" name="sysDriver.mobilePhone" placeholder="请输入手机号"  maxlength="20" value="${sysOrder.sysDriver.mobilePhone}"/>
+						</div>
+						<div class="item">
 							<label>订单编号：</label>
 							<input type="text" name="orderNumber" placeholder="订单编号/交易流水号"  maxlength="20" value="${sysOrder.orderNumber}"/>
 						</div>
@@ -46,7 +50,7 @@
 							<label>交易类型：</label>
 							<select id="is_discharge" name="is_discharge">
 								<option value="">全部</option>
-								<option value="0">消费</option>
+								<option value="0">充值</option>
 								<option value="1">冲红</option>
 							</select>
 						</div>	
@@ -117,6 +121,7 @@
 									</c:if>
 									<th onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">客户姓名</th>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
+									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">手机号</th>
 									<th onclick="orderBy(this,'charge_type');commitForm();" id="charge_type_order">支付方式</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">充值金额</th>
 									<!-- <th onclick="orderBy(this,'cash_back_per');commitForm();" id="cash_back_per_order">返现系数</th> -->
@@ -152,6 +157,7 @@
 									</c:if>
 									<td>${list.full_name}</td>
 									<td>${list.user_name}</td>
+									<td>${list.mobile_phone}</td>
 									<td><s:Code2Name mcode="${list.charge_type}" gcode="CASHBACK"></s:Code2Name></td>
 									<td>${list.cash}</td>
 									<%-- <td>${list.cash_back_per}</td> --%>

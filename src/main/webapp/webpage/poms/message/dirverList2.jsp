@@ -11,11 +11,11 @@
 %>
 
 <form id="formgastation">
-		<input id="pageNum1" type="hidden"   value="${pageInfo.pageNum}" />
-	<input id="pageSize1" type="hidden"  value="${pageInfo.pageSize}" />
-	<input id="pageNumMax1" type="hidden"  value="${pageInfo.pages}" />
-	<input id="total1" type="hidden"  value="${pageInfo.total}" />
-	<input id="orderBy2" type="hidden"  value="${pageInfo.orderBy}" />
+		<input id="pageNum1" type="hidden"   value="${pageInfo1.pageNum}" />
+	<input id="pageSize1" type="hidden"  value="${pageInfo1.pageSize}" />
+	<input id="pageNumMax1" type="hidden"  value="${pageInfo1.pages}" />
+	<input id="total1" type="hidden"  value="${pageInfo1.total}" />
+	<input id="orderBy2" type="hidden"  value="${pageInfo1.orderBy}" />
 	<input id="retValue" type="hidden" value="${ret.retValue}" />
 	<input id="retCode" type="hidden" value="${ret.retCode}" />
 	<input id="retMsg" type="hidden" value="${ret.retMsg}" />
@@ -44,7 +44,7 @@
 
 				<tbody>
 
-					<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
+					<c:forEach items="${pageInfo1.list}" var="list" varStatus="s">
 						<tr id="${list.sysDriverId }">
 							<%-- <td class="center"><label class="pos-rel"> <input
 									type="checkbox" class="ace checkbox"
@@ -72,8 +72,8 @@
 		<div class="col-sm-6">
 			<div class="dataTables_info sjny-page" id="dynamic-table_info"
 				role="status" aria-live="polite">
-				每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共
-				${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages}
+				每页 ${pageInfo1.pageSize} 条 <span class="line">|</span> 共
+				${pageInfo1.total} 条 <span class="line">|</span> 共 ${pageInfo1.pages}
 				页
 			</div>
 		</div>
@@ -81,11 +81,11 @@
 			<nav>
 				<ul id="ulhandle1" class="pagination pull-right no-margin">
 					<li id="previous1"><a href="javascript:void(0);"
-						aria-label="Previous" onclick="prepage('#formgastation');"> <span
+						aria-label="Previous" onclick="prepage1('#formgastation');"> <span
 							aria-hidden="true">上一页</span>
 					</a></li>
 					<li id="next1"><a id="nexthandle" href="javascript:void(0);"
-						aria-label="Next" onclick="nextpage('#formgastation');"> <span
+						aria-label="Next" onclick="nextpage1('#formgastation');"> <span
 							aria-hidden="true">下一页</span>
 					</a></li>
 				</ul>
@@ -96,56 +96,106 @@
 </form>
 <script type="text/javascript">
 
-var listOptions2 = {
-	url : '../web/message/showUser?id=${message.id}',
-	type : 'post',
-	data:{
-		pageNum:$("#pageNum1").val(),
-		pageSize:$("#pageSize1").val(),
-		pageNumMax:$("#pageNumMax1").val(),
-		total:$("#total1").val(),
-		orderby:$("#orderBy2").val()
-	},
-	dataType : 'html',
-	success : function(data) {
-		// console.log("这里分页之后");
-		$("#content").html(data);
-		
-		$("#editModel").modal('show');
-		if ($("#retCode").val() != "100") {
+
+function scher() {
+	$("#formgastation").ajaxSubmit({
+		url : '../web/message/showUser?id=${message.id}',
+		type : 'post',
+		data:{
+			pageNum:$("#pageNum1").val(),
+			pageSize:$("#pageSize1").val(),
+			pageNumMax:$("#pageNumMax1").val(),
+			total:$("#total1").val(),
+			orderby:$("#orderBy2").val()
+		},
+		dataType : 'html',
+		success : function(data) {
+			// console.log("这里分页之后");
+			$("#content").html(data);
+			
+			$("#editModel").modal('show');
+			if ($("#retCode").val() != "100") {
+
+			}
+			$('[data-rel="tooltip"]').tooltip();
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
 
 		}
-		$('[data-rel="tooltip"]').tooltip();
-	},
-	error : function(XMLHttpRequest, textStatus, errorThrown) {
-
-	}
-}
-function scher() {
-	$("#formgastation").ajaxSubmit(listOptions2);
+	});
 }
 
 function commitForm1(obj) {
 	// 设置当前页的值
+	console.log('commitForm1');
 	if (typeof obj == "undefined") {
 		$("#pageNum1").val("1");
 	} else {
 		$("#pageNum1").val($(obj).text());
 	}
 
-	$("#formgastation").ajaxSubmit(listOptions2);
+	$("#formgastation").ajaxSubmit({
+		url : '../web/message/showUser?id=${message.id}',
+		type : 'post',
+		data:{
+			pageNum:$("#pageNum1").val(),
+			pageSize:$("#pageSize1").val(),
+			pageNumMax:$("#pageNumMax1").val(),
+			total:$("#total1").val(),
+			orderby:$("#orderBy2").val()
+		},
+		dataType : 'html',
+		success : function(data) {
+			// console.log("这里分页之后");
+			$("#content").html(data);
+			
+			$("#editModel").modal('show');
+			if ($("#retCode").val() != "100") {
+
+			}
+			$('[data-rel="tooltip"]').tooltip();
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+		}
+	});
 }
  
-function nextpage(formid){
+function nextpage1(formid){
 	//如果是最后一页
-	if(parseInt($("#pageNum").val()) >= parseInt($("#pageNumMax").val())){
+	console.log(parseInt($("#pageNum1").val()) +"----"+ parseInt($("#pageNumMax1").val()));
+	if(parseInt($("#pageNum1").val()) >= parseInt($("#pageNumMax1").val())){
 		return ;
 	}
 	//设置当前页+1
 	$("#pageNum1").val(parseInt($("#pageNum1").val())+1);
-	$(formid).ajaxSubmit(listOptions2);
+	$(formid).ajaxSubmit({
+		url : '../web/message/showUser?id=${message.id}',
+		type : 'post',
+		data:{
+			pageNum:$("#pageNum1").val(),
+			pageSize:$("#pageSize1").val(),
+			pageNumMax:$("#pageNumMax1").val(),
+			total:$("#total1").val(),
+			orderby:$("#orderBy2").val()
+		},
+		dataType : 'html',
+		success : function(data) {
+			// console.log("这里分页之后");
+			$("#content").html(data);
+			
+			$("#editModel").modal('show');
+			if ($("#retCode").val() != "100") {
+
+			}
+			$('[data-rel="tooltip"]').tooltip();
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+		}
+	});
 }
-function prepage(formid){
+function prepage1(formid){
 	//如果是第一页
 	if(parseInt($("#pageNum1").val()) <= 1){
 		return ;
@@ -154,7 +204,31 @@ function prepage(formid){
 	//设置当前页-1
 	$("#pageNum1").val(parseInt($("#pageNum1").val())-1);
 
-	$(formid).ajaxSubmit(listOptions2);
+	$(formid).ajaxSubmit({
+		url : '../web/message/showUser?id=${message.id}',
+		type : 'post',
+		data:{
+			pageNum:$("#pageNum1").val(),
+			pageSize:$("#pageSize1").val(),
+			pageNumMax:$("#pageNumMax1").val(),
+			total:$("#total1").val(),
+			orderby:$("#orderBy2").val()
+		},
+		dataType : 'html',
+		success : function(data) {
+			// console.log("这里分页之后");
+			$("#content").html(data);
+			
+			$("#editModel").modal('show');
+			if ($("#retCode").val() != "100") {
+
+			}
+			$('[data-rel="tooltip"]').tooltip();
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+		}
+	});
 } 
 window.onload = setCurrentPage1();
 
@@ -172,9 +246,9 @@ function setCurrentPage1(){
 		$("#next1").removeClass("disabled");
 	}
 	//动态加载分页按钮并设定页数
-	for(var i='${pageInfo.total}';i>0;i--){
+	for(var i='${pageInfo1.pages}';i>0;i--){
 		var num = pagenum%5==0?pagenum-5+i:pagenum-(pagenum%5)+i;
-		$("li[id=previous1]").after("<li id='navigator'><a href='javascript:void(0);' onclick='commitForm1(this)'>"+num+"</a></li>");
+		$("li[id=previous1]").after("<li id='navigator'><a href='javascript:void(0);' onclick='commitForm1(this)'>"+num*1+"</a></li>");
 	}
 	//设置当前页按钮样式
 	$("li[id=navigator1]").removeClass("active");

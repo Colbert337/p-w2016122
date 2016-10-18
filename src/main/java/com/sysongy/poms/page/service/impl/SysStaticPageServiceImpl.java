@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.mobile.dao.MbBannerMapper;
 import com.sysongy.poms.page.dao.SysStaticPageMapper;
 import com.sysongy.poms.page.model.SysStaticPage;
 import com.sysongy.poms.page.service.SysStaticPageService;
@@ -18,6 +19,8 @@ public class SysStaticPageServiceImpl implements SysStaticPageService {
 	
 	@Autowired
 	private SysStaticPageMapper pageMapper;
+	@Autowired
+	private MbBannerMapper bannerMapper;
 
 	@Override
 	public PageInfo<SysStaticPage> queryForPage(SysStaticPage record) throws Exception {
@@ -45,6 +48,19 @@ public class SysStaticPageServiceImpl implements SysStaticPageService {
 	@Override
 	public Integer delMessage(String pageid) throws Exception {
 		return pageMapper.deleteByPrimaryKey(pageid);
+	}
+
+	@Override
+	public Integer delForStatus(SysStaticPage page)throws Exception {
+		// TODO Auto-generated method stub
+		bannerMapper.deleteByPrimaryPageKey(page.getId());
+		return pageMapper.delForStatus(page.getId());
+	}
+
+	@Override
+	public Integer update(SysStaticPage page)throws Exception {
+		// TODO Auto-generated method stub
+		return pageMapper.updateByPrimaryKeySelective(page);
 	}
 
 }

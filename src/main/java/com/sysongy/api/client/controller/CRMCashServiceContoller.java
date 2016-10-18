@@ -126,6 +126,7 @@ public class CRMCashServiceContoller {
                 record.setChannelNumber(gastation.getSys_gas_station_id());
             }
 
+            record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
             int nCreateOrder = orderService.insert(record, null);
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -276,6 +277,12 @@ public class CRMCashServiceContoller {
                     return ajaxJson;
                 }
 
+                if(StringUtils.isEmpty(sysDriver.getPayCode())){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("支付密码为空，请先设置支付密码！");
+                    return ajaxJson;
+                }
+
                 if(!(sysDriver.getPayCode().equalsIgnoreCase(payCode))){
                     addWrongTimes(sysDriver.getAccount().getSysUserAccountId());
                     if(isWrong4Times(sysDriver.getAccount().getSysUserAccountId())){
@@ -378,6 +385,7 @@ public class CRMCashServiceContoller {
                 record.setChannel(gastation.getGas_station_name());
                 record.setChannelNumber(gastation.getSys_gas_station_id());
             }
+            record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -416,6 +424,7 @@ public class CRMCashServiceContoller {
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单消费错误：" + e.getMessage());
+            e.printStackTrace();
             return ajaxJson;
         }
     }
@@ -584,6 +593,7 @@ public class CRMCashServiceContoller {
         hedgeRecord.setBeen_discharged("1");
         hedgeRecord.setDischargeOrderId(originalOrder.getOrderId());
 
+        record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
         int nRet = orderService.insert(hedgeRecord, originalOrder.getSysOrderGoods());
         if(nRet < 1){
             logger.error("订单冲红保存错误：" + originalOrder.getOrderId());

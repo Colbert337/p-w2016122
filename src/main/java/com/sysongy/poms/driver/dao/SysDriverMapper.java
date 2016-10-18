@@ -71,4 +71,8 @@ public interface SysDriverMapper {
 	SysDriver queryByUserNameAndPassword(SysDriver record);
 	
 	SysDriver queryByUserName(SysDriver record);
+	
+	SysDriver queryByDeviceToken(String deviceToken);
+	
+	List<SysDriver> queryAll();
 }

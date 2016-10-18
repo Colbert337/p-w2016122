@@ -19,7 +19,7 @@
 <body>
 	<div class="pdp">
 		<div class="pdp-title clearfix">
-			<span class="type">加盟气站</span>
+			<span class="type"><c:if test="${gastation.type == '0'}">联盟站</c:if></span>
 			<div class="name">${gastation.gas_station_name}</div>
 		</div>
 		<div class="pdp-item">
@@ -32,7 +32,7 @@
 			</div>
 			<div class="row address-end">
 				<div class="col-value">提供服务:</div>
-				<div class="col-key"></div>
+				<div class="col-key">${gastation.gas_server}</div>
 			</div>
 		</div>
 		<div class="pdp-item">
@@ -51,8 +51,8 @@
 			<div class="pdp-item-content">
 				<c:forEach items="${priceList}" var="price">
 					<div class="row">
-						<div class="col-value">${price.gasName}单价:</div>
-						<div class="col-key">${price.gasPrice}元/${price.unit}</div>
+						<div class="col-value">${price.priceName}</div>
+						<%--<div class="col-key">${price.gasPrice}元/${price.unit}</div>--%>
 					</div>
 				</c:forEach>
 			</div>
@@ -62,20 +62,12 @@
 				优惠活动：
 			</div>
 			<ul class="station-special">
-				<li>
-					陕西省西安市中心产业园 陕西省西安市中心产业园 陕西省西
-				</li>
-				<li>
-					陕西省西安市中心产业园 陕西省西安市中心产业园 陕西省西
-				</li>
-				<li>
-					陕西省西安市中心产业园 陕西省西安市中心产业园 陕西省西
-				</li>
+				<li>${gastation.promotions}</li>
 			</ul>
 		</div>
-		<div class="station-special-more">
-			<a class="btn">查看更多优惠</a>
-		</div>
+<%-- 		<div class="station-special-more"> --%>
+<%-- 			<a class="btn">查看更多优惠</a> --%>
+<%-- 		</div> --%>
 	</div>
 
 	<script src="<%=basePath %>/webpage/crm/js/zepto.min.js"></script>

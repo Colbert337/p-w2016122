@@ -3,8 +3,10 @@ package com.sysongy.poms.mobile.service;
 
 import java.util.List;
 import java.util.Map;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.mobile.model.SysRoadConditionStr;
 
 /**
  * @FileName: SysRoadService
@@ -29,8 +31,12 @@ public interface SysRoadService {
 	/**
 	 * 获取路况列表
 	 */
-	public PageInfo<Map<String,Object>> queryForPage(SysRoadCondition record) throws Exception;
-	
+	public PageInfo<SysRoadCondition> queryForPage(SysRoadCondition record) throws Exception;
+
+	/**
+	 * 获取路况列表
+	 */
+	public PageInfo<Map<String, Object>> queryForPageMap(SysRoadCondition record) throws Exception;
 	/**
 	 * 根据ID查询
 	 */
@@ -46,5 +52,10 @@ public interface SysRoadService {
 	int deleteRoad(SysRoadCondition road);
 
 	List<SysRoadCondition> queryRoadIDList();
+
+	PageInfo<SysRoadConditionStr> queryRoadListStr(SysRoadCondition road);
+	
+	List<SysRoadCondition> queryAll() throws Exception;
+	public int updateByPrimaryKey(SysRoadCondition record)throws Exception;
 	
 }

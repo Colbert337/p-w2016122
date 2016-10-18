@@ -381,6 +381,12 @@
 		    <artifactId>json</artifactId>
 		    <version>20090211</version>
 	    </dependency>
+		<!--XML解析-->
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
 	</dependencies>
 	
 	<build>

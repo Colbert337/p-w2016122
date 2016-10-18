@@ -289,7 +289,7 @@ form label.error {
 	padding-bottom: 10px;
 }
 .traffic-detail-bd {
-	padding: 5px 10px;
+	padding: 5px 0;
 }
 .traffic-detail-bd .date {
 	color: #999;
@@ -321,7 +321,7 @@ form label.error {
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	z-index: 888;
+	z-index: 2;
 	margin: 0;
 	padding: 10px 0;
 	animation: tipmove 1.5s infinite ease-in-out;
@@ -341,9 +341,6 @@ form label.error {
 	}
 }
 .download-app-fd li.active {
-	display: none;
-}
-.download-app-help {
 	display: none;
 }
 .icon-arrow-down,
@@ -368,16 +365,17 @@ form label.error {
 	left: 0;
 	top: 0;
 	width: 100%;
-	height: 100%;
+	min-height: 100%;
 	background-color: #000;
-	opacity: 0.7;
+	opacity: 0.8;
+	z-index: 88;
 }
 .download-app-help .img {
 	width: 300px;
 	position: absolute;
 	top: 0;
 	right: 15px;
-	z-index: 2;
+	z-index: 89;
 }
 .app-intro-form .item {
 	padding-bottom: 20px;
@@ -393,3 +391,14 @@ form label.error {
 .app-intro-bd {
 	padding-bottom: 20px;
 }
+.btn-more-info {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: #fff;
+}
+.btn-more-info .inner {
+	padding: 5px 15px;
+}
+.code-style{font-weight: bold;color: green;}

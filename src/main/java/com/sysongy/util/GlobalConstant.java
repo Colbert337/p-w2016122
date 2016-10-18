@@ -197,6 +197,7 @@ public class GlobalConstant {
 	
 	/*
 	 * 	110运输公司预付款充值  120 加油站预付款充值 130个人充值 210运输公司消费 220 司机消费 310 运输公司对个人转账 320个人对个人转账
+	 * 	410注册返现 420邀请返现
 	 */
 	public interface OrderType{
 		public static final String CHARGE_TO_TRANSPORTION ="110";
@@ -206,6 +207,8 @@ public class GlobalConstant {
 		public static final String CONSUME_BY_DRIVER ="220";
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER ="310";
 		public static final String TRANSFER_DRIVER_TO_DRIVER ="320";
+		public static final String REGISTER_CASHBACK ="410";
+		public static final String INVITED_CASHBACK ="420";
 	}
 
 	/**
@@ -269,6 +272,8 @@ public class GlobalConstant {
 		public static final String GASTATION="2";
 		public static final String TRANSPORTION="3";
 		public static final String PLATFORM="4";
+		public static final String WECHAT = "5";
+		public static final String APP = "6";
 	}
 
 	/*
@@ -316,6 +321,9 @@ public class GlobalConstant {
 		
 		public static final String CHARGE_TO_TRANSPORTION_CHARGE ="111";//车队充值
 		public static final String CHARGE_TO_GASTATION_CHARGE ="121";//加注站预付款充值
+		
+		public static final String DRIVER_REGISTER_CASHBACK = "410";//被邀请人返现
+		public static final String DRIVER_INVITE_CASHBACK = "420";//邀请人返现
 		
 		public static final String CONSUME_DRIVER_DEDUCT ="221";//个人消费
 		public static final String DISCONSUME_DRIVER_DEDUCT ="222";//冲红
@@ -541,7 +549,7 @@ public class GlobalConstant {
 		public static final String ORDER_ERROR_DEBIT_ACCOUNT_IS_FROEN = "账号已冻结！";
 		public static final String ORDER_ERROR_CREDIT_ACCOUNT_CARD_IS_FROEN = "该卡已冻结！";
 		
-		public static final String DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT = "该司机未实名认证，并且累计充值已经大于"+DRIVER_NOT_CERTIFICATE_LIMIT.toString();
+		public static final String DRIVER_NOT_CERTIFICATE_AND_CHARGE_SUM_BIG_THAN_LIMIT = "该司机未实名认证，充值金额不能大于"+DRIVER_NOT_CERTIFICATE_LIMIT.toString();
 		public static final String DRIVER_NOT_CERTIFICATE = "该司机未实名认证。";
 		
 		public static final String ORDER_ACCOUNT_VERSION_HAVE_CHANGED = "ORDER_ACCOUNT_VERSION_HAVE_CHANGED";
@@ -645,5 +653,64 @@ public class GlobalConstant {
 	public interface StationType{
 		public static final String UNION = "0"; //合作站
 		public static final String UN_UNION = "1"; //非合作站
+	}
+
+ /*
+ * 	路况类型
+ */
+	public interface ConditionType{
+		public static final String  HUAN_XING = "01"; //缓行
+		public static final String SHI_GU ="02"; //事故
+		public static final String FENG_LU ="03"; //封路
+		public static final String ZAI_HAI ="04"; //自然灾害
+		public static final String JIAN_CHA ="05"; //检查
+		public static final String SHI_GONG ="06"; //施工
+		public static final String XIAN_GAO ="07"; //限高
+		public static final String XIAN_ZHONG ="08"; //限重
+		public static final String ROAD_RADIUS ="500000"; //路况范围半径
+		public static final String STATION_RADIUS ="500000"; //气站范围半径
+	}
+
+	/**
+	 * 获取路况
+	 * @param key
+	 * @return
+	 */
+	public static String getConditionType(String key){
+		String value = "";
+		switch (key){
+			case ConditionType.HUAN_XING:
+				value = "缓行";
+				break;
+			case ConditionType.SHI_GU:
+				value = "事故";
+				break;
+			case ConditionType.FENG_LU:
+				value = "封路";
+				break;
+			case ConditionType.ZAI_HAI:
+				value = "自然灾害";
+				break;
+			case ConditionType.JIAN_CHA:
+				value = "检查";
+				break;
+			case ConditionType.SHI_GONG:
+				value = "施工";
+				break;
+			case ConditionType.XIAN_GAO:
+				value = "限高";
+				break;
+			case ConditionType.XIAN_ZHONG:
+				value = "限重";
+				break;
+		}
+		return value;
+	}
+
+	public interface ORDER_STATUS{
+		public static final int ORDER_INIT = 0; 			//订单初始化
+		public static final int ORDER_SUCCESS = 1; 			//订单生成成功
+		public static final int ORDER_FAILED = 2; 			//订单失败
+		public static final int ORDER_WAIT_FOR_PAY = 3; 	//订单待支付
 	}
 }

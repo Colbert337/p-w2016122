@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
@@ -8,7 +9,7 @@
 <html class="white" lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-	<title>司集APP</title>
+	<title>路况详情-司集APP</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/fontello.css">
@@ -17,20 +18,35 @@
 <body>
 	<div class="share">
 		<div class="traffic-detail-hd">
-			缓行 路况详情标题
+			${conditionType}
 		</div>
 		<div class="traffic-detail-bd">
 			<div class="date">
-				发布时间：2016-08-18 08:08:08
+				发布时间：
+				<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm:ss" />
 			</div>
 			<div class="info">
-				“2010年3月公安部公布的货车保有量为1368
+				${conditionType}
+				${name}于<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm" />前提供了${roadCondition.address}附近的${direction}的${conditionType}路况，请注意路况信息变化！
+				<c:if test="${conditionMsg != null}" ><br>路况详情如下：<br>${conditionMsg}</c:if>
+				<c:if test="${roadCondition.memo ne null && roadCondition.memo ne ''}" ><br>备注：<br>${roadCondition.memo}</c:if>
 			</div>
+			<c:if test="${conditionImg != null}" >
 			<div class="img">
-				<img class="img-responsive" src="images/ys1.jpg" alt="">
+				<img class="img-responsive" src="${conditionImg}" alt="">
 			</div>
-			<a href="" class="btn-app-primary"><span class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
+			</c:if>
 		</div>
 	</div>
+
+	<%--<div class="btn-more-info">
+		<div class="inner">
+			&lt;%&ndash;<span class="icon-sy">&ndash;%&gt;
+			<a href="" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
+		</div>
+	</div>--%>
+
+	<script src="<%=basePath %>/webpage/crm/js/jquery.min.js"></script>
+	<script src="<%=basePath %>/webpage/crm/js/webapp.js"></script>
 </body>
 </html>

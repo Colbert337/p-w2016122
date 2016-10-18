@@ -24,6 +24,8 @@ public interface GastationMapper {
 	
 	List<Gastation> queryForPage(Gastation record);
 	List<Gastation> queryForPage2(Gastation record);
+	List<Gastation> queryForPage3(Gastation record);
+	List<Gastation> queryAll(Gastation record);
 	
 	Gastation findGastationid(String province_id);
 	

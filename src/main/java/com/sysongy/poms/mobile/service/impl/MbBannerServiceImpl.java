@@ -79,4 +79,9 @@ public class MbBannerServiceImpl implements MbBannerService{
     public MbBanner queryMbBanner(MbBanner banner) {
         return mbBannerMapper.queryMbBanner(banner);
     }
+
+	@Override
+	public MbBanner selectByPrimaryKey(String mbBannerId) {
+		return mbBannerMapper.selectByPrimaryKey(mbBannerId);
+	}
 }

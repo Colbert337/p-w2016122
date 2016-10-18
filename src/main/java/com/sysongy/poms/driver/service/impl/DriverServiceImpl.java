@@ -121,13 +121,23 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Integer saveDriver(SysDriver record, String operation) throws Exception {
+    public Integer saveDriver(SysDriver record, String operation, String invitationCode) throws Exception {
         if("insert".equals(operation)){
             SysUserAccount sysUserAccount = initWalletForDriver();
             record.setSysUserAccountId(sysUserAccount.getSysUserAccountId());
             sysUserAccount.setAccount_status(GlobalConstant.AccountStatus.NORMAL);
             record.setCreatedDate(new Date());
-            return sysDriverMapper.insertSelective(record);
+			if(invitationCode != null && !"".equals(invitationCode)){
+				record.setRegisCompany(invitationCode);//存储邀请人邀请码
+			}
+
+            int count = sysDriverMapper.insertSelective(record);
+            //如果有要邀请码，要进行返现，现在先写死，以后走订单
+            if(!StringUtils.isEmpty(invitationCode)){
+            	this.cashBackForRegister(record, invitationCode);
+            }
+            
+            return count;
         }else{
             return sysDriverMapper.updateByPrimaryKeySelective(record);
         }
@@ -162,6 +172,7 @@ public class DriverServiceImpl implements DriverService {
         SysUserAccount sysUserAccount = new SysUserAccount();       //初始化钱袋信息
         sysUserAccount.setSysUserAccountId(UUIDGenerator.getUUID());
         sysUserAccount.setAccountCode("DR"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+//        sysUserAccount.setAccountCode("DR"+UUIDGenerator.getUUID());
         sysUserAccount.setAccountType(GlobalConstant.AccounType.DRIVER);
         sysUserAccount.setAccountBalance("0.0");
         sysUserAccount.setCreatedDate(new Date());
@@ -348,12 +359,29 @@ public class DriverServiceImpl implements DriverService {
 		return cashTo_success_specific_type;
 	}
 	
+	public void cashBackForRegister(SysDriver driver, String invitationCode) throws Exception{
+		
+		SysDriver invitation = new SysDriver();
+		invitation.setInvitationCode(invitationCode);
+		
+		List<SysDriver> invitationList = sysDriverMapper.queryForPage(invitation);
+		
+		if(invitationList.size() != 1){
+			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败");
+		}else{
+			invitation = invitationList.get(0);
+	
+	    	sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.REGISTER_CASHBACK);
+	    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.INVITED_CASHBACK);
+		}
+	}
+	
     public Integer isExists(SysDriver obj) throws Exception {
         return sysDriverMapper.isExists(obj);
     }
 
     public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception {
-        SysDriver sysDriver =  sysDriverMapper.queryDriverByMobilePhone(record);
+        SysDriver sysDriver = sysDriverMapper.queryDriverByMobilePhone(record);
         return sysDriver;
     }
 
@@ -421,5 +449,15 @@ public class DriverServiceImpl implements DriverService {
 	@Override
 	public SysDriver queryByUserName(SysDriver record) throws Exception {
 		return sysDriverMapper.queryByUserName(record);
+	}
+
+	@Override
+	public SysDriver queryByDeviceToken(String deviceToken) throws Exception {
+		return sysDriverMapper.queryByDeviceToken(deviceToken);
+	}
+
+	@Override
+	public List<SysDriver> queryAll() throws Exception {
+		return sysDriverMapper.queryAll();
 	}
 }

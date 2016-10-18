@@ -4,7 +4,7 @@
 /* 分页相关方法 start */
 
 window.onload = setCurrentPage();
-
+$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 var listOptions = {
 	url : '../web/mobile/img/list/page',
 	type : 'post',

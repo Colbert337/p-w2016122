@@ -65,7 +65,7 @@ public class GastationServiceImpl implements GastationService {
 	public PageInfo<Gastation> queryGastation(Gastation record) throws Exception {
 		
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
-		List<Gastation> list = gasStationMapper.queryForPage(record);
+		List<Gastation> list = gasStationMapper.queryForPage3(record);
 		PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(list);
 		
 		return pageInfo;
@@ -73,7 +73,7 @@ public class GastationServiceImpl implements GastationService {
 
 	@Override
 	public List<Gastation> getAllStationList(Gastation record) throws Exception {
-		List<Gastation> list = gasStationMapper.queryForPage(record);
+		List<Gastation> list = gasStationMapper.queryAll(record);
 		return list;
 	}
 
@@ -246,6 +246,8 @@ public class GastationServiceImpl implements GastationService {
 		order.setChannelNumber("ZHGLPT");
 		order.setIs_discharge("0");
 		order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.PLATFORM);
+		order.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);//设置订单状态为成功
+		
 		orderService.insert(order, null);
 		orderService.chargeToGasStation(order);
 		
@@ -484,5 +486,11 @@ public class GastationServiceImpl implements GastationService {
 		// TODO Auto-generated method stub
 		
 		return gasStationMapper.delete(gas);
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(Gastation record) throws Exception {
+		// TODO Auto-generated method stub
+		return gasStationMapper.updateByPrimaryKeySelective(record);
 	}
 }

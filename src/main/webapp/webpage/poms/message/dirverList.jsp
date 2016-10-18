@@ -15,9 +15,9 @@
 	<div class="row">
 		<div class="item">
 			<label>手机号码:</label> <input type="text" name="mobilePhone"
-				placeholder="手机号码" maxlength="10" value="${driver.mobilePhone}" />
+				placeholder="手机号码" maxlength="11" value="${driver.mobilePhone}" />
 			<label>姓名:</label> <input type="text" name="fullName"
-				placeholder="姓名" maxlength="10" value="${driver.fullName}" />
+				placeholder="姓名" maxlength="20" value="${driver.fullName}" />
 			<button class="btn btn-sm btn-primary" type="button"
 				onclick="scher();">
 				<i class="ace-icon fa fa-flask align-top bigger-125"></i> 查询
@@ -55,7 +55,7 @@
 						<tr id="${list.sysDriverId }">
 							 <td class="center"><label class="pos-rel"> <input
 									type="checkbox" class="ace checkbox"
-									onchange="checkchange(this)" value1="${list.userName}" value="${list.deviceToken}"  id="${list.deviceToken}" /> <span
+									onchange="checkchange(this)" value1="${list.userName}" value2="${list.sysDriverId}" value="${list.deviceToken}"  id="${list.deviceToken}" /> <span
 									class="lbl"></span>
 							</label></td> 
 							<td>${list.userName}</td>

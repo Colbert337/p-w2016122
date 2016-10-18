@@ -45,20 +45,51 @@
 							</ol>
 						</div>
 					</div> --%>
-					<input type="text" id="imgType" name="imgType" value="${mbBanner.imgType}" />
-					<div class="col-sm-10">
-						<div class="page-header">
+					<input type="hidden" id="imgType" name="imgType" value="${mbBanner.imgType}" />
+					<div class="col-sm-15">
+					<!-- 	<div class="page-header">
 							<h1>图片列表</h1>
+						</div> -->
+					<div class="search-types">
+						<div class="item">
+						    <label>标题：</label>
+							<input type="text" name="title" placeholder="输入标题"  maxlength="32" value="${mbBanner.title}"/>
+						</div>
+						<div class="item">
+						    <label>创建人：</label>
+							<input type="text" name="operator" placeholder="输入创建人"  maxlength="32" value="${mbBanner.operator}"/>
+						</div>
+						
+						<div class="item">
+							<div class="input-daterange top" id="j-input-daterange-top">
+								<label>修改时间:</label>
+								<input type="text" class="" name="createdDate_str" value="${mbBanner.createdDate_str}" readonly="readonly"/>
+								<span class="">
+									<i class="fa fa-exchange"></i>
+								</span>
+								<input type="text" class="" name="updatedDate_str" value="${mbBanner.updatedDate_str}" readonly="readonly"/>
+							</div>
 						</div>
 
-						<div class="search-types">
+						<div class="item">
+						 
+							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								查询
+							</button>
+							<button class="btn btn-sm" type="button" onclick="init();">
+								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
+								重置
+							</button>
+						</div>
+					
 							<div class="item">
 								<button class="btn btn-sm btn-primary" type="button"
 									onclick="bannerAdd('')">
 									<i class="ace-icon fa fa-flask align-top bigger-125"></i> 添加
 								</button>
 							</div>
-						</div>
+					</div>
 
 						<div class="clearfix">
 							<div class="pull-right tableTools-container"></div>
@@ -89,6 +120,10 @@
 											id="created_date_order" class="td-w2"><i
 											id="created_date"
 											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建时间</th>
+										<th onclick="orderBy(this,'updated_date');commitForm();" 	id="updated_date_order"
+											 class="td-w2"><i
+										
+											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>修改时间时间</th>
 										<th onclick="orderBy(this,'operator');commitForm();"
 											id="operator_orber">创建人</th>
 										<th class="text-center td-w3">操作</th>
@@ -105,9 +140,11 @@
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 											<td><div class="td-inner-warp">${list.targetUrl}</div></td>
 											<td><div class="td-inner-warp">${list.content}</div></td>
-											<td>${list.remark}</td>
-											<td>${list.city_name}</td>
+											<td><div class="td-inner-warp">${list.remark}</div></td>
+											<td><div class="td-inner-warp">${list.city_name}</div></td>
 											<td><fmt:formatDate value="${list.createdDate}"
+													type="both" /></td>
+											<td><fmt:formatDate value="${list.updatedDate}"
 													type="both" /></td>
 											<td>${list.operator}</td>
 											<td class="text-center"><a class="option-btn-m"

@@ -25,6 +25,11 @@ var listOptions = {
 	}
 }
 
+function showContent(){
+	closeDialog('innerModel');
+	$("#content").modal('show');
+	
+}
 
 jQuery(function($) {
 	var $overflow = '';
@@ -77,29 +82,41 @@ jQuery(function($) {
 
 window.onload = setCurrentPage();
 
-function del(obj) {
-
-	bootbox.setLocale("zh_CN");
-	bootbox.confirm("是否删除该条数据?", function(result) {
-		if (result) {
-			var messageid = $(obj).parents("tr").find("td:first").find("input")
-					.val();
-			loadPage('#main', '../web/message/deleteMessage?messageid='
-					+ messageid);
-		}
-
-	})
-
-}
-		
+	
 function commitForm(obj) {
 	// 设置当前页的值
-	if (typeof obj == "undefined") {
-		$("#pageNum").val("1");
-	} else {
-		$("#pageNum").val($(obj).text());
-	}
+	
+	if(obj=='return'){
+	
+		$("#formRoad").ajaxSubmit( {
+			url : '../web/mobile/road/roadList',
+			type : 'post',
+			dataType : 'html',
+			data:{
+				conditionMsg:roadmsg,       
+				conditionStatus:roadStatus,
+				conditionType:roadType,
+				publisherTime_str:roadPT,
+				auditorTime_str:roadAT
+			},
+			success : function(data) {
+				$("#main").html(data);
+				if ($("#retCode").val() != "100") {
+					$("#modal-table").modal("show");
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
 
+			}
+		});
+		return;
+	}else{
+		if (typeof obj == "undefined") {
+			$("#pageNum").val("1");
+		} else {
+			$("#pageNum").val($(obj).text());
+		}
+	}
 	$("#formRoad").ajaxSubmit(listOptions);
 }
 function closeDialog(obj) {
@@ -109,15 +126,31 @@ function closeDialog(obj) {
 	// init();
 
 }
+var roadmsg;
+var roadStatus;
+var roadType;
+var roadPT;
+var roadAT;
+function showShixiao(url){
+	roadmsg=$('#msg').val();
+	roadStatus=$('#conditionStatus').val();
+	roadType=$('#type').val();
+	roadPT=$('#publisherTime_str').val();
+	roadAT=$('#auditorTime_str').val();
+	loadPage('#main', url);
+}
+
+
 function init() {
 	loadPage('#main', '../web/mobile/road/roadList');
 }
 
 function updateCheck(obj1, tr, id) {
+	
 	if (id != undefined) {
 		$('#buttonList')
 				.html(
-						'	<button class="btn btn-primary btn-sm" onclick="updateRoad(\'2\')">审核通过</button>					<button class="btn btn-primary btn-sm" onclick="updateRoad(\'3\')">审核不通过</button>					<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>')
+						'	<button class="btn btn-primary btn-sm" onclick="updateRoad(\'2\')">审核通过</button>					<button class="btn btn-primary btn-sm" onclick="showContent(\'3\')">审核不通过</button>					<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>')
 
 	} else {
 		$('#buttonList')
@@ -126,11 +159,14 @@ function updateCheck(obj1, tr, id) {
 	}
 	var show = $("div[name='show']");
 	for (var i = 0; i < show.length; i++) {
-		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{28})/g,
-				'$1\n');
+		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{50})/g,
+				'$1<br\>');
 	}
-	$("#innerimg1").attr("src", projectName + obj1);
-	$("#innerimg1").parent("a").attr("href", projectName + obj1);
+	if(obj1==""){
+		obj1="/common/images/default_productBig.jpg"
+	}
+	$("#innerimg1").attr("src", obj1);
+	$("#innerimg1").parent("a").attr("href",  obj1);
 	$("#innerModel").modal('show');
 	$("#roadId").val(id)
 
@@ -145,14 +181,18 @@ function shixiao(id){
 				url : '../web/mobile/road/updateRoad',
 				type : 'post',
 				data : {
-					id : $('#roadId').val()
+					id : $('#roadId').val(),
+					status:$("#conditionStatus").val()
 				},
 				dataType : 'text',
 				success : function(data) {
+					
 					$("body").removeClass('modal-open').removeAttr('style');
 					$(".modal-backdrop").remove();
-					$("#main").html(data);
-					$("#modal-table").modal("show");
+//					$("#main").html(data);
+//					$("#modal-table").modal("show");
+					bootbox.alert("失效成功");
+					commitForm();
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
 
@@ -164,19 +204,28 @@ function shixiao(id){
 	
 }
 function updateRoad(type) {
+	var oldtype=$("#conditionStatus").val();
 	$("#conditionStatus").val(type);
 	var options = {
 		url : '../web/mobile/road/updateRoad',
 		type : 'post',
 		data : {
-			id : $('#roadId').val()
+			id : $('#roadId').val(),
+			content: $('#contentmes').val(),
+			status:type
+//			conditionStatus:type
 		},
+		
 		dataType : 'text',
 		success : function(data) {
 			$("body").removeClass('modal-open').removeAttr('style');
 			$(".modal-backdrop").remove();
-			$("#main").html(data);
-			$("#modal-table").modal("show");
+//			$("#main").html(data);
+//			$("#modal-table").modal("show");
+			bootbox.alert("审核成功");
+			$("#conditionStatus").val(oldtype);
+			commitForm();
+			
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
 
@@ -199,9 +248,11 @@ function deleteRoad(id){
 				type : 'post',
 				dataType : 'text',
 				success : function(data) {
-					$("#main").html(data);
-					$("#modal-table").modal("show");
-					$('[data-rel="tooltip"]').tooltip();
+//					$("#main").html(data);
+					$("body").removeClass('modal-open').removeAttr('style');
+					$(".modal-backdrop").remove();
+					bootbox.alert("删除成功");
+					commitForm();
 				}
 			}
 			$("#formRoad").ajaxSubmit(deleteOptions);
@@ -209,9 +260,4 @@ function deleteRoad(id){
 	})
 
 
-}
-function showUser(id) {
-
-	loadPage('#content', '../web/message/showUser?id=' + id);
-	$("#editModel").modal('show');
 }

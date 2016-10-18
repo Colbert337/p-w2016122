@@ -12,6 +12,7 @@
 		<result column="message_created_time" property="messageCreatedTime" jdbcType="TIMESTAMP" />
 		<result column="operator" property="operator" jdbcType="VARCHAR" />
 		<result column="memo" property="memo" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
 		<result column="message_type" property="messageType" jdbcType="VARCHAR" />
 		<result column="driver_name" property="driverName" jdbcType="VARCHAR" />
 	</resultMap>
@@ -33,14 +34,14 @@
 	<sql id="Base_Column_List">
 		id, message_title, message_body, message_ticker, message_group,
 		message_send_time,province_name,
-		message_created_time, operator, memo,message_type,driver_name
+		message_created_time, operator, memo,message_type,driver_name,content
 	</sql>
 
 	<select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from sys_message
-		where 1=1
+		where 1=1 and is_delete='1'
 		<trim>
 			<if test="messageTitle != null &amp;&amp; messageTitle != ''">
 				and message_title LIKE CONCAT(CONCAT('%',
@@ -63,10 +64,13 @@
 		select
 		<include refid="Base_Column_List" />
 		from sys_message
-		where 1=1
+		where 1=1  and is_delete='1' and message_group ='1000'
 		<trim>
 			<if test="messageType != null &amp;&amp; messageType != ''">
 				and message_type = #{messageType,jdbcType=VARCHAR}
+			</if>
+			<if test="province_name != null &amp;&amp; province_name != ''">
+				and province_name like concat(concat('%',#{province_name,jdbcType=VARCHAR}),'%')    
 			</if>
 		</trim>
 	</select>
@@ -76,16 +80,16 @@
 		select
 		*
 		from sys_message
-		where id = #{id,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}  and is_delete='1'
 	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		delete from sys_message
+	<update id="deleteByPrimaryKey" parameterType="java.lang.String">
+		update sys_message set is_delete='0'
 		where id = #{id,jdbcType=VARCHAR}
-	</delete>
+	</update>
 	<insert id="insert" parameterType="com.sysongy.poms.message.model.SysMessage">
 		insert into sys_message (id, message_title, message_body,
 		message_ticker,message_type, message_group, message_send_time,
-		message_created_time, operator, memo,device_token,driver_name,province_id,province_name
+		message_created_time, operator, memo,device_token,driver_name,province_id,province_name,content
 		)
 		values (#{id,jdbcType=VARCHAR}, #{messageTitle,jdbcType=VARCHAR},
 		#{messageBody,jdbcType=VARCHAR},
@@ -93,7 +97,7 @@
 		#{messageSendTime,jdbcType=TIMESTAMP},
 		#{messageCreatedTime,jdbcType=TIMESTAMP},
 		#{operator,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR},
-		#{device_token,jdbcType=VARCHAR},#{driver_name,jdbcType=VARCHAR},#{province_id,jdbcType=VARCHAR},#{province_name,jdbcType=VARCHAR}
+		#{device_token,jdbcType=VARCHAR},#{driver_name,jdbcType=VARCHAR},#{province_id,jdbcType=VARCHAR},#{province_name,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.sysongy.poms.message.model.SysMessage">

@@ -42,6 +42,7 @@ import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.RealNameException;
 import com.sysongy.util.UUIDGenerator;
 
 /**
@@ -140,7 +141,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public int updateByPrimaryKey(SysOrder record) {
-		return sysOrderMapper.updateByPrimaryKey(record);
+		return sysOrderMapper.updateByPrimaryKeySelective(record);
 	}
 
     /**
@@ -222,12 +223,14 @@ public class OrderServiceImpl implements OrderService {
 		   throw new Exception( success_charge);
 	   }
 	   //3.调用返现--在返现里面判断是否首次返现，是则增加调用首次返现规则，然后再继续调用返现
-	   String success_cashback = driverService.cashBackToDriver(order);
-	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_cashback)){
-		   //如果出错直接返回错误代码退出
-		   throw new Exception( success_cashback);
+	   if(!GlobalConstant.OrderOperatorSourceType.WECHAT.equals(order.getOperatorSourceType())){
+		   String success_cashback = driverService.cashBackToDriver(order);
+		   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(success_cashback)){
+			   //如果出错直接返回错误代码退出
+			   throw new Exception( success_cashback);
+		   }  
 	   }
-	  
+
 	   return GlobalConstant.OrderProcessResult.SUCCESS;	
 	}
     
@@ -832,7 +835,7 @@ public class OrderServiceImpl implements OrderService {
 	 * 3.不返现
 	 * @return
 	 */
-	public String transferDriverToDriver(SysOrder order) throws Exception{
+	public String transferDriverToDriver(SysOrder order) throws RealNameException,Exception{
 	   if (order ==null){
 		   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
 	   }
@@ -854,11 +857,11 @@ public class OrderServiceImpl implements OrderService {
 	   //增加逻辑：个人未实名认证：不能转入：
 	   SysDriver driver = driverService.queryDriverByPK(debit_account);
 	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver.getCheckedStatus())){
-		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+		   throw new RealNameException(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
 	   }
 	   SysDriver driver2 = driverService.queryDriverByPK(credit_account);
 	   if(!GlobalConstant.DriverCheckedStatus.ALREADY_CERTIFICATED.equalsIgnoreCase(driver2.getCheckedStatus())){
-		   throw new Exception(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
+		   throw new RealNameException(GlobalConstant.OrderProcessResult.DRIVER_NOT_CERTIFICATE);
 	   }
 
 	   //1.扣除credit_account账户钱
@@ -1159,5 +1162,20 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		return GlobalConstant.OrderProcessResult.SUCCESS;
+	}
+
+	@Override
+	public List<Map<String, Object>> queryDriverReCharge(SysOrder record) {
+		return sysOrderMapper.queryDriverReChargeList(record);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryDriverConsume(SysOrder record) {
+		return sysOrderMapper.queryDriverConsumeList(record);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryDriverTransfer(SysOrder record) {
+		return sysOrderMapper.queryDriverTransferList(record);
 	}
 }

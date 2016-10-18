@@ -13,12 +13,34 @@
 
 
 <link rel="stylesheet" href="<%=basePath%>/common/css/fileinput.css" />
-<script src="<%=basePath%>/assets/js/date-time/moment.js"></script>
-<link rel="stylesheet" href="<%=basePath%>/assets/css/bootstrap-datetimepicker.css" />
-<script src="<%=basePath%>/assets/js/date-time/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript"
+		src="<%=basePath%>/assets/js/global/jedate.js"></script>
 
 <script src="<%=basePath%>/dist/js/mobile/roadAdd.js"></script>
+<script type="text/javascript">
 
+	jeDate({
+		dateCell : "#startTime_str",
+		format : "YYYY-MM-DD hh:mm",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#endTime_str",
+		format : "YYYY-MM-DD hh:mm",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#captureTime_str",
+		format : "YYYY-MM-DD hh:mm",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+</script>
 <div class="">
 	<!-- /section:settings.box -->
 	<div class="page-header">
@@ -32,75 +54,74 @@
 			<form class="form-horizontal" id="roadform">
 
 				<%-- <jsp:include page="/common/page_param.jsp"></jsp:include> --%>
-				
-				
+
+
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">路况类型：
 					</label>
 
 					<div class="col-sm-4">
-					<select class="chosen-select col-sm-6"
-							name="conditionType" id="conditionType"  onchange="changeType('conditionType')" >
+						<select class="chosen-select col-sm-6"
+								name="conditionType" id="conditionType"  onchange="changeType('conditionType')" >
 							<s:option flag="true" gcode="CONDITION_TYPE" form="road"
-								field="status" />
+									  field="status" />
 						</select>
 					</div>
-				</div> 
-				 
+				</div>
+
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">坐标：</label>
 
 					<div class="col-sm-4">
-						<input type="text" name="longitude" placeholder="输入信息内容"
-							class="form-control" maxlength="500"></input>
+						<input type="text" name="longitude" placeholder="输入坐标,格式为：经度，纬度，（如：12.15,15.475）"
+							   class="form-control" maxlength="40"></input>
 					</div>
 				</div>
 				<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right"><span
-								class="red_star">*</span> 图片： </label>
-							<div class="col-sm-4">
-								<div class="widget-box">
-									<div class="widget-header">
-										<h4 class="widget-title">图片上传 <font size="2" color="red" ></font></h4>
-									</div>
-									<div class="widget-body">
-										<div class="widget-main">
-										<input type="file" name="image"
-												class="projectfile" id="indu_com_certif_select" /> <input
-												type="hidden" id="img_path" value=""
-												name="conditionImg" /> 
-											<button class="btn btn-sm btn-primary btn-file-space"
-												type="button"
-												onclick="savePhoto(this,'#indu_com_certif_select','#img_path','#show_img');">
-												<i class="ace-icon fa fa-check bigger-110"></i> 图片上传
-											</button>
-										</div>
-									</div>
+					<label class="col-sm-3 control-label no-padding-right">图片：</label>
+					<div class="col-sm-4">
+						<div class="widget-box">
+							<div class="widget-header">
+								<h4 class="widget-title">图片上传 <font size="2" color="red" ></font></h4>
+							</div>
+							<div class="widget-body">
+								<div class="widget-main">
+									<input type="file" name="image"
+										   class="projectfile" id="indu_com_certif_select" /> <input
+										type="hidden" id="img_path" value=""
+										name="conditionImg" />
+									<button class="btn btn-sm btn-primary btn-file-space"
+											type="button"
+											onclick="savePhoto(this,'#indu_com_certif_select','#img_path','#show_img');">
+										<i class="ace-icon fa fa-check bigger-110"></i> 图片上传
+									</button>
 								</div>
 							</div>
 						</div>
+					</div>
+				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">拍照时坐标：</label>
 
 					<div class="col-sm-4">
-						<input type="text" name="captureLongitude" placeholder="输入信息内容"
-							class="form-control" maxlength="500"></input>
+						<input type="text" name="captureLongitude" placeholder="输入拍照坐标,格式为：经度，纬度，（如：12.15,15.475）"
+							   class="form-control" maxlength="40"></input>
 					</div>
 				</div>
- 
-				
+
+
 				<div class="form-group">
 					<label  class="col-sm-3 control-label no-padding-right">拍照时间：
 					</label>
-			<!-- #section:plugins/date-time.datetimepicker -->
-				<div class="input-group col-sm-4">
-					<input type="text" name="captureTime_str" class="form-control col-sm-4 timebox" />
+					<!-- #section:plugins/date-time.datetimepicker -->
+					<div class="input-group col-sm-4">
+						<input type="text" name="captureTime_str" id="captureTime_str" class="form-control col-sm-4 timebox" readonly/>
 					<span class="input-group-addon">
 						<i class="fa fa-clock-o bigger-110"></i>
 					</span>
-				</div>
-				<!-- /section:plugins/date-time.datetimepicker -->
-				 
+					</div>
+					<!-- /section:plugins/date-time.datetimepicker -->
+
 				</div>
 
 				<div class="form-group">
@@ -108,27 +129,27 @@
 
 					<div class="col-sm-4">
 						<textarea name="conditionMsg" placeholder="路况说明"
-							class="form-control"></textarea>
+								  class="form-control" maxlength="200"></textarea>
 					</div>
 				</div>
-					<div class="form-group">
+				<div class="form-group">
 					<label for="email" class="col-sm-3 control-label no-padding-right">开始时间：
 					</label>
-					
+
 					<div class="input-group col-sm-4">
-					<input type="text" name="startTime_str" id="startTime_str" class="form-control col-sm-4 timebox" />
+						<input type="text" name="startTime_str" id="startTime_str" class="form-control col-sm-4 timebox" readonly/>
 					<span class="input-group-addon">
 						<i class="fa fa-clock-o bigger-110"></i>
 					</span>
 					</div>
-				 
+
 				</div>
-					<div class="form-group" id="end">
+				<div class="form-group" id="end">
 					<label for="email" class="col-sm-3 control-label no-padding-right">结束时间：
 					</label>
 
 					<div class="input-group col-sm-4">
-					<input type="text" name="endTime_str" id="endTime_str"  class="form-control col-sm-4 timebox" />
+						<input type="text" name="endTime_str" id="endTime_str"  class="form-control col-sm-4 timebox" readonly/>
 					<span class="input-group-addon">
 						<i class="fa fa-clock-o bigger-110"></i>
 					</span>
@@ -140,7 +161,7 @@
 					</label>
 
 					<div class="col-sm-4">
-						<textarea name="address" placeholder="路况说明" class="form-control"></textarea>
+						<textarea name="address" placeholder="详细地址" class="form-control" maxlength="200"></textarea>
 					</div>
 				</div>
 
@@ -149,7 +170,7 @@
 
 					<div class="col-sm-4">
 						<input type="text" name="province" placeholder="输入信息内容"
-							class="form-control" maxlength="500"></input>
+							   class="form-control" maxlength="20"></input>
 						</select>
 					</div>
 				</div>
@@ -159,9 +180,9 @@
 
 					<div class="col-sm-4">
 						<select class="chosen-select col-sm-6"
-							name="direction" >
+								name="direction" >
 							<s:option flag="true" gcode="DIRECTION_CODE" form="road"
-								field="status" />
+									  field="status" />
 						</select>
 					</div>
 				</div>
@@ -170,7 +191,7 @@
 
 					<div class="col-sm-4">
 						<textarea name="memo" placeholder="备注"
-							class="form-control"></textarea>
+								  class="form-control" maxlength="500"></textarea>
 					</div>
 				</div>
 				<div class="form-group">
@@ -178,8 +199,8 @@
 
 					<div class="col-sm-4">
 						<input type="text" name="operator" class="form-control"
-							readonly="readonly"
-							value="${sessionScope.currUser.user.userName}" />
+							   readonly="readonly"
+							   value="${sessionScope.currUser.user.userName}" />
 					</div>
 				</div>
 
@@ -200,7 +221,7 @@
 						&nbsp; &nbsp; &nbsp;
 
 						<button class="btn btn-success" type="button"
-							onclick="returnpage();">
+								onclick="returnpage();">
 							<i class="ace-icon fa fa-undo bigger-110"></i> 返回
 						</button>
 					</div>

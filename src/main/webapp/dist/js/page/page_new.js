@@ -33,7 +33,7 @@
 	    
 	//实例化编辑器
 	var um = UM.getEditor('myEditor');
-		    
+
 	function save(){
 		$("[name=pageHtml]").val(getContent());
 

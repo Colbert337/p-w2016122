@@ -150,7 +150,7 @@
 	}
 	
 	function resetPassword(obj){
-		var userName = $(obj).parents("tr").children("td").eq(5).text();
+		var userName = $(obj).parents("tr").children("td").eq(6).text();
 		var station = $(obj).parents("tr").children("td").eq(1).text();
 		
 		bootbox.setLocale("zh_CN");

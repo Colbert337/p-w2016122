@@ -11,13 +11,14 @@
     <result column="page_created_time" property="pageCreatedTime" jdbcType="TIMESTAMP" />
     <result column="page_creator" property="pageCreator" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="show_title" property="show_title" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.sysongy.poms.page.model.SysStaticPage" extends="BaseResultMap" >
     <result column="page_html" property="pageHtml" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, page_title, page_body, page_ticker, page_status, page_html, page_created_time, page_creator, 
-    memo
+    memo,show_title
   </sql>
   <sql id="Blob_Column_List" >
     page_html
@@ -29,6 +30,9 @@
     from sys_static_page
     where 1=1
   <trim>
+  		<if test="pageStatus != null &amp;&amp; pageStatus != ''" >
+  	 and  page_status=#{pageStatus,jdbcType=VARCHAR} 
+  		</if> 
       <if test="pageTitle != null &amp;&amp; pageTitle != ''" >
         and page_title LIKE CONCAT(CONCAT('%', #{pageTitle,jdbcType=VARCHAR}), '%')
       </if>
@@ -53,11 +57,11 @@
   <insert id="insert" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
     insert into sys_static_page (id, page_title, page_body, 
       page_ticker, page_status, page_created_time, 
-      page_creator, memo, page_html
+      page_creator, memo, page_html, show_title
       )
     values (#{id,jdbcType=VARCHAR}, #{pageTitle,jdbcType=VARCHAR}, #{pageBody,jdbcType=VARCHAR}, 
       #{pageTicker,jdbcType=VARCHAR}, #{pageStatus,jdbcType=VARCHAR}, #{pageCreatedTime,jdbcType=TIMESTAMP}, 
-      #{pageCreator,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{pageHtml,jdbcType=LONGVARCHAR}
+      #{pageCreator,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{pageHtml,jdbcType=LONGVARCHAR}, #{show_title,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
@@ -148,6 +152,17 @@
       <if test="pageHtml != null" >
         page_html = #{pageHtml,jdbcType=LONGVARCHAR},
       </if>
+      <if test="show_title != null" >
+        show_title = #{show_title,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="delForStatus" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
+    update sys_static_page
+    <set> 
+        page_status = '1',
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -160,7 +175,8 @@
       page_created_time = #{pageCreatedTime,jdbcType=TIMESTAMP},
       page_creator = #{pageCreator,jdbcType=VARCHAR},
       memo = #{memo,jdbcType=VARCHAR},
-      page_html = #{pageHtml,jdbcType=LONGVARCHAR}
+      page_html = #{pageHtml,jdbcType=LONGVARCHAR},
+      show_title = #{show_title,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.page.model.SysStaticPage" >
@@ -171,7 +187,9 @@
       page_status = #{pageStatus,jdbcType=VARCHAR},
       page_created_time = #{pageCreatedTime,jdbcType=TIMESTAMP},
       page_creator = #{pageCreator,jdbcType=VARCHAR},
-      memo = #{memo,jdbcType=VARCHAR}
+      memo = #{memo,jdbcType=VARCHAR},
+      page_html = #{pageHtml,jdbcType=LONGVARCHAR},
+      show_title = #{show_title,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

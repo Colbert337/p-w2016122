@@ -6,6 +6,8 @@ public class MobileVerification {
 	
 	private String reqType;
 
+	private String content;
+
 	public String getReqType() {
 		return reqType;
 	}
@@ -21,5 +23,12 @@ public class MobileVerification {
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
-	
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
 }

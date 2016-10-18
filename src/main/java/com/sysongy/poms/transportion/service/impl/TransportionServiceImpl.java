@@ -363,6 +363,8 @@ public class TransportionServiceImpl implements TransportionService {
 		order.setChannelNumber("ZHGLPT");
 		order.setIs_discharge("0");
 		order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.PLATFORM);
+		order.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);//设置订单状态为成功
+		
 		orderService.insert(order, null);
 		orderService.chargeToTransportion(order);
 		

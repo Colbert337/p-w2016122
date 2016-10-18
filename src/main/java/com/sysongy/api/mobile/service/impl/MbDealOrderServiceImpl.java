@@ -1,22 +1,30 @@
 package com.sysongy.api.mobile.service.impl;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.sysongy.api.mobile.service.MbDealOrderService;
 import com.sysongy.poms.driver.dao.SysDriverMapper;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
-import com.sysongy.poms.driver.service.impl.DriverServiceImpl;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.permi.dao.SysUserMapper;
+import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
+import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.RealNameException;
 import com.sysongy.util.UUIDGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
 /**
  * @FileName: DealOrderService
@@ -36,6 +44,10 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
     DriverService driverService;
     @Autowired
     OrderService orderService;
+    @Autowired
+    SysUserMapper sysUserMapper;
+    @Autowired
+    SysUserAccountService sysUserAccountService;
 
     /**
      * 个人对个人转账
@@ -43,7 +55,7 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
      * @return
      */
     @Override
-    public int transferDriverToDriver(Map<String, Object> driverMap) throws Exception{
+    public int transferDriverToDriver(Map<String, Object> driverMap) throws RealNameException,Exception{
 
         String driverId = "";
         String paycode = "";
@@ -60,7 +72,7 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                 if(queryReceiveDriver !=null && queryReceiveDriver.size()>0){
                 	driverId = driverMap.get("token").toString();
                 	paycode = driverMap.get("paycode").toString();
-                    SysDriver driver = new SysDriver();
+                    SysDriver driver = sysDriverMapper.selectByPrimaryKey(driverId);
                     driver.setSysDriverId(driverId);
                     driver.setPayCode(paycode);
                     //校验支付密码
@@ -95,21 +107,27 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                             if(list.size() != 1){
                             	throw new Exception("找不到对应的唯一司机用户");
                             }
-                            
                             driver1 = list.get(0);
-                            
                             order.setDebitAccount(driver1.getSysDriverId());
-                            order.setChargeType(GlobalConstant.OrderChargeType.CHARGETYPE_TRANSFER_CHARGE);
-                            order.setOperator(driverId);
+                            order.setChargeType(GlobalConstant.OrderType.TRANSFER_DRIVER_TO_DRIVER);
+                            SysUser user = new SysUser();
+                            user.setUserName("13000000000");
+                            SysUser usr = sysUserMapper.queryUser(user);
+                            order.setOperator(usr.getSysUserId());
+                            order.setChannel("APP");
+                            order.setChannelNumber("APP");
+                            order.setOrderRemark(driverMap.get("remark").toString());
                             order.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.DRIVER);
                             order.setOperatorTargetType(GlobalConstant.OrderOperatorSourceType.DRIVER);
                             order.setOrderNumber(orderNum);
                             order.setIs_discharge(GlobalConstant.ORDER_BEEN_DISCHARGED_NO);
+                            order.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
                             //添加订单
                             orderService.insert(order, null);
                             //个人往个人转账
                             orderService.transferDriverToDriver(order);
                             resultVal = 1;
+                            sendTransferMessage(order,account);
                             return resultVal;
                         }else{
                             return resultVal = 2;//账户不存在
@@ -125,10 +143,34 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
             }else{
                 return resultVal = 3;//司机不存在
             }
+        }catch (RealNameException e){
+            e.printStackTrace();
+            throw new RealNameException("未实名认证");
         }catch (Exception e){
             e.printStackTrace();
             return resultVal = -1;//账户不存在
         }
 
     }
+	/**
+	 * 转账成功后发送短信提醒
+	 */
+	private void sendTransferMessage(SysOrder order,String receiverNum){
+		 /*发送转账通知短信*/
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        SimpleDateFormat sfm = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+        String time = sfm.format(new Date());
+        aliShortMessageBean.setTime(time);
+        aliShortMessageBean.setString("转入");
+        aliShortMessageBean.setMoney(order.getCash().toString());
+        aliShortMessageBean.setSendNumber(receiverNum);
+        /*查询账户余额*/
+        SysUserAccount sysUserAccount = sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+        if(sysUserAccount != null){
+            aliShortMessageBean.setMoney1(sysUserAccount.getAccountBalance());
+        }else{
+            aliShortMessageBean.setMoney1("0.00");
+        }
+		AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+	}
 }

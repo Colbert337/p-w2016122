@@ -74,6 +74,7 @@
         and (full_name like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%'))
         or  mobile_phone like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%')))
       </if>
+     
     </trim>
     and user_status &lt; 2
     ORDER BY created_date DESC
@@ -93,16 +94,14 @@
         and sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
       </if>
       <if test="fullName!= null &amp;&amp; fullName != ''" >
-        and full_name = #{fullName,jdbcType=VARCHAR}
-      </if>
-      <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
-        and (mobile_phone = #{mobilePhone,jdbcType=VARCHAR} or full_name = #{mobilePhone,jdbcType=VARCHAR})
+        and (user_name	 like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%'))
+        or  mobile_phone like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%')))
       </if>
       <if test="checkedStatus != null &amp;&amp; checkedStatus != ''" >
         and checked_status = #{checkedStatus,jdbcType=VARCHAR}
       </if>
       <if test="userName != null &amp;&amp; userName != ''">
-        and user_name = #{userName,jdbcType=INTEGER}
+        and user_name = #{userName,jdbcType=VARCHAR}
       </if>
       <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">
         and sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
@@ -122,6 +121,9 @@
       <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
         and plate_number like CONCAT(CONCAT('%',  #{plateNumber,jdbcType=VARCHAR}), '%')
       </if>
+      <if test="invitationCode != null &amp;&amp; invitationCode != ''" >
+        and invitation_code like CONCAT(CONCAT('%',  #{invitationCode,jdbcType=VARCHAR}), '%')
+      </if>
     </trim>
   </select>
   
@@ -130,7 +132,7 @@
     select
      *
     from sys_driver
-    where 1=1
+    where 1=1 and  device_token is not null and device_token <![CDATA[<>]]> ""
     <trim>
        
       <if test="fullName!= null &amp;&amp; fullName != ''" >
@@ -147,7 +149,7 @@
     select
      *
     from sys_driver
-    where 1=1 and user_name IN <foreach collection="list" item="item" index="index" 
+    where 1=1 and sys_driver_id IN <foreach collection="list" item="item" index="index" 
 open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
   </select>
   
@@ -169,7 +171,7 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
         and sd.checked_status = #{checkedStatus,jdbcType=VARCHAR}
       </if>
       <if test="userName != null &amp;&amp; userName != ''">
-        and sd.user_name = #{userName,jdbcType=INTEGER}
+        and sd.user_name = #{userName,jdbcType=VARCHAR}
       </if>
       <if test="sysUserAccountId != null &amp;&amp; sysUserAccountId != ''">
         and sd.sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
@@ -617,6 +619,9 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
       <if test="driverQrcode != null" >
         driver_qrcode = #{driverQrcode,jdbcType=VARCHAR},
       </if>
+      <if test="deviceToken != null" >
+        device_token = #{deviceToken,jdbcType=VARCHAR},
+      </if>
     </set>
     where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
   </update>
@@ -674,7 +679,7 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
 
   <select id="queryDriverByMobilePhone" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
     select
-    <include refid="Base_Column_List" />
+    *
     from sys_driver
     where mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
     and user_status = 0
@@ -716,5 +721,16 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
     where 
     user_name = #{userName,jdbcType=VARCHAR}
   </select>
-  
+  <select id="queryByDeviceToken" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+    where 
+    device_token = #{deviceToken,jdbcType=VARCHAR}
+  </select>   
+  <select id="queryAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_driver
+  </select>  
 </mapper>

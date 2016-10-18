@@ -25,7 +25,7 @@
   </select>
   
 <select id="querySuggest" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.mobile.model.Suggest" >
-  	 SELECT a.*,b.user_name FROM mb_user_suggest a, sys_driver b WHERE a.`sys_driver_id`=b.`sys_driver_id`
+  	 SELECT a.*,b.user_name FROM mb_user_suggest a LEFT JOIN sys_driver b ON a.`sys_driver_id`=b.`sys_driver_id` where 1=1 
     <trim>
       <if test="mb_user_suggest_id != null &amp;&amp; mb_user_suggest_id != ''" >
         and mb_user_suggest_id = #{mb_user_suggest_id,jdbcType=VARCHAR}

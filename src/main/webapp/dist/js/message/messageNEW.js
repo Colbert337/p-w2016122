@@ -38,20 +38,26 @@
 		if(!$('#messageform').data('bootstrapValidator').isValid()){
 			return ;
 		}
-		
+		if(device_token.split(",")==0){	
+			bootbox.alert("请选择发送对象！");
+			return;
+		}
+		$('#div').showLoading();
 		var options ={   
 	            url:'../web/message/saveMessageNew',   
 	            type:'post',
 	            data:{
-	            	device_token:device_token,
-	            	driver_name:driver_name
+	            	device_token:device_token.replace(/\#/g, ""),
+	            	driver_name:user_id.replace(/\#/g, ""),
+	            	messageType:1
 	            },
 	            dataType:'text',
 	            success:function(data){
 	            	$("#main").html(data);
 	            	$("#modal-table").modal("show");
+	            	$('#div').hideLoading();
 	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-	            	
+	            	$('#div').hideLoading();
 	 	       }
 		}
 					
@@ -64,6 +70,7 @@
 	}
 	var device_token = '';
 	var driver_name = '';
+	var user_id='';
 	function addUser(){
 		
 	
