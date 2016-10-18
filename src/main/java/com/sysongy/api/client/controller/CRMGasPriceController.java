@@ -332,4 +332,71 @@ public class CRMGasPriceController {
    			return ret;
    		}
    	}
+
+    @RequestMapping("/getUpdateGsGasPricePage")
+    public String preUpdate(ModelMap map, @RequestParam String gsGasPriceId,HttpServletRequest request, HttpServletResponse response){
+        PageBean bean = new PageBean();
+        String ret = "webpage/poms/gastation/gastation_price_update";
+        GsGasPrice gsGasPrice = new GsGasPrice();
+
+        try {
+            if(gsGasPriceId != null && !"".equals(gsGasPriceId)){
+                gsGasPrice = gsGasPriceService.queryGsPriceByPK(gsGasPriceId);
+            }
+
+            bean.setRetCode(100);
+            bean.setRetMsg("根据["+gsGasPriceId+"]查询gastationpriceId成功");
+            bean.setPageInfo(ret);
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("gsGasPrice", gsGasPrice);
+
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+            map.addAttribute("ret", bean);
+            logger.error("", e);
+            throw e;
+        }
+        finally {
+            return ret;
+        }
+    }
+    @RequestMapping("/updateGasPrice")
+    public String saveGastation(ModelMap map, GsGasPrice gsGasPrice) throws Exception{
+        PageBean bean = new PageBean();
+        String ret = "webpage/poms/gastation/gastation_new";
+        int gastationid ;
+
+        try {
+            if (gsGasPrice.getFixed_discount() != null && gsGasPrice.getMinus_money()!=null) {
+                return "" ;
+            }
+                ret = "webpage/poms/gastation/gastation_update";
+                gastationid = gsGasPriceService.saveGsPrice(gsGasPrice,"update");
+                bean.setRetMsg("修改成功");
+                ret = this.queryAllGasPriceList(map, gsGasPrice==null?new GsGasPrice():gsGasPrice);
+
+
+            bean.setRetCode(100);
+
+            bean.setRetValue("");
+            bean.setPageInfo(ret);
+
+            map.addAttribute("ret", bean);
+        } catch (Exception e) {
+            bean.setRetCode(5000);
+            bean.setRetMsg(e.getMessage());
+
+            map.addAttribute("ret", bean);
+            map.addAttribute("station", gsGasPrice);
+
+            logger.error("", e);
+        }
+        finally {
+            return ret;
+        }
+    }
+
+
 }

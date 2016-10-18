@@ -10,10 +10,7 @@ import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.mobile.model.MbAppVersion;
 import com.sysongy.poms.mobile.service.MbAppVersionService;
 import com.sysongy.poms.permi.model.SysUser;
-import com.sysongy.util.Encoder;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.*;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.*;
 
 @RequestMapping("/web/mobile/appversion")
@@ -101,7 +99,9 @@ public class MbAppVersionController extends BaseContoller {
 		String ret = "webpage/poms/mobile/appVersion_list";
 
 		try {
-
+			String PATH = (String) prop.get("downloadDir");
+			String s[]=mbAppVersion.getUrl().split(PATH);
+			mbAppVersion.setUrl(PATH+s[1]);
 
 			if (mbAppVersion != null && mbAppVersion.getAppVersionId() != null && !"".equals(mbAppVersion.getAppVersionId())) {
 
@@ -112,7 +112,6 @@ public class MbAppVersionController extends BaseContoller {
 			} else {
 				mbAppVersion.setAppVersionId(UUIDGenerator.getUUID());
 				mbAppVersion.setCreatedDate(new Date());
-
 				mbAppVersionService.insert(mbAppVersion);
 
 				bean.setRetMsg("新增成功");
@@ -161,7 +160,6 @@ public class MbAppVersionController extends BaseContoller {
 		Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 		String data = (String) prop.get("version");
 		String[] datas = data.split(",");
-		List<DistCity> list = city.queryHotCityList(2);
 		MbAppVersion mbAppVersions = mbAppVersionService.selectByPrimaryKey(mbAppVersion.getAppVersionId());
 		PageBean bean = new PageBean();
 		bean.setRetCode(100);
@@ -211,7 +209,12 @@ public class MbAppVersionController extends BaseContoller {
 			e.printStackTrace();
 		}
 		String localPath = (String) prop.get("http_poms_path");//当前服务器域名地址
-		ajaxJson.setObj(localPath+PATH+uploadify.getOriginalFilename());//返回给前台下载目录
+		Map map=new HashMap();
+		map.put("downloadUrl",localPath+PATH+uploadify.getOriginalFilename());
+		DecimalFormat df = new DecimalFormat("#.00");
+		map.put("appSize",df.format((double) uploadify.getSize() / 1048576) + "MB");
+		map.put("createDate",DateUtil.getToday());
+		ajaxJson.setAttributes(map);
 		return ajaxJson;
 	}
 

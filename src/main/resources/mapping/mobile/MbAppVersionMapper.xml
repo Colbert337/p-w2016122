@@ -12,11 +12,13 @@
     <result column="is_publish" property="isPublish" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+    <result column="app_size" property="appSize" jdbcType="VARCHAR" />
+    <result column="is_update" property="isUpdate" jdbcType="VARCHAR" />
   </resultMap>
 
 
   <sql id="Base_Column_List" >
-    app_version_id, url, version, code, is_publish, remark, created_date ,status, down_count
+    app_version_id, url, version, code, is_publish, remark, created_date ,status, down_count,app_size,is_update
   </sql>
 
   <select id="queryAppVersionList" resultMap="BaseResultMap" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
@@ -57,18 +59,27 @@
     from mb_app_version
     where app_version_id = #{appVersionId,jdbcType=VARCHAR}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from mb_app_version
     where app_version_id = #{appVersionId,jdbcType=VARCHAR}
   </delete>
+
   <insert id="insert" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
     insert into mb_app_version (app_version_id, url, version, 
       code, is_publish, remark, 
-      created_date)
+      created_date,
+      app_size,
+      is_update
+      )
     values (#{appVersionId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
       #{code,jdbcType=VARCHAR}, #{isPublish,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{createdDate,jdbcType=TIMESTAMP})
+      #{createdDate,jdbcType=TIMESTAMP},
+      #{appSize,jdbcType=VARCHAR},
+      #{isUpdate,jdbcType=VARCHAR}
+      )
   </insert>
+
   <insert id="insertSelective" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
     insert into mb_app_version
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -118,11 +129,14 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
     update mb_app_version
 
     where app_version_id = #{appVersionId,jdbcType=VARCHAR}
   </update>
+
+
   <update id="updateByPrimaryKey" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
     update mb_app_version
     set url = #{url,jdbcType=VARCHAR},
@@ -130,12 +144,21 @@
       code = #{code,jdbcType=VARCHAR},
       is_publish = #{isPublish,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      created_date = #{createdDate,jdbcType=TIMESTAMP}
+      created_date = #{createdDate,jdbcType=TIMESTAMP},
+      app_size=#{appSize,jdbcType=VARCHAR},
+      is_update=#{isUpdate,jdbcType=VARCHAR}
     where app_version_id = #{appVersionId,jdbcType=VARCHAR}
   </update>
+
   <!--更新APP下载量-->
-  <update id="updateDownCount" >
+  <update id="updateDownCount" parameterType="com.sysongy.poms.mobile.model.MbAppVersion" >
     update mb_app_version set down_count = down_count + 1
-    where status = 2
+    where code = #{code,jdbcType=VARCHAR}
   </update>
+  <!-- 获取最新版本 -->
+  <select id="queryNewest" resultMap="BaseResultMap">
+    select
+   	<include refid="Base_Column_List"/>
+    FROM mb_app_version where is_publish = '1' ORDER BY created_date DESC LIMIT 1
+  </select>
 </mapper>

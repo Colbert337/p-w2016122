@@ -1,31 +1,15 @@
 package com.sysongy.poms.crm.controller;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import com.sysongy.api.mobile.model.base.MobileReturn;
-import com.sysongy.api.mobile.model.verification.MobileVerification;
-import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
-import com.sysongy.api.util.DESUtil;
-import com.sysongy.poms.base.model.AjaxJson;
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.base.model.InterfaceConstants;
-import com.sysongy.poms.card.model.GasCard;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.driver.service.DriverService;
-import com.sysongy.poms.mobile.dao.MbAppVersionMapper;
-import com.sysongy.poms.transportion.model.Transportion;
-import com.sysongy.poms.transportion.service.TransportionService;
-import com.sysongy.tcms.advance.model.TcVehicle;
-import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.*;
-import com.sysongy.util.pojo.AliShortMessageBean;
-import jxl.Sheet;
-import jxl.Workbook;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,18 +19,26 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
+import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.crm.model.CrmHelp;
 import com.sysongy.poms.crm.model.CrmHelpType;
 import com.sysongy.poms.crm.service.CrmHelpService;
 import com.sysongy.poms.crm.service.CrmHelpTypeService;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.mobile.dao.MbAppVersionMapper;
+import com.sysongy.poms.mobile.model.MbAppVersion;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.service.MbBannerService;
@@ -55,10 +47,18 @@ import com.sysongy.poms.page.model.SysStaticPage;
 import com.sysongy.poms.page.service.SysStaticPageService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+import com.sysongy.tcms.advance.service.TcVehicleService;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.TwoDimensionCode;
+import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
 /**
  * @FileName: CrmPortalController
@@ -386,8 +386,8 @@ public class CrmPortalController {
         //统计阅读数
         SysRoadCondition rction = new SysRoadCondition();
         String viewCount = roadCondition.getViewCount();
-        viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
-        rction.setViewCount(viewCount);
+        int viewCountInt = Integer.parseInt(viewCount)+1;
+        rction.setViewCount(viewCountInt+"");
         rction.setId(roadCondition.getId());
         sysRoadService.updateByPrimaryKey(rction);
         return "/webpage/crm/webapp-traffic-detail";
@@ -422,8 +422,8 @@ public class CrmPortalController {
         //统计分享数
         SysRoadCondition rction = new SysRoadCondition();
         String shareCount = roadCondition.getShareCount();
-        shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
-        rction.setShareCount(shareCount);
+        int shareCountInt = Integer.parseInt(shareCount)+1;
+        rction.setShareCount(shareCountInt+"");
         rction.setId(roadCondition.getId());
         sysRoadService.updateByPrimaryKey(rction);
         return "/webpage/crm/webapp-traffic-share";
@@ -505,58 +505,61 @@ public class CrmPortalController {
      * @return
      */
     @RequestMapping("/user/register")
-    public String savaUser(@RequestParam String phone,@RequestParam String vcode, @RequestParam String invitationCode,  ModelMap map) throws Exception{
+    public String savaUser(@RequestParam String phone,@RequestParam String vcode, @RequestParam String invitationCode,  ModelMap map,HttpServletResponse hsr) throws Exception{
 
         if(phone != null){
             SysDriver driver = new SysDriver();
             driver.setUserName(phone);
             driver.setMobilePhone(phone);
-
             String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
-            if(vcode != null && !"".equals(veCode)) {
-                List<SysDriver> driverlist = driverService.queryeSingleList(driver);
-                if (driverlist != null && driverlist.size() > 0) {
-                    logger.info("该手机号已注册！");
-                    //throw new Exception(MobileRegisterUtils.RET_DRIVER_MOBILE_REGISTED);
-                } else {
-                    String sysDriverId = UUIDGenerator.getUUID();
-                    driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
-                    driver.setSysDriverId(sysDriverId);
-                    driver.setRegisSource("APP");
-                    driver.setRegisCompany(invitationCode);
-                    String encoderContent=phone;
-                    //图片路径
-                    String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
-                    File file =new File(rootPath);
-                    //如果根文件夹不存在则创建
-                    if  (!file.exists()  && !file.isDirectory()){
-                        file.mkdir();
-                    }
-                    String path = rootPath+phone+"/";
-                    File file1 =new File(path);
-                    //如果用户文件夹不存在则创建
-                    if  (!file1.exists()  && !file1.isDirectory()){
-                        file1.mkdir();
-                    }
-                    //二维码路径
-                    String imgPath = path+phone+".jpg";
-                    String show_path = (String) prop.get("show_images_path")+ "/driver/"+phone+"/"+phone+".jpg";
-                    //生成二维码
-                    driver.setDriverQrcode(show_path);
+            if(veCode != null && !"".equals(veCode)) {
+            	if(vcode.equals(veCode)){
+            		List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+                    if (driverlist != null && driverlist.size() > 0) {
+                    	hsr.getWriter().println("<script type='text/javascript'>alert('该手机号已注册！');</script>");
+                        logger.info("该手机号已注册！");
+                    } else {
+                        String sysDriverId = UUIDGenerator.getUUID();
+                        driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
+                        driver.setSysDriverId(sysDriverId);
+                        driver.setRegisSource("APP");
+                        driver.setRegisCompany(invitationCode);
+                        String encoderContent=phone;
+                        //图片路径
+                        String rootPath = (String) prop.get("images_upload_path")+ "/driver/";
+                        File file =new File(rootPath);
+                        //如果根文件夹不存在则创建
+                        if  (!file.exists()  && !file.isDirectory()){
+                            file.mkdir();
+                        }
+                        String path = rootPath+phone+"/";
+                        File file1 =new File(path);
+                        //如果用户文件夹不存在则创建
+                        if  (!file1.exists()  && !file1.isDirectory()){
+                            file1.mkdir();
+                        }
+                        //二维码路径
+                        String imgPath = path+phone+".jpg";
+                        String show_path = (String) prop.get("show_images_path")+ "/driver/"+phone+"/"+phone+".jpg";
+                        //生成二维码
+                        driver.setDriverQrcode(show_path);
 
-                    Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
-                    if(tmp > 0){
-                        TwoDimensionCode handler = new TwoDimensionCode();
-                        handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+                        Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
+                        if(tmp > 0){
+                            TwoDimensionCode handler = new TwoDimensionCode();
+                            handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
+                        }
                     }
-
-                }
+            	}else{
+            		logger.info("验证码无效！");
+            		hsr.getWriter().println("<script type='text/javascript'>alert('验证码无效！');</script>");
+            	}
             }else{
+            	hsr.getWriter().println("<script type='text/javascript'>alert('验证码无效！');</script>");
                 logger.info("验证码无效！");
             }
         }
-        mbAppVersionMapper.updateDownCount();//更新APP下载数
-        return "redirect:/webpage/crm/webapp-download-app.jsp";
+        return "/webpage/crm/webapp-download-app";
     }
 
     /**
@@ -565,8 +568,10 @@ public class CrmPortalController {
      */
     @RequestMapping("/app/down")
     @ResponseBody
-    public String appDownCount(ModelMap map) throws Exception {
-        mbAppVersionMapper.updateDownCount();//更新APP下载数
+    public String appDownCount(@RequestParam String appVersion,ModelMap map) throws Exception {
+    	MbAppVersion mbAppVersion = new MbAppVersion();
+    	mbAppVersion.setCode(appVersion);
+        mbAppVersionMapper.updateDownCount(mbAppVersion);//更新APP下载数
         return null;
     }
     /**

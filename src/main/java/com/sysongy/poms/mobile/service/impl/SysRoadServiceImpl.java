@@ -3,6 +3,8 @@ package com.sysongy.poms.mobile.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,7 @@ public class SysRoadServiceImpl implements SysRoadService {
 
 	@Autowired
 	SysRoadConditionStrMapper sysRoadConditionStrMapper;
-
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	/**
 	 * 路况列表
 	 */
@@ -149,6 +151,8 @@ public class SysRoadServiceImpl implements SysRoadService {
 	@Override
 	public int updateByPrimaryKey(SysRoadCondition record) throws Exception {
 		// TODO Auto-generated method stub
-		return sysRoadConditionMapper.updateByPrimaryKey(record);
+		System.out.println("更新路况统计^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^更新路况统计^^^^^^^^^^^^^^^^^^^^^^^^^");
+		logger.info("更新路况统计^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^更新路况统计^^^^^^^^^^^^^^^^^^^^^^^^^");
+		return sysRoadConditionMapper.updateByPrimaryKeySelective(record);
 	}
 }
