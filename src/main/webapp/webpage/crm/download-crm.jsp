@@ -23,7 +23,7 @@
             <ul>
                 <li class="home"><a href="<%=basePath %>/webpage/crm/index.jsp">首页</a></li>
                 <li class="current"><a href="<%=basePath %>/webpage/crm/download-crm.jsp">CRM下载</a></li>
-                <li><a href="<%=basePath %>/webpage/crm/download-app.jsp">APP下载</a></li>
+                <li><a href="<%=basePath %>/webpage/crm/download-app">APP下载</a></li>
             </ul>
         </div>
     </div>

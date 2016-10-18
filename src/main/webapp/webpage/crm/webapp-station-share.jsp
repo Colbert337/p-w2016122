@@ -72,7 +72,7 @@
 
 	<div class="btn-more-info">
 		<div class="inner">
-			<a href="<%=basePath %>/webpage/crm/webapp-download-app.jsp" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
+			<a href="<%=basePath %>/webpage/crm/webapp-download-app" class="btn-app-primary logic-download-app"></span>下载司集APP给您提供更多优质服务</a>
 		</div>
 	</div>
 

@@ -61,6 +61,7 @@ public class MbAppVersionServiceImpl implements MbAppVersionService {
 
     @Override
     public PageInfo<MbAppVersion> queryAppVersionListPage(MbAppVersion record)  throws Exception{
+
         if(record != null){
             PageHelper.startPage(record.getPageNum(),record.getPageSize(),record.getOrderby());
             List<MbAppVersion> MbAppVersionList = mbAppVersionMapper.queryAppVersionList(record);
@@ -76,6 +77,10 @@ public class MbAppVersionServiceImpl implements MbAppVersionService {
         }
     }
 
+	@Override
+	public MbAppVersion queryNewest() {
+		return mbAppVersionMapper.queryNewest();
+	}
     /**
      * 给版本说明加上换行符，用于APP版本展示说明
      */

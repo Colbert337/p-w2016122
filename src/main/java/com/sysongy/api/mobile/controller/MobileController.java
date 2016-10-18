@@ -8,15 +8,21 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sysongy.util.*;
-import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
-
-import net.sf.json.JSONArray;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
@@ -38,7 +44,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
@@ -63,9 +68,11 @@ import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.controller.SysRoadController;
+import com.sysongy.poms.mobile.model.MbAppVersion;
 import com.sysongy.poms.mobile.model.MbBanner;
 import com.sysongy.poms.mobile.model.MbStatistics;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.mobile.service.MbAppVersionService;
 import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
@@ -79,9 +86,18 @@ import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.pojo.AliShortMessageBean;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.HttpUtil;
+import com.sysongy.util.JsonTool;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RealNameException;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.TwoDimensionCode;
+import com.sysongy.util.UUIDGenerator;
 import com.tencent.mm.sdk.modelpay.PayReq;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @RequestMapping("/api/v1/mobile")
@@ -148,6 +164,8 @@ public class MobileController {
 	SysMessageService sysMessageService;
 	@Autowired
 	MbStatisticsService mbStatisticsService;
+	@Autowired
+	MbAppVersionService mbAppVersionService;
 
 	/**
 	 * 用户登录
@@ -533,7 +551,7 @@ public class MobileController {
 							resultMap.put("nick", "");
 						}
 						resultMap.put("account", driver.getUserName());
-						resultMap.put("securityPhone", driver.getMobilePhone());
+						resultMap.put("securityPhone", driver.getSecurityMobilePhone());
 						resultMap.put("isRealNameAuth", driver.getCheckedStatus());
 						resultMap.put("balance", driver.getAccount().getAccountBalance());
 						resultMap.put("QRCodeUrl", http_poms_path + driverlist.get(0).getDriverQrcode());
@@ -790,7 +808,8 @@ public class MobileController {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("验证码为空！");
 				} else {
-					String	veCode = (String) redisClientImpl.getFromCache(mainObj.optString("token"));
+					driver = driverService.queryDriverByPK(mainObj.optString("token"));
+					String	veCode = (String) redisClientImpl.getFromCache(driver.getUserName());
 					if (veCode != null && !"".equals(veCode)) {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
@@ -2534,8 +2553,7 @@ public class MobileController {
 				SysOrder sysOrder = null;
 				String thirdPartyID = null;
 				if (payType.equalsIgnoreCase("2")) { // 支付宝支付
-					sysOrder = createNewOrder(orderID, driverID, feeCount,
-							GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE); // TODO充值成功后再去生成订单
+					sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE); // TODO充值成功后再去生成订单
 					orderService.checkIfCanChargeToDriver(sysOrder);
 					String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayCallBackPay";
 					Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
@@ -3675,8 +3693,8 @@ public class MobileController {
 					sysRoadCondition.setId(sysRoadCondition.getId());
 					if ("1".equals(operation)) {// 阅读
 						String viewCount = sysRoadCondition.getViewCount();
-						viewCount = String.valueOf(Integer.parseInt(viewCount) + 1);
-						sysRoadCondition.setViewCount(viewCount);
+						int viewCountInt = Integer.parseInt(viewCount) + 1;
+						sysRoadCondition.setViewCount(viewCountInt+"");
 						rs = sysRoadService.updateRoad(sysRoadCondition);
 						if (rs > 0) {
 							result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -3686,8 +3704,8 @@ public class MobileController {
 						}
 					} else {// 分享
 						String shareCount = sysRoadCondition.getShareCount();
-						shareCount = String.valueOf(Integer.parseInt(shareCount) + 1);
-						sysRoadCondition.setShareCount(shareCount);
+						int shareCountInt = Integer.parseInt(shareCount) + 1;
+						sysRoadCondition.setShareCount(shareCountInt+"");
 						rs = sysRoadService.updateRoad(sysRoadCondition);
 						if (rs > 0) {
 							result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -3875,12 +3893,20 @@ public class MobileController {
 		result.setMsg("获取成功！");
 		String resultStr = "";
 		try {
-			Map<String, Object> tokenMap = new HashMap<>();
-			String localPath = (String) prop.get("http_poms_path");
-			tokenMap.put("lastVersion", "13");
-			tokenMap.put("downUrl", localPath + "/docs/app/sysongy-sysongy-release-1.0.0.13.apk");
-			tokenMap.put("isUpdate", "1");
-			result.setData(tokenMap);
+			MbAppVersion appVersion = mbAppVersionService.queryNewest();
+			if(appVersion!=null){
+				Map<String, Object> tokenMap = new HashMap<>();
+				String localPath = (String) prop.get("http_poms_path");
+				tokenMap.put("lastVersion", appVersion.getCode());//对内版本号
+				tokenMap.put("downUrl", localPath + appVersion.getUrl());
+				tokenMap.put("isUpdate", appVersion.getIsUpdate());
+				tokenMap.put("appSize", appVersion.getAppSize());
+				tokenMap.put("remark", appVersion.getRemark());
+				result.setData(tokenMap);
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("暂无版本！");
+			}
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
@@ -4078,20 +4104,22 @@ public class MobileController {
 
 	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType) throws Exception {
 		SysOrder record = new SysOrder();
+		record.setChannel("APP-支付宝充值");
+		record.setChannelNumber("APP-支付宝充值"); // 建立一个虚拟的APP气站，方便后期统计
 		if (chargeType.equals(GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE)) {// 微信支付，将金额转换为以元为单位
 			BigDecimal cashBd = new BigDecimal(cash);
 			BigDecimal num = new BigDecimal(100);
 			cashBd = cashBd.divide(num, 2, RoundingMode.HALF_UP);
 			cash = cashBd.toString();
+			record.setChannel("APP-微信充值");
+			record.setChannelNumber("APP-微信充值"); // 建立一个虚拟的APP气站，方便后期统计
 		}
 		record.setOrderId(orderID);
 		record.setDebitAccount(driverID);
 		record.setOperator(appOperatorId);
 		record.setOperatorSourceId(appOperatorId);
-
 		record.setCash(new BigDecimal(cash));
 		record.setChargeType(chargeType);
-
 		record.setIs_discharge("0");
 		record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.GASTATION);
 		record.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);
@@ -4108,8 +4136,6 @@ public class MobileController {
 		 **/
 		Date curDate = new Date();
 		record.setOrderDate(curDate);
-		record.setChannel("APP");
-		record.setChannelNumber("APP"); // 建立一个虚拟的APP气站，方便后期统计
 		return record;
 	}
 
