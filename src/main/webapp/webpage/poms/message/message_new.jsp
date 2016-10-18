@@ -35,7 +35,7 @@
 
 					<div class="col-sm-4">
 						<input type="text" name="messageTitle" placeholder="输入信息标题"
-							class="form-control" maxlength="30" />
+							class="form-control" maxlength="12" />
 					</div>
 				</div>
 

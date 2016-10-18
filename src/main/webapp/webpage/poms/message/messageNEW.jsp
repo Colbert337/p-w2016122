@@ -31,7 +31,7 @@
 										<label class="col-sm-3 control-label no-padding-right">信息标题： </label>
 
 										<div class="col-sm-4">
-											<input type="text" name="messageTitle" placeholder="输入信息标题" class="form-control" maxlength="30"/>
+											<input type="text" name="messageTitle" placeholder="输入信息标题" class="form-control" maxlength="12"/>
 										</div>
 									</div>
 									
