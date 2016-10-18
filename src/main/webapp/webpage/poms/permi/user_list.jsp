@@ -37,7 +37,7 @@
 			password: {
 				validators: {
 					notEmpty: {
-						message: '支付密码不能为空'
+						message: '密码不能为空'
 					},
 					stringLength: {
 						min: 6,
