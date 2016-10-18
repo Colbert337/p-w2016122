@@ -217,8 +217,8 @@
       #{updated_time,jdbcType=TIMESTAMP},#{prepay_balance,jdbcType=DECIMAL}, #{prepay_version,jdbcType=INTEGER},
        #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{map_type,jdbcType=VARCHAR},
         #{gas_server ,jdbcType=VARCHAR}, #{lng_price ,jdbcType=VARCHAR}, #{promotions ,jdbcType=VARCHAR},
-        #{price_effective_time,jdbcType=VARCHAR},
-/*         #{fixed_discount ,jdbcType=FLOAT})*/
+        #{price_effective_time,jdbcType=VARCHAR}
+<!--         , #{fixed_discount ,jdbcType=FLOAT} -->)
   </insert>
   
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
