@@ -490,6 +490,12 @@ public class CardController extends BaseContoller {
 	@RequestMapping("/cardListReport")
 	public String cardListReport(ModelMap map, GasCard gascard, HttpServletRequest request,HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
 		try {
+			if(StringUtils.isNotBlank(gascard.getStorage_time_after()) || StringUtils.isNotBlank(gascard.getStorage_time_before())
+					||StringUtils.isNotBlank(gascard.getCard_property())||StringUtils.isNotBlank(gascard.getCard_status())||
+					StringUtils.isNotBlank(gascard.getOperator())) {
+				gascard.setPageNum(1);
+				gascard.setPageSize(1048576);
+			}
 
 			if(StringUtils.isEmpty(gascard.getOrderby())){
 				gascard.setOrderby("order_date desc");

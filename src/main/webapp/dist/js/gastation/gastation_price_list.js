@@ -84,3 +84,8 @@
 		$("body").removeClass('modal-open').removeAttr('style');
 		$(".modal-backdrop").remove();
 	}
+
+	function getUpdatePage(obj){
+		var gsGasPriceId = $(obj).parents("tr").find("td:first").find("input").val();
+		loadPage('#main', '../crmInterface/crmGasPriceService/getUpdateGsGasPricePage?gsGasPriceId='+gsGasPriceId);
+	}

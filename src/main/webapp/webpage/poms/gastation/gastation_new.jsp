@@ -310,15 +310,15 @@
 										</div>
 									</div>
 
-										<div class="form-group">
+										<%--<div class="form-group">
 											<label for="fixed_discount" class="col-sm-3 control-label no-padding-right"> 固定折扣： </label>
 
 											<div class="col-sm-4">
-												<input type="text" onKeyUp="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"  id="fixed_discount"  name="fixed_discount" placeholder="固定折扣" class="form-control"  maxlength="5" value=""  />
+												<input type="text" onKeyUp="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"  id="fixed_discount"  name="fixed_discount" placeholder="固定折扣" class="form-control"  maxlength="4" value=""  />
 
 											</div>
 											<div class="form-group">	<span class="red_star">固定折扣格式如：7.5 &nbsp(7.5代表7.5折)</span></div>
-										</div>
+										</div>--%>
 
 										<div class="form-group">
 											<label class="col-sm-3 control-label no-padding-right" for="price_effective_time"> 价格生效时间： </label>

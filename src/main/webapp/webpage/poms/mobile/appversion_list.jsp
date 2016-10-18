@@ -76,12 +76,16 @@
 										<th
 											id="url_order">下载地址</th>
 										<th
-											id="version_order">版本信息</th>
+												id="appSize_order">App大小</th>
 										<th
-											id="code_order">版本号</th>
+											id="version_order">外部版本号</th>
+										<th
+											id="code_order">内部版本号</th>
 										<th
 											id="isPublish_order">是否发布</th>
-										<th id="level">备注</th>
+										<th
+												id="isUpdate_order">是否强制更新</th>
+										<th id="level">版本说明</th>
 										<th onclick="orderBy(this,'created_date');commitForm();"
 											id="created_date_order" class="td-w2"><i
 											id="created_date"
@@ -97,13 +101,20 @@
 										<tr id="${list.appVersionId }">
 											<td class='center' style="width: 30px;">${s.index+1}</td>
 											<td>${list.url}</td>
+											<td>${list.appSize}</td>
 											<td>${list.version}</td>
 											<td style="width: 30px;"><div class="td-inner-warp">${list.code}</div></td>
+
 											<td style="width: 10px;"><div class="td-inner-warp">
 											<c:if test="${list.isPublish == '1'}">是</c:if>
-
 											<c:if test="${list.isPublish == '0' }">否</c:if>
 											</div></td>
+
+											<td style="width: 10px;"><div class="td-inner-warp">
+												<c:if test="${list.isUpdate == '1'}">是</c:if>
+												<c:if test="${list.isUpdate == '2' }">否</c:if>
+											</div></td>
+
 											<td>${list.remark}</td>
 											<td>${list.createdDateStr}
 													</td>
