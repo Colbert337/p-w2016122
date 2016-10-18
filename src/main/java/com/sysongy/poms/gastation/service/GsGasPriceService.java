@@ -28,4 +28,10 @@ public interface GsGasPriceService {
      * @return
      */
     List<Map<String, Object>> queryPriceList(String stationId);
+    /**
+     * 获取折扣信息
+     * @param stationId 加注站编号
+     * @return
+     */
+    List<Map<String, Object>> queryDiscount(String stationId);
 }
