@@ -3957,14 +3957,18 @@ public class MobileController {
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				gastationId = mainObj.optString("gastationId");
 				List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
-				for (Map<String, Object> map : gsGasPriceList) {
-					Map<String, Object> reChargeMap = new HashMap<>();
-					reChargeMap.put("preferential_type", map.get("preferential_type").toString().equals("0")?"立减金额":"固定折扣");
-					reChargeMap.put("gasName", map.get("gas_name"));
-					reChargeMap.put("gasPrice", map.get("product_price"));
-					reChargeMap.put("priceUnit", map.get("unit"));
-					reChargeMap.put("discountAmount",map.get("minus_money")==null?map.get("fixed_discount"):map.get("minus_money"));
-					reChargeList.add(reChargeMap);
+				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
+					for (Map<String, Object> map : gsGasPriceList) {
+						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("preferential_type", map.get("preferential_type").toString().equals("0")?"立减金额":"固定折扣");
+						reChargeMap.put("gasName", map.get("gas_name"));
+						reChargeMap.put("gasPrice", map.get("product_price"));
+						reChargeMap.put("priceUnit", map.get("unit"));
+						reChargeMap.put("discountAmount",map.get("minus_money")==null?map.get("fixed_discount"):map.get("minus_money"));
+						reChargeList.add(reChargeMap);
+					}
+				}else{
+					result.setMsg("暂无折扣信息");
 				}
 				result.setListMap(reChargeList);
 			} else {
