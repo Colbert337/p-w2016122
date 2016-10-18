@@ -48,6 +48,7 @@ public class UmengUtil {
 		broadcast.setProductionMode();
 		// Set customized fields
 		broadcast.setExtraField("content", params.getContent());// 弹出内容
+		broadcast.setExtraField("title", params.getTitle());//设置自定义title
 		return client.send(broadcast);
 	}
 
@@ -68,6 +69,7 @@ public class UmengUtil {
 		// Set customized fields
 
 		unicast.setExtraField("content", params.getContent());// 弹出内容
+		unicast.setExtraField("title", params.getTitle());//设置自定义title
 		return client.send(unicast);
 	}
 

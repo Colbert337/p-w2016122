@@ -27,8 +27,8 @@
 					<p>1.0.0.13 ( build 6 ) </p>
 					<p>更新于 2016-09-22</p>
 				</div>
-				<div class="download-app-bd">
-					<a class="btn-app-primary logic-download-app" href="<%=basePath %>/docs/app/sysongy-sysongy-release-1.0.0.13.apk"><span class="icon-android"></span>下载安卓</a>
+				<div class="download-app-bd" onclick="statistics(${version})">
+					<a class="btn-app-primary logic-download-app" href="<%=basePath %>${url}"><span class="icon-android"></span>下载安卓</a>
 				</div>
 			</div>
 		</div>
@@ -61,15 +61,20 @@
 <script src="<%=basePath %>/assets/js/jquery.validate.js"></script>
 <script src="<%=basePath %>/webpage/crm/js/webapp.js"></script>
 <script>
+var appVersion;
+function statistics(version){
 	$.ajax({
 		url:"../../portal/crm/help/app/down",
-		data:{},
+		data:{
+			appVersion:version
+		},
 		async:false,
 		type: "POST",
 		success: function(data){
 			console.log("APP下载统计成功！");
 		}
 	})
+}
 </script>
 </body>
 </html>

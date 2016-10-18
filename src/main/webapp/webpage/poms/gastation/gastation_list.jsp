@@ -107,7 +107,7 @@
 									<th onclick="orderBy(this,'prepay_balance');commitForm();" id="prepay_balance_order">预付款额度</th>
 									<th style="display: none">钱袋编号</th>
 				 				<th onclick="orderBy(this,'price_effective_time');commitForm();" id="price_effective_order">价格生效时间</th>
-									<th onclick="orderBy(this,'fixed_discount');commitForm();" id="fixed_discount_order">固定折扣</th>
+									<%--<th onclick="orderBy(this,'fixed_discount');commitForm();" id="fixed_discount_order">固定折扣</th>--%>
 									<th class="text-center td-w2">更多操作</th>
 								</tr>
 							</thead>
@@ -146,7 +146,7 @@
 										<c:if test="${list.price_effective_time == '12' }">12小时后生效</c:if>
 										<c:if test="${list.price_effective_time == '24' }">24小时后生效</c:if>
 									</td>
-									<td>${list.fixed_discount}</td>
+									<%--<td>${list.fixed_discount}</td>--%>
 									<td style="display: none">${list.sys_user_account_id}</td>
 									<td class="text-center">
 										<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
@@ -266,11 +266,11 @@
 							<th>价格生效时间</th>
 							<td><div id="price_effective_time" name="show"> </div></td>
 						</tr>
-						<tr>
+						<%--<tr>
 
 							<th>固定折扣</th>
 							<td colspan="3"><div id="fixed_discount" name="show"> </div></td>
-						</tr>
+						</tr>--%>
 					</tbody>
 				</table>
 

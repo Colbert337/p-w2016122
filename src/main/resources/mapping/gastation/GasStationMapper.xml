@@ -40,7 +40,7 @@
     
 
     <result column="price_effective_time" property="price_effective_time" jdbcType="VARCHAR" />
-    <result column="fixed_discount" property="fixed_discount" jdbcType="FLOAT" />
+    <!--<result column="fixed_discount" property="fixed_discount" jdbcType="FLOAT" />-->
 
     <association column="sys_user_account_id" property="account" javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -75,7 +75,7 @@
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
-    updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server,LNG_price,promotions,view_count,share_count,price_effective_time,fixed_discount
+    updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server,LNG_price,promotions,view_count,share_count,price_effective_time
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -198,7 +198,7 @@
       indu_com_number, tax_number, indu_com_certif, 
       tax_certif, lng_certif, dcp_certif, 
       platform_type, status, created_time, 
-      updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server ,LNG_price ,promotions,price_effective_time,fixed_discount )
+      updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server ,LNG_price ,promotions,price_effective_time )
     values (#{company,jdbcType=VARCHAR},
     #{sys_gas_station_id,jdbcType=VARCHAR},
       #{gas_station_name,jdbcType=VARCHAR}, 
@@ -218,7 +218,7 @@
        #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{map_type,jdbcType=VARCHAR},
         #{gas_server ,jdbcType=VARCHAR}, #{lng_price ,jdbcType=VARCHAR}, #{promotions ,jdbcType=VARCHAR},
         #{price_effective_time,jdbcType=VARCHAR},
-         #{fixed_discount ,jdbcType=FLOAT})
+/*         #{fixed_discount ,jdbcType=FLOAT})*/
   </insert>
   
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
@@ -515,9 +515,9 @@
     <if test="price_effective_time != null &amp;&amp; price_effective_time != ''" >
       price_effective_time = #{price_effective_time,jdbcType=VARCHAR},
     </if>
-    <if test="fixed_discount != null &amp;&amp; fixed_discount != ''" >
+   <!-- <if test="fixed_discount != null &amp;&amp; fixed_discount != ''" >
       fixed_discount = #{fixed_discount,jdbcType=FLOAT}
-    </if>
+    </if>-->
     </set>
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </update>
@@ -672,7 +672,7 @@
       prepay_balance = #{prepay_balance,jdbcType=DECIMAL},
 
       price_effective_time = #{price_effective_time,jdbcType=VARCHAR},
-      fixed_discount = #{fixed_discount,jdbcType=FLOAT}
+     /* fixed_discount = #{fixed_discount,jdbcType=FLOAT}*/
 
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </update>

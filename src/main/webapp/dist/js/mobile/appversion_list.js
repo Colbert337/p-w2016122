@@ -200,6 +200,9 @@ function versionUpdate(appVersionId){
 		type : "POST",
 		success : function(data) {
 			$("#main").html(data);
+			$('#urldiv').css('display','block');
+			$('#appSizediv').css('display','block');
+			$('#createdDateStrdiv').css('display','block');
 		}
 	})
 	 

@@ -99,20 +99,10 @@
 					<!-- PAGE CONTENT BEGINS -->
 					<form class="form-horizontal" id="editForm">
 
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								for="url">   下载地址：
-							</label>
-							<div class="col-sm-8">
-								<input name="url" id="url" style="resize: none;"
-									   placeholder="请先上传程序包"
-									value="${mbAppVersion.url }" readonly="readonly"
-									class="col-xs-10 col-sm-12 limited form-control" />
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right"
-								   for="version">   版本信息：
+								   for="version">   外部版本号：
 							</label>
 							<div class="col-sm-8">
 								<input name="version" id="version" style="resize: none;"
@@ -123,11 +113,11 @@
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								   for="code">   版本号：
+								   for="code">   内部版本号：
 							</label>
 							<div class="col-sm-8">
 								<input name="code" id="code" style="resize: none;"
-
+										type="number" min="1"
 									   value="${mbAppVersion.code }"
 									   class="col-xs-10 col-sm-12 limited form-control" />
 							</div>
@@ -147,28 +137,37 @@
 								</select>
 							</div>
 						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right"
+								   for="isUpdate">   是否强制更新：
+							</label>
+							<div class="col-sm-8">
+								<%--<input name="isPublish" id="isPublish" style="resize: none;"
+
+									   value="${mbAppVersion.isPublish }"
+									   class="col-xs-10 col-sm-12 limited form-control" />--%>
+								<select name="isUpdate" title="状态">
+									<option value="1" <c:if test="${mbAppVersion.isUpdate == '1' }">selected</c:if> >是</option>
+									<option value="2" <c:if test="${mbAppVersion.isUpdate == '2' }">selected</c:if> >否</option>
+								</select>
+							</div>
+						</div>
+
+
+
 
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								   for="remark"> 备注： </label>
+								   for="remark"> 版本说明： </label>
 							<div class="col-sm-8">
 								<textarea name="remark" id="remark" style="resize: none;"
-										  maxlength="100" placeholder="备注"
+										  maxlength="200" placeholder="版本说明" rows="6" wrap="virtual"
 										  class="col-xs-10 col-sm-12 limited form-control">${mbAppVersion.remark}</textarea>
+
 							</div>
+							<div class="form-group"><span class="red_star">版本说明填写格式:以中文“句号”来结束每一条更新提示语。总长度不能超过200个字符(标点符号算一个字符)</span></div>
 						</div>
 
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="createdDateStr">添加时间： </label>
-							<div class="col-sm-4 datepicker-noicon">
-								<div class="input-group">
-									<input class="form-control date-picker" name="createdDateStr" id="createdDateStr" type="text" readonly="readonly" data-date-format="yyyy-mm-dd"  value="${mbAppVersion.createdDateStr}"/>
-													<span class="input-group-addon">
-														<i class="fa fa-calendar bigger-110"></i>
-													</span>
-								</div>
-							</div>
-						</div>
 
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="createdDateStr">上传安装包： </label>
@@ -181,8 +180,42 @@
 							</div>
 						</div>
 
+						<div class="form-group" id="urldiv" STYLE="display: none">
+							<label class="col-sm-3 control-label no-padding-right"
+								   for="url">   下载地址：
+							</label>
+							<div class="col-sm-8">
+								<input name="url" id="url" style="resize: none;border:none;"
+									   placeholder="请先上传程序包"
+									   value="${mbAppVersion.url }" readonly="readonly"
+									   class="col-xs-10 col-sm-12 limited form-control" />
+							</div>
+						</div>
+
+						<div class="form-group" id="appSizediv" STYLE="display: none">
+							<label class="col-sm-3 control-label no-padding-right"
+								   for="appSize">   App包大小：
+							</label>
+							<div class="col-sm-8">
+								<input name="appSize" id="appSize" style="resize: none;border:none;"
+									   placeholder="请先上传程序包"
+									   value="${mbAppVersion.appSize }" readonly="readonly"
+									   class="col-xs-10 col-sm-12 limited form-control" />
+							</div>
+						</div>
+
+						<div class="form-group" id="createdDateStrdiv"  STYLE="display: none">
+							<label class="col-sm-3 control-label no-padding-right" for="createdDateStr">添加时间： </label>
+							<div class="col-sm-8">
+								<input class="col-xs-10 col-sm-12 limited form-control"   placeholder="请先上传程序包" name="createdDateStr"
+									   id="createdDateStr" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" style="resize: none;border:none;"
+									   value="${mbAppVersion.createdDateStr}"/>
+							</div>
+						</div>
+
 						<input type="hidden" id="appVersionId" name="appVersionId"
 							value="${mbAppVersion.appVersionId}" />
+
 					</form>
 
 				<%--	<div class="showImg">
@@ -250,14 +283,21 @@
 			version : {
 				validators : {
 					notEmpty : {
-						message : '请填写版本信息描述'
+						message : '请填写外部版本号'
 					}
 				}
 			},
 			code : {
 				validators : {
 					notEmpty : {
-						message : '请填写版本号'
+						message : '请填写内部版本号'
+					}
+				}
+			},
+			remark : {
+				validators : {
+					notEmpty : {
+						message : '请填写本次更新的说明。（以中文句号结束内容填写）'
 					}
 				}
 			}
@@ -271,7 +311,10 @@
 		if (!$('#editForm').data('bootstrapValidator').isValid()) {
 			return;
 		}
-
+		if($('#url').val()==''){
+			alert('请上传文件');
+			return false;
+		}
 
 
 
@@ -324,7 +367,7 @@
 					'uploader' : "<%=basePath%>/common/uploadify/uploadify.swf",
 					'script'    : "<%=basePath%>/web/mobile/appversion/uploadFile",
 					'cancelImg' : "<%=basePath%>/common/uploadify/cancel.png",
-					'folder' : "<%=basePath%>/null",//上传文件存放的路径,请保持与uploadFile.jsp中PATH的值相同
+					'folder' : "<%=basePath%>/null",
 					'queueId' : "fileQueue",
 					'queueSizeLimit' : 10,//限制上传文件的数量
 					'fileExt' : "*.apk,*.apk",
@@ -340,8 +383,16 @@
 						var isSuccess=obj.success;
 						 if(isSuccess){
 							console.log(obj.obj);
-							 $("#url").val(obj.obj);
-							 $("#url").html(obj.obj);
+							 $("#url").val(obj.attributes.downloadUrl);
+							 $("#url").html(obj.attributes.downloadUrl);
+							 $("#appSize").val(obj.attributes.appSize);
+							 $("#appSize").html(obj.attributes.appSize);
+							 $("#createdDateStr").val(obj.attributes.createDate);
+							 $("#createdDateStr").html(obj.attributes.createDate);
+							 $('#urldiv').css('display','block');
+							 $('#appSizediv').css('display','block');
+							 $('#createdDateStrdiv').css('display','block');
+
 						 }
 						return false;
 					}
