@@ -148,4 +148,37 @@ public class CouponServiceImpl implements CouponService {
 		return couponMapper.selectByUserCouponByPK(user_coupon_id);
 	}
 
+	@Override
+	public PageInfo<Coupon> queryCouponOrderByAmount(Coupon record) throws Exception {
+		if (record.getPageNum() == null) {
+			record.setPageNum(1);
+			record.setPageSize(10);
+		}
+		if (StringUtils.isEmpty(record.getOrderby())) {
+			record.setOrderby("preferential_discount+0 DESC");
+		}
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Coupon> list = couponMapper.queryCouponOrderByAmount(record);
+		PageInfo<Coupon> pageInfo = new PageInfo<Coupon>(list);
+		return pageInfo;
+	}
+	/**
+	 * 查询当前用户所有优惠券
+	 * @param driverId
+	 * @return
+	 */
+	@Override
+	public PageInfo<Coupon> queryAllCouponForPage(Coupon record, String driverId) throws Exception {
+		if (record.getPageNum() == null) {
+			record.setPageNum(1);
+			record.setPageSize(10);
+		}
+		if (StringUtils.isEmpty(record.getOrderby())) {
+			record.setOrderby("preferential_discount+0 DESC");
+		}
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Coupon> list = couponMapper.queryAllCouponForPage(driverId);
+		PageInfo<Coupon> pageInfo = new PageInfo<Coupon>(list);
+		return pageInfo;
+	}
 }

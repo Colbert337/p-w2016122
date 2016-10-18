@@ -1,6 +1,8 @@
 package com.sysongy.poms.coupon.service;
 
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.UserCoupon;
@@ -24,5 +26,13 @@ public interface CouponService {
 	public PageInfo<UserCoupon> queryUserCoupon(UserCoupon userCoupon) throws Exception;
 	
 	public UserCoupon queryUserCouponByPK(String user_coupon_id) throws Exception;
-
+	
+	public PageInfo<Coupon> queryCouponOrderByAmount(Coupon record) throws Exception;
+	
+	/**
+	 * 查询当前用户所有优惠券
+	 * @param driverId
+	 * @return
+	 */
+	public PageInfo<Coupon> queryAllCouponForPage(Coupon record,String driverId) throws Exception;
 }
