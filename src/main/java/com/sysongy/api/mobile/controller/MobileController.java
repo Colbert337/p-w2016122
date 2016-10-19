@@ -63,6 +63,7 @@ import com.sysongy.poms.base.service.DistrictService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.message.model.SysMessage;
@@ -3918,6 +3919,129 @@ public class MobileController {
 			resutObj = JSONObject.fromObject(result);
 			logger.error("获取失败： " + e);
 			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	
+	/**
+	 * 获取折扣信息
+	 */
+	@RequestMapping(value = "/deal/getDiscount")
+	@ResponseBody
+	public String getDiscount(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("操作成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 必填参数
+			 */
+			String gastationId = "gastationId";
+			boolean b = JsonTool.checkJson(mainObj, gastationId);
+			/**
+			 * 请求接口
+			 */
+			if (b) {
+				List<Map<String, Object>> reChargeList = new ArrayList<>();
+				gastationId = mainObj.optString("gastationId");
+				List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
+					for (Map<String, Object> map : gsGasPriceList) {
+						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("preferential_type", map.get("preferential_type").toString().equals("0")?"立减金额":"固定折扣");
+						reChargeMap.put("gasName", map.get("gas_name"));
+						reChargeMap.put("gasPrice", map.get("product_price"));
+						reChargeMap.put("priceUnit", map.get("unit"));
+						reChargeMap.put("discountAmount",map.get("minus_money")==null?map.get("fixed_discount"):map.get("minus_money"));
+						reChargeList.add(reChargeMap);
+					}
+				}else{
+					result.setMsg("暂无折扣信息");
+				}
+				result.setListMap(reChargeList);
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取折扣信息失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取折扣信息失败： " + e);
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	/**
+	 * 获取优惠券信息
+	 */
+	@RequestMapping(value = "/deal/getCoupon")
+	@ResponseBody
+	public String getCoupon(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取优惠券信息成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String gastationId = "gastationId";//
+			String amount = "amount";//
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj, token,gastationId,amount,pageNum,pageSize);
+			/**
+			 * 请求接口
+			 */
+			if (b) {
+//				Map<String, Object> tokenMap = new HashMap<>();
+//				gastationId = mainObj.optString("gastationId");
+//				List<GsGasPrice> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+//				tokenMap.put("lastVersion", appVersion.getCode());//对内版本号
+//				result.setData(tokenMap);
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取优惠券信息失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取优惠券信息失败： " + e);
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 			return resultStr;

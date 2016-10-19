@@ -289,4 +289,21 @@ SET
     select b.mname as gasName,pp.product_price as gasPrice,ggp.unit from gs_gas_price ggp left join product_price pp on ggp.price_id = pp.id
     left join usysparam b on ggp.gas_name=b.mcode
   </select>
+    <!--获取折扣信息-->
+  <select id="queryDiscount" resultMap="MapResultMap" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
+	SELECT
+		gs_gas_price.sys_gas_station_id,
+		gs_gas_price.gas_name,
+		gs_gas_price.unit,
+		gs_gas_price.preferential_type,
+		gs_gas_price.fixed_discount,
+		gs_gas_price.minus_money,
+		product_price.product_price
+	FROM
+		gs_gas_price
+	LEFT JOIN product_price ON gs_gas_price.price_id = product_price.id
+	WHERE
+		gs_gas_price.sys_gas_station_id = #{gsGasPriceId,jdbcType=VARCHAR}
+	AND product_price.product_price_status = '1'
+  </select>
 </mapper>

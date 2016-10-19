@@ -206,6 +206,14 @@ public class CRMCashServiceContoller {
                 AliShortMessage.SHORT_MESSAGE_TYPE.TRANSPORTION_TRANSFER_SELF_CHARGE);
     }
 
+    /**
+     * 会员消费
+     * @param request
+     * @param response
+     * @param strRecord
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping("/web/customerGasPay")
     public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
