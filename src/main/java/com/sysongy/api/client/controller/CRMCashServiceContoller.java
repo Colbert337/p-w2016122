@@ -42,7 +42,6 @@ import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -52,7 +51,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 @Controller
@@ -421,7 +419,7 @@ public class CRMCashServiceContoller {
             //设置商品打折信息
             sysOrderGoodsService.setGoodsDiscountInfo(goods, gastation.getSys_gas_station_id());
             
-            UserCoupon usercoupon = couponService.queryUserCouponByNo(record.getCoupon_number());
+            UserCoupon usercoupon = couponService.queryUserCouponByNo(record.getCoupon_number(), record.getSysDriver().getSysDriverId());
             
             if(usercoupon == null){
             	record.setCoupon_number("");

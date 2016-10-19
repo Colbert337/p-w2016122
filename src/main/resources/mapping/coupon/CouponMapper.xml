@@ -22,9 +22,17 @@
 	<resultMap id="UserCouponMap" type="com.sysongy.poms.coupon.model.UserCoupon">
 		<id column="user_coupon_id" property="user_coupon_id" jdbcType="VARCHAR" />
 		<result column="coupon_id" property="coupon_id" jdbcType="VARCHAR" />
-		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+		<result column="coupon_on" property="coupon_on" jdbcType="VARCHAR" />
+		<result column="sys_driver_id" property="sys_driver_id" jdbcType="VARCHAR" />
 		<result column="isuse" property="isuse" jdbcType="VARCHAR" />
+		<result column="start_coupon_time" property="start_coupon_time" jdbcType="TIMESTAMP" />
+		<result column="end_coupon_time" property="end_coupon_time" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="lastmodify_time" property="lastmodify_time" jdbcType="TIMESTAMP" />
+		<result column="create_person_id" property="create_person_id" jdbcType="VARCHAR" />
+		<result column="lastmodify_person_id" property="lastmodify_person_id" jdbcType="VARCHAR" />
 	</resultMap>
+	
 	<sql id="Base_Column_List">
 			sc.coupon_id,
 			sc.coupon_no,
@@ -130,7 +138,7 @@
 			user_coupon_id,
 			coupon_id,
 			coupon_no,
-			user_id,
+			sys_driver_id,
 			isuse,
 			sd.user_name,
 			sd.full_name,
@@ -141,7 +149,7 @@
 			sd.regis_source
 			FROM
 				`sys_user_coupon` suc
-			LEFT JOIN `sys_driver` sd ON suc.user_id = sd.sys_driver_id
+			LEFT JOIN `sys_driver` sd ON suc.sys_driver_id = sd.sys_driver_id
 			WHERE
 				1 = 1
 		<trim>
@@ -151,8 +159,8 @@
 		    <if test="coupon_id != null &amp;&amp; coupon_id != ''">
 		      	and suc.coupon_id = #{coupon_id,jdbcType=VARCHAR}
 		    </if>
-		    <if test="user_id != null &amp;&amp; user_id != ''">
-		      	and suc.user_id = #{user_id,jdbcType=VARCHAR}
+		    <if test="sys_driver_id != null &amp;&amp; sys_driver_id != ''">
+		      	and suc.sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}
 		    </if>
 		</trim>
 	</select>
@@ -161,7 +169,7 @@
 			SELECT
 			user_coupon_id,
 			coupon_id,
-			user_id,
+			sys_driver_id,
 			isuse,
 			sd.user_name,
 			sd.full_name,
@@ -172,16 +180,16 @@
 			sd.regis_source
 			FROM
 				`sys_user_coupon` suc
-			LEFT JOIN `sys_driver` sd ON suc.user_id = sd.sys_driver_id
+			LEFT JOIN `sys_driver` sd ON suc.sys_driver_id = sd.sys_driver_id
 			WHERE
 				1 = 1
 		and  suc.user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
 	</select>
 	<insert id="insertUserCoupon" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
-		insert into sys_user_coupon (user_coupon_id, coupon_id, coupon_no, user_id, isuse, 
+		insert into sys_user_coupon (user_coupon_id, coupon_id, coupon_no, sys_driver_id, isuse, 
 		create_person_id,create_time,lastmodify_person_id,lastmodify_time
 		)
-		values (#{user_coupon_id,jdbcType=VARCHAR}, #{coupon_id,jdbcType=VARCHAR}, #{coupon_no,jdbcType=VARCHAR}, #{user_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},
+		values (#{user_coupon_id,jdbcType=VARCHAR}, #{coupon_id,jdbcType=VARCHAR}, #{coupon_no,jdbcType=VARCHAR}, #{sys_driver_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},
 		#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
@@ -190,11 +198,13 @@
 		set isuse = #{isuse,jdbcType=VARCHAR},
 		lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
 		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
-		where user_coupon_no = #{user_coupon_no,jdbcType=VARCHAR}
+		where coupon_no = #{coupon_no,jdbcType=VARCHAR}
 	</update>
 	
-	<select id="queryUserCouponByNo" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
+	<select id="queryUserCouponByNo" resultMap="UserCouponMap" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
 		select * from sys_user_coupon
-		where isuse = '0' and user_coupon_no = #{user_coupon_no,jdbcType=VARCHAR}
+		where isuse = '0' 
+		and coupon_no = #{coupon_no,jdbcType=VARCHAR}
+		and sys_driver_id = #{driver_id,jdbcType=VARCHAR}
 	</select>
 </mapper>

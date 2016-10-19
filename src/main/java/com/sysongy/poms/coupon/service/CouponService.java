@@ -25,6 +25,6 @@ public interface CouponService {
 	
 	public UserCoupon queryUserCouponByPK(String user_coupon_id) throws Exception;
 	
-	public UserCoupon queryUserCouponByNo(String user_coupon_no) throws Exception;
+	public UserCoupon queryUserCouponByNo(String coupon_no, String driver_id) throws Exception;
 
 }

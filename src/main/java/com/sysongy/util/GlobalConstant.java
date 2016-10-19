@@ -714,6 +714,11 @@ public class GlobalConstant {
 		public static final int ORDER_WAIT_FOR_PAY = 3; 	//订单待支付
 	}
 	
+	public interface ORDER_SPEND_TYPE{
+		public static final String CASH_BOX = "C01"; 			//账户余额支付
+		public static final String POS = "C02"; 			//POS支付
+	}
+	
 	public interface COUPON_STATUS{
 		public static final String UNUSE = "0"; 
 		public static final String USED = "1"; 

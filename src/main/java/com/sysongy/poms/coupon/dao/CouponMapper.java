@@ -25,5 +25,5 @@ public interface CouponMapper {
 	
 	UserCoupon selectByUserCouponByPK(String user_coupon_id);
 	
-	UserCoupon queryUserCouponByNo(String user_coupon_no);
+	UserCoupon queryUserCouponByNo(String coupon_no, String driver_id);
 }

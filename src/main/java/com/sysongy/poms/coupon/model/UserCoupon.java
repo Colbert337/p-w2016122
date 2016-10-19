@@ -12,7 +12,7 @@ public class UserCoupon extends BaseModel {
 	// 优惠券编号
 	private String coupon_no;
 	// 用户ID
-	private String user_id;
+	private String sys_driver_id;
 	// 是否可用，0可用 1不可用
 	private String isuse;
 	// 创建人ID
@@ -120,13 +120,13 @@ public class UserCoupon extends BaseModel {
 	public void setCoupon_id(String coupon_id) {
 		this.coupon_id = coupon_id;
 	}
-	public String getUser_id() {
-		return user_id;
-	}
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
-	}
 	
+	public String getSys_driver_id() {
+		return sys_driver_id;
+	}
+	public void setSys_driver_id(String sys_driver_id) {
+		this.sys_driver_id = sys_driver_id;
+	}
 	public String getCreate_person_id() {
 		return create_person_id;
 	}

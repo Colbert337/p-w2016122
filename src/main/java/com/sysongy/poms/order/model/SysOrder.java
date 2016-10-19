@@ -30,6 +30,8 @@ public class SysOrder extends BaseModel{
     private String debitAccount;
 
     private String chargeType;
+    
+    private String spend_type;//消费支付类型
 
     private String channel;
 
@@ -96,6 +98,14 @@ public class SysOrder extends BaseModel{
     private String coupon_number;//优惠劵编号
     
     private BigDecimal coupon_cash;//优惠劵优惠金额
+
+	public String getSpend_type() {
+		return spend_type;
+	}
+
+	public void setSpend_type(String spend_type) {
+		this.spend_type = spend_type;
+	}
 
 	public BigDecimal getShould_payment() {
 		return should_payment;
