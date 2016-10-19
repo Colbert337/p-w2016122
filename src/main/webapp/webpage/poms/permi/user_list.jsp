@@ -118,6 +118,7 @@
 	/*分页相关方法 end*/
 	//显示添加用户弹出层
 	function addUser(){
+		document.getElementById("pwd").style.display="inline";
 		/*$("#userModel").modal('show');*/
 		$("#editUserDiv").text("添加用户");
 		queryRoleList();
@@ -215,6 +216,7 @@
 	 * 回显用户信息
 	 */
 	function editUser(userId){
+		document.getElementById("pwd").style.display="none";
 		$.ajax({
 			url:"<%=basePath%>/web/permi/user/update",
 			data:{sysUserId:userId},
@@ -515,7 +517,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="row">
+								<div class="row" id="pwd" style="display: none;">
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label class="col-sm-4 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码:</label>
