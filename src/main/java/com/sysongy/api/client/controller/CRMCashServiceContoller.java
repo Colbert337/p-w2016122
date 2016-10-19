@@ -8,18 +8,25 @@ import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.coupon.model.Coupon;
+import com.sysongy.poms.coupon.model.UserCoupon;
+import com.sysongy.poms.coupon.service.CouponGroupService;
+import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.gastation.service.impl.GsGasPriceServiceImpl;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
+import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -36,6 +43,7 @@ import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.Expression;
 import org.springframework.stereotype.Controller;
@@ -77,7 +85,16 @@ public class CRMCashServiceContoller {
     private GasCardService gasCardService;
 
     @Autowired
+    private GsGasPriceService gsGasPriceService;
+
+    @Autowired
+    private SysOrderGoodsService sysOrderGoodsService;
+
+    @Autowired
     private GastationService gastationService;
+
+    @Autowired
+    private CouponService couponService;
 
     @Autowired
     private TcFleetService tcFleetService;
@@ -420,7 +437,8 @@ public class CRMCashServiceContoller {
             record.setCash(totalPrice);
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
             if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
-                record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
+
+            	record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
                 record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 
                 TcFleet tcFleet = findFleetInfo(record.getConsume_card());      //如果车队为空，则直接消费运输公司资金
@@ -438,6 +456,7 @@ public class CRMCashServiceContoller {
 
                 record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION));
                 String orderConsume = orderService.consumeByTransportion(record, transportion, tcFleet);
+
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
@@ -468,7 +487,25 @@ public class CRMCashServiceContoller {
                 record.setChannel(gastation.getGas_station_name());
                 record.setChannelNumber(gastation.getSys_gas_station_id());
             }
+
             record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
+
+            List<SysOrderGoods> goods = record.getSysOrderGoods();
+
+            //设置商品打折信息
+            sysOrderGoodsService.setGoodsDiscountInfo(goods, gastation.getSys_gas_station_id());
+
+            UserCoupon usercoupon = couponService.queryUserCouponByNo(record.getCoupon_number());
+
+            if(usercoupon == null){
+            	record.setCoupon_number("");
+            	record.setCoupon_cash(BigDecimal.valueOf(0.0d));
+            	logger.info("根据"+record.getCoupon_number()+"找不到对应的优惠劵信息");
+            }else{
+            	usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.USED);
+                couponService.modifyUserCoupon(usercoupon, record.getOperator());
+            }
+
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);

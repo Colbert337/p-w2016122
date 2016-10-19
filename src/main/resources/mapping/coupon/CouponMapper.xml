@@ -26,36 +26,34 @@
 		<result column="isuse" property="isuse" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		sc.coupon_id,
-		sc.coupon_no,
-		sc.coupon_title,
-		sc.coupon_detail,
-		sc.coupon_type,
-		sc.coupon_kind,
-		sc.preferential_discount,
-		sc.use_condition,
-		sc.limit_money,
-		sc.issuance_type,
-		sc.consume_type,
-		sc.STATUS,
-		(
-		SELECT
-		gs.gas_station_name
-		FROM
-		`sys_gas_station` gs
-		WHERE
-		gs.sys_gas_station_id =
-		sc.sys_gas_station_id
-		) gas_station_name,
-		sc.sys_gas_station_id,
-		DATE_FORMAT(
-		sc.start_coupon_time,
-		'%Y-%m-%d'
-		) start_coupon_time,
-		DATE_FORMAT(sc.end_coupon_time, '%Y-%m-%d') end_coupon_time
+			sc.coupon_id,
+			sc.coupon_no,
+			sc.coupon_title,
+			sc.coupon_detail,
+			sc.coupon_type,
+			sc.coupon_kind,
+			sc.preferential_discount,
+			sc.use_condition,
+			sc.limit_money,
+			sc.issuance_type,
+			sc.consume_type,
+			sc.STATUS,
+				(
+			SELECT
+				gs.gas_station_name
+			FROM
+				`sys_gas_station` gs
+			WHERE
+				gs.sys_gas_station_id = sc.sys_gas_station_id
+				) gas_station_name,
+				sc.sys_gas_station_id,
+			DATE_FORMAT(
+				sc.start_coupon_time,
+				'%Y-%m-%d'
+			) start_coupon_time,
+			DATE_FORMAT(sc.end_coupon_time, '%Y-%m-%d') end_coupon_time
 	</sql>
-	<select id="queryForPage" resultMap="BaseResultMap"
-		parameterType="java.lang.String">
+	<select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from `sys_coupon` sc
@@ -69,19 +67,18 @@
 				and sc.coupon_title LIKE CONCAT(CONCAT('%',
 				#{coupon_title,jdbcType=VARCHAR}), '%')
 			</if>
-			<if test="coupon_type != null &amp;&amp; coupon_type != ''">
-				and sc.coupon_type = #{coupon_type,jdbcType=VARCHAR}
-			</if>
-			<if test="coupon_kind != null &amp;&amp; coupon_kind != ''">
-				and sc.coupon_kind = #{coupon_kind,jdbcType=VARCHAR}
-			</if>
-			<if test="status != null &amp;&amp; status != ''">
-				and sc.status = #{status,jdbcType=VARCHAR}
-			</if>
-			<if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''">
-				and sc.sys_gas_station_id =
-				#{sys_gas_station_id,jdbcType=VARCHAR}
-			</if>
+		    <if test="coupon_type != null &amp;&amp; coupon_type != ''">
+		      and sc.coupon_type = #{coupon_type,jdbcType=VARCHAR}
+		    </if>
+		    <if test="coupon_kind != null &amp;&amp; coupon_kind != ''">
+		      and sc.coupon_kind = #{coupon_kind,jdbcType=VARCHAR}
+		    </if>
+		   <if test="status != null &amp;&amp; status != ''">
+		      and sc.status = #{status,jdbcType=VARCHAR}
+		    </if>
+		   <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''">
+		      and sc.sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+		    </if>
 		</trim>
 	</select>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
@@ -92,44 +89,31 @@
 		where sc.coupon_id = #{coupon_id,jdbcType=VARCHAR}
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		delete from
-		sys_coupon
+		delete from sys_coupon
 		where coupon_id = #{coupon_id,jdbcType=VARCHAR}
 	</delete>
 	<insert id="insert" parameterType="com.sysongy.poms.coupon.model.Coupon">
-		insert into sys_coupon
-		(coupon_id,coupon_no, coupon_title, coupon_detail, coupon_type,
-		coupon_kind,
+		insert into sys_coupon (coupon_id,coupon_no, coupon_title, coupon_detail, coupon_type, coupon_kind,
 		preferential_discount,limit_money,use_condition,issuance_type,consume_type,status,
 		start_coupon_time, end_coupon_time,sys_gas_station_id,
 		create_person_id,create_time,lastmodify_person_id,lastmodify_time
 		)
-		values (#{coupon_id,jdbcType=VARCHAR}, #{coupon_no,jdbcType=VARCHAR},
-		#{coupon_title,jdbcType=VARCHAR},#{coupon_detail,jdbcType=VARCHAR},
-		#{coupon_type,jdbcType=VARCHAR},#{coupon_kind,jdbcType=VARCHAR},
-		#{preferential_discount,jdbcType=VARCHAR},
-		#{limit_money,jdbcType=VARCHAR},#{use_condition,jdbcType=VARCHAR},#{issuance_type,jdbcType=VARCHAR},
-		#{consume_type,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},
-		#{start_coupon_time,jdbcType=TIMESTAMP},
-		#{end_coupon_time,jdbcType=TIMESTAMP},#{sys_gas_station_id,jdbcType=VARCHAR},
+		values (#{coupon_id,jdbcType=VARCHAR}, #{coupon_no,jdbcType=VARCHAR}, #{coupon_title,jdbcType=VARCHAR},#{coupon_detail,jdbcType=VARCHAR},
+		#{coupon_type,jdbcType=VARCHAR},#{coupon_kind,jdbcType=VARCHAR}, #{preferential_discount,jdbcType=VARCHAR},
+		#{limit_money,jdbcType=VARCHAR},#{use_condition,jdbcType=VARCHAR},#{issuance_type,jdbcType=VARCHAR}, #{consume_type,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},
+		 #{start_coupon_time,jdbcType=TIMESTAMP}, #{end_coupon_time,jdbcType=TIMESTAMP},#{sys_gas_station_id,jdbcType=VARCHAR},
 		#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 	<update id="updateByPrimaryKey" parameterType="com.sysongy.poms.coupon.model.Coupon">
 		update sys_coupon
 		set coupon_title = #{coupon_title,jdbcType=VARCHAR},
-		coupon_detail =
-		#{coupon_detail,jdbcType=VARCHAR},
-		coupon_type =
-		#{coupon_type,jdbcType=VARCHAR},
-		coupon_kind =
-		#{coupon_kind,jdbcType=VARCHAR},
-		preferential_discount =
-		#{preferential_discount,jdbcType=VARCHAR},
-		limit_money =
-		#{limit_money,jdbcType=VARCHAR},
-		use_condition =
-		#{use_condition,jdbcType=VARCHAR},
+		coupon_detail = #{coupon_detail,jdbcType=VARCHAR},
+		coupon_type = #{coupon_type,jdbcType=VARCHAR},
+		coupon_kind = #{coupon_kind,jdbcType=VARCHAR},
+		preferential_discount = #{preferential_discount,jdbcType=VARCHAR},
+		limit_money = #{limit_money,jdbcType=VARCHAR},
+		use_condition = #{use_condition,jdbcType=VARCHAR},
 		issuance_type=#{issuance_type,jdbcType=VARCHAR},
 		consume_type=#{consume_type,jdbcType=VARCHAR},
 		status=#{status,jdbcType=VARCHAR},
@@ -138,81 +122,74 @@
 		end_coupon_time=#{end_coupon_time,jdbcType=TIMESTAMP},
 		lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
 		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
-		where coupon_id =
-		#{coupon_id,jdbcType=VARCHAR}
+		where coupon_id = #{coupon_id,jdbcType=VARCHAR}
 	</update>
 	<select id="selectByUser_Coupon" resultMap="UserCouponMap"
 		parameterType="java.lang.String">
-		SELECT
-		user_coupon_id,
-		coupon_id,
-		user_id,
-		isuse,
-		sd.user_name,
-		sd.full_name,
-		sd.identity_card,
-		sd.plate_number,
-		sd.fuel_type,
-		sd.station_id,
-		sd.regis_source
-		FROM
-		`sys_user_coupon` suc
-		LEFT JOIN
-		`sys_driver` sd ON suc.user_id = sd.sys_driver_id
-		WHERE
-		1 = 1
+			SELECT
+			user_coupon_id,
+			coupon_id,
+			user_id,
+			isuse,
+			sd.user_name,
+			sd.full_name,
+			sd.identity_card,
+			sd.plate_number,
+			sd.fuel_type,
+			sd.station_id,
+			sd.regis_source
+			FROM
+				`sys_user_coupon` suc
+			LEFT JOIN `sys_driver` sd ON suc.user_id = sd.sys_driver_id
+			WHERE
+				1 = 1
 		<trim>
 			<if test="user_coupon_id != null &amp;&amp; user_coupon_id != ''">
-				and suc.user_coupon_id =
-				#{user_coupon_id,jdbcType=VARCHAR}
+				and suc.user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
 			</if>
-			<if test="coupon_id != null &amp;&amp; coupon_id != ''">
-				and suc.coupon_id = #{coupon_id,jdbcType=VARCHAR}
-			</if>
-			<if test="user_id != null &amp;&amp; user_id != ''">
-				and suc.user_id = #{user_id,jdbcType=VARCHAR}
-			</if>
+		    <if test="coupon_id != null &amp;&amp; coupon_id != ''">
+		      	and suc.coupon_id = #{coupon_id,jdbcType=VARCHAR}
+		    </if>
+		    <if test="user_id != null &amp;&amp; user_id != ''">
+		      	and suc.user_id = #{user_id,jdbcType=VARCHAR}
+		    </if>
 		</trim>
 	</select>
 	<select id="selectByUserCouponByPK" resultMap="UserCouponMap"
 		parameterType="java.lang.String">
-		SELECT
-		user_coupon_id,
-		coupon_id,
-		user_id,
-		isuse,
-		sd.user_name,
-		sd.full_name,
-		sd.identity_card,
-		sd.plate_number,
-		sd.fuel_type,
-		sd.station_id,
-		sd.regis_source
-		FROM
-		`sys_user_coupon` suc
-		LEFT JOIN `sys_driver` sd ON suc.user_id = sd.sys_driver_id
-		WHERE
-		1 = 1
-		and suc.user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
+			SELECT
+			user_coupon_id,
+			coupon_id,
+			user_id,
+			isuse,
+			sd.user_name,
+			sd.full_name,
+			sd.identity_card,
+			sd.plate_number,
+			sd.fuel_type,
+			sd.station_id,
+			sd.regis_source
+			FROM
+				`sys_user_coupon` suc
+			LEFT JOIN `sys_driver` sd ON suc.user_id = sd.sys_driver_id
+			WHERE
+				1 = 1
+		and  suc.user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
 	</select>
 	<insert id="insertUserCoupon" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
-		insert into
-		sys_user_coupon (user_coupon_id, coupon_id, user_id, isuse,
+		insert into sys_user_coupon (user_coupon_id, coupon_id, user_id, isuse, 
 		create_person_id,create_time,lastmodify_person_id,lastmodify_time
 		)
-		values (#{user_coupon_id,jdbcType=VARCHAR},
-		#{coupon_id,jdbcType=VARCHAR},#{user_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},
+		values (#{user_coupon_id,jdbcType=VARCHAR}, #{coupon_id,jdbcType=VARCHAR},#{user_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},
 		#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 	<update id="updateUserCoupon" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
-		update
-		sys_user_coupon
+		update sys_user_coupon
 		set isuse = #{isuse,jdbcType=VARCHAR},
 		lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
 		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
-		where
-		user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
+		where user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
 	</update>
 	<!-- 当前用户可用优惠券 -->
 	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -257,5 +234,10 @@
 					isuse = '1'
 				AND sys_user_coupon.sys_driver_id = #{driverId,jdbcType=VARCHAR}
 			)
+	</select>
+
+	<select id="queryUserCouponByNo" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
+		select * from sys_user_coupon
+		where isuse = '0' and user_coupon_no = #{user_coupon_no,jdbcType=VARCHAR}
 	</select>
 </mapper>

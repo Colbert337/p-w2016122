@@ -26,13 +26,16 @@ public interface CouponService {
 	public PageInfo<UserCoupon> queryUserCoupon(UserCoupon userCoupon) throws Exception;
 	
 	public UserCoupon queryUserCouponByPK(String user_coupon_id) throws Exception;
-	
+
 	public PageInfo<Coupon> queryCouponOrderByAmount(Coupon record) throws Exception;
-	
+
 	/**
 	 * 查询当前用户所有优惠券
 	 * @param driverId
 	 * @return
 	 */
 	public PageInfo<Coupon> queryAllCouponForPage(Coupon record,String driverId) throws Exception;
+
+	public UserCoupon queryUserCouponByNo(String user_coupon_no) throws Exception;
+
 }

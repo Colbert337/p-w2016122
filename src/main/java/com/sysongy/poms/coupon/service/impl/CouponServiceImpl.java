@@ -181,4 +181,10 @@ public class CouponServiceImpl implements CouponService {
 		PageInfo<Coupon> pageInfo = new PageInfo<Coupon>(list);
 		return pageInfo;
 	}
+
+	@Override
+	public UserCoupon queryUserCouponByNo(String user_coupon_no) throws Exception {
+		return couponMapper.queryUserCouponByNo(user_coupon_no);
+	}
+
 }

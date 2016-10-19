@@ -36,4 +36,6 @@ public interface CouponMapper {
 	 * @return
 	 */
 	List<Coupon> queryAllCouponForPage(String driverId);
+
+	UserCoupon queryUserCouponByNo(String user_coupon_no);
 }

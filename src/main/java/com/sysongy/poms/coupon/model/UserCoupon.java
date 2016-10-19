@@ -9,10 +9,12 @@ public class UserCoupon extends BaseModel {
 	private String user_coupon_id;
 	// 优惠券ID
 	private String coupon_id;
+	// 优惠券编号
+	private String coupon_no;
 	// 用户ID
 	private String user_id;
 	// 是否可用，0可用 1不可用
-	private int isuse;
+	private String isuse;
 	// 创建人ID
 	private String create_person_id;
 	// 创建时间
@@ -36,9 +38,34 @@ public class UserCoupon extends BaseModel {
 	 //注册工作站名称
 	private String regis_source;
 	
+	private Date start_coupon_time;
 	
+	private Date end_coupon_time;
 	
-	
+	public String getIsuse() {
+		return isuse;
+	}
+	public void setIsuse(String isuse) {
+		this.isuse = isuse;
+	}
+	public Date getStart_coupon_time() {
+		return start_coupon_time;
+	}
+	public void setStart_coupon_time(Date start_coupon_time) {
+		this.start_coupon_time = start_coupon_time;
+	}
+	public Date getEnd_coupon_time() {
+		return end_coupon_time;
+	}
+	public void setEnd_coupon_time(Date end_coupon_time) {
+		this.end_coupon_time = end_coupon_time;
+	}
+	public String getCoupon_no() {
+		return coupon_no;
+	}
+	public void setCoupon_no(String coupon_no) {
+		this.coupon_no = coupon_no;
+	}
 	public String getUser_name() {
 		return user_name;
 	}
@@ -99,12 +126,7 @@ public class UserCoupon extends BaseModel {
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
-	public int getIsuse() {
-		return isuse;
-	}
-	public void setIsuse(int isuse) {
-		this.isuse = isuse;
-	}
+	
 	public String getCreate_person_id() {
 		return create_person_id;
 	}

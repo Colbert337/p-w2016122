@@ -740,4 +740,10 @@ public class GlobalConstant {
 		}
 		return value;
 	}
+
+	public interface COUPON_STATUS{
+		public static final String UNUSE = "0";
+		public static final String USED = "1";
+		public static final String SUSPEND = "2";
+	}
 }
