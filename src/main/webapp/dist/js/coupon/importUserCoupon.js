@@ -48,6 +48,7 @@ function importUserCoupon(){
 			$('body').append('<div class="loading-warp"><div class="loading"><i class="ace-icon fa fa-spinner fa-spin"></i></div><div class="modal-backdrop fade in"></div></div>')
 		},
 		success:function(data){
+				var num=0;
 				$("#import").hide();
 				$("#importAction").hide();
 				if(data.message.length>0){
@@ -55,6 +56,7 @@ function importUserCoupon(){
 				}
 				$("#info").text(data.info);
 				$.each(data.driverList, function(i, driver){
+					num++;
 					var fuelType;
 					if(driver.fuelType=='1'){
 						fuelType='LNG';
@@ -77,6 +79,9 @@ function importUserCoupon(){
 					);
 				});
 			$("#userCouponList").show();
+			if(num==0){
+				$("#importuserConpon").hide();
+			}
 			initTable();
 		}, complete: function () {
 			$("body").removeClass('modal-open').removeAttr('style');

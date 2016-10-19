@@ -51,9 +51,8 @@ public class CouponServiceImpl implements CouponService {
 		// 设置优惠卷编号
 		String coupon_no = "";
 		Coupon aCoupon = new Coupon();
-		if (StringUtils.isEmpty(aCoupon.getOrderby())) {
-			aCoupon.setOrderby("create_time desc");
-		}
+		aCoupon.setOrderby("coupon_no desc");
+		PageHelper.startPage(aCoupon.getPageNum(), aCoupon.getPageSize(), aCoupon.getOrderby());
 			//平台优惠卷
 			if (coupon.getCoupon_kind().equals("1")) {
 				aCoupon.setCoupon_kind("1");
@@ -147,10 +146,44 @@ public class CouponServiceImpl implements CouponService {
 	public UserCoupon queryUserCouponByPK(String user_coupon_id) throws Exception {
 		return couponMapper.selectByUserCouponByPK(user_coupon_id);
 	}
-	
+
+	@Override
+	public PageInfo<Coupon> queryCouponOrderByAmount(Coupon record) throws Exception {
+		if (record.getPageNum() == null) {
+			record.setPageNum(1);
+			record.setPageSize(10);
+		}
+		if (StringUtils.isEmpty(record.getOrderby())) {
+			record.setOrderby("preferential_discount+0 DESC");
+		}
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Coupon> list = couponMapper.queryCouponOrderByAmount(record);
+		PageInfo<Coupon> pageInfo = new PageInfo<Coupon>(list);
+		return pageInfo;
+	}
+	/**
+	 * 查询当前用户所有优惠券
+	 * @param driverId
+	 * @return
+	 */
+	@Override
+	public PageInfo<Coupon> queryAllCouponForPage(Coupon record, String driverId) throws Exception {
+		if (record.getPageNum() == null) {
+			record.setPageNum(1);
+			record.setPageSize(10);
+		}
+		if (StringUtils.isEmpty(record.getOrderby())) {
+			record.setOrderby("preferential_discount+0 DESC");
+		}
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<Coupon> list = couponMapper.queryAllCouponForPage(driverId);
+		PageInfo<Coupon> pageInfo = new PageInfo<Coupon>(list);
+		return pageInfo;
+	}
+
 	@Override
 	public UserCoupon queryUserCouponByNo(String coupon_no, String driver_id) throws Exception {
 		return couponMapper.queryUserCouponByNo(coupon_no, driver_id);
 	}
-	
+
 }

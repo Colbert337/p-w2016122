@@ -13,8 +13,12 @@ public class UserCoupon extends BaseModel {
 	private String coupon_no;
 	// 用户ID
 	private String sys_driver_id;
-	// 是否可用，0可用 1不可用
+	// 优惠卷使用状态，0获得，1已使用，2冻结等异常状态
 	private String isuse;
+	//优惠开始时间
+	private Date start_coupon_time;
+	//优惠结束时间
+	private Date end_coupon_time;
 	// 创建人ID
 	private String create_person_id;
 	// 创建时间
@@ -37,35 +41,7 @@ public class UserCoupon extends BaseModel {
 	 private String station_id;
 	 //注册工作站名称
 	private String regis_source;
-	
-	private Date start_coupon_time;
-	
-	private Date end_coupon_time;
-	
-	public String getIsuse() {
-		return isuse;
-	}
-	public void setIsuse(String isuse) {
-		this.isuse = isuse;
-	}
-	public Date getStart_coupon_time() {
-		return start_coupon_time;
-	}
-	public void setStart_coupon_time(Date start_coupon_time) {
-		this.start_coupon_time = start_coupon_time;
-	}
-	public Date getEnd_coupon_time() {
-		return end_coupon_time;
-	}
-	public void setEnd_coupon_time(Date end_coupon_time) {
-		this.end_coupon_time = end_coupon_time;
-	}
-	public String getCoupon_no() {
-		return coupon_no;
-	}
-	public void setCoupon_no(String coupon_no) {
-		this.coupon_no = coupon_no;
-	}
+
 	public String getUser_name() {
 		return user_name;
 	}
@@ -120,12 +96,35 @@ public class UserCoupon extends BaseModel {
 	public void setCoupon_id(String coupon_id) {
 		this.coupon_id = coupon_id;
 	}
-	
+	public String getCoupon_no() {
+		return coupon_no;
+	}
 	public String getSys_driver_id() {
 		return sys_driver_id;
 	}
 	public void setSys_driver_id(String sys_driver_id) {
 		this.sys_driver_id = sys_driver_id;
+	}
+	public void setCoupon_no(String coupon_no) {
+		this.coupon_no = coupon_no;
+	}
+	public String getIsuse() {
+		return isuse;
+	}
+	public void setIsuse(String isuse) {
+		this.isuse = isuse;
+	}
+	public Date getStart_coupon_time() {
+		return start_coupon_time;
+	}
+	public void setStart_coupon_time(Date start_coupon_time) {
+		this.start_coupon_time = start_coupon_time;
+	}
+	public Date getEnd_coupon_time() {
+		return end_coupon_time;
+	}
+	public void setEnd_coupon_time(Date end_coupon_time) {
+		this.end_coupon_time = end_coupon_time;
 	}
 	public String getCreate_person_id() {
 		return create_person_id;

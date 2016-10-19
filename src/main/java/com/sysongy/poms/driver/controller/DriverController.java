@@ -582,10 +582,10 @@ public class DriverController extends BaseContoller{
 	@RequestMapping("/driverInfoListReport")
     public String queryConsumeReport(ModelMap map, SysDriver sysDriver, HttpServletRequest request,HttpServletResponse response, @ModelAttribute CurrUser currUser) throws IOException {
         try {
-			if(StringUtils.isNotBlank(sysDriver.getCreatedDate_after()) || StringUtils.isNotBlank(sysDriver.getCreatedDate_before())) {
+//			if(StringUtils.isNotBlank(sysDriver.getCreatedDate_after()) || StringUtils.isNotBlank(sysDriver.getCreatedDate_before())) {
 				sysDriver.setPageNum(1);
 				sysDriver.setPageSize(1048576);
-			}
+//			}
 			if(StringUtils.isEmpty(sysDriver.getOrderby())){
 				sysDriver.setOrderby("order_date desc");
 			}
