@@ -295,7 +295,12 @@ $('#editForm').bootstrapValidator({
                 regexp: {
                     regexp: '^[0-9a-zA-Z]+$',
                     message: '密码只能包含数字和字母'
-                }
+                },
+                stringLength: {
+					min: 6,
+					max:20,
+					message: '密码长度必须在6~20位之间'
+				}
             }
         },
         rePassword: {
@@ -307,6 +312,11 @@ $('#editForm').bootstrapValidator({
                     regexp: '^[0-9a-zA-Z]+$',
                     message: '密码只能包含数字和字母'
                 },
+                stringLength: {
+					min: 6,
+					max:20,
+					message: '密码长度必须在6~20位之间'
+				},
                 callback: {
                     message: '支付密码不一致',
                     callback: function (value, validator, $field) {
@@ -324,7 +334,7 @@ $('#editForm').bootstrapValidator({
                     message: '手机号不能为空'
                 },
                 regexp: {
-                    regexp: '^[0-9a-zA-Z]+$',
+                    regexp: '^[0-9]+$',
                     message: '手机号只能包含数字'
                 },
                 stringLength: {
