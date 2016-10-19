@@ -220,6 +220,7 @@
 		select
 			sc.coupon_id,
 			sc.coupon_kind,
+			sc.coupon_title,
 			sc.coupon_type,
 			sc.use_condition,
 			sc.preferential_discount,
