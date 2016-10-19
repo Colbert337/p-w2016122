@@ -3850,10 +3850,12 @@ public class MobileController {
 					SysRoadCondition sysRoadCondition = sysRoadService.selectByPrimaryKey(id);
 					sysRoadCondition.setId(sysRoadCondition.getId());
 					if ("1".equals(operation)) {// 阅读
+						SysRoadCondition sysRoad = new SysRoadCondition();
 						String viewCount = sysRoadCondition.getViewCount();
 						int viewCountInt = Integer.parseInt(viewCount) + 1;
-						sysRoadCondition.setViewCount(viewCountInt+"");
-						rs = sysRoadService.updateRoad(sysRoadCondition);
+						sysRoad.setViewCount(viewCountInt+"");
+						sysRoad.setId(sysRoadCondition.getId());
+						rs = sysRoadService.updateByPrimaryKey(sysRoad);
 						if (rs > 0) {
 							result.setStatus(MobileReturn.STATUS_SUCCESS);
 						} else {
@@ -3862,9 +3864,11 @@ public class MobileController {
 						}
 					} else {// 分享
 						String shareCount = sysRoadCondition.getShareCount();
+						SysRoadCondition sysRoad = new SysRoadCondition();
 						int shareCountInt = Integer.parseInt(shareCount) + 1;
-						sysRoadCondition.setShareCount(shareCountInt+"");
-						rs = sysRoadService.updateRoad(sysRoadCondition);
+						sysRoad.setId(sysRoadCondition.getId());
+						sysRoad.setShareCount(shareCountInt+"");
+						rs = sysRoadService.updateByPrimaryKey(sysRoad);
 						if (rs > 0) {
 							result.setStatus(MobileReturn.STATUS_SUCCESS);
 						} else {

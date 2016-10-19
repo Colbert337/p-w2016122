@@ -151,8 +151,6 @@ public class SysRoadServiceImpl implements SysRoadService {
 	@Override
 	public int updateByPrimaryKey(SysRoadCondition record) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("更新路况统计^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^更新路况统计^^^^^^^^^^^^^^^^^^^^^^^^^");
-		logger.info("更新路况统计^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^更新路况统计^^^^^^^^^^^^^^^^^^^^^^^^^");
 		return sysRoadConditionMapper.updateByPrimaryKeySelective(record);
 	}
 }
