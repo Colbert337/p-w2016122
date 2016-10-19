@@ -147,5 +147,10 @@ public class CouponServiceImpl implements CouponService {
 	public UserCoupon queryUserCouponByPK(String user_coupon_id) throws Exception {
 		return couponMapper.selectByUserCouponByPK(user_coupon_id);
 	}
-
+	
+	@Override
+	public UserCoupon queryUserCouponByNo(String user_coupon_no) throws Exception {
+		return couponMapper.queryUserCouponByNo(user_coupon_no);
+	}
+	
 }

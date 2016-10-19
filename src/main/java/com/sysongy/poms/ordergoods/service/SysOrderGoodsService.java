@@ -8,4 +8,5 @@ public interface SysOrderGoodsService {
 	
 	List<SysOrderGoods> selectByOrderID(String orderID);
 	
+	List<SysOrderGoods> setGoodsDiscountInfo(List<SysOrderGoods> goods, String stationid) throws Exception;
 }

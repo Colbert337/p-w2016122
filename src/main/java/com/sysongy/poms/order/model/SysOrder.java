@@ -89,7 +89,47 @@ public class SysOrder extends BaseModel{
     
     private String type;//查询个人转账记录时，转入转出表示列，不对应数据库字段 
     
-    public SysOrderDeal getOrder_deal() {
+    private BigDecimal preferential_cash;//优惠金额，气站给的优惠
+    
+    private BigDecimal should_payment;//订单应付金额
+    
+    private String coupon_number;//优惠劵编号
+    
+    private BigDecimal coupon_cash;//优惠劵优惠金额
+
+	public BigDecimal getShould_payment() {
+		return should_payment;
+	}
+
+	public void setShould_payment(BigDecimal should_payment) {
+		this.should_payment = should_payment;
+	}
+
+	public String getCoupon_number() {
+		return coupon_number;
+	}
+
+	public void setCoupon_number(String coupon_number) {
+		this.coupon_number = coupon_number;
+	}
+
+	public BigDecimal getCoupon_cash() {
+		return coupon_cash;
+	}
+
+	public void setCoupon_cash(BigDecimal coupon_cash) {
+		this.coupon_cash = coupon_cash;
+	}
+
+	public BigDecimal getPreferential_cash() {
+		return preferential_cash;
+	}
+
+	public void setPreferential_cash(BigDecimal preferential_cash) {
+		this.preferential_cash = preferential_cash;
+	}
+
+	public SysOrderDeal getOrder_deal() {
 		return order_deal;
 	}
 

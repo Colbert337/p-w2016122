@@ -23,6 +23,11 @@
     <result column="consume_card" property="consume_card" jdbcType="VARCHAR" />
     <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
     <result column="order_remark" property="orderRemark" jdbcType="VARCHAR" />
+    <result column="preferential_cash" property="preferential_cash" jdbcType="DECIMAL" />
+    <result column="should_payment" property="should_payment" jdbcType="DECIMAL" />
+    <result column="coupon_number" property="coupon_number" jdbcType="VARCHAR" />
+    <result column="coupon_cash" property="coupon_cash" jdbcType="DECIMAL" />
+    
     <association property="orderTypeInfo" column="order_type"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
@@ -109,7 +114,9 @@
 
   <sql id="Base_Column_List" >
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
-    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id, operator_source_id, operator_source_type, operator_target_type,consume_card,order_status,order_remark
+    charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id, 
+    operator_source_id, operator_source_type, operator_target_type,consume_card,order_status,order_remark, preferential_cash,
+    should_payment, coupon_number, coupon_cash
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -187,14 +194,15 @@
       order_date, cash, credit_account, 
       debit_account, charge_type, channel, 
       channel_number, operator, is_discharge,discharge_reason,discharge_order_id,operator_target_type,operator_source_id,operator_source_type, consume_card
-      ,order_status,order_remark
+      ,order_status,order_remark, preferential_cash, should_payment, coupon_number, coupon_cash
       )
     values (#{orderId,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
       #{orderDate,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL}, #{creditAccount,jdbcType=VARCHAR}, 
       #{debitAccount,jdbcType=VARCHAR}, #{chargeType,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, 
       #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{discharge_reason,jdbcType=VARCHAR},#{dischargeOrderId,jdbcType=VARCHAR},
       #{operatorTargetType,jdbcType=VARCHAR},#{operatorSourceId,jdbcType=VARCHAR}, #{operatorSourceType,jdbcType=VARCHAR},#{consume_card,jdbcType=VARCHAR},
-      #{orderStatus,jdbcType=INTEGER}, #{orderRemark,jdbcType=VARCHAR}
+      #{orderStatus,jdbcType=INTEGER}, #{orderRemark,jdbcType=VARCHAR}, #{preferential_cash,jdbcType=DECIMAL},
+      #{should_payment,jdbcType=DECIMAL}, #{coupon_number,jdbcType=VARCHAR},#{coupon_cash,jdbcType=DECIMAL}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysOrder" >

@@ -5,6 +5,7 @@ import com.sysongy.poms.usysparam.model.Usysparam;
 import java.math.BigDecimal;
 
 public class SysOrderGoods {
+	
     private String orderGoodsId;
 
     private String orderId;
@@ -18,8 +19,28 @@ public class SysOrderGoods {
     private String goodsType;
 
     private Usysparam goods_type_info;
+    
+    private String preferential_type;//优惠类型
+    
+    private BigDecimal preferential_cash;//优惠金额
 
-    public String getOrderGoodsId() {
+    public String getPreferential_type() {
+		return preferential_type;
+	}
+
+	public void setPreferential_type(String preferential_type) {
+		this.preferential_type = preferential_type;
+	}
+
+	public BigDecimal getPreferential_cash() {
+		return preferential_cash;
+	}
+
+	public void setPreferential_cash(BigDecimal preferential_cash) {
+		this.preferential_cash = preferential_cash;
+	}
+
+	public String getOrderGoodsId() {
         return orderGoodsId;
     }
 

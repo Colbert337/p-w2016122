@@ -129,6 +129,7 @@
 			SELECT
 			user_coupon_id,
 			coupon_id,
+			coupon_no,
 			user_id,
 			isuse,
 			sd.user_name,
@@ -177,10 +178,10 @@
 		and  suc.user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
 	</select>
 	<insert id="insertUserCoupon" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
-		insert into sys_user_coupon (user_coupon_id, coupon_id, user_id, isuse, 
+		insert into sys_user_coupon (user_coupon_id, coupon_id, coupon_no, user_id, isuse, 
 		create_person_id,create_time,lastmodify_person_id,lastmodify_time
 		)
-		values (#{user_coupon_id,jdbcType=VARCHAR}, #{coupon_id,jdbcType=VARCHAR},#{user_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},
+		values (#{user_coupon_id,jdbcType=VARCHAR}, #{coupon_id,jdbcType=VARCHAR}, #{coupon_no,jdbcType=VARCHAR}, #{user_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},
 		#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
@@ -189,6 +190,11 @@
 		set isuse = #{isuse,jdbcType=VARCHAR},
 		lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
 		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
-		where user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
+		where user_coupon_no = #{user_coupon_no,jdbcType=VARCHAR}
 	</update>
+	
+	<select id="queryUserCouponByNo" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
+		select * from sys_user_coupon
+		where isuse = '0' and user_coupon_no = #{user_coupon_no,jdbcType=VARCHAR}
+	</select>
 </mapper>

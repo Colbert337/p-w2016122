@@ -713,4 +713,10 @@ public class GlobalConstant {
 		public static final int ORDER_FAILED = 2; 			//订单失败
 		public static final int ORDER_WAIT_FOR_PAY = 3; 	//订单待支付
 	}
+	
+	public interface COUPON_STATUS{
+		public static final String UNUSE = "0"; 
+		public static final String USED = "1"; 
+		public static final String SUSPEND = "2"; 
+	}
 }
