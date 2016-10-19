@@ -709,10 +709,35 @@ public class GlobalConstant {
 		return value;
 	}
 
+	/*订单状态*/
 	public interface ORDER_STATUS{
 		public static final int ORDER_INIT = 0; 			//订单初始化
 		public static final int ORDER_SUCCESS = 1; 			//订单生成成功
 		public static final int ORDER_FAILED = 2; 			//订单失败
 		public static final int ORDER_WAIT_FOR_PAY = 3; 	//订单待支付
+	}
+
+	/*折扣优惠类型*/
+	public interface PREFERENTIAL_TYPE{
+		public static final String MINUS = "0"; 			//立减
+		public static final String DISCOUNT = "1"; 		//折扣
+	}
+
+	/**
+	 * 获取折扣优惠类型
+	 * @param key
+	 * @return
+	 */
+	public static String getPreferentialType(String key){
+		String value = "";
+		switch (key){
+			case PREFERENTIAL_TYPE.MINUS:
+				value = "立减";
+				break;
+			case PREFERENTIAL_TYPE.DISCOUNT:
+				value = "折扣";
+				break;
+		}
+		return value;
 	}
 }

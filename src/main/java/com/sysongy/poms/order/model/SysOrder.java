@@ -2,6 +2,7 @@ package com.sysongy.poms.order.model;
 
 import com.sysongy.poms.base.model.BaseModel;
 import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
@@ -87,10 +88,16 @@ public class SysOrder extends BaseModel{
     
     private String orderRemark; 
     
-    private String type;//查询个人转账记录时，转入转出表示列，不对应数据库字段 
+    private String type;//查询个人转账记录时，转入转出表示列，不对应数据库字段
+
+    private String discountAmount;//优惠金额
+
+    private String amount;//优惠后金额
+
+    List<Coupon> couponlist;
     
     private String gas_station_name;//虚拟字段气站名，查询消费订单用
-    
+
     public SysOrderDeal getOrder_deal() {
 		return order_deal;
 	}
@@ -397,6 +404,30 @@ public class SysOrder extends BaseModel{
 	public void setType(String type) {
 		this.type = type;
 	}
+
+    public String getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(String discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public List<Coupon> getCouponlist() {
+        return couponlist;
+    }
+
+    public void setCouponlist(List<Coupon> couponlist) {
+        this.couponlist = couponlist;
+    }
 
 	public String getGas_station_name() {
 		return gas_station_name;
