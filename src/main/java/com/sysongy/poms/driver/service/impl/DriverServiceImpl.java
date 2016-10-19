@@ -303,16 +303,22 @@ public class DriverServiceImpl implements DriverService {
 			chong ="消费冲红";
 			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_DRIVER_DEDUCT;
 		}
+		
+		String preferential_cash = "";
+		if(order.getPreferential_cash().compareTo(BigDecimal.valueOf(0.0)) > 0){
+			preferential_cash = "气站优惠" + order.getPreferential_cash() + "元";
+		}
 
         String remark = "";
         if(StringUtils.isEmpty(order.getDischarge_reason())){
-            remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+            remark = driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。";
         } else {
-            remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
+            remark = driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。" + order.getDischarge_reason();
         }
 
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
         order.setDischarge_reason(remark);
+        
 		return cash_success;
 	}
 

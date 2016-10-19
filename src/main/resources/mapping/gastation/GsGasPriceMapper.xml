@@ -96,6 +96,10 @@
     where a.gs_gas_price_id = #{gsGasPriceId,jdbcType=VARCHAR}
   </select>
 
+  <!--根据气站ID和商品类型查询气品价格信息-->
+  <select id="queryGsPriceByStationId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select * from gs_gas_price where sys_gas_station_id = {0} and gas_name = {1}
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     update  gs_gas_price set is_deleted=1

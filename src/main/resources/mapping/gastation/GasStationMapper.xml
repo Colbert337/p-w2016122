@@ -40,7 +40,6 @@
     
 
     <result column="price_effective_time" property="price_effective_time" jdbcType="VARCHAR" />
-    <!--<result column="fixed_discount" property="fixed_discount" jdbcType="FLOAT" />-->
 
     <association column="sys_user_account_id" property="account" javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -218,7 +217,7 @@
        #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{map_type,jdbcType=VARCHAR},
         #{gas_server ,jdbcType=VARCHAR}, #{lng_price ,jdbcType=VARCHAR}, #{promotions ,jdbcType=VARCHAR},
         #{price_effective_time,jdbcType=VARCHAR}
-<!--         , #{fixed_discount ,jdbcType=FLOAT} -->)
+        )
   </insert>
   
   <insert id="insertSelective" parameterType="com.sysongy.poms.gastation.model.Gastation" >
@@ -515,9 +514,6 @@
     <if test="price_effective_time != null &amp;&amp; price_effective_time != ''" >
       price_effective_time = #{price_effective_time,jdbcType=VARCHAR},
     </if>
-   <!-- <if test="fixed_discount != null &amp;&amp; fixed_discount != ''" >
-      fixed_discount = #{fixed_discount,jdbcType=FLOAT}
-    </if>-->
     </set>
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </update>
@@ -672,7 +668,6 @@
       prepay_balance = #{prepay_balance,jdbcType=DECIMAL},
 
       price_effective_time = #{price_effective_time,jdbcType=VARCHAR},
-     /* fixed_discount = #{fixed_discount,jdbcType=FLOAT}*/
 
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </update>
