@@ -25,7 +25,6 @@ public class SysOrderGoods {
 
     private BigDecimal discountSumPrice;
 
-    public String getOrderGoodsId() {
     public String getPreferential_type() {
 		return preferential_type;
 	}
