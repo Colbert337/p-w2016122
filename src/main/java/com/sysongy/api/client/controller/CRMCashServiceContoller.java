@@ -223,20 +223,36 @@ public class CRMCashServiceContoller {
             List<SysOrderGoods> sysOrderGoodsList = record.getSysOrderGoods();
             if(sysOrderGoodsList != null && sysOrderGoodsList.size() > 0){
                 for (SysOrderGoods sysOrderGoods:sysOrderGoodsList ) {
-                    BigDecimal sumPrice = sysOrderGoods.getSumPrice();
+                    BigDecimal discountSum = BigDecimal.ZERO;
+
+                    double num = sysOrderGoods.getNumber();
+                    BigDecimal price = sysOrderGoods.getPrice();
                     String goodsType = sysOrderGoods.getGoodsType();
                     GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByStationId(gastationId,goodsType);
                     if(gsGasPrice != null && gsGasPrice.getPreferential_type() != null){
                         String preferentialType = gsGasPrice.getPreferential_type();
-                        if(preferentialType.equals("") ){
-
+                        BigDecimal discountSumPrice = BigDecimal.ZERO;
+                        if(preferentialType.equals("0") ){//立减
+                            String minusMoney = gsGasPrice.getMinus_money();//获取立减金额
+                            if(minusMoney == null || "".equals(minusMoney)){
+                                minusMoney = "0";
+                            }
+                            price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));//计算立减后价格
+                            discountSumPrice = BigDecimalArith.mul(price,new BigDecimal(num+""));//计算价格立减后该商品总金额
+                            sysOrderGoods.setDiscountSumPrice(discountSumPrice);
+                        }else if(preferentialType.equals("1")){//折扣
+                            BigDecimal sumPrice = sysOrderGoods.getSumPrice();
+                            float fixedDiscount = gsGasPrice.getFixed_discount();//获取折扣
+                            discountSumPrice = BigDecimalArith.mul(sumPrice,new BigDecimal(fixedDiscount+""));
+                            sysOrderGoods.setDiscountSumPrice(discountSumPrice);
                         }
-                    }
+                        discountSum = BigDecimalArith.add(discountSum,discountSumPrice);
 
+                    }
 
                 }
             }
-
+            //重置订单金额及优惠后金额
 
             //根据订单金额和会员信息，查询优惠券列表
 

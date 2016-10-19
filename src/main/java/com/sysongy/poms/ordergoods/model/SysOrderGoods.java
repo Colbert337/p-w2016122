@@ -19,6 +19,8 @@ public class SysOrderGoods {
 
     private Usysparam goods_type_info;
 
+    private BigDecimal discountSumPrice;
+
     public String getOrderGoodsId() {
         return orderGoodsId;
     }
@@ -73,5 +75,13 @@ public class SysOrderGoods {
 
     public void setGoodsType(String goodsType) {
         this.goodsType = goodsType;
+    }
+
+    public BigDecimal getDiscountSumPrice() {
+        return discountSumPrice;
+    }
+
+    public void setDiscountSumPrice(BigDecimal discountSumPrice) {
+        this.discountSumPrice = discountSumPrice;
     }
 }
