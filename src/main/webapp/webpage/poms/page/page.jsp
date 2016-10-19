@@ -43,7 +43,7 @@
 			<div class="inner">
 				<a href="<%=basePath%>/webpage/crm/webapp-download-app"
 					class="btn-app-primary logic-download-app"><span
-					class="icon-sy"></span>下载司集APP给您提供更多优质服务</a>
+					class="icon-sy"></span>ä¸è½½å¸éAPPç»æ¨æä¾æ´å¤ä¼è´¨æå¡</a>
 			</div>
 		</div>
 	</c:if>
