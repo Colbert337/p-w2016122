@@ -58,6 +58,9 @@ public class Coupon extends BaseModel {
 	public void setCoupon_info(Date coupon_info) {
 		this.coupon_info = coupon_info;
 	}
+	//虚拟字段，司集ID
+	private String driverId;
+
 
 	public String getCoupon_id() {
 		return coupon_id;
@@ -224,6 +227,14 @@ public class Coupon extends BaseModel {
 
 	public void setCoupon_no(String coupon_no) {
 		this.coupon_no = coupon_no;
+	}
+
+	public String getDriverId() {
+		return driverId;
+	}
+
+	public void setDriverId(String driverId) {
+		this.driverId = driverId;
 	}
 	
 }

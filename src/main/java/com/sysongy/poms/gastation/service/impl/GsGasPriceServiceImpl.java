@@ -51,6 +51,12 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 	}
 
 	@Override
+	public GsGasPrice queryGsPriceByStationId(String gastationId, String goodsType) throws Exception {
+		GsGasPrice gsGasPrice =  gsGasPriceMapper.queryGsPriceByStationId(gastationId, goodsType);
+		return gsGasPrice;
+	}
+
+	@Override
 	public Integer saveGsPrice(GsGasPrice record, String operation) throws Exception {
 		int ret = 0;
 		if("insert".equals(operation)){
@@ -81,5 +87,10 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 	@Override
 	public List<Map<String, Object>> queryPriceList(String stationId) {
 		return gsGasPriceMapper.queryPriceList(stationId);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryDiscount(String stationId) {
+		return gsGasPriceMapper.queryDiscount(stationId);
 	}
 }

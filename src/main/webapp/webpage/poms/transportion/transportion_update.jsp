@@ -545,7 +545,9 @@
 		                        min: 1,
 		                        max: 50,
 		                        message: '加注站注册邮箱不能超过50个字符'
-		                    }
+		                    },emailAddress: {
+								message: '邮箱地址格式有误'
+							}
 		                }
 		            },
 		            operations_id: {

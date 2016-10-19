@@ -104,7 +104,7 @@ var listOptions ={
 		$("#createdate").text($(obj).parents('tr').children("td").eq(8).text());
 		$("#checkedate").text($(obj).parents('tr').children("td").eq(10).text());
 		$("#checkstatus").text($(obj).parents('tr').children("td").eq(9).text());
-		$("#regisource").text($(obj).parents('tr').children("td").eq(7).text());
+		$("#regisource").text($(obj).parents('tr').children("td").eq(14).text());
 		
 		$("#userName").text($(obj).parents('tr').children("td").eq(1).text());
 		$("#fullName").text($(obj).parents('tr').children("td").eq(2).text());

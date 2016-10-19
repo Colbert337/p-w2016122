@@ -125,7 +125,7 @@
 										<!-- <a class="" href="javascript:void(0);" title="修改" data-rel="tooltip">
 											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 										</a> -->
-										<a class="option-btn-m" href="javascript:void(0);" title="账户余额" data-rel="tooltip">
+										<a class="option-btn-m" href="javascript:void(0);" title="充值" data-rel="tooltip">
 											<i class="ace-icon fa fa-credit-card bigger-130" onclick="preDeposit(this);"></i>
 										</a>
 									</td>

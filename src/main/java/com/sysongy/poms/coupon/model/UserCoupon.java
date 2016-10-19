@@ -106,6 +106,7 @@ public class UserCoupon extends BaseModel {
 	public String getCoupon_no() {
 		return coupon_no;
 	}
+
 	public void setCoupon_no(String coupon_no) {
 		this.coupon_no = coupon_no;
 	}

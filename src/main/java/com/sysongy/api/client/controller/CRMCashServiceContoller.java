@@ -8,16 +8,25 @@ import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.coupon.model.Coupon;
+import com.sysongy.poms.coupon.model.UserCoupon;
+import com.sysongy.poms.coupon.service.CouponGroupService;
+import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.gastation.service.impl.GsGasPriceServiceImpl;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
+import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -34,7 +43,9 @@ import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.Expression;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +56,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 @RequestMapping("/crmInterface/crmCashServiceContoller")
@@ -73,7 +85,13 @@ public class CRMCashServiceContoller {
     private GasCardService gasCardService;
 
     @Autowired
+    private SysOrderGoodsService sysOrderGoodsService;
+
+    @Autowired
     private GastationService gastationService;
+
+    @Autowired
+    private CouponService couponService;
 
     @Autowired
     private TcFleetService tcFleetService;
@@ -86,6 +104,10 @@ public class CRMCashServiceContoller {
 
     @Autowired
     RedisClientInterface redisClientImpl;
+
+    @Autowired
+    GsGasPriceService gsGasPriceService;
+
 
     @ResponseBody
     @RequestMapping("/web/customerGasCharge")
@@ -188,6 +210,81 @@ public class CRMCashServiceContoller {
                 AliShortMessage.SHORT_MESSAGE_TYPE.TRANSPORTION_TRANSFER_SELF_CHARGE);
     }
 
+    /**
+     * 提交订单
+     * @param request
+     * @param response
+     * @param strRecord
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/web/submitOrder")
+    public AjaxJson submitOrder(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception {
+        AjaxJson ajaxJson = new AjaxJson();
+        try {
+            SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
+            record.setIs_discharge("0");
+            if ((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
+                    StringUtils.isEmpty(record.getOperatorSourceId())) {
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("订单无效！！！");
+                return ajaxJson;
+            }
+
+            //根据订单详情计算折扣后订单
+            String gastationId = record.getOperatorSourceId();
+            List<SysOrderGoods> sysOrderGoodsList = record.getSysOrderGoods();
+            if(sysOrderGoodsList != null && sysOrderGoodsList.size() > 0){
+                for (SysOrderGoods sysOrderGoods:sysOrderGoodsList ) {
+                    BigDecimal discountSum = BigDecimal.ZERO;
+
+                    double num = sysOrderGoods.getNumber();
+                    BigDecimal price = sysOrderGoods.getPrice();
+                    String goodsType = sysOrderGoods.getGoodsType();
+                    GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByStationId(gastationId,goodsType);
+                    if(gsGasPrice != null && gsGasPrice.getPreferential_type() != null){
+                        String preferentialType = gsGasPrice.getPreferential_type();
+                        BigDecimal discountSumPrice = BigDecimal.ZERO;
+                        if(preferentialType.equals("0") ){//立减
+                            String minusMoney = gsGasPrice.getMinus_money();//获取立减金额
+                            if(minusMoney == null || "".equals(minusMoney)){
+                                minusMoney = "0";
+                            }
+                            price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));//计算立减后价格
+                            discountSumPrice = BigDecimalArith.mul(price,new BigDecimal(num+""));//计算价格立减后该商品总金额
+                            sysOrderGoods.setDiscountSumPrice(discountSumPrice);
+                        }else if(preferentialType.equals("1")){//折扣
+                            BigDecimal sumPrice = sysOrderGoods.getSumPrice();
+                            float fixedDiscount = gsGasPrice.getFixed_discount();//获取折扣
+                            discountSumPrice = BigDecimalArith.mul(sumPrice,new BigDecimal(fixedDiscount+""));
+                            sysOrderGoods.setDiscountSumPrice(discountSumPrice);
+                        }
+                        discountSum = BigDecimalArith.add(discountSum,discountSumPrice);
+
+                    }
+
+                }
+            }
+            //重置订单金额及优惠后金额
+
+            //根据订单金额和会员信息，查询优惠券列表
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 会员消费
+     * @param request
+     * @param response
+     * @param strRecord
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping("/web/customerGasPay")
     public AjaxJson customerGasPay(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
@@ -337,7 +434,8 @@ public class CRMCashServiceContoller {
             record.setCash(totalPrice);
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
             if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
-                record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
+
+            	record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
                 record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.TRANSPORTION);
 
                 TcFleet tcFleet = findFleetInfo(record.getConsume_card());      //如果车队为空，则直接消费运输公司资金
@@ -355,6 +453,7 @@ public class CRMCashServiceContoller {
 
                 record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION));
                 String orderConsume = orderService.consumeByTransportion(record, transportion, tcFleet);
+
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
@@ -385,7 +484,25 @@ public class CRMCashServiceContoller {
                 record.setChannel(gastation.getGas_station_name());
                 record.setChannelNumber(gastation.getSys_gas_station_id());
             }
+
             record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
+
+            List<SysOrderGoods> goods = record.getSysOrderGoods();
+
+            //设置商品打折信息
+            sysOrderGoodsService.setGoodsDiscountInfo(goods, gastation.getSys_gas_station_id());
+
+            UserCoupon usercoupon = couponService.queryUserCouponByNo(record.getCoupon_number());
+
+            if(usercoupon == null){
+            	record.setCoupon_number("");
+            	record.setCoupon_cash(BigDecimal.valueOf(0.0d));
+            	logger.info("根据"+record.getCoupon_number()+"找不到对应的优惠劵信息");
+            }else{
+            	usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.USED);
+                couponService.modifyUserCoupon(usercoupon, record.getOperator());
+            }
+
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -881,5 +998,33 @@ public class CRMCashServiceContoller {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 计算优惠后金额
+     * @param payableAmount
+     * @param price
+     * @param coupon
+     * @param discount
+     * @return
+     */
+    public BigDecimal getPayAmount(String payableAmount, String price, String coupon, String discount ,int discountType  ){
+        BigDecimal payAmount = BigDecimal.ZERO;
+        if(!StringUtils.isEmpty(payableAmount.trim()) ){
+            if(!StringUtils.isEmpty(price)){
+                //计算加气量
+                BigDecimal num = BigDecimal.ZERO;
+                BigDecimal payableAmountBd = new BigDecimal(payableAmount);
+                BigDecimal priceBd = new BigDecimal(price);
+                num = BigDecimalArith.div(payableAmountBd,priceBd);
+
+                //计算优惠后价格
+                priceBd = BigDecimalArith.sub(priceBd,new BigDecimal(discount));
+
+                //计算优惠后总金额
+                payAmount = BigDecimalArith.mul(num,priceBd);
+            }
+        }
+        return payAmount;
     }
 }

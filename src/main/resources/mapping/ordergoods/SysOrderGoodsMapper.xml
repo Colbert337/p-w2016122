@@ -8,6 +8,8 @@
     <result column="number" property="number" jdbcType="DOUBLE" />
     <result column="sum_price" property="sumPrice" jdbcType="DECIMAL" />
     <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="preferential_cash" property="preferential_cash" jdbcType="DECIMAL" />
+    <result column="preferential_type" property="preferential_type" jdbcType="VARCHAR" />
     <association property="goods_type_info" column="goods_type"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
                  select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryCardTypeByMcode">
@@ -15,7 +17,7 @@
   </resultMap>
   
   <sql id="Base_Column_List" >
-    order_goods_id, order_id, price, number, sum_price, goods_type
+    order_goods_id, order_id, price, number, sum_price, goods_type, preferential_type, preferential_cash
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -29,10 +31,11 @@
   </delete>
   <insert id="insert" parameterType="com.sysongy.poms.ordergoods.model.SysOrderGoods" >
     insert into sys_order_goods (order_goods_id, order_id, price, 
-      number, sum_price, goods_type
+      number, sum_price, goods_type, preferential_type, preferential_cash
       )
     values (#{orderGoodsId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
-      #{number,jdbcType=DOUBLE}, #{sumPrice,jdbcType=DECIMAL}, #{goodsType,jdbcType=VARCHAR}
+      #{number,jdbcType=DOUBLE}, #{sumPrice,jdbcType=DECIMAL}, #{goodsType,jdbcType=VARCHAR},#{preferential_type,jdbcType=VARCHAR},
+      #{preferential_cash,jdbcType=DECIMAL}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.ordergoods.model.SysOrderGoods" >
