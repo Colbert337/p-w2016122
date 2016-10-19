@@ -1,31 +1,60 @@
-$('#start_rated_time').datepicker({
+$('#start_moneyrated_time').datepicker({
 	autoclose: true,
 	todayHighlight: true,
 	language: "cn",
 	weekStart: 1,
-	format: "yyyy-mm-dd",
+	format: "yyyy/mm/dd",
 	pickerPosition: "bottom-left"
 }).on("click",function(e){
-	$("#start_rated_time").datepicker("setEndDate", $("#end_rated_time").val());
+	$("#start_moneyrated_time").datepicker("setEndDate", $("#end_moneyrated_time").val());
 }).on('hide',function(e) {
 	$('#coupongroupform').data('bootstrapValidator')
-		.updateStatus('start_rated_time', 'NOT_VALIDATED',null)
-		.validateField('start_rated_time');
+		.updateStatus('start_moneyrated_time', 'NOT_VALIDATED',null)
+		.validateField('start_moneyrated_time');
 });
 
-$('#end_rated_time').datepicker({
+$('#end_moneyrated_time').datepicker({
 	autoclose: true,
 	todayHighlight: true,
 	language: "cn",
 	weekStart: 1,
-	dateFormat:"yyyy-mm-dd",
+	format: "yyyy/mm/dd",
 	pickerPosition: "bottom-left"
 }).on("click", function (e) {
-	$("#end_rated_time").datepicker("setStartDate", $("#start_rated_time").val());
+	$("#end_moneyrated_time").datepicker("setStartDate", $("#start_moneyrated_time").val());
 }).on('hide',function(e) {
 	$('#coupongroupform').data('bootstrapValidator')
-		.updateStatus('end_rated_time', 'NOT_VALIDATED',null)
-		.validateField('end_rated_time');
+		.updateStatus('end_moneyrated_time', 'NOT_VALIDATED',null)
+		.validateField('end_moneyrated_time');
+});
+$('#start_timesrated_time').datepicker({
+	autoclose: true,
+	todayHighlight: true,
+	language: "cn",
+	weekStart: 1,
+	format: "yyyy/mm/dd",
+	pickerPosition: "bottom-left"
+}).on("click",function(e){
+	$("#start_timesrated_time").datepicker("setEndDate", $("#end_timesrated_time").val());
+}).on('hide',function(e) {
+	$('#coupongroupform').data('bootstrapValidator')
+		.updateStatus('start_timesrated_time', 'NOT_VALIDATED',null)
+		.validateField('start_timesrated_time');
+});
+
+$('#end_timesrated_time').datepicker({
+	autoclose: true,
+	todayHighlight: true,
+	language: "cn",
+	weekStart: 1,
+	format: "yyyy/mm/dd",
+	pickerPosition: "bottom-left"
+}).on("click", function (e) {
+	$("#end_timesrated_time").datepicker("setStartDate", $("#start_timesrated_time").val());
+}).on('hide',function(e) {
+	$('#coupongroupform').data('bootstrapValidator')
+		.updateStatus('end_timesrated_time', 'NOT_VALIDATED',null)
+		.validateField('end_timesrated_time');
 });
 
 //bootstrap验证控件

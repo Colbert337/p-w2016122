@@ -30,6 +30,9 @@
 								<th width="15%" style="text-align:right">优惠卷名称：</th>
 								<td style="text-align:left">
 									<input type="hidden" value="${coupon.coupon_id}" name="coupon_id"/>
+									<input type="hidden" value="${coupon.coupon_no}" name="coupon_no"/>
+									<input type="hidden" value="${coupon.start_coupon_time}" name="start_coupon_time"/>
+									<input type="hidden" value="${coupon.end_coupon_time}" name="end_coupon_time"/>
 									<span id="coupon_title">${coupon.coupon_title}</span>
 								</td>
 							</tr>
@@ -103,7 +106,7 @@
 						</div>
 						<div class="clearfix form-actions">
 							<div class="col-md-offset-3 col-md-9">
-								<button class="btn btn-info" type="button" onclick="saveUserCoupon();">
+								<button class="btn btn-info" id="importuserConpon"  type="button" onclick="saveUserCoupon();">
 									<i class="ace-icon fa fa-check bigger-110">导入</i>
 								</button>
 								&nbsp; &nbsp; &nbsp;

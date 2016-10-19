@@ -118,6 +118,9 @@
       <if test="driverType!= null &amp;&amp; driverType != ''" >
         and driver_type = #{driverType,jdbcType=INTEGER}
       </if>
+      <if test="mobilePhone!= null &amp;&amp; mobilePhone != ''" >
+        and mobile_phone =#{mobilePhone,jdbcType=VARCHAR}
+      </if>
       <if test="plateNumber != null &amp;&amp; plateNumber != ''" >
         and plate_number like CONCAT(CONCAT('%',  #{plateNumber,jdbcType=VARCHAR}), '%')
       </if>

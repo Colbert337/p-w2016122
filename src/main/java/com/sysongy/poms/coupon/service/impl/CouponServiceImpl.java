@@ -51,9 +51,8 @@ public class CouponServiceImpl implements CouponService {
 		// 设置优惠卷编号
 		String coupon_no = "";
 		Coupon aCoupon = new Coupon();
-		if (StringUtils.isEmpty(aCoupon.getOrderby())) {
-			aCoupon.setOrderby("create_time desc");
-		}
+		aCoupon.setOrderby("coupon_no desc");
+		PageHelper.startPage(aCoupon.getPageNum(), aCoupon.getPageSize(), aCoupon.getOrderby());
 			//平台优惠卷
 			if (coupon.getCoupon_kind().equals("1")) {
 				aCoupon.setCoupon_kind("1");

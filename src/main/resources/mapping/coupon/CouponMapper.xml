@@ -18,12 +18,16 @@
 		<result column="end_coupon_time" property="end_coupon_time" jdbcType="TIMESTAMP" />
 		<result column="gas_station_name" property="gas_station_name" jdbcType="VARCHAR" />
 		<result column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
+		<result column="coupon_info" property="coupon_info" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="UserCouponMap" type="com.sysongy.poms.coupon.model.UserCoupon">
 		<id column="user_coupon_id" property="user_coupon_id" jdbcType="VARCHAR" />
 		<result column="coupon_id" property="coupon_id" jdbcType="VARCHAR" />
+		<result column="coupon_no" property="coupon_no" jdbcType="VARCHAR" />
 		<result column="sys_driver_id" property="sys_driver_id" jdbcType="VARCHAR" />
 		<result column="isuse" property="isuse" jdbcType="VARCHAR" />
+		<result column="start_coupon_time" property="start_coupon_time" jdbcType="TIMESTAMP" />
+		<result column="end_coupon_time" property="end_coupon_time" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<sql id="Base_Column_List">
 			sc.coupon_id,
@@ -51,7 +55,20 @@
 				sc.start_coupon_time,
 				'%Y-%m-%d'
 			) start_coupon_time,
-			DATE_FORMAT(sc.end_coupon_time, '%Y-%m-%d') end_coupon_time
+			DATE_FORMAT(sc.end_coupon_time, '%Y-%m-%d') end_coupon_time,
+			CASE  WHEN coupon_type = '1' THEN
+				(CASE WHEN use_condition = '1' THEN
+					concat('满',limit_money,'元减',preferential_discount,'元')
+				WHEN use_condition = '2' THEN
+					concat('立减',preferential_discount,'元')
+				END)
+				WHEN coupon_type = '2' THEN
+					(CASE WHEN use_condition = '1' THEN
+						concat('满',limit_money,'元打',preferential_discount,'折')
+					WHEN use_condition = '2' THEN
+						concat('立打',preferential_discount,'折')
+					END)
+			END couponinfo
 	</sql>
 	<select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -127,10 +144,13 @@
 	<select id="selectByUser_Coupon" resultMap="UserCouponMap"
 		parameterType="java.lang.String">
 			SELECT
-			user_coupon_id,
-			coupon_id,
-			sys_driver_id,
-			isuse,
+			suc.user_coupon_id,
+			suc.coupon_id,
+			suc.coupon_no,
+			suc.sys_driver_id,
+			suc.start_coupon_time,
+			suc.end_coupon_time,
+			suc.isuse,
 			sd.user_name,
 			sd.full_name,
 			sd.identity_card,
@@ -158,10 +178,13 @@
 	<select id="selectByUserCouponByPK" resultMap="UserCouponMap"
 		parameterType="java.lang.String">
 			SELECT
-			user_coupon_id,
-			coupon_id,
-			sys_driver_id,
-			isuse,
+			suc.user_coupon_id,
+			suc.coupon_id,
+			suc.sys_driver_id,
+			suc.coupon_no,
+			suc.isuse,
+			suc.start_coupon_time,
+			suc.end_coupon_time,
 			sd.user_name,
 			sd.full_name,
 			sd.identity_card,
@@ -177,11 +200,11 @@
 		and  suc.user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
 	</select>
 	<insert id="insertUserCoupon" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
-		insert into sys_user_coupon (user_coupon_id, coupon_id, sys_driver_id, isuse, 
-		create_person_id,create_time,lastmodify_person_id,lastmodify_time
+		insert into sys_user_coupon (user_coupon_id, coupon_id,coupon_no, sys_driver_id, isuse, 
+		start_coupon_time, end_coupon_time,create_person_id,create_time,lastmodify_person_id,lastmodify_time
 		)
-		values (#{user_coupon_id,jdbcType=VARCHAR}, #{coupon_id,jdbcType=VARCHAR},#{sys_driver_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},
-		#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
+		values (#{user_coupon_id,jdbcType=VARCHAR},#{coupon_id,jdbcType=VARCHAR},#{coupon_no,jdbcType=VARCHAR},#{sys_driver_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},
+		 #{start_coupon_time,jdbcType=TIMESTAMP}, #{end_coupon_time,jdbcType=TIMESTAMP},#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 	<update id="updateUserCoupon" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
@@ -189,6 +212,7 @@
 		set isuse = #{isuse,jdbcType=VARCHAR},
 		lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
 		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
-		where user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
+		where coupon_no = #{coupon_no,jdbcType=VARCHAR}
+		and sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}
 	</update>
 </mapper>

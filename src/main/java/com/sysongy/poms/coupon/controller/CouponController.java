@@ -4,6 +4,7 @@ import jxl.Sheet;
 import jxl.Workbook;
 import java.util.List;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import net.sf.json.JSONArray;
 import java.util.regex.Matcher;
@@ -395,6 +396,8 @@ public class CouponController extends BaseContoller {
 	 */
 	@RequestMapping("/importCoupon")
 	public String importCoupon(ModelMap map, @RequestParam("coupon_id") String coupon_id,
+			@RequestParam("coupon_no") String coupon_no,@RequestParam("start_coupon_time") String start_coupon_time,
+			@RequestParam("end_coupon_time") String end_coupon_time,
 			 HttpServletRequest request) throws Exception {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/coupon/importUserCoupon";
@@ -406,12 +409,21 @@ public class CouponController extends BaseContoller {
 			return ret;
 		}
 		 coupon_id =  new String(coupon_id.getBytes("iso8859-1"),"UTF-8");
+		 coupon_no =  new String(coupon_no.getBytes("iso8859-1"),"UTF-8");
+		 start_coupon_time =  new String(start_coupon_time.getBytes("iso8859-1"),"UTF-8");
+		 end_coupon_time =  new String(end_coupon_time.getBytes("iso8859-1"),"UTF-8");
 		 String[] sysDriverId =  request.getParameterValues("sysDriverId");
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for(int i=0;i<sysDriverId.length;i++){
 				UserCoupon userCoupon = new UserCoupon();
 				userCoupon.setCoupon_id(coupon_id);
+				userCoupon.setCoupon_no(coupon_no);
+				userCoupon.setStart_coupon_time(sdf.parse(start_coupon_time));
+				userCoupon.setEnd_coupon_time(sdf.parse(end_coupon_time));
 				userCoupon.setSys_driver_id(sysDriverId[i]);
+				//获得优惠卷
+				userCoupon.setIsuse("0");
 				 service.addUserCoupon(userCoupon, currUser.getUserId());
 			}
 			bean.setRetMsg("" + sysDriverId.length + "名司机导入成功");

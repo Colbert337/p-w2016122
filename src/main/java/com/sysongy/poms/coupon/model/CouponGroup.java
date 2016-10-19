@@ -20,10 +20,14 @@ public class CouponGroup extends BaseModel {
 	private String coupon_nos;
 	//优惠卷组的发放类型
 	private String issued_type;
-	// 优惠开始时间
-	private String start_rated_time;
-	// 优惠结束时间
-	private String end_rated_time;
+	// 额定消费优惠开始时间
+	private String start_moneyrated_time;
+	// 额定消费优惠结束时间
+	private String end_moneyrated_time;
+	// 额定次数优惠开始时间
+	private String start_timesrated_time;
+	// 额定次数优惠结束时间
+	private String end_timesrated_time;
 	// 额定时间内额定消费金额
 	private String consume_money;
 	// 额定时间内额定消费次数
@@ -81,17 +85,29 @@ public class CouponGroup extends BaseModel {
 	public void setIssued_type(String issued_type) {
 		this.issued_type = issued_type;
 	}
-	public String getStart_rated_time() {
-		return start_rated_time;
+	public String getStart_moneyrated_time() {
+		return start_moneyrated_time;
 	}
-	public void setStart_rated_time(String start_rated_time) {
-		this.start_rated_time = start_rated_time;
+	public void setStart_moneyrated_time(String start_moneyrated_time) {
+		this.start_moneyrated_time = start_moneyrated_time;
 	}
-	public String getEnd_rated_time() {
-		return end_rated_time;
+	public String getEnd_moneyrated_time() {
+		return end_moneyrated_time;
 	}
-	public void setEnd_rated_time(String end_rated_time) {
-		this.end_rated_time = end_rated_time;
+	public void setEnd_moneyrated_time(String end_moneyrated_time) {
+		this.end_moneyrated_time = end_moneyrated_time;
+	}
+	public String getStart_timesrated_time() {
+		return start_timesrated_time;
+	}
+	public void setStart_timesrated_time(String start_timesrated_time) {
+		this.start_timesrated_time = start_timesrated_time;
+	}
+	public String getEnd_timesrated_time() {
+		return end_timesrated_time;
+	}
+	public void setEnd_timesrated_time(String end_timesrated_time) {
+		this.end_timesrated_time = end_timesrated_time;
 	}
 	public String getConsume_money() {
 		return consume_money;

@@ -39,14 +39,24 @@
 						<textarea type="text" name="couponGroup_detail" placeholder="输入优惠卷组详情"  class="form-control" maxlength="150">${couponGroup.coupon_detail}</textarea>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">额定时间：</label>
+				<div class="form-group" id="ratedmoney" style="display:none">
+					<label class="col-sm-3 control-label no-padding-right">额定消费优惠时间：</label>
 					<div class="col-sm-4 datepicker-noicon">
-						<input type="text" class="date-picker" name="start_rated_time" id="start_rated_time" value="${couponGroup.start_rated_time}" readonly="readonly" data-date-format="yyyy-mm-dd"/>
+						<input type="text" class="date-picker" name="start_moneyrated_time" id="start_moneyrated_time" value="${couponGroup.start_moneyrated_time}"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
 						<span class="">
 							<i class="fa fa-exchange"></i>
 						</span>
-						<input type="text" class="date-picker" name="end_rated_time" id="end_rated_time" value="${couponGroup.end_rated_time}" readonly="readonly" data-date-format="yyyy-mm-dd"/>
+						<input type="text" class="date-picker" name="end_moneyrated_time" id="end_moneyrated_time"   value="${couponGroup.end_moneyrated_time}" readonly="readonly" data-date-format="yyyy-mm-dd"/>
+					</div>
+				</div>
+				<div class="form-group" id="ratedtime" style="display:none">
+					<label class="col-sm-3 control-label no-padding-right">额度次数优惠时间：</label>
+					<div class="col-sm-4 datepicker-noicon">
+						<input type="text" class="date-picker" name="start_timesrated_time" id="start_timesrated_time" value="${couponGroup.start_timesrated_time}" readonly="readonly" data-date-format="yyyy-mm-dd"/>
+						<span class="">
+							<i class="fa fa-exchange"></i>
+						</span>
+						<input type="text" class="date-picker" name="end_timesrated_time" id="end_timesrated_time" value="${couponGroup.end_timesrated_time}"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
 					</div>
 				</div>
 				<div class="clearfix form-actions">
