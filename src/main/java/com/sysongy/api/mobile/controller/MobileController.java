@@ -1068,6 +1068,7 @@ public class MobileController {
 							+ driverList.get(0).getMobilePhone() + "/" + driverList.get(0).getMobilePhone() + ".jpg";
 					// 生成二维码
 					driver.setDriverQrcode(show_path);
+					driver.setVerifySource("1");
 					int resultVal = driverService.saveDriver(driver, "update", null);
 					if (resultVal <= 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
