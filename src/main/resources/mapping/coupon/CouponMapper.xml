@@ -232,7 +232,7 @@
 				FROM
 					sys_user_coupon suc
 				WHERE
-					suc.isuse = '1'
+					suc.isuse = '0'
 				AND suc.sys_driver_id = #{driverId,jdbcType=VARCHAR}
 				)
 				and sc.sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
@@ -255,7 +255,7 @@
 				FROM
 					sys_user_coupon
 				WHERE
-					isuse = '1'
+					isuse = '0'
 				AND sys_user_coupon.sys_driver_id = #{driverId,jdbcType=VARCHAR}
 			)
 	</select>
