@@ -192,7 +192,7 @@
 		where user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
 	</update>
 	<!-- 当前用户可用优惠券 -->
-	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="com.sysongy.poms.coupon.model.Coupon">
 		select
 			sc.coupon_id,
 			sc.coupon_kind,

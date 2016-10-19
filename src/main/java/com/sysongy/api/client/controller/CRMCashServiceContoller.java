@@ -3,14 +3,12 @@ package com.sysongy.api.client.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.PayCodeValidModel;
-import com.sysongy.api.client.controller.model.ShortMessageInfoModel;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.UserCoupon;
-import com.sysongy.poms.coupon.service.CouponGroupService;
 import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
@@ -18,8 +16,6 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
-import com.sysongy.poms.gastation.service.GsGasPriceService;
-import com.sysongy.poms.gastation.service.impl.GsGasPriceServiceImpl;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
@@ -31,8 +27,6 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
-import com.sysongy.poms.system.model.SysCashBack;
-import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -43,9 +37,7 @@ import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.Expression;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,9 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 @Controller
 @RequestMapping("/crmInterface/crmCashServiceContoller")
@@ -235,10 +225,9 @@ public class CRMCashServiceContoller {
             //根据订单详情计算折扣后订单
             String gastationId = record.getOperatorSourceId();
             List<SysOrderGoods> sysOrderGoodsList = record.getSysOrderGoods();
+            BigDecimal discountSum = BigDecimal.ZERO;
             if(sysOrderGoodsList != null && sysOrderGoodsList.size() > 0){
                 for (SysOrderGoods sysOrderGoods:sysOrderGoodsList ) {
-                    BigDecimal discountSum = BigDecimal.ZERO;
-
                     double num = sysOrderGoods.getNumber();
                     BigDecimal price = sysOrderGoods.getPrice();
                     String goodsType = sysOrderGoods.getGoodsType();
@@ -267,14 +256,30 @@ public class CRMCashServiceContoller {
                 }
             }
             //重置订单金额及优惠后金额
+            if(discountSum.compareTo(BigDecimal.ZERO) > 0){//优惠金额大于零时，做金额重置
+                record.setShould_payment(record.getCash());//订单金额
+                record.setCash(discountSum);//优惠后金额
+            }
 
             //根据订单金额和会员信息，查询优惠券列表
+            Coupon coupon = new Coupon();
+            SysDriver driver = record.getSysDriver();
+            coupon.setSys_gas_station_id(record.getOperatorSourceId());
+            coupon.setDriverId(driver.getSysDriverId());
+            PageInfo<Coupon> pageInfo = couponService.queryCouponOrderByAmount(coupon);
 
-
+            driver.setList(pageInfo.getList());
+            record.setSysDriver(driver);
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            attributes.put("sysOrder", record);
+            ajaxJson.setAttributes(attributes);
+            return ajaxJson;
         }catch (Exception e){
-            e.printStackTrace();
+            logger.warn("订单提交失败：" + e.getMessage());
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(e.getMessage());
+            return ajaxJson;
         }
-        return null;
     }
 
     /**
