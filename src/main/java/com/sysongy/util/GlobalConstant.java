@@ -433,6 +433,7 @@ public class GlobalConstant {
 		public static final String CASHBACK_CARD_CHARGE ="106";//充值卡充值
 		public static final String CASHBACK_POS_CHARGE ="107";//POS充值
 		public static final String CASHBACK_PLATFORM_CHARGE ="108";//后台充值
+		public static final String APP_CONSUME_CHARGE ="220";//司机APP消费
 	}
 
 	/**
@@ -493,6 +494,7 @@ public class GlobalConstant {
 		public static final String CHARGETYPE_CARD_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_CARD_CHARGE;
 		public static final String CHARGETYPE_POS_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_POS_CHARGE;
 		public static final String CHARGETYPE_PLATFORM_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_PLATFORM_CHARGE;
+		public static final String APP_CONSUME_CHARGE =GlobalConstant.CashBackNumber.APP_CONSUME_CHARGE;
 	}
 	
 	/*
