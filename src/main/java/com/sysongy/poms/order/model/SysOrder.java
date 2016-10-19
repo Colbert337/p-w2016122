@@ -96,6 +96,8 @@ public class SysOrder extends BaseModel{
 
     List<Coupon> couponlist;
     
+    private String gas_station_name;//虚拟字段气站名，查询消费订单用
+
     public SysOrderDeal getOrder_deal() {
 		return order_deal;
 	}
@@ -426,4 +428,12 @@ public class SysOrder extends BaseModel{
     public void setCouponlist(List<Coupon> couponlist) {
         this.couponlist = couponlist;
     }
+
+	public String getGas_station_name() {
+		return gas_station_name;
+	}
+
+	public void setGas_station_name(String gas_station_name) {
+		this.gas_station_name = gas_station_name;
+	}
 }

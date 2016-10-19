@@ -60,10 +60,11 @@ import com.sysongy.api.util.ShareCodeUtil;
 import com.sysongy.poms.base.model.DistCity;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.base.service.DistrictService;
+import com.sysongy.poms.coupon.model.Coupon;
+import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
-import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.message.model.SysMessage;
@@ -167,6 +168,8 @@ public class MobileController {
 	MbStatisticsService mbStatisticsService;
 	@Autowired
 	MbAppVersionService mbAppVersionService;
+	@Autowired
+	CouponService couponService;
 
 	/**
 	 * 用户登录
@@ -4014,26 +4017,63 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String token = "token";
-			String gastationId = "gastationId";//
-			String amount = "amount";//
 			String pageNum = "pageNum";
 			String pageSize = "pageSize";
-			boolean b = JsonTool.checkJson(mainObj, token,gastationId,amount,pageNum,pageSize);
+			boolean b = JsonTool.checkJson(mainObj, token,pageNum,pageSize);
 			/**
 			 * 请求接口
 			 */
 			if (b) {
-//				Map<String, Object> tokenMap = new HashMap<>();
-//				gastationId = mainObj.optString("gastationId");
-//				List<GsGasPrice> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
-//				tokenMap.put("lastVersion", appVersion.getCode());//对内版本号
-//				result.setData(tokenMap);
+				String gastationId = mainObj.optString("gastationId");
+				String amount = mainObj.optString("amount");
+				String driverId = mainObj.optString("token");
+				Coupon coupon = new Coupon();
+				List<Map<String, Object>> reChargeList = new ArrayList<>();
+				//当加注站ID和消费金额不为空时，返回当前用户可用优惠券列表，按金额倒叙排列，分页。
+				if(gastationId!=null&&!"".endsWith(gastationId)&&amount!=null&&!"".equals(amount)){
+					coupon.setSys_gas_station_id(gastationId);
+					coupon.setDriverId(driverId);
+					PageInfo<Coupon> pageInfo = couponService.queryCouponOrderByAmount(coupon);
+					if(pageInfo.getList()!=null&&pageInfo.getList().size()>0){
+						for (Coupon data : pageInfo.getList()) {
+							Map<String, Object> reChargeMap = new HashMap<>();
+							reChargeMap.put("couponId",data.getCoupon_id());
+							reChargeMap.put("couponKind", data.getCoupon_kind());
+							reChargeMap.put("couponType", data.getCoupon_type());
+							reChargeMap.put("useCondition", data.getUse_condition());
+							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
+							reChargeMap.put("startTime",data.getStart_coupon_time());
+							reChargeMap.put("endTime",data.getEnd_coupon_time());
+							reChargeList.add(reChargeMap);
+						}
+					}else{
+						result.setMsg("暂无优惠券！");
+					}
+				}else{//当加注站ID和消费金额为空时，返回当前用户所有优惠券列表，按金额倒叙排列，分页。
+					PageInfo<Coupon> pageInfo = couponService.queryAllCouponForPage(coupon,driverId);
+					if(pageInfo.getList()!=null&&pageInfo.getList().size()>0){
+						for (Coupon data : pageInfo.getList()) {
+							Map<String, Object> reChargeMap = new HashMap<>();
+							reChargeMap.put("couponId",data.getCoupon_id());
+							reChargeMap.put("couponKind", data.getCoupon_kind());
+							reChargeMap.put("couponType", data.getCoupon_type());
+							reChargeMap.put("useCondition", data.getUse_condition());
+							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
+							reChargeMap.put("startTime",data.getStart_coupon_time());
+							reChargeMap.put("endTime",data.getEnd_coupon_time());
+							reChargeList.add(reChargeMap);
+						}
+					}else{
+						result.setMsg("暂无优惠券！");
+					}
+				}
+				result.setListMap(reChargeList);
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
 			}
 			resutObj = JSONObject.fromObject(result);
-			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			logger.error("信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
@@ -4049,7 +4089,64 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-
+	/**
+	 * 获取消费订单详情
+	 */
+	@RequestMapping(value = "/deal/getOrderInfo")
+	@ResponseBody
+	public String getOrderInfo(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取消费订单详情成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 必填参数
+			 */
+			String orderId = "orderId";
+			boolean b = JsonTool.checkJson(mainObj,orderId);
+			if(b){
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				orderId = mainObj.optString("orderId");
+				SysOrder order = orderService.queryById(orderId);
+				Map<String, Object> tokenMap = new HashMap<>();
+				tokenMap.put("cash",order.getCash());
+				tokenMap.put("gastationName",order.getGas_station_name());
+				tokenMap.put("orderStatus",order.getOrderStatus());
+				tokenMap.put("dealTime",sft.format(order.getOrderDate()));
+				tokenMap.put("chargeType",order.getChargeType());
+				tokenMap.put("orderId",orderId);
+				tokenMap.put("gastationId",order.getDebitAccount());
+				result.setData(tokenMap);
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("暂无消费订单！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取消费订单详情失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取消费订单详情失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 	private String genPayReq(Map<String, String> resultunifiedorder) {
 
 		/*

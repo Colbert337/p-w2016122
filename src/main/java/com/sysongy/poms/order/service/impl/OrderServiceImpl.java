@@ -1178,4 +1178,9 @@ public class OrderServiceImpl implements OrderService {
 	public List<Map<String, Object>> queryDriverTransfer(SysOrder record) {
 		return sysOrderMapper.queryDriverTransferList(record);
 	}
+
+	@Override
+	public SysOrder queryById(String orderId) {
+		return sysOrderMapper.queryById(orderId);
+	}
 }

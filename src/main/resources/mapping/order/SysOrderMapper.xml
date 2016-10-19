@@ -989,4 +989,13 @@
        and  temp.order_date like CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
     </if>
   </select>
+  <!-- 消费订单详情 -->
+  <select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+   	sys_gas_station.gas_station_name,
+    <include refid="Base_Column_List" />
+    from sys_order 
+    LEFT JOIN sys_gas_station ON sys_order.debit_account = sys_gas_station.sys_gas_station_id
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
 </mapper>

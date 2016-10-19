@@ -237,4 +237,10 @@ public interface OrderService {
     String checkIfCanChargeToDriver(SysOrder order) throws Exception;
 
 	int updateByPrimaryKey(SysOrder record);
+    /**
+     * 消费订单详情
+     * @param orderId
+     * @return
+     */
+    SysOrder queryById(String orderId);
 }

@@ -112,6 +112,10 @@ public interface SysOrderMapper {
      * @return
      */
     List<Map<String,Object>> queryDriverTransferList(SysOrder record);
-
-
+    /**
+     * 消费订单详情
+     * @param orderId
+     * @return
+     */
+    SysOrder queryById(String orderId);
 }
