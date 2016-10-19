@@ -85,9 +85,6 @@ public class CRMCashServiceContoller {
     private GasCardService gasCardService;
 
     @Autowired
-    private GsGasPriceService gsGasPriceService;
-
-    @Autowired
     private SysOrderGoodsService sysOrderGoodsService;
 
     @Autowired
