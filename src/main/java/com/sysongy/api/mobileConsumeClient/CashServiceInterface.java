@@ -357,6 +357,7 @@ public class CashServiceInterface {
                 if(record.getConsumeType().equalsIgnoreCase(GlobalConstant.ConsumeType.CONSUME_TYPE_CARD)){
                     record.setConsume_card(null);
                 }
+                
                 String orderConsume = orderService.consumeByDriver(record);
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);

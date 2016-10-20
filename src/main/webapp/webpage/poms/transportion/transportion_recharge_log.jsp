@@ -31,11 +31,11 @@
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
-								<input type="text" class="" name="operatorSourceType" value="${order.operatorSourceType}" readonly="readonly"/>
+								<input type="text" class="" name="begin" value="${order.begin}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="operatorTargetType" value="${order.operatorTargetType}" readonly="readonly"/>
+								<input type="text" class="" name="end" value="${order.end}" readonly="readonly"/>
 							</div>			
 						</div>
 						

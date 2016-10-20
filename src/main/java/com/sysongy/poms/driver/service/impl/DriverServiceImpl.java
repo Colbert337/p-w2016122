@@ -19,6 +19,8 @@ import com.sysongy.poms.card.dao.GasCardLogMapper;
 import com.sysongy.poms.card.dao.GasCardMapper;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.model.GasCardLog;
+import com.sysongy.poms.coupon.model.UserCoupon;
+import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.dao.SysDriverMapper;
 import com.sysongy.poms.driver.dao.SysDriverReviewStrMapper;
 import com.sysongy.poms.driver.model.SysDriver;
@@ -69,6 +71,9 @@ public class DriverServiceImpl implements DriverService {
 
     @Autowired
     private GasCardLogMapper gasCardLogMapper;
+    
+    @Autowired
+    private CouponService couponService;
 
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
@@ -303,16 +308,37 @@ public class DriverServiceImpl implements DriverService {
 			chong ="消费冲红";
 			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_DRIVER_DEDUCT;
 		}
+		
+		String preferential_cash = "";
+		if(order.getPreferential_cash().compareTo(BigDecimal.valueOf(0.0)) > 0){
+			preferential_cash = "气站优惠" + order.getPreferential_cash() + "元";
+		}
 
         String remark = "";
         if(StringUtils.isEmpty(order.getDischarge_reason())){
-            remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。";
+            remark = driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。";
         } else {
-            remark = driver.getFullName()+"的账户，"+chong+cash.toString()+"。" + order.getDischarge_reason();
+            remark = driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。" + order.getDischarge_reason();
+        }
+        
+        UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_number(), order.getSysDriver().getSysDriverId());
+        
+        if(usercoupon == null){
+        	order.setCoupon_number("");
+        	order.setCoupon_cash(BigDecimal.valueOf(0.0d));
+        	logger.info("根据"+order.getCoupon_number()+"找不到对应的优惠劵信息");
+        }else{
+        	usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.USED);
+            couponService.modifyUserCoupon(usercoupon, order.getOperator());
+        }
+        
+        if(!(StringUtils.isEmpty(order.getCoupon_number()) && (StringUtils.isEmpty(order.getCoupon_cash().toString()))) && usercoupon != null){
+            remark = remark + "使用优惠劵优惠"+order.getCoupon_cash().toString()+"元。";
         }
 
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
         order.setDischarge_reason(remark);
+        
 		return cash_success;
 	}
 

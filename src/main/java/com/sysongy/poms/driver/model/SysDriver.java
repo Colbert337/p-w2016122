@@ -109,6 +109,8 @@ public class SysDriver extends BaseModel{
     private String securityMobilePhone ;
     
     private String driverQrcode;
+    
+    private String verifySource;//实名认证来源，默认为CRM认证来源0，APP认证来源是改为1
 
     public String getMemo() {
 		return memo;
@@ -509,6 +511,14 @@ public class SysDriver extends BaseModel{
 
 	public void setDriverQrcode(String driverQrcode) {
 		this.driverQrcode = driverQrcode;
+	}
+
+	public String getVerifySource() {
+		return verifySource;
+	}
+
+	public void setVerifySource(String verifySource) {
+		this.verifySource = verifySource;
 	}
 
 }

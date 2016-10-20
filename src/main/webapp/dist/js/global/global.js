@@ -69,7 +69,7 @@
 					stringLength: {
 						min: 6,
 						max: 20,
-						message: '密码不能小于6个数字，不能大于10个字符'
+						message: '密码不能小于6个数字，不能大于20个字符'
 					},
 					remote: {
 						url: '../web/permi/user/info/isPassword',
@@ -112,7 +112,7 @@
 					stringLength: {
 						min: 6,
 						max: 20,
-						message: '密码不能小于6个数字，不能大于10个字符'
+						message: '密码不能小于6个数字，不能大于20个字符'
 					},
 					callback: {
 						message: '确认密码不一致',

@@ -433,6 +433,7 @@ public class GlobalConstant {
 		public static final String CASHBACK_CARD_CHARGE ="106";//充值卡充值
 		public static final String CASHBACK_POS_CHARGE ="107";//POS充值
 		public static final String CASHBACK_PLATFORM_CHARGE ="108";//后台充值
+		public static final String APP_CONSUME_CHARGE ="220";//司机APP消费
 	}
 
 	/**
@@ -493,6 +494,7 @@ public class GlobalConstant {
 		public static final String CHARGETYPE_CARD_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_CARD_CHARGE;
 		public static final String CHARGETYPE_POS_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_POS_CHARGE;
 		public static final String CHARGETYPE_PLATFORM_CHARGE =GlobalConstant.CashBackNumber.CASHBACK_PLATFORM_CHARGE;
+		public static final String APP_CONSUME_CHARGE =GlobalConstant.CashBackNumber.APP_CONSUME_CHARGE;
 	}
 	
 	/*
@@ -707,10 +709,49 @@ public class GlobalConstant {
 		return value;
 	}
 
+	/*订单状态*/
 	public interface ORDER_STATUS{
 		public static final int ORDER_INIT = 0; 			//订单初始化
 		public static final int ORDER_SUCCESS = 1; 			//订单生成成功
 		public static final int ORDER_FAILED = 2; 			//订单失败
 		public static final int ORDER_WAIT_FOR_PAY = 3; 	//订单待支付
+	}
+
+	/*订单消费类型*/
+	public interface ORDER_SPEND_TYPE{
+		public static final String CASH_BOX = "C01"; 		//账户余额支付
+		public static final String POS = "C02"; 			//POS支付
+		public static final String WECHAT = "C03"; 			//微信消费
+		public static final String ALIPAY = "C04";          //支付宝消费
+	}
+
+	/*折扣优惠类型*/
+	public interface PREFERENTIAL_TYPE{
+		public static final String MINUS = "0"; 			//立减
+		public static final String DISCOUNT = "1"; 		//折扣
+	}
+
+	/**
+	 * 获取折扣优惠类型
+	 * @param key
+	 * @return
+	 */
+	public static String getPreferentialType(String key){
+		String value = "";
+		switch (key){
+			case PREFERENTIAL_TYPE.MINUS:
+				value = "立减";
+				break;
+			case PREFERENTIAL_TYPE.DISCOUNT:
+				value = "折扣";
+				break;
+		}
+		return value;
+	}
+
+	public interface COUPON_STATUS{
+		public static final String UNUSE = "0";
+		public static final String USED = "1";
+		public static final String SUSPEND = "2";
 	}
 }

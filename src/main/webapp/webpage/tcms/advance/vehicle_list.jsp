@@ -95,8 +95,11 @@
 									</c:if>
 								</td>
 								<td class="text-center">
-									<a class="" href="javascript:editVehicle('${vehicle.tcVehicleId}');" title="修改" data-rel="tooltip">
+									<a class="" href="javascript:editVehicle('${vehicle.tcVehicleId}');" title="修改信息" data-rel="tooltip">
 										<span class="ace-icon fa fa-pencil bigger-130"></span>
+									</a>&nbsp;
+									<a class="" href="javascript:editPayCode('${vehicle.tcVehicleId}');" title="修改密码" data-rel="tooltip">
+										<span class="ace-icon fa  fa-key bigger-130"></span>
 									</a>
 								</td>
 							</tr>
@@ -155,20 +158,20 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label no-padding-right" for="plates_number"><span class="red_star">*</span> 车牌号： </label>
 									<div class="col-sm-7">
-										<input type="text" name="platesNumber" id="plates_number" data-onFlag="" onblur="isVehicleExit()" placeholder="车牌号" class="col-xs-10 col-sm-12" />
+										<input type="text" name="platesNumber" id="plates_number" data-onFlag="" onblur="isVehicleExit()" maxlength="7" placeholder="车牌号" class="col-xs-10 col-sm-12" />
 										<input type="hidden" name="tcVehicleId" id="tc_vehicle_id" />
 									</div>
 								</div>
-								<div class="form-group">
+								<div class="form-group" id="pay1">
 									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
 									<div class="col-sm-7">
-										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" maxlength="6" class="col-xs-10 col-sm-12" />
+										<input type="password" name="payCode" id="pay_code" placeholder="支付密码" maxlength="20" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
-								<div class="form-group">
+								<div class="form-group" id="pay2">
 									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
 									<div class="col-sm-7">
-										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" maxlength="6" class="col-xs-10 col-sm-12" />
+										<input type="password" id="re_password" name="rePassword" placeholder="确认密码" maxlength="20" class="col-xs-10 col-sm-12" />
 									</div>
 								</div>
 								<div class="form-group">
@@ -219,6 +222,48 @@
 	</div><!-- /.modal -->
 </div>
 <!--添加车辆弹层-结束-->
+<!--修改密码-开始-->
+<div id="editPayCodeDiv" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="editVehicle">修改密码</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<form class="form-horizontal" id="editPayCode">
+								<input type="hidden" value="" id="tcVehicleId"/>
+								<div class="form-group" id="pay1">
+									<label class="col-sm-4 control-label no-padding-right" for="pay_code"><span class="red_star">*</span> 支付密码： </label>
+									<div class="col-sm-7">
+										<input type="password" name="payCode1" id="pay_code1" placeholder="支付密码" maxlength="20" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+								<div class="form-group" id="pay2">
+									<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码： </label>
+									<div class="col-sm-7">
+										<input type="password" id="re_password1" name="rePassword1" placeholder="确认密码" maxlength="20" class="col-xs-10 col-sm-12" />
+									</div>
+								</div>
+							</form>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="changePayCode()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('editPayCodeDiv')">取   消 </button>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+<!--修改密码-结束-->
 
 <!--提示弹层-开始-->
 <div id="importDivModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
