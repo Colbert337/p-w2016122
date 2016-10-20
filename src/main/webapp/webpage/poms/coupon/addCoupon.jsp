@@ -28,10 +28,10 @@
 									<input name="coupon_type"  type="radio" class="ace" value="1" checked="checked" onclick="changeCouponType()">
 									<span class="lbl"><s:Code2Name mcode="1" gcode="COUPON_TYPE"></s:Code2Name></span>
 								</label>
-								<label class="radio-inline">
-									<input name="coupon_type"  type="radio" class="ace" value="2" onclick="changeCouponType()">
-									<span class="lbl"><s:Code2Name mcode="2" gcode="COUPON_TYPE"></s:Code2Name></span>
-								</label>
+								<%--<label class="radio-inline">--%>
+									<%--<input name="coupon_type"  type="radio" class="ace" value="2" onclick="changeCouponType()">--%>
+									<%--<span class="lbl"><s:Code2Name mcode="2" gcode="COUPON_TYPE"></s:Code2Name></span>--%>
+								<%--</label>--%>
 							</div>
 						</div>
 					</div>
