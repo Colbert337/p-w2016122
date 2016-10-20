@@ -85,13 +85,6 @@ function changeCouponType(){
 	            validating: 'glyphicon glyphicon-refresh'
 			},
 	        fields: {
-				coupon_title: {
-					validators: {
-						notEmpty: {
-							message: '优惠卷名称不能为空'
-						}
-					}
-				},
 				preferential_money: {
 					validators: {
 						notEmpty: {

@@ -41,7 +41,23 @@ public class UserCoupon extends BaseModel {
 	 private String station_id;
 	 //注册工作站名称
 	private String regis_source;
+	//优惠卷类型
+	private String coupon_kind;
+	//加注站ID
+	private String sys_gas_station_id;
 	
+	public String getCoupon_kind() {
+		return coupon_kind;
+	}
+	public void setCoupon_kind(String coupon_kind) {
+		this.coupon_kind = coupon_kind;
+	}
+	public String getSys_gas_station_id() {
+		return sys_gas_station_id;
+	}
+	public void setSys_gas_station_id(String sys_gas_station_id) {
+		this.sys_gas_station_id = sys_gas_station_id;
+	}
 	public String getUser_name() {
 		return user_name;
 	}
