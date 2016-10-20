@@ -345,11 +345,11 @@ public class CouponController extends BaseContoller {
 							err++;
 							continue;
 						}
-						if (!driverInfo.get(0).getFullName().equals(sheet.getRow(i)[0].getContents())) {
+						/*if (!driverInfo.get(0).getFullName().equals(sheet.getRow(i)[0].getContents())) {
 							message += "第" + (i + 1) + "行姓名与电话号码在系统中不匹配！\n";
 							err++;
 							continue;
-						}
+						}*/
 						SysDriver driver = driverInfo.get(0);
 						userCoupon.setSys_driver_id(driver.getSysDriverId());
 						driverList.add(driver);
