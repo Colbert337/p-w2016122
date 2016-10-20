@@ -282,6 +282,7 @@ public class CRMCashServiceContoller {
             //查询当前优惠券列表
             coupon.setSys_gas_station_id(record.getOperatorSourceId());
             coupon.setDriverId(driver.getSysDriverId());
+            coupon.setPreferential_discount(discountSum.toString());//存储需支付金额
             PageInfo<Coupon> pageInfo = couponService.queryCouponOrderByAmount(coupon);
 
             //封装当前司机可用优惠券列表

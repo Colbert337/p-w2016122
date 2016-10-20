@@ -33,6 +33,8 @@
 									<input type="hidden" value="${coupon.coupon_no}" name="coupon_no"/>
 									<input type="hidden" value="${coupon.start_coupon_time}" name="start_coupon_time"/>
 									<input type="hidden" value="${coupon.end_coupon_time}" name="end_coupon_time"/>
+									<input type="hidden" value="${coupon.coupon_kind}" name="coupon_kind"/>
+									<input type="hidden" value="${coupon.sys_gas_station_id}" name="sys_gas_station_id"/>
 									<span id="coupon_title">${coupon.coupon_title}</span>
 								</td>
 							</tr>

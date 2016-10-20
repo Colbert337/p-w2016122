@@ -21,18 +21,6 @@
 				<form class="form-horizontal" id="couponform">
 				<jsp:include page="/common/page_param.jsp"></jsp:include>
 					<div class="form-group">
-						<label for="coupon_title"  class="col-sm-3 control-label no-padding-right">名称：</label>
-						<div class="col-sm-4">
-							<input type="text" name="coupon_title" placeholder="输入优惠名称" class="form-control" maxlength="20" required/>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="coupon_detail" class="col-sm-3 control-label no-padding-right" >详情：</label>
-						<div class="col-sm-4">
-							<textarea type="text" name="coupon_detail" placeholder="输入优惠详情" class="form-control" maxlength="150"></textarea>
-						</div>
-					</div>
-					<div class="form-group">
 						<label for="coupon_type" class="col-sm-3 control-label no-padding-right">优惠方式：</label>
 						<div class="col-sm-4">
 							<div class="radio">
@@ -153,6 +141,12 @@
 								<span class="lbl"><s:Code2Name mcode="2" gcode="COUPON_STATUS"></s:Code2Name></span>
 							</label>
 							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="coupon_detail" class="col-sm-3 control-label no-padding-right" >详情：</label>
+						<div class="col-sm-4">
+							<textarea type="text" name="coupon_detail" placeholder="输入优惠详情" class="form-control" maxlength="150"></textarea>
 						</div>
 					</div>
 					<div class="clearfix form-actions">

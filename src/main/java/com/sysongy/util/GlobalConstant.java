@@ -716,12 +716,15 @@ public class GlobalConstant {
 		public static final int ORDER_FAILED = 2; 			//订单失败
 		public static final int ORDER_WAIT_FOR_PAY = 3; 	//订单待支付
 	}
-	
+
+	/*订单消费类型*/
 	public interface ORDER_SPEND_TYPE{
-		public static final String CASH_BOX = "C01"; 			//账户余额支付
+		public static final String CASH_BOX = "C01"; 		//账户余额支付
 		public static final String POS = "C02"; 			//POS支付
+		public static final String WECHAT = "C03"; 			//微信消费
+		public static final String ALIPAY = "C04";          //支付宝消费
 	}
-	
+
 	/*折扣优惠类型*/
 	public interface PREFERENTIAL_TYPE{
 		public static final String MINUS = "0"; 			//立减
