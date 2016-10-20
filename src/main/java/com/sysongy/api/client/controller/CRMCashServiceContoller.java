@@ -231,17 +231,23 @@ public class CRMCashServiceContoller {
                     double num = sysOrderGoods.getNumber();
                     BigDecimal price = sysOrderGoods.getPrice();
                     String goodsType = sysOrderGoods.getGoodsType();
+
+                    //获取气品价格
                     GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByStationId(gastationId,goodsType);
                     if(gsGasPrice != null && gsGasPrice.getPreferential_type() != null){
                         String preferentialType = gsGasPrice.getPreferential_type();
                         BigDecimal discountSumPrice = BigDecimal.ZERO;
                         if(preferentialType.equals("0") ){//立减
-                            String minusMoney = gsGasPrice.getMinus_money();//获取立减金额
+                            //获取立减金额
+                            String minusMoney = gsGasPrice.getMinus_money();
                             if(minusMoney == null || "".equals(minusMoney)){
                                 minusMoney = "0";
                             }
-                            price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));//计算立减后价格
-                            discountSumPrice = BigDecimalArith.mul(price,new BigDecimal(num+""));//计算价格立减后该商品总金额
+
+                            //计算立减后价格
+                            price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));
+                            //计算价格立减后该商品总金额
+                            discountSumPrice = BigDecimalArith.mul(price,new BigDecimal(num+""));
                             sysOrderGoods.setDiscountSumPrice(discountSumPrice);
                         }else if(preferentialType.equals("1")){//折扣
                             BigDecimal sumPrice = sysOrderGoods.getSumPrice();
@@ -255,19 +261,30 @@ public class CRMCashServiceContoller {
 
                 }
             }
-            //重置订单金额及优惠后金额
+            //重置订单金额、优惠金额及优惠后金额
             if(discountSum.compareTo(BigDecimal.ZERO) > 0){//优惠金额大于零时，做金额重置
-                record.setShould_payment(record.getCash());//订单金额
                 record.setCash(discountSum);//优惠后金额
+                BigDecimal discountAmount = BigDecimalArith.sub(record.getShould_payment(),discountSum);
+                record.setPreferential_cash(discountAmount);//优惠金额
             }
 
             //根据订单金额和会员信息，查询优惠券列表
             Coupon coupon = new Coupon();
             SysDriver driver = record.getSysDriver();
+            //回填司机账户信息
+            Gastation gastation = record.getGastation();
+            if(gastation.getSys_gas_station_id() == null || gastation.getAccount().getSysUserAccountId() == null){
+                SysUserAccount userAccount = sysUserAccountService.queryUserAccountByDriverId(driver.getSysDriverId());
+                gastation.setAccount(userAccount);
+                record.setGastation(gastation);
+            }
+
+            //查询当前优惠券列表
             coupon.setSys_gas_station_id(record.getOperatorSourceId());
             coupon.setDriverId(driver.getSysDriverId());
             PageInfo<Coupon> pageInfo = couponService.queryCouponOrderByAmount(coupon);
 
+            //封装当前司机可用优惠券列表
             driver.setList(pageInfo.getList());
             record.setSysDriver(driver);
             Map<String, Object> attributes = new HashMap<String, Object>();
@@ -276,6 +293,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }catch (Exception e){
             logger.warn("订单提交失败：" + e.getMessage());
+            e.printStackTrace();
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg(e.getMessage());
             return ajaxJson;

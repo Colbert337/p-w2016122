@@ -373,6 +373,8 @@ public class CRMGasPriceController {
                 return "" ;
             }
                 ret = "webpage/poms/gastation/gastation_update";
+                gsGasPrice.setGasNum(null);
+                gsGasPrice.setGasName(null);
                 gastationid = gsGasPriceService.saveGsPrice(gsGasPrice,"update");
                 bean.setRetMsg("修改成功");
                 ret = this.queryAllGasPriceList(map, gsGasPrice==null?new GsGasPrice():gsGasPrice);
