@@ -345,11 +345,11 @@ public class CouponController extends BaseContoller {
 							err++;
 							continue;
 						}
-//						if (!driverInfo.get(0).getFullName().equals(sheet.getRow(i)[0].getContents())) {
-//							message += "第" + (i + 1) + "行姓名与电话号码在系统中不匹配！\n";
-//							err++;
-//							continue;
-//						}
+						/*if (!driverInfo.get(0).getFullName().equals(sheet.getRow(i)[0].getContents())) {
+							message += "第" + (i + 1) + "行姓名与电话号码在系统中不匹配！\n";
+							err++;
+							continue;
+						}*/
 						SysDriver driver = driverInfo.get(0);
 						userCoupon.setSys_driver_id(driver.getSysDriverId());
 						driverList.add(driver);
@@ -423,7 +423,7 @@ public class CouponController extends BaseContoller {
 				userCoupon.setCoupon_id(coupon_id);
 				userCoupon.setCoupon_no(coupon_no);
 				userCoupon.setCoupon_kind(coupon_kind);
-				userCoupon.setSys_gas_station_id(sys_gas_station_id); 
+				userCoupon.setSys_gas_station_id(sys_gas_station_id);
 				userCoupon.setStart_coupon_time(sdf.parse(start_coupon_time));
 				userCoupon.setEnd_coupon_time(sdf.parse(end_coupon_time));
 				userCoupon.setSys_driver_id(sysDriverId[i]);

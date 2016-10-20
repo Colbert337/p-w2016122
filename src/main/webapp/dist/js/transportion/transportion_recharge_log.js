@@ -30,8 +30,8 @@
 	}
 	
 	function init(){
-		$("[name=operatorSourceType]").val("");
-		$("[name=operatorTargetType]").val("");
+		$("[name=begin]").val("");
+		$("[name=end]").val("");
 		$("[name=deal_number]").val("");
 		commitForm();
 		//loadPage('#main', '../crmGasPriceService/queryProductPriceList');
