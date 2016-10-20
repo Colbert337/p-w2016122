@@ -278,11 +278,4 @@
 				AND sys_user_coupon.sys_driver_id = #{driverId,jdbcType=VARCHAR}
 			)
 	</select>
-
-	<select id="queryUserCouponByNo" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
-		select * from sys_user_coupon
-		where isuse = '0' 
-		and coupon_no = #{coupon_no,jdbcType=VARCHAR}
-		and sys_driver_id = #{driver_id,jdbcType=VARCHAR}
-	</select>
 </mapper>
