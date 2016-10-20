@@ -106,6 +106,10 @@ public class SysOrder extends BaseModel{
     private String coupon_number;//优惠劵编号
 
     private BigDecimal coupon_cash;//优惠劵优惠金额
+    
+    private String begin;//开始时间，虚拟字段，充值报表时间过滤用
+    
+    private String end;//结束时间，虚拟字段，充值报表时间过滤用
 
 	public String getSpend_type() {
 		return spend_type;
@@ -485,4 +489,20 @@ public class SysOrder extends BaseModel{
     public void setGas_station_name(String gas_station_name) {
         this.gas_station_name = gas_station_name;
     }
+
+	public String getBegin() {
+		return begin;
+	}
+
+	public void setBegin(String begin) {
+		this.begin = begin;
+	}
+
+	public String getEnd() {
+		return end;
+	}
+
+	public void setEnd(String end) {
+		this.end = end;
+	}
 }

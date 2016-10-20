@@ -144,6 +144,16 @@ function saveFenpei(){
         return false;
     }
     var dataForm = $("#fenpeiForm").serialize(); //序列化表单 获取到数据
+    var data = dataForm.split("&");
+    var array = new Array();
+    for(var i=0;i<data.length;i++){
+    	if(data[i].indexOf("quota")!=-1){
+    		if(data[i].split("=")[1]<0){
+    			alert("分配金额不能小于0");
+    			return;
+    		}    
+    	}
+    }
     dataForm = decodeURIComponent(dataForm,true);
     var saveOptions ={
         url:"../web/tcms/fleetQuota/save/fenpei",

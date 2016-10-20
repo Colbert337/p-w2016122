@@ -150,8 +150,8 @@
     <if test="channelNumber != null &amp;&amp; channelNumber !=''" >
       and sor.channel_number = #{channelNumber}
     </if>
-    <if test="operatorSourceType != null &amp;&amp; operatorTargetType != ''">
-      and sor.order_date between  #{storage_time_after,jdbcType=VARCHAR} and #{storage_time_before,jdbcType=VARCHAR}
+    <if test="begin != null &amp;&amp; end != ''">
+      and sor.order_date between  #{begin,jdbcType=VARCHAR} and #{end,jdbcType=VARCHAR}
     </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
