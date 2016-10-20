@@ -253,7 +253,9 @@ public class CRMCashServiceContoller {
                         }else if(preferentialType.equals("1")){//折扣
                             BigDecimal sumPrice = sysOrderGoods.getSumPrice();
                             float fixedDiscount = gsGasPrice.getFixed_discount();//获取折扣
-                            discountSumPrice = BigDecimalArith.mul(sumPrice,new BigDecimal(fixedDiscount+""));
+                            if(fixedDiscount > 0){//折扣为零时，不做折扣处理
+                                discountSumPrice = BigDecimalArith.mul(sumPrice,new BigDecimal(fixedDiscount+""));
+                            }
                             sysOrderGoods.setDiscountSumPrice(discountSumPrice);
                         }
                         discountSum = BigDecimalArith.add(discountSum,discountSumPrice);
