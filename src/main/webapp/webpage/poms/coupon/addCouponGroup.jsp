@@ -83,10 +83,10 @@
 										<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 											<thead>
 												<tr>
-													<th><input type="checkbox" onclick="selectAll()" /></th>
+													<th style="text-align:center"><input type="checkbox" id="checkboxAll" /></th>
 													<th id="coupon_no_order">优惠编号</th>
 													<th id="coupon_title_order">优惠名称</th>
-													<th>数量</th>
+													<th style="text-align:center">数量</th>
 												</tr>
 											</thead>
 											<tbody id="coupon">
