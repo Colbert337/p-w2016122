@@ -36,6 +36,4 @@ public interface CouponService {
 	 */
 	public PageInfo<Coupon> queryAllCouponForPage(Coupon record,String driverId) throws Exception;
 
-	public UserCoupon queryUserCouponByNo(String user_coupon_no) throws Exception;
-
 }
