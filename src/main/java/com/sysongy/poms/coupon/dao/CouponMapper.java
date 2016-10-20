@@ -25,7 +25,7 @@ public interface CouponMapper {
 	
 	UserCoupon selectByUserCouponByPK(String user_coupon_id);
 	
-	UserCoupon queryUserCouponByNo(String coupon_no, String driver_id);
+	UserCoupon queryUserCouponByNo(String coupon_no, String sys_driver_id);
 
 	/**
 	 * 前用户可用优惠券列表
@@ -39,6 +39,4 @@ public interface CouponMapper {
 	 * @return
 	 */
 	List<Coupon> queryAllCouponForPage(String driverId);
-
-	UserCoupon queryUserCouponByNo(String user_coupon_no);
 }

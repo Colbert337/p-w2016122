@@ -229,10 +229,7 @@
 		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
 		where coupon_no = #{coupon_no,jdbcType=VARCHAR}
 	</update>
-	
-	<select id="queryUserCouponByNo" resultMap="UserCouponMap" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
-		and sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}
-	</select>
+
 	<!-- 当前用户可用优惠券 -->
 	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="com.sysongy.poms.coupon.model.Coupon">
 		select
@@ -278,10 +275,10 @@
 			)
 	</select>
 
-	<select id="queryUserCouponByNo" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
+	<select id="queryUserCouponByNo" resultMap="UserCouponMap" parameterType="java.lang.String">
 		select * from sys_user_coupon
 		where isuse = '0' 
-		and coupon_no = #{coupon_no,jdbcType=VARCHAR}
-		and sys_driver_id = #{driver_id,jdbcType=VARCHAR}
+		and coupon_no = #{0}
+		and sys_driver_id = #{1}
 	</select>
 </mapper>

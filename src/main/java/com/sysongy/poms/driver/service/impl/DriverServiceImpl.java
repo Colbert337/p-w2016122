@@ -315,6 +315,10 @@ public class DriverServiceImpl implements DriverService {
         } else {
             remark = driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。" + order.getDischarge_reason();
         }
+        
+        if(!(StringUtils.isEmpty(order.getCoupon_number()) && (StringUtils.isEmpty(order.getCoupon_cash().toString())))){
+            remark = remark + "使用优惠劵优惠"+order.getCoupon_cash().toString()+"元。";
+        }
 
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
         order.setDischarge_reason(remark);

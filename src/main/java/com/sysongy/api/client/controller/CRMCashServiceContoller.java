@@ -431,12 +431,12 @@ public class CRMCashServiceContoller {
                 record.setGasCard(gasCard);
             }
 
-            BigDecimal totalPrice = new BigDecimal(0);
-            for(SysOrderGoods goods : record.getSysOrderGoods()){
-                totalPrice = totalPrice.add(goods.getSumPrice());
-            }
-
-            record.setCash(totalPrice);
+//            BigDecimal totalPrice = new BigDecimal(0);
+//            for(SysOrderGoods goods : record.getSysOrderGoods()){
+//                totalPrice = totalPrice.add(goods.getSumPrice());
+//            }
+//
+//            record.setCash(totalPrice);
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
             if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
 
