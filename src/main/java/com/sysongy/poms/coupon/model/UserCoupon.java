@@ -11,7 +11,7 @@ public class UserCoupon extends BaseModel {
 	private String coupon_id;
 	// 优惠券编号
 	private String coupon_no;
-	// 用户角色编号
+	// 用户ID
 	private String sys_driver_id;
 	// 优惠卷使用状态，0获得，1已使用，2冻结等异常状态
 	private String isuse;
@@ -112,17 +112,15 @@ public class UserCoupon extends BaseModel {
 	public void setCoupon_id(String coupon_id) {
 		this.coupon_id = coupon_id;
 	}
-
+	public String getCoupon_no() {
+		return coupon_no;
+	}
 	public String getSys_driver_id() {
 		return sys_driver_id;
 	}
 	public void setSys_driver_id(String sys_driver_id) {
 		this.sys_driver_id = sys_driver_id;
 	}
-	public String getCoupon_no() {
-		return coupon_no;
-	}
-
 	public void setCoupon_no(String coupon_no) {
 		this.coupon_no = coupon_no;
 	}

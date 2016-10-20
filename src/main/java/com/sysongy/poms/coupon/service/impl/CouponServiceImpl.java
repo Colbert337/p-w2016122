@@ -225,8 +225,8 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	@Override
-	public UserCoupon queryUserCouponByNo(String user_coupon_no) throws Exception {
-		return couponMapper.queryUserCouponByNo(user_coupon_no);
+	public UserCoupon queryUserCouponByNo(String coupon_no, String driver_id) throws Exception {
+		return couponMapper.queryUserCouponByNo(coupon_no, driver_id);
 	}
 
 }

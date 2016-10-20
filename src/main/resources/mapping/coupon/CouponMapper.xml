@@ -22,12 +22,18 @@
 	<resultMap id="UserCouponMap" type="com.sysongy.poms.coupon.model.UserCoupon">
 		<id column="user_coupon_id" property="user_coupon_id" jdbcType="VARCHAR" />
 		<result column="coupon_id" property="coupon_id" jdbcType="VARCHAR" />
+		<result column="coupon_on" property="coupon_on" jdbcType="VARCHAR" />
 		<result column="coupon_no" property="coupon_no" jdbcType="VARCHAR" />
 		<result column="sys_driver_id" property="sys_driver_id" jdbcType="VARCHAR" />
 		<result column="isuse" property="isuse" jdbcType="VARCHAR" />
 		<result column="start_coupon_time" property="start_coupon_time" jdbcType="TIMESTAMP" />
 		<result column="end_coupon_time" property="end_coupon_time" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="lastmodify_time" property="lastmodify_time" jdbcType="TIMESTAMP" />
+		<result column="create_person_id" property="create_person_id" jdbcType="VARCHAR" />
+		<result column="lastmodify_person_id" property="lastmodify_person_id" jdbcType="VARCHAR" />
 	</resultMap>
+	
 	<sql id="Base_Column_List">
 			sc.coupon_id,
 			sc.coupon_no,
@@ -132,6 +138,11 @@
 	<select id="selectByUser_Coupon" resultMap="UserCouponMap"
 		parameterType="java.lang.String">
 			SELECT
+			user_coupon_id,
+			coupon_id,
+			coupon_no,
+			sys_driver_id,
+			isuse,
 			suc.user_coupon_id,
 			suc.coupon_id,
 			suc.coupon_no,
@@ -166,6 +177,10 @@
 	<select id="selectByUserCouponByPK" resultMap="UserCouponMap"
 		parameterType="java.lang.String">
 			SELECT
+			user_coupon_id,
+			coupon_id,
+			sys_driver_id,
+			isuse,
 			suc.user_coupon_id,
 			suc.coupon_id,
 			suc.sys_driver_id,
@@ -188,10 +203,10 @@
 		and  suc.user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
 	</select>
 	<insert id="insertUserCoupon" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
-		insert into sys_user_coupon (user_coupon_id, coupon_id,coupon_no, sys_driver_id, isuse, 
+		insert into sys_user_coupon (user_coupon_id, coupon_id,coupon_no, sys_driver_id, isuse, coupon_kind,sys_gas_station_id,
 		start_coupon_time, end_coupon_time,create_person_id,create_time,lastmodify_person_id,lastmodify_time
 		)
-		values (#{user_coupon_id,jdbcType=VARCHAR},#{coupon_id,jdbcType=VARCHAR},#{coupon_no,jdbcType=VARCHAR},#{sys_driver_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},
+		values (#{user_coupon_id,jdbcType=VARCHAR},#{coupon_id,jdbcType=VARCHAR},#{coupon_no,jdbcType=VARCHAR},#{sys_driver_id,jdbcType=VARCHAR},#{isuse,jdbcType=VARCHAR},#{coupon_kind,jdbcType=VARCHAR},#{sys_gas_station_id,jdbcType=VARCHAR},
 		 #{start_coupon_time,jdbcType=TIMESTAMP}, #{end_coupon_time,jdbcType=TIMESTAMP},#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
@@ -201,13 +216,14 @@
 		lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
 		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
 		where coupon_no = #{coupon_no,jdbcType=VARCHAR}
-		and sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}
 	</update>
+
 	<!-- 当前用户可用优惠券 -->
 	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="com.sysongy.poms.coupon.model.Coupon">
 		select
 			sc.coupon_id,
 			sc.coupon_kind,
+			sc.coupon_title,
 			sc.coupon_type,
 			sc.use_condition,
 			sc.preferential_discount,
@@ -220,7 +236,7 @@
 				FROM
 					sys_user_coupon suc
 				WHERE
-					suc.isuse = '1'
+					suc.isuse = '0'
 				AND suc.sys_driver_id = #{driverId,jdbcType=VARCHAR}
 				)
 				and sc.sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
@@ -243,13 +259,15 @@
 				FROM
 					sys_user_coupon
 				WHERE
-					isuse = '1'
+					isuse = '0'
 				AND sys_user_coupon.sys_driver_id = #{driverId,jdbcType=VARCHAR}
 			)
 	</select>
 
-	<select id="queryUserCouponByNo" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
+	<select id="queryUserCouponByNo" resultMap="UserCouponMap" parameterType="java.lang.String">
 		select * from sys_user_coupon
-		where isuse = '0' and user_coupon_no = #{user_coupon_no,jdbcType=VARCHAR}
+		where isuse = '0' 
+		and coupon_no = #{0}
+		and sys_driver_id = #{1}
 	</select>
 </mapper>
