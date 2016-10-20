@@ -24,6 +24,9 @@ public interface CouponMapper {
 	int updateUserCoupon(UserCoupon record);
 	
 	UserCoupon selectByUserCouponByPK(String user_coupon_id);
+	
+	UserCoupon queryUserCouponByNo(String coupon_no, String driver_id);
+
 	/**
 	 * 前用户可用优惠券列表
 	 * @param record
