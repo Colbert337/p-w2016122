@@ -102,10 +102,10 @@ public class CouponController extends BaseContoller {
 		try {
 			if (null == coupon.getCoupon_id()) {
 				coupon_id = service.addCoupon(coupon, currUser.getUserId());
-				bean.setRetMsg("[" + coupon.getCoupon_title() + "]新增成功");
+				bean.setRetMsg("新增成功");
 			} else {
 				coupon_id = service.modifyCoupon(coupon, currUser.getUserId());
-				bean.setRetMsg("[" + coupon.getCoupon_title() + "]保存成功");
+				bean.setRetMsg("保存成功");
 			}
 			ret = this.queryAllCouponList(map, this.coupon == null ? new Coupon() : this.coupon);
 			bean.setRetCode(100);
@@ -397,7 +397,8 @@ public class CouponController extends BaseContoller {
 	@RequestMapping("/importCoupon")
 	public String importCoupon(ModelMap map, @RequestParam("coupon_id") String coupon_id,
 			@RequestParam("coupon_no") String coupon_no,@RequestParam("start_coupon_time") String start_coupon_time,
-			@RequestParam("end_coupon_time") String end_coupon_time,
+			@RequestParam("end_coupon_time") String end_coupon_time,@RequestParam("coupon_kind") String coupon_kind,
+			 @RequestParam("sys_gas_station_id") String sys_gas_station_id,
 			 HttpServletRequest request) throws Exception {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/coupon/importUserCoupon";
@@ -412,6 +413,8 @@ public class CouponController extends BaseContoller {
 		 coupon_no =  new String(coupon_no.getBytes("iso8859-1"),"UTF-8");
 		 start_coupon_time =  new String(start_coupon_time.getBytes("iso8859-1"),"UTF-8");
 		 end_coupon_time =  new String(end_coupon_time.getBytes("iso8859-1"),"UTF-8");
+		 coupon_kind =  new String(coupon_kind.getBytes("iso8859-1"),"UTF-8");
+		 sys_gas_station_id =  new String(sys_gas_station_id.getBytes("iso8859-1"),"UTF-8");
 		 String[] sysDriverId =  request.getParameterValues("sysDriverId");
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -419,6 +422,8 @@ public class CouponController extends BaseContoller {
 				UserCoupon userCoupon = new UserCoupon();
 				userCoupon.setCoupon_id(coupon_id);
 				userCoupon.setCoupon_no(coupon_no);
+				userCoupon.setCoupon_kind(coupon_kind);
+				userCoupon.setSys_gas_station_id(sys_gas_station_id);
 				userCoupon.setStart_coupon_time(sdf.parse(start_coupon_time));
 				userCoupon.setEnd_coupon_time(sdf.parse(end_coupon_time));
 				userCoupon.setSys_driver_id(sysDriverId[i]);

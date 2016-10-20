@@ -79,8 +79,8 @@
 										<%--</label>--%>
 									<%--</th>--%>
 									<th style="width:10%" onclick="orderBy(this,'coupon_no');commitForm();" id="coupon_no_order">优惠编号</th>
-									<th style="width:30%" onclick="orderBy(this,'coupon_title');commitForm();" id="coupon_title_order">优惠名称</th>
-									<th style="width:15%"onclick="orderBy(this,'coupon_kind');commitForm();" id="coupon_kind_order">优惠类型</th>
+									<th style="width:10%" onclick="orderBy(this,'coupon_title');commitForm();" id="coupon_title_order">优惠名称</th>
+									<th style="width:30%"onclick="orderBy(this,'coupon_kind');commitForm();" id="coupon_kind_order">优惠类型</th>
 									<th style="text-align:center;width:10%" onclick="orderBy(this,'coupon_type');commitForm();" id="coupon_type_order">优惠方式</th>
 									<th style="width:10%" onclick="orderBy(this,'use_condition');commitForm();" id="use_condition_order">使用条件</th>
 									<th style="text-align:center;width:10%" onclick="orderBy(this,'preferential_discount');commitForm();" id="preferential_discount_order">优惠额度</th>
