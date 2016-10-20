@@ -1052,4 +1052,35 @@ public class CRMCashServiceContoller {
         }
         return payAmount;
     }
+
+    /**
+     * 获取气品价格信息
+     * @param gastationId 气站ID
+     * @param goodsType 气品类型
+     * @return 优惠后价格
+     */
+    public BigDecimal getGsGasPrice(String gastationId, String goodsType) throws Exception{
+        //获取气品价格
+        GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByStationId(gastationId,goodsType);
+        BigDecimal price = BigDecimal.ZERO;
+        if(gsGasPrice != null && gsGasPrice.getPreferential_type() != null){
+            String preferentialType = gsGasPrice.getPreferential_type();
+            BigDecimal discountSumPrice = BigDecimal.ZERO;
+            if(preferentialType.equals("0") ){//立减
+                //获取立减金额
+                String minusMoney = gsGasPrice.getMinus_money();
+                if(minusMoney == null || "".equals(minusMoney)){
+                    minusMoney = "0";
+                }
+
+                //计算立减后价格
+                price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));
+            }else if(preferentialType.equals("1")){//折扣
+                float fixedDiscount = gsGasPrice.getFixed_discount();//获取折扣
+                price = BigDecimalArith.mul(price,new BigDecimal(fixedDiscount+""));
+            }
+        }
+        return  price;
+    }
+
 }
