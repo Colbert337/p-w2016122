@@ -248,6 +248,7 @@ public class CRMCashServiceContoller {
                             price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));
                             //计算价格立减后该商品总金额
                             discountSumPrice = BigDecimalArith.mul(price,new BigDecimal(num+""));
+                            discountSumPrice = BigDecimalArith.round(discountSumPrice,2);
                             sysOrderGoods.setDiscountSumPrice(discountSumPrice);
                         }else if(preferentialType.equals("1")){//折扣
                             BigDecimal sumPrice = sysOrderGoods.getSumPrice();
