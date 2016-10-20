@@ -514,17 +514,6 @@ public class CRMCashServiceContoller {
 
             //设置商品打折信息
             sysOrderGoodsService.setGoodsDiscountInfo(goods, gastation.getSys_gas_station_id());
-            
-            UserCoupon usercoupon = couponService.queryUserCouponByNo(record.getCoupon_number(), record.getSysDriver().getSysDriverId());
-            
-            if(usercoupon == null){
-            	record.setCoupon_number("");
-            	record.setCoupon_cash(BigDecimal.valueOf(0.0d));
-            	logger.info("根据"+record.getCoupon_number()+"找不到对应的优惠劵信息");
-            }else{
-            	usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.USED);
-                couponService.modifyUserCoupon(usercoupon, record.getOperator());
-            }
 
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
