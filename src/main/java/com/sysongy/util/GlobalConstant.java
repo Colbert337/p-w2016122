@@ -719,10 +719,10 @@ public class GlobalConstant {
 
 	/*订单消费类型*/
 	public interface ORDER_SPEND_TYPE{
-		public static final String CASH_BOX = "C01"; 			//账户余额支付
+		public static final String CASH_BOX = "C01"; 		//账户余额支付
 		public static final String POS = "C02"; 			//POS支付
-		public static final String WECHAT = "C03"; 			//账户余额支付
-		public static final String ALIPAY = "C04";                //POS支付
+		public static final String WECHAT = "C03"; 			//微信消费
+		public static final String ALIPAY = "C04";          //支付宝消费
 	}
 
 	/*折扣优惠类型*/
