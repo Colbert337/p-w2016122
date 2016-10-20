@@ -516,17 +516,6 @@ public class CRMCashServiceContoller {
 
             //设置商品打折信息
             sysOrderGoodsService.setGoodsDiscountInfo(goods, gastation.getSys_gas_station_id());
-            
-            UserCoupon usercoupon = couponService.queryUserCouponByNo(record.getCoupon_number(), record.getSysDriver().getSysDriverId());
-            
-            if(usercoupon == null){
-            	record.setCoupon_number("");
-            	record.setCoupon_cash(BigDecimal.valueOf(0.0d));
-            	logger.info("根据"+record.getCoupon_number()+"找不到对应的优惠劵信息");
-            }else{
-            	usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.USED);
-                couponService.modifyUserCoupon(usercoupon, record.getOperator());
-            }
 
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
@@ -1051,36 +1040,6 @@ public class CRMCashServiceContoller {
             }
         }
         return payAmount;
-    }
-
-    /**
-     * 获取气品价格信息
-     * @param gastationId 气站ID
-     * @param goodsType 气品类型
-     * @return 优惠后价格
-     */
-    public BigDecimal getGsGasPrice(String gastationId, String goodsType) throws Exception{
-        //获取气品价格
-        GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByStationId(gastationId,goodsType);
-        BigDecimal price = BigDecimal.ZERO;
-        if(gsGasPrice != null && gsGasPrice.getPreferential_type() != null){
-            String preferentialType = gsGasPrice.getPreferential_type();
-            BigDecimal discountSumPrice = BigDecimal.ZERO;
-            if(preferentialType.equals("0") ){//立减
-                //获取立减金额
-                String minusMoney = gsGasPrice.getMinus_money();
-                if(minusMoney == null || "".equals(minusMoney)){
-                    minusMoney = "0";
-                }
-
-                //计算立减后价格
-                price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));
-            }else if(preferentialType.equals("1")){//折扣
-                float fixedDiscount = gsGasPrice.getFixed_discount();//获取折扣
-                price = BigDecimalArith.mul(price,new BigDecimal(fixedDiscount+""));
-            }
-        }
-        return  price;
     }
 
 }
