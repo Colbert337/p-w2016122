@@ -2560,7 +2560,7 @@ public class MobileController {
 				//不为空或空字符串，为司机消费订单
 				if(orderType!=null && !"".equals(orderType) && orderType.equals("220")){
 					if (payType.equalsIgnoreCase("2")) { // 支付宝消费
-						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,"2"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2"); // TODO充值成功后再去生成订单
 						orderService.checkIfCanChargeToDriver(sysOrder);
 						String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
 						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员消费",
@@ -2577,7 +2577,7 @@ public class MobileController {
 						data.put("payReq", orderParam + "&" + sign);
 						result.setData(data);
 					} else if (payType.equalsIgnoreCase("1")) { // 微信消费
-						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,"2"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2"); // TODO充值成功后再去生成订单
 						orderService.checkIfCanChargeToDriver(sysOrder);
 						String entity = genProductArgs(orderID, feeCount,"2");
 						byte[] buf = Util.httpPost(url, entity);
@@ -2597,7 +2597,7 @@ public class MobileController {
 					}
 				}else{//充值订单
 					if (payType.equalsIgnoreCase("2")) { // 支付宝支付
-						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE,"1"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE,null,"1"); // TODO充值成功后再去生成订单
 						orderService.checkIfCanChargeToDriver(sysOrder);
 						String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayCallBackPay";
 						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
@@ -2614,7 +2614,7 @@ public class MobileController {
 						data.put("payReq", orderParam + "&" + sign);
 						result.setData(data);
 					} else if (payType.equalsIgnoreCase("1")) { // 微信支付
-						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE,"1"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE,null,"1"); // TODO充值成功后再去生成订单
 						orderService.checkIfCanChargeToDriver(sysOrder);
 						String entity = genProductArgs(orderID, feeCount,"1");
 						byte[] buf = Util.httpPost(url, entity);
@@ -4503,7 +4503,7 @@ public class MobileController {
 		return null;
 	}
 
-	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType,String type) throws Exception {
+	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType,String spendType,String type) throws Exception {
 		SysOrder record = new SysOrder();
 		//消费订单
 		if(type.equals("2")){
@@ -4532,6 +4532,7 @@ public class MobileController {
 				record.setChannel("APP-微信充值");
 				record.setChannelNumber("APP-微信充值"); // 建立一个虚拟的APP气站，方便后期统计
 			}
+			record.setSpend_type(spendType);
 			record.setOrderId(orderID);
 			record.setDebitAccount(driverID);
 			record.setOperator(appOperatorId);
