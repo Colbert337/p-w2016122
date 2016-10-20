@@ -416,8 +416,8 @@ public class CouponController extends BaseContoller {
 		 coupon_kind =  new String(coupon_kind.getBytes("iso8859-1"),"UTF-8");
 		 sys_gas_station_id =  new String(sys_gas_station_id.getBytes("iso8859-1"),"UTF-8");
 		 String[] sysDriverId =  request.getParameterValues("sysDriverId");
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for(int i=0;i<sysDriverId.length;i++){
 				UserCoupon userCoupon = new UserCoupon();
 				userCoupon.setCoupon_id(coupon_id);
