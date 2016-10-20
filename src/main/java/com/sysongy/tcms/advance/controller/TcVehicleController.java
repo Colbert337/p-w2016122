@@ -583,5 +583,25 @@ public class TcVehicleController extends BaseContoller {
         }
         return ajaxJson;
     }
+    /**
+     * 修改密码
+     * @param tcVehicleId
+     * @param payCode
+     * @return
+     */
+    @RequestMapping("changePayCode")
+    public String changePayCode(String tcVehicleId,String payCode){
+    	String msg;
+        TcVehicle tcVehicle = new TcVehicle();
+        tcVehicle.setTcVehicleId(tcVehicleId);
+        tcVehicle.setPayCode(payCode);
+        int rs = tcVehicleService.updateVehicle(tcVehicle);
+        if(rs >0 ){
+        	msg="修改成功";
+        }else{
+        	msg="修改失败";
+        }
+        return "redirect:/web/tcms/vehicle/list/page?msg="+msg;
+    }
 
 }
