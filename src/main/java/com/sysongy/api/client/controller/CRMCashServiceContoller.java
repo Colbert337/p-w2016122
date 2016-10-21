@@ -428,8 +428,8 @@ public class CRMCashServiceContoller {
 
             if(!StringUtils.isEmpty(checkCode)){
                 record.setConsume_card(sysDriver.getCardId());
-                String checkCodeFromRedis = (String)redisClientImpl.getFromCache
-                        (sysDriver.getSysDriverId());
+                String checkCodeFromRedis = (String)redisClientImpl.getFromCache(sysDriver.getSysDriverId());
+                
                 if(StringUtils.isEmpty(checkCodeFromRedis)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("验证码已失效，请重新生成验证码！！！");
@@ -458,6 +458,7 @@ public class CRMCashServiceContoller {
 //
 //            record.setCash(totalPrice);
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
+            
             if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
 
             	record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
@@ -465,10 +466,13 @@ public class CRMCashServiceContoller {
 
                 TcFleet tcFleet = findFleetInfo(record.getConsume_card());      //如果车队为空，则直接消费运输公司资金
                 List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(record.getConsume_card());
+                
                 Transportion transportion = null;
+                
                 if (vehicles.size() > 0) {
                     transportion = transportionService.queryTransportionByPK(vehicles.get(0).getStationId());
                 }
+                
                 if(transportion == null){
                     logger.error("所属运输公司无法查询:" + tcFleet.getStationId());
                     ajaxJson.setSuccess(false);

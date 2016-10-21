@@ -25,6 +25,7 @@
 
 	
 	window.UEDITOR_HOME_URL = projectName+"/umeditor-dev/";
+	//window.UEDITOR_HOME_URL = "/123poms-web/umeditor-dev/";
 	
 		
     var URL = window.UMEDITOR_HOME_URL || (function(){

@@ -436,9 +436,19 @@ public class CRMCustomerContoller {
     @RequestMapping(value = {"/web/addCustomer"})
     @ResponseBody
     public AjaxJson addCustomer(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
+    	
+    	String suserId = request.getParameter("suserId");
+    	
         AjaxJson ajaxJson = new AjaxJson();
         try
-        {
+        {	
+        	
+        	if(!StringUtils.isNotEmpty(suserId)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("用户ID缺失，请检查参数！！！");
+                return ajaxJson;
+            }
+        	
             if(!StringUtils.isNotEmpty(sysDriver.getSysDriverId())){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("用户ID未生成，请重新添加！！！");
@@ -514,7 +524,7 @@ public class CRMCustomerContoller {
             sysDriver.setRegisSource(gastation.getGas_station_name());
 
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
-            int renum = driverService.saveDriver(sysDriver, "insert",null);
+            int renum = driverService.saveDriver(sysDriver, "insert", null, suserId);
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
             if(renum < 1){
@@ -669,7 +679,7 @@ public class CRMCustomerContoller {
             }
 
             orgSysDriver.setUpdatedDate(new Date());
-            int renum = driverService.saveDriver(orgSysDriver, "update", null);
+            int renum = driverService.saveDriver(orgSysDriver, "update", null, null);
             if(renum > 0){
                 return orgSysDriver;
             }
@@ -724,7 +734,7 @@ public class CRMCustomerContoller {
             }
             sysDriver.setCheckedStatus("1");
             sysDriver.setUpdatedDate(new Date());
-            driverService.saveDriver(sysDriver, "update", null);
+            driverService.saveDriver(sysDriver, "update", null, null);
             SysDriver sysDriverNew = driverService.queryDriverByPK(sysDriver.getSysDriverId());
             attributes.put("driver", sysDriverNew);
             ajaxJson.setAttributes(attributes);
