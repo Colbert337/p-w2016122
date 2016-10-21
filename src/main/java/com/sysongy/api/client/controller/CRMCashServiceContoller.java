@@ -8,7 +8,9 @@ import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.coupon.model.Coupon;
+import com.sysongy.poms.coupon.model.CouponGroup;
 import com.sysongy.poms.coupon.model.UserCoupon;
+import com.sysongy.poms.coupon.service.CouponGroupService;
 import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
@@ -97,6 +99,9 @@ public class CRMCashServiceContoller {
 
     @Autowired
     GsGasPriceService gsGasPriceService;
+    
+    @Autowired
+    private CouponGroupService couponGroupService;
 
 
     @ResponseBody
@@ -317,8 +322,7 @@ public class CRMCashServiceContoller {
         try {
             SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
             record.setIs_discharge("0");
-            if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
-                    StringUtils.isEmpty(record.getOperatorSourceId()) ){
+            if((record == null) || StringUtils.isEmpty(record.getOrderId()) || StringUtils.isEmpty(record.getOperatorSourceId()) ){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单ID或者气站ID为空！！！");
                 return ajaxJson;
@@ -520,6 +524,25 @@ public class CRMCashServiceContoller {
 
             //设置商品打折信息
             sysOrderGoodsService.setGoodsDiscountInfo(goods, gastation.getSys_gas_station_id());
+            
+            //发优惠劵
+            SysOrder order = new SysOrder();
+            order.setCreditAccount(record.getCreditAccount());
+            order.setOrderType("220");
+            
+            List<SysOrder> order_list = orderService.queryOrders(order).getList();
+            //首次消费
+            if(order_list.size() < 1){
+            	CouponGroup couponGroup = new CouponGroup();
+                couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
+                
+                List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+                
+                if(list.size()>0){
+                	couponGroupService.sendCouponGroup(order.getCreditAccount(), list, order.getOperator());
+                }
+            }
+            
 
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
@@ -549,6 +572,8 @@ public class CRMCashServiceContoller {
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
+            
+            
 
             recordNew.setCash(formatCash(record.getCash()));
             sendConsumeMessage(recordNew, mobilePhone);

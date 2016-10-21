@@ -147,7 +147,7 @@ public class DriverServiceImpl implements DriverService {
             int count = sysDriverMapper.insertSelective(record);
             //如果有要邀请码，要进行返现，现在先写死，以后走订单
             if(!StringUtils.isEmpty(invitationCode)){
-            	this.cashBackForRegister(record, invitationCode);
+            	this.cashBackForRegister(record, invitationCode, operator_id);
             }
             
             CouponGroup couponGroup = new CouponGroup();
@@ -402,7 +402,7 @@ public class DriverServiceImpl implements DriverService {
 		return cashTo_success_specific_type;
 	}
 	
-	public void cashBackForRegister(SysDriver driver, String invitationCode) throws Exception{
+	public void cashBackForRegister(SysDriver driver, String invitationCode, String operator_id) throws Exception{
 		
 		SysDriver invitation = new SysDriver();
 		invitation.setInvitationCode(invitationCode);
@@ -416,6 +416,25 @@ public class DriverServiceImpl implements DriverService {
 	
 	    	sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.REGISTER_CASHBACK);
 	    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.INVITED_CASHBACK);
+	    	
+	    	//发优惠劵
+	    	CouponGroup couponGroup = new CouponGroup();
+            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITED);
+            
+            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+            
+            if(list.size()>0){
+            	couponGroupService.sendCouponGroup(driver.getSysDriverId(), list, operator_id);
+            }
+            
+            CouponGroup couponGroup1 = new CouponGroup();
+            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITED);
+            
+            List<CouponGroup> list1 = couponGroupService.queryCouponGroup(couponGroup1).getList();
+            
+            if(list1.size()>0){
+            	couponGroupService.sendCouponGroup(invitation.getSysDriverId(), list1, operator_id);
+            }
 		}
 	}
 	

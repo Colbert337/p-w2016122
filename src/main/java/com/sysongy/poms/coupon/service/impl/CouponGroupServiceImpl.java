@@ -105,17 +105,26 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			
 			String []coupon = group.getCoupon_ids().split(",");
 			
+			String []nums = group.getCoupon_nums().split(",");
+			
+			if(coupon.length != nums.length){
+				throw new Exception("优惠劵组配置错误，请检查");
+			}
+			
 			if(coupon.length < 1){
 				throw new Exception("找不到对应的优惠劵信息");
 			}
 			
 			for(int i=0;i<coupon.length;i++){
-				Coupon tmp_coupon = couponService.queryCouponByPK(coupon[i]);
-				
-				UserCoupon userCoupon = new UserCoupon();
-				BeanUtils.copyProperties(tmp_coupon, userCoupon);
-				
-				couponService.addUserCoupon(userCoupon, operator_id);
+				for(int k=0;k<Integer.valueOf(nums[i]);k++){
+					Coupon tmp_coupon = couponService.queryCouponByPK(coupon[i]);
+					
+					UserCoupon userCoupon = new UserCoupon();
+					BeanUtils.copyProperties(tmp_coupon, userCoupon);
+					userCoupon.setUser_coupon_id(UUIDGenerator.getUUID());
+					
+					couponService.addUserCoupon(userCoupon, operator_id);
+				}
 			}
 		}
 	}
