@@ -176,8 +176,8 @@ public class DriverServiceImpl implements DriverService {
     private SysUserAccount initWalletForDriver(){
         SysUserAccount sysUserAccount = new SysUserAccount();       //初始化钱袋信息
         sysUserAccount.setSysUserAccountId(UUIDGenerator.getUUID());
-        sysUserAccount.setAccountCode("DR"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
-//        sysUserAccount.setAccountCode("DR"+UUIDGenerator.getUUID());
+//        sysUserAccount.setAccountCode("DR"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+        sysUserAccount.setAccountCode("DR"+UUIDGenerator.getUUID());
         sysUserAccount.setAccountType(GlobalConstant.AccounType.DRIVER);
         sysUserAccount.setAccountBalance("0.0");
         sysUserAccount.setCreatedDate(new Date());
