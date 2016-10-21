@@ -141,7 +141,6 @@
 			user_coupon_id,
 			coupon_id,
 			coupon_no,
-			sys_driver_id,
 			isuse,
 			suc.user_coupon_id,
 			suc.coupon_id,
@@ -179,7 +178,6 @@
 			SELECT
 			user_coupon_id,
 			coupon_id,
-			sys_driver_id,
 			isuse,
 			suc.user_coupon_id,
 			suc.coupon_id,

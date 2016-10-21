@@ -9,36 +9,36 @@
 %>
 	<script src="<%=basePath %>/dist/js/coupon/addCouponGroup.js"></script>
 	<style type="text/css">
-	/*自定义宽度*/
-	.myOwnDdl{
-	display:inline-block;
-	width:100%;
-	}
+	<%--/*自定义宽度*/--%>
+	<%--.myOwnDdl{--%>
+	<%--display:inline-block;--%>
+	<%--width:100%;--%>
+	<%--}--%>
 
-	/* 实现宽度自定义 */
-	.myOwnDdl .btn-group{
-	width:100%;
-	}
-	.myOwnDdl .multiselect {
-	width:100%;
-	text-align:right;
-	margin-top:-5px;
-	}
-	.myOwnDdl ul {
-	width:100%;
-	}
-	.myOwnDdl .multiselect-selected-text {
-	position:absolute;
-	left:0;
-	right:25px;
-	text-align:left;
-	padding-left:20px;
-	}
+	<%--/* 实现宽度自定义 */--%>
+	<%--.myOwnDdl .btn-group{--%>
+	<%--width:100%;--%>
+	<%--}--%>
+	<%--.myOwnDdl .multiselect {--%>
+	<%--width:100%;--%>
+	<%--text-align:right;--%>
+	<%--margin-top:-5px;--%>
+	<%--}--%>
+	<%--.myOwnDdl ul {--%>
+	<%--width:100%;--%>
+	<%--}--%>
+	<%--.myOwnDdl .multiselect-selected-text {--%>
+	<%--position:absolute;--%>
+	<%--left:0;--%>
+	<%--right:25px;--%>
+	<%--text-align:left;--%>
+	<%--padding-left:20px;--%>
+	<%--}--%>
 
-	/*控制隔行换色*/
-	.myOwnDll .multiselect-container li.odd {
-	background: #eeeeee;
-	}
+	<%--/*控制隔行换色*/--%>
+	<%--.myOwnDll .multiselect-container li.odd {--%>
+	<%--background: #eeeeee;--%>
+	<%--}--%>
 	.input-group-btn  button.btn{
 		padding: 2px 10px;
 	}
@@ -59,20 +59,21 @@
 				<form class="form-horizontal" id="coupongroupform">
 					<jsp:include page="/common/page_param.jsp"></jsp:include>
 						<div class="form-group">
-							<label for="couponGroup_title"  class="col-sm-3 control-label no-padding-right">名称：</label>
+							<label for="coupongroup_title"  class="col-sm-3 control-label no-padding-right">名称：</label>
 							<div class="col-sm-4">
-								<input type="text" name="couponGroup_title" placeholder="输入优惠卷组名称" class="form-control" maxlength="20" required/>
+								<input type="text" name="coupongroup_title" placeholder="输入优惠卷组名称" class="form-control" maxlength="20" required/>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="couponGroup_detail" class="col-sm-3 control-label no-padding-right" >详情：</label>
+							<label for="coupongroup_detail" class="col-sm-3 control-label no-padding-right" >详情：</label>
 							<div class="col-sm-4">
-								<textarea type="text" name="couponGroup_detail" placeholder="输入优惠卷组详情" class="form-control" maxlength="150"></textarea>
+								<textarea type="text" name="coupongroup_detail" placeholder="输入优惠卷组详情" class="form-control" maxlength="150"></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="coupon_ids" class="col-sm-3 control-label no-padding-right">优惠卷：</label>
 							<div class="col-sm-4">
+								<input type="text" name="coupon_ids"/>
 								<%--<input type="hidden" name="coupon_nos"/>--%>
 								<%--<div class="myOwnDdl">--%>
 									<%--<select multiple="multiple" class="form-control" id="coupon_ids" name="coupon_ids">--%>
@@ -84,8 +85,8 @@
 											<thead>
 												<tr>
 													<th style="text-align:center"><input type="checkbox" id="checkboxAll" /></th>
-													<th id="coupon_no_order">优惠编号</th>
 													<th id="coupon_title_order">优惠名称</th>
+													<th id="coupon_kind_order">优惠类型</th>
 													<th style="text-align:center">数量</th>
 												</tr>
 											</thead>

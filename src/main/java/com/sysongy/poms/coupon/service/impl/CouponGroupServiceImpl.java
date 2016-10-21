@@ -68,8 +68,9 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 		String coupongroup_no = "";
 		CouponGroup aCouponGroup = new CouponGroup();
 		if (StringUtils.isEmpty(aCouponGroup.getOrderby())) {
-			aCouponGroup.setOrderby("create_time desc");
+			aCouponGroup.setOrderby("coupongroup_no desc");
 		}
+		PageHelper.startPage(aCouponGroup.getPageNum(), aCouponGroup.getPageSize(), aCouponGroup.getOrderby());
 		List<CouponGroup> couponGroupList = couponGroupMapper.queryForPage(aCouponGroup);
 		if (couponGroupList.size() == 0) {
 			coupongroup_no = "YHZ00001";
