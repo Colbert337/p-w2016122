@@ -2816,9 +2816,11 @@ public class MobileController {
 	@ResponseBody
 	public String alipayCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String orderId = "";
+		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
+			trade_no = request.getParameter("trade_no");//支付宝交易号
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2840,6 +2842,7 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
+				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -2866,9 +2869,11 @@ public class MobileController {
 	@ResponseBody
 	public String alipayConsum(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String orderId = "";
+		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
+			trade_no = request.getParameter("trade_no");//支付宝交易号
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2890,6 +2895,7 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
+				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
