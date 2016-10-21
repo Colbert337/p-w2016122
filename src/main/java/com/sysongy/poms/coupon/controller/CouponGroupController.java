@@ -77,7 +77,8 @@ public class CouponGroupController extends BaseContoller {
 	 * @throws Exception
 	 */
 	@RequestMapping("/saveCouponGroup")
-	public String addCouponGroup(ModelMap map, CouponGroup couponGroup, HttpServletRequest request) throws Exception {
+	public String addCouponGroup(ModelMap map, CouponGroup couponGroup,
+			@RequestParam("couponNums") String couponNums,	HttpServletRequest request) throws Exception {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/coupon/addCouponGroup";
 		String coupongroup_id = null;
@@ -88,25 +89,11 @@ public class CouponGroupController extends BaseContoller {
 			bean.setRetMsg("登录信息过期，请重新登录！");
 			return ret;
 		}
-		//优惠卷id
-		 String[] coupon_id =  request.getParameterValues("coupon_id");
-		 //优惠卷数量
-		 String[] couponNum =  request.getParameterValues("couponNum");
-		 //优惠卷编号
-		 String[] coupon_no =  request.getParameterValues("coupon_no");		 
+		//优惠卷个数
+		couponNums =  new String(couponNums.getBytes("iso8859-1"),"UTF-8");
 		 //发放类型
 		 String[] issued_type =  request.getParameterValues("issued_type");
-		 String coupon_ids="";
-		 if(coupon_id!=null&&couponNum!=null){
-			 for(int i=0;i<coupon_id.length;i++){
-				 if(couponNum.length>0){
-					 for(int j=0;j<Integer.parseInt(couponNum[i]);j++){
-						 coupon_ids+=coupon_id[i]+",";
-					 }
-				 }
-			 } 		 
-		 }
-		 couponGroup.setCoupon_ids(coupon_ids);
+		 couponGroup.setCoupon_nums(couponNums);
 		 //设置发放类型
 		 String issuedtype = "";
 		 if(issued_type!=null){
@@ -114,6 +101,7 @@ public class CouponGroupController extends BaseContoller {
 				 issuedtype+=issued_type[i]+",";
 			 } 	 
 		 }
+		 issuedtype.substring(0,issuedtype.length()-1);
 		 couponGroup.setIssued_type(issuedtype);
 		try {
 			if (null == couponGroup.getCoupongroup_id()) {

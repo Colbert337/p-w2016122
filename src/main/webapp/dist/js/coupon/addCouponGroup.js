@@ -1,10 +1,35 @@
+function Map() {
+	var struct = function(key, value) {
+		this.key = key;
+		this.value = value;
+	};
+	var put = function(key, value) {
+		for ( var i = 0; i < this.arr.length; i++) {
+			if (this.arr[i].key === key) {
+				this.arr[i].value = value;
+				return;
+			}
+		}
+		this.arr[this.arr.length] = new struct(key, value);
+	};
+	var get = function(key) {
+		for ( var i = 0; i < this.arr.length; i++) {
+			if (this.arr[i].key === key) {
+				return this.arr[i].value;
+			}
+		}
+		return null;
+	};
+	this.arr = new Array();
+	this.get = get;
+	this.put = put;
+}
 //定义全局变量
 var coupon_ids='';
-var coupon_nums='';
-var coupon_nos='';
-var coupon_titles='';
+var coupon_nums= new Map();
 
 $(function () {
+
 	//多选下拉框
 	// $.ajax({
 	// 	type: "GET",
@@ -44,24 +69,45 @@ $(function () {
 	// });
 	// //设置选中值后，需要刷新select控件
 	// $("#coupon_ids").multiselect('refresh');
-	var num;
-	var checknum;
+	var num=0;
+	var checknum=0;
 	$("input:checkbox[name='coupon_id']").each(function(){
 		num++;
 	});
 	$("input:checkbox[name='coupon_id']:checked").each(function(){
 		checknum++;
 	});
+
 	if(num==checknum){
 		$("#checkboxAll").attr("checked");
-	}else{
+		$("input[name='coupon_id']").each(function(){
+			if(coupon_ids.indexOf($(this).val())==-1){
+				coupon_ids += $(this).val()+",";
+			}
+		});
+		$("input[name='coupon_ids']").val(coupon_ids);
+	} else{
 		$("#checkboxAll").removeAttr("checked");
+		$("input[name='coupon_id']").each(function(){
+			coupon_ids= $("input[name='coupon_ids']").val().replace($(this).val()+',','');
+		});
+		$("input[name='coupon_ids']").val(coupon_ids);
 	}
 	$("#checkboxAll").click(function(){
 		if(this.checked){
-			$("input[name='coupon_id']").each(function(){this.checked=true;});
+			$("input[name='coupon_id']").each(function(){
+				this.checked=true;
+				if(coupon_ids.indexOf($(this).val())==-1){
+					coupon_ids += $(this).val()+",";
+				}
+			});
+			$("input[name='coupon_ids']").val(coupon_ids);
 		}else{
-			$("input[name='coupon_id']").each(function(){this.checked=false;});
+			$("input[name='coupon_id']").each(function(){
+				this.checked=false;
+				coupon_ids= $("input[name='coupon_ids']").val().replace($(this).val()+',','');
+			});
+			$("input[name='coupon_ids']").val(coupon_ids);
 		}
 	});
 
@@ -88,10 +134,10 @@ $(function () {
 				}
 				$("#coupon").append(
 					"<tr class='success'>"
-					+"<td style='text-align:center'><input type='checkbox' onclick='selectCoupon(this)' name='coupon_id' coupon_title='"+conpon.coupon_title+"' coupon_no='"+conpon.coupon_no+"' value='"+conpon.coupon_id+"' /><input type='hidden' name='coupon_no' value='"+conpon.coupon_no+"'/></td>"
+					+"<td style='text-align:center'><input type='checkbox' onclick='selectCoupon(this)' name='coupon_id' coupon_title='"+conpon.coupon_title+"' coupon_no='"+conpon.coupon_no+"' value='"+conpon.coupon_id+"' /></td>"
 					+"<td>"+conpon.coupon_title+"</td>"
 					+"<td>"+couponkind+"</td>"
-					+"<td style='text-align:center'><input name='min'  type='button' onclick='minCouponNum(this)' class='btn btn-default' value='-' disabled='disabled'/><input id='couponNum' name='couponNum' style='text-align: right;width: 30px;' class='form-control' type='text' value='1' disabled='disabled' maxlength='2' 　readOnly='true' /><input name='add' onclick='addCouponNum(this)'   type='button' class='btn btn-default' disabled='disabled' value='+'/></td>"
+					+"<td style='text-align:center'><input name='min'  type='button' onclick='minCouponNum(this)' class='btn btn-default' value='-' disabled='disabled'/><input id='"+conpon.coupon_id+"' name='couponNum' style='text-align: right;width: 30px;' class='form-control' type='text' value='0' disabled='disabled' maxlength='2' 　readOnly='true' /><input name='add' onclick='addCouponNum(this)'   type='button' class='btn btn-default' disabled='disabled' value='+'/></td>"
 					+"</tr>"
 				);
 			});
@@ -172,6 +218,11 @@ function minCouponNum(num){
 	if(parseInt(couponNum.val())<0){
 		couponNum.val(0);
 	}
+	$("input[name='coupon_id']").each(function(i,id){
+		if(couponNum.attr('id')==$(this).val()){
+			coupon_nums.put(couponNum.attr('id'),couponNum.val());
+		}
+	});
 }
 function addCouponNum(num){
 	var couponNum=$(num).parent().find('input[name=couponNum]');
@@ -179,6 +230,11 @@ function addCouponNum(num){
 	if(parseInt(couponNum.val())=='100'){
 		couponNum.val(99);
 	}
+	$("input[name='coupon_id']").each(function(i,id){
+		if(couponNum.attr('id')==$(this).val()){
+			coupon_nums.put(couponNum.attr('id'),couponNum.val());
+		}
+	});
 }
 
 //更改优惠卷发送类型
@@ -247,6 +303,13 @@ function changeissuedtype(){
 						}
 					}
 				},
+				issued_type: {
+					validators: {
+						notEmpty: {
+							message: '发放类型不能为空'
+						}
+					}
+				},
 			}
 	    });
 
@@ -307,6 +370,11 @@ function selectCoupon(check){
 			if (isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) <= 0){
 				$(this).val(1);
 			}
+			$("input[name='coupon_id']").each(function(i,id){
+				if(couponNum.attr('id')==$(this).val()){
+					coupon_nums.put(couponNum.attr('id'),couponNum.val());
+				}
+			});
 		});
 		//只能输入数字
 		$(couponNum).bind("keydown", function (e) {
@@ -316,36 +384,29 @@ function selectCoupon(check){
 			} else {
 				return false;
 			}
+			$("input[name='coupon_id']").each(function(i,id){
+				if(couponNum.attr('id')==$(this).val()){
+					coupon_nums.put(couponNum.attr('id'),couponNum.val());
+				}
+			});
 		});
-
-		//选择优惠卷
-		$("input[name='coupon_id']:checked").each(function(){
-			coupon_ids += $(this).val()+",";
-			coupon_nos += $(this).attr("coupon_no")+",";
-			coupon_titles += $(this).attr("coupon_title")+",";
-		});
+			//选择优惠卷
+			$("input[name='coupon_id']:checked").each(function(){
+				if(coupon_ids.indexOf($(this).val())==-1){
+					coupon_ids += $(this).val()+",";
+				}
+			});
 		$("input[name='coupon_ids']").val(coupon_ids);
-		$("input[name='coupon_nos']").val(coupon_nos);
-		$("input[name='coupon_titles']").val(coupon_titles);
 	}else{
 		min.prop("disabled","disabled");
 		add.prop("disabled","disabled");
 		couponNum.prop("disabled","disabled");
 		//取消优惠卷
-		$("input[name='coupon_id']:checked").each(function(){
-			coupon_ids += $(this).val()+",";
-			coupon_nos += $(this).attr("coupon_no")+",";
-			coupon_titles += $(this).attr("coupon_title")+",";
-		});
-		coupon_ids = coupon_ids.replace($(check).val()+",",'');
-		coupon_nos = coupon_nos.replace($(check).attr("coupon_no")+",",'');
-		coupon_titles = coupon_titles.replace($(check).attr("coupon_title")+",",'');
+		coupon_ids= $("input[name='coupon_ids']").val().replace($(check).val()+',','');
 		$("input[name='coupon_ids']").val(coupon_ids);
-		$("input[name='coupon_nos']").val(coupon_nos);
-		$("input[name='coupon_titles']").val(coupon_titles);
 	}
-	var num;
-	var checknum;
+	var num=0;
+	var checknum=0;
 	$("input:checkbox[name='coupon_id']").each(function(){
 		num++;
 	});
@@ -354,8 +415,18 @@ function selectCoupon(check){
 	});
 	if(num==checknum){
 		$("#checkboxAll").attr("checked");
-	}else{
+			$("input[name='coupon_id']").each(function(){
+				if(coupon_ids.indexOf($(this).val())==-1){
+					coupon_ids += $(this).val()+",";
+				}
+			});
+		$("input[name='coupon_ids']").val(coupon_ids);
+		} else{
 		$("#checkboxAll").removeAttr("checked");
+		$("input[name='coupon_id']").each(function(){
+			coupon_ids= $("input[name='coupon_ids']").val().replace($(this).val()+',','');
+		});
+		$("input[name='coupon_ids']").val(coupon_ids);
 	}
 }
 
@@ -366,20 +437,44 @@ function save(){
 	if(!$('#coupongroupform').data('bootstrapValidator').isValid()){
 		return ;
 	}
-
-	var options ={
-		url:'../web/couponGroup/saveCouponGroup',
-		type:'post',
-		dataType:'text',
-		success:function(data){
-			$("#main").html(data);
-			$("#modal-table").modal("show");
-		},error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+	var couponnums = new Array();
+	var couponid = $("input[name='coupon_ids']").val().substr(0,$("input[name='coupon_ids']").val().length-1);
+	$("input[name='coupon_ids']").val(couponid);
+	var couponids=couponid.split(',');
+	for(var i=0;i<couponids.length;i++){
+		couponnums.push(coupon_nums.get(couponids[i]));
+	}
+	var numStatus="false";
+	for(var j=0;j<couponnums.length;j++){
+		if(couponnums[j]==0){
+			alert(couponnums[j]);
+			numStatus = "true";
+			break;
 		}
 	}
+	if(couponids==null||couponids=='undefined'||couponids==''){
+		bootbox.alert("请选择优惠卷！");
+		return false;
+	}else if(numStatus=="true"){
+		bootbox.alert("请填写优惠卷数量！");
+		return false;
+	}else{
+		var options ={
+			url:'../web/couponGroup/saveCouponGroup',
+			type:'post',
+			data:{
+				couponNums:couponnums.join(",")
+			},
+			dataType:'text',
+			success:function(data){
+				$("#main").html(data);
+				$("#modal-table").modal("show");
+			},error:function(XMLHttpRequest, textStatus, errorThrown) {
 
-	$("#coupongroupform").ajaxSubmit(options);
+			}
+		}
+		$("#coupongroupform").ajaxSubmit(options);
+	}
 }
 
 function resetform(){
