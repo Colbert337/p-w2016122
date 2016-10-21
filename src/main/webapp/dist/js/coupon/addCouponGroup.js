@@ -1,3 +1,9 @@
+//定义全局变量
+var coupon_ids='';
+var coupon_nums='';
+var coupon_nos='';
+var coupon_titles='';
+
 $(function () {
 	//多选下拉框
 	// $.ajax({
@@ -38,7 +44,19 @@ $(function () {
 	// });
 	// //设置选中值后，需要刷新select控件
 	// $("#coupon_ids").multiselect('refresh');
-
+	var num;
+	var checknum;
+	$("input:checkbox[name='coupon_id']").each(function(){
+		num++;
+	});
+	$("input:checkbox[name='coupon_id']:checked").each(function(){
+		checknum++;
+	});
+	if(num==checknum){
+		$("#checkboxAll").attr("checked");
+	}else{
+		$("#checkboxAll").removeAttr("checked");
+	}
 	$("#checkboxAll").click(function(){
 		if(this.checked){
 			$("input[name='coupon_id']").each(function(){this.checked=true;});
@@ -47,19 +65,7 @@ $(function () {
 		}
 	});
 
-		//限制键盘只能按数字键、小键盘数字键、退格键
-		$("input[name='couponNum']").keydown(function (e) {
-			var code = parseInt(e.keyCode);
-			if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
-				return true;
-			} else {
-				return false;
-			}
-		});
-		//文本框输入事件,任何非正整数的输入都重置为1
-		$("input[name='couponNum']").bind("input propertychange", function () {
-			if (isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) <= 0) $(this).val(1);
-		});
+
 	var multipartOptions ={
 		type: "GET",
 		url: "../web/couponGroup/couponList",
@@ -74,12 +80,18 @@ $(function () {
 		success:function(data){
 			var conponList = JSON.parse(data);
 			$.each(conponList, function(i, conpon){
+				var couponkind;
+				if(conpon.coupon_kind=='1') {
+					couponkind = '平台优惠卷';
+				}else if(conpon.coupon_kind=='2'){
+					couponkind='气站优惠卷，优惠气站：'+conpon.gas_station_name;
+				}
 				$("#coupon").append(
 					"<tr class='success'>"
-					+"<td style='text-align:center'><input type='checkbox' onclick='selectCoupon()' name='coupon_id' value='"+conpon.coupon_id+"' /></td>"
-					+"<td>"+conpon.coupon_no+"</td>"
+					+"<td style='text-align:center'><input type='checkbox' onclick='selectCoupon(this)' name='coupon_id' coupon_title='"+conpon.coupon_title+"' coupon_no='"+conpon.coupon_no+"' value='"+conpon.coupon_id+"' /><input type='hidden' name='coupon_no' value='"+conpon.coupon_no+"'/></td>"
 					+"<td>"+conpon.coupon_title+"</td>"
-					+"<td style='text-align:center'><input id='min'  type='button' onclick='minCouponNum(this)' class='btn btn-default' value='-'/><input id='couponNum' name='couponNum' style='text-align: right;width: 30px;' class='form-control' placeholder='2' type='text' value='0' 　readOnly='true' /><input id='add' onclick='addCouponNum(this)'   type='button' class='btn btn-default' value='+'/></td>"
+					+"<td>"+couponkind+"</td>"
+					+"<td style='text-align:center'><input name='min'  type='button' onclick='minCouponNum(this)' class='btn btn-default' value='-' disabled='disabled'/><input id='couponNum' name='couponNum' style='text-align: right;width: 30px;' class='form-control' type='text' value='1' disabled='disabled' maxlength='2' 　readOnly='true' /><input name='add' onclick='addCouponNum(this)'   type='button' class='btn btn-default' disabled='disabled' value='+'/></td>"
 					+"</tr>"
 				);
 			});
@@ -164,6 +176,9 @@ function minCouponNum(num){
 function addCouponNum(num){
 	var couponNum=$(num).parent().find('input[name=couponNum]');
 	couponNum.val(parseInt(couponNum.val())+1);
+	if(parseInt(couponNum.val())=='100'){
+		couponNum.val(99);
+	}
 }
 
 //更改优惠卷发送类型
@@ -211,7 +226,7 @@ function changeissuedtype(){
 	            validating: 'glyphicon glyphicon-refresh'
 			},
 	        fields: {
-				couponGroup_title: {
+				coupongroup_title: {
 					validators: {
 						notEmpty: {
 							message: '优惠卷组名称不能为空'
@@ -234,39 +249,6 @@ function changeissuedtype(){
 				},
 			}
 	    });
-
-	function save(){
-		/*手动验证表单，当是普通按钮时。*/
-		$('#coupongroupform').data('bootstrapValidator').validate();
-		if(!$('#coupongroupform').data('bootstrapValidator').isValid()){
-			return ;
-		}
-		
-		var options ={   
-	            url:'../web/couponGroup/saveCouponGroup',
-	            type:'post',                    
-	            dataType:'text',
-	            success:function(data){
-	            	$("#main").html(data);
-	            	$("#modal-table").modal("show");
-	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-	            	
-	 	       }
-		}
-					
-		$("#coupongroupform").ajaxSubmit(options);
-	}
-	
-	function resetform(){
-		loadPage('#main', '../webpage/poms/coupon/addCouponGroup.jsp');
-	}
-
-	function returnpage(){
-		loadPage('#main', '../web/couponGroup/couponGroupList');
-	}
-
-
-
 
 
 //动态初始化详细列表
@@ -310,4 +292,100 @@ function initTable() {
 			"aaSorting": [[1, "asc"]],
 			"oLanguage" :lang, //提示信息
 		} );
+}
+//选择优惠卷复选框
+function selectCoupon(check){
+	var couponNum = $(check).parent().next().next().next().find('input[name=couponNum]');
+	var min = $(check).parent().next().next().next().find('input[name=min]');
+	var add = $(check).parent().next().next().next().find('input[name=add]');
+	if($(check).is(':checked')){
+		min.removeAttr("disabled");
+		add.removeAttr("disabled");
+		couponNum.removeAttr("disabled");
+		//文本框输入事件,任何非正整数的输入都重置为1
+		$(couponNum).bind("input propertychange", function () {
+			if (isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) <= 0){
+				$(this).val(1);
+			}
+		});
+		//只能输入数字
+		$(couponNum).bind("keydown", function (e) {
+			var code = parseInt(e.keyCode);
+			if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
+				return true;
+			} else {
+				return false;
+			}
+		});
+
+		//选择优惠卷
+		$("input[name='coupon_id']:checked").each(function(){
+			coupon_ids += $(this).val()+",";
+			coupon_nos += $(this).attr("coupon_no")+",";
+			coupon_titles += $(this).attr("coupon_title")+",";
+		});
+		$("input[name='coupon_ids']").val(coupon_ids);
+		$("input[name='coupon_nos']").val(coupon_nos);
+		$("input[name='coupon_titles']").val(coupon_titles);
+	}else{
+		min.prop("disabled","disabled");
+		add.prop("disabled","disabled");
+		couponNum.prop("disabled","disabled");
+		//取消优惠卷
+		$("input[name='coupon_id']:checked").each(function(){
+			coupon_ids += $(this).val()+",";
+			coupon_nos += $(this).attr("coupon_no")+",";
+			coupon_titles += $(this).attr("coupon_title")+",";
+		});
+		coupon_ids = coupon_ids.replace($(check).val()+",",'');
+		coupon_nos = coupon_nos.replace($(check).attr("coupon_no")+",",'');
+		coupon_titles = coupon_titles.replace($(check).attr("coupon_title")+",",'');
+		$("input[name='coupon_ids']").val(coupon_ids);
+		$("input[name='coupon_nos']").val(coupon_nos);
+		$("input[name='coupon_titles']").val(coupon_titles);
+	}
+	var num;
+	var checknum;
+	$("input:checkbox[name='coupon_id']").each(function(){
+		num++;
+	});
+	$("input:checkbox[name='coupon_id']:checked").each(function(){
+		checknum++;
+	});
+	if(num==checknum){
+		$("#checkboxAll").attr("checked");
+	}else{
+		$("#checkboxAll").removeAttr("checked");
+	}
+}
+
+
+function save(){
+	/*手动验证表单，当是普通按钮时。*/
+	$('#coupongroupform').data('bootstrapValidator').validate();
+	if(!$('#coupongroupform').data('bootstrapValidator').isValid()){
+		return ;
+	}
+
+	var options ={
+		url:'../web/couponGroup/saveCouponGroup',
+		type:'post',
+		dataType:'text',
+		success:function(data){
+			$("#main").html(data);
+			$("#modal-table").modal("show");
+		},error:function(XMLHttpRequest, textStatus, errorThrown) {
+
+		}
+	}
+
+	$("#coupongroupform").ajaxSubmit(options);
+}
+
+function resetform(){
+	loadPage('#main', '../webpage/poms/coupon/addCouponGroup.jsp');
+}
+
+function returnpage(){
+	loadPage('#main', '../web/couponGroup/couponGroupList');
 }
