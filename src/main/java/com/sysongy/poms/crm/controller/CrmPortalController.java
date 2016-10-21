@@ -511,7 +511,7 @@ public class CrmPortalController {
             SysDriver driver = new SysDriver();
             driver.setUserName(phone);
             driver.setMobilePhone(phone);
-            String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
+            String veCode = (String) redisClientImpl.getFromCache("msg_"+phone);
             if(veCode != null && !"".equals(veCode)) {
             	if(vcode.equals(veCode)){
             		List<SysDriver> driverlist = driverService.queryeSingleList(driver);
