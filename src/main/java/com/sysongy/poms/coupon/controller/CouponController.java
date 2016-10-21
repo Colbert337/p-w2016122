@@ -323,11 +323,11 @@ public class CouponController extends BaseContoller {
 					if (sheet.getRow(i)[1] != null && !"".equals(sheet.getRow(i)[1])) {
 						UserCoupon userCoupon = new UserCoupon();
 						userCoupon.setCoupon_id(coupon_id);
-						Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
-						Matcher m = p.matcher(sheet.getRow(i)[1].getContents());
+//						Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
+//						Matcher m = p.matcher(sheet.getRow(i)[1].getContents());
 						SysDriver sysDriver = new SysDriver();
 						sysDriver.setMobilePhone(sheet.getRow(i)[1].getContents());
-						sysDriver.setNotin_checked_status("0");
+//						sysDriver.setNotin_checked_status("0");
 						List<SysDriver> driverInfo = driverService.queryeSingleList(sysDriver);
 						if (sheet.getRow(i)[1] == null
 								|| "".equals(sheet.getCell(1, i).getContents().replace(" ", ""))) {
@@ -335,11 +335,11 @@ public class CouponController extends BaseContoller {
 							err++;
 							continue;
 						}
-						if (!m.matches()) {
-							message += "第" + (i + 1) + "行电话号码格式不正确！\n";
-							err++;
-							continue;
-						}
+//						if (!m.matches()) {
+//							message += "第" + (i + 1) + "行电话号码格式不正确！\n";
+//							err++;
+//							continue;
+//						}
 						if (driverInfo.size() == 0) {
 							message += "第" + (i + 1) + "行电话号码在系统中不存在！\n";
 							err++;
