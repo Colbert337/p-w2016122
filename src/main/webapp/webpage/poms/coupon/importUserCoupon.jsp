@@ -109,7 +109,7 @@
 						<div class="clearfix form-actions">
 							<div class="col-md-offset-3 col-md-9">
 								<button class="btn btn-info" id="importuserConpon"  type="button" onclick="saveUserCoupon();">
-									<i class="ace-icon fa fa-check bigger-110">导入</i>
+									<i class="ace-icon fa fa-check bigger-110">保存</i>
 								</button>
 								&nbsp; &nbsp; &nbsp;
 								<button class="btn btn-success" type="button" onclick="cancel();">

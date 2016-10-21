@@ -88,6 +88,33 @@ public class CouponGroupController extends BaseContoller {
 			bean.setRetMsg("登录信息过期，请重新登录！");
 			return ret;
 		}
+		//优惠卷id
+		 String[] coupon_id =  request.getParameterValues("coupon_id");
+		 //优惠卷数量
+		 String[] couponNum =  request.getParameterValues("couponNum");
+		 //优惠卷编号
+		 String[] coupon_no =  request.getParameterValues("coupon_no");		 
+		 //发放类型
+		 String[] issued_type =  request.getParameterValues("issued_type");
+		 String coupon_ids="";
+		 if(coupon_id!=null&&couponNum!=null){
+			 for(int i=0;i<coupon_id.length;i++){
+				 if(couponNum.length>0){
+					 for(int j=0;j<Integer.parseInt(couponNum[i]);j++){
+						 coupon_ids+=coupon_id[i]+",";
+					 }
+				 }
+			 } 		 
+		 }
+		 couponGroup.setCoupon_ids(coupon_ids);
+		 //设置发放类型
+		 String issuedtype = "";
+		 if(issued_type!=null){
+			 for(int i=0;i<issued_type.length;i++){
+				 issuedtype+=issued_type[i]+",";
+			 } 	 
+		 }
+		 couponGroup.setIssued_type(issuedtype);
 		try {
 			if (null == couponGroup.getCoupongroup_id()) {
 				coupongroup_id = service.addCouponGroup(couponGroup, currUser.getUserId());
