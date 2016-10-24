@@ -60,18 +60,6 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 	public String modifyCouponGroup(CouponGroup couponGroup, String userID) throws Exception {
 		couponGroup.setLastmodify_person_id(userID);
 		couponGroup.setLastmodify_time(new Date());
-		if("".equals(couponGroup.getStart_moneyrated_time())){
-			couponGroup.setStart_moneyrated_time(null);
-		}
-		if("".equals(couponGroup.getEnd_moneyrated_time())){
-			couponGroup.setEnd_moneyrated_time(null);
-		}
-		if("".equals(couponGroup.getStart_timesrated_time())){
-			couponGroup.setStart_timesrated_time(null);
-		}
-		if("".equals(couponGroup.getEnd_timesrated_time())){
-			couponGroup.setEnd_timesrated_time(null);
-		}
 		couponGroupMapper.updateByPrimaryKey(couponGroup);
 		return couponGroup.getCoupongroup_id();
 	}
@@ -99,18 +87,6 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			coupongroup_no = "YHZ" + StringUtils.leftPad(tmp.toString(), 5, "0");
 		}
 		couponGroup.setCoupongroup_no(coupongroup_no);
-		if("".equals(couponGroup.getStart_moneyrated_time())){
-			couponGroup.setStart_moneyrated_time(null);
-		}
-		if("".equals(couponGroup.getEnd_moneyrated_time())){
-			couponGroup.setEnd_moneyrated_time(null);
-		}
-		if("".equals(couponGroup.getStart_timesrated_time())){
-			couponGroup.setStart_timesrated_time(null);
-		}
-		if("".equals(couponGroup.getEnd_timesrated_time())){
-			couponGroup.setEnd_timesrated_time(null);
-		}
 		couponGroupMapper.insert(couponGroup);
 		return couponGroup.getCoupongroup_id();
 	}

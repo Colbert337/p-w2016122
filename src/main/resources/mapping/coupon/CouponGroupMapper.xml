@@ -9,12 +9,6 @@
 		<result column="coupon_ids" property="coupon_ids" jdbcType="VARCHAR" />
 		<result column="coupon_nums" property="coupon_nums" jdbcType="VARCHAR" />
 		<result column="issued_type" property="issued_type" jdbcType="VARCHAR" />
-		<result column="consume_money" property="consume_money" jdbcType="VARCHAR" />
-		<result column="consume_times" property="consume_times" jdbcType="VARCHAR" />
-		<result column="start_moneyrated_time" property="start_moneyrated_time" jdbcType="TIMESTAMP" />
-		<result column="end_moneyrated_time" property="end_moneyrated_time" jdbcType="TIMESTAMP" />
-		<result column="start_timesrated_time" property="start_timesrated_time" jdbcType="TIMESTAMP" />
-		<result column="end_timesrated_time" property="end_timesrated_time" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<sql id="Base_Column_List">
 			coupongroup_id,
@@ -23,19 +17,7 @@
 			coupongroup_detail,
 			coupon_ids,
 			coupon_nums,
-			issued_type,
-			consume_money,
-			consume_times,
-			DATE_FORMAT(
-				start_moneyrated_time,
-				'%Y-%m-%d'
-			) start_moneyrated_time,
-			DATE_FORMAT(end_moneyrated_time, '%Y-%m-%d') end_moneyrated_time,
-			DATE_FORMAT(
-				start_timesrated_time,
-				'%Y-%m-%d'
-			) start_timesrated_time,
-			DATE_FORMAT(end_timesrated_time, '%Y-%m-%d') end_timesrated_time
+			issued_type
 	</sql>
 	<select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -69,13 +51,10 @@
 	</delete>
 	<insert id="insert" parameterType="com.sysongy.poms.coupon.model.CouponGroup">
 		insert into `sys_coupon_group` (coupongroup_id,coupongroup_no, coupongroup_title, coupongroup_detail, coupon_ids, coupon_nums,
-		issued_type,start_moneyrated_time, end_moneyrated_time,start_timesrated_time,end_timesrated_time,consume_money,consume_times,
-		create_person_id,create_time,lastmodify_person_id,lastmodify_time
+		issued_type,create_person_id,create_time,lastmodify_person_id,lastmodify_time
 		)
 		values (#{coupongroup_id,jdbcType=VARCHAR}, #{coupongroup_no,jdbcType=VARCHAR}, #{coupongroup_title,jdbcType=VARCHAR},#{coupongroup_detail,jdbcType=VARCHAR},
-		#{coupon_ids,jdbcType=VARCHAR},#{coupon_nums,jdbcType=VARCHAR}, #{issued_type,jdbcType=VARCHAR}, #{start_moneyrated_time,jdbcType=TIMESTAMP},
-		 #{end_moneyrated_time,jdbcType=TIMESTAMP}, #{start_timesrated_time,jdbcType=TIMESTAMP}, #{end_timesrated_time,jdbcType=TIMESTAMP},#{consume_money,jdbcType=VARCHAR},#{consume_times,jdbcType=VARCHAR},
-		#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
+		#{coupon_ids,jdbcType=VARCHAR},#{coupon_nums,jdbcType=VARCHAR}, #{issued_type,jdbcType=VARCHAR},#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 	<update id="updateByPrimaryKey" parameterType="com.sysongy.poms.coupon.model.CouponGroup">
@@ -85,12 +64,6 @@
 		coupon_ids = #{coupon_ids,jdbcType=VARCHAR},
 		coupon_nums = #{coupon_nums,jdbcType=VARCHAR},
 		issued_type = #{issued_type,jdbcType=VARCHAR},
-		start_moneyrated_time=#{start_moneyrated_time,jdbcType=TIMESTAMP},
-		end_moneyrated_time=#{end_moneyrated_time,jdbcType=TIMESTAMP},
-		start_timesrated_time=#{start_timesrated_time,jdbcType=TIMESTAMP},
-		end_timesrated_time=#{end_timesrated_time,jdbcType=TIMESTAMP},
-		consume_money = #{consume_money,jdbcType=VARCHAR},
-		consume_times = #{consume_times,jdbcType=VARCHAR},
 		lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
 		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
 		where coupongroup_id = #{coupongroup_id,jdbcType=VARCHAR}
