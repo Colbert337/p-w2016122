@@ -173,64 +173,7 @@ $(function () {
 	$("#coupongroupform").ajaxSubmit(multipartOptions);
 });
 
-$('#start_moneyrated_time').datepicker({
-	autoclose: true,
-	todayHighlight: true,
-	language: "cn",
-	weekStart: 1,
-	format: "yyyy/mm/dd",
-	pickerPosition: "bottom-left"
-}).on("click",function(e){
-	$("#start_moneyrated_time").datepicker("setEndDate", $("#end_moneyrated_time").val());
-}).on('hide',function(e) {
-	$('#coupongroupform').data('bootstrapValidator')
-		.updateStatus('start_moneyrated_time', 'NOT_VALIDATED',null)
-		.validateField('start_moneyrated_time');
-});
 
-$('#end_moneyrated_time').datepicker({
-	autoclose: true,
-	todayHighlight: true,
-	language: "cn",
-	weekStart: 1,
-	format: "yyyy/mm/dd",
-	pickerPosition: "bottom-left"
-}).on("click", function (e) {
-	$("#end_moneyrated_time").datepicker("setStartDate", $("#start_moneyrated_time").val());
-}).on('hide',function(e) {
-	$('#coupongroupform').data('bootstrapValidator')
-		.updateStatus('end_moneyrated_time', 'NOT_VALIDATED',null)
-		.validateField('end_moneyrated_time');
-});
-$('#start_timesrated_time').datepicker({
-	autoclose: true,
-	todayHighlight: true,
-	language: "cn",
-	weekStart: 1,
-	format: "yyyy/mm/dd",
-	pickerPosition: "bottom-left"
-}).on("click",function(e){
-	$("#start_timesrated_time").datepicker("setEndDate", $("#end_timesrated_time").val());
-}).on('hide',function(e) {
-	$('#coupongroupform').data('bootstrapValidator')
-		.updateStatus('start_timesrated_time', 'NOT_VALIDATED',null)
-		.validateField('start_timesrated_time');
-});
-
-$('#end_timesrated_time').datepicker({
-	autoclose: true,
-	todayHighlight: true,
-	language: "cn",
-	weekStart: 1,
-	format: "yyyy/mm/dd",
-	pickerPosition: "bottom-left"
-}).on("click", function (e) {
-	$("#end_timesrated_time").datepicker("setStartDate", $("#start_timesrated_time").val());
-}).on('hide',function(e) {
-	$('#coupongroupform').data('bootstrapValidator')
-		.updateStatus('end_timesrated_time', 'NOT_VALIDATED',null)
-		.validateField('end_timesrated_time');
-});
 
 
 function minCouponNum(num){
@@ -250,42 +193,6 @@ function addCouponNum(num){
 	coupon_nums.put(couponNum.attr('id'),couponNum.val());
 }
 
-//更改优惠卷发送类型
-function changeissuedtype(){
-	var checkedids;
-	$("input[name='issued_type']:checked").each(function () {
-		checkedids+=$(this).val()+",";
-	});
-	if(typeof(checkedids) == "undefined"||!checkedids){
-		$("#ratedtime").hide();
-		$("#ratedmoney").hide();
-		$("#money").hide();
-		$("#times").hide();
-	}else{
-		//选择非固定优惠卷
-		if(checkedids.indexOf("5")>=0&&checkedids.indexOf("6")<0){
-			$("#ratedtime").show();
-			$("#times").show();
-			$("#ratedmoney").hide();
-			$("#money").hide();
-		}else if(checkedids.indexOf("6")>=0&&checkedids.indexOf("5")<0){
-			$("#ratedmoney").show();
-			$("#money").show();
-			$("#ratedtime").hide();
-			$("#times").hide();
-		} else if(checkedids.indexOf("5")>=0&&checkedids.indexOf("6")>=0){
-			$("#ratedtime").show();
-			$("#ratedmoney").show();
-			$("#money").show();
-			$("#times").show();
-		}else{
-			$("#ratedtime").hide();
-			$("#ratedmoney").hide();
-			$("#money").hide();
-			$("#times").hide();
-		}
-	}
-}
 //bootstrap验证控件
 	    $('#coupongroupform').bootstrapValidator({
 	        message: 'This value is not valid',
@@ -301,28 +208,7 @@ function changeissuedtype(){
 							message: '优惠卷组名称不能为空'
 						}
 					}
-				},
-				start_coupon_time: {
-					validators: {
-						notEmpty: {
-							message: '优惠开始时间不能为空'
-						}
-					}
-				},
-				end_coupon_time: {
-					validators: {
-						notEmpty: {
-							message: '优惠结束时间不能为空'
-						}
-					}
-				},
-				issued_type: {
-					validators: {
-						notEmpty: {
-							message: '发放类型不能为空'
-						}
-					}
-				},
+				}
 			}
 	    });
 
