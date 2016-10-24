@@ -713,6 +713,7 @@ public class CRMCashServiceContoller {
         }
         SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(originalOrder,
                 user.getSysUserId(), record.getDischarge_reason());
+        hedgeRecord.setPreferential_cash(originalOrder.getPreferential_cash());// add by wdq 20161024 给冲红订单添加优惠金额属性
 
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
