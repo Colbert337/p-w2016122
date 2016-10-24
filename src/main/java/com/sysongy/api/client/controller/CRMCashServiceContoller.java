@@ -274,6 +274,9 @@ public class CRMCashServiceContoller {
                 record.setCash(discountSum);//优惠后金额
                 BigDecimal discountAmount = BigDecimalArith.sub(record.getShould_payment(),discountSum);
                 record.setPreferential_cash(discountAmount);//优惠金额
+            }else{
+                record.setCash(record.getShould_payment());//优惠后金额
+                record.setPreferential_cash(BigDecimal.ZERO);//优惠金额
             }
 
             //根据订单金额和会员信息，查询优惠券列表
