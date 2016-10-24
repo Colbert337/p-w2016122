@@ -4146,11 +4146,14 @@ public class MobileController {
 				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
 					for (Map<String, Object> map : gsGasPriceList) {
 						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("preferential_type", map.get("preferential_type").toString().equals("0")?"立减金额":"固定折扣");
-						reChargeMap.put("gasName", map.get("gas_name"));
+						reChargeMap.put("preferential_type", map.get("preferential_type"));
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("CARDTYPE",map.get("gas_name").toString());
+						String gasName = usysparam.getMname();
+						reChargeMap.put("gasName", gasName);
 						reChargeMap.put("gasPrice", map.get("product_price"));
 						reChargeMap.put("priceUnit", map.get("unit"));
 						reChargeMap.put("discountAmount",map.get("minus_money")==null?map.get("fixed_discount"):map.get("minus_money"));
+						reChargeMap.put("remark",map.get("remark"));
 						reChargeList.add(reChargeMap);
 					}
 				}else{
@@ -4621,10 +4624,8 @@ public class MobileController {
 	public void getQR() {
 		try {
 			List<SysDriver> list = driverService.queryAll();
-			System.out.println(list.size());
 			// 图片路径
 			String rootPath = (String) prop.get("images_upload_path") + "/driver/";
-			System.out.println(rootPath);
 			File file = new File(rootPath);
 			// 如果根文件夹不存在则创建
 			if (!file.exists() && !file.isDirectory()) {
@@ -4645,13 +4646,6 @@ public class MobileController {
 				String encoderContent = null;
 				if (list.get(i).getFullName() != null && !"".equals(list.get(i).getFullName())) {
 					String name = list.get(i).getFullName();
-					// name = new
-					// String(list.get(i).getFullName().getBytes("GB2312"),"UTF-8");
-					// name = new
-					// String(list.get(i).getFullName().getBytes("UTF-8"),"GB2312");
-					// encoderContent=list.get(i).getUserName()+"_"+ new
-					// String(new
-					// String(list.get(i).getFullName().getBytes("UTF-8"),"GBK").getBytes("GBK"),"UTF-8");
 					encoderContent = list.get(i).getUserName() + "_" + name;
 				} else {
 					encoderContent = list.get(i).getUserName();
