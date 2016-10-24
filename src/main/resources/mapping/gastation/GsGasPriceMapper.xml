@@ -302,7 +302,8 @@ SET
 		gs_gas_price.preferential_type,
 		gs_gas_price.fixed_discount,
 		gs_gas_price.minus_money,
-		product_price.product_price
+		product_price.product_price,
+		gs_gas_price.remark
 	FROM
 		gs_gas_price
 	LEFT JOIN product_price ON gs_gas_price.price_id = product_price.id
