@@ -4223,11 +4223,11 @@ public class MobileController {
 				String driverId = mainObj.optString("token");
 				Coupon coupon = new Coupon();
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
+				String useCondition =null;
 				//当加注站ID和消费金额不为空时，返回当前用户可用优惠券列表，按金额倒叙排列，分页。
 				if(gastationId!=null&&!"".endsWith(gastationId)&&amount!=null&&!"".equals(amount)){
 					coupon.setSys_gas_station_id(gastationId);
 					coupon.setDriverId(driverId);
-					String useCondition =null;
 					PageInfo<Coupon> pageInfo = couponService.queryCouponOrderByAmount(coupon);
 					if(pageInfo.getList()!=null&&pageInfo.getList().size()>0){
 						for (Coupon data : pageInfo.getList()) {
@@ -4257,7 +4257,12 @@ public class MobileController {
 							reChargeMap.put("couponId",data.getCoupon_id());
 							reChargeMap.put("couponKind", data.getCoupon_kind());
 							reChargeMap.put("couponType", data.getCoupon_type());
-							reChargeMap.put("useCondition", data.getUse_condition());
+							reChargeMap.put("title",data.getCoupon_title());
+							useCondition = data.getUse_condition();
+							reChargeMap.put("useCondition", useCondition);
+							if(useCondition.equals("1")){
+								reChargeMap.put("limit_money",data.getLimit_money());
+							}
 							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
 							reChargeMap.put("startTime",data.getStart_coupon_time());
 							reChargeMap.put("endTime",data.getEnd_coupon_time());
