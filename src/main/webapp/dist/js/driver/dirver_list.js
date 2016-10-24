@@ -275,7 +275,19 @@ $('#driverForm').bootstrapValidator({
                 stringLength: {
                     min: 6,
                     max: 6,
-                    message: '支付密码不能小于6个数字，不能大于10个字符'
+                    message: '支付密码不能小于6个数字'
+                },
+                callback: {
+                    message: '支付密码不一致',
+                    callback: function (value, validator, $field) {
+                        if($("[name=rePassword]").val()!=""){
+                        	if($("[name=rePassword]").val() != value){
+                                return false;
+                            }
+                            return true;
+                        }
+                        return true;
+                    }
                 }
             }
         },
@@ -291,7 +303,7 @@ $('#driverForm').bootstrapValidator({
                 stringLength: {
                     min: 6,
                     max: 6,
-                    message: '支付密码不能小于6个数字，不能大于10个字符'
+                    message: '支付密码不能小于6个数字'
                 },
                 callback: {
                     message: '支付密码不一致',

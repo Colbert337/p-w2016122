@@ -99,4 +99,6 @@ public interface DriverService {
 	public SysDriver queryByDeviceToken(String deviceToken) throws Exception;
 	
 	public List<SysDriver> queryAll() throws Exception;
+
+	public void cashBackForRegister(SysDriver queryDriver, String regisCompany) throws Exception;
 }

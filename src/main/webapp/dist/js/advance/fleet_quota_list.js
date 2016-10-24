@@ -458,6 +458,23 @@ $('#passwordForm').bootstrapValidator({
                 regexp: {
                     regexp: '^[0-9a-zA-Z]+$',
                     message: '密码只能包含数字和字母'
+                },
+                stringLength: {
+					min: 6,
+					max:6,
+					message: '密码长度必须为6位'
+				},
+                callback: {
+                    message: '支付密码不一致',
+                    callback: function (value, validator, $field) {
+                        if($("[name=rePassword]").val()!=""){
+                        	if($("[name=rePassword]").val() != value){
+                                return false;
+                            }
+                            return true;
+                        }
+                        return true;
+                    }
                 }
             }
         },
@@ -470,6 +487,11 @@ $('#passwordForm').bootstrapValidator({
                     regexp: '^[0-9a-zA-Z]+$',
                     message: '密码只能包含数字和字母'
                 },
+                stringLength: {
+					min: 6,
+					max:6,
+					message: '密码长度必须为6位'
+				},
                 callback: {
                     message: '支付密码不一致',
                     callback: function (value, validator, $field) {

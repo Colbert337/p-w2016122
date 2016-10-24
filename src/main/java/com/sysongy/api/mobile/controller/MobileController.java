@@ -211,6 +211,10 @@ public class MobileController {
 					driver.setPassword(mainObj.optString("password"));
 					queryDriver = driverService.queryByUserNameAndPassword(driver);
 					if (queryDriver != null) {
+						String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
+						if(invitationCode==null){
+							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany());
+						}
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", queryDriver.getSysDriverId());
 						result.setData(tokenMap);
@@ -229,6 +233,10 @@ public class MobileController {
 							result.setStatus(MobileReturn.STATUS_FAIL);
 							result.setMsg("用户名或密码错误！");
 						} else {
+							String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
+							if(invitationCode==null){
+								driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany());
+							}
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token", queryDriver.getSysDriverId());
 							result.setData(tokenMap);
@@ -4210,10 +4218,7 @@ public class MobileController {
 							Map<String, Object> reChargeMap = new HashMap<>();
 							reChargeMap.put("couponId",data.getCoupon_id());
 							reChargeMap.put("couponKind", data.getCoupon_kind());
-							//reChargeMap.put("couponType", data.getCoupon_type());
-							if(data.getCoupon_kind().equals("2")){
-								reChargeMap.put("gasStationName", data.getGas_station_name());
-							}
+							reChargeMap.put("couponType", data.getCoupon_type());
 							reChargeMap.put("useCondition", data.getUse_condition());
 							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
 							reChargeMap.put("startTime",data.getStart_coupon_time());
@@ -4230,7 +4235,7 @@ public class MobileController {
 							Map<String, Object> reChargeMap = new HashMap<>();
 							reChargeMap.put("couponId",data.getCoupon_id());
 							reChargeMap.put("couponKind", data.getCoupon_kind());
-							//reChargeMap.put("couponType", data.getCoupon_type());
+							reChargeMap.put("couponType", data.getCoupon_type());
 							reChargeMap.put("useCondition", data.getUse_condition());
 							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
 							reChargeMap.put("startTime",data.getStart_coupon_time());

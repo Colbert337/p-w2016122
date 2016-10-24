@@ -258,7 +258,9 @@ public class CRMCashServiceContoller {
                         }else if(preferentialType.equals("1")){//折扣
                             BigDecimal sumPrice = sysOrderGoods.getSumPrice();
                             float fixedDiscount = gsGasPrice.getFixed_discount();//获取折扣
-                            discountSumPrice = BigDecimalArith.mul(sumPrice,new BigDecimal(fixedDiscount+""));
+                            if(fixedDiscount > 0){//折扣为零时，不做折扣处理
+                                discountSumPrice = BigDecimalArith.mul(sumPrice,new BigDecimal(fixedDiscount+""));
+                            }
                             sysOrderGoods.setDiscountSumPrice(discountSumPrice);
                         }
                         discountSum = BigDecimalArith.add(discountSum,discountSumPrice);
@@ -740,6 +742,7 @@ public class CRMCashServiceContoller {
         }
         SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(originalOrder,
                 user.getSysUserId(), record.getDischarge_reason());
+        hedgeRecord.setPreferential_cash(originalOrder.getPreferential_cash());// add by wdq 20161024 给冲红订单添加优惠金额属性
 
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
@@ -763,6 +766,8 @@ public class CRMCashServiceContoller {
         }
 
         Map<String, Object> attributes = new HashMap<String, Object>();
+        hedgeRecord.setShould_payment(originalOrder.getShould_payment());
+        hedgeRecord.setCoupon_cash(originalOrder.getCoupon_cash());
         attributes.put("sysOrder", hedgeRecord);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
@@ -823,7 +828,7 @@ public class CRMCashServiceContoller {
             ajaxJson.setMsg("气站ID为空！！！" );
             return ajaxJson;
         }
-
+        sysOrderDeal = orderDealService.selectByPrimaryKey(sysOrderDeal.getDealId());
         if(StringUtils.isEmpty(sysOrderDeal.getIsCharge())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("报表类型为空！！！" );

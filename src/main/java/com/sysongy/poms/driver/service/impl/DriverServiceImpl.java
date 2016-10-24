@@ -79,10 +79,15 @@ public class DriverServiceImpl implements DriverService {
     
     @Autowired
     private CouponService couponService;
-    
+
     @Autowired
     private CouponGroupService couponGroupService;
-    
+
+    @Override
+    public void cashBackForRegister(SysDriver queryDriver, String regisCompany) throws Exception {
+
+    }
+
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
         PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
@@ -149,12 +154,12 @@ public class DriverServiceImpl implements DriverService {
             if(!StringUtils.isEmpty(invitationCode)){
             	this.cashBackForRegister(record, invitationCode, operator_id);
             }
-            
+
             CouponGroup couponGroup = new CouponGroup();
             couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.NEW_REGISTER_USER);
-            
+
             List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
-            
+
             if(list.size()>0){
             	couponGroupService.sendCouponGroup(record.getSysDriverId(), list, operator_id);
             }
@@ -337,20 +342,25 @@ public class DriverServiceImpl implements DriverService {
         } else {
             remark = driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。" + order.getDischarge_reason();
         }
-        
-        UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_number(), order.getSysDriver().getSysDriverId());
-        
-        if(usercoupon == null){
-        	order.setCoupon_number("");
-        	order.setCoupon_cash(BigDecimal.valueOf(0.0d));
-        	logger.info("根据"+order.getCoupon_number()+"找不到对应的优惠劵信息");
-        }else{
-        	usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.USED);
-            couponService.modifyUserCoupon(usercoupon, order.getOperator());
-        }
-        
-        if(!(StringUtils.isEmpty(order.getCoupon_number()) && (StringUtils.isEmpty(order.getCoupon_cash().toString()))) && usercoupon != null){
-            remark = remark + "使用优惠劵优惠"+order.getCoupon_cash().toString()+"元。";
+
+        if(order.getCoupon_number() != null){//add by wdq 判断当前订单是否有优惠券
+            UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_number(), order.getSysDriver().getSysDriverId());
+            if(usercoupon == null){
+                order.setCoupon_number("");
+                order.setCoupon_cash(BigDecimal.valueOf(0.0d));
+                logger.info("根据"+order.getCoupon_number()+"找不到对应的优惠劵信息");
+            }else{
+                if(order.getIs_discharge().equals("0")){//add by wdq 不是冲红，则修改优惠券状态为已使用
+                    usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.USED);
+                }else{
+                    usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.SUSPEND);//add by wdq 是冲红，则修改优惠券状态为初始化
+                }
+                couponService.modifyUserCoupon(usercoupon, order.getOperator());
+            }
+
+            if(!(StringUtils.isEmpty(order.getCoupon_number()) && (StringUtils.isEmpty(order.getCoupon_cash().toString()))) && usercoupon != null){
+                remark = remark + "使用优惠劵优惠"+order.getCoupon_cash().toString()+"元。";
+            }
         }
 
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
@@ -416,22 +426,22 @@ public class DriverServiceImpl implements DriverService {
 	
 	    	sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.REGISTER_CASHBACK);
 	    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.INVITED_CASHBACK);
-	    	
+
 	    	//发优惠劵
 	    	CouponGroup couponGroup = new CouponGroup();
             couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITED);
-            
+
             List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
-            
+
             if(list.size()>0){
             	couponGroupService.sendCouponGroup(driver.getSysDriverId(), list, operator_id);
             }
-            
+
             CouponGroup couponGroup1 = new CouponGroup();
             couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITED);
-            
+
             List<CouponGroup> list1 = couponGroupService.queryCouponGroup(couponGroup1).getList();
-            
+
             if(list1.size()>0){
             	couponGroupService.sendCouponGroup(invitation.getSysDriverId(), list1, operator_id);
             }

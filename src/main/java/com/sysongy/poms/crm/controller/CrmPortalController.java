@@ -1,6 +1,7 @@
 package com.sysongy.poms.crm.controller;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -511,7 +512,7 @@ public class CrmPortalController {
             SysDriver driver = new SysDriver();
             driver.setUserName(phone);
             driver.setMobilePhone(phone);
-            String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
+            String veCode = (String) redisClientImpl.getFromCache("msg_"+phone);
             if(veCode != null && !"".equals(veCode)) {
             	if(vcode.equals(veCode)){
             		List<SysDriver> driverlist = driverService.queryeSingleList(driver);
@@ -658,29 +659,31 @@ public class CrmPortalController {
     @RequestMapping("/info/file")
     public String saveDriver(HttpServletRequest request, @ModelAttribute("currUser") CurrUser currUser, ModelMap map) throws Exception{
         SysDriver driver = new SysDriver();
-        String stationId = "TC59000001";//"郑州上运"
+        String stationId = "TC29000002";//"咸阳裕隆煤业有限公司"
 
         int resultInt = 0;
-        int intiVal = 110001301;
-        for (intiVal = 110001301;intiVal <= 110001400;intiVal++){
+        long intiVal = 12000000601l;
+        int nameNo = 1000;
+        for (intiVal = 12000000601l;intiVal <= 12000000700l;intiVal++){
             String operation = "insert";
             String payCode = "111111";
 
             String cardNum = intiVal+"";
             driver.setUserName(cardNum);
             driver.setMobilePhone(cardNum);
-            driver.setCardId(cardNum);
-            driver.setFullName(cardNum);
+            /*driver.setCardId(cardNum);*/
+            nameNo = nameNo + 1;
+            driver.setFullName("裕隆车辆"+nameNo);
             driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
             driver.setUserStatus("0");//0 使用中 1 已冻结
-            driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
+            driver.setCheckedStatus("2");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
             driver.setStationId(stationId);//站点编号
 //            Transportion transportion = transportionService.queryTransportionByPK(stationId);
-            driver.setRegisSource("郑州上运货物运输有限公司");//司机注册来源（运输公司名称）
+            driver.setRegisSource("咸阳裕隆煤业有限公司");//司机注册来源（运输公司名称）
 
             driver.setSysDriverId(UUIDGenerator.getUUID());
             driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
-            driver.setMemo("芈程程特殊业务 2016-9-29 脚本添加100个司机(卡号：110001301~110001400)");
+            driver.setMemo("钟殿滨特殊业务 2016-10-21 脚本添加100个司机(卡号：12000000601~12000000700)");
 
             driverService.saveDriver(driver,operation, null, null);
 
