@@ -84,11 +84,6 @@ public class DriverServiceImpl implements DriverService {
     private CouponGroupService couponGroupService;
 
     @Override
-    public void cashBackForRegister(SysDriver queryDriver, String regisCompany) throws Exception {
-
-    }
-
-    @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
         PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
         List<SysDriver> list = sysDriverMapper.queryForPage(record);
@@ -411,7 +406,7 @@ public class DriverServiceImpl implements DriverService {
     	}
 		return cashTo_success_specific_type;
 	}
-	
+	@Override
 	public void cashBackForRegister(SysDriver driver, String invitationCode, String operator_id) throws Exception{
 		
 		SysDriver invitation = new SysDriver();

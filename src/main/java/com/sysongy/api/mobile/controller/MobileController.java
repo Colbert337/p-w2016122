@@ -217,7 +217,8 @@ public class MobileController {
 					if (queryDriver != null) {
 						String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
 						if(invitationCode==null){
-							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany());
+							//被邀請用戶首次登錄返現，送優惠券
+							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
 						}
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", queryDriver.getSysDriverId());
@@ -239,7 +240,8 @@ public class MobileController {
 						} else {
 							String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
 							if(invitationCode==null){
-								driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany());
+								//被邀請用戶首次登錄返現，送優惠券
+								driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
 							}
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token", queryDriver.getSysDriverId());
