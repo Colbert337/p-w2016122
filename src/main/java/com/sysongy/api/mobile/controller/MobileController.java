@@ -211,6 +211,10 @@ public class MobileController {
 					driver.setPassword(mainObj.optString("password"));
 					queryDriver = driverService.queryByUserNameAndPassword(driver);
 					if (queryDriver != null) {
+						String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
+						if(invitationCode==null){
+							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany());
+						}
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", queryDriver.getSysDriverId());
 						result.setData(tokenMap);
@@ -229,6 +233,10 @@ public class MobileController {
 							result.setStatus(MobileReturn.STATUS_FAIL);
 							result.setMsg("用户名或密码错误！");
 						} else {
+							String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
+							if(invitationCode==null){
+								driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany());
+							}
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token", queryDriver.getSysDriverId());
 							result.setData(tokenMap);
@@ -358,12 +366,25 @@ public class MobileController {
 					verification.setContent("APP");
 					break;
 				}
-
-				MobileVerificationUtils.sendMSGType(verification, checkCode.toString(), msgTypeaTemp);
-				// 设置短信有效期10分钟
-				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
 				Map<String, Object> tokenMap = new HashMap<>();
-				tokenMap.put("verificationCode", checkCode.toString());
+				if(msgTypeaTemp.equals(AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER)){
+					SysDriver driver = new SysDriver();
+					driver.setMobilePhone(mainObj.optString("phoneNum"));
+					SysDriver queryDriver = driverService.queryDriverByMobilePhone(driver);
+					if(queryDriver==null){
+						MobileVerificationUtils.sendMSGType(verification, checkCode.toString(), msgTypeaTemp);
+						// 设置短信有效期10分钟
+						redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
+						tokenMap.put("verificationCode", checkCode.toString());
+					}else{
+						result.setMsg("该手机号已注册！");
+					}
+				}else{
+					MobileVerificationUtils.sendMSGType(verification, checkCode.toString(), msgTypeaTemp);
+					// 设置短信有效期10分钟
+					redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
+					tokenMap.put("verificationCode", checkCode.toString());
+				}
 				result.setData(tokenMap);
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
