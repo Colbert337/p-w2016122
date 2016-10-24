@@ -766,6 +766,8 @@ public class CRMCashServiceContoller {
         }
 
         Map<String, Object> attributes = new HashMap<String, Object>();
+        hedgeRecord.setShould_payment(originalOrder.getShould_payment());
+        hedgeRecord.setCoupon_cash(originalOrder.getCoupon_cash());
         attributes.put("sysOrder", hedgeRecord);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
@@ -826,7 +828,7 @@ public class CRMCashServiceContoller {
             ajaxJson.setMsg("气站ID为空！！！" );
             return ajaxJson;
         }
-
+        sysOrderDeal = orderDealService.selectByPrimaryKey(sysOrderDeal.getDealId());
         if(StringUtils.isEmpty(sysOrderDeal.getIsCharge())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("报表类型为空！！！" );
