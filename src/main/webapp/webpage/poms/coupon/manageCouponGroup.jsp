@@ -60,8 +60,6 @@
 									<%--</th>--%>
 									<th style="width:10%" onclick="orderBy(this,'coupongroup_no');commitForm();" id="coupongroup_no_order">优惠组编号</th>
 									<th style="width:30%" onclick="orderBy(this,'coupongroup_title');commitForm();" id="coupongroup_title_order">优惠组名称</th>
-									<th style="width:15%"onclick="orderBy(this,'coupon_nos');commitForm();" id="coupon_nos_order">优惠组内优惠卷编号</th>
-									<th style="width:10%" onclick="orderBy(this,'coupon_titles');commitForm();" id="coupon_titles_order">优惠组内优惠卷名称</th>
 									<th style="width:10%" onclick="orderBy(this,'issued_type');commitForm();" id="issued_type_order">发放类型</th>
 									<th style="width:5%" class="text-center td-w3">更多操作</th>
 								</tr>
@@ -77,8 +75,6 @@
 										<%--</td>--%>
 										<td>${list.coupongroup_no}</td>
 										<td>${list.coupongroup_title}</td>
-										<td>${list.coupon_nos}</td>
-										<td>${list.coupon_titles}</td>
 										<td>${list.issued_type}</td>
 										<td>
 											<div class="text-center">

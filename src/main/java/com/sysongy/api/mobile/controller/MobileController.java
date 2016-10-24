@@ -262,7 +262,7 @@ public class MobileController {
 					// 生成二维码
 					driver.setDriverQrcode(show_path);
 					driver.setSysDriverId(queryDriver.getSysDriverId());
-					Integer tmp = driverService.saveDriver(driver, "update", null);
+					Integer tmp = driverService.saveDriver(driver, "update", null, this.appOperatorId);
 					String encoderContent = null;
 					if (queryDriver.getFullName() == null || "".equals(queryDriver.getFullName())) {
 						encoderContent = mainObj.optString("username");
@@ -471,7 +471,7 @@ public class MobileController {
 						// 生成二维码
 						driver.setDriverQrcode(show_path);
 
-						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
+						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, this.appOperatorId);
 						if (tmp > 0) {
 							TwoDimensionCode handler = new TwoDimensionCode();
 							handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null,
@@ -587,7 +587,7 @@ public class MobileController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode, "update", null);
+							driverService.saveDriver(driverCode, "update", null, null);
 						}
 						resultMap.put("invitationCode", invitationCode);
 						if (driver.getTransportionName() != null
@@ -672,7 +672,7 @@ public class MobileController {
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
 
-					driverService.saveDriver(sysDriver, "update", null);
+					driverService.saveDriver(sysDriver, "update", null, null);
 				} else {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("密码为空！");
@@ -749,10 +749,10 @@ public class MobileController {
 						SysDriver oldDriver = driverService.queryByDeviceToken(deviceToken);
 						if (oldDriver != null) {
 							oldDriver.setDeviceToken("");
-							int resultoldVal = driverService.saveDriver(oldDriver, "update", null);
+							int resultoldVal = driverService.saveDriver(oldDriver, "update", null, null);
 						}
 					}
-					int resultVal = driverService.saveDriver(driver, "update", null);
+					int resultVal = driverService.saveDriver(driver, "update", null, null);
 				} else {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("修改用户信息失败！");
@@ -831,7 +831,7 @@ public class MobileController {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
 						driver.setPayCode(mainObj.optString("paycode"));
-						driverService.saveDriver(driver, "update", null);// 设置支付密码
+						driverService.saveDriver(driver, "update", null, null);// 设置支付密码
 					}else{
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("验证码无效！");
@@ -905,7 +905,7 @@ public class MobileController {
 					newPayCode = mainObj.optString("newPayCode");
 					if (newPayCode != null && !"".equals(newPayCode)) {
 						sysDriver.setPayCode(newPayCode);
-						driverService.saveDriver(sysDriver, "update", null);
+						driverService.saveDriver(sysDriver, "update", null, null);
 					}
 				} else {
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1082,7 +1082,7 @@ public class MobileController {
 					// 生成二维码
 					driver.setDriverQrcode(show_path);
 					driver.setVerifySource("1");
-					int resultVal = driverService.saveDriver(driver, "update", null);
+					int resultVal = driverService.saveDriver(driver, "update", null, null);
 					if (resultVal <= 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("用户ID为空，申请失败！");
@@ -2957,7 +2957,7 @@ public class MobileController {
 						}
 						sysDriver.setDriverType(driver.get(0).getDriverType());
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						int resultVal = driverService.saveDriver(sysDriver, "update", null);
+						int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 						// 返回大于0，成功
 						if (resultVal <= 0) {
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3049,7 +3049,7 @@ public class MobileController {
 								sysDriver.setPayCode(initialPassword);
 								sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 								// 更新初始密码
-								int resultVal = driverService.saveDriver(sysDriver, "update", null);
+								int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 								// 返回大于0，成功
 								if (resultVal <= 0) {
 									result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3072,7 +3072,7 @@ public class MobileController {
 									sysDriver.setPayCode(initialPassword);
 									sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 									// 更新初始密码
-									int resultVal = driverService.saveDriver(sysDriver, "update", null);
+									int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 									// 返回大于0，成功
 									if (resultVal <= 0) {
 										result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3105,7 +3105,7 @@ public class MobileController {
 							sysDriver.setPayCode(initialPassword);
 							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 							// 更新初始密码
-							int resultVal = driverService.saveDriver(sysDriver, "update", null);
+							int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 							// 返回大于0，成功
 							if (resultVal <= 0) {
 								result.setStatus(MobileReturn.STATUS_FAIL);
@@ -4647,7 +4647,7 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				driver.setSysDriverId(list.get(i).getSysDriverId());
 				driver.setDriverQrcode(show_path);
-				int resultVal = driverService.saveDriver(driver, "update", null);
+				int resultVal = driverService.saveDriver(driver, "update", null, null);
 				handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null, TwoDimensionCode.size);
 			}
 		} catch (Exception e) {
