@@ -150,6 +150,7 @@ public class DriverServiceImpl implements DriverService {
             	this.cashBackForRegister(record, invitationCode, operator_id);
             }
             
+            //发优惠卷
             CouponGroup couponGroup = new CouponGroup();
             couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.NEW_REGISTER_USER);
             
