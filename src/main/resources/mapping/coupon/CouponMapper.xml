@@ -218,35 +218,18 @@
 
 	<!-- 当前用户可用优惠券 -->
 	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="com.sysongy.poms.coupon.model.Coupon">
-		select
-			sc.coupon_id,
-			sc.coupon_kind,
-			sc.coupon_title,
-			sc.coupon_no,
-			sc.coupon_type,
-			sc.use_condition,
-			sc.preferential_discount,
-			sc.start_coupon_time,
-			sc.end_coupon_time
-		from sys_coupon sc
-		where sc.coupon_id IN (
-				SELECT
-					suc.coupon_id
-				FROM
-					sys_user_coupon suc
-				WHERE
-					suc.isuse = '0'
-				AND suc.sys_driver_id = #{driverId,jdbcType=VARCHAR}
-				)
-				and (sc.sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR} or sc.coupon_kind = 1 )
-				AND sc.start_coupon_time &lt;= CURDATE() AND sc.end_coupon_time &gt;= CURDATE()
-			<trim>
-				<if test="preferential_discount != null &amp;&amp; preferential_discount != ''">
-					AND sc.preferential_discount &lt; CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal)
-					AND (sc.limit_money is null or sc.limit_money &lt; CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal))
-				</if>
-			</trim>
-			order by CONVERT(preferential_discount,decimal) DESC,use_condition DESC,end_coupon_time ASC
+		select sc.*,suc.user_coupon_id
+		from sys_user_coupon suc left join sys_coupon sc on suc.coupon_id = sc.coupon_id
+		where suc.isuse = '0' AND suc.sys_driver_id = #{driverId,jdbcType=VARCHAR} AND sc.status = 1
+		AND (sc.sys_gas_station_id =  #{sys_gas_station_id,jdbcType=VARCHAR} OR sc.coupon_kind = 1)
+		AND sc.start_coupon_time &lt;= CURDATE() AND sc.end_coupon_time &gt;= CURDATE()
+		<trim>
+			<if test="preferential_discount != null &amp;&amp; preferential_discount != ''">
+				AND sc.preferential_discount &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal)
+				AND (sc.limit_money is null or sc.limit_money &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal))
+			</if>
+		</trim>
+		order by CONVERT(preferential_discount,decimal) DESC,use_condition DESC,end_coupon_time ASC
 	</select>
 	<!-- 查询当前用户所有优惠券 -->
 	<select id="queryAllCouponForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -271,10 +254,10 @@
 			)
 	</select>
 
-	<select id="queryUserCouponByNo" resultMap="UserCouponMap" parameterType="java.lang.String">
+	<select id="queryUserCouponByID" resultMap="UserCouponMap" parameterType="java.lang.String">
 		select * from sys_user_coupon
 		where isuse = '0' 
-		and coupon_no = #{0}
+		and user_coupon_id = #{0}
 		and sys_driver_id = #{1}
 	</select>
 </mapper>

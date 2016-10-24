@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.pagehelper.PageInfo;
@@ -16,7 +17,9 @@ import com.sysongy.poms.coupon.dao.CouponGroupMapper;
 import com.sysongy.poms.coupon.dao.CouponMapper;
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.CouponGroup;
+import com.sysongy.poms.coupon.model.UserCoupon;
 import com.sysongy.poms.coupon.service.CouponGroupService;
+import com.sysongy.poms.coupon.service.CouponService;
 
 @Service
 public class CouponGroupServiceImpl implements CouponGroupService {
@@ -28,6 +31,9 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 	
 	@Autowired
 	private CouponMapper couponMapper;
+
+	private CouponService couponService;
+
 
 	@Override
 	public PageInfo<CouponGroup> queryCouponGroup(CouponGroup couponGroup) throws Exception {
@@ -111,6 +117,46 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 	@Override
 	public Integer delCouponGroup(String coupongroupid) throws Exception {
 		return couponGroupMapper.deleteByPrimaryKey(coupongroupid);
+	}
+	
+	/**
+	 * 根据业务场景给用户发送优惠劵组
+	 */
+	@Override
+	public void sendCouponGroup(String driver_id, List<CouponGroup> list, String operator_id) throws Exception{
+		
+		if(list.size()<1){
+			throw new Exception("优惠劵组为空，请检查");
+		}
+		
+		for(int j=0;j<list.size();j++){
+
+			CouponGroup group = list.get(j);
+			
+			String []coupon = group.getCoupon_ids().split(",");
+			
+			String []nums = group.getCoupon_nums().split(",");
+			
+			if(coupon.length != nums.length){
+				throw new Exception("优惠劵组配置错误，请检查");
+			}
+			
+			if(coupon.length < 1){
+				throw new Exception("找不到对应的优惠劵信息");
+			}
+			
+			for(int i=0;i<coupon.length;i++){
+				for(int k=0;k<Integer.valueOf(nums[i]);k++){
+					Coupon tmp_coupon = couponService.queryCouponByPK(coupon[i]);
+					
+					UserCoupon userCoupon = new UserCoupon();
+					BeanUtils.copyProperties(tmp_coupon, userCoupon);
+					userCoupon.setUser_coupon_id(UUIDGenerator.getUUID());
+					
+					couponService.addUserCoupon(userCoupon, operator_id);
+				}
+			}
+		}
 	}
 
 	@Override

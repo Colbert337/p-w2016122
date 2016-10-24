@@ -61,6 +61,8 @@ import com.sysongy.poms.base.model.DistCity;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.base.service.DistrictService;
 import com.sysongy.poms.coupon.model.Coupon;
+import com.sysongy.poms.coupon.model.CouponGroup;
+import com.sysongy.poms.coupon.service.CouponGroupService;
 import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
@@ -170,6 +172,8 @@ public class MobileController {
 	MbAppVersionService mbAppVersionService;
 	@Autowired
 	CouponService couponService;
+	@Autowired
+    CouponGroupService couponGroupService;
 
 	/**
 	 * 用户登录
@@ -211,6 +215,11 @@ public class MobileController {
 					driver.setPassword(mainObj.optString("password"));
 					queryDriver = driverService.queryByUserNameAndPassword(driver);
 					if (queryDriver != null) {
+						String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
+						if(invitationCode==null){
+							//被邀請用戶首次登錄返現，送優惠券
+							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
+						}
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", queryDriver.getSysDriverId());
 						result.setData(tokenMap);
@@ -229,6 +238,11 @@ public class MobileController {
 							result.setStatus(MobileReturn.STATUS_FAIL);
 							result.setMsg("用户名或密码错误！");
 						} else {
+							String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
+							if(invitationCode==null){
+								//被邀請用戶首次登錄返現，送優惠券
+								driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
+							}
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token", queryDriver.getSysDriverId());
 							result.setData(tokenMap);
@@ -262,7 +276,7 @@ public class MobileController {
 					// 生成二维码
 					driver.setDriverQrcode(show_path);
 					driver.setSysDriverId(queryDriver.getSysDriverId());
-					Integer tmp = driverService.saveDriver(driver, "update", null);
+					Integer tmp = driverService.saveDriver(driver, "update", null, this.appOperatorId);
 					String encoderContent = null;
 					if (queryDriver.getFullName() == null || "".equals(queryDriver.getFullName())) {
 						encoderContent = mainObj.optString("username");
@@ -358,12 +372,25 @@ public class MobileController {
 					verification.setContent("APP");
 					break;
 				}
-
-				MobileVerificationUtils.sendMSGType(verification, checkCode.toString(), msgTypeaTemp);
-				// 设置短信有效期10分钟
-				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
 				Map<String, Object> tokenMap = new HashMap<>();
-				tokenMap.put("verificationCode", checkCode.toString());
+				if(msgTypeaTemp.equals(AliShortMessage.SHORT_MESSAGE_TYPE.USER_REGISTER)){
+					SysDriver driver = new SysDriver();
+					driver.setMobilePhone(mainObj.optString("phoneNum"));
+					SysDriver queryDriver = driverService.queryDriverByMobilePhone(driver);
+					if(queryDriver==null){
+						MobileVerificationUtils.sendMSGType(verification, checkCode.toString(), msgTypeaTemp);
+						// 设置短信有效期10分钟
+						redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
+						tokenMap.put("verificationCode", checkCode.toString());
+					}else{
+						result.setMsg("该手机号已注册！");
+					}
+				}else{
+					MobileVerificationUtils.sendMSGType(verification, checkCode.toString(), msgTypeaTemp);
+					// 设置短信有效期10分钟
+					redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
+					tokenMap.put("verificationCode", checkCode.toString());
+				}
 				result.setData(tokenMap);
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -458,7 +485,7 @@ public class MobileController {
 						// 生成二维码
 						driver.setDriverQrcode(show_path);
 
-						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
+						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, this.appOperatorId);
 						if (tmp > 0) {
 							TwoDimensionCode handler = new TwoDimensionCode();
 							handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null,
@@ -574,7 +601,7 @@ public class MobileController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode, "update", null);
+							driverService.saveDriver(driverCode, "update", null, null);
 						}
 						resultMap.put("invitationCode", invitationCode);
 						if (driver.getTransportionName() != null
@@ -659,7 +686,7 @@ public class MobileController {
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
 
-					driverService.saveDriver(sysDriver, "update", null);
+					driverService.saveDriver(sysDriver, "update", null, null);
 				} else {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("密码为空！");
@@ -736,10 +763,10 @@ public class MobileController {
 						SysDriver oldDriver = driverService.queryByDeviceToken(deviceToken);
 						if (oldDriver != null) {
 							oldDriver.setDeviceToken("");
-							int resultoldVal = driverService.saveDriver(oldDriver, "update", null);
+							int resultoldVal = driverService.saveDriver(oldDriver, "update", null, null);
 						}
 					}
-					int resultVal = driverService.saveDriver(driver, "update", null);
+					int resultVal = driverService.saveDriver(driver, "update", null, null);
 				} else {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("修改用户信息失败！");
@@ -818,7 +845,7 @@ public class MobileController {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
 						driver.setPayCode(mainObj.optString("paycode"));
-						driverService.saveDriver(driver, "update", null);// 设置支付密码
+						driverService.saveDriver(driver, "update", null, null);// 设置支付密码
 					}else{
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("验证码无效！");
@@ -892,7 +919,7 @@ public class MobileController {
 					newPayCode = mainObj.optString("newPayCode");
 					if (newPayCode != null && !"".equals(newPayCode)) {
 						sysDriver.setPayCode(newPayCode);
-						driverService.saveDriver(sysDriver, "update", null);
+						driverService.saveDriver(sysDriver, "update", null, null);
 					}
 				} else {
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1069,7 +1096,7 @@ public class MobileController {
 					// 生成二维码
 					driver.setDriverQrcode(show_path);
 					driver.setVerifySource("1");
-					int resultVal = driverService.saveDriver(driver, "update", null);
+					int resultVal = driverService.saveDriver(driver, "update", null, null);
 					if (resultVal <= 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("用户ID为空，申请失败！");
@@ -2559,9 +2586,11 @@ public class MobileController {
 				String thirdPartyID = null;
 				//不为空或空字符串，为司机消费订单
 				if(orderType!=null && !"".equals(orderType) && orderType.equals("220")){
+					//查询消费订单个数
+					int number = orderService.queryConsumerOrderNumber(driverID);
 					if (payType.equalsIgnoreCase("2")) { // 支付宝消费
-						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2"); // TODO充值成功后再去生成订单
-						orderService.checkIfCanChargeToDriver(sysOrder);
+						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","2"); // TODO充值成功后再去生成订单
+						orderService.checkIfCanConsume(sysOrder);
 						String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
 						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员消费",
 								"司集云平台-会员消费", orderID, notifyUrl);
@@ -2577,8 +2606,8 @@ public class MobileController {
 						data.put("payReq", orderParam + "&" + sign);
 						result.setData(data);
 					} else if (payType.equalsIgnoreCase("1")) { // 微信消费
-						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2"); // TODO充值成功后再去生成订单
-						orderService.checkIfCanChargeToDriver(sysOrder);
+						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","1"); // TODO充值成功后再去生成订单
+						orderService.checkIfCanConsume(sysOrder);
 						String entity = genProductArgs(orderID, feeCount,"2");
 						byte[] buf = Util.httpPost(url, entity);
 						String content = new String(buf, "utf-8");
@@ -2595,9 +2624,18 @@ public class MobileController {
 						data.put("payReq", dataObj);
 						result.setData(data);
 					}
+					//首次消费成功，发放优惠券
+					if(number==0){
+						CouponGroup couponGroup = new CouponGroup();
+			            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
+			            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+			            if(list.size()>0){
+			            	couponGroupService.sendCouponGroup(driverID, list, this.appOperatorId);
+			            }
+					}
 				}else{//充值订单
 					if (payType.equalsIgnoreCase("2")) { // 支付宝支付
-						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE,null,"1"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE,null,"1",null); // TODO充值成功后再去生成订单
 						orderService.checkIfCanChargeToDriver(sysOrder);
 						String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayCallBackPay";
 						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
@@ -2614,7 +2652,7 @@ public class MobileController {
 						data.put("payReq", orderParam + "&" + sign);
 						result.setData(data);
 					} else if (payType.equalsIgnoreCase("1")) { // 微信支付
-						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE,null,"1"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE,null,"1",null); // TODO充值成功后再去生成订单
 						orderService.checkIfCanChargeToDriver(sysOrder);
 						String entity = genProductArgs(orderID, feeCount,"1");
 						byte[] buf = Util.httpPost(url, entity);
@@ -2944,7 +2982,7 @@ public class MobileController {
 						}
 						sysDriver.setDriverType(driver.get(0).getDriverType());
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						int resultVal = driverService.saveDriver(sysDriver, "update", null);
+						int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 						// 返回大于0，成功
 						if (resultVal <= 0) {
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3036,7 +3074,7 @@ public class MobileController {
 								sysDriver.setPayCode(initialPassword);
 								sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 								// 更新初始密码
-								int resultVal = driverService.saveDriver(sysDriver, "update", null);
+								int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 								// 返回大于0，成功
 								if (resultVal <= 0) {
 									result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3059,7 +3097,7 @@ public class MobileController {
 									sysDriver.setPayCode(initialPassword);
 									sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 									// 更新初始密码
-									int resultVal = driverService.saveDriver(sysDriver, "update", null);
+									int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 									// 返回大于0，成功
 									if (resultVal <= 0) {
 										result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3092,7 +3130,7 @@ public class MobileController {
 							sysDriver.setPayCode(initialPassword);
 							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 							// 更新初始密码
-							int resultVal = driverService.saveDriver(sysDriver, "update", null);
+							int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 							// 返回大于0，成功
 							if (resultVal <= 0) {
 								result.setStatus(MobileReturn.STATUS_FAIL);
@@ -4187,6 +4225,7 @@ public class MobileController {
 				String driverId = mainObj.optString("token");
 				Coupon coupon = new Coupon();
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
+				String useCondition =null;
 				//当加注站ID和消费金额不为空时，返回当前用户可用优惠券列表，按金额倒叙排列，分页。
 				if(gastationId!=null&&!"".endsWith(gastationId)&&amount!=null&&!"".equals(amount)){
 					coupon.setSys_gas_station_id(gastationId);
@@ -4198,8 +4237,13 @@ public class MobileController {
 							reChargeMap.put("couponId",data.getCoupon_id());
 							reChargeMap.put("couponKind", data.getCoupon_kind());
 							reChargeMap.put("couponType", data.getCoupon_type());
-							reChargeMap.put("useCondition", data.getUse_condition());
+							useCondition = data.getUse_condition();
+							reChargeMap.put("useCondition",useCondition);
 							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
+							reChargeMap.put("title",data.getCoupon_title());
+							if(useCondition.equals("1")){
+								reChargeMap.put("limit_money",data.getLimit_money());
+							}
 							reChargeMap.put("startTime",data.getStart_coupon_time());
 							reChargeMap.put("endTime",data.getEnd_coupon_time());
 							reChargeList.add(reChargeMap);
@@ -4215,7 +4259,12 @@ public class MobileController {
 							reChargeMap.put("couponId",data.getCoupon_id());
 							reChargeMap.put("couponKind", data.getCoupon_kind());
 							reChargeMap.put("couponType", data.getCoupon_type());
-							reChargeMap.put("useCondition", data.getUse_condition());
+							reChargeMap.put("title",data.getCoupon_title());
+							useCondition = data.getUse_condition();
+							reChargeMap.put("useCondition", useCondition);
+							if(useCondition.equals("1")){
+								reChargeMap.put("limit_money",data.getLimit_money());
+							}
 							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
 							reChargeMap.put("startTime",data.getStart_coupon_time());
 							reChargeMap.put("endTime",data.getEnd_coupon_time());
@@ -4503,12 +4552,19 @@ public class MobileController {
 		return null;
 	}
 
-	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType,String spendType,String type) throws Exception {
+	private SysOrder createNewOrder(String orderID, String driverID, String cash, String chargeType,String spendType,String type,String consumeType) throws Exception {
 		SysOrder record = new SysOrder();
 		//消费订单
 		if(type.equals("2")){
 			record.setChannel("APP-消费");
 			record.setChannelNumber("APP-消费"); // 建立一个虚拟的APP气站，方便后期统计
+			//微信消费
+			if(consumeType.equals("1")){
+				record.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.WECHAT);
+			}else{
+				//支付宝消费
+				record.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.ALIPAY);
+			}
 			record.setOrderId(orderID);
 			record.setCreditAccount(driverID);
 			record.setOperator(appOperatorId);
@@ -4631,7 +4687,7 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				driver.setSysDriverId(list.get(i).getSysDriverId());
 				driver.setDriverQrcode(show_path);
-				int resultVal = driverService.saveDriver(driver, "update", null);
+				int resultVal = driverService.saveDriver(driver, "update", null, null);
 				handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null, TwoDimensionCode.size);
 			}
 		} catch (Exception e) {

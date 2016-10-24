@@ -110,6 +110,8 @@ public class SysOrder extends BaseModel{
     private String begin;//开始时间，虚拟字段，充值报表时间过滤用
     
     private String end;//结束时间，虚拟字段，充值报表时间过滤用
+    
+    private String trade_no;//交易号
 
 	public String getSpend_type() {
 		return spend_type;
@@ -504,5 +506,13 @@ public class SysOrder extends BaseModel{
 
 	public void setEnd(String end) {
 		this.end = end;
+	}
+
+	public String getTrade_no() {
+		return trade_no;
+	}
+
+	public void setTrade_no(String trade_no) {
+		this.trade_no = trade_no;
 	}
 }

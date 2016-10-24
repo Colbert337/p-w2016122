@@ -349,8 +349,6 @@
 		loadPage('#main', '../web/permi/user/list/page');
 	}
 	function check(){
-		alert("check");
-		alert($("[name=rePassword]").val()=="");
 		$('#userForm').bootstrapValidator({
 			message: 'This value is not valid',
 			feedbackIcons: {
@@ -570,7 +568,7 @@
 							<!-- PAGE CONTENT BEGINS -->
 							<form class="form-horizontal" id="userForm">
 								<!-- #section:elements.form -->
-								<h5 class="header smaller lighter blue no-margin-top">账户1信息</h5>
+								<h5 class="header smaller lighter blue no-margin-top">账户信息</h5>
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">

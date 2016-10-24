@@ -21,4 +21,6 @@ public interface CouponGroupService {
 	public CouponGroup queryCouponGroupByPK(String coupongroupid) throws Exception;
 	
 	public List<Coupon> queryCoupon(Coupon coupon,String coupongroup_id) throws Exception;
+	
+	public void sendCouponGroup(String driver_id, List<CouponGroup> list, String operator_id) throws Exception;
 }
