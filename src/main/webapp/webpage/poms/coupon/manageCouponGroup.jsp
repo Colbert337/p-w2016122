@@ -59,8 +59,8 @@
 										<%--</label>--%>
 									<%--</th>--%>
 									<th style="width:10%" onclick="orderBy(this,'coupongroup_no');commitForm();" id="coupongroup_no_order">优惠组编号</th>
-									<th style="width:30%" onclick="orderBy(this,'coupongroup_title');commitForm();" id="coupongroup_title_order">优惠组名称</th>
-									<th style="width:10%" onclick="orderBy(this,'issued_type');commitForm();" id="issued_type_order">发放类型</th>
+									<th style="width:10%" onclick="orderBy(this,'coupongroup_title');commitForm();" id="coupongroup_title_order">优惠组名称</th>
+									<th style="width:40%" onclick="orderBy(this,'issued_type');commitForm();" id="issued_type_order">发放类型</th>
 									<th style="width:5%" class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
@@ -75,7 +75,15 @@
 										<%--</td>--%>
 										<td>${list.coupongroup_no}</td>
 										<td>${list.coupongroup_title}</td>
-										<td>${list.issued_type}</td>
+										<td>
+									<c:set value="${ fn:split(list.issued_type, ',') }" var="issued_type" />
+									<c:forEach var="item" items="${issued_type}" varStatus="status">
+										<s:Code2Name mcode="${item}" gcode="ISSUED_TYPE"></s:Code2Name>
+										<c:if test="${!status.last}">
+											，
+										</c:if>
+									</c:forEach>
+									</td>
 										<td>
 											<div class="text-center">
 

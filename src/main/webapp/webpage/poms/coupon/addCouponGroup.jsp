@@ -73,7 +73,7 @@
 						<div class="form-group">
 							<label for="coupon_ids" class="col-sm-3 control-label no-padding-right">优惠卷：</label>
 							<div class="col-sm-4">
-								<input type="text" name="coupon_ids"/>
+								<input type="hidden" name="coupon_ids"/>
 								<%--<input type="hidden" name="coupon_nos"/>--%>
 								<%--<div class="myOwnDdl">--%>
 									<%--<select multiple="multiple" class="form-control" id="coupon_ids" name="coupon_ids">--%>

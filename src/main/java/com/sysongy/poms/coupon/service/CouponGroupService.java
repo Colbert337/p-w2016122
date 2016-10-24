@@ -1,7 +1,10 @@
 package com.sysongy.poms.coupon.service;
 
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.CouponGroup;
 
 
@@ -16,6 +19,6 @@ public interface CouponGroupService {
 	public Integer delCouponGroup(String coupongroupid) throws Exception;
 
 	public CouponGroup queryCouponGroupByPK(String coupongroupid) throws Exception;
-
-
+	
+	public List<Coupon> queryCoupon(Coupon coupon,String coupongroup_id) throws Exception;
 }

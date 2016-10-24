@@ -7,7 +7,6 @@ import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.CouponGroup;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.coupon.service.CouponGroupService;
-import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.gastation.model.Gastation;
 
 import net.sf.json.JSONArray;
@@ -15,6 +14,7 @@ import net.sf.json.JSONArray;
 import javax.servlet.http.HttpSession;
 import org.springframework.ui.ModelMap;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CouponGroupController extends BaseContoller {
 
 	@Autowired
-	private CouponGroupService service;
-	@Autowired
-	private CouponService couponService;	
+	private CouponGroupService service;	
 	
 
 	private CouponGroup couponGroup;
@@ -206,19 +204,21 @@ public class CouponGroupController extends BaseContoller {
 	 */
 	@RequestMapping("/couponList")
 	@ResponseBody
-	public String selectCouponList(ModelMap map) throws Exception {
+	public String selectCouponList(ModelMap map,HttpServletRequest request) throws Exception {
 		Coupon coupon = new Coupon();
-		PageInfo<Coupon> list;
+		List<Coupon> list;
 		// 优惠卷状态是开启的
 		coupon.setStatus("1");
+		String coupongroupid =   request.getParameter("coupongroup_id");
 		try {
-			list = couponService.queryCoupon(coupon);
+			list =  service.queryCoupon(coupon,coupongroupid);
 		} catch (Exception e) {
 			logger.error("查询优惠卷信息出错！", e);
 			throw e;
 		}
+		
 		JSONArray jsonArray = new JSONArray();
-		jsonArray.addAll(list.getList());
+		jsonArray.addAll(list);
 		return jsonArray.toString();
 	}
 	

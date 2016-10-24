@@ -1,6 +1,7 @@
 package com.sysongy.poms.coupon.service.impl;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,8 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.util.UUIDGenerator;
 import com.github.pagehelper.PageHelper;
 import com.sysongy.poms.coupon.dao.CouponGroupMapper;
+import com.sysongy.poms.coupon.dao.CouponMapper;
+import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.CouponGroup;
 import com.sysongy.poms.coupon.service.CouponGroupService;
 
@@ -22,6 +25,9 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 
 	@Autowired
 	private CouponGroupMapper couponGroupMapper;
+	
+	@Autowired
+	private CouponMapper couponMapper;
 
 	@Override
 	public PageInfo<CouponGroup> queryCouponGroup(CouponGroup couponGroup) throws Exception {
@@ -47,6 +53,18 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 	public String modifyCouponGroup(CouponGroup couponGroup, String userID) throws Exception {
 		couponGroup.setLastmodify_person_id(userID);
 		couponGroup.setLastmodify_time(new Date());
+		if("".equals(couponGroup.getStart_moneyrated_time())){
+			couponGroup.setStart_moneyrated_time(null);
+		}
+		if("".equals(couponGroup.getEnd_moneyrated_time())){
+			couponGroup.setEnd_moneyrated_time(null);
+		}
+		if("".equals(couponGroup.getStart_timesrated_time())){
+			couponGroup.setStart_timesrated_time(null);
+		}
+		if("".equals(couponGroup.getEnd_timesrated_time())){
+			couponGroup.setEnd_timesrated_time(null);
+		}
 		couponGroupMapper.updateByPrimaryKey(couponGroup);
 		return couponGroup.getCoupongroup_id();
 	}
@@ -74,6 +92,18 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			coupongroup_no = "YHZ" + StringUtils.leftPad(tmp.toString(), 5, "0");
 		}
 		couponGroup.setCoupongroup_no(coupongroup_no);
+		if("".equals(couponGroup.getStart_moneyrated_time())){
+			couponGroup.setStart_moneyrated_time(null);
+		}
+		if("".equals(couponGroup.getEnd_moneyrated_time())){
+			couponGroup.setEnd_moneyrated_time(null);
+		}
+		if("".equals(couponGroup.getStart_timesrated_time())){
+			couponGroup.setStart_timesrated_time(null);
+		}
+		if("".equals(couponGroup.getEnd_timesrated_time())){
+			couponGroup.setEnd_timesrated_time(null);
+		}
 		couponGroupMapper.insert(couponGroup);
 		return couponGroup.getCoupongroup_id();
 	}
@@ -83,4 +113,26 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 		return couponGroupMapper.deleteByPrimaryKey(coupongroupid);
 	}
 
+	@Override
+	public List<Coupon> queryCoupon(Coupon coupon,String coupongroup_id) throws Exception {
+		CouponGroup couponGroup = couponGroupMapper.selectByPrimaryKey(coupongroup_id);
+		List<Coupon> couponlist = couponMapper.queryForPage(coupon);
+		if(null!=couponGroup){
+			if(!"".equals(couponGroup.getCoupon_ids())&&null!=couponGroup.getCoupon_ids()){
+				String[] coupon_id = couponGroup.getCoupon_ids().split(",");
+				String[] coupon_num = couponGroup.getCoupon_nums().split(",");
+				Iterator it = couponlist.iterator();
+				while(it.hasNext()){
+					Coupon aCoupon = (Coupon) it.next();
+					for(int i=0;i<coupon_id.length;i++){
+						if(coupon_id[i].equals(aCoupon.getCoupon_id())){
+							aCoupon.setCoupon_check_status("true");
+							aCoupon.setCoupon_check_nums(coupon_num[i]);
+						}
+					}
+				}	
+			}	
+		}
+			return couponlist;
+	}
 }

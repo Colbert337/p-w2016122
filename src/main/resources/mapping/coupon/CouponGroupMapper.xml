@@ -52,7 +52,7 @@
 				#{coupongroup_title,jdbcType=VARCHAR}), '%')
 			</if>
 			<if test="issued_type != null &amp;&amp; issued_type != ''">
-				and FIND_IN_SET(#{coupongroup_no,jdbcType=VARCHAR},issued_type)>0
+				and FIND_IN_SET(#{issued_type,jdbcType=VARCHAR},issued_type)>0
 			</if>
 		</trim>
 	</select>
@@ -79,7 +79,7 @@
 		)
 	</insert>
 	<update id="updateByPrimaryKey" parameterType="com.sysongy.poms.coupon.model.CouponGroup">
-		update sys_coupon
+		update `sys_coupon_group`
 		set coupongroup_title = #{coupongroup_title,jdbcType=VARCHAR},
 		coupongroup_detail = #{coupongroup_detail,jdbcType=VARCHAR},
 		coupon_ids = #{coupon_ids,jdbcType=VARCHAR},

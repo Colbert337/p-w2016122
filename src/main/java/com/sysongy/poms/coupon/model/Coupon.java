@@ -46,22 +46,30 @@ public class Coupon extends BaseModel {
 	// 最后修改人ID
 	private String lastmodify_person_id;
 	// 最后修改时间
-	private Date lastmodify_time;
-	// 优惠信息
-	private Date coupon_info;	
-	
+	private Date lastmodify_time;	
+	//是否选到优惠卷组
+	private String coupon_check_status;
+	//是否选到优惠卷组
+	private String coupon_check_nums;	
 
-	public Date getCoupon_info() {
-		return coupon_info;
-	}
-
-	public void setCoupon_info(Date coupon_info) {
-		this.coupon_info = coupon_info;
-	}
 	//虚拟字段，司集ID
 	private String driverId;
+	
+	public String getCoupon_check_status() {
+		return coupon_check_status;
+	}
 
+	public void setCoupon_check_status(String coupon_check_status) {
+		this.coupon_check_status = coupon_check_status;
+	}
 
+	public String getCoupon_check_nums() {
+		return coupon_check_nums;
+	}
+
+	public void setCoupon_check_nums(String coupon_check_nums) {
+		this.coupon_check_nums = coupon_check_nums;
+	}
 	public String getCoupon_id() {
 		return coupon_id;
 	}
