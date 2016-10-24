@@ -226,6 +226,7 @@ public interface OrderService {
      * @return
      */
     List<Map<String,Object>> queryDriverConsume(SysOrder record);
+    String checkIfCanConsume(SysOrder order) throws Exception;
 
     /**
      * 转账记录
@@ -243,4 +244,10 @@ public interface OrderService {
      * @return
      */
     SysOrder queryById(String orderId);
+   /**
+    * 查询消费订单个数
+    * @param token 当前用户唯一标识
+    * @return 消费订单个数
+    */
+    int queryConsumerOrderNumber(String token);
 }
