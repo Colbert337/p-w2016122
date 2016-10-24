@@ -196,9 +196,7 @@ public class CouponServiceImpl implements CouponService {
 			record.setPageNum(1);
 			record.setPageSize(10);
 		}
-		if (StringUtils.isEmpty(record.getOrderby())) {
-			record.setOrderby("preferential_discount+0 DESC");
-		}
+
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Coupon> list = couponMapper.queryCouponOrderByAmount(record);
 		PageInfo<Coupon> pageInfo = new PageInfo<Coupon>(list);
