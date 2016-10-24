@@ -31,7 +31,7 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 	
 	@Autowired
 	private CouponMapper couponMapper;
-
+	@Autowired
 	private CouponService couponService;
 
 
