@@ -211,6 +211,10 @@ public class MobileController {
 					driver.setPassword(mainObj.optString("password"));
 					queryDriver = driverService.queryByUserNameAndPassword(driver);
 					if (queryDriver != null) {
+						String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
+						if(invitationCode==null){
+							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany());
+						}
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", queryDriver.getSysDriverId());
 						result.setData(tokenMap);
@@ -229,6 +233,10 @@ public class MobileController {
 							result.setStatus(MobileReturn.STATUS_FAIL);
 							result.setMsg("用户名或密码错误！");
 						} else {
+							String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
+							if(invitationCode==null){
+								driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany());
+							}
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token", queryDriver.getSysDriverId());
 							result.setData(tokenMap);
@@ -240,8 +248,7 @@ public class MobileController {
 					}
 				}
 				// 判断二维码是否为空
-				if (queryDriver != null
-						&& (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
+				if (queryDriver != null && (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
 					// 图片路径
 					String rootPath = (String) prop.get("images_upload_path") + "/driver/";
 					File file = new File(rootPath);
@@ -470,7 +477,6 @@ public class MobileController {
 								+ mainObj.optString("phoneNum") + "/" + mainObj.optString("phoneNum") + ".jpg";
 						// 生成二维码
 						driver.setDriverQrcode(show_path);
-
 						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
 						if (tmp > 0) {
 							TwoDimensionCode handler = new TwoDimensionCode();
@@ -2810,9 +2816,11 @@ public class MobileController {
 	@ResponseBody
 	public String alipayCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String orderId = "";
+		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
+			trade_no = request.getParameter("trade_no");//支付宝交易号
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2834,6 +2842,7 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
+				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -2860,9 +2869,11 @@ public class MobileController {
 	@ResponseBody
 	public String alipayConsum(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String orderId = "";
+		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
+			trade_no = request.getParameter("trade_no");//支付宝交易号
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2884,6 +2895,7 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
+				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);

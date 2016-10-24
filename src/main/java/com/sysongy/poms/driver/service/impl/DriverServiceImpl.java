@@ -138,10 +138,10 @@ public class DriverServiceImpl implements DriverService {
 
             int count = sysDriverMapper.insertSelective(record);
             //如果有要邀请码，要进行返现，现在先写死，以后走订单
-            if(!StringUtils.isEmpty(invitationCode)){
-            	this.cashBackForRegister(record, invitationCode);
-            }
-            
+            //返现转移，用户登录后进行返现
+            //if(!StringUtils.isEmpty(invitationCode)){
+            // this.cashBackForRegister(record, invitationCode);
+            //}
             return count;
         }else{
             return sysDriverMapper.updateByPrimaryKeySelective(record);
