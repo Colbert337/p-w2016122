@@ -81,9 +81,6 @@
 					<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" <c:if test="${fn:contains(couponGroup.issued_type,'2')}">checked="checked"</c:if> value="2" /><s:Code2Name mcode="2" gcode="ISSUED_TYPE"></s:Code2Name></label>
 					<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" <c:if test="${fn:contains(couponGroup.issued_type,'3')}">checked="checked"</c:if> value="3" /><s:Code2Name mcode="3" gcode="ISSUED_TYPE"></s:Code2Name></label>
 					<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" <c:if test="${fn:contains(couponGroup.issued_type,'4')}">checked="checked"</c:if> value="4" /><s:Code2Name mcode="4" gcode="ISSUED_TYPE"></s:Code2Name></label>
-					<br/>
-					<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" <c:if test="${fn:contains(couponGroup.issued_type,'5')}">checked="checked"</c:if> value="5" /><s:Code2Name mcode="5" gcode="ISSUED_TYPE"></s:Code2Name></label>
-					<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" <c:if test="${fn:contains(couponGroup.issued_type,'6')}">checked="checked"</c:if> value="6" /><s:Code2Name mcode="6" gcode="ISSUED_TYPE"></s:Code2Name></label>
 				</div>
 			</div>
 			<div class="clearfix form-actions">
