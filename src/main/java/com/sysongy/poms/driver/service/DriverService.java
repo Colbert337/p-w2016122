@@ -31,7 +31,7 @@ public interface DriverService {
 		
 	public Integer delDriver(String sysDriverId) throws Exception;
 	
-	public Integer saveDriver(SysDriver record, String operation, String invitationCode) throws Exception;
+	public Integer saveDriver(SysDriver record, String operation, String invitationCode, String operator_id) throws Exception;
 
 	/**
 	 * 给司机充钱

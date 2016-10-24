@@ -248,7 +248,8 @@ public class MobileController {
 					}
 				}
 				// 判断二维码是否为空
-				if (queryDriver != null && (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
+				if (queryDriver != null
+						&& (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
 					// 图片路径
 					String rootPath = (String) prop.get("images_upload_path") + "/driver/";
 					File file = new File(rootPath);
@@ -269,7 +270,7 @@ public class MobileController {
 					// 生成二维码
 					driver.setDriverQrcode(show_path);
 					driver.setSysDriverId(queryDriver.getSysDriverId());
-					Integer tmp = driverService.saveDriver(driver, "update", null);
+					Integer tmp = driverService.saveDriver(driver, "update", null, this.appOperatorId);
 					String encoderContent = null;
 					if (queryDriver.getFullName() == null || "".equals(queryDriver.getFullName())) {
 						encoderContent = mainObj.optString("username");
@@ -477,7 +478,8 @@ public class MobileController {
 								+ mainObj.optString("phoneNum") + "/" + mainObj.optString("phoneNum") + ".jpg";
 						// 生成二维码
 						driver.setDriverQrcode(show_path);
-						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
+
+						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, this.appOperatorId);
 						if (tmp > 0) {
 							TwoDimensionCode handler = new TwoDimensionCode();
 							handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null,
@@ -593,7 +595,7 @@ public class MobileController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode, "update", null);
+							driverService.saveDriver(driverCode, "update", null, null);
 						}
 						resultMap.put("invitationCode", invitationCode);
 						if (driver.getTransportionName() != null
@@ -678,7 +680,7 @@ public class MobileController {
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
 
-					driverService.saveDriver(sysDriver, "update", null);
+					driverService.saveDriver(sysDriver, "update", null, null);
 				} else {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("密码为空！");
@@ -755,10 +757,10 @@ public class MobileController {
 						SysDriver oldDriver = driverService.queryByDeviceToken(deviceToken);
 						if (oldDriver != null) {
 							oldDriver.setDeviceToken("");
-							int resultoldVal = driverService.saveDriver(oldDriver, "update", null);
+							int resultoldVal = driverService.saveDriver(oldDriver, "update", null, null);
 						}
 					}
-					int resultVal = driverService.saveDriver(driver, "update", null);
+					int resultVal = driverService.saveDriver(driver, "update", null, null);
 				} else {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("修改用户信息失败！");
@@ -837,7 +839,7 @@ public class MobileController {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
 						driver.setPayCode(mainObj.optString("paycode"));
-						driverService.saveDriver(driver, "update", null);// 设置支付密码
+						driverService.saveDriver(driver, "update", null, null);// 设置支付密码
 					}else{
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("验证码无效！");
@@ -911,7 +913,7 @@ public class MobileController {
 					newPayCode = mainObj.optString("newPayCode");
 					if (newPayCode != null && !"".equals(newPayCode)) {
 						sysDriver.setPayCode(newPayCode);
-						driverService.saveDriver(sysDriver, "update", null);
+						driverService.saveDriver(sysDriver, "update", null, null);
 					}
 				} else {
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -1088,7 +1090,7 @@ public class MobileController {
 					// 生成二维码
 					driver.setDriverQrcode(show_path);
 					driver.setVerifySource("1");
-					int resultVal = driverService.saveDriver(driver, "update", null);
+					int resultVal = driverService.saveDriver(driver, "update", null, null);
 					if (resultVal <= 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("用户ID为空，申请失败！");
@@ -2816,11 +2818,9 @@ public class MobileController {
 	@ResponseBody
 	public String alipayCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String orderId = "";
-		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
-			trade_no = request.getParameter("trade_no");//支付宝交易号
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2842,7 +2842,6 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
-				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -2869,11 +2868,9 @@ public class MobileController {
 	@ResponseBody
 	public String alipayConsum(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String orderId = "";
-		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
-			trade_no = request.getParameter("trade_no");//支付宝交易号
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2895,7 +2892,6 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
-				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
@@ -2969,7 +2965,7 @@ public class MobileController {
 						}
 						sysDriver.setDriverType(driver.get(0).getDriverType());
 						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						int resultVal = driverService.saveDriver(sysDriver, "update", null);
+						int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 						// 返回大于0，成功
 						if (resultVal <= 0) {
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3061,7 +3057,7 @@ public class MobileController {
 								sysDriver.setPayCode(initialPassword);
 								sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 								// 更新初始密码
-								int resultVal = driverService.saveDriver(sysDriver, "update", null);
+								int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 								// 返回大于0，成功
 								if (resultVal <= 0) {
 									result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3084,7 +3080,7 @@ public class MobileController {
 									sysDriver.setPayCode(initialPassword);
 									sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 									// 更新初始密码
-									int resultVal = driverService.saveDriver(sysDriver, "update", null);
+									int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 									// 返回大于0，成功
 									if (resultVal <= 0) {
 										result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3117,7 +3113,7 @@ public class MobileController {
 							sysDriver.setPayCode(initialPassword);
 							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 							// 更新初始密码
-							int resultVal = driverService.saveDriver(sysDriver, "update", null);
+							int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
 							// 返回大于0，成功
 							if (resultVal <= 0) {
 								result.setStatus(MobileReturn.STATUS_FAIL);
@@ -4146,14 +4142,11 @@ public class MobileController {
 				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
 					for (Map<String, Object> map : gsGasPriceList) {
 						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("preferential_type", map.get("preferential_type"));
-						Usysparam usysparam = usysparamService.queryUsysparamByCode("CARDTYPE",map.get("gas_name").toString());
-						String gasName = usysparam.getMname();
-						reChargeMap.put("gasName", gasName);
+						reChargeMap.put("preferential_type", map.get("preferential_type").toString().equals("0")?"立减金额":"固定折扣");
+						reChargeMap.put("gasName", map.get("gas_name"));
 						reChargeMap.put("gasPrice", map.get("product_price"));
 						reChargeMap.put("priceUnit", map.get("unit"));
 						reChargeMap.put("discountAmount",map.get("minus_money")==null?map.get("fixed_discount"):map.get("minus_money"));
-						reChargeMap.put("remark",map.get("remark"));
 						reChargeList.add(reChargeMap);
 					}
 				}else{
@@ -4225,10 +4218,7 @@ public class MobileController {
 							Map<String, Object> reChargeMap = new HashMap<>();
 							reChargeMap.put("couponId",data.getCoupon_id());
 							reChargeMap.put("couponKind", data.getCoupon_kind());
-							//reChargeMap.put("couponType", data.getCoupon_type());
-							if(data.getCoupon_kind().equals("2")){
-								reChargeMap.put("gasStationName", data.getGas_station_name());
-							}
+							reChargeMap.put("couponType", data.getCoupon_type());
 							reChargeMap.put("useCondition", data.getUse_condition());
 							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
 							reChargeMap.put("startTime",data.getStart_coupon_time());
@@ -4245,7 +4235,7 @@ public class MobileController {
 							Map<String, Object> reChargeMap = new HashMap<>();
 							reChargeMap.put("couponId",data.getCoupon_id());
 							reChargeMap.put("couponKind", data.getCoupon_kind());
-							//reChargeMap.put("couponType", data.getCoupon_type());
+							reChargeMap.put("couponType", data.getCoupon_type());
 							reChargeMap.put("useCondition", data.getUse_condition());
 							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
 							reChargeMap.put("startTime",data.getStart_coupon_time());
@@ -4624,8 +4614,10 @@ public class MobileController {
 	public void getQR() {
 		try {
 			List<SysDriver> list = driverService.queryAll();
+			System.out.println(list.size());
 			// 图片路径
 			String rootPath = (String) prop.get("images_upload_path") + "/driver/";
+			System.out.println(rootPath);
 			File file = new File(rootPath);
 			// 如果根文件夹不存在则创建
 			if (!file.exists() && !file.isDirectory()) {
@@ -4646,6 +4638,13 @@ public class MobileController {
 				String encoderContent = null;
 				if (list.get(i).getFullName() != null && !"".equals(list.get(i).getFullName())) {
 					String name = list.get(i).getFullName();
+					// name = new
+					// String(list.get(i).getFullName().getBytes("GB2312"),"UTF-8");
+					// name = new
+					// String(list.get(i).getFullName().getBytes("UTF-8"),"GB2312");
+					// encoderContent=list.get(i).getUserName()+"_"+ new
+					// String(new
+					// String(list.get(i).getFullName().getBytes("UTF-8"),"GBK").getBytes("GBK"),"UTF-8");
 					encoderContent = list.get(i).getUserName() + "_" + name;
 				} else {
 					encoderContent = list.get(i).getUserName();
@@ -4653,7 +4652,7 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				driver.setSysDriverId(list.get(i).getSysDriverId());
 				driver.setDriverQrcode(show_path);
-				int resultVal = driverService.saveDriver(driver, "update", null);
+				int resultVal = driverService.saveDriver(driver, "update", null, null);
 				handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null, TwoDimensionCode.size);
 			}
 		} catch (Exception e) {

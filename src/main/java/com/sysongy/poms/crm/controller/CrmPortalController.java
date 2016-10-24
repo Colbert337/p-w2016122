@@ -545,7 +545,7 @@ public class CrmPortalController {
                         //生成二维码
                         driver.setDriverQrcode(show_path);
 
-                        Integer tmp = driverService.saveDriver(driver, "insert", invitationCode);
+                        Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, GlobalConstant.appOperatorId);
                         if(tmp > 0){
                             TwoDimensionCode handler = new TwoDimensionCode();
                             handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
@@ -685,7 +685,7 @@ public class CrmPortalController {
             driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
             driver.setMemo("钟殿滨特殊业务 2016-10-21 脚本添加100个司机(卡号：12000000601~12000000700)");
 
-            driverService.saveDriver(driver,operation, null);
+            driverService.saveDriver(driver,operation, null, null);
 
         }
         return "/webpage/crm/show-import";

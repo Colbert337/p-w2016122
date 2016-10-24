@@ -16,8 +16,8 @@ public class CouponGroup extends BaseModel {
 	private String coupongroup_detail;
 	// 优惠券组中多个优惠卷IDs
 	private String coupon_ids;
-	// 优惠券组中多个优惠卷NOs
-	private String coupon_nos;
+	// 优惠券组中多个优惠卷的发放个数
+	private String coupon_nums;
 	//优惠卷组的发放类型
 	private String issued_type;
 	// 额定消费优惠开始时间
@@ -42,7 +42,13 @@ public class CouponGroup extends BaseModel {
 	private Date lastmodify_time;
 	// 优惠券组中多个优惠卷IDs
 	private String coupon_titles;
-	
+
+	public String getCoupon_nums() {
+		return coupon_nums;
+	}
+	public void setCoupon_nums(String coupon_nums) {
+		this.coupon_nums = coupon_nums;
+	}
 	public String getCoupongroup_id() {
 		return coupongroup_id;
 	}
@@ -72,12 +78,6 @@ public class CouponGroup extends BaseModel {
 	}
 	public void setCoupon_ids(String coupon_ids) {
 		this.coupon_ids = coupon_ids;
-	}
-	public String getCoupon_nos() {
-		return coupon_nos;
-	}
-	public void setCoupon_nos(String coupon_nos) {
-		this.coupon_nos = coupon_nos;
 	}
 	public String getIssued_type() {
 		return issued_type;

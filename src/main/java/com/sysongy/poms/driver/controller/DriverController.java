@@ -176,7 +176,7 @@ public class DriverController extends BaseContoller{
 		driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
 
 		try {
-			result = driverService.saveDriver(driver,operation, null);
+			result = driverService.saveDriver(driver,operation, null, currUser.getUserId());
 			resultInt = 1;
 		}catch (Exception e){
 			e.printStackTrace();
