@@ -22,6 +22,8 @@ public interface CouponMapper {
 	int insertUserCoupon(UserCoupon record);
 	
 	int updateUserCoupon(UserCoupon record);
+
+	int updateUserCouponStatus(UserCoupon record);
 	
 	UserCoupon selectByUserCouponByPK(String user_coupon_id);
 	

@@ -19,6 +19,8 @@ public interface CouponService {
 
 	public String modifyUserCoupon(UserCoupon userCoupon, String userID) throws Exception;
 
+	public int modifyUserCouponStatus(UserCoupon record) throws Exception ;
+
 	public String addUserCoupon(UserCoupon userCoupon, String userID) throws Exception;
 
 	public PageInfo<UserCoupon> queryUserCoupon(UserCoupon userCoupon) throws Exception;
