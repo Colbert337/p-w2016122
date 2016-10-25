@@ -149,7 +149,7 @@ function saveFenpei(){
     for(var i=0;i<data.length;i++){
     	if(data[i].indexOf("quota")!=-1){
     		if(data[i].split("=")[1]<0){
-    			alert("分配金额不能小于0");
+    			 bootbox.alert("分配金额不能小于0");
     			return;
     		}    
     	}
