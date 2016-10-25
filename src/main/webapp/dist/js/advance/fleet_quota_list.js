@@ -155,6 +155,11 @@ function saveFenpei(){
     	}
     }
     dataForm = decodeURIComponent(dataForm,true);
+    if(dataForm.indexOf("quota")==-1){
+    	bootbox.alert("暂无车队，不能分配资金!");
+    	$("#fenpeiModel").modal('hide');
+    	return;
+    }
     var saveOptions ={
         url:"../web/tcms/fleetQuota/save/fenpei",
         type:'post',
