@@ -93,12 +93,8 @@
 									</td>
 										<td>
 											<div class="text-center">
-
-												<a class="option-btn-m" href="javascript:void(0);" title="查看详情" data-rel="tooltip">
-													<i class="ace-icon fa fa-search-plus  bigger-130" onclick="showUserCoupon('${list.coupongroup_id}');"></i>
-												</a>
 												<a class="option-btn-m" href="javascript:void(0);" title="导入优惠名单" data-rel="tooltip">
-													<i class="ace-icon fa fa-cloud-download  bigger-130" onclick="importuserCoupon('${list.coupongroup_id}');"></i>
+													<i class="ace-icon fa fa-cloud-download  bigger-130" onclick="importUserCoupon('${list.coupongroup_id}');"></i>
 												</a>
 												<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 													<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate('${list.coupongroup_id}');"></i>

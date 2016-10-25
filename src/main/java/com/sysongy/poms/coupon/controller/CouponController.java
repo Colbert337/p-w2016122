@@ -449,4 +449,28 @@ public class CouponController extends BaseContoller {
 		}
 	}
 	
+	
+	@RequestMapping("/couponUserList")
+	public String queryCouponUserList(ModelMap map, UserCoupon userCoupon) throws Exception {
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/coupon/manageCouponUser";
+		try {
+			PageInfo<UserCoupon> userCouponInfo = service.queryUserCoupon(userCoupon);
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+			map.addAttribute("ret", bean);
+			map.addAttribute("userCouponInfo", userCouponInfo);
+			map.addAttribute("userCoupon", userCoupon);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+			map.addAttribute("ret", bean);
+			logger.error("获得优惠卷的人员名单出错！", e);
+			throw e;
+		} finally {
+			return ret;
+		}
+	}
+	
 }

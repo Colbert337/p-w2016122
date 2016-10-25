@@ -49,7 +49,7 @@ public class Coupon extends BaseModel {
 	private Date lastmodify_time;	
 	//是否选到优惠卷组
 	private String coupon_check_status;
-	//是否选到优惠卷组
+	//优惠卷组中数目
 	private String coupon_check_nums;	
 
 	//虚拟字段，司集ID
