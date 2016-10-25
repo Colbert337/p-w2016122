@@ -57,7 +57,10 @@
 								value="${road.auditorTime_str}" readonly="readonly" />
 						</div>
 					</div>
-
+					<div class="item">
+						<label>创建人电话/创建人:</label> <input type="text" name="publisherName" id="publisherName"
+													placeholder="输入创建人电话/创建人" maxlength="200" value="${road.publisherName}" />
+					</div>
 					<div class="item">
 						<button class="btn btn-sm btn-primary" type="button"
 							onclick="loadPage('#main','<%=basePath%>/webpage/poms/mobile/roadAdd.jsp');">
@@ -244,17 +247,31 @@
 				<div class="shenhe-items-hd">路况信息</div>
 				<table class="table">
 					<tbody>
+					<tr>
+						<th>开始时间</th>
+						<td><div id="indu_com_number" name="show"></div></td>
+						<th>结束时间</th>
+						<td colspan="3"><div id="status" name="show"></div></td>
+
+					</tr>
+					<tr>
+						<th>省份信息</th>
+						<td><div name="show"></div></td>
+						<th>点赞数量</th>
+						<td><div id="prepay_phone" name="show"></div></td>
+					</tr>
+					<tr>
+						<th>坐标</th>
+						<td><div id="salesmen_name" name="show"></div></td>
+						<th>方向</th>
+						<td><div id="salesmen_name" name="show"></div></td>
+					</tr>
+
 						<tr>
 							<th width="15%">路况类型</th>
 							<td><div id="sys_gas_station_id" name="show"></div></td>
-							<th width="15%">路况状态</th>
+							<th width="15%">审核状态</th>
 							<td><div id="gas_station_name" name="show"></div></td>
-						</tr>
-						<tr>
-							<th>坐标</th>
-							<td><div id="salesmen_name" name="show"></div></td>
-							<th>方向</th>
-							<td><div id="salesmen_name" name="show"></div></td>
 						</tr>
 						<tr>
 							<th>拍照时间</th>
@@ -262,28 +279,7 @@
 							<th>路况说明</th>
 							<td><div id="admin_username" name="show"></div></td>
 						</tr>
-						<tr>
-							<th>开始时间</th>
-							<td><div id="indu_com_number" name="show"></div></td>
-							<th>结束时间</th>
-							<td colspan="3"><div id="status" name="show"></div></td>
 
-						</tr>
-					</tbody>
-				</table>
-				<div class="shenhe-items-hd">创建信息</div>
-				<table class="table">
-					<tbody>
-						<tr>
-							<th>创建人</th>
-							<td><div id="address" name="show"></div></td>
-							<th>创建人电话</th>
-							<td><div id="created_time" name="show"></div></td>
-						</tr>
-						<tr>
-							<th>创建时间</th>
-							<td colspan="3"><div id="created_time" name="show"></div></td>
-						</tr>
 					</tbody>
 				</table>
 				<div class="shenhe-items-hd">审核信息</div>
@@ -301,14 +297,25 @@
 					</tr>
 					</tbody>
 				</table>
+				<div class="shenhe-items-hd">创建信息</div>
+				<table class="table">
+					<tbody>
+						<tr>
+							<th>创建人</th>
+							<td><div id="address" name="show"></div></td>
+							<th>创建人电话</th>
+							<td><div id="created_time" name="show"></div></td>
+						</tr>
+						<tr>
+							<th>创建时间</th>
+							<td colspan="3"><div id="created_time" name="show"></div></td>
+						</tr>
+					</tbody>
+				</table>
+
 				<div class="shenhe-items-hd">其他信息</div>
 				<table class="table">
-					<tr>
-						<th>省份信息</th>
-						<td><div name="show"></div></td>
-						<th>点赞数量</th>
-						<td><div id="prepay_phone" name="show"></div></td>
-					</tr>
+
 					<tr>
 						<th>备注</th>
 						<td colspan="3"><div id="prepay_balance" name="show"></div></td>

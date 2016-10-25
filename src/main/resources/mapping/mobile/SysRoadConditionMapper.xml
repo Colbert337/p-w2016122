@@ -101,7 +101,9 @@
 		<if test="publisherTime_str != null &amp;&amp; publisherTime_str != ''">
 			and publisher_time between CONCAT(#{publisherTime_str,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{auditorTime_str,jdbcType=VARCHAR},' 23:59:59')
 		</if>
-		 
+      <if test="publisherName != null &amp;&amp; publisherName!= ''">
+       and publisher_name=#{publisherName,jdbcType=VARCHAR}  or   publisher_phone=#{publisherName,jdbcType=VARCHAR}
+       </if>
 		</trim>
   </select> 
   
