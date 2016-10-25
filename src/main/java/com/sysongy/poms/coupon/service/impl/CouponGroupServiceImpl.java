@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import com.github.pagehelper.PageHelper;
 import com.sysongy.poms.coupon.dao.CouponGroupMapper;
@@ -128,6 +129,8 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 					UserCoupon userCoupon = new UserCoupon();
 					BeanUtils.copyProperties(tmp_coupon, userCoupon);
 					userCoupon.setUser_coupon_id(UUIDGenerator.getUUID());
+					userCoupon.setSys_driver_id(driver_id);
+					userCoupon.setIsuse(GlobalConstant.COUPON_STATUS.UNUSE);
 					
 					couponService.addUserCoupon(userCoupon, operator_id);
 				}
