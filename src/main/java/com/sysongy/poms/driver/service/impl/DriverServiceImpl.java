@@ -329,8 +329,10 @@ public class DriverServiceImpl implements DriverService {
 		}
 		
 		String preferential_cash = "";
-		if(order.getPreferential_cash().compareTo(BigDecimal.valueOf(0.0)) > 0){
-			preferential_cash = "气站优惠" + order.getPreferential_cash() + "元";
+		if(order.getPreferential_cash() !=null && "".equals(order.getPreferential_cash() )){
+			if(order.getPreferential_cash().compareTo(BigDecimal.valueOf(0.0)) > 0){
+				preferential_cash = "气站优惠" + order.getPreferential_cash() + "元";
+			}
 		}
 
         String remark = "";
