@@ -544,7 +544,7 @@ public class CRMCashServiceContoller {
                 List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
                 
                 if(list.size()>0){
-                	couponGroupService.sendCouponGroup(order.getCreditAccount(), list, order.getOperator());
+                	couponGroupService.sendCouponGroup(order.getCreditAccount(), list, record.getOperator());
                 }
             }
             
