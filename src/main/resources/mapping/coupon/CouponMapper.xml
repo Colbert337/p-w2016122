@@ -273,24 +273,21 @@
 	<!-- 查询当前用户所有优惠券 -->
 	<select id="queryAllCouponForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
 		SELECT
-			coupon_id,
-			coupon_kind,
-			coupon_type,
-			use_condition,
-			preferential_discount,
-			start_coupon_time,
-			end_coupon_time
-		FROM sys_coupon
+			sys_user_coupon.coupon_id,
+			sys_coupon.coupon_kind,
+			sys_coupon.coupon_type,
+			sys_coupon.use_condition,
+			sys_coupon.preferential_discount,
+			sys_coupon.coupon_title,
+			sys_coupon.limit_money,
+			sys_coupon.start_coupon_time,
+			sys_coupon.end_coupon_time
+		FROM
+			sys_user_coupon
+		LEFT JOIN sys_coupon ON sys_user_coupon.coupon_id = sys_coupon.coupon_id
 		WHERE
-			coupon_id IN (
-				SELECT
-					coupon_id
-				FROM
-					sys_user_coupon
-				WHERE
-					isuse = '0'
-				AND sys_user_coupon.sys_driver_id = #{driverId,jdbcType=VARCHAR}
-			)
+			isuse = '0'
+		AND sys_user_coupon.sys_driver_id = #{driverId,jdbcType=VARCHAR}
 	</select>
 
 	<select id="queryUserCouponByID" resultMap="UserCouponMap" parameterType="java.lang.String">
