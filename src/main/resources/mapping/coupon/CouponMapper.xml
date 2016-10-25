@@ -276,6 +276,7 @@
 			sys_user_coupon.coupon_id,
 			sys_coupon.coupon_kind,
 			sys_coupon.coupon_type,
+			sys_gas_station.gas_station_name,
 			sys_coupon.use_condition,
 			sys_coupon.preferential_discount,
 			sys_coupon.coupon_title,
@@ -285,6 +286,7 @@
 		FROM
 			sys_user_coupon
 		LEFT JOIN sys_coupon ON sys_user_coupon.coupon_id = sys_coupon.coupon_id
+		LEFT JOIN sys_gas_station ON sys_coupon.sys_gas_station_id = sys_gas_station.sys_gas_station_id
 		WHERE
 			isuse = '0'
 		AND sys_user_coupon.sys_driver_id = #{driverId,jdbcType=VARCHAR}

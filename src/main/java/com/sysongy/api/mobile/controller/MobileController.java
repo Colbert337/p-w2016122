@@ -4277,6 +4277,7 @@ public class MobileController {
 				Coupon coupon = new Coupon();
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				String useCondition =null;
+				String couponKind =null;
 				//当加注站ID和消费金额不为空时，返回当前用户可用优惠券列表，按金额倒叙排列，分页。
 				if(gastationId!=null&&!"".endsWith(gastationId)&&amount!=null&&!"".equals(amount)){
 					coupon.setSys_gas_station_id(gastationId);
@@ -4286,7 +4287,11 @@ public class MobileController {
 						for (Coupon data : pageInfo.getList()) {
 							Map<String, Object> reChargeMap = new HashMap<>();
 							reChargeMap.put("couponId",data.getCoupon_id());
-							reChargeMap.put("couponKind", data.getCoupon_kind());
+							couponKind = data.getCoupon_kind();
+							if(couponKind.equals("2")){
+								reChargeMap.put("gasStationName",data.getGas_station_name());
+							}
+							reChargeMap.put("couponKind", couponKind);
 							reChargeMap.put("couponType", data.getCoupon_type());
 							useCondition = data.getUse_condition();
 							reChargeMap.put("useCondition",useCondition);
@@ -4295,8 +4300,8 @@ public class MobileController {
 							if(useCondition.equals("1")){
 								reChargeMap.put("limit_money",data.getLimit_money());
 							}
-							reChargeMap.put("startTime",data.getStart_coupon_time());
-							reChargeMap.put("endTime",data.getEnd_coupon_time());
+							reChargeMap.put("startTime",data.getStart_coupon_time().substring(0, 19));
+							reChargeMap.put("endTime",data.getEnd_coupon_time().substring(0, 19));
 							reChargeList.add(reChargeMap);
 						}
 					}else{
@@ -4308,7 +4313,11 @@ public class MobileController {
 						for (Coupon data : pageInfo.getList()) {
 							Map<String, Object> reChargeMap = new HashMap<>();
 							reChargeMap.put("couponId",data.getCoupon_id());
-							reChargeMap.put("couponKind", data.getCoupon_kind());
+							couponKind = data.getCoupon_kind();
+							if(couponKind.equals("2")){
+								reChargeMap.put("gasStationName",data.getGas_station_name());
+							}
+							reChargeMap.put("couponKind", couponKind);
 							reChargeMap.put("couponType", data.getCoupon_type());
 							reChargeMap.put("title",data.getCoupon_title());
 							useCondition = data.getUse_condition();
@@ -4317,8 +4326,8 @@ public class MobileController {
 								reChargeMap.put("limit_money",data.getLimit_money());
 							}
 							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
-							reChargeMap.put("startTime",data.getStart_coupon_time());
-							reChargeMap.put("endTime",data.getEnd_coupon_time());
+							reChargeMap.put("startTime",data.getStart_coupon_time().substring(0, 19));
+							reChargeMap.put("endTime",data.getEnd_coupon_time().substring(0, 19));
 							reChargeList.add(reChargeMap);
 						}
 					}else{
