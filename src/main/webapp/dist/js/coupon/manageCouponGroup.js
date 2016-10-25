@@ -25,7 +25,7 @@
 			}
 		})
 	}
-	function importuserCoupon(coupongroup_id){
+	function importUserCoupon(coupongroup_id){
 		loadPage('#main', '../web/couponGroup/importUserCoupon?coupongroup_id='+coupongroup_id);
 	}
 	function commitForm(obj){
@@ -41,11 +41,6 @@
 	
 	function init(){
 		loadPage('#main', '../web/couponGroup/couponGroupList');
-	}
-
-	function showUserCoupon(coupon_id){
-		loadPage('#content', '../web/couponGroup/showUserCoupon?coupon_id='+coupon_id);
-		$("#userCouponModel").modal('show');
 	}
 	
 	function closeDialog(obj){

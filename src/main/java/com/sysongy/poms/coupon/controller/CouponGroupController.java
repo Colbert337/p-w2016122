@@ -98,9 +98,9 @@ public class CouponGroupController extends BaseContoller {
 			 for(int i=0;i<issued_type.length;i++){
 				 issuedtype+=issued_type[i]+",";
 			 } 	 
-		 }
-		 issuedtype.substring(0,issuedtype.length()-1);
-		 couponGroup.setIssued_type(issuedtype);
+			 issuedtype.substring(0,issuedtype.length()-1);
+			 couponGroup.setIssued_type(issuedtype);
+		 } 
 		try {
 			if (null == couponGroup.getCoupongroup_id()) {
 				coupongroup_id = service.addCouponGroup(couponGroup, currUser.getUserId());

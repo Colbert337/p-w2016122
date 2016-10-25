@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import com.github.pagehelper.PageHelper;
 import com.sysongy.poms.coupon.dao.CouponGroupMapper;
@@ -59,18 +60,6 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 	public String modifyCouponGroup(CouponGroup couponGroup, String userID) throws Exception {
 		couponGroup.setLastmodify_person_id(userID);
 		couponGroup.setLastmodify_time(new Date());
-		if("".equals(couponGroup.getStart_moneyrated_time())){
-			couponGroup.setStart_moneyrated_time(null);
-		}
-		if("".equals(couponGroup.getEnd_moneyrated_time())){
-			couponGroup.setEnd_moneyrated_time(null);
-		}
-		if("".equals(couponGroup.getStart_timesrated_time())){
-			couponGroup.setStart_timesrated_time(null);
-		}
-		if("".equals(couponGroup.getEnd_timesrated_time())){
-			couponGroup.setEnd_timesrated_time(null);
-		}
 		couponGroupMapper.updateByPrimaryKey(couponGroup);
 		return couponGroup.getCoupongroup_id();
 	}
@@ -98,18 +87,6 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			coupongroup_no = "YHZ" + StringUtils.leftPad(tmp.toString(), 5, "0");
 		}
 		couponGroup.setCoupongroup_no(coupongroup_no);
-		if("".equals(couponGroup.getStart_moneyrated_time())){
-			couponGroup.setStart_moneyrated_time(null);
-		}
-		if("".equals(couponGroup.getEnd_moneyrated_time())){
-			couponGroup.setEnd_moneyrated_time(null);
-		}
-		if("".equals(couponGroup.getStart_timesrated_time())){
-			couponGroup.setStart_timesrated_time(null);
-		}
-		if("".equals(couponGroup.getEnd_timesrated_time())){
-			couponGroup.setEnd_timesrated_time(null);
-		}
 		couponGroupMapper.insert(couponGroup);
 		return couponGroup.getCoupongroup_id();
 	}
@@ -148,11 +125,13 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			for(int i=0;i<coupon.length;i++){
 				for(int k=0;k<Integer.valueOf(nums[i]);k++){
 					Coupon tmp_coupon = couponService.queryCouponByPK(coupon[i]);
+					
 					UserCoupon userCoupon = new UserCoupon();
 					BeanUtils.copyProperties(tmp_coupon, userCoupon);
 					userCoupon.setUser_coupon_id(UUIDGenerator.getUUID());
 					userCoupon.setSys_driver_id(driver_id);
-					userCoupon.setIsuse("0");
+					userCoupon.setIsuse(GlobalConstant.COUPON_STATUS.UNUSE);
+
 					couponService.addUserCoupon(userCoupon, operator_id);
 				}
 			}

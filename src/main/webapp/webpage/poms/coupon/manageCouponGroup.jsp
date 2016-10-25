@@ -23,11 +23,18 @@
 					<div class="search-types">
 						<div class="item">
 							<label>优惠组编号：</label>
-							<input type="text" name="coupon_no" placeholder="输入优惠卷组编号"  maxlength="32" value="${couponGroup.coupongroup_no}"/>
+							<input type="text" name="coupongroup_no" placeholder="输入优惠卷组编号"  maxlength="32" value="${couponGroup.coupongroup_no}"/>
 						</div>
 						<div class="item">
 							<label>优惠组名称：</label>
-							<input type="text" name="coupon_title" placeholder="输入优惠卷组名称"  maxlength="32" value="${couponGroup.coupongroup_title}"/>
+							<input type="text" name="coupongroup_title" placeholder="输入优惠卷组名称"  maxlength="32" value="${couponGroup.coupongroup_title}"/>
+						</div>
+						<div class="item">
+						<label>发放类型：</label>
+							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${couponGroup.issued_type=='1'}">checked="checked"</c:if> name="issued_type" value="1"/><s:Code2Name mcode="1" gcode="ISSUED_TYPE"></s:Code2Name></label>
+							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${couponGroup.issued_type=='2'}">checked="checked"</c:if> name="issued_type" value="2" /><s:Code2Name mcode="2" gcode="ISSUED_TYPE"></s:Code2Name></label>
+							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${couponGroup.issued_type=='3'}">checked="checked"</c:if> name="issued_type" value="3" /><s:Code2Name mcode="3" gcode="ISSUED_TYPE"></s:Code2Name></label>
+							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${couponGroup.issued_type=='4'}">checked="checked"</c:if> name="issued_type" value="4" /><s:Code2Name mcode="4" gcode="ISSUED_TYPE"></s:Code2Name></label>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/coupon/addCouponGroup.jsp');">
@@ -86,12 +93,8 @@
 									</td>
 										<td>
 											<div class="text-center">
-
-												<a class="option-btn-m" href="javascript:void(0);" title="查看详情" data-rel="tooltip">
-													<i class="ace-icon fa fa-search-plus  bigger-130" onclick="showUserCoupon('${list.coupongroup_id}');"></i>
-												</a>
 												<a class="option-btn-m" href="javascript:void(0);" title="导入优惠名单" data-rel="tooltip">
-													<i class="ace-icon fa fa-cloud-download  bigger-130" onclick="importuserCoupon('${list.coupongroup_id}');"></i>
+													<i class="ace-icon fa fa-cloud-download  bigger-130" onclick="importUserCoupon('${list.coupongroup_id}');"></i>
 												</a>
 												<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 													<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate('${list.coupongroup_id}');"></i>

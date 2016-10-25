@@ -133,6 +133,9 @@
     <if test="orderType != null &amp;&amp; orderType != ''" >
       and order_type = #{orderType,jdbcType=VARCHAR}
     </if>
+    <if test="creditAccount != null &amp;&amp; creditAccount != ''" >
+      and credit_account = #{creditAccount,jdbcType=VARCHAR}
+    </if>
   </select>
 
   <select id="queryOrderLogs" resultMap="OrderLogResultMap" parameterType="java.lang.String" >
