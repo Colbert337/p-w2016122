@@ -2640,6 +2640,7 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 						}
 						data.put("payReq", orderParam + "&" + sign);
+						data.put("orderId", orderID);
 						result.setData(data);
 					} else if (payType.equalsIgnoreCase("1")) { // 微信消费
 						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","C03"); // TODO充值成功后再去生成订单
@@ -2672,6 +2673,7 @@ public class MobileController {
 						}
 						JSONObject dataObj = JSONObject.fromObject(payReq);
 						data.put("payReq", dataObj);
+						data.put("orderId", orderID);
 						result.setData(data);
 					}
 
