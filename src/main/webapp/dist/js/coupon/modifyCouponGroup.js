@@ -257,7 +257,6 @@ function addCouponNum(num){
 		couponNum.val(99);
 	}
 	coupon_nums.put(couponNum.attr('id'),couponNum.val());
-	console.log("coupon_nums",coupon_nums);
 }
 
 //更改优惠卷发送类型
@@ -463,9 +462,7 @@ function save(){
 	}
 	var couponnums = new Array();
 	var couponids=couponid.split(',');
-	console.log("coupon_nums",coupon_nums);
 	for(var i=0;i<couponids.length;i++){
-		console.log("coupon_nums+value",couponids[i]+"---------------"+coupon_nums.get(couponids[i]));
 		couponnums.push(coupon_nums.get(couponids[i]));
 	}
 
