@@ -31,7 +31,7 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 	
 	@Autowired
 	private CouponMapper couponMapper;
-
+	@Autowired
 	private CouponService couponService;
 
 
@@ -148,11 +148,11 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			for(int i=0;i<coupon.length;i++){
 				for(int k=0;k<Integer.valueOf(nums[i]);k++){
 					Coupon tmp_coupon = couponService.queryCouponByPK(coupon[i]);
-					
 					UserCoupon userCoupon = new UserCoupon();
 					BeanUtils.copyProperties(tmp_coupon, userCoupon);
 					userCoupon.setUser_coupon_id(UUIDGenerator.getUUID());
-					
+					userCoupon.setSys_driver_id(driver_id);
+					userCoupon.setIsuse("0");
 					couponService.addUserCoupon(userCoupon, operator_id);
 				}
 			}
