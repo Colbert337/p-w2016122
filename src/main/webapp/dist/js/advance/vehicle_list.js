@@ -303,7 +303,19 @@ $('#editForm').bootstrapValidator({
 					min: 6,
 					max:20,
 					message: '密码长度必须在6~20位之间'
-				}
+				},
+				callback: {
+                    message: '支付密码不一致',
+                    callback: function (value, validator, $field) {
+                    	if($("[name=rePassword]").val()!=""){
+                    		if($("[name=rePassword]").val() != value){
+                                return false;
+                            }
+                            return true;
+                    	}
+                    	return true;
+                    }
+                }
             }
         },
         rePassword: {

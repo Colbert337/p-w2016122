@@ -15,6 +15,8 @@ import java.util.HashMap;
  *
  */
 public class GlobalConstant {
+	
+	public static final String appOperatorId = "8aa4ba67855a11e6a356000c291aa9e3";
 
 	/**
 	 * 状态-启用
@@ -753,5 +755,12 @@ public class GlobalConstant {
 		public static final String UNUSE = "0";
 		public static final String USED = "1";
 		public static final String SUSPEND = "2";
+	}
+	
+	public interface COUPONGROUP_TYPE{
+		public static final String NEW_REGISTER_USER = "1";
+		public static final String FIRST_CONSUME = "2";
+		public static final String REGISTER_INVITE_FRIEND = "3";
+		public static final String REGISTER_INVITED = "4";
 	}
 }

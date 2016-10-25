@@ -8,7 +8,9 @@ import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.coupon.model.Coupon;
+import com.sysongy.poms.coupon.model.CouponGroup;
 import com.sysongy.poms.coupon.model.UserCoupon;
+import com.sysongy.poms.coupon.service.CouponGroupService;
 import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
@@ -97,6 +99,9 @@ public class CRMCashServiceContoller {
 
     @Autowired
     GsGasPriceService gsGasPriceService;
+    
+    @Autowired
+    private CouponGroupService couponGroupService;
 
 
     @ResponseBody
@@ -253,7 +258,9 @@ public class CRMCashServiceContoller {
                         }else if(preferentialType.equals("1")){//折扣
                             BigDecimal sumPrice = sysOrderGoods.getSumPrice();
                             float fixedDiscount = gsGasPrice.getFixed_discount();//获取折扣
-                            discountSumPrice = BigDecimalArith.mul(sumPrice,new BigDecimal(fixedDiscount+""));
+                            if(fixedDiscount > 0){//折扣为零时，不做折扣处理
+                                discountSumPrice = BigDecimalArith.mul(sumPrice,new BigDecimal(fixedDiscount+""));
+                            }
                             sysOrderGoods.setDiscountSumPrice(discountSumPrice);
                         }
                         discountSum = BigDecimalArith.add(discountSum,discountSumPrice);
@@ -267,6 +274,9 @@ public class CRMCashServiceContoller {
                 record.setCash(discountSum);//优惠后金额
                 BigDecimal discountAmount = BigDecimalArith.sub(record.getShould_payment(),discountSum);
                 record.setPreferential_cash(discountAmount);//优惠金额
+            }else{
+                record.setCash(record.getShould_payment());//优惠后金额
+                record.setPreferential_cash(BigDecimal.ZERO);//优惠金额
             }
 
             //根据订单金额和会员信息，查询优惠券列表
@@ -317,8 +327,7 @@ public class CRMCashServiceContoller {
         try {
             SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
             record.setIs_discharge("0");
-            if((record == null) || StringUtils.isEmpty(record.getOrderId()) ||
-                    StringUtils.isEmpty(record.getOperatorSourceId()) ){
+            if((record == null) || StringUtils.isEmpty(record.getOrderId()) || StringUtils.isEmpty(record.getOperatorSourceId()) ){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单ID或者气站ID为空！！！");
                 return ajaxJson;
@@ -428,8 +437,8 @@ public class CRMCashServiceContoller {
 
             if(!StringUtils.isEmpty(checkCode)){
                 record.setConsume_card(sysDriver.getCardId());
-                String checkCodeFromRedis = (String)redisClientImpl.getFromCache
-                        (sysDriver.getSysDriverId());
+                String checkCodeFromRedis = (String)redisClientImpl.getFromCache(sysDriver.getSysDriverId());
+                
                 if(StringUtils.isEmpty(checkCodeFromRedis)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("验证码已失效，请重新生成验证码！！！");
@@ -458,6 +467,7 @@ public class CRMCashServiceContoller {
 //
 //            record.setCash(totalPrice);
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
+            
             if((gasCard != null) && (gasCard.getCard_property().equalsIgnoreCase(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION))){
 
             	record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION);      //车队消费
@@ -465,10 +475,13 @@ public class CRMCashServiceContoller {
 
                 TcFleet tcFleet = findFleetInfo(record.getConsume_card());      //如果车队为空，则直接消费运输公司资金
                 List<TcVehicle> vehicles = tcVehicleService.queryVehicleByCardNo(record.getConsume_card());
+                
                 Transportion transportion = null;
+                
                 if (vehicles.size() > 0) {
                     transportion = transportionService.queryTransportionByPK(vehicles.get(0).getStationId());
                 }
+                
                 if(transportion == null){
                     logger.error("所属运输公司无法查询:" + tcFleet.getStationId());
                     ajaxJson.setSuccess(false);
@@ -516,6 +529,25 @@ public class CRMCashServiceContoller {
 
             //设置商品打折信息
             sysOrderGoodsService.setGoodsDiscountInfo(goods, gastation.getSys_gas_station_id());
+            
+            //发优惠劵
+            SysOrder order = new SysOrder();
+            order.setCreditAccount(record.getCreditAccount());
+            order.setOrderType("220");
+            
+            List<SysOrder> order_list = orderService.queryOrders(order).getList();
+            //首次消费
+            if(order_list.size() < 1){
+            	CouponGroup couponGroup = new CouponGroup();
+                couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
+                
+                List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+                
+                if(list.size()>0){
+                	couponGroupService.sendCouponGroup(order.getCreditAccount(), list, record.getOperator());
+                }
+            }
+            
 
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
@@ -545,6 +577,8 @@ public class CRMCashServiceContoller {
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
+            
+            
 
             recordNew.setCash(formatCash(record.getCash()));
             sendConsumeMessage(recordNew, mobilePhone);
@@ -711,6 +745,7 @@ public class CRMCashServiceContoller {
         }
         SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(originalOrder,
                 user.getSysUserId(), record.getDischarge_reason());
+        hedgeRecord.setPreferential_cash(originalOrder.getPreferential_cash());// add by wdq 20161024 给冲红订单添加优惠金额属性
 
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
@@ -734,6 +769,8 @@ public class CRMCashServiceContoller {
         }
 
         Map<String, Object> attributes = new HashMap<String, Object>();
+        hedgeRecord.setShould_payment(originalOrder.getShould_payment());
+        hedgeRecord.setCoupon_cash(originalOrder.getCoupon_cash());
         attributes.put("sysOrder", hedgeRecord);
         ajaxJson.setAttributes(attributes);
         return ajaxJson;
@@ -794,7 +831,7 @@ public class CRMCashServiceContoller {
             ajaxJson.setMsg("气站ID为空！！！" );
             return ajaxJson;
         }
-
+        sysOrderDeal = orderDealService.selectByPrimaryKey(sysOrderDeal.getDealId());
         if(StringUtils.isEmpty(sysOrderDeal.getIsCharge())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("报表类型为空！！！" );

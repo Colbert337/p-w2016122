@@ -7,7 +7,6 @@ import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.CouponGroup;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.coupon.service.CouponGroupService;
-import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.gastation.model.Gastation;
 
 import net.sf.json.JSONArray;
@@ -15,6 +14,7 @@ import net.sf.json.JSONArray;
 import javax.servlet.http.HttpSession;
 import org.springframework.ui.ModelMap;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CouponGroupController extends BaseContoller {
 
 	@Autowired
-	private CouponGroupService service;
-	@Autowired
-	private CouponService couponService;	
+	private CouponGroupService service;	
 	
 
 	private CouponGroup couponGroup;
@@ -77,7 +75,8 @@ public class CouponGroupController extends BaseContoller {
 	 * @throws Exception
 	 */
 	@RequestMapping("/saveCouponGroup")
-	public String addCouponGroup(ModelMap map, CouponGroup couponGroup, HttpServletRequest request) throws Exception {
+	public String addCouponGroup(ModelMap map, CouponGroup couponGroup,
+			@RequestParam("couponNums") String couponNums,	HttpServletRequest request) throws Exception {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/coupon/addCouponGroup";
 		String coupongroup_id = null;
@@ -88,33 +87,20 @@ public class CouponGroupController extends BaseContoller {
 			bean.setRetMsg("登录信息过期，请重新登录！");
 			return ret;
 		}
-		//优惠卷id
-		 String[] coupon_id =  request.getParameterValues("coupon_id");
-		 //优惠卷数量
-		 String[] couponNum =  request.getParameterValues("couponNum");
-		 //优惠卷编号
-		 String[] coupon_no =  request.getParameterValues("coupon_no");		 
+		//优惠卷个数
+		couponNums =  new String(couponNums.getBytes("iso8859-1"),"UTF-8");
 		 //发放类型
 		 String[] issued_type =  request.getParameterValues("issued_type");
-		 String coupon_ids="";
-		 if(coupon_id!=null&&couponNum!=null){
-			 for(int i=0;i<coupon_id.length;i++){
-				 if(couponNum.length>0){
-					 for(int j=0;j<Integer.parseInt(couponNum[i]);j++){
-						 coupon_ids+=coupon_id[i]+",";
-					 }
-				 }
-			 } 		 
-		 }
-		 couponGroup.setCoupon_ids(coupon_ids);
+		 couponGroup.setCoupon_nums(couponNums);
 		 //设置发放类型
 		 String issuedtype = "";
 		 if(issued_type!=null){
 			 for(int i=0;i<issued_type.length;i++){
 				 issuedtype+=issued_type[i]+",";
 			 } 	 
-		 }
-		 couponGroup.setIssued_type(issuedtype);
+			 issuedtype.substring(0,issuedtype.length()-1);
+			 couponGroup.setIssued_type(issuedtype);
+		 } 
 		try {
 			if (null == couponGroup.getCoupongroup_id()) {
 				coupongroup_id = service.addCouponGroup(couponGroup, currUser.getUserId());
@@ -218,19 +204,21 @@ public class CouponGroupController extends BaseContoller {
 	 */
 	@RequestMapping("/couponList")
 	@ResponseBody
-	public String selectCouponList(ModelMap map) throws Exception {
+	public String selectCouponList(ModelMap map,HttpServletRequest request) throws Exception {
 		Coupon coupon = new Coupon();
-		PageInfo<Coupon> list;
+		List<Coupon> list;
 		// 优惠卷状态是开启的
 		coupon.setStatus("1");
+		String coupongroupid =   request.getParameter("coupongroup_id");
 		try {
-			list = couponService.queryCoupon(coupon);
+			list =  service.queryCoupon(coupon,coupongroupid);
 		} catch (Exception e) {
 			logger.error("查询优惠卷信息出错！", e);
 			throw e;
 		}
+		
 		JSONArray jsonArray = new JSONArray();
-		jsonArray.addAll(list.getList());
+		jsonArray.addAll(list);
 		return jsonArray.toString();
 	}
 	

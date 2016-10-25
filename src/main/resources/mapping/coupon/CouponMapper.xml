@@ -22,16 +22,22 @@
 	<resultMap id="UserCouponMap" type="com.sysongy.poms.coupon.model.UserCoupon">
 		<id column="user_coupon_id" property="user_coupon_id" jdbcType="VARCHAR" />
 		<result column="coupon_id" property="coupon_id" jdbcType="VARCHAR" />
-		<result column="coupon_on" property="coupon_on" jdbcType="VARCHAR" />
 		<result column="coupon_no" property="coupon_no" jdbcType="VARCHAR" />
 		<result column="sys_driver_id" property="sys_driver_id" jdbcType="VARCHAR" />
 		<result column="isuse" property="isuse" jdbcType="VARCHAR" />
 		<result column="start_coupon_time" property="start_coupon_time" jdbcType="TIMESTAMP" />
 		<result column="end_coupon_time" property="end_coupon_time" jdbcType="TIMESTAMP" />
-		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
-		<result column="lastmodify_time" property="lastmodify_time" jdbcType="TIMESTAMP" />
-		<result column="create_person_id" property="create_person_id" jdbcType="VARCHAR" />
-		<result column="lastmodify_person_id" property="lastmodify_person_id" jdbcType="VARCHAR" />
+		<result column="coupon_kind" property="coupon_kind" jdbcType="TIMESTAMP" />
+		<result column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="TIMESTAMP" />
+		<result column="gas_station_name" property="gas_station_name" jdbcType="VARCHAR" />
+		<result column="coupon_title" property="coupon_title" jdbcType="VARCHAR" />
+		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
+		<result column="full_name" property="full_name" jdbcType="VARCHAR" />
+		<result column="identity_card" property="identity_card" jdbcType="VARCHAR" />
+		<result column="plate_number" property="plate_number" jdbcType="VARCHAR" />
+		<result column="fuel_type" property="fuel_type" jdbcType="VARCHAR" />
+		<result column="station_id" property="station_id" jdbcType="VARCHAR" />
+		<result column="regis_source" property="regis_source" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<sql id="Base_Column_List">
@@ -138,18 +144,28 @@
 	<select id="selectByUser_Coupon" resultMap="UserCouponMap"
 		parameterType="java.lang.String">
 			SELECT
-			user_coupon_id,
-			coupon_id,
-			coupon_no,
-			sys_driver_id,
-			isuse,
 			suc.user_coupon_id,
 			suc.coupon_id,
 			suc.coupon_no,
+			suc.isuse,
 			suc.sys_driver_id,
 			suc.start_coupon_time,
 			suc.end_coupon_time,
-			suc.isuse,
+			suc.coupon_kind,
+			suc.sys_gas_station_id,
+			(SELECT
+				gs.gas_station_name
+			FROM
+				`sys_gas_station` gs
+			WHERE
+				gs.sys_gas_station_id = suc.sys_gas_station_id
+				) gas_station_name,
+			(SELECT
+			coupon_title
+				FROM
+			`sys_coupon` sc
+			WHERE
+			sc.coupon_id = suc.coupon_id) coupon_title,
 			sd.user_name,
 			sd.full_name,
 			sd.identity_card,
@@ -172,6 +188,28 @@
 		    <if test="sys_driver_id != null &amp;&amp; sys_driver_id != ''">
 		      	and suc.sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}
 		    </if>
+			<if test="user_name != null &amp;&amp; user_name != ''">
+				and sd.user_name LIKE CONCAT(CONCAT('%',
+				#{user_name,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="full_name != null &amp;&amp; full_name != ''">
+				and sd.full_name LIKE CONCAT(CONCAT('%',
+				#{full_name,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="coupon_no != null &amp;&amp; coupon_no != ''">
+				and suc.coupon_no LIKE CONCAT(CONCAT('%',
+				#{coupon_no,jdbcType=VARCHAR}), '%')
+			</if>
+			<if test="coupon_title != null &amp;&amp; coupon_title != ''">
+				and 	(SELECT	count(1) FROM sys_coupon WHERE coupon_id = suc.coupon_id
+					AND coupon_title LIKE CONCAT(CONCAT('%',#{coupon_title,jdbcType=VARCHAR}), '%')) > 0
+			</if>
+		    <if test="coupon_kind != null &amp;&amp; coupon_kind != ''">
+		      and suc.coupon_kind = #{coupon_kind,jdbcType=VARCHAR}
+		    </if>
+		    <if test="isuse != null &amp;&amp; isuse != ''">
+		      and suc.isuse = #{isuse,jdbcType=VARCHAR}
+		    </if>
 		</trim>
 	</select>
 	<select id="selectByUserCouponByPK" resultMap="UserCouponMap"
@@ -179,7 +217,6 @@
 			SELECT
 			user_coupon_id,
 			coupon_id,
-			sys_driver_id,
 			isuse,
 			suc.user_coupon_id,
 			suc.coupon_id,
@@ -220,35 +257,18 @@
 
 	<!-- 当前用户可用优惠券 -->
 	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="com.sysongy.poms.coupon.model.Coupon">
-		select
-			sc.coupon_id,
-			sc.coupon_kind,
-			sc.coupon_title,
-			sc.coupon_no,
-			sc.coupon_type,
-			sc.use_condition,
-			sc.preferential_discount,
-			sc.start_coupon_time,
-			sc.end_coupon_time
-		from sys_coupon sc
-		where sc.coupon_id IN (
-				SELECT
-					suc.coupon_id
-				FROM
-					sys_user_coupon suc
-				WHERE
-					suc.isuse = '0'
-				AND suc.sys_driver_id = #{driverId,jdbcType=VARCHAR}
-				)
-				and (sc.sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR} or sc.coupon_kind = 1 )
-				AND sc.start_coupon_time &lt;= CURDATE() AND sc.end_coupon_time &gt;= CURDATE()
-			<trim>
-				<if test="preferential_discount != null &amp;&amp; preferential_discount != ''">
-					AND sc.preferential_discount &lt; CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal)
-					AND (sc.limit_money is null or sc.limit_money &lt; CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal))
-				</if>
-			</trim>
-			order by CONVERT(preferential_discount,decimal) DESC,use_condition DESC,end_coupon_time ASC
+		select sc.*,suc.user_coupon_id
+		from sys_user_coupon suc left join sys_coupon sc on suc.coupon_id = sc.coupon_id
+		where suc.isuse = '0' AND suc.sys_driver_id = #{driverId,jdbcType=VARCHAR} AND sc.status = 1
+		AND (sc.sys_gas_station_id =  #{sys_gas_station_id,jdbcType=VARCHAR} OR sc.coupon_kind = 1)
+		AND sc.start_coupon_time &lt;= CURDATE() AND sc.end_coupon_time &gt;= CURDATE()
+		<trim>
+			<if test="preferential_discount != null &amp;&amp; preferential_discount != ''">
+				AND sc.preferential_discount &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal)
+				AND (sc.limit_money is null or sc.limit_money &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal))
+			</if>
+		</trim>
+		order by CONVERT(preferential_discount,decimal) DESC,use_condition DESC,end_coupon_time ASC
 	</select>
 	<!-- 查询当前用户所有优惠券 -->
 	<select id="queryAllCouponForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -273,10 +293,10 @@
 			)
 	</select>
 
-	<select id="queryUserCouponByNo" resultMap="UserCouponMap" parameterType="java.lang.String">
+	<select id="queryUserCouponByID" resultMap="UserCouponMap" parameterType="java.lang.String">
 		select * from sys_user_coupon
 		where isuse = '0' 
-		and coupon_no = #{0}
+		and user_coupon_id = #{0}
 		and sys_driver_id = #{1}
 	</select>
 </mapper>

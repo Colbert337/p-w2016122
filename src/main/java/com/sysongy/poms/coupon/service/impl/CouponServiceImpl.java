@@ -196,9 +196,7 @@ public class CouponServiceImpl implements CouponService {
 			record.setPageNum(1);
 			record.setPageSize(10);
 		}
-		if (StringUtils.isEmpty(record.getOrderby())) {
-			record.setOrderby("preferential_discount+0 DESC");
-		}
+
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Coupon> list = couponMapper.queryCouponOrderByAmount(record);
 		PageInfo<Coupon> pageInfo = new PageInfo<Coupon>(list);
@@ -225,8 +223,8 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	@Override
-	public UserCoupon queryUserCouponByNo(String coupon_no, String driver_id) throws Exception {
-		return couponMapper.queryUserCouponByNo(coupon_no, driver_id);
+	public UserCoupon queryUserCouponByNo(String coupon_id, String driver_id) throws Exception {
+		return couponMapper.queryUserCouponByID(coupon_id, driver_id);
 	}
 
 }

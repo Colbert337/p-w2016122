@@ -73,9 +73,7 @@
 						<div class="form-group">
 							<label for="coupon_ids" class="col-sm-3 control-label no-padding-right">优惠卷：</label>
 							<div class="col-sm-4">
-								<input type="text" name="coupon_ids"/>
-								<input type="text" name="coupon_nos"/>
-								<input type="text" name="coupon_titles"/>
+								<input type="hidden" name="coupon_ids"/>
 								<%--<input type="hidden" name="coupon_nos"/>--%>
 								<%--<div class="myOwnDdl">--%>
 									<%--<select multiple="multiple" class="form-control" id="coupon_ids" name="coupon_ids">--%>
@@ -106,41 +104,6 @@
 								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="2" /><s:Code2Name mcode="2" gcode="ISSUED_TYPE"></s:Code2Name></label>
 								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="3" /><s:Code2Name mcode="3" gcode="ISSUED_TYPE"></s:Code2Name></label>
 								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="4" /><s:Code2Name mcode="4" gcode="ISSUED_TYPE"></s:Code2Name></label>
-								<br/>
-								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="5" /><s:Code2Name mcode="5" gcode="ISSUED_TYPE"></s:Code2Name></label>
-								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="6" /><s:Code2Name mcode="6" gcode="ISSUED_TYPE"></s:Code2Name></label>
-							</div>
-						</div>
-						<div class="form-group" id="ratedmoney" style="display:none">
-							<label class="col-sm-3 control-label no-padding-right">额定消费优惠时间：</label>
-							<div class="col-sm-4 datepicker-noicon">
-								<input type="text" class="date-picker" name="start_moneyrated_time" id="start_moneyrated_time"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
-									<span class="">
-										<i class="fa fa-exchange"></i>
-									</span>
-								<input type="text" class="date-picker" name="end_moneyrated_time" id="end_moneyrated_time"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
-							</div>
-						</div>
-						<div class="form-group" id="money" style="display:none">
-							<label for="consume_money"  class="col-sm-3 control-label no-padding-right">消费金额：</label>
-							<div class="col-sm-4">
-								<input type="text" name="consume_money" placeholder="输入额定消费金额" class="form-control" maxlength="6" style="width:200px;text-align:right" required/>
-							</div>
-						</div>
-						<div class="form-group" id="ratedtime" style="display:none">
-							<label class="col-sm-3 control-label no-padding-right">额度次数优惠时间：</label>
-							<div class="col-sm-4 datepicker-noicon">
-								<input type="text" class="date-picker" name="start_timesrated_time" id="start_timesrated_time"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
-								<span class="">
-									<i class="fa fa-exchange"></i>
-								</span>
-								<input type="text" class="date-picker" name="end_timesrated_time" id="end_timesrated_time"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
-							</div>
-						</div>
-						<div class="form-group" id="times" style="display:none">
-							<label for="consume_times"  class="col-sm-3 control-label no-padding-right">消费次数：</label>
-							<div class="col-sm-4">
-								<input type="text" name="consume_times" placeholder="输入额定消费次数" class="form-control" maxlength="5" style="width:200px;text-align:right" required/>
 							</div>
 						</div>
 						<div class="clearfix form-actions">

@@ -607,6 +607,18 @@
 		                        min: 6,
 		                        max: 20,
 		                        message: '管理员密码长度必须大于等于6位'
+		                    },
+		                    callback: {
+		                    	message: '管理员密码不一致',
+		                    	callback: function (value, validator, $field) {
+		                    		if($("[name=admin_userpassword_repert]").val()!=""){
+		                    			if($("[name=admin_userpassword_repert]").val() != value){
+		                                	 return false;
+		                                 }
+		                                 return true;
+		                    		}
+		                    		return true; 
+	                            }
 		                    }
 		                }
 		            },
