@@ -2674,6 +2674,7 @@ public class MobileController {
 						data.put("payReq", dataObj);
 						result.setData(data);
 					}
+
 					//首次消费成功，发放优惠券
 					if(number==0){
 						CouponGroup couponGroup = new CouponGroup();
