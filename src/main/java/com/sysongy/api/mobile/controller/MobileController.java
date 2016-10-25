@@ -2568,15 +2568,26 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
+			boolean b = false;
+			String orderType = mainObj.optString("orderType");
 			String token = "token";
+			String gastationId = "gastationId";
+			String payableAmount = "payableAmount";
+			String amount = "amount";
 			String feeCount = "feeCount";
 			String payType = "payType";
-			boolean b = JsonTool.checkJson(mainObj, token, feeCount, payType);
+			//充值必填参数校验
+			if(orderType==null || "".equals(orderType)){
+				b= JsonTool.checkJson(mainObj, token, feeCount, payType);
+			}
+			//消费必填参数校验
+			if(orderType!=null && !"".equals(orderType) && orderType.equals("220")){
+				b= JsonTool.checkJson(mainObj, token, gastationId, payableAmount,amount);
+			}
 			/**
 			 * 请求接口
 			 */
 			if (b) {
-				String orderType = mainObj.optString("orderType");
 				payType = mainObj.optString("payType");
 				feeCount = mainObj.optString("feeCount");
 				String driverID = mainObj.optString("token");
@@ -2588,8 +2599,33 @@ public class MobileController {
 				if(orderType!=null && !"".equals(orderType) && orderType.equals("220")){
 					//查询消费订单个数
 					int number = orderService.queryConsumerOrderNumber(driverID);
+					//优惠券ID
+					String couponId = mainObj.optString("couponId");		
+					//优惠券金额
+					String couponCash = mainObj.optString("couponCash");	
+					//气站ID
+					gastationId = mainObj.optString("gastationId");	
+					//应付金额
+					payableAmount = mainObj.optString("payableAmount");	
+					//实付金额
+					amount =  mainObj.optString("amount");	
+					
 					if (payType.equalsIgnoreCase("2")) { // 支付宝消费
 						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","2"); // TODO充值成功后再去生成订单
+						//设置优惠券ID
+						if(couponId!=null && !"".equals(couponId)){
+							sysOrder.setCoupon_number(couponId);
+						}
+						//设置优惠金额
+						if(couponCash!=null && !"".equals(couponCash)){
+							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+						}
+						//设置气站ID
+						sysOrder.setChannelNumber(gastationId);
+						//设置应付金额
+						sysOrder.setCash(new BigDecimal(payableAmount));
+						//设置实付金额
+						sysOrder.setShould_payment(new BigDecimal(amount));
 						orderService.checkIfCanConsume(sysOrder);
 						String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
 						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员消费",
@@ -2607,6 +2643,20 @@ public class MobileController {
 						result.setData(data);
 					} else if (payType.equalsIgnoreCase("1")) { // 微信消费
 						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","1"); // TODO充值成功后再去生成订单
+						//设置优惠券ID
+						if(couponId!=null && !"".equals(couponId)){
+							sysOrder.setCoupon_number(couponId);
+						}
+						//设置优惠金额
+						if(couponCash!=null && !"".equals(couponCash)){
+							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+						}
+						//设置气站ID
+						sysOrder.setChannelNumber(gastationId);
+						//设置应付金额
+						sysOrder.setCash(new BigDecimal(payableAmount));
+						//设置实付金额
+						sysOrder.setShould_payment(new BigDecimal(amount));
 						orderService.checkIfCanConsume(sysOrder);
 						String entity = genProductArgs(orderID, feeCount,"2");
 						byte[] buf = Util.httpPost(url, entity);
