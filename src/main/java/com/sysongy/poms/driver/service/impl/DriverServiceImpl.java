@@ -350,11 +350,11 @@ public class DriverServiceImpl implements DriverService {
                 logger.info("根据"+order.getCoupon_number()+"找不到对应的优惠劵信息");
             }else{
                 if(order.getIs_discharge().equals("0")){//add by wdq 不是冲红，则修改优惠券状态为已使用
-                    usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.USED);
+                    usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.USED);//已使用
                 }else{
-                    usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.SUSPEND);//add by wdq 是冲红，则修改优惠券状态为初始化
+                    usercoupon.setIsuse(GlobalConstant.COUPON_STATUS.UNUSE);//add by wdq 是冲红，则修改优惠券状态为初始化
                 }
-                couponService.modifyUserCoupon(usercoupon, order.getOperator());
+                couponService.modifyUserCouponStatus(usercoupon);//修改当前优惠券状态
             }
 
             if(!(StringUtils.isEmpty(order.getCoupon_number()) && (StringUtils.isEmpty(order.getCoupon_cash().toString()))) && usercoupon != null){

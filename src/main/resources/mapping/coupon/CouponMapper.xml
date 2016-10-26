@@ -255,6 +255,12 @@
 		where coupon_no = #{coupon_no,jdbcType=VARCHAR}
 	</update>
 
+	<update id="updateUserCouponStatus" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
+		update sys_user_coupon
+		set isuse = #{isuse,jdbcType=VARCHAR}
+		where coupon_no = #{coupon_no,jdbcType=VARCHAR}
+	</update>
+
 	<!-- 当前用户可用优惠券 -->
 	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="com.sysongy.poms.coupon.model.Coupon">
 		select sc.*,suc.user_coupon_id
@@ -264,7 +270,7 @@
 		AND sc.start_coupon_time &lt;= CURDATE() AND sc.end_coupon_time &gt;= CURDATE()
 		<trim>
 			<if test="preferential_discount != null &amp;&amp; preferential_discount != ''">
-				AND sc.preferential_discount &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal)
+				AND ((sc.preferential_discount &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal) AND sc.use_condition = 1) or (sc.use_condition = 2) )
 				AND (sc.limit_money is null or sc.limit_money &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal))
 			</if>
 		</trim>
