@@ -131,7 +131,7 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 					userCoupon.setUser_coupon_id(UUIDGenerator.getUUID());
 					userCoupon.setSys_driver_id(driver_id);
 					userCoupon.setIsuse(GlobalConstant.COUPON_STATUS.UNUSE);
-					
+
 					couponService.addUserCoupon(userCoupon, operator_id);
 				}
 			}
