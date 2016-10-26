@@ -263,8 +263,9 @@
 
 	<!-- 当前用户可用优惠券 -->
 	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="com.sysongy.poms.coupon.model.Coupon">
-		select sc.*,suc.user_coupon_id
+		select sc.*,suc.user_coupon_id,sys_gas_station.gas_station_name
 		from sys_user_coupon suc left join sys_coupon sc on suc.coupon_id = sc.coupon_id
+		LEFT JOIN sys_gas_station ON sc.sys_gas_station_id = sys_gas_station.sys_gas_station_id
 		where suc.isuse = '0' AND suc.sys_driver_id = #{driverId,jdbcType=VARCHAR} AND sc.status = 1
 		AND (sc.sys_gas_station_id =  #{sys_gas_station_id,jdbcType=VARCHAR} OR sc.coupon_kind = 1)
 		AND sc.start_coupon_time &lt;= CURDATE() AND sc.end_coupon_time &gt;= CURDATE()
@@ -273,8 +274,11 @@
 				AND ((sc.preferential_discount &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal) AND sc.use_condition = 1) or (sc.use_condition = 2) )
 				AND (sc.limit_money is null or sc.limit_money &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal))
 			</if>
+			<if test="amount != null &amp;&amp; amount != ''">
+				<![CDATA[   AND sc.preferential_discount+0 <  #{amount,jdbcType=VARCHAR} ]]>
+			</if>			
 		</trim>
-		order by CONVERT(preferential_discount,decimal) DESC,use_condition DESC,end_coupon_time ASC
+		order by CONVERT(preferential_discount,decimal) DESC,use_condition DESC,end_coupon_time ASC,sc.coupon_kind DESC
 	</select>
 	<!-- 查询当前用户所有优惠券 -->
 	<select id="queryAllCouponForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
