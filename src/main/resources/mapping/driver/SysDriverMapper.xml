@@ -85,7 +85,7 @@
     select * from sys_driver where sys_driver_id like #{provinceId} order by sys_driver_id desc limit 1
   </select>
 
-  <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
     select
      *
     from sys_driver

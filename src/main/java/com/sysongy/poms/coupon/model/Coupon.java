@@ -52,15 +52,18 @@ public class Coupon extends BaseModel {
 	//优惠卷组中数目
 	private String coupon_check_nums;
 	//优惠卷发放数目
-	private String coupon_nums;	
+	private String coupon_nums;
 	//虚拟字段，司集ID
 	private String driverId;
+	//虚拟字段，应付金额
+	private String amount;
+
 	//当前时间
 	private String nowDate;
 	//当前时间
 	private String statusinfo;
-	
-	
+
+
 	public String getStatusinfo() {
 		return statusinfo;
 	}
@@ -274,5 +277,13 @@ public class Coupon extends BaseModel {
 	public void setDriverId(String driverId) {
 		this.driverId = driverId;
 	}
-	
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+
 }

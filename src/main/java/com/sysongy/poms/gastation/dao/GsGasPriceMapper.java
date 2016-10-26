@@ -18,6 +18,8 @@ public interface GsGasPriceMapper {
 
     GsGasPrice queryGsPriceByStationId(String gastationId,String goodsType);
 
+    GsGasPrice queryGsPriceByGsPriceId(String gastationId,String gsPriceId);
+
     int updateByPrimaryKeySelective(GsGasPrice record);
 
     int updateByPrimaryKey(GsGasPrice record);

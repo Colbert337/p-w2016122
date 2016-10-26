@@ -402,6 +402,11 @@ public class OrderServiceImpl implements OrderService {
 		   
 		   //针对司机消费充红
 		   if(orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CONSUME_DRIVER_DEDUCT)){
+			   dischargeOrder.setCoupon_cash(originalOrder.getCoupon_cash());
+			   dischargeOrder.setPreferential_cash(originalOrder.getPreferential_cash());
+			   dischargeOrder.setShould_payment(originalOrder.getShould_payment());
+			   dischargeOrder.setCoupon_number(originalOrder.getCoupon_number());
+
 			  String disChargeConsume_success = driverService.deductCashToDriver(dischargeOrder, GlobalConstant.ORDER_ISCHARGE_YES);
 			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargeConsume_success)){
 		    		//如果出错，直接退出

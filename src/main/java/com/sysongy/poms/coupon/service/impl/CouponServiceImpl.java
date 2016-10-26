@@ -203,6 +203,10 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	@Override
+	public int modifyUserCouponStatus(UserCoupon userCoupon) throws Exception {
+		return couponMapper.updateUserCouponStatus(userCoupon);
+	}
+	@Override
 	public UserCoupon queryUserCouponByPK(String user_coupon_id) throws Exception {
 		return couponMapper.selectByUserCouponByPK(user_coupon_id);
 	}
