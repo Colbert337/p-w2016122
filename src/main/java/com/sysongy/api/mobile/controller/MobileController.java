@@ -2611,7 +2611,7 @@ public class MobileController {
 					amount =  mainObj.optString("amount");	
 					
 					if (payType.equalsIgnoreCase("2")) { // 支付宝消费
-						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","C04"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","C04"); // TODO充值成功后再去生成订单
 						//设置优惠券ID
 						if(couponId!=null && !"".equals(couponId)){
 							sysOrder.setCoupon_number(couponId);
@@ -2622,13 +2622,14 @@ public class MobileController {
 						}
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
+						sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 						//设置应付金额
 						sysOrder.setCash(new BigDecimal(payableAmount));
 						//设置实付金额
 						sysOrder.setShould_payment(new BigDecimal(amount));
 						orderService.checkIfCanConsume(sysOrder);
 						String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
-						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员消费",
+						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, amount, "司集云平台-会员消费",
 								"司集云平台-会员消费", orderID, notifyUrl);
 						String orderParam = OrderInfoUtil2_0.buildOrderParam(paramsApp);
 						String sign = OrderInfoUtil2_0.getSign(paramsApp, RSA_PRIVATE);
@@ -2643,7 +2644,7 @@ public class MobileController {
 						data.put("orderId", orderID);
 						result.setData(data);
 					} else if (payType.equalsIgnoreCase("1")) { // 微信消费
-						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","C03"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, amount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","C03"); // TODO充值成功后再去生成订单
 						//设置优惠券ID
 						if(couponId!=null && !"".equals(couponId)){
 							sysOrder.setCoupon_number(couponId);
@@ -2654,12 +2655,15 @@ public class MobileController {
 						}
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
+						sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 						//设置应付金额
 						sysOrder.setCash(new BigDecimal(payableAmount));
 						//设置实付金额
 						sysOrder.setShould_payment(new BigDecimal(amount));
 						orderService.checkIfCanConsume(sysOrder);
-						String entity = genProductArgs(orderID, feeCount,"2");
+						//消费金额，微信消费金额单位为分，不能有小数
+						Integer money = (int) (new Double(amount)*100);
+						String entity = genProductArgs(orderID,money.toString(),"2");
 						byte[] buf = Util.httpPost(url, entity);
 						String content = new String(buf, "utf-8");
 						Map<String, String> orderHashs = decodeXml(content);
@@ -2754,6 +2758,7 @@ public class MobileController {
 	public String wechatCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String resultStr = "";
 		String orderId = "";
+		String transaction_id = "";
 		logger.debug("微信支付回调获取数据开始");
 		String inputLine;
 		String notityXml = "";
@@ -2780,6 +2785,8 @@ public class MobileController {
 			listNodes(node);
 			Element element = node.element("out_trade_no");
 			orderId = element.getText();
+			Element element1 = node.element("transaction_id");
+			transaction_id = element1.getText();
 		}
 
 		if (orderId != null && !"".equals(orderId)) {
@@ -2796,6 +2803,7 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
+				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -2821,6 +2829,7 @@ public class MobileController {
 	public String wechatConsum(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String resultStr = "";
 		String orderId = "";
+		String transaction_id = "";
 		logger.debug("微信支付回调获取数据开始");
 		String inputLine;
 		String notityXml = "";
@@ -2847,6 +2856,8 @@ public class MobileController {
 			listNodes(node);
 			Element element = node.element("out_trade_no");
 			orderId = element.getText();
+			Element element1 = node.element("transaction_id");
+			transaction_id = element1.getText();
 		}
 
 		if (orderId != null && !"".equals(orderId)) {
@@ -2863,6 +2874,7 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
+				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
@@ -2888,9 +2900,11 @@ public class MobileController {
 	@ResponseBody
 	public String alipayCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String orderId = "";
+		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
+			trade_no = request.getParameter("trade_no");//支付宝交易号
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2912,6 +2926,7 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
+				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -2938,9 +2953,11 @@ public class MobileController {
 	@ResponseBody
 	public String alipayConsum(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String orderId = "";
+		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
+			trade_no = request.getParameter("trade_no");//支付宝交易号
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2962,6 +2979,7 @@ public class MobileController {
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
+				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
