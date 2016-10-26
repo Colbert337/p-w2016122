@@ -4284,6 +4284,7 @@ public class MobileController {
 				if(gastationId!=null&&!"".endsWith(gastationId)&&amount!=null&&!"".equals(amount)){
 					coupon.setSys_gas_station_id(gastationId);
 					coupon.setDriverId(driverId);
+					coupon.setAmount(amount);
 					PageInfo<Coupon> pageInfo = couponService.queryCouponOrderByAmount(coupon);
 					if(pageInfo.getList()!=null&&pageInfo.getList().size()>0){
 						for (Coupon data : pageInfo.getList()) {
