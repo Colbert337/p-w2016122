@@ -51,8 +51,14 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 	}
 
 	@Override
-	public GsGasPrice queryGsPriceByStationId(String gastationId, String goodsType) throws Exception {
-		GsGasPrice gsGasPrice =  gsGasPriceMapper.queryGsPriceByStationId(gastationId, goodsType);
+	public GsGasPrice queryGsPriceByStationId(String gastationId,String goodsType) throws Exception {
+		GsGasPrice gsGasPrice =  gsGasPriceMapper.queryGsPriceByStationId(gastationId,goodsType);
+		return gsGasPrice;
+	}
+
+	@Override
+	public GsGasPrice queryGsPriceByGsPriceId(String gastationId, String gsPriceId) throws Exception {
+		GsGasPrice gsGasPrice =  gsGasPriceMapper.queryGsPriceByGsPriceId(gastationId,gsPriceId);
 		return gsGasPrice;
 	}
 

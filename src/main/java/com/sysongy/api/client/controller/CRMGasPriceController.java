@@ -148,7 +148,7 @@ public class CRMGasPriceController {
         Calendar curr = Calendar.getInstance();
         curr.set(Calendar.YEAR, curr.get(Calendar.YEAR) + 20);
         Date finishTime = curr.getTime();
-        productPrice.setFinishTime(finishTime);
+        productPrice.setStartTime(finishTime);
         productPrice.setProductPrice(lPrice);
         productPrice.setProduct_price_type("1");
         productPrice.setProduct_id(gsGasPrice.getGsGasPriceId());

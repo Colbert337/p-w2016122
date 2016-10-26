@@ -44,6 +44,7 @@ function importUserCoupon(){
 		dataType:'json',
 		enctype:"multipart/form-data",
 		beforeSend: function () {
+			$("#importAction").hide();
 			$('body').addClass('modal-open').css('padding-right','17px')
 			$('body').append('<div class="loading-warp"><div class="loading"><i class="ace-icon fa fa-spinner fa-spin"></i></div><div class="modal-backdrop fade in"></div></div>')
 		},
@@ -55,27 +56,56 @@ function importUserCoupon(){
 					bootbox.alert(data.message);
 				}
 				$("#info").text(data.info);
+				var sysDriverIds='';
 				$.each(data.driverList, function(i, driver){
 					num++;
 					var fuelType;
-					if(driver.fuelType=='1'){
-						fuelType='LNG';
-					}else if(driver.fuelType=='2'){
-						fuelType='LNG';
+					if(driver.fuelType!=null){
+						if(driver.fuelType=='1'){
+							fuelType='LNG';
+						}else if(driver.fuelType=='2'){
+							fuelType='LNG';
+						}else{
+							fuelType='柴油';
+						}
 					}else{
-						fuelType='柴油';
+						fuelType='';
+					}
+					sysDriverIds+= driver.sysDriverId+",";
+					var userName=driver.userName;
+					if(userName==null){
+						userName='';
+					}
+					var fullName=driver.fullName;
+					if(fullName==null){
+						fullName='';
+					}
+					var plateNumber=driver.plateNumber;
+					if(plateNumber==null){
+						plateNumber='';
+					}
+					var identityCard=driver.identityCard;
+					if(identityCard==null){
+						identityCard='';
+					}
+					var stationId=driver.stationId;
+					if(stationId==null){
+						stationId='';
+					}
+					var regisSource=driver.regisSource;
+					if(regisSource==null){
+						regisSource='';
 					}
 					$("#driver").append(
-					"<tr class='success'>"
-					+"<td style='display: none'><input type='hidden' name='sysDriverId' value='"+driver.sysDriverId+"'/></td>"
-					+"<td>"+driver.userName+"</td>"
-					+"<td>"+driver.fullName+"</td>"
-					+"<td>"+driver.plateNumber+"</td>"
-					+"<td>"+driver.identityCard+"</td>"
-					+"<td style='text-align:center'>"+fuelType+"</td>"
-					+"<td>"+driver.stationId+"</td>"
-					+"<td>"+driver.regisSource+"</td>"
-					+"</tr>"
+						"<tr class='success'>"
+						+"<td>"+userName+"</td>"
+						+"<td>"+fullName+"</td>"
+						+"<td>"+plateNumber+"</td>"
+						+"<td>"+identityCard+"</td>"
+						+"<td style='text-align:center'>"+fuelType+"</td>"
+						+"<td>"+stationId+"</td>"
+						+"<td>"+regisSource+"</td>"
+						+"</tr>"
 					);
 				});
 			$("#userCouponList").show();
@@ -83,6 +113,7 @@ function importUserCoupon(){
 				$("#importuserConpon").hide();
 			}
 			initTable();
+			$("input[name='sysDriverIds']").val(sysDriverIds.substr(0,sysDriverIds.length-1));
 		}, complete: function () {
 			$("body").removeClass('modal-open').removeAttr('style');
 			$(".loading-warp").remove();
@@ -168,7 +199,7 @@ function initTable() {
 		{
 		bDestroy:true,
 		bAutoWidth: false,
-		"aoColumns": [null, null,null, null, null, null, null, null],
+		"aoColumns": [null, null,null, null, null, null, null],
 		"aaSorting": [],
 		"oLanguage" :lang, //提示信息
 		select: {

@@ -86,7 +86,7 @@
 					</div>
 					<div id="userCouponList" style="display:none">
 						<p class="text-warning" id="info"></p>
-						<p class="text-info">列表中的人员可以获得优惠卷，“点击保存”获得优惠卷，“点击取消”重新导入人员名单！</p>
+						<p class="text-info">列表中的人员可以获得优惠卷，“点击保存”获得优惠卷，“点击取消”重新导入人员名单！<input type="hidden" name="sysDriverIds"/></p>
 						<div class="sjny-table-responsive">
 							<div id="dynamic-table_div">
 								<table id="dynamic-table" class="table table-striped table-bordered table-hover">

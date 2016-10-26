@@ -44,9 +44,11 @@
 							<%--<button class="btn btn-sm btn-primary" type="button" onclick="addChongzhi();">
 								充值
 							</button>--%>
-							<button class="btn btn-sm btn-primary" type="button" onclick="addFenpei();">
-								资金分配
-							</button>
+							<c:if test="${fleetQuotaMap.fleetQuotaList.size()!=0}">
+								<button class="btn btn-sm btn-primary" type="button" onclick="addFenpei();">
+									资金分配
+								</button>
+							</c:if>
 							<button class="btn btn-sm btn-primary" type="button" onclick="addZhuan();">
 								个人转账
 							</button>

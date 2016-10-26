@@ -31,12 +31,12 @@
 							<label>优惠名称：</label>
 							<input type="text" name="coupon_title" placeholder="输入优惠卷名称"  maxlength="32" value="${coupon.coupon_title}"/>
 						</div>
-						<div class="item">
-						    <label>优惠方式：</label>
-							<select class="chosen-select" name="coupon_type" >
-								<s:option flag="true" gcode="COUPON_TYPE" form="coupon" field="coupon_type" />
-							</select>
-						</div>
+						<%--<div class="item">--%>
+						    <%--<label>优惠方式：</label>--%>
+							<%--<select class="chosen-select" name="coupon_type" >--%>
+								<%--<s:option flag="true" gcode="COUPON_TYPE" form="coupon" field="coupon_type" />--%>
+							<%--</select>--%>
+						<%--</div>--%>
 						<div class="item">
 						    <label>优惠类型：</label>
 							<select class="chosen-select" name="coupon_kind" >
@@ -81,10 +81,11 @@
 									<th style="width:10%" onclick="orderBy(this,'coupon_no');commitForm();" id="coupon_no_order">优惠编号</th>
 									<th style="width:10%" onclick="orderBy(this,'coupon_title');commitForm();" id="coupon_title_order">优惠名称</th>
 									<th style="width:30%"onclick="orderBy(this,'coupon_kind');commitForm();" id="coupon_kind_order">优惠类型</th>
-									<th style="text-align:center;width:10%" onclick="orderBy(this,'coupon_type');commitForm();" id="coupon_type_order">优惠方式</th>
+									<%--<th style="text-align:center;width:10%" onclick="orderBy(this,'coupon_type');commitForm();" id="coupon_type_order">优惠方式</th>--%>
 									<th style="width:10%" onclick="orderBy(this,'use_condition');commitForm();" id="use_condition_order">使用条件</th>
 									<th style="text-align:center;width:10%" onclick="orderBy(this,'preferential_discount');commitForm();" id="preferential_discount_order">优惠额度</th>
 									<th style="text-align:center;width:10%" onclick="orderBy(this,'status');commitForm();" id="status_order">优惠状态</th>
+									<th style="width:10%" onclick="orderBy(this,'statusinfo');commitForm();" id="statusinfo_order">优惠情况</th>
 									<th style="width:5%" class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
@@ -101,11 +102,12 @@
 										<td>${list.coupon_title}</td>
 										<td style="display:none">${list.coupon_detail}</td>
 										<td><c:if test="${list.coupon_kind=='1'}"><s:Code2Name mcode="1" gcode="COUPON_KIND"></s:Code2Name></c:if><c:if test="${list.coupon_kind=='2'}"><s:Code2Name mcode="2" gcode="COUPON_KIND"></s:Code2Name>，优惠气站：${list.gas_station_name}</c:if> </td>
-										<td style="text-align:center;"><s:Code2Name mcode="${list.coupon_type}" gcode="COUPON_TYPE"></s:Code2Name></td>
+										<%--<td style="text-align:center;"><s:Code2Name mcode="${list.coupon_type}" gcode="COUPON_TYPE"></s:Code2Name></td>--%>
 										<td><c:if test="${list.use_condition=='1'}">满${list.limit_money}元使用</c:if><c:if test="${list.use_condition=='2'}">无条件使用</c:if></td>
 										<td style="text-align:center;">${list.preferential_discount}<c:if test="${list.coupon_type=='1'}">元</c:if><c:if test="${list.coupon_type=='2'}">折</c:if></td>
 										<td style="display:none;">${list.start_coupon_time}至${list.end_coupon_time}</td>
 										<td style="text-align:center;"><s:Code2Name mcode="${list.status}" gcode="COUPON_STATUS"></s:Code2Name></td>
+										<td>${list.statusinfo}</td>
 										<td>
 											<div class="text-center">
 
@@ -118,9 +120,11 @@
 												<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 													<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate('${list.coupon_id}');"></i>
 												</a>
-												<a class="option-btn-m" href="javascript:deleteCoupon('${list.coupon_id}');" title="删除" data-rel="tooltip">
-													<span class="ace-icon fa fa-trash-o bigger-130"></span>
-												</a>
+												<c:if test="${list.coupon_nums==0}">
+													<a class="option-btn-m" href="javascript:deleteCoupon('${list.coupon_id}');" title="删除" data-rel="tooltip">
+														<span class="ace-icon fa fa-trash-o bigger-130"></span>
+													</a>
+												</c:if>
 											</div>
 										</td>
 									</tr>

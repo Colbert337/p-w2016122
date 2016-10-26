@@ -25,8 +25,8 @@
 			}
 		})
 	}
-	function importUserCoupon(coupongroup_id){
-		loadPage('#main', '../web/couponGroup/importUserCoupon?coupongroup_id='+coupongroup_id);
+	function importUserCouponGroup(coupongroup_id){
+		loadPage('#main', '../web/couponGroup/importUserCouponGroup?coupongroup_id='+coupongroup_id);
 	}
 	function commitForm(obj){
 		//设置当前页的值
