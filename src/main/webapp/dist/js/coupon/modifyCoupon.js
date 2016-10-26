@@ -35,6 +35,8 @@ $('#start_coupon_time').datepicker({
 	todayHighlight: true,
 	language: "cn",
 	weekStart: 1,
+	startDate:new Date(),
+	endDate:"2037-12-31",
 	format: "yyyy-mm-dd",
 	pickerPosition: "bottom-left"
 }).on("click",function(e){
@@ -50,6 +52,8 @@ $('#end_coupon_time').datepicker({
 	todayHighlight: true,
 	language: "cn",
 	weekStart: 1,
+	startDate:new Date(),
+	endDate:"2037-12-31",
 	dateFormat:"yyyy-mm-dd",
 	pickerPosition: "bottom-left"
 }).on("click", function (e) {
@@ -70,9 +74,6 @@ function changeUseCondition(){
 	if(type=='2'){
 		$("input[name='limit_money']").val("");
 		$("input[name='limit_money']").attr("disabled","disabled");
-		$('#couponform').data('bootstrapValidator')
-			.updateStatus('limit_money', 'NOT_VALIDATED',null)
-			.validateField('limit_money');
 	}else{
 		$("input[name='limit_money']").removeAttr("disabled");
 	}
@@ -174,7 +175,6 @@ function save(){
 	if(!$('#couponform').data('bootstrapValidator').isValid()){
 		return ;
 	}
-
 	var options ={
 		url:'../web/coupon/saveCoupon',
 		type:'post',

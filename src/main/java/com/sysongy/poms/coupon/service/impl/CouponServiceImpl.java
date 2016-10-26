@@ -100,7 +100,7 @@ public class CouponServiceImpl implements CouponService {
 		}
 		coupon.setCoupon_title(coupontitle);
 		//设置优惠结束时间
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//格式化
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(sf.parse(coupon.getEnd_coupon_time()));
@@ -137,7 +137,24 @@ public class CouponServiceImpl implements CouponService {
 			}
 		}
 		coupon.setCoupon_title(coupontitle);
+		//设置优惠结束时间
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//格式化
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(sf.parse(coupon.getEnd_coupon_time()));
+		calendar.add(Calendar.HOUR_OF_DAY ,23);
+		calendar.add(Calendar.MINUTE, 59);
+		calendar.add(Calendar.SECOND, 59);
+		coupon.setEnd_coupon_time(sdf.format(calendar.getTime()));
 		couponMapper.updateByPrimaryKey(coupon);
+		if("2".equals(coupon.getStatus())){
+			UserCoupon userCoupon = new UserCoupon();
+			userCoupon.setCoupon_no(coupon.getCoupon_no());
+			userCoupon.setIsuse("2");
+			userCoupon.setLastmodify_person_id(userID);
+			userCoupon.setLastmodify_time(new Date());
+			couponMapper.updateUserCoupon(userCoupon);
+		}
 		return coupon.getCoupon_id();
 	}
 
@@ -153,9 +170,9 @@ public class CouponServiceImpl implements CouponService {
 
 	@Override
 	public PageInfo<UserCoupon> queryUserCoupon(UserCoupon userCoupon) throws Exception {
-		userCoupon.setPageSize(10);
 		if (userCoupon.getPageNum() == null) {
 			userCoupon.setPageNum(1);
+			userCoupon.setPageSize(10);
 		}
 		if (StringUtils.isEmpty(userCoupon.getOrderby())) {
 			userCoupon.setOrderby("create_time desc");
