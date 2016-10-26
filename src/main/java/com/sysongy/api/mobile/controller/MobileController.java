@@ -4212,7 +4212,7 @@ public class MobileController {
 				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
 					for (Map<String, Object> map : gsGasPriceList) {
 						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("preferential_type", map.get("preferential_type").toString().equals("0")?"立减金额":"固定折扣");
+						reChargeMap.put("preferential_type", map.get("preferential_type"));
 						reChargeMap.put("gasName", map.get("gas_name"));
 						reChargeMap.put("gasPrice", map.get("product_price"));
 						reChargeMap.put("priceUnit", map.get("unit"));
