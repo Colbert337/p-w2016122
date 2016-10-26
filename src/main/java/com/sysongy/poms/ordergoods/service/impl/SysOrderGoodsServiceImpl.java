@@ -35,18 +35,15 @@ public class SysOrderGoodsServiceImpl implements SysOrderGoodsService {
 			GsGasPrice price = new GsGasPrice();
 			price.setSysGasStationId(stationid);
 			price.setGasName(good.getGoodsType());
+			String gsPriceId = good.getOrderGoodsId();
 			
-			List<GsGasPrice> pricelist = gsGasPriceService.queryGsPrice(price).getList();
-			
-			if(pricelist.size() != 1){
-				throw new Exception("找不对对应的气品价格，STATION="+stationid+"GOODSTYPE="+good.getGoodsType());
-			}
-			
-			price = pricelist.get(0);
+			GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByGsPriceId(stationid, gsPriceId);
+
+			price = gsGasPrice;
 			//记录该订单的打折方式与打折金额
 			good.setPreferential_type(price.getPreferential_type());
 			
-			BigDecimal tmp = good.getPrice().subtract(this.getGsGasPrice(stationid, good.getGoodsType(),good.getPrice()));//优惠单价
+			BigDecimal tmp = good.getPrice().subtract(this.getGsGasPrice(stationid, gsPriceId,good.getPrice()));//优惠单价
 			
 			good.setPreferential_cash(tmp.multiply(BigDecimal.valueOf(good.getNumber())));//这里自己算
 		}
@@ -57,12 +54,12 @@ public class SysOrderGoodsServiceImpl implements SysOrderGoodsService {
 	 /**
      * 获取气品价格信息
      * @param gastationId 气站ID
-     * @param goodsType 气品类型
+     * @param gsPriceId 气品ID
      * @return 优惠后单价
      */
-    public BigDecimal getGsGasPrice(String gastationId, String goodsType, BigDecimal cash) throws Exception{
+    public BigDecimal getGsGasPrice(String gastationId, String gsPriceId, BigDecimal cash) throws Exception{
         //获取气品价格
-        GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByStationId(gastationId, goodsType);
+        GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByGsPriceId(gastationId, gsPriceId);
         
         if(gsGasPrice != null && gsGasPrice.getPreferential_type() != null){
         	

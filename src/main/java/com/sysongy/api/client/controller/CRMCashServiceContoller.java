@@ -235,10 +235,10 @@ public class CRMCashServiceContoller {
                 for (SysOrderGoods sysOrderGoods:sysOrderGoodsList ) {
                     double num = sysOrderGoods.getNumber();
                     BigDecimal price = sysOrderGoods.getPrice();
-                    String goodsType = sysOrderGoods.getGoodsType();
+                    String gsPriceId = sysOrderGoods.getOrderGoodsId();
 
                     //获取气品价格
-                    GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByStationId(gastationId,goodsType);
+                    GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByGsPriceId(gastationId,gsPriceId);
                     if(gsGasPrice != null && gsGasPrice.getPreferential_type() != null){
                         String preferentialType = gsGasPrice.getPreferential_type();
                         BigDecimal discountSumPrice = BigDecimal.ZERO;
