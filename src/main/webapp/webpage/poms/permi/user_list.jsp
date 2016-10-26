@@ -43,6 +43,18 @@
 						min: 6,
 						max:20,
 						message: '密码长度必须在6~20位之间'
+					},
+					callback: {
+						message: '密码不一致',
+						callback: function (value, validator, $field) {
+							if($("[name=rePassword]").val()!=""){
+								if($("[name=rePassword]").val() != value){
+									return false;
+								}
+								return true;
+							}
+							return true;
+						}
 					}
 				}
 			},
@@ -118,6 +130,7 @@
 	/*分页相关方法 end*/
 	//显示添加用户弹出层
 	function addUser(){
+		document.getElementById("pwd").style.display="inline";
 		/*$("#userModel").modal('show');*/
 		$("#editUserDiv").text("添加用户");
 		queryRoleList();
@@ -215,6 +228,7 @@
 	 * 回显用户信息
 	 */
 	function editUser(userId){
+		document.getElementById("pwd").style.display="none";
 		$.ajax({
 			url:"<%=basePath%>/web/permi/user/update",
 			data:{sysUserId:userId},
@@ -333,6 +347,64 @@
 	//重置
 	function init(){
 		loadPage('#main', '../web/permi/user/list/page');
+	}
+	function check(){
+		$('#userForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+// 			password: {
+// 				validators: {
+// 					notEmpty: {
+// 						message: '密码不能为空'
+// 					},
+// 					stringLength: {
+// 						min: 6,
+// 						max:20,
+// 						message: '密码长度必须在6~20位之间'
+// 					}
+// 					,
+// 					callback: {
+// 						message: '密码不一致',
+// 						callback: function (value, validator, $field) {
+// 							alert($("[name=rePassword]").val());
+// 							if($("[name=rePassword]").val() != ""){
+// 								if($("[name=rePassword]").val() != value){
+// 									return false;
+// 								}
+// 								return true;
+// 							}
+// 							return true;
+// 						}
+// 					}
+// 				}
+// 			}
+// 			,
+			rePassword: {
+				validators: {
+					notEmpty: {
+						message: '确认密码不能为空'
+					},
+					stringLength: {
+						min: 6,
+						max:20,
+						message: '密码长度必须在6~20位之间'
+					},
+					callback: {
+						message: '密码不一致',
+						callback: function (value, validator, $field) {
+							if($("[name=password]").val() != value){
+								return false;
+							}
+							return true;
+						}
+					}
+				}
+			}
+		})
 	}
 </script>
 <div class="page-header">
@@ -515,12 +587,12 @@
 										</div>
 									</div>
 								</div>
-								<div class="row">
+								<div class="row" id="pwd" style="display: none;">
 									<div class="col-sm-6">
 										<div class="form-group">
 											<label class="col-sm-4 control-label no-padding-right" for="password"><span class="red_star">*</span> 用户密码:</label>
 											<div class="col-sm-8">
-												<input type="password" name="password" id="password" placeholder="用户密码" maxlength="20" class="form-control" />
+												<input type="password" name="password" id="password" placeholder="用户密码" onblur="check()" maxlength="20" class="form-control" />
 											</div>
 										</div>
 									</div>
@@ -528,7 +600,7 @@
 										<div class="form-group">
 											<label class="col-sm-4 control-label no-padding-right" for="re_password"><span class="red_star">*</span> 确认密码:</label>
 											<div class="col-sm-8">
-												<input type="password" name="rePassword" id="re_password" placeholder="确认密码" maxlength="20" class="form-control" />
+												<input type="password" name="rePassword" id="re_password" placeholder="确认密码" onblur="check()" maxlength="20" class="form-control" />
 											</div>
 										</div>
 									</div>

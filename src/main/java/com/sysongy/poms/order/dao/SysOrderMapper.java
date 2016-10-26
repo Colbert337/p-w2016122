@@ -118,4 +118,11 @@ public interface SysOrderMapper {
      * @return
      */
     SysOrder queryById(String orderId);
+    
+    /**
+     * 查询消费订单个数
+     * @param token 当前用户唯一标识
+     * @return 消费订单个数
+     */
+     int queryConsumerOrderNumber(String token);
 }

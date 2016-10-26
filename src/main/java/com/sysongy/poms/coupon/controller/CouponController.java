@@ -102,10 +102,10 @@ public class CouponController extends BaseContoller {
 		try {
 			if (null == coupon.getCoupon_id()) {
 				coupon_id = service.addCoupon(coupon, currUser.getUserId());
-				bean.setRetMsg("[" + coupon.getCoupon_title() + "]新增成功");
+				bean.setRetMsg("新增成功");
 			} else {
 				coupon_id = service.modifyCoupon(coupon, currUser.getUserId());
-				bean.setRetMsg("[" + coupon.getCoupon_title() + "]保存成功");
+				bean.setRetMsg("保存成功");
 			}
 			ret = this.queryAllCouponList(map, this.coupon == null ? new Coupon() : this.coupon);
 			bean.setRetCode(100);
@@ -323,11 +323,11 @@ public class CouponController extends BaseContoller {
 					if (sheet.getRow(i)[1] != null && !"".equals(sheet.getRow(i)[1])) {
 						UserCoupon userCoupon = new UserCoupon();
 						userCoupon.setCoupon_id(coupon_id);
-						Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
-						Matcher m = p.matcher(sheet.getRow(i)[1].getContents());
+//						Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
+//						Matcher m = p.matcher(sheet.getRow(i)[1].getContents());
 						SysDriver sysDriver = new SysDriver();
 						sysDriver.setMobilePhone(sheet.getRow(i)[1].getContents());
-						sysDriver.setNotin_checked_status("0");
+//						sysDriver.setNotin_checked_status("0");
 						List<SysDriver> driverInfo = driverService.queryeSingleList(sysDriver);
 						if (sheet.getRow(i)[1] == null
 								|| "".equals(sheet.getCell(1, i).getContents().replace(" ", ""))) {
@@ -335,21 +335,21 @@ public class CouponController extends BaseContoller {
 							err++;
 							continue;
 						}
-						if (!m.matches()) {
-							message += "第" + (i + 1) + "行电话号码格式不正确！\n";
-							err++;
-							continue;
-						}
+//						if (!m.matches()) {
+//							message += "第" + (i + 1) + "行电话号码格式不正确！\n";
+//							err++;
+//							continue;
+//						}
 						if (driverInfo.size() == 0) {
 							message += "第" + (i + 1) + "行电话号码在系统中不存在！\n";
 							err++;
 							continue;
 						}
-						if (!driverInfo.get(0).getFullName().equals(sheet.getRow(i)[0].getContents())) {
+						/*if (!driverInfo.get(0).getFullName().equals(sheet.getRow(i)[0].getContents())) {
 							message += "第" + (i + 1) + "行姓名与电话号码在系统中不匹配！\n";
 							err++;
 							continue;
-						}
+						}*/
 						SysDriver driver = driverInfo.get(0);
 						userCoupon.setSys_driver_id(driver.getSysDriverId());
 						driverList.add(driver);
@@ -397,7 +397,8 @@ public class CouponController extends BaseContoller {
 	@RequestMapping("/importCoupon")
 	public String importCoupon(ModelMap map, @RequestParam("coupon_id") String coupon_id,
 			@RequestParam("coupon_no") String coupon_no,@RequestParam("start_coupon_time") String start_coupon_time,
-			@RequestParam("end_coupon_time") String end_coupon_time,
+			@RequestParam("end_coupon_time") String end_coupon_time,@RequestParam("coupon_kind") String coupon_kind,
+			 @RequestParam("sys_gas_station_id") String sys_gas_station_id,
 			 HttpServletRequest request) throws Exception {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/coupon/importUserCoupon";
@@ -412,13 +413,17 @@ public class CouponController extends BaseContoller {
 		 coupon_no =  new String(coupon_no.getBytes("iso8859-1"),"UTF-8");
 		 start_coupon_time =  new String(start_coupon_time.getBytes("iso8859-1"),"UTF-8");
 		 end_coupon_time =  new String(end_coupon_time.getBytes("iso8859-1"),"UTF-8");
+		 coupon_kind =  new String(coupon_kind.getBytes("iso8859-1"),"UTF-8");
+		 sys_gas_station_id =  new String(sys_gas_station_id.getBytes("iso8859-1"),"UTF-8");
 		 String[] sysDriverId =  request.getParameterValues("sysDriverId");
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			for(int i=0;i<sysDriverId.length;i++){
 				UserCoupon userCoupon = new UserCoupon();
 				userCoupon.setCoupon_id(coupon_id);
 				userCoupon.setCoupon_no(coupon_no);
+				userCoupon.setCoupon_kind(coupon_kind);
+				userCoupon.setSys_gas_station_id(sys_gas_station_id);
 				userCoupon.setStart_coupon_time(sdf.parse(start_coupon_time));
 				userCoupon.setEnd_coupon_time(sdf.parse(end_coupon_time));
 				userCoupon.setSys_driver_id(sysDriverId[i]);
@@ -439,6 +444,30 @@ public class CouponController extends BaseContoller {
 			map.addAttribute("coupon_id", coupon_id);
 			map.addAttribute("coupon", coupon);
 			logger.error("" + sysDriverId.length + "名司机导入失败", e);
+		} finally {
+			return ret;
+		}
+	}
+	
+	
+	@RequestMapping("/couponUserList")
+	public String queryCouponUserList(ModelMap map, UserCoupon userCoupon) throws Exception {
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/coupon/manageCouponUser";
+		try {
+			PageInfo<UserCoupon> userCouponInfo = service.queryUserCoupon(userCoupon);
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+			map.addAttribute("ret", bean);
+			map.addAttribute("userCouponInfo", userCouponInfo);
+			map.addAttribute("userCoupon", userCoupon);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+			map.addAttribute("ret", bean);
+			logger.error("获得优惠卷的人员名单出错！", e);
+			throw e;
 		} finally {
 			return ret;
 		}

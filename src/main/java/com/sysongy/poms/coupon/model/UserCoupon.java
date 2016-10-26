@@ -11,7 +11,7 @@ public class UserCoupon extends BaseModel {
 	private String coupon_id;
 	// 优惠券编号
 	private String coupon_no;
-	// 用户角色编号
+	// 用户ID
 	private String sys_driver_id;
 	// 优惠卷使用状态，0获得，1已使用，2冻结等异常状态
 	private String isuse;
@@ -41,7 +41,40 @@ public class UserCoupon extends BaseModel {
 	 private String station_id;
 	 //注册工作站名称
 	private String regis_source;
+	//优惠卷类型
+	private String coupon_kind;
+	//加注站ID
+	private String sys_gas_station_id;
+	//加注站名称
+	private String gas_station_name;
+	//优惠卷名称
+	private String coupon_title;
 	
+	
+	public String getGas_station_name() {
+		return gas_station_name;
+	}
+	public void setGas_station_name(String gas_station_name) {
+		this.gas_station_name = gas_station_name;
+	}
+	public String getCoupon_title() {
+		return coupon_title;
+	}
+	public void setCoupon_title(String coupon_title) {
+		this.coupon_title = coupon_title;
+	}
+	public String getCoupon_kind() {
+		return coupon_kind;
+	}
+	public void setCoupon_kind(String coupon_kind) {
+		this.coupon_kind = coupon_kind;
+	}
+	public String getSys_gas_station_id() {
+		return sys_gas_station_id;
+	}
+	public void setSys_gas_station_id(String sys_gas_station_id) {
+		this.sys_gas_station_id = sys_gas_station_id;
+	}
 	public String getUser_name() {
 		return user_name;
 	}
@@ -96,17 +129,15 @@ public class UserCoupon extends BaseModel {
 	public void setCoupon_id(String coupon_id) {
 		this.coupon_id = coupon_id;
 	}
-
+	public String getCoupon_no() {
+		return coupon_no;
+	}
 	public String getSys_driver_id() {
 		return sys_driver_id;
 	}
 	public void setSys_driver_id(String sys_driver_id) {
 		this.sys_driver_id = sys_driver_id;
 	}
-	public String getCoupon_no() {
-		return coupon_no;
-	}
-
 	public void setCoupon_no(String coupon_no) {
 		this.coupon_no = coupon_no;
 	}

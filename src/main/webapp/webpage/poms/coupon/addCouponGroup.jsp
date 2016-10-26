@@ -9,36 +9,36 @@
 %>
 	<script src="<%=basePath %>/dist/js/coupon/addCouponGroup.js"></script>
 	<style type="text/css">
-	/*自定义宽度*/
-	.myOwnDdl{
-	display:inline-block;
-	width:100%;
-	}
+	<%--/*自定义宽度*/--%>
+	<%--.myOwnDdl{--%>
+	<%--display:inline-block;--%>
+	<%--width:100%;--%>
+	<%--}--%>
 
-	/* 实现宽度自定义 */
-	.myOwnDdl .btn-group{
-	width:100%;
-	}
-	.myOwnDdl .multiselect {
-	width:100%;
-	text-align:right;
-	margin-top:-5px;
-	}
-	.myOwnDdl ul {
-	width:100%;
-	}
-	.myOwnDdl .multiselect-selected-text {
-	position:absolute;
-	left:0;
-	right:25px;
-	text-align:left;
-	padding-left:20px;
-	}
+	<%--/* 实现宽度自定义 */--%>
+	<%--.myOwnDdl .btn-group{--%>
+	<%--width:100%;--%>
+	<%--}--%>
+	<%--.myOwnDdl .multiselect {--%>
+	<%--width:100%;--%>
+	<%--text-align:right;--%>
+	<%--margin-top:-5px;--%>
+	<%--}--%>
+	<%--.myOwnDdl ul {--%>
+	<%--width:100%;--%>
+	<%--}--%>
+	<%--.myOwnDdl .multiselect-selected-text {--%>
+	<%--position:absolute;--%>
+	<%--left:0;--%>
+	<%--right:25px;--%>
+	<%--text-align:left;--%>
+	<%--padding-left:20px;--%>
+	<%--}--%>
 
-	/*控制隔行换色*/
-	.myOwnDll .multiselect-container li.odd {
-	background: #eeeeee;
-	}
+	<%--/*控制隔行换色*/--%>
+	<%--.myOwnDll .multiselect-container li.odd {--%>
+	<%--background: #eeeeee;--%>
+	<%--}--%>
 	.input-group-btn  button.btn{
 		padding: 2px 10px;
 	}
@@ -59,20 +59,21 @@
 				<form class="form-horizontal" id="coupongroupform">
 					<jsp:include page="/common/page_param.jsp"></jsp:include>
 						<div class="form-group">
-							<label for="couponGroup_title"  class="col-sm-3 control-label no-padding-right">名称：</label>
+							<label for="coupongroup_title"  class="col-sm-3 control-label no-padding-right">名称：</label>
 							<div class="col-sm-4">
-								<input type="text" name="couponGroup_title" placeholder="输入优惠卷组名称" class="form-control" maxlength="20" required/>
+								<input type="text" name="coupongroup_title" placeholder="输入优惠卷组名称" class="form-control" maxlength="20" required/>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="couponGroup_detail" class="col-sm-3 control-label no-padding-right" >详情：</label>
+							<label for="coupongroup_detail" class="col-sm-3 control-label no-padding-right" >详情：</label>
 							<div class="col-sm-4">
-								<textarea type="text" name="couponGroup_detail" placeholder="输入优惠卷组详情" class="form-control" maxlength="150"></textarea>
+								<textarea type="text" name="coupongroup_detail" placeholder="输入优惠卷组详情" class="form-control" maxlength="150"></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="coupon_ids" class="col-sm-3 control-label no-padding-right">优惠卷：</label>
 							<div class="col-sm-4">
+								<input type="hidden" name="coupon_ids"/>
 								<%--<input type="hidden" name="coupon_nos"/>--%>
 								<%--<div class="myOwnDdl">--%>
 									<%--<select multiple="multiple" class="form-control" id="coupon_ids" name="coupon_ids">--%>
@@ -83,10 +84,10 @@
 										<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 											<thead>
 												<tr>
-													<th><input type="checkbox" onclick="selectAll()" /></th>
-													<th id="coupon_no_order">优惠编号</th>
+													<th style="text-align:center"><input type="checkbox" id="checkboxAll" /></th>
 													<th id="coupon_title_order">优惠名称</th>
-													<th>数量</th>
+													<th id="coupon_kind_order">优惠类型</th>
+													<th style="text-align:center">数量</th>
 												</tr>
 											</thead>
 											<tbody id="coupon">
@@ -103,41 +104,6 @@
 								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="2" /><s:Code2Name mcode="2" gcode="ISSUED_TYPE"></s:Code2Name></label>
 								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="3" /><s:Code2Name mcode="3" gcode="ISSUED_TYPE"></s:Code2Name></label>
 								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="4" /><s:Code2Name mcode="4" gcode="ISSUED_TYPE"></s:Code2Name></label>
-								<br/>
-								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="5" /><s:Code2Name mcode="5" gcode="ISSUED_TYPE"></s:Code2Name></label>
-								<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox" onclick="changeissuedtype()" name="issued_type" value="6" /><s:Code2Name mcode="6" gcode="ISSUED_TYPE"></s:Code2Name></label>
-							</div>
-						</div>
-						<div class="form-group" id="ratedmoney" style="display:none">
-							<label class="col-sm-3 control-label no-padding-right">额定消费优惠时间：</label>
-							<div class="col-sm-4 datepicker-noicon">
-								<input type="text" class="date-picker" name="start_moneyrated_time" id="start_moneyrated_time"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
-									<span class="">
-										<i class="fa fa-exchange"></i>
-									</span>
-								<input type="text" class="date-picker" name="end_moneyrated_time" id="end_moneyrated_time"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
-							</div>
-						</div>
-						<div class="form-group" id="money" style="display:none">
-							<label for="consume_money"  class="col-sm-3 control-label no-padding-right">消费金额：</label>
-							<div class="col-sm-4">
-								<input type="text" name="consume_money" placeholder="输入额定消费金额" class="form-control" maxlength="6" style="width:200px;text-align:right" required/>
-							</div>
-						</div>
-						<div class="form-group" id="ratedtime" style="display:none">
-							<label class="col-sm-3 control-label no-padding-right">额度次数优惠时间：</label>
-							<div class="col-sm-4 datepicker-noicon">
-								<input type="text" class="date-picker" name="start_timesrated_time" id="start_timesrated_time"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
-								<span class="">
-									<i class="fa fa-exchange"></i>
-								</span>
-								<input type="text" class="date-picker" name="end_timesrated_time" id="end_timesrated_time"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
-							</div>
-						</div>
-						<div class="form-group" id="times" style="display:none">
-							<label for="consume_times"  class="col-sm-3 control-label no-padding-right">消费次数：</label>
-							<div class="col-sm-4">
-								<input type="text" name="consume_times" placeholder="输入额定消费次数" class="form-control" maxlength="5" style="width:200px;text-align:right" required/>
 							</div>
 						</div>
 						<div class="clearfix form-actions">

@@ -51,13 +51,12 @@ function editVehicle(vehicleId){
         success: function(data){
             $("#plates_number").val(data.vehicle.platesNumber);
             $("#tc_vehicle_id").val(data.vehicle.tcVehicleId);
-            $("#pay_code").val(data.vehicle.payCode);
-            $("#re_password").val(data.vehicle.payCode);
+            document.getElementById("pay1").style.display="none";
+            document.getElementById("pay2").style.display="none";
             $("#notice_phone").val(data.vehicle.noticePhone);
             $("#copy_phone").val(data.vehicle.copyPhone);
             $("#editVehicle").text("修改车辆");
             $("#plates_number").attr("data-onFlag","edit");
-
             $("#dongjie").empty();
             if(data.gasCard != null && data.gasCard.card_no != null){
                 if(data.gasCard.card_no != "" && data.gasCard.card_status == 4){
@@ -131,6 +130,11 @@ function editVehicle(vehicleId){
     $("#cardInfoDiv").show();
     $("#editModel").modal('show');
 }
+//显示编辑用户弹出层
+function editPayCode(vehicleId){
+	$("#tcVehicleId").val(vehicleId);
+    $("#editPayCodeDiv").modal('show');
+}
 
 /**
  * 冻结卡
@@ -192,7 +196,6 @@ function saveVehicle(){
             }
         }
         $("#editForm").ajaxSubmit(saveOptions);
-
         $("#editModel").modal('hide');
         $(".modal-backdrop").css("display","none");
 
@@ -295,6 +298,23 @@ $('#editForm').bootstrapValidator({
                 regexp: {
                     regexp: '^[0-9a-zA-Z]+$',
                     message: '密码只能包含数字和字母'
+                },
+                stringLength: {
+					min: 6,
+					max:20,
+					message: '密码长度必须在6~20位之间'
+				},
+				callback: {
+                    message: '支付密码不一致',
+                    callback: function (value, validator, $field) {
+                    	if($("[name=rePassword]").val()!=""){
+                    		if($("[name=rePassword]").val() != value){
+                                return false;
+                            }
+                            return true;
+                    	}
+                    	return true;
+                    }
                 }
             }
         },
@@ -307,6 +327,11 @@ $('#editForm').bootstrapValidator({
                     regexp: '^[0-9a-zA-Z]+$',
                     message: '密码只能包含数字和字母'
                 },
+                stringLength: {
+					min: 6,
+					max:20,
+					message: '密码长度必须在6~20位之间'
+				},
                 callback: {
                     message: '支付密码不一致',
                     callback: function (value, validator, $field) {
@@ -324,7 +349,7 @@ $('#editForm').bootstrapValidator({
                     message: '手机号不能为空'
                 },
                 regexp: {
-                    regexp: '^[0-9a-zA-Z]+$',
+                    regexp: '^[0-9]+$',
                     message: '手机号只能包含数字'
                 },
                 stringLength: {
@@ -344,6 +369,72 @@ $('#editForm').bootstrapValidator({
                     min: 11,
                     max: 11,
                     message: '手机号码为11位'
+                }
+            }
+        }
+    }
+});
+/**
+ * 修改密码密码校验
+ */
+$('#editPayCodeDiv').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        payCode1: {
+            validators: {
+                notEmpty: {
+                    message: '支付密码不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9a-zA-Z]+$',
+                    message: '密码只能包含数字和字母'
+                },
+                stringLength: {
+					min: 6,
+					max:20,
+					message: '密码长度必须在6~20位之间'
+				},
+				callback: {
+                    message: '支付密码不一致',
+                    callback: function (value, validator, $field) {
+                        if($("[name=rePassword1]").val()!=""){
+                        	if($("[name=rePassword1]").val() != value){
+                                return false;
+                            }
+                            return true;
+                        }
+                        return true;
+                    }
+                }
+            }
+        },
+        rePassword1: {
+            validators: {
+                notEmpty: {
+                    message: '确认密码不能为空'
+                },
+                regexp: {
+                    regexp: '^[0-9a-zA-Z]+$',
+                    message: '密码只能包含数字和字母'
+                },
+                stringLength: {
+					min: 6,
+					max:20,
+					message: '密码长度必须在6~20位之间'
+				},
+                callback: {
+                    message: '支付密码不一致',
+                    callback: function (value, validator, $field) {
+                        if($("[name=payCode1]").val() != value){
+                            return false;
+                        }
+                        return true;
+                    }
                 }
             }
         }
@@ -421,3 +512,24 @@ $(function(){
         //
     });
 })
+/**
+ * 重置支付密码
+ */
+function changePayCode(){
+	 $('#editPayCodeDiv').data('bootstrapValidator').validate();
+     if(!$('#editPayCodeDiv').data('bootstrapValidator').isValid()){
+         return ;
+     }
+    $.ajax({
+        url: '../web/tcms/vehicle/changePayCode',
+        data: {tcVehicleId:$("#tcVehicleId").val(), payCode:$("#pay_code1").val()},
+        type: "POST",
+        success: function(data){
+        	bootbox.alert("修改成功！");
+        	$("#editPayCodeDiv").modal('hide');
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+        	bootbox.alert("修改失败！");
+        }
+    })
+}
+

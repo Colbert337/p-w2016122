@@ -27,6 +27,9 @@
     <result column="should_payment" property="should_payment" jdbcType="DECIMAL" />
     <result column="coupon_number" property="coupon_number" jdbcType="VARCHAR" />
     <result column="coupon_cash" property="coupon_cash" jdbcType="DECIMAL" />
+    <result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
+    <result column="trade_no" property="trade_no" jdbcType="VARCHAR" />
+    
     
     <association property="orderTypeInfo" column="order_type"
                  javaType="com.sysongy.poms.usysparam.model.Usysparam"
@@ -93,7 +96,7 @@
 	  <result column="plate_number" property="plate_number" jdbcType="VARCHAR" />
 	  <result column="remark" property="remark" jdbcType="VARCHAR" />
 	  <result column="user_name" property="user_name" jdbcType="VARCHAR" />
-    <result column="mobile_phone" property="mobile_phone" jdbcType="VARCHAR" />
+      <result column="mobile_phone" property="mobile_phone" jdbcType="VARCHAR" />
 	  <result column="product_unit" property="product_unit" jdbcType="VARCHAR" />
 	  <result column="station_id" property="station_id" jdbcType="VARCHAR" />
 	  <result column="channel_number" property="channel_number" jdbcType="VARCHAR" />
@@ -116,7 +119,7 @@
     order_id, order_number, order_type, order_date, cash, credit_account, debit_account, 
     charge_type, channel, channel_number, operator, is_discharge, been_discharged, discharge_reason,discharge_order_id, 
     operator_source_id, operator_source_type, operator_target_type,consume_card,order_status,order_remark, preferential_cash,
-    should_payment, coupon_number, coupon_cash
+    should_payment, coupon_number, coupon_cash, spend_type,trade_no
   </sql>
 
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -129,6 +132,9 @@
     </if>
     <if test="orderType != null &amp;&amp; orderType != ''" >
       and order_type = #{orderType,jdbcType=VARCHAR}
+    </if>
+    <if test="creditAccount != null &amp;&amp; creditAccount != ''" >
+      and credit_account = #{creditAccount,jdbcType=VARCHAR}
     </if>
   </select>
 
@@ -194,7 +200,7 @@
       order_date, cash, credit_account, 
       debit_account, charge_type, channel, 
       channel_number, operator, is_discharge,discharge_reason,discharge_order_id,operator_target_type,operator_source_id,operator_source_type, consume_card
-      ,order_status,order_remark, preferential_cash, should_payment, coupon_number, coupon_cash
+      ,order_status,order_remark, preferential_cash, should_payment, coupon_number, coupon_cash, spend_type
       )
     values (#{orderId,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, 
       #{orderDate,jdbcType=TIMESTAMP}, #{cash,jdbcType=DECIMAL}, #{creditAccount,jdbcType=VARCHAR}, 
@@ -202,7 +208,7 @@
       #{channelNumber,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR},#{is_discharge,jdbcType=VARCHAR},#{discharge_reason,jdbcType=VARCHAR},#{dischargeOrderId,jdbcType=VARCHAR},
       #{operatorTargetType,jdbcType=VARCHAR},#{operatorSourceId,jdbcType=VARCHAR}, #{operatorSourceType,jdbcType=VARCHAR},#{consume_card,jdbcType=VARCHAR},
       #{orderStatus,jdbcType=INTEGER}, #{orderRemark,jdbcType=VARCHAR}, #{preferential_cash,jdbcType=DECIMAL},
-      #{should_payment,jdbcType=DECIMAL}, #{coupon_number,jdbcType=VARCHAR},#{coupon_cash,jdbcType=DECIMAL}
+      #{should_payment,jdbcType=DECIMAL}, #{coupon_number,jdbcType=VARCHAR},#{coupon_cash,jdbcType=DECIMAL}, #{spend_type,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sysongy.poms.order.model.SysOrder" >
@@ -379,6 +385,9 @@
       </if>
       <if test="operatorSourceType != null" >
         operator_source_type = #{operatorSourceType,jdbcType=VARCHAR},
+      </if>
+      <if test="trade_no != null" >
+        trade_no = #{trade_no,jdbcType=VARCHAR},
       </if>
     </set>
     where order_id = #{orderId,jdbcType=VARCHAR}
@@ -1005,5 +1014,12 @@
     from sys_order 
     LEFT JOIN sys_gas_station ON sys_order.debit_account = sys_gas_station.sys_gas_station_id
     where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+    <!-- 查询消费订单个数 -->
+  <select id="queryConsumerOrderNumber" resultType="java.lang.Integer"  parameterType="java.lang.String" >
+    select 
+	count(order_id)
+	from sys_order 
+    where order_type = '220' and credit_account = #{driverID,jdbcType=VARCHAR}
   </select>
 </mapper>

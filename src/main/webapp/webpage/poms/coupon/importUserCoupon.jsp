@@ -33,6 +33,8 @@
 									<input type="hidden" value="${coupon.coupon_no}" name="coupon_no"/>
 									<input type="hidden" value="${coupon.start_coupon_time}" name="start_coupon_time"/>
 									<input type="hidden" value="${coupon.end_coupon_time}" name="end_coupon_time"/>
+									<input type="hidden" value="${coupon.coupon_kind}" name="coupon_kind"/>
+									<input type="hidden" value="${coupon.sys_gas_station_id}" name="sys_gas_station_id"/>
 									<span id="coupon_title">${coupon.coupon_title}</span>
 								</td>
 							</tr>
@@ -107,7 +109,7 @@
 						<div class="clearfix form-actions">
 							<div class="col-md-offset-3 col-md-9">
 								<button class="btn btn-info" id="importuserConpon"  type="button" onclick="saveUserCoupon();">
-									<i class="ace-icon fa fa-check bigger-110">导入</i>
+									<i class="ace-icon fa fa-check bigger-110">保存</i>
 								</button>
 								&nbsp; &nbsp; &nbsp;
 								<button class="btn btn-success" type="button" onclick="cancel();">

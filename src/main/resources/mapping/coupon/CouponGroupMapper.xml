@@ -7,14 +7,8 @@
 		<result column="coupongroup_title" property="coupongroup_title" jdbcType="VARCHAR" />
 		<result column="coupongroup_detail" property="coupongroup_detail" jdbcType="VARCHAR" />
 		<result column="coupon_ids" property="coupon_ids" jdbcType="VARCHAR" />
-		<result column="coupon_nos" property="coupon_nos" jdbcType="VARCHAR" />
+		<result column="coupon_nums" property="coupon_nums" jdbcType="VARCHAR" />
 		<result column="issued_type" property="issued_type" jdbcType="VARCHAR" />
-		<result column="consume_money" property="consume_money" jdbcType="VARCHAR" />
-		<result column="consume_times" property="consume_times" jdbcType="VARCHAR" />
-		<result column="start_moneyrated_time" property="start_moneyrated_time" jdbcType="TIMESTAMP" />
-		<result column="end_moneyrated_time" property="end_moneyrated_time" jdbcType="TIMESTAMP" />
-		<result column="start_timesrated_time" property="start_timesrated_time" jdbcType="TIMESTAMP" />
-		<result column="end_timesrated_time" property="end_timesrated_time" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<sql id="Base_Column_List">
 			coupongroup_id,
@@ -22,26 +16,14 @@
 			coupongroup_title,
 			coupongroup_detail,
 			coupon_ids,
-			coupon_nos,
-			issued_type,
-			consume_money,
-			consume_times,
-			DATE_FORMAT(
-				start_moneyrated_time,
-				'%Y-%m-%d'
-			) start_moneyrated_time,
-			DATE_FORMAT(end_moneyrated_time, '%Y-%m-%d') end_moneyrated_time,
-			DATE_FORMAT(
-				start_timesrated_time,
-				'%Y-%m-%d'
-			) start_timesrated_time,
-			DATE_FORMAT(end_timesrated_time, '%Y-%m-%d') end_timesrated_time
+			coupon_nums,
+			issued_type
 	</sql>
 	<select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
 		from `sys_coupon_group` 
-		where 1=1
+		where 2=2
 		<trim>
 			<if test="coupongroup_no != null &amp;&amp; coupongroup_no != ''">
 				and coupongroup_no LIKE CONCAT(CONCAT('%',
@@ -52,7 +34,7 @@
 				#{coupongroup_title,jdbcType=VARCHAR}), '%')
 			</if>
 			<if test="issued_type != null &amp;&amp; issued_type != ''">
-				and FIND_IN_SET(#{coupongroup_no,jdbcType=VARCHAR},issued_type)>0
+				and FIND_IN_SET(#{issued_type,jdbcType=VARCHAR},issued_type)>0
 			</if>
 		</trim>
 	</select>
@@ -68,29 +50,20 @@
 		where coupongroup_id = #{coupongroup_id,jdbcType=VARCHAR}
 	</delete>
 	<insert id="insert" parameterType="com.sysongy.poms.coupon.model.CouponGroup">
-		insert into `sys_coupon_group` (coupongroup_id,coupongroup_no, coupongroup_title, coupongroup_detail, coupon_ids, coupon_nos,
-		issued_type,start_moneyrated_time, end_moneyrated_time,start_timesrated_time,end_timesrated_time,consume_money,consume_times,
-		create_person_id,create_time,lastmodify_person_id,lastmodify_time
+		insert into `sys_coupon_group` (coupongroup_id,coupongroup_no, coupongroup_title, coupongroup_detail, coupon_ids, coupon_nums,
+		issued_type,create_person_id,create_time,lastmodify_person_id,lastmodify_time
 		)
 		values (#{coupongroup_id,jdbcType=VARCHAR}, #{coupongroup_no,jdbcType=VARCHAR}, #{coupongroup_title,jdbcType=VARCHAR},#{coupongroup_detail,jdbcType=VARCHAR},
-		#{coupon_ids,jdbcType=VARCHAR},#{coupon_nos,jdbcType=VARCHAR}, #{issued_type,jdbcType=VARCHAR}, #{start_moneyrated_time,jdbcType=TIMESTAMP},
-		 #{end_moneyrated_time,jdbcType=TIMESTAMP}, #{start_timesrated_time,jdbcType=TIMESTAMP}, #{end_timesrated_time,jdbcType=TIMESTAMP},#{consume_money,jdbcType=VARCHAR},#{consume_times,jdbcType=VARCHAR},
-		#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
+		#{coupon_ids,jdbcType=VARCHAR},#{coupon_nums,jdbcType=VARCHAR}, #{issued_type,jdbcType=VARCHAR},#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 	<update id="updateByPrimaryKey" parameterType="com.sysongy.poms.coupon.model.CouponGroup">
-		update sys_coupon
+		update `sys_coupon_group`
 		set coupongroup_title = #{coupongroup_title,jdbcType=VARCHAR},
 		coupongroup_detail = #{coupongroup_detail,jdbcType=VARCHAR},
 		coupon_ids = #{coupon_ids,jdbcType=VARCHAR},
-		coupon_nos = #{coupon_nos,jdbcType=VARCHAR},
+		coupon_nums = #{coupon_nums,jdbcType=VARCHAR},
 		issued_type = #{issued_type,jdbcType=VARCHAR},
-		start_moneyrated_time=#{start_moneyrated_time,jdbcType=TIMESTAMP},
-		end_moneyrated_time=#{end_moneyrated_time,jdbcType=TIMESTAMP},
-		start_timesrated_time=#{start_timesrated_time,jdbcType=TIMESTAMP},
-		end_timesrated_time=#{end_timesrated_time,jdbcType=TIMESTAMP},
-		consume_money = #{consume_money,jdbcType=VARCHAR},
-		consume_times = #{consume_times,jdbcType=VARCHAR},
 		lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
 		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
 		where coupongroup_id = #{coupongroup_id,jdbcType=VARCHAR}

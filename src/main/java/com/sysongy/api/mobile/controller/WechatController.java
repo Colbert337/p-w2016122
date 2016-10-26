@@ -252,7 +252,7 @@ public class WechatController {
 					//获取邀请码并查询用户
 					String invitationCode = mainObj.optString("invitationCode");
 					driver.setRegisCompany(invitationCode);
-					Integer tmp = driverService.saveDriver(driver, "insert", null);
+					Integer tmp = driverService.saveDriver(driver, "insert", null, this.wechatOperatorId);
 					//大于0注册成功
 					if(tmp > 0 ){
 						if(invitationCode !=null && !"".equals(invitationCode)){
@@ -389,7 +389,7 @@ public class WechatController {
 							SysDriver driverCode = new SysDriver();
 							driverCode.setSysDriverId(driver.getSysDriverId());
 							driverCode.setInvitationCode(invitationCode);
-							driverService.saveDriver(driverCode,"update", null);
+							driverService.saveDriver(driverCode,"update", null, null);
 						}
 						resultMap.put("invitationCode",invitationCode);
 						/**关联公司

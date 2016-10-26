@@ -25,6 +25,8 @@ public class SysOrderGoods {
 
     private BigDecimal discountSumPrice;
 
+    private String goodsName;//气品名称
+
     public String getPreferential_type() {
 		return preferential_type;
 	}
@@ -103,5 +105,13 @@ public class SysOrderGoods {
 
     public void setDiscountSumPrice(BigDecimal discountSumPrice) {
         this.discountSumPrice = discountSumPrice;
+    }
+
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
     }
 }

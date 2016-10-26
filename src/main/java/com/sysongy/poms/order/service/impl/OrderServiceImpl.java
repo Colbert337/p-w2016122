@@ -574,11 +574,14 @@ public class OrderServiceImpl implements OrderService {
 	   validAccount(order);
 
 	   //消费的时候传过去的cash是正值
-	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
-	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
-  		   //如果出错直接返回错误代码退出
-		   throw new Exception( consume_success);
-  	   }
+	   if(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX.equals(order.getSpend_type())){
+		   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
+		   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
+	  		   //如果出错直接返回错误代码退出
+			   throw new Exception( consume_success);
+	  	   }
+	   }
+	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
@@ -1182,5 +1185,28 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public SysOrder queryById(String orderId) {
 		return sysOrderMapper.queryById(orderId);
+	}
+
+	@Override
+	public int queryConsumerOrderNumber(String driverID) {
+		return sysOrderMapper.queryConsumerOrderNumber(driverID);
+	}
+	@Override
+	public String checkIfCanConsume(SysOrder order) throws Exception {
+		if (order ==null){
+			throw new Exception(GlobalConstant.OrderProcessResult.ORDER_IS_NULL);
+		}
+
+		String orderType = order.getOrderType();
+		if(orderType == null || (!orderType.equalsIgnoreCase(GlobalConstant.OrderType.CONSUME_BY_DRIVER))){
+			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_MATCH);
+		}
+		String operatorTargetType = order.getOperatorTargetType();
+		if(operatorTargetType==null || (!operatorTargetType.equalsIgnoreCase(GlobalConstant.OrderOperatorTargetType.DRIVER))){
+			throw new Exception( GlobalConstant.OrderProcessResult.OPERATOR_TYPE_IS_NOT_DRIVER);
+		}
+		//检查订单
+		validAccount(order);
+		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 }

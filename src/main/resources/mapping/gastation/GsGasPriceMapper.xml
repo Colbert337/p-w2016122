@@ -98,7 +98,7 @@
 
   <!--根据气站ID和商品类型查询气品价格信息-->
   <select id="queryGsPriceByStationId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select * from gs_gas_price where sys_gas_station_id = {0} and gas_name = {1}
+    select * from gs_gas_price where is_deleted = 0 AND sys_gas_station_id = #{0} and gas_name = #{1}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
@@ -302,7 +302,8 @@ SET
 		gs_gas_price.preferential_type,
 		gs_gas_price.fixed_discount,
 		gs_gas_price.minus_money,
-		product_price.product_price
+		product_price.product_price,
+		gs_gas_price.remark
 	FROM
 		gs_gas_price
 	LEFT JOIN product_price ON gs_gas_price.price_id = product_price.id

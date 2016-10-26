@@ -1,5 +1,7 @@
 package com.sysongy.poms.coupon.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -81,6 +83,31 @@ public class CouponServiceImpl implements CouponService {
 		} else {
 			coupon.setPreferential_discount(coupon.getPreferential_discount());
 		}
+		//优惠卷标题
+		String coupontitle="";
+		if("1".equals(coupon.getCoupon_type())){
+			if("1".equals(coupon.getUse_condition())){
+				coupontitle="满"+coupon.getLimit_money()+"元减"+coupon.getPreferential_discount()+"元";
+			}else{
+				coupontitle="立减"+coupon.getPreferential_discount()+"元";
+			}
+		}else{
+			if("1".equals(coupon.getUse_condition())){
+				coupontitle="满"+coupon.getLimit_money()+"元打"+coupon.getPreferential_discount()+"折";
+			}else{
+				coupontitle="立打"+coupon.getPreferential_discount()+"折";
+			}
+		}
+		coupon.setCoupon_title(coupontitle);
+		//设置优惠结束时间
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//格式化
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(sf.parse(coupon.getEnd_coupon_time()));
+		calendar.add(Calendar.HOUR_OF_DAY ,23);
+		calendar.add(Calendar.MINUTE, 59);
+		calendar.add(Calendar.SECOND, 59);
+		coupon.setEnd_coupon_time(sdf.format(calendar.getTime()));
 		couponMapper.insert(coupon);
 		return coupon.getCoupon_id();
 	}
@@ -94,6 +121,22 @@ public class CouponServiceImpl implements CouponService {
 		} else {
 			coupon.setPreferential_discount(coupon.getPreferential_discount());
 		}
+		//优惠卷标题
+		String coupontitle="";
+		if("1".equals(coupon.getCoupon_type())){
+			if("1".equals(coupon.getUse_condition())){
+				coupontitle="满"+coupon.getLimit_money()+"元减"+coupon.getPreferential_discount()+"元";
+			}else{
+				coupontitle="立减"+coupon.getPreferential_discount()+"元";
+			}
+		}else{
+			if("1".equals(coupon.getUse_condition())){
+				coupontitle="满"+coupon.getLimit_money()+"元打"+coupon.getPreferential_discount()+"折";
+			}else{
+				coupontitle="立打"+coupon.getPreferential_discount()+"折";
+			}
+		}
+		coupon.setCoupon_title(coupontitle);
 		couponMapper.updateByPrimaryKey(coupon);
 		return coupon.getCoupon_id();
 	}
@@ -153,9 +196,7 @@ public class CouponServiceImpl implements CouponService {
 			record.setPageNum(1);
 			record.setPageSize(10);
 		}
-		if (StringUtils.isEmpty(record.getOrderby())) {
-			record.setOrderby("preferential_discount+0 DESC");
-		}
+
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Coupon> list = couponMapper.queryCouponOrderByAmount(record);
 		PageInfo<Coupon> pageInfo = new PageInfo<Coupon>(list);
@@ -182,8 +223,8 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	@Override
-	public UserCoupon queryUserCouponByNo(String user_coupon_no) throws Exception {
-		return couponMapper.queryUserCouponByNo(user_coupon_no);
+	public UserCoupon queryUserCouponByNo(String coupon_id, String driver_id) throws Exception {
+		return couponMapper.queryUserCouponByID(coupon_id, driver_id);
 	}
 
 }

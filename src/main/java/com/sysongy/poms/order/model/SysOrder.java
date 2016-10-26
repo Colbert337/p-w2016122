@@ -31,6 +31,8 @@ public class SysOrder extends BaseModel{
     private String debitAccount;
 
     private String chargeType;
+    
+    private String spend_type;//消费支付类型
 
     private String channel;
 
@@ -104,7 +106,20 @@ public class SysOrder extends BaseModel{
     private String coupon_number;//优惠劵编号
 
     private BigDecimal coupon_cash;//优惠劵优惠金额
+    
+    private String begin;//开始时间，虚拟字段，充值报表时间过滤用
+    
+    private String end;//结束时间，虚拟字段，充值报表时间过滤用
+    
+    private String trade_no;//交易号
 
+	public String getSpend_type() {
+		return spend_type;
+	}
+
+	public void setSpend_type(String spend_type) {
+		this.spend_type = spend_type;
+	}
 
 	public BigDecimal getShould_payment() {
 		return should_payment;
@@ -476,4 +491,28 @@ public class SysOrder extends BaseModel{
     public void setGas_station_name(String gas_station_name) {
         this.gas_station_name = gas_station_name;
     }
+
+	public String getBegin() {
+		return begin;
+	}
+
+	public void setBegin(String begin) {
+		this.begin = begin;
+	}
+
+	public String getEnd() {
+		return end;
+	}
+
+	public void setEnd(String end) {
+		this.end = end;
+	}
+
+	public String getTrade_no() {
+		return trade_no;
+	}
+
+	public void setTrade_no(String trade_no) {
+		this.trade_no = trade_no;
+	}
 }

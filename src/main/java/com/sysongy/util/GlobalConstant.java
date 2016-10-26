@@ -15,6 +15,8 @@ import java.util.HashMap;
  *
  */
 public class GlobalConstant {
+	
+	public static final String appOperatorId = "8aa4ba67855a11e6a356000c291aa9e3";
 
 	/**
 	 * 状态-启用
@@ -717,6 +719,14 @@ public class GlobalConstant {
 		public static final int ORDER_WAIT_FOR_PAY = 3; 	//订单待支付
 	}
 
+	/*订单消费类型*/
+	public interface ORDER_SPEND_TYPE{
+		public static final String CASH_BOX = "C01"; 		//账户余额支付
+		public static final String POS = "C02"; 			//POS支付
+		public static final String WECHAT = "C03"; 			//微信消费
+		public static final String ALIPAY = "C04";          //支付宝消费
+	}
+
 	/*折扣优惠类型*/
 	public interface PREFERENTIAL_TYPE{
 		public static final String MINUS = "0"; 			//立减
@@ -745,5 +755,12 @@ public class GlobalConstant {
 		public static final String UNUSE = "0";
 		public static final String USED = "1";
 		public static final String SUSPEND = "2";
+	}
+	
+	public interface COUPONGROUP_TYPE{
+		public static final String NEW_REGISTER_USER = "1";
+		public static final String FIRST_CONSUME = "2";
+		public static final String REGISTER_INVITE_FRIEND = "3";
+		public static final String REGISTER_INVITED = "4";
 	}
 }

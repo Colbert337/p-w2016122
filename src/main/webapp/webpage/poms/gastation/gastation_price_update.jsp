@@ -117,7 +117,7 @@
 
 										<div class="col-sm-4">
 
-											<input type="text"  id="fixed_discount" onKeyUp="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" onblur="javascript:if(parseFloat(value) >= 1){value='';alert('值不能大于1');}
+											<input type="text"  id="fixed_discount" onKeyUp="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" onblur="javascript:if(parseFloat(value) >= 1){value='';alert('值不能大于等于1');}
 											if($('#minus_money').val()!=''&&$('#fixed_discount').val()!=''){alert('选择固定折扣就不能再选择立减金额');$('#minus_money').val('');}
 											<%--if($('#fixed_discount').val()!=''&&$('#fixed_discount_preferential_type').isChecked()==false){alert('请先选择优惠方式');$('#fixed_discount').val('');}--%>"
 												   name="fixed_discount" placeholder="固定折扣" class="form-control" maxlength="4" value="${gsGasPrice.fixed_discount}"/>
@@ -133,7 +133,7 @@
 											<input class="form-control" id="minus_money" name="minus_money" type="text" placeholder="输入立减金额"
 												   onKeyUp="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')"
 												   onblur="javascript:if($('#fixed_discount').val()!=''&&$('#minus_money').val()!=''){alert('选择立减金额就不能再选择固定折扣');$('#fixed_discount').val('');}
-												<%--if($('#minus_money').val()!=''&&$('#minus_money_preferential_type').isChecked()==false){$('#minus_money_preferential_type').attr('checked',true);}--%>"
+												if($('#minus_money').val()!=''&&parseFloat($('#minus_money').val())>=parseFloat($('#productPrice').val())){alert('立减金额不能大于等于当前单价');$('#minus_money').val('');}"
 												  maxlength="20" value="${gsGasPrice.minus_money}" />
 										</div>
 										<input id="minus_money_temp" type="hidden" value="" />
@@ -369,6 +369,7 @@
 				alert('请输入立减金额');
 				return false;
 			}*/
+			if($('#minus_money').val()!=''&&parseFloat($('#minus_money').val())>=parseFloat($('#productPrice').val())){alert('立减金额不能大于等于当前单价');$('#minus_money').val('');return false;}
 
 				if($('#fixed_discount').val()=='' &&
 			$('#minus_money').val()==''){

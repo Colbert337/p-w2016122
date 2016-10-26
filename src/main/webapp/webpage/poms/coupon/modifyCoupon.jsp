@@ -23,20 +23,7 @@
 				<div class="form-group">
 					<label for="coupon_no"  class="col-sm-3 control-label no-padding-right">编号：</label>
 					<div class="col-sm-4" style="margin-top:7px">
-						${coupon.coupon_title}
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="coupon_title"  class="col-sm-3 control-label no-padding-right">名称：</label>
-					<div class="col-sm-4">
-						<input type="hidden" name="coupon_id" value="${coupon.coupon_id}"/>
-						<input type="text" name="coupon_title" placeholder="输入优惠名称" class="form-control" maxlength="20" value="${coupon.coupon_title}" required/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="coupon_detail" class="col-sm-3 control-label no-padding-right" >详情：</label>
-					<div class="col-sm-4">
-						<textarea type="text" name="coupon_detail" placeholder="输入优惠详情"  class="form-control" maxlength="150">${coupon.coupon_detail}</textarea>
+						${coupon.coupon_no} <input type="hidden" name="coupon_id" value="${coupon.coupon_id}"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -47,10 +34,10 @@
 								<input name="coupon_type"  type="radio" class="ace" value="1" <c:if test="${coupon.coupon_type=='1'}">checked="checked"</c:if> onclick="changeCouponType()">
 								<span class="lbl"><s:Code2Name mcode="1" gcode="COUPON_TYPE"></s:Code2Name></span>
 							</label>
-							<label class="radio-inline">
-								<input name="coupon_type"  type="radio" class="ace" value="2" <c:if test="${coupon.coupon_type=='2'}">checked="checked"</c:if> onclick="changeCouponType()">
-								<span class="lbl"><s:Code2Name mcode="2" gcode="COUPON_TYPE"></s:Code2Name></span>
-							</label>
+							<%--<label class="radio-inline">--%>
+								<%--<input name="coupon_type"  type="radio" class="ace" value="2" <c:if test="${coupon.coupon_type=='2'}">checked="checked"</c:if> onclick="changeCouponType()">--%>
+								<%--<span class="lbl"><s:Code2Name mcode="2" gcode="COUPON_TYPE"></s:Code2Name></span>--%>
+							<%--</label>--%>
 						</div>
 					</div>
 				</div>
@@ -160,6 +147,12 @@
 								<span class="lbl"><s:Code2Name mcode="2" gcode="COUPON_STATUS"></s:Code2Name></span>
 							</label>
 						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="coupon_detail" class="col-sm-3 control-label no-padding-right" >详情：</label>
+					<div class="col-sm-4">
+						<textarea type="text" name="coupon_detail" placeholder="输入优惠详情"  class="form-control" maxlength="150">${coupon.coupon_detail}</textarea>
 					</div>
 				</div>
 				<div class="clearfix form-actions">
