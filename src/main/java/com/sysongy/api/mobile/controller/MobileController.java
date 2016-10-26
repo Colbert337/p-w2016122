@@ -4465,40 +4465,51 @@ public class MobileController {
 			String payableAmount = "payableAmount";
 			String amount = "amount";
 			String gastationId = "gastationId";
-			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId);
+			String payCode = "payCode";
+			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId,payCode);
+//			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId);
 			if(b){
-				Map<String, Object> data = new HashedMap();
-				String couponId = mainObj.optString("couponId");
-				String couponCash = mainObj.optString("couponCash");
-				String orderID = UUIDGenerator.getUUID();
+				payCode = mainObj.optString("payCode");
 				token = mainObj.optString("token");
-				amount = mainObj.optString("amount");
-				gastationId = mainObj.optString("gastationId");
-				payableAmount = mainObj.optString("payableAmount");
-					SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
-					//设置优惠券ID
-					if(couponId!=null && !"".equals(couponId)){
-						sysOrder.setCoupon_number(couponId);
-					}
-					//设置优惠金额
-					if(couponCash!=null && !"".equals(couponCash)){
-						sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-					}
-					//设置气站ID
-					sysOrder.setChannelNumber(gastationId);
-					//设置实付金额
-					sysOrder.setCash(new BigDecimal(amount));
-					//设置应付金额
-					sysOrder.setShould_payment(new BigDecimal(payableAmount));
-					if (sysOrder != null) {
-						int nCreateOrder = orderService.insert(sysOrder, null);
-						if (nCreateOrder < 1){
-							throw new Exception("订单生成错误：" + sysOrder.getOrderId());
-						}else{
-							orderService.consumeByDriver(sysOrder);
-							data.put("orderId", orderID);
+				String driverPayCode = driverService.queryDriverByPK(token).getPayCode();
+				Map<String, Object> data = new HashedMap();
+				if(payCode.equals(driverPayCode)){
+					String couponId = mainObj.optString("couponId");
+					String couponCash = mainObj.optString("couponCash");
+					String orderID = UUIDGenerator.getUUID();
+					
+					amount = mainObj.optString("amount");
+					gastationId = mainObj.optString("gastationId");
+					payableAmount = mainObj.optString("payableAmount");
+						SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
+						//设置优惠券ID
+						if(couponId!=null && !"".equals(couponId)){
+							sysOrder.setCoupon_number(couponId);
 						}
-					}
+						//设置优惠金额
+						if(couponCash!=null && !"".equals(couponCash)){
+							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+						}
+						//设置气站ID
+						sysOrder.setChannelNumber(gastationId);
+						//设置实付金额
+						sysOrder.setCash(new BigDecimal(amount));
+						//设置应付金额
+						sysOrder.setShould_payment(new BigDecimal(payableAmount));
+						if (sysOrder != null) {
+							int nCreateOrder = orderService.insert(sysOrder, null);
+							if (nCreateOrder < 1){
+								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+							}else{
+								orderService.consumeByDriver(sysOrder);
+								data.put("orderId", orderID);
+								data.put("orderNum", orderService.queryById(orderID).getOrderNumber());
+							}
+						}
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("支付密码错误");
+				}
 				result.setData(data);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
