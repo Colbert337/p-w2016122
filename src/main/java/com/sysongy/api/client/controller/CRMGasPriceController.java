@@ -16,6 +16,7 @@ import com.sysongy.poms.liquid.model.SysGasSource;
 import com.sysongy.poms.liquid.service.LiquidService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.util.DateTimeHelper;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
@@ -158,12 +159,16 @@ public class CRMGasPriceController {
 
         String priceStatus = GlobalConstant.PRICE_STATUS.VALID;
         Calendar curr = Calendar.getInstance();
-        Date startTime = curr.getTime();
+        Date currentTime = curr.getTime();
+        Date startTime = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH");
-        if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE)){
+        /*if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE)){
             priceStatus = GlobalConstant.PRICE_STATUS.ENACTMENT;//价格状态改为待生效
-            /*startTime =*/
-        }
+            startTime = DateTimeHelper.getTwelve(currentTime);//生效时间改为12小时后
+        }else if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWENTY)){
+            priceStatus = GlobalConstant.PRICE_STATUS.ENACTMENT;//价格状态改为待生效
+            startTime = DateTimeHelper.getTomorrow(currentTime);//生效时间改为24小时后
+        }*/
         productPrice.setProductPriceStatus(priceStatus);
         productPrice.setCreateTime(new Date());
         productPrice.setStartTime(startTime);

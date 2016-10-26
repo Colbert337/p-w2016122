@@ -44,6 +44,8 @@ public class ProductPrice extends BaseModel {
     
     private String created_time_before;
 
+    private String gastationId;
+
     public String getCreated_time_after() {
 		return created_time_after;
 	}
@@ -188,5 +190,13 @@ public class ProductPrice extends BaseModel {
 
     public void setProductPriceStatusInfo(Usysparam productPriceStatusInfo) {
         this.productPriceStatusInfo = productPriceStatusInfo;
+    }
+
+    public String getGastationId() {
+        return gastationId;
+    }
+
+    public void setGastationId(String gastationId) {
+        this.gastationId = gastationId;
     }
 }
