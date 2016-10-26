@@ -341,7 +341,7 @@ public class DriverServiceImpl implements DriverService {
         } else {
             remark = driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。" + order.getDischarge_reason();
         }
-
+        order.setSysDriver(driver);
         if(order.getCoupon_number() != null){//add by wdq 判断当前订单是否有优惠券
             UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_number(), order.getSysDriver().getSysDriverId());
             if(usercoupon == null){
