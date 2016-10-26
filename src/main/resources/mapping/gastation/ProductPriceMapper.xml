@@ -10,6 +10,7 @@
     <result column="product_price_status" property="productPriceStatus" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="strat_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="start_time_after" property="start_time_after" jdbcType="TIMESTAMP" />
     <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
     <result column="product_price_type" property="product_price_type" jdbcType="VARCHAR" />
     <result column="product_id" property="product_id" jdbcType="VARCHAR" />
@@ -49,7 +50,13 @@
     </if>
     <if test="created_time_after != null &amp;&amp; created_time_after != ''">
         and create_time between CONCAT(#{created_time_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{created_time_before,jdbcType=VARCHAR},' 23:59:59')
-      </if>
+    </if>
+    <if test="start_time_after != null &amp;&amp; start_time_after != ''">
+        and strat_time &gt; #{start_time_after,jdbcType=TIMESTAMP}
+    </if>
+    <if test="productPriceStatus != null &amp;&amp; productPriceStatus != ''">
+        and product_price_status = #{productPriceStatus,jdbcType=VARCHAR}
+    </if>
      order by product_price_status desc
   </select>
 
