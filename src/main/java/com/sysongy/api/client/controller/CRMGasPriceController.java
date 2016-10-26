@@ -6,14 +6,17 @@ import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.model.ProductPrice;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.gastation.service.ProductPriceService;
 import com.sysongy.poms.liquid.model.SysGasSource;
 import com.sysongy.poms.liquid.service.LiquidService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,6 +56,9 @@ public class CRMGasPriceController {
 
     @Autowired
     ProductPriceService productPriceService;
+
+    @Autowired
+    GastationService gastationService;
 
     @RequestMapping(value = {"/web/queryGsPriceInfo"})
     @ResponseBody
@@ -120,7 +127,12 @@ public class CRMGasPriceController {
             }
 
             double lPrice = Double.valueOf(strPrice);
-            gsGasPrice = createProductPrice(gsGasPrice, lPrice);
+            Gastation gastation = gastationService.queryGastationByPK(gsGasPrice.getSysGasStationId());
+            String effectiveTime = "";
+            if(gastation != null){
+                effectiveTime = gastation.getPrice_effective_time();
+            }
+            gsGasPrice = createProductPrice(gsGasPrice, lPrice, effectiveTime);
 
             int renum = gsGasPriceService.saveGsPrice(gsGasPrice, "insert");
             if(renum < 1){
@@ -140,15 +152,21 @@ public class CRMGasPriceController {
         return ajaxJson;
     }
 
-    private GsGasPrice createProductPrice(GsGasPrice gsGasPrice, double lPrice){
+    private GsGasPrice createProductPrice(GsGasPrice gsGasPrice, double lPrice, String effectiveTime){
         ProductPrice productPrice = new ProductPrice();
         productPrice.setId(UUIDGenerator.getUUID());
-        productPrice.setProductPriceStatus("1");
-        productPrice.setCreateTime(new Date());
+
+        String priceStatus = GlobalConstant.PRICE_STATUS.VALID;
         Calendar curr = Calendar.getInstance();
-        curr.set(Calendar.YEAR, curr.get(Calendar.YEAR) + 20);
-        Date finishTime = curr.getTime();
-        productPrice.setStartTime(finishTime);
+        Date startTime = curr.getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH");
+        if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE)){
+            priceStatus = GlobalConstant.PRICE_STATUS.ENACTMENT;//价格状态改为待生效
+            /*startTime =*/
+        }
+        productPrice.setProductPriceStatus(priceStatus);
+        productPrice.setCreateTime(new Date());
+        productPrice.setStartTime(startTime);
         productPrice.setProductPrice(lPrice);
         productPrice.setProduct_price_type("1");
         productPrice.setProduct_id(gsGasPrice.getGsGasPriceId());

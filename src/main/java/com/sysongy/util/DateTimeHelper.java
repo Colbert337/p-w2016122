@@ -1298,9 +1298,20 @@ public final class DateTimeHelper {
 	}
 
 	/**
+	 * 返回12小时后的时间
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static Date getTwelve(Date date) {
+		long day = date.getTime();
+		long twelve = day + 12 * 60 * 60 * 1000;
+		return new Date(twelve);
+	}
+
+	/**
 	 * 取得30天前的这个时间
 	 * 
-	 * @param date
 	 * @return
 	 */
 	public static Date getDayLastMonth() {
@@ -1312,7 +1323,6 @@ public final class DateTimeHelper {
 	/**
 	 * 取得30天后的这个时间
 	 * 
-	 * @param date
 	 * @return
 	 */
 	public static Date getDayNextMonth() {
