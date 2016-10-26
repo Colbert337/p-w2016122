@@ -18,12 +18,13 @@ public interface GsGasPriceService {
 
     /**
      * 根据气站ID和商品类型查询气品价格信息
-     * @param gastationId 气站ID
-     * @param goodsType 气站价格信息
+     * @param goodsType 气站ID
      * @return
      * @throws Exception
      */
     public GsGasPrice queryGsPriceByStationId(String gastationId,String goodsType) throws Exception;
+
+    public GsGasPrice queryGsPriceByGsPriceId(String gastationId,String gsPriceId) throws Exception;
 
     public Integer saveGsPrice(GsGasPrice gsPriceID, String operation) throws Exception;
 

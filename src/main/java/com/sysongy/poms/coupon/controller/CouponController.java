@@ -321,6 +321,7 @@ public class CouponController extends BaseContoller {
 				int err = 0;
 				for (int i = 1; i < rows; i++) {
 					if (sheet.getRow(i)[1] != null && !"".equals(sheet.getRow(i)[1])) {
+						if(sheet.getRow(i)[1].getContents()!=null&&!"".equals(sheet.getRow(i)[1].getContents())){
 						UserCoupon userCoupon = new UserCoupon();
 						userCoupon.setCoupon_id(coupon_id);
 //						Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
@@ -331,7 +332,7 @@ public class CouponController extends BaseContoller {
 						List<SysDriver> driverInfo = driverService.queryeSingleList(sysDriver);
 						if (sheet.getRow(i)[1] == null
 								|| "".equals(sheet.getCell(1, i).getContents().replace(" ", ""))) {
-							message += "第" + (i + 1) + "行电话号码不能为空！\n";
+							message += "第" + (i + 1) + "行电话号码不能为空！<br/>\r\n";
 							err++;
 							continue;
 						}
@@ -341,7 +342,7 @@ public class CouponController extends BaseContoller {
 //							continue;
 //						}
 						if (driverInfo.size() == 0) {
-							message += "第" + (i + 1) + "行电话号码在系统中不存在！\n";
+							message += "第" + (i + 1) + "行电话号码在系统中不存在！<br/>\r\n";
 							err++;
 							continue;
 						}
@@ -361,10 +362,11 @@ public class CouponController extends BaseContoller {
 						}
 						count++;
 					}
+				  }		
 				}
 				bean.setRetCode(100);
 				if(!"".equals(info)){
-					info += "\n如需重复获取，请确认保存！";
+					info += "\r\n如需重复获取，请确认保存！";
 				}
 				if(count>0){
 					message += "导入名单中" + count + "名司机可以获得优惠卷!";
@@ -415,7 +417,7 @@ public class CouponController extends BaseContoller {
 		 end_coupon_time =  new String(end_coupon_time.getBytes("iso8859-1"),"UTF-8");
 		 coupon_kind =  new String(coupon_kind.getBytes("iso8859-1"),"UTF-8");
 		 sys_gas_station_id =  new String(sys_gas_station_id.getBytes("iso8859-1"),"UTF-8");
-		 String[] sysDriverId =  request.getParameterValues("sysDriverId");
+		 String[] sysDriverId =  request.getParameter("sysDriverIds").split(",");
 		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			for(int i=0;i<sysDriverId.length;i++){
@@ -450,6 +452,13 @@ public class CouponController extends BaseContoller {
 	}
 	
 	
+	/**
+	 * 查看优惠人员信息
+	 * @param map
+	 * @param userCoupon
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/couponUserList")
 	public String queryCouponUserList(ModelMap map, UserCoupon userCoupon) throws Exception {
 		PageBean bean = new PageBean();
@@ -457,10 +466,10 @@ public class CouponController extends BaseContoller {
 		try {
 			PageInfo<UserCoupon> userCouponInfo = service.queryUserCoupon(userCoupon);
 			bean.setRetCode(100);
-			bean.setRetMsg("查询成功");
+			bean.setRetMsg("查询成功"); 
 			bean.setPageInfo(ret);
 			map.addAttribute("ret", bean);
-			map.addAttribute("userCouponInfo", userCouponInfo);
+			map.addAttribute("pageInfo", userCouponInfo);
 			map.addAttribute("userCoupon", userCoupon);
 		} catch (Exception e) {
 			bean.setRetCode(5000);

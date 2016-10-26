@@ -28,7 +28,7 @@ public class CouponGroup extends BaseModel {
 	private String lastmodify_person_id;
 	// 最后修改时间
 	private Date lastmodify_time;
-	// 优惠券组中多个优惠卷IDs
+	// 优惠券组中多个优惠卷标题
 	private String coupon_titles;
 
 	public String getCoupon_nums() {

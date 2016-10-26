@@ -31,15 +31,15 @@ $('#importForm').bootstrapValidator({
 	}
 });
 
-//根据电话号码导入享受优惠卷的名单
-function importUserCoupon(){
+//根据电话号码导入享受批量优惠卷的名单
+function importUserCouponGroup(){
 	if ($("#file_import").val()=="") {
 		bootbox.alert("请选择文件");
 		return false;
 	}
 	$("#driver").empty();
 	var multipartOptions ={
-		url:'../web/coupon/file',
+		url:'../web/couponGroup/file',
 		type:'post',
 		dataType:'json',
 		enctype:"multipart/form-data",
@@ -97,15 +97,15 @@ function importUserCoupon(){
 						regisSource='';
 					}
 					$("#driver").append(
-						"<tr class='success'>"
-						+"<td>"+userName+"</td>"
-						+"<td>"+fullName+"</td>"
-						+"<td>"+plateNumber+"</td>"
-						+"<td>"+identityCard+"</td>"
-						+"<td style='text-align:center'>"+fuelType+"</td>"
-						+"<td>"+stationId+"</td>"
-						+"<td>"+regisSource+"</td>"
-						+"</tr>"
+					"<tr class='success'>"
+					+"<td>"+userName+"</td>"
+					+"<td>"+fullName+"</td>"
+					+"<td>"+plateNumber+"</td>"
+					+"<td>"+identityCard+"</td>"
+					+"<td style='text-align:center'>"+fuelType+"</td>"
+					+"<td>"+stationId+"</td>"
+					+"<td>"+regisSource+"</td>"
+					+"</tr>"
 					);
 				});
 			$("#userCouponList").show();
@@ -127,9 +127,9 @@ function importUserCoupon(){
 	$(".modal-backdrop").remove();
 }
 
-function saveUserCoupon(){
+function saveUserCouponGroup(){
 	var options ={
-		url:'../web/coupon/importCoupon',
+		url:'../web/couponGroup/importCouponGroup',
 		type:'post',
 		dataType:'text',
 		success:function(data){
@@ -163,7 +163,7 @@ $(function(){
 })
 
 function returnpage(){
-	loadPage('#main', '../web/coupon/couponList');
+	loadPage('#main', '../web/couponGroup/couponGroupList');
 }
 
 //动态初始化详细列表
@@ -199,7 +199,7 @@ function initTable() {
 		{
 		bDestroy:true,
 		bAutoWidth: false,
-		"aoColumns": [null, null,null, null, null, null, null],
+		"aoColumns": [null,null, null,null, null, null, null],
 		"aaSorting": [],
 		"oLanguage" :lang, //提示信息
 		select: {

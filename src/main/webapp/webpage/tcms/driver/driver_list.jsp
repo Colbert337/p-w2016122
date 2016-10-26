@@ -56,7 +56,7 @@
 						<tr>
 							<th class="center td-w1">
 								<label class="pos-rel">
-									<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
+									<input type="checkbox" class="ace" onclick="checkedAllRows(this);" <c:if test='${driverList.size()==0}'>disabled='disabled'</c:if> />
 									<span class="lbl"></span>
 								</label>
 							</th>
