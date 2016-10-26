@@ -287,7 +287,12 @@ $('#editForm').bootstrapValidator({
             validators: {
                 notEmpty: {
                     message: '车牌号不能为空'
-                }
+                },
+                stringLength: {
+					min: 7,
+					max: 7,
+					message: '请输入正确车牌号，长度为7的数字字母及汉字组合'
+				},
             }
         },
         payCode: {

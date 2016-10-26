@@ -26,7 +26,7 @@
 			<div class="row">
 				<div class="col-value">气站地址:</div>
 				<div class="col-key">
-					<a href="<%=basePath %>/webpage/crm/webapp-download-app.jsp" class="station-icon"><span class="icon-direction"></span></a>
+					<%--<a href="<%=basePath %>/webpage/crm/webapp-download-app.jsp" class="station-icon"><span class="icon-direction"></span></a>--%>
 					${gastation.address}
 				</div>
 			</div>
@@ -39,7 +39,7 @@
 			<div class="row">
 				<div class="col-value">电话:</div>
 				<div class="col-key">
-					<a href="<%=basePath %>/webpage/crm/webapp-download-app.jsp" class="station-icon"><span class="icon-phone-1"></span></a>
+					<a href="<%=basePath %>/webpage/crm/webapp-download-app.jsp" class="station-icon"><span style="color: #669F31;" class="icon-phone-1"></span></a>
 					${gastation.contact_phone}
 				</div>
 			</div>

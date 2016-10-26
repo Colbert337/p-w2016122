@@ -379,9 +379,8 @@ public class DriverController extends BaseContoller{
 			for (int i = 0;i < ids.length;i++) {
 				idList.add(ids[i]);
 			}
+			driverService.deleteDriverByIds(idList);
 		}
-
-		driverService.deleteDriverByIds(idList);
 		return "redirect:/web/driver/list/page";
 	}
 

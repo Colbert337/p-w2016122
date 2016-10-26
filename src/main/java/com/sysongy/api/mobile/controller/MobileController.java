@@ -2568,15 +2568,26 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
+			boolean b = false;
+			String orderType = mainObj.optString("orderType");
 			String token = "token";
+			String gastationId = "gastationId";
+			String payableAmount = "payableAmount";
+			String amount = "amount";
 			String feeCount = "feeCount";
 			String payType = "payType";
-			boolean b = JsonTool.checkJson(mainObj, token, feeCount, payType);
+			//充值必填参数校验
+			if(orderType==null || "".equals(orderType)){
+				b= JsonTool.checkJson(mainObj, token, feeCount, payType);
+			}
+			//消费必填参数校验
+			if(orderType!=null && !"".equals(orderType) && orderType.equals("220")){
+				b= JsonTool.checkJson(mainObj, token, gastationId, payableAmount,amount);
+			}
 			/**
 			 * 请求接口
 			 */
 			if (b) {
-				String orderType = mainObj.optString("orderType");
 				payType = mainObj.optString("payType");
 				feeCount = mainObj.optString("feeCount");
 				String driverID = mainObj.optString("token");
@@ -2588,8 +2599,33 @@ public class MobileController {
 				if(orderType!=null && !"".equals(orderType) && orderType.equals("220")){
 					//查询消费订单个数
 					int number = orderService.queryConsumerOrderNumber(driverID);
+					//优惠券ID
+					String couponId = mainObj.optString("couponId");		
+					//优惠券金额
+					String couponCash = mainObj.optString("couponCash");	
+					//气站ID
+					gastationId = mainObj.optString("gastationId");	
+					//应付金额
+					payableAmount = mainObj.optString("payableAmount");	
+					//实付金额
+					amount =  mainObj.optString("amount");	
+					
 					if (payType.equalsIgnoreCase("2")) { // 支付宝消费
-						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","2"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","C04"); // TODO充值成功后再去生成订单
+						//设置优惠券ID
+						if(couponId!=null && !"".equals(couponId)){
+							sysOrder.setCoupon_number(couponId);
+						}
+						//设置优惠金额
+						if(couponCash!=null && !"".equals(couponCash)){
+							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+						}
+						//设置气站ID
+						sysOrder.setChannelNumber(gastationId);
+						//设置应付金额
+						sysOrder.setCash(new BigDecimal(payableAmount));
+						//设置实付金额
+						sysOrder.setShould_payment(new BigDecimal(amount));
 						orderService.checkIfCanConsume(sysOrder);
 						String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
 						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员消费",
@@ -2604,9 +2640,24 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 						}
 						data.put("payReq", orderParam + "&" + sign);
+						data.put("orderId", orderID);
 						result.setData(data);
 					} else if (payType.equalsIgnoreCase("1")) { // 微信消费
-						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","1"); // TODO充值成功后再去生成订单
+						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","C03"); // TODO充值成功后再去生成订单
+						//设置优惠券ID
+						if(couponId!=null && !"".equals(couponId)){
+							sysOrder.setCoupon_number(couponId);
+						}
+						//设置优惠金额
+						if(couponCash!=null && !"".equals(couponCash)){
+							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+						}
+						//设置气站ID
+						sysOrder.setChannelNumber(gastationId);
+						//设置应付金额
+						sysOrder.setCash(new BigDecimal(payableAmount));
+						//设置实付金额
+						sysOrder.setShould_payment(new BigDecimal(amount));
 						orderService.checkIfCanConsume(sysOrder);
 						String entity = genProductArgs(orderID, feeCount,"2");
 						byte[] buf = Util.httpPost(url, entity);
@@ -2622,8 +2673,10 @@ public class MobileController {
 						}
 						JSONObject dataObj = JSONObject.fromObject(payReq);
 						data.put("payReq", dataObj);
+						data.put("orderId", orderID);
 						result.setData(data);
 					}
+
 					//首次消费成功，发放优惠券
 					if(number==0){
 						CouponGroup couponGroup = new CouponGroup();
@@ -4159,8 +4212,9 @@ public class MobileController {
 				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
 					for (Map<String, Object> map : gsGasPriceList) {
 						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("preferential_type", map.get("preferential_type").toString().equals("0")?"立减金额":"固定折扣");
+						reChargeMap.put("preferential_type", map.get("preferential_type"));
 						reChargeMap.put("gasName", map.get("gas_name"));
+						reChargeMap.put("remark", map.get("remark"));
 						reChargeMap.put("gasPrice", map.get("product_price"));
 						reChargeMap.put("priceUnit", map.get("unit"));
 						reChargeMap.put("discountAmount",map.get("minus_money")==null?map.get("fixed_discount"):map.get("minus_money"));
@@ -4226,16 +4280,22 @@ public class MobileController {
 				Coupon coupon = new Coupon();
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				String useCondition =null;
+				String couponKind =null;
 				//当加注站ID和消费金额不为空时，返回当前用户可用优惠券列表，按金额倒叙排列，分页。
 				if(gastationId!=null&&!"".endsWith(gastationId)&&amount!=null&&!"".equals(amount)){
 					coupon.setSys_gas_station_id(gastationId);
 					coupon.setDriverId(driverId);
+					coupon.setAmount(amount);
 					PageInfo<Coupon> pageInfo = couponService.queryCouponOrderByAmount(coupon);
 					if(pageInfo.getList()!=null&&pageInfo.getList().size()>0){
 						for (Coupon data : pageInfo.getList()) {
 							Map<String, Object> reChargeMap = new HashMap<>();
 							reChargeMap.put("couponId",data.getCoupon_id());
-							reChargeMap.put("couponKind", data.getCoupon_kind());
+							couponKind = data.getCoupon_kind();
+							if(couponKind.equals("2")){
+								reChargeMap.put("gasStationName",data.getGas_station_name());
+							}
+							reChargeMap.put("couponKind", couponKind);
 							reChargeMap.put("couponType", data.getCoupon_type());
 							useCondition = data.getUse_condition();
 							reChargeMap.put("useCondition",useCondition);
@@ -4244,8 +4304,8 @@ public class MobileController {
 							if(useCondition.equals("1")){
 								reChargeMap.put("limit_money",data.getLimit_money());
 							}
-							reChargeMap.put("startTime",data.getStart_coupon_time());
-							reChargeMap.put("endTime",data.getEnd_coupon_time());
+							reChargeMap.put("startTime",data.getStart_coupon_time().substring(0, 19));
+							reChargeMap.put("endTime",data.getEnd_coupon_time().substring(0, 19));
 							reChargeList.add(reChargeMap);
 						}
 					}else{
@@ -4257,7 +4317,11 @@ public class MobileController {
 						for (Coupon data : pageInfo.getList()) {
 							Map<String, Object> reChargeMap = new HashMap<>();
 							reChargeMap.put("couponId",data.getCoupon_id());
-							reChargeMap.put("couponKind", data.getCoupon_kind());
+							couponKind = data.getCoupon_kind();
+							if(couponKind.equals("2")){
+								reChargeMap.put("gasStationName",data.getGas_station_name());
+							}
+							reChargeMap.put("couponKind", couponKind);
 							reChargeMap.put("couponType", data.getCoupon_type());
 							reChargeMap.put("title",data.getCoupon_title());
 							useCondition = data.getUse_condition();
@@ -4266,8 +4330,8 @@ public class MobileController {
 								reChargeMap.put("limit_money",data.getLimit_money());
 							}
 							reChargeMap.put("preferentialDiscount",data.getPreferential_discount());
-							reChargeMap.put("startTime",data.getStart_coupon_time());
-							reChargeMap.put("endTime",data.getEnd_coupon_time());
+							reChargeMap.put("startTime",data.getStart_coupon_time().substring(0, 19));
+							reChargeMap.put("endTime",data.getEnd_coupon_time().substring(0, 19));
 							reChargeList.add(reChargeMap);
 						}
 					}else{
@@ -4331,6 +4395,8 @@ public class MobileController {
 				tokenMap.put("chargeType",order.getChargeType());
 				tokenMap.put("orderId",orderId);
 				tokenMap.put("gastationId",order.getDebitAccount());
+				tokenMap.put("payment",order.getShould_payment());
+				tokenMap.put("preferentialCash",order.getPreferential_cash());
 				result.setData(tokenMap);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -4354,6 +4420,90 @@ public class MobileController {
 			return resultStr;
 		}
 	}
+	
+	/**
+	 * 账户余额消费
+	 */
+	@RequestMapping(value = "/deal/accountSpend")
+	@ResponseBody
+	public String accountSpend(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("订单支付成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			String payableAmount = "payableAmount";
+			String amount = "amount";
+			String gastationId = "gastationId";
+			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId);
+			if(b){
+				Map<String, Object> data = new HashedMap();
+				String couponId = mainObj.optString("couponId");
+				String couponCash = mainObj.optString("couponCash");
+				String orderID = UUIDGenerator.getUUID();
+				token = mainObj.optString("token");
+				amount = mainObj.optString("amount");
+				gastationId = mainObj.optString("gastationId");
+				payableAmount = mainObj.optString("payableAmount");
+					SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
+					//设置优惠券ID
+					if(couponId!=null && !"".equals(couponId)){
+						sysOrder.setCoupon_number(couponId);
+					}
+					//设置优惠金额
+					if(couponCash!=null && !"".equals(couponCash)){
+						sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+					}
+					//设置气站ID
+					sysOrder.setChannelNumber(gastationId);
+					//设置实付金额
+					sysOrder.setCash(new BigDecimal(amount));
+					//设置应付金额
+					sysOrder.setShould_payment(new BigDecimal(payableAmount));
+					if (sysOrder != null) {
+						int nCreateOrder = orderService.insert(sysOrder, null);
+						if (nCreateOrder < 1){
+							throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+						}else{
+							orderService.consumeByDriver(sysOrder);
+							data.put("orderId", orderID);
+						}
+					}
+				result.setData(data);
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("订单支付失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("订单支付情失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	
 	private String genPayReq(Map<String, String> resultunifiedorder) {
 
 		/*
@@ -4559,12 +4709,16 @@ public class MobileController {
 			record.setChannel("APP-消费");
 			record.setChannelNumber("APP-消费"); // 建立一个虚拟的APP气站，方便后期统计
 			//微信消费
-			if(consumeType.equals("1")){
+			if(consumeType.equals("C03")){
 				record.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.WECHAT);
-			}else{
+			}else if(consumeType.equals("C04")){
 				//支付宝消费
 				record.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.ALIPAY);
+			}else if(consumeType.equals("C01")){
+				//账户余额
+				record.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
 			}
+			record.setSpend_type(spendType);
 			record.setOrderId(orderID);
 			record.setCreditAccount(driverID);
 			record.setOperator(appOperatorId);
@@ -4588,7 +4742,6 @@ public class MobileController {
 				record.setChannel("APP-微信充值");
 				record.setChannelNumber("APP-微信充值"); // 建立一个虚拟的APP气站，方便后期统计
 			}
-			record.setSpend_type(spendType);
 			record.setOrderId(orderID);
 			record.setDebitAccount(driverID);
 			record.setOperator(appOperatorId);

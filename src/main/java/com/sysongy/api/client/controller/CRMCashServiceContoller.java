@@ -235,10 +235,10 @@ public class CRMCashServiceContoller {
                 for (SysOrderGoods sysOrderGoods:sysOrderGoodsList ) {
                     double num = sysOrderGoods.getNumber();
                     BigDecimal price = sysOrderGoods.getPrice();
-                    String goodsType = sysOrderGoods.getGoodsType();
+                    String gsPriceId = sysOrderGoods.getOrderGoodsId();
 
                     //获取气品价格
-                    GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByStationId(gastationId,goodsType);
+                    GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByGsPriceId(gastationId,gsPriceId);
                     if(gsGasPrice != null && gsGasPrice.getPreferential_type() != null){
                         String preferentialType = gsGasPrice.getPreferential_type();
                         BigDecimal discountSumPrice = BigDecimal.ZERO;
@@ -743,10 +743,11 @@ public class CRMCashServiceContoller {
             ajaxJson.setMsg("该订单不符合冲红条件！！！");
             return ajaxJson;
         }
+        //封装冲红订单
         SysOrder hedgeRecord = orderService.createDischargeOrderByOriginalOrder(originalOrder,
                 user.getSysUserId(), record.getDischarge_reason());
         hedgeRecord.setPreferential_cash(originalOrder.getPreferential_cash());// add by wdq 20161024 给冲红订单添加优惠金额属性
-
+        //更新原始订单及相关信息
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
             logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
@@ -759,6 +760,7 @@ public class CRMCashServiceContoller {
         hedgeRecord.setBeen_discharged("1");
         hedgeRecord.setDischargeOrderId(originalOrder.getOrderId());
 
+        //创建冲红订单
         record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
         int nRet = orderService.insert(hedgeRecord, originalOrder.getSysOrderGoods());
         if(nRet < 1){
@@ -831,7 +833,7 @@ public class CRMCashServiceContoller {
             ajaxJson.setMsg("气站ID为空！！！" );
             return ajaxJson;
         }
-        sysOrderDeal = orderDealService.selectByPrimaryKey(sysOrderDeal.getDealId());
+        /*sysOrderDeal = orderDealService.selectByPrimaryKey(sysOrderDeal.getDealId());*/
         if(StringUtils.isEmpty(sysOrderDeal.getIsCharge())){
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("报表类型为空！！！" );
@@ -876,6 +878,18 @@ public class CRMCashServiceContoller {
                     sysOrderDealInfo.setSysDriver(sysDriverInfo);
                 } else {
                     sysOrderDealInfo = findSysOrderDeal(sysOrderDealInfo, sysOrderDealInfo.getSysOrderInfo().getConsume_card());
+                }
+                //将shouldPayment字段null改为0
+                SysOrder orderInfo = sysOrderDealInfo.getSysOrderInfo();
+                if(orderInfo != null ){
+                    if(orderInfo.getShould_payment() == null){
+                        orderInfo.setShould_payment(BigDecimal.ZERO);
+                    }
+                    if(orderInfo.getCoupon_cash() == null){
+                        orderInfo.setCoupon_cash(BigDecimal.ZERO);
+                    }
+
+                    sysOrderDealInfo.setSysOrderInfo(orderInfo);
                 }
                 sysOrderDealInfos.add(sysOrderDealInfo);
             }
