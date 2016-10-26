@@ -18,6 +18,8 @@
 		<result column="end_coupon_time" property="end_coupon_time" jdbcType="TIMESTAMP" />
 		<result column="gas_station_name" property="gas_station_name" jdbcType="VARCHAR" />
 		<result column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
+		<result column="coupon_nums" property="coupon_nums" jdbcType="VARCHAR" />
+		<result column="statusinfo" property="statusinfo" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="UserCouponMap" type="com.sysongy.poms.coupon.model.UserCoupon">
 		<id column="user_coupon_id" property="user_coupon_id" jdbcType="VARCHAR" />
@@ -66,7 +68,18 @@
 				sc.start_coupon_time,
 				'%Y-%m-%d'
 			) start_coupon_time,
-			DATE_FORMAT(sc.end_coupon_time, '%Y-%m-%d') end_coupon_time
+			DATE_FORMAT(sc.end_coupon_time, '%Y-%m-%d') end_coupon_time,
+				(SELECT	count(1)	FROM	`sys_user_coupon` su
+			WHERE	su.coupon_id = sc.coupon_id	) coupon_nums,
+				(CASE	WHEN now()  &lt; sc.start_coupon_time THEN
+			'未开始'	WHEN now() &gt;= sc.start_coupon_time
+		AND now() &lt;= sc.end_coupon_time THEN
+			(	CASE	WHEN timestampdiff(HOUR,now(),sc.end_coupon_time) &gt; 24 THEN
+					CONCAT('优惠结束还剩',	timestampdiff(DAY,now(),sc.end_coupon_time),'天')
+				ELSE	CONCAT('优惠结束还剩',timestampdiff(HOUR,now(),sc.end_coupon_time),'小时')
+				END)
+       WHEN now() &gt; sc.end_coupon_time THEN
+			'已结束'	END) statusinfo
 	</sql>
 	<select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
@@ -91,8 +104,8 @@
 		   <if test="status != null &amp;&amp; status != ''">
 		      and sc.status = #{status,jdbcType=VARCHAR}
 		    </if>
-		   <if test="sys_gas_station_id != null &amp;&amp; sys_gas_station_id != ''">
-		      and sc.sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
+		   <if test="nowDate != null &amp;&amp; nowDate != ''">
+		      AND start_coupon_time &lt;= NOW() AND end_coupon_time &gt;= NOW()
 		    </if>
 		</trim>
 	</select>
@@ -188,13 +201,9 @@
 		    <if test="sys_driver_id != null &amp;&amp; sys_driver_id != ''">
 		      	and suc.sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}
 		    </if>
-			<if test="user_name != null &amp;&amp; user_name != ''">
-				and sd.user_name LIKE CONCAT(CONCAT('%',
-				#{user_name,jdbcType=VARCHAR}), '%')
-			</if>
 			<if test="full_name != null &amp;&amp; full_name != ''">
-				and sd.full_name LIKE CONCAT(CONCAT('%',
-				#{full_name,jdbcType=VARCHAR}), '%')
+		        and (sd.full_name	 like CONCAT('%',CONCAT(#{full_name,jdbcType=VARCHAR},'%'))
+		        or  sd.mobile_phone like CONCAT('%',CONCAT(#{full_name,jdbcType=VARCHAR},'%')))
 			</if>
 			<if test="coupon_no != null &amp;&amp; coupon_no != ''">
 				and suc.coupon_no LIKE CONCAT(CONCAT('%',

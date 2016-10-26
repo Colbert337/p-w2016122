@@ -30,6 +30,8 @@ $('#start_coupon_time').datepicker({
 	todayHighlight: true,
 	language: "cn",
 	weekStart: 1,
+	startDate:new Date(),
+	endDate:"2037-12-31",
 	format: "yyyy/mm/dd",
 	pickerPosition: "bottom-left"
 }).on("click",function(e){
@@ -46,6 +48,8 @@ $('#end_coupon_time').datepicker({
 	language: "cn",
 	weekStart: 1,
 	format: "yyyy/mm/dd",
+	startDate:new Date(),
+	endDate:"2037-12-31",
 	pickerPosition: "bottom-left"
 }).on("click", function (e) {
 	$("#end_coupon_time").datepicker("setStartDate", $("#start_coupon_time").val());

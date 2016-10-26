@@ -20,26 +20,27 @@
 				<!-- PAGE CONTENT BEGINS -->
 				<form class="form-horizontal" id="couponform">
 				<jsp:include page="/common/page_param.jsp"></jsp:include>
-					<div class="form-group">
-						<label for="coupon_type" class="col-sm-3 control-label no-padding-right">优惠方式：</label>
-						<div class="col-sm-4">
-							<div class="radio">
-								<label class="radio-inline">
-									<input name="coupon_type"  type="radio" class="ace" value="1" checked="checked" onclick="changeCouponType()">
-									<span class="lbl"><s:Code2Name mcode="1" gcode="COUPON_TYPE"></s:Code2Name></span>
-								</label>
+					<%--<div class="form-group">--%>
+						<%--<label for="coupon_type" class="col-sm-3 control-label no-padding-right">优惠方式：</label>--%>
+						<%--<div class="col-sm-4">--%>
+							<%--<div class="radio">--%>
+								<%--<label class="radio-inline">--%>
+									<%--<input name="coupon_type"  type="radio" class="ace" value="1" checked="checked" onclick="changeCouponType()">--%>
+									<%--<span class="lbl"><s:Code2Name mcode="1" gcode="COUPON_TYPE"></s:Code2Name></span>--%>
+								<%--</label>--%>
 								<%--<label class="radio-inline">--%>
 									<%--<input name="coupon_type"  type="radio" class="ace" value="2" onclick="changeCouponType()">--%>
 									<%--<span class="lbl"><s:Code2Name mcode="2" gcode="COUPON_TYPE"></s:Code2Name></span>--%>
 								<%--</label>--%>
-							</div>
-						</div>
-					</div>
+							<%--</div>--%>
+						<%--</div>--%>
+					<%--</div>--%>
 					<div class="form-group">
 						<label for="coupon_kind" class="col-sm-3 control-label no-padding-right">优惠类型：</label>
 						<div class="col-sm-4">
 							<div class="radio">
 								<label class="radio-inline">
+									<input type="hidden" name="coupon_type" value="1"/>
 									<input name="coupon_kind"  type="radio" class="ace" value="1" checked="checked" onclick="changecouponkind()">
 									<span class="lbl"><s:Code2Name mcode="1" gcode="COUPON_KIND"></s:Code2Name></span>
 								</label>
@@ -76,7 +77,7 @@
 						<div class="col-sm-4">
 								<label class="radio-inline">
 									<input name="use_condition"  type="radio" class="ace" value="1" checked="checked" onclick="changeUseCondition()">
-									<span class="lbl">满<input type="text" name="limit_money" maxlength="8" style="width:80px;"/> 元使用</span>
+									<span class="lbl">满<input type="text" name="limit_money" maxlength="8" style="width:80px;"/>元使用</span>
 								</label>
 								<label class="radio-inline">
 									<input name="use_condition"  type="radio" class="ace" value="2" onclick="changeUseCondition()">
