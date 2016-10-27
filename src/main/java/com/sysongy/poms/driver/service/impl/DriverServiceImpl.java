@@ -145,12 +145,11 @@ public class DriverServiceImpl implements DriverService {
 			}
 
             int count = sysDriverMapper.insertSelective(record);
-            //如果有要邀请码，要进行返现，现在先写死，以后走订单
-            if(!StringUtils.isEmpty(invitationCode)){
-            	this.cashBackForRegister(record, invitationCode, operator_id);
-            }else{//如果没有邀请么 则触发注册返现规则
-    			SysCashBack back= sysCashBackService.queryForBreak("201").get(0);//获取返现规则
-    			if (back!=null) {
+            //如果没有邀请么 则触发注册返现规则
+            if(StringUtils.isEmpty(invitationCode)){
+    			List<SysCashBack> list=sysCashBackService.queryForBreak("201");
+    			if (list!=null && list.get(0)!=null) {
+    				SysCashBack back= list.get(0);//获取返现规则
     				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 				}else{
 					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
@@ -431,9 +430,10 @@ public class DriverServiceImpl implements DriverService {
 			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败");
 		}else{
 			invitation = invitationList.get(0);
-	
-			SysCashBack back= sysCashBackService.queryForBreak("203").get(0);//获取返现规则
-			if (back!=null) {
+			List<SysCashBack> listBack=sysCashBackService.queryForBreak("203");
+			
+			if (listBack!=null && listBack.get(0)!=null) {
+				SysCashBack back= listBack.get(0);//获取返现规则
 				sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 		    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_max_value())), GlobalConstant.OrderType.INVITED_CASHBACK);
 			}else{
