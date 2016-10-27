@@ -57,7 +57,10 @@
 								value="${road.auditorTime_str}" readonly="readonly" />
 						</div>
 					</div>
-
+					<div class="item">
+						<label>创建人电话/创建人:</label> <input type="text" name="publisherName" id="publisherName"
+													placeholder="输入创建人电话/创建人" maxlength="200" value="${road.publisherName}" />
+					</div>
 					<div class="item">
 						<button class="btn btn-sm btn-primary" type="button"
 							onclick="loadPage('#main','<%=basePath%>/webpage/poms/mobile/roadAdd.jsp');">

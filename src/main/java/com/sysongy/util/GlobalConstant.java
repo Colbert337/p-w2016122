@@ -763,4 +763,18 @@ public class GlobalConstant {
 		public static final String REGISTER_INVITE_FRIEND = "3";
 		public static final String REGISTER_INVITED = "4";
 	}
+
+	//价格生效延期时间
+	public interface PRICE_EFFECTIVE_TIME{
+		public static final String NOW = "0";
+		public static final String TWELVE = "12";
+		public static final String TWENTY = "24";
+	}
+
+	//价格状态 0 不生效 1 生效 2 待生效
+	public interface PRICE_STATUS{
+		public static final String INVALID = "0";
+		public static final String VALID = "1";
+		public static final String ENACTMENT = "2";
+	}
 }

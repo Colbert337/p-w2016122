@@ -4,10 +4,14 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.core.interceptors.DateConvertEditor;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.model.ProductPrice;
+import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.gastation.service.ProductPriceService;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.GlobalConstant;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +43,9 @@ public class CRMProductPriceController {
 
     @Autowired
     GsGasPriceService gsGasPriceService;
+
+    @Autowired
+    GastationService gastationService;
 
     @InitBinder
     public void InitBinder(HttpServletRequest request,
@@ -111,31 +118,74 @@ public class CRMProductPriceController {
                 return ajaxJson;
             }
 
-            int updatePrice = productPriceService.updatePriceStatus(productPrice);
-            if(updatePrice != 1){
-                logger.warn("更新商品价格信息异常，更新记录数："  + updatePrice + ", 商品id为：" + productPrice.getProductPriceId());
-            }
-
+            //查询气品名称
             GsGasPrice gsGasPrice = gsGasPriceService.queryGsPriceByPK(productPrice.getProduct_id());
             productPrice.setProductPriceStatus("1");
             productPrice.setProductPriceId(gsGasPrice.getGasName());
-            int renum = productPriceService.saveProductPrice(productPrice, "insert");
-            if(renum < 1){
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("无价格添加！！！");
-                return ajaxJson;
+
+            String gastationId = productPrice.getGaStationId();
+            /*gastationId = "GS15300001";*/
+            Gastation gastation = gastationService.queryGastationByPK(gastationId);
+            String effectiveTime = gastation.getPrice_effective_time();
+            Date startTime = new Date();
+            if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE)){//12小时后生效
+                startTime = productPrice.getStartTime();
+                Date currntTime = DateTimeHelper.getTwelve(new Date());
+                int resultVal = DateTimeHelper.compareTwoDate(currntTime,startTime);
+                if(resultVal > 0){
+                    productPrice.setProductPriceStatus(GlobalConstant.PRICE_STATUS.ENACTMENT);
+                    int renum = productPriceService.saveProductPrice(productPrice, "insert");
+                    if(renum < 1){
+                        ajaxJson.setSuccess(false);
+                        ajaxJson.setMsg("无价格添加！！！");
+                        return ajaxJson;
+                    }
+                }else{
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("生效时间必须为12小时之后！！！");
+                    return ajaxJson;
+                }
+            }else if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWENTY)){//24小时后生效
+                startTime = productPrice.getStartTime();
+                Date currntTime = DateTimeHelper.getTomorrow(new Date());
+                int resultVal = DateTimeHelper.compareTwoDate(startTime,currntTime);
+                if(resultVal > 0){
+                    productPrice.setProductPriceStatus(GlobalConstant.PRICE_STATUS.ENACTMENT);
+                    int renum = productPriceService.saveProductPrice(productPrice, "insert");
+                    if(renum < 1){
+                        ajaxJson.setSuccess(false);
+                        ajaxJson.setMsg("无价格添加！！！");
+                        return ajaxJson;
+                    }
+                }else{
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("生效时间必须为24小时之后！！！");
+                    return ajaxJson;
+                }
+            }else{//立即生效
+                int updatePrice = productPriceService.updatePriceStatus(productPrice);//将所有价格状态改为无效
+                if(updatePrice != 1){
+                    logger.warn("更新商品价格信息异常，更新记录数："  + updatePrice + ", 商品id为：" + productPrice.getProductPriceId());
+                }
+
+                int renum = productPriceService.saveProductPrice(productPrice, "insert");//添加新价格
+                if(renum < 1){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("无价格添加！！！");
+                    return ajaxJson;
+                }
+
+                gsGasPrice.setPrice_id(productPrice.getId());
+                renum = gsGasPriceService.saveGsPrice(gsGasPrice, "update");//更新商品价格关系
+                if(renum < 1){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("无商品价格变动！！！");
+                    return ajaxJson;
+                }
             }
 
-            gsGasPrice.setPrice_id(productPrice.getId());
-            renum = gsGasPriceService.saveGsPrice(gsGasPrice, "update");
-            if(renum < 1){
-                ajaxJson.setSuccess(false);
-                ajaxJson.setMsg("无商品价格变动！！！");
-                return ajaxJson;
-            }
 
-            ProductPrice productPriceInfo =
-                    productPriceService.queryProductPriceByPK(productPrice.getId());
+            ProductPrice productPriceInfo = productPriceService.queryProductPriceByPK(productPrice.getId());//查询当前要添加的价格信息
             if(productPriceInfo == null){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("商品价格变动出错！！！");
