@@ -128,6 +128,14 @@
       <if test="invitationCode != null &amp;&amp; invitationCode != ''" >
         and invitation_code like CONCAT(CONCAT('%',  #{invitationCode,jdbcType=VARCHAR}), '%')
       </if>
+
+      <if test="regisSource != null &amp;&amp; regisSource != '' &amp;&amp; regisSource != '加注站'" >
+        and regis_source  =#{regisSource,jdbcType=VARCHAR}
+      </if>
+      <if test="regisSource != null &amp;&amp; regisSource != '' &amp;&amp; regisSource == '加注站'" >
+        and regis_source  !='APP'  and regis_source  !='WeChat'
+      </if>
+
     </trim>
   </select>
   
