@@ -29,7 +29,7 @@ var tradeNo=null;
 var cash=null
 var orderId=null;
 function showBreak(tradeNo1,type1,cash1,orderId1){
-	console.log('show');
+	
 	closeDialog('content');
 	type=type1;
 	cash=cash1;
@@ -159,9 +159,7 @@ function subbreak() {
 		 bootbox.alert("退款金额不能为空");
 		 return;
 	}
-	console.log($('#money').val()*1);
-	console.log(cash*1);
-	
+		
 	 if ($('#money').val()*1>cash*1) {
 		 bootbox.alert("退款金额不能大于交易金额");
 		 return;
