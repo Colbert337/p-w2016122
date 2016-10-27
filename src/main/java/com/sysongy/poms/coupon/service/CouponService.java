@@ -46,5 +46,5 @@ public interface CouponService {
 	 * @param record
 	 * @return
 	 */
-	PageInfo <Map<String, Object>> queryCouponMapByAmount(Coupon record);
+	List<Map<String, Object>> queryCouponMapByAmount(Coupon record);
 }

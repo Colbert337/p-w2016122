@@ -226,16 +226,9 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	@Override
-	public PageInfo<Map<String, Object>> queryCouponMapByAmount(Coupon record) {
-		if (record.getPageNum() == null) {
-			record.setPageNum(1);
-			record.setPageSize(10);
-		}
-
-		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+	public List<Map<String, Object>> queryCouponMapByAmount(Coupon record) {
 		List<Map<String, Object>> list = couponMapper.queryCouponMapByAmount(record);
-		PageInfo<Map<String, Object>> pageInfo = new PageInfo<Map<String, Object>>(list);
-		return pageInfo;
+		return list;
 	}
 
 	/**

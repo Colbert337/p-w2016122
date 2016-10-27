@@ -295,10 +295,10 @@ public class CRMCashServiceContoller {
             coupon.setSys_gas_station_id(record.getOperatorSourceId());
             coupon.setDriverId(driver.getSysDriverId());
             coupon.setPreferential_discount(discountSum.toString());//存储需支付金额
-            PageInfo<Map<String, Object>> pageInfo = couponService.queryCouponMapByAmount(coupon);
+            List<Map<String, Object>> pageInfo = couponService.queryCouponMapByAmount(coupon);
 
             //封装当前司机可用优惠券列表
-            driver.setList(pageInfo.getList());
+            driver.setList(pageInfo);
             record.setSysDriver(driver);
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", record);
