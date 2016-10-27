@@ -46,7 +46,17 @@
 								<input type="text" name="createdDate_before" value="${driver.createdDate_before}" readonly="readonly"/>
 							</div>
 						</div>
-
+						<div class="item">
+							<div class="input-daterange top" >
+								<label>注册公司:</label>
+								<select id="is_discharge" name="regisSource" maxlength="20">
+									<option value="">全部</option>
+									<option value="APP">APP</option>
+									<option value="WeChat">WeChat</option>
+									<option value="加注站">加注站</option>
+								</select>
+							</div>
+						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
@@ -190,3 +200,8 @@
 	<!-- /.row -->
 	</form>
 </div>
+
+<script type="text/javascript">
+	var is_discharge = '${driver.regisSource}';
+	$("#is_discharge").find("option[value='"+is_discharge+"']").attr("selected",true);
+</script>
