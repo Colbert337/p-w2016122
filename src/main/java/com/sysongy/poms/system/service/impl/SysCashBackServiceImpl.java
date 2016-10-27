@@ -115,7 +115,12 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 			//新插入的日期开始时间在已经配置的日期区间之内
 			boolean case_2 = !obj_start_date.before(sysCashBack.getStart_date()) && !obj_start_date.after(sysCashBack.getEnd_date());
 			
-			if(case_1 || case_2){
+			//203邀请类型  阈最大值字段用于保存被邀请人返现金额  阈最小值 为邀请人返现金额
+			//202和201首次充值和注册定额返现 返现系数为返现金额
+			//这些类型应该一个级别应当只有一个规则
+			if ("203".equals(sysCashBack.getSys_cash_back_no())||"202".equals(sysCashBack.getSys_cash_back_no())||"201".equals(sysCashBack.getSys_cash_back_no())) {
+				throw new Exception("该时间范围内已有生效配置，请确认时间范围后重试！");
+			}if(case_1 || case_2){
 				//例外CASE1，配置项的minvalue与maxvalue均小于已配置的minvalue
 				boolean exceptionCase_1 = Float.valueOf(obj_min_value) <= Float.valueOf(sysCashBack.getThreshold_min_value()) && Float.valueOf(obj_max_value) <= Float.valueOf(sysCashBack.getThreshold_min_value());
 				//例外CASE2，配置项的minvalue大于已配置的maxvalue
@@ -294,5 +299,9 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		// TODO Auto-generated method stub
 		return cashBackMapper.queryMaxCashBack();
 	}
-	
+	@Override
+	public List<SysCashBack> queryForBreak(String cashbackno) {
+		// TODO Auto-generated method stub
+		return cashBackMapper.queryForBreak(cashbackno);
+	}
 }

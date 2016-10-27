@@ -61,6 +61,19 @@ public interface OrderService {
     PageInfo<Map<String, Object>> queryGastationConsumeReportDetail(SysOrder record);
    
     /**
+     * 查看订单（用于退费，只查看类型是退费和微信支付宝充值类型）
+     * @param order
+     * @return
+     */
+    PageInfo<SysOrder> queryRoadListForBack(SysOrder order);
+    /**
+     * 保存订单 用于生成退款订单
+     * @param order
+     * @return
+     */
+	void saveOrder(SysOrder order);
+ 
+    /**
      * 给司机充值
      * @param order
      * @return

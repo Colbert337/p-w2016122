@@ -148,6 +148,15 @@ public class DriverServiceImpl implements DriverService {
             //如果有要邀请码，要进行返现，现在先写死，以后走订单
             if(!StringUtils.isEmpty(invitationCode)){
             	this.cashBackForRegister(record, invitationCode, operator_id);
+            }else{//如果没有邀请么 则触发注册返现规则
+    			SysCashBack back= sysCashBackService.queryForBreak("201").get(0);//获取返现规则
+    			if (back!=null) {
+    				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+				}else{
+					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
+				}
+ 
+            	this.cashBackForRegister(record, invitationCode, operator_id);
             }
             
             //发优惠卷
@@ -423,9 +432,14 @@ public class DriverServiceImpl implements DriverService {
 		}else{
 			invitation = invitationList.get(0);
 	
-	    	sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.REGISTER_CASHBACK);
-	    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(10.00), GlobalConstant.OrderType.INVITED_CASHBACK);
-
+			SysCashBack back= sysCashBackService.queryForBreak("203").get(0);//获取返现规则
+			if (back!=null) {
+				sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+		    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_max_value())), GlobalConstant.OrderType.INVITED_CASHBACK);
+			}else{
+				logger.info("找不到匹配的返现规则，注册成功，返现失败");
+			}
+	    	
 	    	//发优惠劵
 	    	CouponGroup couponGroup = new CouponGroup();
             couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITED);

@@ -29,7 +29,7 @@ public interface SysOrderMapper {
     int updateByPrimaryKey(SysOrder record);
     
     int updateOriginalOrderAfterDischarged(Map map);
-    
+    List<SysOrder> queryForPageForBack(SysOrder order);
     /**
      * 
      * @param map

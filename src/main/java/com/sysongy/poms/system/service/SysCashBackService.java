@@ -30,7 +30,7 @@ public interface SysCashBackService {
 	public Integer delCashBack(String sysCashBackId) throws Exception;
 	
 	public Integer delCashBack(String sysCashBackNo, String level) throws Exception;
-	
+	public List<SysCashBack> queryForBreak(String cashbackno);
 	/**
 	 * 通过cashBack的number得到对象
 	 * @param cashBackid
