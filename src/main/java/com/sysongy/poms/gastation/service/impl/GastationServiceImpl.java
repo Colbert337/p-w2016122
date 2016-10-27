@@ -3,6 +3,7 @@ package com.sysongy.poms.gastation.service.impl;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.gastation.dao.GastationMapper;
 import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.model.GsGasPrice;
+import com.sysongy.poms.gastation.model.ProductPrice;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.gastation.service.ProductPriceService;
 import com.sysongy.poms.order.dao.SysPrepayMapper;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysPrepay;
@@ -49,8 +54,10 @@ public class GastationServiceImpl implements GastationService {
 	private UsysparamService usysparamService;
 	@Autowired
 	private SysDepositLogMapper sysDepositLogMapper;
-	
-	
+	@Autowired
+	private ProductPriceService productPriceService;
+	@Autowired
+	private GsGasPriceService gsGasPriceService;
 	@Autowired
 	private SysPrepayMapper sysPrepayMapper;
 
@@ -492,5 +499,67 @@ public class GastationServiceImpl implements GastationService {
 	public int updateByPrimaryKeySelective(Gastation record) throws Exception {
 		// TODO Auto-generated method stub
 		return gasStationMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public void updateForJob() throws Exception {
+		ProductPrice record = new ProductPrice();
+		record.setStart_time_after(new Date());
+		record.setProductPriceStatus("2");
+		record.setOrderby("version asc");
+
+		List<ProductPrice> list = productPriceService.queryProductPrice(record).getList();
+
+		for (int i = 0; i < list.size(); i++) {
+			record = list.get(i);
+
+			Calendar recordTime = Calendar.getInstance();
+			recordTime.setTime(record.getStartTime());
+
+			Integer recordYear = recordTime.get(Calendar.YEAR);
+			Integer recordMonth = recordTime.get(Calendar.MONTH) + 1;
+			Integer recordDay = recordTime.get(Calendar.DAY_OF_MONTH);
+			Integer recordHour = recordTime.get(Calendar.HOUR_OF_DAY);
+
+			Calendar now = Calendar.getInstance();
+
+			if (recordYear.equals(now.get(Calendar.YEAR)) && recordMonth.equals(now.get(Calendar.MONTH) + 1) && recordDay.equals(now.get(Calendar.DAY_OF_MONTH))&& recordHour.equals(now.get(Calendar.HOUR_OF_DAY) + 1)) {
+				ProductPrice tmp = new ProductPrice();
+				
+				tmp.setProduct_id(record.getProduct_id());
+				tmp.setProductPriceStatus("1");
+				
+				List<ProductPrice> tmpList = productPriceService.queryProductPrice(tmp).getList();
+				if(tmpList.size() != 1){
+					throw new Exception("通过product_id找不到唯一一条生效的价格信息");
+				}
+				//这个是之前生效的价格信息 
+				tmp = tmpList.get(0);
+				
+					
+				//修改productPrice状态
+				ProductPrice newrecord = record;
+
+				productPriceService.updatePriceStatus(record);
+
+				newrecord.setProductPriceStatus("1");
+				productPriceService.saveProductPrice(newrecord, "update");
+				
+				//修改GasPrice状态
+				GsGasPrice gsGasPrice = new GsGasPrice();
+				gsGasPrice.setPrice_id(tmp.getId());
+				
+				List<GsGasPrice> gspricelist = gsGasPriceService.queryGsPrice(gsGasPrice).getList();
+				
+				if(gspricelist.size() != 1){
+					throw new Exception("通过price_id找不到唯一的gsgasprice信息");
+				}
+				
+				gsGasPrice = gspricelist.get(0);
+				gsGasPrice.setPrice_id(record.getId());
+				
+				gsGasPriceService.saveGsPrice(gsGasPrice, "update");
+			}
+		}
 	}
 }
