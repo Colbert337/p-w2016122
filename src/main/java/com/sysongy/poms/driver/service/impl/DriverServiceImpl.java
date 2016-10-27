@@ -440,7 +440,7 @@ public class DriverServiceImpl implements DriverService {
 				logger.info("找不到匹配的返现规则，注册成功，返现失败");
 			}
 	    	
-	    	//发优惠劵
+	    	//发优惠劵,被邀请用户注册发放优惠券
 	    	CouponGroup couponGroup = new CouponGroup();
             couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITED);
 
@@ -449,9 +449,9 @@ public class DriverServiceImpl implements DriverService {
             if(list.size()>0){
             	couponGroupService.sendCouponGroup(driver.getSysDriverId(), list, operator_id);
             }
-
+            //发优惠劵,邀请用户成功发放优惠券
             CouponGroup couponGroup1 = new CouponGroup();
-            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITED);
+            couponGroup1.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITE_FRIEND);
 
             List<CouponGroup> list1 = couponGroupService.queryCouponGroup(couponGroup1).getList();
 
