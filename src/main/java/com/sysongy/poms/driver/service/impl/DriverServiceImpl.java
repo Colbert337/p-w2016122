@@ -150,7 +150,7 @@ public class DriverServiceImpl implements DriverService {
     			List<SysCashBack> list=sysCashBackService.queryForBreak("201");
     			if (list!=null && list.size() > 0 ) {
     				SysCashBack back= list.get(0);//获取返现规则
-    				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+    				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 				}else{
 					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
 				}

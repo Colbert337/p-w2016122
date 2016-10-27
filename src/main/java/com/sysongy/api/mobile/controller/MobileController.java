@@ -4416,7 +4416,7 @@ public class MobileController {
 				tokenMap.put("orderNum",order.getOrderNumber());
 				tokenMap.put("gastationId",order.getDebitAccount());
 				tokenMap.put("payment",order.getShould_payment());
-				tokenMap.put("preferentialCash",order.getPreferential_cash());
+				tokenMap.put("preferentialCash",(order.getPreferential_cash()==null||"".equals(order.getPreferential_cash()))?"0":order.getPreferential_cash());
 				result.setData(tokenMap);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);

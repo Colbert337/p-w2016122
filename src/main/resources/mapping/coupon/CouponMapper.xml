@@ -306,7 +306,7 @@
 				AND (sc.limit_money is null or sc.limit_money &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal))
 			</if>
 			<if test="amount != null &amp;&amp; amount != ''">
-				<![CDATA[   AND sc.preferential_discount+0 <  #{amount,jdbcType=VARCHAR} ]]>
+				AND ( sc.use_condition ='2' OR  <![CDATA[ sc.limit_money+0 <=  #{amount,jdbcType=VARCHAR} ]]>)
 			</if>			
 		</trim>
 		order by CONVERT(preferential_discount,decimal) DESC,use_condition DESC,end_coupon_time ASC,sc.coupon_kind DESC
