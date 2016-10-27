@@ -148,7 +148,7 @@ public class DriverServiceImpl implements DriverService {
             //如果没有邀请么 则触发注册返现规则
             if(StringUtils.isEmpty(invitationCode)){
     			List<SysCashBack> list=sysCashBackService.queryForBreak("201");
-    			if (list!=null && list.get(0)!=null) {
+    			if (list!=null && list.size() > 0 ) {
     				SysCashBack back= list.get(0);//获取返现规则
     				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 				}else{
@@ -432,7 +432,7 @@ public class DriverServiceImpl implements DriverService {
 			invitation = invitationList.get(0);
 			List<SysCashBack> listBack=sysCashBackService.queryForBreak("203");
 			
-			if (listBack!=null && listBack.get(0)!=null) {
+			if (listBack!=null && listBack.size() > 0) {
 				SysCashBack back= listBack.get(0);//获取返现规则
 				sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 		    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_max_value())), GlobalConstant.OrderType.INVITED_CASHBACK);
