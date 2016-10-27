@@ -60,7 +60,7 @@ public class Coupon extends BaseModel {
 
 	//当前时间
 	private String nowDate;
-	//当前时间
+	//状态信息
 	private String statusinfo;
 
 

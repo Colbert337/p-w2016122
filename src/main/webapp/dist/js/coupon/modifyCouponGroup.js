@@ -113,6 +113,9 @@ $(function () {
 		$("input[name='coupon_ids']").val(coupon_ids);
 	}
 	$("#checkboxAll").click(function(){
+		var couponNum = $("input[name='couponNum']");
+		var min =  $("input[name='min']");
+		var add = $("input[name='add']");
 		if(this.checked){
 			$("input[name='coupon_id']").each(function(){
 				this.checked=true;
@@ -121,6 +124,9 @@ $(function () {
 				}
 			});
 			$("input[name='coupon_ids']").val(coupon_ids);
+			min.removeAttr("disabled");
+			add.removeAttr("disabled");
+			couponNum.removeAttr("disabled");
 		}else{
 			$("input[name='coupon_id']").each(function(){
 				this.checked=false;
@@ -128,6 +134,9 @@ $(function () {
 				coupon_nums.remove($(this).val());
 			});
 			$("input[name='coupon_ids']").val(coupon_ids);
+			min.prop("disabled","disabled");
+			add.prop("disabled","disabled");
+			couponNum.prop("disabled","disabled");
 		}
 	});
 	

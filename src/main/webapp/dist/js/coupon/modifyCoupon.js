@@ -38,6 +38,7 @@ $('#start_coupon_time').datepicker({
 	startDate:new Date(),
 	endDate:"2037-12-31",
 	format: "yyyy-mm-dd",
+	dateFormat:"yyyy-mm-dd",
 	pickerPosition: "bottom-left"
 }).on("click",function(e){
 	$("#start_coupon_time").datepicker("setEndDate", $("#end_coupon_time").val());
@@ -54,6 +55,7 @@ $('#end_coupon_time').datepicker({
 	weekStart: 1,
 	startDate:new Date(),
 	endDate:"2037-12-31",
+	format: "yyyy-mm-dd",
 	dateFormat:"yyyy-mm-dd",
 	pickerPosition: "bottom-left"
 }).on("click", function (e) {
@@ -186,7 +188,6 @@ function save(){
 
 		}
 	}
-
 	$("#couponform").ajaxSubmit(options);
 }
 

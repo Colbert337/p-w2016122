@@ -1,6 +1,7 @@
 package com.sysongy.poms.coupon.model;
 
 import java.util.Date;
+import java.util.List;
 
 import com.sysongy.poms.base.model.BaseModel;
 
@@ -30,7 +31,15 @@ public class CouponGroup extends BaseModel {
 	private Date lastmodify_time;
 	// 优惠券组中多个优惠卷标题
 	private String coupon_titles;
-
+	//优惠卷发送类型
+	private List<Integer> issued_types; 
+	
+	public List<Integer> getIssued_types() {
+		return issued_types;
+	}
+	public void setIssued_types(List<Integer> issued_types) {
+		this.issued_types = issued_types;
+	}
 	public String getCoupon_nums() {
 		return coupon_nums;
 	}

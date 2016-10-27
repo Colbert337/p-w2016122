@@ -114,6 +114,9 @@ $(function () {
 		$("input[name='coupon_ids']").val(coupon_ids);
 	}
 	$("#checkboxAll").click(function(){
+		var couponNum = $("input[name='couponNum']");
+		var min =  $("input[name='min']");
+		var add = $("input[name='add']");
 		if(this.checked){
 			$("input[name='coupon_id']").each(function(){
 				this.checked=true;
@@ -122,12 +125,18 @@ $(function () {
 				}
 			});
 			$("input[name='coupon_ids']").val(coupon_ids);
+			min.removeAttr("disabled");
+			add.removeAttr("disabled");
+			couponNum.removeAttr("disabled");
 		}else{
 			$("input[name='coupon_id']").each(function(){
 				this.checked=false;
 				coupon_ids= $("input[name='coupon_ids']").val().replace($(this).val()+',','');
 				coupon_nums.remove($(this).val());
 			});
+			min.prop("disabled","disabled");
+			add.prop("disabled","disabled");
+			couponNum.prop("disabled","disabled");
 			$("input[name='coupon_ids']").val(coupon_ids);
 		}
 	});
@@ -333,7 +342,7 @@ function save(){
 		bootbox.alert("请选择优惠卷！");
 		return false;
 	}
-	if(coupon_nums.isEmpty()) {
+	if(coupon_nums.size==0) {
 		bootbox.alert("请填写优惠卷数量！");
 		return false;
 	}
@@ -342,9 +351,6 @@ function save(){
 	for(var i=0;i<couponids.length;i++){
 		couponnums.push(coupon_nums.get(couponids[i]));
 	}
-
-
-
 	var numStatus="false";
 	for(var j=0;j<couponnums.length;j++){
 		if(null==couponnums[j] ||couponnums[j]=='0'){
