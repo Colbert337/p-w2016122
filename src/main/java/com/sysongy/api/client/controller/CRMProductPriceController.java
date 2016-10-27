@@ -124,7 +124,6 @@ public class CRMProductPriceController {
             productPrice.setProductPriceId(gsGasPrice.getGasName());
 
             String gastationId = productPrice.getGaStationId();
-            /*gastationId = "GS15300001";*/
             Gastation gastation = gastationService.queryGastationByPK(gastationId);
             String effectiveTime = gastation.getPrice_effective_time();
             Date startTime = new Date();
