@@ -1,6 +1,8 @@
 package com.sysongy.poms.coupon.dao;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.UserCoupon;
@@ -35,6 +37,14 @@ public interface CouponMapper {
 	 * @return
 	 */
 	List<Coupon> queryCouponOrderByAmount(Coupon record);
+
+	/**
+	 * 当前用户可用优惠券列表（返回MAP）
+	 * @param record
+	 * @return
+     */
+	List<Map<String, Object>> queryCouponMapByAmount(Coupon record);
+
 	/**
 	 * 查询当前用户所有优惠券
 	 * @param driverId

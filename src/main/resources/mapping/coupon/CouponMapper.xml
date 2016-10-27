@@ -41,7 +41,29 @@
 		<result column="station_id" property="station_id" jdbcType="VARCHAR" />
 		<result column="regis_source" property="regis_source" jdbcType="VARCHAR" />
 	</resultMap>
-	
+	<resultMap id="MapResultMap" type="java.util.Map">
+		<id column="coupon_id" property="coupon_id" jdbcType="VARCHAR" />
+		<result column="coupon_no" property="coupon_no" jdbcType="VARCHAR" />
+		<result column="coupon_title" property="coupon_title" jdbcType="VARCHAR" />
+		<result column="coupon_detail" property="coupon_detail" jdbcType="VARCHAR" />
+		<result column="coupon_type" property="coupon_type" jdbcType="VARCHAR" />
+		<result column="coupon_kind" property="coupon_kind" jdbcType="VARCHAR" />
+		<result column="preferential_discount" property="preferential_discount" jdbcType="VARCHAR" />
+		<result column="use_condition" property="use_condition" jdbcType="VARCHAR" />
+		<result column="limit_money" property="limit_money" jdbcType="VARCHAR" />
+		<result column="issuance_type" property="issuance_type" jdbcType="VARCHAR" />
+		<result column="consume_type" property="consume_type" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="start_coupon_time" property="start_coupon_time" jdbcType="TIMESTAMP" />
+		<result column="end_coupon_time" property="end_coupon_time" jdbcType="TIMESTAMP" />
+		<result column="gas_station_name" property="gas_station_name" jdbcType="VARCHAR" />
+		<result column="sys_gas_station_id" property="sys_gas_station_id" jdbcType="VARCHAR" />
+		<result column="coupon_nums" property="coupon_nums" jdbcType="VARCHAR" />
+		<result column="statusinfo" property="statusinfo" jdbcType="VARCHAR" />
+		<result column="user_coupon_id" property="user_coupon_id" jdbcType="VARCHAR" />
+		<result column="gas_station_name" property="user_coupon_id" jdbcType="VARCHAR" />
+	</resultMap>
+
 	<sql id="Base_Column_List">
 			sc.coupon_id,
 			sc.coupon_no,
@@ -267,7 +289,7 @@
 	<update id="updateUserCouponStatus" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
 		update sys_user_coupon
 		set isuse = #{isuse,jdbcType=VARCHAR}
-		where coupon_no = #{coupon_no,jdbcType=VARCHAR}
+		where user_coupon_id = #{user_coupon_id,jdbcType=VARCHAR}
 	</update>
 
 	<!-- 当前用户可用优惠券 -->
@@ -289,6 +311,27 @@
 		</trim>
 		order by CONVERT(preferential_discount,decimal) DESC,use_condition DESC,end_coupon_time ASC,sc.coupon_kind DESC
 	</select>
+
+	<!-- 当前用户可用优惠券 返回MAP-->
+	<select id="queryCouponMapByAmount" resultMap="MapResultMap" parameterType="com.sysongy.poms.coupon.model.Coupon">
+		select sc.*,suc.user_coupon_id,sys_gas_station.gas_station_name
+		from sys_user_coupon suc left join sys_coupon sc on suc.coupon_id = sc.coupon_id
+		LEFT JOIN sys_gas_station ON sc.sys_gas_station_id = sys_gas_station.sys_gas_station_id
+		where suc.isuse = '0' AND suc.sys_driver_id = #{driverId,jdbcType=VARCHAR} AND sc.status = 1
+		AND (sc.sys_gas_station_id =  #{sys_gas_station_id,jdbcType=VARCHAR} OR sc.coupon_kind = 1)
+		AND sc.start_coupon_time &lt;= CURDATE() AND sc.end_coupon_time &gt;= CURDATE()
+		<trim>
+			<if test="preferential_discount != null &amp;&amp; preferential_discount != ''">
+				AND ((sc.preferential_discount &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal) AND sc.use_condition = 1) or (sc.use_condition = 2) )
+				AND (sc.limit_money is null or sc.limit_money &lt;= CONVERT(#{preferential_discount,jdbcType=VARCHAR},decimal))
+			</if>
+			<if test="amount != null &amp;&amp; amount != ''">
+				<![CDATA[   AND sc.preferential_discount+0 <  #{amount,jdbcType=VARCHAR} ]]>
+			</if>
+		</trim>
+		order by CONVERT(preferential_discount,decimal) DESC,use_condition DESC,end_coupon_time ASC,sc.coupon_kind DESC
+	</select>
+
 	<!-- 查询当前用户所有优惠券 -->
 	<select id="queryAllCouponForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
 		SELECT

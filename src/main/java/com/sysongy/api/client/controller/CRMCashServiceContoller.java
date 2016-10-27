@@ -295,7 +295,7 @@ public class CRMCashServiceContoller {
             coupon.setSys_gas_station_id(record.getOperatorSourceId());
             coupon.setDriverId(driver.getSysDriverId());
             coupon.setPreferential_discount(discountSum.toString());//存储需支付金额
-            PageInfo<Coupon> pageInfo = couponService.queryCouponOrderByAmount(coupon);
+            PageInfo<Map<String, Object>> pageInfo = couponService.queryCouponMapByAmount(coupon);
 
             //封装当前司机可用优惠券列表
             driver.setList(pageInfo.getList());
