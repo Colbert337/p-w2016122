@@ -4395,7 +4395,7 @@ public class MobileController {
 		String resultStr = "";
 		try {
 			/**
-			 * 解析参数 添加参数
+			 * 解析参数
 			 */
 			params = DESUtil.decode(keyStr, params);
 			JSONObject paramsObj = JSONObject.fromObject(params);
