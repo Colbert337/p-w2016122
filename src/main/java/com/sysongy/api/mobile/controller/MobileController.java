@@ -1444,6 +1444,10 @@ public class MobileController {
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
 				String name = mainObj.optString("name");
+				String type = mainObj.optString("type");
+				if(type!=null && !"".equals(type) && "0".equals(type)){
+					gastation.setType(type);
+				}
 				//范围为空，列表显示加分也
 				if(radius == null || "".equals(radius)){
 					if (gastation.getPageNum() == null) {
