@@ -632,7 +632,7 @@ public class DriverController extends BaseContoller{
 								 regisCompany = "微信服务号";
 								 break;
 							 }
-							 default:
+					 		 default:
 								 regisCompany = "";
 								 break;
 						 }
@@ -675,23 +675,25 @@ public class DriverController extends BaseContoller{
 							 checkedStatus = "";
 							 break;
 					 }
-					 switch (tmpMap.getAccount().getAccount_status().toString()) {
-						 case "0":{
-							 account_status = "用户冻结";
-							 break;
+					 if(tmpMap.getAccount()!=null) {
+						 switch (tmpMap.getAccount().getAccount_status().toString()) {
+							 case "0": {
+								 account_status = "用户冻结";
+								 break;
+							 }
+							 case "1": {
+								 account_status = "卡冻结";
+								 break;
+							 }
+							 case "2": {
+								 account_status = "正常";
+								 break;
+							 }
+							 default:
+								 account_status = "";
+								 break;
 						 }
-						 case "1":{
-							 account_status = "卡冻结";
-							 break;
-						 }
-						 case "2":{
-							 account_status = "正常";
-							 break;
-						 }
-						 default:
-							 account_status = "";
-							 break;
-					 }
+					 }else{account_status = "";}
 
                     content[i] = new String[]{userName,
 							cardId,mobilePhone,regisCompany,regisSource,stationId,accountBalance,createdDate,cardStatus,checkedStatus,account_status};
