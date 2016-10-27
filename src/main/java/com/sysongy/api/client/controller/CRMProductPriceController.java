@@ -123,14 +123,15 @@ public class CRMProductPriceController {
             productPrice.setProductPriceStatus("1");
             productPrice.setProductPriceId(gsGasPrice.getGasName());
 
-            String gastationId = productPrice.getGastationId();
+            String gastationId = productPrice.getGaStationId();
+            /*gastationId = "GS15300001";*/
             Gastation gastation = gastationService.queryGastationByPK(gastationId);
             String effectiveTime = gastation.getPrice_effective_time();
             Date startTime = new Date();
             if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE)){//12小时后生效
                 startTime = productPrice.getStartTime();
                 Date currntTime = DateTimeHelper.getTwelve(new Date());
-                int resultVal = DateTimeHelper.compareTwoDate(startTime,currntTime);
+                int resultVal = DateTimeHelper.compareTwoDate(currntTime,startTime);
                 if(resultVal > 0){
                     productPrice.setProductPriceStatus(GlobalConstant.PRICE_STATUS.ENACTMENT);
                     int renum = productPriceService.saveProductPrice(productPrice, "insert");

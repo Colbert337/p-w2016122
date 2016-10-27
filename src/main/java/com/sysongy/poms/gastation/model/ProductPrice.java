@@ -44,7 +44,7 @@ public class ProductPrice extends BaseModel {
     
     private String created_time_before;
 
-    private String gastationId;
+    private String gaStationId;
 
     public String getCreated_time_after() {
 		return created_time_after;
@@ -192,11 +192,11 @@ public class ProductPrice extends BaseModel {
         this.productPriceStatusInfo = productPriceStatusInfo;
     }
 
-    public String getGastationId() {
-        return gastationId;
+    public String getGaStationId() {
+        return gaStationId;
     }
 
-    public void setGastationId(String gastationId) {
-        this.gastationId = gastationId;
+    public void setGaStationId(String gaStationId) {
+        this.gaStationId = gaStationId;
     }
 }
