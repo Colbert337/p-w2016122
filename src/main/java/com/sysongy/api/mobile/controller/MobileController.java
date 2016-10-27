@@ -4295,7 +4295,11 @@ public class MobileController {
 				String gastationId = mainObj.optString("gastationId");
 				String amount = mainObj.optString("amount");
 				String driverId = mainObj.optString("token");
+				pageNum = mainObj.optString("pageNum");
+				pageSize = mainObj.optString("pageSize");
 				Coupon coupon = new Coupon();
+				coupon.setPageNum(Integer.valueOf(pageNum));
+				coupon.setPageSize(Integer.valueOf(pageSize));
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				String useCondition =null;
 				String couponKind =null;
