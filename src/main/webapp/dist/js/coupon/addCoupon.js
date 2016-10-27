@@ -32,7 +32,8 @@ $('#start_coupon_time').datepicker({
 	weekStart: 1,
 	startDate:new Date(),
 	endDate:"2037-12-31",
-	format: "yyyy/mm/dd",
+	format: "yyyy-mm-dd",
+	dateFormat:"yyyy-mm-dd",
 	pickerPosition: "bottom-left"
 }).on("click",function(e){
 	$("#start_coupon_time").datepicker("setEndDate", $("#end_coupon_time").val());
@@ -47,9 +48,10 @@ $('#end_coupon_time').datepicker({
 	todayHighlight: true,
 	language: "cn",
 	weekStart: 1,
-	format: "yyyy/mm/dd",
 	startDate:new Date(),
 	endDate:"2037-12-31",
+	format: "yyyy-mm-dd",
+	dateFormat:"yyyy-mm-dd",
 	pickerPosition: "bottom-left"
 }).on("click", function (e) {
 	$("#end_coupon_time").datepicker("setStartDate", $("#start_coupon_time").val());
@@ -166,7 +168,6 @@ function changeCouponType(){
 		if(!$('#couponform').data('bootstrapValidator').isValid()){
 			return ;
 		}
-		
 		var options ={   
 	            url:'../web/coupon/saveCoupon',
 	            type:'post',                    
@@ -175,7 +176,7 @@ function changeCouponType(){
 	            	$("#main").html(data);
 	            	$("#modal-table").modal("show");
 	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-	            	
+
 	 	       }
 		}
 					

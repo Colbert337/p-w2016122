@@ -1,5 +1,6 @@
 package com.sysongy.poms.coupon.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -46,6 +47,14 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			couponGroup.setOrderby("create_time desc");
 		}
 		PageHelper.startPage(couponGroup.getPageNum(), couponGroup.getPageSize(), couponGroup.getOrderby());
+		if(null!=couponGroup.getIssued_type()&&!"".equals(couponGroup.getIssued_type())){
+			String issued_type[] = couponGroup.getIssued_type().split(",");
+			List<Integer> issued_types = new ArrayList<Integer>();
+			for(int i=0;i<issued_type.length;i++){
+				issued_types.add(Integer.parseInt(issued_type[i]));
+			}
+			couponGroup.setIssued_types(issued_types);
+		}
 		List<CouponGroup> list = couponGroupMapper.queryForPage(couponGroup);
 		PageInfo<CouponGroup> pageInfo = new PageInfo<CouponGroup>(list);
 		return pageInfo;
