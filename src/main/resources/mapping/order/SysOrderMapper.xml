@@ -122,6 +122,16 @@
     should_payment, coupon_number, coupon_cash, spend_type,trade_no
   </sql>
 
+ <select id="queryForPageForBack" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select a.*,b.mobile_phone from sys_order a, sys_driver b where a.debit_account=b.sys_driver_id and  1=1 and (a.charge_type="103" or a.charge_type="104" or a.charge_type="110")
+    <if test="orderId != null &amp;&amp; orderId != ''" >
+      and a.order_id = #{orderId,jdbcType=VARCHAR}
+    </if>
+    <if test="orderType != null &amp;&amp; orderType != ''" >
+      and a.order_type = #{orderType,jdbcType=VARCHAR}
+    </if>
+  </select>
+
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />

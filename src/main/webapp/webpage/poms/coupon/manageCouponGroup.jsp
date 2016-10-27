@@ -31,10 +31,10 @@
 						</div>
 						<div class="item">
 						<label>发放类型：</label>
-							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${couponGroup.issued_type=='1'}">checked="checked"</c:if> name="issued_type" value="1"/><s:Code2Name mcode="1" gcode="ISSUED_TYPE"></s:Code2Name></label>
-							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${couponGroup.issued_type=='2'}">checked="checked"</c:if> name="issued_type" value="2" /><s:Code2Name mcode="2" gcode="ISSUED_TYPE"></s:Code2Name></label>
-							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${couponGroup.issued_type=='3'}">checked="checked"</c:if> name="issued_type" value="3" /><s:Code2Name mcode="3" gcode="ISSUED_TYPE"></s:Code2Name></label>
-							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${couponGroup.issued_type=='4'}">checked="checked"</c:if> name="issued_type" value="4" /><s:Code2Name mcode="4" gcode="ISSUED_TYPE"></s:Code2Name></label>
+							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${fn:contains(couponGroup.issued_type,'1')}">checked="checked"</c:if> name="issued_type" value="1"/><s:Code2Name mcode="1" gcode="ISSUED_TYPE"></s:Code2Name></label>
+							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${fn:contains(couponGroup.issued_type,'2')}">checked="checked"</c:if> name="issued_type" value="2" /><s:Code2Name mcode="2" gcode="ISSUED_TYPE"></s:Code2Name></label>
+							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${fn:contains(couponGroup.issued_type,'3')}">checked="checked"</c:if> name="issued_type" value="3" /><s:Code2Name mcode="3" gcode="ISSUED_TYPE"></s:Code2Name></label>
+							<label class="checkbox inline font-size"  style="padding-left:25px"><input type="checkbox"  <c:if test="${fn:contains(couponGroup.issued_type,'4')}">checked="checked"</c:if> name="issued_type" value="4" /><s:Code2Name mcode="4" gcode="ISSUED_TYPE"></s:Code2Name></label>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/coupon/addCouponGroup.jsp');">

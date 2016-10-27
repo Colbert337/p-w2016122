@@ -113,6 +113,16 @@ public class SysOrder extends BaseModel{
     
     private String trade_no;//交易号
 
+    private String mobile_phone;
+    
+	public String getMobile_phone() {
+		return mobile_phone;
+	}
+
+	public void setMobile_phone(String mobile_phone) {
+		this.mobile_phone = mobile_phone;
+	}
+
 	public String getSpend_type() {
 		return spend_type;
 	}

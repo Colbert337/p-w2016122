@@ -33,28 +33,28 @@
 										</div>
 									</div>
 									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">阈最小值： </label>
+									<div class="form-group" id="div1">
+										<label class="col-sm-3 control-label no-padding-right" id="label1">阈最小值： </label>
 										
 										<div class="col-sm-4">
-											<input type="text" readonly="readonly" name="threshold_min_value" placeholder="输入该阈最小值" class="form-control" maxlength="6" value="${sysCashBack.threshold_min_value}"/>
+											<input type="text" readonly="readonly" id="input1" name="threshold_min_value" placeholder="输入该阈最小值" class="form-control" maxlength="6" value="${sysCashBack.threshold_min_value}"/>
 										</div>
 									</div>
 									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">阈最大值（包含）： </label>
+									<div class="form-group" id="div2">
+										<label class="col-sm-3 control-label no-padding-right" id="label2">阈最大值（包含）： </label>
 
 										<div class="col-sm-4">
-											<input type="text" readonly="readonly" name="threshold_max_value" placeholder="输入该阈最大值" class="form-control" maxlength="6" value="${sysCashBack.threshold_max_value}"/>
+											<input type="text" readonly="readonly" id="input2" name="threshold_max_value" placeholder="输入该阈最大值" class="form-control" maxlength="6" value="${sysCashBack.threshold_max_value}"/>
 										</div>
 									</div>
 									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right">返现系数： </label>
+									<div class="form-group" id="div3">
+										<label class="col-sm-3 control-label no-padding-right" id="label3" >返现系数： </label>
 
 										<div class="col-sm-4">
-											<input type="text"  name="cash_per" placeholder="输入返现系数" class="form-control" maxlength="5" value="${sysCashBack.cash_per}"/>
-											<p class="text-error">（返现金额=充值金额 X 返现系数）</p>
+											<input type="text"  name="cash_per" id="input3" placeholder="输入返现系数" class="form-control" maxlength="5" value="${sysCashBack.cash_per}"/>
+											<p class="text-error" id="p">（返现金额=充值金额 X 返现系数）</p>
 										</div>
 									</div>
 									
@@ -120,3 +120,268 @@
 							</div><!-- /.col -->
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
+<script>
+
+if('${sysCashBack.sys_cash_back_no}'=='201'|| '${sysCashBack.sys_cash_back_no}'=='202'){
+	$("#div1").hide();
+	$("#div2").hide();
+	$("#label3").text("定额返现");
+	$("#input3").attr('placeholder','请输入返现金额');
+	$("#p").text("返现金额");
+	$('#cashbackform').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+      
+            cash_per: {
+                validators: {
+                    notEmpty: {
+                        message: '返现金额不能为空'
+                    },
+                    regexp: {
+                        regexp: '^([0-9])|([1-9]\d+)\.\d?$',
+                        message: '返现金额必须是数字'
+                    }
+                }
+            },
+            status: {
+                validators: {
+                    notEmpty: {
+                        message: '状态不能为空'
+                    }
+                }
+            },
+            level: {
+                validators: {
+                    notEmpty: {
+                        message: '优先级不能为空'
+                    }
+                }
+            },
+            start_date_after: {
+                validators: {
+                    notEmpty: {
+                        message: '生效日期不能为空'
+                    }/*,
+                    callback: {
+                    	message: '生效日期必须大于等于当前日期',
+                    	callback: function (value, validator, $field) {
+                    		return compareDate(value ,new Date().toLocaleDateString());
+                        }
+                    }*/
+                },
+                trigger: 'change'
+            },
+            start_date_before: {
+                validators: { 
+                    notEmpty: {
+                        message: '失效日期不能为空'
+                    },
+                    callback: {
+                    	callback: function (value, validator, $field) {
+                    		if(!compareDate(value ,new Date().toLocaleDateString())){
+                    			var txt = $('.start-date-before small[data-bv-validator="callback"]').text('失效日期必须大于等于当前日期');
+
+                    			return false;
+                    		}     		
+                    		return !compareDate($('[name=start_date_after]').val(), value);
+                        },
+                        message: '失效日期必须大于等于生效日期'
+                    }
+                },
+                trigger: 'change'
+            }
+        }
+    }); 
+}else if('${sysCashBack.sys_cash_back_no}'=='203'){
+	$("#label1").text('邀请人返现金额');
+	$("#input1").attr('placeholder','请输入邀请人返现金额');
+	$("#label2").text('被邀请人返现金额');
+	$("#input2").attr('placeholder','请输入被邀请人返现金额');
+	$("div3").hide();
+	$('#cashbackform').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            threshold_max_value: {
+                validators: { 
+                    notEmpty: {
+                        message: '阈最大值不能为空'
+                    },
+                    regexp: {
+                        regexp: '^[0-9]*$',
+                        message: '阈最大值必须是整数'
+                    },
+                    callback: {
+                    	message: '阈最大值必须大于最小值',
+                    	callback: function (value, validator, $field) {
+                             if(parseFloat($('[name=threshold_min_value]').val()) >= value){
+                            	 return false;
+                             }
+                             return true;
+                        }
+                    }
+                }
+            },
+            cash_per: {
+                validators: {
+                    notEmpty: {
+                        message: '返现系数不能为空'
+                    },
+                    regexp: {
+                        regexp: '^([0-9])|([1-9]\d+)\.\d?$',
+                        message: '返现系数必须是数字'
+                    }
+                }
+            },
+            status: {
+                validators: {
+                    notEmpty: {
+                        message: '状态不能为空'
+                    }
+                }
+            },
+            level: {
+                validators: {
+                    notEmpty: {
+                        message: '优先级不能为空'
+                    }
+                }
+            },
+            start_date_after: {
+                validators: {
+                    notEmpty: {
+                        message: '生效日期不能为空'
+                    }/*,
+                    callback: {
+                    	message: '生效日期必须大于等于当前日期',
+                    	callback: function (value, validator, $field) {
+                    		return compareDate(value ,new Date().toLocaleDateString());
+                        }
+                    }*/
+                },
+                trigger: 'change'
+            },
+            start_date_before: {
+                validators: { 
+                    notEmpty: {
+                        message: '失效日期不能为空'
+                    },
+                    callback: {
+                    	callback: function (value, validator, $field) {
+                    		if(!compareDate(value ,new Date().toLocaleDateString())){
+                    			var txt = $('.start-date-before small[data-bv-validator="callback"]').text('失效日期必须大于等于当前日期');
+
+                    			return false;
+                    		}     		
+                    		return !compareDate($('[name=start_date_after]').val(), value);
+                        },
+                        message: '失效日期必须大于等于生效日期'
+                    }
+                },
+                trigger: 'change'
+            }
+        }
+    });
+}else{
+	$('#cashbackform').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            threshold_max_value: {
+                validators: { 
+                    notEmpty: {
+                        message: '阈最大值不能为空'
+                    },
+                    regexp: {
+                        regexp: '^[0-9]*$',
+                        message: '阈最大值必须是整数'
+                    },
+                    callback: {
+                    	message: '阈最大值必须大于最小值',
+                    	callback: function (value, validator, $field) {
+                             if(parseFloat($('[name=threshold_min_value]').val()) >= value){
+                            	 return false;
+                             }
+                             return true;
+                        }
+                    }
+                }
+            },
+            cash_per: {
+                validators: {
+                    notEmpty: {
+                        message: '返现系数不能为空'
+                    },
+                    regexp: {
+                        regexp: '^([0-9])|([1-9]\d+)\.\d?$',
+                        message: '返现系数必须是数字'
+                    }
+                }
+            },
+            status: {
+                validators: {
+                    notEmpty: {
+                        message: '状态不能为空'
+                    }
+                }
+            },
+            level: {
+                validators: {
+                    notEmpty: {
+                        message: '优先级不能为空'
+                    }
+                }
+            },
+            start_date_after: {
+                validators: {
+                    notEmpty: {
+                        message: '生效日期不能为空'
+                    }/*,
+                    callback: {
+                    	message: '生效日期必须大于等于当前日期',
+                    	callback: function (value, validator, $field) {
+                    		return compareDate(value ,new Date().toLocaleDateString());
+                        }
+                    }*/
+                },
+                trigger: 'change'
+            },
+            start_date_before: {
+                validators: { 
+                    notEmpty: {
+                        message: '失效日期不能为空'
+                    },
+                    callback: {
+                    	callback: function (value, validator, $field) {
+                    		if(!compareDate(value ,new Date().toLocaleDateString())){
+                    			var txt = $('.start-date-before small[data-bv-validator="callback"]').text('失效日期必须大于等于当前日期');
+
+                    			return false;
+                    		}     		
+                    		return !compareDate($('[name=start_date_after]').val(), value);
+                        },
+                        message: '失效日期必须大于等于生效日期'
+                    }
+                },
+                trigger: 'change'
+            }
+        }
+    });
+	
+	
+	
+}
+</script>

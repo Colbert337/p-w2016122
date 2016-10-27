@@ -1214,4 +1214,21 @@ public class OrderServiceImpl implements OrderService {
 		validAccount(order);
 		return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
+	
+	@Override
+	 
+	public PageInfo<SysOrder> queryRoadListForBack(SysOrder order) {
+		PageHelper.startPage(order.getPageNum(), order.getPageSize(), order.getOrderby());
+		List<SysOrder> list = sysOrderMapper.queryForPageForBack(order);
+		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
+		return pageInfo;
+	}
+
+	@Override
+	public void saveOrder(SysOrder order) {
+		// TODO Auto-generated method stub
+		sysOrderMapper.insertSelective(order);
+	}
+	
+	
 }

@@ -45,4 +45,10 @@ public interface SysCashBackMapper {
      * 最高返现规则列表
      */
     List<SysCashBack> queryMaxCashBack();
+    /**
+     * 返现获取返现
+     * @param cashBackNo 规则编号
+     * @return
+     */
+    List<SysCashBack> queryForBreak(String cashBackNo);
 }

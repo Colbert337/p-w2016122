@@ -19,11 +19,11 @@
 			coupon_nums,
 			issued_type
 	</sql>
-	<select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
+	<select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.coupon.model.CouponGroup">
 		select
 		<include refid="Base_Column_List" />
 		from `sys_coupon_group` 
-		where 2=2
+		where 1=1
 		<trim>
 			<if test="coupongroup_no != null &amp;&amp; coupongroup_no != ''">
 				and coupongroup_no LIKE CONCAT(CONCAT('%',
@@ -33,8 +33,12 @@
 				and coupongroup_title LIKE CONCAT(CONCAT('%',
 				#{coupongroup_title,jdbcType=VARCHAR}), '%')
 			</if>
-			<if test="issued_type != null &amp;&amp; issued_type != ''">
-				and FIND_IN_SET(#{issued_type,jdbcType=VARCHAR},issued_type)>0
+			<if test="issued_types != null &amp;&amp; issued_types != ''">
+				and (
+			<foreach collection="issued_types" index="index" item="type" open=""	separator="or" close="">
+   				#{type,jdbcType=INTEGER} in  (issued_type) 
+ 			 </foreach>
+ 			 	)
 			</if>
 		</trim>
 	</select>
