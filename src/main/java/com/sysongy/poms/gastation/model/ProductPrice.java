@@ -40,6 +40,8 @@ public class ProductPrice extends BaseModel {
 
     private GsGasPrice product_info;
     
+    private Date start_time_after;
+    
     private String created_time_after;
     
     private String created_time_before;
@@ -48,6 +50,14 @@ public class ProductPrice extends BaseModel {
 
     public String getCreated_time_after() {
 		return created_time_after;
+	}
+
+	public Date getStart_time_after() {
+		return start_time_after;
+	}
+
+	public void setStart_time_after(Date start_time_after) {
+		this.start_time_after = start_time_after;
 	}
 
 	public void setCreated_time_after(String created_time_after) {
