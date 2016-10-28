@@ -107,11 +107,12 @@ $(function () {
 		$("input[name='coupon_ids']").val(coupon_ids);
 	} else{
 		$("#checkboxAll").removeAttr("checked");
+		var couponids = $("input[name='coupon_ids']").val();
 		$("input[name='coupon_id']").each(function(){
-			coupon_ids= $("input[name='coupon_ids']").val().replace($(this).val()+',','');
+			couponids= couponids.replace($(this).val()+',','');
 			coupon_nums.remove($(this).val());
 		});
-		$("input[name='coupon_ids']").val(coupon_ids);
+		$("input[name='coupon_ids']").val(couponids);
 	}
 	$("#checkboxAll").click(function(){
 		var couponNum = $("input[name='couponNum']");
@@ -129,15 +130,16 @@ $(function () {
 			add.removeAttr("disabled");
 			couponNum.removeAttr("disabled");
 		}else{
+			var couponids = $("input[name='coupon_ids']").val();
 			$("input[name='coupon_id']").each(function(){
 				this.checked=false;
-				coupon_ids= $("input[name='coupon_ids']").val().replace($(this).val()+',','');
+				couponids= couponids.replace($(this).val()+',','');
 				coupon_nums.remove($(this).val());
 			});
+			$("input[name='coupon_ids']").val(couponids);
 			min.prop("disabled","disabled");
 			add.prop("disabled","disabled");
 			couponNum.prop("disabled","disabled");
-			$("input[name='coupon_ids']").val(coupon_ids);
 		}
 	});
 
@@ -162,11 +164,18 @@ $(function () {
 				}else if(conpon.coupon_kind=='2'){
 					couponkind='气站优惠卷，优惠气站：'+conpon.gas_station_name;
 				}
+				var couponkindstr = '';
+				if(couponkind.length>10){
+					couponkindstr = couponkind.substr(0,10)+'...';
+				}else{
+					couponkindstr = couponkind;
+				}
 				$("#coupon").append(
 					"<tr class='success'>"
 					+"<td style='text-align:center'><input type='checkbox' onclick='selectCoupon()' name='coupon_id'  value='"+conpon.coupon_id+"' /></td>"
+					+"<td>"+conpon.coupon_no+"</td>"
 					+"<td>"+conpon.coupon_title+"</td>"
-					+"<td>"+couponkind+"</td>"
+					+"<td title='"+couponkind+"'>"+couponkindstr+"</td>"
 					+"<td style='text-align:center'><input name='min'  type='button' onclick='minCouponNum(this)' class='btn btn-default "+conpon.coupon_id+"' value='-' disabled='disabled'/><input id='"+conpon.coupon_id+"' name='couponNum' class='"+conpon.coupon_id+"' style='text-align: right;width: 30px;' type='text' value='0' disabled='disabled' maxlength='2' 　readOnly='true' /><input name='add' onclick='addCouponNum(this)'   type='button' class='btn btn-default "+conpon.coupon_id+"' disabled='disabled' value='+'/></td>"
 					+"</tr>"
 				);
@@ -259,7 +268,7 @@ function initTable() {
 			"bDeferRender": true,
 			"bDestroy":true,
 			"bAutoWidth": false,
-			"aoColumns": [{ "bSortable": false },null,null,{ "bSortable": false }],
+			"aoColumns": [{ "bSortable": false },null,null,null,{ "bSortable": false }],
 			"aaSorting": [[1, "asc"]],
 			"oLanguage" :lang, //提示信息
 		} );
@@ -322,11 +331,12 @@ function selectCoupon(){
 		$("input[name='coupon_ids']").val(coupon_ids);
 	} else{
 		$("#checkboxAll").removeAttr("checked");
+		var couponids = $("input[name='coupon_ids']").val();
 		$("input[name='coupon_id']").not("input:checked").each(function(){
-			coupon_ids= $("input[name='coupon_ids']").val().replace($(this).val()+',','');
+			couponids= couponids.replace($(this).val()+',','');
 			coupon_nums.remove($(this).val());
 		});
-		$("input[name='coupon_ids']").val(coupon_ids);
+		$("input[name='coupon_ids']").val(couponids);
 	}
 }
 
@@ -369,11 +379,18 @@ function save(){
 				couponNums:couponnums.join(",")
 			},
 			dataType:'text',
+			beforeSend: function () {
+				$('body').addClass('modal-open').css('padding-right','17px')
+				$('body').append('<div class="loading-warp"><div class="loading"><i class="ace-icon fa fa-spinner fa-spin"></i></div><div class="modal-backdrop fade in"></div></div>')
+			},
 			success:function(data){
 				$("#main").html(data);
 				$("#modal-table").modal("show");
+			},complete: function () {
+				$("body").removeClass('modal-open').removeAttr('style');
+				$(".loading-warp").remove();
 			},error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+				bootbox.alert("操作失败！");
 			}
 		}
 		$("#coupongroupform").ajaxSubmit(options);

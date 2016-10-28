@@ -147,14 +147,6 @@ public class CouponServiceImpl implements CouponService {
 		calendar.add(Calendar.SECOND, 59);
 		coupon.setEnd_coupon_time(sdf.format(calendar.getTime()));
 		couponMapper.updateByPrimaryKey(coupon);
-		if("2".equals(coupon.getStatus())){
-			UserCoupon userCoupon = new UserCoupon();
-			userCoupon.setCoupon_no(coupon.getCoupon_no());
-			userCoupon.setIsuse("2");
-			userCoupon.setLastmodify_person_id(userID);
-			userCoupon.setLastmodify_time(new Date());
-			couponMapper.updateUserCoupon(userCoupon);
-		}
 		return coupon.getCoupon_id();
 	}
 
