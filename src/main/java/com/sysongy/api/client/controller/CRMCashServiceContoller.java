@@ -507,6 +507,11 @@ public class CRMCashServiceContoller {
                 if(record.getConsumeType().equalsIgnoreCase(GlobalConstant.ConsumeType.CONSUME_TYPE_CARD)){
                     record.setConsume_card(null);
                 }
+
+                String id = record.getCoupon_id();
+                record.setCoupon_id(record.getCoupon_number());
+                record.setCoupon_number(id);//调换num和id位置，在order表中实际上存储id
+
                 String orderConsume = orderService.consumeByDriver(record);
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
@@ -549,7 +554,6 @@ public class CRMCashServiceContoller {
                 }
             }
             
-
             int nCreateOrder = orderService.insert(record, record.getSysOrderGoods());
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -578,8 +582,10 @@ public class CRMCashServiceContoller {
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
-            
-            
+
+
+            recordNew.setCoupon_id(record.getCoupon_number());
+            recordNew.setCoupon_number(record.getCoupon_id());
 
             recordNew.setCash(formatCash(record.getCash()));
             sendConsumeMessage(recordNew, mobilePhone);

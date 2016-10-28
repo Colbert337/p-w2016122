@@ -406,6 +406,7 @@ public class OrderServiceImpl implements OrderService {
 			   dischargeOrder.setPreferential_cash(originalOrder.getPreferential_cash());
 			   dischargeOrder.setShould_payment(originalOrder.getShould_payment());
 			   dischargeOrder.setCoupon_number(originalOrder.getCoupon_number());
+			   dischargeOrder.setCoupon_id(originalOrder.getCoupon_id());
 
 			  String disChargeConsume_success = driverService.deductCashToDriver(dischargeOrder, GlobalConstant.ORDER_ISCHARGE_YES);
 			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargeConsume_success)){

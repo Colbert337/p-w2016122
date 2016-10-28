@@ -356,8 +356,7 @@
 
 	<select id="queryUserCouponByID" resultMap="UserCouponMap" parameterType="java.lang.String">
 		select * from sys_user_coupon
-		where isuse = '0' 
-		and user_coupon_id = #{0}
+		where user_coupon_id = #{0}
 		and sys_driver_id = #{1}
 	</select>
 </mapper>
