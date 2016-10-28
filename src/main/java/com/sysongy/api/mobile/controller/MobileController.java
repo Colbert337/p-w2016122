@@ -4411,7 +4411,17 @@ public class MobileController {
 				tokenMap.put("gastationName",order.getGas_station_name());
 				tokenMap.put("orderStatus",order.getOrderStatus());
 				tokenMap.put("dealTime",sft.format(order.getOrderDate()));
-				tokenMap.put("chargeType",order.getChargeType());
+				String Spend_type = order.getSpend_type();
+				if(Spend_type.equals("C01")){
+					Spend_type ="卡余额消费";
+				}else if(Spend_type.equals("C02")){
+					Spend_type ="POS消费";
+				}else if(Spend_type.equals("C03")){
+					Spend_type ="微信消费";
+				}else if(Spend_type.equals("C04")){
+					Spend_type ="支付宝消费";
+				}
+				tokenMap.put("chargeType",Spend_type);
 				tokenMap.put("orderId",orderId);
 				tokenMap.put("orderNum",order.getOrderNumber());
 				tokenMap.put("gastationId",order.getChannelNumber());
