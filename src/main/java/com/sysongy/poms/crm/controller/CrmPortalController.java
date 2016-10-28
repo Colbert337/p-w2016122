@@ -659,7 +659,7 @@ public class CrmPortalController {
     @RequestMapping("/info/file")
     public String saveDriver(HttpServletRequest request, @ModelAttribute("currUser") CurrUser currUser, ModelMap map) throws Exception{
         SysDriver driver = new SysDriver();
-        String stationId = "TC29000003";//"陕西明泰能源有限公司"
+        String stationId = currUser.getStationId();//"陕西明泰能源有限公司"
 
         int resultInt = 0;
         long intiVal = 13000000601l;
