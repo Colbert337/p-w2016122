@@ -52,6 +52,19 @@
 						</div>
 
 						<div class="item">
+							<div class="input-daterange top" >
+								<label>审核状态:</label>
+								<select id="is_discharge" name="checkedStatus" maxlength="20">
+									<option value="">全部</option>
+									<option value="0">未认证</option>
+									<option value="1">审核中</option>
+									<option value="2">已认证</option>
+									<option value="3">认证未通过</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
@@ -294,3 +307,8 @@
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </div>
+
+<script type="text/javascript">
+	var is_discharge = '${driver.checkedStatus}';
+	$("#is_discharge").find("option[value='"+is_discharge+"']").attr("selected",true);
+</script>
