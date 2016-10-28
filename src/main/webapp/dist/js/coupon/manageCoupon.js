@@ -47,10 +47,4 @@
 		loadPage('#content', '../web/coupon/showUserCoupon?coupon_id='+coupon_id);
 		$("#userCouponModel").modal('show');
 	}
-	
-	function closeDialog(obj){
-		$("#" + obj).modal('hide').removeClass('in');
-		$("body").removeClass('modal-open').removeAttr('style');
-		$(".modal-backdrop").remove();
-	}
 

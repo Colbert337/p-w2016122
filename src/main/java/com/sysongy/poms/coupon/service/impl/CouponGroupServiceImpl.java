@@ -155,7 +155,7 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			if(!"".equals(couponGroup.getCoupon_ids())&&null!=couponGroup.getCoupon_ids()){
 				String[] coupon_id = couponGroup.getCoupon_ids().split(",");
 				String[] coupon_num = couponGroup.getCoupon_nums().split(",");
-				Iterator it = couponlist.iterator();
+				Iterator<Coupon> it = couponlist.iterator();
 				while(it.hasNext()){
 					Coupon aCoupon = (Coupon) it.next();
 					for(int i=0;i<coupon_id.length;i++){
