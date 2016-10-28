@@ -11,8 +11,9 @@
 %>
 
 <script src="<%=basePath%>/dist/js/mobile/order_list.js"></script>
-
-<div class="">
+<link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
+<script src="<%=basePath%>/dist/js/message/show.js"></script>
+<div class="" id="div">
 	<!-- /.page-header -->
 	<form id="formRoad">
 
@@ -26,45 +27,28 @@
 				</div>
 
 				<div class="search-types">
+					 
 					<div class="item">
-						<label>路况说明:</label> <input type="text" name="conditionMsg"
-							id="msg" placeholder="输入路况说明" maxlength="200"
-							value="${road.conditionMsg}" />
-					</div>
-					<div class="item">
-						<label>路况类型</label> <select name="conditionType" id="type"
-							value="${road.conditionType}">
-							<s:option flag="true" gcode="CONDITION_TYPE" form="road"
+						<label>充值类型</label> <select name="chargeType" id="type"
+							value="${order.chargeType}">
+							<s:option flag="true" gcode="CHARGE_TYPE" form="road"
 								field="conditionType" />
 						</select>
-					</div>
-					<div class="item">
-						<label>路况状态</label> <select name="conditionStatus"
-							id="conditionStatus">
-							<option value="">--请选择--</option>
-							<option value="0">已失效</option>
-							<option value="1">待审核</option>
-							<option value="2">审核通过</option>
-							<option value="3">未通过</option>
-						</select>
-					</div>
+					</div> 
 					<div class="item">
 						<div class="input-daterange top" id="j-input-daterange-top">
-							<label>发布日期:</label> <input type="text" class="timebox"
-								name="publisherTime_str" id="publisherTime_str"
-								value="${road.publisherTime_str}" readonly="readonly" /> <span
+							<label>订单日期:</label> <input type="text" class="timebox"
+								name="startDate" id="publisherTime_str"
+								value="${order.startDate}" readonly="readonly" /> <span
 								class=""> <i class="fa fa-exchange"></i>
-							</span> <input type="text" class="timebox" name="auditorTime_str"
-								id="auditorTime_str" value="${road.auditorTime_str}"
+							</span> <input type="text" class="timebox" name="endDate"
+								id="auditorTime_str" value="${order.endDate}"
 								readonly="readonly" />
 						</div>
 					</div>
 
 					<div class="item">
-						<button class="btn btn-sm btn-primary" type="button"
-							onclick="loadPage('#main','<%=basePath%>/webpage/poms/mobile/roadAdd.jsp');">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 添加
-						</button>
+						 
 						<button class="btn btn-sm btn-primary" type="button"
 							onclick="commitForm();">
 							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 查询
@@ -109,6 +93,8 @@
 								<th onclick="orderBy(this,'trade_no');commitForm();"
 									id="trade_no_order">交易号</th>
 								<th>退款原因</th>
+								<th>退款批号</th>
+								<th>退款状态</th>
 								<th class="text-center td-w3">操作</th>
 							</tr>
 						</thead>
@@ -133,6 +119,13 @@
 									<td>${list.channel}</td>
 									<td>${list.trade_no}</td>
 									<td>${list.orderRemark}</td>
+									<td>${list.batch_no}</td>
+									<td><c:if test="${list.orderType eq '230'}">
+											<c:if test="${list.orderStatus==1}">成功</c:if>
+											<c:if test="${list.orderStatus==2}">失败功</c:if>
+											<c:if test="${list.orderStatus==3}">待退款</c:if>
+										</c:if>
+									</td>
 									<td class="text-center">
 									<c:if test="${not empty list.trade_no }">
 									<a class=""

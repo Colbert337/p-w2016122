@@ -15,7 +15,7 @@
 			if(!$('#cashbackform').data('bootstrapValidator').isValid()){
 				return ;
 			}
-			if (tyep==0) {
+			if (tyep==1) {
 				bootbox.alert("该优先级已有数据 请重新选择优先级");
    			   
    			 	return;
@@ -48,7 +48,7 @@
 		           dataType:'text',
 		           success:function(data){ 
 		        	   var s = JSON.parse(data);
-		        	   alert($("#sys_cash_back_no").val());
+		        	 //  alert($("#sys_cash_back_no").val());
 		        	   if(s.length == 1){
 		        		   if ($("#sys_cash_back_no").val()=="203"||$("#sys_cash_back_no").val()=="202"||$("#sys_cash_back_no").val()=="201") {
 		        			   bootbox.alert("该优先级已有数据 请重新选择优先级");

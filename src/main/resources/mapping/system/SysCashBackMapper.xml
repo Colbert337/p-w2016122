@@ -52,6 +52,12 @@
      from sys_cash_back where sys_cash_back_no = #{0} and level = #{1} order by sys_cash_back_id desc limit 1
   </select>
   
+  
+    <select id="queryForBreak" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select <include refid="Base_Column_List" />
+     from sys_cash_back where sys_cash_back_no = #{0} and start_date<![CDATA[<= ]]> NOW() and end_date<![CDATA[>= ]]>NOW() order by `level` DESC limit 1
+  </select>
+  
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.card.model.GasCard" >
   	 select <include refid="Base_Column_List" />
     from sys_cash_back gc where 1=1

@@ -172,12 +172,19 @@ function changeCouponType(){
 	            url:'../web/coupon/saveCoupon',
 	            type:'post',                    
 	            dataType:'text',
+				beforeSend: function () {
+					$('body').addClass('modal-open').css('padding-right','17px')
+					$('body').append('<div class="loading-warp"><div class="loading"><i class="ace-icon fa fa-spinner fa-spin"></i></div><div class="modal-backdrop fade in"></div></div>')
+				},
 	            success:function(data){
 	            	$("#main").html(data);
 	            	$("#modal-table").modal("show");
-	            },error:function(XMLHttpRequest, textStatus, errorThrown) {
-
-	 	       }
+	            },complete: function () {
+				$("body").removeClass('modal-open').removeAttr('style');
+				$(".loading-warp").remove();
+			},error:function(XMLHttpRequest, textStatus, errorThrown) {
+				bootbox.alert("操作失败！");
+			}
 		}
 					
 		$("#couponform").ajaxSubmit(options);

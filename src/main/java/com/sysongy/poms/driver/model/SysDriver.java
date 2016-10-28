@@ -111,6 +111,8 @@ public class SysDriver extends BaseModel{
     private String driverQrcode;
     
     private String verifySource;//实名认证来源，默认为CRM认证来源0，APP认证来源是改为1
+    
+    private String isImport;//虚拟字段是否导入，导入时值为1
 
     public String getMemo() {
 		return memo;
@@ -519,6 +521,14 @@ public class SysDriver extends BaseModel{
 
 	public void setVerifySource(String verifySource) {
 		this.verifySource = verifySource;
+	}
+
+	public String getIsImport() {
+		return isImport;
+	}
+
+	public void setIsImport(String isImport) {
+		this.isImport = isImport;
 	}
 
 }
