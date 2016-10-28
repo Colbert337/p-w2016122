@@ -49,9 +49,9 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 		PageHelper.startPage(couponGroup.getPageNum(), couponGroup.getPageSize(), couponGroup.getOrderby());
 		if(null!=couponGroup.getIssued_type()&&!"".equals(couponGroup.getIssued_type())){
 			String issued_type[] = couponGroup.getIssued_type().split(",");
-			List<Integer> issued_types = new ArrayList<Integer>();
+			List<String> issued_types = new ArrayList<String>();
 			for(int i=0;i<issued_type.length;i++){
-				issued_types.add(Integer.parseInt(issued_type[i]));
+				issued_types.add(issued_type[i]);
 			}
 			couponGroup.setIssued_types(issued_types);
 		}
