@@ -194,6 +194,39 @@ function leaveDriver(){
     }
 
 }
+/**
+ * 显示导入
+ */
+function openImportDiv(){
+    $("#importDivModel").modal("show");
+}
+/**
+ *导入文件
+ */
+function saveTemplate(){
+	if ($("#file_import").val()=="") {
+		bootbox.alert("请选择文件");
+		return false;
+	}
+    var multipartOptions ={
+        url:'../portal/crm/help/info/file',
+        type:'post',
+        dataType:'json',
+        enctype:"multipart/form-data",
+        success:function(data){
+            if (data.SUCCESS == true) {
+            	bootbox.alert(data.datas);
+            	init();
+    		}
+        },error:function(XMLHttpRequest, textStatus, errorThrown) {
+        	bootbox.alert("操作失败！");
+        }
+    }
+    $("#importForm").ajaxSubmit(multipartOptions);
+    $("#importDivModel").modal('hide').removeClass('in');
+    $("body").removeClass('modal-open').removeAttr('style');
+    $(".modal-backdrop").remove();
+}
 
 //bootstrap验证控件
 $('#driverForm').bootstrapValidator({
