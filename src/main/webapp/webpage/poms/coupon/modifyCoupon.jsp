@@ -126,7 +126,7 @@
 							</label>
 						</c:if>
 						<c:if test="${coupon.coupon_nums>0}">
-							<input type="hidden" name="use_condition" value="${coupon.use_condition}"/>
+							<input type="hidden" name="use_condition" value="${coupon.use_condition}"/><c:if test="${coupon.use_condition=='1'}"><input type="hidden" name="limit_money" value="${coupon.limit_money}"/></c:if>
 							<label class="radio-inline">
 								<input name="use_condition" disabled="disabled"  type="radio" class="ace" value="1" <c:if test="${coupon.use_condition=='1'}">checked="checked"</c:if>  onclick="changeUseCondition()">
 								<span class="lbl">满<input type="text" name="limit_money"  disabled="disabled" <c:if test="${coupon.use_condition=='1'}">value="${coupon.limit_money}"</c:if>  maxlength="8" style="width:80px;"/> 元使用</span>
