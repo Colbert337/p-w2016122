@@ -118,7 +118,12 @@ public interface SysOrderMapper {
      * @return
      */
     SysOrder queryById(String orderId);
-    
+    /**
+     * 查看订单详情用于支付宝回调
+     * @param TradeNo
+     * @return
+     */
+    SysOrder queryByTrade(String TradeNo);
     /**
      * 查询消费订单个数
      * @param token 当前用户唯一标识
