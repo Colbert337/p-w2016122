@@ -659,12 +659,12 @@ public class CrmPortalController {
     @RequestMapping("/info/file")
     public String saveDriver(HttpServletRequest request, @ModelAttribute("currUser") CurrUser currUser, ModelMap map) throws Exception{
         SysDriver driver = new SysDriver();
-        String stationId = "TC29000002";//"咸阳裕隆煤业有限公司"
+        String stationId = "TC29000003";//"陕西明泰能源有限公司"
 
         int resultInt = 0;
-        long intiVal = 12000000601l;
+        long intiVal = 13000000601l;
         int nameNo = 1000;
-        for (intiVal = 12000000601l;intiVal <= 12000000700l;intiVal++){
+        for (intiVal = 13000000601l;intiVal <= 13000000700l;intiVal++){
             String operation = "insert";
             String payCode = "111111";
 
@@ -673,17 +673,17 @@ public class CrmPortalController {
             driver.setMobilePhone(cardNum);
             /*driver.setCardId(cardNum);*/
             nameNo = nameNo + 1;
-            driver.setFullName("裕隆车辆"+nameNo);
+            driver.setFullName("明泰车辆"+nameNo);
             driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
             driver.setUserStatus("0");//0 使用中 1 已冻结
             driver.setCheckedStatus("2");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
             driver.setStationId(stationId);//站点编号
 //            Transportion transportion = transportionService.queryTransportionByPK(stationId);
-            driver.setRegisSource("咸阳裕隆煤业有限公司");//司机注册来源（运输公司名称）
+            driver.setRegisSource("陕西明泰能源有限公司");//司机注册来源（运输公司名称）
 
             driver.setSysDriverId(UUIDGenerator.getUUID());
             driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
-            driver.setMemo("钟殿滨特殊业务 2016-10-21 脚本添加100个司机(卡号：12000000601~12000000700)");
+            driver.setMemo("王涵特殊业务 2016-10-27 脚本添加100个司机(卡号：13000000601~13000000700)");
 
             driverService.saveDriver(driver,operation, null, null);
 

@@ -62,6 +62,7 @@
 								<thead>
 									<tr>
 										<th style="text-align:center"><input type="checkbox" id="checkboxAll" /></th>
+										<th id="coupon_no_order">优惠编号</th>
 										<th id="coupon_title_order">优惠名称</th>
 										<th id="coupon_kind_order">优惠类型</th>
 										<th style="text-align:center">数量</th>

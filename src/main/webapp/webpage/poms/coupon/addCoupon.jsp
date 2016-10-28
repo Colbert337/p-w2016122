@@ -8,6 +8,11 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 	<script src="<%=basePath %>/dist/js/coupon/addCoupon.js"></script>
+	<style type="text/css">
+	#limit i.form-control-feedback{
+		right: -28px;
+	}
+	</style>
 	<div class="">
 		<!-- /section:settings.box -->
 		<div class="page-header">
@@ -77,7 +82,7 @@
 						<div class="col-sm-4">
 								<label class="radio-inline">
 									<input name="use_condition"  type="radio" class="ace" value="1" checked="checked" onclick="changeUseCondition()">
-									<span class="lbl">满<input type="text" name="limit_money" maxlength="8" style="width:80px;"/>元使用</span>
+									<span id="limit" class="lbl">满<input type="number" name="limit_money"  maxlength="8" style="width:80px;"/>元使用</span>
 								</label>
 								<label class="radio-inline">
 									<input name="use_condition"  type="radio" class="ace" value="2" onclick="changeUseCondition()">

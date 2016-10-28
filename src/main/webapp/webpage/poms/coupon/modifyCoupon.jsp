@@ -8,6 +8,11 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 	<script src="<%=basePath %>/dist/js/coupon/modifyCoupon.js"></script>
+	<style type="text/css">
+	#limit i.form-control-feedback{
+		right: -28px;
+	}
+	</style>
 	<div class="">
 		<!-- /section:settings.box -->
 		<div class="page-header">
@@ -113,7 +118,7 @@
 						<c:if test="${coupon.coupon_nums==0}">
 							<label class="radio-inline">
 								<input name="use_condition"  type="radio" class="ace" value="1" <c:if test="${coupon.use_condition=='1'}">checked="checked"</c:if>  onclick="changeUseCondition()">
-								<span class="lbl">满<input type="text" name="limit_money" <c:if test="${coupon.use_condition=='1'}">value="${coupon.limit_money}"</c:if>  maxlength="8" style="width:80px;"/>元使用</span>
+								<span id="limit" class="lbl">满<input type="number" name="limit_money" <c:if test="${coupon.use_condition=='1'}">value="${coupon.limit_money}"</c:if>  maxlength="8" style="width:80px;"/>元使用</span>
 							</label>
 							<label class="radio-inline">
 								<input name="use_condition"  type="radio" class="ace" <c:if test="${coupon.use_condition=='2'}">checked="checked"</c:if> value="2" onclick="changeUseCondition()">
@@ -124,7 +129,7 @@
 							<input type="hidden" name="use_condition" value="${coupon.use_condition}"/>
 							<label class="radio-inline">
 								<input name="use_condition" disabled="disabled"  type="radio" class="ace" value="1" <c:if test="${coupon.use_condition=='1'}">checked="checked"</c:if>  onclick="changeUseCondition()">
-								<span class="lbl">满<input type="text" name="limit_money"  disabled="true" readonly="true" <c:if test="${coupon.use_condition=='1'}">value="${coupon.limit_money}"</c:if>  maxlength="8" style="width:80px;"/> 元使用</span>
+								<span class="lbl">满<input type="text" name="limit_money"  disabled="disabled" <c:if test="${coupon.use_condition=='1'}">value="${coupon.limit_money}"</c:if>  maxlength="8" style="width:80px;"/> 元使用</span>
 							</label>
 							<label class="radio-inline">
 								<input name="use_condition"  type="radio"  disabled="disabled"   class="ace" <c:if test="${coupon.use_condition=='2'}">checked="checked"</c:if> value="2" onclick="changeUseCondition()">

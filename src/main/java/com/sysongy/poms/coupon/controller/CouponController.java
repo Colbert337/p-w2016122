@@ -204,17 +204,19 @@ public class CouponController extends BaseContoller {
 	@ResponseBody
 	public String selectGastationList(ModelMap map) throws Exception {
 		Gastation gastation = new Gastation();
-		List<Gastation> list;
+		PageInfo<Gastation> list;
 		// 加注站状态是开启的
 		gastation.setStatus("1");
+		 gastation.setType("0");//联盟气站
 		try {
-			list = gastationService.getAllStationList(gastation);
+			list = gastationService.queryGastation(gastation);
 		} catch (Exception e) {
 			logger.error("查询加注站信息出错！", e);
 			throw e;
 		}
+		List<Gastation> gastationList= list.getList();
 		JSONArray jsonArray = new JSONArray();
-		jsonArray.addAll(list);
+		jsonArray.addAll(gastationList);
 		return jsonArray.toString();
 	}
 
