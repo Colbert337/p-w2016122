@@ -4497,6 +4497,8 @@ public class MobileController {
 						sysOrder.setCash(new BigDecimal(amount));
 						//设置应付金额
 						sysOrder.setShould_payment(new BigDecimal(payableAmount));
+						//订单状态
+						sysOrder.setOrderStatus(1);
 						if (sysOrder != null) {
 							int nCreateOrder = orderService.insert(sysOrder, null);
 							if (nCreateOrder < 1){
