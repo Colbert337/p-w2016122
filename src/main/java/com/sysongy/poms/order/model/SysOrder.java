@@ -96,7 +96,17 @@ public class SysOrder extends BaseModel{
 
     private String amount;//优惠后金额
 
-    List<Coupon> couponlist;
+    private String batch_no;
+    
+    public String getBatch_no() {
+		return batch_no;
+	}
+
+	public void setBatch_no(String batch_no) {
+		this.batch_no = batch_no;
+	}
+
+	List<Coupon> couponlist;
     
     private String gas_station_name;//虚拟字段气站名，查询消费订单用
     private BigDecimal preferential_cash;//优惠金额，气站给的优惠
@@ -104,6 +114,8 @@ public class SysOrder extends BaseModel{
     private BigDecimal should_payment;//订单应付金额
 
     private String coupon_number;//优惠劵编号
+
+    private String coupon_id;//优惠劵用户关系ID
 
     private BigDecimal coupon_cash;//优惠劵优惠金额
     
@@ -525,4 +537,12 @@ public class SysOrder extends BaseModel{
 	public void setTrade_no(String trade_no) {
 		this.trade_no = trade_no;
 	}
+
+    public String getCoupon_id() {
+        return coupon_id;
+    }
+
+    public void setCoupon_id(String coupon_id) {
+        this.coupon_id = coupon_id;
+    }
 }

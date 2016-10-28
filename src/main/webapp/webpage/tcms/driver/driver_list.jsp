@@ -47,6 +47,9 @@
 							<button class="btn btn-sm btn-primary" type="button" onclick="leaveDriver();">
 								离职
 							</button>
+							<button class="btn btn-sm btn-primary" type="button" onclick="openImportDiv();">
+								导入Excel
+							</button>
 						</div>
 					</div>
 					<%--</h4>--%>
@@ -229,3 +232,35 @@
 	</div><!-- /.modal -->
 </div>
 <!--提示弹层-结束-->
+<!--提示弹层-开始-->
+<div id="importDivModel" class="modal fade" role="dialog" aria-labelledby="gridSystemModalLabel" data-backdrop="static"  tabindex="-1">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="alertModalLabel">批量导入</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<%--两行表单 开始--%>
+					<div class="row">
+						<div class="col-xs-12">
+							<form class="form-horizontal" id="importForm" enctype="multipart/form-data">
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input type="file" id="file_import" name="fileImport" onchange="fileFormat()"/>
+									</div>
+								</div>
+							</form>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<%--两行表单 结束--%>
+				</div>
+			</div><!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" onclick="saveTemplate()">确   定</button>
+				<button class="btn btn-sm" i="close" onclick="closeDialog('importDivModel')">取   消 </button>
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>

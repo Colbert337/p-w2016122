@@ -112,7 +112,18 @@ public class GlobalConstant {
 
 	// http请求的地址
 	public static final String HTTP_PEMS_PATH = "http_pems_path";
+	
+	//微信退款配置
+	public static final String WXKEY = "Gy325U2312T360o2312t2p23b212tR4a";
+	public static final String APPID = "wxbc6365b82bab3598";
+	public static final String MCHID = "1280581101";
+	public static final String CERTPASSWORD = "1280581101";
 
+	//支付宝退款配置
+	public static final String ALIKEY= "2xkmkid4ooi1izylnpn8n9xset2ypaf7";
+	public static final String PARTNER = "2088021509644364";
+	public static final String INPUTCHARSET = "utf-8";
+	public static final String SIGNTYPE = "MD5";
 	/* 配置文件路径 */
 	public static final String CONF_PATH = "conf/system-conf.properties";
 

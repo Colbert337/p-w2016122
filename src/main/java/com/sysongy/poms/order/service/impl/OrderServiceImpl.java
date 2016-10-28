@@ -1193,6 +1193,10 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public SysOrder queryByTrade(String tradeNo){
+		return sysOrderMapper.queryByTrade(tradeNo);
+	 }
+	@Override
 	public int queryConsumerOrderNumber(String driverID) {
 		return sysOrderMapper.queryConsumerOrderNumber(driverID);
 	}
