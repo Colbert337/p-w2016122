@@ -1022,7 +1022,7 @@
    	sys_gas_station.gas_station_name,
     <include refid="Base_Column_List" />
     from sys_order 
-    LEFT JOIN sys_gas_station ON sys_order.debit_account = sys_gas_station.sys_gas_station_id
+    LEFT JOIN sys_gas_station ON sys_order.channel_number = sys_gas_station.sys_gas_station_id
     where order_id = #{orderId,jdbcType=VARCHAR}
   </select>
     <!-- 查询消费订单个数 -->
