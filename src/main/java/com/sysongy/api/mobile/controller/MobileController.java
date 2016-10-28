@@ -215,11 +215,6 @@ public class MobileController {
 					driver.setPassword(mainObj.optString("password"));
 					queryDriver = driverService.queryByUserNameAndPassword(driver);
 					if (queryDriver != null) {
-						String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
-						if(invitationCode==null){
-							//被邀請用戶首次登錄返現，送優惠券
-							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
-						}
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", queryDriver.getSysDriverId());
 						result.setData(tokenMap);
@@ -238,11 +233,6 @@ public class MobileController {
 							result.setStatus(MobileReturn.STATUS_FAIL);
 							result.setMsg("用户名或密码错误！");
 						} else {
-							String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
-							if(invitationCode==null){
-								//被邀請用戶首次登錄返現，送優惠券
-								driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
-							}
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token", queryDriver.getSysDriverId());
 							result.setData(tokenMap);
@@ -596,6 +586,9 @@ public class MobileController {
 
 						String invitationCode = driver.getInvitationCode();// 获取邀请码
 						if (invitationCode == null || "".equals(invitationCode)) {
+							//被邀请用户第一次登录，进行邀请返现 ，送優惠券
+							SysDriver queryDriver = driverService.queryDriverByPK(sysDriverId);
+							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
 							invitationCode = ShareCodeUtil.toSerialCode(driver.getDriver_number());
 							// 更新当前司机邀请码
 							SysDriver driverCode = new SysDriver();
@@ -1451,6 +1444,10 @@ public class MobileController {
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
 				String name = mainObj.optString("name");
+				String type = mainObj.optString("type");
+				if(type!=null && !"".equals(type) && "0".equals(type)){
+					gastation.setType(type);
+				}
 				//范围为空，列表显示加分也
 				if(radius == null || "".equals(radius)){
 					if (gastation.getPageNum() == null) {
