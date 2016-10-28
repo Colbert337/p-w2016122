@@ -105,6 +105,8 @@ public class SysOrder extends BaseModel{
 
     private String coupon_number;//优惠劵编号
 
+    private String coupon_id;//优惠劵用户关系ID
+
     private BigDecimal coupon_cash;//优惠劵优惠金额
     
     private String begin;//开始时间，虚拟字段，充值报表时间过滤用
@@ -525,4 +527,12 @@ public class SysOrder extends BaseModel{
 	public void setTrade_no(String trade_no) {
 		this.trade_no = trade_no;
 	}
+
+    public String getCoupon_id() {
+        return coupon_id;
+    }
+
+    public void setCoupon_id(String coupon_id) {
+        this.coupon_id = coupon_id;
+    }
 }

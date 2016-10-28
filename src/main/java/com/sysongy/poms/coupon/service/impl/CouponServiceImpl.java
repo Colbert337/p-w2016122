@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.sysongy.poms.coupon.dao.CouponMapper;
 import com.sysongy.poms.coupon.model.Coupon;
@@ -215,6 +216,13 @@ public class CouponServiceImpl implements CouponService {
 		PageInfo<Coupon> pageInfo = new PageInfo<Coupon>(list);
 		return pageInfo;
 	}
+
+	@Override
+	public List<Map<String, Object>> queryCouponMapByAmount(Coupon record) {
+		List<Map<String, Object>> list = couponMapper.queryCouponMapByAmount(record);
+		return list;
+	}
+
 	/**
 	 * 查询当前用户所有优惠券
 	 * @param driverId

@@ -237,7 +237,7 @@ public class SysOrderController extends BaseContoller {
 				Configure.setMchID((String)prop.get("mchID"));
 				Configure.setCertLocalPath((String)(prop.get("certLocalPath")));
 				Configure.setCertPassword((String)prop.get("certPassword"));
-				RefundReqData rrd = new RefundReqData(tradeNo, "", null, batch_no,Integer.valueOf(new BigDecimal(cash).subtract(new BigDecimal(100))+""),Integer.valueOf( new BigDecimal(money).subtract(new BigDecimal(100))+""), Configure.getMchid(),"CNY");
+				RefundReqData rrd = new RefundReqData(tradeNo, "", null, batch_no,Integer.valueOf((int)((double) Double.parseDouble(new BigDecimal(cash).multiply(new BigDecimal(100)).toString()))),Integer.valueOf( (int)((double) Double.parseDouble(new BigDecimal(money).multiply(new BigDecimal(100)).toString()))), Configure.getMchid(),"CNY");
 				String xml=WXPay.requestRefundService(rrd);
 				if (xml.indexOf("<err_code_des>")>0) {
 					throw new Exception("退款失败,错误信息：" + xml.substring(xml.indexOf("<err_code_des>")+"<err_code_des>".length(), xml.indexOf("</err_code_des>")));
