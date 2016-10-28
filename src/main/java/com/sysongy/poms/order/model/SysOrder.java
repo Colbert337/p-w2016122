@@ -96,7 +96,17 @@ public class SysOrder extends BaseModel{
 
     private String amount;//优惠后金额
 
-    List<Coupon> couponlist;
+    private String batch_no;
+    
+    public String getBatch_no() {
+		return batch_no;
+	}
+
+	public void setBatch_no(String batch_no) {
+		this.batch_no = batch_no;
+	}
+
+	List<Coupon> couponlist;
     
     private String gas_station_name;//虚拟字段气站名，查询消费订单用
     private BigDecimal preferential_cash;//优惠金额，气站给的优惠

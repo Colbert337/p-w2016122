@@ -185,12 +185,14 @@ function subbreak() {
 //			$("#modal-table").modal("show");
 			bootbox.alert(data);
 //			$("#conditionStatus").val(oldtype);
+			$('#div').hideLoading();
 			commitForm();
 			
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
-
+			$('#div').hideLoading();
 		}
 	}
+	$('#div').showLoading();
 	$("#formRoad").ajaxSubmit(options);
 }
