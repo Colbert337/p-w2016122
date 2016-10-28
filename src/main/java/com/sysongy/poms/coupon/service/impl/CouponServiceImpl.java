@@ -35,7 +35,7 @@ public class CouponServiceImpl implements CouponService {
 			record.setPageSize(10);
 		}
 		if (StringUtils.isEmpty(record.getOrderby())) {
-			record.setOrderby("create_time desc");
+			record.setOrderby("lastmodify_time desc");
 		}
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Coupon> list = couponMapper.queryForPage(record);
@@ -167,7 +167,7 @@ public class CouponServiceImpl implements CouponService {
 			userCoupon.setPageSize(10);
 		}
 		if (StringUtils.isEmpty(userCoupon.getOrderby())) {
-			userCoupon.setOrderby("create_time desc");
+			userCoupon.setOrderby("lastmodify_time desc");
 		}
 		PageHelper.startPage(userCoupon.getPageNum(), userCoupon.getPageSize(), userCoupon.getOrderby());
 		List<UserCoupon> list = couponMapper.selectByUser_Coupon(userCoupon);

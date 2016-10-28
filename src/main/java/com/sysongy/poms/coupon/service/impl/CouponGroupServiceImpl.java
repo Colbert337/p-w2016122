@@ -44,7 +44,7 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			couponGroup.setPageSize(10);
 		}
 		if (StringUtils.isEmpty(couponGroup.getOrderby())) {
-			couponGroup.setOrderby("create_time desc");
+			couponGroup.setOrderby("lastmodify_time desc");
 		}
 		PageHelper.startPage(couponGroup.getPageNum(), couponGroup.getPageSize(), couponGroup.getOrderby());
 		if(null!=couponGroup.getIssued_type()&&!"".equals(couponGroup.getIssued_type())){
