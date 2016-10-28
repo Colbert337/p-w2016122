@@ -277,6 +277,7 @@ public class CRMCashServiceContoller {
             }else{
                 record.setCash(record.getShould_payment());//优惠后金额
                 record.setPreferential_cash(BigDecimal.ZERO);//优惠金额
+                discountSum = record.getCash();
             }
 
             //根据订单金额和会员信息，查询优惠券列表
@@ -294,10 +295,10 @@ public class CRMCashServiceContoller {
             coupon.setSys_gas_station_id(record.getOperatorSourceId());
             coupon.setDriverId(driver.getSysDriverId());
             coupon.setPreferential_discount(discountSum.toString());//存储需支付金额
-            PageInfo<Coupon> pageInfo = couponService.queryCouponOrderByAmount(coupon);
+            List<Map<String, Object>> pageInfo = couponService.queryCouponMapByAmount(coupon);
 
             //封装当前司机可用优惠券列表
-            driver.setList(pageInfo.getList());
+            driver.setList(pageInfo);
             record.setSysDriver(driver);
             Map<String, Object> attributes = new HashMap<String, Object>();
             attributes.put("sysOrder", record);
@@ -897,6 +898,19 @@ public class CRMCashServiceContoller {
             for(SysOrderDeal sysOrderDealInfo : sysOrderDeals){
                 SysDriver sysDriverInfo = driverService.queryDriverByPK(sysOrderDealInfo.getSysOrderInfo().getDebitAccount());
                 sysOrderDealInfo.setSysDriver(sysDriverInfo);
+
+                //将shouldPayment字段null改为0
+                SysOrder orderInfo = sysOrderDealInfo.getSysOrderInfo();
+                if(orderInfo != null ){
+                    if(orderInfo.getShould_payment() == null){
+                        orderInfo.setShould_payment(BigDecimal.ZERO);
+                    } //将空值改为0
+                    if(orderInfo.getCoupon_cash() == null){
+                        orderInfo.setCoupon_cash(BigDecimal.ZERO);
+                    }
+                    sysOrderDealInfo.setSysOrderInfo(orderInfo);
+                }
+
                 sysOrderDealInfos.add(sysOrderDealInfo);
             }
         }

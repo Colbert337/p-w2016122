@@ -215,11 +215,6 @@ public class MobileController {
 					driver.setPassword(mainObj.optString("password"));
 					queryDriver = driverService.queryByUserNameAndPassword(driver);
 					if (queryDriver != null) {
-						String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
-						if(invitationCode==null){
-							//被邀請用戶首次登錄返現，送優惠券
-							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
-						}
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", queryDriver.getSysDriverId());
 						result.setData(tokenMap);
@@ -238,11 +233,6 @@ public class MobileController {
 							result.setStatus(MobileReturn.STATUS_FAIL);
 							result.setMsg("用户名或密码错误！");
 						} else {
-							String invitationCode = queryDriver.getInvitationCode();//判断邀请码是否为空
-							if(invitationCode==null){
-								//被邀請用戶首次登錄返現，送優惠券
-								driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
-							}
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token", queryDriver.getSysDriverId());
 							result.setData(tokenMap);
@@ -596,6 +586,9 @@ public class MobileController {
 
 						String invitationCode = driver.getInvitationCode();// 获取邀请码
 						if (invitationCode == null || "".equals(invitationCode)) {
+							//被邀请用户第一次登录，进行邀请返现 ，送優惠券
+							SysDriver queryDriver = driverService.queryDriverByPK(sysDriverId);
+							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
 							invitationCode = ShareCodeUtil.toSerialCode(driver.getDriver_number());
 							// 更新当前司机邀请码
 							SysDriver driverCode = new SysDriver();
@@ -1451,6 +1444,10 @@ public class MobileController {
 				String longitudeStr = mainObj.optString("longitude");
 				String latitudeStr = mainObj.optString("latitude");
 				String name = mainObj.optString("name");
+				String type = mainObj.optString("type");
+				if(type!=null && !"".equals(type) && "0".equals(type)){
+					gastation.setType(type);
+				}
 				//范围为空，列表显示加分也
 				if(radius == null || "".equals(radius)){
 					if (gastation.getPageNum() == null) {
@@ -4414,12 +4411,22 @@ public class MobileController {
 				tokenMap.put("gastationName",order.getGas_station_name());
 				tokenMap.put("orderStatus",order.getOrderStatus());
 				tokenMap.put("dealTime",sft.format(order.getOrderDate()));
-				tokenMap.put("chargeType",order.getChargeType());
+				String Spend_type = order.getSpend_type();
+				if(Spend_type.equals("C01")){
+					Spend_type ="卡余额消费";
+				}else if(Spend_type.equals("C02")){
+					Spend_type ="POS消费";
+				}else if(Spend_type.equals("C03")){
+					Spend_type ="微信消费";
+				}else if(Spend_type.equals("C04")){
+					Spend_type ="支付宝消费";
+				}
+				tokenMap.put("chargeType",Spend_type);
 				tokenMap.put("orderId",orderId);
 				tokenMap.put("orderNum",order.getOrderNumber());
-				tokenMap.put("gastationId",order.getDebitAccount());
+				tokenMap.put("gastationId",order.getChannelNumber());
 				tokenMap.put("payment",order.getShould_payment());
-				tokenMap.put("preferentialCash",order.getPreferential_cash());
+				tokenMap.put("preferentialCash",(order.getPreferential_cash()==null||"".equals(order.getPreferential_cash()))?"0":order.getPreferential_cash());
 				result.setData(tokenMap);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -4500,6 +4507,8 @@ public class MobileController {
 						sysOrder.setCash(new BigDecimal(amount));
 						//设置应付金额
 						sysOrder.setShould_payment(new BigDecimal(payableAmount));
+						//订单状态
+						sysOrder.setOrderStatus(1);
 						if (sysOrder != null) {
 							int nCreateOrder = orderService.insert(sysOrder, null);
 							if (nCreateOrder < 1){

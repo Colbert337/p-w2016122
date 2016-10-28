@@ -5,6 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.UserCoupon;
 
+import java.util.List;
+import java.util.Map;
+
 public interface CouponService {
 
 	public PageInfo<Coupon> queryCoupon(Coupon record) throws Exception;
@@ -37,4 +40,11 @@ public interface CouponService {
 	 * @return
 	 */
 	public PageInfo<Coupon> queryAllCouponForPage(Coupon record,String driverId) throws Exception;
+
+	/**
+	 * 当前用户可用优惠券列表（返回MAP）
+	 * @param record
+	 * @return
+	 */
+	List<Map<String, Object>> queryCouponMapByAmount(Coupon record);
 }

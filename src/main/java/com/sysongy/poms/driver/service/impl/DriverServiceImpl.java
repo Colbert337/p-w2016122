@@ -143,33 +143,33 @@ public class DriverServiceImpl implements DriverService {
 			if(invitationCode != null && !"".equals(invitationCode)){
 				record.setRegisCompany(invitationCode);//存储邀请人邀请码
 			}
-
             int count = sysDriverMapper.insertSelective(record);
-            //如果有要邀请码，要进行返现，现在先写死，以后走订单
-            if(!StringUtils.isEmpty(invitationCode)){
-            	this.cashBackForRegister(record, invitationCode, operator_id);
-            }else{//如果没有邀请么 则触发注册返现规则
-    			SysCashBack back= sysCashBackService.queryForBreak("201").get(0);//获取返现规则
-    			if (back!=null) {
-    				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-				}else{
-					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
-				}
- 
-            	this.cashBackForRegister(record, invitationCode, operator_id);
+            //判断是否是导入数据，导入数据不返现不发优惠券
+            if(!"1".equals(record.getIsImport())){
+            	 //如果没有邀请么 则触发注册返现规则
+                if(StringUtils.isEmpty(invitationCode)){
+        			List<SysCashBack> list=sysCashBackService.queryForBreak("201");
+        			if (list!=null && list.size() > 0 ) {
+        				SysCashBack back= list.get(0);//获取返现规则
+        				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+    				}else{
+    					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
+    				}
+     
+                	this.cashBackForRegister(record, invitationCode, operator_id);
+                }
+                
+                //发优惠卷
+
+                CouponGroup couponGroup = new CouponGroup();
+                couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.NEW_REGISTER_USER);
+
+                List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+
+                if(list.size()>0){
+                	couponGroupService.sendCouponGroup(record.getSysDriverId(), list, operator_id);
+                }
             }
-            
-            //发优惠卷
-
-            CouponGroup couponGroup = new CouponGroup();
-            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.NEW_REGISTER_USER);
-
-            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
-
-            if(list.size()>0){
-            	couponGroupService.sendCouponGroup(record.getSysDriverId(), list, operator_id);
-            }
-            
             return count;
         }else{
             return sysDriverMapper.updateByPrimaryKeySelective(record);
@@ -204,8 +204,8 @@ public class DriverServiceImpl implements DriverService {
     private SysUserAccount initWalletForDriver(){
         SysUserAccount sysUserAccount = new SysUserAccount();       //初始化钱袋信息
         sysUserAccount.setSysUserAccountId(UUIDGenerator.getUUID());
-        sysUserAccount.setAccountCode("DR"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
-//        sysUserAccount.setAccountCode("DR"+UUIDGenerator.getUUID());
+//        sysUserAccount.setAccountCode("DR"+new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+        sysUserAccount.setAccountCode("DR"+UUIDGenerator.getUUID());
         sysUserAccount.setAccountType(GlobalConstant.AccounType.DRIVER);
         sysUserAccount.setAccountBalance("0.0");
         sysUserAccount.setCreatedDate(new Date());
@@ -310,19 +310,31 @@ public class DriverServiceImpl implements DriverService {
 			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
 		}
 		
-		//给账户减去
+		//先给个默认值
+		String cash_success = GlobalConstant.OrderProcessResult.SUCCESS;
 		SysDriver driver = this.queryDriverByPK(credit_account);
-		String driver_account = driver.getSysUserAccountId();
 		BigDecimal cash = order.getCash();
-		//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
-		BigDecimal addcash = cash.multiply(new BigDecimal(-1));
-		//如果是负值，但是is_discharge却不是充红，则返回错误
-		if(cash.compareTo(new BigDecimal("0")) < 0 ){
-			if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
-				throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
-			 }
+		
+		//如果是卡余额支付
+		if(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX.equals(order.getSpend_type())){
+			//给账户减去
+			String driver_account = driver.getSysUserAccountId();
+			
+			cash = order.getCash();
+			
+			//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
+			BigDecimal addcash = cash.multiply(new BigDecimal(-1));
+			
+			//如果是负值，但是is_discharge却不是充红，则返回错误
+			if(cash.compareTo(new BigDecimal("0")) < 0 ){
+				if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
+					throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
+				}
+			}
+			
+			cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
 		}
-		String cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
+		
 		//记录订单流水
 		String chong = "转账扣钱";
 		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_DRIVER_TO_DRIVER_INCREASE_DRIVER;
@@ -352,7 +364,7 @@ public class DriverServiceImpl implements DriverService {
         }
         order.setSysDriver(driver);
         if(order.getCoupon_number() != null){//add by wdq 判断当前订单是否有优惠券
-            UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_number(), order.getSysDriver().getSysDriverId());
+            UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_id(), order.getSysDriver().getSysDriverId());
             if(usercoupon == null){
                 order.setCoupon_number("");
                 order.setCoupon_cash(BigDecimal.valueOf(0.0d));
@@ -431,16 +443,17 @@ public class DriverServiceImpl implements DriverService {
 			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败");
 		}else{
 			invitation = invitationList.get(0);
-	
-			SysCashBack back= sysCashBackService.queryForBreak("203").get(0);//获取返现规则
-			if (back!=null) {
-				sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-		    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(Long.valueOf(back.getThreshold_max_value())), GlobalConstant.OrderType.INVITED_CASHBACK);
+			List<SysCashBack> listBack=sysCashBackService.queryForBreak("203");
+			
+			if (listBack!=null && listBack.size() > 0) {
+				SysCashBack back= listBack.get(0);//获取返现规则
+				sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+		    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_max_value())), GlobalConstant.OrderType.INVITED_CASHBACK);
 			}else{
 				logger.info("找不到匹配的返现规则，注册成功，返现失败");
 			}
 	    	
-	    	//发优惠劵
+	    	//发优惠劵,被邀请用户注册发放优惠券
 	    	CouponGroup couponGroup = new CouponGroup();
             couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITED);
 
@@ -449,9 +462,9 @@ public class DriverServiceImpl implements DriverService {
             if(list.size()>0){
             	couponGroupService.sendCouponGroup(driver.getSysDriverId(), list, operator_id);
             }
-
+            //发优惠劵,邀请用户成功发放优惠券
             CouponGroup couponGroup1 = new CouponGroup();
-            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITED);
+            couponGroup1.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.REGISTER_INVITE_FRIEND);
 
             List<CouponGroup> list1 = couponGroupService.queryCouponGroup(couponGroup1).getList();
 
