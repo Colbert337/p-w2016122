@@ -898,6 +898,19 @@ public class CRMCashServiceContoller {
             for(SysOrderDeal sysOrderDealInfo : sysOrderDeals){
                 SysDriver sysDriverInfo = driverService.queryDriverByPK(sysOrderDealInfo.getSysOrderInfo().getDebitAccount());
                 sysOrderDealInfo.setSysDriver(sysDriverInfo);
+
+                //将shouldPayment字段null改为0
+                SysOrder orderInfo = sysOrderDealInfo.getSysOrderInfo();
+                if(orderInfo != null ){
+                    if(orderInfo.getShould_payment() == null){
+                        orderInfo.setShould_payment(BigDecimal.ZERO);
+                    } //将空值改为0
+                    if(orderInfo.getCoupon_cash() == null){
+                        orderInfo.setCoupon_cash(BigDecimal.ZERO);
+                    }
+                    sysOrderDealInfo.setSysOrderInfo(orderInfo);
+                }
+
                 sysOrderDealInfos.add(sysOrderDealInfo);
             }
         }
