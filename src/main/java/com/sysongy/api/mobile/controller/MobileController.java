@@ -4414,7 +4414,7 @@ public class MobileController {
 				tokenMap.put("chargeType",order.getChargeType());
 				tokenMap.put("orderId",orderId);
 				tokenMap.put("orderNum",order.getOrderNumber());
-				tokenMap.put("gastationId",order.getDebitAccount());
+				tokenMap.put("gastationId",order.getChannelNumber());
 				tokenMap.put("payment",order.getShould_payment());
 				tokenMap.put("preferentialCash",(order.getPreferential_cash()==null||"".equals(order.getPreferential_cash()))?"0":order.getPreferential_cash());
 				result.setData(tokenMap);
