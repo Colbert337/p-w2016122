@@ -167,6 +167,8 @@ public class CRMProductPriceController {
                     logger.warn("更新商品价格信息异常，更新记录数："  + updatePrice + ", 商品id为：" + productPrice.getProductPriceId());
                 }
 
+                productPrice.setProductPriceStatus(GlobalConstant.PRICE_STATUS.VALID);
+                productPrice.setStartTime(new Date());
                 int renum = productPriceService.saveProductPrice(productPrice, "insert");//添加新价格
                 if(renum < 1){
                     ajaxJson.setSuccess(false);
@@ -174,15 +176,16 @@ public class CRMProductPriceController {
                     return ajaxJson;
                 }
 
+                //更新商品价格关系
                 gsGasPrice.setPrice_id(productPrice.getId());
-                renum = gsGasPriceService.saveGsPrice(gsGasPrice, "update");//更新商品价格关系
-                if(renum < 1){
+                int renum2 = gsGasPriceService.saveGsPrice(gsGasPrice, "update");
+                if(renum2 < 1){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("无商品价格变动！！！");
                     return ajaxJson;
                 }
-            }
 
+            }
 
             ProductPrice productPriceInfo = productPriceService.queryProductPriceByPK(productPrice.getId());//查询当前要添加的价格信息
             if(productPriceInfo == null){

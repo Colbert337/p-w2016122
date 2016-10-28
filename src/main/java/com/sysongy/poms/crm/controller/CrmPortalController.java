@@ -1,6 +1,8 @@
 package com.sysongy.poms.crm.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,10 +23,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.feedback.MbUserSuggest;
 import com.sysongy.api.mobile.service.MbUserSuggestServices;
+import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.InterfaceConstants;
@@ -48,6 +52,7 @@ import com.sysongy.poms.page.model.SysStaticPage;
 import com.sysongy.poms.page.service.SysStaticPageService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
@@ -61,6 +66,9 @@ import com.sysongy.util.TwoDimensionCode;
 import com.sysongy.util.UUIDGenerator;
 import com.sysongy.util.pojo.AliShortMessageBean;
 
+import jxl.Sheet;
+import jxl.Workbook;
+
 /**
  * @FileName: CrmPortalController
  * @Encoding: UTF-8
@@ -73,7 +81,7 @@ import com.sysongy.util.pojo.AliShortMessageBean;
  */
 @RequestMapping("/portal/crm/help")
 @Controller
-public class CrmPortalController {
+public class CrmPortalController extends BaseContoller {
     @Autowired
     private CrmHelpService crmHelpService;
     @Autowired
@@ -657,37 +665,60 @@ public class CrmPortalController {
      * @throws Exception
      */
     @RequestMapping("/info/file")
-    public String saveDriver(HttpServletRequest request, @ModelAttribute("currUser") CurrUser currUser, ModelMap map) throws Exception{
+    public String saveDriver(@RequestParam("fileImport") MultipartFile file, @ModelAttribute("currUser") CurrUser currUser,
+			HttpServletResponse response) throws IOException{
         SysDriver driver = new SysDriver();
-        String stationId = "TC29000003";//"陕西明泰能源有限公司"
-
-        int resultInt = 0;
-        long intiVal = 13000000601l;
-        int nameNo = 1000;
-        for (intiVal = 13000000601l;intiVal <= 13000000700l;intiVal++){
-            String operation = "insert";
-            String payCode = "111111";
-
-            String cardNum = intiVal+"";
-            driver.setUserName(cardNum);
-            driver.setMobilePhone(cardNum);
-            /*driver.setCardId(cardNum);*/
-            nameNo = nameNo + 1;
-            driver.setFullName("明泰车辆"+nameNo);
-            driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
-            driver.setUserStatus("0");//0 使用中 1 已冻结
-            driver.setCheckedStatus("2");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
-            driver.setStationId(stationId);//站点编号
-//            Transportion transportion = transportionService.queryTransportionByPK(stationId);
-            driver.setRegisSource("陕西明泰能源有限公司");//司机注册来源（运输公司名称）
-
-            driver.setSysDriverId(UUIDGenerator.getUUID());
-            driver.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
-            driver.setMemo("王涵特殊业务 2016-10-27 脚本添加100个司机(卡号：13000000601~13000000700)");
-
-            driverService.saveDriver(driver,operation, null, null);
-
-        }
-        return "/webpage/crm/show-import";
+        String stationId = currUser.getStationId();
+        driver.setStationId(stationId);
+        String message = "导入成功！";
+		PageBean bean = new PageBean();
+		PrintWriter pw = response.getWriter();
+		int i=0;
+		int sum = 0;	//添加个数
+		int upd = 0;	//更新个数
+    	try {
+			if (file != null && !"".equals(file)) {
+				Transportion transportion = transportionService.queryTransportionByPK(stationId);
+				Workbook book = Workbook.getWorkbook(file.getInputStream());
+				Sheet sheet = book.getSheet(0);
+				int rows = sheet.getRows();
+				for (i = 1; i < rows; i++) {
+					System.out.println(sheet.getCell(1, i).getContents());
+			        driver.setUserName(sheet.getCell(1, i).getContents());
+			        SysDriver sysDriver = driverService.queryByUserName(driver);
+		            if(sysDriver==null){
+		            	driver.setMobilePhone(sheet.getCell(1, i).getContents());
+			            driver.setFullName(sheet.getCell(0, i).getContents());
+			            driver.setPassword(Encoder.MD5Encode("111111".getBytes()));
+			            driver.setUserStatus("0");//0 使用中 1 已冻结
+			            driver.setCheckedStatus("0");//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
+			            driver.setStationId(stationId);//站点编号
+			            driver.setRegisSource(transportion.getTransportion_name());//司机注册来源（运输公司名称）
+			            driver.setSysDriverId(UUIDGenerator.getUUID());
+			            driver.setPayCode(Encoder.MD5Encode("111111".getBytes()));
+			            driver.setIsImport("1");
+		            	int count = driverService.saveDriver(driver,"insert", null, "8aa4ba67855a11e6a356000c291aa9e3");
+				        sum = sum + count;
+		            }else{
+		            	driver.setSysDriverId(sysDriver.getSysDriverId());
+		            	driver.setUserStatus("0");//0 使用中 1 已冻结
+		            	int update = driverService.saveDriver(driver,"update", null, "8aa4ba67855a11e6a356000c291aa9e3");
+		            	upd = upd + update;
+		            }
+				}
+				message += "成功（" + sum + "条），更新（" + upd + "条）";
+			}
+		} catch (Exception e) {
+			message = "导入失败！";
+			bean.setRetCode(500);
+			bean.setRetMsg(i+e.getMessage());
+			logger.error("", e);
+		} finally {
+			response.setContentType("text/xml; charset=utf-8");
+			response.setHeader("Content-type", "text/html;charset=UTF-8");
+			pw.write("{\"SUCCESS\":true,\"datas\":\"" + message+ "\"}");
+			pw.close();
+			return null;
+		}
     }
 }
