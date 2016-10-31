@@ -1131,7 +1131,7 @@
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		SELECT
 		B.order_number,
-		(SELECT sys_order_goods.number FROM sys_order_goods WHERE
+		(SELECT SUM(sys_order_goods.number) FROM sys_order_goods WHERE
 		sys_order_goods.order_id = (SELECT a.order_id FROM sys_order AS a
 		WHERE a.order_number = B.order_number)) AS goods_sum,
 		cash,
