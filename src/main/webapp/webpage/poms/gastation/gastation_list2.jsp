@@ -127,7 +127,7 @@
 											<!-- <a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 												<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 											</a> -->
-											<a class="option-btn-m" href="javascript:void(0);" title="预付款额度" data-rel="tooltip">
+											<a class="option-btn-m" href="javascript:void(0);" title="预付款充值" data-rel="tooltip">
 												<i class="ace-icon fa fa-credit-card bigger-130" onclick="preDeposit(this);"></i>
 											</a>
 											<!-- <a href="" class="logic-del" title="删除" data-rel="tooltip">
