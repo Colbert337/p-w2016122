@@ -1220,8 +1220,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	@Override
-	 
-	public PageInfo<SysOrder> queryRoadListForBack(SysOrder order) {
+	public PageInfo<SysOrder> queryOrderListForBack(SysOrder order) {
 		PageHelper.startPage(order.getPageNum(), order.getPageSize(), order.getOrderby());
 		List<SysOrder> list = sysOrderMapper.queryForPageForBack(order);
 		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
@@ -1232,6 +1231,17 @@ public class OrderServiceImpl implements OrderService {
 	public void saveOrder(SysOrder order) {
 		// TODO Auto-generated method stub
 		sysOrderMapper.insertSelective(order);
+	}
+
+	@Override
+	public boolean exisit(String debitAccount) {
+		// TODO Auto-generated method stub
+		List<SysOrder>list=sysOrderMapper.queryByExisit(debitAccount);
+		if (list.size()>=0) {
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	

@@ -137,7 +137,7 @@ public class SysOrderController extends BaseContoller {
 			}
 
 			PageInfo<SysOrder> pageinfo = new PageInfo<SysOrder>();
-			pageinfo = service.queryRoadListForBack(order);
+			pageinfo = service.queryOrderListForBack(order);
 			bean.setRetCode(100);
 		 
 			bean.setRetMsg("查询成功");
