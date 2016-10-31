@@ -188,6 +188,9 @@ public class DriverServiceImpl implements DriverService {
             gasCard.setStation_receive_time(new Date());
 
             gasCardMapper.updateByPrimaryKeySelective(gasCard);
+            //修改用户卡状态为正常  在表 sys_user_account  字段account_status=2
+            record.getAccount().setAccount_status("2");
+            sysUserAccountService.updateAccount(record.getAccount());
 
             GasCardLog gascardlog = new GasCardLog();
             org.springframework.beans.BeanUtils.copyProperties(gasCard, gascardlog);
