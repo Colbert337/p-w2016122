@@ -154,7 +154,7 @@
 		parameterType="java.lang.String">
 		select a.*,b.mobile_phone from sys_order a, sys_driver b where
 		a.debit_account=b.sys_driver_id and 1=1 and (a.charge_type="103" or
-		a.charge_type="104" or a.charge_type="110")
+		a.charge_type="104" or a.charge_type="110" or a.charge_type="111")
 		<if test="orderId != null &amp;&amp; orderId != ''">
 			and a.order_id = #{orderId,jdbcType=VARCHAR}
 		</if>
@@ -168,6 +168,14 @@
 			 and DATE_FORMAT(order_date,"%Y/%m/%d")   <![CDATA[   >=  ]]> #{startDate,jdbcType=VARCHAR} and   DATE_FORMAT(order_date,"%Y/%m/%d")  <![CDATA[   <=  ]]> #{endDate,jdbcType=VARCHAR}
 		</if>
 	</select>
+
+
+<select id="queryByExisit" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select * from sys_order where order_type="130" and order_status=1 and debit_account=#{creditAccount,jdbcType=VARCHAR}
+	</select>
+
+
 
 	<select id="queryForPage" resultMap="BaseResultMap"
 		parameterType="java.lang.String">

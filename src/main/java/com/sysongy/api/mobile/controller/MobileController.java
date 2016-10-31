@@ -2903,6 +2903,18 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
+				if(!orderService.exisit(sysOrder.getDebitAccount())){//判断是否是第一次充值
+					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
+					
+					if (listBack!=null && listBack.size() > 0) {
+						SysCashBack back= listBack.get(0);//获取返现规则
+						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+				   
+					}else{
+						logger.info("找不到匹配的返现规则，返现失败");
+					}
+				}
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -3008,6 +3020,18 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
+				if(!orderService.exisit(sysOrder.getDebitAccount())){//判断是否是第一次充值
+					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
+					
+					if (listBack!=null && listBack.size() > 0) {
+						SysCashBack back= listBack.get(0);//获取返现规则
+						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+				   
+					}else{
+						logger.info("找不到匹配的返现规则，返现失败");
+					}
+				}
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
