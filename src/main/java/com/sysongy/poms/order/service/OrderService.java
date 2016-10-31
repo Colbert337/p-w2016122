@@ -65,7 +65,7 @@ public interface OrderService {
      * @param order
      * @return
      */
-    PageInfo<SysOrder> queryRoadListForBack(SysOrder order);
+    PageInfo<SysOrder> queryOrderListForBack(SysOrder order);
     /**
      * 保存订单 用于生成退款订单
      * @param order
@@ -257,10 +257,20 @@ public interface OrderService {
      * @return
      */
     SysOrder queryById(String orderId);
+    /**
+     * 支付宝退款回调查询订单
+     * @param tradeNo
+     * @return
+     */
+    SysOrder queryByTrade(String tradeNo);
    /**
     * 查询消费订单个数
     * @param token 当前用户唯一标识
     * @return 消费订单个数
     */
     int queryConsumerOrderNumber(String token);
+
+boolean exisit(String debitAccount);
+
+
 }

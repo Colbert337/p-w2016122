@@ -191,7 +191,7 @@
 				<div class="container-fluid" id="content"></div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-primary btn-sm" onclick="closeDialog('userCouponModel')">关闭</button>
+				<button class="btn btn-primary btn-sm"  data-dismiss="modal">关闭</button>
 			</div>
 		</div>
 	<!-- /.modal-dialog -->

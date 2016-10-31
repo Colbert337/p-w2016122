@@ -42,10 +42,3 @@
 	function init(){
 		loadPage('#main', '../web/couponGroup/couponGroupList');
 	}
-	
-	function closeDialog(obj){
-		$("#" + obj).modal('hide').removeClass('in');
-		$("body").removeClass('modal-open').removeAttr('style');
-		$(".modal-backdrop").remove();
-	}
-
