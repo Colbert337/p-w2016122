@@ -98,8 +98,8 @@ public class CRMUserContoller {
             }
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
-            logger.error("queryCardInfo error： " + e);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.toString());
+            logger.error("queryCardInfo error： " + e.toString());
         }
     	return ajaxJson;
     }
