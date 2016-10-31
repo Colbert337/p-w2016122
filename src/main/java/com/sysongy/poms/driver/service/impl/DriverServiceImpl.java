@@ -156,7 +156,7 @@ public class DriverServiceImpl implements DriverService {
     					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
     				}
      
-                	this.cashBackForRegister(record, invitationCode, operator_id);
+//                	this.cashBackForRegister(record, invitationCode, operator_id);
                 }
                 
                 //发优惠卷
@@ -188,6 +188,9 @@ public class DriverServiceImpl implements DriverService {
             gasCard.setStation_receive_time(new Date());
 
             gasCardMapper.updateByPrimaryKeySelective(gasCard);
+            //修改用户卡状态为正常  在表 sys_user_account  字段account_status=2
+            record.getAccount().setAccount_status("2");
+            sysUserAccountService.updateAccount(record.getAccount());
 
             GasCardLog gascardlog = new GasCardLog();
             org.springframework.beans.BeanUtils.copyProperties(gasCard, gascardlog);
@@ -310,19 +313,31 @@ public class DriverServiceImpl implements DriverService {
 			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
 		}
 		
-		//给账户减去
+		//先给个默认值
+		String cash_success = GlobalConstant.OrderProcessResult.SUCCESS;
 		SysDriver driver = this.queryDriverByPK(credit_account);
-		String driver_account = driver.getSysUserAccountId();
 		BigDecimal cash = order.getCash();
-		//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
-		BigDecimal addcash = cash.multiply(new BigDecimal(-1));
-		//如果是负值，但是is_discharge却不是充红，则返回错误
-		if(cash.compareTo(new BigDecimal("0")) < 0 ){
-			if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
-				throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
-			 }
+		
+		//如果是卡余额支付
+		if(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX.equals(order.getSpend_type())){
+			//给账户减去
+			String driver_account = driver.getSysUserAccountId();
+			
+			cash = order.getCash();
+			
+			//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
+			BigDecimal addcash = cash.multiply(new BigDecimal(-1));
+			
+			//如果是负值，但是is_discharge却不是充红，则返回错误
+			if(cash.compareTo(new BigDecimal("0")) < 0 ){
+				if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
+					throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
+				}
+			}
+			
+			cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
 		}
-		String cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
+		
 		//记录订单流水
 		String chong = "转账扣钱";
 		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_DRIVER_TO_DRIVER_INCREASE_DRIVER;
@@ -352,7 +367,7 @@ public class DriverServiceImpl implements DriverService {
         }
         order.setSysDriver(driver);
         if(order.getCoupon_number() != null){//add by wdq 判断当前订单是否有优惠券
-            UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_id(), order.getSysDriver().getSysDriverId());
+            UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_number(), order.getSysDriver().getSysDriverId());
             if(usercoupon == null){
                 order.setCoupon_number("");
                 order.setCoupon_cash(BigDecimal.valueOf(0.0d));
@@ -439,6 +454,14 @@ public class DriverServiceImpl implements DriverService {
 		    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_max_value())), GlobalConstant.OrderType.INVITED_CASHBACK);
 			}else{
 				logger.info("找不到匹配的返现规则，注册成功，返现失败");
+			}
+			
+			listBack=sysCashBackService.queryForBreak("201");
+			if (listBack!=null && listBack.size() > 0 ) {
+				SysCashBack back= listBack.get(0);//获取返现规则
+				sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+			}else{
+				logger.info("找不到匹配的返现规则，注册成功，返现失败");    
 			}
 	    	
 	    	//发优惠劵,被邀请用户注册发放优惠券

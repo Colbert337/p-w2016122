@@ -194,11 +194,14 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 				//大于等于0 则是当前日期大于等于start_date.
 				if((now.compareTo(start_date)>=0)&&(now.compareTo(end_date)<=0)){
 					//判断阈值是否在区间
-					BigDecimal min = new BigDecimal(cashback.getThreshold_min_value());
-					BigDecimal max = new BigDecimal(cashback.getThreshold_max_value());
-					if((cash.compareTo(min)>=0)&&(cash.compareTo(max)<0)){
-						eligible_list.add(cashback);	
+					if(!StringUtils.isEmpty(cashback.getThreshold_min_value()) && !StringUtils.isEmpty(cashback.getThreshold_max_value())){
+						BigDecimal min = new BigDecimal(cashback.getThreshold_min_value());
+						BigDecimal max = new BigDecimal(cashback.getThreshold_max_value());
+						if((cash.compareTo(min)>=0)&&(cash.compareTo(max)<0)){
+							eligible_list.add(cashback);
+						}
 					}
+
 				}
 			}
 		}

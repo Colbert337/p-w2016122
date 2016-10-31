@@ -406,6 +406,7 @@ public class OrderServiceImpl implements OrderService {
 			   dischargeOrder.setPreferential_cash(originalOrder.getPreferential_cash());
 			   dischargeOrder.setShould_payment(originalOrder.getShould_payment());
 			   dischargeOrder.setCoupon_number(originalOrder.getCoupon_number());
+			   dischargeOrder.setCoupon_id(originalOrder.getCoupon_id());
 
 			  String disChargeConsume_success = driverService.deductCashToDriver(dischargeOrder, GlobalConstant.ORDER_ISCHARGE_YES);
 			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargeConsume_success)){
@@ -579,12 +580,11 @@ public class OrderServiceImpl implements OrderService {
 	   validAccount(order);
 
 	   //消费的时候传过去的cash是正值
-	   if(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX.equals(order.getSpend_type())){
-		   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
-		   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
-	  		   //如果出错直接返回错误代码退出
-			   throw new Exception( consume_success);
-	  	   }
+	   
+	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
+		   //如果出错直接返回错误代码退出
+		   throw new Exception( consume_success);
 	   }
 	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;

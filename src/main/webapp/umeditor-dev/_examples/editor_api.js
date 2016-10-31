@@ -6,6 +6,11 @@
 	var pathName=window.document.location.pathname;
 	var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
 	
+	//我们自己坑自己
+	if(projectName.indexOf("common") == 1){
+		projectName = "";
+	}
+	
     var paths  = [
             'editor.js',
             'core/browser.js',
@@ -70,7 +75,9 @@
             'adapter/source.js',
             'adapter/combobox.js'
         ],
+        
         baseURL = projectName+'/umeditor-dev/_src/';
+    	
     for (var i=0,pi;pi = paths[i++];) {
         $('head').append('<script type="text/javascript" src="'+ baseURL + pi +'"></script>');
     }

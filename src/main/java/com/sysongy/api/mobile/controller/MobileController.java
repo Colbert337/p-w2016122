@@ -1482,130 +1482,22 @@ public class MobileController {
 						}
 						//按距离重新排序gastationAllList
 						Collections.sort(gastationAllList);
-						int pNum = mainObj.optInt("pageNum");
-						int pSize = mainObj.optInt("pageSize");
-						if (pNum == 0) {
-							pNum = 1;
-						}
-						int x = pNum * pSize;
-						if (x > gastationAllList.size()) {
-							x = gastationAllList.size();
-						}
-						PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList((pNum - 1) * pSize, x));
-						List<Gastation> gastationList1 = pageInfo.getList();
-						List<Map<String, Object>> gastationArray = new ArrayList<>();
-						if (gastationList1 != null && gastationList1.size() > 0) {
-							for (Gastation gastationInfo : gastationList1) {
-								Map<String, Object> gastationMap = new HashMap<>();
-								gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
-								gastationMap.put("name", gastationInfo.getGas_station_name());
-								gastationMap.put("type", gastationInfo.getType());
-								gastationMap.put("longitude", gastationInfo.getLongitude());
-								gastationMap.put("latitude", gastationInfo.getLatitude());
-								Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",
-										gastationInfo.getType());
-								gastationMap.put("stationType", usysparam.getMname());
-								gastationMap.put("service",
-										gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
-								gastationMap.put("preferential",
-										gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
-								// 获取当前气站价格列表
-								String price = gastationInfo.getLng_price();
-								if (price != null && !"".equals(price)) {
-									price = price.replaceAll("，", ",");
-									price = price.replaceAll("：", ":");
-									if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
-										String strArray[] = price.split(",");
-										Map[] map = new Map[strArray.length];
-										for (int i = 0; i < strArray.length; i++) {
-											String strInfo = strArray[i].trim();
-											String strArray1[] = strInfo.split(":");
-											String strArray2[] = strArray1[1].split("/");
-											Map<String, Object> dataMap = new HashMap<>();
-											dataMap.put("gasName", strArray1[0]);
-											dataMap.put("gasPrice", strArray2[0]);
-											dataMap.put("gasUnit", strArray2[1]);
-											map[i] = dataMap;
-										}
-										gastationMap.put("priceList", map);
-									} else {
-										gastationMap.put("priceList", new ArrayList());
-									}
-								} else {
-									gastationMap.put("priceList", new ArrayList());
-								}
-								gastationMap.put("phone", gastationInfo.getContact_phone());
-								if (gastationInfo.getStatus().equals("0")) {
-									gastationMap.put("state", "开启");
-								} else {
-									gastationMap.put("state", "关闭");
-								}
-								gastationMap.put("address", gastationInfo.getAddress());
-								String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="
-										+ gastationInfo.getSys_gas_station_id();
-								gastationMap.put("infoUrl", infoUrl);
-								gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="
-										+ gastationInfo.getSys_gas_station_id());
-								gastationArray.add(gastationMap);
+						int pageNum = mainObj.optInt("pageNum");
+						int pageSize = mainObj.optInt("pageSize");
+						int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize:(gastationAllList.size()/pageSize)+1;
+						if(allPage >= pageNum ){
+							if (pageNum == 0) {
+								pageNum = 1;
 							}
-							result.setListMap(gastationArray);
-
-						} else {
-							result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
-							result.setMsg("暂无数据！");
-							result.setListMap(new ArrayList<Map<String, Object>>());
-						}
-					} else {
-						result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
-						result.setMsg("暂无数据！");
-						result.setListMap(new ArrayList<Map<String, Object>>());
-					}
-				}else{//范围不为空，地图显示，不加分页
-					//判断name，不等于null是分页搜索，不考虑范围
-					name  = mainObj.optString("name");
-					if(name!=null && !"".equals(name)){
-						if (gastation.getPageNum() == null) {
-							gastation.setPageNum(GlobalConstant.PAGE_NUM);
-							gastation.setPageSize(GlobalConstant.PAGE_SIZE);
-						} else {
-							gastation.setPageNum(mainObj.optInt("pageNum"));
-							gastation.setPageSize(mainObj.optInt("pageSize"));
-						}
-						gastation.setGas_station_name(name);
-						Double longitude = new Double(0);
-						Double latitude = new Double(0);
-						// 获取气站列表
-						List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
-						if (gastationAllList != null && gastationAllList.size() > 0) {
-							for (int i = 0; i < gastationAllList.size(); i++) {
-								if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
-									longitude = new Double(longitudeStr);
-									latitude = new Double(latitudeStr);
-									String longStr = gastationAllList.get(i).getLongitude();
-									String langStr = gastationAllList.get(i).getLatitude();
-									Double longDb = new Double(0);
-									Double langDb = new Double(0);
-									if (longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)) {
-										longDb = new Double(longStr);
-										langDb = new Double(langStr);
-									}
-									// 计算当前加注站离指定坐标距离
-									Double dist = DistCnvter.getDistance(longitude, latitude, longDb, langDb);
-									gastationAllList.get(i).setDistance(dist);
-								}
+							int end = pageNum * pageSize;
+							if (end > gastationAllList.size()) {
+								end  = gastationAllList.size();
 							}
-							//按距离重新排序gastationAllList
-							Collections.sort(gastationAllList);
-							int pNum = mainObj.optInt("pageNum");
-							int pSize = mainObj.optInt("pageSize");
-							if (pNum == 0) {
-								pNum = 1;
+							int begin = (pageNum - 1) * pageSize;
+							if(begin > allPage ){
+								begin = allPage;
 							}
-							int x = pNum * pSize;
-							if (x > gastationAllList.size()) {
-								x = gastationAllList.size();
-							}
-							PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList((pNum - 1) * pSize, x));
+							PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
 							List<Gastation> gastationList1 = pageInfo.getList();
 							List<Map<String, Object>> gastationArray = new ArrayList<>();
 							if (gastationList1 != null && gastationList1.size() > 0) {
@@ -1667,6 +1559,137 @@ public class MobileController {
 							} else {
 								result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
 								result.setMsg("暂无数据！");
+								result.setListMap(new ArrayList<Map<String, Object>>());
+							}
+						}else {
+							result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+							result.setMsg("没有更多数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
+						
+					} else {
+						result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+						result.setMsg("暂无数据！");
+						result.setListMap(new ArrayList<Map<String, Object>>());
+					}
+				}else{//范围不为空，地图显示，不加分页
+					//判断name，不等于null是分页搜索，不考虑范围
+					name  = mainObj.optString("name");
+					if(name!=null && !"".equals(name)){
+						if (gastation.getPageNum() == null) {
+							gastation.setPageNum(GlobalConstant.PAGE_NUM);
+							gastation.setPageSize(GlobalConstant.PAGE_SIZE);
+						} else {
+							gastation.setPageNum(mainObj.optInt("pageNum"));
+							gastation.setPageSize(mainObj.optInt("pageSize"));
+						}
+						gastation.setGas_station_name(name);
+						Double longitude = new Double(0);
+						Double latitude = new Double(0);
+						// 获取气站列表
+						List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
+						if (gastationAllList != null && gastationAllList.size() > 0) {
+							for (int i = 0; i < gastationAllList.size(); i++) {
+								if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+									longitude = new Double(longitudeStr);
+									latitude = new Double(latitudeStr);
+									String longStr = gastationAllList.get(i).getLongitude();
+									String langStr = gastationAllList.get(i).getLatitude();
+									Double longDb = new Double(0);
+									Double langDb = new Double(0);
+									if (longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)) {
+										longDb = new Double(longStr);
+										langDb = new Double(langStr);
+									}
+									// 计算当前加注站离指定坐标距离
+									Double dist = DistCnvter.getDistance(longitude, latitude, longDb, langDb);
+									gastationAllList.get(i).setDistance(dist);
+								}
+							}
+							//按距离重新排序gastationAllList
+							Collections.sort(gastationAllList);
+							int pageNum = mainObj.optInt("pageNum");
+							int pageSize = mainObj.optInt("pageSize");
+							int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize:(gastationAllList.size()/pageSize)+1;
+							if(allPage >= pageNum ){
+								if (pageNum == 0) {
+									pageNum = 1;
+								}
+								int end = pageNum * pageSize;
+								if (end > gastationAllList.size()) {
+									end  = gastationAllList.size();
+								}
+								int begin = (pageNum - 1) * pageSize;
+								if(begin > allPage ){
+									begin = allPage;
+								}
+								PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
+								List<Gastation> gastationList1 = pageInfo.getList();
+								List<Map<String, Object>> gastationArray = new ArrayList<>();
+								if (gastationList1 != null && gastationList1.size() > 0) {
+									for (Gastation gastationInfo : gastationList1) {
+										Map<String, Object> gastationMap = new HashMap<>();
+										gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
+										gastationMap.put("name", gastationInfo.getGas_station_name());
+										gastationMap.put("type", gastationInfo.getType());
+										gastationMap.put("longitude", gastationInfo.getLongitude());
+										gastationMap.put("latitude", gastationInfo.getLatitude());
+										Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",
+												gastationInfo.getType());
+										gastationMap.put("stationType", usysparam.getMname());
+										gastationMap.put("service",
+												gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
+										gastationMap.put("preferential",
+												gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
+										// 获取当前气站价格列表
+										String price = gastationInfo.getLng_price();
+										if (price != null && !"".equals(price)) {
+											price = price.replaceAll("，", ",");
+											price = price.replaceAll("：", ":");
+											if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+												String strArray[] = price.split(",");
+												Map[] map = new Map[strArray.length];
+												for (int i = 0; i < strArray.length; i++) {
+													String strInfo = strArray[i].trim();
+													String strArray1[] = strInfo.split(":");
+													String strArray2[] = strArray1[1].split("/");
+													Map<String, Object> dataMap = new HashMap<>();
+													dataMap.put("gasName", strArray1[0]);
+													dataMap.put("gasPrice", strArray2[0]);
+													dataMap.put("gasUnit", strArray2[1]);
+													map[i] = dataMap;
+												}
+												gastationMap.put("priceList", map);
+											} else {
+												gastationMap.put("priceList", new ArrayList());
+											}
+										} else {
+											gastationMap.put("priceList", new ArrayList());
+										}
+										gastationMap.put("phone", gastationInfo.getContact_phone());
+										if (gastationInfo.getStatus().equals("0")) {
+											gastationMap.put("state", "开启");
+										} else {
+											gastationMap.put("state", "关闭");
+										}
+										gastationMap.put("address", gastationInfo.getAddress());
+										String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="
+												+ gastationInfo.getSys_gas_station_id();
+										gastationMap.put("infoUrl", infoUrl);
+										gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="
+												+ gastationInfo.getSys_gas_station_id());
+										gastationArray.add(gastationMap);
+									}
+									result.setListMap(gastationArray);
+	
+								} else {
+									result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+									result.setMsg("暂无数据！");
+									result.setListMap(new ArrayList<Map<String, Object>>());
+								}
+							}else {
+								result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+								result.setMsg("无更多数据！");
 								result.setListMap(new ArrayList<Map<String, Object>>());
 							}
 						} else {
@@ -2606,86 +2629,93 @@ public class MobileController {
 					payableAmount = mainObj.optString("payableAmount");	
 					//实付金额
 					amount =  mainObj.optString("amount");	
-					
-					if (payType.equalsIgnoreCase("2")) { // 支付宝消费
-						sysOrder = createNewOrder(orderID, driverID, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","C04"); // TODO充值成功后再去生成订单
-						//设置优惠券ID
-						if(couponId!=null && !"".equals(couponId)){
-							sysOrder.setCoupon_number(couponId);
+					//账户正常使用
+					if(driverService.queryDriverByPK(driverID).getUserStatus().equals("0")){
+						if (payType.equalsIgnoreCase("2")) { // 支付宝消费
+							sysOrder = createNewOrder(orderID, driverID, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","C04"); // TODO充值成功后再去生成订单
+							//设置优惠券ID
+							if(couponId!=null && !"".equals(couponId)){
+								sysOrder.setCoupon_number(couponId);
+							}
+							//设置优惠金额
+							if(couponCash!=null && !"".equals(couponCash)){
+								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+							}
+							//设置气站ID
+							sysOrder.setChannelNumber(gastationId);
+							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
+							//设置应付金额
+							sysOrder.setCash(new BigDecimal(payableAmount));
+							//设置实付金额
+							sysOrder.setShould_payment(new BigDecimal(amount));
+							orderService.checkIfCanConsume(sysOrder);
+							String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
+							Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, amount, "司集云平台-会员消费",
+									"司集云平台-会员消费", orderID, notifyUrl);
+							String orderParam = OrderInfoUtil2_0.buildOrderParam(paramsApp);
+							String sign = OrderInfoUtil2_0.getSign(paramsApp, RSA_PRIVATE);
+							thirdPartyID = orderID;
+							if (sysOrder != null) {
+								sysOrder.setThirdPartyOrderID(thirdPartyID);
+								int nCreateOrder = orderService.insert(sysOrder, null);
+								if (nCreateOrder < 1)
+									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+							}
+							data.put("payReq", orderParam + "&" + sign);
+							data.put("orderId", orderID);
+							result.setData(data);
+						} else if (payType.equalsIgnoreCase("1")) { // 微信消费
+							sysOrder = createNewOrder(orderID, driverID, amount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","C03"); // TODO充值成功后再去生成订单
+							//设置优惠券ID
+							if(couponId!=null && !"".equals(couponId)){
+								sysOrder.setCoupon_number(couponId);
+							}
+							//设置优惠金额
+							if(couponCash!=null && !"".equals(couponCash)){
+								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+							}
+							//设置气站ID
+							sysOrder.setChannelNumber(gastationId);
+							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
+							//设置应付金额
+							sysOrder.setCash(new BigDecimal(payableAmount));
+							//设置实付金额
+							sysOrder.setShould_payment(new BigDecimal(amount));
+							orderService.checkIfCanConsume(sysOrder);
+							//消费金额，微信消费金额单位为分，不能有小数
+							Integer money = (int) (new Double(amount)*100);
+							String entity = genProductArgs(orderID,money.toString(),"2");
+							byte[] buf = Util.httpPost(url, entity);
+							String content = new String(buf, "utf-8");
+							Map<String, String> orderHashs = decodeXml(content);
+							String payReq = genPayReq(orderHashs);
+							thirdPartyID = orderHashs.get("prepay_id");
+							if (sysOrder != null) {
+								sysOrder.setThirdPartyOrderID(thirdPartyID);
+								int nCreateOrder = orderService.insert(sysOrder, null);
+								if (nCreateOrder < 1)
+									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+							}
+							JSONObject dataObj = JSONObject.fromObject(payReq);
+							data.put("payReq", dataObj);
+							data.put("orderId", orderID);
+							result.setData(data);
 						}
-						//设置优惠金额
-						if(couponCash!=null && !"".equals(couponCash)){
-							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+						//首次消费成功，发放优惠券
+						if(number==0){
+							CouponGroup couponGroup = new CouponGroup();
+				            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
+				            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+				            if(list.size()>0){
+				            	couponGroupService.sendCouponGroup(driverID, list, this.appOperatorId);
+				            }
 						}
-						//设置气站ID
-						sysOrder.setChannelNumber(gastationId);
-						sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
-						//设置应付金额
-						sysOrder.setCash(new BigDecimal(payableAmount));
-						//设置实付金额
-						sysOrder.setShould_payment(new BigDecimal(amount));
-						orderService.checkIfCanConsume(sysOrder);
-						String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
-						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, amount, "司集云平台-会员消费",
-								"司集云平台-会员消费", orderID, notifyUrl);
-						String orderParam = OrderInfoUtil2_0.buildOrderParam(paramsApp);
-						String sign = OrderInfoUtil2_0.getSign(paramsApp, RSA_PRIVATE);
-						thirdPartyID = orderID;
-						if (sysOrder != null) {
-							sysOrder.setThirdPartyOrderID(thirdPartyID);
-							int nCreateOrder = orderService.insert(sysOrder, null);
-							if (nCreateOrder < 1)
-								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
-						}
-						data.put("payReq", orderParam + "&" + sign);
-						data.put("orderId", orderID);
-						result.setData(data);
-					} else if (payType.equalsIgnoreCase("1")) { // 微信消费
-						sysOrder = createNewOrder(orderID, driverID, amount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","C03"); // TODO充值成功后再去生成订单
-						//设置优惠券ID
-						if(couponId!=null && !"".equals(couponId)){
-							sysOrder.setCoupon_number(couponId);
-						}
-						//设置优惠金额
-						if(couponCash!=null && !"".equals(couponCash)){
-							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-						}
-						//设置气站ID
-						sysOrder.setChannelNumber(gastationId);
-						sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
-						//设置应付金额
-						sysOrder.setCash(new BigDecimal(payableAmount));
-						//设置实付金额
-						sysOrder.setShould_payment(new BigDecimal(amount));
-						orderService.checkIfCanConsume(sysOrder);
-						//消费金额，微信消费金额单位为分，不能有小数
-						Integer money = (int) (new Double(amount)*100);
-						String entity = genProductArgs(orderID,money.toString(),"2");
-						byte[] buf = Util.httpPost(url, entity);
-						String content = new String(buf, "utf-8");
-						Map<String, String> orderHashs = decodeXml(content);
-						String payReq = genPayReq(orderHashs);
-						thirdPartyID = orderHashs.get("prepay_id");
-						if (sysOrder != null) {
-							sysOrder.setThirdPartyOrderID(thirdPartyID);
-							int nCreateOrder = orderService.insert(sysOrder, null);
-							if (nCreateOrder < 1)
-								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
-						}
-						JSONObject dataObj = JSONObject.fromObject(payReq);
-						data.put("payReq", dataObj);
-						data.put("orderId", orderID);
-						result.setData(data);
-					}
-
-					//首次消费成功，发放优惠券
-					if(number==0){
-						CouponGroup couponGroup = new CouponGroup();
-			            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
-			            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
-			            if(list.size()>0){
-			            	couponGroupService.sendCouponGroup(driverID, list, this.appOperatorId);
-			            }
+					}else if(driverService.queryDriverByPK(driverID).getUserStatus().equals("1")){//冻结
+						result.setStatus(MobileReturn.STATUS_SUCCESS);
+						result.setMsg("账户已冻结！");
+					}else if(driverService.queryDriverByPK(driverID).getUserStatus().equals("2")){// 离职
+						result.setStatus(MobileReturn.STATUS_SUCCESS);
+						result.setMsg("司机已离职！");
 					}
 				}else{//充值订单
 					if (payType.equalsIgnoreCase("2")) { // 支付宝支付
