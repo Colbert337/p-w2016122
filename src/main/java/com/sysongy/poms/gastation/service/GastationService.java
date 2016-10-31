@@ -51,4 +51,8 @@ public interface GastationService {
 	public int delete(String id);
 	
 	public int updateByPrimaryKeySelective(Gastation record) throws Exception;
+	
+	public void updateForJob() throws Exception;
+	
+	public List<Gastation> queryGastationForCoupon(Gastation record) throws Exception;
 }

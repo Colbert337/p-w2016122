@@ -84,8 +84,9 @@
 									<%--<th style="text-align:center;width:10%" onclick="orderBy(this,'coupon_type');commitForm();" id="coupon_type_order">优惠方式</th>--%>
 									<th style="width:10%" onclick="orderBy(this,'use_condition');commitForm();" id="use_condition_order">使用条件</th>
 									<th style="text-align:center;width:10%" onclick="orderBy(this,'preferential_discount');commitForm();" id="preferential_discount_order">优惠额度</th>
+									<th style="width:10%" onclick="orderBy(this,'coupon_detail');commitForm();" id="coupon_detail_order">优惠详情</th>
 									<th style="text-align:center;width:10%" onclick="orderBy(this,'status');commitForm();" id="status_order">优惠状态</th>
-									<th style="width:10%" onclick="orderBy(this,'statusinfo');commitForm();" id="statusinfo_order">优惠情况</th>
+									<th style="width:10%" onclick="orderBy(this,'statusinfo');commitForm();" id="statusinfo_order">优惠有效期</th>
 									<th style="width:5%" class="text-center td-w3">更多操作</th>
 								</tr>
 							</thead>
@@ -106,6 +107,17 @@
 										<td><c:if test="${list.use_condition=='1'}">满${list.limit_money}元使用</c:if><c:if test="${list.use_condition=='2'}">无条件使用</c:if></td>
 										<td style="text-align:center;">${list.preferential_discount}<c:if test="${list.coupon_type=='1'}">元</c:if><c:if test="${list.coupon_type=='2'}">折</c:if></td>
 										<td style="display:none;">${list.start_coupon_time}至${list.end_coupon_time}</td>
+										<td title='${list.coupon_detail}'>
+											<c:set var="subStr" value="${list.coupon_detail}"/>
+											<c:choose>
+												<c:when test="${fn:length(subStr) > 25}">
+													<c:out value="${fn:substring(subStr, 0, 25)}..." />
+												</c:when>
+												<c:otherwise>
+													<c:out value="${subStr}" />
+												</c:otherwise>
+											</c:choose>
+										</td>
 										<td style="text-align:center;"><s:Code2Name mcode="${list.status}" gcode="COUPON_STATUS"></s:Code2Name></td>
 										<td>${list.statusinfo}</td>
 										<td>
@@ -114,9 +126,11 @@
 												<a class="option-btn-m" href="javascript:void(0);" title="查看详情" data-rel="tooltip">
 													<i class="ace-icon fa fa-search-plus  bigger-130" onclick="showUserCoupon('${list.coupon_id}');"></i>
 												</a>
-												<a class="option-btn-m" href="javascript:void(0);" title="导入优惠名单" data-rel="tooltip">
-													<i class="ace-icon fa fa-cloud-download  bigger-130" onclick="importuserCoupon('${list.coupon_id}');"></i>
-												</a>
+												<c:if test="${list.status!='2'&&list.statusinfo!='已结束'}">
+													<a class="option-btn-m" href="javascript:void(0);" title="导入优惠名单" data-rel="tooltip">
+														<i class="ace-icon fa fa-cloud-download  bigger-130" onclick="importuserCoupon('${list.coupon_id}');"></i>
+													</a>
+												</c:if>
 												<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 													<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate('${list.coupon_id}');"></i>
 												</a>

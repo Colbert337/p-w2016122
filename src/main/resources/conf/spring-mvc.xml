@@ -224,7 +224,7 @@
 	
 	<bean id="cronTrigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
 		<property name="jobDetail" ref="updateGasUnitPricejob" />  
-		<property name="cronExpression" value="*/10 * * * * ?" />  
+		<property name="cronExpression" value="0 50 0/1 * * ?" />  
 	</bean>
 	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  

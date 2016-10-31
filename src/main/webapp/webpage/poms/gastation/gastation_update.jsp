@@ -467,7 +467,7 @@
 												</div>
 											</div>--%>
 										<div class="col-sm-4">
-											<select class="form-control" id="price_effective_time" name="price_effective_time">
+											<select class="form-control" id="price_effective_time" name="price_effective_time" >
 												<s:option flag="true" gcode="price_effective_time" form="station" field="price_effective_time"/>
 											</select>
 										</div>
@@ -806,12 +806,25 @@
 								message: '税务注册号不能超过18位'
 							}
 						}
+					},
+				price_effective_time :{
+					validators: {
+						notEmpty: {
+							message: '请选择价格生效时间'
+						}
 					}
+				}
 		    });
 			    
 		function save(){
 			$("#address").val($("#province").find("option:selected").text()+" "+$("#city").find("option:selected").text()+" "+$("#detail").val());
-			
+
+
+			if($('#price_effective_time  option:selected').text()=='--请选择--'){
+					alert('请选择价格生效时间');
+				 return false;
+			 }
+
 			/*手动验证表单，当是普通按钮时。*/
 			$('#gastationform').data('bootstrapValidator').validate();
 			if(!$('#gastationform').data('bootstrapValidator').isValid()){

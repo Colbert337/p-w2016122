@@ -77,7 +77,10 @@ function changeUseCondition(){
 		$("input[name='limit_money']").val("");
 		$("input[name='limit_money']").attr("disabled","disabled");
 	}else{
-		$("input[name='limit_money']").removeAttr("disabled");
+		var status= $('select[name="preferential_money"]').attr("disabled");
+		if(status!="disabled"){
+			$("input[name='limit_money']").removeAttr("disabled");
+		}
 	}
 }
 function changeCouponType(){
@@ -181,11 +184,18 @@ function save(){
 		url:'../web/coupon/saveCoupon',
 		type:'post',
 		dataType:'text',
+		beforeSend: function () {
+			$('body').addClass('modal-open').css('padding-right','17px')
+			$('body').append('<div class="loading-warp"><div class="loading"><i class="ace-icon fa fa-spinner fa-spin"></i></div><div class="modal-backdrop fade in"></div></div>')
+		},
 		success:function(data){
 			$("#main").html(data);
 			$("#modal-table").modal("show");
+		},complete: function () {
+			$("body").removeClass('modal-open').removeAttr('style');
+			$(".loading-warp").remove();
 		},error:function(XMLHttpRequest, textStatus, errorThrown) {
-
+			bootbox.alert("操作失败！");
 		}
 	}
 	$("#couponform").ajaxSubmit(options);
