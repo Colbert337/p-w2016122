@@ -139,25 +139,3 @@
 	<!-- /.row -->
 </div>
 <!-- /.page-content -->
-
-
-<div id="userCouponModel" class="modal fade" role="dialog" aria-labelledby="conponModalLabel" data-backdrop="static" tabindex="-1">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title" id="editBanner">享优惠卷人员列表</h4>
-			</div>
-			<div class="modal-body">
-				<div class="container-fluid" id="content"></div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-primary btn-sm" onclick="closeDialog('userCouponModel')">关闭</button>
-			</div>
-		</div>
-	<!-- /.modal-dialog -->
-	</div>
-	<!-- /.modal -->
-</div>

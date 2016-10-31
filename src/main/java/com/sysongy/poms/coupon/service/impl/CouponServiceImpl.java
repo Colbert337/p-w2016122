@@ -36,7 +36,7 @@ public class CouponServiceImpl implements CouponService {
 			record.setPageSize(10);
 		}
 		if (StringUtils.isEmpty(record.getOrderby())) {
-			record.setOrderby("create_time desc");
+			record.setOrderby("lastmodify_time desc");
 		}
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
 		List<Coupon> list = couponMapper.queryForPage(record);
@@ -148,14 +148,6 @@ public class CouponServiceImpl implements CouponService {
 		calendar.add(Calendar.SECOND, 59);
 		coupon.setEnd_coupon_time(sdf.format(calendar.getTime()));
 		couponMapper.updateByPrimaryKey(coupon);
-		if("2".equals(coupon.getStatus())){
-			UserCoupon userCoupon = new UserCoupon();
-			userCoupon.setCoupon_no(coupon.getCoupon_no());
-			userCoupon.setIsuse("2");
-			userCoupon.setLastmodify_person_id(userID);
-			userCoupon.setLastmodify_time(new Date());
-			couponMapper.updateUserCoupon(userCoupon);
-		}
 		return coupon.getCoupon_id();
 	}
 
@@ -176,7 +168,7 @@ public class CouponServiceImpl implements CouponService {
 			userCoupon.setPageSize(10);
 		}
 		if (StringUtils.isEmpty(userCoupon.getOrderby())) {
-			userCoupon.setOrderby("create_time desc");
+			userCoupon.setOrderby("lastmodify_time desc");
 		}
 		PageHelper.startPage(userCoupon.getPageNum(), userCoupon.getPageSize(), userCoupon.getOrderby());
 		List<UserCoupon> list = couponMapper.selectByUser_Coupon(userCoupon);

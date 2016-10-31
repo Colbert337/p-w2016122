@@ -257,6 +257,12 @@ public interface OrderService {
      * @return
      */
     SysOrder queryById(String orderId);
+    /**
+     * 支付宝退款回调查询订单
+     * @param tradeNo
+     * @return
+     */
+    SysOrder queryByTrade(String tradeNo);
    /**
     * 查询消费订单个数
     * @param token 当前用户唯一标识

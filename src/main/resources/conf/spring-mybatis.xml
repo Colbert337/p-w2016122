@@ -113,10 +113,8 @@
 	</tx:advice>
 	<!-- Spring aop事务管理 -->
 	<aop:config>
-		<aop:pointcut id="transactionPointcut"
-			expression="execution(* com.sysongy.*.*.service..*Impl.*(..))" />
-		<aop:advisor pointcut-ref="transactionPointcut"
-			advice-ref="transactionAdvice" />
+		<aop:pointcut id="transactionPointcut" expression="execution(* com.sysongy.*.*.service..*Impl.*(..))" />
+		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />
 	</aop:config>
 
 </beans>

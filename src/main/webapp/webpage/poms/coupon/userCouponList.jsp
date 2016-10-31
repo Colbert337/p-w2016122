@@ -205,9 +205,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		}
 
 		//动态加载分页按钮并设定页数
-		for(var i='${userCouponInfo.pages}';i>0;i--){
+		for(var i=5;i>0;i--){
 			var num = parseInt(pagenum%5==0?pagenum-5+i:pagenum-(pagenum%5)+i);
-			$("li[id=previous1]").after("<li id='navigator'><a href='javascript:void(0);' onclick='commitForm1(this)'>"+num+"</a></li>");
+			$("li[id=previous1]").after("<li id='navigator1'><a href='javascript:void(0);' onclick='commitForm1(this)'>"+num+"</a></li>");
 		}
 		//设置当前页按钮样式
 		$("li[id=navigator1]").removeClass("active");

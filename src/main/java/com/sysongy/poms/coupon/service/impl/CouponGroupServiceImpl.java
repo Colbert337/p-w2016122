@@ -44,14 +44,14 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			couponGroup.setPageSize(10);
 		}
 		if (StringUtils.isEmpty(couponGroup.getOrderby())) {
-			couponGroup.setOrderby("create_time desc");
+			couponGroup.setOrderby("lastmodify_time desc");
 		}
 		PageHelper.startPage(couponGroup.getPageNum(), couponGroup.getPageSize(), couponGroup.getOrderby());
 		if(null!=couponGroup.getIssued_type()&&!"".equals(couponGroup.getIssued_type())){
 			String issued_type[] = couponGroup.getIssued_type().split(",");
-			List<Integer> issued_types = new ArrayList<Integer>();
+			List<String> issued_types = new ArrayList<String>();
 			for(int i=0;i<issued_type.length;i++){
-				issued_types.add(Integer.parseInt(issued_type[i]));
+				issued_types.add(issued_type[i]);
 			}
 			couponGroup.setIssued_types(issued_types);
 		}
@@ -155,7 +155,7 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 			if(!"".equals(couponGroup.getCoupon_ids())&&null!=couponGroup.getCoupon_ids()){
 				String[] coupon_id = couponGroup.getCoupon_ids().split(",");
 				String[] coupon_num = couponGroup.getCoupon_nums().split(",");
-				Iterator it = couponlist.iterator();
+				Iterator<Coupon> it = couponlist.iterator();
 				while(it.hasNext()){
 					Coupon aCoupon = (Coupon) it.next();
 					for(int i=0;i<coupon_id.length;i++){

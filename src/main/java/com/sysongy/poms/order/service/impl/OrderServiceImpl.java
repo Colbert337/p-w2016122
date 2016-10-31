@@ -580,12 +580,11 @@ public class OrderServiceImpl implements OrderService {
 	   validAccount(order);
 
 	   //消费的时候传过去的cash是正值
-	   if(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX.equals(order.getSpend_type())){
-		   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
-		   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
-	  		   //如果出错直接返回错误代码退出
-			   throw new Exception( consume_success);
-	  	   }
+	   
+	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
+	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
+		   //如果出错直接返回错误代码退出
+		   throw new Exception( consume_success);
 	   }
 	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
@@ -1193,6 +1192,10 @@ public class OrderServiceImpl implements OrderService {
 		return sysOrderMapper.queryById(orderId);
 	}
 
+	@Override
+	public SysOrder queryByTrade(String tradeNo){
+		return sysOrderMapper.queryByTrade(tradeNo);
+	 }
 	@Override
 	public int queryConsumerOrderNumber(String driverID) {
 		return sysOrderMapper.queryConsumerOrderNumber(driverID);

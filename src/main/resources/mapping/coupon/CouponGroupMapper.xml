@@ -36,7 +36,7 @@
 			<if test="issued_types != null &amp;&amp; issued_types != ''">
 				and (
 			<foreach collection="issued_types" index="index" item="type" open=""	separator="or" close="">
-   				#{type,jdbcType=INTEGER} in  (issued_type) 
+   				 LOCATE(#{type,jdbcType=VARCHAR}, issued_type)>0
  			 </foreach>
  			 	)
 			</if>

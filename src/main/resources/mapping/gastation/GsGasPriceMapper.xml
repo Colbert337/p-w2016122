@@ -81,6 +81,9 @@
     <if test="gasNum != null &amp;&amp; gasNum != ''" >
       and gas_num = #{gasNum,jdbcType=VARCHAR}
     </if>
+    <if test="price_id != null &amp;&amp; price_id != ''" >
+      and price_id = #{price_id,jdbcType=VARCHAR}
+    </if>
     <if test="created_date_before != null &amp;&amp; created_date_before != ''" >
       and created_date between CONCAT(#{created_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{created_date_before,jdbcType=VARCHAR},' 23:59:59')
     </if>

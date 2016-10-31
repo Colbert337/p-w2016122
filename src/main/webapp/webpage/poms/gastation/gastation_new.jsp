@@ -742,7 +742,13 @@
 								message: '税务注册号不能超过18位'
 							}
 						}
-					}
+					},
+					price_effective_time :{
+						validators: {
+							notEmpty: {
+								message: '请选择价格生效时间'
+							}
+						}}
 		         }
 		    });
 			    

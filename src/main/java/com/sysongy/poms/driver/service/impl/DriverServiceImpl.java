@@ -310,19 +310,31 @@ public class DriverServiceImpl implements DriverService {
 			throw new Exception( GlobalConstant.OrderProcessResult.ORDER_ERROR_CREDIT_ACCOUNT_IS_FROEN);
 		}
 		
-		//给账户减去
+		//先给个默认值
+		String cash_success = GlobalConstant.OrderProcessResult.SUCCESS;
 		SysDriver driver = this.queryDriverByPK(credit_account);
-		String driver_account = driver.getSysUserAccountId();
 		BigDecimal cash = order.getCash();
-		//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
-		BigDecimal addcash = cash.multiply(new BigDecimal(-1));
-		//如果是负值，但是is_discharge却不是充红，则返回错误
-		if(cash.compareTo(new BigDecimal("0")) < 0 ){
-			if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
-				throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
-			 }
+		
+		//如果是卡余额支付
+		if(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX.equals(order.getSpend_type())){
+			//给账户减去
+			String driver_account = driver.getSysUserAccountId();
+			
+			cash = order.getCash();
+			
+			//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
+			BigDecimal addcash = cash.multiply(new BigDecimal(-1));
+			
+			//如果是负值，但是is_discharge却不是充红，则返回错误
+			if(cash.compareTo(new BigDecimal("0")) < 0 ){
+				if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
+					throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
+				}
+			}
+			
+			cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
 		}
-		String cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
+		
 		//记录订单流水
 		String chong = "转账扣钱";
 		String orderDealType = GlobalConstant.OrderDealType.TRANSFER_DRIVER_TO_DRIVER_INCREASE_DRIVER;
