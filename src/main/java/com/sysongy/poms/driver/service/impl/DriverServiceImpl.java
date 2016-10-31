@@ -364,7 +364,7 @@ public class DriverServiceImpl implements DriverService {
         }
         order.setSysDriver(driver);
         if(order.getCoupon_number() != null){//add by wdq 判断当前订单是否有优惠券
-            UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_id(), order.getSysDriver().getSysDriverId());
+            UserCoupon usercoupon = couponService.queryUserCouponByNo(order.getCoupon_number(), order.getSysDriver().getSysDriverId());
             if(usercoupon == null){
                 order.setCoupon_number("");
                 order.setCoupon_cash(BigDecimal.valueOf(0.0d));
