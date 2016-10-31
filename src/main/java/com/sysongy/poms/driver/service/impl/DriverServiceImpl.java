@@ -156,7 +156,7 @@ public class DriverServiceImpl implements DriverService {
     					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
     				}
      
-                	this.cashBackForRegister(record, invitationCode, operator_id);
+//                	this.cashBackForRegister(record, invitationCode, operator_id);
                 }
                 
                 //发优惠卷
@@ -451,6 +451,14 @@ public class DriverServiceImpl implements DriverService {
 		    	sysUserAccountService.addCashToAccount(invitation.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_max_value())), GlobalConstant.OrderType.INVITED_CASHBACK);
 			}else{
 				logger.info("找不到匹配的返现规则，注册成功，返现失败");
+			}
+			
+			listBack=sysCashBackService.queryForBreak("201");
+			if (listBack!=null && listBack.size() > 0 ) {
+				SysCashBack back= listBack.get(0);//获取返现规则
+				sysUserAccountService.addCashToAccount(driver.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+			}else{
+				logger.info("找不到匹配的返现规则，注册成功，返现失败");    
 			}
 	    	
 	    	//发优惠劵,被邀请用户注册发放优惠券
