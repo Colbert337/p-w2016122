@@ -1485,7 +1485,7 @@ public class MobileController {
 						Collections.sort(gastationAllList);
 						int pageNum = mainObj.optInt("pageNum");
 						int pageSize = mainObj.optInt("pageSize");
-						int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize:(gastationAllList.size()/pageSize)+1;
+						int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize+1:(gastationAllList.size()/pageSize)+1;
 						if(allPage >= pageNum ){
 							if (pageNum == 0) {
 								pageNum = 1;
@@ -1558,18 +1558,18 @@ public class MobileController {
 								result.setListMap(gastationArray);
 
 							} else {
-								result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+								result.setStatus(MobileReturn.STATUS_SUCCESS);
 								result.setMsg("暂无数据！");
 								result.setListMap(new ArrayList<Map<String, Object>>());
 							}
 						}else {
-							result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
 							result.setMsg("没有更多数据！");
 							result.setListMap(new ArrayList<Map<String, Object>>());
 						}
 						
 					} else {
-						result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+						result.setStatus(MobileReturn.STATUS_SUCCESS);
 						result.setMsg("暂无数据！");
 						result.setListMap(new ArrayList<Map<String, Object>>());
 					}
@@ -1611,7 +1611,7 @@ public class MobileController {
 							Collections.sort(gastationAllList);
 							int pageNum = mainObj.optInt("pageNum");
 							int pageSize = mainObj.optInt("pageSize");
-							int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize:(gastationAllList.size()/pageSize)+1;
+							int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize+1:(gastationAllList.size()/pageSize)+1;
 							if(allPage >= pageNum ){
 								if (pageNum == 0) {
 									pageNum = 1;
@@ -1684,17 +1684,17 @@ public class MobileController {
 									result.setListMap(gastationArray);
 	
 								} else {
-									result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+									result.setStatus(MobileReturn.STATUS_SUCCESS);
 									result.setMsg("暂无数据！");
 									result.setListMap(new ArrayList<Map<String, Object>>());
 								}
 							}else {
-								result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+								result.setStatus(MobileReturn.STATUS_SUCCESS);
 								result.setMsg("无更多数据！");
 								result.setListMap(new ArrayList<Map<String, Object>>());
 							}
 						} else {
-							result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
 							result.setMsg("暂无数据！");
 							result.setListMap(new ArrayList<Map<String, Object>>());
 						}
@@ -1796,12 +1796,12 @@ public class MobileController {
 									}
 									result.setListMap(gastationArray);
 								} else {
-									result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+									result.setStatus(MobileReturn.STATUS_SUCCESS);
 									result.setMsg("暂无数据！");
 									result.setListMap(new ArrayList<Map<String, Object>>());
 								}
 							} else {
-								result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+								result.setStatus(MobileReturn.STATUS_SUCCESS);
 								result.setMsg("暂无数据！");
 								result.setListMap(new ArrayList<Map<String, Object>>());
 							}
@@ -1838,81 +1838,92 @@ public class MobileController {
 								}
 								//按距离重新排序gastationAllList
 								Collections.sort(gastationAllList);
-								int pNum = mainObj.optInt("pageNum");
-								int pSize = mainObj.optInt("pageSize");
-								if (pNum == 0) {
-									pNum = 1;
-								}
-								int x = pNum * pSize;
-								if (x > gastationAllList.size()) {
-									x = gastationAllList.size();
-								}
-								PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList((pNum - 1) * pSize, x));
-								List<Gastation> gastationList1 = pageInfo.getList();
-								List<Map<String, Object>> gastationArray = new ArrayList<>();
-								if (gastationList1 != null && gastationList1.size() > 0) {
-									for (Gastation gastationInfo : gastationList1) {
-										Map<String, Object> gastationMap = new HashMap<>();
-										gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
-										gastationMap.put("name", gastationInfo.getGas_station_name());
-										gastationMap.put("type", gastationInfo.getType());
-										gastationMap.put("longitude", gastationInfo.getLongitude());
-										gastationMap.put("latitude", gastationInfo.getLatitude());
-										Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",
-												gastationInfo.getType());
-										gastationMap.put("stationType", usysparam.getMname());
-										gastationMap.put("service",
-												gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
-										gastationMap.put("preferential",
-												gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
-										// 获取当前气站价格列表
-										String price = gastationInfo.getLng_price();
-										if (price != null && !"".equals(price)) {
-											price = price.replaceAll("，", ",");
-											price = price.replaceAll("：", ":");
-											if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
-												String strArray[] = price.split(",");
-												Map[] map = new Map[strArray.length];
-												for (int i = 0; i < strArray.length; i++) {
-													String strInfo = strArray[i].trim();
-													String strArray1[] = strInfo.split(":");
-													String strArray2[] = strArray1[1].split("/");
-													Map<String, Object> dataMap = new HashMap<>();
-													dataMap.put("gasName", strArray1[0]);
-													dataMap.put("gasPrice", strArray2[0]);
-													dataMap.put("gasUnit", strArray2[1]);
-													map[i] = dataMap;
+								int pageNum = mainObj.optInt("pageNum");
+								int pageSize = mainObj.optInt("pageSize");
+								int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize+1:(gastationAllList.size()/pageSize)+1;
+								if(allPage >= pageNum ){
+									if (pageNum == 0) {
+										pageNum = 1;
+									}
+									int end = pageNum * pageSize;
+									if (end > gastationAllList.size()) {
+										end  = gastationAllList.size();
+									}
+									int begin = (pageNum - 1) * pageSize;
+									if(begin > allPage ){
+										begin = allPage;
+									}
+									PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end));
+									List<Gastation> gastationList1 = pageInfo.getList();
+									List<Map<String, Object>> gastationArray = new ArrayList<>();
+									if (gastationList1 != null && gastationList1.size() > 0) {
+										for (Gastation gastationInfo : gastationList1) {
+											Map<String, Object> gastationMap = new HashMap<>();
+											gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
+											gastationMap.put("name", gastationInfo.getGas_station_name());
+											gastationMap.put("type", gastationInfo.getType());
+											gastationMap.put("longitude", gastationInfo.getLongitude());
+											gastationMap.put("latitude", gastationInfo.getLatitude());
+											Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",
+													gastationInfo.getType());
+											gastationMap.put("stationType", usysparam.getMname());
+											gastationMap.put("service",
+													gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
+											gastationMap.put("preferential",
+													gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
+											// 获取当前气站价格列表
+											String price = gastationInfo.getLng_price();
+											if (price != null && !"".equals(price)) {
+												price = price.replaceAll("，", ",");
+												price = price.replaceAll("：", ":");
+												if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+													String strArray[] = price.split(",");
+													Map[] map = new Map[strArray.length];
+													for (int i = 0; i < strArray.length; i++) {
+														String strInfo = strArray[i].trim();
+														String strArray1[] = strInfo.split(":");
+														String strArray2[] = strArray1[1].split("/");
+														Map<String, Object> dataMap = new HashMap<>();
+														dataMap.put("gasName", strArray1[0]);
+														dataMap.put("gasPrice", strArray2[0]);
+														dataMap.put("gasUnit", strArray2[1]);
+														map[i] = dataMap;
+													}
+													gastationMap.put("priceList", map);
+												} else {
+													gastationMap.put("priceList", new ArrayList());
 												}
-												gastationMap.put("priceList", map);
 											} else {
 												gastationMap.put("priceList", new ArrayList());
 											}
-										} else {
-											gastationMap.put("priceList", new ArrayList());
+											gastationMap.put("phone", gastationInfo.getContact_phone());
+											if (gastationInfo.getStatus().equals("0")) {
+												gastationMap.put("state", "开启");
+											} else {
+												gastationMap.put("state", "关闭");
+											}
+											gastationMap.put("address", gastationInfo.getAddress());
+											String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="
+													+ gastationInfo.getSys_gas_station_id();
+											gastationMap.put("infoUrl", infoUrl);
+											gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="
+													+ gastationInfo.getSys_gas_station_id());
+											gastationArray.add(gastationMap);
 										}
-										gastationMap.put("phone", gastationInfo.getContact_phone());
-										if (gastationInfo.getStatus().equals("0")) {
-											gastationMap.put("state", "开启");
-										} else {
-											gastationMap.put("state", "关闭");
-										}
-										gastationMap.put("address", gastationInfo.getAddress());
-										String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="
-												+ gastationInfo.getSys_gas_station_id();
-										gastationMap.put("infoUrl", infoUrl);
-										gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="
-												+ gastationInfo.getSys_gas_station_id());
-										gastationArray.add(gastationMap);
-									}
-									result.setListMap(gastationArray);
+										result.setListMap(gastationArray);
 
-								} else {
-									result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
-									result.setMsg("暂无数据！");
+									} else {
+										result.setStatus(MobileReturn.STATUS_SUCCESS);
+										result.setMsg("暂无数据！");
+										result.setListMap(new ArrayList<Map<String, Object>>());
+									}
+								}else {
+									result.setStatus(MobileReturn.STATUS_SUCCESS);
+									result.setMsg("无更多数据！");
 									result.setListMap(new ArrayList<Map<String, Object>>());
 								}
 							} else {
-								result.setStatus(MobileReturn.STATUS_MSG_SUCCESS);
+								result.setStatus(MobileReturn.STATUS_SUCCESS);
 								result.setMsg("暂无数据！");
 								result.setListMap(new ArrayList<Map<String, Object>>());
 							}
@@ -2665,9 +2676,6 @@ public class MobileController {
 								int nCreateOrder = orderService.insert(sysOrder, null);
 								if (nCreateOrder < 1){
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
-								}else{
-									//支付宝消费短信通知
-									MobileVerificationUtils.sendMSGType(verification, amount, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 								}
 							}
 							data.put("payReq", orderParam + "&" + sign);
@@ -2704,9 +2712,6 @@ public class MobileController {
 								int nCreateOrder = orderService.insert(sysOrder, null);
 								if (nCreateOrder < 1){
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
-								}else{
-									//微信消费短信通知
-									MobileVerificationUtils.sendMSGType(verification, amount, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 								}
 							}
 							JSONObject dataObj = JSONObject.fromObject(payReq);
@@ -2745,9 +2750,6 @@ public class MobileController {
 							int nCreateOrder = orderService.insert(sysOrder, null);
 							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
-							}else{
-								//支付宝充值短信通知
-								MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
 							}
 						}
 						data.put("payReq", orderParam + "&" + sign);
@@ -2766,9 +2768,6 @@ public class MobileController {
 							int nCreateOrder = orderService.insert(sysOrder, null);
 							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
-							}else{
-								//微信充值短信通知
-								MobileVerificationUtils.sendMSGType(verification,feeCount, SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
 							}
 						}
 						JSONObject dataObj = JSONObject.fromObject(payReq);
@@ -2804,9 +2803,11 @@ public class MobileController {
 	@RequestMapping(value = "/deal/wechatCallBackPay")
 	@ResponseBody
 	public String wechatCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		MobileVerification verification = new MobileVerification();
 		String resultStr = "";
 		String orderId = "";
 		String transaction_id = "";
+		String feeCount = "";
 		logger.debug("微信支付回调获取数据开始");
 		String inputLine;
 		String notityXml = "";
@@ -2835,6 +2836,10 @@ public class MobileController {
 			orderId = element.getText();
 			Element element1 = node.element("transaction_id");
 			transaction_id = element1.getText();
+			Element element2 = node.element("total_fee");
+			feeCount = element2.getText();
+			feeCount = String.valueOf(Integer.parseInt(feeCount)/100);
+			
 		}
 
 		if (orderId != null && !"".equals(orderId)) {
@@ -2859,6 +2864,9 @@ public class MobileController {
 						throw new Exception("订单充值错误：" + orderCharge);
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
+						verification.setPhoneNum(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						//微信消费短信通知
+						MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -2875,6 +2883,8 @@ public class MobileController {
 	@RequestMapping(value = "/deal/wechatConsum")
 	@ResponseBody
 	public String wechatConsum(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		MobileVerification verification = new MobileVerification();
+		String feeCount = "";
 		String resultStr = "";
 		String orderId = "";
 		String transaction_id = "";
@@ -2942,6 +2952,9 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
+						verification.setPhoneNum(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						//微信消费短信通知
+						MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -2959,12 +2972,15 @@ public class MobileController {
 	@RequestMapping(value = "/deal/alipayCallBackPay")
 	@ResponseBody
 	public String alipayCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		MobileVerification verification = new MobileVerification();
+		String feeCount = "";
 		String orderId = "";
 		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
 			trade_no = request.getParameter("trade_no");//支付宝交易号
+			feeCount = request.getParameter("total_amount");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2995,6 +3011,9 @@ public class MobileController {
 						throw new Exception("订单充值错误：" + orderCharge);
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
+						//支付宝充值短信通知
+						verification.setPhoneNum(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
 					}
 
 				} catch (Exception e) {
@@ -3012,12 +3031,15 @@ public class MobileController {
 	@RequestMapping(value = "/deal/alipayConsum")
 	@ResponseBody
 	public String alipayConsum(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		MobileVerification verification = new MobileVerification();
+		String feeCount = "";
 		String orderId = "";
 		String trade_no= "";
 		logger.debug("支付宝支付回调获取数据开始");
 		try {
 			orderId = request.getParameter("out_trade_no");
 			trade_no = request.getParameter("trade_no");//支付宝交易号
+			feeCount = request.getParameter("total_amount");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3059,6 +3081,9 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
+						//支付宝充值短信通知
+						verification.setPhoneNum(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
