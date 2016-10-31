@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sysongy.poms.card.service.GasCardService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
@@ -1242,6 +1242,13 @@ public class OrderServiceImpl implements OrderService {
 		}else{
 			return false;
 		}
+	}
+
+	@Override
+	public String queryForBreakMoney(String orderNumber) {
+		// TODO Auto-generated method stub
+		return sysOrderMapper.queryForBreakMoney(orderNumber);
+		
 	}
 	
 	

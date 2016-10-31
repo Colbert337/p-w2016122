@@ -953,6 +953,13 @@
 			</if>
 		</trim>
 	</select>
+	
+	<select id="queryForBreakMoney" resultType="java.lang.String"
+		parameterType="java.lang.String">
+			select sum(cash)*-1 from sys_order where  order_number=#{orderNumber, jdbcType=VARCHAR} and order_type='230' and order_status=1
+	</select>
+	
+	 
 
 	<select id="queryRechargeDriverReportTotal" resultMap="HenryTotalMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
@@ -976,7 +983,7 @@
 			</if>
 			<if
 				test="sysDriver!= null &amp;&amp; sysDriver.mobilePhone != null &amp;&amp;  sysDriver.mobilePhone != ''">
-				and sd.mobile_phon= #{sysDriver.mobile_phone, jdbcType=VARCHAR}
+				and sd.mobile_phone= #{sysDriver.mobilePhone, jdbcType=VARCHAR}
 			</if>
 			<if test="is_discharge != null &amp;&amp; is_discharge != ''">
 				and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}

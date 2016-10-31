@@ -272,5 +272,7 @@ public interface OrderService {
 
 boolean exisit(String debitAccount);
 
+String  queryForBreakMoney(String orderNumber);
+
 
 }
