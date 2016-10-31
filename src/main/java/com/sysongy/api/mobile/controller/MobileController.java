@@ -91,6 +91,7 @@ import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.HttpUtil;
 import com.sysongy.util.JsonTool;
@@ -2615,6 +2616,10 @@ public class MobileController {
 				Map<String, Object> data = new HashedMap();
 				SysOrder sysOrder = null;
 				String thirdPartyID = null;
+				//发送短信
+				MobileVerification verification = new MobileVerification();
+				verification.setPhoneNum(driverService.queryDriverByPK(driverID).getMobilePhone());
+				
 				//不为空或空字符串，为司机消费订单
 				if(orderType!=null && !"".equals(orderType) && orderType.equals("220")){
 					//查询消费订单个数
@@ -2658,8 +2663,12 @@ public class MobileController {
 							if (sysOrder != null) {
 								sysOrder.setThirdPartyOrderID(thirdPartyID);
 								int nCreateOrder = orderService.insert(sysOrder, null);
-								if (nCreateOrder < 1)
+								if (nCreateOrder < 1){
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+								}else{
+									//支付宝消费短信通知
+									MobileVerificationUtils.sendMSGType(verification, amount, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+								}
 							}
 							data.put("payReq", orderParam + "&" + sign);
 							data.put("orderId", orderID);
@@ -2693,8 +2702,12 @@ public class MobileController {
 							if (sysOrder != null) {
 								sysOrder.setThirdPartyOrderID(thirdPartyID);
 								int nCreateOrder = orderService.insert(sysOrder, null);
-								if (nCreateOrder < 1)
+								if (nCreateOrder < 1){
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+								}else{
+									//微信消费短信通知
+									MobileVerificationUtils.sendMSGType(verification, amount, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+								}
 							}
 							JSONObject dataObj = JSONObject.fromObject(payReq);
 							data.put("payReq", dataObj);
@@ -2730,8 +2743,12 @@ public class MobileController {
 						if (sysOrder != null) {
 							sysOrder.setThirdPartyOrderID(thirdPartyID);
 							int nCreateOrder = orderService.insert(sysOrder, null);
-							if (nCreateOrder < 1)
+							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+							}else{
+								//支付宝充值短信通知
+								MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
+							}
 						}
 						data.put("payReq", orderParam + "&" + sign);
 						result.setData(data);
@@ -2747,8 +2764,12 @@ public class MobileController {
 						if (sysOrder != null) {
 							sysOrder.setThirdPartyOrderID(thirdPartyID);
 							int nCreateOrder = orderService.insert(sysOrder, null);
-							if (nCreateOrder < 1)
+							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+							}else{
+								//微信充值短信通知
+								MobileVerificationUtils.sendMSGType(verification,feeCount, SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
+							}
 						}
 						JSONObject dataObj = JSONObject.fromObject(payReq);
 						data.put("payReq", dataObj);
@@ -4805,14 +4826,14 @@ public class MobileController {
 			record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
 			record.setOrderStatus(0);
 		}else{
-			record.setChannel("APP-支付宝充值");
+			record.setChannel("APP");
 			record.setChannelNumber("APP-支付宝充值"); // 建立一个虚拟的APP气站，方便后期统计
 			if (chargeType.equals(GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE)) {// 微信支付，将金额转换为以元为单位
 				BigDecimal cashBd = new BigDecimal(cash);
 				BigDecimal num = new BigDecimal(100);
 				cashBd = cashBd.divide(num, 2, RoundingMode.HALF_UP);
 				cash = cashBd.toString();
-				record.setChannel("APP-微信充值");
+				record.setChannel("APP");
 				record.setChannelNumber("APP-微信充值"); // 建立一个虚拟的APP气站，方便后期统计
 			}
 			record.setOrderId(orderID);
