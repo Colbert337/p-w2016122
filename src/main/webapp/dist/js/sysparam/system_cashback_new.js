@@ -1,6 +1,4 @@
 		//bootstrap验证控件
-		    
-			
 		    $('.date-picker').datepicker({
 				autoclose: true,
 				todayHighlight: true,
@@ -15,11 +13,15 @@
 			if(!$('#cashbackform').data('bootstrapValidator').isValid()){
 				return ;
 			}
-			if (tyep==1) {
-				bootbox.alert("该优先级已有数据 请重新选择优先级");
-   			   
-   			 	return;
-			}
+			  if ($("#sys_cash_back_no").val() == "203"
+			|| $("#sys_cash_back_no").val() == "202"
+			|| $("#sys_cash_back_no").val() == "201") {
+		if (tyep == 1) {
+			bootbox.alert("该优先级已有数据 请重新选择优先级");
+			return;
+		}
+	}
+		
 			var options ={   
 		            url:'../web/sysparam/saveCashback',   
 		            type:'post',                    

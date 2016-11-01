@@ -90,6 +90,10 @@
 									id="is_discharge_order">是否充红</th>
 								<th onclick="orderBy(this,'channel');commitForm();"
 									id="channel_order">充值渠道</th>
+									
+								<th onclick="orderBy(this,'spend_type');commitForm();"
+									id="spend_tyep_order">消费方式</th>
+								 
 								<th onclick="orderBy(this,'trade_no');commitForm();"
 									id="trade_no_order">交易号</th>
 								<th>退款原因</th>
@@ -117,6 +121,7 @@
 									<td><c:if test="${list.is_discharge eq '0'}">否</c:if> <c:if
 											test="${list.is_discharge eq '1'}">是</c:if></td>
 									<td>${list.channel}</td>
+									<td><s:Code2Name mcode="${list.spend_type}" gcode="CHARGE_TYPE"></s:Code2Name></td>
 									<td>${list.trade_no}</td>
 									<td>${list.orderRemark}</td>
 									<td>${list.batch_no}</td>
