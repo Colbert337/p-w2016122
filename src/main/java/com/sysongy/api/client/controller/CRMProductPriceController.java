@@ -132,7 +132,7 @@ public class CRMProductPriceController {
                 startTime = productPrice.getStartTime();//获取当前时间12小时后的时间
                 Date currntTime = new Date();
                 double resultVal = DateTimeHelper.getHoursOfHoursTwoDate(startTime,currntTime);
-                if(resultVal == GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE){
+                if(resultVal >= GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE){
                     productPrice.setProductPriceStatus(GlobalConstant.PRICE_STATUS.ENACTMENT);
                     int renum = productPriceService.saveProductPrice(productPrice, "insert");
                     if(renum < 1){
@@ -149,7 +149,7 @@ public class CRMProductPriceController {
                 startTime = productPrice.getStartTime();
                 Date currntTime = new Date();
                 double resultVal = DateTimeHelper.getHoursOfHoursTwoDate(startTime,currntTime);
-                if(resultVal == GlobalConstant.PRICE_EFFECTIVE_TIME.TWENTY){
+                if(resultVal >= GlobalConstant.PRICE_EFFECTIVE_TIME.TWENTY){
                     productPrice.setProductPriceStatus(GlobalConstant.PRICE_STATUS.ENACTMENT);
                     int renum = productPriceService.saveProductPrice(productPrice, "insert");
                     if(renum < 1){
