@@ -90,6 +90,10 @@
 									id="is_discharge_order">是否充红</th>
 								<th onclick="orderBy(this,'channel');commitForm();"
 									id="channel_order">充值渠道</th>
+									
+								<th onclick="orderBy(this,'spend_type');commitForm();"
+									id="spend_tyep_order">消费方式</th>
+								 
 								<th onclick="orderBy(this,'trade_no');commitForm();"
 									id="trade_no_order">交易号</th>
 								<th>退款原因</th>
@@ -117,6 +121,7 @@
 									<td><c:if test="${list.is_discharge eq '0'}">否</c:if> <c:if
 											test="${list.is_discharge eq '1'}">是</c:if></td>
 									<td>${list.channel}</td>
+									<td><s:Code2Name mcode="${list.spend_type}" gcode="CHARGE_TYPE"></s:Code2Name></td>
 									<td>${list.trade_no}</td>
 									<td>${list.orderRemark}</td>
 									<td>${list.batch_no}</td>
@@ -130,7 +135,7 @@
 									<c:if test="${not empty list.trade_no }">
 									<a class=""
 										href="javascript:void(0);"
-										onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }');" title="退款"
+										onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}');" title="退款"
 										data-rel="tooltip"> <i
 											class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
 									</a>
@@ -186,6 +191,8 @@
 				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
 			</div>--%>
 			<div class="modal-body">
+				<label class="col-sm-11 control-label no-padding-right" id="title">订单累计退款金额为：</label>
+				<br /> <br />
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">请输入金额：</label>
 					<div class="col-sm-8">

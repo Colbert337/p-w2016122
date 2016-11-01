@@ -45,7 +45,7 @@
 
 								<th>坐标</th>
 								<td><div id="salesmen_name" >
-										${road.longitude},${road.longitude}</div></td>
+										${road.longitude},${road.latitude}</div></td>
 													<input type="hidden" name="id" value="${road.id }" />
 							</tr>
 							<tr>
@@ -74,7 +74,7 @@
 
 								<th>坐标</th>
 								<td><div id="salesmen_name" >
-										${road.longitude},${road.longitude}</div></td>
+										${road.longitude},${road.latitude}</div></td>
 
 								<th>省份信息</th>
 								<td><div >${road.province}</div></td>

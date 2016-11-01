@@ -1245,6 +1245,15 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public String queryForBreakMoney(String orderNumber) {
+		// TODO Auto-generated method stub
+		return sysOrderMapper.queryForBreakMoney(orderNumber);
+
+	}
+
+	
+
+	@Override
 	public Double backCash(String orderId) {
 		return sysOrderMapper.backCash(orderId);
 	}

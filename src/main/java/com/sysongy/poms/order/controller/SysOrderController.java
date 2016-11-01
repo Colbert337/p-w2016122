@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -160,6 +161,40 @@ public class SysOrderController extends BaseContoller {
 		}
 
 	}
+	
+	/**
+	 * 查询一个交易号里面的累计退金额
+	 * @param order
+	 * @param map
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping("/BreakMoney")
+	@ResponseBody
+	public String queryForBreakMoney(String orderNumber, ModelMap map) {
+//		String ret = "webpage/poms/mobile/order_list";
+		PageBean bean = new PageBean();
+		String money = "";
+		try {
+			money = service.queryForBreakMoney(orderNumber);
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			if ("null".equalsIgnoreCase(money)||money==null) {
+				money="0";
+			}
+			// map.addAttribute("current_module",
+			// "/web/mobile/suggest/suggestList");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			logger.error("", e);
+		} finally {
+			return money+"";
+		}
+
+	}
 	/*sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
 	sParaTemp.put("partner", AlipayConfig.partner);
 	sParaTemp.put("_input_charset", AlipayConfig.input_charset);
@@ -239,6 +274,7 @@ public class SysOrderController extends BaseContoller {
 					order.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
 					order.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
 					order.setIs_discharge("0");
+					order.setOrderStatus(3);
 					order.setOrderDate(new Date());
 					order.setOrderType("230");
 					order.setChargeType("110");
