@@ -154,7 +154,7 @@
 		parameterType="java.lang.String">
 		select a.*,b.mobile_phone from sys_order a, sys_driver b where
 		a.debit_account=b.sys_driver_id and 1=1 and (a.charge_type="103" or
-		a.charge_type="104" or a.charge_type="110")
+		a.charge_type="104" or a.charge_type="110" or a.charge_type="111")
 		<if test="orderId != null &amp;&amp; orderId != ''">
 			and a.order_id = #{orderId,jdbcType=VARCHAR}
 		</if>
@@ -168,6 +168,14 @@
 			 and DATE_FORMAT(order_date,"%Y/%m/%d")   <![CDATA[   >=  ]]> #{startDate,jdbcType=VARCHAR} and   DATE_FORMAT(order_date,"%Y/%m/%d")  <![CDATA[   <=  ]]> #{endDate,jdbcType=VARCHAR}
 		</if>
 	</select>
+
+
+<select id="queryByExisit" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select * from sys_order where order_type="130" and order_status=1 and debit_account=#{creditAccount,jdbcType=VARCHAR}
+	</select>
+
+
 
 	<select id="queryForPage" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
@@ -968,7 +976,7 @@
 			</if>
 			<if
 				test="sysDriver!= null &amp;&amp; sysDriver.mobilePhone != null &amp;&amp;  sysDriver.mobilePhone != ''">
-				and sd.mobile_phon= #{sysDriver.mobile_phone, jdbcType=VARCHAR}
+				and sd.mobile_phone= #{sysDriver.mobilePhone, jdbcType=VARCHAR}
 			</if>
 			<if test="is_discharge != null &amp;&amp; is_discharge != ''">
 				and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
@@ -1131,7 +1139,7 @@
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		SELECT
 		B.order_number,
-		(SELECT sys_order_goods.number FROM sys_order_goods WHERE
+		(SELECT SUM(sys_order_goods.number) FROM sys_order_goods WHERE
 		sys_order_goods.order_id = (SELECT a.order_id FROM sys_order AS a
 		WHERE a.order_number = B.order_number)) AS goods_sum,
 		cash,
@@ -1217,7 +1225,7 @@
 		sys_gas_station.gas_station_name,
 		<include refid="Base_Column_List" />
 		from sys_order
-		LEFT JOIN sys_gas_station ON sys_order.debit_account =
+		LEFT JOIN sys_gas_station ON sys_order.channel_number =
 		sys_gas_station.sys_gas_station_id
 		where order_id = #{orderId,jdbcType=VARCHAR}
 	</select>
@@ -1241,4 +1249,8 @@
 		from sys_order
 		where order_type = '220' and credit_account = #{driverID,jdbcType=VARCHAR}
 	</select>
+	<!-- 根据订单号查询返现金额 -->
+	<select id="backCash" resultType="java.lang.Double" parameterType="java.lang.String">
+		select cash_back from sys_order_deal where cash_back_per is not null and cash_back_per !="" and  order_id= #{orderId,jdbcType=VARCHAR} 
+	</select>	
 </mapper>

@@ -130,4 +130,7 @@ public interface SysOrderMapper {
      * @return 消费订单个数
      */
      int queryConsumerOrderNumber(String token);
+
+	List<SysOrder> queryByExisit(String debitAccount);
+	Double backCash(String orderId);
 }

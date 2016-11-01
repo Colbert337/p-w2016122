@@ -406,7 +406,8 @@ public class OrderServiceImpl implements OrderService {
 			   dischargeOrder.setPreferential_cash(originalOrder.getPreferential_cash());
 			   dischargeOrder.setShould_payment(originalOrder.getShould_payment());
 			   dischargeOrder.setCoupon_number(originalOrder.getCoupon_number());
-
+			   dischargeOrder.setCoupon_id(originalOrder.getCoupon_id());
+			   dischargeOrder.setSpend_type(originalOrder.getSpend_type());
 			  String disChargeConsume_success = driverService.deductCashToDriver(dischargeOrder, GlobalConstant.ORDER_ISCHARGE_YES);
 			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargeConsume_success)){
 		    		//如果出错，直接退出
@@ -1219,8 +1220,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	@Override
-	 
-	public PageInfo<SysOrder> queryRoadListForBack(SysOrder order) {
+	public PageInfo<SysOrder> queryOrderListForBack(SysOrder order) {
 		PageHelper.startPage(order.getPageNum(), order.getPageSize(), order.getOrderby());
 		List<SysOrder> list = sysOrderMapper.queryForPageForBack(order);
 		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
@@ -1232,6 +1232,20 @@ public class OrderServiceImpl implements OrderService {
 		// TODO Auto-generated method stub
 		sysOrderMapper.insertSelective(order);
 	}
-	
-	
+
+	@Override
+	public boolean exisit(String debitAccount) {
+		// TODO Auto-generated method stub
+		List<SysOrder>list=sysOrderMapper.queryByExisit(debitAccount);
+		if (list.size()>=0) {
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	@Override
+	public Double backCash(String orderId) {
+		return sysOrderMapper.backCash(orderId);
+	}
 }

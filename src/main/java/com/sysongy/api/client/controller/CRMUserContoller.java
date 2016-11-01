@@ -98,8 +98,8 @@ public class CRMUserContoller {
             }
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
-            logger.error("queryCardInfo error： " + e);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.toString());
+            logger.error("queryCardInfo error： " + e.toString());
         }
     	return ajaxJson;
     }
@@ -156,7 +156,7 @@ public class CRMUserContoller {
 
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_SYSUSER_ERROR + e.getMessage());
+            ajaxJson.setMsg(InterfaceConstants.UPDATE_CRM_SYSUSER_ERROR );
             logger.error("updateCardInfo error： " + e);
         }
         ajaxJson.setAttributes(attributes);
@@ -206,7 +206,7 @@ public class CRMUserContoller {
             ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("上传文件失败：" + e.getMessage());
+            ajaxJson.setMsg("上传文件失败：" );
             logger.error("uploadFileData Customer error： " + e);
         }
         return ajaxJson;
@@ -232,7 +232,7 @@ public class CRMUserContoller {
             ajaxJson.setMsg("查询成功！");
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR );
             logger.error("queryUsers error： " + e);
         }
         return ajaxJson;
@@ -266,7 +266,7 @@ public class CRMUserContoller {
             ajaxJson.setMsg("查询成功！");
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR );
             logger.error("queryUsersForCRMReport error： " + e);
         }
         return ajaxJson;
