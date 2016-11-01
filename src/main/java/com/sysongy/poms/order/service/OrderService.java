@@ -270,7 +270,9 @@ public interface OrderService {
     */
     int queryConsumerOrderNumber(String token);
 
-boolean exisit(String debitAccount);
-
-
+    boolean exisit(String debitAccount);
+    /**
+     * 根据订单号查询返现金额
+     */
+    Double backCash(String orderId);
 }

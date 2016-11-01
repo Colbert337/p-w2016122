@@ -886,6 +886,23 @@ public final class DateTimeHelper {
 	}
 
 	/**
+	 * 获得两个日期之间相差的小时数（日期精确到小时）
+	 *
+	 * @param d1
+	 * @param d2
+	 * @return 两日期之间相差的小时数
+	 */
+	public static double getHoursOfHoursTwoDate(Date d1, Date d2) throws Exception {
+		if (d1 == null || d2 == null) {
+			throw new IllegalArgumentException("参数d1或d2不能是null对象!");
+		}
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH");
+		d1 = format.parse(format.format(d1));//将时间格式化到小时
+		d2 = format.parse(format.format(d2));
+		long millions = getMillisecondsOfTwoDate(d1, d2);
+		return (double) millions / 60 / 60 / 1000;
+	}
+	/**
 	 * 获得两个日期之间相差的天数
 	 * 
 	 * @param d1
