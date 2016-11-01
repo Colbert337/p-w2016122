@@ -407,7 +407,7 @@ public class OrderServiceImpl implements OrderService {
 			   dischargeOrder.setShould_payment(originalOrder.getShould_payment());
 			   dischargeOrder.setCoupon_number(originalOrder.getCoupon_number());
 			   dischargeOrder.setCoupon_id(originalOrder.getCoupon_id());
-
+			   dischargeOrder.setSpend_type(originalOrder.getSpend_type());
 			  String disChargeConsume_success = driverService.deductCashToDriver(dischargeOrder, GlobalConstant.ORDER_ISCHARGE_YES);
 			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargeConsume_success)){
 		    		//如果出错，直接退出
@@ -1243,6 +1243,18 @@ public class OrderServiceImpl implements OrderService {
 			return false;
 		}
 	}
+
+	@Override
+	public String queryForBreakMoney(String orderNumber) {
+		// TODO Auto-generated method stub
+		return sysOrderMapper.queryForBreakMoney(orderNumber);
+
+	}
+
 	
-	
+
+	@Override
+	public Double backCash(String orderId) {
+		return sysOrderMapper.backCash(orderId);
+	}
 }

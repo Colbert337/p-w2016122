@@ -28,16 +28,42 @@ var type=null;
 var tradeNo=null;
 var cash=null
 var orderId=null;
-function showBreak(tradeNo1,type1,cash1,orderId1){
-	
-	closeDialog('content');
-	type=type1;
-	cash=cash1;
-	tradeNo=tradeNo1;
-	orderId=orderId1;
-	$("#content").modal('show');
-	$("#money").val("");
-	$("#msgcontent").val();
+var orderNumber=null;
+function showBreak(tradeNo1,type1,cash1,orderId1,no){
+	$('#div').showLoading();
+	 $.ajax({
+		type : "post",
+		url : "../web/order/BreakMoney",
+		data : {
+			orderNumber :no
+		},
+		dataType : "json",
+		success : function(data) {
+			$("#title").text("本订单累计退款金额为："+data+"元");
+			orderNumber=data*1;
+			$('#div').hideLoading();
+			closeDialog('content');
+			type=type1;
+			cash=cash1;
+			tradeNo=tradeNo1;
+			orderId=orderId1;
+			if(cash*1<=orderNumber){
+				 bootbox.alert("累计退款金额（"+orderNumber+"）大于交易金额("+cash+"),不能继续退款");
+				 return;
+			 }else{
+				 $("#content").modal('show');	 
+			 }
+			
+			
+			$("#money").val("");
+			$("#msgcontent").val();
+			
+		},
+		error:function(){
+			$('#div').hideLoading();
+			 bootbox.alert("查询退款金额失败");
+		}
+	});
 	
 }
 
@@ -98,7 +124,8 @@ function commitForm(obj) {
 	
 	if(obj=='return'){
 	
-		$("#formRoad").ajaxSubmit( {
+
+				$("#formRoad").ajaxSubmit( {
 			url : '../web/order/list/page',
 			type : 'post',
 			dataType : 'html',
@@ -164,6 +191,7 @@ function subbreak() {
 		 bootbox.alert("退款金额不能大于交易金额");
 		 return;
 	}
+	 
 	var options = {
 		url : '../web/order/saveBreak',
 		type : 'post',

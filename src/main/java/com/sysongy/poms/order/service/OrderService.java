@@ -272,5 +272,12 @@ public interface OrderService {
 
 boolean exisit(String debitAccount);
 
+String  queryForBreakMoney(String orderNumber);
 
+
+    boolean exisit(String debitAccount);
+    /**
+     * 根据订单号查询返现金额
+     */
+    Double backCash(String orderId);
 }

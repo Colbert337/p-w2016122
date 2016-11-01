@@ -75,7 +75,9 @@
         and (full_name like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%'))
         or  mobile_phone like CONCAT('%',CONCAT(#{fullName,jdbcType=VARCHAR},'%')))
       </if>
-     
+      <if test="cardId!= null &amp;&amp; cardId!= ''" >
+        and card_id like CONCAT('%',CONCAT(#{cardId,jdbcType=VARCHAR},'%'))
+      </if>
     </trim>
     and user_status &lt; 2
     ORDER BY created_date DESC

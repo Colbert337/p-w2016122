@@ -130,7 +130,7 @@
 									<c:if test="${not empty list.trade_no }">
 									<a class=""
 										href="javascript:void(0);"
-										onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }');" title="退款"
+										onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}');" title="退款"
 										data-rel="tooltip"> <i
 											class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
 									</a>
@@ -186,6 +186,8 @@
 				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
 			</div>--%>
 			<div class="modal-body">
+				<label class="col-sm-11 control-label no-padding-right" id="title">订单累计退款金额为：</label>
+				<br /> <br />
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">请输入金额：</label>
 					<div class="col-sm-8">
