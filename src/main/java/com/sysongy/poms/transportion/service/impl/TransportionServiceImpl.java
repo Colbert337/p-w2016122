@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.sysongy.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,6 @@ import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.AliShortMessage;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.UUIDGenerator;
 import com.sysongy.util.pojo.AliShortMessageBean;
 
 @Service
@@ -268,6 +265,15 @@ public class TransportionServiceImpl implements TransportionService {
 		BigDecimal addCash = cash.multiply(new BigDecimal(-1));
 		String cash_success = sysUserAccountService.addCashToAccount(tran_account,addCash,order.getOrderType());
 
+		//更新运输公司额度
+		Transportion transportion = new Transportion();
+		transportion.setSys_transportion_id(tran.getSys_transportion_id());
+		BigDecimal deposit = tran.getDeposit();
+		deposit = BigDecimalArith.add(deposit, addCash);
+		transportion.setDeposit(deposit);
+		transportionMapper.updateByPrimaryKeySelective(transportion);
+
+		//更新车队额度
 
 		String remark = "";
 		if(StringUtils.isEmpty(order.getDischarge_reason())){

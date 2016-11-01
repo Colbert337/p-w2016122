@@ -38,7 +38,7 @@
 						</select>
 					</div>
 					<div class="item">
-						<label>路况状态</label> <select name="conditionStatus"
+						<label>审核状态</label> <select name="conditionStatus"
 							id="conditionStatus">
 							<option value="">--请选择--</option>
 							<option value="0">已失效</option>
@@ -90,24 +90,37 @@
 						class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
+								<th onclick="orderBy(this,'start_time');commitForm();"
+									id="start_time_order"><i
+										class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>开始时间</th>
+								<th onclick="orderBy(this,'end_time');commitForm();"
+									id="end_time_order"><i
+										class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
+								<th onclick="orderBy(this,'province');commitForm();"
+									id="province_orber">省份信息</th>
+								<th onclick="orderBy(this,'useful_count');commitForm();"
+									id="useful_count_orber">点赞数量</th>
+								<th>坐标</th>
+								<th>方向</th>
+								<th onclick="orderBy(this,'auditor_phone');commitForm();"
+									id="auditor_phone_orber">审核人电话</th>
+								<th onclick="orderBy(this,'auditor');commitForm();"
+									id="auditor_orber">审核人</th>
+
+
 								<th onclick="orderBy(this,'condition_type');commitForm();"
 									id="condition_type_order">路况类型</th>
 								<th onclick="orderBy(this,'condition_status');commitForm();"
-									id="condition_status_order">路况状态</th>
+									id="condition_status_order">审核状态</th>
 								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
-								<th>坐标</th>
-								<th>方向</th>
 								<th onclick="orderBy(this,'capture_time');commitForm();"
 									id="capture_time_order">拍照时间</th>
 								<th onclick="orderBy(this,'condition_msg');commitForm();"
 									id="condition_msg_order">路况说明</th>
-								<th onclick="orderBy(this,'start_time');commitForm();"
-									id="start_time_order"><i
-									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>开始时间</th>
-								<th onclick="orderBy(this,'end_time');commitForm();"
-									id="end_time_order"><i
-									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
+								<th onclick="orderBy(this,'memo');commitForm();" id="memo_orber">备注</th>
+
+
 
 								<th onclick="orderBy(this,'publisher_name');commitForm();"
 									id="publisher_name_orber">创建人</th>
@@ -117,17 +130,11 @@
 									id="publisher_time_order" class="td-w2"><i
 									id="created_date"
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>发布时间</th>
-								<th onclick="orderBy(this,'auditor');commitForm();"
-									id="auditor_orber">审核人</th>
-								<th onclick="orderBy(this,'auditor_phone');commitForm();"
-									id="auditor_phone_orber">审核人电话</th>
+
 								<th onclick="orderBy(this,'auditor_time');commitForm();"
 									id="auditor_time_orber">审核时间</th>
-								<th onclick="orderBy(this,'province');commitForm();"
-									id="province_orber">省份信息</th>
-								<th onclick="orderBy(this,'useful_count');commitForm();"
-									id="useful_count_orber">点赞数量</th>
-								<th onclick="orderBy(this,'memo');commitForm();" id="memo_orber">备注</th>
+
+
 								<th onclick="orderBy(this,'invalid_count');commitForm();"
 									id="invalid_count_orber">失效请求</th>
 								<th class="text-center td-w3">操作</th>
@@ -138,6 +145,17 @@
 
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="${list.id }">
+									<td><fmt:formatDate value="${list.startTime}" type="both" /></td>
+									<td><fmt:formatDate value="${list.endTime}" type="both" /></td>
+									<td>${list.province}</td>
+									<td>${list.usefulCount}</td>
+									<td><div class="td-inner-warp">${list.longitude},${list.latitude }</div></td>
+									<td><s:Code2Name mcode="${list.direction}"
+													 gcode="DIRECTION_CODE"></s:Code2Name></td>
+									<td>${list.auditorPhone}</td>
+									<td>${list.auditor}</td>
+
+
 									<td><s:Code2Name mcode="${list.conditionType}"
 											gcode="CONDITION_TYPE"></s:Code2Name></td>
 									<td><c:if test="${list.conditionStatus == '0' }">已失效</c:if>
@@ -146,26 +164,23 @@
 											test="${list.conditionStatus == '3' }">未通过</c:if></td>
 									<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
-									<td><div class="td-inner-warp">${list.longitude},${list.latitude }</div></td>
-									<td><s:Code2Name mcode="${list.direction}"
-											gcode="DIRECTION_CODE"></s:Code2Name></td>
+
 									<td><fmt:formatDate value="${list.captureTime}"
 											type="both" /></td>
 									<td><div class="td-inner-warp">${list.conditionMsg}</div></td>
-									<td><fmt:formatDate value="${list.startTime}" type="both" /></td>
-									<td><fmt:formatDate value="${list.endTime}" type="both" /></td>
+
+
+
+									<td><div class="td-inner-warp">${list.memo}</div></td>
 									<td>${list.publisherName}</td>
 									<td>${list.publisherPhone}</td>
 									<td><fmt:formatDate value="${list.publisherTime}"
-											type="both" /></td>
-									<td>${list.auditor}</td>
-									<td>${list.auditorPhone}</td>
+														type="both" /></td>
 									<td><fmt:formatDate value="${list.auditorTime}"
 											type="both" /></td>
 									<%-- <td>${list.operator}</td> --%>
-									<td>${list.province}</td>
-									<td>${list.usefulCount}</td>
-									<td><div class="td-inner-warp">${list.memo}</div></td>
+
+
 									<td><c:if test="${list.conditionStatus == '2'}">
 
 											<a class="option-btn-m" href="javascript:void(0);"
@@ -247,42 +262,65 @@
 				<div class="shenhe-items-hd">路况信息</div>
 				<table class="table">
 					<tbody>
-						<tr>
-							<th width="15%">路况类型</th>
-							<td><div id="sys_gas_station_id" name="show"></div></td>
-							<th width="15%">路况状态</th>
-							<td><div id="gas_station_name" name="show"></div></td>
-						</tr>
-						<tr>
-							<th>坐标</th>
-							<td><div id="salesmen_name" name="show"></div></td>
-							<th>方向</th>
-							<td><div id="salesmen_name" name="show"></div></td>
-						</tr>
-						<tr>
-							<th>拍照时间</th>
-							<td><div id="operations_name" name="show"></div></td>
-							<th>路况说明</th>
-							<td><div id="admin_username" name="show"></div></td>
-						</tr>
-						<tr>
-							<th>开始时间</th>
-							<td><div id="indu_com_number" name="show"></div></td>
-							<th>结束时间</th>
-							<td colspan="3"><div id="status" name="show"></div></td>
+					<tr>
+						<th>开始时间</th>
+						<td><div id="indu_com_number" name="show"></div></td>
+						<th>结束时间</th>
+						<td colspan="3"><div id="status" name="show"></div></td>
 
-						</tr>
+					</tr>
+					<tr>
+						<th>省份信息</th>
+						<td><div name="show"></div></td>
+						<th>点赞数量</th>
+						<td><div id="prepay_phone" name="show"></div></td>
+					</tr>
+					<tr>
+						<th>坐标</th>
+						<td><div id="salesmen_name" name="show"></div></td>
+						<th>方向</th>
+						<td><div id="salesmen_name" name="show"></div></td>
+					</tr>
+					<tr>
+						<th>审核人</th>
+						<td><div id="prepay_balance" name="show"></div></td>
+						<th>审核人电话</th>
+						<td><div id="prepay_phone" name="show"></div></td>
+					</tr>
+					<tr>
+						<th width="15%">路况类型</th>
+						<td><div id="sys_gas_station_id" name="show"></div></td>
+						<th width="15%">审核状态</th>
+						<td><div id="gas_station_name" name="show"></div></td>
+					</tr>
+					<tr>
+						<th>拍照时间</th>
+						<td><div id="operations_name" name="show"></div></td>
+						<th>路况说明</th>
+						<td><div id="admin_username" name="show"></div></td>
+					</tr>
+					<tr>
+						<th>备注</th>
+						<td colspan="3"><div id="prepay_balance" name="show"></div></td>
+
+					</tr>
+					<tr>
+						<th>创建人</th>
+						<td><div id="address" name="show"></div></td>
+						<th>创建人电话</th>
+						<td><div id="created_time" name="show"></div></td>
+					</tr>
+
+
+
+
+
 					</tbody>
 				</table>
 				<div class="shenhe-items-hd">创建信息</div>
 				<table class="table">
 					<tbody>
-						<tr>
-							<th>创建人</th>
-							<td><div id="address" name="show"></div></td>
-							<th>创建人电话</th>
-							<td><div id="created_time" name="show"></div></td>
-						</tr>
+
 						<tr>
 							<th>创建时间</th>
 							<td colspan="3"><div id="created_time" name="show"></div></td>
@@ -291,12 +329,7 @@
 				</table>
 				<div class="shenhe-items-hd">审核信息</div>
 				<table class="table">
-					<tr>
-						<th>审核人</th>
-						<td><div id="prepay_balance" name="show"></div></td>
-						<th>审核人电话</th>
-						<td><div id="prepay_phone" name="show"></div></td>
-					</tr>
+
 					<tr>
 						<th>审核时间</th>
 						<td colspan="3"><div id="prepay_balance" name="show"></div></td>
@@ -306,17 +339,7 @@
 				</table>
 				<div class="shenhe-items-hd">其他信息</div>
 				<table class="table">
-					<tr>
-						<th>省份信息</th>
-						<td><div name="show"></div></td>
-						<th>点赞数量</th>
-						<td><div id="prepay_phone" name="show"></div></td>
-					</tr>
-					<tr>
-						<th>备注</th>
-						<td colspan="3"><div id="prepay_balance" name="show"></div></td>
 
-					</tr>
 					</tbody>
 				</table>
 

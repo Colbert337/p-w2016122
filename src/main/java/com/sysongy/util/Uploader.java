@@ -95,7 +95,8 @@ public class Uploader {
 					File file = new File(path+"/"+this.fileName);
 
 					SimpleDateFormat formater = new SimpleDateFormat("yyyyMMdd");
-					this.url = this.request.getContextPath() + "/" + this.savePath + "/"+ formater.format(new Date())+ "/"+this.fileName;
+//					this.url = this.request.getContextPath() + "/" + this.savePath + "/"+ formater.format(new Date())+ "/"+this.fileName;
+					this.url =  "/" + this.savePath + "/"+ formater.format(new Date())+ "/"+this.fileName;
 					
 					FileOutputStream out = new FileOutputStream( file );
 					BufferedOutputStream output = new BufferedOutputStream(out);
