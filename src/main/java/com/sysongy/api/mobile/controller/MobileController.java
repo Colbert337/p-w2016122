@@ -2812,7 +2812,6 @@ public class MobileController {
 		String inputLine;
 		String notityXml = "";
 		try {
-
 			while ((inputLine = request.getReader().readLine()) != null) {
 				notityXml += inputLine;
 			}
@@ -2820,7 +2819,6 @@ public class MobileController {
 		} catch (Exception e) {
 			logger.debug("xml获取失败：" + e);
 			throw new ServiceException("xml获取失败！");
-
 		}
 		System.out.println("接收到的报文：" + notityXml);
 		logger.debug("收到微信异步回调：");
@@ -2840,23 +2838,32 @@ public class MobileController {
 			feeCount = element2.getText();
 			feeCount = String.valueOf(Double.valueOf(feeCount)/100);
 		}
-
 		if (orderId != null && !"".equals(orderId)) {
 			MobileReturn result = new MobileReturn();
 			result.setStatus(MobileReturn.STATUS_SUCCESS);
 			result.setMsg("支付成功！");
 			JSONObject resutObj = new JSONObject();
-
 			// 查询订单内容
 			SysOrder order = orderService.selectByPrimaryKey(orderId);
 			if (order != null && order.getOrderStatus() == 0) {// 0 初始化 1 成功 2
-																// 失败 3 待支付
+				//判断是否是第一次充值
+				if(!orderService.exisit(order.getDebitAccount())){
+					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
+					if (listBack!=null && listBack.size() > 0) {
+						SysCashBack back= listBack.get(0);//获取返现规则
+						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+					}else{
+						logger.info("找不到匹配的返现规则，返现失败");
+					}
+				}
 				// 修改订单状态
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
+				
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -2879,7 +2886,6 @@ public class MobileController {
 					throw new Exception("订单充值错误：" + e);
 				}
 			}
-
 		}
 		return resultStr;
 	}
@@ -2922,6 +2928,9 @@ public class MobileController {
 			orderId = element.getText();
 			Element element1 = node.element("transaction_id");
 			transaction_id = element1.getText();
+			Element element2 = node.element("cash_fee");
+			feeCount = element2.getText();
+			feeCount = String.valueOf(Double.valueOf(feeCount)/100);
 		}
 
 		if (orderId != null && !"".equals(orderId)) {
@@ -2940,27 +2949,21 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				if(!orderService.exisit(sysOrder.getDebitAccount())){//判断是否是第一次充值
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
-					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
-					
-					if (listBack!=null && listBack.size() > 0) {
-						SysCashBack back= listBack.get(0);//获取返现规则
-						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-				   
-					}else{
-						logger.info("找不到匹配的返现规则，返现失败");
-					}
-				}
+				
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
-						verification.setPhoneNum(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
 						//微信消费短信通知
-						MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
+						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+						aliShortMessageBean.setSpentMoney(feeCount);
+						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
+						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3003,12 +3006,27 @@ public class MobileController {
 			String resultStr = "";
 			// 查询订单内容
 			SysOrder order = orderService.selectByPrimaryKey(orderId);
+		
 			if (order != null && order.getOrderStatus() == 0) {// 当订单状态是初始化时，做状态更新
 				// 修改订单状态
 				SysOrder sysOrder = new SysOrder();
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
+				//判断是否是第一次充值
+				if(!orderService.exisit(order.getDebitAccount())){
+					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
+					if (listBack!=null && listBack.size() > 0) {
+						SysCashBack back= listBack.get(0);//获取返现规则
+						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+				   
+					}else{
+						logger.info("找不到匹配的返现规则，返现失败");
+					}
+				}
+			
+				
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -3074,18 +3092,7 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
-				if(!orderService.exisit(sysOrder.getDebitAccount())){//判断是否是第一次充值
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
-					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
-					
-					if (listBack!=null && listBack.size() > 0) {
-						SysCashBack back= listBack.get(0);//获取返现规则
-						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-				   
-					}else{
-						logger.info("找不到匹配的返现规则，返现失败");
-					}
-				}
+				
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -3093,8 +3100,13 @@ public class MobileController {
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
 						//支付宝充值短信通知
-						verification.setPhoneNum(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
-						MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
+						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+						aliShortMessageBean.setSpentMoney(feeCount);
+						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
+						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
