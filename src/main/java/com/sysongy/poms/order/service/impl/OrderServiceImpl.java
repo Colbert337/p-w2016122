@@ -1237,7 +1237,7 @@ public class OrderServiceImpl implements OrderService {
 	public boolean exisit(String debitAccount) {
 		// TODO Auto-generated method stub
 		List<SysOrder>list=sysOrderMapper.queryByExisit(debitAccount);
-		if (list.size()>=0) {
+		if (list.size()>0) {
 			return true;
 		}else{
 			return false;
