@@ -24,7 +24,9 @@
 	var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
 
 	
-	window.UEDITOR_HOME_URL = projectName+"/umeditor-dev/";
+	window.UEDITOR_HOME_URL = "/sjnyPlatform/umeditor-dev/";
+
+	//alert(imgPath);
 	//window.UEDITOR_HOME_URL = "/123poms-web/umeditor-dev/";
 	
 		
@@ -148,7 +150,7 @@
 
         //图片上传配置区
         ,imageUrl:URL+"jsp/imageUp.jsp"             //图片上传提交地址
-        ,imagePath:"../../../"                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
+        ,imagePath:""                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
         ,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
 
 

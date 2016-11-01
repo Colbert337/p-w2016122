@@ -33,6 +33,10 @@
 							<input type="text" name="fullName" placeholder="司机姓名/手机号码"  maxlength="11" value="${driver.fullName}"/>
 						</div>
 						<div class="item">
+							<label>实体卡号：</label>
+							<input type="text" name="cardId" placeholder="实体卡号"  maxlength="9" value="${driver.cardId}"/>
+						</div>
+						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								查询
