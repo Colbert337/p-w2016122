@@ -6,8 +6,18 @@
 
 <%
 	String path = request.getContextPath();
+	
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+	String imgPath = request.getScheme()+"://"+request.getServerName();
 %>
+<script type="text/javascript">
+	var imgPath = "<%=imgPath %>";
+	var server = "<%=request.getServerName() %>";
+
+	if(server.indexOf("sysongy") == -1){
+		imgPath = imgPath + ":"+"<%=request.getServerPort() %>";
+	}
+</script>
 
 	<link href="<%=basePath %>/umeditor-dev/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet">
 
