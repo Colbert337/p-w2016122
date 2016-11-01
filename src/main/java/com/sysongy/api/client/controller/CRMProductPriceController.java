@@ -127,38 +127,39 @@ public class CRMProductPriceController {
             Gastation gastation = gastationService.queryGastationByPK(gastationId);
             String effectiveTime = gastation.getPrice_effective_time();
             Date startTime = new Date();
-            if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE)){//12小时后生效
-                startTime = productPrice.getStartTime();
-                Date currntTime = DateTimeHelper.getTwelve(new Date());
-                int resultVal = DateTimeHelper.compareTwoDate(currntTime,startTime);
-                if(resultVal > 0){
+
+            if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE+"")){//12小时后生效
+                startTime = productPrice.getStartTime();//获取当前时间12小时后的时间
+                Date currntTime = new Date();
+                double resultVal = DateTimeHelper.getHoursOfHoursTwoDate(startTime,currntTime);
+                if(resultVal == GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE){
                     productPrice.setProductPriceStatus(GlobalConstant.PRICE_STATUS.ENACTMENT);
                     int renum = productPriceService.saveProductPrice(productPrice, "insert");
                     if(renum < 1){
                         ajaxJson.setSuccess(false);
-                        ajaxJson.setMsg("无价格添加！！！");
+                        ajaxJson.setMsg("无价格添加！");
                         return ajaxJson;
                     }
                 }else{
                     ajaxJson.setSuccess(false);
-                    ajaxJson.setMsg("生效时间必须为12小时之后！！！");
+                    ajaxJson.setMsg("生效时间必须为12小时之后！");
                     return ajaxJson;
                 }
-            }else if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWENTY)){//24小时后生效
+            }else if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWENTY+"")){//24小时后生效
                 startTime = productPrice.getStartTime();
-                Date currntTime = DateTimeHelper.getTomorrow(new Date());
-                int resultVal = DateTimeHelper.compareTwoDate(startTime,currntTime);
-                if(resultVal > 0){
+                Date currntTime = new Date();
+                double resultVal = DateTimeHelper.getHoursOfHoursTwoDate(startTime,currntTime);
+                if(resultVal == GlobalConstant.PRICE_EFFECTIVE_TIME.TWENTY){
                     productPrice.setProductPriceStatus(GlobalConstant.PRICE_STATUS.ENACTMENT);
                     int renum = productPriceService.saveProductPrice(productPrice, "insert");
                     if(renum < 1){
                         ajaxJson.setSuccess(false);
-                        ajaxJson.setMsg("无价格添加！！！");
+                        ajaxJson.setMsg("无价格添加！");
                         return ajaxJson;
                     }
                 }else{
                     ajaxJson.setSuccess(false);
-                    ajaxJson.setMsg("生效时间必须为24小时之后！！！");
+                    ajaxJson.setMsg("生效时间必须为24小时之后！");
                     return ajaxJson;
                 }
             }else{//立即生效
