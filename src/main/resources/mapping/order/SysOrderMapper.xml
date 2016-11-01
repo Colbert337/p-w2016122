@@ -976,7 +976,7 @@
 			</if>
 			<if
 				test="sysDriver!= null &amp;&amp; sysDriver.mobilePhone != null &amp;&amp;  sysDriver.mobilePhone != ''">
-				and sd.mobile_phon= #{sysDriver.mobile_phone, jdbcType=VARCHAR}
+				and sd.mobile_phone= #{sysDriver.mobilePhone, jdbcType=VARCHAR}
 			</if>
 			<if test="is_discharge != null &amp;&amp; is_discharge != ''">
 				and so.is_discharge = #{is_discharge, jdbcType=VARCHAR}
