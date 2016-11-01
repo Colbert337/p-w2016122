@@ -1243,6 +1243,9 @@ public class OrderServiceImpl implements OrderService {
 			return false;
 		}
 	}
-	
-	
+
+	@Override
+	public Double backCash(String orderId) {
+		return sysOrderMapper.backCash(orderId);
+	}
 }
