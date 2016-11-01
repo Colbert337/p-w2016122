@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.transportion.dao.TransportionMapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +91,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private GasCardService gasCardService;
-
+	@Autowired
+	private TransportionMapper transportionMapper;
 	@Override
 	public PageInfo<SysOrder> queryOrders(SysOrder record) throws Exception {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
