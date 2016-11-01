@@ -1331,7 +1331,7 @@ public class MobileController {
 				
 				
 				//操作日志
-				sysOperationLogService.saveOperationLog(sysOperationLog);
+				sysOperationLogService.saveOperationLog(sysOperationLog,null);
 				
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
