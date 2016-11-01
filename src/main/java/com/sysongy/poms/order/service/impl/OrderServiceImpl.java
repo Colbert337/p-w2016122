@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sysongy.poms.card.service.GasCardService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
@@ -407,7 +407,7 @@ public class OrderServiceImpl implements OrderService {
 			   dischargeOrder.setShould_payment(originalOrder.getShould_payment());
 			   dischargeOrder.setCoupon_number(originalOrder.getCoupon_number());
 			   dischargeOrder.setCoupon_id(originalOrder.getCoupon_id());
-
+			   dischargeOrder.setSpend_type(originalOrder.getSpend_type());
 			  String disChargeConsume_success = driverService.deductCashToDriver(dischargeOrder, GlobalConstant.ORDER_ISCHARGE_YES);
 			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargeConsume_success)){
 		    		//如果出错，直接退出
@@ -1248,8 +1248,13 @@ public class OrderServiceImpl implements OrderService {
 	public String queryForBreakMoney(String orderNumber) {
 		// TODO Auto-generated method stub
 		return sysOrderMapper.queryForBreakMoney(orderNumber);
-		
+
 	}
+
 	
-	
+
+	@Override
+	public Double backCash(String orderId) {
+		return sysOrderMapper.backCash(orderId);
+	}
 }

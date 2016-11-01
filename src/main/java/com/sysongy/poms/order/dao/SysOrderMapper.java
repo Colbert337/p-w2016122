@@ -133,4 +133,5 @@ public interface SysOrderMapper {
 
     String queryForBreakMoney(String orderNumber);
 	List<SysOrder> queryByExisit(String debitAccount);
+	Double backCash(String orderId);
 }

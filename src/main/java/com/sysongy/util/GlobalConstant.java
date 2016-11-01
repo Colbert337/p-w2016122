@@ -777,9 +777,9 @@ public class GlobalConstant {
 
 	//价格生效延期时间
 	public interface PRICE_EFFECTIVE_TIME{
-		public static final String NOW = "0";
-		public static final String TWELVE = "12";
-		public static final String TWENTY = "24";
+		public static final int NOW = 0;
+		public static final int TWELVE = 12;
+		public static final int TWENTY = 24;
 	}
 
 	//价格状态 0 不生效 1 生效 2 待生效
