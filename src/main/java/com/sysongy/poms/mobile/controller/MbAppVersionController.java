@@ -194,7 +194,7 @@ public class MbAppVersionController extends BaseContoller {
 			ajaxJson.setSuccess(false);
 			return ajaxJson;
 		}
-		String savePath = request.getSession().getServletContext().getRealPath("/");
+		String savePath ="";
 		String PATH = (String) prop.get("downloadDir");
 		savePath = savePath + PATH;//保存的服务器目录
 		File f1 = new File(savePath);
