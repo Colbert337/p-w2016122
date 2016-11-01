@@ -172,7 +172,7 @@
 
 <select id="queryByExisit" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
-		select * from sys_order where order_type="130" and order_status=1 and debit_account=#{creditAccount,jdbcType=VARCHAR}
+		select * from sys_order where order_type="130" and order_status=1 and debit_account=#{debitAccount,jdbcType=VARCHAR}
 	</select>
 
 
