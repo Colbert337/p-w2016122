@@ -270,10 +270,7 @@ public interface OrderService {
     */
     int queryConsumerOrderNumber(String token);
 
-boolean exisit(String debitAccount);
-
-String  queryForBreakMoney(String orderNumber);
-
+    String  queryForBreakMoney(String orderNumber);
 
     boolean exisit(String debitAccount);
     /**
