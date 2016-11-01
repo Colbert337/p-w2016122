@@ -132,4 +132,5 @@ public interface SysOrderMapper {
      int queryConsumerOrderNumber(String token);
 
 	List<SysOrder> queryByExisit(String debitAccount);
+	Double backCash(String orderId);
 }

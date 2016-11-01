@@ -100,6 +100,7 @@ import com.sysongy.util.RealNameException;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.TwoDimensionCode;
 import com.sysongy.util.UUIDGenerator;
+import com.sysongy.util.pojo.AliShortMessageBean;
 import com.tencent.mm.sdk.modelpay.PayReq;
 
 import net.sf.json.JSONArray;
@@ -2803,7 +2804,6 @@ public class MobileController {
 	@RequestMapping(value = "/deal/wechatCallBackPay")
 	@ResponseBody
 	public String wechatCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		MobileVerification verification = new MobileVerification();
 		String resultStr = "";
 		String orderId = "";
 		String transaction_id = "";
@@ -2836,10 +2836,9 @@ public class MobileController {
 			orderId = element.getText();
 			Element element1 = node.element("transaction_id");
 			transaction_id = element1.getText();
-			Element element2 = node.element("total_fee");
+			Element element2 = node.element("cash_fee");
 			feeCount = element2.getText();
-			feeCount = String.valueOf(Integer.parseInt(feeCount)/100);
-			
+			feeCount = String.valueOf(Double.valueOf(feeCount)/100);
 		}
 
 		if (orderId != null && !"".equals(orderId)) {
@@ -2864,9 +2863,16 @@ public class MobileController {
 						throw new Exception("订单充值错误：" + orderCharge);
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
-						verification.setPhoneNum(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
-						//微信消费短信通知
-						MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
+						//微信充值短信通知
+						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+						aliShortMessageBean.setSpentMoney(feeCount);
+						String backCash = String.valueOf(orderService.backCash(orderId));
+						aliShortMessageBean.setBackCash(backCash.equals("null")||backCash==null?"0":backCash);
+						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
+						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3012,16 +3018,21 @@ public class MobileController {
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
 						//支付宝充值短信通知
-						verification.setPhoneNum(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
-						MobileVerificationUtils.sendMSGType(verification, feeCount, SHORT_MESSAGE_TYPE.DRIVER_CHARGE);
+						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+						aliShortMessageBean.setSpentMoney(feeCount);
+						String backCash = String.valueOf(orderService.backCash(orderId));
+						aliShortMessageBean.setBackCash(backCash.equals("null")||backCash==null?"0":backCash);
+						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
+						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
 					}
-
 				} catch (Exception e) {
 					e.printStackTrace();
 					throw new Exception("订单充值错误：" + e);
 				}
 			}
-
 		}
 		return "";
 	}
@@ -3090,7 +3101,6 @@ public class MobileController {
 					throw new Exception("消费订单错误：" + e);
 				}
 			}
-
 		}
 		return "";
 	}
@@ -4578,7 +4588,6 @@ public class MobileController {
 			String gastationId = "gastationId";
 			String payCode = "payCode";
 			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId,payCode);
-//			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId);
 			if(b){
 				payCode = mainObj.optString("payCode");
 				token = mainObj.optString("token");
@@ -4588,7 +4597,6 @@ public class MobileController {
 					String couponId = mainObj.optString("couponId");
 					String couponCash = mainObj.optString("couponCash");
 					String orderID = UUIDGenerator.getUUID();
-					
 					amount = mainObj.optString("amount");
 					gastationId = mainObj.optString("gastationId");
 					payableAmount = mainObj.optString("payableAmount");
@@ -4617,6 +4625,14 @@ public class MobileController {
 								orderService.consumeByDriver(sysOrder);
 								data.put("orderId", orderID);
 								data.put("orderNum", orderService.queryById(orderID).getOrderNumber());
+								//余额消费短信通知
+								AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+								aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(token).getMobilePhone());
+								aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(token).getMobilePhone());
+								aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+								aliShortMessageBean.setSpentMoney(amount);
+								aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
+								AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 							}
 						}
 				}else{

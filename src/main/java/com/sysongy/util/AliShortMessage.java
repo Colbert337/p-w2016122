@@ -36,6 +36,7 @@ public class AliShortMessage {
         ACCOUNT_RECEIVE_MONEY,         //系统到账通知
         DRIVER_CONSUME,                //司机消费
         DRIVER_CHARGE,                 //司机充值
+        DRIVER_CHARGE_BACKCASH,                 //司机充值即返现 11.1 王昭
         DRIVER_HEDGE,                  //司机转账
         CARD_FROZEN,                            //账户卡冻结模板
         CARD_THAW,                            //账户卡解冻模板
@@ -127,11 +128,12 @@ public class AliShortMessage {
                 break;
             case DRIVER_CONSUME_SUCCESSFUL:
                 req.setSmsTemplateCode("SMS_3100513");
-                req.setSmsFreeSignName("消费通知");
-                req.setSmsParamString("{\"account\":\"" + aliShortMessageBean.getAccountNumber() + "\",\"time\":\""
+                req.setSmsFreeSignName("司集科技");
+                String msg = "{\"account\":\"" + aliShortMessageBean.getAccountNumber() + "\",\"time\":\""
                         + aliShortMessageBean.getCreateTime() + "\",\"out_money\":\"" + aliShortMessageBean.getSpentMoney()
                         + "\",\"balance\":\"" + aliShortMessageBean.getBalance()
-                        + "\"}");
+                        + "\"}";
+                req.setSmsParamString(msg);
                 break;
             case DRIVER_CHARGE:
                 req.setSmsTemplateCode("SMS_4421119");
@@ -140,6 +142,15 @@ public class AliShortMessage {
                         + aliShortMessageBean.getCreateTime() + "\",\"money\":\"" + aliShortMessageBean.getSpentMoney()
                         + "\"}");
                 break;
+            case DRIVER_CHARGE_BACKCASH:
+                req.setSmsTemplateCode("SMS_12140738");
+                req.setSmsFreeSignName("变更验证");
+                req.setSmsParamString("{\"time\":\""+ aliShortMessageBean.getCreateTime() 
+                		+ "\",\"string\":\"充值\",\"money\":\"" + aliShortMessageBean.getSpentMoney()
+                        + "\",\"backCash\":\"" + aliShortMessageBean.getBackCash()
+                        + "\",\"money1\":\"" + aliShortMessageBean.getBalance()
+                        + "\"}");
+                break;                
             case DRIVER_HEDGE:
                 req.setSmsTemplateCode("SMS_3030408");
                 req.setSmsFreeSignName("变更验证");
