@@ -577,7 +577,7 @@ public class CrmPortalController extends BaseContoller {
      */
     @RequestMapping("/app/down")
     @ResponseBody
-    public String appDownCount(@RequestParam String appVersion,ModelMap map) throws Exception {
+    public String appDownCount(@RequestParam(required = false) String appVersion,ModelMap map) throws Exception {
     	MbAppVersion mbAppVersion = new MbAppVersion();
     	mbAppVersion.setCode(appVersion);
         mbAppVersionMapper.updateDownCount(mbAppVersion);//更新APP下载数
