@@ -637,13 +637,13 @@ public class OrderServiceImpl implements OrderService {
 		   is_allot = tcfleet.getIsAllot();
 	   }
 	   //扣除车队额度//传过去负值
-	   BigDecimal cash = order.getCash();
+	   /*BigDecimal cash = order.getCash();
 	   BigDecimal addcash = cash.multiply(new BigDecimal(-1));
 	   if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_YES){
 		   tcFleetService.updateFleetQuota(tran.getSys_transportion_id(), tcfleet.getTcFleetId(), addcash);
 	   }else if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_NO){
 		   transportionService.modifyDeposit(tran, addcash);
-	   }
+	   }*/
 
 	   //2.扣除运输公司账户金额
 	   //消费的时候传过去的cash是正值,充红的时候传过去的是负值
