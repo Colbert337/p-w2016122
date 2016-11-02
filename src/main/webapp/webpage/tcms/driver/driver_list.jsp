@@ -51,7 +51,7 @@
 							<button class="btn btn-sm btn-primary" type="button" onclick="leaveDriver();">
 								离职
 							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="openImportDiv();">
+							<button class="btn btn-sm btn-primary" type="button" onclick="openImportDiv();" style="display:none">
 								导入Excel
 							</button>
 						</div>
