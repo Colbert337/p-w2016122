@@ -172,7 +172,7 @@
 
 <select id="queryByExisit" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
-		select * from sys_order where order_type="130" and order_status=1 and debit_account=#{creditAccount,jdbcType=VARCHAR}
+		select * from sys_order where order_type="130" and order_status=1 and debit_account=#{debitAccount,jdbcType=VARCHAR}
 	</select>
 
 
@@ -953,6 +953,13 @@
 			</if>
 		</trim>
 	</select>
+	
+	<select id="queryForBreakMoney" resultType="java.lang.String"
+		parameterType="java.lang.String">
+			select sum(cash)*-1 from sys_order where  order_number=#{orderNumber, jdbcType=VARCHAR} and order_type='230' and order_status=1
+	</select>
+	
+	 
 
 	<select id="queryRechargeDriverReportTotal" resultMap="HenryTotalMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">

@@ -197,7 +197,7 @@ function savePhoto(fileobj, obj, obj1, obj2) {
 				var a=s.obj.substring(s.obj.indexOf('/')+1,s.obj.length);
 
 				bootbox.alert("上传成功");
-				$(obj1).val(a.substring(a.indexOf('/'),a.length));
+				$(obj1).val(s.obj);
 			}
 
 		},
