@@ -369,7 +369,7 @@
 					'cancelImg' : "<%=basePath%>/common/uploadify/cancel.png",
 					'folder' : "<%=basePath%>/null",
 					'queueId' : "fileQueue",
-					'queueSizeLimit' : 10,//限制上传文件的数量
+					'queueSizeLimit' : 30,//限制上传文件的数量
 					'fileExt' : "*.apk,*.apk",
 					'fileDesc' : "APK *.apk",//限制文件类型
 					'auto'  : false,

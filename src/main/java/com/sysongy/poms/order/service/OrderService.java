@@ -26,6 +26,8 @@ public interface OrderService {
 
     SysOrder selectByPrimaryKey(String orderId);
 
+    List<SysOrder> queryOrderList(SysOrder record);
+
     //int updateByPrimaryKey(SysOrder record);
     
     PageInfo<OrderLog> queryOrderLogs(OrderLog obj) throws Exception;

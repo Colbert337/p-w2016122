@@ -79,6 +79,8 @@ public class Gastation extends BaseModel implements Comparable {
 	
 	private Double distance;//虚拟距离字段，列表显示时计算距离后排序
 	
+	private Double minPrice;//虚拟距离字段，最低价格
+	
 	public String getCompany() {
 		return company;
 	}
@@ -469,5 +471,13 @@ public class Gastation extends BaseModel implements Comparable {
 		Gastation gastation = (Gastation)obj;
 		i = this.distance.compareTo(gastation.distance);
 			return i;
+	}
+
+	public Double getMinPrice() {
+		return minPrice;
+	}
+
+	public void setMinPrice(Double minPrice) {
+		this.minPrice = minPrice;
 	}
 }

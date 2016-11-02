@@ -48,6 +48,8 @@ public class ProductPrice extends BaseModel {
 
     private String gaStationId;
 
+    private Date start_time_before;
+
     public String getCreated_time_after() {
 		return created_time_after;
 	}
@@ -208,5 +210,13 @@ public class ProductPrice extends BaseModel {
 
     public void setGaStationId(String gaStationId) {
         this.gaStationId = gaStationId;
+    }
+
+    public Date getStart_time_before() {
+        return start_time_before;
+    }
+
+    public void setStart_time_before(Date start_time_before) {
+        this.start_time_before = start_time_before;
     }
 }
