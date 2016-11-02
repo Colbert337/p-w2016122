@@ -4757,7 +4757,14 @@ public class MobileController {
 					}
 				//按价格排序	
 				}else if(sortType.equals("3")){
-					
+					gastationArray = orderByPriceList(gastationAllList,pageNumIn,pageSizeIn);
+					if(gastationArray!=null && gastationArray.size() > 0 ){
+						result.setListMap(gastationArray);
+					}else{
+						result.setStatus(MobileReturn.STATUS_SUCCESS);
+						result.setMsg("暂无数据！");
+						result.setListMap(new ArrayList<Map<String, Object>>());
+					}
 				}
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
