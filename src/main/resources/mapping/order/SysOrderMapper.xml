@@ -169,6 +169,23 @@
 		</if>
 	</select>
 
+	<!--查询微信充值订单列表-->
+	<select id="queryForPageForBack" resultMap="BaseResultMap"
+			parameterType="com.sysongy.poms.order.model.SysOrder">
+		select * from sys_order where
+		<if test="debitAccount != null &amp;&amp; debitAccount != ''">
+			and debit_account = #{debitAccount,jdbcType=VARCHAR}
+		</if>
+		<if test="amount != null &amp;&amp; amount != ''">
+			and amount = #{amount,jdbcType=DECIMAL}
+		</if>
+		<if test="channel != null &amp;&amp; channel != ''">
+			and channel = #{channel,jdbcType=VARCHAR}
+		</if>
+		<if test="orderDate != null &amp;&amp; orderDate != ''">
+			and order_date  &gt;=  #{orderDate,jdbcType=VARCHAR}
+		</if>
+	</select>
 
 <select id="queryByExisit" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
