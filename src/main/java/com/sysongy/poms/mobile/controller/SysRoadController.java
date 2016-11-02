@@ -391,11 +391,17 @@ public class SysRoadController extends BaseContoller {
 					road.setUsefulCount("0");
 					redisClientImpl.addToCache("Road" + road.getId(), road, time);
 				}
+				messageService.saveMessage_New_Road("您上报的路况信息已审核通过，感谢您的贡献！", road);
 			}
 			if ("3".equals(road.getConditionStatus())) {
 				msg = "审核成功";
 				messageService.saveMessage_New_Road(content, road);
 			}
+			bean.setRetCode(100);
+			bean.setRetMsg("审核成功");
+			// msg = "审核成功";
+			bean.setPageInfo(ret);
+			map.addAttribute("ret", bean);
 
 			// map.addAttribute("current_module",
 			// "/web/mobile/suggest/suggestList");
@@ -406,7 +412,6 @@ public class SysRoadController extends BaseContoller {
 			msg = "审核错误";
 			map.addAttribute("ret", bean);
 			logger.error("", e);
-			throw e;
 		} finally {
 			return ret;
 		}

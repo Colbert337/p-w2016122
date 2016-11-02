@@ -428,10 +428,11 @@
 			success : function(data) {
 				var s = JSON.parse(data);
 				if (s.success == true) {
-					var a=s.obj.substring(s.obj.indexOf('/')+1,s.obj.length);
+					
 					$(obj2).hide();
 					bootbox.alert("上传成功");
-					$(obj1).val(a.substring(a.indexOf('/'),a.length));
+					
+					$(obj1).val(s.obj);
 				}
 
 			},
@@ -529,8 +530,8 @@
 				eval("$('#c" + datas[i] + "').attr('checked',true);");
 			}
 			checkedclick();
-			$("#show_img").attr("src", '<%=basePath%>' + '${mbBanner.imgPath}');
-			$("#show_sm_img").attr("src",'<%=basePath%>' + '${mbBanner.imgSmPath}');
+			$("#show_img").attr("src", '${mbBanner.imgPath}');
+			$("#show_sm_img").attr("src", '${mbBanner.imgSmPath}');
 			photoType = 1;
 			phototypeSm = 1;
 		}
