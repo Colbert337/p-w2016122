@@ -479,12 +479,12 @@ public class WechatController {
 						Date date = DateTimeHelper.addTime(new Date(),times,Calendar.HOUR);
 						SysOrder orderTemp = new SysOrder();
 						orderTemp.setDebitAccount(sysDriver.get(0).getSysDriverId());
-						orderTemp.setAmount(amount);
+						orderTemp.setCash(new BigDecimal(mainObj.optString("amount")));//交易金额
 						orderTemp.setChannel("微信VIP充值");
 						orderTemp.setOrderDate(date);
 						List<SysOrder> orderListTemp = orderService.queryOrderList(orderTemp);
 
-						if(orderListTemp == null){
+						if(orderListTemp == null || orderListTemp.size() == 0){
 							//新用户订单对象
 							SysOrder driverOrder = new SysOrder();
 							String driverOrderID = UUIDGenerator.getUUID();//新用户订单ID

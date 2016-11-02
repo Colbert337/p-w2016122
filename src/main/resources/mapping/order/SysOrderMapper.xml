@@ -170,14 +170,14 @@
 	</select>
 
 	<!--查询微信充值订单列表-->
-	<select id="queryForPageForBack" resultMap="BaseResultMap"
+	<select id="queryOrderList" resultMap="BaseResultMap"
 			parameterType="com.sysongy.poms.order.model.SysOrder">
 		select * from sys_order where
 		<if test="debitAccount != null &amp;&amp; debitAccount != ''">
-			and debit_account = #{debitAccount,jdbcType=VARCHAR}
+			debit_account = #{debitAccount,jdbcType=VARCHAR}
 		</if>
-		<if test="amount != null &amp;&amp; amount != ''">
-			and amount = #{amount,jdbcType=DECIMAL}
+		<if test="cash != null &amp;&amp; cash != ''">
+			and cash = #{cash,jdbcType=DECIMAL}
 		</if>
 		<if test="channel != null &amp;&amp; channel != ''">
 			and channel = #{channel,jdbcType=VARCHAR}
