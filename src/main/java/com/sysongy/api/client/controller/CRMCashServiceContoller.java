@@ -29,6 +29,8 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -102,7 +104,8 @@ public class CRMCashServiceContoller {
     
     @Autowired
     private CouponGroupService couponGroupService;
-
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 
     @ResponseBody
     @RequestMapping("/web/customerGasCharge")
@@ -130,6 +133,17 @@ public class CRMCashServiceContoller {
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
             record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
             String orderCharge = orderService.chargeToDriver(record);
+    		//系统关键日志记录
+    		SysOperationLog sysOperationLog = new SysOperationLog();
+    		sysOperationLog.setOperation_type("充值");
+    		sysOperationLog.setSystemModule("/crmInterface/crmCashServiceContoller"); 
+    		sysOperationLog.setOperation_domain("订单"); 
+    		sysOperationLog.setLogPlatform("CRM用户");
+    		sysOperationLog.setOrder_number(record.getOrderNumber());
+    		sysOperationLog.setLogContent("加气站通过CRM对司机个人充值成功！订单号为："+record.getOrderNumber()); 
+    		//操作日志
+    		sysOperationLogService.saveOperationLog(sysOperationLog,record.getOrderId());
+    	   
             if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单充值错误：" + orderCharge);

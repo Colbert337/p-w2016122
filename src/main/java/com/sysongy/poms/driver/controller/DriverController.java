@@ -39,6 +39,8 @@ import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.system.model.SysDepositLog;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 
 import net.sf.json.JSONObject;
 
@@ -69,7 +71,8 @@ public class DriverController extends BaseContoller{
 	OrderService orderService;
 
 	SysDriver driver;
-
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 	/**
      * 查询司机列表
      * @return
@@ -315,7 +318,30 @@ public class DriverController extends BaseContoller{
 			driver.setSysUserAccountId(accountid);
 			
 			ret = this.queryDriverInfoList(this.driver ==null?new SysDriver():this.driver, map);
-
+			//系统关键日志记录
+			SysOperationLog sysOperationLog = new SysOperationLog();
+				if ("0".equals(status)) {
+					sysOperationLog.setOperation_type("冻结账户 ");
+				} else if ("1".equals(status)){
+					sysOperationLog.setOperation_type("冻结卡");
+				}else{
+					sysOperationLog.setOperation_type("解除挂失");
+				}
+				SysDriver sysDriver = driverService.queryDriverByPK(accountid);
+				//手机端
+				sysOperationLog.setSystemModule("/web/driver"); 
+				sysOperationLog.setOperation_domain("用户卡"); 
+				String name = sysDriver.getFullName();
+				if("".equals(name)||null==name){
+					name = sysDriver.getUserName();
+				}
+				if("".equals(name)||null==name){
+					name = sysDriver.getMobilePhone();
+				}
+				sysOperationLog.setLogPlatform("网站用户");
+				sysOperationLog.setLogContent(name+"把卡号是："+cardno+"的账户卡"+sysOperationLog.getOperation_type()); 
+				//操作日志
+				sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysUserAccountId());
 			bean.setRetCode(100);
 			bean.setRetMsg("状态修改成功");
 			bean.setPageInfo(ret);

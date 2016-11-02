@@ -20,6 +20,8 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -81,7 +83,10 @@ public class CashServiceInterface {
 
     @Autowired
     RedisClientInterface redisClientImpl;
-
+	
+    @Autowired
+	SysOperationLogService sysOperationLogService;
+    
     @ResponseBody
     @RequestMapping("/web/customerGasCharge")
     public AjaxJson customerGasCharge(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
@@ -108,6 +113,17 @@ public class CashServiceInterface {
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
             record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
             String orderCharge = orderService.chargeToDriver(record);
+			//系统关键日志记录
+			SysOperationLog newSysOperationLog = new SysOperationLog();
+			newSysOperationLog.setOperation_type("充值");
+			newSysOperationLog.setSystemModule("/api/v1/wechat"); 
+			newSysOperationLog.setOperation_domain("订单"); 
+			newSysOperationLog.setLogPlatform("微信VIP用户");
+			newSysOperationLog.setOrder_number(record.getOrderNumber());
+			newSysOperationLog.setLogContent("加气站为司机充值成功！订单号为："+record.getOrderNumber()); 
+			//操作日志
+			sysOperationLogService.saveOperationLog(newSysOperationLog,record.getOrderId());
+			
             if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单充值错误：" + orderCharge);
