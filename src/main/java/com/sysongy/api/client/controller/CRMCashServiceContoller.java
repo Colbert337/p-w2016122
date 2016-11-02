@@ -29,6 +29,8 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -60,7 +62,8 @@ public class CRMCashServiceContoller {
 
     @Autowired
     private OrderService orderService;
-
+	@Autowired
+	SysCashBackService sysCashBackService;
     @Autowired
     private SysUserAccountService sysUserAccountService;
 
@@ -144,6 +147,17 @@ public class CRMCashServiceContoller {
             }
 
             record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
+            //判读首次充值
+            if(!orderService.exisit(record.getDebitAccount())){
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(record.getDebitAccount());
+				List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
+				if (listBack!=null && listBack.size() > 0) {
+					SysCashBack back= listBack.get(0);//获取返现规则
+					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+				}else{
+					logger.info("找不到匹配的返现规则，返现失败");
+				}
+			}
             int nCreateOrder = orderService.insert(record, null);
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -166,7 +180,7 @@ public class CRMCashServiceContoller {
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
-
+            
             recordNew.setCash(formatCash(recordNew.getCash()));
             sendChargeMessage(recordNew);
             Map<String, Object> attributes = new HashMap<String, Object>();
