@@ -88,7 +88,9 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.model.SysOperationLog;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.AliShortMessage;
@@ -177,6 +179,8 @@ public class MobileController {
 	CouponService couponService;
 	@Autowired
     CouponGroupService couponGroupService;
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 
 	/**
 	 * 用户登录
@@ -1322,6 +1326,14 @@ public class MobileController {
 					}
 					result.setMsg(failStr + "成功！");
 				}
+				
+				//系统关键日志记录
+				SysOperationLog sysOperationLog = new SysOperationLog();
+				
+				
+				//操作日志
+				sysOperationLogService.saveOperationLog(sysOperationLog,null);
+				
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");

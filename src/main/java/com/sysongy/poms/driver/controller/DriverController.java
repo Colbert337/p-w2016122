@@ -195,14 +195,14 @@ public class DriverController extends BaseContoller{
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
         
         if(StringUtils.isEmpty(driver.getOrderby())){
-        	driver.setOrderby("checked_status=0 desc");
+        	driver.setOrderby("checked_status=1 desc");
         }
         
      //   driver.setNotin_checked_status("0");
 
         pageinfo = driverService.queryDrivers(driver);
 
-			if(driver.getOrderby().equals("checked_status=0 desc")){
+			if(driver.getOrderby().equals("checked_status=1 desc")){
 				pageinfo.setOrderBy("");
 			}
 

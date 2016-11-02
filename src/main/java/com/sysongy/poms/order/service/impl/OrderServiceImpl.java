@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.transportion.dao.TransportionMapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +91,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private GasCardService gasCardService;
-
+	@Autowired
+	private TransportionMapper transportionMapper;
 	@Override
 	public PageInfo<SysOrder> queryOrders(SysOrder record) throws Exception {
 		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
@@ -635,13 +637,13 @@ public class OrderServiceImpl implements OrderService {
 		   is_allot = tcfleet.getIsAllot();
 	   }
 	   //扣除车队额度//传过去负值
-	   BigDecimal cash = order.getCash();
+	   /*BigDecimal cash = order.getCash();
 	   BigDecimal addcash = cash.multiply(new BigDecimal(-1));
 	   if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_YES){
 		   tcFleetService.updateFleetQuota(tran.getSys_transportion_id(), tcfleet.getTcFleetId(), addcash);
 	   }else if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_NO){
 		   transportionService.modifyDeposit(tran, addcash);
-	   }
+	   }*/
 
 	   //2.扣除运输公司账户金额
 	   //消费的时候传过去的cash是正值,充红的时候传过去的是负值
@@ -1243,6 +1245,15 @@ public class OrderServiceImpl implements OrderService {
 			return false;
 		}
 	}
+
+	@Override
+	public String queryForBreakMoney(String orderNumber) {
+		// TODO Auto-generated method stub
+		return sysOrderMapper.queryForBreakMoney(orderNumber);
+
+	}
+
+	
 
 	@Override
 	public Double backCash(String orderId) {
