@@ -57,6 +57,9 @@
     <if test="productPriceStatus != null &amp;&amp; productPriceStatus != ''">
         and product_price_status = #{productPriceStatus,jdbcType=VARCHAR}
     </if>
+    <if test="start_time_before != null &amp;&amp; start_time_before != ''">
+      and strat_time &lt; #{start_time_before,jdbcType=TIMESTAMP}
+    </if>
      order by product_price_status desc
   </select>
 
