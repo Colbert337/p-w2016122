@@ -543,8 +543,8 @@ public class CRMCashServiceContoller {
             order.setOrderType("220");
             
             List<SysOrder> order_list = orderService.queryOrders(order).getList();
-            //首次消费
-            if(order_list.size() < 1){
+            //首次消费 给无卡的人（认为无卡并且可以消费的一定是个人司机）和油卡并且卡类型是个人卡的司机首次消费时发优惠券
+            if((order_list.size() < 1 && gasCard == null) || (order_list.size() < 1 && gasCard != null && gasCard.getCard_property_info().getMcode().equals("1"))){
             	CouponGroup couponGroup = new CouponGroup();
                 couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
                 
