@@ -264,11 +264,16 @@ public class CRMCashServiceContoller {
                                 minusMoney = "0";
                             }
 
-                            //计算立减后价格
-                            price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));
-                            //计算价格立减后该商品总金额
-                            discountSumPrice = BigDecimalArith.mul(price,new BigDecimal(num+""));
-                            discountSumPrice = BigDecimalArith.round(discountSumPrice,2);
+                            //如果立减值为0，则不做优惠金额计算
+                            if("0".equals(minusMoney)){
+                                discountSumPrice = sysOrderGoods.getSumPrice();
+                            }else{
+                                //计算立减后价格
+                                price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));
+                                //计算价格立减后该商品总金额
+                                discountSumPrice = BigDecimalArith.mul(price,new BigDecimal(num+""));
+                                discountSumPrice = BigDecimalArith.round(discountSumPrice,2);
+                            }
                             sysOrderGoods.setDiscountSumPrice(discountSumPrice);
                         }else if(preferentialType.equals("1")){//折扣
                             BigDecimal sumPrice = sysOrderGoods.getSumPrice();
@@ -285,10 +290,17 @@ public class CRMCashServiceContoller {
                 }
             }
             //重置订单金额、优惠金额及优惠后金额
-            if(discountSum.compareTo(BigDecimal.ZERO) > 0){//优惠金额大于零时，做金额重置
-                record.setCash(discountSum);//优惠后金额
-                BigDecimal discountAmount = BigDecimalArith.sub(record.getShould_payment(),discountSum);
-                record.setPreferential_cash(discountAmount);//优惠金额
+            if(discountSum.compareTo(BigDecimal.ZERO) > 0){//优惠后金额大于零时，做金额重置
+                BigDecimal discountAmount = BigDecimalArith.sub(record.getShould_payment(),discountSum);//计算优惠金额
+                if(discountAmount.compareTo(BigDecimal.ZERO) < 0){//如果优惠金额为负，则置为0,实付金额减去优惠金额
+                    discountAmount = BigDecimal.ZERO;
+                    discountSum = BigDecimalArith.add(discountSum,discountAmount);
+                    record.setCash(discountSum);//优惠后金额
+                    record.setPreferential_cash(discountAmount);//优惠金额
+                }else{
+                    record.setCash(discountSum);//优惠后金额
+                    record.setPreferential_cash(discountAmount);//优惠金额
+                }
             }else{
                 record.setCash(record.getShould_payment());//优惠后金额
                 record.setPreferential_cash(BigDecimal.ZERO);//优惠金额
@@ -557,8 +569,8 @@ public class CRMCashServiceContoller {
             order.setOrderType("220");
             
             List<SysOrder> order_list = orderService.queryOrders(order).getList();
-            //首次消费
-            if(order_list.size() < 1){
+            //首次消费 给无卡的人（认为无卡并且可以消费的一定是个人司机）和油卡并且卡类型是个人卡的司机首次消费时发优惠券
+            if((order_list.size() < 1 && gasCard == null) || (order_list.size() < 1 && gasCard != null && gasCard.getCard_property_info().getMcode().equals("1"))){
             	CouponGroup couponGroup = new CouponGroup();
                 couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
                 

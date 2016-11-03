@@ -26,6 +26,8 @@ public interface OrderService {
 
     SysOrder selectByPrimaryKey(String orderId);
 
+    List<SysOrder> queryOrderList(SysOrder record);
+
     //int updateByPrimaryKey(SysOrder record);
     
     PageInfo<OrderLog> queryOrderLogs(OrderLog obj) throws Exception;
@@ -277,4 +279,6 @@ public interface OrderService {
      * 根据订单号查询返现金额
      */
     Double backCash(String orderId);
+
+	int updateByBatchNo(SysOrder record);
 }

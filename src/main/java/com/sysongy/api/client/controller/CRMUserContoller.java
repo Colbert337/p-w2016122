@@ -71,6 +71,11 @@ public class CRMUserContoller {
                 }
 
                 Gastation gastation = gastationService.queryGastationByPK(sysUser.getStationId());
+                /*if(gastation == null){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("激活码有误！");
+                    return ajaxJson;
+                }*/
                 long nTime = gastation.getExpiry_date().getTime() - new Date().getTime();
                 if(gastation.getStatus().equalsIgnoreCase(GlobalConstant.StationStatus.PAUSE) || (nTime < 0.0)){
                     ajaxJson.setSuccess(false);
@@ -98,7 +103,7 @@ public class CRMUserContoller {
             }
         } catch (Exception e) {
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.toString());
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR);
             logger.error("queryCardInfo error： " + e.toString());
         }
     	return ajaxJson;

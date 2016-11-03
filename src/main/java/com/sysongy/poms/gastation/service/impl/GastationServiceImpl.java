@@ -503,8 +503,15 @@ public class GastationServiceImpl implements GastationService {
 
 	@Override
 	public void updateForJob() throws Exception {
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.HOUR_OF_DAY, 1);
+		c.set(Calendar.MINUTE, 59);
+		c.set(Calendar.SECOND, 59);
+
 		ProductPrice record = new ProductPrice();
 		record.setStart_time_after(new Date());
+
+		record.setStart_time_before(c.getTime());
 		record.setProductPriceStatus("2");
 		record.setOrderby("version asc");
 
@@ -525,40 +532,47 @@ public class GastationServiceImpl implements GastationService {
 
 			if (recordYear.equals(now.get(Calendar.YEAR)) && recordMonth.equals(now.get(Calendar.MONTH) + 1) && recordDay.equals(now.get(Calendar.DAY_OF_MONTH))&& recordHour.equals(now.get(Calendar.HOUR_OF_DAY) + 1)) {
 				ProductPrice tmp = new ProductPrice();
-				
+
 				tmp.setProduct_id(record.getProduct_id());
 				tmp.setProductPriceStatus("1");
-				
+
 				List<ProductPrice> tmpList = productPriceService.queryProductPrice(tmp).getList();
 				if(tmpList.size() != 1){
 					throw new Exception("通过product_id找不到唯一一条生效的价格信息");
 				}
-				//这个是之前生效的价格信息 
+
+				//这个是之前生效的价格信息
 				tmp = tmpList.get(0);
-				
-					
+				tmp.setProductPriceStatus("0");
+
 				//修改productPrice状态
 				ProductPrice newrecord = record;
 
-				productPriceService.updatePriceStatus(record);
+				//productPriceService.updatePriceStatus(record);
+				if(i == list.size() - 1){
+					newrecord.setProductPriceStatus("1");
 
-				newrecord.setProductPriceStatus("1");
-				productPriceService.saveProductPrice(newrecord, "update");
-				
-				//修改GasPrice状态
-				GsGasPrice gsGasPrice = new GsGasPrice();
-				gsGasPrice.setPrice_id(tmp.getId());
-				
-				List<GsGasPrice> gspricelist = gsGasPriceService.queryGsPrice(gsGasPrice).getList();
-				
-				if(gspricelist.size() != 1){
-					throw new Exception("通过price_id找不到唯一的gsgasprice信息");
+					//修改GasPrice状态
+					GsGasPrice gsGasPrice = new GsGasPrice();
+					gsGasPrice.setPrice_id(tmp.getId());
+
+					List<GsGasPrice> gspricelist = gsGasPriceService.queryGsPrice(gsGasPrice).getList();
+
+					if(gspricelist.size() != 1){
+						throw new Exception("通过price_id找不到唯一的gsgasprice信息");
+					}
+
+					gsGasPrice = gspricelist.get(0);
+					gsGasPrice.setPrice_id(record.getId());
+
+					gsGasPriceService.saveGsPrice(gsGasPrice, "update");
+
+					productPriceService.saveProductPrice(tmp, "update");
+				}else{
+					newrecord.setProductPriceStatus("0");
 				}
-				
-				gsGasPrice = gspricelist.get(0);
-				gsGasPrice.setPrice_id(record.getId());
-				
-				gsGasPriceService.saveGsPrice(gsGasPrice, "update");
+
+				productPriceService.saveProductPrice(newrecord, "update");
 			}
 		}
 	}

@@ -112,7 +112,8 @@ public class CRMBaseContoller {
         String show_path = (String) prop.get("show_images_path");
         if(!StringUtils.isEmpty(stationid)){
         	path = path + "/"+stationid+"/";
-        	show_path = request.getContextPath() + show_path + "/"+stationid+"/";
+//        	show_path = request.getContextPath() + show_path + "/"+stationid+"/";
+        	show_path = show_path + "/"+stationid+"/";
         }
         path+= filename;
         show_path+= filename;

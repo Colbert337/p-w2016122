@@ -22,6 +22,8 @@ public interface SysOrderMapper {
 
     SysOrder selectByPrimaryKey(String orderId);
 
+    List<SysOrder> queryOrderList(SysOrder record);
+
     SysOrder selectByOrderGASID(SysOrder record);
 
     int updateByPrimaryKeySelective(SysOrder record);
@@ -134,4 +136,6 @@ public interface SysOrderMapper {
     String queryForBreakMoney(String orderNumber);
 	List<SysOrder> queryByExisit(String debitAccount);
 	Double backCash(String orderId);
+
+	int updateByBatchNo(SysOrder record);
 }

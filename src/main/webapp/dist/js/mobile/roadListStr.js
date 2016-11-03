@@ -117,8 +117,8 @@ function updateCheck(obj1, tr, id) {
 		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{50})/g,
 				'$1<br\>');
 	}
-	$("#innerimg2").attr("src", projectName + obj1);
-	$("#innerimg2").parent("a").attr("href", projectName + obj1);
+	$("#innerimg2").attr("src", obj1);
+	$("#innerimg2").parent("a").attr("href", obj1);
 	$("#innerModel").modal('show');
 	$("#roadId").val(id)
 

@@ -135,7 +135,7 @@ public class CouponGroupServiceImpl implements CouponGroupService {
 				for(int k=0;k<Integer.valueOf(nums[i]);k++){
 					Coupon tmp_coupon = couponService.queryCouponByPK(coupon[i]);
 					//发送优惠卷，必须条件是 优惠卷的时间还未结束的，和启用的优惠卷
-					if((!"已结束".equals(tmp_coupon.getStatusinfo()))&&("1".equals(tmp_coupon.getStatusinfo()))){
+					if((!"已结束".equals(tmp_coupon.getStatusinfo()))&&("1".equals(tmp_coupon.getStatus()))){
 						UserCoupon userCoupon = new UserCoupon();
 						BeanUtils.copyProperties(tmp_coupon, userCoupon);
 						userCoupon.setUser_coupon_id(UUIDGenerator.getUUID());
