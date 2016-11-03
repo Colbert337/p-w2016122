@@ -101,4 +101,5 @@ public interface DriverService {
 	public List<SysDriver> queryAll() throws Exception;
 
 	public void cashBackForRegister(SysDriver driver, String invitationCode, String operator_id) throws Exception;
+	
 }

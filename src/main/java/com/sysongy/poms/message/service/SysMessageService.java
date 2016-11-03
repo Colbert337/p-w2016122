@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.order.model.SysOrder;
 
 public interface SysMessageService {
 	
@@ -32,9 +33,12 @@ public interface SysMessageService {
 
 
 	public String saveMessage_New_Road(String content, SysRoadCondition publisherPhone) throws Exception;
-
-
-
-
-
+	/**
+	 * 交易消息提醒
+	 * @param content
+	 * @param order
+	 * @return
+	 * @throws Exception
+	 */
+	public String saveMessageTransaction(String content, SysOrder order,String type) throws Exception;
 }

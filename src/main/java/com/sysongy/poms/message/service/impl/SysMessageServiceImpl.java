@@ -20,6 +20,7 @@ import com.sysongy.poms.message.dao.SysMessageMapper;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.usysparam.dao.UsysparamMapper;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
@@ -194,4 +195,28 @@ public class SysMessageServiceImpl implements SysMessageService {
 
 	}
 
+	@Override
+	public String saveMessageTransaction(String content, SysOrder order,String type) throws Exception {
+		SysMessage message = new SysMessage();
+		SysDriver driver = null;
+		message.setOperator("admin");
+		message.setMessageType(1);
+		//充值
+		if(type.equals("1")){
+			driver = driverMapper.queryByPK(order.getDebitAccount());
+		}else{//消费
+			driver = driverMapper.queryByPK(order.getCreditAccount());
+		}
+		message.setDevice_token(driver.getDeviceToken());
+		message.setDriver_name(driver.getSysDriverId());
+		message.setDriverName(driver.getDeviceToken());
+		message.setMessageGroup("999");
+		message.setMessageTicker("交易提醒");
+		message.setMessageTitle("交易提醒");
+		
+		
+		
+		
+		return saveMessage_New(message);
+	}
 }
