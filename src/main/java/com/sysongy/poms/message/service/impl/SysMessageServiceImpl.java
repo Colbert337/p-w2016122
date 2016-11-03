@@ -167,6 +167,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 
 	@Override
 	public String saveMessage_New_Road(String content, SysRoadCondition road) throws Exception {
+
 		SysDriver driver = new SysDriver();
 		driver.setMobilePhone(road.getPublisherPhone());
 		driver = driverMapper.queryDriverByMobilePhone(driver);
@@ -178,22 +179,23 @@ public class SysMessageServiceImpl implements SysMessageService {
 		message.setOperator("admin");
 		message.setMessageType(1);
 
-		message.setMessageBody("路况类型：" + paramservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType()).getMname()
-				+ "\n路况位置：" + road.getAddress() + "\n审核:" + content+"");
-		message.setContent("路况类型：" + paramservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType()).getMname()
-				+ "\n路况位置：" + road.getAddress() + "\n审核:" + content);
+		message.setMessageBody(
+				"路况类型：" + paramservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType()).getMname()
+						+ "\n路况位置：" + road.getAddress() + "\n审核结果：" + content + "");
+		message.setContent(
+				"路况类型：" + paramservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType()).getMname()
+						+ "\n路况位置：" + road.getAddress() + "\n审核结果：" + content);
 		message.setDevice_token(driver.getDeviceToken());
 		message.setDriver_name(driver.getSysDriverId());
 		message.setDriverName(driver.getDeviceToken());
 		message.setMessageGroup("999");
 		message.setMemo("路况位置：" + road.getAddress() + "。路况详情：" + road.getConditionMsg());
-		message.setMessageTicker("路况审核未通过提醒");
-		message.setMessageTitle("路况审核未通过提醒");
+		message.setMessageTicker("上报路况审核提醒");
+		message.setMessageTitle("上报路况审核提醒");
 		message.setMessageType(1);
 		return saveMessage_New(message);
 		// TODO Auto-generated method stub
-
-	}
+	} 
 
 	@Override
 	public String saveMessageTransaction(String content, SysOrder order,String type) throws Exception {

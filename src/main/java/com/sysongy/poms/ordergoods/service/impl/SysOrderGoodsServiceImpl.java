@@ -41,8 +41,10 @@ public class SysOrderGoodsServiceImpl implements SysOrderGoodsService {
 
 			price = gsGasPrice;
 			//记录该订单的打折方式与打折金额
-			good.setPreferential_type(price.getPreferential_type());
-			
+			if(price != null && price.getPreferential_type() != null){
+				good.setPreferential_type(price.getPreferential_type());
+			}
+
 			BigDecimal tmp = good.getPrice().subtract(this.getGsGasPrice(stationid, gsPriceId,good.getPrice()));//优惠单价
 			
 			good.setPreferential_cash(tmp.multiply(BigDecimal.valueOf(good.getNumber())));//这里自己算

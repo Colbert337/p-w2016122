@@ -132,6 +132,11 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public List<SysOrder> queryOrderList(SysOrder record) {
+		return sysOrderMapper.queryOrderList(record);
+	}
+
+	@Override
 	public SysOrder selectByOrderGASID(SysOrder record) {
 		SysOrder sysOrder = sysOrderMapper.selectByOrderGASID(record);
 		List<SysOrderGoods> sysOrderGoods = sysOrderGoodsMapper.selectByOrderID(record.getOrderId());

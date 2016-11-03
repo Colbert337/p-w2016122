@@ -22,6 +22,8 @@ public interface SysOrderMapper {
 
     SysOrder selectByPrimaryKey(String orderId);
 
+    List<SysOrder> queryOrderList(SysOrder record);
+
     SysOrder selectByOrderGASID(SysOrder record);
 
     int updateByPrimaryKeySelective(SysOrder record);

@@ -29,6 +29,8 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -60,7 +62,8 @@ public class CRMCashServiceContoller {
 
     @Autowired
     private OrderService orderService;
-
+	@Autowired
+	SysCashBackService sysCashBackService;
     @Autowired
     private SysUserAccountService sysUserAccountService;
 
@@ -144,6 +147,17 @@ public class CRMCashServiceContoller {
             }
 
             record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
+            //判读首次充值
+            if(!orderService.exisit(record.getDebitAccount())){
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(record.getDebitAccount());
+				List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
+				if (listBack!=null && listBack.size() > 0) {
+					SysCashBack back= listBack.get(0);//获取返现规则
+					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+				}else{
+					logger.info("找不到匹配的返现规则，返现失败");
+				}
+			}
             int nCreateOrder = orderService.insert(record, null);
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
@@ -166,7 +180,7 @@ public class CRMCashServiceContoller {
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
-
+            
             recordNew.setCash(formatCash(recordNew.getCash()));
             sendChargeMessage(recordNew);
             Map<String, Object> attributes = new HashMap<String, Object>();
@@ -543,8 +557,8 @@ public class CRMCashServiceContoller {
             order.setOrderType("220");
             
             List<SysOrder> order_list = orderService.queryOrders(order).getList();
-            //首次消费
-            if(order_list.size() < 1){
+            //首次消费 给无卡的人（认为无卡并且可以消费的一定是个人司机）和油卡并且卡类型是个人卡的司机首次消费时发优惠券
+            if((order_list.size() < 1 && gasCard == null) || (order_list.size() < 1 && gasCard != null && gasCard.getCard_property_info().getMcode().equals("1"))){
             	CouponGroup couponGroup = new CouponGroup();
                 couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
                 
