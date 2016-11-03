@@ -36,7 +36,7 @@ public class AliShortMessage {
         ACCOUNT_RECEIVE_MONEY,         //系统到账通知
         DRIVER_CONSUME,                //司机消费
         DRIVER_CHARGE,                 //司机充值
-        DRIVER_CHARGE_BACKCASH,                 //司机充值即返现 11.1 王昭
+        DRIVER_CHARGE_BACKCASH,                 //司机充值及返现 11.1 王昭
         DRIVER_HEDGE,                  //司机转账
         CARD_FROZEN,                            //账户卡冻结模板
         CARD_THAW,                            //账户卡解冻模板
@@ -259,6 +259,6 @@ public class AliShortMessage {
         aliShortMessageBean.setAccountNumber("18392396707");
         aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         aliShortMessageBean.setTotalPrice("2000");
-//        sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.ACCOUNT_RECEIVE_MONEY);
+        sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.ACCOUNT_RECEIVE_MONEY);
     }
 }

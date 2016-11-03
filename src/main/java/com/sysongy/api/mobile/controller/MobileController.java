@@ -2004,11 +2004,14 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
+				String fromDriverId = mainObj.optString("token");
+				String toDriverId = mainObj.optString("account");
+				amount = mainObj.optString("amount");
 				Map<String, Object> driverMap = new HashMap<>();
 				driverMap.put("token", mainObj.optString("token"));
 				driverMap.put("account", mainObj.optString("account"));
 				driverMap.put("name", mainObj.optString("name"));
-				driverMap.put("amount", mainObj.optString("amount"));
+				driverMap.put("amount",amount);
 				driverMap.put("remark", mainObj.optString("remark"));
 				driverMap.put("paycode", mainObj.optString("paycode"));
 				int resultVal = mbDealOrderService.transferDriverToDriver(driverMap);
@@ -2018,6 +2021,23 @@ public class MobileController {
 				} else if (resultVal == 1) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("转账成功！");
+					//发送短信提醒
+					//付款人短信提醒
+					AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+					aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
+					aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
+					aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+					aliShortMessageBean.setMoney(amount);
+					aliShortMessageBean.setMoney1(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(fromDriverId).getSysDriverId()).getAccountBalance());
+					aliShortMessageBean.setString("转出");
+					AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+					//收款人短信提醒
+					AliShortMessageBean aliShortMessage = new AliShortMessageBean();
+					aliShortMessage.setSendNumber(driverService.queryDriverByPK(toDriverId).getMobilePhone());
+					aliShortMessage.setAccountNumber(driverService.queryDriverByPK(toDriverId).getMobilePhone());
+					aliShortMessage.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+					aliShortMessage.setTotalPrice(amount);
+					AliShortMessage.sendShortMessage(aliShortMessage, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
 				} else if (resultVal == 2) {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("账户不存在,无法转账！");
@@ -2418,10 +2438,9 @@ public class MobileController {
 						reChargeMap.put("amount", map.get("cash"));
 						reChargeMap.put("gasStationName", gastationService.queryGastationByPK(map.get("channelNumber").toString()).getGas_station_name());
 						reChargeMap.put("gasStationId", map.get("channelNumber"));
-						String gasTotal = (String) map.get("goods_sum");
-						reChargeMap.put("gasTotal",gasTotal==null?"0":gasTotal);
+						reChargeMap.put("gasTotal",map.get("goods_sum")==null?"0":map.get("goods_sum"));
 						//0初始化，1成功，2失败，3待支付
-						String status = (String) map.get("orderStatus");
+						String status = map.get("orderStatus").toString();
 						if(status.equals("0")){
 							status = "订单初始化";
 						}else if(status.equals("1")){
@@ -4667,6 +4686,7 @@ public class MobileController {
 						sysOrder.setShould_payment(new BigDecimal(payableAmount));
 						//订单状态
 						sysOrder.setOrderStatus(1);
+						//设置优惠总金额(优惠券金额+平台优惠金额)
 						if (sysOrder != null) {
 							int nCreateOrder = orderService.insert(sysOrder, null);
 							if (nCreateOrder < 1){
