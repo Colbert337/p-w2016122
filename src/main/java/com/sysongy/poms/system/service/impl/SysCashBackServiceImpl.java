@@ -162,7 +162,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	
 	/**
 	 * 取出规则，计算返现值，然后操作对应账户的金额。
-	 * 如果是充红，cash是负数，---不调用返现规则，直接调用历史记录
+	 * 如果是冲红，cash是负数，---不调用返现规则，直接调用历史记录
 	 * 返现步骤：
 	 * 1.从传过来的某个充值类型的cashBackList中，计算过滤得到符合条件的一条返现规则：算法
 	 *   计算算法：
@@ -252,9 +252,9 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	}
 	
 	/**
-	 * 充红返现给账户
-	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则充红，否则不执行。
-	 * @param order 充红订单对象
+	 * 冲红返现给账户
+	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则冲红，否则不执行。
+	 * @param order 冲红订单对象
 	 * @paramcashBackRecord 订单处理流程对象
 	 * @param accountId
 	 * @param accountUserName
@@ -276,10 +276,10 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		if(cash_back.compareTo(new BigDecimal(0)) > 0){
 			back_money = cash_back.multiply(new BigDecimal(-1));
 		}
-		//给这个账户把返现充红
+		//给这个账户把返现冲红
 		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money,order.getOrderType());
 		//写入订单处理流程
-		String remark = "给"+ accountUserName+"的账户，充红返现"+back_money.toString()+"。";
+		String remark = "给"+ accountUserName+"的账户，冲红返现"+back_money.toString()+"。";
 		logger.info(remark);
 		remark = order.getDischarge_reason();
 		String cash_per_str = orderDealRecord.getCashBackPer();

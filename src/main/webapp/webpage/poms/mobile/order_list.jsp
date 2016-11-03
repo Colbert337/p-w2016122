@@ -87,7 +87,7 @@
 								<th onclick="orderBy(this,'charge_type');commitForm();"
 									id="charge_type_order">充值方式</th>
 								<th onclick="orderBy(this,'is_discharge');commitForm();"
-									id="is_discharge_order">是否充红</th>
+									id="is_discharge_order">是否冲红</th>
 								<th onclick="orderBy(this,'channel');commitForm();"
 									id="channel_order">充值渠道</th>
 									

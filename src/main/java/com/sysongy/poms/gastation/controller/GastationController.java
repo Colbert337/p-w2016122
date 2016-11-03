@@ -641,15 +641,15 @@ public class GastationController extends BaseContoller{
 							break;
 						}
 						case "134":{
-							deal_type = "个人充值充红";
+							deal_type = "个人充值冲红";
 							break;
 						}
 						case "135":{
-							deal_type = "首次充值返现充红";
+							deal_type = "首次充值返现冲红";
 							break;
 						}
 						case "136":{
-							deal_type = "充值返现充红";
+							deal_type = "充值返现冲红";
 							break;
 						}
 						case "137":{
@@ -657,7 +657,7 @@ public class GastationController extends BaseContoller{
 							break;
 						}
 						case "138":{
-							deal_type = "加注站预付款余额扣除充红";
+							deal_type = "加注站预付款余额扣除冲红";
 							break;
 						}
 						default:
