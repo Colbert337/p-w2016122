@@ -12,6 +12,7 @@ import com.sysongy.poms.mobile.service.MbAppVersionService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.util.*;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -56,6 +57,9 @@ public class MbAppVersionController extends BaseContoller {
 		if (mbAppVersion.getPageNum() == null) {
 			mbAppVersion.setPageNum(GlobalConstant.PAGE_NUM);
 			mbAppVersion.setPageSize(GlobalConstant.PAGE_SIZE);
+		}
+		if(StringUtils.isEmpty(mbAppVersion.getOrderby())){
+			mbAppVersion.setOrderby("created_date desc");
 		}
 
 		PageInfo<MbAppVersion> pageinfo = new PageInfo<MbAppVersion>();
