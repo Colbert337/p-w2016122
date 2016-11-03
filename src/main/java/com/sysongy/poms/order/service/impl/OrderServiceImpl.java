@@ -150,7 +150,10 @@ public class OrderServiceImpl implements OrderService {
 	public int updateByPrimaryKey(SysOrder record) {
 		return sysOrderMapper.updateByPrimaryKeySelective(record);
 	}
-
+	@Override
+	public int updateByBatchNo(SysOrder record) {
+		return sysOrderMapper.updateByBatchNo(record);
+	}
     /**
      * 创建流水单编码
      * @paramrecord

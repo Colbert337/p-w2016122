@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.bcel.generic.IF_ACMPEQ;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.NameValuePair;
@@ -37,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -4703,7 +4705,8 @@ public class MobileController {
 								aliShortMessageBean.setSpentMoney(amount);
 								aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
 								AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
-								//sysMessageService.saveMessageConsume(content, order);
+								//APP提示
+//								sysMessageService.saveMessageTransaction(content, order);
 							}
 						}
 				}else{
@@ -5139,6 +5142,70 @@ public class MobileController {
 		return gastationArray;
 	}
 	
+	
+	/**
+	 * 退费并保存退费订单(支付宝退费回调)
+	 * @param detail_data
+	 * @return
+	 */
+	@RequestMapping("/breakReturn")
+	@ResponseBody
+	public String breakReturn(HttpServletRequest request, HttpServletResponse response,ModelMap map) {
+		String batch_no = "";
+		String result_details= "";
+		logger.debug("支付宝支付回调获取数据开始");
+		SysOrder order=null;
+		try {
+			batch_no = request.getParameter("batch_no");
+			result_details = request.getParameter("result_details");//支付宝返回结果集
+		if (StringUtils.isEmpty(result_details)&&StringUtils.isEmpty(batch_no)) {
+			logger.debug("支付宝回调返回结果为空");
+			throw new ServiceException("支付宝回调返回结果为空！");
+		}
+		order=orderService.queryByTrade(batch_no);
+		String[] dates=result_details.split("#");//第一单
+		String[] date=dates[0].split("\\|");//第一笔
+		String no=date[0].split("\\^")[0];
+		String money=date[0].split("\\^")[1];
+		String b=date[0].split("\\^")[2];
+			if (b.equalsIgnoreCase("SUCCESS")) {
+				MobileReturn result = new MobileReturn();
+				result.setStatus(MobileReturn.STATUS_SUCCESS);
+				result.setMsg("退款成功！");
+				JSONObject resutObj = new JSONObject();
+				String resultStr = "";
+				// 查询订单内容
+				if (order != null && order.getOrderStatus() == 3) {// 当订单状态是初始化时，做状态更新
+					// 修改订单状态
+					order.setOrderStatus(1);
+					order.setOrderRemark("退款成功！");
+					order.setOrderDate(new Date());
+					order.setBatch_no(batch_no);
+					orderService.updateByBatchNo(order);
+					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());//初始化钱袋
+					if (account==null) {
+						logger.error("支付宝返现失败：");
+					}
+					account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+					sysUserAccountService.updateAccount(account);
+				}
+			}else{
+				order.setOrderStatus(2);
+				order.setOrderRemark("退款失败！");
+				order.setOrderDate(new Date());
+				order.setBatch_no(batch_no);
+				orderService.updateByBatchNo(order);
+				logger.error("支付宝返现失败："+b);
+			}
+		} catch (Exception e) {
+			logger.error("支付宝返现失败："+e.getLocalizedMessage());
+			e.printStackTrace();
+		}finally {
+			return "";
+		}
+		
+	}
+	
 	private String genPayReq(Map<String, String> resultunifiedorder) {
 
 		/*
@@ -5471,5 +5538,6 @@ public class MobileController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 	}
 }

@@ -497,6 +497,76 @@
 		</set>
 		where order_id = #{orderId,jdbcType=VARCHAR}
 	</update>
+	
+	
+	<update id="updateByBatchNo" parameterType="com.sysongy.poms.order.model.SysOrder">
+		update sys_order
+		<set>
+			<if test="orderNumber != null">
+				order_number = #{orderNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="orderType != null">
+				order_type = #{orderType,jdbcType=VARCHAR},
+			</if>
+			<if test="orderDate != null">
+				order_date = #{orderDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cash != null">
+				cash = #{cash,jdbcType=DECIMAL},
+			</if>
+			<if test="creditAccount != null">
+				credit_account = #{creditAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="debitAccount != null">
+				debit_account = #{debitAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="chargeType != null">
+				charge_type = #{chargeType,jdbcType=VARCHAR},
+			</if>
+			<if test="channel != null">
+				channel = #{channel,jdbcType=VARCHAR},
+			</if>
+			<if test="channelNumber != null">
+				channel_number = #{channelNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				operator = #{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="is_discharge != null">
+				is_discharge = #{is_discharge,jdbcType=VARCHAR},
+			</if>
+			<if test="been_discharged != null">
+				been_discharged = #{been_discharged,jdbcType=VARCHAR},
+			</if>
+			<if test="discharge_reason != null">
+				discharge_reason = #{discharge_reason,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorSourceId != null">
+				operator_source_id = #{operatorSourceId,jdbcType=VARCHAR},
+			</if>
+			<if test="dischargeOrderId != null">
+				discharge_order_id = #{dischargeOrderId,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTargetType != null">
+				operator_target_type = #{operatorTargetType,jdbcType=VARCHAR},
+			</if>
+			<if test="consume_card != null">
+				consume_card = #{consume_card,jdbcType=VARCHAR},
+			</if>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus,jdbcType=INTEGER},
+			</if>
+			<if test="operatorSourceType != null">
+				operator_source_type = #{operatorSourceType,jdbcType=VARCHAR},
+			</if>
+			<if test="trade_no != null">
+				trade_no = #{trade_no,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where batch_no = #{batch_no,jdbcType=VARCHAR}
+	</update>
+	
+	
 
 	<update id="updateOriginalOrderAfterDischarged" parameterType="java.util.Map">
 		update sys_order
