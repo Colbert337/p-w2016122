@@ -266,16 +266,15 @@ public class CRMCashServiceContoller {
 
                             //如果立减值为0，则不做优惠金额计算
                             if("0".equals(minusMoney)){
-                                discountSumPrice = sysOrderGoods.getDiscountSumPrice();
+                                discountSumPrice = sysOrderGoods.getSumPrice();
                             }else{
                                 //计算立减后价格
                                 price = BigDecimalArith.sub(price,new BigDecimal(minusMoney));
                                 //计算价格立减后该商品总金额
                                 discountSumPrice = BigDecimalArith.mul(price,new BigDecimal(num+""));
                                 discountSumPrice = BigDecimalArith.round(discountSumPrice,2);
-                                sysOrderGoods.setDiscountSumPrice(discountSumPrice);
                             }
-
+                            sysOrderGoods.setDiscountSumPrice(discountSumPrice);
                         }else if(preferentialType.equals("1")){//折扣
                             BigDecimal sumPrice = sysOrderGoods.getSumPrice();
                             float fixedDiscount = gsGasPrice.getFixed_discount();//获取折扣
