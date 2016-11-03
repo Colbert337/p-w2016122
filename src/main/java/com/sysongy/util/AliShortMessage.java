@@ -244,17 +244,21 @@ public class AliShortMessage {
     public static void main(String[] args){
         Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
         AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-        aliShortMessageBean.setSendNumber("15129808123");
+        aliShortMessageBean.setSendNumber("18392396707");
         aliShortMessageBean.setExtent("test");   //消息返回时自带参数，暂时不需要
         aliShortMessageBean.setCode(checkCode.toString());
         //身份等各种验证等等
         aliShortMessageBean.setCode(aliShortMessageBean.getCode());
         aliShortMessageBean.setProduct("司集能源科技平台");
-        sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.USER_CHANGE_PASSWORD);
+        aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        aliShortMessageBean.setString("收到转账：");
+        aliShortMessageBean.setMoney("10");
+        aliShortMessageBean.setMoney1("20");
+        sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
         //到账通知
-        aliShortMessageBean.setAccountNumber("123456789");
+        aliShortMessageBean.setAccountNumber("18392396707");
         aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         aliShortMessageBean.setTotalPrice("2000");
-        sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.ACCOUNT_RECEIVE_MONEY);
+//        sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.ACCOUNT_RECEIVE_MONEY);
     }
 }

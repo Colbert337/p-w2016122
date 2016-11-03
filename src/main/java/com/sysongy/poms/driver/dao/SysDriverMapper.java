@@ -75,4 +75,6 @@ public interface SysDriverMapper {
 	SysDriver queryByDeviceToken(String deviceToken);
 	
 	List<SysDriver> queryAll();
+	
+	SysDriver queryByPK(String driverId);
 }

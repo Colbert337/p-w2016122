@@ -2410,23 +2410,33 @@ public class MobileController {
 						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString()));
 					}
 				}
-
 				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum", map.get("orderNumber"));
 						reChargeMap.put("amount", map.get("cash"));
-						reChargeMap.put("gasStationName", map.get("channel"));
+						reChargeMap.put("gasStationName", gastationService.queryGastationByPK(map.get("channelNumber").toString()).getGas_station_name());
 						reChargeMap.put("gasStationId", map.get("channelNumber"));
-						reChargeMap.put("gasTotal", map.get("goods_sum"));
-						reChargeMap.put("payStatus", "支付成功");
-
-						String chargeType = "";
+						String gasTotal = (String) map.get("goods_sum");
+						reChargeMap.put("gasTotal",gasTotal==null?"0":gasTotal);
+						//0初始化，1成功，2失败，3待支付
+						String status = (String) map.get("orderStatus");
+						if(status.equals("0")){
+							status = "订单初始化";
+						}else if(status.equals("1")){
+							status = "支付成功";
+						}else if(status.equals("2")){
+							status = "支付失败";
+						}else if(status.equals("3")){
+							status = "待支付订单";
+						}
+						reChargeMap.put("payStatus", status);
+						/*String chargeType = "";
 						if (map.get("chargeType") != null && !"".equals(map.get("chargeType").toString())) {
 							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
 						}
-						reChargeMap.put("paymentType", chargeType);
+						reChargeMap.put("paymentType", chargeType);*/
 						reChargeMap.put("remark", map.get("remark"));
 						String dateTime = "";
 						if (map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())) {
@@ -2434,8 +2444,23 @@ public class MobileController {
 						} else {
 							dateTime = sft.format(new Date());
 						}
+						String preferentialCash = (String) map.get("preferential_cash");
 						reChargeMap.put("time", dateTime);
-
+						reChargeMap.put("shouldPayment",map.get("should_payment"));//应付金额
+						reChargeMap.put("preferentialCash",preferentialCash==null?"0":preferentialCash );//优惠金额
+						reChargeMap.put("couponTitle", map.get("couponTitle")==null?"":map.get("couponTitle"));//优惠券标题
+						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费
+						String chargeType = (String) map.get("spend_type");
+						if(chargeType.equals("C01")){
+							chargeType = "卡余额消费";
+						}else if(chargeType.equals("C02")){
+							chargeType = "POS消费";
+						}else if(chargeType.equals("C03")){
+							chargeType = "微信消费";
+						}else if(chargeType.equals("C04 ")){
+							chargeType = "支付宝消费";
+						}
+						reChargeMap.put("chargeType", chargeType);//
 						reChargeList.add(reChargeMap);
 					}
 					reCharge.put("listMap", reChargeList);
@@ -4658,6 +4683,7 @@ public class MobileController {
 								aliShortMessageBean.setSpentMoney(amount);
 								aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
 								AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+								//sysMessageService.saveMessageConsume(content, order);
 							}
 						}
 				}else{
@@ -4717,22 +4743,15 @@ public class MobileController {
 			String pageSize = "pageSize";
 			boolean b = JsonTool.checkJson(mainObj,longitude,latitude,sortType,infoType,pageNum,pageSize);
 			if(b){
-				String http_poms_path = (String) prop.get("http_poms_path");
-				String name = mainObj.getString("name");
 				longitude = mainObj.getString("longitude");
 				latitude = mainObj.getString("latitude");
 				sortType =  mainObj.getString("sortType");//排序类型 1默认2 距离 3 价格(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
-				Double longDb = new Double(0);
-				Double langDb = new Double(0);
 				Double longIn = new Double(longitude);
 				Double langIn = new Double(latitude);
 				int pageNumIn = mainObj.optInt("pageNum");
 				int pageSizeIn = mainObj.optInt("pageSize");
 				Gastation gastation = new Gastation();
-				if(name!=null && !"".equals(name)){
-					gastation.setGas_station_name(name);
-				}
 				//获取所有数据
 				List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
 				//默认排序(置顶两个联盟站)
@@ -4771,7 +4790,7 @@ public class MobileController {
 				result.setMsg("参数有误！");
 			}
 			resutObj = JSONObject.fromObject(result);
-			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			logger.error("信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
@@ -5302,17 +5321,18 @@ public class MobileController {
 		SysOrder record = new SysOrder();
 		//消费订单
 		if(type.equals("2")){
-			record.setChannel("APP-消费");
-			record.setChannelNumber("APP-消费"); // 建立一个虚拟的APP气站，方便后期统计
 			//微信消费
 			if(consumeType.equals("C03")){
+				record.setChannel("APP-微信");
 				record.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.WECHAT);
 			}else if(consumeType.equals("C04")){
 				//支付宝消费
 				record.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.ALIPAY);
+				record.setChannel("APP-支付宝");
 			}else if(consumeType.equals("C01")){
 				//账户余额
 				record.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
+				record.setChannel("APP-账户余额");
 			}
 			record.setSpend_type(spendType);
 			record.setOrderId(orderID);

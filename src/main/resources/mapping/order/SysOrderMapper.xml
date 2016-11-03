@@ -1177,11 +1177,15 @@
 		FROM
 		sys_order_deal rc
 		WHERE
-		rc.order_id = order_number
+		rc.order_id = B.order_id
 		) AS remark,
+		(SELECT sys_coupon.coupon_title FROM sys_coupon WHERE sys_coupon.coupon_no = B.coupon_number) AS couponTitle,
 		B.order_date,
 		B.order_status,
-		B.been_discharged
+		B.been_discharged,
+		B.preferential_cash,
+		B.spend_type,
+		B.should_payment
 		FROM sys_order AS B
 		WHERE B.order_type = '220'
 		AND B.order_status = '1'
