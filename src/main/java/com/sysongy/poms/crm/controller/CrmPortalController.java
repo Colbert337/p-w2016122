@@ -572,6 +572,41 @@ public class CrmPortalController extends BaseContoller {
     }
 
     /**
+     * 判断验证码是否正确
+     * @param phone 手机号码
+     * @param vcode 验证码
+     * @return
+     */
+    @RequestMapping("/user/checkCode")
+    @ResponseBody
+    public String checkCode(@RequestParam String phone,@RequestParam String vcode ){
+        String resultStr = "true";
+        String veCode = (String) redisClientImpl.getFromCache(phone);
+        if(!veCode.equals(vcode)){
+            resultStr = "false";
+        }
+        return resultStr;
+    }
+
+    /**
+     * 判断手机号码是否存在
+     * @param phone 手机号码
+     * @return
+     */
+    @RequestMapping("/user/phone")
+    @ResponseBody
+    public String isExitPhone(@RequestParam String phone) throws Exception{
+        String resultStr = "true";
+        SysDriver sysDriver = new SysDriver();
+        sysDriver.setMobilePhone(phone);
+        SysDriver driver = new SysDriver();
+        driver = driverService.queryDriverByMobilePhone(sysDriver);
+        if(driver != null){
+            resultStr = "false";
+        }
+        return resultStr;
+    }
+    /**
      * 更新APP下载数
      * @return
      */
