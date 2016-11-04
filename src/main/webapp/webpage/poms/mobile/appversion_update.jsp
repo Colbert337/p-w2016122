@@ -370,8 +370,8 @@
 					'folder' : "<%=basePath%>/null",
 					'queueId' : "fileQueue",
 					'queueSizeLimit' : 30,//限制上传文件的数量
-					'fileExt' : "*.apk,*.apk",
-					'fileDesc' : "APK *.apk",//限制文件类型
+					'fileExt' : "*.rar,*.zip",
+					//'fileDesc' : "APK *.apk",//限制文件类型
 					'auto'  : false,
 					'multi'  : false,//是否允许多文件上传
 					'simUploadLimit': 2,//同时运行上传的进程数量
