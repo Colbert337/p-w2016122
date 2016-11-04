@@ -127,7 +127,7 @@
 									<td>${list.batch_no}</td>
 									<td><c:if test="${list.orderType eq '230'}">
 											<c:if test="${list.orderStatus==1}">成功</c:if>
-											<c:if test="${list.orderStatus==2}">失败功</c:if>
+											<c:if test="${list.orderStatus==2}">失败</c:if>
 											<c:if test="${list.orderStatus==3}">待退款</c:if>
 										</c:if>
 									</td>

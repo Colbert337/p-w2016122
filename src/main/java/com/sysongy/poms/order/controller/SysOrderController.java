@@ -261,7 +261,7 @@ public class SysOrderController extends BaseContoller {
 				sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
 				sParaTemp.put("partner", AlipayConfig.partner);
 				sParaTemp.put("_input_charset", AlipayConfig.input_charset);
-				sParaTemp.put("notify_url", http_poms_path+"/web/order/breakReturn");
+				sParaTemp.put("notify_url", http_poms_path+"/api/v1/mobile/breakReturn");
 				sParaTemp.put("batch_no", batch_no);
 //				sParaTemp.put("", arg1);
 				sParaTemp.put("refund_date", refund_date);
@@ -325,7 +325,7 @@ public class SysOrderController extends BaseContoller {
 							+ xml.substring(xml.indexOf("<return_msg><![CDATA[") + "<return_msg><![CDATA[".length(),
 									xml.indexOf("]]></return_msg>")));
 				}
-				account.setAccountBalanceBigDecimal(account.getAccountBalanceBigDecimal().add(new BigDecimal(money)));
+				account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
 				accountService.updateAccount(account);
 			}
 		
@@ -339,75 +339,9 @@ public class SysOrderController extends BaseContoller {
 			return bean.getRetMsg();
 		}
 	}
-	/**
-	 * 退费并保存退费订单
-	 * @param detail_data
-	 * @return
-	 */
-	@RequestMapping("/breakReturn")
-	@ResponseBody
-	public String breakReturn(HttpServletRequest request, HttpServletResponse response,ModelMap map) {
-		String batch_no = "";
-		String result_details= "";
-		logger.debug("支付宝支付回调获取数据开始");
-		try {
-			batch_no = request.getParameter("batch_no");
-			result_details = request.getParameter("result_details");//支付宝返回结果集
-		
-		if (StringUtils.isEmpty(result_details)&&StringUtils.isEmpty(batch_no)) {
-			logger.debug("支付宝回调返回结果为空");
-			throw new ServiceException("支付宝回调返回结果为空！");
-		}
-		String[] dates=result_details.split("#");//第一单
-		String[] date=dates[0].split("|");//第一笔
-		String no=date[0].split("^")[0];
-		String money=date[0].split("^")[1];
-		String b=date[0].split("^")[2];
-		SysOrder order=null;
-		if (b.equalsIgnoreCase("SUCCESS")) {
-			
-			
-			order=service.queryByTrade(batch_no);
-			MobileReturn result = new MobileReturn();
-			result.setStatus(MobileReturn.STATUS_SUCCESS);
-			result.setMsg("支付成功！");
-			JSONObject resutObj = new JSONObject();
-			String resultStr = "";
-			// 查询订单内容
-//			SysOrder order = service.selectByPrimaryKey(batch_no);
-			if (order != null && order.getOrderStatus() == 3) {// 当订单状态是初始化时，做状态更新
-				// 修改订单状态
-				order.setOrderStatus(1);
-				order.setOrderRemark("退款成功！");
-				order.setOrderDate(new Date());
-				service.updateByPrimaryKey(order);
-				SysUserAccount account=accountService.queryUserAccountByDriverId(order.getDebitAccount());//初始化钱袋
-				if (account==null) {
-					logger.error("支付宝返现失败：");
-				}
-				account.setAccountBalanceBigDecimal(account.getAccountBalanceBigDecimal().add(new BigDecimal(money)));
-				accountService.updateAccount(account);
-			}
-
-		
-		}else{
-			order.setOrderStatus(2);
-			order.setOrderRemark("退款失败！");
-			order.setOrderDate(new Date());
-			service.updateByPrimaryKey(order);
-			logger.error("支付宝返现失败："+b);
-		}
-		
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			return "";
-		}
-		
-	}
+	
 	//生成定点编号
-	private synchronized String getBatchNo(){
+	public static synchronized String getBatchNo(){
 		return (new SimpleDateFormat("yyyyMMdd").format(new Date())+System.currentTimeMillis()).toString();
 	}
 }
