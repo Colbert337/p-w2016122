@@ -5104,8 +5104,12 @@ public class MobileController {
 							String strArray2[] = strArray1[1].split("/");
 							priceList.add(Double.valueOf(strArray2[0].substring(0, strArray2[0].length()-1)));
 						}
+					}else{
+						priceList.add(0.0);
 					} 
-				}
+				}else{
+					priceList.add(0.0);
+				} 
 				//获取最低价格,并赋值
 				Collections.sort(priceList);
 				gastationAllList.get(i).setMinPrice(priceList.get(0));
