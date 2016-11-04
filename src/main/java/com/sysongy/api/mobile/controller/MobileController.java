@@ -2006,8 +2006,8 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
-				String fromDriverId = mainObj.optString("token");
-				String toDriverId = mainObj.optString("account");
+				/*String fromDriverId = mainObj.optString("token");
+				String toDriverId = mainObj.optString("account");*/
 				amount = mainObj.optString("amount");
 				Map<String, Object> driverMap = new HashMap<>();
 				driverMap.put("token", mainObj.optString("token"));
@@ -2025,7 +2025,7 @@ public class MobileController {
 					result.setMsg("转账成功！");
 					//发送短信提醒
 					//付款人短信提醒
-					AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+/*					AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 					aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
 					aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
 					aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
@@ -2039,7 +2039,7 @@ public class MobileController {
 					aliShortMessage.setAccountNumber(driverService.queryDriverByPK(toDriverId).getMobilePhone());
 					aliShortMessage.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 					aliShortMessage.setTotalPrice(amount);
-					AliShortMessage.sendShortMessage(aliShortMessage, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+					AliShortMessage.sendShortMessage(aliShortMessage, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);*/
 				} else if (resultVal == 2) {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("账户不存在,无法转账！");
@@ -2724,10 +2724,10 @@ public class MobileController {
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
-							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
+							//设置应付金额
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置平台优惠金额(应付金额-实付金额-优惠券优惠金额)
 							BigDecimal preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 							//设置优惠券优惠金额
@@ -2762,10 +2762,10 @@ public class MobileController {
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
-							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
+							//设置应付金额
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置平台优惠金额(应付金额-实付金额-优惠券优惠金额)
 							BigDecimal preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 							//设置优惠券优惠金额
@@ -2955,6 +2955,8 @@ public class MobileController {
 						aliShortMessageBean.setBackCash(backCash.equals("null")||backCash==null?"0":backCash);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
+						//APP提示
+						sysMessageService.saveMessageTransaction("微信充值", sysOrder,"1");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3039,6 +3041,8 @@ public class MobileController {
 						aliShortMessageBean.setSpentMoney(feeCount);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						//APP提示
+						sysMessageService.saveMessageTransaction("微信消费", sysOrder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3120,6 +3124,8 @@ public class MobileController {
 						aliShortMessageBean.setBackCash(backCash.equals("null")||backCash==null?"0":backCash);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
+						//APP提示
+						sysMessageService.saveMessageTransaction("支付宝充值", sysOrder,"1");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3182,6 +3188,8 @@ public class MobileController {
 						aliShortMessageBean.setSpentMoney(feeCount);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						//APP提示
+						sysMessageService.saveMessageTransaction("支付宝消费", sysOrder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -4725,7 +4733,7 @@ public class MobileController {
 								aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
 								AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 								//APP提示
-//								sysMessageService.saveMessageTransaction(content, order);
+								sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
 							}
 						}
 				}else{
