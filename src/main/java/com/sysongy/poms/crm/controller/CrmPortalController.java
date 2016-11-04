@@ -568,7 +568,7 @@ public class CrmPortalController extends BaseContoller {
                 logger.info("验证码无效！");
             }
         }
-        return "/webpage/crm/webapp-download-app";
+        return "redirect:/webpage/crm/webapp-download-app";
     }
 
     /**
