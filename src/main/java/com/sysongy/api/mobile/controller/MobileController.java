@@ -65,6 +65,7 @@ import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.base.service.DistrictService;
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.CouponGroup;
+import com.sysongy.poms.coupon.model.UserCoupon;
 import com.sysongy.poms.coupon.service.CouponGroupService;
 import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
@@ -3033,6 +3034,14 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
+						String couponId = orderService.queryById(orderId).getCoupon_id();
+						//更新优惠券使用状态
+						if(couponId!=null && !couponId.equals("")){
+							UserCoupon uc = new UserCoupon();
+							uc.setUser_coupon_id(couponId);
+							uc.setIsuse("1");
+							int rs = couponService.updateUserCouponStatus(uc);
+						}
 						//微信消费短信通知
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
@@ -3180,6 +3189,14 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
+						String couponId = orderService.queryById(orderId).getCoupon_id();
+						//更新优惠券使用状态
+						if(couponId!=null && !couponId.equals("")){
+							UserCoupon uc = new UserCoupon();
+							uc.setUser_coupon_id(couponId);
+							uc.setIsuse("1");
+							int rs = couponService.updateUserCouponStatus(uc);
+						}
 						//支付宝充值短信通知
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
@@ -4514,7 +4531,7 @@ public class MobileController {
 					if(pageInfo.getList()!=null&&pageInfo.getList().size()>0){
 						for (Coupon data : pageInfo.getList()) {
 							Map<String, Object> reChargeMap = new HashMap<>();
-							reChargeMap.put("couponId",data.getCoupon_id());
+							reChargeMap.put("couponId",data.getUser_coupon_id());
 							couponKind = data.getCoupon_kind();
 							if(couponKind.equals("2")){
 								reChargeMap.put("gasStationName",data.getGas_station_name());
@@ -4540,7 +4557,7 @@ public class MobileController {
 					if(pageInfo.getList()!=null&&pageInfo.getList().size()>0){
 						for (Coupon data : pageInfo.getList()) {
 							Map<String, Object> reChargeMap = new HashMap<>();
-							reChargeMap.put("couponId",data.getCoupon_id());
+							reChargeMap.put("couponId",data.getUser_coupon_id());
 							couponKind = data.getCoupon_kind();
 							if(couponKind.equals("2")){
 								reChargeMap.put("gasStationName",data.getGas_station_name());
@@ -4721,6 +4738,13 @@ public class MobileController {
 							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
+								//更新优惠券使用状态
+								if(couponId!=null && !couponId.equals("")){
+									UserCoupon uc = new UserCoupon();
+									uc.setUser_coupon_id(couponId);
+									uc.setIsuse("1");
+									int rs = couponService.updateUserCouponStatus(uc);
+								}
 								orderService.consumeByDriver(sysOrder);
 								data.put("orderId", orderID);
 								data.put("orderNum", orderService.queryById(orderID).getOrderNumber());
