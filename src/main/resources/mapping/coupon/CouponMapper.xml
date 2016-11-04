@@ -294,7 +294,7 @@
 
 	<!-- 当前用户可用优惠券 -->
 	<select id="queryCouponOrderByAmount" resultMap="BaseResultMap" parameterType="com.sysongy.poms.coupon.model.Coupon">
-		select sc.*,suc.user_coupon_id,sys_gas_station.gas_station_name
+		select sc.*,suc.user_coupon_id,sys_gas_station.gas_station_name,suc.user_coupon_id
 		from sys_user_coupon suc left join sys_coupon sc on suc.coupon_id = sc.coupon_id
 		LEFT JOIN sys_gas_station ON sc.sys_gas_station_id = sys_gas_station.sys_gas_station_id
 		where suc.isuse = '0' AND suc.sys_driver_id = #{driverId,jdbcType=VARCHAR} AND sc.status = 1

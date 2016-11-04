@@ -62,6 +62,8 @@ public class Coupon extends BaseModel {
 	private String nowDate;
 	//状态信息
 	private String statusinfo;
+	//用户优惠券分配ID 虚拟字段
+	private String user_coupon_id;
 
 
 	public String getStatusinfo() {
@@ -284,6 +286,14 @@ public class Coupon extends BaseModel {
 
 	public void setAmount(String amount) {
 		this.amount = amount;
+	}
+
+	public String getUser_coupon_id() {
+		return user_coupon_id;
+	}
+
+	public void setUser_coupon_id(String user_coupon_id) {
+		this.user_coupon_id = user_coupon_id;
 	}
 
 }

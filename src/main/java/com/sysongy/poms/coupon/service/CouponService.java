@@ -47,4 +47,6 @@ public interface CouponService {
 	 * @return
 	 */
 	List<Map<String, Object>> queryCouponMapByAmount(Coupon record);
+	
+	int updateUserCouponStatus(UserCoupon record);
 }
