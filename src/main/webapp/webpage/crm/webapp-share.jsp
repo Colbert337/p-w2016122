@@ -28,6 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<form class="download-form" action="<%=basePath %>/portal/crm/help/user/register" method="post" id="shareInviteCode">
 			<div class="df-item">
 				<input id="phone" name="phone" tabIndex="1" class="txt required" type="text" placeholder="请输入手机号码">
+				<input id="isPhone" name="isPhone" type="hidden" value="1">
 			</div>
 			<div class="df-item">
 				<input id="vcode" name="vcode" tabIndex="2" class="txt code required" type="text" placeholder="请输入验证码">

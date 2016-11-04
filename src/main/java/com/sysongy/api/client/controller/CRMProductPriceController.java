@@ -128,7 +128,7 @@ public class CRMProductPriceController {
             String effectiveTime = gastation.getPrice_effective_time();
             Date startTime = new Date();
 
-            if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE+"")){//12小时后生效
+            if(effectiveTime != null && effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWELVE+"")){//12小时后生效
                 startTime = productPrice.getStartTime();//获取当前时间12小时后的时间
                 Date currntTime = new Date();
                 double resultVal = DateTimeHelper.getHoursOfHoursTwoDate(startTime,currntTime);
@@ -145,7 +145,7 @@ public class CRMProductPriceController {
                     ajaxJson.setMsg("生效时间必须为12小时之后！");
                     return ajaxJson;
                 }
-            }else if(effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWENTY+"")){//24小时后生效
+            }else if(effectiveTime != null && effectiveTime.equals(GlobalConstant.PRICE_EFFECTIVE_TIME.TWENTY+"")){//24小时后生效
                 startTime = productPrice.getStartTime();
                 Date currntTime = new Date();
                 double resultVal = DateTimeHelper.getHoursOfHoursTwoDate(startTime,currntTime);
