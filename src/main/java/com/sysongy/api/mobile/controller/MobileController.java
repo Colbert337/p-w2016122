@@ -2465,10 +2465,18 @@ public class MobileController {
 						} else {
 							dateTime = sft.format(new Date());
 						}
-						String preferentialCash = (String) map.get("preferential_cash");
+						String preferentialCash = (String) map.get("preferential_cash");//平台优惠金额
+						String coupon_cash = (String) map.get("coupon_cash");//优惠券优惠金额
+						BigDecimal cashAll = new BigDecimal(0);
+						if(preferentialCash!=null && !preferentialCash.equals("")){
+							cashAll = new BigDecimal(preferentialCash);
+						}
+						if(coupon_cash!=null && !coupon_cash.equals("")){
+							cashAll = cashAll.add(new BigDecimal(coupon_cash));
+						}
 						reChargeMap.put("time", dateTime);
 						reChargeMap.put("shouldPayment",map.get("should_payment"));//应付金额
-						reChargeMap.put("preferentialCash",preferentialCash==null?"0":preferentialCash );//优惠金额
+						reChargeMap.put("preferentialCash",cashAll);//优惠金额
 						reChargeMap.put("couponTitle", map.get("couponTitle")==null?"":map.get("couponTitle"));//优惠券标题
 						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费
 						String chargeType = (String) map.get("spend_type");
@@ -2697,7 +2705,7 @@ public class MobileController {
 					int number = orderService.queryConsumerOrderNumber(driverID);
 					//优惠券ID
 					String couponId = mainObj.optString("couponId");		
-					//优惠券金额
+					//设置优惠券优惠金额
 					String couponCash = mainObj.optString("couponCash");	
 					//气站ID
 					gastationId = mainObj.optString("gastationId");	
@@ -2713,10 +2721,6 @@ public class MobileController {
 							if(couponId!=null && !"".equals(couponId)){
 								sysOrder.setCoupon_number(couponId);
 							}
-							//设置优惠金额
-							if(couponCash!=null && !"".equals(couponCash)){
-								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-							}
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
@@ -2724,6 +2728,14 @@ public class MobileController {
 							sysOrder.setCash(new BigDecimal(payableAmount));
 							//设置实付金额
 							sysOrder.setShould_payment(new BigDecimal(amount));
+							//设置平台优惠金额(应付金额-实付金额-优惠券优惠金额)
+							BigDecimal preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
+							//设置优惠券优惠金额
+							if(couponCash!=null && !"".equals(couponCash)){
+								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+								preferential_cash.subtract(new BigDecimal(couponCash));
+							}
+							sysOrder.setPreferential_cash(preferential_cash);
 							orderService.checkIfCanConsume(sysOrder);
 							String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
 							Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, amount, "司集云平台-会员消费",
@@ -2747,10 +2759,6 @@ public class MobileController {
 							if(couponId!=null && !"".equals(couponId)){
 								sysOrder.setCoupon_number(couponId);
 							}
-							//设置优惠金额
-							if(couponCash!=null && !"".equals(couponCash)){
-								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-							}
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
@@ -2758,6 +2766,14 @@ public class MobileController {
 							sysOrder.setCash(new BigDecimal(payableAmount));
 							//设置实付金额
 							sysOrder.setShould_payment(new BigDecimal(amount));
+							//设置平台优惠金额(应付金额-实付金额-优惠券优惠金额)
+							BigDecimal preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
+							//设置优惠券优惠金额
+							if(couponCash!=null && !"".equals(couponCash)){
+								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+								preferential_cash.subtract(new BigDecimal(couponCash));
+							}
+							sysOrder.setPreferential_cash(preferential_cash);
 							orderService.checkIfCanConsume(sysOrder);
 							//消费金额，微信消费金额单位为分，不能有小数
 							Integer money = (int) (new Double(amount)*100);
@@ -4676,10 +4692,6 @@ public class MobileController {
 						if(couponId!=null && !"".equals(couponId)){
 							sysOrder.setCoupon_number(couponId);
 						}
-						//设置优惠金额
-						if(couponCash!=null && !"".equals(couponCash)){
-							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-						}
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
 						//设置实付金额
@@ -4688,7 +4700,14 @@ public class MobileController {
 						sysOrder.setShould_payment(new BigDecimal(payableAmount));
 						//订单状态
 						sysOrder.setOrderStatus(1);
-						//设置优惠总金额(优惠券金额+平台优惠金额)
+						//设置平台优惠金额(应付金额-实付金额-优惠券优惠金额)
+						BigDecimal preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
+						//设置优惠券优惠金额
+						if(couponCash!=null && !"".equals(couponCash)){
+							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+							preferential_cash.subtract(new BigDecimal(couponCash));
+						}
+						sysOrder.setPreferential_cash(preferential_cash);
 						if (sysOrder != null) {
 							int nCreateOrder = orderService.insert(sysOrder, null);
 							if (nCreateOrder < 1){
