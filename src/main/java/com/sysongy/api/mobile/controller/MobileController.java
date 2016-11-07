@@ -2741,7 +2741,7 @@ public class MobileController {
 							//设置优惠券优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
 								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-								preferential_cash.subtract(new BigDecimal(couponCash));
+								preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));
 							}
 							sysOrder.setPreferential_cash(preferential_cash);
 							orderService.checkIfCanConsume(sysOrder);
@@ -4457,7 +4457,7 @@ public class MobileController {
 					for (Map<String, Object> map : gsGasPriceList) {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("preferential_type", map.get("preferential_type"));
-						reChargeMap.put("gasName", map.get("gas_name"));
+						reChargeMap.put("gasName", usysparamService.query("CARDTYPE", map.get("gas_name").toString()).get(0).getMname());
 						reChargeMap.put("remark", map.get("remark"));
 						reChargeMap.put("gasPrice", map.get("product_price"));
 						reChargeMap.put("priceUnit", map.get("unit"));
@@ -4655,7 +4655,14 @@ public class MobileController {
 				tokenMap.put("orderNum",order.getOrderNumber());
 				tokenMap.put("gastationId",order.getChannelNumber());
 				tokenMap.put("payment",order.getShould_payment());
-				tokenMap.put("preferentialCash",(order.getPreferential_cash()==null||"".equals(order.getPreferential_cash()))?"0":order.getPreferential_cash());
+				BigDecimal cash = new BigDecimal(0);
+				if(order.getPreferential_cash()!=null && !"".equals(order.getPreferential_cash())){
+					cash = cash.add(new BigDecimal(order.getPreferential_cash().toString()));
+				}
+				if(order.getCoupon_cash() !=null && !"".equals(order.getCoupon_cash())){
+					cash = cash.add(new BigDecimal(order.getCoupon_cash().toString()));
+				}
+				tokenMap.put("preferentialCash",cash);
 				result.setData(tokenMap);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -4737,7 +4744,7 @@ public class MobileController {
 						//设置优惠券优惠金额
 						if(couponCash!=null && !"".equals(couponCash)){
 							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-							preferential_cash.subtract(new BigDecimal(couponCash));
+							preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));
 						}
 						sysOrder.setPreferential_cash(preferential_cash);
 						if (sysOrder != null) {
