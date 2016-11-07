@@ -55,4 +55,6 @@ public interface GastationService {
 	public void updateForJob() throws Exception;
 	
 	public List<Gastation> queryGastationForCoupon(Gastation record) throws Exception;
+	
+	public Integer queryGastationByPhone(String phone) throws Exception;
 }

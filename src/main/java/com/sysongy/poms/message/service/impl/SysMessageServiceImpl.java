@@ -1,5 +1,6 @@
 package com.sysongy.poms.message.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -215,10 +216,8 @@ public class SysMessageServiceImpl implements SysMessageService {
 		message.setMessageGroup("999");
 		message.setMessageTicker("交易提醒");
 		message.setMessageTitle("交易提醒");
-		
-		
-		
-		
+		message.setMessageBody("您的账户于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(order.getOrderDate())+content+order.getCash()+"元");
+		message.setContent("您的账户于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(order.getOrderDate())+content+order.getCash()+"元");
 		return saveMessage_New(message);
 	}
 }

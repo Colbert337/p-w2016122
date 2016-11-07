@@ -110,6 +110,8 @@ public class SysDriver extends BaseModel{
     
     private String driverQrcode;
     
+    private String nickname;
+    
     private String verifySource;//实名认证来源，默认为CRM认证来源0，APP认证来源是改为1
     
     private String isImport;//虚拟字段是否导入，导入时值为1
@@ -529,6 +531,14 @@ public class SysDriver extends BaseModel{
 
 	public void setIsImport(String isImport) {
 		this.isImport = isImport;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 }

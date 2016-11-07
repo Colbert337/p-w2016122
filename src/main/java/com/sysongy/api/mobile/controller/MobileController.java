@@ -65,6 +65,7 @@ import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.base.service.DistrictService;
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.CouponGroup;
+import com.sysongy.poms.coupon.model.UserCoupon;
 import com.sysongy.poms.coupon.service.CouponGroupService;
 import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
@@ -587,6 +588,13 @@ public class MobileController {
 						resultMap.put("QRCodeUrl", http_poms_path + driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn", cashBack);
 						resultMap.put("userStatus", sysUserAccount.getAccount_status());
+						int i = gastationService.queryGastationByPhone(driverService.queryDriverByPK(sysDriverId).getMobilePhone());
+						//用户类型(1 司机 2 气站管理员)
+						if(i==0){
+							resultMap.put("userType","1");
+						}else{
+							resultMap.put("userType", "2");
+						}
 						if (driver.getAvatarB() == null || "".equals(driver.getAvatarB())) {
 							resultMap.put("photoUrl", "");
 						} else {
@@ -754,7 +762,7 @@ public class MobileController {
 				String sysDriverId = mainObj.optString("token");
 				if (sysDriverId != null && !sysDriverId.equals("")) {
 					if (name != null && !"".equals(name)) {
-						driver.setFullName(name);
+						driver.setNickname(name);
 					}
 					if (imgUrl != null && !"".equals(imgUrl)) {
 						driver.setAvatarB(imgUrl);
@@ -2006,8 +2014,8 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
-				String fromDriverId = mainObj.optString("token");
-				String toDriverId = mainObj.optString("account");
+				/*String fromDriverId = mainObj.optString("token");
+				String toDriverId = mainObj.optString("account");*/
 				amount = mainObj.optString("amount");
 				Map<String, Object> driverMap = new HashMap<>();
 				driverMap.put("token", mainObj.optString("token"));
@@ -2025,7 +2033,7 @@ public class MobileController {
 					result.setMsg("转账成功！");
 					//发送短信提醒
 					//付款人短信提醒
-					AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+/*					AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 					aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
 					aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
 					aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
@@ -2039,7 +2047,7 @@ public class MobileController {
 					aliShortMessage.setAccountNumber(driverService.queryDriverByPK(toDriverId).getMobilePhone());
 					aliShortMessage.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 					aliShortMessage.setTotalPrice(amount);
-					AliShortMessage.sendShortMessage(aliShortMessage, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+					AliShortMessage.sendShortMessage(aliShortMessage, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);*/
 				} else if (resultVal == 2) {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("账户不存在,无法转账！");
@@ -2724,10 +2732,10 @@ public class MobileController {
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
-							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
+							//设置应付金额
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置平台优惠金额(应付金额-实付金额-优惠券优惠金额)
 							BigDecimal preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 							//设置优惠券优惠金额
@@ -2762,10 +2770,10 @@ public class MobileController {
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
-							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
+							//设置应付金额
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置平台优惠金额(应付金额-实付金额-优惠券优惠金额)
 							BigDecimal preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 							//设置优惠券优惠金额
@@ -2955,6 +2963,8 @@ public class MobileController {
 						aliShortMessageBean.setBackCash(backCash.equals("null")||backCash==null?"0":backCash);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
+						//APP提示
+						sysMessageService.saveMessageTransaction("微信充值", sysOrder,"1");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3031,6 +3041,14 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
+						String couponId = orderService.queryById(orderId).getCoupon_id();
+						//更新优惠券使用状态
+						if(couponId!=null && !couponId.equals("")){
+							UserCoupon uc = new UserCoupon();
+							uc.setUser_coupon_id(couponId);
+							uc.setIsuse("1");
+							int rs = couponService.updateUserCouponStatus(uc);
+						}
 						//微信消费短信通知
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
@@ -3039,6 +3057,8 @@ public class MobileController {
 						aliShortMessageBean.setSpentMoney(feeCount);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						//APP提示
+						sysMessageService.saveMessageTransaction("微信消费", sysOrder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3120,6 +3140,8 @@ public class MobileController {
 						aliShortMessageBean.setBackCash(backCash.equals("null")||backCash==null?"0":backCash);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
+						//APP提示
+						sysMessageService.saveMessageTransaction("支付宝充值", sysOrder,"1");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3174,6 +3196,14 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
+						String couponId = orderService.queryById(orderId).getCoupon_id();
+						//更新优惠券使用状态
+						if(couponId!=null && !couponId.equals("")){
+							UserCoupon uc = new UserCoupon();
+							uc.setUser_coupon_id(couponId);
+							uc.setIsuse("1");
+							int rs = couponService.updateUserCouponStatus(uc);
+						}
 						//支付宝充值短信通知
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
@@ -3182,6 +3212,8 @@ public class MobileController {
 						aliShortMessageBean.setSpentMoney(feeCount);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						//APP提示
+						sysMessageService.saveMessageTransaction("支付宝消费", sysOrder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -4506,7 +4538,7 @@ public class MobileController {
 					if(pageInfo.getList()!=null&&pageInfo.getList().size()>0){
 						for (Coupon data : pageInfo.getList()) {
 							Map<String, Object> reChargeMap = new HashMap<>();
-							reChargeMap.put("couponId",data.getCoupon_id());
+							reChargeMap.put("couponId",data.getUser_coupon_id());
 							couponKind = data.getCoupon_kind();
 							if(couponKind.equals("2")){
 								reChargeMap.put("gasStationName",data.getGas_station_name());
@@ -4532,7 +4564,7 @@ public class MobileController {
 					if(pageInfo.getList()!=null&&pageInfo.getList().size()>0){
 						for (Coupon data : pageInfo.getList()) {
 							Map<String, Object> reChargeMap = new HashMap<>();
-							reChargeMap.put("couponId",data.getCoupon_id());
+							reChargeMap.put("couponId",data.getUser_coupon_id());
 							couponKind = data.getCoupon_kind();
 							if(couponKind.equals("2")){
 								reChargeMap.put("gasStationName",data.getGas_station_name());
@@ -4713,6 +4745,13 @@ public class MobileController {
 							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
+								//更新优惠券使用状态
+								if(couponId!=null && !couponId.equals("")){
+									UserCoupon uc = new UserCoupon();
+									uc.setUser_coupon_id(couponId);
+									uc.setIsuse("1");
+									int rs = couponService.updateUserCouponStatus(uc);
+								}
 								orderService.consumeByDriver(sysOrder);
 								data.put("orderId", orderID);
 								data.put("orderNum", orderService.queryById(orderID).getOrderNumber());
@@ -4725,7 +4764,7 @@ public class MobileController {
 								aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
 								AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 								//APP提示
-//								sysMessageService.saveMessageTransaction(content, order);
+								sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
 							}
 						}
 				}else{
@@ -5057,6 +5096,25 @@ public class MobileController {
 		List<Map<String, Object>> gastationArray = new ArrayList<>();
 		String http_poms_path = (String) prop.get("http_poms_path");
 		if(gastationAllList!=null && gastationAllList.size() > 0){
+			List<Gastation> rightList = new ArrayList<Gastation>();
+			List<Gastation> wrongList = new ArrayList<Gastation>();
+			for(int i=0;i<gastationAllList.size();i++ ){
+				System.out.println(gastationAllList.get(i).getGas_station_name());
+				String price = gastationAllList.get(i).getLng_price();
+				if(price!=null && !" ".equals(price) && !"".equals(price)){
+					price = price.replaceAll("，", ",");
+					price = price.replaceAll("：", ":");
+					if(price.indexOf(":") != -1 && price.indexOf("/") != -1){
+						rightList.add(gastationAllList.get(i));
+					}else{
+						wrongList.add(gastationAllList.get(i));
+						gastationAllList.remove(i);
+					}
+				}else{
+					wrongList.add(gastationAllList.get(i));
+					gastationAllList.remove(i);
+				}
+			}	
 			for (int i=0;i <gastationAllList.size();i++ ){
 				String price = gastationAllList.get(i).getLng_price();
 				List<Double> priceList = new ArrayList<Double>();
@@ -5072,8 +5130,12 @@ public class MobileController {
 							String strArray2[] = strArray1[1].split("/");
 							priceList.add(Double.valueOf(strArray2[0].substring(0, strArray2[0].length()-1)));
 						}
+					}else{
+						priceList.add(0.0);
 					} 
-				}
+				}else{
+					priceList.add(0.0);
+				} 
 				//获取最低价格,并赋值
 				Collections.sort(priceList);
 				gastationAllList.get(i).setMinPrice(priceList.get(0));
@@ -5090,6 +5152,8 @@ public class MobileController {
 	                return -1;  
 	            }  
 	        }); 
+	        gastationAllList.addAll(wrongList);
+	        System.out.println(gastationAllList.size());
 	        //进行分页
 			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
 			if(allPage >= pageNumIn ){
