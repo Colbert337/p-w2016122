@@ -1519,9 +1519,6 @@ public class MobileController {
 								end  = gastationAllList.size();
 							}
 							int begin = (pageNum - 1) * pageSize;
-							if(begin > allPage ){
-								begin = allPage;
-							}
 							PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
 							List<Gastation> gastationList1 = pageInfo.getList();
 							List<Map<String, Object>> gastationArray = new ArrayList<>();
@@ -4946,9 +4943,6 @@ public class MobileController {
 					end  = gastationAllList.size();
 				}
 				int begin = (pageNumIn - 1) * pageSizeIn;
-				if(begin > allPage ){
-					begin = allPage;
-				}
 				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
 				List<Gastation> gastationList1 = pageInfo.getList();
 				if (gastationList1 != null && gastationList1.size() > 0) {
@@ -5039,9 +5033,6 @@ public class MobileController {
 					end  = gastationAllList.size();
 				}
 				int begin = (pageNumIn - 1) * pageSizeIn;
-				if(begin > allPage ){
-					begin = allPage;
-				}
 				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
 				List<Gastation> gastationList1 = pageInfo.getList();
 				if (gastationList1 != null && gastationList1.size() > 0) {
@@ -5108,7 +5099,6 @@ public class MobileController {
 			List<Gastation> rightList = new ArrayList<Gastation>();
 			List<Gastation> wrongList = new ArrayList<Gastation>();
 			for(int i=0;i<gastationAllList.size();i++ ){
-				System.out.println(gastationAllList.get(i).getGas_station_name());
 				String price = gastationAllList.get(i).getLng_price();
 				if(price!=null && !" ".equals(price) && !"".equals(price)){
 					price = price.replaceAll("，", ",");
@@ -5118,10 +5108,12 @@ public class MobileController {
 					}else{
 						wrongList.add(gastationAllList.get(i));
 						gastationAllList.remove(i);
+						i--;
 					}
 				}else{
 					wrongList.add(gastationAllList.get(i));
 					gastationAllList.remove(i);
+					i--;
 				}
 			}	
 			for (int i=0;i <gastationAllList.size();i++ ){
@@ -5162,7 +5154,6 @@ public class MobileController {
 	            }  
 	        }); 
 	        gastationAllList.addAll(wrongList);
-	        System.out.println(gastationAllList.size());
 	        //进行分页
 			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
 			if(allPage >= pageNumIn ){
@@ -5174,9 +5165,6 @@ public class MobileController {
 					end  = gastationAllList.size();
 				}
 				int begin = (pageNumIn - 1) * pageSizeIn;
-				if(begin > allPage ){
-					begin = allPage;
-				}
 				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
 				List<Gastation> gastationList1 = pageInfo.getList();
 				if (gastationList1 != null && gastationList1.size() > 0) {
@@ -5519,7 +5507,7 @@ public class MobileController {
 			record.setOperator(appOperatorId);
 			record.setOperatorSourceId(appOperatorId);
 			record.setCash(new BigDecimal(cash));
-			record.setChargeType(chargeType);
+			//record.setChargeType(chargeType);
 			record.setIs_discharge("0");
 			record.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.DRIVER);
 			record.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);
