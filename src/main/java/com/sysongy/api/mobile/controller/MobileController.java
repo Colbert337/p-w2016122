@@ -2730,6 +2730,7 @@ public class MobileController {
 								sysOrder.setCoupon_number(couponId);
 							}
 							//设置气站ID
+							sysOrder.setDebitAccount(gastationId);
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 							//设置实付金额
@@ -4732,6 +4733,7 @@ public class MobileController {
 							sysOrder.setCoupon_number(couponId);
 						}
 						//设置气站ID
+						sysOrder.setDebitAccount(gastationId);
 						sysOrder.setChannelNumber(gastationId);
 						//设置实付金额
 						sysOrder.setCash(new BigDecimal(amount));
