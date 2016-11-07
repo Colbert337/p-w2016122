@@ -13,6 +13,7 @@ import com.sysongy.api.mobile.service.MbDealOrderService;
 import com.sysongy.poms.driver.dao.SysDriverMapper;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.dao.SysUserMapper;
@@ -48,6 +49,8 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
     SysUserMapper sysUserMapper;
     @Autowired
     SysUserAccountService sysUserAccountService;
+	@Autowired
+	SysMessageService sysMessageService;
 
     /**
      * 个人对个人转账
@@ -128,6 +131,31 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                             orderService.transferDriverToDriver(order);
                             resultVal = 1;
                             sendTransferMessage(order,account);
+                            //发送短信提醒
+                            String fromDriverId = driverId;
+                            SysDriver record = new SysDriver();
+                            record.setMobilePhone(account);
+            				String toDriverId =  driverService.queryDriverByMobilePhone(record).getSysDriverId();
+        					//付款人短信提醒
+        					AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        					aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
+        					aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
+        					aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        					aliShortMessageBean.setMoney(amount);
+        					aliShortMessageBean.setMoney1(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(fromDriverId).getSysDriverId()).getAccountBalance());
+        					aliShortMessageBean.setString("转出");
+        					AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+        					//APP提示
+    						sysMessageService.saveMessageTransaction("转出", order,"2");
+        					//收款人短信提醒
+        					AliShortMessageBean aliShortMessage = new AliShortMessageBean();
+        					aliShortMessage.setSendNumber(driverService.queryDriverByPK(toDriverId).getMobilePhone());
+        					aliShortMessage.setAccountNumber(driverService.queryDriverByPK(toDriverId).getMobilePhone());
+        					aliShortMessage.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        					aliShortMessage.setTotalPrice(amount);
+        					AliShortMessage.sendShortMessage(aliShortMessage, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+        					//APP提示
+    						sysMessageService.saveMessageTransaction("收到转账", order,"1");
                             return resultVal;
                         }else{
                             return resultVal = 2;//账户不存在

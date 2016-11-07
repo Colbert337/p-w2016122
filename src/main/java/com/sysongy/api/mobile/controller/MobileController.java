@@ -588,6 +588,13 @@ public class MobileController {
 						resultMap.put("QRCodeUrl", http_poms_path + driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn", cashBack);
 						resultMap.put("userStatus", sysUserAccount.getAccount_status());
+						int i = gastationService.queryGastationByPhone(driverService.queryDriverByPK(sysDriverId).getMobilePhone());
+						//用户类型(1 司机 2 气站管理员)
+						if(i==0){
+							resultMap.put("userType","1");
+						}else{
+							resultMap.put("userType", "2");
+						}
 						if (driver.getAvatarB() == null || "".equals(driver.getAvatarB())) {
 							resultMap.put("photoUrl", "");
 						} else {
@@ -755,7 +762,7 @@ public class MobileController {
 				String sysDriverId = mainObj.optString("token");
 				if (sysDriverId != null && !sysDriverId.equals("")) {
 					if (name != null && !"".equals(name)) {
-						driver.setFullName(name);
+						driver.setNickname(name);
 					}
 					if (imgUrl != null && !"".equals(imgUrl)) {
 						driver.setAvatarB(imgUrl);
@@ -5089,6 +5096,25 @@ public class MobileController {
 		List<Map<String, Object>> gastationArray = new ArrayList<>();
 		String http_poms_path = (String) prop.get("http_poms_path");
 		if(gastationAllList!=null && gastationAllList.size() > 0){
+			List<Gastation> rightList = new ArrayList<Gastation>();
+			List<Gastation> wrongList = new ArrayList<Gastation>();
+			for(int i=0;i<gastationAllList.size();i++ ){
+				System.out.println(gastationAllList.get(i).getGas_station_name());
+				String price = gastationAllList.get(i).getLng_price();
+				if(price!=null && !" ".equals(price) && !"".equals(price)){
+					price = price.replaceAll("，", ",");
+					price = price.replaceAll("：", ":");
+					if(price.indexOf(":") != -1 && price.indexOf("/") != -1){
+						rightList.add(gastationAllList.get(i));
+					}else{
+						wrongList.add(gastationAllList.get(i));
+						gastationAllList.remove(i);
+					}
+				}else{
+					wrongList.add(gastationAllList.get(i));
+					gastationAllList.remove(i);
+				}
+			}	
 			for (int i=0;i <gastationAllList.size();i++ ){
 				String price = gastationAllList.get(i).getLng_price();
 				List<Double> priceList = new ArrayList<Double>();
@@ -5126,6 +5152,8 @@ public class MobileController {
 	                return -1;  
 	            }  
 	        }); 
+	        gastationAllList.addAll(wrongList);
+	        System.out.println(gastationAllList.size());
 	        //进行分页
 			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
 			if(allPage >= pageNumIn ){

@@ -581,4 +581,9 @@ public class GastationServiceImpl implements GastationService {
 		List<Gastation> list = gasStationMapper.queryForPage3(record);
 		return list;
 	}
+
+	@Override
+	public Integer queryGastationByPhone(String phone) throws Exception {
+		return gasStationMapper.queryGastationByPhone(phone);
+	}
 }

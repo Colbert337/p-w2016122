@@ -38,6 +38,7 @@
     <result column="security_mobile_phone" property="securityMobilePhone" jdbcType="VARCHAR" />
     <result column="driver_qrcode" property="driverQrcode" jdbcType="VARCHAR" />
     <result column="verify_source" property="verifySource" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
     <association property="account" column="sys_user_account_id"
                  javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -59,7 +60,7 @@
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,avatar_s,avatar_b,
     is_ident, plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card,
     card_id, sys_user_account_id, regis_company, regis_source, created_date,
-    updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type, driver_number, invitation_code,verify_source
+    updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type, driver_number, invitation_code,verify_source,nickname
   </sql>
 
   <select id="querySearchDriverList" resultMap="BaseResultMap" >
@@ -362,6 +363,9 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
       <if test="userName != null" >
         user_name,
       </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
       <if test="password != null" >
         password,
       </if>
@@ -545,6 +549,9 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
     <set >
       <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        user_name = #{nickname,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},
