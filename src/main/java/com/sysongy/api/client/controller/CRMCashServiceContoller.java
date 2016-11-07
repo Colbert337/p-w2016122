@@ -118,7 +118,10 @@ public class CRMCashServiceContoller {
             ajaxJson.setMsg("订单ID或者气站ID为空！！！");
             return ajaxJson;
         }
-
+	    SysUser user = new SysUser();
+       	user.setUserName(request.getParameter("suserName"));
+    	user.setPassword(request.getParameter("spassword"));
+    	SysUser sysUser = sysUserService.queryUserByUserInfo(user);
         try{
             SysOrder sysOrders = orderService.selectByPrimaryKey(record.getOrderId());
             if(sysOrders != null){
@@ -135,14 +138,13 @@ public class CRMCashServiceContoller {
             String orderCharge = orderService.chargeToDriver(record);
     		//系统关键日志记录
     		SysOperationLog sysOperationLog = new SysOperationLog();
-    		sysOperationLog.setOperation_type("充值");
-    		sysOperationLog.setSystemModule("/crmInterface/crmCashServiceContoller"); 
-    		sysOperationLog.setOperation_domain("订单"); 
-    		sysOperationLog.setLogPlatform("CRM用户");
+    		sysOperationLog.setOperation_type("cz");
+    		sysOperationLog.setUser_name(user.getUserName());
+    		sysOperationLog.setLog_platform("3");
     		sysOperationLog.setOrder_number(record.getOrderNumber());
-    		sysOperationLog.setLogContent("加气站通过CRM对司机个人充值成功！订单号为："+record.getOrderNumber()); 
+    		sysOperationLog.setLog_content("加气站"+user.getUserName()+"对"+record.getSysDriver().getMobilePhone()+"会员充值成功！订单号为："+record.getOrderNumber()+"，充值金额为："+record.getCash()); 
     		//操作日志
-    		sysOperationLogService.saveOperationLog(sysOperationLog,record.getOrderId());
+    		sysOperationLogService.saveOperationLog(sysOperationLog,sysUser.getSysUserId());
     	   
             if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
@@ -363,7 +365,6 @@ public class CRMCashServiceContoller {
                 ajaxJson.setMsg("支付密码为空！！！");
                 return ajaxJson;
             }
-
             String checkCode = request.getParameter("checkCode");
             GasCard gasCard = null;
             if(StringUtils.isEmpty(checkCode)){
@@ -528,6 +529,19 @@ public class CRMCashServiceContoller {
                 record.setCoupon_number(id);//调换num和id位置，在order表中实际上存储id
 
                 String orderConsume = orderService.consumeByDriver(record);
+				//系统关键日志记录
+    			SysOperationLog sysOperationLog = new SysOperationLog();
+        	    SysUser user = new SysUser();
+            	user.setUserName(request.getParameter("suserName"));
+            	user.setPassword(request.getParameter("spassword"));
+            	SysUser sysUser = sysUserService.queryUserByUserInfo(user);
+    			sysOperationLog.setOperation_type("xf");
+    			sysOperationLog.setUser_name(user.getUserName());
+    			sysOperationLog.setLog_platform("3");
+        		sysOperationLog.setOrder_number(record.getOrderNumber());
+        		sysOperationLog.setLog_content(user.getUserName()+"操作司机"+sysDriver.getMobilePhone()+"消费成功！订单号为："+record.getOrderNumber()); 
+    			//操作日志
+    			sysOperationLogService.saveOperationLog(sysOperationLog,sysUser.getSysUserId());
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
@@ -771,6 +785,15 @@ public class CRMCashServiceContoller {
         hedgeRecord.setPreferential_cash(originalOrder.getPreferential_cash());// add by wdq 20161024 给冲红订单添加优惠金额属性
         //更新原始订单及相关信息
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
+		//系统关键日志记录
+		SysOperationLog sysOperationLog = new SysOperationLog();
+		sysOperationLog.setUser_name(sysUser.getUserName());
+		sysOperationLog.setOperation_type("ch");
+		sysOperationLog.setLog_platform("3");
+		sysOperationLog.setOrder_number(originalOrder.getOrderNumber());
+		sysOperationLog.setLog_content(user.getUserName()+"冲红订单成功！订单号为："+originalOrder.getOrderNumber()+"，冲红订单号为："+hedgeRecord.getOrderNumber()); 
+		//操作日志
+		sysOperationLogService.saveOperationLog(sysOperationLog,user.getSysUserId());
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
             logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
             ajaxJson.setSuccess(false);

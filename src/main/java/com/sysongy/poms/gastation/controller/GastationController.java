@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,9 @@ import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysDepositLog;
+import com.sysongy.poms.system.model.SysOperationLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.util.DateTimeHelper;
 import com.sysongy.util.ExportUtil;
 import com.sysongy.util.GlobalConstant;
@@ -49,6 +53,9 @@ public class GastationController extends BaseContoller{
 	private OrderService orderService;
 	
 	private Gastation gastation;
+	
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 	
 	/**
 	 * 加气站查询
@@ -318,14 +325,28 @@ public class GastationController extends BaseContoller{
 	 * @throws Exception
 	 */
 	@RequestMapping("/saveGastation")
-	public String saveGastation(ModelMap map, Gastation gastation) throws Exception{
+	public String saveGastation(ModelMap map, Gastation gastation, HttpServletRequest request) throws Exception{
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_new";
 		String gastationid = null;
-
+		HttpSession session = request.getSession(true);
+		CurrUser currUser = (CurrUser) session.getAttribute("currUser");// 登录人角色
+		if (null == currUser) {
+			bean.setRetCode(5000);
+			bean.setRetMsg("登录信息过期，请重新登录！");
+			return ret;
+		}
 		try {
 			if(StringUtils.isEmpty(gastation.getSys_gas_station_id())){
 				gastationid = service.saveGastation(gastation,"insert");
+				//系统关键日志记录
+				SysOperationLog sysOperationLog = new SysOperationLog();
+				sysOperationLog.setOperation_type("zc");
+				sysOperationLog.setLog_platform("4");
+	    		sysOperationLog.setLog_content("加注站注册成功！加注站id为："+gastationid); 
+				//操作日志
+				sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
+				
 				bean.setRetMsg("["+gastationid+"]新增成功");
 				ret = "webpage/poms/gastation/gastation_upload";
 			}else{
@@ -475,6 +496,13 @@ public class GastationController extends BaseContoller{
 		try {
 				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
 					rowcount = service.updatedepositGastation(deposit, currUser.getUser().getSysUserId());
+					//系统关键日志记录
+        			SysOperationLog sysOperationLog = new SysOperationLog();
+        			sysOperationLog.setOperation_type("cz");
+        			sysOperationLog.setLog_platform("4");
+            		sysOperationLog.setLog_content("加注站充值成功！充值金额为："+deposit.getDeposit()); 
+        			//操作日志
+        			sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
 				}
 
 				ret = this.queryAllGastationList2(map, this.gastation==null?new Gastation():this.gastation);

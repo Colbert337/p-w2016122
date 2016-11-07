@@ -85,7 +85,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
-        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby()); 
         List<SysDriver> list = sysDriverMapper.queryForPage(record);
         PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
         return pageInfo;
@@ -569,4 +569,10 @@ public class DriverServiceImpl implements DriverService {
 	public List<SysDriver> queryAll() throws Exception {
 		return sysDriverMapper.queryAll();
 	}
+	
+    @Override
+    public SysDriver selectByAccount(String sys_user_account_id) throws Exception {
+        SysDriver sysDriver =  sysDriverMapper.selectByAccount(sys_user_account_id);
+        return sysDriver;
+    }
 }

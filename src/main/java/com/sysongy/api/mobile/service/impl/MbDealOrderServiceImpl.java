@@ -19,6 +19,8 @@ import com.sysongy.poms.permi.dao.SysUserMapper;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.util.AliShortMessage;
 import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
 import com.sysongy.util.GlobalConstant;
@@ -48,7 +50,8 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
     SysUserMapper sysUserMapper;
     @Autowired
     SysUserAccountService sysUserAccountService;
-
+	@Autowired
+	SysOperationLogService sysOperationLogService;
     /**
      * 个人对个人转账
      * @param driverMap 转账参数
@@ -126,6 +129,14 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                             orderService.insert(order, null);
                             //个人往个人转账
                             orderService.transferDriverToDriver(order);
+        					//系统关键日志记录
+                			SysOperationLog sysOperationLog = new SysOperationLog();
+                			sysOperationLog.setOperation_type("zz");
+                			sysOperationLog.setLog_platform("1");
+                    		sysOperationLog.setOrder_number(order.getOrderNumber());
+                    		sysOperationLog.setLog_content(driver.getFullName()+"对"+driver1.getFullName()+"转账成功！订单号为："+order.getOrderNumber()); 
+                			//操作日志
+                			sysOperationLogService.saveOperationLog(sysOperationLog,driverId);
                             resultVal = 1;
                             sendTransferMessage(order,account);
                             return resultVal;

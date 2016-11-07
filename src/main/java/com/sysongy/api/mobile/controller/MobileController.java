@@ -484,10 +484,7 @@ public class MobileController {
 						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, this.appOperatorId);
 						//系统关键日志记录
 						SysOperationLog sysOperationLog = new SysOperationLog();
-						sysOperationLog.setOperation_type("开户");
-						//手机端
-						sysOperationLog.setSystemModule("/api/v1/mobile"); 
-						sysOperationLog.setOperation_domain("用户卡"); 
+						sysOperationLog.setOperation_type("kh");
 						String name = driver.getFullName();
 						if("".equals(name)||null==name){
 							name = driver.getUserName();
@@ -495,10 +492,10 @@ public class MobileController {
 						if("".equals(name)||null==name){
 							name = driver.getMobilePhone();
 						}
-						sysOperationLog.setLogPlatform("APP用户");
-						sysOperationLog.setLogContent(name+"的账户卡通过APP"+sysOperationLog.getOperation_type()+"成功！"); 
+						sysOperationLog.setLog_platform("1");
+						sysOperationLog.setLog_content(name+"的账户卡通过APP开户成功！"); 
 						//操作日志
-						sysOperationLogService.saveOperationLog(sysOperationLog,driver.getAccount().getSysUserAccountId());		
+						sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysDriverId());		
 						
 						if (tmp > 0) {
 							TwoDimensionCode handler = new TwoDimensionCode();
@@ -613,6 +610,15 @@ public class MobileController {
 							//被邀请用户第一次登录，进行邀请返现 ，送優惠券
 							SysDriver queryDriver = driverService.queryDriverByPK(sysDriverId);
 							driverService.cashBackForRegister(queryDriver,queryDriver.getRegisCompany(),this.appOperatorId);
+							
+							//系统关键日志记录
+		        			SysOperationLog sysOperationLog = new SysOperationLog();
+		        			sysOperationLog.setOperation_type("fx");
+		        			sysOperationLog.setLog_platform("1");
+		            		sysOperationLog.setLog_content("APP用户"+queryDriver.getMobilePhone()+"首次登陆返现成功！"); 
+		        			//操作日志
+		        			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriverId);
+		        			
 							invitationCode = ShareCodeUtil.toSerialCode(driver.getDriver_number());
 							// 更新当前司机邀请码
 							SysDriver driverCode = new SysDriver();
@@ -1340,16 +1346,13 @@ public class MobileController {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					if ("2".equals(lossType)) {
 						failStr = "解除挂失";
-						sysOperationLog.setOperation_type("解冻");
+						sysOperationLog.setOperation_type("jd");
 					} else {
 						failStr = ("挂失");
-						sysOperationLog.setOperation_type("冻结");
+						sysOperationLog.setOperation_type("dj");
 					}
 					result.setMsg(failStr + "成功！");
 					
-					//手机端
-					sysOperationLog.setSystemModule("/api/v1/mobile"); 
-					sysOperationLog.setOperation_domain("用户卡"); 
 					String name = driver.getFullName();
 					if("".equals(name)||null==name){
 						name = driver.getUserName();
@@ -1357,10 +1360,18 @@ public class MobileController {
 					if("".equals(name)||null==name){
 						name = driver.getMobilePhone();
 					}
-					sysOperationLog.setLogPlatform("APP用户");
-					sysOperationLog.setLogContent(name+"把卡号是："+driver.getCardInfo().getCard_no()+"的账户卡"+sysOperationLog.getOperation_type()); 
+					sysOperationLog.setLog_platform("1");
+					String operation="冻结";
+					if("2".equals(lossType)){
+						operation="解冻";
+					}
+					String cardNo="";
+					if (driver.getCardInfo() != null) {
+						cardNo = driver.getCardInfo().getCard_no();
+					}
+					sysOperationLog.setLog_content(name+"把"+cardNo+"账户卡"+operation+"成功！"); 
 					//操作日志
-					sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysUserAccountId());
+					sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysDriverId());		
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -2040,6 +2051,7 @@ public class MobileController {
 				driverMap.put("remark", mainObj.optString("remark"));
 				driverMap.put("paycode", mainObj.optString("paycode"));
 				int resultVal = mbDealOrderService.transferDriverToDriver(driverMap);
+				
 				if (resultVal < 0) {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("账户余额不足,无法转账！");
@@ -2781,18 +2793,6 @@ public class MobileController {
 					if (payType.equalsIgnoreCase("2")) { // 支付宝支付
 						sysOrder = createNewOrder(orderID, driverID, feeCount, GlobalConstant.OrderChargeType.CHARGETYPE_ALIPAY_CHARGE,null,"1",null); // TODO充值成功后再去生成订单
 						orderService.checkIfCanChargeToDriver(sysOrder);
-						
-	          			//系统关键日志记录
-            			SysOperationLog sysOperationLog = new SysOperationLog();
-            			sysOperationLog.setOperation_type("充值");
-            			sysOperationLog.setSystemModule("/api/v1/mobile"); 
-            			sysOperationLog.setOperation_domain("订单"); 
-            			sysOperationLog.setLogPlatform("APP用户");
-                		sysOperationLog.setOrder_number(sysOrder.getOrderNumber());
-                		sysOperationLog.setLogContent("通过APP支付宝对司机个人充值成功！订单号为："+sysOrder.getOrderNumber()); 
-            			//操作日志
-            			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOrderId());
-						
 						String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayCallBackPay";
 						Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, feeCount, "司集云平台-会员充值",
 								"司集云平台-会员充值", orderID, notifyUrl);
@@ -2811,16 +2811,6 @@ public class MobileController {
 					} else if (payType.equalsIgnoreCase("1")) { // 微信支付
 						sysOrder = createNewOrder(orderID, driverID, feeCount,GlobalConstant.OrderChargeType.CHARGETYPE_WEICHAT_CHARGE,null,"1",null); // TODO充值成功后再去生成订单
 						orderService.checkIfCanChargeToDriver(sysOrder);
-	          			//系统关键日志记录
-            			SysOperationLog sysOperationLog = new SysOperationLog();
-            			sysOperationLog.setOperation_type("充值");
-            			sysOperationLog.setSystemModule("/api/v1/mobile"); 
-            			sysOperationLog.setOperation_domain("订单"); 
-            			sysOperationLog.setLogPlatform("微信用户");
-                		sysOperationLog.setOrder_number(sysOrder.getOrderNumber());
-                		sysOperationLog.setLogContent("通过微信对司机个人充值成功！订单号为："+sysOrder.getOrderNumber()); 
-            			//操作日志
-            			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOrderId());
 						
 						String entity = genProductArgs(orderID, feeCount,"1");
 						byte[] buf = Util.httpPost(url, entity);
@@ -2925,14 +2915,12 @@ public class MobileController {
 					String orderCharge = orderService.chargeToDriver(order);
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
-        			sysOperationLog.setOperation_type("充值");
-        			sysOperationLog.setSystemModule("/api/v1/mobile"); 
-        			sysOperationLog.setOperation_domain("订单"); 
-        			sysOperationLog.setLogPlatform("app用户");
+        			sysOperationLog.setOperation_type("cz");
+        			sysOperationLog.setLog_platform("1");
             		sysOperationLog.setOrder_number(order.getOrderNumber());
-            		sysOperationLog.setLogContent("app微信在线充值回调成功！订单号为："+order.getOrderNumber()); 
+            		sysOperationLog.setLog_content("app微信在线充值回调成功！订单号为："+order.getOrderNumber()); 
         			//操作日志
-        			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOrderId());
+        			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOperator());
         			
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("订单充值错误：" + orderCharge);
@@ -3022,13 +3010,28 @@ public class MobileController {
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-				   
+						//系统关键日志记录
+	        			SysOperationLog sysOperationLog = new SysOperationLog();
+	        			sysOperationLog.setOperation_type("fx");
+	        			sysOperationLog.setLog_platform("1");
+	            		sysOperationLog.setLog_content("手机微信消费返现成功！返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
+	        			//操作日志
+	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
 				}
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
+					//系统关键日志记录
+	    			SysOperationLog sysOperationLog = new SysOperationLog();
+	    			sysOperationLog.setOperation_type("cz");
+	    			sysOperationLog.setLog_platform("2");
+	        		sysOperationLog.setOrder_number(order.getOrderNumber());
+	        		sysOperationLog.setLog_content("司机个人通过微信充值成功！订单号为："+order.getOrderNumber()); 
+	    			//操作日志
+	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+					
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
@@ -3090,14 +3093,12 @@ public class MobileController {
 					
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
-        			sysOperationLog.setOperation_type("充值");
-        			sysOperationLog.setSystemModule("/api/v1/mobile"); 
-        			sysOperationLog.setOperation_domain("订单"); 
-        			sysOperationLog.setLogPlatform("app用户");
+        			sysOperationLog.setOperation_type("cz");
+        			sysOperationLog.setLog_platform("1");
             		sysOperationLog.setOrder_number(order.getOrderNumber());
-            		sysOperationLog.setLogContent("app支付宝在线充值回调成功！订单号为："+order.getOrderNumber()); 
+            		sysOperationLog.setLog_content("app支付宝在线充值回调成功！订单号为："+order.getOrderNumber()); 
         			//操作日志
-        			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOrderId());
+        			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOperator());
 
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("订单充值错误：" + orderCharge);
@@ -3167,13 +3168,28 @@ public class MobileController {
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-				   
+						//系统关键日志记录
+	        			SysOperationLog sysOperationLog = new SysOperationLog();
+	        			sysOperationLog.setOperation_type("fx");
+	        			sysOperationLog.setLog_platform("1");
+	            		sysOperationLog.setLog_content("手机支付宝消费返现成功！返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
+	        			//操作日志
+	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
 				}
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
+					//系统关键日志记录
+	    			SysOperationLog sysOperationLog = new SysOperationLog();
+	    			sysOperationLog.setOperation_type("cz");
+	    			sysOperationLog.setLog_platform("1");
+	        		sysOperationLog.setOrder_number(order.getOrderNumber());
+	        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！订单号为："+order.getOrderNumber()); 
+	    			//操作日志
+	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+					
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
@@ -4709,6 +4725,15 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
 								orderService.consumeByDriver(sysOrder);
+								//系统关键日志记录
+				    			SysOperationLog sysOperationLog = new SysOperationLog();
+				    			SysDriver driver  = driverService.queryDriverByPK(token);
+				    			sysOperationLog.setOperation_type("xf");
+				    			sysOperationLog.setLog_platform("1");
+				        		sysOperationLog.setOrder_number(sysOrder.getOrderNumber());
+				        		sysOperationLog.setLog_content("司机"+driver.getFullName()+"通过app消费"+sysOrder.getCash()+"元！订单号为："+sysOrder.getOrderNumber()); 
+				    			//操作日志
+				    			sysOperationLogService.saveOperationLog(sysOperationLog,token);
 								data.put("orderId", orderID);
 								data.put("orderNum", orderService.queryById(orderID).getOrderNumber());
 								//余额消费短信通知

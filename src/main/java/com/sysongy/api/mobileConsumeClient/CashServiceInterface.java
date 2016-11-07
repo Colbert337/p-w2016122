@@ -115,14 +115,12 @@ public class CashServiceInterface {
             String orderCharge = orderService.chargeToDriver(record);
 			//系统关键日志记录
 			SysOperationLog newSysOperationLog = new SysOperationLog();
-			newSysOperationLog.setOperation_type("充值");
-			newSysOperationLog.setSystemModule("/api/v1/wechat"); 
-			newSysOperationLog.setOperation_domain("订单"); 
-			newSysOperationLog.setLogPlatform("微信VIP用户");
+			newSysOperationLog.setOperation_type("cz");
+			newSysOperationLog.setLog_platform("2");
 			newSysOperationLog.setOrder_number(record.getOrderNumber());
-			newSysOperationLog.setLogContent("加气站为司机充值成功！订单号为："+record.getOrderNumber()); 
+			newSysOperationLog.setLog_content("加气站为司机充值成功！订单号为："+record.getOrderNumber()); 
 			//操作日志
-			sysOperationLogService.saveOperationLog(newSysOperationLog,record.getOrderId());
+			sysOperationLogService.saveOperationLog(newSysOperationLog,record.getOperator());
 			
             if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
@@ -375,6 +373,14 @@ public class CashServiceInterface {
                 }
                 
                 String orderConsume = orderService.consumeByDriver(record);
+				//系统关键日志记录
+    			SysOperationLog sysOperationLog = new SysOperationLog();
+    			sysOperationLog.setOperation_type("xf");
+    			sysOperationLog.setLog_platform("1");
+        		sysOperationLog.setOrder_number(record.getOrderNumber());
+        		sysOperationLog.setLog_content("司机消费成功！订单号为："+record.getOrderNumber()); 
+    			//操作日志
+    			sysOperationLogService.saveOperationLog(sysOperationLog,record.getOperator());
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
@@ -585,6 +591,16 @@ public class CashServiceInterface {
                 user.getSysUserId(), record.getDischarge_reason());
 
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
+        
+		//系统关键日志记录
+		SysOperationLog sysOperationLog = new SysOperationLog();
+		sysOperationLog.setOperation_type("ch");
+		sysOperationLog.setLog_platform("3");
+		sysOperationLog.setOrder_number(originalOrder.getOrderNumber());
+		sysOperationLog.setLog_content("CRM用户冲红订单成功！订单号为："+originalOrder.getOrderNumber()+"，冲红订单号为："+hedgeRecord.getOrderNumber()); 
+		//操作日志
+		sysOperationLogService.saveOperationLog(sysOperationLog,user.getSysUserId());
+		
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
             logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
             ajaxJson.setSuccess(false);

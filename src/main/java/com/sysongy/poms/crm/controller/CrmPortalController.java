@@ -560,9 +560,7 @@ public class CrmPortalController extends BaseContoller {
                         Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, GlobalConstant.appOperatorId);
             			//系统关键日志记录
             			SysOperationLog sysOperationLog = new SysOperationLog();
-            			sysOperationLog.setOperation_type("开户");
-            			sysOperationLog.setSystemModule("/portal/crm/help"); 
-            			sysOperationLog.setOperation_domain("用户卡"); 
+            			sysOperationLog.setOperation_type("kh");
             			String name = driver.getFullName();
             			if("".equals(name)||null==name){
             				name = driver.getUserName();
@@ -570,10 +568,10 @@ public class CrmPortalController extends BaseContoller {
             			if("".equals(name)||null==name){
             				name = driver.getMobilePhone();
             			}
-            			sysOperationLog.setLogPlatform("APP用户");
-            			sysOperationLog.setLogContent("被邀请用户"+name+"通过APP"+sysOperationLog.getOperation_type()+"成功！"); 
+            			sysOperationLog.setLog_platform("1");
+            			sysOperationLog.setLog_content("被邀请用户"+name+"通过APP开户成功！"); 
             			//操作日志
-            			sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysUserAccountId());
+            			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriverId);
             			
                         if(tmp > 0){
                             TwoDimensionCode handler = new TwoDimensionCode();
@@ -721,9 +719,7 @@ public class CrmPortalController extends BaseContoller {
 		            	int count = driverService.saveDriver(driver,"insert", null, "8aa4ba67855a11e6a356000c291aa9e3");
             			//系统关键日志记录
             			SysOperationLog sysOperationLog = new SysOperationLog();
-            			sysOperationLog.setOperation_type("开户");
-            			sysOperationLog.setSystemModule("/portal/crm/help"); 
-            			sysOperationLog.setOperation_domain("用户卡"); 
+            			sysOperationLog.setOperation_type("kh");
             			String name = driver.getFullName();
             			if("".equals(name)||null==name){
             				name = driver.getUserName();
@@ -731,10 +727,10 @@ public class CrmPortalController extends BaseContoller {
             			if("".equals(name)||null==name){
             				name = driver.getMobilePhone();
             			}
-            			sysOperationLog.setLogPlatform("网站用户");
-            			sysOperationLog.setLogContent("批量导入用户"+name+sysOperationLog.getOperation_type()+"成功！"); 
+            			sysOperationLog.setLog_platform("4");
+            			sysOperationLog.setLog_content("批量导入用户开户成功！"); 
             			//操作日志
-            			sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysUserAccountId());
+            			sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
 				        sum = sum + count;
 		            }else{
 		            	driver.setSysDriverId(sysDriver.getSysDriverId());

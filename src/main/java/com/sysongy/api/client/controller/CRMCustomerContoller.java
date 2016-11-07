@@ -529,9 +529,7 @@ public class CRMCustomerContoller {
             int renum = driverService.saveDriver(sysDriver, "insert", null, suserId);
 			//系统关键日志记录
 			SysOperationLog sysOperationLog = new SysOperationLog();
-			sysOperationLog.setOperation_type("开户");
-			sysOperationLog.setSystemModule("/crmInterface/crmCustomerService"); 
-			sysOperationLog.setOperation_domain("用户卡"); 
+			sysOperationLog.setOperation_type("kh");
 			String name = sysDriver.getFullName();
 			if("".equals(name)||null==name){
 				name = sysDriver.getUserName();
@@ -539,10 +537,11 @@ public class CRMCustomerContoller {
 			if("".equals(name)||null==name){
 				name = sysDriver.getMobilePhone();
 			}
-			sysOperationLog.setLogPlatform("CRM用户");
-			sysOperationLog.setLogContent(gastation.getGas_station_name()+"气站用户"+name+"通过CRM"+sysOperationLog.getOperation_type()+"成功！"); 
+			sysOperationLog.setUser_name(name);
+			sysOperationLog.setLog_platform("3");
+			sysOperationLog.setLog_content(gastation.getGas_station_name()+"气站用户"+name+"通过CRM开户成功！"); 
 			//操作日志
-			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriver.getSysUserAccountId());
+			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriver.getSysDriverId());		
 			
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);

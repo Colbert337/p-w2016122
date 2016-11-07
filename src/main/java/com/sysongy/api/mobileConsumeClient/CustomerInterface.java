@@ -478,10 +478,7 @@ public class CustomerInterface {
             int renum = driverService.saveDriver(sysDriver, "insert", null, null);
 			//系统关键日志记录
 			SysOperationLog sysOperationLog = new SysOperationLog();
-			sysOperationLog.setOperation_type("开户");
-			//手机端
-			sysOperationLog.setSystemModule("/api/v1/wechat"); 
-			sysOperationLog.setOperation_domain("用户卡"); 
+			sysOperationLog.setOperation_type("kh");
 			String name = sysDriver.getFullName();
 			if("".equals(name)||null==name){
 				name = sysDriver.getUserName();
@@ -489,10 +486,10 @@ public class CustomerInterface {
 			if("".equals(name)||null==name){
 				name = sysDriver.getMobilePhone();
 			}
-			sysOperationLog.setLogPlatform("网站用户");
-			sysOperationLog.setLogContent(name+"的账户卡通过网站"+sysOperationLog.getOperation_type()+"开户成功！"); 
+			sysOperationLog.setLog_platform("4");
+			sysOperationLog.setLog_content(name+"的账户卡通过网站开户成功！"); 
 			//操作日志
-			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriver.getSysUserAccountId());		
+			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriver.getSysDriverId());		
 			
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
