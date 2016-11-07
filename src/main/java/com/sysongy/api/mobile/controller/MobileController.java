@@ -1974,7 +1974,7 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-
+ 
 	/**
 	 * 个人转账
 	 * 
@@ -5093,6 +5093,7 @@ public class MobileController {
 	 * 获取加注站信息列表(orderByPrice)
 	 */
 	private List<Map<String, Object>> orderByPriceList(List<Gastation> gastationAllList,int pageNumIn,int pageSizeIn){
+		System.out.println(gastationAllList.size());
 		List<Map<String, Object>> gastationArray = new ArrayList<>();
 		String http_poms_path = (String) prop.get("http_poms_path");
 		if(gastationAllList!=null && gastationAllList.size() > 0){
@@ -5129,7 +5130,8 @@ public class MobileController {
 							String strInfo = strArray[x].trim();
 							String strArray1[] = strInfo.split(":");
 							String strArray2[] = strArray1[1].split("/");
-							priceList.add(Double.valueOf(strArray2[0].substring(0, strArray2[0].length()-1)));
+							Double m = Double.valueOf(strArray2[0].substring(0, strArray2[0].length()-1));
+							priceList.add(m);
 						}
 					}else{
 						priceList.add(0.0);
@@ -5143,14 +5145,9 @@ public class MobileController {
 			}
 	        Collections.sort(gastationAllList, new Comparator<Gastation>(){  
 	            public int compare(Gastation g1, Gastation g2) {  
-	                //按照价格升序排列  
-	                if(g1.getMinPrice() > g2.getMinPrice()){  
-	                    return 1;  
-	                }  
-	                if(g1.getMinPrice() == g2.getMinPrice()){  
-	                    return 0;  
-	                }  
-	                return -1;  
+	            	int i = 0;
+	        		i = g1.getMinPrice().compareTo(g2.getMinPrice());
+	        		return i;
 	            }  
 	        }); 
 	        gastationAllList.addAll(wrongList);
