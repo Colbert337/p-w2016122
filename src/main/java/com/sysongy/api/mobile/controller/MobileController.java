@@ -5093,7 +5093,6 @@ public class MobileController {
 	 * 获取加注站信息列表(orderByPrice)
 	 */
 	private List<Map<String, Object>> orderByPriceList(List<Gastation> gastationAllList,int pageNumIn,int pageSizeIn){
-		System.out.println(gastationAllList.size());
 		List<Map<String, Object>> gastationArray = new ArrayList<>();
 		String http_poms_path = (String) prop.get("http_poms_path");
 		if(gastationAllList!=null && gastationAllList.size() > 0){
