@@ -443,7 +443,7 @@ public class DriverServiceImpl implements DriverService {
 		List<SysDriver> invitationList = sysDriverMapper.queryForPage(invitation);
 		
 		if(invitationList.size() != 1){
-			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败");
+			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败 invitationCode = "+invitationCode);
 		}else{
 			invitation = invitationList.get(0);
 			List<SysCashBack> listBack=sysCashBackService.queryForBreak("203");
