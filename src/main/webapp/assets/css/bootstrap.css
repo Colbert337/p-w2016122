@@ -2780,6 +2780,7 @@ select[multiple].input-lg {
   line-height: 34px;
   text-align: center;
   pointer-events: none;
+  padding-left:30px;
 }
 .input-lg + .form-control-feedback,
 .input-group-lg + .form-control-feedback,
