@@ -752,7 +752,7 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
   </select>  
   <select id="queryByPK" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
-    <include refid="Base_Column_List" />
+    *
     from sys_driver where sys_driver_id = #{driverId,jdbcType=VARCHAR}
   </select>  
 </mapper>
