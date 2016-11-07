@@ -12,7 +12,9 @@ import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysDepositLog;
+import com.sysongy.poms.system.model.SysOperationLog;
 import com.sysongy.poms.system.service.SysDepositLogService;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcVehicle;
@@ -39,7 +41,9 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @RequestMapping("/web/transportion")
@@ -72,6 +76,9 @@ public class TransportionController extends BaseContoller{
 	private TcVehicle tcVehicle;
 	
 	private SysOrder sysOrder;
+	
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 
 	/**
 	 * 运输公司查询
@@ -402,15 +409,28 @@ public class TransportionController extends BaseContoller{
 	 * @throws Exception
 	 */
 	@RequestMapping("/saveTransportion")
-	public String saveTransportion(ModelMap map, Transportion transportion) throws Exception{
+	public String saveTransportion(ModelMap map, Transportion transportion, HttpServletRequest request) throws Exception{
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_new";
 		String transportionid = null;
-
+		HttpSession session = request.getSession(true);
+		CurrUser currUser = (CurrUser) session.getAttribute("currUser");// 登录人角色
+		if (null == currUser) {
+			bean.setRetCode(5000);
+			bean.setRetMsg("登录信息过期，请重新登录！");
+			return ret;
+		}
 		try {
 			if(StringUtils.isEmpty(transportion.getSys_transportion_id())){
 				transportionid = service.saveTransportion(transportion,"insert");
 				bean.setRetMsg("["+transportionid+"]新增成功");
+				//系统关键日志记录
+				SysOperationLog sysOperationLog = new SysOperationLog();
+				sysOperationLog.setOperation_type("zc");
+				sysOperationLog.setLog_platform("4");
+	    		sysOperationLog.setLog_content(currUser.getUser().getUserName()+ "注册运输车队成功！编号："+transportionid); 
+				//操作日志
+				sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
 				ret = "webpage/poms/transportion/transportion_upload";
 			}else{
 				ret = "webpage/poms/transportion/transportion_update";
@@ -767,6 +787,14 @@ public class TransportionController extends BaseContoller{
 		try {
 				if(deposit.getAccountId() != null && !"".equals(deposit.getAccountId())){
 					rowcount = service.updatedeposiTransportion(deposit, currUser.getUser().getSysUserId());
+					//系统关键日志记录
+        			SysOperationLog sysOperationLog = new SysOperationLog();
+        			sysOperationLog.setOperation_type("cz");
+        			sysOperationLog.setLog_platform("4");
+            		sysOperationLog.setLog_content("运输公司充值成功！充值金额为："+deposit.getDeposit()); 
+        			//操作日志
+        			sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
+					
 				}
 
 				ret = this.queryAllTransportionList2(map, this.transportion==null?new Transportion():this.transportion);

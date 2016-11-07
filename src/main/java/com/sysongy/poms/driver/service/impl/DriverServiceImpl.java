@@ -85,7 +85,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
-        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby()); 
         List<SysDriver> list = sysDriverMapper.queryForPage(record);
         PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
         return pageInfo;
@@ -443,7 +443,7 @@ public class DriverServiceImpl implements DriverService {
 		List<SysDriver> invitationList = sysDriverMapper.queryForPage(invitation);
 		
 		if(invitationList.size() != 1){
-			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败");
+			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败 invitationCode = "+invitationCode);
 		}else{
 			invitation = invitationList.get(0);
 			List<SysCashBack> listBack=sysCashBackService.queryForBreak("203");
@@ -569,4 +569,10 @@ public class DriverServiceImpl implements DriverService {
 	public List<SysDriver> queryAll() throws Exception {
 		return sysDriverMapper.queryAll();
 	}
+	
+    @Override
+    public SysDriver selectByAccount(String sys_user_account_id) throws Exception {
+        SysDriver sysDriver =  sysDriverMapper.selectByAccount(sys_user_account_id);
+        return sysDriver;
+    }
 }
