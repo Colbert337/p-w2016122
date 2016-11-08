@@ -3124,7 +3124,7 @@ public class MobileController {
             		sysOperationLog.setOrder_number(order.getOrderNumber());
             		sysOperationLog.setLog_content("app支付宝在线充值回调成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
         			//操作日志
-        			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOperator());
+        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
 
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("订单充值错误：" + orderCharge);
