@@ -40,83 +40,84 @@ import net.sf.json.JSONObject;
 @RequestMapping("/web/order")
 @Controller
 public class SysOrderController extends BaseContoller {
-	
-	@Autowired 
+
+	@Autowired
 	private OrderService service;
 
-	@Autowired 
+	@Autowired
 	private SysUserAccountService accountService;
+
 	@RequestMapping("/queryOrderDeal")
-   	public String queryProductPriceList(ModelMap map, OrderLog order) throws Exception{
+	public String queryProductPriceList(ModelMap map, OrderLog order) throws Exception {
 
-   		PageBean bean = new PageBean();
-   		String ret = "webpage/poms/gastation/gastation_order_log";
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/gastation/gastation_order_log";
 
-   		try {
-   			if(order.getPageNum() == null){
-   				order.setOrderby("deal_date desc");
-   				order.setPageNum(1);
-   				order.setPageSize(10);
-   			}
-   			
-   			PageInfo<OrderLog> pageinfo = service.queryOrderLogs(order);
+		try {
+			if (order.getPageNum() == null) {
+				order.setOrderby("deal_date desc");
+				order.setPageNum(1);
+				order.setPageSize(10);
+			}
 
-   			bean.setRetCode(100);
-   			bean.setRetMsg("查询成功");
-   			bean.setPageInfo(ret);
+			PageInfo<OrderLog> pageinfo = service.queryOrderLogs(order);
 
-   			map.addAttribute("ret", bean);
-   			map.addAttribute("pageInfo", pageinfo);
-   			map.addAttribute("order",order);
-   		} catch (Exception e) {
-   			bean.setRetCode(5000);
-   			bean.setRetMsg(e.getMessage());
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
 
-   			map.addAttribute("ret", bean);
-   			logger.error("", e);
-   			throw e;
-   		}
-   		finally {
-   			return ret;
-   		}
-   	}
-	
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("order", order);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		} finally {
+			return ret;
+		}
+	}
+
 	@RequestMapping("/queryOrderDeal2")
-   	public String queryProductPriceList2(ModelMap map, OrderLog order) throws Exception{
+	public String queryProductPriceList2(ModelMap map, OrderLog order) throws Exception {
 
-   		PageBean bean = new PageBean();
-   		String ret = "webpage/poms/transportion/transpotion_order_log";
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/transportion/transpotion_order_log";
 
-   		try {
-   			if(order.getPageNum() == null){
-   				order.setOrderby("deal_date desc");
-   				order.setPageNum(1);
-   				order.setPageSize(10);
-   			}
-   			
-   			PageInfo<OrderLog> pageinfo = service.queryOrderLogs(order);
+		try {
+			if (order.getPageNum() == null) {
+				order.setOrderby("deal_date desc");
+				order.setPageNum(1);
+				order.setPageSize(10);
+			}
 
-   			bean.setRetCode(100);
-   			bean.setRetMsg("查询成功");
-   			bean.setPageInfo(ret);
+			PageInfo<OrderLog> pageinfo = service.queryOrderLogs(order);
 
-   			map.addAttribute("ret", bean);
-   			map.addAttribute("pageInfo", pageinfo);
-   			map.addAttribute("order",order);
-   		} catch (Exception e) {
-   			bean.setRetCode(5000);
-   			bean.setRetMsg(e.getMessage());
+			bean.setRetCode(100);
+			bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
 
-   			map.addAttribute("ret", bean);
-   			logger.error("", e);
-   			throw e;
-   		}
-   		finally {
-   			return ret;
-   		}
-   	}
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("order", order);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		} finally {
+			return ret;
+		}
+	}
+
 	/**
 	 * 退款查询
+	 * 
 	 * @param order
 	 * @param map
 	 * @param type
@@ -140,9 +141,9 @@ public class SysOrderController extends BaseContoller {
 			PageInfo<SysOrder> pageinfo = new PageInfo<SysOrder>();
 			pageinfo = service.queryOrderListForBack(order);
 			bean.setRetCode(100);
-		 
+
 			bean.setRetMsg("查询成功");
-			
+
 			bean.setPageInfo(ret);
 			map.addAttribute("ret", bean);
 			map.addAttribute("pageInfo", pageinfo);
@@ -161,9 +162,10 @@ public class SysOrderController extends BaseContoller {
 		}
 
 	}
-	
+
 	/**
 	 * 查询一个交易号里面的累计退金额
+	 * 
 	 * @param order
 	 * @param map
 	 * @param type
@@ -172,15 +174,15 @@ public class SysOrderController extends BaseContoller {
 	@RequestMapping("/BreakMoney")
 	@ResponseBody
 	public String queryForBreakMoney(String orderNumber, ModelMap map) {
-//		String ret = "webpage/poms/mobile/order_list";
+		// String ret = "webpage/poms/mobile/order_list";
 		PageBean bean = new PageBean();
 		String money = "";
 		try {
 			money = service.queryForBreakMoney(orderNumber);
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");
-			if ("null".equalsIgnoreCase(money)||money==null) {
-				money="0";
+			if ("null".equalsIgnoreCase(money) || money == null) {
+				money = "0";
 			}
 			// map.addAttribute("current_module",
 			// "/web/mobile/suggest/suggestList");
@@ -191,48 +193,53 @@ public class SysOrderController extends BaseContoller {
 
 			logger.error("", e);
 		} finally {
-			return money+"";
+			return money + "";
 		}
 
 	}
-	/*sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
-	sParaTemp.put("partner", AlipayConfig.partner);
-	sParaTemp.put("_input_charset", AlipayConfig.input_charset);
-	sParaTemp.put("notify_url", notify_url);
-	sParaTemp.put("batch_no", batch_no);
-	sParaTemp.put("refund_date", refund_date);
-	sParaTemp.put("batch_num", batch_num);
-	sParaTemp.put("detail_data", detail_data);*/
+
+	/*
+	 * sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
+	 * sParaTemp.put("partner", AlipayConfig.partner);
+	 * sParaTemp.put("_input_charset", AlipayConfig.input_charset);
+	 * sParaTemp.put("notify_url", notify_url); sParaTemp.put("batch_no",
+	 * batch_no); sParaTemp.put("refund_date", refund_date);
+	 * sParaTemp.put("batch_num", batch_num); sParaTemp.put("detail_data",
+	 * detail_data);
+	 */
 	/**
 	 * 退费并保存退费订单
+	 * 
 	 * @param detail_data
 	 * @return
 	 */
 	@RequestMapping("/saveBreak")
 	@ResponseBody
-	public String saveBreak(ModelMap map,String money, String msg, String tradeNo,String cash, String orderId, String type) {
+	public String saveBreak(ModelMap map, String money, String msg, String tradeNo, String cash, String orderId,
+			String type) {
 		String http_poms_path = (String) prop.get("http_poms_path");
 		SysOrder order = null;
 		PageBean bean = new PageBean();
 		SysUserAccount account;
 		try {
-			order =service.queryById(orderId);
-			account=accountService.queryUserAccountByDriverId(order.getDebitAccount());
-			if (account==null) {
+			order = service.queryById(orderId);
+			account = accountService.queryUserAccountByDriverId(order.getDebitAccount());
+			if (account == null) {
 				throw new Exception("查找司机失败,返现失败");
 			}
-			//生成退款定单
+			// 生成退款定单
 			String batch_no = new String(getBatchNo().getBytes("ISO-8859-1"), "UTF-8");
 			if (type.equals("104")) {// 支付宝退费
-				
-				AlipayConfig.key=GlobalConstant.ALIKEY;
-				AlipayConfig.log_path=(String)prop.get("log_path");
-				AlipayConfig.partner=GlobalConstant.PARTNER;
-				AlipayConfig.sign_type=GlobalConstant.SIGNTYPE;
-				AlipayConfig.input_charset=GlobalConstant.INPUTCHARSET;
-				
-//				String notify_url = http_poms_path + "/refund_fastpay_by_platform_nopwd-JAVA-UTF-8/notify_url.jsp";
-			
+
+				AlipayConfig.key = GlobalConstant.ALIKEY;
+				AlipayConfig.log_path = (String) prop.get("log_path");
+				AlipayConfig.partner = GlobalConstant.PARTNER;
+				AlipayConfig.sign_type = GlobalConstant.SIGNTYPE;
+				AlipayConfig.input_charset = GlobalConstant.INPUTCHARSET;
+
+				// String notify_url = http_poms_path +
+				// "/refund_fastpay_by_platform_nopwd-JAVA-UTF-8/notify_url.jsp";
+
 				// 退款请求时间
 				String refund_date = new String(
 						new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()).getBytes("ISO-8859-1"), "UTF-8");
@@ -241,36 +248,38 @@ public class SysOrderController extends BaseContoller {
 				// 退款总笔数
 				String batch_num = new String("1".getBytes("ISO-8859-1"), "UTF-8");
 				// 必填，即参数detail_data的值中，“#”字符出现的数量加1，最大支持1000笔（即“#”字符出现的最大数量999个）
-				if(msg.indexOf('^')>0){
+				if (msg.indexOf('^') > 0) {
 					throw new Exception("退款理由格式不正确，不可以包含“^”、“|”、“$”、“#”等特殊字符！");
 				}
-				if(msg.indexOf('|')>0){
-					throw new Exception("退款理由格式不正确，不可以包含“^”、“|”、“$”、“#”等特殊字符！"); 
-				}
-				if(msg.indexOf('$')>0){
+				if (msg.indexOf('|') > 0) {
 					throw new Exception("退款理由格式不正确，不可以包含“^”、“|”、“$”、“#”等特殊字符！");
 				}
-				if(msg.indexOf('#')>0){
+				if (msg.indexOf('$') > 0) {
+					throw new Exception("退款理由格式不正确，不可以包含“^”、“|”、“$”、“#”等特殊字符！");
+				}
+				if (msg.indexOf('#') > 0) {
 					throw new Exception("退款理由格式不正确，不可以包含“^”、“|”、“$”、“#”等特殊字符！");
 				}
 				// 单笔数据集
 				String detail_data = new String((tradeNo + "^" + money + "^" + msg).getBytes("ISO-8859-1"), "UTF-8");
-				
 
 				Map<String, String> sParaTemp = new HashMap<String, String>();
 				sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
 				sParaTemp.put("partner", AlipayConfig.partner);
 				sParaTemp.put("_input_charset", AlipayConfig.input_charset);
-				sParaTemp.put("notify_url", http_poms_path+"/api/v1/mobile/breakReturn");
+				sParaTemp.put("notify_url", http_poms_path + "/api/v1/mobile/breakReturn");
 				sParaTemp.put("batch_no", batch_no);
-//				sParaTemp.put("", arg1);
+				// sParaTemp.put("", arg1);
 				sParaTemp.put("refund_date", refund_date);
 				sParaTemp.put("batch_num", batch_num);
 				sParaTemp.put("detail_data", detail_data);
-				String sHtmlText = AlipaySubmit.buildRequest("", "", sParaTemp);//支付宝接口 如果账户发生变化 请到AlipayConfig配置
-				if (sHtmlText.toUpperCase().indexOf("<is_success>T</is_success>".toUpperCase())>0) {
+				String sHtmlText = AlipaySubmit.buildRequest("", "", sParaTemp);// 支付宝接口
+																				// 如果账户发生变化
+																				// 请到AlipayConfig配置
+				if (sHtmlText.toUpperCase().indexOf("<is_success>T</is_success>".toUpperCase()) > 0) {
 					bean.setRetMsg("退款申请成功，等待支付退款");
-//					order = service.queryById(orderId);
+					// order = service.queryById(orderId);
+					order.setOrderRemark(msg);
 					order.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
 					order.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
 					order.setIs_discharge("0");
@@ -284,8 +293,8 @@ public class SysOrderController extends BaseContoller {
 				} else {
 					throw new Exception("退款失败,错误代码：" + sHtmlText);
 				}
-				 
-			}else{//微信退款
+
+			} else {// 微信退款
 				Configure.setAppID(GlobalConstant.APPID);
 				Configure.setKey(GlobalConstant.WXKEY);
 				Configure.setMchID(GlobalConstant.MCHID);
@@ -308,7 +317,8 @@ public class SysOrderController extends BaseContoller {
 								xml.indexOf("]]></err_code_des>")));
 					} else {
 						bean.setRetMsg("退款成功");
-//						order = service.queryById(orderId);
+						// order = service.queryById(orderId);
+						order.setOrderRemark(msg);
 						order.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
 						order.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
 						order.setIs_discharge("0");
@@ -320,28 +330,48 @@ public class SysOrderController extends BaseContoller {
 						order.setBatch_no(batch_no);
 						service.saveOrder(order);
 					}
-				}else{
+				} else {
 					throw new Exception("退款失败,错误信息："
 							+ xml.substring(xml.indexOf("<return_msg><![CDATA[") + "<return_msg><![CDATA[".length(),
 									xml.indexOf("]]></return_msg>")));
 				}
-				account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+				account.setAccountBalance(
+						account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
 				accountService.updateAccount(account);
 			}
-		
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			bean.setRetCode(5000);
 			bean.setRetMsg(e.getMessage());
 			map.addAttribute("ret", bean);
 			logger.error("", e);
-		}  finally {
+		} finally {
 			return bean.getRetMsg();
 		}
 	}
-	
-	//生成定点编号
-	public static synchronized String getBatchNo(){
-		return (new SimpleDateFormat("yyyyMMdd").format(new Date())+System.currentTimeMillis()).toString();
+
+	@RequestMapping("/saveBreakForRe")
+	@ResponseBody
+	public String saveBreakForRe(String msg, String money, String orderId) {
+		PageBean bean = new PageBean();
+		try {
+			service.saveBareakForRe(msg,money,orderId);
+			bean.setRetMsg("退款成功");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			bean.setRetMsg("退款失败:"+e.getMessage());
+		}finally {
+			return bean.getRetMsg();
+		}
+		
+		// order.setBatch_no(batch_no);
+
+	}
+
+	// 生成定点编号
+	public static synchronized String getBatchNo() {
+		return (new SimpleDateFormat("yyyyMMdd").format(new Date()) + System.currentTimeMillis()).toString();
 	}
 }

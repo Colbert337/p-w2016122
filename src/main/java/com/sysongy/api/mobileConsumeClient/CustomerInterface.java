@@ -13,6 +13,8 @@ import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.poms.usysparam.model.Usysparam;
@@ -70,8 +72,8 @@ public class CustomerInterface {
     @Autowired
     private GasCardService gasCardService;
 
-    @Autowired
-    private SysUserAccountService sysUserAccountService;
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 
     public DriverService getDriverService() {
         return driverService;
@@ -474,6 +476,21 @@ public class CustomerInterface {
 
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
             int renum = driverService.saveDriver(sysDriver, "insert", null, null);
+			//系统关键日志记录
+			SysOperationLog sysOperationLog = new SysOperationLog();
+			sysOperationLog.setOperation_type("kh");
+			String name = sysDriver.getFullName();
+			if("".equals(name)||null==name){
+				name = sysDriver.getUserName();
+			}
+			if("".equals(name)||null==name){
+				name = sysDriver.getMobilePhone();
+			}
+			sysOperationLog.setLog_platform("4");
+			sysOperationLog.setLog_content(name+"的账户卡通过网站开户成功！"); 
+			//操作日志
+			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriver.getSysDriverId());		
+			
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
             if(renum < 1){

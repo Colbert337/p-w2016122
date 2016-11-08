@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.transportion.model.Transportion;
@@ -39,6 +40,8 @@ import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.system.model.SysDepositLog;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 
 import net.sf.json.JSONObject;
 
@@ -69,7 +72,8 @@ public class DriverController extends BaseContoller{
 	OrderService orderService;
 
 	SysDriver driver;
-
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 	/**
      * 查询司机列表
      * @return
@@ -304,10 +308,16 @@ public class DriverController extends BaseContoller{
 	}
 
     @RequestMapping("/changeDriverStatus")
-    public String changeDriverStatus(@RequestParam String accountid, @RequestParam String status, @RequestParam String cardno, ModelMap map)throws Exception{
+    public String changeDriverStatus(@RequestParam String accountid, @RequestParam String status, @RequestParam String cardno, ModelMap map,HttpServletRequest request)throws Exception{
     	PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/driver_info";
-
+		HttpSession session = request.getSession(true);
+		CurrUser currUser = (CurrUser) session.getAttribute("currUser");// 登录人角色
+		if (null == currUser) {
+			bean.setRetCode(5000);
+			bean.setRetMsg("登录信息过期，请重新登录！");
+			return ret;
+		}
 		try {
 			sysUserAccountService.changeStatus(accountid, status, cardno);
 
@@ -315,7 +325,32 @@ public class DriverController extends BaseContoller{
 			driver.setSysUserAccountId(accountid);
 			
 			ret = this.queryDriverInfoList(this.driver ==null?new SysDriver():this.driver, map);
-
+			//系统关键日志记录
+			SysOperationLog sysOperationLog = new SysOperationLog();
+				String operation = "";
+				if ("0".equals(status)) {
+					sysOperationLog.setOperation_type("djzh");
+					operation= "冻结账户 ";
+				} else if ("1".equals(status)){
+					sysOperationLog.setOperation_type("djk");
+					operation= "冻结卡";
+				}else{
+					sysOperationLog.setOperation_type("jcgs");
+					operation="解除挂失";
+				}
+				List<SysDriver> driverlist = driverService.queryeSingleList(driver);
+				SysDriver sysDriver = driverlist.get(0);
+				String name = sysDriver.getFullName();
+				if("".equals(name)||null==name){
+					name = sysDriver.getUserName();
+				}
+				if("".equals(name)||null==name){
+					name = sysDriver.getMobilePhone();
+				}
+				sysOperationLog.setLog_platform("4");
+				sysOperationLog.setLog_content(currUser.getUser().getUserName()+ "把"+name+"的账户进行"+operation+"操作"); 
+				//操作日志
+				sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
 			bean.setRetCode(100);
 			bean.setRetMsg("状态修改成功");
 			bean.setPageInfo(ret);

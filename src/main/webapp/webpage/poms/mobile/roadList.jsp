@@ -90,18 +90,18 @@
 						class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
-								<th onclick="orderBy(this,'start_time');commitForm();"
+								<th onclick="orderBy(this,'start_time');commitForm();"  style="display:none"
 									id="start_time_order"><i
 										class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>开始时间</th>
-								<th onclick="orderBy(this,'end_time');commitForm();"
+								<th onclick="orderBy(this,'end_time');commitForm();" style="display:none"
 									id="end_time_order"><i
 										class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
-								<th onclick="orderBy(this,'province');commitForm();"
+								<th onclick="orderBy(this,'province');commitForm();"  style="display:none"
 									id="province_orber">省份信息</th>
-								<th onclick="orderBy(this,'useful_count');commitForm();"
+								<th onclick="orderBy(this,'useful_count');commitForm();"  style="display:none"
 									id="useful_count_orber">点赞数量</th>
-								<th>坐标</th>
-								<th>方向</th>
+								<th  style="display:none">坐标</th>
+								<th  style="display:none">方向</th>
 								<th onclick="orderBy(this,'auditor_phone');commitForm();"
 									id="auditor_phone_orber">审核人电话</th>
 								<th onclick="orderBy(this,'auditor');commitForm();"
@@ -145,12 +145,12 @@
 
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="${list.id }">
-									<td><fmt:formatDate value="${list.startTime}" type="both" /></td>
-									<td><fmt:formatDate value="${list.endTime}" type="both" /></td>
-									<td>${list.province}</td>
-									<td>${list.usefulCount}</td>
-									<td><div class="td-inner-warp">${list.longitude},${list.latitude }</div></td>
-									<td><s:Code2Name mcode="${list.direction}"
+									<td  style="display:none"><fmt:formatDate value="${list.startTime}" type="both" /></td>
+									<td  style="display:none"><fmt:formatDate value="${list.endTime}" type="both" /></td>
+									<td  style="display:none">${list.province}</td>
+									<td  style="display:none">${list.usefulCount}</td>
+									<td  style="display:none"><div class="td-inner-warp">${list.longitude},${list.latitude }</div></td>
+									<td  style="display:none"><s:Code2Name mcode="${list.direction}"
 													 gcode="DIRECTION_CODE"></s:Code2Name></td>
 									<td>${list.auditorPhone}</td>
 									<td>${list.auditor}</td>
@@ -282,10 +282,10 @@
 						<td><div id="salesmen_name" name="show"></div></td>
 					</tr>
 					<tr>
-						<th>审核人</th>
-						<td><div id="prepay_balance" name="show"></div></td>
 						<th>审核人电话</th>
 						<td><div id="prepay_phone" name="show"></div></td>
+						<th>审核人</th>
+						<td><div id="prepay_balance" name="show"></div></td>
 					</tr>
 					<tr>
 						<th width="15%">路况类型</th>

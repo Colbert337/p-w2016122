@@ -85,7 +85,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
-        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+        PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby()); 
         List<SysDriver> list = sysDriverMapper.queryForPage(record);
         PageInfo<SysDriver> pageInfo = new PageInfo<SysDriver>(list);
         return pageInfo;
@@ -241,7 +241,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     /**
-	 * 给司机充值/充红/转账，增加钱
+	 * 给司机充值/冲红/转账，增加钱
 	 * @param order
 	 * @return
      * @throws Exception 
@@ -260,7 +260,7 @@ public class DriverServiceImpl implements DriverService {
 		SysDriver driver = this.queryDriverByPK(debit_account);
 		String driver_account = driver.getSysUserAccountId();
 		BigDecimal cash = order.getCash();
-		//如果是负值，但是is_discharge却不是充红，则返回错误
+		//如果是负值，但是is_discharge却不是冲红，则返回错误
 		if(cash.compareTo(new BigDecimal("0")) < 0 ){
 			if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
 				throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
@@ -272,7 +272,7 @@ public class DriverServiceImpl implements DriverService {
 		String chong = "充值";
 		String orderDealType = GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CHARGE;
 		if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
-			chong ="充红";
+			chong ="冲红";
 			orderDealType = GlobalConstant.OrderDealType.DISCHARGE_TO_DRIVER_CHARGE;
 		}
 		if(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER.equalsIgnoreCase(order.getOrderType())){
@@ -298,7 +298,7 @@ public class DriverServiceImpl implements DriverService {
 	 * 扣除司机账户金额
 	 * 转账：扣除A司机
 	 * 消费：扣除
-	 *     消费充红：is_discharge是yes，则
+	 *     消费冲红：is_discharge是yes，则
 	 * @param order
 	 * @return
      * @throws Exception 
@@ -325,10 +325,10 @@ public class DriverServiceImpl implements DriverService {
 			
 			cash = order.getCash();
 			
-			//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是充红扣除（个人消费的时候充红），负负得正
+			//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是冲红扣除（个人消费的时候冲红），负负得正
 			BigDecimal addcash = cash.multiply(new BigDecimal(-1));
 			
-			//如果是负值，但是is_discharge却不是充红，则返回错误
+			//如果是负值，但是is_discharge却不是冲红，则返回错误
 			if(cash.compareTo(new BigDecimal("0")) < 0 ){
 				if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
 					throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
@@ -443,7 +443,7 @@ public class DriverServiceImpl implements DriverService {
 		List<SysDriver> invitationList = sysDriverMapper.queryForPage(invitation);
 		
 		if(invitationList.size() != 1){
-			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败");
+			logger.info("通过邀请码找不到对应的司机用户,注册成功，返现失败 invitationCode = "+invitationCode);
 		}else{
 			invitation = invitationList.get(0);
 			List<SysCashBack> listBack=sysCashBackService.queryForBreak("203");
@@ -569,4 +569,10 @@ public class DriverServiceImpl implements DriverService {
 	public List<SysDriver> queryAll() throws Exception {
 		return sysDriverMapper.queryAll();
 	}
+	
+    @Override
+    public SysDriver selectByAccount(String sys_user_account_id) throws Exception {
+        SysDriver sysDriver =  sysDriverMapper.selectByAccount(sys_user_account_id);
+        return sysDriver;
+    }
 }

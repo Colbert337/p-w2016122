@@ -18,6 +18,8 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.poms.usysparam.model.Usysparam;
@@ -78,8 +80,8 @@ public class CRMCustomerContoller {
     @Autowired
     private GasCardService gasCardService;
 
-    @Autowired
-    private SysUserAccountService sysUserAccountService;
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 
     public DriverService getDriverService() {
         return driverService;
@@ -525,6 +527,22 @@ public class CRMCustomerContoller {
 
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
             int renum = driverService.saveDriver(sysDriver, "insert", null, suserId);
+			//系统关键日志记录
+			SysOperationLog sysOperationLog = new SysOperationLog();
+			sysOperationLog.setOperation_type("kh");
+			String name = sysDriver.getFullName();
+			if("".equals(name)||null==name){
+				name = sysDriver.getUserName();
+			}
+			if("".equals(name)||null==name){
+				name = sysDriver.getMobilePhone();
+			}
+			sysOperationLog.setUser_name(name);
+			sysOperationLog.setLog_platform("3");
+			sysOperationLog.setLog_content(gastation.getGas_station_name()+"气站用户"+name+"通过CRM开户成功！"); 
+			//操作日志
+			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriver.getSysDriverId());		
+			
             attributes.put("driver", sysDriver);
             ajaxJson.setAttributes(attributes);
             if(renum < 1){

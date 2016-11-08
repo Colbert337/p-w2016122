@@ -138,7 +138,7 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	public synchronized String addCashToAccount(String accountId, BigDecimal cash, String order_type) throws Exception {
 		SysUserAccount sysUserAccount = sysUserAccountMapper.selectByPrimaryKey(accountId);
 		BigDecimal balance = new BigDecimal(sysUserAccount.getAccountBalance()) ;
-		//在此增加金额，如果是负值则是充红或者消费,仍然用add。
+		//在此增加金额，如果是负值则是冲红或者消费,仍然用add。
 		BigDecimal balance_result = balance.add(cash);
 		//如果余额变成负值，则抛出错误:余额不足
 		if(balance_result.compareTo(new BigDecimal(0))<0){
@@ -180,5 +180,11 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	@Override
 	public SysUserAccount queryUserAccountByDriverId(String sysDriverId) {
 		return sysUserAccountMapper.queryUserAccountByDriverId(sysDriverId);
+	}
+
+	@Override
+	public SysUserAccount queryUserAccountByGas(String channelNumber) {
+		// TODO Auto-generated method stub
+		return sysUserAccountMapper.queryUserAccountByGas(channelNumber);
 	}
 }

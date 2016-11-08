@@ -146,4 +146,11 @@ public interface SysUserService {
      * @return
      */
     SysUser queryMaxIndex();
+    
+   /**
+    * 根据用户名和密码查询user信息
+    * @param user
+    * @return
+    */
+    SysUser queryUserByUserInfo(SysUser user);
 }

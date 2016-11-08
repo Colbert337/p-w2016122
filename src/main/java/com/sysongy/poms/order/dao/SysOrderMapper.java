@@ -69,7 +69,7 @@ public interface SysOrderMapper {
    
     /**
      * 查询某个用户在start_date之后，有没有产生消费
-     * 用于在用户充红的时候判断能否充红。
+     * 用于在用户冲红的时候判断能否冲红。
      * @param userId---用户ID
      * @param order_type --- 传过来消费的类型
      * @param start_date ----特定日期

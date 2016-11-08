@@ -29,7 +29,9 @@ var tradeNo=null;
 var cash=null
 var orderId=null;
 var orderNumber=null;
-function showBreak(tradeNo1,type1,cash1,orderId1,no){
+function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
+	if (retype==1) {
+	
 	$('#div').showLoading();
 	 $.ajax({
 		type : "post",
@@ -56,7 +58,7 @@ function showBreak(tradeNo1,type1,cash1,orderId1,no){
 			
 			
 			$("#money").val("");
-			$("#msgcontent").val();
+			$("#msgcontent").val('');
 			
 		},
 		error:function(){
@@ -64,7 +66,17 @@ function showBreak(tradeNo1,type1,cash1,orderId1,no){
 			 bootbox.alert("查询退款金额失败");
 		}
 	});
-	
+		
+	}else{
+		type=type1;
+		cash=cash1;
+		tradeNo=tradeNo1;
+		orderId=orderId1;
+		 $("#content").modal('show');	 
+		 $("#money").val("");
+		 $("#retype").val(retype);
+		 $("#msgcontent").val('');
+	}
 }
 
 jQuery(function($) {
@@ -172,32 +184,34 @@ obj.value = obj.value.replace(/\.{2,}/g,".");
 obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
 }
 
-/*sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
-sParaTemp.put("partner", AlipayConfig.partner);
-sParaTemp.put("_input_charset", AlipayConfig.input_charset);
-sParaTemp.put("notify_url", notify_url);
-sParaTemp.put("batch_no", batch_no);
-sParaTemp.put("refund_date", refund_date);
-sParaTemp.put("batch_num", batch_num);
-sParaTemp.put("detail_data", detail_data);*/
 function subbreak() {
 	
 	if ($('#money').val()=="") {
 		 bootbox.alert("退款金额不能为空");
 		 return;
 	}
-		
+	if($('#msgcontent').val()==""){
+		 bootbox.alert("退款原因不能为空");
+		 return;
+	}
+	
 	 if ($('#money').val()*1>cash*1) {
 		 bootbox.alert("退款金额不能大于交易金额");
 		 return;
 	}
-	 
+	 var url="";
+	if ($('#retype').val()==2) {
+		url ='../web/order/saveBreakForRe';
+	}else{
+		url ='../web/order/saveBreak';
+	}
 	var options = {
-		url : '../web/order/saveBreak',
+		url : url,
 		type : 'post',
 		data : {
 			money : $('#money').val(),
 			msg: $('#msgcontent').val(),
+			retype:$('#retype').val(),
 			type:type,
 			cash:cash,
 			orderId:orderId,

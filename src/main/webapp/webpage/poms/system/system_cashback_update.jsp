@@ -202,7 +202,7 @@ if('${sysCashBack.sys_cash_back_no}'=='201'|| '${sysCashBack.sys_cash_back_no}'=
 	$("#input1").attr('placeholder','请输入邀请人返现金额');
 	$("#label2").text('被邀请人返现金额');
 	$("#input2").attr('placeholder','请输入被邀请人返现金额');
-	$("div3").hide();
+	$("#div3").hide();
 	$('#cashbackform').bootstrapValidator({
         message: 'This value is not valid',
         feedbackIcons: {

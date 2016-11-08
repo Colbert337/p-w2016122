@@ -551,7 +551,7 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="nickname != null" >
-        user_name = #{nickname,jdbcType=VARCHAR},
+        nickname = #{nickname,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},

@@ -470,7 +470,7 @@ public class Gastation extends BaseModel implements Comparable {
 		int i = 0;
 		Gastation gastation = (Gastation)obj;
 		i = this.distance.compareTo(gastation.distance);
-			return i;
+		return i;
 	}
 
 	public Double getMinPrice() {
