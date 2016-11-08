@@ -484,7 +484,9 @@ public class MobileController {
 								+ mainObj.optString("phoneNum") + "/" + mainObj.optString("phoneNum") + ".jpg";
 						// 生成二维码
 						driver.setDriverQrcode(show_path);
-
+						//设置默认驾驶证和行驶证图片
+                        driver.setDrivingLice("/image/default_productBig.jpg");
+                        driver.setVehicleLice("/image/default_productBig.jpg");
 						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, this.appOperatorId);
 						//系统关键日志记录
 						SysOperationLog sysOperationLog = new SysOperationLog();
@@ -784,8 +786,9 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if (sysDriverId != null && !sysDriverId.equals("")) {
+					
 					if (name != null && !"".equals(name)) {
-						driver.setFullName(name);
+						driver.setNickname(name);
 					}
 					if (imgUrl != null && !"".equals(imgUrl)) {
 						driver.setAvatarB(imgUrl);
@@ -2942,6 +2945,8 @@ public class MobileController {
 						aliShortMessageBean.setBackCash(backCash.equals("null")||backCash==null?"0":backCash);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
+						//APP提示
+						sysMessageService.saveMessageTransaction("微信充值", sysOrder,"1");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3051,6 +3056,8 @@ public class MobileController {
 						aliShortMessageBean.setSpentMoney(feeCount);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						//APP提示
+						sysMessageService.saveMessageTransaction("微信消费", sysOrder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3140,6 +3147,8 @@ public class MobileController {
 						aliShortMessageBean.setBackCash(backCash.equals("null")||backCash==null?"0":backCash);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
+						//APP提示
+						sysMessageService.saveMessageTransaction("支付宝充值", sysOrder,"1");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3227,6 +3236,8 @@ public class MobileController {
 						aliShortMessageBean.setSpentMoney(feeCount);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						//APP提示
+						sysMessageService.saveMessageTransaction("支付宝消费", sysOrder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3681,6 +3692,16 @@ public class MobileController {
 					SysRoadCondition sysRoadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId());
 					if (sysRoadCondition != null) {
 						redisList.add(sysRoadCondition);
+					}else{
+						SysRoadCondition src = new SysRoadCondition();
+						src.setId(roadIdList.get(i).getId());
+						src.setConditionStatus("0");
+						int rs = sysRoadService.updateByPrimaryKey(src);
+						if (rs ==1) {
+							logger.info("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：成功!!!");
+						}else{
+							logger.error("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：失败!!!");
+						}
 					}
 				}
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
@@ -4470,7 +4491,7 @@ public class MobileController {
 					for (Map<String, Object> map : gsGasPriceList) {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("preferential_type", map.get("preferential_type"));
-						reChargeMap.put("gasName", map.get("gas_name"));
+						reChargeMap.put("gasName", usysparamService.query("CARDTYPE", map.get("gas_name").toString()).get(0).getMname());
 						reChargeMap.put("remark", map.get("remark"));
 						reChargeMap.put("gasPrice", map.get("product_price"));
 						reChargeMap.put("priceUnit", map.get("unit"));
@@ -4773,6 +4794,8 @@ public class MobileController {
 								aliShortMessageBean.setSpentMoney(amount);
 								aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
 								AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+								//APP提示
+								sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
 							}
 						}
 				}else{
