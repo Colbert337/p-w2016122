@@ -556,7 +556,9 @@ public class CrmPortalController extends BaseContoller {
                         String show_path = (String) prop.get("show_images_path")+ "/driver/"+phone+"/"+phone+".jpg";
                         //生成二维码
                         driver.setDriverQrcode(show_path);
-
+                        //设置默认驾驶证和行驶证图片
+                        driver.setDrivingLice("/image/default_productBig.jpg");
+                        driver.setVehicleLice("/image/default_productBig.jpg");
                         Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, GlobalConstant.appOperatorId);
             			//系统关键日志记录
             			SysOperationLog sysOperationLog = new SysOperationLog();
