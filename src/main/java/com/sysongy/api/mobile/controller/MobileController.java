@@ -2925,9 +2925,9 @@ public class MobileController {
         			sysOperationLog.setOperation_type("cz");
         			sysOperationLog.setLog_platform("1");
             		sysOperationLog.setOrder_number(order.getOrderNumber());
-            		sysOperationLog.setLog_content("app微信在线充值回调成功！订单号为："+order.getOrderNumber()); 
+            		sysOperationLog.setLog_content("app微信在线充值回调成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
         			//操作日志
-        			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOperator());
+        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("订单充值错误：" + orderCharge);
 					} else {
@@ -3022,7 +3022,7 @@ public class MobileController {
 	        			SysOperationLog sysOperationLog = new SysOperationLog();
 	        			sysOperationLog.setOperation_type("fx");
 	        			sysOperationLog.setLog_platform("1");
-	            		sysOperationLog.setLog_content("手机微信消费返现成功！返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
+	            		sysOperationLog.setLog_content("手机微信消费返现成功！充值金额："+order.getCash()+"，返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
 	        			//操作日志
 	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
 					}else{
@@ -3036,7 +3036,7 @@ public class MobileController {
 	    			sysOperationLog.setOperation_type("cz");
 	    			sysOperationLog.setLog_platform("2");
 	        		sysOperationLog.setOrder_number(order.getOrderNumber());
-	        		sysOperationLog.setLog_content("司机个人通过微信充值成功！订单号为："+order.getOrderNumber()); 
+	        		sysOperationLog.setLog_content("司机个人通过微信充值成功！充值金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
 	    			//操作日志
 	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -3122,7 +3122,7 @@ public class MobileController {
         			sysOperationLog.setOperation_type("cz");
         			sysOperationLog.setLog_platform("1");
             		sysOperationLog.setOrder_number(order.getOrderNumber());
-            		sysOperationLog.setLog_content("app支付宝在线充值回调成功！订单号为："+order.getOrderNumber()); 
+            		sysOperationLog.setLog_content("app支付宝在线充值回调成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
         			//操作日志
         			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOperator());
 
@@ -3212,7 +3212,7 @@ public class MobileController {
 	    			sysOperationLog.setOperation_type("cz");
 	    			sysOperationLog.setLog_platform("1");
 	        		sysOperationLog.setOrder_number(order.getOrderNumber());
-	        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！订单号为："+order.getOrderNumber()); 
+	        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
 	    			//操作日志
 	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
