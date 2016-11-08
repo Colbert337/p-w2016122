@@ -4384,7 +4384,7 @@ public class MobileController {
 					for (Map<String, Object> map : gsGasPriceList) {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("preferential_type", map.get("preferential_type"));
-						reChargeMap.put("gasName", map.get("gas_name"));
+						reChargeMap.put("gasName", usysparamService.query("CARDTYPE", map.get("gas_name").toString()).get(0).getMname());
 						reChargeMap.put("remark", map.get("remark"));
 						reChargeMap.put("gasPrice", map.get("product_price"));
 						reChargeMap.put("priceUnit", map.get("unit"));
