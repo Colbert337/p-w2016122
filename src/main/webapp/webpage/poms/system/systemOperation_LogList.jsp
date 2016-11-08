@@ -39,11 +39,11 @@
 						</div>
 						<div class="item">
 							<label>时间：</label>
-								<input type="text" class="date-picker" name="created_date_after" id="created_date_after" style="width:150px"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
+								<input type="text" class="date-picker" name="created_date_after" id="created_date_after" style="width:150px" value="${sysOperationLog.created_date_after}"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
 									<span class="">
 										<i class="fa fa-exchange"></i>
 									</span>
-								<input type="text" class="date-picker" name="created_date_before" id="created_date_before"  style="width:150px" readonly="readonly" data-date-format="yyyy-mm-dd"/>
+								<input type="text" class="date-picker" name="created_date_before" id="created_date_before"  style="width:150px" value="${sysOperationLog.created_date_before}" readonly="readonly" data-date-format="yyyy-mm-dd"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">

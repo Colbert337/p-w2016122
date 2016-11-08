@@ -1335,23 +1335,31 @@ public class MobileController {
 					retvale = sysUserAccountService.changeStatus(driver.getAccount().getSysUserAccountId(), lossType,
 							cardNo);
 				}
-
+				//系统关键日志记录
+				SysOperationLog sysOperationLog = new SysOperationLog();
+				String operation="";
 				if (retvale > 0) {
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					if ("2".equals(lossType)) {
 						failStr = "解除挂失";
+						 operation="解除挂失";
+						sysOperationLog.setOperation_type("jcgs");
 					} else {
 						failStr = ("挂失");
+						operation="挂失";
+						sysOperationLog.setOperation_type("gs");
 					}
 					result.setMsg(failStr + "成功！");
 				}
-				
-				//系统关键日志记录
-				SysOperationLog sysOperationLog = new SysOperationLog();
-				
-				
+				sysOperationLog.setUser_name(driver.getFullName());
+				sysOperationLog.setLog_platform("1");
+				String cardNo="";
+				if (driver.getCardInfo() != null) {
+					cardNo = driver.getCardInfo().getCard_no();
+				}
+				sysOperationLog.setLog_content("APP用户"+driver.getMobilePhone()+"把"+cardNo+"账户卡"+operation+"成功！");
 				//操作日志
-				sysOperationLogService.saveOperationLog(sysOperationLog,null);
+				sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysDriverId());
 				
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
