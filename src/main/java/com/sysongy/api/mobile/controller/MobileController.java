@@ -3284,33 +3284,49 @@ public class MobileController {
 				// 原电话号码赋值
 				sysDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				// 获取验证码
-				String codePay = mainObj.optString("veCode");
+				String inVeCode = mainObj.optString("veCode");
+				newCode = mainObj.optString("newCode");
 				veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
-				if (veCode != null && !"".equals(veCode)) {
+				if (veCode != null && !"".equals(veCode) && inVeCode.equals(veCode)) {
 					phoneType = mainObj.optString("phoneType");
 					// 数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
-					String codeStr = mainObj.optString("phoneNum");
 					if (!driver.isEmpty()) {
 						// 新电话号码
 						newPhoneNum = mainObj.optString("newPhoneNum");
-						// 修改账户手机
-						if ("1".equals(phoneType)) {
-							sysDriver.setUserName(newPhoneNum);
-							sysDriver.setMobilePhone(newPhoneNum);
-						} else {
-							sysDriver.setSecurityMobilePhone(newPhoneNum);
-						}
-						sysDriver.setDriverType(driver.get(0).getDriverType());
-						sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-						int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
-						// 返回大于0，成功
-						if (resultVal <= 0) {
-							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("修改账号手机号/密保手机失败！");
-						}
+						SysDriver temp = new SysDriver();
+						temp.setMobilePhone(newPhoneNum);
+						SysDriver rs = driverService.queryDriverByMobilePhone(temp);
 						Map<String, Object> dataMap = new HashMap<>();
-						dataMap.put("resultVal", "true");
+						if(rs!=null && !"".equals(rs)){
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("该手机号已存在！！！");
+							dataMap.put("resultVal", "false");
+						}else{
+							String RnewCode = (String) redisClientImpl.getFromCache(newPhoneNum);
+							if(newCode.equals(RnewCode)){
+								// 修改账户手机
+								if ("1".equals(phoneType)) {
+									sysDriver.setUserName(newPhoneNum);
+									sysDriver.setMobilePhone(newPhoneNum);
+								} else {
+									sysDriver.setSecurityMobilePhone(newPhoneNum);
+								}
+								sysDriver.setDriverType(driver.get(0).getDriverType());
+								sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+								int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
+								// 返回大于0，成功
+								if (resultVal <= 0) {
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("修改账号手机号/密保手机失败！");
+								}else{
+									dataMap.put("resultVal", "true");
+								}
+							}else{
+								result.setStatus(MobileReturn.STATUS_FAIL);
+								result.setMsg("新手机验证码无效！");
+							}
+						}
 						result.setData(dataMap);
 					} else {
 						result.setStatus(MobileReturn.STATUS_FAIL);
