@@ -27,8 +27,27 @@
 		
 		$("#formgastation").ajaxSubmit(listOptions);
 	}
-	
-	function showDetail(order_id,order_type,cash){
+
+	var creditAccount;
+	var orderNumber;
+	var is_discharge;
+	var plateNumber;
+	var startDate;
+	var endDate;
+	var pageNumber;
+	var pageSize;
+	var orderBy;
+	function showDetail(order_id,order_type,cash,
+						creditAccounts,orderNumbers,is_discharges,plateNumbers,startDates,endDates,pageNumbers,pageSizes,orderBys){
+		creditAccount=creditAccounts;
+		orderNumber=orderNumbers;
+		is_discharge=is_discharges;
+		plateNumber=plateNumbers;
+		startDate=startDates;
+		endDate=endDates;
+		pageNumber=pageNumbers;
+		pageSize=pageSizes;
+		orderBy=orderBys;
 		/*$.ajax({
 			type: "POST",
 			url: '../web/transportion/queryRechargeReportDetail?order_id='+order_id+'&order_type='+order_type+'&cash='+cash,
@@ -50,9 +69,18 @@
 	}
 
 
+
+
 	//导出报表
 	function importReport(){
 		var cur = "${sessionScope.currUser.userId}";
 		//alert(cur);
 		$("#formgastation").submit();
+	}
+
+
+	function backQuery(){
+		loadPage('#main', '../web/transportion/queryRechargeReport?'+'creditAccount='+creditAccount+
+			'&orderNumber='+orderNumber+'&sysDriver.plateNumber='+plateNumber+'&is_discharge='+is_discharge+
+			'&startDate='+startDate+'&endDate='+endDate+'&pageNum='+pageNumber+'&=pageSize'+pageSize+'&orderBy='+orderBy);
 	}
