@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.transportion.dao.TransportionMapper;
 import org.apache.commons.lang.StringUtils;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -56,6 +59,10 @@ public class OrderServiceImpl implements OrderService {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
+	@Autowired
+	private SysUserAccountService accountService;
+	
 	@Autowired
 	private SysOrderMapper sysOrderMapper;
 
@@ -245,7 +252,7 @@ public class OrderServiceImpl implements OrderService {
 	}
     
 	/**
-     * 根据原订单，创建充红订单
+     * 根据原订单，创建冲红订单
      * @paramorder
      * @return
      * @throws Exception
@@ -271,23 +278,23 @@ public class OrderServiceImpl implements OrderService {
     	dischargeOrder.setOperatorSourceId(originalOrder.getOperatorSourceId());
     	dischargeOrder.setOperatorSourceType(originalOrder.getOperatorSourceType());
     	dischargeOrder.setOperatorTargetType(originalOrder.getOperatorTargetType());
-    	//设置为充红
+    	//设置为冲红
     	dischargeOrder.setIs_discharge(GlobalConstant.ORDER_ISCHARGE_YES);
     	//设置dischargeorderid，为原订单Id
     	dischargeOrder.setDischargeOrderId(originalOrder.getOrderId());
 		dischargeOrder.setConsume_card(originalOrder.getConsume_card());
     	dischargeOrder.setConsume_cardInfo(originalOrder.getConsume_cardInfo());
-    	//设置订单充红原因
+    	//设置订单冲红原因
     	dischargeOrder.setDischarge_reason(discharge_reason);
     	return dischargeOrder;
     }
     
 	/**
-     * 判断订单能否充红
-     * 1.如果是充值：从订单对应的账户debit_account中找到对应的司机或者车队，如果此司机或者车队没有在订单创建时间后消费，则可以充红。
+     * 判断订单能否冲红
+     * 1.如果是充值：从订单对应的账户debit_account中找到对应的司机或者车队，如果此司机或者车队没有在订单创建时间后消费，则可以冲红。
      *   不用have_consume字段，只能从order表中查询是否在这个订单后，有消费记录
      *    
-     * 2.如果是消费，如果此消费订单没有超过24小时，则可以充红
+     * 2.如果是消费，如果此消费订单没有超过24小时，则可以冲红
      * @paramorder
      * @return
      * @throws Exception
@@ -295,7 +302,7 @@ public class OrderServiceImpl implements OrderService {
     public boolean checkCanDischarge(SysOrder originalOrder) throws Exception{
     	
     	String order_type = originalOrder.getOrderType();
-    	//如果是对司机充值的订单充红，或者是对车队充值的订单充红
+    	//如果是对司机充值的订单冲红，或者是对车队充值的订单冲红
     	if(GlobalConstant.OrderType.CHARGE_TO_DRIVER.equalsIgnoreCase(order_type)
     	  ||GlobalConstant.OrderType.CHARGE_TO_TRANSPORTION.equalsIgnoreCase(order_type)
     	  ||GlobalConstant.OrderType.CHARGE_TO_GASTATION.equalsIgnoreCase(order_type)){
@@ -334,10 +341,10 @@ public class OrderServiceImpl implements OrderService {
     }
     
 	/**
-	 * 充红订单--包括充值充红、消费充红
+	 * 冲红订单--包括充值冲红、消费冲红
 	 * 1.从查询原始订单的订单处理流程
 	 * 2.针对每个处理过程，进行反向操作
-	 * @paramorder 充红的订单对象，其中属性discharge_order_id存的是对冲的订单ID,其他信息是初始化原始订单的信息，尤其是cash字段
+	 * @paramorder 冲红的订单对象，其中属性discharge_order_id存的是对冲的订单ID,其他信息是初始化原始订单的信息，尤其是cash字段
 	 */
     @Override
     public String dischargeOrder(SysOrder originalOrder, SysOrder dischargeOrder) throws Exception{
@@ -361,7 +368,7 @@ public class OrderServiceImpl implements OrderService {
 	   //检查订单
 	   validAccount(dischargeOrder);
 	   
-	   //充红的金额必须是负值
+	   //冲红的金额必须是负值
 	   BigDecimal cash = dischargeOrder.getCash();
 	   if(cash.compareTo(new BigDecimal("0")) > 0 ){
 		   throw new Exception( GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE);
@@ -381,7 +388,7 @@ public class OrderServiceImpl implements OrderService {
 				  throw new Exception( dischargeCashToDriver_success);
 		      }
 		   }
-		   //如果类型是加注站预付款扣除，则将加注站预付款的扣除充红
+		   //如果类型是加注站预付款扣除，则将加注站预付款的扣除冲红
 		   if(orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY)){
 			   String charge_type = dischargeOrder.getChargeType(); 
 			   if(GlobalConstant.OrderChargeType.CHARGETYPE_CASH_CHARGE.equalsIgnoreCase(charge_type)){
@@ -410,7 +417,7 @@ public class OrderServiceImpl implements OrderService {
 		      }
 		   }
 		   
-		   //针对司机消费充红
+		   //针对司机消费冲红
 		   if(orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CONSUME_DRIVER_DEDUCT)){
 			   dischargeOrder.setCoupon_cash(originalOrder.getCoupon_cash());
 			   dischargeOrder.setPreferential_cash(originalOrder.getPreferential_cash());
@@ -425,7 +432,7 @@ public class OrderServiceImpl implements OrderService {
 		      }
 		   }
 		   
-		  //针对运输公司消费充红
+		  //针对运输公司消费冲红
 		   if(orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CONSUME_TRANSPORTION_DEDUCT)){
 			  String disChargeConsume_success = transportionService.consumeTransportion(dischargeOrder);
 			  if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(disChargeConsume_success)){
@@ -438,7 +445,7 @@ public class OrderServiceImpl implements OrderService {
 		   
 		 //TODO 针对其他类型进行操作
 	   }
-	   //充红完成后，将对应的原订单里面的discharge_order_id修改为此订单ID。同时修改been_discharged字段为1
+	   //冲红完成后，将对应的原订单里面的discharge_order_id修改为此订单ID。同时修改been_discharged字段为1
 	   HashMap<String,String> map = new HashMap<String,String>();
 	   map.put("orderId", originalOrder.getOrderId());
 	   map.put("dischargeOrderId", dischargeOrder.getOrderId());
@@ -654,7 +661,7 @@ public class OrderServiceImpl implements OrderService {
 	   }*/
 
 	   //2.扣除运输公司账户金额
-	   //消费的时候传过去的cash是正值,充红的时候传过去的是负值
+	   //消费的时候传过去的cash是正值,冲红的时候传过去的是负值
 	   String consume_success =transportionService.consumeTransportion(order);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
 		   //如果出错直接返回错误代码退出
@@ -1266,5 +1273,45 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Double backCash(String orderId) {
 		return sysOrderMapper.backCash(orderId);
+	}
+
+	@Override
+	@Transactional
+	public void saveBareakForRe(String msg, String money, String orderId)throws Exception {
+		// TODO Auto-generated method stub
+		SysOrder order = null; 
+		SysUserAccount account;
+			order = this.queryById(orderId);
+			order.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+			order.setOrderRemark(msg);
+			order.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
+			order.setIs_discharge("0");
+			order.setOrderStatus(1);
+			order.setOrderDate(new Date());
+			order.setOrderType("230");
+			order.setChargeType("112");
+			order.setOrderRemark(msg);
+			account = accountService.queryUserAccountByGas(order.getChannelNumber());
+			if (account == null) {
+				throw new Exception("查无此气站");
+			}
+			if (Double.valueOf(account.getAccountBalance())<Double.valueOf(money)) {
+				throw new Exception("退款金额不足");
+			}
+			account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+			accountService.updateAccount(account);
+			account = accountService.queryUserAccountByDriverId(order.getCreditAccount());
+			if (account == null) {
+				throw new Exception("查无此司机");
+			}
+			account.setAccountBalance(account.getAccountBalanceBigDecimal().add(new BigDecimal(money)).toString());
+			accountService.updateAccount(account);
+			 
+			this.saveOrder(order);
+	
+			// TODO Auto-generated catch block
+		//	e.printStackTrace();
+			 
+		
 	}
 }

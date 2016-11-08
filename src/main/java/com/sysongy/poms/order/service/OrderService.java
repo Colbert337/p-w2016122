@@ -119,7 +119,7 @@ public interface OrderService {
 	
 		
     /**
-     * 判断订单能否充红
+     * 判断订单能否冲红
      * @param order
      * @return
      * @throws Exception
@@ -127,7 +127,7 @@ public interface OrderService {
     boolean checkCanDischarge(SysOrder order) throws Exception;
     
     /**
-     * 根据原订单，创建充红订单
+     * 根据原订单，创建冲红订单
      * @param order
      * @return
      * @throws Exception
@@ -142,7 +142,7 @@ public interface OrderService {
     String createOrderNumber(String order_type) throws Exception;
     
     /**
-     * 充红订单
+     * 冲红订单
      * @param order
      * @return
      * @throws Exception
@@ -281,4 +281,6 @@ public interface OrderService {
     Double backCash(String orderId);
 
 	int updateByBatchNo(SysOrder record);
+
+	void  saveBareakForRe(String msg, String money, String orderId)throws Exception;
 }

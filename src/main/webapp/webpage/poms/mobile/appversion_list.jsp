@@ -67,25 +67,25 @@
 						<div class="table-header">图片列表</div>
 
 						<!-- div.dataTables_borderWrap -->
-						<div class="sjny-table-responsive">
-							<table id="dynamic-table"
-								class="table table-striped table-bordered table-hover">
+						<!-- <div class="sjny-table-responsive">-->
+							<table id="dynamic-table"  style="table-layout:fixed;"
+								   class="table table-striped table-bordered table-hover">
 								<thead>
 									<tr>
-										<th>序号</th>
-										<th
+										<th class="center" width="3%">序号</th>
+										<th  width="30%"
 											id="url_order">下载地址</th>
-										<th
+										<th  width="4%"
 												id="appSize_order">App大小</th>
-										<th
+										<th  width="10%"
 											id="version_order">外部版本号</th>
-										<th
+										<th  width="10%"
 											id="code_order">内部版本号</th>
-										<th
+										<th  width="4%"
 											id="isPublish_order">是否发布</th>
-										<th
+										<th  width="4%"
 												id="isUpdate_order">是否强制更新</th>
-										<th id="level">版本说明</th>
+										<th id="level" >版本说明</th>
 										<th onclick="orderBy(this,'created_date');commitForm();"
 											id="created_date_order" class="td-w2"><i
 											id="created_date"
@@ -99,23 +99,23 @@
 									<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 
 										<tr id="${list.appVersionId }">
-											<td class='center' style="width: 30px;">${s.index+1}</td>
-											<td>${list.url}</td>
+											<td class="center">${s.index+1}</td>
+											<td style="width:30px;overflow: hidden">${list.url}</td>
 											<td>${list.appSize}</td>
 											<td>${list.version}</td>
-											<td style="width: 30px;"><div class="td-inner-warp">${list.code}</div></td>
+											<td style="width:10px;"><div class="td-inner-warp">${list.code}</div></td>
 
-											<td style="width: 10px;"><div class="td-inner-warp">
+											<td style="width: 5px;"><div class="td-inner-warp">
 											<c:if test="${list.isPublish == '1'}">是</c:if>
 											<c:if test="${list.isPublish == '0' }">否</c:if>
 											</div></td>
 
-											<td style="width: 10px;"><div class="td-inner-warp">
+											<td style="width: 5px;"><div class="td-inner-warp">
 												<c:if test="${list.isUpdate == '1'}">是</c:if>
 												<c:if test="${list.isUpdate == '2' }">否</c:if>
 											</div></td>
 
-											<td>${list.remark}</td>
+											<td  style="overflow: hidden" width="40%">${list.remark}</td>
 											<td>${list.createdDateStr}
 													</td>
 											<td class="text-center"><a class="option-btn-m"
@@ -131,7 +131,7 @@
 									</c:forEach>
 								</tbody>
 							</table>
-						</div>
+						<!--</div>-->
 
 
 					</div>

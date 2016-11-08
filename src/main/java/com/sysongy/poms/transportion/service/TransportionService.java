@@ -27,7 +27,7 @@ public interface TransportionService {
 
 	public int updateDeposit(Transportion transportion) throws Exception;
 	/**
-	 * 给运输公司充值(无充红,不返现)
+	 * 给运输公司充值(无冲红,不返现)
 	 * @param order
 	 * @return
      * @throws Exception 

@@ -26,6 +26,11 @@
     from sys_user_account
     where sys_user_account_id = #{sysUserAccountId,jdbcType=VARCHAR}
   </select>
+   <!-- 根据加气站id查看账户 -->
+    <select id="queryUserAccountByGas" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select sua.* from sys_user_account sua left join sys_gas_station st on sua.sys_user_account_id = st.sys_user_account_id
+    where st.sys_gas_station_id = #{channelNumber}
+  </select>
   <!--根据运输公司编号查询运输公司账号-->
   <select id="queryUserAccountByStationId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select sua.* from sys_user_account sua left join sys_transportion st on sua.sys_user_account_id = st.sys_user_account_id
