@@ -6,12 +6,16 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.util.HttpUtil;
 import com.sysongy.util.JsonTool;
 import net.sf.json.JSON;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @FileName: AmapController
@@ -111,6 +115,32 @@ public class MapController {
             String mapResult = HttpUtil.sendPostUrl(routeAPI,paramStr,"UTF-8");
 
             resultObj = JSONObject.fromObject(mapResult);
+            JSONObject routeObj = resultObj.optJSONObject("route");
+            JSONObject pathsObj = routeObj.optJSONObject("paths");
+            JSONArray stepsArray = pathsObj.optJSONArray("steps");
+
+            //获取当前线路所有坐标点
+            List<String> polylineList = new ArrayList<>();
+            if(stepsArray != null && stepsArray.size() > 0){
+                for ( int i = 0; i < stepsArray.size();i++){
+                    JSONObject stepObj = stepsArray.getJSONObject(i);
+                    String polylineStr = stepObj.optString("polyline");
+
+                    if(polylineStr != null && !"".equals(polylineStr)){
+                        String[] polylineArray = polylineStr.split(";");
+                        if(polylineArray != null && polylineArray.length > 0){
+                            for (String poly:polylineArray){
+                                polylineList.add(poly);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //过滤当前路线坐标点（参数，过滤尺度，整型，隔N个取一个）
+
+            //查询当前路线坐标点周边气站（参数，范围半径）
+
 
         }catch (Exception e){
             e.printStackTrace();
