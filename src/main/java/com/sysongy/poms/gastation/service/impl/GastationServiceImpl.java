@@ -294,7 +294,7 @@ public class GastationServiceImpl implements GastationService {
 	}
 
 	/**
-	 * 向司机充值的时候，更新加注站预付款余额：分为充值和充红
+	 * 向司机充值的时候，更新加注站预付款余额：分为充值和冲红
 	 * @return
 	 */
 	public String chargeToDriverUpdateGastationPrepay(SysOrder order, String is_discharge) throws Exception{
@@ -310,7 +310,7 @@ public class GastationServiceImpl implements GastationService {
 			   if(cash.compareTo(prepay) > 0){
 				   throw new Exception( GlobalConstant.OrderProcessResult.ORDER_ERROR_PREPAY_IS_NOT_ENOUGH);
 			   }
-			   //减少预付款，并增加预付款操作记录。将订单中的金额cash修改为负数，因为是要减少预付款---如果是充红，则刚好进行了相反操作，变成正值。正确
+			   //减少预付款，并增加预付款操作记录。将订单中的金额cash修改为负数，因为是要减少预付款---如果是冲红，则刚好进行了相反操作，变成正值。正确
 		 	   BigDecimal addCash = cash.multiply(new BigDecimal(-1));
 		 	   String updateBalance_success =  updatePrepayBalance(gastation, addCash);
 		 	   //增加订单操作流程：
@@ -318,7 +318,7 @@ public class GastationServiceImpl implements GastationService {
 				String remark = "因司机充值，修改"+ gastation.getGas_station_name()+"的预付款，减少金额"+cash.toString()+"。";
 			    if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
 			 		orderDealType = GlobalConstant.OrderDealType.DISCHARGE_TO_DRIVER_DEDUCT_GASTATION_PREPAY;
-			 		remark = "因司机充红，修改"+ gastation.getGas_station_name()+"的预付款，增加金额"+addCash.toString()+"。";
+			 		remark = "因司机冲红，修改"+ gastation.getGas_station_name()+"的预付款，增加金额"+addCash.toString()+"。";
 			 	}
 			   orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,updateBalance_success);
 		 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(updateBalance_success)){
@@ -337,7 +337,7 @@ public class GastationServiceImpl implements GastationService {
 				   sysPrepay.setOperateType(GlobalConstant.SysPrepayOperate.CHARGE_TO_DRIVER_DEDUCT);
 			   }
 			   if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
-				  remark = "因司机现金充红，增加"+ gastation.getGas_station_name()+"的预付款"+addCash.toString()+"。";
+				  remark = "因司机现金冲红，增加"+ gastation.getGas_station_name()+"的预付款"+addCash.toString()+"。";
 			   }else{
 			      remark = "因司机现金充值，抵扣"+ gastation.getGas_station_name()+"的预付款"+cash.toString()+"。";
 			   }

@@ -31,4 +31,10 @@ public interface SysUserAccountMapper {
      * @return
      */
     SysUserAccount queryUserAccountByDriverId(String sysDriverId);
+    /**
+     * 根据加气站编号查询司机账户信息
+     * @param sysDriverId 运输公司ID
+     * @return
+     */
+	SysUserAccount queryUserAccountByGas(String channelNumber);
 }

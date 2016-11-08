@@ -320,7 +320,7 @@ public class GlobalConstant {
 	/*
 	 * 订单处理流程中的类型
 	 * Charge ---表示充值
-	 * discharge---表示充红
+	 * discharge---表示冲红
 	 */
 	public interface OrderDealType{
 		public static final String CHARGE_TO_DRIVER_CHARGE ="131";//个人充值
@@ -511,13 +511,13 @@ public class GlobalConstant {
 	}
 	
 	/*
-	 * 是否充红订单 
+	 * 是否冲红订单
 	 */
 	public static final String ORDER_ISCHARGE_YES = "1";
 	public static final String ORDER_ISCHARGE_NO = "0";
 	
 	/*
-	 * 订单是否已经被充红 
+	 * 订单是否已经被冲红
 	 */
 	public static final String ORDER_BEEN_DISCHARGED_YES = "1";
 	public static final String ORDER_BEEN_DISCHARGED_NO = "0";

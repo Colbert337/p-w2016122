@@ -141,7 +141,16 @@
 									<td>${list.operator}</td>
 									<td class="text-center">
 										<a class="" href="javascript:void(0);" title="查看明细" data-rel="tooltip">
-											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showDetail('${list.order_id}','${list.order_type}','${list.cash}');"></i>
+											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showDetail('${list.order_id}','${list.order_type}'
+													,'${list.cash}','${sysOrder.sysDriver.userName}'
+													,'${sysOrder.sysDriver.mobilePhone}'
+													,'${sysOrder.orderNumber}'
+													,'${sysOrder.is_discharge}'
+													,'${sysOrder.startDate}'
+													,'${sysOrder.endDate}',
+													'${pageInfo.pageNum}',
+													'${pageInfo.pageSize}',
+													'${pageInfo.orderBy}');"></i>
 										</a>
 									</td>
 								</tr>
