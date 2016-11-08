@@ -143,7 +143,7 @@
 														<td class="text-center">
 														<jsp:useBean id="now" class="java.util.Date" />   
 															<c:if test="${list.end_date ge now}">
-																<a class="option-btn-m" href="javascript:void(0);"  title="修改" data-rel="tooltip">
+																<a class="option-btn-m" href="javascript:void(0);" id="edit" title="修改" data-rel="tooltip">
 																	<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
 																</a>
 															</c:if>

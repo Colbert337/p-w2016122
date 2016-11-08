@@ -29,7 +29,9 @@ var tradeNo=null;
 var cash=null
 var orderId=null;
 var orderNumber=null;
-function showBreak(tradeNo1,type1,cash1,orderId1,no){
+function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
+	if (retype==1) {
+	
 	$('#div').showLoading();
 	 $.ajax({
 		type : "post",
@@ -56,7 +58,7 @@ function showBreak(tradeNo1,type1,cash1,orderId1,no){
 			
 			
 			$("#money").val("");
-			$("#msgcontent").val();
+			$("#msgcontent").val('');
 			
 		},
 		error:function(){
@@ -64,7 +66,17 @@ function showBreak(tradeNo1,type1,cash1,orderId1,no){
 			 bootbox.alert("查询退款金额失败");
 		}
 	});
-	
+		
+	}else{
+		type=type1;
+		cash=cash1;
+		tradeNo=tradeNo1;
+		orderId=orderId1;
+		 $("#content").modal('show');	 
+		 $("#money").val("");
+		 $("#retype").val(retype);
+		 $("#msgcontent").val('');
+	}
 }
 
 jQuery(function($) {
@@ -186,18 +198,28 @@ function subbreak() {
 		 bootbox.alert("退款金额不能为空");
 		 return;
 	}
-		
+	if($('#msgcontent').val()==""){
+		 bootbox.alert("退款原因不能为空");
+		 return;
+	}
+	alert($('#money').val()+":"+cash);
 	 if ($('#money').val()*1>cash*1) {
 		 bootbox.alert("退款金额不能大于交易金额");
 		 return;
 	}
-	 
+	 var url="";
+	if ($('#retype').val()==2) {
+		url ='../web/order/saveBreakForRe';
+	}else{
+		url ='../web/order/saveBreak';
+	}
 	var options = {
-		url : '../web/order/saveBreak',
+		url : url,
 		type : 'post',
 		data : {
 			money : $('#money').val(),
 			msg: $('#msgcontent').val(),
+			retype:$('#retype').val(),
 			type:type,
 			cash:cash,
 			orderId:orderId,

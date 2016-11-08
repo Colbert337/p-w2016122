@@ -45,4 +45,6 @@ public interface SysUserAccountService {
 	 * @return
 	 */
 	SysUserAccount queryUserAccountByDriverId(String sysDriverId);
+
+	SysUserAccount queryUserAccountByGas(String channelNumber);
 }

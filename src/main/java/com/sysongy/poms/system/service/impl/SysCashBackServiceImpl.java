@@ -119,7 +119,13 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 			//202和201首次充值和注册定额返现 返现系数为返现金额
 			//这些类型应该一个级别应当只有一个规则
 			if ("203".equals(sysCashBack.getSys_cash_back_no())||"202".equals(sysCashBack.getSys_cash_back_no())||"201".equals(sysCashBack.getSys_cash_back_no())) {
-				throw new Exception("该时间范围内已有生效配置，请确认时间范围后重试！");
+				if ("insert".equals(operation)) {
+					throw new Exception("该时间范围内已有生效配置，请确认时间范围后重试！");
+				}else{
+					record.setUpdated_date(new Date());
+					cashBackMapper.updateByPrimaryKeySelective(record);
+					return record.getSys_cash_back_id();
+				}
 			}if(case_1 || case_2){
 				//例外CASE1，配置项的minvalue与maxvalue均小于已配置的minvalue
 				boolean exceptionCase_1 = Float.valueOf(obj_min_value) <= Float.valueOf(sysCashBack.getThreshold_min_value()) && Float.valueOf(obj_max_value) <= Float.valueOf(sysCashBack.getThreshold_min_value());

@@ -181,4 +181,10 @@ public class SysUserAccountServiceImpl implements SysUserAccountService {
 	public SysUserAccount queryUserAccountByDriverId(String sysDriverId) {
 		return sysUserAccountMapper.queryUserAccountByDriverId(sysDriverId);
 	}
+
+	@Override
+	public SysUserAccount queryUserAccountByGas(String channelNumber) {
+		// TODO Auto-generated method stub
+		return sysUserAccountMapper.queryUserAccountByGas(channelNumber);
+	}
 }

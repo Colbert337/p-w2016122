@@ -79,13 +79,17 @@
 									id="order_type_order">订单类型</th>
 								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
-								<th>金额</th>
+								<th >金额</th>
 								<th>用户电话号码</th>
+								<th>消费者电话号码</th>
 								<th onclick="orderBy(this,'order_date');commitForm();"
 									id="order_date_order"><i
-									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>创建日期</th>
+									class="ace-icon fa fa-clock-o bigger-110 hidden-480">
+									</i>创建日期</th>
 								<th onclick="orderBy(this,'charge_type');commitForm();"
 									id="charge_type_order">充值方式</th>
+								<th onclick="orderBy(this,'spend_type');commitForm();"
+									id="spend_type_order">消费类型</th>
 								<th onclick="orderBy(this,'is_discharge');commitForm();"
 									id="is_discharge_order">是否冲红</th>
 								<th onclick="orderBy(this,'channel');commitForm();"
@@ -112,12 +116,16 @@
 											gcode="ORDER_TYPE" /></td>
 									<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
-									<td><div class="td-inner-warp">${list.cash}</div></td>
+									<td>${list.cash}</td>
 									<td>${list.mobile_phone}</td>
+									<td>${list.creditPhone}</td>
 									<td><fmt:formatDate value="${list.orderDate}" type="both" /></td>
-									<td><div class="td-inner-warp">
-											<s:Code2Name mcode="${list.chargeType}" gcode="CHARGE_TYPE"></s:Code2Name>
-										</div></td>
+									<td> 
+										<s:Code2Name mcode="${list.chargeType}" gcode="CHARGE_TYPE"></s:Code2Name>
+									</td>
+									<td> 
+										<s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name>
+									</td>
 									<td><c:if test="${list.is_discharge eq '0'}">否</c:if> <c:if
 											test="${list.is_discharge eq '1'}">是</c:if></td>
 									<td>${list.channel}</td>
@@ -132,14 +140,23 @@
 										</c:if>
 									</td>
 									<td class="text-center">
-									<c:if test="${not empty list.trade_no }">
-									<a class=""
-										href="javascript:void(0);"
-										onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}');" title="退款"
-										data-rel="tooltip"> <i
-											class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
-									</a>
-									</c:if></td>
+										<c:if test="${not empty list.trade_no }">
+										<a class=""
+											href="javascript:void(0);"
+											onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',1);" title="退款"
+											data-rel="tooltip"> <i
+												class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
+										</a>
+										</c:if>
+										<c:if test="${list.spend_type eq 'C01' }">
+										<a class=""
+											href="javascript:void(0);"
+											onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',2);" title="退款"
+											data-rel="tooltip"> <i
+												class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
+										</a>
+										</c:if>
+									</td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -191,14 +208,14 @@
 				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
 			</div>--%>
 			<div class="modal-body">
-				<label class="col-sm-11 control-label no-padding-right" id="title">订单累计退款金额为：</label>
+				<label class="col-sm-11 control-label no-padding-right" id="title"></label>
 				<br /> <br />
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">请输入金额：</label>
 					<div class="col-sm-8">
 						<input type="text" id="money"  onkeyup="clearNoNum(this)"   placeholder="请输入退款金额"
 							class="form-control" maxlength="12" />
-						
+						<input type='hidden' id="retype" />
 					</div>
 				</div>
 				<br /> <br />

@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.transportion.dao.TransportionMapper;
 import org.apache.commons.lang.StringUtils;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -56,6 +59,10 @@ public class OrderServiceImpl implements OrderService {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
+	@Autowired
+	private SysUserAccountService accountService;
+	
 	@Autowired
 	private SysOrderMapper sysOrderMapper;
 
@@ -1266,5 +1273,45 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Double backCash(String orderId) {
 		return sysOrderMapper.backCash(orderId);
+	}
+
+	@Override
+	@Transactional
+	public void saveBareakForRe(String msg, String money, String orderId)throws Exception {
+		// TODO Auto-generated method stub
+		SysOrder order = null; 
+		SysUserAccount account;
+			order = this.queryById(orderId);
+			order.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+			order.setOrderRemark(msg);
+			order.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
+			order.setIs_discharge("0");
+			order.setOrderStatus(1);
+			order.setOrderDate(new Date());
+			order.setOrderType("230");
+			order.setChargeType("112");
+			order.setOrderRemark(msg);
+			account = accountService.queryUserAccountByGas(order.getChannelNumber());
+			if (account == null) {
+				throw new Exception("查无此气站");
+			}
+			if (Double.valueOf(account.getAccountBalance())<Double.valueOf(money)) {
+				throw new Exception("退款金额不足");
+			}
+			account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+			accountService.updateAccount(account);
+			account = accountService.queryUserAccountByDriverId(order.getCreditAccount());
+			if (account == null) {
+				throw new Exception("查无此司机");
+			}
+			account.setAccountBalance(account.getAccountBalanceBigDecimal().add(new BigDecimal(money)).toString());
+			accountService.updateAccount(account);
+			 
+			this.saveOrder(order);
+	
+			// TODO Auto-generated catch block
+		//	e.printStackTrace();
+			 
+		
 	}
 }

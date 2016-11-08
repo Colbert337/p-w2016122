@@ -281,4 +281,6 @@ public interface OrderService {
     Double backCash(String orderId);
 
 	int updateByBatchNo(SysOrder record);
+
+	void  saveBareakForRe(String msg, String money, String orderId)throws Exception;
 }
