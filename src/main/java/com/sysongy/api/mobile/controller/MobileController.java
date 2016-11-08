@@ -484,7 +484,9 @@ public class MobileController {
 								+ mainObj.optString("phoneNum") + "/" + mainObj.optString("phoneNum") + ".jpg";
 						// 生成二维码
 						driver.setDriverQrcode(show_path);
-
+						//设置默认驾驶证和行驶证图片
+                        driver.setDrivingLice("/image/default_productBig.jpg");
+                        driver.setVehicleLice("/image/default_productBig.jpg");
 						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, this.appOperatorId);
 						if (tmp > 0) {
 							TwoDimensionCode handler = new TwoDimensionCode();
