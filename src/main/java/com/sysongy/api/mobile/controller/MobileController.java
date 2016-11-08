@@ -2910,6 +2910,13 @@ public class MobileController {
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+						//系统关键日志记录
+	        			SysOperationLog sysOperationLog = new SysOperationLog();
+	        			sysOperationLog.setOperation_type("fx");
+	        			sysOperationLog.setLog_platform("1");
+	            		sysOperationLog.setLog_content("手机微信充值返现成功！充值金额："+order.getCash()+"，返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
+	        			//操作日志
+	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -2930,7 +2937,7 @@ public class MobileController {
             		sysOperationLog.setOrder_number(order.getOrderNumber());
             		sysOperationLog.setLog_content("app微信在线充值回调成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
         			//操作日志
-        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("订单充值错误：" + orderCharge);
 					} else {
@@ -3029,7 +3036,7 @@ public class MobileController {
 	        			sysOperationLog.setLog_platform("1");
 	            		sysOperationLog.setLog_content("手机微信消费返现成功！充值金额："+order.getCash()+"，返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
 	        			//操作日志
-	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3043,7 +3050,7 @@ public class MobileController {
 	        		sysOperationLog.setOrder_number(order.getOrderNumber());
 	        		sysOperationLog.setLog_content("司机个人通过微信充值成功！充值金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
 	    			//操作日志
-	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
@@ -3114,7 +3121,13 @@ public class MobileController {
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-				   
+						//系统关键日志记录
+	        			SysOperationLog sysOperationLog = new SysOperationLog();
+	        			sysOperationLog.setOperation_type("fx");
+	        			sysOperationLog.setLog_platform("1");
+	            		sysOperationLog.setLog_content("手机支付宝充值返现成功！充值金额："+order.getCash()+"，返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
+	        			//操作日志
+	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3131,7 +3144,7 @@ public class MobileController {
             		sysOperationLog.setOrder_number(order.getOrderNumber());
             		sysOperationLog.setLog_content("app支付宝在线充值回调成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
         			//操作日志
-        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("订单充值错误：" + orderCharge);
@@ -3207,9 +3220,9 @@ public class MobileController {
 	        			SysOperationLog sysOperationLog = new SysOperationLog();
 	        			sysOperationLog.setOperation_type("fx");
 	        			sysOperationLog.setLog_platform("1");
-	            		sysOperationLog.setLog_content("手机支付宝消费返现成功！返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
+	            		sysOperationLog.setLog_content("手机支付宝消费返现成功！充值金额："+order.getCash()+"，返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
 	        			//操作日志
-	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3223,7 +3236,7 @@ public class MobileController {
 	        		sysOperationLog.setOrder_number(order.getOrderNumber());
 	        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
 	    			//操作日志
-	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
