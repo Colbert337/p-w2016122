@@ -3691,6 +3691,16 @@ public class MobileController {
 					SysRoadCondition sysRoadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId());
 					if (sysRoadCondition != null) {
 						redisList.add(sysRoadCondition);
+					}else{
+						SysRoadCondition src = new SysRoadCondition();
+						src.setId(roadIdList.get(i).getId());
+						src.setConditionStatus("0");
+						int rs = sysRoadService.updateByPrimaryKey(src);
+						if (rs ==1) {
+							logger.info("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：成功!!!");
+						}else{
+							logger.error("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：失败!!!");
+						}
 					}
 				}
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
