@@ -158,12 +158,16 @@
 		<if test="orderId != null &amp;&amp; orderId != ''">
 			and a.order_id = #{orderId,jdbcType=VARCHAR}
 		</if>
-		<if test="orderType != null &amp;&amp; orderType != ''">
-			and a.order_type = #{orderType,jdbcType=VARCHAR}
+		<if test="orderNumber != null &amp;&amp; orderNumber != ''">
+			and a.order_number = #{orderNumber,jdbcType=VARCHAR}
+		</if>
+		<if test="spend_type != null &amp;&amp; spend_type != ''">
+			and a.spend_type = #{spend_type,jdbcType=VARCHAR}
 		</if>
 		<if test="chargeType != null &amp;&amp; chargeType != ''">
 			and a.charge_type = #{chargeType,jdbcType=VARCHAR}
 		</if>
+		
 		<if test="endDate != null &amp;&amp; endDate != ''">
 			 and DATE_FORMAT(order_date,"%Y/%m/%d")   <![CDATA[   >=  ]]> #{startDate,jdbcType=VARCHAR} and   DATE_FORMAT(order_date,"%Y/%m/%d")  <![CDATA[   <=  ]]> #{endDate,jdbcType=VARCHAR}
 		</if>

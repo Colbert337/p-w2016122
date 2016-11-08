@@ -35,6 +35,17 @@
 								field="conditionType" />
 						</select>
 					</div> 
+					
+						<div class="item">
+						<label>消费类型</label> <select name="spend_type" id="type"
+							value="${order.spend_type}">
+							<s:option flag="true" gcode="SPEND_TYPE" form="road"
+								field="conditionType" />
+						</select>
+					</div> 
+					<div class="item">
+						<label>订单号</label> <input type='text' name=orderNumber value="${order.orderNumber}" />
+					</div> 
 					<div class="item">
 						<div class="input-daterange top" id="j-input-daterange-top">
 							<label>订单日期:</label> <input type="text" class="timebox"
