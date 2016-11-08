@@ -484,7 +484,9 @@ public class MobileController {
 								+ mainObj.optString("phoneNum") + "/" + mainObj.optString("phoneNum") + ".jpg";
 						// 生成二维码
 						driver.setDriverQrcode(show_path);
-
+						//设置默认驾驶证和行驶证图片
+                        driver.setDrivingLice("/image/default_productBig.jpg");
+                        driver.setVehicleLice("/image/default_productBig.jpg");
 						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, this.appOperatorId);
 						if (tmp > 0) {
 							TwoDimensionCode handler = new TwoDimensionCode();
@@ -4390,7 +4392,7 @@ public class MobileController {
 					for (Map<String, Object> map : gsGasPriceList) {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("preferential_type", map.get("preferential_type"));
-						reChargeMap.put("gasName", map.get("gas_name"));
+						reChargeMap.put("gasName", usysparamService.query("CARDTYPE", map.get("gas_name").toString()).get(0).getMname());
 						reChargeMap.put("remark", map.get("remark"));
 						reChargeMap.put("gasPrice", map.get("product_price"));
 						reChargeMap.put("priceUnit", map.get("unit"));

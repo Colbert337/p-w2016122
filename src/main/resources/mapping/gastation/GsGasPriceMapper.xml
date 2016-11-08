@@ -317,6 +317,6 @@ SET
 	LEFT JOIN product_price ON gs_gas_price.price_id = product_price.id
 	WHERE
 		gs_gas_price.sys_gas_station_id = #{gsGasPriceId,jdbcType=VARCHAR}
-	AND product_price.product_price_status = '1'
+	AND product_price.product_price_status = '1' and gs_gas_price.is_deleted='0'
   </select>
 </mapper>
