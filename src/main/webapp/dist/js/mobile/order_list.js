@@ -184,14 +184,6 @@ obj.value = obj.value.replace(/\.{2,}/g,".");
 obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
 }
 
-/*sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
-sParaTemp.put("partner", AlipayConfig.partner);
-sParaTemp.put("_input_charset", AlipayConfig.input_charset);
-sParaTemp.put("notify_url", notify_url);
-sParaTemp.put("batch_no", batch_no);
-sParaTemp.put("refund_date", refund_date);
-sParaTemp.put("batch_num", batch_num);
-sParaTemp.put("detail_data", detail_data);*/
 function subbreak() {
 	
 	if ($('#money').val()=="") {
@@ -202,7 +194,7 @@ function subbreak() {
 		 bootbox.alert("退款原因不能为空");
 		 return;
 	}
-	alert($('#money').val()+":"+cash);
+	
 	 if ($('#money').val()*1>cash*1) {
 		 bootbox.alert("退款金额不能大于交易金额");
 		 return;
