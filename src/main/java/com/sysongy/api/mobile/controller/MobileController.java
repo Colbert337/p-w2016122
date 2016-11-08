@@ -786,8 +786,9 @@ public class MobileController {
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
 				if (sysDriverId != null && !sysDriverId.equals("")) {
+					
 					if (name != null && !"".equals(name)) {
-						driver.setFullName(name);
+						driver.setNickname(name);
 					}
 					if (imgUrl != null && !"".equals(imgUrl)) {
 						driver.setAvatarB(imgUrl);
