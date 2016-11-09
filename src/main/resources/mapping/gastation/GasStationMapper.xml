@@ -150,12 +150,12 @@
   	select 
     <include refid="Base_Column_List" />
     from sys_gas_station where sys_gas_station_id !='GS12900004' 
-    <!-- and status ='0' -->
+    and status ='0'
     <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
         and (gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}),'%') or company LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') or address LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') )
     </if>
     <if test="type != null &amp;&amp; type != ''" >
-        and type = #{type,jdbcType=VARCHAR} and status= '0'
+        and type = #{type,jdbcType=VARCHAR}
     </if>
   </select> 
    <select id="exists" resultMap="BaseResultMap" parameterType="java.lang.String" >

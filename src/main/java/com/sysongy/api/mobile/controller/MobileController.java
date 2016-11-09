@@ -1553,9 +1553,6 @@ public class MobileController {
 								end  = gastationAllList.size();
 							}
 							int begin = (pageNum - 1) * pageSize;
-							if(begin > allPage ){
-								begin = allPage;
-							}
 							PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
 							List<Gastation> gastationList1 = pageInfo.getList();
 							List<Map<String, Object>> gastationArray = new ArrayList<>();
@@ -5192,7 +5189,6 @@ public class MobileController {
 	            }  
 	        }); 
 	        gastationAllList.addAll(wrongList);
-	        System.out.println("gastationAllList.size() = "+gastationAllList.size());
 	        //进行分页
 			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
 			if(allPage >= pageNumIn ){
@@ -5204,7 +5200,6 @@ public class MobileController {
 					end  = gastationAllList.size();
 				}
 				int begin = (pageNumIn - 1) * pageSizeIn;
-				System.out.println(begin+"======="+ end);
 				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
 				List<Gastation> gastationList1 = pageInfo.getList();
 				if (gastationList1 != null && gastationList1.size() > 0) {
