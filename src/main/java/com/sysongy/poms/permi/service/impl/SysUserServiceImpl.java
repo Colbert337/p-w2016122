@@ -364,4 +364,25 @@ public class SysUserServiceImpl implements SysUserService{
         String provinceId = "%S%";
         return sysUserMapper.queryMaxIndex(provinceId);
     }
+    
+    /**
+     *  根据用户名和密码查询user信息
+     * @param user
+     * @return
+     */
+    @Override
+    public SysUser queryUserByUserInfo(SysUser user) {
+        SysUser sysUser = null;
+        if (user != null && user.getUserName() != null && user.getPassword() != null) {
+            String password = user.getPassword();
+            String userName = user.getUserName();
+            try {
+                sysUser = sysUserMapper.queryUserByAccount(userName, password);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return sysUser;
+    }
+
 }

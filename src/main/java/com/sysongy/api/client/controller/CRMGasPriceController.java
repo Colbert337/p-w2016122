@@ -4,8 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.model.ProductPrice;
@@ -15,8 +13,9 @@ import com.sysongy.poms.gastation.service.ProductPriceService;
 import com.sysongy.poms.liquid.model.SysGasSource;
 import com.sysongy.poms.liquid.service.LiquidService;
 import com.sysongy.poms.permi.model.SysUser;
-import com.sysongy.poms.transportion.model.Transportion;
-import com.sysongy.util.DateTimeHelper;
+import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 import org.apache.commons.lang.StringUtils;
@@ -25,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,6 +60,10 @@ public class CRMGasPriceController {
 
     @Autowired
     GastationService gastationService;
+	@Autowired
+	SysOperationLogService sysOperationLogService;
+	@Autowired
+	SysUserService sysUserService;
 
     @RequestMapping(value = {"/web/queryGsPriceInfo"})
     @ResponseBody
@@ -133,7 +137,7 @@ public class CRMGasPriceController {
             if(gastation != null){
                 effectiveTime = gastation.getPrice_effective_time();
             }
-            gsGasPrice = createProductPrice(gsGasPrice, lPrice, effectiveTime);
+            gsGasPrice = createProductPrice(gsGasPrice, lPrice, effectiveTime,request);
 
             int renum = gsGasPriceService.saveGsPrice(gsGasPrice, "insert");
             if(renum < 1){
@@ -153,7 +157,11 @@ public class CRMGasPriceController {
         return ajaxJson;
     }
 
-    private GsGasPrice createProductPrice(GsGasPrice gsGasPrice, double lPrice, String effectiveTime){
+    private GsGasPrice createProductPrice(GsGasPrice gsGasPrice, double lPrice, String effectiveTime,HttpServletRequest request){
+	    SysUser user = new SysUser();
+		user.setUserName(request.getParameter("suserName"));
+		user.setPassword(request.getParameter("spassword"));
+		SysUser sysUser = sysUserService.queryUserByUserInfo(user);
         ProductPrice productPrice = new ProductPrice();
         productPrice.setId(UUIDGenerator.getUUID());
 
@@ -181,6 +189,14 @@ public class CRMGasPriceController {
         try
         {
             productPriceService.saveProductPrice(productPrice, "insert");
+			//系统关键日志记录
+			SysOperationLog aSysOperationLog = new SysOperationLog();
+			aSysOperationLog.setOperation_type("tj");
+			aSysOperationLog.setUser_name(user.getUserName());
+			aSysOperationLog.setLog_platform("4");
+			aSysOperationLog.setLog_content(user.getUserName()+"添加新价格成功！调价商品为："+productPrice.getProductPriceId()+"，调整价格为："+productPrice.getProductPrice());
+			//操作日志
+			sysOperationLogService.saveOperationLog(aSysOperationLog,sysUser.getSysUserId());
         }catch (Exception e){
             logger.error("createProductPrice error： " + e);
         }

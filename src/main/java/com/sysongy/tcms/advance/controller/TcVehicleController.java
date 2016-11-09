@@ -1,5 +1,6 @@
 package com.sysongy.tcms.advance.controller;
 
+import com.alipay.util.httpClient.HttpRequest;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.AjaxJson;
@@ -7,6 +8,8 @@ import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -33,6 +36,8 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -61,7 +66,8 @@ public class TcVehicleController extends BaseContoller {
     TcVehicleCardService tcVehicleCardService;
     @Autowired
     TransportionService transportionService;
-
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 
     /**
      * 查询车辆列表
@@ -164,10 +170,22 @@ public class TcVehicleController extends BaseContoller {
     
     @RequestMapping("/changeCard")
     @ResponseBody
-    public String changeCard(@RequestParam String tc_vehicle_id, @RequestParam String newcardno) throws Exception{
+    public String changeCard(@RequestParam String tc_vehicle_id, @RequestParam String newcardno,HttpServletRequest request) throws Exception{
         String ret = "";
+		HttpSession session = request.getSession(true);
+		CurrUser currUser = (CurrUser) session.getAttribute("currUser");// 登录人角色
+		if (null == currUser) {
+			currUser = new CurrUser();
+		}
     	try{
         	ret = tcVehicleService.updateAndchangeCard(tc_vehicle_id, newcardno).toString();
+    		//系统关键日志记录
+    		SysOperationLog sysOperationLog = new SysOperationLog();
+    		sysOperationLog.setOperation_type("bhk");
+    		sysOperationLog.setLog_platform("4");
+    		sysOperationLog.setLog_content("网站用户补换卡成功！车辆编号为："+tc_vehicle_id+"，新编号为："+newcardno); 
+    		//操作日志
+    		sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
         }catch(Exception e){
         	ret = e.getMessage();
         	logger.error("",e);
@@ -208,9 +226,23 @@ public class TcVehicleController extends BaseContoller {
         if(gasCard.getCard_status().equals(GlobalConstant.CardStatus.PAUSED)){
             //卡冻结
             sendMsgApi(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.CARD_FROZEN);
+    		//系统关键日志记录
+    		SysOperationLog sysOperationLog = new SysOperationLog();
+    		sysOperationLog.setOperation_type("dj");
+    		sysOperationLog.setLog_platform("4");
+    		sysOperationLog.setLog_content("网站用户冻结卡成功！实体卡编号为："+gasCard.getCard_no());
+			//操作日志
+			sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
         }else{
             //卡解冻
             sendMsgApi(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.CARD_THAW);
+    		//系统关键日志记录
+    		SysOperationLog sysOperationLog = new SysOperationLog();
+    		sysOperationLog.setOperation_type("jd");
+    		sysOperationLog.setLog_platform("4");
+    		sysOperationLog.setLog_content("网站用户解冻卡成功！实体卡编号为："+gasCard.getCard_no());
+			//操作日志
+			sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
         }
         return "redirect:/web/tcms/vehicle/list/page";
     }

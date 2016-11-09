@@ -50,7 +50,9 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.model.SysOperationLog;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.*;
@@ -131,7 +133,8 @@ public class WechatController {
 	MbBannerService mbBannerService;
 	@Autowired
 	UsysparamService usysparamService;
-	
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 
 	/**
 	 * 用户登录
@@ -253,6 +256,22 @@ public class WechatController {
 					String invitationCode = mainObj.optString("invitationCode");
 					driver.setRegisCompany(invitationCode);
 					Integer tmp = driverService.saveDriver(driver, "insert", null, this.wechatOperatorId);
+					//系统关键日志记录
+					SysOperationLog sysOperationLog = new SysOperationLog();
+					sysOperationLog.setOperation_type("kh");
+					//手机端
+					String name = driver.getFullName();
+					if("".equals(name)||null==name){
+						name = driver.getUserName();
+					}
+					if("".equals(name)||null==name){
+						name = driver.getMobilePhone();
+					}
+					sysOperationLog.setLog_platform("2");
+					sysOperationLog.setLog_content(name+"的账户卡通过微信开户成功！");
+					//操作日志
+					sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysDriverId());
+
 					//大于0注册成功
 					if(tmp > 0 ){
 						if(invitationCode !=null && !"".equals(invitationCode)){
@@ -278,6 +297,16 @@ public class WechatController {
 								oldDriverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
 								oldDriverOrder.setOrderStatus(0);//订单初始化
 								orderService.chargeToDriver(oldDriverOrder);
+
+								//系统关键日志记录
+			        			SysOperationLog oldSysOperationLog = new SysOperationLog();
+			        			oldSysOperationLog.setOperation_type("cz");
+			        			oldSysOperationLog.setLog_platform("2");
+			        			oldSysOperationLog.setOrder_number(oldDriverOrder.getOrderNumber());
+			        			oldSysOperationLog.setLog_content("司机注册返现原用户订单充值成功！充值金额为："+new BigDecimal(usysparam.getData())+"，订单号为："+oldDriverOrder.getOrderNumber());
+			        			//操作日志
+			        			sysOperationLogService.saveOperationLog(oldSysOperationLog,wechatOperatorId);
+
 								//新用户订单对象
 								SysOrder driverOrder = new SysOrder();
 								driverOrder.setOrderId(driverOrderID);//订单ID
@@ -293,6 +322,15 @@ public class WechatController {
 								driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
 								driverOrder.setOrderStatus(0);//订单初始化
 								orderService.chargeToDriver(driverOrder);
+
+								//系统关键日志记录
+			        			SysOperationLog newSysOperationLog = new SysOperationLog();
+			        			newSysOperationLog.setOperation_type("cz");
+			        			newSysOperationLog.setLog_platform("2");
+			        			newSysOperationLog.setOrder_number(driverOrder.getOrderNumber());
+			        			newSysOperationLog.setLog_content("司机注册返现新用户订单充值成功！充值金额为："+new BigDecimal(usysparam.getData())+"，订单号为："+driverOrder.getOrderNumber());
+			        			//操作日志
+			        			sysOperationLogService.saveOperationLog(newSysOperationLog,wechatOperatorId);
 							}
 						}
 					}
@@ -472,53 +510,43 @@ public class WechatController {
 					SysDriver driver = new SysDriver();
 					driver.setUserName(mobile);
 					List<SysDriver>  sysDriver = driverService.queryeSingleList(driver);
-
 					if(sysDriver !=null && sysDriver.size() > 0){
-						//根据司机ID、消费金额、充值渠道查询订单，如果时间小于12小时，不能创建
-						double times = -12;
-						Date date = DateTimeHelper.addTime(new Date(),times,Calendar.HOUR);
-						SysOrder orderTemp = new SysOrder();
-						orderTemp.setDebitAccount(sysDriver.get(0).getSysDriverId());
-						orderTemp.setCash(new BigDecimal(mainObj.optString("amount")));//交易金额
-						orderTemp.setChannel("微信VIP充值");
-						orderTemp.setOrderDate(date);
-						List<SysOrder> orderListTemp = orderService.queryOrderList(orderTemp);
-
-						if(orderListTemp == null || orderListTemp.size() == 0){
-							//新用户订单对象
-							SysOrder driverOrder = new SysOrder();
-							String driverOrderID = UUIDGenerator.getUUID();//新用户订单ID
-							driverOrder.setOrderId(driverOrderID);//订单ID
-							driverOrder.setDebitAccount(sysDriver.get(0).getSysDriverId());//增加的账户ID
-							driverOrder.setOperator(wechatOperatorId);//操作人ID
-							driverOrder.setOperatorSourceId(wechatOperatorId);//被操作人ID
-							driverOrder.setCash(new BigDecimal(mainObj.optString("amount")));//交易金额
-							driverOrder.setChargeType("103");//充值方式 103代表微信支付
-							driverOrder.setIs_discharge("0");//是否红冲
-							driverOrder.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.WECHAT);//操作者发起人类型
-							driverOrder.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);//订单类型
-							driverOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);//操作对象类型
-							driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
-							driverOrder.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);//订单初始化
-							driverOrder.setChannel("微信VIP充值");
-							driverOrder.setChannelNumber("微信VIP充值");
-							driverOrder.setOrderDate(new Date());
-							int nCreateOrder = orderService.insert(driverOrder, null);
-							if(nCreateOrder>0){
-								orderService.chargeToDriver(driverOrder);
-								dataMap.put("resultVal","true");
-								result.setData(dataMap);
-							}else{
-								result.setStatus(MobileReturn.STATUS_FAIL);
-								result.setMsg("订单生成错误！");
-								result.setData(null);
-							}
+						//新用户订单对象
+						SysOrder driverOrder = new SysOrder();
+						String driverOrderID = UUIDGenerator.getUUID();//新用户订单ID
+						driverOrder.setOrderId(driverOrderID);//订单ID
+						driverOrder.setDebitAccount(sysDriver.get(0).getSysDriverId());//增加的账户ID
+						driverOrder.setOperator(wechatOperatorId);//操作人ID
+						driverOrder.setOperatorSourceId(wechatOperatorId);//被操作人ID
+						driverOrder.setCash(new BigDecimal(mainObj.optString("amount")));//交易金额
+						driverOrder.setChargeType("103");//充值方式 103代表微信支付
+						driverOrder.setIs_discharge("0");//是否红冲
+						driverOrder.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.WECHAT);//操作者发起人类型
+						driverOrder.setOrderType(GlobalConstant.OrderType.CHARGE_TO_DRIVER);//订单类型
+						driverOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);//操作对象类型
+						driverOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));//订单号
+						driverOrder.setOrderStatus(0);//订单初始化
+						driverOrder.setChannel("微信VIP充值");
+						driverOrder.setChannelNumber("微信VIP充值");
+						driverOrder.setOrderDate(new Date());
+						int nCreateOrder = orderService.insert(driverOrder, null);
+						if(nCreateOrder>0){
+							orderService.chargeToDriver(driverOrder);
+							//系统关键日志记录
+		        			SysOperationLog newSysOperationLog = new SysOperationLog();
+		        			newSysOperationLog.setOperation_type("cz");
+		        			newSysOperationLog.setLog_platform("2");
+		        			newSysOperationLog.setOrder_number(driverOrder.getOrderNumber());
+		        			newSysOperationLog.setLog_content("司机订单微信充值成功！充值金额为："+new BigDecimal(mainObj.optString("amount"))+"，订单号为："+driverOrder.getOrderNumber());
+		        			//操作日志
+		        			sysOperationLogService.saveOperationLog(newSysOperationLog,wechatOperatorId);
+							dataMap.put("resultVal","true");
+							result.setData(dataMap);
 						}else{
 							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("同一个账户12小时内不能充值相同的金额");
+							result.setMsg("订单生成错误！");
 							result.setData(null);
 						}
-
 						
 					}else{
 						result.setStatus(MobileReturn.STATUS_FAIL);

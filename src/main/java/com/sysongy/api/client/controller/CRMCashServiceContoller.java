@@ -31,6 +31,8 @@ import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -105,7 +107,8 @@ public class CRMCashServiceContoller {
     
     @Autowired
     private CouponGroupService couponGroupService;
-
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 
     @ResponseBody
     @RequestMapping("/web/customerGasCharge")
@@ -118,7 +121,10 @@ public class CRMCashServiceContoller {
             ajaxJson.setMsg("订单ID或者气站ID为空！！！");
             return ajaxJson;
         }
-
+	    SysUser user = new SysUser();
+       	user.setUserName(request.getParameter("suserName"));
+    	user.setPassword(request.getParameter("spassword"));
+    	SysUser sysUser = sysUserService.queryUserByUserInfo(user);
         try{
             SysOrder sysOrders = orderService.selectByPrimaryKey(record.getOrderId());
             if(sysOrders != null){
@@ -133,6 +139,16 @@ public class CRMCashServiceContoller {
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
             record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
             String orderCharge = orderService.chargeToDriver(record);
+    		//系统关键日志记录
+    		SysOperationLog sysOperationLog = new SysOperationLog();
+    		sysOperationLog.setOperation_type("cz");
+    		sysOperationLog.setUser_name(user.getUserName());
+    		sysOperationLog.setLog_platform("3");
+    		sysOperationLog.setOrder_number(record.getOrderNumber());
+    		sysOperationLog.setLog_content("加气站"+user.getUserName()+"对"+record.getSysDriver().getMobilePhone()+"会员充值成功！订单号为："+record.getOrderNumber()+"，充值金额为："+record.getCash());
+    		//操作日志
+    		sysOperationLogService.saveOperationLog(sysOperationLog,sysUser.getSysUserId());
+
             if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单充值错误：" + orderCharge);
@@ -180,7 +196,7 @@ public class CRMCashServiceContoller {
             } else {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
-            
+
             recordNew.setCash(formatCash(recordNew.getCash()));
             sendChargeMessage(recordNew);
             Map<String, Object> attributes = new HashMap<String, Object>();
@@ -540,6 +556,19 @@ public class CRMCashServiceContoller {
                 record.setCoupon_number(id);//调换num和id位置，在order表中实际上存储id
 
                 String orderConsume = orderService.consumeByDriver(record);
+				//系统关键日志记录
+    			SysOperationLog sysOperationLog = new SysOperationLog();
+        	    SysUser user = new SysUser();
+            	user.setUserName(request.getParameter("suserName"));
+            	user.setPassword(request.getParameter("spassword"));
+            	SysUser sysUser = sysUserService.queryUserByUserInfo(user);
+    			sysOperationLog.setOperation_type("xf");
+    			sysOperationLog.setUser_name(user.getUserName());
+    			sysOperationLog.setLog_platform("3");
+        		sysOperationLog.setOrder_number(record.getOrderNumber());
+        		sysOperationLog.setLog_content(user.getUserName()+"操作司机"+sysDriver.getMobilePhone()+"消费成功！订单号为："+record.getOrderNumber());
+    			//操作日志
+    			sysOperationLogService.saveOperationLog(sysOperationLog,sysUser.getSysUserId());
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
@@ -783,6 +812,15 @@ public class CRMCashServiceContoller {
         hedgeRecord.setPreferential_cash(originalOrder.getPreferential_cash());// add by wdq 20161024 给冲红订单添加优惠金额属性
         //更新原始订单及相关信息
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
+		//系统关键日志记录
+		SysOperationLog sysOperationLog = new SysOperationLog();
+		sysOperationLog.setUser_name(sysUser.getUserName());
+		sysOperationLog.setOperation_type("ch");
+		sysOperationLog.setLog_platform("3");
+		sysOperationLog.setOrder_number(originalOrder.getOrderNumber());
+		sysOperationLog.setLog_content(user.getUserName()+"冲红订单成功！订单号为："+originalOrder.getOrderNumber()+"，冲红订单号为："+hedgeRecord.getOrderNumber());
+		//操作日志
+		sysOperationLogService.saveOperationLog(sysOperationLog,user.getSysUserId());
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
             logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
             ajaxJson.setSuccess(false);

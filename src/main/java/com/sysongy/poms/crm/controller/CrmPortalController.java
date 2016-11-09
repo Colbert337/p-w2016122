@@ -51,7 +51,9 @@ import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.page.model.SysStaticPage;
 import com.sysongy.poms.page.service.SysStaticPageService;
 import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.model.SysOperationLog;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.poms.usysparam.model.Usysparam;
@@ -112,6 +114,8 @@ public class CrmPortalController extends BaseContoller {
     TcVehicleService tcVehicleService;
     @Autowired
     MbAppVersionMapper mbAppVersionMapper;
+	@Autowired
+	SysOperationLogService sysOperationLogService;
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
@@ -552,8 +556,25 @@ public class CrmPortalController extends BaseContoller {
                         String show_path = (String) prop.get("show_images_path")+ "/driver/"+phone+"/"+phone+".jpg";
                         //生成二维码
                         driver.setDriverQrcode(show_path);
-
+                        //设置默认驾驶证和行驶证图片
+                        driver.setDrivingLice("/image/default_productBig.jpg");
+                        driver.setVehicleLice("/image/default_productBig.jpg");
                         Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, GlobalConstant.appOperatorId);
+            			//系统关键日志记录
+            			SysOperationLog sysOperationLog = new SysOperationLog();
+            			sysOperationLog.setOperation_type("kh");
+            			String name = driver.getFullName();
+            			if("".equals(name)||null==name){
+            				name = driver.getUserName();
+            			}
+            			if("".equals(name)||null==name){
+            				name = driver.getMobilePhone();
+            			}
+            			sysOperationLog.setLog_platform("1");
+            			sysOperationLog.setLog_content("被邀请用户"+name+"通过APP开户成功！"); 
+            			//操作日志
+            			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriverId);
+            			
                         if(tmp > 0){
                             TwoDimensionCode handler = new TwoDimensionCode();
                             handler.encoderQRCode(encoderContent,imgPath, TwoDimensionCode.imgType,null, TwoDimensionCode.size);
@@ -568,9 +589,44 @@ public class CrmPortalController extends BaseContoller {
                 logger.info("验证码无效！");
             }
         }
-        return "/webpage/crm/webapp-download-app";
+        return "redirect:/webpage/crm/webapp-download-app";
     }
 
+    /**
+     * 判断验证码是否正确
+     * @param phone 手机号码
+     * @param vcode 验证码
+     * @return
+     */
+    @RequestMapping("/user/checkCode")
+    @ResponseBody
+    public String checkCode(@RequestParam String phone,@RequestParam String vcode ){
+        String resultStr = "true";
+        String veCode = (String) redisClientImpl.getFromCache(phone);
+        if(!veCode.equals(vcode)){
+            resultStr = "false";
+        }
+        return resultStr;
+    }
+
+    /**
+     * 判断手机号码是否存在
+     * @param phone 手机号码
+     * @return
+     */
+    @RequestMapping("/user/phone")
+    @ResponseBody
+    public String isExitPhone(@RequestParam String phone) throws Exception{
+        String resultStr = "true";
+        SysDriver sysDriver = new SysDriver();
+        sysDriver.setMobilePhone(phone);
+        SysDriver driver = new SysDriver();
+        driver = driverService.queryDriverByMobilePhone(sysDriver);
+        if(driver != null){
+            resultStr = "false";
+        }
+        return resultStr;
+    }
     /**
      * 更新APP下载数
      * @return
@@ -698,6 +754,20 @@ public class CrmPortalController extends BaseContoller {
 			            driver.setPayCode(Encoder.MD5Encode("111111".getBytes()));
 			            driver.setIsImport("1");
 		            	int count = driverService.saveDriver(driver,"insert", null, "8aa4ba67855a11e6a356000c291aa9e3");
+            			//系统关键日志记录
+            			SysOperationLog sysOperationLog = new SysOperationLog();
+            			sysOperationLog.setOperation_type("kh");
+            			String name = driver.getFullName();
+            			if("".equals(name)||null==name){
+            				name = driver.getUserName();
+            			}
+            			if("".equals(name)||null==name){
+            				name = driver.getMobilePhone();
+            			}
+            			sysOperationLog.setLog_platform("4");
+            			sysOperationLog.setLog_content("批量导入用户开户成功！"); 
+            			//操作日志
+            			sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
 				        sum = sum + count;
 		            }else{
 		            	driver.setSysDriverId(sysDriver.getSysDriverId());

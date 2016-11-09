@@ -137,8 +137,8 @@
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.checkedDate}" type="both"/></td>
 									<td style="display:none">${list.memo}</td>
-									<td style="display:none"><c:if test="${list.drivingLice != ''}"><%=basePath%></c:if>${list.drivingLice}</td>
-									<td style="display:none"><c:if test="${list.vehicleLice != ''}"><%=basePath%></c:if>${list.vehicleLice}</td>
+									<td style="display:none"><c:if test="${list.drivingLice != '' and list.drivingLice != null}"><%=basePath%></c:if>${list.drivingLice}</td>
+									<td style="display:none"><c:if test="${list.vehicleLice != '' and list.vehicleLice != null}"><%=basePath%></c:if>${list.vehicleLice}</td>
 									<td style="display:none">${list.verifySource=='0'?'CRM':'APP'}</td>
 									<td class="text-center">
 										<a class="option-btn-m" href="javascript:void(0);" title="更多信息" data-rel="tooltip">

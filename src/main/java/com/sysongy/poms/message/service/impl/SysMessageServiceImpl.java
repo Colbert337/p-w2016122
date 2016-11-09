@@ -1,5 +1,6 @@
 package com.sysongy.poms.message.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -209,16 +210,19 @@ public class SysMessageServiceImpl implements SysMessageService {
 		}else{//消费
 			driver = driverMapper.queryByPK(order.getCreditAccount());
 		}
-		message.setDevice_token(driver.getDeviceToken());
-		message.setDriver_name(driver.getSysDriverId());
-		message.setDriverName(driver.getDeviceToken());
-		message.setMessageGroup("999");
-		message.setMessageTicker("交易提醒");
-		message.setMessageTitle("交易提醒");
-		
-		
-		
-		
-		return saveMessage_New(message);
+		String deviceToken = driver.getDeviceToken();
+		if(deviceToken!=null &&!"".equals(deviceToken)){
+			message.setDevice_token(driver.getDeviceToken());
+			message.setDriver_name(driver.getSysDriverId());
+			message.setDriverName(driver.getDeviceToken());
+			message.setMessageGroup("999");
+			message.setMessageTicker("交易提醒");
+			message.setMessageTitle("交易提醒");
+			message.setMessageBody("您的账户于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(order.getOrderDate())+content+order.getCash()+"元");
+			message.setContent("您的账户于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(order.getOrderDate())+content+order.getCash()+"元");
+			return saveMessage_New(message);
+		}else{
+			return null;
+		}
 	}
 }

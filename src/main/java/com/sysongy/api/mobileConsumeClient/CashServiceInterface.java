@@ -20,6 +20,8 @@ import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -81,7 +83,10 @@ public class CashServiceInterface {
 
     @Autowired
     RedisClientInterface redisClientImpl;
-
+	
+    @Autowired
+	SysOperationLogService sysOperationLogService;
+    
     @ResponseBody
     @RequestMapping("/web/customerGasCharge")
     public AjaxJson customerGasCharge(HttpServletRequest request, HttpServletResponse response, String strRecord) throws Exception{
@@ -108,6 +113,15 @@ public class CashServiceInterface {
             record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
             record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CHARGE_TO_DRIVER));
             String orderCharge = orderService.chargeToDriver(record);
+			//系统关键日志记录
+			SysOperationLog newSysOperationLog = new SysOperationLog();
+			newSysOperationLog.setOperation_type("cz");
+			newSysOperationLog.setLog_platform("2");
+			newSysOperationLog.setOrder_number(record.getOrderNumber());
+			newSysOperationLog.setLog_content("加气站为司机充值成功！订单号为："+record.getOrderNumber()); 
+			//操作日志
+			sysOperationLogService.saveOperationLog(newSysOperationLog,record.getOperator());
+			
             if(!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("订单充值错误：" + orderCharge);
@@ -359,6 +373,14 @@ public class CashServiceInterface {
                 }
                 
                 String orderConsume = orderService.consumeByDriver(record);
+				//系统关键日志记录
+    			SysOperationLog sysOperationLog = new SysOperationLog();
+    			sysOperationLog.setOperation_type("xf");
+    			sysOperationLog.setLog_platform("1");
+        		sysOperationLog.setOrder_number(record.getOrderNumber());
+        		sysOperationLog.setLog_content("司机消费成功！订单号为："+record.getOrderNumber()); 
+    			//操作日志
+    			sysOperationLogService.saveOperationLog(sysOperationLog,record.getOperator());
                 if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
@@ -569,6 +591,16 @@ public class CashServiceInterface {
                 user.getSysUserId(), record.getDischarge_reason());
 
         String bSuccessful = orderService.dischargeOrder(originalOrder, hedgeRecord);
+        
+		//系统关键日志记录
+		SysOperationLog sysOperationLog = new SysOperationLog();
+		sysOperationLog.setOperation_type("ch");
+		sysOperationLog.setLog_platform("3");
+		sysOperationLog.setOrder_number(originalOrder.getOrderNumber());
+		sysOperationLog.setLog_content("CRM用户冲红订单成功！订单号为："+originalOrder.getOrderNumber()+"，冲红订单号为："+hedgeRecord.getOrderNumber()); 
+		//操作日志
+		sysOperationLogService.saveOperationLog(sysOperationLog,user.getSysUserId());
+		
         if(!bSuccessful.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
             logger.error("订单冲红保存错误：" + originalOrder.getOrderId());
             ajaxJson.setSuccess(false);

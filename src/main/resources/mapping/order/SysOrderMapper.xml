@@ -1259,7 +1259,8 @@
 		B.been_discharged,
 		B.preferential_cash,
 		B.spend_type,
-		B.should_payment
+		B.should_payment,
+		B.coupon_cash
 		FROM sys_order AS B
 		WHERE B.order_type = '220'
 		AND B.order_status = '1'

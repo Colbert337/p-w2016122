@@ -23,7 +23,7 @@ public class SysOperationLogController extends BaseContoller {
 	public String queryOperationLogList(ModelMap map, SysOperationLog sysOperationLog) throws Exception{
 
 		PageBean bean = new PageBean();
-		String ret = "webpage/poms/system/operation_log_list";
+		String ret = "webpage/poms/system/systemOperation_LogList";
 
 		try {
 			if(sysOperationLog.getPageNum() == null){

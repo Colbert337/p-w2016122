@@ -6,19 +6,15 @@ import com.sysongy.poms.base.model.BaseModel;
 
 public class SysOperationLog extends BaseModel {
 	//日志ID
-	private String sysOperationLogId;
+	private String sys_operation_log_id;
 	//用户类型：1、app用户 2、微信用户 3、CRM用户 4、后台用户
-	private String logPlatform;
-	//系统模块
-	private String systemModule;
-	//操作域
-	private String operation_domain;
+	private String log_platform;
 	//操作类型，kh开户，cz充值，xf消费，dj冻结，jd解冻，bcj补换卡，ch冲红
 	private String operation_type;
 	//订单号
 	private String order_number;
 	//日志内容
-	private String logContent;
+	private String log_content;
 	//操作人员ID
 	private String operator_id;
 	//用户角色
@@ -29,10 +25,21 @@ public class SysOperationLog extends BaseModel {
 	private String user_ip;
 	//创建时间
 	private Date created_date;
+	//创建时间字符格式
+	private String createdDateStr;
 
 	private String created_date_after;
 
 	private String created_date_before;
+	
+
+	public String getCreatedDateStr() {
+		return createdDateStr;
+	}
+
+	public void setCreatedDateStr(String createdDateStr) {
+		this.createdDateStr = createdDateStr;
+	}
 
 	public String getCreated_date_after() {
 		return created_date_after;
@@ -50,36 +57,28 @@ public class SysOperationLog extends BaseModel {
 		this.created_date_before = created_date_before;
 	}
 
-	public String getSysOperationLogId() {
-		return sysOperationLogId;
+	
+	public String getSys_operation_log_id() {
+		return sys_operation_log_id;
 	}
 
-	public void setSysOperationLogId(String sysOperationLogId) {
-		this.sysOperationLogId = sysOperationLogId == null ? null : sysOperationLogId.trim();
+	public void setSys_operation_log_id(String sys_operation_log_id) {
+		this.sys_operation_log_id = sys_operation_log_id;
 	}
 
-	public String getLogPlatform() {
-		return logPlatform;
+	public String getLog_platform() {
+		return log_platform;
 	}
 
-	public void setLogPlatform(String logPlatform) {
-		this.logPlatform = logPlatform == null ? null : logPlatform.trim();
+	public void setLog_platform(String log_platform) {
+		this.log_platform = log_platform;
+	}
+	public String getLog_content() {
+		return log_content;
 	}
 
-	public String getSystemModule() {
-		return systemModule;
-	}
-
-	public void setSystemModule(String systemModule) {
-		this.systemModule = systemModule == null ? null : systemModule.trim();
-	}
-
-	public String getLogContent() {
-		return logContent;
-	}
-
-	public void setLogContent(String logContent) {
-		this.logContent = logContent == null ? null : logContent.trim();
+	public void setLog_content(String log_content) {
+		this.log_content = log_content;
 	}
 
 	public String getOperator_id() {
@@ -120,14 +119,6 @@ public class SysOperationLog extends BaseModel {
 
 	public void setCreated_date(Date created_date) {
 		this.created_date = created_date;
-	}
-
-	public String getOperation_domain() {
-		return operation_domain;
-	}
-
-	public void setOperation_domain(String operation_domain) {
-		this.operation_domain = operation_domain;
 	}
 
 	public String getOperation_type() {
