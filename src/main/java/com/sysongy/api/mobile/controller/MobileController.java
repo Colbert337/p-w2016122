@@ -1507,7 +1507,7 @@ public class MobileController {
 				if(type!=null && !"".equals(type) && "0".equals(type)){
 					gastation.setType(type);
 				}
-				//范围为空，列表显示加分也
+				//范围为空，列表显示加分页
 				if(radius == null || "".equals(radius)){
 					if (gastation.getPageNum() == null) {
 						gastation.setPageNum(GlobalConstant.PAGE_NUM);
