@@ -124,7 +124,7 @@
     <if test="dealType != null &amp;&amp; dealType != ''" >
       and deal_type=#{dealType,jdbcType=VARCHAR}
     </if>
-    and  b.operator_source_id=#{stationID,jdbcType=VARCHAR}
+    and  b.channel_number=#{stationID,jdbcType=VARCHAR}
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >

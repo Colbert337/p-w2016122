@@ -689,7 +689,7 @@
 				#{orderId,jdbcType=VARCHAR})
 			</if>
 			<if test="operatorSourceId != null &amp;&amp; operatorSourceId != ''">
-				and operator_source_id = #{operatorSourceId, jdbcType=VARCHAR}
+				and b.channel_number = #{operatorSourceId, jdbcType=VARCHAR}
 			</if>
 			<if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
 				and order_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},'
