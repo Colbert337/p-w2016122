@@ -2703,6 +2703,9 @@ public class MobileController {
 					//账户正常使用
 					if(driverService.queryDriverByPK(driverID).getUserStatus().equals("0")){
 						if (payType.equalsIgnoreCase("2")) { // 支付宝消费
+							//设置平台优惠金额
+							BigDecimal preferential_cash = new BigDecimal(0);
+							preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 							sysOrder = createNewOrder(orderID, driverID, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","C04"); // TODO充值成功后再去生成订单
 							//设置优惠券ID
 							if(couponId!=null && !"".equals(couponId)){
@@ -2711,7 +2714,10 @@ public class MobileController {
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
 								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+								preferential_cash = preferential_cash.subtract(new BigDecimal(amount));
 							}
+							//设置平台优惠金额
+							sysOrder.setPreferential_cash(preferential_cash);
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
@@ -2738,6 +2744,9 @@ public class MobileController {
 							result.setData(data);
 						} else if (payType.equalsIgnoreCase("1")) { // 微信消费
 							sysOrder = createNewOrder(orderID, driverID, amount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","C03"); // TODO充值成功后再去生成订单
+							//设置平台优惠金额
+							BigDecimal preferential_cash = new BigDecimal(0);
+							preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 							//设置优惠券ID
 							if(couponId!=null && !"".equals(couponId)){
 								sysOrder.setCoupon_number(couponId);
@@ -2745,7 +2754,10 @@ public class MobileController {
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
 								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+								preferential_cash = preferential_cash.subtract(new BigDecimal(amount));
 							}
+							//设置平台优惠金额
+							sysOrder.setPreferential_cash(preferential_cash);
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
@@ -4702,7 +4714,14 @@ public class MobileController {
 				tokenMap.put("orderNum",order.getOrderNumber());
 				tokenMap.put("gastationId",order.getChannelNumber());
 				tokenMap.put("payment",order.getShould_payment());
-				tokenMap.put("preferentialCash",(order.getPreferential_cash()==null||"".equals(order.getPreferential_cash()))?"0":order.getPreferential_cash());
+				BigDecimal cash = new BigDecimal(0);
+				if(order.getPreferential_cash()!=null && !"".equals(order.getPreferential_cash())){
+					cash = cash.add(new BigDecimal(order.getPreferential_cash().toString()));
+				}
+				if(order.getCoupon_cash() !=null && !"".equals(order.getCoupon_cash())){
+					cash = cash.add(new BigDecimal(order.getCoupon_cash().toString()));
+				}
+				tokenMap.put("preferentialCash",cash);
 				result.setData(tokenMap);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -4766,6 +4785,9 @@ public class MobileController {
 					amount = mainObj.optString("amount");
 					gastationId = mainObj.optString("gastationId");
 					payableAmount = mainObj.optString("payableAmount");
+					//设置平台优惠金额
+					BigDecimal preferential_cash = new BigDecimal(0);
+					preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 						SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
 						//设置优惠券ID
 						if(couponId!=null && !"".equals(couponId)){
@@ -4774,6 +4796,7 @@ public class MobileController {
 						//设置优惠金额
 						if(couponCash!=null && !"".equals(couponCash)){
 							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+							preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));
 						}
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
@@ -4781,6 +4804,8 @@ public class MobileController {
 						sysOrder.setCash(new BigDecimal(amount));
 						//设置应付金额
 						sysOrder.setShould_payment(new BigDecimal(payableAmount));
+						sysOrder.setPreferential_cash(preferential_cash);
+						sysOrder.setPreferential_cash(preferential_cash);
 						//订单状态
 						sysOrder.setOrderStatus(1);
 						if (sysOrder != null) {
