@@ -188,7 +188,7 @@ public class TransportionServiceImpl implements TransportionService {
 	
 	
 	 /**
-	 * 给运输公司充值(无充红,不返现)
+	 * 给运输公司充值(无冲红,不返现)
 	 * 同时增加运输公司的剩余额度。
 	 * @param order
 	 * @return
@@ -226,7 +226,7 @@ public class TransportionServiceImpl implements TransportionService {
 	}
 	
 	/**
-	 * 运输公司消费，以及消费充红 ---扣除账户的操作
+	 * 运输公司消费，以及消费冲红 ---扣除账户的操作
 	 * @param order
 	 * @return
      * @throws Exception 
@@ -255,13 +255,13 @@ public class TransportionServiceImpl implements TransportionService {
 		if(GlobalConstant.ORDER_ISCHARGE_YES.equalsIgnoreCase(is_discharge)){
 			chong = "消费冲红";
 			orderDealType = GlobalConstant.OrderDealType.DISCONSUME_TRANSPORTION_DEDUCT;
-			//充红传过来必须是负值
+			//冲红传过来必须是负值
 			if(cash.compareTo(new BigDecimal(0)) > 0){
 				throw new Exception(GlobalConstant.OrderProcessResult.DISCHARGE_ORDER_CASH_IS_NOT_NEGATIVE);
 			}
 		}
 		
-		//消费传过来的cash是正值，需要乘以-1,如果是充红，订单传过来的是负值，乘以-1，就成为正值。
+		//消费传过来的cash是正值，需要乘以-1,如果是冲红，订单传过来的是负值，乘以-1，就成为正值。
 		BigDecimal addCash = cash.multiply(new BigDecimal(-1));
 		String cash_success = sysUserAccountService.addCashToAccount(tran_account,addCash,order.getOrderType());
 

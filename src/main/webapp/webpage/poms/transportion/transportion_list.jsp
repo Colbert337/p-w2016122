@@ -84,10 +84,10 @@
 						class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
-								<th class="center td-w1"><label class="pos-rel"> <input
+								<%--<th class="center td-w1"><label class="pos-rel"> <input
 										type="checkbox" class="ace" onclick="checkedAllRows(this);" />
 										<span class="lbl"></span>
-								</label></th>
+								</label></th>--%>
 								<th onclick="orderBy(this,'sys_transportion_id');commitForm();"
 									id="sys_transportion_id_order">运输公司编号</th>
 								<th onclick="orderBy(this,'transportion_name');commitForm();"
@@ -121,10 +121,10 @@
 
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="${list.sys_transportion_id}">
-									<td class="center"><label class="pos-rel"> <input
+									<%--<td class="center"><label class="pos-rel"> <input
 											type="checkbox" class="ace" id="pks"
 											value="${list.sys_transportion_id}" /> <span class="lbl"></span>
-									</label></td>
+									</label></td>--%>
 									<td>${list.sys_transportion_id}</td>
 									<td>${list.transportion_name}</td>
 									<td>${list.salesmen_name}</td>

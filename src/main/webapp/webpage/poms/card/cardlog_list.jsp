@@ -91,10 +91,10 @@
 								class="table table-striped table-bordered table-hover">
 								<thead>
 									<tr>
-										<th class="center td-w1"><label class="pos-rel">
+										<%--<th class="center td-w1"><label class="pos-rel">
 												<input type="checkbox" class="ace"
 												onclick="checkedAllRows(this);" /> <span class="lbl"></span>
-										</label></th>
+										</label></th>--%>
 										<th onclick="orderBy(this,'card_no');commitForm();"
 											id="card_no_order">用户卡号</th>
 										<th onclick="orderBy(this,'card_type');commitForm();"
@@ -133,10 +133,10 @@
 
 									<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 										<tr id="listobj">
-											<td class="center"><label class="pos-rel"> <input
+											<%--<td class="center"><label class="pos-rel"> <input
 													type="checkbox" class="ace" id="pks"
 													value="${list.card_no}" /> <span class="lbl"></span>
-											</label></td>
+											</label></td>--%>
 
 											<td>${list.card_no}</td>
 											<td><s:Code2Name mcode="${list.card_type}"

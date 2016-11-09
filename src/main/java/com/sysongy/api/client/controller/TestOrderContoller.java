@@ -86,14 +86,14 @@ public class TestOrderContoller {
     public AjaxJson testDischarge(HttpServletRequest request, HttpServletResponse response){
         AjaxJson ajaxJson = new AjaxJson();
         Map<String, Object> attributes = new HashMap<String, Object>();
-       //测试充红，要通过原始订单，创建充红订单，然后调用discharge_order方法：
+       //测试冲红，要通过原始订单，创建冲红订单，然后调用discharge_order方法：
     	try{
         	SysOrder originalOrder = orderService.selectByPrimaryKey("63db81c4aa314e0aa444594ef907fbf8");
         	boolean bl = orderService.checkCanDischarge(originalOrder);
-        	System.out.println("能否充红："+bl);
+        	System.out.println("能否冲红："+bl);
         	if(bl){
 	        	SysOrder dischargeOrder = orderService.createDischargeOrderByOriginalOrder(originalOrder, "006648b1e6c1469fa4fff0a0ad86ac06", "没啥原因，就想撤销。");
-	        	//注意要保存充红订单
+	        	//注意要保存冲红订单
 	        	orderService.insert(dischargeOrder, dischargeOrder.getSysOrderGoods());
 	        	orderService.dischargeOrder(originalOrder, dischargeOrder);
         	}

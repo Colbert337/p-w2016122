@@ -119,7 +119,13 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 			//202和201首次充值和注册定额返现 返现系数为返现金额
 			//这些类型应该一个级别应当只有一个规则
 			if ("203".equals(sysCashBack.getSys_cash_back_no())||"202".equals(sysCashBack.getSys_cash_back_no())||"201".equals(sysCashBack.getSys_cash_back_no())) {
-				throw new Exception("该时间范围内已有生效配置，请确认时间范围后重试！");
+				if ("insert".equals(operation)) {
+					throw new Exception("该时间范围内已有生效配置，请确认时间范围后重试！");
+				}else{
+					record.setUpdated_date(new Date());
+					cashBackMapper.updateByPrimaryKeySelective(record);
+					return record.getSys_cash_back_id();
+				}
 			}if(case_1 || case_2){
 				//例外CASE1，配置项的minvalue与maxvalue均小于已配置的minvalue
 				boolean exceptionCase_1 = Float.valueOf(obj_min_value) <= Float.valueOf(sysCashBack.getThreshold_min_value()) && Float.valueOf(obj_max_value) <= Float.valueOf(sysCashBack.getThreshold_min_value());
@@ -162,7 +168,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	
 	/**
 	 * 取出规则，计算返现值，然后操作对应账户的金额。
-	 * 如果是充红，cash是负数，---不调用返现规则，直接调用历史记录
+	 * 如果是冲红，cash是负数，---不调用返现规则，直接调用历史记录
 	 * 返现步骤：
 	 * 1.从传过来的某个充值类型的cashBackList中，计算过滤得到符合条件的一条返现规则：算法
 	 *   计算算法：
@@ -252,9 +258,9 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 	}
 	
 	/**
-	 * 充红返现给账户
-	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则充红，否则不执行。
-	 * @param order 充红订单对象
+	 * 冲红返现给账户
+	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则冲红，否则不执行。
+	 * @param order 冲红订单对象
 	 * @paramcashBackRecord 订单处理流程对象
 	 * @param accountId
 	 * @param accountUserName
@@ -276,10 +282,10 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		if(cash_back.compareTo(new BigDecimal(0)) > 0){
 			back_money = cash_back.multiply(new BigDecimal(-1));
 		}
-		//给这个账户把返现充红
+		//给这个账户把返现冲红
 		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money,order.getOrderType());
 		//写入订单处理流程
-		String remark = "给"+ accountUserName+"的账户，充红返现"+back_money.toString()+"。";
+		String remark = "给"+ accountUserName+"的账户，冲红返现"+back_money.toString()+"。";
 		logger.info(remark);
 		remark = order.getDischarge_reason();
 		String cash_per_str = orderDealRecord.getCashBackPer();

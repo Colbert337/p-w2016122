@@ -50,9 +50,9 @@ public interface SysCashBackService {
 	public String cashToAccount(SysOrder order, List<SysCashBack> cashBackList,String accountId,String accountUserName, String orderDealType) throws Exception;
 	
 	/**
-	 * 充红返现给账户
-	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则充红，否则不执行。
-	 * @param order 充红订单对象
+	 * 冲红返现给账户
+	 * 算法： 读出sysOrderDeal对象里面的cashback，判断run_success字段，如果是成功，则冲红，否则不执行。
+	 * @param order 冲红订单对象
 	 * @param cashBackRecord 订单处理流程对象
 	 * @param accountId
 	 * @param accountUserName

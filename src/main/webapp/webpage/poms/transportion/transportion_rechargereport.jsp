@@ -141,7 +141,16 @@
 									<td>${list.user_name}</td>
 									<td class="text-center">
 										<a class="" href="javascript:void(0);" title="查看明细" data-rel="tooltip">
-											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showDetail('${list.order_id}','${list.order_type}','${list.cash}');"></i>
+											<i class="ace-icon fa fa-search-plus bigger-130" onclick="showDetail('${list.order_id}','${list.order_type}','${list.cash}',
+												'${sysOrder.creditAccount}',
+													'${sysOrder.orderNumber}',
+													'${sysOrder.is_discharge}',
+													'${sysOrder.sysDriver.plateNumber}',
+													'${sysOrder.startDate}',
+													'${sysOrder.endDate}',
+													'${pageInfo.pageNum}',
+													'${pageInfo.pageSize}',
+													'${pageInfo.orderBy}');"></i>
 										</a>
 									</td>
 								</tr>

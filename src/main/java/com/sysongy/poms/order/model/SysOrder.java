@@ -125,7 +125,17 @@ public class SysOrder extends BaseModel{
     
     private String trade_no;//交易号
 
-    private String mobile_phone;
+    private String mobile_phone;//存储退款（充值）司机手机号
+    
+    public String getCreditPhone() {
+		return creditPhone;
+	}
+
+	public void setCreditPhone(String creditPhone) {
+		this.creditPhone = creditPhone;
+	}
+
+	private String creditPhone;//存贮退款时（消费类型）司机的手机号
     
 	public String getMobile_phone() {
 		return mobile_phone;
