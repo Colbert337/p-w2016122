@@ -189,7 +189,7 @@ public class SysRoadServiceImpl implements SysRoadService {
 		} else {
 
 			long a = startTime.getTime() - new Date().getTime();
-			int time = h * 60 * 60 + (int) a / 1000;
+			int time = h  * 60 + (int) a / 1000;
 			// road.setEndTime(new Date(new Date().getTime() + h * 60 * 60 *
 			// 1000 + a));
 			if (time <= 0) {
