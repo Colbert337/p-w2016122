@@ -44,4 +44,6 @@ public interface GsGasPriceService {
      * @return
      */
     List<Map<String, Object>> queryDiscount(String stationId);
+    
+    public GsGasPrice queryGsPrice(String gastationId,String gasPrice) throws Exception;
 }

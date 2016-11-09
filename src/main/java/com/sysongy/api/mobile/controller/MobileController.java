@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,6 +73,7 @@ import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.message.model.SysMessage;
@@ -2958,11 +2961,26 @@ public class MobileController {
 			if (order != null && order.getOrderStatus() == 0) {// 0 初始化 1 成功 2
 				//判断是否是第一次充值
 				if(!orderService.exisit(order.getDebitAccount())){
+					
 					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+						//添加首次充值订单
+						SysOrder newOrder=new SysOrder();
+						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
+						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
+						newOrder.setOrderDate(new Date());
+						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
+						newOrder.setDebitAccount(order.getDebitAccount());
+						newOrder.setChargeType("113");
+						newOrder.setChannel("充值返现");
+						newOrder.setIs_discharge("0");
+						newOrder.setOperator(appOperatorId);
+						newOrder.setOperatorSourceId(appOperatorId);
+						orderService.saveOrder(newOrder);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3069,24 +3087,7 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				if(!orderService.exisit(sysOrder.getDebitAccount())){//判断是否是第一次充值
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
-					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
-					
-					if (listBack!=null && listBack.size() > 0) {
-						SysCashBack back= listBack.get(0);//获取返现规则
-						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-						//系统关键日志记录
-	        			SysOperationLog sysOperationLog = new SysOperationLog();
-	        			sysOperationLog.setOperation_type("fx");
-	        			sysOperationLog.setLog_platform("1");
-	            		sysOperationLog.setLog_content("手机微信消费返现成功！充值金额："+order.getCash()+"，返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
-	        			//操作日志
-	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
-					}else{
-						logger.info("找不到匹配的返现规则，返现失败");
-					}
-				}
+				
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -3175,7 +3176,20 @@ public class MobileController {
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-				   
+						//添加首次充值订单
+						SysOrder newOrder=new SysOrder();
+						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
+						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
+						newOrder.setOrderDate(new Date());
+						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
+						newOrder.setDebitAccount(order.getDebitAccount());
+						newOrder.setChargeType("113");
+						newOrder.setChannel("充值返现");
+						newOrder.setIs_discharge("0");
+						newOrder.setOperator(appOperatorId);
+						newOrder.setOperatorSourceId(appOperatorId);
+						orderService.saveOrder(newOrder);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3257,24 +3271,6 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
-				if(!orderService.exisit(sysOrder.getDebitAccount())){//判断是否是第一次充值
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
-					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
-					
-					if (listBack!=null && listBack.size() > 0) {
-						SysCashBack back= listBack.get(0);//获取返现规则
-						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-						//系统关键日志记录
-	        			SysOperationLog sysOperationLog = new SysOperationLog();
-	        			sysOperationLog.setOperation_type("fx");
-	        			sysOperationLog.setLog_platform("1");
-	            		sysOperationLog.setLog_content("手机支付宝消费返现成功！返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
-	        			//操作日志
-	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
-					}else{
-						logger.info("找不到匹配的返现规则，返现失败");
-					}
-				}
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -4564,6 +4560,7 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String gastationId = "gastationId";
+			String amount = "amount";
 			boolean b = JsonTool.checkJson(mainObj, gastationId);
 			/**
 			 * 请求接口
@@ -4571,16 +4568,56 @@ public class MobileController {
 			if (b) {
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				gastationId = mainObj.optString("gastationId");
+				amount = mainObj.optString("amount");
 				List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+				String gasName = null;
 				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
+					List<Integer> priceList = new ArrayList<Integer>();
 					for (Map<String, Object> map : gsGasPriceList) {
-						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("preferential_type", map.get("preferential_type"));
-						reChargeMap.put("gasName", usysparamService.query("CARDTYPE", map.get("gas_name").toString()).get(0).getMname());
-						reChargeMap.put("remark", map.get("remark"));
-						reChargeMap.put("gasPrice", map.get("product_price"));
-						reChargeMap.put("priceUnit", map.get("unit"));
-						reChargeMap.put("discountAmount",map.get("minus_money")==null?map.get("fixed_discount"):map.get("minus_money"));
+						gasName = usysparamService.query("CARDTYPE",map.get("gas_name").toString()).get(0).getMname();
+						if(gasName.indexOf("LNG")!=-1 && gasName.indexOf("lng")!=-1){
+							//获取最高单价
+							String gasPrice = map.get("product_price").toString();
+							priceList.add(Integer.valueOf(gasPrice));
+						}
+					}
+					//重排获取最高价格
+					Collections.sort(priceList);
+					String gasPrice = priceList.get(priceList.size()-1).toString();
+					//通过价格获取气品名称及优惠规则
+					GsGasPrice ggp = gsGasPriceService.queryGsPrice(gastationId, gasPrice);
+					Map<String, Object> reChargeMap = new HashMap<>();
+					String preferentialType = ggp.getPreferential_type();//折扣类型
+					String discountAmount = ggp.getMinus_money()==null?ggp.getFixed_discount().toString():ggp.getMinus_money();
+					gasName = usysparamService.query("CARDTYPE",ggp.getGasName()).get(0).getMname();
+					String cashBack = "";
+					//0立减金额
+					if(preferentialType.equals("0")){
+						cashBack = new BigDecimal(amount).subtract(new BigDecimal(discountAmount)).toString();
+						reChargeMap.put("cashBack",cashBack);
+						reChargeMap.put("preferential_type",preferentialType );
+						reChargeMap.put("gasName",gasName);
+						reChargeMap.put("remark", ggp.getRemark());
+						reChargeMap.put("gasPrice",ggp.getProductPriceInfo().getProductPrice());
+						reChargeMap.put("priceUnit", ggp.getProductPriceInfo().getProductUnit());
+						reChargeMap.put("discountAmount",discountAmount);
+						reChargeList.add(reChargeMap);
+					}else{//固定折扣
+						//按优惠前价格计算加气量
+						BigDecimal gas = new BigDecimal(amount).divide(new BigDecimal(gasPrice),2, RoundingMode.HALF_UP) ;
+						//优惠后价格
+						BigDecimal rs = new BigDecimal(gasPrice).multiply(new BigDecimal(discountAmount));
+						//优惠后花费
+						BigDecimal huafei = rs.multiply(gas);
+						//优惠总金额
+						cashBack = new BigDecimal(amount).subtract(huafei).toString();
+						reChargeMap.put("cashBack",cashBack);
+						reChargeMap.put("preferential_type",preferentialType );
+						reChargeMap.put("gasName",gasName);
+						reChargeMap.put("remark", ggp.getRemark());
+						reChargeMap.put("gasPrice",ggp.getProductPriceInfo().getProductPrice());
+						reChargeMap.put("priceUnit", ggp.getProductPriceInfo().getProductUnit());
+						reChargeMap.put("discountAmount",discountAmount);
 						reChargeList.add(reChargeMap);
 					}
 				}else{
