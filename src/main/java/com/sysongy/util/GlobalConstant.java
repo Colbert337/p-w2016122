@@ -568,8 +568,6 @@ public class GlobalConstant {
 		public static final String DRIVER_NOT_CERTIFICATE = "该司机未实名认证。";
 		
 		public static final String ORDER_ACCOUNT_VERSION_HAVE_CHANGED = "ORDER_ACCOUNT_VERSION_HAVE_CHANGED";
-		
-		public static final String CONSUME_FAIL="加注站收款失败！！";
 	}
 
 	/*
