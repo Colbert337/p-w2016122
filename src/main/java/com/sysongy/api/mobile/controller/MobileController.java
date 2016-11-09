@@ -593,7 +593,7 @@ public class MobileController {
 
 						String driverCheckedStstus = driver.getCheckedStatus();
 						if ("2".equals(driverCheckedStstus)) {
-							resultMap.put("nick", driver.getFullName());
+							resultMap.put("nick", driver.getNickname());
 						} else {
 							resultMap.put("nick", "");
 						}
