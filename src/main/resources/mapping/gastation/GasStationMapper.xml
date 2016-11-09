@@ -155,7 +155,7 @@
         and (gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}),'%') or company LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') or address LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') )
     </if>
     <if test="type != null &amp;&amp; type != ''" >
-        and type = '0'
+        and type = #{type,jdbcType=VARCHAR} and status= '0'
     </if>
   </select> 
    <select id="exists" resultMap="BaseResultMap" parameterType="java.lang.String" >
