@@ -2709,7 +2709,10 @@ public class MobileController {
 							sysOrder = createNewOrder(orderID, driverID, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","C04"); // TODO充值成功后再去生成订单
 							//设置优惠券ID
 							if(couponId!=null && !"".equals(couponId)){
-								sysOrder.setCoupon_number(couponId);
+								UserCoupon uc = new UserCoupon();
+								uc.setCoupon_id(couponId);
+								uc.setSys_driver_id(token);
+								sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
 							}
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
@@ -2749,7 +2752,10 @@ public class MobileController {
 							preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 							//设置优惠券ID
 							if(couponId!=null && !"".equals(couponId)){
-								sysOrder.setCoupon_number(couponId);
+								UserCoupon uc = new UserCoupon();
+								uc.setCoupon_id(couponId);
+								uc.setSys_driver_id(token);
+								sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
 							}
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
@@ -4807,7 +4813,10 @@ public class MobileController {
 						SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
 						//设置优惠券ID
 						if(couponId!=null && !"".equals(couponId)){
-							sysOrder.setCoupon_number(couponId);
+							UserCoupon uc = new UserCoupon();
+							uc.setCoupon_id(couponId);
+							uc.setSys_driver_id(token);
+							sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
 						}
 						//设置优惠金额
 						if(couponCash!=null && !"".equals(couponCash)){

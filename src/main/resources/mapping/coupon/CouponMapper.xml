@@ -359,4 +359,9 @@
 		where user_coupon_id = #{0}
 		and sys_driver_id = #{1}
 	</select>
+	<select id="queryUserCouponId" resultType="java.lang.String" parameterType="com.sysongy.poms.coupon.model.UserCoupon">
+		select user_coupon_id  from sys_user_coupon
+		where coupon_id = #{coupon_id,jdbcType=VARCHAR} 
+		and sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR} and isuse = '0' limit 1
+	</select>
 </mapper>
