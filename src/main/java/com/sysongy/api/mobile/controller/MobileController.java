@@ -591,8 +591,14 @@ public class MobileController {
 						SysUserAccount sysUserAccount = sysUserAccountService
 								.queryUserAccountByDriverId(driver.getSysDriverId());
 
-						String driverCheckedStstus = driver.getCheckedStatus();
+						/*String driverCheckedStstus = driver.getCheckedStatus();
 						if ("2".equals(driverCheckedStstus)) {
+							resultMap.put("nick", driver.getNickname());
+						} else {
+							resultMap.put("nick", "");
+						}*/
+						String nick = driver.getNickname();
+						if (nick!=null && !"".equals(nick)) {
 							resultMap.put("nick", driver.getNickname());
 						} else {
 							resultMap.put("nick", "");
@@ -2451,23 +2457,32 @@ public class MobileController {
 						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString()));
 					}
 				}
-
 				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum", map.get("orderNumber"));
 						reChargeMap.put("amount", map.get("cash"));
-						reChargeMap.put("gasStationName", map.get("channel"));
+						reChargeMap.put("gasStationName", gastationService.queryGastationByPK(map.get("channelNumber").toString()).getGas_station_name());
 						reChargeMap.put("gasStationId", map.get("channelNumber"));
-						reChargeMap.put("gasTotal", map.get("goods_sum"));
-						reChargeMap.put("payStatus", "支付成功");
-
-						String chargeType = "";
+						reChargeMap.put("gasTotal",map.get("goods_sum")==null?"0":map.get("goods_sum"));
+						//0初始化，1成功，2失败，3待支付
+						String status = map.get("orderStatus").toString();
+						if(status.equals("0")){
+							status = "订单初始化";
+						}else if(status.equals("1")){
+							status = "支付成功";
+						}else if(status.equals("2")){
+							status = "支付失败";
+						}else if(status.equals("3")){
+							status = "待支付订单";
+						}
+						reChargeMap.put("payStatus", status);
+						/*String chargeType = "";
 						if (map.get("chargeType") != null && !"".equals(map.get("chargeType").toString())) {
 							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
 						}
-						reChargeMap.put("paymentType", chargeType);
+						reChargeMap.put("paymentType", chargeType);*/
 						reChargeMap.put("remark", map.get("remark"));
 						String dateTime = "";
 						if (map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())) {
@@ -2475,8 +2490,31 @@ public class MobileController {
 						} else {
 							dateTime = sft.format(new Date());
 						}
+						Object obj = map.get("preferential_cash");//平台优惠金额
+						Object coupon_cash = map.get("coupon_cash");//优惠券优惠金额
+						BigDecimal cashAll = new BigDecimal(0);
+						if(obj!=null && !"".equals(obj)){
+							cashAll = new BigDecimal(obj.toString());
+						}
+						if(coupon_cash!=null && !coupon_cash.equals("")){
+							cashAll = cashAll.add(new BigDecimal(coupon_cash.toString()));
+						}
 						reChargeMap.put("time", dateTime);
-
+						reChargeMap.put("shouldPayment",map.get("should_payment"));//应付金额
+						reChargeMap.put("preferentialCash",cashAll);//优惠金额
+						reChargeMap.put("couponTitle", map.get("couponTitle")==null?"":map.get("couponTitle"));//优惠券标题
+						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费
+						String chargeType = (String) map.get("spend_type");
+						if(chargeType.equals("C01")){
+							chargeType = "卡余额消费";
+						}else if(chargeType.equals("C02")){
+							chargeType = "POS消费";
+						}else if(chargeType.equals("C03")){
+							chargeType = "微信消费";
+						}else if(chargeType.equals("C04 ")){
+							chargeType = "支付宝消费";
+						}
+						reChargeMap.put("chargeType", chargeType);//
 						reChargeList.add(reChargeMap);
 					}
 					reCharge.put("listMap", reChargeList);
