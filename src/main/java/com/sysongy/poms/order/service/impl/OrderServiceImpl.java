@@ -597,13 +597,18 @@ public class OrderServiceImpl implements OrderService {
 	   validAccount(order);
 
 	   //消费的时候传过去的cash是正值
-	   
 	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
 		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
 	   }
-	   
+	   //给加注站加钱
+	   SysUserAccount sua = sysUserAccountService.queryUserAccountByGas(order.getChannelNumber());
+	   sua.setAccountBalance(new BigDecimal(sua.getAccountBalance()).add(order.getCash()).toString());
+	   int rs = sysUserAccountService.updateAccount(sua);
+	   if(rs < 0){
+		   throw new Exception(GlobalConstant.OrderProcessResult.CONSUME_FAIL);
+	   }
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
