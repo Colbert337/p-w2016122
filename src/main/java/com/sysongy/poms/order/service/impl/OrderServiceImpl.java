@@ -606,7 +606,7 @@ public class OrderServiceImpl implements OrderService {
 	   SysUserAccount sua = sysUserAccountService.queryUserAccountByGas(order.getChannelNumber());
 	   sua.setAccountBalance(new BigDecimal(sua.getAccountBalance()).add(order.getCash()).toString());
 	   int rs = sysUserAccountService.updateAccount(sua);
-	   if(rs < 0){
+	   if(rs==0){
 		   throw new Exception(GlobalConstant.OrderProcessResult.CONSUME_FAIL);
 	   }
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
