@@ -1,5 +1,6 @@
 package com.sysongy.poms.mobile.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,10 @@ import com.sysongy.poms.mobile.dao.SysRoadConditionStrMapper;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.model.SysRoadConditionStr;
 import com.sysongy.poms.mobile.service.SysRoadService;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.poms.usysparam.service.UsysparamService;
+import com.sysongy.util.RedisClientImpl;
+import com.sysongy.util.RedisClientInterface;
 
 /**
  * @FileName: SysRoadServiceImpl
@@ -31,6 +36,13 @@ public class SysRoadServiceImpl implements SysRoadService {
 	@Autowired
 	SysRoadConditionMapper sysRoadConditionMapper;
 
+	@Autowired
+	private UsysparamService usysparamservice;
+	
+
+	
+	RedisClientInterface redisClientImpl;
+	
 	@Autowired
 	SysRoadConditionStrMapper sysRoadConditionStrMapper;
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -153,4 +165,38 @@ public class SysRoadServiceImpl implements SysRoadService {
 		// TODO Auto-generated method stub
 		return sysRoadConditionMapper.updateByPrimaryKeySelective(record);
 	}
+
+	@Override
+	public boolean restoreRedis(RedisClientInterface redisClientImpl) {
+		// TODO Auto-generated method stub
+		List<SysRoadCondition>list= sysRoadConditionMapper.queryForRedis();
+		for (int i = 0; i < list.size(); i++) {
+			Usysparam param=usysparamservice.queryUsysparamByCode("CONDITION_TYPE", list.get(i).getConditionType());
+			int time =sumTime(list.get(i).getStartTime(), Integer.valueOf(param.getData()));
+			if (time!=0) {
+				redisClientImpl.addToCache("Road"+list.get(i).getId(), list.get(i), time);
+			}
+		}
+		return true;
+	}
+	
+	private int sumTime(Date startTime, Integer h) {
+
+		// TODO Auto-generated method stub
+
+		if (h == null || h == 0) {
+			return -1;
+		} else {
+
+			long a = startTime.getTime() - new Date().getTime();
+			int time = h * 60 * 60 + (int) a / 1000;
+			// road.setEndTime(new Date(new Date().getTime() + h * 60 * 60 *
+			// 1000 + a));
+			if (time <= 0) {
+				time = 0;
+			}
+			return time;
+		}
+	}
 }
+	

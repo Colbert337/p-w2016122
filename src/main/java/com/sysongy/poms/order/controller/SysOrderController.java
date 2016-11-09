@@ -7,22 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alipay.config.AlipayConfig;
 import com.alipay.util.AlipaySubmit;
 import com.github.pagehelper.PageInfo;
-import com.sysongy.api.mobile.model.base.MobileReturn;
+import com.sysongy.api.mobile.model.verification.MobileVerification;
+import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.order.model.OrderLog;
@@ -30,12 +26,13 @@ import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.RedisClientInterface;
 import com.tencent.WXPay;
 import com.tencent.common.Configure;
 import com.tencent.protocol.refund_protocol.RefundReqData;
-
-import net.sf.json.JSONObject;
 
 @RequestMapping("/web/order")
 @Controller
@@ -44,6 +41,9 @@ public class SysOrderController extends BaseContoller {
 	@Autowired
 	private OrderService service;
 
+	@Autowired
+	RedisClientInterface redisClientImpl;
+	
 	@Autowired
 	private SysUserAccountService accountService;
 
@@ -216,12 +216,21 @@ public class SysOrderController extends BaseContoller {
 	@RequestMapping("/saveBreak")
 	@ResponseBody
 	public String saveBreak(ModelMap map, String money, String msg, String tradeNo, String cash, String orderId,
-			String type) {
+			String type,String phone ,String code) {
+		
+		
 		String http_poms_path = (String) prop.get("http_poms_path");
 		SysOrder order = null;
 		PageBean bean = new PageBean();
 		SysUserAccount account;
 		try {
+			if (code!=null) {
+				if (((String)redisClientImpl.getFromCache(phone)).equalsIgnoreCase(code)) {
+					logger.debug("验证码正确");
+				}
+			}else{
+				throw new Exception("验证码不能为空");
+			}
 			order = service.queryById(orderId);
 			account = accountService.queryUserAccountByDriverId(order.getDebitAccount());
 			if (account == null) {
@@ -353,9 +362,17 @@ public class SysOrderController extends BaseContoller {
 
 	@RequestMapping("/saveBreakForRe")
 	@ResponseBody
-	public String saveBreakForRe(String msg, String money, String orderId) {
+	public String saveBreakForRe(String msg, String money, String orderId,String phone,String code) {
 		PageBean bean = new PageBean();
 		try {
+			if (code!=null) {
+				if (((String)redisClientImpl.getFromCache(phone)).equalsIgnoreCase(code)) {
+					
+				}
+			}else{
+				throw new Exception("验证码不能为空");
+			}
+			 
 			service.saveBareakForRe(msg,money,orderId);
 			bean.setRetMsg("退款成功");
 		} catch (Exception e) {
@@ -369,7 +386,35 @@ public class SysOrderController extends BaseContoller {
 		// order.setBatch_no(batch_no);
 
 	}
-
+	@RequestMapping("/checkPhone")
+	@ResponseBody
+	public String check(String phone){
+		Integer checkCode = (int) ((Math.random() * 9 + 1) * 100000);
+		String md5phone=(String) prop.get("checkPhone");
+		String md5=Encoder.MD5Encode(phone.getBytes());
+		PageBean bean=new PageBean();
+		try {
+			if (md5phone.equalsIgnoreCase(md5)) {
+				AliShortMessage.SHORT_MESSAGE_TYPE msgTypeaTemp = AliShortMessage.SHORT_MESSAGE_TYPE.USER_VALIDATION;
+				MobileVerification verification = new MobileVerification();
+				verification.setPhoneNum(phone);
+				verification.setContent("退款");
+				MobileVerificationUtils.sendMSGType(verification,checkCode.toString(),msgTypeaTemp);
+				// 设置短信有效期10分钟
+				redisClientImpl.addToCache(verification.getPhoneNum(), checkCode.toString(), 600);
+				bean.setRetMsg("获取验证码成功！");
+			}else{
+				bean.setRetMsg("发送失败，手机号码不正确！");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			bean.setRetMsg("发送失败："+e.getMessage());
+		}finally {
+			return bean.getRetMsg();
+		}
+		
+	}
 	// 生成定点编号
 	public static synchronized String getBatchNo() {
 		return (new SimpleDateFormat("yyyyMMdd").format(new Date()) + System.currentTimeMillis()).toString();

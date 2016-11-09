@@ -11,8 +11,9 @@
 %>
 
 <script src="<%=basePath%>/dist/js/mobile/roadList.js"></script>
-
-<div class="">
+<link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
+<script src="<%=basePath%>/dist/js/message/show.js"></script>
+<div class="" id="div">
 	<!-- /.page-header -->
 	<form id="formRoad">
 
@@ -72,6 +73,10 @@
 						</button>
 						<button class="btn btn-sm" type="button" onclick="init();">
 							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 重置
+						</button>
+						<button class="btn btn-sm btn-primary" type="button"
+							onclick="restoreRedis()">
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 恢复redis
 						</button>
 					</div>
 				</div>

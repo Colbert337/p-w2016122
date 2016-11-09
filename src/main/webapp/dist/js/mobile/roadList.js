@@ -31,6 +31,20 @@ function showContent(){
 	
 }
 
+function restoreRedis(){
+	$('#div').showLoading();
+	
+	$.ajax({
+		url : "../web/mobile/road/restoreRedis",
+		async : false,
+		type : "POST",
+		success : function(data) {
+			bootbox.alert("恢复成功");
+			$('#div').hideLoading();
+		}
+	})
+}
+
 jQuery(function($) {
 	var $overflow = '';
 	var colorbox_params = {

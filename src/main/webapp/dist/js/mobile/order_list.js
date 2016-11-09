@@ -29,44 +29,50 @@ var tradeNo=null;
 var cash=null
 var orderId=null;
 var orderNumber=null;
-function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
-	if (retype==1) {
+
+function showCheck(){
 	
-	$('#div').showLoading();
-	 $.ajax({
-		type : "post",
-		url : "../web/order/BreakMoney",
-		data : {
-			orderNumber :no
-		},
-		dataType : "json",
-		success : function(data) {
-			$("#title").text("本订单累计退款金额为："+data+"元");
-			orderNumber=data*1;
-			$('#div').hideLoading();
-			closeDialog('content');
-			type=type1;
-			cash=cash1;
-			tradeNo=tradeNo1;
-			orderId=orderId1;
-			if(cash*1<=orderNumber){
-				 bootbox.alert("累计退款金额（"+orderNumber+"）大于交易金额("+cash+"),不能继续退款");
-				 return;
-			 }else{
-				 $("#content").modal('show');	 
-			 }
-			
-			
-			$("#money").val("");
-			$("#msgcontent").val('');
-			
-		},
-		error:function(){
-			$('#div').hideLoading();
-			 bootbox.alert("查询退款金额失败");
-		}
-	});
-		
+	
+}
+
+
+function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
+	if (retype == 1) {
+		$('#div').showLoading();
+		$.ajax({
+			type : "post",
+			url : "../web/order/BreakMoney",
+			data : {
+				orderNumber : no
+			},
+			dataType : "json",
+			success : function(data) {
+				$("#title").text("本订单累计退款金额为：" + data + "元");
+				orderNumber = data * 1;
+				$('#div').hideLoading();
+				closeDialog('content');
+				type = type1;
+				cash = cash1;
+				tradeNo = tradeNo1;
+				orderId = orderId1;
+				if (cash * 1 <= orderNumber) {
+					bootbox.alert("累计退款金额（" + orderNumber + "）大于交易金额(" + cash
+							+ "),不能继续退款");
+					return;
+				} else {
+					$("#content").modal('show');
+				}
+
+				$("#money").val("");
+				$("#msgcontent").val('');
+
+			},
+			error : function() {
+				$('#div').hideLoading();
+				bootbox.alert("查询退款金额失败");
+			}
+		});
+
 	}else{
 		type=type1;
 		cash=cash1;
@@ -184,8 +190,55 @@ obj.value = obj.value.replace(/\.{2,}/g,".");
 obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
 }
 
-function subbreak() {
+function clearNoNum2(obj)
+{
+//先把非数字的都替换掉，除了数字和.
+obj.value = obj.value.replace(/[^\d.]/g,"");
+//必须保证第一个为数字而不是.
+//obj.value = obj.value.replace(/^\./g,"");
+//保证只有出现一个.而没有多个.
+//obj.value = obj.value.replace(/\.{2,}/g,".");
+//保证.只出现一次，而不能出现两次以上
+//obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+}
+ 
+
+function subCheck(tradeNo1,type1,cash1,orderId1,no,retype){
+	$('#div').showLoading();
+	 $.ajax({
+			type : "post",
+			url : "../web/order/checkPhone",
+			data : {
+				phone :$("#phone").val()
+			},
+			dataType : "json",
+			success : function(data) {
+				 bootbox.alert(data);
+				if (data=='获取验证码成功！') {
+					
+				}else{
+					
+				}
+				$('#div').hideLoading();
+			},
+			error:function(){
+				$('#div').hideLoading();
+				 bootbox.alert("获取验证失败！");
+			}
+		});
 	
+	
+}
+
+function subbreak() {
+	if ($('#phone').val()=="") {
+		 bootbox.alert("请先输入手机号码获取验证码！");
+		 return;
+	}
+	if ($('#code').val()=="") {
+		 bootbox.alert("请输入验证码！");
+		 return;
+	}
 	if ($('#money').val()=="") {
 		 bootbox.alert("退款金额不能为空");
 		 return;
@@ -215,7 +268,9 @@ function subbreak() {
 			type:type,
 			cash:cash,
 			orderId:orderId,
-			tradeNo:tradeNo
+			tradeNo:tradeNo,
+			code:$('#code').val(),
+			phone:$('#phone').val()
 //			conditionStatus:type
 		},
 		
