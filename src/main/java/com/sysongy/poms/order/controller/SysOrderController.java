@@ -221,6 +221,7 @@ public class SysOrderController extends BaseContoller {
 		
 		String http_poms_path = (String) prop.get("http_poms_path");
 		SysOrder order = null;
+		SysOrder newOrder=null;
 		PageBean bean = new PageBean();
 		SysUserAccount account;
 		try {
@@ -232,6 +233,7 @@ public class SysOrderController extends BaseContoller {
 				throw new Exception("验证码不能为空");
 			}
 			order = service.queryById(orderId);
+			newOrder=order;
 			account = accountService.queryUserAccountByDriverId(order.getDebitAccount());
 			if (account == null) {
 				throw new Exception("查找司机失败,返现失败");
@@ -288,17 +290,20 @@ public class SysOrderController extends BaseContoller {
 				if (sHtmlText.toUpperCase().indexOf("<is_success>T</is_success>".toUpperCase()) > 0) {
 					bean.setRetMsg("退款申请成功，等待支付退款");
 					// order = service.queryById(orderId);
-					order.setOrderRemark(msg);
-					order.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-					order.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
-					order.setIs_discharge("0");
-					order.setOrderStatus(3);
-					order.setOrderDate(new Date());
-					order.setOrderType("230");
-					order.setChargeType("110");
-					order.setBatch_no(batch_no);
-					order.setOrderRemark(msg);
-					service.saveOrder(order);
+					newOrder.setOrderRemark(msg);
+					newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+					newOrder.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
+					newOrder.setIs_discharge("0");
+					newOrder.setOrderStatus(3);
+					newOrder.setOrderDate(new Date());
+					newOrder.setOrderType("230");
+					newOrder.setChargeType("110");
+					newOrder.setShould_payment(order.getCash());
+					newOrder.setBatch_no(batch_no);
+					newOrder.setOrderRemark(msg);
+					order.setCash(order.getCash().subtract(new BigDecimal(money)));
+					service.updateByPrimaryKey(order);
+					service.saveOrder(newOrder);
 				} else {
 					throw new Exception("退款失败,错误代码：" + sHtmlText);
 				}
@@ -327,17 +332,20 @@ public class SysOrderController extends BaseContoller {
 					} else {
 						bean.setRetMsg("退款成功");
 						// order = service.queryById(orderId);
-						order.setOrderRemark(msg);
-						order.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-						order.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
-						order.setIs_discharge("0");
-						order.setOrderStatus(1);
-						order.setOrderDate(new Date());
-						order.setOrderType("230");
-						order.setChargeType("111");
-						order.setOrderRemark(msg);
-						order.setBatch_no(batch_no);
-						service.saveOrder(order);
+						newOrder.setOrderRemark(msg);
+						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newOrder.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
+						newOrder.setIs_discharge("0");
+						newOrder.setOrderStatus(1);
+						newOrder.setOrderDate(new Date());
+						newOrder.setOrderType("230");
+						newOrder.setChargeType("111");
+						newOrder.setOrderRemark(msg);
+						newOrder.setShould_payment(order.getCash());
+						newOrder.setBatch_no(batch_no);
+						order.setCash(order.getCash().subtract(new BigDecimal(money)));
+						service.updateByPrimaryKey(order);
+						service.saveOrder(newOrder);
 					}
 				} else {
 					throw new Exception("退款失败,错误信息："
