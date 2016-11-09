@@ -3057,6 +3057,14 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
+						String couponId = orderService.queryById(orderId).getCoupon_id();
+						//更新优惠券使用状态
+						if(couponId!=null && !couponId.equals("")){
+							UserCoupon uc = new UserCoupon();
+							uc.setUser_coupon_id(couponId);
+							uc.setIsuse("1");
+							int rs = couponService.updateUserCouponStatus(uc);
+						}
 						//微信消费短信通知
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
@@ -3237,6 +3245,14 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
+						String couponId = orderService.queryById(orderId).getCoupon_id();
+						//更新优惠券使用状态
+						if(couponId!=null && !couponId.equals("")){
+							UserCoupon uc = new UserCoupon();
+							uc.setUser_coupon_id(couponId);
+							uc.setIsuse("1");
+							int rs = couponService.updateUserCouponStatus(uc);
+						}
 						//支付宝充值短信通知
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
@@ -4805,7 +4821,6 @@ public class MobileController {
 						//设置应付金额
 						sysOrder.setShould_payment(new BigDecimal(payableAmount));
 						sysOrder.setPreferential_cash(preferential_cash);
-						sysOrder.setPreferential_cash(preferential_cash);
 						//订单状态
 						sysOrder.setOrderStatus(1);
 						if (sysOrder != null) {
@@ -4814,6 +4829,7 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
 								orderService.consumeByDriver(sysOrder);
+								//更新优惠券使用状态
 								//系统关键日志记录
 				    			SysOperationLog sysOperationLog = new SysOperationLog();
 				    			sysOperationLog.setOperation_type("xf");
@@ -4824,6 +4840,13 @@ public class MobileController {
 				    			sysOperationLogService.saveOperationLog(sysOperationLog,token);
 								data.put("orderId", orderID);
 								data.put("orderNum", orderService.queryById(orderID).getOrderNumber());
+								//更新优惠券使用状态
+								if(couponId!=null && !couponId.equals("")){
+									UserCoupon uc = new UserCoupon();
+									uc.setUser_coupon_id(couponId);
+									uc.setIsuse("1");
+									int rs = couponService.updateUserCouponStatus(uc);
+								}
 								//余额消费短信通知
 								AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 								aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(token).getMobilePhone());
