@@ -4863,6 +4863,7 @@ public class MobileController {
 						}
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
+						sysOrder.setChannel("APP-余额消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 						//设置实付金额
 						sysOrder.setCash(new BigDecimal(amount));
 						//设置应付金额
