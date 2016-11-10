@@ -4592,9 +4592,11 @@ public class MobileController {
 					gasName = usysparamService.query("CARDTYPE",ggp.getGasName()).get(0).getMname();
 					double cashBack = 0;
 					String priceUnit = usysparamService.query("GAS_UNIT", ggp.getUnit()).get(0).getMname();
-					//0立减金额
+					//0立减金额(单价立减)
 					if(preferentialType.equals("0")){
-						cashBack = new BigDecimal(amount).subtract(new BigDecimal(discountAmount)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();;
+						//优惠金额(单价减去立减金额乘以加气总量)
+						BigDecimal gas = new BigDecimal(amount).divide(new BigDecimal(gasPrice),2, RoundingMode.HALF_UP) ;//加气总量
+						cashBack = gas.multiply(new BigDecimal(discountAmount)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();;
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
@@ -4603,15 +4605,9 @@ public class MobileController {
 						reChargeMap.put("priceUnit", priceUnit);
 						reChargeMap.put("discountAmount",discountAmount);
 						reChargeList.add(reChargeMap);
-					}else{//固定折扣
-						//按优惠前价格计算加气量
-						BigDecimal gas = new BigDecimal(amount).divide(new BigDecimal(gasPrice),2, RoundingMode.HALF_UP) ;
-						//优惠后价格
-						BigDecimal rs = new BigDecimal(gasPrice).multiply(new BigDecimal(discountAmount));
-						//优惠后花费
-						BigDecimal huafei = rs.multiply(gas);
-						//优惠总金额
-						cashBack = new BigDecimal(amount).subtract(huafei).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+					}else{//固定折扣(整单折扣)
+						//优惠总金额(消费总金额乘以折扣)
+						cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
