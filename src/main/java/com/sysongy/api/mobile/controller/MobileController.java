@@ -3136,7 +3136,7 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
 				//更新最新余额到账户
 				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
@@ -3322,7 +3322,7 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
-				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
 				//更新最新余额到账户
 				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
@@ -5010,6 +5010,7 @@ public class MobileController {
 				payCode = mainObj.optString("payCode");
 				token = mainObj.optString("token");
 				gasTotal = mainObj.optString("gasTotal");
+				gastationId = mainObj.optString("gastationId");
 				SysDriver driver = driverService.queryDriverByPK(token);
 				Gastation gas = gastationService.queryGastationByPK(gastationId);
 				String driverPayCode = driver.getPayCode();
@@ -5053,7 +5054,7 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
 								orderService.consumeByDriver(sysOrder);
-								SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(sysOrder.getDebitAccount());
+								SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(sysOrder.getCreditAccount());
 								//更新最新余额到账户
 								sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(amount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 								//系统关键日志记录
