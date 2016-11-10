@@ -1280,7 +1280,7 @@ public class OrderServiceImpl implements OrderService {
 		SysOrder order = null; 
 		SysUserAccount account;
 			order = this.queryById(orderId);
-			SysOrder newOrder=order;
+			SysOrder newOrder=this.queryById(orderId);
 			newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
 			newOrder.setOrderRemark(msg);
 			newOrder.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));

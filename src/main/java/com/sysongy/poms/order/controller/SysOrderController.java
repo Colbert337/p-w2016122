@@ -233,7 +233,7 @@ public class SysOrderController extends BaseContoller {
 				throw new Exception("验证码不能为空");
 			}
 			order = service.queryById(orderId);
-			newOrder=order;
+			newOrder=service.queryById(orderId);
 			account = accountService.queryUserAccountByDriverId(order.getDebitAccount());
 			if (account == null) {
 				throw new Exception("查找司机失败,返现失败");
