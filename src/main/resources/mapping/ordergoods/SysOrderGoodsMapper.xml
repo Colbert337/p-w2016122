@@ -59,6 +59,12 @@
       <if test="goodsType != null" >
         goods_type,
       </if>
+      <if test="preferential_type != null" >
+        preferential_type,
+      </if>
+      <if test="preferential_cash != null" >
+        preferential_cash,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="orderGoodsId != null" >
@@ -78,6 +84,12 @@
       </if>
       <if test="goodsType != null" >
         #{goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="preferential_type != null" >
+        #{preferential_type,jdbcType=VARCHAR},
+      </if>
+      <if test="preferential_cash != null" >
+        #{preferential_cash,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
