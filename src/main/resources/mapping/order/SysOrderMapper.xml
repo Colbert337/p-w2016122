@@ -1221,7 +1221,7 @@
 		order_date,
 		order_status
 		FROM sys_order
-		WHERE order_type = '130'
+		WHERE (order_type = '130' or order_type = '430')
 		AND is_discharge = '0'
 		AND been_discharged = '0'
 		AND order_status = '1'

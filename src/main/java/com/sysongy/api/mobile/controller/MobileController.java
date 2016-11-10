@@ -3028,6 +3028,7 @@ public class MobileController {
 						newOrder.setIs_discharge("0");
 						newOrder.setOperator(appOperatorId);
 						newOrder.setOperatorSourceId(appOperatorId);
+						newOrder.setOrderStatus(1);
 						orderService.saveOrder(newOrder);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
@@ -3241,6 +3242,7 @@ public class MobileController {
 						newOrder.setIs_discharge("0");
 						newOrder.setOperator(appOperatorId);
 						newOrder.setOperatorSourceId(appOperatorId);
+						newOrder.setOrderStatus(1);
 						orderService.saveOrder(newOrder);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
