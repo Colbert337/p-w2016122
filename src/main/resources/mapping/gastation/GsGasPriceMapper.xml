@@ -320,7 +320,7 @@ SET
 	AND product_price.product_price_status = '1' and gs_gas_price.is_deleted='0'
   </select>
      <!--通过气站ID和价格获取单个气品信息-->
-  <select id="queryDiscount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="queryGsPrice" resultMap="BaseResultMap" parameterType="java.lang.String" >
 	SELECT
 		gs_gas_price.sys_gas_station_id,
 		gs_gas_price.gas_name,
