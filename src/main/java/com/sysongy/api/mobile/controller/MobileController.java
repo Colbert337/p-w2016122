@@ -4589,36 +4589,52 @@ public class MobileController {
 					GsGasPrice ggp = gsGasPriceService.queryGsPrice(gastationId, gasPrice);
 					Map<String, Object> reChargeMap = new HashMap<>();
 					String preferentialType = ggp.getPreferential_type();//折扣类型
-					String discountAmount = ggp.getMinus_money()==null?ggp.getFixed_discount().toString():ggp.getMinus_money();
+					String discountAmount = "0";
+					if(preferentialType!=null && !"".equals(preferentialType)){
+						discountAmount = ggp.getMinus_money()==null?ggp.getFixed_discount().toString():ggp.getMinus_money();
+					}else{
+						preferentialType="";
+					}
 					gasName = usysparamService.query("CARDTYPE",ggp.getGasName()).get(0).getMname();
-					String cashBack = "";
-					//0立减金额
-					if(preferentialType.equals("0")){
-						cashBack = new BigDecimal(amount).subtract(new BigDecimal(discountAmount)).toString();
+					double cashBack = 0;
+					String priceUnit = usysparamService.query("GAS_UNIT", ggp.getUnit()).get(0).getMname();
+					//加气总量
+					BigDecimal gasTotal = new BigDecimal(amount).divide(new BigDecimal(gasPrice),2, RoundingMode.HALF_UP) ;
+					//没有折扣信息
+					if(preferentialType==null){
+						//优惠总金额(消费总金额乘以折扣)
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
 						reChargeMap.put("remark", ggp.getRemark());
-						reChargeMap.put("gasPrice",ggp.getProductPriceInfo().getProductPrice());
-						reChargeMap.put("priceUnit", ggp.getProductPriceInfo().getProductUnit());
+						reChargeMap.put("gasPrice",gasPrice);
+						reChargeMap.put("priceUnit",priceUnit);
 						reChargeMap.put("discountAmount",discountAmount);
+						reChargeMap.put("gasTotal",gasTotal);
 						reChargeList.add(reChargeMap);
-					}else{//固定折扣
-						//按优惠前价格计算加气量
-						BigDecimal gas = new BigDecimal(amount).divide(new BigDecimal(gasPrice),2, RoundingMode.HALF_UP) ;
-						//优惠后价格
-						BigDecimal rs = new BigDecimal(gasPrice).multiply(new BigDecimal(discountAmount));
-						//优惠后花费
-						BigDecimal huafei = rs.multiply(gas);
-						//优惠总金额
-						cashBack = new BigDecimal(amount).subtract(huafei).toString();
+					}else if(preferentialType.equals("1")){//固定折扣(整单折扣)
+						//优惠总金额(消费总金额乘以折扣)
+						cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
 						reChargeMap.put("remark", ggp.getRemark());
-						reChargeMap.put("gasPrice",ggp.getProductPriceInfo().getProductPrice());
-						reChargeMap.put("priceUnit", ggp.getProductPriceInfo().getProductUnit());
+						reChargeMap.put("gasPrice",gasPrice);
+						reChargeMap.put("priceUnit",priceUnit);
 						reChargeMap.put("discountAmount",discountAmount);
+						reChargeMap.put("gasTotal",gasTotal);
+						reChargeList.add(reChargeMap);
+					}else{//0立减金额(单价立减)
+						//优惠金额(单价减去立减金额乘以加气总量)
+						cashBack = gasTotal.multiply(new BigDecimal(discountAmount)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();;
+						reChargeMap.put("cashBack",cashBack);
+						reChargeMap.put("preferential_type",preferentialType );
+						reChargeMap.put("gasName",gasName);
+						reChargeMap.put("remark", ggp.getRemark());
+						reChargeMap.put("gasPrice",gasPrice);
+						reChargeMap.put("priceUnit", priceUnit);
+						reChargeMap.put("discountAmount",discountAmount);
+						reChargeMap.put("gasTotal",gasTotal);
 						reChargeList.add(reChargeMap);
 					}
 				}else{
@@ -4887,7 +4903,7 @@ public class MobileController {
 					payableAmount = mainObj.optString("payableAmount");
 					//设置平台优惠金额
 					BigDecimal preferential_cash = new BigDecimal(0);
-					preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
+					preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));//总优惠金额
 						SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
 						//设置优惠券ID
 						if(couponId!=null && !"".equals(couponId)){
@@ -4899,7 +4915,7 @@ public class MobileController {
 						//设置优惠金额
 						if(couponCash!=null && !"".equals(couponCash)){
 							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-							preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));
+							preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));//总优惠金额减去优惠券优惠金额为平台优惠金额
 						}
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
@@ -4917,7 +4933,6 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
 								orderService.consumeByDriver(sysOrder);
-								//更新优惠券使用状态
 								//系统关键日志记录
 				    			SysOperationLog sysOperationLog = new SysOperationLog();
 				    			sysOperationLog.setOperation_type("xf");
