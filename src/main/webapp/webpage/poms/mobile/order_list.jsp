@@ -138,11 +138,11 @@
 									<td><c:if test="${list.is_discharge eq '0'}">否</c:if> <c:if
 											test="${list.is_discharge eq '1'}">是</c:if></td>
 									<td>${list.channel}</td>
-									<td><s:Code2Name mcode="${list.spend_type}" gcode="CHARGE_TYPE"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
 									<td>${list.trade_no}</td>
 									 
 									<td class="text-center">
-										<c:if test="${not empty list.trade_no }">
+										<c:if test="${not empty list.trade_no and list.cash!='0'}">
 										<a class=""
 											href="javascript:void(0);"
 											onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',1);" title="退款"
@@ -225,7 +225,7 @@
 						<button class="btn btn-primary btn-sm" onclick="subCheck()">获取验证码</button>
 					</div>
 				</div>
-				<br /> <br />
+				<br /> <br /><br />
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">验证码：</label>
 					<div class="col-sm-8">
