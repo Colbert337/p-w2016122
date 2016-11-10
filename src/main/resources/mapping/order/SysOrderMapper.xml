@@ -689,7 +689,7 @@
 				#{orderId,jdbcType=VARCHAR})
 			</if>
 			<if test="operatorSourceId != null &amp;&amp; operatorSourceId != ''">
-				and operator_source_id = #{operatorSourceId, jdbcType=VARCHAR}
+				and b.channel_number = #{operatorSourceId, jdbcType=VARCHAR}
 			</if>
 			<if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
 				and order_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},'
@@ -1237,9 +1237,14 @@
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		SELECT
 		B.order_number,
-		(SELECT SUM(sys_order_goods.number) FROM sys_order_goods WHERE
-		sys_order_goods.order_id = (SELECT a.order_id FROM sys_order AS a
-		WHERE a.order_number = B.order_number)) AS goods_sum,
+		(
+			SELECT
+				SUM(sys_order_goods.number)
+			FROM
+				sys_order_goods
+			WHERE
+				sys_order_goods.order_id = B.order_id
+		) AS goods_sum,
 		cash,
 		B.channel,
 		B.channel_number,
@@ -1250,10 +1255,17 @@
 		remark
 		FROM
 		sys_order_deal rc
-		WHERE
+		WHERE 
 		rc.order_id = B.order_id
 		) AS remark,
-		(SELECT sys_coupon.coupon_title FROM sys_coupon WHERE sys_coupon.coupon_no = B.coupon_number) AS couponTitle,
+		(
+		SELECT coupon_title FROM sys_coupon WHERE sys_coupon.coupon_id = (SELECT
+			sys_user_coupon.coupon_id
+		FROM
+			sys_user_coupon
+		WHERE
+			sys_user_coupon.user_coupon_id = B.coupon_number)
+		) AS couponTitle,
 		B.order_date,
 		B.order_status,
 		B.been_discharged,
@@ -1262,7 +1274,7 @@
 		B.should_payment,
 		B.coupon_cash
 		FROM sys_order AS B
-		WHERE B.order_type = '220'
+		WHERE 2=2 and B.order_type = '220'
 		AND B.order_status = '1'
 		AND B.is_discharge = '0'
 		AND B.been_discharged = '0'

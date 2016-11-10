@@ -597,13 +597,11 @@ public class OrderServiceImpl implements OrderService {
 	   validAccount(order);
 
 	   //消费的时候传过去的cash是正值
-	   
 	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
 		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
 	   }
-	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
