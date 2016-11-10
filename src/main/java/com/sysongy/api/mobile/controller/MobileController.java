@@ -89,6 +89,7 @@ import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -4572,53 +4573,55 @@ public class MobileController {
 				List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
 				String gasName = null;
 				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
-					List<BigDecimal> priceList = new ArrayList<BigDecimal>();
-					for (Map<String, Object> map : gsGasPriceList) {
-						gasName = usysparamService.query("CARDTYPE",map.get("gas_name").toString()).get(0).getMname();
-						if(gasName.indexOf("LNG")!=-1 || gasName.indexOf("lng")!=-1){
-							//获取最高单价
-							String gasPrice = map.get("product_price").toString();
-							priceList.add(new BigDecimal(gasPrice));
-						}
-					}
+//					List<BigDecimal> priceList = new ArrayList<BigDecimal>();
+//					for (Map<String, Object> map : gsGasPriceList) {
+//						gasName = usysparamService.query("CARDTYPE",map.get("gas_name").toString()).get(0).getMname();
+//						if(gasName.indexOf("LNG")!=-1 || gasName.indexOf("lng")!=-1){
+//							//获取最高单价
+//							String gasPrice = map.get("product_price").toString();
+//							priceList.add(new BigDecimal(gasPrice));
+//						}
+//					}
 					//重排获取最高价格
-					Collections.sort(priceList);
-					String gasPrice = priceList.get(priceList.size()-1).toString();
+//					Collections.sort(priceList);
+//					String gasPrice = priceList.get(priceList.size()-1).toString();
 					//通过价格获取气品名称及优惠规则
-					GsGasPrice ggp = gsGasPriceService.queryGsPrice(gastationId, gasPrice);
+//					GsGasPrice ggp = gsGasPriceService.queryGsPrice(gastationId, gasPrice);
 					Map<String, Object> reChargeMap = new HashMap<>();
-					String preferentialType = ggp.getPreferential_type();//折扣类型
+					Object preferentialType = gsGasPriceList.get(0).get("preferential_type");//折扣类型
+					String type;
 					String discountAmount = "0";
 					if(preferentialType!=null && !"".equals(preferentialType)){
-						discountAmount = ggp.getMinus_money()==null?ggp.getFixed_discount().toString():ggp.getMinus_money();
+						discountAmount = gsGasPriceList.get(0).get("minus_money")==null?gsGasPriceList.get(0).get("fixed_discount").toString():gsGasPriceList.get(0).get("minus_money").toString();
+						type = preferentialType.toString();
 					}else{
-						preferentialType="";
+						type="";
 					}
-					gasName = usysparamService.query("CARDTYPE",ggp.getGasName()).get(0).getMname();
+					gasName = usysparamService.query("CARDTYPE",gsGasPriceList.get(0).get("gas_name").toString()).get(0).getMname();
 					double cashBack = 0;
-					String priceUnit = usysparamService.query("GAS_UNIT", ggp.getUnit()).get(0).getMname();
+					String priceUnit = usysparamService.query("GAS_UNIT", gsGasPriceList.get(0).get("unit").toString()).get(0).getMname();
 					//加气总量
-					BigDecimal gasTotal = new BigDecimal(amount).divide(new BigDecimal(gasPrice),2, RoundingMode.HALF_UP) ;
+					BigDecimal gasTotal = new BigDecimal(amount).divide(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()),2, RoundingMode.HALF_UP) ;
 					//没有折扣信息
-					if(preferentialType==null){
+					if("".equals(type)){
 						//优惠总金额(消费总金额乘以折扣)
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
-						reChargeMap.put("remark", ggp.getRemark());
-						reChargeMap.put("gasPrice",gasPrice);
+						reChargeMap.put("remark", gsGasPriceList.get(0).get("remark"));
+						reChargeMap.put("gasPrice",gsGasPriceList.get(0).get("product_price"));
 						reChargeMap.put("priceUnit",priceUnit);
 						reChargeMap.put("discountAmount",discountAmount);
 						reChargeMap.put("gasTotal",gasTotal);
 						reChargeList.add(reChargeMap);
-					}else if(preferentialType.equals("1")){//固定折扣(整单折扣)
+					}else if(type.equals("1")){//固定折扣(整单折扣)
 						//优惠总金额(消费总金额乘以折扣)
 						cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
-						reChargeMap.put("remark", ggp.getRemark());
-						reChargeMap.put("gasPrice",gasPrice);
+						reChargeMap.put("remark", gsGasPriceList.get(0).get("remark"));
+						reChargeMap.put("gasPrice",gsGasPriceList.get(0).get("product_price"));
 						reChargeMap.put("priceUnit",priceUnit);
 						reChargeMap.put("discountAmount",discountAmount);
 						reChargeMap.put("gasTotal",gasTotal);
@@ -4629,8 +4632,8 @@ public class MobileController {
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
-						reChargeMap.put("remark", ggp.getRemark());
-						reChargeMap.put("gasPrice",gasPrice);
+						reChargeMap.put("remark", gsGasPriceList.get(0).get("remark"));
+						reChargeMap.put("gasPrice",gsGasPriceList.get(0).get("product_price"));
 						reChargeMap.put("priceUnit", priceUnit);
 						reChargeMap.put("discountAmount",discountAmount);
 						reChargeMap.put("gasTotal",gasTotal);
@@ -4885,10 +4888,12 @@ public class MobileController {
 			String amount = "amount";
 			String gastationId = "gastationId";
 			String payCode = "payCode";
-			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId,payCode);
+			String gasTotal = "gasTotal";
+			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId,payCode,gasTotal);
 			if(b){
 				payCode = mainObj.optString("payCode");
 				token = mainObj.optString("token");
+				gasTotal = mainObj.optString("gasTotal");
 				SysDriver driver = driverService.queryDriverByPK(token);
 				Gastation gas = gastationService.queryGastationByPK(gastationId);
 				String driverPayCode = driver.getPayCode();
@@ -4949,6 +4954,16 @@ public class MobileController {
 									uc.setIsuse("1");
 									int rs = couponService.updateUserCouponStatus(uc);
 								}
+								//添加OrderGoods信息
+								SysOrderGoods orderGoods = new SysOrderGoods ();
+								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());//ID
+								//原单价=应付金额/加气总量
+								BigDecimal price = new BigDecimal(payableAmount).divide(new BigDecimal(gasTotal),2, RoundingMode.HALF_UP);
+								orderGoods.setPrice(price);//原始单价
+								orderGoods.setNumber(Double.valueOf(gasTotal));
+								orderGoods.setOrderId(orderID);
+//								orderGoods.setPreferential_cash(preferential_cash);//优惠金额，优惠类型。商品类型
+								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
 								//余额消费短信通知
 								AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 								aliShortMessageBean.setSendNumber(driver.getMobilePhone());
