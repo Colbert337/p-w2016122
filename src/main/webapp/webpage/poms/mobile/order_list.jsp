@@ -220,7 +220,23 @@
 			</div>--%>
 			<div class="modal-body">
 				<label class="col-sm-11 control-label no-padding-right" id="title"></label>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">验证手机号：</label>
+					<div class="col-sm-8">
+						<input type="text" id="phone"  onkeyup="clearNoNum2(this)"   placeholder="请输入验证手机号"
+							class="form-control" maxlength="11" />
+						<button class="btn btn-primary btn-sm" onclick="subCheck()">获取验证码</button>
+					</div>
+				</div>
 				<br /> <br />
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">验证码：</label>
+					<div class="col-sm-8">
+						<input type="text" id="code"  onkeyup="clearNoNum2(this)"   placeholder="请输入验证码"
+							class="form-control" maxlength="6" />
+					</div>
+				</div>
+				<br /><br /><br /> 
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">请输入金额：</label>
 					<div class="col-sm-8">
@@ -246,6 +262,8 @@
 		</div>
 	</div>
 </div>
+
+ 
 
 
 <script>

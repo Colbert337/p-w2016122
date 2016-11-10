@@ -27,13 +27,13 @@ import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.model.SysRoadConditionStr;
 import com.sysongy.poms.mobile.service.SysRoadService;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
 
 import net.sf.json.JSONObject;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisSentinelPool;
 
 /**
  * @FileName: SysRoadController
@@ -52,6 +52,11 @@ public class SysRoadController extends BaseContoller {
 	@Autowired
 	SysRoadService sysRoadService;
 
+	@Autowired
+	private UsysparamService usysparamservice;
+	
+
+	
 	@Autowired
 	RedisClientInterface redisClientImpl;
 
@@ -192,7 +197,8 @@ public class SysRoadController extends BaseContoller {
 			road.setPublisherName(user.getUser().getUserName());
 			road.setConditionStatus("2");
 			road.setPublisherPhone(user.getUser().getMobilePhone());
-			int time = sumTime(road);
+			Usysparam param= usysparamservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType());
+			int time = sumTime(road,Integer.valueOf(param.getData()));
 			int a = sysRoadService.saveRoad(road);
 			bean.setRetCode(100);
 			bean.setRetMsg("保存成功");
@@ -232,29 +238,38 @@ public class SysRoadController extends BaseContoller {
 		}
 		return null;
 	}
-
-	public static int sumTime(SysRoadCondition road) {
+/**
+ * 考虑通用性，不修改原有算法，传入参数需要路况对象和失效时间
+ * @param road 路况对象
+ * @param m 失效时间(分钟)
+ * @return
+ */
+	public static int sumTime(SysRoadCondition road,Integer m) {
 		// TODO Auto-generated method stub
-		int h = 0;
-		switch (road.getConditionType()) {
-		case "01":
-			h = 1;
-			break;
-		case "02":
-			h = 2;
-			break;
-		case "05":
-			h = 4;
-			break;
-		default:
-			break;
+		
+		if (m==0||null==m) {
+			return -1;
 		}
+		
+//		switch (road.getConditionType()) {
+//		case "01":
+//			h = 1;
+//			break;
+//		case "02":
+//			h = 2;
+//			break;
+//		case "05":
+//			h = 4;
+//			break;
+//		default:
+//			break;
+//		}
 
-		if (h != 0) {
+		if (m != 0) {
 
 			long a = road.getStartTime().getTime() - new Date().getTime();
-			int time = h * 60 * 60 + (int) a / 1000;
-			road.setEndTime(new Date(new Date().getTime() + h * 60 * 60 * 1000 + a));
+			int time = m * 60 + (int) a / 1000;
+			road.setEndTime(new Date(new Date().getTime() + m* 60 * 1000 + a));
 			return time;
 		} else if (road.getEndTime() != null) {
 			long a = road.getAuditorTime().getTime() - road.getEndTime().getTime();
@@ -386,7 +401,9 @@ public class SysRoadController extends BaseContoller {
 			if ("2".equals(road.getConditionStatus())) {
 				// 放到redis
 				msg = "审核成功";
-				int time = sumTime(road);
+				
+				Usysparam param= usysparamservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType());
+				int time = sumTime(road,Integer.valueOf(param.getData()));
 				if (time == -1 || time > 0) {
 					road.setUsefulCount("0");
 					redisClientImpl.addToCache("Road" + road.getId(), road, time);
@@ -452,5 +469,16 @@ public class SysRoadController extends BaseContoller {
 		String ret = "redirect:/web/mobile/road/roadList?type=delete";
 		PageBean bean = new PageBean();
 		return ret;
+	}
+	@RequestMapping("/restoreRedis")	
+	@ResponseBody
+	public String restoreRedis( ModelMap map){
+		PageBean bean = new PageBean();
+		if (sysRoadService.restoreRedis(redisClientImpl)) {
+			bean.setRetMsg("恢复成功");
+		}else{
+			bean.setRetMsg("恢复失败");
+		}
+		return bean.getRetMsg();
 	}
 }
