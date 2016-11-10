@@ -4572,13 +4572,13 @@ public class MobileController {
 				List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
 				String gasName = null;
 				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
-					List<Integer> priceList = new ArrayList<Integer>();
+					List<BigDecimal> priceList = new ArrayList<BigDecimal>();
 					for (Map<String, Object> map : gsGasPriceList) {
 						gasName = usysparamService.query("CARDTYPE",map.get("gas_name").toString()).get(0).getMname();
-						if(gasName.indexOf("LNG")!=-1 && gasName.indexOf("lng")!=-1){
+						if(gasName.indexOf("LNG")!=-1 || gasName.indexOf("lng")!=-1){
 							//获取最高单价
 							String gasPrice = map.get("product_price").toString();
-							priceList.add(Integer.valueOf(gasPrice));
+							priceList.add(new BigDecimal(gasPrice));
 						}
 					}
 					//重排获取最高价格
