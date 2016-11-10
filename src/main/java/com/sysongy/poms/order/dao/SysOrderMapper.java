@@ -138,4 +138,6 @@ public interface SysOrderMapper {
 	Double backCash(String orderId);
 
 	int updateByBatchNo(SysOrder record);
+
+	List<SysOrder> queryForPageForBack2(SysOrder order);
 }

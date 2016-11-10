@@ -1243,6 +1243,15 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public PageInfo<SysOrder> queryOrderListForBack2(SysOrder order) {
+		PageHelper.startPage(order.getPageNum(), order.getPageSize(), order.getOrderby());
+		List<SysOrder> list = sysOrderMapper.queryForPageForBack2(order);
+		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
+		return pageInfo;
+	}
+
+	
+	@Override
 	public void saveOrder(SysOrder order) {
 		// TODO Auto-generated method stub
 		sysOrderMapper.insertSelective(order);

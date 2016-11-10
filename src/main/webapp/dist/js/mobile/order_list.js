@@ -229,7 +229,9 @@ function subCheck(tradeNo1,type1,cash1,orderId1,no,retype){
 	
 	
 }
-
+function showOrderForBack(number){
+	loadPage('#main', '../web/order/showOrderForBack?orderNumber='+number);
+}
 function subbreak() {
 	if ($('#phone').val()=="") {
 		 bootbox.alert("请先输入手机号码获取验证码！");
@@ -241,6 +243,10 @@ function subbreak() {
 	}
 	if ($('#money').val()=="") {
 		 bootbox.alert("退款金额不能为空");
+		 return;
+	}
+	if ($('#money').val()=="0"||$('#money').val()=="0.") {
+		 bootbox.alert("退款金额不能为0");
 		 return;
 	}
 	if($('#msgcontent').val()==""){
@@ -292,4 +298,6 @@ function subbreak() {
 	}
 	$('#div').showLoading();
 	$("#formRoad").ajaxSubmit(options);
+	
+	
 }

@@ -116,7 +116,7 @@ public class SysOrderController extends BaseContoller {
 	}
 
 	/**
-	 * 退款查询
+	 * 退款主查询
 	 * 
 	 * @param order
 	 * @param map
@@ -140,6 +140,55 @@ public class SysOrderController extends BaseContoller {
 
 			PageInfo<SysOrder> pageinfo = new PageInfo<SysOrder>();
 			pageinfo = service.queryOrderListForBack(order);
+			bean.setRetCode(100);
+
+			bean.setRetMsg("查询成功");
+
+			bean.setPageInfo(ret);
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("order", order);
+			// map.addAttribute("current_module",
+			// "/web/mobile/suggest/suggestList");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		} finally {
+			return ret;
+		}
+
+	}
+	
+	
+	/**
+	 * 退款子查询
+	 * 
+	 * @param order
+	 * @param map
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping("/showOrderForBack")
+	public String showOrderForBreak(SysOrder order, ModelMap map, String type) {
+		String ret = "webpage/poms/mobile/order_listForBack";
+
+		PageBean bean = new PageBean();
+		order.setPageSize(20);
+		try {
+			if (order.getPageNum() == null || "".equals(order.getPageNum())) {
+				order.setPageNum(GlobalConstant.PAGE_NUM);
+				order.setPageSize(20);
+			}
+			if (StringUtils.isEmpty(order.getOrderby())) {
+				order.setOrderby("order_date desc");
+			}
+
+			PageInfo<SysOrder> pageinfo = new PageInfo<SysOrder>();
+			pageinfo = service.queryOrderListForBack2(order);
 			bean.setRetCode(100);
 
 			bean.setRetMsg("查询成功");

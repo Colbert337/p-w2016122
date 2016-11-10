@@ -167,6 +167,12 @@
 												class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
 										</a>
 										</c:if>
+										<a class=""
+											href="javascript:void(0);"
+											onclick="showOrderForBack('${list.orderNumber}' );" title="查看退款记录"
+											data-rel="tooltip"> <i
+												class="ace-icon fa fa-search-plus bigger-130"></i>
+										</a>
 									</td>
 								</tr>
 							</c:forEach>
