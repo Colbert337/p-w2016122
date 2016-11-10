@@ -3040,6 +3040,7 @@ public class MobileController {
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
 				//更新最新余额到账户
+				//微信在线支付回调方法(充值回调)
 				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -5054,9 +5055,6 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
 								orderService.consumeByDriver(sysOrder);
-								SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(sysOrder.getCreditAccount());
-								//更新最新余额到账户
-								sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(amount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 								//系统关键日志记录
 				    			SysOperationLog sysOperationLog = new SysOperationLog();
 				    			sysOperationLog.setOperation_type("xf");
