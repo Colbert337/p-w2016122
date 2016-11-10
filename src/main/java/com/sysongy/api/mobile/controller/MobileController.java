@@ -2705,6 +2705,7 @@ public class MobileController {
 			String amount = "amount";
 			String feeCount = "feeCount";
 			String payType = "payType";
+			String gasTotal = "gasTotal";
 			//充值必填参数校验
 			if(orderType==null || "".equals(orderType)){
 				b= JsonTool.checkJson(mainObj, token, feeCount, payType);
@@ -2720,6 +2721,7 @@ public class MobileController {
 				payType = mainObj.optString("payType");
 				feeCount = mainObj.optString("feeCount");
 				String driverID = mainObj.optString("token");
+				gasTotal = mainObj.optString("gasTotal");
 				String orderID = UUIDGenerator.getUUID();
 				Map<String, Object> data = new HashedMap();
 				SysOrder sysOrder = null;
@@ -2783,6 +2785,29 @@ public class MobileController {
 								if (nCreateOrder < 1){
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 								}
+								//添加OrderGoods信息
+								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+								SysOrderGoods orderGoods = new SysOrderGoods ();
+								//ID
+								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
+								//orderID
+								orderGoods.setOrderId(orderID);
+								//原始单价
+								orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+								//加气总量
+								orderGoods.setNumber(Double.valueOf(gasTotal));
+								//商品总价
+								orderGoods.setSumPrice(new BigDecimal(payableAmount));
+								//商品类型
+								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+								//优惠类型。
+								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								//平台优惠金额
+								orderGoods.setDiscountSumPrice(preferential_cash);
+								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
+								if(rs < 1){
+									throw new Exception("orderGoods信息添加失败");
+								}
 							}
 							data.put("payReq", orderParam + "&" + sign);
 							data.put("orderId", orderID);
@@ -2827,6 +2852,29 @@ public class MobileController {
 								int nCreateOrder = orderService.insert(sysOrder, null);
 								if (nCreateOrder < 1){
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+								}
+								//添加OrderGoods信息
+								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+								SysOrderGoods orderGoods = new SysOrderGoods ();
+								//ID
+								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
+								//orderID
+								orderGoods.setOrderId(orderID);
+								//原始单价
+								orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+								//加气总量
+								orderGoods.setNumber(Double.valueOf(gasTotal));
+								//商品总价
+								orderGoods.setSumPrice(new BigDecimal(payableAmount));
+								//商品类型
+								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+								//优惠类型。
+								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								//平台优惠金额
+								orderGoods.setDiscountSumPrice(preferential_cash);
+								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
+								if(rs < 1){
+									throw new Exception("orderGoods信息添加失败");
 								}
 							}
 							JSONObject dataObj = JSONObject.fromObject(payReq);
@@ -4955,25 +5003,39 @@ public class MobileController {
 									int rs = couponService.updateUserCouponStatus(uc);
 								}
 								//添加OrderGoods信息
+								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
 								SysOrderGoods orderGoods = new SysOrderGoods ();
-								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());//ID
-								//原单价=应付金额/加气总量
-								BigDecimal price = new BigDecimal(payableAmount).divide(new BigDecimal(gasTotal),2, RoundingMode.HALF_UP);
-								orderGoods.setPrice(price);//原始单价
-								orderGoods.setNumber(Double.valueOf(gasTotal));
+								//ID
+								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
+								//orderID
 								orderGoods.setOrderId(orderID);
-//								orderGoods.setPreferential_cash(preferential_cash);//优惠金额，优惠类型。商品类型
+								//原始单价
+								orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+								//加气总量
+								orderGoods.setNumber(Double.valueOf(gasTotal));
+								//商品总价
+								orderGoods.setSumPrice(new BigDecimal(payableAmount));
+								//商品类型
+								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+								//优惠类型。
+								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								//平台优惠金额
+								orderGoods.setDiscountSumPrice(preferential_cash);
 								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
-								//余额消费短信通知
-								AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-								aliShortMessageBean.setSendNumber(driver.getMobilePhone());
-								aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
-								aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-								aliShortMessageBean.setSpentMoney(amount);
-								aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
-								AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
-								//APP提示
-								sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+								if(rs > 0 ){
+									//余额消费短信通知
+									AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+									aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+									aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
+									aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+									aliShortMessageBean.setSpentMoney(amount);
+									aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
+									AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+									//APP提示
+									sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+								}else{
+									throw new Exception("orderGoods信息添加失败");
+								}
 							}
 						}
 				}else{
