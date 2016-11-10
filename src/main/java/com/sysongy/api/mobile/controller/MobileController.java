@@ -3008,10 +3008,9 @@ public class MobileController {
 			// 查询订单内容
 			SysOrder order = orderService.selectByPrimaryKey(orderId);
 			if (order != null && order.getOrderStatus() == 0) {// 0 初始化 1 成功 2
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 				//判断是否是第一次充值
 				if(!orderService.exisit(order.getDebitAccount())){
-					
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
@@ -3040,7 +3039,8 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
           			//系统关键日志记录
@@ -3136,7 +3136,9 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -3218,9 +3220,9 @@ public class MobileController {
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 				//判断是否是第一次充值
 				if(!orderService.exisit(order.getDebitAccount())){
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
@@ -3243,8 +3245,8 @@ public class MobileController {
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
 				}
-			
-				
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);				
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -3320,6 +3322,9 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -5048,6 +5053,9 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
 								orderService.consumeByDriver(sysOrder);
+								SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(sysOrder.getDebitAccount());
+								//更新最新余额到账户
+								sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(amount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 								//系统关键日志记录
 				    			SysOperationLog sysOperationLog = new SysOperationLog();
 				    			sysOperationLog.setOperation_type("xf");
