@@ -111,9 +111,7 @@
 								 
 								<th onclick="orderBy(this,'trade_no');commitForm();"
 									id="trade_no_order">交易号</th>
-								<th>退款原因</th>
-								<th>退款批号</th>
-								<th>退款状态</th>
+								 
 								<th class="text-center td-w3">操作</th>
 							</tr>
 						</thead>
@@ -142,14 +140,7 @@
 									<td>${list.channel}</td>
 									<td><s:Code2Name mcode="${list.spend_type}" gcode="CHARGE_TYPE"></s:Code2Name></td>
 									<td>${list.trade_no}</td>
-									<td>${list.orderRemark}</td>
-									<td>${list.batch_no}</td>
-									<td><c:if test="${list.orderType eq '230'}">
-											<c:if test="${list.orderStatus==1}">成功</c:if>
-											<c:if test="${list.orderStatus==2}">失败</c:if>
-											<c:if test="${list.orderStatus==3}">待退款</c:if>
-										</c:if>
-									</td>
+									 
 									<td class="text-center">
 										<c:if test="${not empty list.trade_no }">
 										<a class=""

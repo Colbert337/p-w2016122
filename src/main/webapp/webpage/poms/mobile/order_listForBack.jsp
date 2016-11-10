@@ -10,7 +10,7 @@
 	String imagePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 %>
 
-<script src="<%=basePath%>/dist/js/mobile/order_list.js"></script>
+
 <link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
 <script src="<%=basePath%>/dist/js/message/show.js"></script>
 <div class="" id="div">
@@ -142,9 +142,7 @@
 				</div>
  
 				 
-				<button class="btn" 
-					onclick="loadPage('#main', '../web/order/list/page');">返回</button>
-			 
+			
 				<jsp:include page="/common/message.jsp"></jsp:include>
 
 			</div>
@@ -152,62 +150,11 @@
 		</div>
 		<!-- /.row -->
 	</form>
+		<div class="modal-footer">
+		<button class="btn" onclick="loadPage('#main', '../web/order/list/page');">返回</button>
+			 </div>
 </div>
-
-<div id="content" class="modal fade" role="dialog"
-	aria-labelledby="gridSystemModalLabel" data-backdrop="static"
-	tabindex="-1">
-	<div class="modal-dialog modal-lg" style='width: 552px;' role="document">
-		<div class="modal-content">
-			<%--<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
-			</div>--%>
-			<div class="modal-body">
-				<label class="col-sm-11 control-label no-padding-right" id="title"></label>
-				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">验证手机号：</label>
-					<div class="col-sm-8">
-						<input type="text" id="phone"  onkeyup="clearNoNum2(this)"   placeholder="请输入验证手机号"
-							class="form-control" maxlength="11" />
-						<button class="btn btn-primary btn-sm" onclick="subCheck()">获取验证码</button>
-					</div>
-				</div>
-				<br /> <br />
-				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">验证码：</label>
-					<div class="col-sm-8">
-						<input type="text" id="code"  onkeyup="clearNoNum2(this)"   placeholder="请输入验证码"
-							class="form-control" maxlength="6" />
-					</div>
-				</div>
-				<br /><br /><br /> 
-				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">请输入金额：</label>
-					<div class="col-sm-8">
-						<input type="text" id="money"  onkeyup="clearNoNum(this)"   placeholder="请输入退款金额"
-							class="form-control" maxlength="12" />
-						<input type='hidden' id="retype" />
-					</div>
-				</div>
-				<br /> <br />
-				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">请输入退款原因：</label>
-
-					<div class="col-sm-8">
-						<textarea class="form-control" id="msgcontent" placeholder="请输入退款原因" rows="3"></textarea>
-					</div>
-				</div>
-			</div>
-			<br /> <br /> <br />	
-			<div class="modal-footer" id="buttonList">
-				<button class="btn btn-primary btn-sm" onclick="subbreak()">确定</button>
-				<button class="btn btn-primary btn-sm" data-dismiss="modal">关闭</button>
-			</div>
-		</div>
-	</div>
-</div>
-
+ 
  
 
 
