@@ -3363,6 +3363,69 @@ public class MobileController {
 	}
 
 	/**
+	 * 退费并保存退费订单(支付宝退费回调)
+	 * @param detail_data
+	 * @return
+	 */
+	@RequestMapping("/breakReturn")
+	@ResponseBody
+	public String breakReturn(HttpServletRequest request, HttpServletResponse response,ModelMap map) {
+		String batch_no = "";
+		String result_details= "";
+		logger.debug("支付宝支付回调获取数据开始");
+		SysOrder order=null;
+		try {
+			batch_no = request.getParameter("batch_no");
+			result_details = request.getParameter("result_details");//支付宝返回结果集
+		if (StringUtils.isEmpty(result_details)&&StringUtils.isEmpty(batch_no)) {
+			logger.debug("支付宝回调返回结果为空");
+			throw new ServiceException("支付宝回调返回结果为空！");
+		}
+		order=orderService.queryByTrade(batch_no);
+		String[] dates=result_details.split("#");//第一单
+		String[] date=dates[0].split("\\|");//第一笔
+		String no=date[0].split("\\^")[0];
+		String money=date[0].split("\\^")[1];
+		String b=date[0].split("\\^")[2];
+			if (b.equalsIgnoreCase("SUCCESS")) {
+				MobileReturn result = new MobileReturn();
+				result.setStatus(MobileReturn.STATUS_SUCCESS);
+				result.setMsg("退款成功！");
+				JSONObject resutObj = new JSONObject();
+				String resultStr = "";
+				// 查询订单内容
+				if (order != null && order.getOrderStatus() == 3) {// 当订单状态是初始化时，做状态更新
+					// 修改订单状态
+					order.setOrderStatus(1);
+					order.setOrderRemark("退款成功！");
+					order.setOrderDate(new Date());
+					order.setBatch_no(batch_no);
+					orderService.updateByBatchNo(order);
+					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());//初始化钱袋
+					if (account==null) {
+						logger.error("支付宝返现失败：");
+					}
+					account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+					sysUserAccountService.updateAccount(account);
+				}
+			}else{
+				order.setOrderStatus(2);
+				order.setOrderRemark("退款失败！");
+				order.setOrderDate(new Date());
+				order.setBatch_no(batch_no);
+				orderService.updateByBatchNo(order);
+				logger.error("支付宝返现失败："+b);
+			}
+		} catch (Exception e) {
+			logger.error("支付宝返现失败："+e.getLocalizedMessage());
+			e.printStackTrace();
+		}finally {
+			return "";
+		}
+		
+	}
+	
+	/**
 	 * 修改账号手机号/密保手机
 	 */
 	@RequestMapping(value = "/user/updatePhone")
@@ -5776,6 +5839,8 @@ public class MobileController {
 		}
 	}
 
+	
+	
 	@RequestMapping(value = "/QR")
 	@ResponseBody
 	public void getQR() {
