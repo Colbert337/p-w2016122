@@ -222,6 +222,7 @@ public class GlobalConstant {
 		public static final String TRANSFER_DRIVER_TO_DRIVER ="320";
 		public static final String REGISTER_CASHBACK ="410";
 		public static final String INVITED_CASHBACK ="420";
+		public static final String CASHBACK="430";
 	}
 
 	/**
