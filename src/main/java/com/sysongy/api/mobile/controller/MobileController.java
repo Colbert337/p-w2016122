@@ -4873,7 +4873,9 @@ public class MobileController {
 			if(b){
 				payCode = mainObj.optString("payCode");
 				token = mainObj.optString("token");
-				String driverPayCode = driverService.queryDriverByPK(token).getPayCode();
+				SysDriver driver = driverService.queryDriverByPK(token);
+				Gastation gas = gastationService.queryGastationByPK(gastationId);
+				String driverPayCode = driver.getPayCode();
 				Map<String, Object> data = new HashedMap();
 				if(payCode.equals(driverPayCode)){
 					String couponId = mainObj.optString("couponId");
@@ -4900,7 +4902,7 @@ public class MobileController {
 						}
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
-						sysOrder.setChannel("APP-余额消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
+						sysOrder.setChannel("APP-余额消费-"+gas.getGas_station_name());
 						//设置实付金额
 						sysOrder.setCash(new BigDecimal(amount));
 						//设置应付金额
@@ -4924,7 +4926,7 @@ public class MobileController {
 				    			//操作日志
 				    			sysOperationLogService.saveOperationLog(sysOperationLog,token);
 								data.put("orderId", orderID);
-								data.put("orderNum", orderService.queryById(orderID).getOrderNumber());
+								data.put("orderNum", sysOrder.getOrderNumber());
 								//更新优惠券使用状态
 								if(couponId!=null && !couponId.equals("")){
 									UserCoupon uc = new UserCoupon();
@@ -4934,8 +4936,8 @@ public class MobileController {
 								}
 								//余额消费短信通知
 								AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-								aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(token).getMobilePhone());
-								aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(token).getMobilePhone());
+								aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+								aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
 								aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 								aliShortMessageBean.setSpentMoney(amount);
 								aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
