@@ -4590,16 +4590,17 @@ public class MobileController {
 					String preferentialType = ggp.getPreferential_type();//折扣类型
 					String discountAmount = ggp.getMinus_money()==null?ggp.getFixed_discount().toString():ggp.getMinus_money();
 					gasName = usysparamService.query("CARDTYPE",ggp.getGasName()).get(0).getMname();
-					String cashBack = "";
+					double cashBack = 0;
+					String priceUnit = usysparamService.query("GAS_UNIT", ggp.getUnit()).get(0).getMname();
 					//0立减金额
 					if(preferentialType.equals("0")){
-						cashBack = new BigDecimal(amount).subtract(new BigDecimal(discountAmount)).toString();
+						cashBack = new BigDecimal(amount).subtract(new BigDecimal(discountAmount)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();;
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
 						reChargeMap.put("remark", ggp.getRemark());
-						reChargeMap.put("gasPrice",ggp.getProductPriceInfo().getProductPrice());
-						reChargeMap.put("priceUnit", ggp.getProductPriceInfo().getProductUnit());
+						reChargeMap.put("gasPrice",gasPrice);
+						reChargeMap.put("priceUnit", priceUnit);
 						reChargeMap.put("discountAmount",discountAmount);
 						reChargeList.add(reChargeMap);
 					}else{//固定折扣
@@ -4610,13 +4611,13 @@ public class MobileController {
 						//优惠后花费
 						BigDecimal huafei = rs.multiply(gas);
 						//优惠总金额
-						cashBack = new BigDecimal(amount).subtract(huafei).toString();
+						cashBack = new BigDecimal(amount).subtract(huafei).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
 						reChargeMap.put("remark", ggp.getRemark());
-						reChargeMap.put("gasPrice",ggp.getProductPriceInfo().getProductPrice());
-						reChargeMap.put("priceUnit", ggp.getProductPriceInfo().getProductUnit());
+						reChargeMap.put("gasPrice",gasPrice);
+						reChargeMap.put("priceUnit",priceUnit);
 						reChargeMap.put("discountAmount",discountAmount);
 						reChargeList.add(reChargeMap);
 					}
@@ -4916,7 +4917,6 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
 								orderService.consumeByDriver(sysOrder);
-								//更新优惠券使用状态
 								//系统关键日志记录
 				    			SysOperationLog sysOperationLog = new SysOperationLog();
 				    			sysOperationLog.setOperation_type("xf");
