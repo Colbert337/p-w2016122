@@ -142,21 +142,24 @@
 									<td>${list.trade_no}</td>
 									 
 									<td class="text-center">
-										<c:if test="${not empty list.trade_no and list.cash!='0'}">
-										<a class=""
-											href="javascript:void(0);"
-											onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',1);" title="退款"
-											data-rel="tooltip"> <i
-												class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
-										</a>
-										</c:if>
-										<c:if test="${list.spend_type eq 'C01' }">
-										<a class=""
-											href="javascript:void(0);"
-											onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',2);" title="退款"
-											data-rel="tooltip"> <i
-												class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
-										</a>
+										<c:if test="${list.cash ne '0.00' }">
+											<c:if test="${not empty list.trade_no}">
+												<a class=""
+													href="javascript:void(0);"
+													onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',1);" title="退款"
+													data-rel="tooltip"> <i
+														class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
+												</a>
+											</c:if>
+										
+											<c:if test="${list.spend_type eq 'C01' }">
+												<a class=""
+													href="javascript:void(0);"
+													onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',2);" title="退款"
+													data-rel="tooltip"> <i
+														class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
+												</a>
+											</c:if>
 										</c:if>
 										<a class=""
 											href="javascript:void(0);"
