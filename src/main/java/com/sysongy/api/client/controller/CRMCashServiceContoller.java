@@ -920,6 +920,14 @@ public class CRMCashServiceContoller {
         return ajaxJson;
     }
 
+    /**
+     * 充值消费记录查询
+     * @param request
+     * @param response
+     * @param sysOrderDeal
+     * @return
+     * @throws Exception IsCharge 0 消费 1 充值
+     */
     @ResponseBody
     @RequestMapping("/web/queryOrderChangeDeal")
     public AjaxJson queryOrderChangeDeal(HttpServletRequest request, HttpServletResponse response,
@@ -1095,6 +1103,14 @@ public class CRMCashServiceContoller {
         return null;
     }
 
+    /**
+     * 消费明细查询
+     * @param request
+     * @param response
+     * @param sysOrderGoodsForCRMReport
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping("/web/queryGoodsOrderInfos")
     public AjaxJson queryGoodsOrderInfos(HttpServletRequest request, HttpServletResponse response,
