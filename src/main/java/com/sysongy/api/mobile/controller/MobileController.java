@@ -3918,7 +3918,8 @@ public class MobileController {
 						if (rs > 0) {
 							result.setStatus(MobileReturn.STATUS_SUCCESS);
 							result.setMsg("统计成功！");
-							int time = SysRoadController.sumTime(roadCondition);
+							Usysparam param= usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
+							int time = SysRoadController.sumTime(roadCondition,Integer.valueOf(param.getData()));
 							redisClientImpl.addToCache("Road" + roadCondition.getId(), roadCondition, time);
 							Map<String, Object> dataMap = new HashMap<>();
 							dataMap.put("count", roadCondition.getUsefulCount());
