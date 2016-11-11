@@ -3163,16 +3163,17 @@ public class MobileController {
 							uc.setIsuse("1");
 							int rs = couponService.updateUserCouponStatus(uc);
 						}
+						SysOrder sorder = orderService.queryById(orderId);
 						//微信消费短信通知
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
-						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
+						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(sorder.getCreditAccount()).getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(sorder.getCreditAccount()).getMobilePhone());
 						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 						aliShortMessageBean.setSpentMoney(feeCount);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 						//APP提示
-						sysMessageService.saveMessageTransaction("微信消费", sysOrder,"2");
+						sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
