@@ -415,7 +415,8 @@ public class SysOrderController extends BaseContoller {
 					}
 					account.setAccountBalance(
 							account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
-					accountService.updateAccount(account);
+//					accountService.updateAccount(account);
+					accountService.addCashToAccount(account.getSysUserAccountId(), (new BigDecimal(money)), "230");
 				
 					
 				}
@@ -536,7 +537,8 @@ public class SysOrderController extends BaseContoller {
 				}
 				account.setAccountBalance(
 						account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
-				accountService.updateAccount(account);
+				
+				accountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal("-"+money)), "230");
 			}
 			}
 		} catch (Exception e) {

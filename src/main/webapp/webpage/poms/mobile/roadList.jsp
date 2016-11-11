@@ -9,7 +9,30 @@
 			+ path;
 	String imagePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 %>
+<<style>
+<!--
 
+-->
+a:link {
+	color: #337ab7;
+     
+}
+
+a:visited {
+    color: #337ab7;
+    
+}
+    
+a:hover {
+    color: #337ab7;
+     
+    }
+    
+a:active {
+    color: #337ab7;
+     
+}
+</style>
 <script src="<%=basePath%>/dist/js/mobile/roadList.js"></script>
 <link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
 <script src="<%=basePath%>/dist/js/message/show.js"></script>

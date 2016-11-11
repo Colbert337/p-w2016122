@@ -3042,7 +3042,7 @@ public class MobileController {
 				orderService.updateByPrimaryKey(sysOrder);
 				//更新最新余额到账户
 				//微信在线支付回调方法(充值回调)
-				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
+				//sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
           			//系统关键日志记录
@@ -3415,7 +3415,7 @@ public class MobileController {
 						logger.error("支付宝返现失败：");
 					}
 					account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
-					sysUserAccountService.updateAccount(account);
+					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal("-"+money)), "230");
 				}
 			}else{
 				order.setOrderStatus(2);

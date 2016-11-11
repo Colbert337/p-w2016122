@@ -37,7 +37,8 @@ function showCheck(){
 
 
 function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
-	if (retype == 1) {
+	$('#titleNo').text("订单号："+no);
+	 
 		$('#div').showLoading();
 		$.ajax({
 			type : "post",
@@ -69,16 +70,17 @@ function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
 			}
 		});
 
-	}else{
+	 
+//		$("#title").text( );
 		type=type1;
 		cash=cash1;
 		tradeNo=tradeNo1;
 		orderId=orderId1;
-		 $("#content").modal('show');	 
+//		 $("#content").modal('show');	 
 		 $("#money").val("");
 		 $("#retype").val(retype);
 		 $("#msgcontent").val('');
-	}
+	 
 }
 
 jQuery(function($) {
