@@ -2500,12 +2500,9 @@ public class MobileController {
 						if(obj!=null && !"".equals(obj)){
 							cashAll = new BigDecimal(obj.toString());
 						}
-						if(coupon_cash!=null && !coupon_cash.equals("")){
-							cashAll = cashAll.add(new BigDecimal(coupon_cash.toString()));
-						}
 						reChargeMap.put("time", dateTime);
 						reChargeMap.put("shouldPayment",map.get("should_payment"));//应付金额
-						reChargeMap.put("preferentialCash",cashAll);//优惠金额
+						reChargeMap.put("preferentialCash",cashAll);//优惠金额(平台优惠金额不包括优惠券)
 						reChargeMap.put("couponTitle", map.get("couponTitle")==null?"":map.get("couponTitle"));//优惠券标题
 						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费
 						String chargeType = (String) map.get("spend_type");
