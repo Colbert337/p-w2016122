@@ -161,10 +161,9 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
     						sysMessageService.saveMessageTransaction("转出", order,"2");
         					//收款人短信提醒
         					AliShortMessageBean aliShortMessage = new AliShortMessageBean();
-        					aliShortMessage.setSendNumber(driverService.queryDriverByPK(toDriverId).getMobilePhone());
-        					aliShortMessage.setAccountNumber(driverService.queryDriverByPK(toDriverId).getMobilePhone());
-        					aliShortMessage.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        					aliShortMessage.setTotalPrice(amount);
+        					aliShortMessageBean.setMoney(amount);
+        					aliShortMessageBean.setMoney1(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(toDriverId).getSysDriverId()).getAccountBalance());
+        					aliShortMessageBean.setString("转出");
         					AliShortMessage.sendShortMessage(aliShortMessage, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
         					//APP提示
     						sysMessageService.saveMessageTransaction("收到转账", order,"1");

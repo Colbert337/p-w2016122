@@ -2769,9 +2769,9 @@ public class MobileController {
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
 							orderService.checkIfCanConsume(sysOrder);
 							String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
 							Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, amount, "司集云平台-会员消费",
@@ -2835,9 +2835,9 @@ public class MobileController {
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
 							orderService.checkIfCanConsume(sysOrder);
 							//消费金额，微信消费金额单位为分，不能有小数
 							Integer money = (int) (new Double(amount)*100);
@@ -3008,10 +3008,9 @@ public class MobileController {
 			// 查询订单内容
 			SysOrder order = orderService.selectByPrimaryKey(orderId);
 			if (order != null && order.getOrderStatus() == 0) {// 0 初始化 1 成功 2
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 				//判断是否是第一次充值
 				if(!orderService.exisit(order.getDebitAccount())){
-					
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
@@ -3029,6 +3028,7 @@ public class MobileController {
 						newOrder.setIs_discharge("0");
 						newOrder.setOperator(appOperatorId);
 						newOrder.setOperatorSourceId(appOperatorId);
+						newOrder.setOrderStatus(1);
 						orderService.saveOrder(newOrder);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
@@ -3040,7 +3040,9 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				
+				//更新最新余额到账户
+				//微信在线支付回调方法(充值回调)
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
           			//系统关键日志记录
@@ -3136,7 +3138,9 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -3218,9 +3222,9 @@ public class MobileController {
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 				//判断是否是第一次充值
 				if(!orderService.exisit(order.getDebitAccount())){
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
@@ -3238,13 +3242,14 @@ public class MobileController {
 						newOrder.setIs_discharge("0");
 						newOrder.setOperator(appOperatorId);
 						newOrder.setOperatorSourceId(appOperatorId);
+						newOrder.setOrderStatus(1);
 						orderService.saveOrder(newOrder);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
 				}
-			
-				
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);				
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -3320,6 +3325,9 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -5006,6 +5014,7 @@ public class MobileController {
 				payCode = mainObj.optString("payCode");
 				token = mainObj.optString("token");
 				gasTotal = mainObj.optString("gasTotal");
+				gastationId = mainObj.optString("gastationId");
 				SysDriver driver = driverService.queryDriverByPK(token);
 				Gastation gas = gastationService.queryGastationByPK(gastationId);
 				String driverPayCode = driver.getPayCode();

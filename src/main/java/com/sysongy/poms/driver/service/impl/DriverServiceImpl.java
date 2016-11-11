@@ -334,7 +334,21 @@ public class DriverServiceImpl implements DriverService {
 					throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
 				}
 			}
-			
+			cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
+		}
+		//转账
+		if(GlobalConstant.OrderType.TRANSFER_DRIVER_TO_DRIVER.equals(order.getChargeType())){
+			//给账户减去
+			String driver_account = driver.getSysUserAccountId();
+			cash = order.getCash();
+			//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是冲红扣除（个人消费的时候冲红），负负得正
+			BigDecimal addcash = cash.multiply(new BigDecimal(-1));
+			//如果是负值，但是is_discharge却不是冲红，则返回错误
+			if(cash.compareTo(new BigDecimal("0")) < 0 ){
+				if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
+					throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
+				}
+			}
 			cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
 		}
 		
