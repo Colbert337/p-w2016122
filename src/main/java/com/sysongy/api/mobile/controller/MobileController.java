@@ -2595,6 +2595,7 @@ public class MobileController {
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				order.setSysDriver(sysDriver);
 				order.setOrderDate(sft1.parse(mainObj.optString("time")));
+				//order.setOrderby(orderby);
 				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverTransferPage(order);
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
@@ -5163,20 +5164,30 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
-			String longitude = "longitude";
-			String latitude = "latitude";
 			String sortType = "sortType";
 			String infoType = "infoType";
 			String pageNum = "pageNum";
 			String pageSize = "pageSize";
-			boolean b = JsonTool.checkJson(mainObj,longitude,latitude,sortType,infoType,pageNum,pageSize);
+			boolean b = JsonTool.checkJson(mainObj,sortType,infoType,pageNum,pageSize);
 			if(b){
-				longitude = mainObj.getString("longitude");
-				latitude = mainObj.getString("latitude");
+				String longitude = null;
+				Double longIn = null;
+				if(mainObj.toString().indexOf("longitude")!=-1){
+					longitude = mainObj.getString("longitude");
+					longIn = new Double(longitude);
+				}else{
+					longIn = new Double(0);
+				}
+				String latitude = null;
+				Double langIn = null;
+				if(mainObj.toString().indexOf("latitude")!=-1){
+					latitude = mainObj.getString("latitude");
+					langIn = new Double(latitude);
+				}else{
+					langIn = new Double(0);
+				}
 				sortType =  mainObj.getString("sortType");//排序类型 1默认2 距离 3 价格(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
-				Double longIn = new Double(longitude);
-				Double langIn = new Double(latitude);
 				int pageNumIn = mainObj.optInt("pageNum");
 				int pageSizeIn = mainObj.optInt("pageSize");
 				Gastation gastation = new Gastation();
@@ -5255,12 +5266,16 @@ public class MobileController {
 					longDb = new Double(longStr);
 					langDb = new Double(langStr);
 				}
-				// 计算当前加注站离指定坐标距离
-				Double dist = DistCnvter.getDistance(longIn, langIn, longDb, langDb);
-				gastationAllList.get(i).setDistance(dist);
+				if(longIn!=null && 0.0!=longIn && langIn!=null && 0.0!=langIn){
+					// 计算当前加注站离指定坐标距离
+					Double dist = DistCnvter.getDistance(longIn, langIn, longDb, langDb);
+					gastationAllList.get(i).setDistance(dist);
+				}
 			}
 			//按距离重新排序gastationResultList
-			Collections.sort(gastationAllList);
+			if(longIn!=null && 0.0!=longIn && langIn!=null && 0.0!=langIn){
+				Collections.sort(gastationAllList);
+			}
 			//获取两个联盟站并置顶
 			int index = 0;
 			for(int i=0;i<gastationAllList.size();i++ ){
@@ -5357,12 +5372,16 @@ public class MobileController {
 					longDb = new Double(longStr);
 					langDb = new Double(langStr);
 				}
-				// 计算当前加注站离指定坐标距离
-				Double dist = DistCnvter.getDistance(longIn, langIn, longDb, langDb);
-				gastationAllList.get(i).setDistance(dist);
+				if(longIn!=null && 0.0!=longIn && langIn!=null && 0.0!=langIn){
+					// 计算当前加注站离指定坐标距离
+					Double dist = DistCnvter.getDistance(longIn, langIn, longDb, langDb);
+					gastationAllList.get(i).setDistance(dist);
+				}
 			}
 			//按距离重新排序gastationResultList
-			Collections.sort(gastationAllList);
+			if(longIn!=null && 0.0!=longIn && langIn!=null && 0.0!=langIn){
+				Collections.sort(gastationAllList);
+			}
 			//进行分页
 			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
 			if(allPage >= pageNumIn ){
