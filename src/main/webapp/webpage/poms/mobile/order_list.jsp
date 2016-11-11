@@ -144,7 +144,7 @@
 									<td class="text-center">
 										<c:if test="${list.cash ne '0.00' }">
 											<c:if test="${not empty list.trade_no}">
-												<a class=""
+												<a class=""  style="color:#337ab7" 
 													href="javascript:void(0);"
 													onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',1);" title="退款"
 													data-rel="tooltip"> <i
@@ -224,7 +224,7 @@
 				</div>
 				<br />  
 				<div class="form-group">
-					<label class="col-sm-11 control-label no-padding-left" id="title"></label>
+					 
 				</div>
 				<br />  
 				<div class="form-group">
