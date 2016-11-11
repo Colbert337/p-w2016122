@@ -3024,7 +3024,7 @@ public class MobileController {
 						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
 						newOrder.setDebitAccount(order.getDebitAccount());
 						newOrder.setChargeType("113");
-						newOrder.setChannel("充值返现");
+						newOrder.setChannel("首次充值返现-");
 						newOrder.setIs_discharge("0");
 						newOrder.setOperator(appOperatorId);
 						newOrder.setOperatorSourceId(appOperatorId);
@@ -3052,7 +3052,7 @@ public class MobileController {
             		sysOperationLog.setOrder_number(order.getOrderNumber());
             		sysOperationLog.setLog_content("app微信在线充值回调成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
         			//操作日志
-        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("订单充值错误：" + orderCharge);
 					} else {
@@ -3152,7 +3152,7 @@ public class MobileController {
 	        		sysOperationLog.setOrder_number(order.getOrderNumber());
 	        		sysOperationLog.setLog_content("司机个人通过微信充值成功！充值金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
 	    			//操作日志
-	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
@@ -3242,7 +3242,7 @@ public class MobileController {
 						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
 						newOrder.setDebitAccount(order.getDebitAccount());
 						newOrder.setChargeType("113");
-						newOrder.setChannel("充值返现");
+						newOrder.setChannel("首次充值返现-");
 						newOrder.setIs_discharge("0");
 						newOrder.setOperator(appOperatorId);
 						newOrder.setOperatorSourceId(appOperatorId);
@@ -3253,7 +3253,7 @@ public class MobileController {
 					}
 				}
 				//更新最新余额到账户
-				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);				
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -3264,7 +3264,7 @@ public class MobileController {
             		sysOperationLog.setOrder_number(order.getOrderNumber());
             		sysOperationLog.setLog_content("app支付宝在线充值回调成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
         			//操作日志
-        			sysOperationLogService.saveOperationLog(sysOperationLog,sysOrder.getOperator());
+        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("订单充值错误：" + orderCharge);
@@ -3343,7 +3343,7 @@ public class MobileController {
 	        		sysOperationLog.setOrder_number(order.getOrderNumber());
 	        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
 	    			//操作日志
-	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
+	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
@@ -3438,9 +3438,9 @@ public class MobileController {
 		}finally {
 			return "";
 		}
-		
+
 	}
-	
+
 	/**
 	 * 修改账号手机号/密保手机
 	 */
@@ -5207,7 +5207,7 @@ public class MobileController {
 						result.setMsg("暂无数据！");
 						result.setListMap(new ArrayList<Map<String, Object>>());
 					}
-				//按价格排序	
+				//按价格排序
 				}else if(sortType.equals("3")){
 					gastationArray = orderByPriceList(gastationAllList,pageNumIn,pageSizeIn);
 					if(gastationArray!=null && gastationArray.size() > 0 ){
@@ -5240,7 +5240,7 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-	
+
 	/**
 	 * 获取加注站信息列表(default)
 	 * @param resultunifiedorder
@@ -5461,7 +5461,7 @@ public class MobileController {
 					gastationAllList.remove(i);
 					i--;
 				}
-			}	
+			}
 			for (int i=0;i <gastationAllList.size();i++ ){
 				String price = gastationAllList.get(i).getLng_price();
 				List<Double> priceList = new ArrayList<Double>();
@@ -5480,21 +5480,21 @@ public class MobileController {
 						}
 					}else{
 						priceList.add(0.0);
-					} 
+					}
 				}else{
 					priceList.add(0.0);
-				} 
+				}
 				//获取最低价格,并赋值
 				Collections.sort(priceList);
 				gastationAllList.get(i).setMinPrice(priceList.get(0));
 			}
-	        Collections.sort(gastationAllList, new Comparator<Gastation>(){  
-	            public int compare(Gastation g1, Gastation g2) {  
+	        Collections.sort(gastationAllList, new Comparator<Gastation>(){
+	            public int compare(Gastation g1, Gastation g2) {
 	            	int i = 0;
 	        		i = g1.getMinPrice().compareTo(g2.getMinPrice());
 	        		return i;
-	            }  
-	        }); 
+	            }
+	        });
 	        gastationAllList.addAll(wrongList);
 	        //进行分页
 			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
@@ -5857,8 +5857,8 @@ public class MobileController {
 		}
 	}
 
-	
-	
+
+
 	@RequestMapping(value = "/QR")
 	@ResponseBody
 	public void getQR() {

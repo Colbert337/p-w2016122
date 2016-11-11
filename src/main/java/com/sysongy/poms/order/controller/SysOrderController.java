@@ -265,30 +265,163 @@ public class SysOrderController extends BaseContoller {
 	@RequestMapping("/saveBreak")
 	@ResponseBody
 	public String saveBreak(ModelMap map, String money, String msg, String tradeNo, String cash, String orderId,
-			String type,String phone ,String code) {
-		
-		
+			String type, String phone, String code) {
+
 		String http_poms_path = (String) prop.get("http_poms_path");
 		SysOrder order = null;
-		SysOrder newOrder=null;
+		SysOrder newOrder = null;
 		PageBean bean = new PageBean();
 		SysUserAccount account;
 		try {
-			if (code!=null) {
-				if (((String)redisClientImpl.getFromCache(phone)).equalsIgnoreCase(code)) {
+			if (code != null) {
+				if (((String) redisClientImpl.getFromCache(phone)).equalsIgnoreCase(code)) {
 					logger.debug("验证码正确");
 				}
-			}else{
+			} else {
 				throw new Exception("验证码不能为空");
 			}
 			order = service.queryById(orderId);
-			newOrder=service.queryById(orderId);
-			account = accountService.queryUserAccountByDriverId(order.getDebitAccount());
+			newOrder = service.queryById(orderId);
+			// 判断司机消费
+			if (order.getOrderType().equals("220")) {
+				account = accountService.queryUserAccountByDriverId(order.getCreditAccount());
+			} else {
+				// 个人充值
+				account = accountService.queryUserAccountByDriverId(order.getDebitAccount());
+			}
+
 			if (account == null) {
 				throw new Exception("查找司机失败,返现失败");
 			}
 			// 生成退款定单
 			String batch_no = new String(getBatchNo().getBytes("ISO-8859-1"), "UTF-8");
+			// 判断司机消费
+			if (order.getOrderType().equals("220")) {
+				if (order.getSpend_type().equalsIgnoreCase("C04")) {// 支付宝退费
+
+					AlipayConfig.key = GlobalConstant.ALIKEY;
+					AlipayConfig.log_path = (String) prop.get("log_path");
+					AlipayConfig.partner = GlobalConstant.PARTNER;
+					AlipayConfig.sign_type = GlobalConstant.SIGNTYPE;
+					AlipayConfig.input_charset = GlobalConstant.INPUTCHARSET;
+
+					// String notify_url = http_poms_path +
+					// "/refund_fastpay_by_platform_nopwd-JAVA-UTF-8/notify_url.jsp";
+
+					// 退款请求时间
+					String refund_date = new String(
+							new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()).getBytes("ISO-8859-1"),
+							"UTF-8");
+					// 必填，格式为：yyyy-MM-dd hh:mm:ss
+
+					// 退款总笔数
+					String batch_num = new String("1".getBytes("ISO-8859-1"), "UTF-8");
+					// 必填，即参数detail_data的值中，“#”字符出现的数量加1，最大支持1000笔（即“#”字符出现的最大数量999个）
+					if (msg.indexOf('^') > 0) {
+						throw new Exception("退款理由格式不正确，不可以包含“^”、“|”、“$”、“#”等特殊字符！");
+					}
+					if (msg.indexOf('|') > 0) {
+						throw new Exception("退款理由格式不正确，不可以包含“^”、“|”、“$”、“#”等特殊字符！");
+					}
+					if (msg.indexOf('$') > 0) {
+						throw new Exception("退款理由格式不正确，不可以包含“^”、“|”、“$”、“#”等特殊字符！");
+					}
+					if (msg.indexOf('#') > 0) {
+						throw new Exception("退款理由格式不正确，不可以包含“^”、“|”、“$”、“#”等特殊字符！");
+					}
+					// 单笔数据集
+					String detail_data = new String((tradeNo + "^" + money + "^" + msg).getBytes("ISO-8859-1"),
+							"UTF-8");
+
+					Map<String, String> sParaTemp = new HashMap<String, String>();
+					sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
+					sParaTemp.put("partner", AlipayConfig.partner);
+					sParaTemp.put("_input_charset", AlipayConfig.input_charset);
+					sParaTemp.put("notify_url", http_poms_path + "/api/v1/mobile/breakReturn");
+					sParaTemp.put("batch_no", batch_no);
+					// sParaTemp.put("", arg1);
+					sParaTemp.put("refund_date", refund_date);
+					sParaTemp.put("batch_num", batch_num);
+					sParaTemp.put("detail_data", detail_data);
+					String sHtmlText = AlipaySubmit.buildRequest("", "", sParaTemp);// 支付宝接口
+																					// 如果账户发生变化
+																					// 请到AlipayConfig配置
+					if (sHtmlText.toUpperCase().indexOf("<is_success>T</is_success>".toUpperCase()) > 0) {
+						bean.setRetMsg("退款申请成功，等待支付退款");
+						// order = service.queryById(orderId);
+						newOrder.setOrderRemark(msg);
+						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newOrder.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
+						newOrder.setIs_discharge("0");
+						newOrder.setOrderStatus(3);
+						newOrder.setOrderDate(new Date());
+						newOrder.setOrderType("230");
+						newOrder.setChargeType("110");
+						newOrder.setShould_payment(order.getCash());
+						newOrder.setBatch_no(batch_no);
+						newOrder.setOrderRemark(msg);
+						order.setCash(order.getCash().subtract(new BigDecimal(money)));
+						service.updateByPrimaryKey(order);
+						service.saveOrder(newOrder);
+					} else {
+						throw new Exception("退款失败,错误代码：" + sHtmlText);
+					}
+
+				}else
+				{
+					// 微信退款
+					Configure.setAppID(GlobalConstant.APPID);
+					Configure.setKey(GlobalConstant.WXKEY);
+					Configure.setMchID(GlobalConstant.MCHID);
+					Configure.setCertLocalPath((String) (prop.get("certLocalPath")));
+					Configure.setCertPassword(GlobalConstant.CERTPASSWORD);
+					RefundReqData rrd = new RefundReqData(tradeNo, "", null, batch_no,
+							Integer.valueOf((int) ((double) Double
+									.parseDouble(new BigDecimal(cash).multiply(new BigDecimal(100)).toString()))),
+							Integer.valueOf((int) ((double) Double
+									.parseDouble(new BigDecimal(money).multiply(new BigDecimal(100)).toString()))),
+							Configure.getMchid(), "CNY");
+					// RefundReqData rrd = new
+					// RefundReqData("4008642001201610126499353666", "", null,
+					// "00059", 1, 1, Configure.getMchid(),"CNY");
+					String xml = WXPay.requestRefundService(rrd);
+					if (xml.indexOf("<return_msg><![CDATA[OK]]></return_msg>") > 0) {
+						if (xml.indexOf("<err_code_des>") > 0) {
+							throw new Exception("退款失败,错误信息：" + xml.substring(
+									xml.indexOf("<err_code_des><![CDATA[") + "<err_code_des><![CDATA[".length(),
+									xml.indexOf("]]></err_code_des>")));
+						} else {
+							bean.setRetMsg("退款成功");
+							// order = service.queryById(orderId);
+							newOrder.setOrderRemark(msg);
+							newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+							newOrder.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
+							newOrder.setIs_discharge("0");
+							newOrder.setOrderStatus(1);
+							newOrder.setOrderDate(new Date());
+							newOrder.setOrderType("230");
+							newOrder.setChargeType("111");
+							newOrder.setOrderRemark(msg);
+							newOrder.setShould_payment(order.getCash());
+							newOrder.setBatch_no(batch_no);
+							order.setCash(order.getCash().subtract(new BigDecimal(money)));
+							service.updateByPrimaryKey(order);
+							service.saveOrder(newOrder);
+						}
+					} else {
+						throw new Exception("退款失败,错误信息："
+								+ xml.substring(xml.indexOf("<return_msg><![CDATA[") + "<return_msg><![CDATA[".length(),
+										xml.indexOf("]]></return_msg>")));
+					}
+					account.setAccountBalance(
+							account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+					accountService.updateAccount(account);
+				
+					
+				}
+			} else {
+				// 个人充值
+			
 			if (type.equals("104")) {// 支付宝退费
 
 				AlipayConfig.key = GlobalConstant.ALIKEY;
@@ -405,7 +538,7 @@ public class SysOrderController extends BaseContoller {
 						account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
 				accountService.updateAccount(account);
 			}
-
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			bean.setRetCode(5000);

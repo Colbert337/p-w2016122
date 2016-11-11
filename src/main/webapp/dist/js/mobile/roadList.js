@@ -219,6 +219,13 @@ function shixiao(id){
 }
 function updateRoad(type) {
 	var oldtype=$("#conditionStatus").val();
+	if(type==3){
+		if ( $('#contentmes').val()=="") {
+			bootbox.alert("原因不能为空");
+			return;
+		}
+		
+	}
 	$("#conditionStatus").val(type);
 	var options = {
 		url : '../web/mobile/road/updateRoad',

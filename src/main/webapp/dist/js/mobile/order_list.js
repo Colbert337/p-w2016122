@@ -55,13 +55,9 @@ function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
 				cash = cash1;
 				tradeNo = tradeNo1;
 				orderId = orderId1;
-				if (cash * 1 <= orderNumber) {
-					bootbox.alert("累计退款金额（" + orderNumber + "）大于交易金额(" + cash
-							+ "),不能继续退款");
-					return;
-				} else {
-					$("#content").modal('show');
-				}
+				 
+				$("#content").modal('show');
+				 
 
 				$("#money").val("");
 				$("#msgcontent").val('');

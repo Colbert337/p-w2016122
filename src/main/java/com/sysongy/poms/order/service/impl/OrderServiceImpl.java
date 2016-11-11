@@ -1287,9 +1287,10 @@ public class OrderServiceImpl implements OrderService {
 	public void saveBareakForRe(String msg, String money, String orderId)throws Exception {
 		// TODO Auto-generated method stub
 		SysOrder order = null; 
+		SysOrder newOrder=null;
 		SysUserAccount account;
-			order = this.queryById(orderId);
-			SysOrder newOrder=this.queryById(orderId);
+		order = this.queryById(orderId);
+			newOrder=this.queryById(orderId);
 			newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
 			newOrder.setOrderRemark(msg);
 			newOrder.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
@@ -1315,9 +1316,11 @@ public class OrderServiceImpl implements OrderService {
 			}
 			account.setAccountBalance(account.getAccountBalanceBigDecimal().add(new BigDecimal(money)).toString());
 			accountService.updateAccount(account);
+			this.saveOrder(newOrder);
+			order = this.queryById(orderId);
 			order.setCash(order.getCash().subtract(new BigDecimal(money)));
 			this.updateByPrimaryKey(order);
-			this.saveOrder(newOrder);
+			
 	
 			// TODO Auto-generated catch block
 		//	e.printStackTrace();
