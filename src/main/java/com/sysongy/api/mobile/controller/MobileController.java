@@ -3037,9 +3037,7 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				//更新最新余额到账户
 				//微信在线支付回调方法(充值回调)
-				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
           			//系统关键日志记录
