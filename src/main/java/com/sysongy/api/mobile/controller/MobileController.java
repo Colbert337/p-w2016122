@@ -2799,7 +2799,9 @@ public class MobileController {
 								//商品类型
 								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
 								//优惠类型。
-								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								if(gsGasPriceList.get(0).get("preferential_type")!=null){
+									orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								}
 								//平台优惠金额
 								orderGoods.setDiscountSumPrice(preferential_cash);
 								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
@@ -2867,7 +2869,9 @@ public class MobileController {
 								//商品类型
 								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
 								//优惠类型。
-								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								if(gsGasPriceList.get(0).get("preferential_type")!=null){
+									orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								}
 								//平台优惠金额
 								orderGoods.setDiscountSumPrice(preferential_cash);
 								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
@@ -5095,7 +5099,9 @@ public class MobileController {
 								//商品类型
 								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
 								//优惠类型。
-								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								if(gsGasPriceList.get(0).get("preferential_type")!=null){
+									orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								}
 								//平台优惠金额
 								orderGoods.setDiscountSumPrice(preferential_cash);
 								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
