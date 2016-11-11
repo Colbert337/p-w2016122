@@ -108,6 +108,8 @@
 		<result column="order_date" property="order_date" jdbcType="TIMESTAMP" />
 		<result column="is_discharge" property="is_discharge" jdbcType="VARCHAR" />
 		<result column="cash" property="cash" jdbcType="DECIMAL" />
+		<result column="should_payment" property="should_payment" jdbcType="DECIMAL" />
+		<result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
 		<result column="cash_back" property="cash_back" jdbcType="DECIMAL" />
 		<result column="credit_account" property="creditAccount"
 			jdbcType="VARCHAR" />
@@ -872,8 +874,8 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	<select id="queryGastationConsumeReport" resultMap="HenryResultMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		SELECT
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sod.deal_type,so.credit_account,so.channel,so.channel_number,sd.user_name,su.user_name
-		operator
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,sod.deal_type,so.credit_account,so.channel,so.channel_number,sd.user_name,su.user_name
+		operator,sod.remark
 		FROM sys_order so
 		INNER JOIN sys_order_deal sod ON so.order_id = sod.order_id
 		LEFT JOIN sys_driver sd ON sd.sys_driver_id = so.credit_account
@@ -958,7 +960,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	<select id="queryRechargeReport" resultMap="HenryResultMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		select
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
 		from sys_order so
 		inner join sys_order_deal sod on so.order_id = sod.order_id
 		left join tc_vehicle tv on so.consume_card=tv.card_no
@@ -991,7 +993,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	<select id="queryRechargeDriverReport" resultMap="HenryResultMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		select
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name
 		operator, sd.mobile_phone
 		from sys_order so
 		inner join sys_order_deal sod on so.order_id = sod.order_id
@@ -1064,7 +1066,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	<select id="queryRechargeDriverReportTotal" resultMap="HenryTotalMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		select sum(cash) total from (select
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name
 		operator, sd.mobile_phone
 		from sys_order so
 		inner join sys_order_deal sod on so.order_id = sod.order_id
@@ -1103,7 +1105,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	<select id="queryRechargeReportTotal" resultMap="HenryTotalMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		select sum(cash) total from (select
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
 		from sys_order so
 		inner join sys_order_deal sod on so.order_id = sod.order_id
 		left join tc_vehicle tv on so.consume_card=tv.card_no

@@ -455,7 +455,7 @@ public class DriverController extends BaseContoller{
 				sysOrder.setPageSize(10);
 			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
-				//transportion.setOrderby("created_time desc");
+				sysOrder.setOrderby("order_date desc");
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeDriverReport(sysOrder);
@@ -558,7 +558,7 @@ public class DriverController extends BaseContoller{
 
 			String[][] content = new String[cells+1][9];//[行数][列数]
 			//第一列
-			content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","会员账号","电话号码","加注站编号","加注站名称","关联运输公司","备注","操作人"};
+			content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","实收金额","订单金额","支付方式","会员账号","电话号码","加注站编号","加注站名称","关联运输公司","备注","操作人"};
 
 			int i = 1;
 			if(list != null && list.size() > 0){
@@ -569,7 +569,9 @@ public class DriverController extends BaseContoller{
 					String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
 					String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
 					String is_discharge = tmpMap.get("is_discharge")==null?"":"0".equals(tmpMap.get("is_discharge").toString())?"消费":"冲红";
-					String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+					String cash = tmpMap.get("cash")==null?"0.0":tmpMap.get("cash").toString();
+					String should_payment = tmpMap.get("should_payment") == null?"0.0":tmpMap.get("should_payment").toString();
+            		String spend_type = tmpMap.get("spend_type") == null?"":tmpMap.get("spend_type").toString();
 					String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
 					String mobile_phone = tmpMap.get("mobile_phone")==null?"":tmpMap.get("mobile_phone").toString();
 					String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
@@ -592,9 +594,33 @@ public class DriverController extends BaseContoller{
 							order_type = "";
 							break;
 					}
+					
+					if(!StringUtils.isEmpty(spend_type)){
+                    	switch (tmpMap.get("spend_type").toString()) {
+    					case "C01":{
+    						spend_type = "卡余额消费";
+    						break;
+    					}
+    					case "C02":{
+    						spend_type = "POS消费";
+    						break;
+    					}
+    					case "C03":{
+    						spend_type = "微信消费";
+    						break;
+    					}
+    					case "C04":{
+    						spend_type = "支付宝消费";
+    						break;
+    					}
+    					default:
+    						spend_type = "";
+    						break;
+    					}
+                    }
 
 
-					content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,user_name,mobile_phone,channel_number,channel,transportion_name,remark,operator};
+					content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,should_payment,spend_type,user_name,mobile_phone,channel_number,channel,transportion_name,remark,operator};
 					i++;
 				}
 			}

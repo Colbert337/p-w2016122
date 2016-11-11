@@ -97,7 +97,7 @@
 									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">运输公司编号</th>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="debit_account_order">个人账号</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">实收金额</th>
 									<th onclick="orderBy(this,'cash_back');commitForm();" id="cash_back_order">返现金额</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 								</tr>

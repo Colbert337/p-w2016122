@@ -102,7 +102,9 @@
 									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">实收金额</th>
+									<th onclick="orderBy(this,'should_payment');commitForm();" id="should_payment_order">订单金额</th>
+									<th onclick="orderBy(this,'spend_type');commitForm();" id="spend_type_order">支付方式</th>
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">运输公司编号</th>
 									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 									<th onclick="orderBy(this,'channel');commitForm();" id="channel_order">加注站名称</th>
@@ -133,6 +135,8 @@
 										<c:if test="${list.is_discharge == 1}">冲红</c:if>
 									</td>
 									<td>${list.cash}</td>
+									<td>${list.should_payment}</td>
+									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
 									<td>${list.creditAccount}</td>
 									<td>${list.transportion_name}</td>
 									<td>${list.channel}</td>
