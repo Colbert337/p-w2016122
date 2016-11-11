@@ -127,12 +127,12 @@
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr class="logic-card-tbody-tr">
-									<%--<td class="center">
+									<td class="center"  style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.card_no}"/> 
 											<span class="lbl"></span>
 										</label>
-									</td>--%>
+									</td>
 
 									<td>${list.card_no}</td>
 								 	<td><s:Code2Name mcode="${list.card_type}" gcode="CARDTYPE"></s:Code2Name> </td> 

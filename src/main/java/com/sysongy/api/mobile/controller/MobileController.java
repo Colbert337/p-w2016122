@@ -88,6 +88,8 @@ import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
@@ -188,7 +190,8 @@ public class MobileController {
     CouponGroupService couponGroupService;
 	@Autowired
 	SysOperationLogService sysOperationLogService;
-
+	@Autowired
+	OrderDealService orderDealService;
 	/**
 	 * 用户登录
 	 * 
@@ -3018,20 +3021,17 @@ public class MobileController {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 						//添加首次充值订单
-						SysOrder newOrder=new SysOrder();
-						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
-						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
-						newOrder.setOrderDate(new Date());
-						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
-						newOrder.setDebitAccount(order.getDebitAccount());
-						newOrder.setChargeType("113");
-						newOrder.setChannel("首次充值返现-");
-						newOrder.setIs_discharge("0");
-						newOrder.setOperator(appOperatorId);
-						newOrder.setOperatorSourceId(appOperatorId);
-						newOrder.setOrderStatus(1);
-						orderService.saveOrder(newOrder);
+						SysOrderDeal newDeal=new SysOrderDeal();
+//						orderDealService
+						newDeal.setOrderId(orderId);
+						newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+						newDeal.setDealDate(new Date());
+						newDeal.setDealType("202");
+						newDeal.setCashBack(new BigDecimal(back.getCash_per()));
+						newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
+						newDeal.setRemark("");
+						orderDealService.insert(newDeal);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3043,6 +3043,7 @@ public class MobileController {
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
 				//微信在线支付回调方法(充值回调)
+				//sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
           			//系统关键日志记录
@@ -3234,20 +3235,17 @@ public class MobileController {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 						//添加首次充值订单
-						SysOrder newOrder=new SysOrder();
-						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
-						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
-						newOrder.setOrderDate(new Date());
-						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
-						newOrder.setDebitAccount(order.getDebitAccount());
-						newOrder.setChargeType("113");
-						newOrder.setChannel("首次充值返现-");
-						newOrder.setIs_discharge("0");
-						newOrder.setOperator(appOperatorId);
-						newOrder.setOperatorSourceId(appOperatorId);
-						newOrder.setOrderStatus(1);
-						orderService.saveOrder(newOrder);
+						SysOrderDeal newDeal=new SysOrderDeal();
+//						orderDealService
+						newDeal.setOrderId(orderId);
+						newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+						newDeal.setDealDate(new Date());
+						newDeal.setDealType("202");
+						newDeal.setCashBack(new BigDecimal(back.getCash_per()));
+						newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
+						newDeal.setRemark("");
+						orderDealService.insert(newDeal);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3422,7 +3420,7 @@ public class MobileController {
 						logger.error("支付宝返现失败：");
 					}
 					account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
-					sysUserAccountService.updateAccount(account);
+					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal("-"+money)), "230");
 				}
 			}else{
 				order.setOrderStatus(2);

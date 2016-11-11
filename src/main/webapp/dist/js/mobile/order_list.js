@@ -36,49 +36,24 @@ function showCheck(){
 }
 
 
-function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
-	if (retype == 1) {
-		$('#div').showLoading();
-		$.ajax({
-			type : "post",
-			url : "../web/order/BreakMoney",
-			data : {
-				orderNumber : no
-			},
-			dataType : "json",
-			success : function(data) {
-				$("#title").text("本订单累计退款金额为：" + data + "元");
-				orderNumber = data * 1;
-				$('#div').hideLoading();
-				closeDialog('content');
-				type = type1;
-				cash = cash1;
-				tradeNo = tradeNo1;
-				orderId = orderId1;
-				 
-				$("#content").modal('show');
-				 
+function showBreak(tradeNo1, type1, cash1, orderId1, no, retype) {
+	$('#titleNo').text("订单号：" + no);
 
-				$("#money").val("");
-				$("#msgcontent").val('');
+	
+	$('#div').hideLoading();
+	closeDialog('content');
+	type = type1;
+	cash = cash1;
+	tradeNo = tradeNo1;
+	orderId = orderId1;
+	$("#content").modal('show');
+	// $("#title").text( );
+	 
+	// $("#content").modal('show');
+	$("#money").val("");
+	$("#retype").val(retype);
+	$("#msgcontent").val('');
 
-			},
-			error : function() {
-				$('#div').hideLoading();
-				bootbox.alert("查询退款金额失败");
-			}
-		});
-
-	}else{
-		type=type1;
-		cash=cash1;
-		tradeNo=tradeNo1;
-		orderId=orderId1;
-		 $("#content").modal('show');	 
-		 $("#money").val("");
-		 $("#retype").val(retype);
-		 $("#msgcontent").val('');
-	}
 }
 
 jQuery(function($) {
