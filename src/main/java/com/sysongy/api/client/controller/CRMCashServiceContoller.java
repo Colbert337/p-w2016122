@@ -1,6 +1,7 @@
 package com.sysongy.api.client.controller;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -181,20 +182,19 @@ public class CRMCashServiceContoller {
 				if (listBack!=null && listBack.size() > 0) {
 					SysCashBack back= listBack.get(0);//获取返现规则
 					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-					//添加首次充值订单
-					SysOrder newOrder=new SysOrder();
-					newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-					newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
-					newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
-					newOrder.setOrderDate(new Date());
-					newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
-					newOrder.setDebitAccount(record.getDebitAccount());
-					newOrder.setChargeType("113");
-					newOrder.setChannel("首次充值返现-");
-					newOrder.setIs_discharge("0");
-					newOrder.setOperator(GlobalConstant.OrderOperatorSourceType.GASTATION);
-					newOrder.setOperatorSourceId(GlobalConstant.OrderOperatorSourceType.GASTATION);
-					orderService.saveOrder(newOrder);
+					//添加首次充值订单-xyq
+					SysOrderDeal newDeal=new SysOrderDeal();
+//					orderDealService
+					newDeal.setOrderId(record.getOrderId());
+					newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
+					newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+					newDeal.setDealDate(new Date());
+					newDeal.setDealType(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);
+					newDeal.setCashBack(new BigDecimal(back.getCash_per()));
+					newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
+					newDeal.setRemark("");
+					orderDealService.insert(newDeal);
+//					orderService.saveOrder(newOrder);
 
 				}else{
 					logger.info("找不到匹配的返现规则，返现失败");
@@ -1220,4 +1220,19 @@ public class CRMCashServiceContoller {
         return payAmount;
     }
 
+    //CRM POS消费时添加短信提醒
+    private void sendMessage(SysOrder recordNew, String mobilePhone){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(mobilePhone);
+        if(recordNew.getOrderDate() != null){
+            String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
+                    DateTimeHelper.FMT_yyyyMMddHHmmss);
+            aliShortMessageBean.setTime(curStrDate);
+        }
+        aliShortMessageBean.setString("消费");
+        aliShortMessageBean.setMoney(recordNew.getCash().toString());
+        aliShortMessageBean.setMoney1(recordNew.getSysDriver().getAccount().getAccountBalance());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+    }
 }

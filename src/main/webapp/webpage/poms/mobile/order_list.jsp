@@ -31,7 +31,7 @@
 					<div class="item">
 						<label>充值类型</label> <select name="chargeType" id="type"
 							value="${order.chargeType}">
-							<s:option flag="true" gcode="CHARGE_TYPE" form="road"
+							<s:option flag="true" gcode="CHARGE_TYPE_SEL" form="road"
 								field="conditionType" />
 						</select>
 					</div> 
@@ -39,7 +39,7 @@
 						<div class="item">
 						<label>消费类型</label> <select name="spend_type" id="type"
 							value="${order.spend_type}">
-							<s:option flag="true" gcode="SPEND_TYPE" form="road"
+							<s:option flag="true" gcode="SPEND_TYPE_SEL" form="road"
 								field="conditionType" />
 						</select>
 					</div> 
@@ -144,16 +144,16 @@
 									<td class="text-center">
 										<c:if test="${list.cash ne '0.00' }">
 											<c:if test="${not empty list.trade_no}">
-												<a class=""
+												<a class=""  style="color:#337ab7" 
 													href="javascript:void(0);"
 													onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',1);" title="退款"
 													data-rel="tooltip"> <i
 														class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
 												</a>
 											</c:if>
-										
+										 
 											<c:if test="${list.spend_type eq 'C01' }">
-												<a class=""
+												<a class="option-btn-m"  style="color:#337ab7" 
 													href="javascript:void(0);"
 													onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',2);" title="退款"
 													data-rel="tooltip"> <i
@@ -161,7 +161,7 @@
 												</a>
 											</c:if>
 										</c:if>
-										<a class=""
+										<a class="option-btn-m" style="color:#337ab7" 
 											href="javascript:void(0);"
 											onclick="showOrderForBack('${list.orderNumber}' );" title="查看退款记录"
 											data-rel="tooltip"> <i
@@ -219,7 +219,14 @@
 				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
 			</div>--%>
 			<div class="modal-body">
-				<label class="col-sm-11 control-label no-padding-right" id="title"></label>
+				<div class="form-group">
+					<label class="col-sm-11 control-label no-padding-right" id="titleNo"></label>
+				</div>
+				<br />  
+				<div class="form-group">
+					 
+				</div>
+				<br />  
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">验证手机号：</label>
 					<div class="col-sm-8">
@@ -236,7 +243,7 @@
 							class="form-control" maxlength="6" />
 					</div>
 				</div>
-				<br /><br /><br /> 
+				<br /><br /> 
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">请输入金额：</label>
 					<div class="col-sm-8">

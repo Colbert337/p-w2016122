@@ -88,6 +88,8 @@ import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
@@ -188,7 +190,8 @@ public class MobileController {
     CouponGroupService couponGroupService;
 	@Autowired
 	SysOperationLogService sysOperationLogService;
-
+	@Autowired
+	OrderDealService orderDealService;
 	/**
 	 * 用户登录
 	 * 
@@ -2765,6 +2768,7 @@ public class MobileController {
 							sysOrder.setPreferential_cash(preferential_cash);
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
+							sysOrder.setDebitAccount(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 							//设置应付金额
 							sysOrder.setShould_payment(new BigDecimal(payableAmount));
@@ -2833,6 +2837,7 @@ public class MobileController {
 							sysOrder.setPreferential_cash(preferential_cash);
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
+							sysOrder.setDebitAccount(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 							//设置应付金额
 							sysOrder.setShould_payment(new BigDecimal(payableAmount));
@@ -3018,20 +3023,17 @@ public class MobileController {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 						//添加首次充值订单
-						SysOrder newOrder=new SysOrder();
-						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
-						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
-						newOrder.setOrderDate(new Date());
-						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
-						newOrder.setDebitAccount(order.getDebitAccount());
-						newOrder.setChargeType("113");
-						newOrder.setChannel("首次充值返现-");
-						newOrder.setIs_discharge("0");
-						newOrder.setOperator(appOperatorId);
-						newOrder.setOperatorSourceId(appOperatorId);
-						newOrder.setOrderStatus(1);
-						orderService.saveOrder(newOrder);
+						SysOrderDeal newDeal=new SysOrderDeal();
+//						orderDealService
+						newDeal.setOrderId(orderId);
+						newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+						newDeal.setDealDate(new Date());
+						newDeal.setDealType("202");
+						newDeal.setCashBack(new BigDecimal(back.getCash_per()));
+						newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
+						newDeal.setRemark("");
+						orderDealService.insert(newDeal);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3043,6 +3045,7 @@ public class MobileController {
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
 				//微信在线支付回调方法(充值回调)
+				//sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
           			//系统关键日志记录
@@ -3140,9 +3143,6 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
-				//更新最新余额到账户
-				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -3151,6 +3151,7 @@ public class MobileController {
 	    			sysOperationLog.setLog_platform("2");
 	        		sysOperationLog.setOrder_number(order.getOrderNumber());
 	        		sysOperationLog.setLog_content("司机个人通过微信充值成功！充值金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
+	        		SysOrder sorder = orderService.queryById(orderId);
 	    			//操作日志
 	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -3165,16 +3166,17 @@ public class MobileController {
 							uc.setIsuse("1");
 							int rs = couponService.updateUserCouponStatus(uc);
 						}
-						SysOrder sorder = orderService.queryById(orderId);
-						SysDriver driver = driverService.queryDriverByPK(sorder.getCreditAccount());
 						//微信消费短信通知
+						SysDriver driver = driverService.queryDriverByPK(sorder.getCreditAccount());
+						String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 						aliShortMessageBean.setSendNumber(driver.getMobilePhone());
 						aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
-						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-						aliShortMessageBean.setSpentMoney(feeCount);
-						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
-						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+						aliShortMessageBean.setName(gasName);
+						aliShortMessageBean.setString("微信");
+						aliShortMessageBean.setMoney(feeCount);
+						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
 						//APP提示
 						sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
 					}
@@ -3234,20 +3236,17 @@ public class MobileController {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 						//添加首次充值订单
-						SysOrder newOrder=new SysOrder();
-						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
-						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
-						newOrder.setOrderDate(new Date());
-						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
-						newOrder.setDebitAccount(order.getDebitAccount());
-						newOrder.setChargeType("113");
-						newOrder.setChannel("首次充值返现-");
-						newOrder.setIs_discharge("0");
-						newOrder.setOperator(appOperatorId);
-						newOrder.setOperatorSourceId(appOperatorId);
-						newOrder.setOrderStatus(1);
-						orderService.saveOrder(newOrder);
+						SysOrderDeal newDeal=new SysOrderDeal();
+//						orderDealService
+						newDeal.setOrderId(orderId);
+						newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+						newDeal.setDealDate(new Date());
+						newDeal.setDealType("202");
+						newDeal.setCashBack(new BigDecimal(back.getCash_per()));
+						newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
+						newDeal.setRemark("");
+						orderDealService.insert(newDeal);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3331,9 +3330,6 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
-				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
-				//更新最新余额到账户
-				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -3357,17 +3353,19 @@ public class MobileController {
 							int rs = couponService.updateUserCouponStatus(uc);
 						}
 						//支付宝充值短信通知
-						SysOrder sOrder = orderService.queryById(orderId);
-						SysDriver driver = driverService.queryDriverByPK(sOrder.getCreditAccount());
+						SysOrder sorder = orderService.queryById(orderId);
+						SysDriver driver = driverService.queryDriverByPK(sorder.getCreditAccount());
+						String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 						aliShortMessageBean.setSendNumber(driver.getMobilePhone());
 						aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
-						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-						aliShortMessageBean.setSpentMoney(feeCount);
-						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
-						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+						aliShortMessageBean.setName(gasName);
+						aliShortMessageBean.setString("支付宝");
+						aliShortMessageBean.setMoney(feeCount);
+						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
 						//APP提示
-						sysMessageService.saveMessageTransaction("支付宝消费", sOrder,"2");
+						sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3422,7 +3420,7 @@ public class MobileController {
 						logger.error("支付宝返现失败：");
 					}
 					account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
-					sysUserAccountService.updateAccount(account);
+					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal("-"+money)), "230");
 				}
 			}else{
 				order.setOrderStatus(2);
@@ -5052,6 +5050,7 @@ public class MobileController {
 						}
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
+						sysOrder.setDebitAccount(gastationId);
 						sysOrder.setChannel("APP-余额消费-"+gas.getGas_station_name());
 						//设置实付金额
 						sysOrder.setCash(new BigDecimal(amount));
@@ -5108,14 +5107,19 @@ public class MobileController {
 								if(rs > 0 ){
 									//余额消费短信通知
 									AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-									aliShortMessageBean.setSendNumber(driver.getMobilePhone());
-									aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
-									aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-									aliShortMessageBean.setSpentMoney(amount);
-									aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
-									AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+									SysOrder sorder = orderService.queryById(orderID);
+									SysDriver sdriver = driverService.queryDriverByPK(sorder.getCreditAccount());
+									String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
+									aliShortMessageBean.setSendNumber(sdriver.getMobilePhone());
+									aliShortMessageBean.setAccountNumber(sdriver.getMobilePhone());
+									aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+									aliShortMessageBean.setName(gasName);
+									aliShortMessageBean.setString("支付宝");
+									aliShortMessageBean.setMoney(amount);
+									AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
 									//APP提示
 									sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+									
 								}else{
 									throw new Exception("orderGoods信息添加失败");
 								}

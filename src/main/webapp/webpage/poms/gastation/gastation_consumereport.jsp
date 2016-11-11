@@ -98,7 +98,9 @@
 									</c:if>
 									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">应付金额</th>
+									<th onclick="orderBy(this,'should_payment');commitForm();" id="should_payment_order">订单金额</th>
+									<th onclick="orderBy(this,'spend_type');commitForm();" id="spend_type_order">支付方式</th>
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">交易对象</th>
 									<c:if test="${sessionScope.currUser.user.userType == 5}">
@@ -106,6 +108,7 @@
 										<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
 									</c:if>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
+									<th onclick="orderBy(this,'remark');commitForm();" id="remark_order">备注</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 									<th>商品详情</th>
 								</tr>
@@ -127,8 +130,10 @@
 										<td><s:Code2Name mcode="${list.order_type}" gcode="ORDER_TYPE"></s:Code2Name></td>
 									</c:if>
 									<td>${list.deal_number}</td>
-									<td><s:Code2Name mcode="${list.deal_type}" gcode="ORDER_DEAL_TYPE"></s:Code2Name></td>
+									<td></td>
 									<td>${list.cash}</td>
+									<td>${list.should_payment}</td>
+									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
 									<td><fmt:formatDate value="${list.order_date}" type="both"/></td>
 									<c:if test="${fn:length(list.creditAccount) eq '32'}">
 										<td>个人</td>
@@ -141,6 +146,7 @@
 										<td>${list.channel_number}</td>
 									</c:if>
 									<td>${list.user_name}</td>
+									<td>${list.remark}</td>
 									<td>${list.operator}</td>
 									<td class="text-center">
 										<a class="" href="javascript:void(0);" title="查看明细" data-rel="tooltip">

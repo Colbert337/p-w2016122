@@ -132,7 +132,7 @@
 													class="ace-icon fa fa-search-plus bigger-130"
 													onclick="showUser('${list.id}');"></i>
 											</a> 
-											</c:if>
+										</c:if>
 										<a class="logic-del" href="javascript:void(0);" title="删除" data-rel="tooltip">
 											<i class="ace-icon fa fa-trash-o bigger-130" onclick="del(this);"></i>
 										</a>
