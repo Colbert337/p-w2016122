@@ -5027,7 +5027,7 @@ public class MobileController {
 				Gastation gas = gastationService.queryGastationByPK(gastationId);
 				String driverPayCode = driver.getPayCode();
 				Map<String, Object> data = new HashedMap();
-				if(payCode.equals(driverPayCode)){
+				if(payCode.equalsIgnoreCase(driverPayCode)){
 					String couponId = mainObj.optString("couponId");
 					String couponCash = mainObj.optString("couponCash");
 					String orderID = UUIDGenerator.getUUID();
