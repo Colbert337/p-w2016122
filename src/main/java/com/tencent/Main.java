@@ -1,5 +1,7 @@
 package com.tencent;
 
+import java.util.Date;
+
 import com.tencent.common.Configure;
 import com.tencent.common.Util;
 import com.tencent.protocol.refund_protocol.RefundReqData;
@@ -9,7 +11,7 @@ public class Main {
 	public static void main(String[] args) {
 		
 		try {
-			RefundReqData rrd = new RefundReqData("4008642001201610126499353666", "", null, "0002", 1, 1, Configure.getMchid(),"CNY");
+			RefundReqData rrd = new RefundReqData("4000782001201611119377293233", "", null, new Date().getTime()+"", 1, 1, Configure.getMchid(),"CNY");
 			System.out.println(WXPay.requestRefundService(rrd));
 			// --------------------------------------------------------------------
 			// 温馨提示，第一次使用该SDK时请到com.tencent.common.Configure类里面进行配置
