@@ -190,7 +190,7 @@ public class CRMCashServiceContoller {
 					newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
 					newOrder.setDebitAccount(record.getDebitAccount());
 					newOrder.setChargeType("113");
-					newOrder.setChannel("充值返现");
+					newOrder.setChannel("首次充值返现-");
 					newOrder.setIs_discharge("0");
 					newOrder.setOperator(GlobalConstant.OrderOperatorSourceType.GASTATION);
 					newOrder.setOperatorSourceId(GlobalConstant.OrderOperatorSourceType.GASTATION);
