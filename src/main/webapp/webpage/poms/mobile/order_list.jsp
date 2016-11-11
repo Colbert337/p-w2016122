@@ -31,7 +31,7 @@
 					<div class="item">
 						<label>充值类型</label> <select name="chargeType" id="type"
 							value="${order.chargeType}">
-							<s:option flag="true" gcode="CHARGE_TYPE" form="road"
+							<s:option flag="true" gcode="CHARGE_TYPE_SEL" form="road"
 								field="conditionType" />
 						</select>
 					</div> 
@@ -39,7 +39,7 @@
 						<div class="item">
 						<label>消费类型</label> <select name="spend_type" id="type"
 							value="${order.spend_type}">
-							<s:option flag="true" gcode="SPEND_TYPE" form="road"
+							<s:option flag="true" gcode="SPEND_TYPE_SEL" form="road"
 								field="conditionType" />
 						</select>
 					</div> 
