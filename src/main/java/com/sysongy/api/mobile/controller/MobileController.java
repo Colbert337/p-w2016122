@@ -2769,9 +2769,9 @@ public class MobileController {
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
 							orderService.checkIfCanConsume(sysOrder);
 							String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
 							Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, amount, "司集云平台-会员消费",
@@ -2835,9 +2835,9 @@ public class MobileController {
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
 							orderService.checkIfCanConsume(sysOrder);
 							//消费金额，微信消费金额单位为分，不能有小数
 							Integer money = (int) (new Double(amount)*100);
