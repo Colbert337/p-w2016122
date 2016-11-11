@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.bcel.generic.IF_ACMPEQ;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.NameValuePair;
@@ -73,7 +71,6 @@ import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
-import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.message.model.SysMessage;
@@ -88,6 +85,8 @@ import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
+import com.sysongy.poms.order.model.SysOrderDeal;
+import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
@@ -188,7 +187,8 @@ public class MobileController {
     CouponGroupService couponGroupService;
 	@Autowired
 	SysOperationLogService sysOperationLogService;
-
+	@Autowired
+	OrderDealService orderDealService;
 	/**
 	 * 用户登录
 	 * 
@@ -3016,20 +3016,17 @@ public class MobileController {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 						//添加首次充值订单
-						SysOrder newOrder=new SysOrder();
-						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
-						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
-						newOrder.setOrderDate(new Date());
-						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
-						newOrder.setDebitAccount(order.getDebitAccount());
-						newOrder.setChargeType("113");
-						newOrder.setChannel("首次充值返现-");
-						newOrder.setIs_discharge("0");
-						newOrder.setOperator(appOperatorId);
-						newOrder.setOperatorSourceId(appOperatorId);
-						newOrder.setOrderStatus(1);
-						orderService.saveOrder(newOrder);
+						SysOrderDeal newDeal=new SysOrderDeal();
+//						orderDealService
+						newDeal.setOrderId(orderId);
+						newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+						newDeal.setDealDate(new Date());
+						newDeal.setDealType("202");
+						newDeal.setCashBack(new BigDecimal(back.getCash_per()));
+						newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
+						newDeal.setRemark("");
+						orderDealService.insert(newDeal);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -3231,20 +3228,17 @@ public class MobileController {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
 						//添加首次充值订单
-						SysOrder newOrder=new SysOrder();
-						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
-						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
-						newOrder.setOrderDate(new Date());
-						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
-						newOrder.setDebitAccount(order.getDebitAccount());
-						newOrder.setChargeType("113");
-						newOrder.setChannel("首次充值返现-");
-						newOrder.setIs_discharge("0");
-						newOrder.setOperator(appOperatorId);
-						newOrder.setOperatorSourceId(appOperatorId);
-						newOrder.setOrderStatus(1);
-						orderService.saveOrder(newOrder);
+						SysOrderDeal newDeal=new SysOrderDeal();
+//						orderDealService
+						newDeal.setOrderId(orderId);
+						newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+						newDeal.setDealDate(new Date());
+						newDeal.setDealType("202");
+						newDeal.setCashBack(new BigDecimal(back.getCash_per()));
+						newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
+						newDeal.setRemark("");
+						orderDealService.insert(newDeal);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
