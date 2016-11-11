@@ -49,6 +49,12 @@ public class SysOrderDeal extends BaseModel {
 
     private String goodType;
 
+    private String couponKind;
+
+    private String couponTitle;
+
+    private BigDecimal preferentialDiscount;
+
     public String getRemark() {
 		return remark;
 	}
@@ -207,5 +213,29 @@ public class SysOrderDeal extends BaseModel {
 
     public void setGoodType(String goodType) {
         this.goodType = goodType;
+    }
+
+    public String getCouponKind() {
+        return couponKind;
+    }
+
+    public void setCouponKind(String couponKind) {
+        this.couponKind = couponKind;
+    }
+
+    public String getCouponTitle() {
+        return couponTitle;
+    }
+
+    public void setCouponTitle(String couponTitle) {
+        this.couponTitle = couponTitle;
+    }
+
+    public BigDecimal getPreferentialDiscount() {
+        return preferentialDiscount;
+    }
+
+    public void setPreferentialDiscount(BigDecimal preferentialDiscount) {
+        this.preferentialDiscount = preferentialDiscount;
     }
 }
