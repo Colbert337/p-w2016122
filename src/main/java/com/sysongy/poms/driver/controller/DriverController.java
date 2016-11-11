@@ -558,7 +558,7 @@ public class DriverController extends BaseContoller{
 
 			String[][] content = new String[cells+1][9];//[行数][列数]
 			//第一列
-			content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","应付金额","订单金额","支付方式","会员账号","电话号码","加注站编号","加注站名称","关联运输公司","备注","操作人"};
+			content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","实收金额","订单金额","支付方式","会员账号","电话号码","加注站编号","加注站名称","关联运输公司","备注","操作人"};
 
 			int i = 1;
 			if(list != null && list.size() > 0){

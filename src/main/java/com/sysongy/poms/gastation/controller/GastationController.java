@@ -839,9 +839,9 @@ public class GastationController extends BaseContoller{
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
 	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
-	            	 content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","应付金额","订单金额","支付方式","交易时间","交易对象","加注站名称","加注站编号","会员账号","操作人"};
+	            	 content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","实收金额","订单金额","支付方式","交易时间","交易对象","加注站名称","加注站编号","会员账号","操作人"};
 	            }else{
-	            	content[0] = new String[]{"订单编号","交易流水号","交易类型","应付金额","订单金额","支付方式","交易时间","交易对象","会员账号","操作人"};
+	            	content[0] = new String[]{"订单编号","交易流水号","交易类型","实收金额","订单金额","支付方式","交易时间","交易对象","会员账号","操作人"};
 	            }
 	           
 

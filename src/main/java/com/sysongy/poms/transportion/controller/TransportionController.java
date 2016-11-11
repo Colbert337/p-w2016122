@@ -249,7 +249,7 @@ public class TransportionController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","运输公司名称","运输公司编号","个人账号","交易金额","操作人"};
+	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","运输公司名称","运输公司编号","个人账号","实收金额","操作人"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -616,7 +616,7 @@ public class TransportionController extends BaseContoller{
 
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","应付金额","订单金额","支付方式","运输公司编号","运输公司名称","加注站名称","车牌号","备注","操作人"};
+            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","实收金额","订单金额","支付方式","运输公司编号","运输公司名称","加注站名称","车牌号","备注","操作人"};
 
             int i = 1;
             if(list != null && list.size() > 0){
@@ -1321,7 +1321,7 @@ public class TransportionController extends BaseContoller{
 					i++;
 				}
 			}
-			//合计交易金额和返现金额
+			//合计实收金额和返现金额
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
 			reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);

@@ -100,7 +100,7 @@
 									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">实收金额</th>
 									<th onclick="orderBy(this,'should_payment');commitForm();" id="should_payment_order">订单金额</th>
 									<th onclick="orderBy(this,'spend_type');commitForm();" id="spend_type_order">支付方式</th>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
