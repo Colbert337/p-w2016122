@@ -31,6 +31,20 @@ function showContent(){
 	
 }
 
+function restoreRedis(){
+	$('#div').showLoading();
+	
+	$.ajax({
+		url : "../web/mobile/road/restoreRedis",
+		async : false,
+		type : "POST",
+		success : function(data) {
+			bootbox.alert("恢复成功");
+			$('#div').hideLoading();
+		}
+	})
+}
+
 jQuery(function($) {
 	var $overflow = '';
 	var colorbox_params = {
@@ -205,6 +219,13 @@ function shixiao(id){
 }
 function updateRoad(type) {
 	var oldtype=$("#conditionStatus").val();
+	if(type==3){
+		if ( $('#contentmes').val()=="") {
+			bootbox.alert("原因不能为空");
+			return;
+		}
+		
+	}
 	$("#conditionStatus").val(type);
 	var options = {
 		url : '../web/mobile/road/updateRoad',

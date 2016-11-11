@@ -76,6 +76,12 @@
     from sys_road_condition
   </select>
   
+   <select id="queryForRedis" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_road_condition where condition_status=2
+  </select>
+  
   
    <select id="queryRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

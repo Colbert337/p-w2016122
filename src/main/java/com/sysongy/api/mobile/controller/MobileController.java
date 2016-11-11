@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,6 +73,7 @@ import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
+import com.sysongy.poms.gastation.model.GsGasPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.message.model.SysMessage;
@@ -86,6 +89,7 @@ import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.ordergoods.model.SysOrderGoods;
 import com.sysongy.poms.ordergoods.service.SysOrderGoodsService;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -591,9 +595,15 @@ public class MobileController {
 						SysUserAccount sysUserAccount = sysUserAccountService
 								.queryUserAccountByDriverId(driver.getSysDriverId());
 
-						String driverCheckedStstus = driver.getCheckedStatus();
+						/*String driverCheckedStstus = driver.getCheckedStatus();
 						if ("2".equals(driverCheckedStstus)) {
-							resultMap.put("nick", driver.getFullName());
+							resultMap.put("nick", driver.getNickname());
+						} else {
+							resultMap.put("nick", "");
+						}*/
+						String nick = driver.getNickname();
+						if (nick!=null && !"".equals(nick)) {
+							resultMap.put("nick", driver.getNickname());
 						} else {
 							resultMap.put("nick", "");
 						}
@@ -1507,7 +1517,7 @@ public class MobileController {
 				if(type!=null && !"".equals(type) && "0".equals(type)){
 					gastation.setType(type);
 				}
-				//范围为空，列表显示加分也
+				//范围为空，列表显示加分页
 				if(radius == null || "".equals(radius)){
 					if (gastation.getPageNum() == null) {
 						gastation.setPageNum(GlobalConstant.PAGE_NUM);
@@ -1553,9 +1563,6 @@ public class MobileController {
 								end  = gastationAllList.size();
 							}
 							int begin = (pageNum - 1) * pageSize;
-							if(begin > allPage ){
-								begin = allPage;
-							}
 							PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
 							List<Gastation> gastationList1 = pageInfo.getList();
 							List<Map<String, Object>> gastationArray = new ArrayList<>();
@@ -2454,23 +2461,32 @@ public class MobileController {
 						totalCash = totalCash.add(new BigDecimal(data.get("cash").toString()));
 					}
 				}
-
 				if (pageInfo != null && pageInfo.getList() != null && pageInfo.getList().size() > 0) {
 
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum", map.get("orderNumber"));
 						reChargeMap.put("amount", map.get("cash"));
-						reChargeMap.put("gasStationName", map.get("channel"));
+						reChargeMap.put("gasStationName", gastationService.queryGastationByPK(map.get("channelNumber").toString()).getGas_station_name());
 						reChargeMap.put("gasStationId", map.get("channelNumber"));
-						reChargeMap.put("gasTotal", map.get("goods_sum"));
-						reChargeMap.put("payStatus", "支付成功");
-
-						String chargeType = "";
+						reChargeMap.put("gasTotal",map.get("goods_sum")==null?"0":map.get("goods_sum"));
+						//0初始化，1成功，2失败，3待支付
+						String status = map.get("orderStatus").toString();
+						if(status.equals("0")){
+							status = "订单初始化";
+						}else if(status.equals("1")){
+							status = "支付成功";
+						}else if(status.equals("2")){
+							status = "支付失败";
+						}else if(status.equals("3")){
+							status = "待支付订单";
+						}
+						reChargeMap.put("payStatus", status);
+						/*String chargeType = "";
 						if (map.get("chargeType") != null && !"".equals(map.get("chargeType").toString())) {
 							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
 						}
-						reChargeMap.put("paymentType", chargeType);
+						reChargeMap.put("paymentType", chargeType);*/
 						reChargeMap.put("remark", map.get("remark"));
 						String dateTime = "";
 						if (map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())) {
@@ -2478,8 +2494,31 @@ public class MobileController {
 						} else {
 							dateTime = sft.format(new Date());
 						}
+						Object obj = map.get("preferential_cash");//平台优惠金额
+						Object coupon_cash = map.get("coupon_cash");//优惠券优惠金额
+						BigDecimal cashAll = new BigDecimal(0);
+						if(obj!=null && !"".equals(obj)){
+							cashAll = new BigDecimal(obj.toString());
+						}
+						if(coupon_cash!=null && !coupon_cash.equals("")){
+							cashAll = cashAll.add(new BigDecimal(coupon_cash.toString()));
+						}
 						reChargeMap.put("time", dateTime);
-
+						reChargeMap.put("shouldPayment",map.get("should_payment"));//应付金额
+						reChargeMap.put("preferentialCash",cashAll);//优惠金额
+						reChargeMap.put("couponTitle", map.get("couponTitle")==null?"":map.get("couponTitle"));//优惠券标题
+						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费
+						String chargeType = (String) map.get("spend_type");
+						if(chargeType.equals("C01")){
+							chargeType = "卡余额消费";
+						}else if(chargeType.equals("C02")){
+							chargeType = "POS消费";
+						}else if(chargeType.equals("C03")){
+							chargeType = "微信消费";
+						}else if(chargeType.equals("C04 ")){
+							chargeType = "支付宝消费";
+						}
+						reChargeMap.put("chargeType", chargeType);//
 						reChargeList.add(reChargeMap);
 					}
 					reCharge.put("listMap", reChargeList);
@@ -2666,6 +2705,7 @@ public class MobileController {
 			String amount = "amount";
 			String feeCount = "feeCount";
 			String payType = "payType";
+			String gasTotal = "gasTotal";
 			//充值必填参数校验
 			if(orderType==null || "".equals(orderType)){
 				b= JsonTool.checkJson(mainObj, token, feeCount, payType);
@@ -2681,6 +2721,7 @@ public class MobileController {
 				payType = mainObj.optString("payType");
 				feeCount = mainObj.optString("feeCount");
 				String driverID = mainObj.optString("token");
+				gasTotal = mainObj.optString("gasTotal");
 				String orderID = UUIDGenerator.getUUID();
 				Map<String, Object> data = new HashedMap();
 				SysOrder sysOrder = null;
@@ -2706,22 +2747,31 @@ public class MobileController {
 					//账户正常使用
 					if(driverService.queryDriverByPK(driverID).getUserStatus().equals("0")){
 						if (payType.equalsIgnoreCase("2")) { // 支付宝消费
+							//设置平台优惠金额
+							BigDecimal preferential_cash = new BigDecimal(0);
+							preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 							sysOrder = createNewOrder(orderID, driverID, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.ALIPAY,"2","C04"); // TODO充值成功后再去生成订单
 							//设置优惠券ID
 							if(couponId!=null && !"".equals(couponId)){
-								sysOrder.setCoupon_number(couponId);
+								UserCoupon uc = new UserCoupon();
+								uc.setCoupon_id(couponId);
+								uc.setSys_driver_id(token);
+								sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
 							}
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
 								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+								preferential_cash = preferential_cash.subtract(new BigDecimal(amount));
 							}
+							//设置平台优惠金额
+							sysOrder.setPreferential_cash(preferential_cash);
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
 							orderService.checkIfCanConsume(sysOrder);
 							String notifyUrl = http_poms_path + "/api/v1/mobile/deal/alipayConsum";
 							Map<String, String> paramsApp = OrderInfoUtil2_0.buildOrderParamMap(APPID, amount, "司集云平台-会员消费",
@@ -2735,27 +2785,59 @@ public class MobileController {
 								if (nCreateOrder < 1){
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 								}
+								//添加OrderGoods信息
+								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+								SysOrderGoods orderGoods = new SysOrderGoods ();
+								//ID
+								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
+								//orderID
+								orderGoods.setOrderId(orderID);
+								//原始单价
+								orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+								//加气总量
+								orderGoods.setNumber(Double.valueOf(gasTotal));
+								//商品总价
+								orderGoods.setSumPrice(new BigDecimal(payableAmount));
+								//商品类型
+								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+								//优惠类型。
+								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								//平台优惠金额
+								orderGoods.setDiscountSumPrice(preferential_cash);
+								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
+								if(rs < 1){
+									throw new Exception("orderGoods信息添加失败");
+								}
 							}
 							data.put("payReq", orderParam + "&" + sign);
 							data.put("orderId", orderID);
 							result.setData(data);
 						} else if (payType.equalsIgnoreCase("1")) { // 微信消费
 							sysOrder = createNewOrder(orderID, driverID, amount,GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.WECHAT,"2","C03"); // TODO充值成功后再去生成订单
+							//设置平台优惠金额
+							BigDecimal preferential_cash = new BigDecimal(0);
+							preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));
 							//设置优惠券ID
 							if(couponId!=null && !"".equals(couponId)){
-								sysOrder.setCoupon_number(couponId);
+								UserCoupon uc = new UserCoupon();
+								uc.setCoupon_id(couponId);
+								uc.setSys_driver_id(token);
+								sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
 							}
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
 								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+								preferential_cash = preferential_cash.subtract(new BigDecimal(amount));
 							}
+							//设置平台优惠金额
+							sysOrder.setPreferential_cash(preferential_cash);
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
 							//设置应付金额
-							sysOrder.setCash(new BigDecimal(payableAmount));
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
-							sysOrder.setShould_payment(new BigDecimal(amount));
+							sysOrder.setCash(new BigDecimal(amount));
 							orderService.checkIfCanConsume(sysOrder);
 							//消费金额，微信消费金额单位为分，不能有小数
 							Integer money = (int) (new Double(amount)*100);
@@ -2770,6 +2852,29 @@ public class MobileController {
 								int nCreateOrder = orderService.insert(sysOrder, null);
 								if (nCreateOrder < 1){
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
+								}
+								//添加OrderGoods信息
+								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+								SysOrderGoods orderGoods = new SysOrderGoods ();
+								//ID
+								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
+								//orderID
+								orderGoods.setOrderId(orderID);
+								//原始单价
+								orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+								//加气总量
+								orderGoods.setNumber(Double.valueOf(gasTotal));
+								//商品总价
+								orderGoods.setSumPrice(new BigDecimal(payableAmount));
+								//商品类型
+								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+								//优惠类型。
+								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								//平台优惠金额
+								orderGoods.setDiscountSumPrice(preferential_cash);
+								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
+								if(rs < 1){
+									throw new Exception("orderGoods信息添加失败");
 								}
 							}
 							JSONObject dataObj = JSONObject.fromObject(payReq);
@@ -2903,13 +3008,28 @@ public class MobileController {
 			// 查询订单内容
 			SysOrder order = orderService.selectByPrimaryKey(orderId);
 			if (order != null && order.getOrderStatus() == 0) {// 0 初始化 1 成功 2
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 				//判断是否是第一次充值
 				if(!orderService.exisit(order.getDebitAccount())){
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+						//添加首次充值订单
+						SysOrder newOrder=new SysOrder();
+						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
+						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
+						newOrder.setOrderDate(new Date());
+						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
+						newOrder.setDebitAccount(order.getDebitAccount());
+						newOrder.setChargeType("113");
+						newOrder.setChannel("充值返现");
+						newOrder.setIs_discharge("0");
+						newOrder.setOperator(appOperatorId);
+						newOrder.setOperatorSourceId(appOperatorId);
+						newOrder.setOrderStatus(1);
+						orderService.saveOrder(newOrder);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
@@ -2920,7 +3040,9 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				
+				//更新最新余额到账户
+				//微信在线支付回调方法(充值回调)
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
           			//系统关键日志记录
@@ -3016,24 +3138,9 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				if(!orderService.exisit(sysOrder.getDebitAccount())){//判断是否是第一次充值
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
-					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
-					
-					if (listBack!=null && listBack.size() > 0) {
-						SysCashBack back= listBack.get(0);//获取返现规则
-						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-						//系统关键日志记录
-	        			SysOperationLog sysOperationLog = new SysOperationLog();
-	        			sysOperationLog.setOperation_type("fx");
-	        			sysOperationLog.setLog_platform("1");
-	            		sysOperationLog.setLog_content("手机微信消费返现成功！充值金额："+order.getCash()+"，返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
-	        			//操作日志
-	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
-					}else{
-						logger.info("找不到匹配的返现规则，返现失败");
-					}
-				}
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -3048,16 +3155,25 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
+						String couponId = orderService.queryById(orderId).getCoupon_id();
+						//更新优惠券使用状态
+						if(couponId!=null && !couponId.equals("")){
+							UserCoupon uc = new UserCoupon();
+							uc.setUser_coupon_id(couponId);
+							uc.setIsuse("1");
+							int rs = couponService.updateUserCouponStatus(uc);
+						}
+						SysOrder sorder = orderService.queryById(orderId);
 						//微信消费短信通知
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
-						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
+						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(sorder.getCreditAccount()).getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(sorder.getCreditAccount()).getMobilePhone());
 						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 						aliShortMessageBean.setSpentMoney(feeCount);
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
 						//APP提示
-						sysMessageService.saveMessageTransaction("微信消费", sysOrder,"2");
+						sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3107,20 +3223,34 @@ public class MobileController {
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 				//判断是否是第一次充值
 				if(!orderService.exisit(order.getDebitAccount())){
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
 					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
 					if (listBack!=null && listBack.size() > 0) {
 						SysCashBack back= listBack.get(0);//获取返现规则
 						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-				   
+						//添加首次充值订单
+						SysOrder newOrder=new SysOrder();
+						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+						newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
+						newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
+						newOrder.setOrderDate(new Date());
+						newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
+						newOrder.setDebitAccount(order.getDebitAccount());
+						newOrder.setChargeType("113");
+						newOrder.setChannel("充值返现");
+						newOrder.setIs_discharge("0");
+						newOrder.setOperator(appOperatorId);
+						newOrder.setOperatorSourceId(appOperatorId);
+						newOrder.setOrderStatus(1);
+						orderService.saveOrder(newOrder);
 					}else{
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
 				}
-			
-				
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);				
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -3196,24 +3326,9 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
-				if(!orderService.exisit(sysOrder.getDebitAccount())){//判断是否是第一次充值
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());
-					List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
-					
-					if (listBack!=null && listBack.size() > 0) {
-						SysCashBack back= listBack.get(0);//获取返现规则
-						sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-						//系统关键日志记录
-	        			SysOperationLog sysOperationLog = new SysOperationLog();
-	        			sysOperationLog.setOperation_type("fx");
-	        			sysOperationLog.setLog_platform("1");
-	            		sysOperationLog.setLog_content("手机支付宝消费返现成功！返现现金为："+BigDecimal.valueOf(Double.valueOf(back.getThreshold_min_value()))); 
-	        			//操作日志
-	        			sysOperationLogService.saveOperationLog(sysOperationLog,order.getOperator());
-					}else{
-						logger.info("找不到匹配的返现规则，返现失败");
-					}
-				}
+				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
+				//更新最新余额到账户
+				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -3228,6 +3343,14 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
+						String couponId = orderService.queryById(orderId).getCoupon_id();
+						//更新优惠券使用状态
+						if(couponId!=null && !couponId.equals("")){
+							UserCoupon uc = new UserCoupon();
+							uc.setUser_coupon_id(couponId);
+							uc.setIsuse("1");
+							int rs = couponService.updateUserCouponStatus(uc);
+						}
 						//支付宝充值短信通知
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
@@ -3248,6 +3371,69 @@ public class MobileController {
 		return "";
 	}
 
+	/**
+	 * 退费并保存退费订单(支付宝退费回调)
+	 * @param detail_data
+	 * @return
+	 */
+	@RequestMapping("/breakReturn")
+	@ResponseBody
+	public String breakReturn(HttpServletRequest request, HttpServletResponse response,ModelMap map) {
+		String batch_no = "";
+		String result_details= "";
+		logger.debug("支付宝支付回调获取数据开始");
+		SysOrder order=null;
+		try {
+			batch_no = request.getParameter("batch_no");
+			result_details = request.getParameter("result_details");//支付宝返回结果集
+		if (StringUtils.isEmpty(result_details)&&StringUtils.isEmpty(batch_no)) {
+			logger.debug("支付宝回调返回结果为空");
+			throw new ServiceException("支付宝回调返回结果为空！");
+		}
+		order=orderService.queryByTrade(batch_no);
+		String[] dates=result_details.split("#");//第一单
+		String[] date=dates[0].split("\\|");//第一笔
+		String no=date[0].split("\\^")[0];
+		String money=date[0].split("\\^")[1];
+		String b=date[0].split("\\^")[2];
+			if (b.equalsIgnoreCase("SUCCESS")) {
+				MobileReturn result = new MobileReturn();
+				result.setStatus(MobileReturn.STATUS_SUCCESS);
+				result.setMsg("退款成功！");
+				JSONObject resutObj = new JSONObject();
+				String resultStr = "";
+				// 查询订单内容
+				if (order != null && order.getOrderStatus() == 3) {// 当订单状态是初始化时，做状态更新
+					// 修改订单状态
+					order.setOrderStatus(1);
+					order.setOrderRemark("退款成功！");
+					order.setOrderDate(new Date());
+					order.setBatch_no(batch_no);
+					orderService.updateByBatchNo(order);
+					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());//初始化钱袋
+					if (account==null) {
+						logger.error("支付宝返现失败：");
+					}
+					account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+					sysUserAccountService.updateAccount(account);
+				}
+			}else{
+				order.setOrderStatus(2);
+				order.setOrderRemark("退款失败！");
+				order.setOrderDate(new Date());
+				order.setBatch_no(batch_no);
+				orderService.updateByBatchNo(order);
+				logger.error("支付宝返现失败："+b);
+			}
+		} catch (Exception e) {
+			logger.error("支付宝返现失败："+e.getLocalizedMessage());
+			e.printStackTrace();
+		}finally {
+			return "";
+		}
+		
+	}
+	
 	/**
 	 * 修改账号手机号/密保手机
 	 */
@@ -3853,7 +4039,8 @@ public class MobileController {
 						if (rs > 0) {
 							result.setStatus(MobileReturn.STATUS_SUCCESS);
 							result.setMsg("统计成功！");
-							int time = SysRoadController.sumTime(roadCondition);
+							Usysparam param= usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadCondition.getConditionType());
+							int time = SysRoadController.sumTime(roadCondition,Integer.valueOf(param.getData()));
 							redisClientImpl.addToCache("Road" + roadCondition.getId(), roadCondition, time);
 							Map<String, Object> dataMap = new HashMap<>();
 							dataMap.put("count", roadCondition.getUsefulCount());
@@ -4495,6 +4682,7 @@ public class MobileController {
 			 * 必填参数
 			 */
 			String gastationId = "gastationId";
+			String amount = "amount";
 			boolean b = JsonTool.checkJson(mainObj, gastationId);
 			/**
 			 * 请求接口
@@ -4502,16 +4690,74 @@ public class MobileController {
 			if (b) {
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				gastationId = mainObj.optString("gastationId");
+				amount = mainObj.optString("amount");
 				List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+				String gasName = null;
 				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
-					for (Map<String, Object> map : gsGasPriceList) {
-						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("preferential_type", map.get("preferential_type"));
-						reChargeMap.put("gasName", usysparamService.query("CARDTYPE", map.get("gas_name").toString()).get(0).getMname());
-						reChargeMap.put("remark", map.get("remark"));
-						reChargeMap.put("gasPrice", map.get("product_price"));
-						reChargeMap.put("priceUnit", map.get("unit"));
-						reChargeMap.put("discountAmount",map.get("minus_money")==null?map.get("fixed_discount"):map.get("minus_money"));
+//					List<BigDecimal> priceList = new ArrayList<BigDecimal>();
+//					for (Map<String, Object> map : gsGasPriceList) {
+//						gasName = usysparamService.query("CARDTYPE",map.get("gas_name").toString()).get(0).getMname();
+//						if(gasName.indexOf("LNG")!=-1 || gasName.indexOf("lng")!=-1){
+//							//获取最高单价
+//							String gasPrice = map.get("product_price").toString();
+//							priceList.add(new BigDecimal(gasPrice));
+//						}
+//					}
+					//重排获取最高价格
+//					Collections.sort(priceList);
+//					String gasPrice = priceList.get(priceList.size()-1).toString();
+					//通过价格获取气品名称及优惠规则
+//					GsGasPrice ggp = gsGasPriceService.queryGsPrice(gastationId, gasPrice);
+					Map<String, Object> reChargeMap = new HashMap<>();
+					Object preferentialType = gsGasPriceList.get(0).get("preferential_type");//折扣类型
+					String type;
+					String discountAmount = "0";
+					if(preferentialType!=null && !"".equals(preferentialType)){
+						discountAmount = gsGasPriceList.get(0).get("minus_money")==null?gsGasPriceList.get(0).get("fixed_discount").toString():gsGasPriceList.get(0).get("minus_money").toString();
+						type = preferentialType.toString();
+					}else{
+						type="";
+					}
+					gasName = usysparamService.query("CARDTYPE",gsGasPriceList.get(0).get("gas_name").toString()).get(0).getMname();
+					double cashBack = 0;
+					String priceUnit = usysparamService.query("GAS_UNIT", gsGasPriceList.get(0).get("unit").toString()).get(0).getMname();
+					//加气总量
+					BigDecimal gasTotal = new BigDecimal(amount).divide(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()),2, RoundingMode.HALF_UP) ;
+					//没有折扣信息
+					if("".equals(type)){
+						//优惠总金额(消费总金额乘以折扣)
+						reChargeMap.put("cashBack",cashBack);
+						reChargeMap.put("preferential_type",preferentialType );
+						reChargeMap.put("gasName",gasName);
+						reChargeMap.put("remark", gsGasPriceList.get(0).get("remark"));
+						reChargeMap.put("gasPrice",gsGasPriceList.get(0).get("product_price"));
+						reChargeMap.put("priceUnit",priceUnit);
+						reChargeMap.put("discountAmount",discountAmount);
+						reChargeMap.put("gasTotal",gasTotal);
+						reChargeList.add(reChargeMap);
+					}else if(type.equals("1")){//固定折扣(整单折扣)
+						//优惠总金额(消费总金额乘以折扣)
+						cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						reChargeMap.put("cashBack",cashBack);
+						reChargeMap.put("preferential_type",preferentialType );
+						reChargeMap.put("gasName",gasName);
+						reChargeMap.put("remark", gsGasPriceList.get(0).get("remark"));
+						reChargeMap.put("gasPrice",gsGasPriceList.get(0).get("product_price"));
+						reChargeMap.put("priceUnit",priceUnit);
+						reChargeMap.put("discountAmount",discountAmount);
+						reChargeMap.put("gasTotal",gasTotal);
+						reChargeList.add(reChargeMap);
+					}else{//0立减金额(单价立减)
+						//优惠金额(单价减去立减金额乘以加气总量)
+						cashBack = gasTotal.multiply(new BigDecimal(discountAmount)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();;
+						reChargeMap.put("cashBack",cashBack);
+						reChargeMap.put("preferential_type",preferentialType );
+						reChargeMap.put("gasName",gasName);
+						reChargeMap.put("remark", gsGasPriceList.get(0).get("remark"));
+						reChargeMap.put("gasPrice",gsGasPriceList.get(0).get("product_price"));
+						reChargeMap.put("priceUnit", priceUnit);
+						reChargeMap.put("discountAmount",discountAmount);
+						reChargeMap.put("gasTotal",gasTotal);
 						reChargeList.add(reChargeMap);
 					}
 				}else{
@@ -4705,7 +4951,14 @@ public class MobileController {
 				tokenMap.put("orderNum",order.getOrderNumber());
 				tokenMap.put("gastationId",order.getChannelNumber());
 				tokenMap.put("payment",order.getShould_payment());
-				tokenMap.put("preferentialCash",(order.getPreferential_cash()==null||"".equals(order.getPreferential_cash()))?"0":order.getPreferential_cash());
+				BigDecimal cash = new BigDecimal(0);
+				if(order.getPreferential_cash()!=null && !"".equals(order.getPreferential_cash())){
+					cash = cash.add(new BigDecimal(order.getPreferential_cash().toString()));
+				}
+				if(order.getCoupon_cash() !=null && !"".equals(order.getCoupon_cash())){
+					cash = cash.add(new BigDecimal(order.getCoupon_cash().toString()));
+				}
+				tokenMap.put("preferentialCash",cash);
 				result.setData(tokenMap);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -4756,11 +5009,16 @@ public class MobileController {
 			String amount = "amount";
 			String gastationId = "gastationId";
 			String payCode = "payCode";
-			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId,payCode);
+			String gasTotal = "gasTotal";
+			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId,payCode,gasTotal);
 			if(b){
 				payCode = mainObj.optString("payCode");
 				token = mainObj.optString("token");
-				String driverPayCode = driverService.queryDriverByPK(token).getPayCode();
+				gasTotal = mainObj.optString("gasTotal");
+				gastationId = mainObj.optString("gastationId");
+				SysDriver driver = driverService.queryDriverByPK(token);
+				Gastation gas = gastationService.queryGastationByPK(gastationId);
+				String driverPayCode = driver.getPayCode();
 				Map<String, Object> data = new HashedMap();
 				if(payCode.equals(driverPayCode)){
 					String couponId = mainObj.optString("couponId");
@@ -4769,21 +5027,30 @@ public class MobileController {
 					amount = mainObj.optString("amount");
 					gastationId = mainObj.optString("gastationId");
 					payableAmount = mainObj.optString("payableAmount");
+					//设置平台优惠金额
+					BigDecimal preferential_cash = new BigDecimal(0);
+					preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));//总优惠金额
 						SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
 						//设置优惠券ID
 						if(couponId!=null && !"".equals(couponId)){
-							sysOrder.setCoupon_number(couponId);
+							UserCoupon uc = new UserCoupon();
+							uc.setCoupon_id(couponId);
+							uc.setSys_driver_id(token);
+							sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
 						}
 						//设置优惠金额
 						if(couponCash!=null && !"".equals(couponCash)){
 							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+							preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));//总优惠金额减去优惠券优惠金额为平台优惠金额
 						}
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
+						sysOrder.setChannel("APP-余额消费-"+gas.getGas_station_name());
 						//设置实付金额
 						sysOrder.setCash(new BigDecimal(amount));
 						//设置应付金额
 						sysOrder.setShould_payment(new BigDecimal(payableAmount));
+						sysOrder.setPreferential_cash(preferential_cash);
 						//订单状态
 						sysOrder.setOrderStatus(1);
 						if (sysOrder != null) {
@@ -4801,17 +5068,48 @@ public class MobileController {
 				    			//操作日志
 				    			sysOperationLogService.saveOperationLog(sysOperationLog,token);
 								data.put("orderId", orderID);
-								data.put("orderNum", orderService.queryById(orderID).getOrderNumber());
-								//余额消费短信通知
-								AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-								aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(token).getMobilePhone());
-								aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(token).getMobilePhone());
-								aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-								aliShortMessageBean.setSpentMoney(amount);
-								aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
-								AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
-								//APP提示
-								sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+								data.put("orderNum", sysOrder.getOrderNumber());
+								//更新优惠券使用状态
+								if(couponId!=null && !couponId.equals("")){
+									UserCoupon uc = new UserCoupon();
+									uc.setUser_coupon_id(couponId);
+									uc.setIsuse("1");
+									int rs = couponService.updateUserCouponStatus(uc);
+								}
+								//添加OrderGoods信息
+								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+								SysOrderGoods orderGoods = new SysOrderGoods ();
+								//ID
+								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
+								//orderID
+								orderGoods.setOrderId(orderID);
+								//原始单价
+								orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+								//加气总量
+								orderGoods.setNumber(Double.valueOf(gasTotal));
+								//商品总价
+								orderGoods.setSumPrice(new BigDecimal(payableAmount));
+								//商品类型
+								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+								//优惠类型。
+								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+								//平台优惠金额
+								orderGoods.setDiscountSumPrice(preferential_cash);
+								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
+								if(rs > 0 ){
+									//余额消费短信通知
+									AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+									aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+									aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
+									aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+									aliShortMessageBean.setSpentMoney(amount);
+									aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
+									AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+									//APP提示
+									sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+								}else{
+									throw new Exception("orderGoods信息添加失败");
+								}
 							}
 						}
 				}else{
@@ -4841,7 +5139,424 @@ public class MobileController {
 			return resultStr;
 		}
 	}
+
+	/**
+	 * 获取加注站信息列表(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
+	 */
+	@RequestMapping(value = "/station/getStationList")
+	@ResponseBody
+	public String getStationList(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("获取加注站信息成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 必填参数
+			 */
+			String longitude = "longitude";
+			String latitude = "latitude";
+			String sortType = "sortType";
+			String infoType = "infoType";
+			String pageNum = "pageNum";
+			String pageSize = "pageSize";
+			boolean b = JsonTool.checkJson(mainObj,longitude,latitude,sortType,infoType,pageNum,pageSize);
+			if(b){
+				longitude = mainObj.getString("longitude");
+				latitude = mainObj.getString("latitude");
+				sortType =  mainObj.getString("sortType");//排序类型 1默认2 距离 3 价格(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
+				List<Map<String, Object>> gastationArray = new ArrayList<>();
+				Double longIn = new Double(longitude);
+				Double langIn = new Double(latitude);
+				int pageNumIn = mainObj.optInt("pageNum");
+				int pageSizeIn = mainObj.optInt("pageSize");
+				Gastation gastation = new Gastation();
+				//获取所有数据
+				List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
+				//默认排序(置顶两个联盟站)
+				if(sortType.equals("1")){
+					gastationArray = defaultList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
+					if(gastationArray!=null && gastationArray.size() > 0 ){
+						result.setListMap(gastationArray);
+					}else{
+						result.setStatus(MobileReturn.STATUS_SUCCESS);
+						result.setMsg("暂无数据！");
+						result.setListMap(new ArrayList<Map<String, Object>>());
+					}
+				//按距离排序
+				}else if(sortType.equals("2")){
+					gastationArray = orderByDistanceList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
+					if(gastationArray!=null && gastationArray.size() > 0 ){
+						result.setListMap(gastationArray);
+					}else{
+						result.setStatus(MobileReturn.STATUS_SUCCESS);
+						result.setMsg("暂无数据！");
+						result.setListMap(new ArrayList<Map<String, Object>>());
+					}
+				//按价格排序	
+				}else if(sortType.equals("3")){
+					gastationArray = orderByPriceList(gastationAllList,pageNumIn,pageSizeIn);
+					if(gastationArray!=null && gastationArray.size() > 0 ){
+						result.setListMap(gastationArray);
+					}else{
+						result.setStatus(MobileReturn.STATUS_SUCCESS);
+						result.setMsg("暂无数据！");
+						result.setListMap(new ArrayList<Map<String, Object>>());
+					}
+				}
+			}else{
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取加注站信息失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取加注站信息失败： " + e);
+			resutObj.remove("data");
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
 	
+	/**
+	 * 获取加注站信息列表(default)
+	 * @param resultunifiedorder
+	 * @return
+	 */
+	private List<Map<String, Object>> defaultList(List<Gastation> gastationAllList,Double longIn,Double langIn,int pageNumIn,int pageSizeIn){
+		List<Map<String, Object>> gastationArray = new ArrayList<>();
+		String http_poms_path = (String) prop.get("http_poms_path");
+		//判断是否有数据
+		if(gastationAllList!=null && gastationAllList.size() > 0){
+			Double longDb = new Double(0);
+			Double langDb = new Double(0);
+			for (int i = 0; i < gastationAllList.size(); i++) {
+				String longStr = gastationAllList.get(i).getLongitude();
+				String langStr = gastationAllList.get(i).getLatitude();
+				if (longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)) {
+					longDb = new Double(longStr);
+					langDb = new Double(langStr);
+				}
+				// 计算当前加注站离指定坐标距离
+				Double dist = DistCnvter.getDistance(longIn, langIn, longDb, langDb);
+				gastationAllList.get(i).setDistance(dist);
+			}
+			//按距离重新排序gastationResultList
+			Collections.sort(gastationAllList);
+			//获取两个联盟站并置顶
+			int index = 0;
+			for(int i=0;i<gastationAllList.size();i++ ){
+				if(gastationAllList.get(i).getType().equals("0")){
+					gastationAllList.add(index, gastationAllList.get(i));
+					gastationAllList.remove(i+1);
+					index++;
+				}
+				if(index > 1 ){
+					break;
+				}
+			}
+			//进行分页
+			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
+			if(allPage >= pageNumIn ){
+				if (pageNumIn == 0) {
+					pageNumIn = 1;
+				}
+				int end = pageNumIn * pageSizeIn;
+				if (end > gastationAllList.size()) {
+					end  = gastationAllList.size();
+				}
+				int begin = (pageNumIn - 1) * pageSizeIn;
+				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
+				List<Gastation> gastationList1 = pageInfo.getList();
+				if (gastationList1 != null && gastationList1.size() > 0) {
+					for (Gastation gastationInfo : gastationList1) {
+						Map<String, Object> gastationMap = new HashMap<>();
+						gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
+						gastationMap.put("name", gastationInfo.getGas_station_name());
+						gastationMap.put("type", gastationInfo.getType());
+						gastationMap.put("longitude", gastationInfo.getLongitude());
+						gastationMap.put("latitude", gastationInfo.getLatitude());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",gastationInfo.getType());
+						gastationMap.put("stationType", usysparam.getMname());
+						gastationMap.put("service",gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
+						gastationMap.put("preferential",gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
+						// 获取当前气站价格列表
+						String price = gastationInfo.getLng_price();
+						if (price != null && !"".equals(price)) {
+							price = price.replaceAll("，", ",");
+							price = price.replaceAll("：", ":");
+							if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+								String strArray[] = price.split(",");
+								Map[] map = new Map[strArray.length];
+								for (int i = 0; i < strArray.length; i++) {
+									String strInfo = strArray[i].trim();
+									String strArray1[] = strInfo.split(":");
+									String strArray2[] = strArray1[1].split("/");
+									Map<String, Object> dataMap = new HashMap<>();
+									dataMap.put("gasName", strArray1[0]);
+									dataMap.put("gasPrice", strArray2[0]);
+									dataMap.put("gasUnit", strArray2[1]);
+									map[i] = dataMap;
+								}
+								gastationMap.put("priceList", map);
+							} else {
+								gastationMap.put("priceList", new ArrayList());
+							}
+						} else {
+							gastationMap.put("priceList", new ArrayList());
+						}
+						gastationMap.put("phone", gastationInfo.getContact_phone());
+						if (gastationInfo.getStatus().equals("0")) {
+							gastationMap.put("state", "开启");
+						} else {
+							gastationMap.put("state", "关闭");
+						}
+						gastationMap.put("address", gastationInfo.getAddress());
+						String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="+ gastationInfo.getSys_gas_station_id();
+						gastationMap.put("infoUrl", infoUrl);
+						gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="+ gastationInfo.getSys_gas_station_id());
+						gastationArray.add(gastationMap);
+					}
+				}
+			}
+		}
+		return gastationArray;
+	}
+	/**
+	 * 获取加注站信息列表(orderByDistance)
+	 */
+	private List<Map<String, Object>> orderByDistanceList(List<Gastation> gastationAllList,Double longIn,Double langIn,int pageNumIn,int pageSizeIn){
+		List<Map<String, Object>> gastationArray = new ArrayList<>();
+		String http_poms_path = (String) prop.get("http_poms_path");
+		//判断是否有数据
+		if(gastationAllList!=null && gastationAllList.size() > 0){
+			Double longDb = new Double(0);
+			Double langDb = new Double(0);
+			for (int i = 0; i < gastationAllList.size(); i++) {
+				String longStr = gastationAllList.get(i).getLongitude();
+				String langStr = gastationAllList.get(i).getLatitude();
+				if (longStr != null && !"".equals(longStr) && langStr != null && !"".equals(langStr)) {
+					longDb = new Double(longStr);
+					langDb = new Double(langStr);
+				}
+				// 计算当前加注站离指定坐标距离
+				Double dist = DistCnvter.getDistance(longIn, langIn, longDb, langDb);
+				gastationAllList.get(i).setDistance(dist);
+			}
+			//按距离重新排序gastationResultList
+			Collections.sort(gastationAllList);
+			//进行分页
+			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
+			if(allPage >= pageNumIn ){
+				if (pageNumIn == 0) {
+					pageNumIn = 1;
+				}
+				int end = pageNumIn * pageSizeIn;
+				if (end > gastationAllList.size()) {
+					end  = gastationAllList.size();
+				}
+				int begin = (pageNumIn - 1) * pageSizeIn;
+				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
+				List<Gastation> gastationList1 = pageInfo.getList();
+				if (gastationList1 != null && gastationList1.size() > 0) {
+					for (Gastation gastationInfo : gastationList1) {
+						Map<String, Object> gastationMap = new HashMap<>();
+						gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
+						gastationMap.put("name", gastationInfo.getGas_station_name());
+						gastationMap.put("type", gastationInfo.getType());
+						gastationMap.put("longitude", gastationInfo.getLongitude());
+						gastationMap.put("latitude", gastationInfo.getLatitude());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",gastationInfo.getType());
+						gastationMap.put("stationType", usysparam.getMname());
+						gastationMap.put("service",gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
+						gastationMap.put("preferential",gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
+						// 获取当前气站价格列表
+						String price = gastationInfo.getLng_price();
+						if (price != null && !"".equals(price)) {
+							price = price.replaceAll("，", ",");
+							price = price.replaceAll("：", ":");
+							if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+								String strArray[] = price.split(",");
+								Map[] map = new Map[strArray.length];
+								for (int i = 0; i < strArray.length; i++) {
+									String strInfo = strArray[i].trim();
+									String strArray1[] = strInfo.split(":");
+									String strArray2[] = strArray1[1].split("/");
+									Map<String, Object> dataMap = new HashMap<>();
+									dataMap.put("gasName", strArray1[0]);
+									dataMap.put("gasPrice", strArray2[0]);
+									dataMap.put("gasUnit", strArray2[1]);
+									map[i] = dataMap;
+								}
+								gastationMap.put("priceList", map);
+							} else {
+								gastationMap.put("priceList", new ArrayList());
+							}
+						} else {
+							gastationMap.put("priceList", new ArrayList());
+						}
+						gastationMap.put("phone", gastationInfo.getContact_phone());
+						if (gastationInfo.getStatus().equals("0")) {
+							gastationMap.put("state", "开启");
+						} else {
+							gastationMap.put("state", "关闭");
+						}
+						gastationMap.put("address", gastationInfo.getAddress());
+						String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="+ gastationInfo.getSys_gas_station_id();
+						gastationMap.put("infoUrl", infoUrl);
+						gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="+ gastationInfo.getSys_gas_station_id());
+						gastationArray.add(gastationMap);
+					}
+				}
+			}
+		}
+		return gastationArray;
+	}
+	/**
+	 * 获取加注站信息列表(orderByPrice)
+	 */
+	private List<Map<String, Object>> orderByPriceList(List<Gastation> gastationAllList,int pageNumIn,int pageSizeIn){
+		List<Map<String, Object>> gastationArray = new ArrayList<>();
+		String http_poms_path = (String) prop.get("http_poms_path");
+		if(gastationAllList!=null && gastationAllList.size() > 0){
+			List<Gastation> rightList = new ArrayList<Gastation>();
+			List<Gastation> wrongList = new ArrayList<Gastation>();
+			for(int i=0;i<gastationAllList.size();i++ ){
+				String price = gastationAllList.get(i).getLng_price();
+				if(price!=null && !" ".equals(price) && !"".equals(price)){
+					price = price.replaceAll("，", ",");
+					price = price.replaceAll("：", ":");
+					if(price.indexOf(":") != -1 && price.indexOf("/") != -1){
+						rightList.add(gastationAllList.get(i));
+					}else{
+						wrongList.add(gastationAllList.get(i));
+						gastationAllList.remove(i);
+						i--;
+					}
+				}else{
+					wrongList.add(gastationAllList.get(i));
+					gastationAllList.remove(i);
+					i--;
+				}
+			}	
+			for (int i=0;i <gastationAllList.size();i++ ){
+				String price = gastationAllList.get(i).getLng_price();
+				List<Double> priceList = new ArrayList<Double>();
+				//获取价格
+				if (price != null && !"".equals(price)) {
+					price = price.replaceAll("，", ",");
+					price = price.replaceAll("：", ":");
+					if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+						String strArray[] = price.split(",");
+						for (int x = 0; x < strArray.length; x++) {
+							String strInfo = strArray[x].trim();
+							String strArray1[] = strInfo.split(":");
+							String strArray2[] = strArray1[1].split("/");
+							Double m = Double.valueOf(strArray2[0].substring(0, strArray2[0].length()-1));
+							priceList.add(m);
+						}
+					}else{
+						priceList.add(0.0);
+					} 
+				}else{
+					priceList.add(0.0);
+				} 
+				//获取最低价格,并赋值
+				Collections.sort(priceList);
+				gastationAllList.get(i).setMinPrice(priceList.get(0));
+			}
+	        Collections.sort(gastationAllList, new Comparator<Gastation>(){  
+	            public int compare(Gastation g1, Gastation g2) {  
+	            	int i = 0;
+	        		i = g1.getMinPrice().compareTo(g2.getMinPrice());
+	        		return i;
+	            }  
+	        }); 
+	        gastationAllList.addAll(wrongList);
+	        //进行分页
+			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
+			if(allPage >= pageNumIn ){
+				if (pageNumIn == 0) {
+					pageNumIn = 1;
+				}
+				int end = pageNumIn * pageSizeIn;
+				if (end > gastationAllList.size()) {
+					end  = gastationAllList.size();
+				}
+				int begin = (pageNumIn - 1) * pageSizeIn;
+				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
+				List<Gastation> gastationList1 = pageInfo.getList();
+				if (gastationList1 != null && gastationList1.size() > 0) {
+					for (Gastation gastationInfo : gastationList1) {
+						Map<String, Object> gastationMap = new HashMap<>();
+						gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
+						gastationMap.put("name", gastationInfo.getGas_station_name());
+						gastationMap.put("type", gastationInfo.getType());
+						gastationMap.put("longitude", gastationInfo.getLongitude());
+						gastationMap.put("latitude", gastationInfo.getLatitude());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",gastationInfo.getType());
+						gastationMap.put("stationType", usysparam.getMname());
+						gastationMap.put("service",gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
+						gastationMap.put("preferential",gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
+						// 获取当前气站价格列表
+						String price = gastationInfo.getLng_price();
+						if (price != null && !"".equals(price)) {
+							price = price.replaceAll("，", ",");
+							price = price.replaceAll("：", ":");
+							if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+								String strArray[] = price.split(",");
+								Map[] map = new Map[strArray.length];
+								for (int i = 0; i < strArray.length; i++) {
+									String strInfo = strArray[i].trim();
+									String strArray1[] = strInfo.split(":");
+									String strArray2[] = strArray1[1].split("/");
+									Map<String, Object> dataMap = new HashMap<>();
+									dataMap.put("gasName", strArray1[0]);
+									dataMap.put("gasPrice", strArray2[0]);
+									dataMap.put("gasUnit", strArray2[1]);
+									map[i] = dataMap;
+								}
+								gastationMap.put("priceList", map);
+							} else {
+								gastationMap.put("priceList", new ArrayList());
+							}
+						} else {
+							gastationMap.put("priceList", new ArrayList());
+						}
+						gastationMap.put("phone", gastationInfo.getContact_phone());
+						if (gastationInfo.getStatus().equals("0")) {
+							gastationMap.put("state", "开启");
+						} else {
+							gastationMap.put("state", "关闭");
+						}
+						gastationMap.put("address", gastationInfo.getAddress());
+						String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="+ gastationInfo.getSys_gas_station_id();
+						gastationMap.put("infoUrl", infoUrl);
+						gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="+ gastationInfo.getSys_gas_station_id());
+						gastationArray.add(gastationMap);
+					}
+				}
+			}
+		}
+		return gastationArray;
+	}
+
 	private String genPayReq(Map<String, String> resultunifiedorder) {
 
 		/*
@@ -5135,6 +5850,8 @@ public class MobileController {
 		}
 	}
 
+	
+	
 	@RequestMapping(value = "/QR")
 	@ResponseBody
 	public void getQR() {

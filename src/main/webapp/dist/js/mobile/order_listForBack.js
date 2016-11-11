@@ -55,9 +55,13 @@ function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
 				cash = cash1;
 				tradeNo = tradeNo1;
 				orderId = orderId1;
-				 
-				$("#content").modal('show');
-				 
+				if (cash * 1 <= orderNumber) {
+					bootbox.alert("累计退款金额（" + orderNumber + "）大于交易金额(" + cash
+							+ "),不能继续退款");
+					return;
+				} else {
+					$("#content").modal('show');
+				}
 
 				$("#money").val("");
 				$("#msgcontent").val('');
@@ -225,9 +229,7 @@ function subCheck(tradeNo1,type1,cash1,orderId1,no,retype){
 	
 	
 }
-function showOrderForBack(number){
-	loadPage('#main', '../web/order/showOrderForBack?orderNumber='+number);
-}
+
 function subbreak() {
 	if ($('#phone').val()=="") {
 		 bootbox.alert("请先输入手机号码获取验证码！");
@@ -294,6 +296,4 @@ function subbreak() {
 	}
 	$('#div').showLoading();
 	$("#formRoad").ajaxSubmit(options);
-	
-	
 }

@@ -1,7 +1,26 @@
 package com.sysongy.api.client.controller;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
@@ -9,7 +28,6 @@ import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.CouponGroup;
-import com.sysongy.poms.coupon.model.UserCoupon;
 import com.sysongy.poms.coupon.service.CouponGroupService;
 import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
@@ -30,8 +48,8 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
-import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
@@ -39,20 +57,13 @@ import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.*;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.BigDecimalArith;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.pojo.AliShortMessageBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
-import java.util.*;
 
 @Controller
 @RequestMapping("/crmInterface/crmCashServiceContoller")
@@ -170,6 +181,21 @@ public class CRMCashServiceContoller {
 				if (listBack!=null && listBack.size() > 0) {
 					SysCashBack back= listBack.get(0);//获取返现规则
 					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+					//添加首次充值订单
+					SysOrder newOrder=new SysOrder();
+					newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+					newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
+					newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
+					newOrder.setOrderDate(new Date());
+					newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
+					newOrder.setDebitAccount(record.getDebitAccount());
+					newOrder.setChargeType("113");
+					newOrder.setChannel("充值返现");
+					newOrder.setIs_discharge("0");
+					newOrder.setOperator(GlobalConstant.OrderOperatorSourceType.GASTATION);
+					newOrder.setOperatorSourceId(GlobalConstant.OrderOperatorSourceType.GASTATION);
+					orderService.saveOrder(newOrder);
+
 				}else{
 					logger.info("找不到匹配的返现规则，返现失败");
 				}
@@ -894,6 +920,14 @@ public class CRMCashServiceContoller {
         return ajaxJson;
     }
 
+    /**
+     * 充值消费记录查询
+     * @param request
+     * @param response
+     * @param sysOrderDeal
+     * @return
+     * @throws Exception IsCharge 0 消费 1 充值
+     */
     @ResponseBody
     @RequestMapping("/web/queryOrderChangeDeal")
     public AjaxJson queryOrderChangeDeal(HttpServletRequest request, HttpServletResponse response,
@@ -1069,6 +1103,14 @@ public class CRMCashServiceContoller {
         return null;
     }
 
+    /**
+     * 消费明细查询
+     * @param request
+     * @param response
+     * @param sysOrderGoodsForCRMReport
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping("/web/queryGoodsOrderInfos")
     public AjaxJson queryGoodsOrderInfos(HttpServletRequest request, HttpServletResponse response,

@@ -597,13 +597,11 @@ public class OrderServiceImpl implements OrderService {
 	   validAccount(order);
 
 	   //消费的时候传过去的cash是正值
-	   
 	   String consume_success =driverService.deductCashToDriver(order, GlobalConstant.ORDER_ISCHARGE_NO);
 	   if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(consume_success)){
 		   //如果出错直接返回错误代码退出
 		   throw new Exception( consume_success);
 	   }
-	   
 	   return GlobalConstant.OrderProcessResult.SUCCESS;
 	}
 
@@ -1245,6 +1243,15 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public PageInfo<SysOrder> queryOrderListForBack2(SysOrder order) {
+		PageHelper.startPage(order.getPageNum(), order.getPageSize(), order.getOrderby());
+		List<SysOrder> list = sysOrderMapper.queryForPageForBack2(order);
+		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
+		return pageInfo;
+	}
+
+	
+	@Override
 	public void saveOrder(SysOrder order) {
 		// TODO Auto-generated method stub
 		sysOrderMapper.insertSelective(order);
@@ -1280,34 +1287,40 @@ public class OrderServiceImpl implements OrderService {
 	public void saveBareakForRe(String msg, String money, String orderId)throws Exception {
 		// TODO Auto-generated method stub
 		SysOrder order = null; 
+		SysOrder newOrder=null;
 		SysUserAccount account;
-			order = this.queryById(orderId);
-			order.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-			order.setOrderRemark(msg);
-			order.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
-			order.setIs_discharge("0");
-			order.setOrderStatus(1);
-			order.setOrderDate(new Date());
-			order.setOrderType("230");
-			order.setChargeType("112");
-			order.setOrderRemark(msg);
-			account = accountService.queryUserAccountByGas(order.getChannelNumber());
-			if (account == null) {
-				throw new Exception("查无此气站");
-			}
-			if (Double.valueOf(account.getAccountBalance())<Double.valueOf(money)) {
-				throw new Exception("退款金额不足");
-			}
-			account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
-			accountService.updateAccount(account);
+		order = this.queryById(orderId);
+			newOrder=this.queryById(orderId);
+			newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
+			newOrder.setOrderRemark(msg);
+			newOrder.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
+			newOrder.setIs_discharge("0");
+			newOrder.setOrderStatus(1);
+			newOrder.setOrderDate(new Date());
+			newOrder.setOrderType("230");
+			newOrder.setShould_payment(order.getCash());
+			newOrder.setChargeType("112");
+			newOrder.setOrderRemark(msg);
+//			account = accountService.queryUserAccountByGas(order.getChannelNumber());
+//			if (account == null) {
+//				throw new Exception("查无此气站");
+//			}
+//			if (Double.valueOf(account.getAccountBalance())<Double.valueOf(money)) {
+//				throw new Exception("退款金额不足");
+//			}
+//			account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+//			accountService.updateAccount(account);
 			account = accountService.queryUserAccountByDriverId(order.getCreditAccount());
 			if (account == null) {
 				throw new Exception("查无此司机");
 			}
 			account.setAccountBalance(account.getAccountBalanceBigDecimal().add(new BigDecimal(money)).toString());
 			accountService.updateAccount(account);
-			 
-			this.saveOrder(order);
+			this.saveOrder(newOrder);
+			order = this.queryById(orderId);
+			order.setCash(order.getCash().subtract(new BigDecimal(money)));
+			this.updateByPrimaryKey(order);
+			
 	
 			// TODO Auto-generated catch block
 		//	e.printStackTrace();

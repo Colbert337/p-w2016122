@@ -111,9 +111,7 @@
 								 
 								<th onclick="orderBy(this,'trade_no');commitForm();"
 									id="trade_no_order">交易号</th>
-								<th>退款原因</th>
-								<th>退款批号</th>
-								<th>退款状态</th>
+								 
 								<th class="text-center td-w3">操作</th>
 							</tr>
 						</thead>
@@ -140,33 +138,35 @@
 									<td><c:if test="${list.is_discharge eq '0'}">否</c:if> <c:if
 											test="${list.is_discharge eq '1'}">是</c:if></td>
 									<td>${list.channel}</td>
-									<td><s:Code2Name mcode="${list.spend_type}" gcode="CHARGE_TYPE"></s:Code2Name></td>
+									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
 									<td>${list.trade_no}</td>
-									<td>${list.orderRemark}</td>
-									<td>${list.batch_no}</td>
-									<td><c:if test="${list.orderType eq '230'}">
-											<c:if test="${list.orderStatus==1}">成功</c:if>
-											<c:if test="${list.orderStatus==2}">失败</c:if>
-											<c:if test="${list.orderStatus==3}">待退款</c:if>
-										</c:if>
-									</td>
+									 
 									<td class="text-center">
-										<c:if test="${not empty list.trade_no }">
+										<c:if test="${list.cash ne '0.00' }">
+											<c:if test="${not empty list.trade_no}">
+												<a class=""
+													href="javascript:void(0);"
+													onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',1);" title="退款"
+													data-rel="tooltip"> <i
+														class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
+												</a>
+											</c:if>
+										
+											<c:if test="${list.spend_type eq 'C01' }">
+												<a class=""
+													href="javascript:void(0);"
+													onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',2);" title="退款"
+													data-rel="tooltip"> <i
+														class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
+												</a>
+											</c:if>
+										</c:if>
 										<a class=""
 											href="javascript:void(0);"
-											onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',1);" title="退款"
+											onclick="showOrderForBack('${list.orderNumber}' );" title="查看退款记录"
 											data-rel="tooltip"> <i
-												class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
+												class="ace-icon fa fa-search-plus bigger-130"></i>
 										</a>
-										</c:if>
-										<c:if test="${list.spend_type eq 'C01' }">
-										<a class=""
-											href="javascript:void(0);"
-											onclick="showBreak('${list.trade_no}','${list.chargeType}','${list.cash}','${list.orderId }','${list.orderNumber}',2);" title="退款"
-											data-rel="tooltip"> <i
-												class="ace-icon glyphicon glyphicon-warning-sign bigger-130"></i>
-										</a>
-										</c:if>
 									</td>
 								</tr>
 							</c:forEach>
@@ -220,7 +220,23 @@
 			</div>--%>
 			<div class="modal-body">
 				<label class="col-sm-11 control-label no-padding-right" id="title"></label>
-				<br /> <br />
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">验证手机号：</label>
+					<div class="col-sm-8">
+						<input type="text" id="phone"  onkeyup="clearNoNum2(this)"   placeholder="请输入验证手机号"
+							class="form-control" maxlength="11" />
+						<button class="btn btn-primary btn-sm" onclick="subCheck()">获取验证码</button>
+					</div>
+				</div>
+				<br /> <br /><br />
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">验证码：</label>
+					<div class="col-sm-8">
+						<input type="text" id="code"  onkeyup="clearNoNum2(this)"   placeholder="请输入验证码"
+							class="form-control" maxlength="6" />
+					</div>
+				</div>
+				<br /><br /><br /> 
 				<div class="form-group">
 					<label class="col-sm-3 control-label no-padding-right">请输入金额：</label>
 					<div class="col-sm-8">
@@ -246,6 +262,8 @@
 		</div>
 	</div>
 </div>
+
+ 
 
 
 <script>
