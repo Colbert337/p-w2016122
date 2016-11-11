@@ -1220,4 +1220,19 @@ public class CRMCashServiceContoller {
         return payAmount;
     }
 
+    //CRM POS消费时添加短信提醒
+    private void sendMessage(SysOrder recordNew, String mobilePhone){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(mobilePhone);
+        if(recordNew.getOrderDate() != null){
+            String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
+                    DateTimeHelper.FMT_yyyyMMddHHmmss);
+            aliShortMessageBean.setTime(curStrDate);
+        }
+        aliShortMessageBean.setString("消费");
+        aliShortMessageBean.setMoney(recordNew.getCash().toString());
+        aliShortMessageBean.setMoney1(recordNew.getSysDriver().getAccount().getAccountBalance());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+    }
 }

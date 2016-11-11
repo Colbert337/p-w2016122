@@ -265,6 +265,22 @@ public class CRMUserContoller {
             sysUserNew.setGender(1);
             sysUsersNew.add(sysUserNew);
             sysUsersNew.addAll(sysUsers);
+            SysUser appUser = new SysUser();
+
+            //添加APP用户
+            appUser.setSysUserId("8aa4ba67855a11e6a356000c291aa9e3");
+            appUser.setUserName("13000000000");
+            appUser.setRealName("APP用户");
+            appUser.setGender(1);
+            sysUsersNew.add(appUser);
+
+            //添加微信用户
+            SysUser wechartUser = new SysUser();
+            wechartUser.setSysUserId("553c248d906611e6b41c3497f629c5bd");
+            wechartUser.setUserName("13000000001");
+            wechartUser.setRealName("微信VIP用户");
+            wechartUser.setGender(1);
+            sysUsersNew.add(wechartUser);
             attributes.put("SysUsers",sysUsersNew);
             ajaxJson.setAttributes(attributes);
             ajaxJson.setSuccess(true);
