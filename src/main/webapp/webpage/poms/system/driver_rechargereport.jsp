@@ -101,6 +101,8 @@
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
 									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'should_payment');commitForm();" id="should_payment_order">订单金额</th>
+									<th onclick="orderBy(this,'spend_type');commitForm();" id="spend_type_order">支付方式</th>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
 									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">电话号码 </th>
 									<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
@@ -132,6 +134,8 @@
 										<c:if test="${list.is_discharge == 1}">冲红</c:if>
 									</td>
 									<td>${list.cash}</td>
+									<td>${list.should_payment}</td>
+									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
 									<td>${list.user_name}</td>
 									<td>${list.mobile_phone}</td>
 									<td>${list.channel_number}</td>

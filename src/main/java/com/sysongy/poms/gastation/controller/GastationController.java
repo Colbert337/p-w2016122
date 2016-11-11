@@ -839,9 +839,9 @@ public class GastationController extends BaseContoller{
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
 	            if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
-	            	 content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","交易金额","交易时间","交易对象","加注站名称","加注站编号","会员账号","操作人"};
+	            	 content[0] = new String[]{"订单编号","订单类型","交易流水号","交易类型","应付金额","订单金额","支付方式","交易时间","交易对象","加注站名称","加注站编号","会员账号","操作人"};
 	            }else{
-	            	content[0] = new String[]{"订单编号","交易流水号","交易类型","交易金额","交易时间","交易对象","会员账号","操作人"};
+	            	content[0] = new String[]{"订单编号","交易流水号","交易类型","应付金额","订单金额","支付方式","交易时间","交易对象","会员账号","操作人"};
 	            }
 	           
 
@@ -853,7 +853,9 @@ public class GastationController extends BaseContoller{
 	            		String order_type;
 	            		String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
 	            		String deal_type;
-	            		String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+	            		String cash = tmpMap.get("cash")==null?"0.0":tmpMap.get("cash").toString();
+	            		String should_payment = tmpMap.get("should_payment") == null?"0.0":tmpMap.get("should_payment").toString();
+	            		String spend_type = tmpMap.get("spend_type") == null?"":tmpMap.get("spend_type").toString();
 	            		String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
 	            		String credit_account = tmpMap.get("creditAccount")==null?"":tmpMap.get("creditAccount").toString();
 	            		String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
@@ -897,15 +899,39 @@ public class GastationController extends BaseContoller{
 							break;
 						}
 	                    
+	                    if(!StringUtils.isEmpty(spend_type)){
+	                    	switch (tmpMap.get("spend_type").toString()) {
+	    					case "C01":{
+	    						spend_type = "卡余额消费";
+	    						break;
+	    					}
+	    					case "C02":{
+	    						spend_type = "POS消费";
+	    						break;
+	    					}
+	    					case "C03":{
+	    						spend_type = "微信消费";
+	    						break;
+	    					}
+	    					case "C04":{
+	    						spend_type = "支付宝消费";
+	    						break;
+	    					}
+	    					default:
+	    						spend_type = "";
+	    						break;
+	    					}
+	                    }
+	                    
 	                    if(credit_account.length() == 32){
 	                    	credit_account = "个人";
 	                    }else{
 	                    	credit_account = "车队";
 	                    }
 	                    if(GlobalConstant.USER_TYPE_MANAGE == currUser.getUser().getUserType()){
-	                    	content[i] = new String[]{order_number,order_type,deal_number,deal_type,cash,order_date,credit_account,channel,channel_number,user_name,operator};
+	                    	content[i] = new String[]{order_number,order_type,deal_number,deal_type,cash,should_payment,spend_type,order_date,credit_account,channel,channel_number,user_name,operator};
 	                    }else{
-	                    	content[i] = new String[]{order_number,deal_number,deal_type,cash,order_date,credit_account,user_name,operator};
+	                    	content[i] = new String[]{order_number,deal_number,deal_type,cash,should_payment,spend_type,order_date,credit_account,user_name,operator};
 	                    }
 	                    
 	                    i++;
