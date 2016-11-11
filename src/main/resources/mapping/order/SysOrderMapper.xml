@@ -1342,6 +1342,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			and temp.order_date like
 			CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
 		</if>
+		ORDER BY temp.order_date DESC
 	</select>
 	<!-- 消费订单详情 -->
 	<select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.String">
