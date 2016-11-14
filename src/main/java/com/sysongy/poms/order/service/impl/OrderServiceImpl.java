@@ -1302,6 +1302,9 @@ public class OrderServiceImpl implements OrderService {
 			newOrder.setOrderDate(new Date());
 			newOrder.setOrderType("230");
 			newOrder.setShould_payment(order.getCash());
+			newOrder.setDebitAccount(order.getDebitAccount());
+			newOrder.setCreditAccount(order.getCreditAccount());
+			newOrder.setSpend_type(order.getSpend_type());
 			newOrder.setChargeType("112");
 			newOrder.setOrderRemark(msg);
 //			account = accountService.queryUserAccountByGas(order.getChannelNumber());

@@ -25,6 +25,10 @@ var listOptions = {
 	}
 }
 
+function outExcel(){
+	$("#formRoad").submit();
+}
+
 function showContent(){
 	closeDialog('innerModel');
 	$("#content").modal('show');
