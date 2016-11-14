@@ -2065,7 +2065,7 @@ public class MobileController {
 				driverMap.put("name", mainObj.optString("name"));
 				driverMap.put("amount", mainObj.optString("amount"));
 				driverMap.put("remark", mainObj.optString("remark"));
-				driverMap.put("paycode", mainObj.optString("paycode"));
+				driverMap.put("paycode", mainObj.optString("paycode").toUpperCase());
 				int resultVal = mbDealOrderService.transferDriverToDriver(driverMap);
 				if (resultVal < 0) {
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3468,7 +3468,7 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
-				String payCode = mainObj.optString("payCode");
+				String payCode = mainObj.optString("payCode").toUpperCase();
 				SysDriver oldDriver = new SysDriver();
 				oldDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				SysDriver oldD = driverService.queryDriverByMobilePhone(oldDriver);
@@ -3498,7 +3498,7 @@ public class MobileController {
 						}else{
 							String RnewCode = (String) redisClientImpl.getFromCache(newPhoneNum);
 							if(newCode.equals(RnewCode)){
-								if(oldD.getPayCode().equals(payCode)){
+								if(oldD.getPayCode().toUpperCase().equals(payCode)){
 									// 修改账户手机
 									if ("1".equals(phoneType)) {
 										sysDriver.setUserName(newPhoneNum);
@@ -3627,7 +3627,7 @@ public class MobileController {
 								// 数据库查询
 								List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 								if (!driver.isEmpty()) {
-									String initialPassword = mainObj.optString("newPassword");
+									String initialPassword = mainObj.optString("newPassword").toUpperCase();
 									// 初始密码加密、赋值
 									sysDriver.setPayCode(initialPassword);
 									sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
@@ -3660,7 +3660,7 @@ public class MobileController {
 						// 数据库查询
 						List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 						if (!driver.isEmpty()) {
-							String initialPassword = mainObj.optString("newPassword");
+							String initialPassword = mainObj.optString("newPassword").toUpperCase();
 							// 初始密码加密、赋值
 							sysDriver.setPayCode(initialPassword);
 							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
