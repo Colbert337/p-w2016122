@@ -9,7 +9,26 @@
 %>
 
 <script src="<%=basePath %>/dist/js/transportion/transportion_consumecollectreport.js"></script>
+<script type="text/javascript"
+		src="<%=basePath%>/assets/js/global/jedate.js"></script>
+<script type="text/javascript">
 
+	jeDate({
+		dateCell : "#startDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#endDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+
+</script>
 <div class="">
 	<!-- /.page-header -->
 	<form id="formgastation" action="<%=basePath%>/web/transportion/transportionConsumeReport/import">
@@ -32,14 +51,14 @@
 							<input type="text" name="stationId" placeholder="运输公司编号/运输公司名称" maxlength="20" value="${loger.stationId}"/>
 						</div>
 						<div class="item">
-							<div class="input-daterange top" id="j-input-daterange-top">
+
 								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${loger.startDate}" readonly="readonly"/>
+								<input type="text" style="width:140px;" id="startDate" name="startDate" value="${loger.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="endDate" value="${loger.endDate}" readonly="readonly"/>
-							</div>			
+								<input type="text" style="width:140px;" id="endDate" name="endDate" value="${loger.endDate}" readonly="readonly"/>
+
 						</div>
 
 						<div class="item">
