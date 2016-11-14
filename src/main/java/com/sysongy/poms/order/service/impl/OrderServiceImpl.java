@@ -265,9 +265,12 @@ public class OrderServiceImpl implements OrderService {
     	dischargeOrder.setOrderNumber(originalOrder.getOrderNumber());
     	dischargeOrder.setOrderType(originalOrder.getOrderType());
     	dischargeOrder.setOrderDate(new Date());
-    	//将订单金额转为负
+    	//将实收金额转为负
     	BigDecimal dis_cash = originalOrder.getCash().multiply(new BigDecimal(-1));
-    	dischargeOrder.setCash(dis_cash);
+		dischargeOrder.setCash(dis_cash);
+		//将订单金额转为负
+		BigDecimal should_payment = originalOrder.getShould_payment().multiply(new BigDecimal(-1));
+		dischargeOrder.setShould_payment(should_payment);
     	dischargeOrder.setCreditAccount(originalOrder.getCreditAccount());
     	dischargeOrder.setDebitAccount(originalOrder.getDebitAccount());
     	dischargeOrder.setChargeType(originalOrder.getChargeType());
