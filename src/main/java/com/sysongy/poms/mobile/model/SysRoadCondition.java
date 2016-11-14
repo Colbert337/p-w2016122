@@ -36,6 +36,16 @@ public class SysRoadCondition extends BaseModel implements Serializable {
 
 	private Date endTime;
 	
+	private String mname;
+	
+	public String getMname() {
+		return mname;
+	}
+
+	public void setMname(String mname) {
+		this.mname = mname;
+	}
+
 	private String captureTime_str;
 	
 	private String auditorTime_str;

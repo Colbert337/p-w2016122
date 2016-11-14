@@ -665,6 +665,10 @@ public class CRMCashServiceContoller {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
 
+            //如果是POS支付，则发送消费短信
+            if(record.getSpend_type().equals(GlobalConstant.ORDER_SPEND_TYPE.POS)){
+                sendMessage(record, sysDriver.getMobilePhone());
+            }
 
             recordNew.setCoupon_id(record.getCoupon_number());
             recordNew.setCoupon_number(record.getCoupon_id());
@@ -1229,10 +1233,10 @@ public class CRMCashServiceContoller {
                     DateTimeHelper.FMT_yyyyMMddHHmmss);
             aliShortMessageBean.setTime(curStrDate);
         }
-        aliShortMessageBean.setString("消费");
+        aliShortMessageBean.setName(recordNew.getChannel());
+        aliShortMessageBean.setString("POS机");
         aliShortMessageBean.setMoney(recordNew.getCash().toString());
-        aliShortMessageBean.setMoney1(recordNew.getSysDriver().getAccount().getAccountBalance());
         AliShortMessage.sendShortMessage(aliShortMessageBean,
-                AliShortMessage.SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+                AliShortMessage.SHORT_MESSAGE_TYPE.APP_CONSUME);
     }
 }

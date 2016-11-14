@@ -781,7 +781,9 @@
 	</trim>
     group by sgs.sys_gas_station_id) as total
   </select>
-<select id="queryGastationByPhone" resultType="java.lang.Integer" parameterType="java.lang.String">
-	select count(sys_gas_station_id) FROM sys_gas_station WHERE admin_username = #{phone, jdbcType=VARCHAR}
+<select id="queryGastationByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select 
+	<include refid="Base_Column_List" />
+	FROM sys_gas_station WHERE admin_username = #{phone, jdbcType=VARCHAR}
 </select>
 </mapper>
