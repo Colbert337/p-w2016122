@@ -485,12 +485,13 @@ function saveTemplate(){
     var multipartOptions ={
         url:'../web/tcms/vehicle/info/file',
         type:'post',
-        dataType:'text',
+        dataType:'json',
         enctype:"multipart/form-data",
         success:function(data){
-            /*bootbox.alert("操作成功！");*/
-            $("#main").html(data);
-            $("#modal-table").modal("show");
+            bootbox.alert(data.msg+",导入"+data.sum+"条数据！");
+            init();
+            /*$("#main").html(data);
+            $("#modal-table").modal("show");*/
         },error:function(XMLHttpRequest, textStatus, errorThrown) {
             bootbox.alert("操作失败！");
         }
