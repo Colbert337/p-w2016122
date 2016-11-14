@@ -91,8 +91,8 @@
 							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
-										<label class="pos-rel" style="display:none">
+									<th class="center" style="display:none">
+										<label class="pos-rel">
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
 										</label>
