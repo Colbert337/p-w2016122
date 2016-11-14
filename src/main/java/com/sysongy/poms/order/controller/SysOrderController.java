@@ -570,15 +570,17 @@ public class SysOrderController extends BaseContoller {
 		PageBean bean = new PageBean();
 		try {
 			if (code!=null) {
-				if (((String)redisClientImpl.getFromCache(phone)).equalsIgnoreCase(code)) {
-					
+				if ((code.equalsIgnoreCase((String)redisClientImpl.getFromCache(phone)))) {
+					service.saveBareakForRe(msg,money,orderId);
+					bean.setRetMsg("退款成功");
+				}else{
+					throw new Exception("验证码不正确");
 				}
 			}else{
 				throw new Exception("验证码不能为空");
 			}
 			 
-			service.saveBareakForRe(msg,money,orderId);
-			bean.setRetMsg("退款成功");
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
