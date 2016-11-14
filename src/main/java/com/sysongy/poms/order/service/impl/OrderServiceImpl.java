@@ -1315,12 +1315,12 @@ public class OrderServiceImpl implements OrderService {
 				throw new Exception("查无此司机");
 			}
 			account.setAccountBalance(account.getAccountBalanceBigDecimal().add(new BigDecimal(money)).toString());
-			accountService.updateAccount(account);
+//			accountService.updateAccount(account);
 			this.saveOrder(newOrder);
 			order = this.queryById(orderId);
 			order.setCash(order.getCash().subtract(new BigDecimal(money)));
 			this.updateByPrimaryKey(order);
-			
+			accountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal(money)), "230");
 	
 			// TODO Auto-generated catch block
 		//	e.printStackTrace();

@@ -15,6 +15,7 @@
 <script src="<%=basePath%>/dist/js/message/show.js"></script>
 <div class="" id="div">
 	<!-- /.page-header -->
+	<button class="btn" onclick="loadPage('#main', '../web/order/list/page');">返回</button>
 	<form id="formRoad">
 
 		<jsp:include page="/common/page_param.jsp"></jsp:include>
@@ -151,7 +152,7 @@
 		<!-- /.row -->
 	</form>
 		<div class="modal-footer">
-		<button class="btn" onclick="loadPage('#main', '../web/order/list/page');">返回</button>
+		
 			 </div>
 </div>
  
