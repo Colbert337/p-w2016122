@@ -5000,7 +5000,7 @@ public class MobileController {
 	 */
 	@RequestMapping(value = "/deal/accountSpend")
 	@ResponseBody
-	public String accountSpend(String params) {
+	public synchronized String accountSpend(String params) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("订单支付成功！");
