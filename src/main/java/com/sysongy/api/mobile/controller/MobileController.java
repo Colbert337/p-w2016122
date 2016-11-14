@@ -617,9 +617,9 @@ public class MobileController {
 						resultMap.put("QRCodeUrl", http_poms_path + driverlist.get(0).getDriverQrcode());
 						resultMap.put("cumulativeReturn", cashBack);
 						resultMap.put("userStatus", sysUserAccount.getAccount_status());
-						int i = gastationService.queryGastationByPhone(driverService.queryDriverByPK(sysDriverId).getMobilePhone());
+						Gastation gastation = gastationService.queryGastationByPhone(driverService.queryDriverByPK(sysDriverId).getMobilePhone());
 						//用户类型(1 司机 2 气站管理员)
-						if(i==0){
+						if(gastation==null){
 							resultMap.put("userType","1");
 						}else{
 							resultMap.put("userType", "2");
@@ -3165,13 +3165,16 @@ public class MobileController {
 						}
 						SysOrder sorder = orderService.queryById(orderId);
 						//微信消费短信通知
+						SysDriver driver = driverService.queryDriverByPK(sorder.getCreditAccount());
+						String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(sorder.getCreditAccount()).getMobilePhone());
-						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(sorder.getCreditAccount()).getMobilePhone());
-						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-						aliShortMessageBean.setSpentMoney(feeCount);
-						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
-						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
+						aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+						aliShortMessageBean.setName(gasName);
+						aliShortMessageBean.setString("微信");
+						aliShortMessageBean.setMoney(feeCount);
+						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
 						//APP提示
 						sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
 					}
@@ -3347,15 +3350,19 @@ public class MobileController {
 							int rs = couponService.updateUserCouponStatus(uc);
 						}
 						//支付宝充值短信通知
+						SysOrder sorder = orderService.queryById(orderId);
+						SysDriver driver = driverService.queryDriverByPK(sorder.getCreditAccount());
+						String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
-						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getCreditAccount()).getMobilePhone());
-						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-						aliShortMessageBean.setSpentMoney(feeCount);
-						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(orderService.queryById(orderId).getCreditAccount()).getAccountBalance());
-						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+						aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
+						aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+						aliShortMessageBean.setName(gasName);
+						aliShortMessageBean.setString("支付宝");
+						aliShortMessageBean.setMoney(feeCount);
+						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
 						//APP提示
-						sysMessageService.saveMessageTransaction("支付宝消费", sysOrder,"2");
+						sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -5103,12 +5110,16 @@ public class MobileController {
 								if(rs > 0 ){
 									//余额消费短信通知
 									AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-									aliShortMessageBean.setSendNumber(driver.getMobilePhone());
-									aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
-									aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-									aliShortMessageBean.setSpentMoney(amount);
-									aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(token).getAccountBalance());
-									AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CONSUME_SUCCESSFUL);
+									SysOrder sorder = orderService.queryById(orderID);
+									SysDriver sdriver = driverService.queryDriverByPK(sorder.getCreditAccount());
+									String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
+									aliShortMessageBean.setSendNumber(sdriver.getMobilePhone());
+									aliShortMessageBean.setAccountNumber(sdriver.getMobilePhone());
+									aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+									aliShortMessageBean.setName(gasName);
+									aliShortMessageBean.setString("账户余额");
+									aliShortMessageBean.setMoney(amount);
+									AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
 									//APP提示
 									sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
 								}else{
@@ -5559,6 +5570,78 @@ public class MobileController {
 			}
 		}
 		return gastationArray;
+	}
+	/**
+	 * 获取单个商户信息
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/station/getStationInfo")
+	@ResponseBody
+	public String getStationInfo(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 必填参数
+			 */
+			String token = "token";
+			boolean b = JsonTool.checkJson(mainObj, token);
+			/**
+			 * 请求接口
+			 */
+			if (b) {
+				Map<String, Object> dataMap = new HashMap<>();
+				token = mainObj.optString("token");
+				SysDriver driver = driverService.queryDriverByPK(token);
+				if(driver!=null){
+					Gastation gastation = gastationService.queryGastationByPhone(driver.getMobilePhone());
+					if(gastation!=null){
+						dataMap.put("stationId", gastation.getSys_gas_station_id());
+						dataMap.put("address", gastation.getAddress());
+						dataMap.put("stationName", gastation.getGas_station_name());
+						dataMap.put("phone", gastation.getContact_phone());
+//						dataMap.put("price", value);
+//						dataMap.put("unit", value);
+//						dataMap.put("gasName", value);
+						result.setData(dataMap);
+					}else{
+						result.setStatus(MobileReturn.STATUS_SUCCESS);
+						result.setMsg("没有对应的气站信息！");
+					}
+				}else{
+					result.setStatus(MobileReturn.STATUS_SUCCESS);
+					result.setMsg("没有对应的司机账户！");
+				}
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取折扣信息失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取折扣信息失败： " + e);
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
 	}
 
 	private String genPayReq(Map<String, String> resultunifiedorder) {
