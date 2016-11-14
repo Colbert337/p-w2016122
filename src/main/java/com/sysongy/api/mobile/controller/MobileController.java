@@ -893,7 +893,8 @@ public class MobileController {
 					if (veCode != null && !"".equals(veCode)) {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
-						driver.setPayCode(mainObj.optString("paycode"));
+						paycode = mainObj.optString("paycode").toUpperCase();
+						driver.setPayCode(paycode);
 						driverService.saveDriver(driver, "update", null, null);// 设置支付密码
 					}else{
 						result.setStatus(MobileReturn.STATUS_FAIL);
@@ -960,12 +961,12 @@ public class MobileController {
 				SysDriver sysDriver = new SysDriver();
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				String driverId = mainObj.optString("token");
-				oldPayCode = mainObj.optString("oldPayCode");
+				oldPayCode = mainObj.optString("oldPayCode").toUpperCase();
 				SysDriver driver = driverService.queryDriverByPK(driverId);
-				String payCode = driver.getPayCode();
+				String payCode = driver.getPayCode().toUpperCase();
 				if (payCode.equals(oldPayCode)) {
 					// 判断原支付密码是否正确
-					newPayCode = mainObj.optString("newPayCode");
+					newPayCode = mainObj.optString("newPayCode").toUpperCase();
 					if (newPayCode != null && !"".equals(newPayCode)) {
 						sysDriver.setPayCode(newPayCode);
 						driverService.saveDriver(sysDriver, "update", null, null);
@@ -5610,9 +5611,10 @@ public class MobileController {
 						dataMap.put("address", gastation.getAddress());
 						dataMap.put("stationName", gastation.getGas_station_name());
 						dataMap.put("phone", gastation.getContact_phone());
-//						dataMap.put("price", value);
-//						dataMap.put("unit", value);
-//						dataMap.put("gasName", value);
+						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
+						dataMap.put("price", gsGasPrice.getPrice());
+						dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getUnit()).get(0).getMname());
+						dataMap.put("gasName", usysparamService.query("CARDTYPE", gsGasPrice.getGasName()).get(0).getMname());
 						result.setData(dataMap);
 					}else{
 						result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -5630,14 +5632,88 @@ public class MobileController {
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			logger.error("信息： " + resultStr);
-			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			resultStr = DESUtil.encode(keyStr, resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("获取折扣信息失败！");
 			resutObj = JSONObject.fromObject(result);
 			logger.error("获取折扣信息失败： " + e);
 			resultStr = resutObj.toString();
-			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+			resultStr = DESUtil.encode(keyStr, resultStr);
+			return resultStr;
+		} finally {
+			return resultStr;
+		}
+	}
+	/**
+	 * 修改商户信息
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "/station/updateStationInfo")
+	@ResponseBody
+	public String updateStationInfo(String params) {
+		MobileReturn result = new MobileReturn();
+		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("查询成功！");
+		JSONObject resutObj = new JSONObject();
+		String resultStr = "";
+		try {
+			/**
+			 * 解析参数
+			 */
+			params = DESUtil.decode(keyStr, params);
+			JSONObject paramsObj = JSONObject.fromObject(params);
+			JSONObject mainObj = paramsObj.optJSONObject("main");
+			/**
+			 * 必填参数
+			 */
+			String stationId = "stationId";
+			boolean b = JsonTool.checkJson(mainObj, stationId);
+			/**
+			 * 请求接口
+			 */
+			if (b) {
+				stationId = mainObj.optString("stationId");
+				Gastation gastation = new Gastation();
+				gastation.setSys_gas_station_id(stationId);
+				String stationName = mainObj.optString("stationName");
+				String phone = mainObj.optString("phone");
+				String price = mainObj.optString("price");
+				String unit = mainObj.optString("unit");
+				String promotions = mainObj.optString("promotions");
+				if(stationName!=null && !"".equals(stationName)){
+					gastation.setGas_station_name(stationName);
+				}
+				if(phone!=null && !"".equals(phone)){
+					gastation.setContact_phone(phone);
+				}
+				if(promotions!=null && !"".equals(promotions)){
+					gastation.setPromotions(promotions);
+				}
+				int rs = gastationService.updateByPrimaryKeySelective(gastation);
+				if(rs > 0){
+					result.setMsg("修改成功！");
+				}else{
+					result.setStatus(MobileReturn.STATUS_FAIL);
+					result.setMsg("修改失败！");
+				}
+			} else {
+				result.setStatus(MobileReturn.STATUS_FAIL);
+				result.setMsg("参数有误！");
+			}
+			resutObj = JSONObject.fromObject(result);
+			resutObj.remove("listMap");
+			resultStr = resutObj.toString();
+			logger.error("信息： " + resultStr);
+			resultStr = DESUtil.encode(keyStr, resultStr);
+		} catch (Exception e) {
+			result.setStatus(MobileReturn.STATUS_FAIL);
+			result.setMsg("获取折扣信息失败！");
+			resutObj = JSONObject.fromObject(result);
+			logger.error("获取折扣信息失败： " + e);
+			resultStr = resutObj.toString();
+			resultStr = DESUtil.encode(keyStr, resultStr);
 			return resultStr;
 		} finally {
 			return resultStr;
