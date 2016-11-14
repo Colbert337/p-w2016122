@@ -29,15 +29,15 @@
 				<div class="search-types">
 					 
 					<div class="item">
-						<label>充值类型</label> <select name="chargeType" id="type"
-							value="${order.chargeType}">
+						<label>充值类型</label> <select name="chargeType"  id='type1'  
+							value='${order.chargeType}'>
 							<s:option flag="true" gcode="CHARGE_TYPE_SEL" form="road"
 								field="conditionType" />
 						</select>
 					</div> 
 					
 						<div class="item">
-						<label>消费类型</label> <select name="spend_type" id="type"
+						<label>消费类型</label> <select name="spend_type"  id='type2'  
 							value="${order.spend_type}">
 							<s:option flag="true" gcode="SPEND_TYPE_SEL" form="road"
 								field="conditionType" />
@@ -275,6 +275,6 @@
 
 <script>
 	//	$("#conditionStatus").val("${road.conditionStatus}");
-
-	
+	$("#type1").val('${order.chargeType}');
+	$("#type2").val('${order.spend_type}');
 </script>
