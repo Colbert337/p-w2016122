@@ -356,8 +356,11 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setOrderStatus(3);
 						newOrder.setOrderDate(new Date());
 						newOrder.setOrderType("230");
-						newOrder.setChargeType("110");
 						newOrder.setShould_payment(order.getCash());
+						newOrder.setDebitAccount(order.getDebitAccount());
+						newOrder.setCreditAccount(order.getCreditAccount());
+						newOrder.setSpend_type(order.getSpend_type());
+						newOrder.setChargeType("110");
 						newOrder.setBatch_no(batch_no);
 						newOrder.setOrderRemark(msg);
 						order.setCash(order.getCash().subtract(new BigDecimal(money)));
@@ -400,6 +403,9 @@ public class SysOrderController extends BaseContoller {
 							newOrder.setOrderStatus(1);
 							newOrder.setOrderDate(new Date());
 							newOrder.setOrderType("230");
+							newOrder.setDebitAccount(order.getDebitAccount());
+							newOrder.setCreditAccount(order.getCreditAccount());
+							newOrder.setSpend_type(order.getSpend_type());
 							newOrder.setChargeType("111");
 							newOrder.setOrderRemark(msg);
 							newOrder.setShould_payment(order.getCash());
@@ -480,6 +486,9 @@ public class SysOrderController extends BaseContoller {
 					newOrder.setOrderStatus(3);
 					newOrder.setOrderDate(new Date());
 					newOrder.setOrderType("230");
+					newOrder.setDebitAccount(order.getDebitAccount());
+					newOrder.setCreditAccount(order.getCreditAccount());
+					newOrder.setSpend_type(order.getSpend_type());
 					newOrder.setChargeType("110");
 					newOrder.setShould_payment(order.getCash());
 					newOrder.setBatch_no(batch_no);
@@ -522,6 +531,9 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setOrderStatus(1);
 						newOrder.setOrderDate(new Date());
 						newOrder.setOrderType("230");
+						newOrder.setDebitAccount(order.getDebitAccount());
+						newOrder.setCreditAccount(order.getCreditAccount());
+						newOrder.setSpend_type(order.getSpend_type());
 						newOrder.setChargeType("111");
 						newOrder.setOrderRemark(msg);
 						newOrder.setShould_payment(order.getCash());
