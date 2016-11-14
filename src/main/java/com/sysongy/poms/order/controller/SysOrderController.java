@@ -7,7 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +23,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
@@ -264,7 +268,7 @@ public class SysOrderController extends BaseContoller {
 	 */
 	@RequestMapping("/saveBreak")
 	@ResponseBody
-	public String saveBreak(ModelMap map, String money, String msg, String tradeNo, String cash, String orderId,
+	public String saveBreak(HttpSession session, ModelMap map, String money, String msg, String tradeNo, String cash, String orderId,
 			String type, String phone, String code) {
 
 		String http_poms_path = (String) prop.get("http_poms_path");
@@ -364,6 +368,11 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setBatch_no(batch_no);
 						newOrder.setOrderRemark(msg);
 						order.setCash(order.getCash().subtract(new BigDecimal(money)));
+						order.setOrderStatus(1);
+						order.setChk_memo(msg);
+						CurrUser user = (CurrUser) session.getAttribute("currUser");
+						order.setChk_time(new Date());
+						order.setChk_user(user.getUser().getMobilePhone());
 						service.updateByPrimaryKey(order);
 						service.saveOrder(newOrder);
 					} else {
@@ -411,6 +420,11 @@ public class SysOrderController extends BaseContoller {
 							newOrder.setShould_payment(order.getCash());
 							newOrder.setBatch_no(batch_no);
 							order.setCash(order.getCash().subtract(new BigDecimal(money)));
+							order.setOrderStatus(1);
+							order.setChk_memo(msg);
+							CurrUser user = (CurrUser) session.getAttribute("currUser");
+							order.setChk_time(new Date());
+							order.setChk_user(user.getUser().getMobilePhone());
 							service.updateByPrimaryKey(order);
 							service.saveOrder(newOrder);
 						}
@@ -494,6 +508,11 @@ public class SysOrderController extends BaseContoller {
 					newOrder.setBatch_no(batch_no);
 					newOrder.setOrderRemark(msg);
 					order.setCash(order.getCash().subtract(new BigDecimal(money)));
+					order.setOrderStatus(1);
+					order.setChk_memo(msg);
+					CurrUser user = (CurrUser) session.getAttribute("currUser");
+					order.setChk_time(new Date());
+					order.setChk_user(user.getUser().getMobilePhone());
 					service.updateByPrimaryKey(order);
 					service.saveOrder(newOrder);
 				} else {
@@ -539,6 +558,11 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setShould_payment(order.getCash());
 						newOrder.setBatch_no(batch_no);
 						order.setCash(order.getCash().subtract(new BigDecimal(money)));
+						order.setChk_memo(msg);
+						CurrUser user = (CurrUser) session.getAttribute("currUser");
+						order.setChk_time(new Date());
+						order.setOrderStatus(1);
+						order.setChk_user(user.getUser().getMobilePhone());
 						service.updateByPrimaryKey(order);
 						service.saveOrder(newOrder);
 					}
@@ -566,12 +590,12 @@ public class SysOrderController extends BaseContoller {
 
 	@RequestMapping("/saveBreakForRe")
 	@ResponseBody
-	public String saveBreakForRe(String msg, String money, String orderId,String phone,String code) {
+	public String saveBreakForRe(HttpSession session,String msg, String money, String orderId,String phone,String code) {
 		PageBean bean = new PageBean();
 		try {
 			if (code!=null) {
 				if ((code.equalsIgnoreCase((String)redisClientImpl.getFromCache(phone)))) {
-					service.saveBareakForRe(msg,money,orderId);
+					service.saveBareakForRe(session,msg,money,orderId);
 					bean.setRetMsg("退款成功");
 				}else{
 					throw new Exception("验证码不正确");

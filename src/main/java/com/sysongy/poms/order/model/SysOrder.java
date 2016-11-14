@@ -127,7 +127,37 @@ public class SysOrder extends BaseModel{
 
     private String mobile_phone;//存储退款（充值）司机手机号
     
-    public String getCreditPhone() {
+    private String chk_memo;
+    
+    private Date chk_time;
+    
+    private String chk_user;
+    
+    public String getChk_user() {
+		return chk_user;
+	}
+
+	public void setChk_user(String chk_user) {
+		this.chk_user = chk_user;
+	}
+
+	public String getChk_memo() {
+		return chk_memo;
+	}
+
+	public void setChk_memo(String chk_memo) {
+		this.chk_memo = chk_memo;
+	}
+
+	public Date getChk_time() {
+		return chk_time;
+	}
+
+	public void setChk_time(Date chk_time) {
+		this.chk_time = chk_time;
+	}
+
+	public String getCreditPhone() {
 		return creditPhone;
 	}
 

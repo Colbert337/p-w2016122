@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.card.service.GasCardService;
-import com.sysongy.poms.transportion.dao.TransportionMapper;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
@@ -41,6 +42,7 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.dao.TransportionMapper;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -1282,9 +1284,8 @@ public class OrderServiceImpl implements OrderService {
 		return sysOrderMapper.backCash(orderId);
 	}
 
-	@Override
 	@Transactional
-	public void saveBareakForRe(String msg, String money, String orderId)throws Exception {
+	public void saveBareakForRe(HttpSession session,String msg, String money, String orderId)throws Exception {
 		// TODO Auto-generated method stub
 		SysOrder order = null; 
 		SysOrder newOrder=null;
@@ -1322,6 +1323,11 @@ public class OrderServiceImpl implements OrderService {
 			this.saveOrder(newOrder);
 			order = this.queryById(orderId);
 			order.setCash(order.getCash().subtract(new BigDecimal(money)));
+			order.setOrderStatus(1);
+			order.setChk_memo(msg);
+			CurrUser user = (CurrUser) session.getAttribute("currUser");
+			order.setChk_time(new Date());
+			order.setChk_user(user.getUser().getMobilePhone());
 			this.updateByPrimaryKey(order);
 			accountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal(money)), "230");
 	
