@@ -3604,7 +3604,7 @@ public class MobileController {
 							// 数据库查询
 							List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 							if (!driver.isEmpty()) {
-								String initialPassword = mainObj.optString("newPassword");
+								String initialPassword = mainObj.optString("newPassword").toUpperCase();
 								// 初始密码加密、赋值
 								sysDriver.setPayCode(initialPassword);
 								sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
