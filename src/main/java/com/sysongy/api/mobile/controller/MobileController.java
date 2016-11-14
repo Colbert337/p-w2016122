@@ -3246,8 +3246,6 @@ public class MobileController {
 						logger.info("找不到匹配的返现规则，返现失败");
 					}
 				}
-				//更新最新余额到账户
-				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CHARGE_TO_DRIVER);
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
@@ -3462,6 +3460,10 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
+				String payCode = mainObj.optString("payCode");
+				SysDriver oldDriver = new SysDriver();
+				oldDriver.setMobilePhone(mainObj.optString("phoneNum"));
+				SysDriver oldD = driverService.queryDriverByMobilePhone(oldDriver);
 				// 创建对象
 				SysDriver sysDriver = new SysDriver();
 				// 原电话号码赋值
@@ -3488,22 +3490,27 @@ public class MobileController {
 						}else{
 							String RnewCode = (String) redisClientImpl.getFromCache(newPhoneNum);
 							if(newCode.equals(RnewCode)){
-								// 修改账户手机
-								if ("1".equals(phoneType)) {
-									sysDriver.setUserName(newPhoneNum);
-									sysDriver.setMobilePhone(newPhoneNum);
-								} else {
-									sysDriver.setSecurityMobilePhone(newPhoneNum);
-								}
-								sysDriver.setDriverType(driver.get(0).getDriverType());
-								sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
-								int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
-								// 返回大于0，成功
-								if (resultVal <= 0) {
-									result.setStatus(MobileReturn.STATUS_FAIL);
-									result.setMsg("修改账号手机号/密保手机失败！");
+								if(oldD.getPayCode().equals(payCode)){
+									// 修改账户手机
+									if ("1".equals(phoneType)) {
+										sysDriver.setUserName(newPhoneNum);
+										sysDriver.setMobilePhone(newPhoneNum);
+									} else {
+										sysDriver.setSecurityMobilePhone(newPhoneNum);
+									}
+									sysDriver.setDriverType(driver.get(0).getDriverType());
+									sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+									int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
+									// 返回大于0，成功
+									if (resultVal <= 0) {
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("修改账号手机号/密保手机失败！");
+									}else{
+										dataMap.put("resultVal", "true");
+									}
 								}else{
-									dataMap.put("resultVal", "true");
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("支付密码错误！");
 								}
 							}else{
 								result.setStatus(MobileReturn.STATUS_FAIL);
