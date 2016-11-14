@@ -964,7 +964,7 @@ public class MobileController {
 				oldPayCode = mainObj.optString("oldPayCode").toUpperCase();
 				SysDriver driver = driverService.queryDriverByPK(driverId);
 				String payCode = driver.getPayCode().toUpperCase();
-				if (payCode.equals(oldPayCode)) {
+				if (payCode.equalsIgnoreCase(oldPayCode)) {
 					// 判断原支付密码是否正确
 					newPayCode = mainObj.optString("newPayCode").toUpperCase();
 					if (newPayCode != null && !"".equals(newPayCode)) {
