@@ -2773,6 +2773,7 @@ public class MobileController {
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
+							sysOrder.setDebitAccount(gastationId);
 							//设置应付金额
 							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
@@ -2839,6 +2840,7 @@ public class MobileController {
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
+							sysOrder.setDebitAccount(gastationId);
 							//设置应付金额
 							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
@@ -5063,6 +5065,7 @@ public class MobileController {
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
 						sysOrder.setChannel("APP-余额消费-"+gas.getGas_station_name());
+						sysOrder.setDebitAccount(gastationId);
 						//设置实付金额
 						sysOrder.setCash(new BigDecimal(amount));
 						//设置应付金额
