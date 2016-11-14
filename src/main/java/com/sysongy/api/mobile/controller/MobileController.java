@@ -87,6 +87,7 @@ import com.sysongy.poms.mobile.service.MbAppVersionService;
 import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
+import com.sysongy.poms.mobile.service.impl.SysRoadServiceImpl;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
@@ -3907,14 +3908,18 @@ public class MobileController {
 					if (sysRoadCondition != null) {
 						redisList.add(sysRoadCondition);
 					}else{
-						SysRoadCondition src = new SysRoadCondition();
-						src.setId(roadIdList.get(i).getId());
-						src.setConditionStatus("0");
-						int rs = sysRoadService.updateByPrimaryKey(src);
-						if (rs ==1) {
-							logger.info("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：成功!!!");
-						}else{
-							logger.error("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：失败!!!");
+						Usysparam param=usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadIdList.get(i).getConditionType());
+						int time = SysRoadServiceImpl.sumTime( roadIdList.get(i).getStartTime(), Integer.valueOf(param.getData()));
+						if(time <= 0 ){
+							SysRoadCondition src = new SysRoadCondition();
+							src.setId(roadIdList.get(i).getId());
+							src.setConditionStatus("0");
+							int rs = sysRoadService.updateByPrimaryKey(src);
+							if (rs ==1) {
+								logger.info("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：成功!!!");
+							}else{
+								logger.error("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：失败!!!");
+							}
 						}
 					}
 				}
@@ -5732,7 +5737,6 @@ public class MobileController {
 			return resultStr;
 		}
 	}
-
 	private String genPayReq(Map<String, String> resultunifiedorder) {
 
 		/*
