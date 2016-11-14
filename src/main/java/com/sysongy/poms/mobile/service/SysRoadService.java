@@ -58,9 +58,9 @@ public interface SysRoadService {
 	
 	List<SysRoadCondition> queryAll() throws Exception;
 	public int updateByPrimaryKey(SysRoadCondition record)throws Exception;
-
- 
-
+  
 	boolean restoreRedis(RedisClientInterface redisClientImpl);
+ 
+	PageInfo<SysRoadCondition> queryForExcel(SysRoadCondition record) throws Exception;
 	
 }
