@@ -5024,13 +5024,13 @@ public class MobileController {
 			String gasTotal = "gasTotal";
 			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId,payCode,gasTotal);
 			if(b){
-				payCode = mainObj.optString("payCode");
+				payCode = mainObj.optString("payCode").toUpperCase();
 				token = mainObj.optString("token");
 				gasTotal = mainObj.optString("gasTotal");
 				gastationId = mainObj.optString("gastationId");
 				SysDriver driver = driverService.queryDriverByPK(token);
 				Gastation gas = gastationService.queryGastationByPK(gastationId);
-				String driverPayCode = driver.getPayCode();
+				String driverPayCode = driver.getPayCode().toUpperCase();
 				Map<String, Object> data = new HashedMap();
 				if(payCode.equals(driverPayCode)){
 					String couponId = mainObj.optString("couponId");
