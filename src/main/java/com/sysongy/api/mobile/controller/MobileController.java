@@ -2759,7 +2759,7 @@ public class MobileController {
 								UserCoupon uc = new UserCoupon();
 								uc.setCoupon_id(couponId);
 								uc.setSys_driver_id(driverID);
-								sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
+								sysOrder.setCoupon_number(couponId);
 							}
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
@@ -2829,7 +2829,7 @@ public class MobileController {
 								UserCoupon uc = new UserCoupon();
 								uc.setCoupon_id(couponId);
 								uc.setSys_driver_id(driverID);
-								sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
+								sysOrder.setCoupon_number(couponId);
 							}
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
@@ -3159,13 +3159,11 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
-						String couponId = orderService.queryById(orderId).getCoupon_id();
+						SysOrder queryOrder = orderService.queryById(orderId);
+						String couponId= queryOrder.getCoupon_number();
 						//更新优惠券使用状态
 						if(couponId!=null && !couponId.equals("")){
-							UserCoupon uc = new UserCoupon();
-							uc.setUser_coupon_id(orderService.queryById(orderId).getCoupon_number());
-							uc.setIsuse("1");
-							int rs = couponService.updateUserCouponStatus(uc);
+							int rs = couponService.updateStatus(couponId,queryOrder.getCreditAccount());
 							if(rs < 1){
 								throw new Exception("优惠券使用状态更新失败！");
 							}
@@ -3347,13 +3345,11 @@ public class MobileController {
 						throw new Exception("消费订单错误：" + orderCharge);
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
-						String couponId = orderService.queryById(orderId).getCoupon_id();
+						SysOrder queryOrder = orderService.queryById(orderId);
+						String couponId= queryOrder.getCoupon_number();
 						//更新优惠券使用状态
 						if(couponId!=null && !couponId.equals("")){
-							UserCoupon uc = new UserCoupon();
-							uc.setUser_coupon_id(orderService.queryById(orderId).getCoupon_number());
-							uc.setIsuse("1");
-							int rs = couponService.updateUserCouponStatus(uc);
+							int rs = couponService.updateStatus(couponId,queryOrder.getCreditAccount());
 							if(rs < 1){
 								throw new Exception("优惠券使用状态更新失败！");
 							}
@@ -5089,13 +5085,11 @@ public class MobileController {
 						sysOrder.setOrderStatus(0);
 						sysOrder.setOrderDate(new Date());
 						//设置优惠券ID
-						String coupon_number = null;
 						if(couponId!=null && !"".equals(couponId)){
 							UserCoupon uc = new UserCoupon();
 							uc.setCoupon_id(couponId);
 							uc.setSys_driver_id(token);
-							coupon_number = couponService.queryUserCouponId(uc);
-							sysOrder.setCoupon_number(coupon_number);
+							sysOrder.setCoupon_number(couponId);
 						}
 						//设置优惠金额
 						if(couponCash!=null && !"".equals(couponCash)){
@@ -5137,10 +5131,7 @@ public class MobileController {
 										data.put("orderNum", sysOrder.getOrderNumber());
 										//更新优惠券使用状态
 										if(couponId!=null && !couponId.equals("")){
-											UserCoupon uc = new UserCoupon();
-											uc.setUser_coupon_id(coupon_number);
-											uc.setIsuse("1");
-											int rs = couponService.updateUserCouponStatus(uc);
+											int rs = couponService.updateStatus(couponId, token);
 											if(rs < 1){
 												throw new Exception("优惠券使用状态更新失败！");
 											}
