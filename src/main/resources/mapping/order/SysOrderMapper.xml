@@ -42,10 +42,13 @@
 		<result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
 		<result column="trade_no" property="trade_no" jdbcType="VARCHAR" />
 
-
 		<association property="orderTypeInfo" column="order_type"
-			javaType="com.sysongy.poms.usysparam.model.Usysparam"
-			select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
+			 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+			 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
+		</association>
+		<association property="coupon" column="coupon_number"
+					 javaType="com.sysongy.poms.coupon.model.Coupon"
+					 select="com.sysongy.poms.coupon.dao.CouponMapper.queryCouponById">
 		</association>
 		<association property="chargeTypeInfo" column="charge_type"
 			javaType="com.sysongy.poms.usysparam.model.Usysparam"
@@ -53,6 +56,9 @@
 		</association>
 		<association property="operatorInfo" column="operator"
 			javaType="com.sysongy.poms.permi.model.SysUser" select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
+		</association>
+		<association property="sysDriver" column="credit_account"
+					 javaType="com.sysongy.poms.driver.model.SysDriver" select="com.sysongy.poms.driver.dao.SysDriverMapper.queryByPK">
 		</association>
 		<association property="consume_cardInfo" column="consume_card"
 			javaType="com.sysongy.poms.card.model.GasCard" select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
