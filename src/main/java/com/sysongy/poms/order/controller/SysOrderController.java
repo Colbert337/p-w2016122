@@ -4,10 +4,14 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +24,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.verification.MobileVerification;
 import com.sysongy.api.mobile.tools.verification.MobileVerificationUtils;
 import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
@@ -135,7 +140,7 @@ public class SysOrderController extends BaseContoller {
 				order.setPageSize(20);
 			}
 			if (StringUtils.isEmpty(order.getOrderby())) {
-				order.setOrderby("order_date desc");
+				order.setOrderby("order_status ASC");
 			}
 
 			PageInfo<SysOrder> pageinfo = new PageInfo<SysOrder>();
@@ -246,6 +251,40 @@ public class SysOrderController extends BaseContoller {
 		}
 
 	}
+	
+	/**
+	 * 查询一个交易号里面的累计退金额
+	 * 
+	 * @param order
+	 * @param map
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping("/queryOrder")
+	@ResponseBody
+	public String queryOrder(String orderNumber, ModelMap map) {
+		// String ret = "webpage/poms/mobile/order_list";
+		PageBean bean = new PageBean();
+		 List<SysOrder> string ;String re="";
+		try {
+			string = service.queryOrderForSearch(orderNumber);
+			bean.setRetCode(100);
+			re=string.get(0).getUser_name()+","+string.get(0).getPlate_number()+","+string.get(0).getGas_station_name();
+			bean.setRetMsg("查询成功");
+			
+			// map.addAttribute("current_module",
+			// "/web/mobile/suggest/suggestList");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			logger.error("", e);
+		} finally {
+			return re + "";
+		}
+
+	}
 
 	/*
 	 * sParaTemp.put("service", "refund_fastpay_by_platform_nopwd");
@@ -264,7 +303,7 @@ public class SysOrderController extends BaseContoller {
 	 */
 	@RequestMapping("/saveBreak")
 	@ResponseBody
-	public String saveBreak(ModelMap map, String money, String msg, String tradeNo, String cash, String orderId,
+	public String saveBreak(HttpSession session, ModelMap map, String money, String msg, String tradeNo, String cash, String orderId,
 			String type, String phone, String code) {
 
 		String http_poms_path = (String) prop.get("http_poms_path");
@@ -364,6 +403,10 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setBatch_no(batch_no);
 						newOrder.setOrderRemark(msg);
 						order.setCash(order.getCash().subtract(new BigDecimal(money)));
+						order.setOrderStatus(1);
+						CurrUser user = (CurrUser) session.getAttribute("currUser");
+						newOrder.setOperator(user.getUser().getSysUserId());
+						
 						service.updateByPrimaryKey(order);
 						service.saveOrder(newOrder);
 					} else {
@@ -403,6 +446,9 @@ public class SysOrderController extends BaseContoller {
 							newOrder.setOrderStatus(1);
 							newOrder.setOrderDate(new Date());
 							newOrder.setOrderType("230");
+							
+							CurrUser user = (CurrUser) session.getAttribute("currUser");
+							newOrder.setOperator(user.getUser().getSysUserId());
 							newOrder.setDebitAccount(order.getDebitAccount());
 							newOrder.setCreditAccount(order.getCreditAccount());
 							newOrder.setSpend_type(order.getSpend_type());
@@ -411,6 +457,8 @@ public class SysOrderController extends BaseContoller {
 							newOrder.setShould_payment(order.getCash());
 							newOrder.setBatch_no(batch_no);
 							order.setCash(order.getCash().subtract(new BigDecimal(money)));
+							order.setOrderStatus(1);
+							
 							service.updateByPrimaryKey(order);
 							service.saveOrder(newOrder);
 						}
@@ -492,8 +540,12 @@ public class SysOrderController extends BaseContoller {
 					newOrder.setChargeType("110");
 					newOrder.setShould_payment(order.getCash());
 					newOrder.setBatch_no(batch_no);
+					CurrUser user = (CurrUser) session.getAttribute("currUser");
+					newOrder.setOperator(user.getUser().getSysUserId());
 					newOrder.setOrderRemark(msg);
 					order.setCash(order.getCash().subtract(new BigDecimal(money)));
+					order.setOrderStatus(1);
+					 
 					service.updateByPrimaryKey(order);
 					service.saveOrder(newOrder);
 				} else {
@@ -538,7 +590,12 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setOrderRemark(msg);
 						newOrder.setShould_payment(order.getCash());
 						newOrder.setBatch_no(batch_no);
+						CurrUser user = (CurrUser) session.getAttribute("currUser");
+						newOrder.setOperator(user.getUser().getSysUserId());
 						order.setCash(order.getCash().subtract(new BigDecimal(money)));
+						 
+						order.setOrderStatus(1);
+					 
 						service.updateByPrimaryKey(order);
 						service.saveOrder(newOrder);
 					}
@@ -566,12 +623,12 @@ public class SysOrderController extends BaseContoller {
 
 	@RequestMapping("/saveBreakForRe")
 	@ResponseBody
-	public String saveBreakForRe(String msg, String money, String orderId,String phone,String code) {
+	public String saveBreakForRe(HttpSession session,String msg, String money, String orderId,String phone,String code) {
 		PageBean bean = new PageBean();
 		try {
 			if (code!=null) {
 				if ((code.equalsIgnoreCase((String)redisClientImpl.getFromCache(phone)))) {
-					service.saveBareakForRe(msg,money,orderId);
+					service.saveBareakForRe(session,msg,money,orderId);
 					bean.setRetMsg("退款成功");
 				}else{
 					throw new Exception("验证码不正确");

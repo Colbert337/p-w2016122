@@ -435,6 +435,13 @@ public class CRMCustomerContoller {
         return bRet;
     }
 
+    /**
+     *  客户注册
+     * @param request
+     * @param response
+     * @param sysDriver
+     * @return
+     */
     @RequestMapping(value = {"/web/addCustomer"})
     @ResponseBody
     public AjaxJson addCustomer(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver){
@@ -526,6 +533,9 @@ public class CRMCustomerContoller {
             sysDriver.setRegisSource(gastation.getGas_station_name());
 
             sysDriver.setDriverType(GlobalConstant.DriverType.GAS_STATION);
+            String payCode = sysDriver.getPayCode();
+            payCode = payCode.toLowerCase();
+            sysDriver.setPayCode(payCode);
             int renum = driverService.saveDriver(sysDriver, "insert", null, suserId);
 			//系统关键日志记录
 			SysOperationLog sysOperationLog = new SysOperationLog();
@@ -552,6 +562,7 @@ public class CRMCustomerContoller {
             }
             sendRegisterSuccessMessage(sysDriver);
             SysDriver responseDriver = driverService.queryDriverByPK(sysDriver.getSysDriverId());
+
             attributes.put("driver", responseDriver);
             ajaxJson.setAttributes(attributes);
         } catch (Exception e) {
@@ -590,6 +601,13 @@ public class CRMCustomerContoller {
         return ajaxJson;
     }
 
+    /**
+     * 修改支付密码
+     * @param request
+     * @param response
+     * @param sysDriver
+     * @return
+     */
     @RequestMapping(value = {"/web/updateCustomer"})
     @ResponseBody
     public AjaxJson updateCustomer(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver) {
@@ -611,6 +629,10 @@ public class CRMCustomerContoller {
                     return ajaxJson;
                 }
             }
+            //将支付密码改为小写
+            String payCode = sysDriver.getPayCode();
+            payCode = payCode.toLowerCase();
+            sysDriver.setPayCode(payCode);
             SysDriver updateSysDriver = updateDriver(sysDriver);
             if(updateSysDriver == null){
                 ajaxJson.setSuccess(false);

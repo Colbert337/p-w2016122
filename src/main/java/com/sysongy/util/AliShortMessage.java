@@ -1,17 +1,18 @@
 package com.sysongy.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sysongy.util.pojo.AliShortMessageBean;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
 import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by Administrator on 2016/5/26.
@@ -51,6 +52,8 @@ public class AliShortMessage {
         VEHICLE_CREATED,                        //车辆创建
         DRIVER_CHECKCODE_PASSWORD_MODIFY,       //司机手机验证码/支付密码修改
         DRIVER_CONSUME_SUCCESSFUL,
+        PERSONAL_TRANSFER,					//个人转账11.11王昭
+        APP_CONSUME,						//APP消费(微信余额支付宝)11.11王昭
     }
 
     /**
@@ -230,6 +233,22 @@ public class AliShortMessage {
                 req.setSmsFreeSignName("司集科技");
                 req.setSmsParamString("\",\"code\":\"" + aliShortMessageBean.getCode() + "\",\"string\":\""
                         + aliShortMessageBean.getString() + "\"}");
+                break;
+            case PERSONAL_TRANSFER:
+                req.setSmsTemplateCode("SMS_25670860");
+                req.setSmsFreeSignName("司集科技");
+                req.setSmsParamString("{\"time\":\"" + aliShortMessageBean.getTime() + 
+                					  "\",\"mode\":\""+ aliShortMessageBean.getString() +
+                					  "\",\"money\":\""+ aliShortMessageBean.getMoney() +
+                					  "\",\"balance\":\""+ aliShortMessageBean.getBalance() + "\"}");
+                break;
+            case APP_CONSUME:
+                req.setSmsTemplateCode("SMS_25765840");
+                req.setSmsFreeSignName("司集科技");
+                req.setSmsParamString("{\"time\":\"" + aliShortMessageBean.getTime() + 
+                					  "\",\"string\":\""+ aliShortMessageBean.getName() +
+                					  "\",\"mode\":\""+ aliShortMessageBean.getString() +
+                					  "\",\"money\":\""+ aliShortMessageBean.getMoney() + "\"}");
                 break;
             default:
                 break;

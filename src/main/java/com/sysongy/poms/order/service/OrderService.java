@@ -11,6 +11,8 @@ import com.sysongy.tcms.advance.model.TcFleet;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * 
  * @author zhangyt 2016-06-16
@@ -19,6 +21,8 @@ import java.util.Map;
 public interface OrderService {
 
     PageInfo<SysOrder> queryOrders(SysOrder obj) throws Exception;
+
+    PageInfo<SysOrder> queryAppOrderForPage(SysOrder obj) throws Exception;
 
     int deleteByPrimaryKey(String orderId);
 
@@ -282,11 +286,15 @@ public interface OrderService {
 
 	int updateByBatchNo(SysOrder record);
 
-	void  saveBareakForRe(String msg, String money, String orderId)throws Exception;
+	 
  /**
   * 查询退款子记录
   * @param order
   * @return
   */
 	PageInfo<SysOrder> queryOrderListForBack2(SysOrder order);
+
+void saveBareakForRe(HttpSession session, String msg, String money, String orderId) throws Exception;
+
+List<SysOrder> queryOrderForSearch(String orderNumber);
 }

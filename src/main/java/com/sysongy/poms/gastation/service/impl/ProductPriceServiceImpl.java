@@ -65,4 +65,9 @@ public class ProductPriceServiceImpl implements ProductPriceService {
 	public Integer compareStartTime(ProductPrice obj) throws Exception{
 		return productPriceMapper.compareStartTime(obj);
 	}
+
+	@Override
+	public Integer updatePriceById(ProductPrice obj) throws Exception {
+		return productPriceMapper.updateByPrimaryKeySelective(obj);
+	}
 }

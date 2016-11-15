@@ -583,7 +583,7 @@ public class GastationServiceImpl implements GastationService {
 	}
 
 	@Override
-	public Integer queryGastationByPhone(String phone) throws Exception {
+	public Gastation queryGastationByPhone(String phone) throws Exception {
 		return gasStationMapper.queryGastationByPhone(phone);
 	}
 }

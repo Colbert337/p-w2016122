@@ -104,4 +104,9 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 	public GsGasPrice queryGsPrice(String gastationId, String gasPrice) throws Exception {
 		return gsGasPriceMapper.queryGsPrice(gastationId, gasPrice);
 	}
+
+	@Override
+	public GsGasPrice queryGsGasPriceInfo(String gsGasPriceId) {
+		return gsGasPriceMapper.queryGsGasPriceInfo(gsGasPriceId);
+	}
 }
