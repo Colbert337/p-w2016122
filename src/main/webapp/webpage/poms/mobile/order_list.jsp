@@ -149,7 +149,7 @@
 									<td><fmt:formatDate value="${list.chk_time}" type="both"/></td>
 									<td>${list.chk_memo}</td>
 									<td class="text-center">
-									<c:if test="${list.orderStatus ne -1 }">
+									<c:if test="${list.orderStatus eq -1 }">
 										<c:if test="${list.cash ne '0.00' }">
 											<c:if test="${not empty list.trade_no}">
 												<a class=""  style="color:#337ab7" 
