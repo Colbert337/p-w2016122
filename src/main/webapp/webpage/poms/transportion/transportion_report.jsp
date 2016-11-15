@@ -83,7 +83,7 @@
 							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -107,7 +107,7 @@
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj">
-									<td class="center">
+									<td class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
 											<span class="lbl"></span>

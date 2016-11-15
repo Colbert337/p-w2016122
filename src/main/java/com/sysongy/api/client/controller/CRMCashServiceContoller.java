@@ -880,6 +880,14 @@ public class CRMCashServiceContoller {
         return ajaxJson;
     }
 
+    /**
+     * 根据订单编号查询订单信息
+     * @param request
+     * @param response
+     * @param record
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping("/web/queryNotHedgeOrder")
     public AjaxJson queryNotHedgeOrder(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception {

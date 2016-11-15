@@ -274,13 +274,6 @@ public class CRMUserContoller {
             appUser.setGender(1);
             sysUsersNew.add(appUser);
 
-            //添加微信用户
-            SysUser wechartUser = new SysUser();
-            wechartUser.setSysUserId("553c248d906611e6b41c3497f629c5bd");
-            wechartUser.setUserName("13000000001");
-            wechartUser.setRealName("微信VIP用户");
-            wechartUser.setGender(1);
-            sysUsersNew.add(wechartUser);
             attributes.put("SysUsers",sysUsersNew);
             ajaxJson.setAttributes(attributes);
             ajaxJson.setSuccess(true);
