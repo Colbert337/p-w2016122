@@ -111,6 +111,11 @@
 								 
 								<th onclick="orderBy(this,'trade_no');commitForm();"
 									id="trade_no_order">交易号</th>
+								<th onclick="orderBy(this,'chk_user');commitForm();"
+									id="chk_user_order">退款操作人</th>
+								<th onclick="orderBy(this,'chk_time');commitForm();"
+									id="chk_time_order">操作时间</th>
+								<th >退款原因</th>
 								 
 								<th class="text-center td-w3">操作</th>
 							</tr>
@@ -140,7 +145,9 @@
 									<td>${list.channel}</td>
 									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
 									<td>${list.trade_no}</td>
-									 
+									<td>${list.chk_user}</td>
+									<td><fmt:formatDate value="${list.chk_time}" type="both"/></td>
+									<td>${list.chk_memo}</td>
 									<td class="text-center">
 										<c:if test="${list.cash ne '0.00' }">
 											<c:if test="${not empty list.trade_no}">

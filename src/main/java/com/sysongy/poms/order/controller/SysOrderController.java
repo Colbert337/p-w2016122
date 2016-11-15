@@ -139,7 +139,7 @@ public class SysOrderController extends BaseContoller {
 				order.setPageSize(20);
 			}
 			if (StringUtils.isEmpty(order.getOrderby())) {
-				order.setOrderby("order_date desc");
+				order.setOrderby("order_status ASC");
 			}
 
 			PageInfo<SysOrder> pageinfo = new PageInfo<SysOrder>();
