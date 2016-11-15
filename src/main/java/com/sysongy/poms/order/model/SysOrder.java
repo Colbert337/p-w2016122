@@ -70,6 +70,8 @@ public class SysOrder extends BaseModel{
 
     private Usysparam orderTypeInfo;
 
+    private Coupon coupon;
+
     private Gastation gastation;
 
     private Transportion transportion;
@@ -113,7 +115,9 @@ public class SysOrder extends BaseModel{
 
     private BigDecimal should_payment;//订单应付金额
 
-    private String coupon_number;//优惠劵编号
+    private String coupon_title;//优惠劵编号
+
+    private String coupon_number;//优惠劵标题
 
     private String coupon_id;//优惠劵用户关系ID
 
@@ -131,7 +135,28 @@ public class SysOrder extends BaseModel{
     
     private Date chk_time;
     
-    private String chk_user;
+    private String user_name;
+    
+    private String plate_number;
+    
+      
+    public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+
+	public String getPlate_number() {
+		return plate_number;
+	}
+
+	public void setPlate_number(String plate_number) {
+		this.plate_number = plate_number;
+	}
+
+	private String chk_user;
     
     public String getChk_user() {
 		return chk_user;
@@ -584,5 +609,24 @@ public class SysOrder extends BaseModel{
 
     public void setCoupon_id(String coupon_id) {
         this.coupon_id = coupon_id;
+    }
+
+    public Coupon getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
+    }
+
+    public String getCoupon_title() {
+        if(coupon != null){
+            coupon_title = coupon.getCoupon_title();
+        }
+        return coupon_title;
+    }
+
+    public void setCoupon_title(String coupon_title) {
+        this.coupon_title = coupon_title;
     }
 }

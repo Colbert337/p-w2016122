@@ -41,11 +41,16 @@
 		<result column="coupon_cash" property="coupon_cash" jdbcType="DECIMAL" />
 		<result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
 		<result column="trade_no" property="trade_no" jdbcType="VARCHAR" />
-
+		<result column="gas_station_name" property="gas_station_name"
+			jdbcType="VARCHAR" />
 
 		<association property="orderTypeInfo" column="order_type"
 			javaType="com.sysongy.poms.usysparam.model.Usysparam"
 			select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
+		</association>
+		<association property="coupon" column="coupon_number"
+					 javaType="com.sysongy.poms.coupon.model.Coupon"
+					 select="com.sysongy.poms.coupon.dao.CouponMapper.queryCouponById">
 		</association>
 		<association property="chargeTypeInfo" column="charge_type"
 			javaType="com.sysongy.poms.usysparam.model.Usysparam"
@@ -53,6 +58,9 @@
 		</association>
 		<association property="operatorInfo" column="operator"
 			javaType="com.sysongy.poms.permi.model.SysUser" select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
+		</association>
+		<association property="sysDriver" column="credit_account"
+					 javaType="com.sysongy.poms.driver.model.SysDriver" select="com.sysongy.poms.driver.dao.SysDriverMapper.queryByPK">
 		</association>
 		<association property="consume_cardInfo" column="consume_card"
 			javaType="com.sysongy.poms.card.model.GasCard" select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
@@ -156,7 +164,7 @@
 		parameterType="java.lang.String">
 			select a.*,b.mobile_phone ,c.mobile_phone as creditPhone from sys_order a left join sys_driver b on 
 			a.debit_account=b.sys_driver_id  LEFT JOIN sys_driver c ON a.credit_account=c.sys_driver_id where 1=1 and (a.charge_type="103" or
-			a.charge_type="104" or SPEND_TYPE="C01" or  SPEND_TYPE="C03" or SPEND_TYPE="C04") and order_type <![CDATA[   <>  ]]>230 and order_type <![CDATA[   <>  ]]>210  and order_status=-1 and operator_source_id='8aa4ba67855a11e6a356000c291aa9e3' 
+			a.charge_type="104" or SPEND_TYPE="C01" or  SPEND_TYPE="C03" or SPEND_TYPE="C04") and order_type <![CDATA[   <>  ]]>230 and order_type <![CDATA[   <>  ]]>210  and order_status=-1 or chk_time is not null and operator_source_id='8aa4ba67855a11e6a356000c291aa9e3'
 		<if test="orderId != null &amp;&amp; orderId != ''">
 			and a.order_id = #{orderId,jdbcType=VARCHAR}
 		</if>
@@ -209,6 +217,11 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 
 
 
+<select id="queryOrderForSearch" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select b.user_name,b.plate_number,c.gas_station_name from sys_order a LEFT JOIN sys_driver b on a.credit_account=b.sys_driver_id LEFT JOIN sys_gas_station c on a.channel_number=c.sys_gas_station_id where a.order_number=#{orderNumber,jdbcType=VARCHAR} and a.order_type!=230
+	</select>
+
 	<select id="queryForPage" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
 		select
@@ -224,6 +237,12 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		<if test="creditAccount != null &amp;&amp; creditAccount != ''">
 			and credit_account = #{creditAccount,jdbcType=VARCHAR}
 		</if>
+	</select>
+
+	<!--根据操作人及chargeType查询APP订单-->
+	<select id="queryAppOrderForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.order.model.SysOrder">
+		select * from sys_order where operator = #{operator,jdbcType=VARCHAR} and charge_type = #{chargeType,jdbcType=VARCHAR}
+		 and channel_number = #{channelNumber,jdbcType=VARCHAR} and chk_user is null
 	</select>
 
 	<select id="queryOrderLogs" resultMap="OrderLogResultMap"
@@ -382,6 +401,15 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			<if test="batch_no != null">
 				batch_no,
 			</if>
+			<if test="chk_user != null">
+				chk_user,
+			</if>
+			<if test="chk_time != null">
+				chk_time,
+			</if>
+			<if test="chk_memo != null">
+				chk_memo,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="orderId != null">
@@ -443,6 +471,15 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			</if>
 			<if test="batch_no != null">
 				#{batch_no,jdbcType=INTEGER},
+			</if>
+			<if test="chk_user != null">
+				#{chk_user,jdbcType=INTEGER},
+			</if>
+			<if test="chk_time != null">
+				#{chk_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="chk_memo != null">
+				#{chk_memo,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
