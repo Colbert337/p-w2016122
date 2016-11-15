@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.bcel.generic.IF_ACMPEQ;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.NameValuePair;
@@ -74,8 +72,10 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
+import com.sysongy.poms.gastation.model.ProductPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.gastation.service.ProductPriceService;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.controller.SysRoadController;
@@ -193,6 +193,8 @@ public class MobileController {
 	SysOperationLogService sysOperationLogService;
 	@Autowired
 	OrderDealService orderDealService;
+	@Autowired
+	ProductPriceService productPriceService;
 	/**
 	 * 用户登录
 	 * 
@@ -5634,7 +5636,7 @@ public class MobileController {
 						dataMap.put("phone", gastation.getContact_phone());
 						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
 						dataMap.put("price", gsGasPrice.getPrice());
-						dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getUnit()).get(0).getMname());
+						dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getProduct_unit()).get(0).getMname());
 						dataMap.put("gasName", usysparamService.query("CARDTYPE", gsGasPrice.getGasName()).get(0).getMname());
 						result.setData(dataMap);
 					}else{
@@ -5712,8 +5714,21 @@ public class MobileController {
 				if(promotions!=null && !"".equals(promotions)){
 					gastation.setPromotions(promotions);
 				}
-				int rs = gastationService.updateByPrimaryKeySelective(gastation);
-				if(rs > 0){
+				//气品价格
+				GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(stationId);
+				ProductPrice productPrice = new ProductPrice(); 
+				productPrice.setId(gsGasPrice.getPrice_id());
+				if(price!=null && !"".equals(price)){
+					productPrice.setProductPrice(Double.valueOf(price));
+				}
+				if(unit!=null && !"".equals(unit)){
+					productPrice.setProductUnit(unit);
+				}
+				//更新气品价格单位信息
+				int pprs = productPriceService.updatePriceById(productPrice);
+				//更新气站优惠信息名称电话信息
+				int gsrs = gastationService.updateByPrimaryKeySelective(gastation);
+				if(pprs > 0 && gsrs >0){
 					result.setMsg("修改成功！");
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5725,6 +5740,7 @@ public class MobileController {
 			}
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			logger.error("信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);
