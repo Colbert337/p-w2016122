@@ -48,15 +48,26 @@ function showBreak(tradeNo1, type1, cash1, orderId1, no, retype,tr) {
 			success : function(data) {
 //				 bootbox.alert(data);
 				var str=data.split(",");
-				 $("#plate_number").text(str[1]);
-				 $("#user_id").text(str[0]);
-				 $("#gas_name").text(str[2]);
+				 
+				if (str[1]!=null&&str[1]!="null") {
+					 $("#plate_number").text(str[1]);
+				}
+				if (str[0]!=null&&str[0]!="null") {
+					 $("#user_id").text(str[0]);
+				}
+				if (str[2]!=null&&str[2]!="null") {
+					 $("#gas_name").text(str[2]);
+				}
+				
+				 
+				
+				
 				 $("#order_number").text($("#"+orderId1).children('td').eq(0).text())
-				 $("#gas_id").text($("#"+orderId1).children('td').eq(12).text())
-				 $("#order_number").text($("#"+orderId1).children('td').eq(0).text())
+				 $("#gas_id").text($("#"+orderId1).children('td').eq(10).text())
+				
 				 $("#order_c").text($("#"+orderId1).children('td').eq(2).text())
 				 
-				 $("#order_time").text( $("#"+orderId1).children('td').eq(5).text());
+				 $("#order_time").text( $("#"+orderId1).children('td').eq(4).text());
 //				alert($("#"+orderId1).children('td').eq(5).text());
 				if (data=='获取验证码成功！') {
 					
