@@ -147,20 +147,18 @@ public class DriverServiceImpl implements DriverService {
             //判断是否是导入数据，导入数据不返现不发优惠券
             if(!"1".equals(record.getIsImport())){
             	 //如果没有邀请么 则触发注册返现规则
-//                if(StringUtils.isEmpty(invitationCode)){
-//        			List<SysCashBack> list=sysCashBackService.queryForBreak("201");
-//        			if (list!=null && list.size() > 0 ) {
-//        				SysCashBack back= list.get(0);//获取返现规则
-//        				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-//    				}else{
-//    					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
-//    				}
-//     
-////                	this.cashBackForRegister(record, invitationCode, operator_id);
-//                }
-                
+                if(StringUtils.isEmpty(invitationCode)){
+        			List<SysCashBack> list=sysCashBackService.queryForBreak("201");
+        			if (list!=null && list.size() > 0 ) {
+        				SysCashBack back= list.get(0);//获取返现规则
+        				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+    				}else{
+    					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
+    				}
+     
+                	this.cashBackForRegister(record, invitationCode, operator_id);
+                }
                 //发优惠卷
-
                 CouponGroup couponGroup = new CouponGroup();
                 couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.NEW_REGISTER_USER);
 
