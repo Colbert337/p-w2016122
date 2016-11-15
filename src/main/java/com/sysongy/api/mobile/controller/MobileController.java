@@ -2764,7 +2764,7 @@ public class MobileController {
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
 								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-								preferential_cash = preferential_cash.subtract(new BigDecimal(amount));
+								preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));
 							}
 							//设置平台优惠金额
 							sysOrder.setPreferential_cash(preferential_cash);
@@ -2834,7 +2834,7 @@ public class MobileController {
 							//设置优惠金额
 							if(couponCash!=null && !"".equals(couponCash)){
 								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-								preferential_cash = preferential_cash.subtract(new BigDecimal(amount));
+								preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));
 							}
 							//设置平台优惠金额
 							sysOrder.setPreferential_cash(preferential_cash);
