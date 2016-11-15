@@ -3064,9 +3064,11 @@ public class MobileController {
 					} else {
 						resultStr = getWechatResult();// 返回通知微信支付成功
 						//微信充值短信通知
+						SysDriver driver = driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount());
+						SysOrder sOrder = orderService.queryById(orderId);
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
-						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
 						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 						aliShortMessageBean.setSpentMoney(feeCount);
 						String backCash = String.valueOf(orderService.backCash(orderId));
@@ -3074,7 +3076,7 @@ public class MobileController {
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
 						//APP提示
-						sysMessageService.saveMessageTransaction("微信充值", sysOrder,"1");
+						sysMessageService.saveMessageTransaction("微信充值", sOrder,"1");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3272,9 +3274,11 @@ public class MobileController {
 					} else {
 						response.getOutputStream().print("success");// 返回通知支付宝支付成功
 						//支付宝充值短信通知
+						SysDriver driver = driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount());
+						SysOrder sOrder= orderService.queryById(orderId);
 						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-						aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
-						aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getMobilePhone());
+						aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+						aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
 						aliShortMessageBean.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 						aliShortMessageBean.setSpentMoney(feeCount);
 						String backCash = String.valueOf(orderService.backCash(orderId));
@@ -3282,7 +3286,7 @@ public class MobileController {
 						aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(orderService.queryById(orderId).getDebitAccount()).getSysDriverId()).getAccountBalance());
 						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.DRIVER_CHARGE_BACKCASH);
 						//APP提示
-						sysMessageService.saveMessageTransaction("支付宝充值", sysOrder,"1");
+						sysMessageService.saveMessageTransaction("支付宝充值", sOrder,"1");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
