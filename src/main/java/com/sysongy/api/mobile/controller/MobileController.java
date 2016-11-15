@@ -5111,11 +5111,12 @@ public class MobileController {
 								if(rs > 0 ){
 									//余额消费短信通知
 									AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-									SysOrder sorder = orderService.queryById(orderID);
+									/*SysOrder sorder = orderService.queryById(orderID);
 									SysDriver sdriver = driverService.queryDriverByPK(sorder.getCreditAccount());
-									String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
-									aliShortMessageBean.setSendNumber(sdriver.getMobilePhone());
-									aliShortMessageBean.setAccountNumber(sdriver.getMobilePhone());
+									String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();*/
+									String gasName = gas.getGas_station_name();
+									aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+									aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
 									aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 									aliShortMessageBean.setName(gasName);
 									aliShortMessageBean.setString("账户余额");
@@ -5252,7 +5253,6 @@ public class MobileController {
 
 	/**
 	 * 获取加注站信息列表(default)
-	 * @param resultunifiedorder
 	 * @return
 	 */
 	private List<Map<String, Object>> defaultList(List<Gastation> gastationAllList,Double longIn,Double langIn,int pageNumIn,int pageSizeIn){

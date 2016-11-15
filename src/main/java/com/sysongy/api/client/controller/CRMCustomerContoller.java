@@ -590,6 +590,13 @@ public class CRMCustomerContoller {
         return ajaxJson;
     }
 
+    /**
+     * 修改支付密码
+     * @param request
+     * @param response
+     * @param sysDriver
+     * @return
+     */
     @RequestMapping(value = {"/web/updateCustomer"})
     @ResponseBody
     public AjaxJson updateCustomer(HttpServletRequest request, HttpServletResponse response, SysDriver sysDriver) {
@@ -611,6 +618,10 @@ public class CRMCustomerContoller {
                     return ajaxJson;
                 }
             }
+            //将支付密码改为小写
+            String payCode = sysDriver.getPayCode();
+            payCode = payCode.toLowerCase();
+            sysDriver.setPayCode(payCode);
             SysDriver updateSysDriver = updateDriver(sysDriver);
             if(updateSysDriver == null){
                 ajaxJson.setSuccess(false);
