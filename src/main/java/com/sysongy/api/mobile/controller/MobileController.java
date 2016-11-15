@@ -3509,7 +3509,30 @@ public class MobileController {
 						}else{
 							String RnewCode = (String) redisClientImpl.getFromCache(newPhoneNum);
 							if(newCode.equals(RnewCode)){
-								if(oldD.getPayCode().equals(payCode)){
+								if(payCode!=null && !"".equals(payCode)){
+									if(oldD.getPayCode().equals(payCode)){
+										// 修改账户手机
+										if ("1".equals(phoneType)) {
+											sysDriver.setUserName(newPhoneNum);
+											sysDriver.setMobilePhone(newPhoneNum);
+										} else {
+											sysDriver.setSecurityMobilePhone(newPhoneNum);
+										}
+										sysDriver.setDriverType(driver.get(0).getDriverType());
+										sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
+										int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
+										// 返回大于0，成功
+										if (resultVal <= 0) {
+											result.setStatus(MobileReturn.STATUS_FAIL);
+											result.setMsg("修改账号手机号/密保手机失败！");
+										}else{
+											dataMap.put("resultVal", "true");
+										}
+									}else{
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("支付密码错误！");
+									}
+								}else{
 									// 修改账户手机
 									if ("1".equals(phoneType)) {
 										sysDriver.setUserName(newPhoneNum);
@@ -3527,9 +3550,6 @@ public class MobileController {
 									}else{
 										dataMap.put("resultVal", "true");
 									}
-								}else{
-									result.setStatus(MobileReturn.STATUS_FAIL);
-									result.setMsg("支付密码错误！");
 								}
 							}else{
 								result.setStatus(MobileReturn.STATUS_FAIL);
