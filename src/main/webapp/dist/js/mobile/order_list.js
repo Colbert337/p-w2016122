@@ -263,7 +263,7 @@ function subbreak() {
 		 bootbox.alert("退款金额不能为0");
 		 return;
 	}
-	if($('#msgcontent').val()==""){
+	if($('#msgcontent').val().trim()==""){
 		 bootbox.alert("退款原因不能为空");
 		 return;
 	}

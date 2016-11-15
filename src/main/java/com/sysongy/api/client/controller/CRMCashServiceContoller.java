@@ -1316,13 +1316,14 @@ public class CRMCashServiceContoller {
 
             order.setChk_user(record.getChk_user());
             order.setChk_time(new Date());
-            order.setChk_memo(record.getChk_memo());
             if(record.getOrderStatus() == -1){
                 //订单退回
                 order.setOrderStatus(record.getOrderStatus());
+                order.setChk_memo(record.getChk_memo());
             }else{
                 //订单确认
                 order.setOrderStatus(1);
+                order.setChk_memo(null);
             }
             orderService.updateByPrimaryKey(order);
             ajaxJson.setSuccess(true);

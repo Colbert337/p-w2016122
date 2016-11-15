@@ -15,17 +15,17 @@
 <script src="<%=basePath%>/dist/js/message/show.js"></script>
 <div class="" id="div">
 	<!-- /.page-header -->
-	<button class="btn" onclick="loadPage('#main', '../web/order/list/page');">返回</button>
-	<form id="formRoad">
-
-		<jsp:include page="/common/page_param.jsp"></jsp:include>
-
+	
 		<div class="row">
 			<div class="col-xs-12">
 
 				<div class="page-header">
-					<h1>订单退款</h1>
+					<h1>订单退款记录</h1>
 				</div>
+<button class="btn" onclick="loadPage('#main', '../web/order/list/page');">返回</button>
+	<form id="formRoad">
+
+		<jsp:include page="/common/page_param.jsp"></jsp:include>
 
 				<div class="search-types">
 					  </div>
@@ -51,24 +51,16 @@
 								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
 								<th >金额</th>
-								<th>用户电话号码</th>
-								<th>消费者电话号码</th>
+								 
 								<th onclick="orderBy(this,'order_date');commitForm();"
 									id="order_date_order"><i
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480">
 									</i>创建日期</th>
-								<th onclick="orderBy(this,'charge_type');commitForm();"
-									id="charge_type_order">充值方式</th>
-								<th onclick="orderBy(this,'spend_type');commitForm();"
-									id="spend_type_order">消费类型</th>
-								<th onclick="orderBy(this,'is_discharge');commitForm();"
-									id="is_discharge_order">是否冲红</th>
+								 
 								<th onclick="orderBy(this,'channel');commitForm();"
 									id="channel_order">充值渠道</th>
 									
-								<th onclick="orderBy(this,'spend_type');commitForm();"
-									id="spend_tyep_order">消费方式</th>
-								 
+							 
 								<th onclick="orderBy(this,'trade_no');commitForm();"
 									id="trade_no_order">交易号</th>
 								<th>退款原因</th>
@@ -88,19 +80,11 @@
 									<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 									<td>${list.cash}</td>
-									<td>${list.mobile_phone}</td>
-									<td>${list.creditPhone}</td>
+									 
 									<td><fmt:formatDate value="${list.orderDate}" type="both" /></td>
-									<td> 
-										<s:Code2Name mcode="${list.chargeType}" gcode="CHARGE_TYPE"></s:Code2Name>
-									</td>
-									<td> 
-										<s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name>
-									</td>
-									<td><c:if test="${list.is_discharge eq '0'}">否</c:if> <c:if
-											test="${list.is_discharge eq '1'}">是</c:if></td>
+								 
 									<td>${list.channel}</td>
-									<td><s:Code2Name mcode="${list.spend_type}" gcode="CHARGE_TYPE"></s:Code2Name></td>
+									 
 									<td>${list.trade_no}</td>
 									<td>${list.orderRemark}</td>
 									<td>${list.batch_no}</td>
