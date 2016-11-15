@@ -37,7 +37,7 @@
 	var endDate;
 	var  pageNumber;
 	var  pageSize;
-	var orderBy;
+	var orderByss;
 	function showDetail(order_id,order_type,cash,userNames,mobilePhones,
 						orderNumbers,is_discharges,startDates,endDates,pageNumbers,pageSizes,orderBys){
 		userName=userNames;
@@ -48,7 +48,7 @@
 		endDate=endDates;
 		pageNumber=pageNumbers;
 		pageSize=pageSizes;
-		orderBy=orderBys;
+		orderByss=orderBys;
 		$.ajax({
 			type: "POST",
 			url: '../web/driver/queryRechargeReportDetail?order_id='+order_id+'&order_type='+order_type+'&cash='+cash,
