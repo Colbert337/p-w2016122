@@ -3416,12 +3416,26 @@ public class MobileController {
 					order.setOrderDate(new Date());
 					order.setBatch_no(batch_no);
 					orderService.updateByBatchNo(order);
-					SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());//初始化钱袋
-					if (account==null) {
-						logger.error("支付宝返现失败：");
+					SysUserAccount account=null;
+					if (order.getOrderType().equals("130")) {
+						 account=sysUserAccountService.queryUserAccountByDriverId(order.getDebitAccount());//初始化钱袋
+						 if (account==null) {
+								logger.error("支付宝返现失败：");
+							}else{
+								account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+								sysUserAccountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal("-"+money)), "230");
+							}
+					}else {
+						 account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());//初始化钱袋
+						 if (account==null) {
+								logger.error("支付宝退费失败：");
+							}else{
+								account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+								sysUserAccountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal(money)), "230");
+							}
 					}
-					account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
-					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal("-"+money)), "230");
+				
+					
 				}
 			}else{
 				order.setOrderStatus(2);
@@ -3429,7 +3443,7 @@ public class MobileController {
 				order.setOrderDate(new Date());
 				order.setBatch_no(batch_no);
 				orderService.updateByBatchNo(order);
-				logger.error("支付宝返现失败："+b);
+				logger.error("支付宝退款失败："+b);
 			}
 		} catch (Exception e) {
 			logger.error("支付宝返现失败："+e.getLocalizedMessage());
