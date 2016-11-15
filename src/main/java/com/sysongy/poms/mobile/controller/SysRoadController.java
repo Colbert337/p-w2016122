@@ -535,7 +535,7 @@ public class SysRoadController extends BaseContoller {
 
 			String[][] content = new String[cells + 1][9];// [行数][列数]
 			// 第一列
-			content[0] = new String[] { "审核人电话", "审核人", "路况类型", "审核状态", "拍照时间", "路况说明", "备注", "创建人", "创界人电话",
+			content[0] = new String[] { "审核人电话", "审核人", "路况类型", "审核状态", "拍照时间", "路况说明", "备注", "创建人", "创建人电话",
 					"发布时间","审核时间" };
 			int i = 1;
 			if (list != null && list.size() > 0) {
