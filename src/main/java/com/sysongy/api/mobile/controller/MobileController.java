@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.bcel.generic.IF_ACMPEQ;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.NameValuePair;
@@ -74,8 +72,10 @@ import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.model.GsGasPrice;
+import com.sysongy.poms.gastation.model.ProductPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
+import com.sysongy.poms.gastation.service.ProductPriceService;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.controller.SysRoadController;
@@ -87,6 +87,7 @@ import com.sysongy.poms.mobile.service.MbAppVersionService;
 import com.sysongy.poms.mobile.service.MbBannerService;
 import com.sysongy.poms.mobile.service.MbStatisticsService;
 import com.sysongy.poms.mobile.service.SysRoadService;
+import com.sysongy.poms.mobile.service.impl.SysRoadServiceImpl;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
@@ -192,6 +193,8 @@ public class MobileController {
 	SysOperationLogService sysOperationLogService;
 	@Autowired
 	OrderDealService orderDealService;
+	@Autowired
+	ProductPriceService productPriceService;
 	/**
 	 * 用户登录
 	 * 
@@ -893,7 +896,7 @@ public class MobileController {
 					if (veCode != null && !"".equals(veCode)) {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
-						paycode = mainObj.optString("paycode").toUpperCase();
+						paycode = mainObj.optString("paycode");
 						driver.setPayCode(paycode);
 						driverService.saveDriver(driver, "update", null, null);// 设置支付密码
 					}else{
@@ -961,12 +964,12 @@ public class MobileController {
 				SysDriver sysDriver = new SysDriver();
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				String driverId = mainObj.optString("token");
-				oldPayCode = mainObj.optString("oldPayCode").toUpperCase();
+				oldPayCode = mainObj.optString("oldPayCode");
 				SysDriver driver = driverService.queryDriverByPK(driverId);
-				String payCode = driver.getPayCode().toUpperCase();
-				if (payCode.equals(oldPayCode)) {
+				String payCode = driver.getPayCode();
+				if (payCode.equalsIgnoreCase(oldPayCode)) {
 					// 判断原支付密码是否正确
-					newPayCode = mainObj.optString("newPayCode").toUpperCase();
+					newPayCode = mainObj.optString("newPayCode");
 					if (newPayCode != null && !"".equals(newPayCode)) {
 						sysDriver.setPayCode(newPayCode);
 						driverService.saveDriver(sysDriver, "update", null, null);
@@ -2772,6 +2775,7 @@ public class MobileController {
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-支付宝消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
+							sysOrder.setDebitAccount(gastationId);
 							//设置应付金额
 							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
@@ -2838,6 +2842,7 @@ public class MobileController {
 							//设置气站ID
 							sysOrder.setChannelNumber(gastationId);
 							sysOrder.setChannel("APP-微信消费-"+gastationService.queryGastationByPK(gastationId).getGas_station_name());
+							sysOrder.setDebitAccount(gastationId);
 							//设置应付金额
 							sysOrder.setShould_payment(new BigDecimal(payableAmount));
 							//设置实付金额
@@ -3907,14 +3912,18 @@ public class MobileController {
 					if (sysRoadCondition != null) {
 						redisList.add(sysRoadCondition);
 					}else{
-						SysRoadCondition src = new SysRoadCondition();
-						src.setId(roadIdList.get(i).getId());
-						src.setConditionStatus("0");
-						int rs = sysRoadService.updateByPrimaryKey(src);
-						if (rs ==1) {
-							logger.info("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：成功!!!");
-						}else{
-							logger.error("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：失败!!!");
+						Usysparam param=usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadIdList.get(i).getConditionType());
+						int time = SysRoadServiceImpl.sumTime( roadIdList.get(i).getStartTime(), Integer.valueOf(param.getData()));
+						if(time <= 0 ){
+							SysRoadCondition src = new SysRoadCondition();
+							src.setId(roadIdList.get(i).getId());
+							src.setConditionStatus("0");
+							int rs = sysRoadService.updateByPrimaryKey(src);
+							if (rs ==1) {
+								logger.info("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：成功!!!");
+							}else{
+								logger.error("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：失败!!!");
+							}
 						}
 					}
 				}
@@ -5058,74 +5067,87 @@ public class MobileController {
 						//设置气站ID
 						sysOrder.setChannelNumber(gastationId);
 						sysOrder.setChannel("APP-余额消费-"+gas.getGas_station_name());
+						sysOrder.setDebitAccount(gastationId);
 						//设置实付金额
 						sysOrder.setCash(new BigDecimal(amount));
 						//设置应付金额
 						sysOrder.setShould_payment(new BigDecimal(payableAmount));
 						sysOrder.setPreferential_cash(preferential_cash);
 						//订单状态
-						sysOrder.setOrderStatus(1);
+						sysOrder.setOrderStatus(0);
 						if (sysOrder != null) {
 							int nCreateOrder = orderService.insert(sysOrder, null);
 							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
-								orderService.consumeByDriver(sysOrder);
-								//系统关键日志记录
-				    			SysOperationLog sysOperationLog = new SysOperationLog();
-				    			sysOperationLog.setOperation_type("xf");
-				    			sysOperationLog.setLog_platform("1");
-				        		sysOperationLog.setOrder_number(sysOrder.getOrderNumber());
-				        		sysOperationLog.setLog_content("司机个人通过账户消费"+sysOrder.getCash()+"元！订单号为："+sysOrder.getOrderNumber()); 
-				    			//操作日志
-				    			sysOperationLogService.saveOperationLog(sysOperationLog,token);
-								data.put("orderId", orderID);
-								data.put("orderNum", sysOrder.getOrderNumber());
-								//更新优惠券使用状态
-								if(couponId!=null && !couponId.equals("")){
-									UserCoupon uc = new UserCoupon();
-									uc.setUser_coupon_id(couponId);
-									uc.setIsuse("1");
-									int rs = couponService.updateUserCouponStatus(uc);
-								}
-								//添加OrderGoods信息
-								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
-								SysOrderGoods orderGoods = new SysOrderGoods ();
-								//ID
-								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
-								//orderID
-								orderGoods.setOrderId(orderID);
-								//原始单价
-								orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
-								//加气总量
-								orderGoods.setNumber(Double.valueOf(gasTotal));
-								//商品总价
-								orderGoods.setSumPrice(new BigDecimal(payableAmount));
-								//商品类型
-								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
-								//优惠类型。
-								orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
-								//平台优惠金额
-								orderGoods.setDiscountSumPrice(preferential_cash);
-								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
-								if(rs > 0 ){
-									//余额消费短信通知
-									AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-									/*SysOrder sorder = orderService.queryById(orderID);
-									SysDriver sdriver = driverService.queryDriverByPK(sorder.getCreditAccount());
-									String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();*/
-									String gasName = gas.getGas_station_name();
-									aliShortMessageBean.setSendNumber(driver.getMobilePhone());
-									aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
-									aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-									aliShortMessageBean.setName(gasName);
-									aliShortMessageBean.setString("账户余额");
-									aliShortMessageBean.setMoney(amount);
-									AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-									//APP提示
-									sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+								String str = orderService.consumeByDriver(sysOrder);
+								if(str.equals("SUCCESS")){
+									SysOrder order = new SysOrder();
+									order.setOrderId(orderID);
+									order.setOrderStatus(1);
+									int temp = orderService.updateByPrimaryKey(order);
+									if(temp > 0 ){
+										//系统关键日志记录
+						    			SysOperationLog sysOperationLog = new SysOperationLog();
+						    			sysOperationLog.setOperation_type("xf");
+						    			sysOperationLog.setLog_platform("1");
+						        		sysOperationLog.setOrder_number(sysOrder.getOrderNumber());
+						        		sysOperationLog.setLog_content("司机个人通过账户消费"+sysOrder.getCash()+"元！订单号为："+sysOrder.getOrderNumber());
+						    			//操作日志
+						    			sysOperationLogService.saveOperationLog(sysOperationLog,token);
+										data.put("orderId", orderID);
+										data.put("orderNum", sysOrder.getOrderNumber());
+										//更新优惠券使用状态
+										if(couponId!=null && !couponId.equals("")){
+											UserCoupon uc = new UserCoupon();
+											uc.setUser_coupon_id(couponId);
+											uc.setIsuse("1");
+											int rs = couponService.updateUserCouponStatus(uc);
+										}
+										//添加OrderGoods信息
+										List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+										SysOrderGoods orderGoods = new SysOrderGoods ();
+										//ID
+										orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
+										//orderID
+										orderGoods.setOrderId(orderID);
+										//原始单价
+										orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+										//加气总量
+										orderGoods.setNumber(Double.valueOf(gasTotal));
+										//商品总价
+										orderGoods.setSumPrice(new BigDecimal(payableAmount));
+										//商品类型
+										orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+										//优惠类型。
+										orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+										//平台优惠金额
+										orderGoods.setDiscountSumPrice(preferential_cash);
+										int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
+										if(rs > 0 ){
+											//余额消费短信通知
+											AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+											SysOrder sorder = orderService.queryById(orderID);
+											SysDriver sdriver = driverService.queryDriverByPK(sorder.getCreditAccount());
+											String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
+											aliShortMessageBean.setSendNumber(sdriver.getMobilePhone());
+											aliShortMessageBean.setAccountNumber(sdriver.getMobilePhone());
+											aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+											aliShortMessageBean.setName(gasName);
+											aliShortMessageBean.setString("账户余额");
+											aliShortMessageBean.setMoney(amount);
+											AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
+											//APP提示
+											sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+										}else{
+											throw new Exception("orderGoods信息添加失败");
+										}
+									}else{
+										throw new Exception("订单状态更新失败");
+									}
 								}else{
-									throw new Exception("orderGoods信息添加失败");
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("支付失败！！");
 								}
 							}
 						}
@@ -5253,6 +5275,7 @@ public class MobileController {
 
 	/**
 	 * 获取加注站信息列表(default)
+	 * @param resultunifiedorder
 	 * @return
 	 */
 	private List<Map<String, Object>> defaultList(List<Gastation> gastationAllList,Double longIn,Double langIn,int pageNumIn,int pageSizeIn){
@@ -5613,7 +5636,7 @@ public class MobileController {
 						dataMap.put("phone", gastation.getContact_phone());
 						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
 						dataMap.put("price", gsGasPrice.getPrice());
-						dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getUnit()).get(0).getMname());
+						dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getProduct_unit()).get(0).getMname());
 						dataMap.put("gasName", usysparamService.query("CARDTYPE", gsGasPrice.getGasName()).get(0).getMname());
 						result.setData(dataMap);
 					}else{
@@ -5691,8 +5714,21 @@ public class MobileController {
 				if(promotions!=null && !"".equals(promotions)){
 					gastation.setPromotions(promotions);
 				}
-				int rs = gastationService.updateByPrimaryKeySelective(gastation);
-				if(rs > 0){
+				//气品价格
+				GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(stationId);
+				ProductPrice productPrice = new ProductPrice();
+				productPrice.setId(gsGasPrice.getPrice_id());
+				if(price!=null && !"".equals(price)){
+					productPrice.setProductPrice(Double.valueOf(price));
+				}
+				if(unit!=null && !"".equals(unit)){
+					productPrice.setProductUnit(unit);
+				}
+				//更新气品价格单位信息
+				int pprs = productPriceService.updatePriceById(productPrice);
+				//更新气站名称电话信息
+				int gsrs = gastationService.updateByPrimaryKeySelective(gastation);
+				if(pprs > 0 && gsrs >0){
 					result.setMsg("修改成功！");
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5704,6 +5740,7 @@ public class MobileController {
 			}
 			resutObj = JSONObject.fromObject(result);
 			resutObj.remove("listMap");
+			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			logger.error("信息： " + resultStr);
 			resultStr = DESUtil.encode(keyStr, resultStr);
@@ -5769,7 +5806,7 @@ public class MobileController {
 		}
 		sb.append("key=");
 		sb.append(API_KEY);
-		String appSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
+		String appSign = MD5.getMessageDigest(sb.toString().getBytes());
 		return appSign;
 	}
 

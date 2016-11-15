@@ -54,6 +54,8 @@ public class GsGasPrice extends BaseModel {
     private String preferential_type;//优惠类型
     
     private String price;		//虚拟字段，查询气站当前最高气价时用
+    
+    private String product_unit;//虚拟字段，气品单位
 
     public String getPreferential_type() {
         return preferential_type;
@@ -245,5 +247,13 @@ public class GsGasPrice extends BaseModel {
 
 	public void setPrice(String price) {
 		this.price = price;
+	}
+
+	public String getProduct_unit() {
+		return product_unit;
+	}
+
+	public void setProduct_unit(String product_unit) {
+		this.product_unit = product_unit;
 	}
 }
