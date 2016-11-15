@@ -51,4 +51,6 @@ public interface CouponService {
 	int updateUserCouponStatus(UserCoupon record);
 	
 	String queryUserCouponId(UserCoupon record);
+	
+	int updateStatus(String couponId, String sysDriverId);
 }
