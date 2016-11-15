@@ -176,6 +176,9 @@
 			and a.charge_type = #{chargeType,jdbcType=VARCHAR}
 		</if>
 		
+		<if test="creditPhone != null &amp;&amp; creditPhone != ''">
+			and c.mobile_phone like CONCAT("%",#{creditPhone,jdbcType=VARCHAR},"%")
+		</if>
 		<if test="endDate != null &amp;&amp; endDate != ''">
 			 and DATE_FORMAT(order_date,"%Y/%m/%d")   <![CDATA[   >=  ]]> #{startDate,jdbcType=VARCHAR} and   DATE_FORMAT(order_date,"%Y/%m/%d")  <![CDATA[   <=  ]]> #{endDate,jdbcType=VARCHAR}
 		</if>
