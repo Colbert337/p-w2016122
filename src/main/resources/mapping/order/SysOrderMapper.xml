@@ -1316,13 +1316,12 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		WHERE 
 		rc.order_id = B.order_id
 		) AS remark,
-		(
-		SELECT coupon_title FROM sys_coupon WHERE sys_coupon.coupon_id = (SELECT
-			sys_user_coupon.coupon_id
+		(SELECT
+			coupon_title
 		FROM
-			sys_user_coupon
+			sys_coupon
 		WHERE
-			sys_user_coupon.user_coupon_id = B.coupon_number)
+			sys_coupon.coupon_id  = B.coupon_number
 		) AS couponTitle,
 		B.order_date,
 		B.order_status,
