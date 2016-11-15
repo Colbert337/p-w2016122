@@ -5055,12 +5055,15 @@ public class MobileController {
 					BigDecimal preferential_cash = new BigDecimal(0);
 					preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));//总优惠金额
 						SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
+						
 						//设置优惠券ID
+						String coupon_number = null;
 						if(couponId!=null && !"".equals(couponId)){
 							UserCoupon uc = new UserCoupon();
 							uc.setCoupon_id(couponId);
 							uc.setSys_driver_id(token);
-							sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
+							coupon_number = couponService.queryUserCouponId(uc);
+							sysOrder.setCoupon_number(coupon_number);
 						}
 						//设置优惠金额
 						if(couponCash!=null && !"".equals(couponCash)){
@@ -5084,7 +5087,7 @@ public class MobileController {
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
 								String str = orderService.consumeByDriver(sysOrder);
-								if(str.equals("SUCCESS")){
+								if(str.equals(GlobalConstant.OrderProcessResult.SUCCESS)){
 									SysOrder order = new SysOrder();
 									order.setOrderId(orderID);
 									order.setOrderStatus(1);
@@ -5103,9 +5106,12 @@ public class MobileController {
 										//更新优惠券使用状态
 										if(couponId!=null && !couponId.equals("")){
 											UserCoupon uc = new UserCoupon();
-											uc.setUser_coupon_id(couponId);
+											uc.setUser_coupon_id(coupon_number);
 											uc.setIsuse("1");
 											int rs = couponService.updateUserCouponStatus(uc);
+											if(rs < 1){
+												throw new Exception("优惠券使用状态更新失败！");
+											}
 										}
 										//添加OrderGoods信息
 										List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
@@ -5123,7 +5129,10 @@ public class MobileController {
 										//商品类型
 										orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
 										//优惠类型。
-										orderGoods.setPreferential_type(gsGasPriceList.get(0).get("preferential_type").toString());
+										Object obj = gsGasPriceList.get(0).get("preferential_type");
+										if(obj!=null){
+											orderGoods.setPreferential_type(obj.toString());
+										}
 										//平台优惠金额
 										orderGoods.setDiscountSumPrice(preferential_cash);
 										int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
