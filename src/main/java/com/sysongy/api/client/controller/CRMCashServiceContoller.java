@@ -13,6 +13,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1246,5 +1247,89 @@ public class CRMCashServiceContoller {
         aliShortMessageBean.setMoney(recordNew.getCash().toString());
         AliShortMessage.sendShortMessage(aliShortMessageBean,
                 AliShortMessage.SHORT_MESSAGE_TYPE.APP_CONSUME);
+    }
+
+    /**
+     * 查询APP支付订单列表
+     * @param request
+     * @param response
+     * @param record
+     * @return
+     */
+    @RequestMapping(value = {"/web/queryAppOrderList"})
+    @ResponseBody
+    public AjaxJson queryCustomerInfo(HttpServletRequest request, HttpServletResponse response, SysOrder record){
+        AjaxJson ajaxJson = new AjaxJson();
+        String stationId = request.getParameter("stationId");
+        if(StringUtils.isEmpty(stationId)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！" );
+            return ajaxJson;
+        }
+
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            record.setOperator(GlobalConstant.appOperatorId);
+            record.setChargeType(GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE);
+            record.setChannelNumber(stationId);
+            record.setPageNum(1);
+            record.setPageSize(100);
+
+            PageInfo<SysOrder> orderPageInfo = orderService.queryAppOrderForPage(record);
+            if((orderPageInfo == null) || (orderPageInfo.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("没有查询到所需内容！！！");
+                return ajaxJson;
+            }
+
+            attributes.put("PageInfo", orderPageInfo);
+            attributes.put("orderList", orderPageInfo.getList());
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
+    /**
+     * CRM处理APP支付订单
+     * @param request
+     * @param response
+     * @param record
+     * @return
+     */
+    @RequestMapping(value = {"/web/appPayDeal"})
+    @ResponseBody
+    public AjaxJson appPayDeal(HttpServletRequest request, HttpServletResponse response, SysOrder record){
+        AjaxJson ajaxJson = new AjaxJson();
+        if(StringUtils.isEmpty(record.getOrderId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单ID为空！！！" );
+            return ajaxJson;
+        }
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            SysOrder order = new SysOrder();
+            order.setOrderId(record.getOrderId());
+            order.setChk_user(record.getChk_user());
+            order.setChk_time(record.getChk_time());
+            order.setChk_memo(record.getChk_memo());
+
+            orderService.saveOrder(order);
+            ajaxJson.setSuccess(true);
+            ajaxJson.setMsg("处理成功！！！");
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
     }
 }

@@ -224,6 +224,12 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		</if>
 	</select>
 
+	<!--根据操作人及chargeType查询APP订单-->
+	<select id="queryAppOrderForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.order.model.SysOrder">
+		select * from sys_order where operator = #{operator,jdbcType=VARCHAR} and charge_type = #{chargeType,jdbcType=VARCHAR}
+		 and channel_number = #{channelNumber,jdbcType=VARCHAR} and chk_user is null
+	</select>
+
 	<select id="queryOrderLogs" resultMap="OrderLogResultMap"
 		parameterType="java.lang.String">
 		select
@@ -380,6 +386,15 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			<if test="batch_no != null">
 				batch_no,
 			</if>
+			<if test="chk_user != null">
+				chk_user,
+			</if>
+			<if test="chk_time != null">
+				chk_time,
+			</if>
+			<if test="chk_memo != null">
+				chk_memo,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="orderId != null">
@@ -441,6 +456,15 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			</if>
 			<if test="batch_no != null">
 				#{batch_no,jdbcType=INTEGER},
+			</if>
+			<if test="chk_user != null">
+				#{chk_user,jdbcType=INTEGER},
+			</if>
+			<if test="chk_time != null">
+				#{chk_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="chk_memo != null">
+				#{chk_memo,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>

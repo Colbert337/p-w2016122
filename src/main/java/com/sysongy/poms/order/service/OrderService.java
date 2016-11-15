@@ -22,6 +22,8 @@ public interface OrderService {
 
     PageInfo<SysOrder> queryOrders(SysOrder obj) throws Exception;
 
+    PageInfo<SysOrder> queryAppOrderForPage(SysOrder obj) throws Exception;
+
     int deleteByPrimaryKey(String orderId);
 
     int insert(SysOrder record, List<SysOrderGoods> sysOrderGoods);

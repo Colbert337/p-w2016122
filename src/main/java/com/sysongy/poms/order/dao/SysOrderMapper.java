@@ -11,7 +11,9 @@ import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 public interface SysOrderMapper {
 
     List<SysOrder> queryForPage(SysOrder record);
-    
+
+    List<SysOrder> queryAppOrderForPage(SysOrder obj);
+
     List<OrderLog> queryOrderLogs(OrderLog record);
 
     int deleteByPrimaryKey(String orderId);
