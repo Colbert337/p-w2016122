@@ -140,4 +140,6 @@ public interface SysOrderMapper {
 	int updateByBatchNo(SysOrder record);
 
 	List<SysOrder> queryForPageForBack2(SysOrder order);
+
+	 List<SysOrder> queryOrderForSearch(String orderNumber);
 }

@@ -41,7 +41,8 @@
 		<result column="coupon_cash" property="coupon_cash" jdbcType="DECIMAL" />
 		<result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
 		<result column="trade_no" property="trade_no" jdbcType="VARCHAR" />
-
+		<result column="gas_station_name" property="gas_station_name"
+			jdbcType="VARCHAR" />
 
 		<association property="orderTypeInfo" column="order_type"
 			javaType="com.sysongy.poms.usysparam.model.Usysparam"
@@ -206,6 +207,11 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	</select>
 
 
+
+<select id="queryOrderForSearch" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select b.user_name,b.plate_number,c.gas_station_name from sys_order a LEFT JOIN sys_driver b on a.credit_account=b.sys_driver_id LEFT JOIN sys_gas_station c on a.channel_number=c.sys_gas_station_id where a.order_number=#{orderNumber,jdbcType=VARCHAR} and a.order_type!=230
+	</select>
 
 	<select id="queryForPage" resultMap="BaseResultMap"
 		parameterType="java.lang.String">

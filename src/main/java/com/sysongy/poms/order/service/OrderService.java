@@ -293,4 +293,6 @@ public interface OrderService {
 	PageInfo<SysOrder> queryOrderListForBack2(SysOrder order);
 
 void saveBareakForRe(HttpSession session, String msg, String money, String orderId) throws Exception;
+
+List<SysOrder> queryOrderForSearch(String orderNumber);
 }

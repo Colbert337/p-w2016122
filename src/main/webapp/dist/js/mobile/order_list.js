@@ -36,17 +36,49 @@ function showCheck(){
 }
 
 
-function showBreak(tradeNo1, type1, cash1, orderId1, no, retype) {
-	$('#titleNo').text("订单号：" + no);
-
+function showBreak(tradeNo1, type1, cash1, orderId1, no, retype,tr) {
+	$('#titleNo').text("退款");
+	 $.ajax({
+			type : "post",
+			url : "../web/order/queryOrder",
+			data : {
+				orderNumber :no
+			},
+			dataType : "json",
+			success : function(data) {
+//				 bootbox.alert(data);
+				var str=data.split(",");
+				 $("#plate_number").text(str[1]);
+				 $("#user_id").text(str[0]);
+				 $("#gas_name").text(str[2]);
+				 $("#order_number").text($("#"+orderId1).children('td').eq(0).text())
+				 $("#gas_id").text($("#"+orderId1).children('td').eq(12).text())
+				 $("#order_number").text($("#"+orderId1).children('td').eq(0).text())
+				 $("#order_c").text($("#"+orderId1).children('td').eq(2).text())
+				 
+				 $("#order_time").text( $("#"+orderId1).children('td').eq(5).text());
+//				alert($("#"+orderId1).children('td').eq(5).text());
+				if (data=='获取验证码成功！') {
+					
+				}else{
+					
+				}
+				$('#content').hideLoading();
+				$("#content").modal('show');
+			},
+			error:function(){
+				$('#content').hideLoading();
+				 bootbox.alert("获取验证失败！");
+			}
+		});
 	
-	$('#div').hideLoading();
+	$('#content').hideLoading();
 	closeDialog('content');
 	type = type1;
 	cash = cash1;
 	tradeNo = tradeNo1;
 	orderId = orderId1;
-	$("#content").modal('show');
+	
 	// $("#title").text( );
 	 
 	// $("#content").modal('show');
@@ -175,7 +207,7 @@ obj.value = obj.value.replace(/[^\d.]/g,"");
  
 
 function subCheck(tradeNo1,type1,cash1,orderId1,no,retype){
-	$('#div').showLoading();
+	$('#content').showLoading();
 	 $.ajax({
 			type : "post",
 			url : "../web/order/checkPhone",
@@ -190,10 +222,10 @@ function subCheck(tradeNo1,type1,cash1,orderId1,no,retype){
 				}else{
 					
 				}
-				$('#div').hideLoading();
+				$('#content').hideLoading();
 			},
 			error:function(){
-				$('#div').hideLoading();
+				$('#content').hideLoading();
 				 bootbox.alert("获取验证失败！");
 			}
 		});
@@ -259,15 +291,15 @@ function subbreak() {
 //			$("#modal-table").modal("show");
 			bootbox.alert(data);
 //			$("#conditionStatus").val(oldtype);
-			$('#div').hideLoading();
+			$('#content').hideLoading();
 			commitForm();
 			
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
-			$('#div').hideLoading();
+			$('#content').hideLoading();
 		}
 	}
-	$('#div').showLoading();
+	$('#content').showLoading();
 	$("#formRoad").ajaxSubmit(options);
 	
 	

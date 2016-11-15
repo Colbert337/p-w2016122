@@ -1336,4 +1336,11 @@ public class OrderServiceImpl implements OrderService {
 			 
 		
 	}
+
+	@Override
+	public  List<SysOrder> queryOrderForSearch(String orderNumber) {
+		// TODO Auto-generated method stub
+		return sysOrderMapper.queryOrderForSearch(orderNumber);
+	
+	}
 }

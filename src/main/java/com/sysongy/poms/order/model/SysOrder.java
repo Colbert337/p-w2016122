@@ -131,7 +131,28 @@ public class SysOrder extends BaseModel{
     
     private Date chk_time;
     
-    private String chk_user;
+    private String user_name;
+    
+    private String plate_number;
+    
+      
+    public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+
+	public String getPlate_number() {
+		return plate_number;
+	}
+
+	public void setPlate_number(String plate_number) {
+		this.plate_number = plate_number;
+	}
+
+	private String chk_user;
     
     public String getChk_user() {
 		return chk_user;
