@@ -29,7 +29,7 @@
 	}
 	
 	function init(){
-		loadPage('#main', '../web/driver/queryRechargeReport');
+		loadPage('#main', '../web/driver/queryRechargeDriverReport');
 	}
 
 
@@ -38,8 +38,10 @@
 		$("#formgastation").submit();
 	}
 
+/*
 	function backQuery(){
+		alert('orderby='+orderByss);
 		loadPage('#main', '../web/driver/queryRechargeDriverReport?'+'sysDriver.userName='+userName+
 			'&sysDriver.mobilePhone='+mobilePhone+'&orderNumber='+orderNumber+'&is_discharge='+is_discharge+
-			'&startDate='+startDate+'&endDate='+endDate+'&pageNum='+pageNumber+'&=pageSize'+pageSize+'&orderBy='+orderBy);
-	}
+			'&startDate='+startDate+'&endDate='+endDate+'&pageNum='+pageNumber+'&pageSize='+pageSize+'&orderby='+orderByss);
+	}*/
