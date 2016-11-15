@@ -22,6 +22,8 @@ public interface OrderService {
 
     PageInfo<SysOrder> queryOrders(SysOrder obj) throws Exception;
 
+    PageInfo<SysOrder> queryAppOrderForPage(SysOrder obj) throws Exception;
+
     int deleteByPrimaryKey(String orderId);
 
     int insert(SysOrder record, List<SysOrderGoods> sysOrderGoods);
@@ -293,4 +295,6 @@ public interface OrderService {
 	PageInfo<SysOrder> queryOrderListForBack2(SysOrder order);
 
 void saveBareakForRe(HttpSession session, String msg, String money, String orderId) throws Exception;
+
+List<SysOrder> queryOrderForSearch(String orderNumber);
 }

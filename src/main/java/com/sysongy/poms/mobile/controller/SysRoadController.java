@@ -524,7 +524,7 @@ public class SysRoadController extends BaseContoller {
 
 			String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),
 					DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
-			downLoadFileName = "用户卡信息_" + downLoadFileName;
+			downLoadFileName = "路况信息_" + downLoadFileName;
 
 			try {
 				response.addHeader("Content-Disposition",
@@ -537,13 +537,11 @@ public class SysRoadController extends BaseContoller {
 			// 第一列
 			content[0] = new String[] { "审核人电话", "审核人", "路况类型", "审核状态", "拍照时间", "路况说明", "备注", "创建人", "创界人电话",
 					"发布时间","审核时间" };
-
 			int i = 1;
 			if (list != null && list.size() > 0) {
 				for (SysRoadCondition one : pageinfo.getList()) {
-					SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd hh:mm");
+					SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 					String publisherPhone = one.getPublisherPhone() == null ? "" : one.getPublisherPhone().toString();
-
 					String publisherName = one.getPublisherName() == null ? "" : one.getPublisherName().toString();
 					String condition_type = one.getConditionType() == null ? "" : one.getConditionType();
 					String captureTime = one.getCaptureTime() == null ? "" : sdf.format(one.getCaptureTime());
@@ -567,20 +565,17 @@ public class SysRoadController extends BaseContoller {
 						break;
 					}
 					String mname=one.getMname();
-					String msg = one.getConditionMsg();
-
-					// String workstation =
-					// road.getWorkstation()==null?"":road.getTransportion().getTransportion_name();
-
+					String msg = one.getConditionMsg(); 
 					String memo = one.getMemo() == null ? ""
 							: one.getMemo().toString();
 					String auditor = one.getAuditor() == null ? "" : one.getAuditor();
 					String auditorPhone = one.getAuditorPhone() == null ? "" : one.getAuditorPhone();
-					String storage_time = one.getAuditorTime() == null ? "" : DateUtil.format(one.getAuditorTime());
+					String auditorTime = one.getAuditorTime() == null ? "" : DateUtil.format(one.getAuditorTime());
 					String release_time = one.getPublisherTime() == null ? "" : DateUtil.format(one.getPublisherTime());
-
-					content[i] = new String[] { publisherPhone, publisherName, mname, condStatus, captureTime,
-							msg, memo, auditor, auditorPhone, storage_time,release_time };
+//				content[0] = new String[] { "审核人电话", "审核人", "路况类型", "审核状态", "拍照时间", "路况说明", "备注", "创建人", "创界人电话",
+//					"发布时间","审核时间" };
+					content[i] = new String[] { auditorPhone, auditor, mname, condStatus, captureTime,
+							msg, memo, publisherName, publisherPhone, release_time,auditorTime };
 					i++;
 				}
 			}

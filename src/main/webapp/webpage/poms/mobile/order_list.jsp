@@ -111,6 +111,12 @@
 								 
 								<th onclick="orderBy(this,'trade_no');commitForm();"
 									id="trade_no_order">交易号</th>
+									<th >气站编号</th>
+								<th onclick="orderBy(this,'chk_user');commitForm();"
+									id="chk_user_order">退款操作人</th>
+								<th onclick="orderBy(this,'chk_time');commitForm();"
+									id="chk_time_order">操作时间</th>
+								<th >退款原因</th>
 								 
 								<th class="text-center td-w3">操作</th>
 							</tr>
@@ -140,7 +146,10 @@
 									<td>${list.channel}</td>
 									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
 									<td>${list.trade_no}</td>
-									 
+									<td>${list.channelNumber}</td>
+									<td>${list.chk_user}</td>
+									<td><fmt:formatDate value="${list.chk_time}" type="both"/></td>
+									<td>${list.chk_memo}</td>
 									<td class="text-center">
 										<c:if test="${list.cash ne '0.00' }">
 											<c:if test="${not empty list.trade_no}">
@@ -227,17 +236,55 @@
 					 
 				</div>
 				<br />  
+					<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">气站编号：</label>
+					<label class="col-sm-8 control-label no-padding-right" id="gas_id" name="show"></label>
+				</div>
+				<br />  
 				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">验证手机号：</label>
-					<div class="col-sm-8">
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">气站名称：</label>
+					<label class="col-sm-8 control-label no-padding-right" id="gas_name" name="show"></label>
+				</div>  <br /> 
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">订单号：</label>
+					<label class="col-sm-8 control-label no-padding-right" id="order_number" name="show"></label>
+				</div>
+				<br /> 
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">会员账号：</label>
+					<label class="col-sm-8 control-label no-padding-right" id="user_id" name="show"></label>
+				</div>
+				
+				<br />  
+					<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">车牌号：</label>
+					<label class="col-sm-8 control-label no-padding-right" id="plate_number" name="show"></label>
+				</div>
+				
+				<br />   
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">交易时间：</label>
+					<label class="col-sm-8 control-label no-padding-right" id="order_time"></label>
+				</div>
+				<br />  
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">实付金额：</label>
+					<label class="col-sm-8 control-label no-padding-right" id='order_c' name="show"></label>
+				</div>
+				 <br /> 
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">验证手机号：</label>
+					<div class="col-sm-5">
 						<input type="text" id="phone"  onkeyup="clearNoNum2(this)"   placeholder="请输入验证手机号"
 							class="form-control" maxlength="11" />
+							</div>
+					<div class="col-sm-3">
 						<button class="btn btn-primary btn-sm" onclick="subCheck()">获取验证码</button>
 					</div>
 				</div>
-				<br /> <br /><br />
+				<br /> <br /> 
 				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">验证码：</label>
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">验证码：</label>
 					<div class="col-sm-8">
 						<input type="text" id="code"  onkeyup="clearNoNum2(this)"   placeholder="请输入验证码"
 							class="form-control" maxlength="6" />
@@ -245,7 +292,7 @@
 				</div>
 				<br /><br /> 
 				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">请输入金额：</label>
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">请输入金额：</label>
 					<div class="col-sm-8">
 						<input type="text" id="money"  onkeyup="clearNoNum(this)"   placeholder="请输入退款金额"
 							class="form-control" maxlength="12" />
@@ -254,7 +301,7 @@
 				</div>
 				<br /> <br />
 				<div class="form-group">
-					<label class="col-sm-3 control-label no-padding-right">请输入退款原因：</label>
+					<label class="col-sm-3 control-label no-padding-right" style="text-align: right;">请输入退款原因：</label>
 
 					<div class="col-sm-8">
 						<textarea class="form-control" id="msgcontent" placeholder="请输入退款原因" rows="3"></textarea>

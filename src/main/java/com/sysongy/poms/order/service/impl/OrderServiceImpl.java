@@ -109,7 +109,15 @@ public class OrderServiceImpl implements OrderService {
 		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
 		return pageInfo;
 	}
-	
+
+	@Override
+	public PageInfo<SysOrder> queryAppOrderForPage(SysOrder record) throws Exception {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<SysOrder> list = sysOrderMapper.queryAppOrderForPage(record);
+		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
+		return pageInfo;
+	}
+
 	@Override
 	public int deleteByPrimaryKey(String orderId) {
 		return sysOrderMapper.deleteByPrimaryKey(orderId);
@@ -1338,5 +1346,12 @@ public class OrderServiceImpl implements OrderService {
 		//	e.printStackTrace();
 			 
 		
+	}
+
+	@Override
+	public  List<SysOrder> queryOrderForSearch(String orderNumber) {
+		// TODO Auto-generated method stub
+		return sysOrderMapper.queryOrderForSearch(orderNumber);
+	
 	}
 }

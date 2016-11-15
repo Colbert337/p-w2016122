@@ -140,7 +140,8 @@ public class CRMUserContoller {
             }
 
             if(StringUtils.isNotEmpty(sysUser.getPassword())){
-                sysUserInfo.setPassword(sysUser.getPassword());
+                String password = sysUser.getPassword().toLowerCase();
+                sysUserInfo.setPassword(password);
             }
 
             if(StringUtils.isNotEmpty(sysUser.getRealName())){

@@ -187,7 +187,7 @@
 							<label class="col-sm-3 control-label no-padding-right"
 								for="target_url"><span class="red_star">*</span>顺序 </label>
 							<div class="col-sm-8">
-								<input type="text" id="sort" value="${mbBanner.sort }"
+								<input type="text" id="sort" onkeyup="clearNoNum2(this)" value="${mbBanner.sort }"
 									placeholder="顺序" maxlength="11" name="sort"
 									class="col-xs-10 col-sm-12" />
 							</div>
@@ -323,6 +323,19 @@
 </div>
 
 <script type="text/javascript">
+
+function clearNoNum2(obj)
+{
+//先把非数字的都替换掉，除了数字和.
+obj.value = obj.value.replace(/[^\d.]/g,"");
+//必须保证第一个为数字而不是.
+//obj.value = obj.value.replace(/^\./g,"");
+//保证只有出现一个.而没有多个.
+//obj.value = obj.value.replace(/\.{2,}/g,".");
+//保证.只出现一次，而不能出现两次以上
+//obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+}
+ 
 	//获取主机地址，如： http://localhost:8080
 	var localhostPaht = curWwwPath.substring(0, pos);
 	var projectfileoptions = {
