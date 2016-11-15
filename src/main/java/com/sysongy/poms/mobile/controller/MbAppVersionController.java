@@ -58,6 +58,13 @@ public class MbAppVersionController extends BaseContoller {
 			mbAppVersion.setPageNum(GlobalConstant.PAGE_NUM);
 			mbAppVersion.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
+		if(mbAppVersion.getConvertPageNum() != null){
+			if(mbAppVersion.getConvertPageNum() > mbAppVersion.getPageNumMax()){
+				mbAppVersion.setPageNum(mbAppVersion.getPageNumMax());
+			}else{
+				mbAppVersion.setPageNum(mbAppVersion.getConvertPageNum());
+			}
+		}
 		if(StringUtils.isEmpty(mbAppVersion.getOrderby())){
 			mbAppVersion.setOrderby("created_date desc");
 		}

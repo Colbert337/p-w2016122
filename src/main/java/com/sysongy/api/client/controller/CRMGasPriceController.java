@@ -1,5 +1,25 @@
 package com.sysongy.api.client.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
@@ -18,26 +38,6 @@ import com.sysongy.poms.system.model.SysOperationLog;
 import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2016/6/14.
@@ -302,6 +302,13 @@ public class CRMGasPriceController {
 				gsGasPrice.setPageNum(1);
 				gsGasPrice.setPageSize(10);
 			}
+			if(gsGasPrice.getConvertPageNum() != null){
+				if(gsGasPrice.getConvertPageNum() > gsGasPrice.getPageNumMax()){
+					gsGasPrice.setPageNum(gsGasPrice.getPageNumMax());
+				}else{
+					gsGasPrice.setPageNum(gsGasPrice.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(gsGasPrice.getOrderby())){
 				gsGasPrice.setOrderby("created_date desc");
 			}
@@ -349,7 +356,13 @@ public class CRMGasPriceController {
    				productPrice.setPageNum(1);
    				productPrice.setPageSize(10);
    			}
-   			
+   			if(productPrice.getConvertPageNum() != null){
+				if(productPrice.getConvertPageNum() > productPrice.getPageNumMax()){
+					productPrice.setPageNum(productPrice.getPageNumMax());
+				}else{
+					productPrice.setPageNum(productPrice.getConvertPageNum());
+				}
+			}
    			PageInfo<ProductPrice> pageinfo = productPriceService.queryProductPrice(productPrice);
 
    			bean.setRetCode(100);

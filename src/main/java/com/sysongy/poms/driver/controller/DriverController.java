@@ -3,7 +3,6 @@ package com.sysongy.poms.driver.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,12 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.sysongy.api.client.controller.model.PayCodeValidModel;
-import com.sysongy.poms.transportion.model.Transportion;
-import com.sysongy.poms.transportion.service.TransportionService;
-import com.sysongy.tcms.advance.model.TcFleet;
-import com.sysongy.tcms.advance.model.TcFleetQuota;
-import com.sysongy.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
@@ -39,9 +33,17 @@ import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
-import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.model.SysOperationLog;
 import com.sysongy.poms.system.service.SysOperationLogService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.DateUtil;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.ExportUtil;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.UUIDGenerator;
 
 import net.sf.json.JSONObject;
 
@@ -85,6 +87,13 @@ public class DriverController extends BaseContoller{
             driver.setPageNum(GlobalConstant.PAGE_NUM);
             driver.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+		if(driver.getConvertPageNum() != null){
+			if(driver.getConvertPageNum() > driver.getPageNumMax()){
+				driver.setPageNum(driver.getPageNumMax());
+			}else{
+				driver.setPageNum(driver.getConvertPageNum());
+			}
+		}
 		driver.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
@@ -120,6 +129,13 @@ public class DriverController extends BaseContoller{
             driver.setPageNum(GlobalConstant.PAGE_NUM);
             driver.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+		if(driver.getConvertPageNum() != null){
+			if(driver.getConvertPageNum() > driver.getPageNumMax()){
+				driver.setPageNum(driver.getPageNumMax());
+			}else{
+				driver.setPageNum(driver.getConvertPageNum());
+			}
+		}
 		driver.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
@@ -198,6 +214,13 @@ public class DriverController extends BaseContoller{
 		try {
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
         
+        if(driver.getConvertPageNum() != null){
+			if(driver.getConvertPageNum() > driver.getPageNumMax()){
+				driver.setPageNum(driver.getPageNumMax());
+			}else{
+				driver.setPageNum(driver.getConvertPageNum());
+			}
+		}
         if(StringUtils.isEmpty(driver.getOrderby())){
         	driver.setOrderby("checked_status=1 desc");
         }
@@ -240,6 +263,13 @@ public class DriverController extends BaseContoller{
 		try {
 	        PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
 
+	        if(driver.getConvertPageNum() != null){
+				if(driver.getConvertPageNum() > driver.getPageNumMax()){
+					driver.setPageNum(driver.getPageNumMax());
+				}else{
+					driver.setPageNum(driver.getConvertPageNum());
+				}
+			}
 	        if(StringUtils.isEmpty(driver.getOrderby())){
 	        	driver.setOrderby("created_date desc");
 	        }
@@ -454,6 +484,13 @@ public class DriverController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
+			if(sysOrder.getConvertPageNum() != null){
+				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
+					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else{
+					sysOrder.setPageNum(sysOrder.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				sysOrder.setOrderby("order_date desc");
 			}
@@ -497,8 +534,15 @@ public class DriverController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
+			if(sysOrder.getConvertPageNum() != null){
+				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
+					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else{
+					sysOrder.setPageNum(sysOrder.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
-				//transportion.setOrderby("created_time desc");
+				sysOrder.setOrderby("order_date desc");
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeDriverReportDetail(sysOrder);

@@ -59,7 +59,13 @@ public class SysOrderController extends BaseContoller {
 				order.setPageNum(1);
 				order.setPageSize(10);
 			}
-
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
+			}
 			PageInfo<OrderLog> pageinfo = service.queryOrderLogs(order);
 
 			bean.setRetCode(100);
@@ -93,7 +99,13 @@ public class SysOrderController extends BaseContoller {
 				order.setPageNum(1);
 				order.setPageSize(10);
 			}
-
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
+			}
 			PageInfo<OrderLog> pageinfo = service.queryOrderLogs(order);
 
 			bean.setRetCode(100);
@@ -133,6 +145,13 @@ public class SysOrderController extends BaseContoller {
 			if (order.getPageNum() == null || "".equals(order.getPageNum())) {
 				order.setPageNum(GlobalConstant.PAGE_NUM);
 				order.setPageSize(20);
+			}
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(order.getOrderby())) {
 				order.setOrderby("order_date desc");
@@ -182,6 +201,13 @@ public class SysOrderController extends BaseContoller {
 			if (order.getPageNum() == null || "".equals(order.getPageNum())) {
 				order.setPageNum(GlobalConstant.PAGE_NUM);
 				order.setPageSize(20);
+			}
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(order.getOrderby())) {
 				order.setOrderby("order_date desc");

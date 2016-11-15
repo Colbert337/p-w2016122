@@ -1,27 +1,15 @@
 package com.sysongy.tcms.advance.controller;
 
-import com.alipay.util.httpClient.HttpRequest;
-import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.base.model.AjaxJson;
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.base.model.InterfaceConstants;
-import com.sysongy.poms.card.model.GasCard;
-import com.sysongy.poms.card.service.GasCardService;
-import com.sysongy.poms.system.model.SysOperationLog;
-import com.sysongy.poms.system.service.SysOperationLogService;
-import com.sysongy.poms.transportion.model.Transportion;
-import com.sysongy.poms.transportion.service.TransportionService;
-import com.sysongy.tcms.advance.model.TcFleet;
-import com.sysongy.tcms.advance.model.TcVehicle;
-import com.sysongy.tcms.advance.model.TcVehicleCard;
-import com.sysongy.tcms.advance.service.TcVehicleCardService;
-import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.*;
-import com.sysongy.util.pojo.AliShortMessageBean;
-import jxl.Sheet;
-import jxl.Workbook;
-import net.sf.json.JSONObject;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,11 +23,30 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.InterfaceConstants;
+import com.sysongy.poms.card.model.GasCard;
+import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.tcms.advance.model.TcVehicle;
+import com.sysongy.tcms.advance.service.TcVehicleCardService;
+import com.sysongy.tcms.advance.service.TcVehicleService;
+import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.Decoder;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.pojo.AliShortMessageBean;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import jxl.Sheet;
+import jxl.Workbook;
+import net.sf.json.JSONObject;
 
 /**
  * @FileName: TcVehicleController
@@ -81,6 +88,13 @@ public class TcVehicleController extends BaseContoller {
             vehicle.setPageNum(GlobalConstant.PAGE_NUM);
             vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+        if(vehicle.getConvertPageNum() != null){
+			if(vehicle.getConvertPageNum() > vehicle.getPageNumMax()){
+				vehicle.setPageNum(vehicle.getPageNumMax());
+			}else{
+				vehicle.setPageNum(vehicle.getConvertPageNum());
+			}
+		}
         vehicle.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容

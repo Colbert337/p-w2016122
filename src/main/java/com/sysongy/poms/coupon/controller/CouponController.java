@@ -1,37 +1,37 @@
 package com.sysongy.poms.coupon.controller;
 
-import jxl.Sheet;
-import jxl.Workbook;
-import java.util.List;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import net.sf.json.JSONArray;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
-import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageInfo;
-import org.springframework.ui.ModelMap;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Controller;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.UserCoupon;
 import com.sysongy.poms.coupon.service.CouponService;
-import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+
+import jxl.Sheet;
+import jxl.Workbook;
+import net.sf.json.JSONArray;
 
 
 
@@ -62,6 +62,13 @@ public class CouponController extends BaseContoller {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/coupon/manageCoupon";
 		try {
+			if(coupon.getConvertPageNum() != null){
+				if(coupon.getConvertPageNum() > coupon.getPageNumMax()){
+					coupon.setPageNum(coupon.getPageNumMax());
+				}else{
+					coupon.setPageNum(coupon.getConvertPageNum());
+				}
+			}
 			PageInfo<Coupon> pageinfo = service.queryCoupon(coupon);
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");
@@ -465,6 +472,13 @@ public class CouponController extends BaseContoller {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/coupon/manageCouponUser";
 		try {
+			if(userCoupon.getConvertPageNum() != null){
+				if(userCoupon.getConvertPageNum() > userCoupon.getPageNumMax()){
+					userCoupon.setPageNum(userCoupon.getPageNumMax());
+				}else{
+					userCoupon.setPageNum(userCoupon.getConvertPageNum());
+				}
+			}
 			PageInfo<UserCoupon> userCouponInfo = service.queryUserCoupon(userCoupon);
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功"); 

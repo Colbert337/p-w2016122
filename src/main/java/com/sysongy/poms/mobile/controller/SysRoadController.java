@@ -54,9 +54,7 @@ public class SysRoadController extends BaseContoller {
 
 	@Autowired
 	private UsysparamService usysparamservice;
-	
 
-	
 	@Autowired
 	RedisClientInterface redisClientImpl;
 
@@ -73,6 +71,13 @@ public class SysRoadController extends BaseContoller {
 			if (road.getPageNum() == null || "".equals(road.getPageNum())) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
 				road.setPageSize(20);
+			}
+			if(road.getConvertPageNum() != null){
+				if(road.getConvertPageNum() > road.getPageNumMax()){
+					road.setPageNum(road.getPageNumMax());
+				}else{
+					road.setPageNum(road.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(road.getOrderby())) {
 				road.setOrderby("start_time desc");
@@ -116,6 +121,13 @@ public class SysRoadController extends BaseContoller {
 			if (road.getPageNum() == null) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
 				road.setPageSize(5);
+			}
+			if(road.getConvertPageNum() != null){
+				if(road.getConvertPageNum() > road.getPageNumMax()){
+					road.setPageNum(road.getPageNumMax());
+				}else{
+					road.setPageNum(road.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(road.getOrderby())) {
 				road.setOrderby(" publisher_time desc");
