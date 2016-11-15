@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -139,7 +140,7 @@ public class SysOrderController extends BaseContoller {
 				order.setPageSize(20);
 			}
 			if (StringUtils.isEmpty(order.getOrderby())) {
-				order.setOrderby("order_date desc");
+				order.setOrderby("order_status ASC");
 			}
 
 			PageInfo<SysOrder> pageinfo = new PageInfo<SysOrder>();
@@ -247,6 +248,40 @@ public class SysOrderController extends BaseContoller {
 			logger.error("", e);
 		} finally {
 			return money + "";
+		}
+
+	}
+	
+	/**
+	 * 查询一个交易号里面的累计退金额
+	 * 
+	 * @param order
+	 * @param map
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping("/queryOrder")
+	@ResponseBody
+	public String queryOrder(String orderNumber, ModelMap map) {
+		// String ret = "webpage/poms/mobile/order_list";
+		PageBean bean = new PageBean();
+		 List<SysOrder> string ;String re="";
+		try {
+			string = service.queryOrderForSearch(orderNumber);
+			bean.setRetCode(100);
+			re=string.get(0).getUser_name()+","+string.get(0).getPlate_number()+","+string.get(0).getGas_station_name();
+			bean.setRetMsg("查询成功");
+			
+			// map.addAttribute("current_module",
+			// "/web/mobile/suggest/suggestList");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+
+			logger.error("", e);
+		} finally {
+			return re + "";
 		}
 
 	}
