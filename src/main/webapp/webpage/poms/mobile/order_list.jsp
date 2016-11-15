@@ -149,6 +149,7 @@
 									<td><fmt:formatDate value="${list.chk_time}" type="both"/></td>
 									<td>${list.chk_memo}</td>
 									<td class="text-center">
+									<c:if test="${list.orderStatus ne -1 }">
 										<c:if test="${list.cash ne '0.00' }">
 											<c:if test="${not empty list.trade_no}">
 												<a class=""  style="color:#337ab7" 
@@ -168,12 +169,14 @@
 												</a>
 											</c:if>
 										</c:if>
+										</c:if>
 										<a class="option-btn-m" style="color:#337ab7" 
 											href="javascript:void(0);"
 											onclick="showOrderForBack('${list.orderNumber}' );" title="查看退款记录"
 											data-rel="tooltip"> <i
 												class="ace-icon fa fa-search-plus bigger-130"></i>
 										</a>
+										
 									</td>
 								</tr>
 							</c:forEach>
