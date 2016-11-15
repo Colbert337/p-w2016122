@@ -19,4 +19,6 @@ public interface ProductPriceService {
     public Integer updatePriceStatus(ProductPrice obj) throws Exception;
 
     public Integer compareStartTime(ProductPrice obj) throws Exception;
+    
+    public Integer updatePriceById(ProductPrice obj) throws Exception;
 }

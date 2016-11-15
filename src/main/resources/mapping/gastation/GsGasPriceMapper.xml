@@ -363,4 +363,12 @@ SET
 		gs_gas_price.sys_gas_station_id = #{0} and product_price.product_price= #{1}
 	AND product_price.product_price_status = '1' and gs_gas_price.is_deleted='0' limit 1
   </select>
+  <!-- 根据气站ID查询气站当前最高气价信息 -->
+   <select id="queryGsGasPriceInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+     <include refid="Base_Column_List" /> ,
+    MAX(product_price.product_price)as price,product_price.product_unit as product_unit from gs_gas_price 
+	LEFT JOIN product_price ON gs_gas_price.price_id = product_price.id
+	WHERE product_price_status ='1' and is_deleted = '0' and sys_gas_station_id = #{gsGasPriceId,jdbcType=VARCHAR}
+  </select>
 </mapper>

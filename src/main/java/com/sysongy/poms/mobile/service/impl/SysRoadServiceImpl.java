@@ -187,7 +187,7 @@ public class SysRoadServiceImpl implements SysRoadService {
 		return true;
 	}
 	
-	private int sumTime(Date startTime, Integer h) {
+	public static int sumTime(Date startTime, Integer h) {
 
 		// TODO Auto-generated method stub
 
