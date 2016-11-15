@@ -163,8 +163,7 @@
 	<select id="queryForPageForBack" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
 			select a.*,b.mobile_phone ,c.mobile_phone as creditPhone from sys_order a left join sys_driver b on 
-			a.debit_account=b.sys_driver_id  LEFT JOIN sys_driver c ON a.credit_account=c.sys_driver_id where 1=1 and (a.charge_type="103" or
-			a.charge_type="104" or SPEND_TYPE="C01" or  SPEND_TYPE="C03" or SPEND_TYPE="C04") and order_type <![CDATA[   <>  ]]>230 and order_type <![CDATA[   <>  ]]>210  and order_status=-1 or chk_memo is not null and operator_source_id='8aa4ba67855a11e6a356000c291aa9e3'
+			a.debit_account=b.sys_driver_id  LEFT JOIN sys_driver c ON a.credit_account=c.sys_driver_id where 1=1   and order_type <![CDATA[   <>  ]]>230 and order_type <![CDATA[   <>  ]]>210  and (order_status=-1 or chk_memo is not null) and operator_source_id='8aa4ba67855a11e6a356000c291aa9e3'
 		<if test="orderId != null &amp;&amp; orderId != ''">
 			and a.order_id = #{orderId,jdbcType=VARCHAR}
 		</if>
