@@ -2502,13 +2502,9 @@ public class MobileController {
 							dateTime = sft.format(new Date());
 						}
 						Object obj = map.get("preferential_cash");//平台优惠金额
-						Object coupon_cash = map.get("coupon_cash");//优惠券优惠金额
 						BigDecimal cashAll = new BigDecimal(0);
 						if(obj!=null && !"".equals(obj)){
 							cashAll = new BigDecimal(obj.toString());
-						}
-						if(coupon_cash!=null && !coupon_cash.equals("")){
-							cashAll = cashAll.add(new BigDecimal(coupon_cash.toString()));
 						}
 						reChargeMap.put("time", dateTime);
 						reChargeMap.put("shouldPayment",map.get("should_payment"));//应付金额
