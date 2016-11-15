@@ -5065,9 +5065,8 @@ public class MobileController {
 				gastationId = mainObj.optString("gastationId");
 				SysDriver driver = driverService.queryDriverByPK(token);
 				Gastation gas = gastationService.queryGastationByPK(gastationId);
-				String driverPayCode = driver.getPayCode();
 				Map<String, Object> data = new HashedMap();
-				if(payCode.equals(driverPayCode)){
+				if(payCode.equals(driver.getPayCode())){
 					String couponId = mainObj.optString("couponId");
 					String couponCash = mainObj.optString("couponCash");
 					String orderID = UUIDGenerator.getUUID();
@@ -5077,8 +5076,22 @@ public class MobileController {
 					//设置平台优惠金额
 					BigDecimal preferential_cash = new BigDecimal(0);
 					preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));//总优惠金额
-						SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
-						
+						//SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
+						SysOrder sysOrder = new SysOrder();
+						sysOrder.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
+						sysOrder.setSpend_type(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
+						sysOrder.setOrderId(orderID);
+						sysOrder.setCreditAccount(token);
+						sysOrder.setOperator(appOperatorId);
+						sysOrder.setOperatorSourceId(appOperatorId);
+						sysOrder.setChargeType(GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE);
+						sysOrder.setIs_discharge("0");
+						sysOrder.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.DRIVER);
+						sysOrder.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);
+						sysOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+						sysOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
+						sysOrder.setOrderStatus(0);
+						sysOrder.setOrderDate(new Date());
 						//设置优惠券ID
 						String coupon_number = null;
 						if(couponId!=null && !"".equals(couponId)){
@@ -6018,6 +6031,7 @@ public class MobileController {
 			record.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
 			record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
 			record.setOrderStatus(0);
+			record.setOrderDate(new Date());
 		}else{
 			record.setChannel("APP");
 			record.setChannelNumber("APP-支付宝充值"); // 建立一个虚拟的APP气站，方便后期统计
