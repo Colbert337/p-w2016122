@@ -3146,9 +3146,6 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(transaction_id);
 				orderService.updateByPrimaryKey(sysOrder);
-				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
-				//更新最新余额到账户
-				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -3167,7 +3164,7 @@ public class MobileController {
 						//更新优惠券使用状态
 						if(couponId!=null && !couponId.equals("")){
 							UserCoupon uc = new UserCoupon();
-							uc.setUser_coupon_id(couponId);
+							uc.setUser_coupon_id(orderService.queryById(orderId).getCoupon_number());
 							uc.setIsuse("1");
 							int rs = couponService.updateUserCouponStatus(uc);
 						}
@@ -3334,9 +3331,6 @@ public class MobileController {
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
 				orderService.updateByPrimaryKey(sysOrder);
-				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(order.getCreditAccount());
-				//更新最新余额到账户
-				sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), new BigDecimal(feeCount), GlobalConstant.OrderType.CONSUME_BY_DRIVER);
 				try {
 					String orderCharge = orderService.consumeByDriver(order);
 					//系统关键日志记录
@@ -3355,7 +3349,7 @@ public class MobileController {
 						//更新优惠券使用状态
 						if(couponId!=null && !couponId.equals("")){
 							UserCoupon uc = new UserCoupon();
-							uc.setUser_coupon_id(couponId);
+							uc.setUser_coupon_id(orderService.queryById(orderId).getCoupon_number());
 							uc.setIsuse("1");
 							int rs = couponService.updateUserCouponStatus(uc);
 						}
