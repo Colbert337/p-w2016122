@@ -1304,6 +1304,8 @@ public class OrderServiceImpl implements OrderService {
 			newOrder.setCreditAccount(order.getCreditAccount());
 			newOrder.setSpend_type(order.getSpend_type());
 			newOrder.setChargeType("112");
+			CurrUser user = (CurrUser) session.getAttribute("currUser");
+			newOrder.setOperator(user.getUser().getSysUserId());
 			newOrder.setOrderRemark(msg);
 //			account = accountService.queryUserAccountByGas(order.getChannelNumber());
 //			if (account == null) {
@@ -1324,10 +1326,9 @@ public class OrderServiceImpl implements OrderService {
 			order = this.queryById(orderId);
 			order.setCash(order.getCash().subtract(new BigDecimal(money)));
 			order.setOrderStatus(1);
-			order.setChk_memo(msg);
-			CurrUser user = (CurrUser) session.getAttribute("currUser");
-			order.setChk_time(new Date());
-			order.setChk_user(user.getUser().getMobilePhone());
+			 
+			
+			 
 			this.updateByPrimaryKey(order);
 			accountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal(money)), "230");
 	
