@@ -2762,7 +2762,7 @@ public class MobileController {
 							if(couponId!=null && !"".equals(couponId)){
 								UserCoupon uc = new UserCoupon();
 								uc.setCoupon_id(couponId);
-								uc.setSys_driver_id(token);
+								uc.setSys_driver_id(driverID);
 								sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
 							}
 							//设置优惠金额
@@ -2832,7 +2832,7 @@ public class MobileController {
 							if(couponId!=null && !"".equals(couponId)){
 								UserCoupon uc = new UserCoupon();
 								uc.setCoupon_id(couponId);
-								uc.setSys_driver_id(token);
+								uc.setSys_driver_id(driverID);
 								sysOrder.setCoupon_number(couponService.queryUserCouponId(uc));
 							}
 							//设置优惠金额
