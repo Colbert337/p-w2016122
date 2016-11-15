@@ -6,3 +6,5 @@ poms-web.iml
 .project
 .classpath
 /target/
+/out/
+/lib/
