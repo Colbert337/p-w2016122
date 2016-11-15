@@ -896,7 +896,7 @@ public class MobileController {
 					if (veCode != null && !"".equals(veCode)) {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
-						paycode = mainObj.optString("paycode").toUpperCase();
+						paycode = mainObj.optString("paycode");
 						driver.setPayCode(paycode);
 						driverService.saveDriver(driver, "update", null, null);// 设置支付密码
 					}else{
@@ -964,12 +964,12 @@ public class MobileController {
 				SysDriver sysDriver = new SysDriver();
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				String driverId = mainObj.optString("token");
-				oldPayCode = mainObj.optString("oldPayCode").toUpperCase();
+				oldPayCode = mainObj.optString("oldPayCode");
 				SysDriver driver = driverService.queryDriverByPK(driverId);
-				String payCode = driver.getPayCode().toUpperCase();
+				String payCode = driver.getPayCode();
 				if (payCode.equalsIgnoreCase(oldPayCode)) {
 					// 判断原支付密码是否正确
-					newPayCode = mainObj.optString("newPayCode").toUpperCase();
+					newPayCode = mainObj.optString("newPayCode");
 					if (newPayCode != null && !"".equals(newPayCode)) {
 						sysDriver.setPayCode(newPayCode);
 						driverService.saveDriver(sysDriver, "update", null, null);
@@ -2068,7 +2068,7 @@ public class MobileController {
 				driverMap.put("name", mainObj.optString("name"));
 				driverMap.put("amount", mainObj.optString("amount"));
 				driverMap.put("remark", mainObj.optString("remark"));
-				driverMap.put("paycode", mainObj.optString("paycode").toUpperCase());
+				driverMap.put("paycode", mainObj.optString("paycode"));
 				int resultVal = mbDealOrderService.transferDriverToDriver(driverMap);
 				if (resultVal < 0) {
 					result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3473,7 +3473,7 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
-				String payCode = mainObj.optString("payCode").toUpperCase();
+				String payCode = mainObj.optString("payCode");
 				SysDriver oldDriver = new SysDriver();
 				oldDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				SysDriver oldD = driverService.queryDriverByMobilePhone(oldDriver);
@@ -3503,7 +3503,7 @@ public class MobileController {
 						}else{
 							String RnewCode = (String) redisClientImpl.getFromCache(newPhoneNum);
 							if(newCode.equals(RnewCode)){
-								if(oldD.getPayCode().toUpperCase().equals(payCode)){
+								if(oldD.getPayCode().equals(payCode)){
 									// 修改账户手机
 									if ("1".equals(phoneType)) {
 										sysDriver.setUserName(newPhoneNum);
@@ -3609,7 +3609,7 @@ public class MobileController {
 							// 数据库查询
 							List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 							if (!driver.isEmpty()) {
-								String initialPassword = mainObj.optString("newPassword").toUpperCase();
+								String initialPassword = mainObj.optString("newPassword");
 								// 初始密码加密、赋值
 								sysDriver.setPayCode(initialPassword);
 								sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
@@ -3632,7 +3632,7 @@ public class MobileController {
 								// 数据库查询
 								List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 								if (!driver.isEmpty()) {
-									String initialPassword = mainObj.optString("newPassword").toUpperCase();
+									String initialPassword = mainObj.optString("newPassword");
 									// 初始密码加密、赋值
 									sysDriver.setPayCode(initialPassword);
 									sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
@@ -3665,7 +3665,7 @@ public class MobileController {
 						// 数据库查询
 						List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 						if (!driver.isEmpty()) {
-							String initialPassword = mainObj.optString("newPassword").toUpperCase();
+							String initialPassword = mainObj.optString("newPassword");
 							// 初始密码加密、赋值
 							sysDriver.setPayCode(initialPassword);
 							sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
@@ -5033,13 +5033,13 @@ public class MobileController {
 			String gasTotal = "gasTotal";
 			boolean b = JsonTool.checkJson(mainObj,token,payableAmount,amount,gastationId,payCode,gasTotal);
 			if(b){
-				payCode = mainObj.optString("payCode").toUpperCase();
+				payCode = mainObj.optString("payCode");
 				token = mainObj.optString("token");
 				gasTotal = mainObj.optString("gasTotal");
 				gastationId = mainObj.optString("gastationId");
 				SysDriver driver = driverService.queryDriverByPK(token);
 				Gastation gas = gastationService.queryGastationByPK(gastationId);
-				String driverPayCode = driver.getPayCode().toUpperCase();
+				String driverPayCode = driver.getPayCode();
 				Map<String, Object> data = new HashedMap();
 				if(payCode.equals(driverPayCode)){
 					String couponId = mainObj.optString("couponId");
@@ -5726,7 +5726,7 @@ public class MobileController {
 				}
 				//更新气品价格单位信息
 				int pprs = productPriceService.updatePriceById(productPrice);
-				//更新气站优惠信息名称电话信息
+				//更新气站名称电话信息
 				int gsrs = gastationService.updateByPrimaryKeySelective(gastation);
 				if(pprs > 0 && gsrs >0){
 					result.setMsg("修改成功！");
@@ -5805,7 +5805,7 @@ public class MobileController {
 		}
 		sb.append("key=");
 		sb.append(API_KEY);
-		String appSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
+		String appSign = MD5.getMessageDigest(sb.toString().getBytes());
 		return appSign;
 	}
 
