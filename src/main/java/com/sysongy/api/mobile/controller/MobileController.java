@@ -3170,6 +3170,9 @@ public class MobileController {
 							uc.setUser_coupon_id(orderService.queryById(orderId).getCoupon_number());
 							uc.setIsuse("1");
 							int rs = couponService.updateUserCouponStatus(uc);
+							if(rs < 1){
+								throw new Exception("优惠券使用状态更新失败！");
+							}
 						}
 						SysOrder sorder = orderService.queryById(orderId);
 						//微信消费短信通知
@@ -3355,6 +3358,9 @@ public class MobileController {
 							uc.setUser_coupon_id(orderService.queryById(orderId).getCoupon_number());
 							uc.setIsuse("1");
 							int rs = couponService.updateUserCouponStatus(uc);
+							if(rs < 1){
+								throw new Exception("优惠券使用状态更新失败！");
+							}
 						}
 						//支付宝充值短信通知
 						SysOrder sorder = orderService.queryById(orderId);
