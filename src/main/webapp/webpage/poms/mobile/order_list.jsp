@@ -103,8 +103,7 @@
 								 
 								<th onclick="orderBy(this,'spend_type');commitForm();"
 									id="spend_type_order">消费类型</th>
-								<th onclick="orderBy(this,'is_discharge');commitForm();"
-									id="is_discharge_order">是否冲红</th>
+								 
 								<th onclick="orderBy(this,'channel');commitForm();"
 									id="channel_order">充值渠道</th>
 									
@@ -141,8 +140,7 @@
 									<td> 
 										<s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name>
 									</td>
-									<td><c:if test="${list.is_discharge eq '0'}">否</c:if> <c:if
-											test="${list.is_discharge eq '1'}">是</c:if></td>
+									 
 									<td>${list.channel}</td>
 									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
 									<td>${list.trade_no}</td>

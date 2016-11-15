@@ -63,7 +63,7 @@ function showBreak(tradeNo1, type1, cash1, orderId1, no, retype,tr) {
 				
 				
 				 $("#order_number").text($("#"+orderId1).children('td').eq(0).text())
-				 $("#gas_id").text($("#"+orderId1).children('td').eq(10).text())
+				 $("#gas_id").text($("#"+orderId1).children('td').eq(9).text())
 				
 				 $("#order_c").text($("#"+orderId1).children('td').eq(2).text())
 				 
