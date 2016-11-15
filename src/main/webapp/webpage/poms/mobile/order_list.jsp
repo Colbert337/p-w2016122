@@ -25,16 +25,16 @@
 				<div class="page-header">
 					<h1>订单退款</h1>
 				</div>
-
+					
 				<div class="search-types">
 					 
-					<div class="item">
+					<%-- <div class="item">
 						<label>充值类型</label> <select name="chargeType"  id='type1'  
 							value='${order.chargeType}'>
 							<s:option flag="true" gcode="CHARGE_TYPE_SEL" form="road"
 								field="conditionType" />
 						</select>
-					</div> 
+					</div>  --%>
 					
 						<div class="item">
 						<label>消费类型</label> <select name="spend_type"  id='type2'  
@@ -42,7 +42,10 @@
 							<s:option flag="true" gcode="SPEND_TYPE_SEL" form="road"
 								field="conditionType" />
 						</select>
-					</div> 
+					</div>
+					<div class="item">
+						<label>手机号</label> <input type='text' name=creditPhone value="${order.creditPhone}" />
+					</div>  
 					<div class="item">
 						<label>订单号</label> <input type='text' name=orderNumber value="${order.orderNumber}" />
 					</div> 
@@ -91,14 +94,13 @@
 								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
 											id="threshold_max_value_order">缩略图</th> -->
 								<th >金额</th>
+								 
 								<th>用户电话号码</th>
-								<th>消费者电话号码</th>
 								<th onclick="orderBy(this,'order_date');commitForm();"
 									id="order_date_order"><i
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480">
 									</i>创建日期</th>
-								<th onclick="orderBy(this,'charge_type');commitForm();"
-									id="charge_type_order">充值方式</th>
+								 
 								<th onclick="orderBy(this,'spend_type');commitForm();"
 									id="spend_type_order">消费类型</th>
 								<th onclick="orderBy(this,'is_discharge');commitForm();"
@@ -132,12 +134,10 @@
 									<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
 									<td>${list.cash}</td>
-									<td>${list.mobile_phone}</td>
+									 
 									<td>${list.creditPhone}</td>
 									<td><fmt:formatDate value="${list.orderDate}" type="both" /></td>
-									<td> 
-										<s:Code2Name mcode="${list.chargeType}" gcode="CHARGE_TYPE"></s:Code2Name>
-									</td>
+									 
 									<td> 
 										<s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name>
 									</td>
@@ -229,7 +229,7 @@
 			</div>--%>
 			<div class="modal-body">
 				<div class="form-group">
-					<label class="col-sm-11 control-label no-padding-right" id="titleNo"></label>
+					<h3 class="col-sm-11 control-label no-padding-right" id="titleNo" style="color: #428bca"></h3>
 				</div>
 				<br />  
 				<div class="form-group">

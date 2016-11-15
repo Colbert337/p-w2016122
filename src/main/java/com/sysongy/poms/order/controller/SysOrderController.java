@@ -404,10 +404,9 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setOrderRemark(msg);
 						order.setCash(order.getCash().subtract(new BigDecimal(money)));
 						order.setOrderStatus(1);
-						order.setChk_memo(msg);
 						CurrUser user = (CurrUser) session.getAttribute("currUser");
-						order.setChk_time(new Date());
-						order.setChk_user(user.getUser().getMobilePhone());
+						newOrder.setOperator(user.getUser().getSysUserId());
+						
 						service.updateByPrimaryKey(order);
 						service.saveOrder(newOrder);
 					} else {
@@ -447,6 +446,9 @@ public class SysOrderController extends BaseContoller {
 							newOrder.setOrderStatus(1);
 							newOrder.setOrderDate(new Date());
 							newOrder.setOrderType("230");
+							
+							CurrUser user = (CurrUser) session.getAttribute("currUser");
+							newOrder.setOperator(user.getUser().getSysUserId());
 							newOrder.setDebitAccount(order.getDebitAccount());
 							newOrder.setCreditAccount(order.getCreditAccount());
 							newOrder.setSpend_type(order.getSpend_type());
@@ -456,10 +458,7 @@ public class SysOrderController extends BaseContoller {
 							newOrder.setBatch_no(batch_no);
 							order.setCash(order.getCash().subtract(new BigDecimal(money)));
 							order.setOrderStatus(1);
-							order.setChk_memo(msg);
-							CurrUser user = (CurrUser) session.getAttribute("currUser");
-							order.setChk_time(new Date());
-							order.setChk_user(user.getUser().getMobilePhone());
+							
 							service.updateByPrimaryKey(order);
 							service.saveOrder(newOrder);
 						}
@@ -541,13 +540,12 @@ public class SysOrderController extends BaseContoller {
 					newOrder.setChargeType("110");
 					newOrder.setShould_payment(order.getCash());
 					newOrder.setBatch_no(batch_no);
+					CurrUser user = (CurrUser) session.getAttribute("currUser");
+					newOrder.setOperator(user.getUser().getSysUserId());
 					newOrder.setOrderRemark(msg);
 					order.setCash(order.getCash().subtract(new BigDecimal(money)));
 					order.setOrderStatus(1);
-					order.setChk_memo(msg);
-					CurrUser user = (CurrUser) session.getAttribute("currUser");
-					order.setChk_time(new Date());
-					order.setChk_user(user.getUser().getMobilePhone());
+					 
 					service.updateByPrimaryKey(order);
 					service.saveOrder(newOrder);
 				} else {
@@ -592,12 +590,12 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setOrderRemark(msg);
 						newOrder.setShould_payment(order.getCash());
 						newOrder.setBatch_no(batch_no);
-						order.setCash(order.getCash().subtract(new BigDecimal(money)));
-						order.setChk_memo(msg);
 						CurrUser user = (CurrUser) session.getAttribute("currUser");
-						order.setChk_time(new Date());
+						newOrder.setOperator(user.getUser().getSysUserId());
+						order.setCash(order.getCash().subtract(new BigDecimal(money)));
+						 
 						order.setOrderStatus(1);
-						order.setChk_user(user.getUser().getMobilePhone());
+					 
 						service.updateByPrimaryKey(order);
 						service.saveOrder(newOrder);
 					}
