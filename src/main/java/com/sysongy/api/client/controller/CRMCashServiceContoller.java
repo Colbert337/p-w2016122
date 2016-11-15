@@ -1,29 +1,7 @@
 package com.sysongy.api.client.controller;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.github.pagehelper.PageInfo;
-import com.sun.tools.corba.se.idl.constExpr.Or;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
@@ -60,13 +38,21 @@ import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.AliShortMessage;
-import com.sysongy.util.BigDecimalArith;
-import com.sysongy.util.DateTimeHelper;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("/crmInterface/crmCashServiceContoller")
