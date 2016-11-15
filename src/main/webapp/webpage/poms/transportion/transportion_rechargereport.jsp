@@ -9,6 +9,26 @@
 %>
 
 <script src="<%=basePath %>/dist/js/transportion/transportion_rechargereport.js"></script>
+<script type="text/javascript"
+		src="<%=basePath%>/assets/js/global/jedate.js"></script>
+<script type="text/javascript">
+
+	jeDate({
+		dateCell : "#startDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#endDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+
+</script>
 
 <div class="">
 	<!-- /.page-header -->
@@ -48,14 +68,14 @@
 							<input type="text" name="sysDriver.plateNumber" placeholder="车牌号"  maxlength="20" value="${sysOrder.sysDriver.plateNumber}"/>
 						</div>
 						<div class="item">
-							<div class="input-daterange top" id="j-input-daterange-top">
+
 								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${sysOrder.startDate}" readonly="readonly"/>
+								<input type="text"  style="width:140px;" id="startDate" name="startDate" value="${sysOrder.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
-							</div>			
+								<input type="text" style="width:140px;" id="endDate" name="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
+
 						</div>
 						
 						<%--<div class="item">
@@ -91,8 +111,8 @@
 							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
-										<label class="pos-rel"> 
+									<th class="center" style="display:none">
+										<label class="pos-rel">
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
 										</label>
@@ -117,7 +137,7 @@
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj" <c:if test="${list.is_discharge == 1}">style="color: #A60000;" </c:if> >
-									<td class="center">
+									<td class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
 											<span class="lbl"></span>

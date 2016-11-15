@@ -38,7 +38,8 @@
 		$("#formgastation").submit();
 	}
 
-	function backQuery(){
+
+	function backQueryTransportionRecharge(){
 		loadPage('#main', '../web/transportion/queryRechargeReport?'+'creditAccount='+creditAccount+
 			'&orderNumber='+orderNumber+'&sysDriver.plateNumber='+plateNumber+'&is_discharge='+is_discharge+
 			'&startDate='+startDate+'&endDate='+endDate+'&pageNum='+pageNumber+'&=pageSize'+pageSize+'&orderBy='+orderBy);
