@@ -133,10 +133,10 @@
 
 									<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 										<tr id="listobj">
-											<%--<td class="center"><label class="pos-rel"> <input
+											<td class="center"  style="display:none"><label class="pos-rel"> <input
 													type="checkbox" class="ace" id="pks"
 													value="${list.card_no}" /> <span class="lbl"></span>
-											</label></td>--%>
+											</label></td>
 
 											<td>${list.card_no}</td>
 											<td><s:Code2Name mcode="${list.card_type}"

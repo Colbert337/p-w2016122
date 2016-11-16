@@ -85,7 +85,7 @@
   
    <select id="queryRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
-    id
+    id,start_time,condition_type
     from sys_road_condition  where 1=1 and condition_status='2' ORDER BY publisher_time DESC
   </select> 
   
@@ -112,6 +112,29 @@
        </if>
 		</trim>
   </select> 
+  
+  <select id="queryForExcel" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select a.*,a.condition_type,b.mname from sys_road_condition a LEFT JOIN usysparam b on a.condition_type=b.mcode where b.gcode='CONDITION_TYPE' 
+    <trim>
+	    <if test="conditionMsg != null &amp;&amp; conditionMsg != ''">
+			and condition_msg like CONCAT('%',CONCAT( #{conditionMsg,jdbcType=VARCHAR},'%'))
+		</if>
+		<if test="conditionType != null &amp;&amp; conditionType != ''">
+			and condition_type = #{conditionType,jdbcType=VARCHAR}
+		</if>
+		<if test="conditionStatus != null &amp;&amp; conditionStatus != ''">
+			and condition_status = #{conditionStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="publisherTime_str != null &amp;&amp; publisherTime_str != ''">
+			and publisher_time between CONCAT(#{publisherTime_str,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{auditorTime_str,jdbcType=VARCHAR},' 23:59:59')
+		</if>
+      <if test="publisherName != null &amp;&amp; publisherName!= ''">
+       and publisher_name=#{publisherName,jdbcType=VARCHAR}  or   publisher_phone=#{publisherName,jdbcType=VARCHAR}
+       </if>
+		</trim>
+  </select> 
+  
+   
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sys_road_condition

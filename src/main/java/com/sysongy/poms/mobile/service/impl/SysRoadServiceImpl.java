@@ -94,6 +94,13 @@ public class SysRoadServiceImpl implements SysRoadService {
 		PageInfo<SysRoadCondition> pageInfo = new PageInfo<SysRoadCondition>(list);
 		return pageInfo;
 	}
+	@Override
+	public PageInfo<SysRoadCondition> queryForExcel(SysRoadCondition record) throws Exception {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<SysRoadCondition> list = sysRoadConditionMapper.queryForExcel(record);
+		PageInfo<SysRoadCondition> pageInfo = new PageInfo<SysRoadCondition>(list);
+		return pageInfo;
+	}
 
 	@Override
 	public SysRoadCondition selectByPrimaryKey(String id) throws Exception {
@@ -180,7 +187,7 @@ public class SysRoadServiceImpl implements SysRoadService {
 		return true;
 	}
 	
-	private int sumTime(Date startTime, Integer h) {
+	public static int sumTime(Date startTime, Integer h) {
 
 		// TODO Auto-generated method stub
 
@@ -198,5 +205,9 @@ public class SysRoadServiceImpl implements SysRoadService {
 			return time;
 		}
 	}
+
+	 
+
+	 
 }
 	

@@ -1,26 +1,7 @@
 package com.sysongy.api.client.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.InterfaceConstants;
@@ -57,13 +38,21 @@ import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcFleetService;
 import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.AliShortMessage;
-import com.sysongy.util.BigDecimalArith;
-import com.sysongy.util.DateTimeHelper;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.PropertyUtil;
-import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.*;
 import com.sysongy.util.pojo.AliShortMessageBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("/crmInterface/crmCashServiceContoller")
@@ -181,20 +170,19 @@ public class CRMCashServiceContoller {
 				if (listBack!=null && listBack.size() > 0) {
 					SysCashBack back= listBack.get(0);//获取返现规则
 					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-					//添加首次充值订单
-					SysOrder newOrder=new SysOrder();
-					newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
-					newOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CASHBACK));
-					newOrder.setOrderType(GlobalConstant.OrderType.CASHBACK);
-					newOrder.setOrderDate(new Date());
-					newOrder.setCash(BigDecimal.valueOf(Double.valueOf(back.getCash_per())));;
-					newOrder.setDebitAccount(record.getDebitAccount());
-					newOrder.setChargeType("113");
-					newOrder.setChannel("首次充值返现-");
-					newOrder.setIs_discharge("0");
-					newOrder.setOperator(GlobalConstant.OrderOperatorSourceType.GASTATION);
-					newOrder.setOperatorSourceId(GlobalConstant.OrderOperatorSourceType.GASTATION);
-					orderService.saveOrder(newOrder);
+					//添加首次充值订单-xyq
+					SysOrderDeal newDeal=new SysOrderDeal();
+//					orderDealService
+					newDeal.setOrderId(record.getOrderId());
+					newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
+					newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+					newDeal.setDealDate(new Date());
+					newDeal.setDealType(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);
+					newDeal.setCashBack(new BigDecimal(back.getCash_per()));
+					newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
+					newDeal.setRemark("");
+					orderDealService.insert(newDeal);
+//					orderService.saveOrder(newOrder);
 
 				}else{
 					logger.info("找不到匹配的返现规则，返现失败");
@@ -665,6 +653,10 @@ public class CRMCashServiceContoller {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
 
+            //如果是POS支付，则发送消费短信
+            if(record.getSpend_type().equals(GlobalConstant.ORDER_SPEND_TYPE.POS)){
+                sendMessage(record, sysDriver.getMobilePhone());
+            }
 
             recordNew.setCoupon_id(record.getCoupon_number());
             recordNew.setCoupon_number(record.getCoupon_id());
@@ -876,6 +868,14 @@ public class CRMCashServiceContoller {
         return ajaxJson;
     }
 
+    /**
+     * 根据订单编号查询订单信息
+     * @param request
+     * @param response
+     * @param record
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping("/web/queryNotHedgeOrder")
     public AjaxJson queryNotHedgeOrder(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception {
@@ -1220,4 +1220,121 @@ public class CRMCashServiceContoller {
         return payAmount;
     }
 
+    //CRM POS消费时添加短信提醒
+    private void sendMessage(SysOrder recordNew, String mobilePhone){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(mobilePhone);
+        if(recordNew.getOrderDate() != null){
+            String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
+                    DateTimeHelper.FMT_yyyyMMddHHmmss);
+            aliShortMessageBean.setTime(curStrDate);
+        }
+        aliShortMessageBean.setName(recordNew.getChannel());
+        aliShortMessageBean.setString("POS机");
+        aliShortMessageBean.setMoney(recordNew.getCash().toString());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.APP_CONSUME);
+    }
+
+    /**
+     * 查询APP支付订单列表
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = {"/web/queryAppOrderList"})
+    @ResponseBody
+    public AjaxJson queryAppOrderList(HttpServletRequest request, HttpServletResponse response ){
+        AjaxJson ajaxJson = new AjaxJson();
+        String stationId = request.getParameter("stationId");
+        if(StringUtils.isEmpty(stationId)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！" );
+            return ajaxJson;
+        }
+        SysOrder record = new SysOrder();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            record.setOperator(GlobalConstant.appOperatorId);
+            record.setChargeType(GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE);
+            record.setChannelNumber(stationId);
+            record.setPageNum(1);
+            record.setPageSize(100);
+
+            PageInfo<SysOrder> orderPageInfo = orderService.queryAppOrderForPage(record);
+            List<SysOrder> sysOrderList = new ArrayList<>();
+            if((orderPageInfo == null) || (orderPageInfo.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("没有查询到所需内容！！！");
+                return ajaxJson;
+            }else{
+                for(SysOrder order:orderPageInfo.getList()){
+                    if(order.getCoupon() != null){
+                        order.setCoupon_title(order.getCoupon().getCoupon_title());
+                        order.setCoupon_cash(new BigDecimal(order.getCoupon().getPreferential_discount()));
+                    }else{
+                        order.setCoupon_cash(BigDecimal.ZERO);
+                    }
+                }
+            }
+
+            attributes.put("PageInfo", orderPageInfo);
+            attributes.put("sysOrders", orderPageInfo.getList());
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
+    /**
+     * CRM处理APP支付订单
+     * @param request
+     * @param response
+     * @param strRecord
+     * @return
+     */
+    @RequestMapping(value = {"/web/appPayDeal"})
+    @ResponseBody
+    public AjaxJson appPayDeal(HttpServletRequest request, HttpServletResponse response, String strRecord){
+        AjaxJson ajaxJson = new AjaxJson();
+        SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
+        if(StringUtils.isEmpty(record.getOrderId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单ID为空！！！" );
+            return ajaxJson;
+        }
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            SysOrder order = new SysOrder();
+            order.setOrderId(record.getOrderId());
+
+            order.setChk_user(record.getChk_user());
+            order.setChk_time(new Date());
+            if(record.getOrderStatus() == -1){
+                //订单退回
+                order.setOrderStatus(record.getOrderStatus());
+                order.setChk_memo(record.getChk_memo());
+            }else{
+                //订单确认
+                order.setOrderStatus(1);
+                order.setChk_memo(null);
+            }
+            orderService.updateByPrimaryKey(order);
+            ajaxJson.setSuccess(true);
+            ajaxJson.setMsg("处理成功！！！");
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
 }

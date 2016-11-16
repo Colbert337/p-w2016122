@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.card.service.GasCardService;
-import com.sysongy.poms.transportion.dao.TransportionMapper;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.gastation.model.Gastation;
@@ -41,6 +42,7 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.transportion.dao.TransportionMapper;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcFleet;
@@ -107,7 +109,15 @@ public class OrderServiceImpl implements OrderService {
 		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
 		return pageInfo;
 	}
-	
+
+	@Override
+	public PageInfo<SysOrder> queryAppOrderForPage(SysOrder record) throws Exception {
+		PageHelper.startPage(record.getPageNum(), record.getPageSize(), record.getOrderby());
+		List<SysOrder> list = sysOrderMapper.queryAppOrderForPage(record);
+		PageInfo<SysOrder> pageInfo = new PageInfo<SysOrder>(list);
+		return pageInfo;
+	}
+
 	@Override
 	public int deleteByPrimaryKey(String orderId) {
 		return sysOrderMapper.deleteByPrimaryKey(orderId);
@@ -265,9 +275,12 @@ public class OrderServiceImpl implements OrderService {
     	dischargeOrder.setOrderNumber(originalOrder.getOrderNumber());
     	dischargeOrder.setOrderType(originalOrder.getOrderType());
     	dischargeOrder.setOrderDate(new Date());
-    	//将订单金额转为负
+    	//将实收金额转为负
     	BigDecimal dis_cash = originalOrder.getCash().multiply(new BigDecimal(-1));
-    	dischargeOrder.setCash(dis_cash);
+		dischargeOrder.setCash(dis_cash);
+		//将订单金额转为负
+		BigDecimal should_payment = originalOrder.getShould_payment().multiply(new BigDecimal(-1));
+		dischargeOrder.setShould_payment(should_payment);
     	dischargeOrder.setCreditAccount(originalOrder.getCreditAccount());
     	dischargeOrder.setDebitAccount(originalOrder.getDebitAccount());
     	dischargeOrder.setChargeType(originalOrder.getChargeType());
@@ -1282,9 +1295,8 @@ public class OrderServiceImpl implements OrderService {
 		return sysOrderMapper.backCash(orderId);
 	}
 
-	@Override
 	@Transactional
-	public void saveBareakForRe(String msg, String money, String orderId)throws Exception {
+	public void saveBareakForRe(HttpSession session,String msg, String money, String orderId)throws Exception {
 		// TODO Auto-generated method stub
 		SysOrder order = null; 
 		SysOrder newOrder=null;
@@ -1299,7 +1311,12 @@ public class OrderServiceImpl implements OrderService {
 			newOrder.setOrderDate(new Date());
 			newOrder.setOrderType("230");
 			newOrder.setShould_payment(order.getCash());
+			newOrder.setDebitAccount(order.getDebitAccount());
+			newOrder.setCreditAccount(order.getCreditAccount());
+			newOrder.setSpend_type(order.getSpend_type());
 			newOrder.setChargeType("112");
+			CurrUser user = (CurrUser) session.getAttribute("currUser");
+			newOrder.setOperator(user.getUser().getSysUserId());
 			newOrder.setOrderRemark(msg);
 //			account = accountService.queryUserAccountByGas(order.getChannelNumber());
 //			if (account == null) {
@@ -1315,16 +1332,27 @@ public class OrderServiceImpl implements OrderService {
 				throw new Exception("查无此司机");
 			}
 			account.setAccountBalance(account.getAccountBalanceBigDecimal().add(new BigDecimal(money)).toString());
-			accountService.updateAccount(account);
+//			accountService.updateAccount(account);
 			this.saveOrder(newOrder);
 			order = this.queryById(orderId);
 			order.setCash(order.getCash().subtract(new BigDecimal(money)));
-			this.updateByPrimaryKey(order);
+			order.setOrderStatus(1);
+			 
 			
+			 
+			this.updateByPrimaryKey(order);
+			accountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal(money)), "230");
 	
 			// TODO Auto-generated catch block
 		//	e.printStackTrace();
 			 
 		
+	}
+
+	@Override
+	public  List<SysOrder> queryOrderForSearch(String orderNumber) {
+		// TODO Auto-generated method stub
+		return sysOrderMapper.queryOrderForSearch(orderNumber);
+	
 	}
 }

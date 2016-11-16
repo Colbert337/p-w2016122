@@ -38,4 +38,6 @@ public interface SysRoadConditionMapper {
 	List<SysRoadCondition> queryAll();
 
 	List<SysRoadCondition> queryForRedis();
+
+	List<SysRoadCondition> queryForExcel(SysRoadCondition record);
 }

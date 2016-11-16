@@ -258,4 +258,9 @@ public class CouponServiceImpl implements CouponService {
 		return couponMapper.queryUserCouponId(record);
 	}
 
+	@Override
+	public int updateStatus(String couponId, String sysDriverId) {
+		return couponMapper.updateStatus(couponId, sysDriverId);
+	}
+
 }

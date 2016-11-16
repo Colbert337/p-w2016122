@@ -404,7 +404,7 @@ public class CouponGroupController extends BaseContoller {
 				Coupon coupon = couponService.queryCouponByPK(couponid[j]);
 				for(int i=0;i<sysDriverId.length;i++){
 					UserCoupon userCoupon = new UserCoupon();
-					userCoupon.setCoupon_id(couponid[i]);
+					userCoupon.setCoupon_id(couponid[j]);
 					userCoupon.setCoupon_no(coupon.getCoupon_no());
 					userCoupon.setCoupon_kind(coupon.getCoupon_kind());
 					userCoupon.setSys_gas_station_id(coupon.getSys_gas_station_id());

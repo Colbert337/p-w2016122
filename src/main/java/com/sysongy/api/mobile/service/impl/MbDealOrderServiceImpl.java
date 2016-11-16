@@ -149,22 +149,27 @@ public class MbDealOrderServiceImpl implements MbDealOrderService{
                             record.setMobilePhone(account);
             				String toDriverId =  driverService.queryDriverByMobilePhone(record).getSysDriverId();
         					//付款人短信提醒
+            				SysDriver fromDriver = driverService.queryDriverByPK(fromDriverId);
         					AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-        					aliShortMessageBean.setSendNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
-        					aliShortMessageBean.setAccountNumber(driverService.queryDriverByPK(fromDriverId).getMobilePhone());
+        					aliShortMessageBean.setSendNumber(fromDriver.getMobilePhone());
+        					aliShortMessageBean.setAccountNumber(fromDriver.getMobilePhone());
         					aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         					aliShortMessageBean.setMoney(amount);
-        					aliShortMessageBean.setMoney1(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(fromDriverId).getSysDriverId()).getAccountBalance());
+        					aliShortMessageBean.setBalance(sysUserAccountService.queryUserAccountByDriverId(fromDriver.getSysDriverId()).getAccountBalance());
         					aliShortMessageBean.setString("转出");
-        					AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+        					AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.PERSONAL_TRANSFER);
         					//APP提示
     						sysMessageService.saveMessageTransaction("转出", order,"2");
         					//收款人短信提醒
+    						SysDriver toDriver = driverService.queryDriverByPK(toDriverId);
         					AliShortMessageBean aliShortMessage = new AliShortMessageBean();
-        					aliShortMessageBean.setMoney(amount);
-        					aliShortMessageBean.setMoney1(sysUserAccountService.queryUserAccountByDriverId(driverService.queryDriverByPK(toDriverId).getSysDriverId()).getAccountBalance());
-        					aliShortMessageBean.setString("转出");
-        					AliShortMessage.sendShortMessage(aliShortMessage, SHORT_MESSAGE_TYPE.SELF_CHARGE_CONSUME_PREINPUT);
+        					aliShortMessage.setSendNumber(toDriver.getMobilePhone());
+        					aliShortMessage.setAccountNumber(toDriver.getMobilePhone());
+        					aliShortMessage.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        					aliShortMessage.setMoney(amount);
+        					aliShortMessage.setBalance(sysUserAccountService.queryUserAccountByDriverId(toDriver.getSysDriverId()).getAccountBalance());
+        					aliShortMessage.setString("转入");
+        					AliShortMessage.sendShortMessage(aliShortMessage, SHORT_MESSAGE_TYPE.PERSONAL_TRANSFER);
         					//APP提示
     						sysMessageService.saveMessageTransaction("收到转账", order,"1");
                             return resultVal;

@@ -7,9 +7,27 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
+<script type="text/javascript"
+		src="<%=basePath%>/assets/js/global/jedate.js"></script>
 
 <script src="<%=basePath %>/dist/js/sysparam/driver_rechargereport.js"></script>
+<script type="text/javascript">
 
+	jeDate({
+		dateCell : "#startDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#endDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+</script>
 <div class="">
 	<!-- /.page-header -->
 	<form id="formgastation" action="<%=basePath%>/web/driver/consumeReport">
@@ -47,14 +65,14 @@
 							</select>
 						</div>
 						<div class="item">
-							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${sysOrder.startDate}" readonly="readonly"/>
-								<span class="">
+								<label   >交易时间:</label>
+									<span>
+								<input type="text" style="width:140px;"   name="startDate" id="startDate" value="${sysOrder.startDate}" readonly/>
+
 									<i class="fa fa-exchange"></i>
-								</span>
-								<input type="text" class="" name="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
-							</div>			
+
+								<input type="text" style="width:140px;"  name="endDate"  id="endDate" value="${sysOrder.endDate}" readonly/>
+									</span>
 						</div>
 						<%--<div class="item">
 						    <label>充值渠道：</label>
@@ -90,8 +108,8 @@
 							<thead>
 								<tr>
 									<th class="center">
-										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
+										<label class="pos-rel">
+											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
 											<span class="lbl"></span>
 										</label>
 									</th>
@@ -115,12 +133,12 @@
 							</thead>
 
 							<tbody>
-								
+
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj" <c:if test="${list.is_discharge == 1}">style="color: #A60000;" </c:if> >
 									<td class="center">
-										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
+										<label class="pos-rel">
+											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/>
 											<span class="lbl"></span>
 										</label>
 									</td>

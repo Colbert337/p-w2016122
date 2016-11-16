@@ -140,7 +140,8 @@ public class CRMUserContoller {
             }
 
             if(StringUtils.isNotEmpty(sysUser.getPassword())){
-                sysUserInfo.setPassword(sysUser.getPassword());
+                String password = sysUser.getPassword().toLowerCase();
+                sysUserInfo.setPassword(password);
             }
 
             if(StringUtils.isNotEmpty(sysUser.getRealName())){
@@ -265,6 +266,15 @@ public class CRMUserContoller {
             sysUserNew.setGender(1);
             sysUsersNew.add(sysUserNew);
             sysUsersNew.addAll(sysUsers);
+            SysUser appUser = new SysUser();
+
+            //添加APP用户
+            appUser.setSysUserId("8aa4ba67855a11e6a356000c291aa9e3");
+            appUser.setUserName("13000000000");
+            appUser.setRealName("APP用户");
+            appUser.setGender(1);
+            sysUsersNew.add(appUser);
+
             attributes.put("SysUsers",sysUsersNew);
             ajaxJson.setAttributes(attributes);
             ajaxJson.setSuccess(true);

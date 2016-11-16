@@ -56,5 +56,5 @@ public interface GastationService {
 	
 	public List<Gastation> queryGastationForCoupon(Gastation record) throws Exception;
 	
-	public Integer queryGastationByPhone(String phone) throws Exception;
+	public Gastation queryGastationByPhone(String phone) throws Exception;
 }

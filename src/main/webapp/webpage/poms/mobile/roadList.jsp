@@ -9,13 +9,36 @@
 			+ path;
 	String imagePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 %>
+<style>
+<!--
 
+-->
+a:link {
+	color: #337ab7;
+     
+}
+
+a:visited {
+    color: #337ab7;
+    
+}
+    
+a:hover {
+    color: #337ab7;
+     
+    }
+    
+a:active {
+    color: #337ab7;
+     
+}
+</style>
 <script src="<%=basePath%>/dist/js/mobile/roadList.js"></script>
 <link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
 <script src="<%=basePath%>/dist/js/message/show.js"></script>
 <div class="" id="div">
 	<!-- /.page-header -->
-	<form id="formRoad">
+	<form id="formRoad" action="../web/mobile/road/outExcel">
 
 		<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -65,19 +88,24 @@
 					<div class="item">
 						<button class="btn btn-sm btn-primary" type="button"
 							onclick="loadPage('#main','<%=basePath%>/webpage/poms/mobile/roadAdd.jsp');">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 添加
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i>添加
 						</button>
 						<button class="btn btn-sm btn-primary" type="button"
 							onclick="commitForm();">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 查询
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i>查询
 						</button>
 						<button class="btn btn-sm" type="button" onclick="init();">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 重置
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i>重置
 						</button>
+						<button class="btn btn-sm btn-primary" type="button" onclick="outExcel();">
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i>导出Excel
+						</button>
+						<c:if test="${currUser.user.userName  eq 'sjnyadmin' }">
 						<button class="btn btn-sm btn-primary" type="button"
 							onclick="restoreRedis()">
 							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 恢复redis
 						</button>
+						</c:if>
 					</div>
 				</div>
 

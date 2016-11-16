@@ -9,7 +9,26 @@
 %>
 
 <script src="<%=basePath %>/dist/js/gastation/gastation_consumecollectreport.js"></script>
+<script type="text/javascript"
+		src="<%=basePath%>/assets/js/global/jedate.js"></script>
+<script type="text/javascript">
 
+	jeDate({
+		dateCell : "#startDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#endDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+
+</script>
 <div class="">
 	<!-- /.page-header -->
 	<form id="formgastation" action="<%=basePath%>/web/gastation/gastationConsumeReport/import">
@@ -34,14 +53,14 @@
 							</div>
 						</c:if>
 						<div class="item">
-							<div class="input-daterange top" id="j-input-daterange-top">
+
 								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${order.startDate}" readonly="readonly"/>
+								<input type="text" style="width:140px;" name="startDate" id="startDate" value="${order.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="endDate" value="${order.endDate}" readonly="readonly"/>
-							</div>			
+								<input type="text" style="width:140px;" name="endDate" id="endDate" value="${order.endDate}" readonly="readonly"/>
+
 						</div>
 
 						<div class="item">
@@ -71,7 +90,7 @@
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -92,7 +111,7 @@
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj">
-									<td class="center">
+									<td class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.sys_gas_station_id}"/> 
 											<span class="lbl"></span>
