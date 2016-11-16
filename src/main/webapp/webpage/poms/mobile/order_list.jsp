@@ -101,8 +101,6 @@
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480">
 									</i>创建日期</th>
 								 
-								<th onclick="orderBy(this,'spend_type');commitForm();"
-									id="spend_type_order">消费类型</th>
 								 
 								<th onclick="orderBy(this,'channel');commitForm();"
 									id="channel_order">充值渠道</th>
@@ -137,9 +135,6 @@
 									<td>${list.creditPhone}</td>
 									<td><fmt:formatDate value="${list.orderDate}" type="both" /></td>
 									 
-									<td> 
-										<s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name>
-									</td>
 									 
 									<td>${list.channel}</td>
 									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
