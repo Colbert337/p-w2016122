@@ -38,10 +38,19 @@
 		$("#formgastation").submit();
 	}
 
-/*
 	function backQuery(){
-		alert('orderby='+orderByss);
-		loadPage('#main', '../web/driver/queryRechargeDriverReport?'+'sysDriver.userName='+userName+
-			'&sysDriver.mobilePhone='+mobilePhone+'&orderNumber='+orderNumber+'&is_discharge='+is_discharge+
-			'&startDate='+startDate+'&endDate='+endDate+'&pageNum='+pageNumber+'&pageSize='+pageSize+'&orderby='+orderByss);
-	}*/
+
+		$.ajax({
+			type: "POST",
+			url: '../web/driver/queryRechargeDriverReport',
+			dataType: 'html',
+			data:{'sysDriver.userName':userName,
+				'sysDriver.mobilePhone':mobilePhone,'orderNumber':orderNumber,'is_discharge':is_discharge,
+				'startDate':startDate,'endDate':endDate,'pageNum':pageNumber,'pageSize':pageSize,'orderby':orderByss},
+			success: function(msg){
+				$("#main").html(msg);
+				$('[data-rel="tooltip"]').tooltip();
+			},error:function(XMLHttpRequest, textStatus, errorThrown) {
+		}});
+	}
+
