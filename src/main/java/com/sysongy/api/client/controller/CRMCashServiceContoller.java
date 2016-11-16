@@ -1259,6 +1259,7 @@ public class CRMCashServiceContoller {
             record.setOperator(GlobalConstant.appOperatorId);
             record.setChargeType(GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE);
             record.setChannelNumber(stationId);
+            record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
             record.setPageNum(1);
             record.setPageSize(100);
 

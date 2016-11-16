@@ -55,4 +55,8 @@ public interface CouponMapper {
 	List<Coupon> queryAllCouponForPage(String driverId);
 	
 	String queryUserCouponId(UserCoupon record);
+	
+	int updateStatus(String couponId, String sysDriverId);
+	
+	
 }

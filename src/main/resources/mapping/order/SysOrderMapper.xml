@@ -243,7 +243,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	<!--根据操作人及chargeType查询APP订单-->
 	<select id="queryAppOrderForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.order.model.SysOrder">
 		select * from sys_order where operator = #{operator,jdbcType=VARCHAR} and charge_type = #{chargeType,jdbcType=VARCHAR}
-		 and channel_number = #{channelNumber,jdbcType=VARCHAR} and chk_user is null
+		 and channel_number = #{channelNumber,jdbcType=VARCHAR} and chk_user is null and order_status = #{orderStatus,jdbcType=VARCHAR}
 	</select>
 
 	<select id="queryOrderLogs" resultMap="OrderLogResultMap"
@@ -1316,13 +1316,12 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		WHERE 
 		rc.order_id = B.order_id
 		) AS remark,
-		(
-		SELECT coupon_title FROM sys_coupon WHERE sys_coupon.coupon_id = (SELECT
-			sys_user_coupon.coupon_id
+		(SELECT
+			coupon_title
 		FROM
-			sys_user_coupon
+			sys_coupon
 		WHERE
-			sys_user_coupon.user_coupon_id = B.coupon_number)
+			sys_coupon.coupon_id  = B.coupon_number
 		) AS couponTitle,
 		B.order_date,
 		B.order_status,
@@ -1421,7 +1420,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		select
 		count(order_id)
 		from sys_order
-		where order_type = '220' and credit_account = #{driverID,jdbcType=VARCHAR}
+		where order_type = '220' and order_status='1' and credit_account = #{driverID,jdbcType=VARCHAR}
 	</select>
 	<!-- 根据订单号查询返现金额 -->
 	<select id="backCash" resultType="java.lang.Double" parameterType="java.lang.String">

@@ -368,4 +368,7 @@
 		where coupon_id = #{coupon_id,jdbcType=VARCHAR} 
 		and sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR} and isuse = '0' limit 1
 	</select>
+	<update id="updateStatus"  parameterType="java.lang.String">
+		UPDATE sys_user_coupon  SET isuse='1' WHERE coupon_id=#{0} AND sys_driver_id=#{1} AND isuse='0' LIMIT 1
+	</update>	
 </mapper>
