@@ -3160,8 +3160,8 @@ public class MobileController {
 							SysOrder sorder = orderService.queryById(orderId);
 							//查询消费订单个数
 							int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
-							//首次消费成功，发放优惠券
-							if(number==0){
+							//首次消费成功，发放优惠券(因为上面已把订单状态改为有效，所以现在数据库中能查出一条数据的话，则为首次消费)
+							if(number==1){
 								CouponGroup couponGroup = new CouponGroup();
 					            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
 					            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
@@ -3363,7 +3363,7 @@ public class MobileController {
 							//查询消费订单个数
 							int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
 							//首次消费成功，发放优惠券
-							if(number==0){
+							if(number==1){
 								CouponGroup couponGroup = new CouponGroup();
 					            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
 					            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
@@ -5192,7 +5192,7 @@ public class MobileController {
 											//查询消费订单个数
 											int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
 											//首次消费成功，发放优惠券
-											if(number==0){
+											if(number==1){
 												CouponGroup couponGroup = new CouponGroup();
 									            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
 									            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
