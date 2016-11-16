@@ -467,10 +467,10 @@ public class SysOrderController extends BaseContoller {
 								+ xml.substring(xml.indexOf("<return_msg><![CDATA[") + "<return_msg><![CDATA[".length(),
 										xml.indexOf("]]></return_msg>")));
 					}
-					account.setAccountBalance(
-							account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
-//					accountService.updateAccount(account);
-					accountService.addCashToAccount(account.getSysUserAccountId(), (new BigDecimal(money)), "230");
+//					account.setAccountBalance(
+//							account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
+////					accountService.updateAccount(account);
+//					accountService.addCashToAccount(account.getSysUserAccountId(), (new BigDecimal(money)), "230");
 				
 					
 				}
