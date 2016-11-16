@@ -1420,7 +1420,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		select
 		count(order_id)
 		from sys_order
-		where order_type = '220' and credit_account = #{driverID,jdbcType=VARCHAR}
+		where order_type = '220' and order_status='1' and credit_account = #{driverID,jdbcType=VARCHAR}
 	</select>
 	<!-- 根据订单号查询返现金额 -->
 	<select id="backCash" resultType="java.lang.Double" parameterType="java.lang.String">
