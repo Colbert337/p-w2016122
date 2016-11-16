@@ -243,7 +243,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	<!--根据操作人及chargeType查询APP订单-->
 	<select id="queryAppOrderForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.order.model.SysOrder">
 		select * from sys_order where operator = #{operator,jdbcType=VARCHAR} and charge_type = #{chargeType,jdbcType=VARCHAR}
-		 and channel_number = #{channelNumber,jdbcType=VARCHAR} and chk_user is null
+		 and channel_number = #{channelNumber,jdbcType=VARCHAR} and chk_user is null and order_status = #{orderStatus,jdbcType=VARCHAR}
 	</select>
 
 	<select id="queryOrderLogs" resultMap="OrderLogResultMap"
