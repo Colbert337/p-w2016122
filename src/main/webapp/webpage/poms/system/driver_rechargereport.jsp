@@ -108,8 +108,8 @@
 							<thead>
 								<tr>
 									<th class="center">
-										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
+										<label class="pos-rel">
+											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
 											<span class="lbl"></span>
 										</label>
 									</th>
@@ -133,12 +133,12 @@
 							</thead>
 
 							<tbody>
-								
+
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj" <c:if test="${list.is_discharge == 1}">style="color: #A60000;" </c:if> >
 									<td class="center">
-										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
+										<label class="pos-rel">
+											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/>
 											<span class="lbl"></span>
 										</label>
 									</td>

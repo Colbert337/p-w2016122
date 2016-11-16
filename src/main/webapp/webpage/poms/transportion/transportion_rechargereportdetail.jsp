@@ -51,7 +51,7 @@
 						</div>--%>
 
 						<div class="item">
-							<button class="btn btn-sm" type="button" onclick="init();">
+							<button class="btn btn-sm" type="button" onclick="backQueryTransportionRecharge();">
 								<i class="ace-icon fa fa-flask align-top bigger-125"></i>
 								返回
 							</button>
