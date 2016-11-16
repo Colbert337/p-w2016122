@@ -83,6 +83,13 @@ public class TcVehicleController extends BaseContoller {
             vehicle.setPageNum(GlobalConstant.PAGE_NUM);
             vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+        if(vehicle.getConvertPageNum() != null){
+			if(vehicle.getConvertPageNum() > vehicle.getPageNumMax()){
+				vehicle.setPageNum(vehicle.getPageNumMax());
+			}else{
+				vehicle.setPageNum(vehicle.getConvertPageNum());
+			}
+		}
         vehicle.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
