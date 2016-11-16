@@ -2735,8 +2735,6 @@ public class MobileController {
 				
 				//不为空或空字符串，为司机消费订单
 				if(orderType!=null && !"".equals(orderType) && orderType.equals("220")){
-					//查询消费订单个数
-					int number = orderService.queryConsumerOrderNumber(driverID);
 					//优惠券ID
 					String couponId = mainObj.optString("couponId");		
 					//优惠券金额
@@ -2892,15 +2890,6 @@ public class MobileController {
 							data.put("payReq", dataObj);
 							data.put("orderId", orderID);
 							result.setData(data);
-						}
-						//首次消费成功，发放优惠券
-						if(number==0){
-							CouponGroup couponGroup = new CouponGroup();
-				            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
-				            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
-				            if(list.size()>0){
-				            	couponGroupService.sendCouponGroup(driverID, list, this.appOperatorId);
-				            }
 						}
 					}else if(driverService.queryDriverByPK(driverID).getUserStatus().equals("1")){//冻结
 						result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -3138,50 +3127,64 @@ public class MobileController {
 			// 查询订单内容
 			SysOrder order = orderService.selectByPrimaryKey(orderId);
 			if (order != null && order.getOrderStatus() == 0) {// 0 初始化 1 成功 2
-																// 失败 3 待支付
-				// 修改订单状态
-				SysOrder sysOrder = new SysOrder();
-				sysOrder.setOrderId(orderId);
-				sysOrder.setOrderStatus(1);
-				sysOrder.setTrade_no(transaction_id);
-				orderService.updateByPrimaryKey(sysOrder);
 				try {
-					String orderCharge = orderService.consumeByDriver(order);
-					//系统关键日志记录
-	    			SysOperationLog sysOperationLog = new SysOperationLog();
-	    			sysOperationLog.setOperation_type("cz");
-	    			sysOperationLog.setLog_platform("2");
-	        		sysOperationLog.setOrder_number(order.getOrderNumber());
-	        		sysOperationLog.setLog_content("司机个人通过微信充值成功！充值金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
-	    			//操作日志
-	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
-					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
-						throw new Exception("消费订单错误：" + orderCharge);
-					} else {
-						resultStr = getWechatResult();// 返回通知微信支付成功
-						SysOrder queryOrder = orderService.queryById(orderId);
-						String couponId= queryOrder.getCoupon_number();
-						//更新优惠券使用状态
-						if(couponId!=null && !couponId.equals("")){
-							int rs = couponService.updateStatus(couponId,queryOrder.getCreditAccount());
-							if(rs < 1){
-								throw new Exception("优惠券使用状态更新失败！");
+					// 修改订单状态
+					SysOrder sysOrder = new SysOrder();
+					sysOrder.setOrderId(orderId);
+					sysOrder.setOrderStatus(1);
+					sysOrder.setTrade_no(transaction_id);
+					int orderRs = orderService.updateByPrimaryKey(sysOrder);
+					if(orderRs > 0){
+						String orderCharge = orderService.consumeByDriver(order);
+						//系统关键日志记录
+		    			SysOperationLog sysOperationLog = new SysOperationLog();
+		    			sysOperationLog.setOperation_type("cz");
+		    			sysOperationLog.setLog_platform("2");
+		        		sysOperationLog.setOrder_number(order.getOrderNumber());
+		        		sysOperationLog.setLog_content("司机个人通过微信充值成功！充值金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
+		    			//操作日志
+		    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
+						if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
+							throw new Exception("消费订单错误：" + orderCharge);
+						} else {
+							resultStr = getWechatResult();// 返回通知微信支付成功
+							SysOrder queryOrder = orderService.queryById(orderId);
+							String couponId= queryOrder.getCoupon_number();
+							//更新优惠券使用状态
+							if(couponId!=null && !couponId.equals("")){
+								int rs = couponService.updateStatus(couponId,queryOrder.getCreditAccount());
+								if(rs < 1){
+									throw new Exception("优惠券使用状态更新失败！");
+								}
 							}
+							SysOrder sorder = orderService.queryById(orderId);
+							//查询消费订单个数
+							int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
+							//首次消费成功，发放优惠券
+							if(number==0){
+								CouponGroup couponGroup = new CouponGroup();
+					            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
+					            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+					            if(list.size()>0){
+					            	couponGroupService.sendCouponGroup(sorder.getCreditAccount(), list, this.appOperatorId);
+					            }
+							}
+							//微信消费短信通知
+							SysDriver driver = driverService.queryDriverByPK(sorder.getCreditAccount());
+							String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
+							AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+							aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+							aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
+							aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+							aliShortMessageBean.setName(gasName);
+							aliShortMessageBean.setString("微信");
+							aliShortMessageBean.setMoney(feeCount);
+							AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
+							//APP提示
+							sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
 						}
-						SysOrder sorder = orderService.queryById(orderId);
-						//微信消费短信通知
-						SysDriver driver = driverService.queryDriverByPK(sorder.getCreditAccount());
-						String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
-						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-						aliShortMessageBean.setSendNumber(driver.getMobilePhone());
-						aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
-						aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-						aliShortMessageBean.setName(gasName);
-						aliShortMessageBean.setString("微信");
-						aliShortMessageBean.setMoney(feeCount);
-						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-						//APP提示
-						sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
+					}else{
+						throw new Exception("修改订单状态失败！");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -3330,44 +3333,59 @@ public class MobileController {
 				sysOrder.setOrderId(orderId);
 				sysOrder.setOrderStatus(1);
 				sysOrder.setTrade_no(trade_no);
-				orderService.updateByPrimaryKey(sysOrder);
+				int orderRs = orderService.updateByPrimaryKey(sysOrder);
 				try {
-					String orderCharge = orderService.consumeByDriver(order);
-					//系统关键日志记录
-	    			SysOperationLog sysOperationLog = new SysOperationLog();
-	    			sysOperationLog.setOperation_type("cz");
-	    			sysOperationLog.setLog_platform("1");
-	        		sysOperationLog.setOrder_number(order.getOrderNumber());
-	        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
-	    			//操作日志
-	    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
-					if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
-						throw new Exception("消费订单错误：" + orderCharge);
-					} else {
-						response.getOutputStream().print("success");// 返回通知支付宝支付成功
-						SysOrder queryOrder = orderService.queryById(orderId);
-						String couponId= queryOrder.getCoupon_number();
-						//更新优惠券使用状态
-						if(couponId!=null && !couponId.equals("")){
-							int rs = couponService.updateStatus(couponId,queryOrder.getCreditAccount());
-							if(rs < 1){
-								throw new Exception("优惠券使用状态更新失败！");
+					if(orderRs > 0 ){
+						String orderCharge = orderService.consumeByDriver(order);
+						//系统关键日志记录
+		    			SysOperationLog sysOperationLog = new SysOperationLog();
+		    			sysOperationLog.setOperation_type("cz");
+		    			sysOperationLog.setLog_platform("1");
+		        		sysOperationLog.setOrder_number(order.getOrderNumber());
+		        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
+		    			//操作日志
+		    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
+						if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
+							throw new Exception("消费订单错误：" + orderCharge);
+						} else {
+							response.getOutputStream().print("success");// 返回通知支付宝支付成功
+							SysOrder queryOrder = orderService.queryById(orderId);
+							String couponId= queryOrder.getCoupon_number();
+							//更新优惠券使用状态
+							if(couponId!=null && !couponId.equals("")){
+								int rs = couponService.updateStatus(couponId,queryOrder.getCreditAccount());
+								if(rs < 1){
+									throw new Exception("优惠券使用状态更新失败！");
+								}
 							}
+							//支付宝充值短信通知
+							SysOrder sorder = orderService.queryById(orderId);
+							//查询消费订单个数
+							int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
+							//首次消费成功，发放优惠券
+							if(number==0){
+								CouponGroup couponGroup = new CouponGroup();
+					            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
+					            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+					            if(list.size()>0){
+					            	couponGroupService.sendCouponGroup(sorder.getCreditAccount(), list, this.appOperatorId);
+					            }
+							}
+							SysDriver driver = driverService.queryDriverByPK(sorder.getCreditAccount());
+							String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
+							AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+							aliShortMessageBean.setSendNumber(driver.getMobilePhone());
+							aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
+							aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+							aliShortMessageBean.setName(gasName);
+							aliShortMessageBean.setString("支付宝");
+							aliShortMessageBean.setMoney(feeCount);
+							AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
+							//APP提示
+							sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
 						}
-						//支付宝充值短信通知
-						SysOrder sorder = orderService.queryById(orderId);
-						SysDriver driver = driverService.queryDriverByPK(sorder.getCreditAccount());
-						String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
-						AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-						aliShortMessageBean.setSendNumber(driver.getMobilePhone());
-						aliShortMessageBean.setAccountNumber(driver.getMobilePhone());
-						aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-						aliShortMessageBean.setName(gasName);
-						aliShortMessageBean.setString("支付宝");
-						aliShortMessageBean.setMoney(feeCount);
-						AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-						//APP提示
-						sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
+					}else{
+						throw new Exception("修改订单状态失败！");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -5077,7 +5095,6 @@ public class MobileController {
 					//设置平台优惠金额
 					BigDecimal preferential_cash = new BigDecimal(0);
 					preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));//总优惠金额
-						//SysOrder sysOrder = createNewOrder(orderID, token, amount, GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE,GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX,"2","C01"); // TODO充值成功后再去生成订单
 						SysOrder sysOrder = new SysOrder();
 						sysOrder.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
 						sysOrder.setSpend_type(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
@@ -5172,6 +5189,17 @@ public class MobileController {
 											//余额消费短信通知
 											AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 											SysOrder sorder = orderService.queryById(orderID);
+											//查询消费订单个数
+											int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
+											//首次消费成功，发放优惠券
+											if(number==0){
+												CouponGroup couponGroup = new CouponGroup();
+									            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
+									            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+									            if(list.size()>0){
+									            	couponGroupService.sendCouponGroup(sorder.getCreditAccount(), list, this.appOperatorId);
+									            }
+											}
 											SysDriver sdriver = driverService.queryDriverByPK(sorder.getCreditAccount());
 											String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
 											aliShortMessageBean.setSendNumber(sdriver.getMobilePhone());
