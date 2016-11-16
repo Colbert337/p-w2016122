@@ -61,8 +61,7 @@
 									id="channel_order">充值渠道</th>
 									
 							 
-								<th onclick="orderBy(this,'trade_no');commitForm();"
-									id="trade_no_order">交易号</th>
+								 
 								<th>退款原因</th>
 								<th>退款批号</th>
 								<th>退款状态</th>
@@ -85,7 +84,6 @@
 								 
 									<td>${list.channel}</td>
 									 
-									<td>${list.trade_no}</td>
 									<td>${list.orderRemark}</td>
 									<td>${list.batch_no}</td>
 									<td><c:if test="${list.orderType eq '230'}">
