@@ -3180,8 +3180,12 @@ public class MobileController {
 							aliShortMessageBean.setString("微信");
 							aliShortMessageBean.setMoney(feeCount);
 							AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-							//APP提示
-							sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
+							try {
+								//APP提示
+								sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
+							} catch (Exception e) {
+								logger.error("消息推送失败： " + e);
+							}
 						}
 					}else{
 						throw new Exception("修改订单状态失败！");
@@ -3381,8 +3385,12 @@ public class MobileController {
 							aliShortMessageBean.setString("支付宝");
 							aliShortMessageBean.setMoney(feeCount);
 							AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-							//APP提示
-							sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
+							try {
+								//APP提示
+								sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
+							} catch (Exception e) {
+								logger.error("消息推送失败： " + e);
+							}
 						}
 					}else{
 						throw new Exception("修改订单状态失败！");
@@ -5214,8 +5222,12 @@ public class MobileController {
 											aliShortMessageBean.setString("账户余额");
 											aliShortMessageBean.setMoney(amount);
 											AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-											//APP提示
-											sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+											try {
+												//APP提示
+												sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+											} catch (Exception e) {
+												logger.error("消息推送失败： " + e);
+											}
 										}else{
 											throw new Exception("orderGoods信息添加失败");
 										}
@@ -5246,7 +5258,7 @@ public class MobileController {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("订单支付失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("订单支付情失败： " + e);
+			logger.error("订单支付失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
