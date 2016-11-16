@@ -36,7 +36,7 @@
 	var endDate;
 	var pageNumber;
 	var pageSize;
-	var orderBy;
+	var transOrderbys;
 	function showDetail(order_id,order_type,cash,
 						creditAccounts,orderNumbers,is_discharges,plateNumbers,startDates,endDates,pageNumbers,pageSizes,orderBys){
 		creditAccount=creditAccounts;
@@ -47,7 +47,7 @@
 		endDate=endDates;
 		pageNumber=pageNumbers;
 		pageSize=pageSizes;
-		orderBy=orderBys;
+		transOrderbys=orderBys;
 		/*$.ajax({
 			type: "POST",
 			url: '../web/transportion/queryRechargeReportDetail?order_id='+order_id+'&order_type='+order_type+'&cash='+cash,
