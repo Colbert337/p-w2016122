@@ -4779,10 +4779,13 @@ public class MobileController {
 					String type;
 					String discountAmount = "0";
 					if(preferentialType!=null && !"".equals(preferentialType)){
-						discountAmount = gsGasPriceList.get(0).get("minus_money")==null?gsGasPriceList.get(0).get("fixed_discount").toString():gsGasPriceList.get(0).get("minus_money").toString();
+						discountAmount = gsGasPriceList.get(0).get("minus_money")==null||"".equals(gsGasPriceList.get(0).get("minus_money"))?gsGasPriceList.get(0).get("fixed_discount").toString():gsGasPriceList.get(0).get("minus_money").toString();
 						type = preferentialType.toString();
 					}else{
 						type="";
+					}
+					if(discountAmount==null || discountAmount.equals("")){
+						discountAmount="0.0";
 					}
 					gasName = usysparamService.query("CARDTYPE",gsGasPriceList.get(0).get("gas_name").toString()).get(0).getMname();
 					double cashBack = 0;
@@ -4803,7 +4806,9 @@ public class MobileController {
 						reChargeList.add(reChargeMap);
 					}else if(type.equals("1")){//固定折扣(整单折扣)
 						//优惠总金额(消费总金额乘以折扣)
-						cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						if(!discountAmount.equals("0.0")){
+							cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						}
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
