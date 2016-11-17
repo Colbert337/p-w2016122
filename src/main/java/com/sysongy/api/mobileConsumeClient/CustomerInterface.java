@@ -478,7 +478,7 @@ public class CustomerInterface {
             int renum = driverService.saveDriver(sysDriver, "insert", null, null);
 			//系统关键日志记录
 			SysOperationLog sysOperationLog = new SysOperationLog();
-			sysOperationLog.setOperation_type("kh");
+			sysOperationLog.setOperation_type("zc");
 			String name = sysDriver.getFullName();
 			if("".equals(name)||null==name){
 				name = sysDriver.getUserName();
@@ -487,7 +487,7 @@ public class CustomerInterface {
 				name = sysDriver.getMobilePhone();
 			}
 			sysOperationLog.setLog_platform("4");
-			sysOperationLog.setLog_content(name+"的账户卡通过网站开户成功！"); 
+			sysOperationLog.setLog_content(name+"的账户卡通过网站注册成功！"); 
 			//操作日志
 			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriver.getSysDriverId());		
 			
