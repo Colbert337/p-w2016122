@@ -3160,8 +3160,8 @@ public class MobileController {
 							SysOrder sorder = orderService.queryById(orderId);
 							//查询消费订单个数
 							int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
-							//首次消费成功，发放优惠券
-							if(number==0){
+							//首次消费成功，发放优惠券(因为上面已把订单状态改为有效，所以现在数据库中能查出一条数据的话，则为首次消费)
+							if(number==1){
 								CouponGroup couponGroup = new CouponGroup();
 					            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
 					            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
@@ -3180,8 +3180,12 @@ public class MobileController {
 							aliShortMessageBean.setString("微信");
 							aliShortMessageBean.setMoney(feeCount);
 							AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-							//APP提示
-							sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
+							try {
+								//APP提示
+								sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
+							} catch (Exception e) {
+								logger.error("消息推送失败： " + e);
+							}
 						}
 					}else{
 						throw new Exception("修改订单状态失败！");
@@ -3363,7 +3367,7 @@ public class MobileController {
 							//查询消费订单个数
 							int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
 							//首次消费成功，发放优惠券
-							if(number==0){
+							if(number==1){
 								CouponGroup couponGroup = new CouponGroup();
 					            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
 					            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
@@ -3381,8 +3385,12 @@ public class MobileController {
 							aliShortMessageBean.setString("支付宝");
 							aliShortMessageBean.setMoney(feeCount);
 							AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-							//APP提示
-							sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
+							try {
+								//APP提示
+								sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
+							} catch (Exception e) {
+								logger.error("消息推送失败： " + e);
+							}
 						}
 					}else{
 						throw new Exception("修改订单状态失败！");
@@ -4779,10 +4787,13 @@ public class MobileController {
 					String type;
 					String discountAmount = "0";
 					if(preferentialType!=null && !"".equals(preferentialType)){
-						discountAmount = gsGasPriceList.get(0).get("minus_money")==null?gsGasPriceList.get(0).get("fixed_discount").toString():gsGasPriceList.get(0).get("minus_money").toString();
+						discountAmount = gsGasPriceList.get(0).get("minus_money")==null||"".equals(gsGasPriceList.get(0).get("minus_money"))?gsGasPriceList.get(0).get("fixed_discount").toString():gsGasPriceList.get(0).get("minus_money").toString();
 						type = preferentialType.toString();
 					}else{
 						type="";
+					}
+					if(discountAmount==null || discountAmount.equals("")){
+						discountAmount="0.0";
 					}
 					gasName = usysparamService.query("CARDTYPE",gsGasPriceList.get(0).get("gas_name").toString()).get(0).getMname();
 					double cashBack = 0;
@@ -4803,7 +4814,9 @@ public class MobileController {
 						reChargeList.add(reChargeMap);
 					}else if(type.equals("1")){//固定折扣(整单折扣)
 						//优惠总金额(消费总金额乘以折扣)
-						cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						if(!discountAmount.equals("0.0")){
+							cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						}
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
@@ -5192,7 +5205,7 @@ public class MobileController {
 											//查询消费订单个数
 											int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
 											//首次消费成功，发放优惠券
-											if(number==0){
+											if(number==1){
 												CouponGroup couponGroup = new CouponGroup();
 									            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
 									            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
@@ -5209,8 +5222,12 @@ public class MobileController {
 											aliShortMessageBean.setString("账户余额");
 											aliShortMessageBean.setMoney(amount);
 											AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-											//APP提示
-											sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+											try {
+												//APP提示
+												sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+											} catch (Exception e) {
+												logger.error("消息推送失败： " + e);
+											}
 										}else{
 											throw new Exception("orderGoods信息添加失败");
 										}
@@ -5241,7 +5258,7 @@ public class MobileController {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("订单支付失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("订单支付情失败： " + e);
+			logger.error("订单支付失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
@@ -5708,7 +5725,7 @@ public class MobileController {
 						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
 						dataMap.put("price", gsGasPrice.getPrice());
 						dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getProduct_unit()).get(0).getMname());
-						dataMap.put("gasName", usysparamService.query("CARDTYPE", gsGasPrice.getGasName()).get(0).getMname());
+						dataMap.put("discount", gastation.getPromotions());
 						result.setData(dataMap);
 					}else{
 						result.setStatus(MobileReturn.STATUS_SUCCESS);
