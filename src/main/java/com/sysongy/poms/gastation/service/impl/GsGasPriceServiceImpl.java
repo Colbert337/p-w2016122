@@ -99,4 +99,14 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 	public List<Map<String, Object>> queryDiscount(String stationId) {
 		return gsGasPriceMapper.queryDiscount(stationId);
 	}
+
+	@Override
+	public GsGasPrice queryGsPrice(String gastationId, String gasPrice) throws Exception {
+		return gsGasPriceMapper.queryGsPrice(gastationId, gasPrice);
+	}
+
+	@Override
+	public GsGasPrice queryGsGasPriceInfo(String gsGasPriceId) {
+		return gsGasPriceMapper.queryGsGasPriceInfo(gsGasPriceId);
+	}
 }

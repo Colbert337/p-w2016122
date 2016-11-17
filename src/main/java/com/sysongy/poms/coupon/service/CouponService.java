@@ -49,4 +49,8 @@ public interface CouponService {
 	List<Map<String, Object>> queryCouponMapByAmount(Coupon record);
 	
 	int updateUserCouponStatus(UserCoupon record);
+	
+	String queryUserCouponId(UserCoupon record);
+	
+	int updateStatus(String couponId, String sysDriverId);
 }

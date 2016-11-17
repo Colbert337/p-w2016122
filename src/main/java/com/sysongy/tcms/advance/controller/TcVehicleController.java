@@ -36,8 +36,10 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -81,6 +83,13 @@ public class TcVehicleController extends BaseContoller {
             vehicle.setPageNum(GlobalConstant.PAGE_NUM);
             vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+        if(vehicle.getConvertPageNum() != null){
+			if(vehicle.getConvertPageNum() > vehicle.getPageNumMax()){
+				vehicle.setPageNum(vehicle.getPageNumMax());
+			}else{
+				vehicle.setPageNum(vehicle.getConvertPageNum());
+			}
+		}
         vehicle.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
@@ -359,12 +368,15 @@ public class TcVehicleController extends BaseContoller {
      * @param currUser
      * @param map
      * @return
+     * @throws IOException 
      */
     @RequestMapping("/info/file")
-    public String importFile(@RequestParam(value = "fileImport") MultipartFile file ,HttpServletRequest request,@ModelAttribute("currUser") CurrUser currUser, ModelMap map){
-        String resultStr = "";
+    public String importFile(@RequestParam(value = "fileImport") MultipartFile file ,HttpServletRequest request,HttpServletResponse hsr,@ModelAttribute("currUser") CurrUser currUser, ModelMap map) throws IOException{
+        String resultStr = "导入成功";
         String resultPath = "redirect:/web/tcms/vehicle/list/page?resultInt=";
-
+        //记录导入数据个数
+        int sum = 0;
+        //提示消息
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
         String stationId = currUser.getStationId();
         //获取参数   参数有 schoolId   gradeId   classId
@@ -374,7 +386,6 @@ public class TcVehicleController extends BaseContoller {
         String schoolId=request.getParameter("schoolId");
         String gradeId=request.getParameter("gradeId");
         String classId=request.getParameter("classId");
-
         try {
             if(file != null && !"".equals(file)){
 
@@ -387,13 +398,11 @@ public class TcVehicleController extends BaseContoller {
                 Transportion transportion = transportionService.queryTransportionByPK(stationId);
                 TcVehicle tcVehicleTemp = tcVehicleService.queryMaxIndex(transportion.getSys_transportion_id());
                 Integer tempVal = 1;
-
                 //车牌号存储
                 Map<String, Object> platesNumberMap = new HashMap<>();
                 //卡号存储
                 Map<String, Object> cardNoMap = new HashMap<>();
                 for (int i = 1; i < rows; i++) {
-
                     //第一个是列数，第二个是行数
                     Integer gender = 0;
                     String platesNumber = "";//默认最左边编号也算一列 所以这里得
@@ -401,10 +410,8 @@ public class TcVehicleController extends BaseContoller {
                     String payCode = "";
                     String noticePhone = "";
                     String copyPhone = "";
-
                     if(sheet.getCell(0, i) != null && !"".equals(sheet.getCell(0, i).getContents())){
                         TcVehicle tcVehicle = new TcVehicle();
-
                         String newid;
                         /*当添加第一条数据时*/
                         if(tcVehicleTemp == null || StringUtils.isEmpty(tcVehicleTemp.getTcVehicleId())){
@@ -421,7 +428,6 @@ public class TcVehicleController extends BaseContoller {
                         tcVehicle.setStationId(stationId);
                         platesNumber = sheet.getCell(0, i).getContents().replaceAll(" ", "");
                         tcVehicle.setPlatesNumber(platesNumber);
-
                         //判断车牌号是否已经存在
                         TcVehicle vehicle1Add = new TcVehicle();
                         vehicle1Add.setStationId(stationId);
@@ -429,23 +435,18 @@ public class TcVehicleController extends BaseContoller {
                         List<TcVehicle> vehicleTemp = tcVehicleService.queryVehicleByNumber(vehicle1Add);
                         if(vehicleTemp != null && vehicleTemp.size() > 0){
                             resultStr = "车牌号"+platesNumber+"已经存在！";
-                            resultStr = Encoder.symmetricEncrypto(resultStr);
-                            return resultPath+resultStr;
+                            break;
                         }
-
                         //判断车牌号是否在当前excel表中已存在
                         if(platesNumberMap.get(platesNumber) != null && !"".equals(platesNumberMap.get(platesNumber)) ){
                             resultStr = "车牌号"+platesNumber+"在当前EXCEL表中已经存在！";
-                            resultStr = Encoder.symmetricEncrypto(resultStr);
-                            return resultPath+resultStr;
+                            break;
                         }else{
                             platesNumberMap.put(platesNumber,platesNumber);
                         }
-
                         if(sheet.getCell(1, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
                             cardNo =  sheet.getCell(1, i).getContents().replaceAll(" ", "");
                             tcVehicle.setCardNo(cardNo);
-
                             //判断卡号是否存在
                             TcVehicle vehicle1Card = new TcVehicle();
                             vehicle1Card.setStationId(stationId);
@@ -453,102 +454,85 @@ public class TcVehicleController extends BaseContoller {
                             List<TcVehicle> vehicleCardList = tcVehicleService.queryVehicleByNumber(vehicle1Card);
                             if(vehicleCardList != null && vehicleCardList.size() > 0){
                                 resultStr = "卡号"+cardNo+"已经存在！";
-                                resultStr = Encoder.symmetricEncrypto(resultStr);
-                                return resultPath+resultStr;
+                                break;
                             }
                             //判断卡号是否在当前excel表中已存在
                             if(cardNoMap.get(cardNo) != null && !"".equals(cardNoMap.get(cardNo)) ){
                                 resultStr = "卡号"+cardNo+"在当前EXCEL表中已经存在！";
-                                resultStr = Encoder.symmetricEncrypto(resultStr);
-                                return resultPath+resultStr;
+                                break;
                             }else{
                                 cardNoMap.put(cardNo,cardNo);
                             }
-
                             //判断卡是否已经出库
                             GasCard gasCard = gasCardService.queryGasCardInfo(cardNo);
                             if(gasCard != null && !GlobalConstant.CardStatus.PROVIDE.equals(gasCard.getCard_status()) && gasCard.getCard_property().equals(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_TRANSPORTION) ){
                                 resultStr = "卡号"+cardNo+GlobalConstant.getCardStatus(gasCard.getCard_status());
-                                resultStr = Encoder.symmetricEncrypto(resultStr);
-                                return resultPath+resultStr;
+                                break;
                             }else if(gasCard != null && gasCard.getCard_property().equals(GlobalConstant.CARD_PROPERTY.CARD_PROPERTY_DRIVER)){
-                                resultStr = "个人卡不能导入！";
-                                resultStr = Encoder.symmetricEncrypto(resultStr);
-                                return resultPath+resultStr;
+                                resultStr = "个人卡不能导入！(卡号："+cardNo+")";
+                                break;
                             }else if(gasCard == null){
                                 resultStr = "卡号"+cardNo+"不存在！";
-                                resultStr = Encoder.symmetricEncrypto(resultStr);
-                                return resultPath+resultStr;
+                                break;
                             }
-
                         }else{
                             resultStr = "卡号不能为空！";
-                            resultStr = Encoder.symmetricEncrypto(resultStr);
-                            return resultPath+resultStr;
+                            break;
                         }
-
                         if(sheet.getCell(2, i) != null && !"".equals(sheet.getCell(2, i).getContents())){
                             payCode = sheet.getCell(2, i).getContents().replaceAll(" ", "");
                             tcVehicle.setOnflag(payCode);
                             tcVehicle.setPayCode(Encoder.MD5Encode(payCode.getBytes()));
                         }else{
                             resultStr = "支付密码不能为空！";
-                            resultStr = Encoder.symmetricEncrypto(resultStr);
-                            return resultPath+resultStr;
+                            break;
                         }
-
                         if(sheet.getCell(3, i) != null && !"".equals(sheet.getCell(3, i).getContents())){
                             noticePhone = sheet.getCell(3, i).getContents().replaceAll(" ", "");
                             tcVehicle.setNoticePhone(noticePhone);
                         }else{
                             resultStr = "通知手机不能为空！";
-                            resultStr = Encoder.symmetricEncrypto(resultStr);
-                            return resultPath+resultStr;
+                            break;
                         }
 
                         if(sheet.getCell(4, i) != null && !"".equals(sheet.getCell(1, i).getContents())){
                             copyPhone = sheet.getCell(4, i).getContents().replaceAll(" ", "");
                             tcVehicle.setCopyPhone(copyPhone);
                         }
-
                         logger.info("正在导入车辆数据》》》》》》》》》》》》》");
-
                         tcVehicle.setIsAllot(0);//是否分配 0 不分配 1 分配
                         vehicleList.add(tcVehicle);
                     }else{
                         resultStr = "车牌号不能为空！";
-                        resultStr = Encoder.symmetricEncrypto(resultStr);
-                        return resultPath+resultStr;
+                        break;
                     }
-
                 }
                 //添加车辆
                 if(vehicleList != null && vehicleList.size() > 0){
                     tcVehicleService.addVehicleList(vehicleList);
                     /*修改卡状态*/
-                    for(TcVehicle tcVehicle:vehicleList){
+                    for(int i = 0 ; i < vehicleList.size() ; i++){
+                    	sum = sum+1;
                         GasCard gasCard = new GasCard();
-                        gasCard.setCard_no(tcVehicle.getCardNo());
+                        gasCard.setCard_no(vehicleList.get(i).getCardNo());
                         gasCard.setCard_status(GlobalConstant.CardStatus.USED);
                         gasCardService.updateByPrimaryKeySelective(gasCard);
-
                         //给通知手机和抄送手机发送短信
                         String msgType = "user_register";
                         AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-                        aliShortMessageBean.setCode(tcVehicle.getOnflag());
-                        tcVehicle.setOnflag(null);
-                        aliShortMessageBean.setLicense(tcVehicle.getPlatesNumber());
+                        aliShortMessageBean.setCode(vehicleList.get(i).getOnflag());
+                        vehicleList.get(i).setOnflag(null);
+                        aliShortMessageBean.setLicense(vehicleList.get(i).getPlatesNumber());
                         aliShortMessageBean.setString(transportion.getTransportion_name());
                         //给通知手机发送短信
-                        if(tcVehicle != null && tcVehicle.getNoticePhone() != null && !tcVehicle.getNoticePhone().equals("")){
-                            aliShortMessageBean.setSendNumber(tcVehicle.getNoticePhone());
-                            sendMsgApi(tcVehicle.getNoticePhone(),msgType,aliShortMessageBean);
+                        if(vehicleList.get(i) != null && vehicleList.get(i).getNoticePhone() != null && !vehicleList.get(i).getNoticePhone().equals("")){
+                            aliShortMessageBean.setSendNumber(vehicleList.get(i).getNoticePhone());
+                            sendMsgApi(vehicleList.get(i).getNoticePhone(),msgType,aliShortMessageBean);
                         }
-
                         //给抄送手机发送短信
-                        if(tcVehicle != null && tcVehicle.getCopyPhone() != null && !tcVehicle.getCopyPhone().equals("")){
-                            aliShortMessageBean.setSendNumber(tcVehicle.getCopyPhone());
-                            sendMsgApi(tcVehicle.getCopyPhone(),msgType,aliShortMessageBean);
+                        if(vehicleList.get(i) != null && vehicleList.get(i).getCopyPhone() != null && !vehicleList.get(i).getCopyPhone().equals("")){
+                            aliShortMessageBean.setSendNumber(vehicleList.get(i).getCopyPhone());
+                            sendMsgApi(vehicleList.get(i).getCopyPhone(),msgType,aliShortMessageBean);
                         }
                     }
                 }
@@ -556,9 +540,13 @@ public class TcVehicleController extends BaseContoller {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        return resultPath;
+        }finally {
+        	hsr.setContentType("text/xml; charset=utf-8");
+        	hsr.setHeader("Content-type", "text/html;charset=UTF-8");
+			hsr.getWriter().write("{\"msg\":\""+resultStr+"\",\"sum\":\""+sum+"\"}");
+			hsr.getWriter().close();
+			return null;
+		}
     }
 
 

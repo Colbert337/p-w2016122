@@ -37,3 +37,20 @@
 	function importReport(){
 		$("#formgastation").submit();
 	}
+
+
+	function backQueryTransportionRecharge(){
+
+		$.ajax({
+			type: "POST",
+			url: '../web/transportion/queryRechargeReport',
+			dataType: 'html',
+			data:{'creditAccount':creditAccount,
+				'orderNumber':orderNumber,'sysDriver.plateNumber':plateNumber,
+				'is_discharge':is_discharge,'orderNumber':orderNumber,'startDate':startDate,'endDate':endDate,'pageNum':pageNumber,'pageSize':pageSize,'transOrderbys':transOrderbys},
+			success: function(msg){
+				$("#main").html(msg);
+				$('[data-rel="tooltip"]').tooltip();
+			},error:function(XMLHttpRequest, textStatus, errorThrown) {
+			}});
+	}

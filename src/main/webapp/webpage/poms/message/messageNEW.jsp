@@ -138,7 +138,7 @@
 					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="editBanner">添加内容</h4>
+				<h4 class="modal-title" id="editBanner">添加用户</h4>
 			</div>
 			<div class="modal-body">
 				<div class="container-fluid" id="content">

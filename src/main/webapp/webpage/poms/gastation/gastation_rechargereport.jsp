@@ -8,8 +8,28 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 
-<script src="<%=basePath %>/dist/js/gastation/gastation_rechargereport.js"></script>
+<script type="text/javascript"
+		src="<%=basePath%>/assets/js/global/jedate.js"></script>
 
+<script src="<%=basePath %>/dist/js/gastation/gastation_rechargereport.js"></script>
+<script type="text/javascript">
+
+	jeDate({
+		dateCell : "#startDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#endDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+
+</script>
 <div class="">
 	<!-- /.page-header -->
 	<form id="formgastation" action="<%=basePath%>/web/gastation/reChargeReport">
@@ -61,14 +81,14 @@
 							</select>
 						</div>	 --%>
 						<div class="item">
-							<div class="input-daterange top" id="j-input-daterange-top">
+
 								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${sysOrder.startDate}" readonly="readonly"/>
+								<input type="text" style="width:140px;" name="startDate" id="startDate" value="${sysOrder.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
-							</div>			
+								<input type="text" style="width:140px;" name="endDate" id="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
+
 						</div>
 						
 						<%--<div class="item">
@@ -103,7 +123,7 @@
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -136,7 +156,7 @@
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj" <c:if test="${list.is_discharge == 1}">style="color: #A60000;" </c:if> >
-									<td class="center">
+									<td class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
 											<span class="lbl"></span>
@@ -174,7 +194,11 @@
 					<%--分页start--%>
 					<div class="row">
 						<div class="col-sm-6">
-							<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
+							<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+								每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+								&nbsp;&nbsp;转到第 <input type="text" name="convertPageNum" style="height:25px;width:45px" maxlength="4"/>  页
+								<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm();">跳转</button>
+							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">

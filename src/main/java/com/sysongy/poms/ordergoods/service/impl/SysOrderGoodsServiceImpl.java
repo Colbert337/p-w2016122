@@ -85,4 +85,9 @@ public class SysOrderGoodsServiceImpl implements SysOrderGoodsService {
         return cash;
     }
 
+	@Override
+	public int saveOrderGoods(SysOrderGoods record) {
+		return sysOrderGoodsMapper.insertSelective(record);
+	}
+
 }

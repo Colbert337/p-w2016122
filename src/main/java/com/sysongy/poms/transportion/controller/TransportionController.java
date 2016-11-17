@@ -1,11 +1,38 @@
 package com.sysongy.poms.transportion.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.support.SessionStatus;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
@@ -19,31 +46,15 @@ import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.*;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.ExportUtil;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.mail.MailEngine;
+
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.support.SessionStatus;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 
 @RequestMapping("/web/transportion")
@@ -98,6 +109,13 @@ public class TransportionController extends BaseContoller{
 				transportion.setPageNum(1);
 				transportion.setPageSize(10);
 			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(transportion.getOrderby())){
 				transportion.setOrderby("created_time desc");
 			}
@@ -144,6 +162,13 @@ public class TransportionController extends BaseContoller{
 				transportion.setPageNum(1);
 				transportion.setPageSize(10);
 			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(transportion.getOrderby())){
 				transportion.setOrderby("created_time desc");
 			}
@@ -188,6 +213,13 @@ public class TransportionController extends BaseContoller{
 			if(sysOrder.getPageNum() == null){
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
+			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				//transportion.setOrderby("created_time desc");
@@ -249,7 +281,7 @@ public class TransportionController extends BaseContoller{
 
 	            String[][] content = new String[cells+1][9];//[行数][列数]
 	            //第一列
-	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","运输公司名称","运输公司编号","个人账号","交易金额","操作人"};
+	            content[0] = new String[]{"订单编号","订单类型","交易流水号","交易时间","交易类型","运输公司名称","运输公司编号","个人账号","实收金额","操作人"};
 
 	            int i = 1;
 	            if(list != null && list.size() > 0){
@@ -331,8 +363,15 @@ public class TransportionController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
-				//transportion.setOrderby("created_time desc");
+				sysOrder.setOrderby("order_date desc");
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeReport(sysOrder);
@@ -373,6 +412,13 @@ public class TransportionController extends BaseContoller{
 			if(sysOrder.getPageNum() == null){
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
+			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				//transportion.setOrderby("created_time desc");
@@ -616,7 +662,7 @@ public class TransportionController extends BaseContoller{
 
             String[][] content = new String[cells+1][9];//[行数][列数]
             //第一列
-            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","运输公司编号","运输公司名称","加注站名称","车牌号","备注","操作人"};
+            content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","实收金额","订单金额","支付方式","运输公司编号","运输公司名称","加注站名称","车牌号","备注","操作人"};
 
             int i = 1;
             if(list != null && list.size() > 0){
@@ -627,7 +673,9 @@ public class TransportionController extends BaseContoller{
             		String deal_number = tmpMap.get("deal_number") == null?"":tmpMap.get("deal_number").toString();
             		String order_date = tmpMap.get("order_date") == null?"":tmpMap.get("order_date").toString();
             		String is_discharge = tmpMap.get("is_discharge") == null?"":"0".equals(tmpMap.get("is_discharge").toString())?"消费":"冲红";
-            		String cash = tmpMap.get("cash") == null?"":tmpMap.get("cash").toString();
+            		String cash = tmpMap.get("cash") == null?"0.0":tmpMap.get("cash").toString();
+            		String should_payment = tmpMap.get("should_payment") == null?"0.0":tmpMap.get("should_payment").toString();
+            		String spend_type = tmpMap.get("spend_type") == null?"":tmpMap.get("spend_type").toString();
             		String credit_account = tmpMap.get("creditAccount") == null?"":tmpMap.get("creditAccount").toString();
             		String channel = tmpMap.get("channel") == null?"":tmpMap.get("channel").toString();
             		String channel_number = tmpMap.get("channel_number") == null?"":tmpMap.get("channel_number").toString();
@@ -650,9 +698,33 @@ public class TransportionController extends BaseContoller{
 						order_type = "";
 						break;
 					}
-
-
-                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,credit_account,transportion_name,channel,plates_number,remark,user_name};
+                    
+                    if(!StringUtils.isEmpty(spend_type)){
+                    	switch (tmpMap.get("spend_type").toString()) {
+    					case "C01":{
+    						spend_type = "卡余额消费";
+    						break;
+    					}
+    					case "C02":{
+    						spend_type = "POS消费";
+    						break;
+    					}
+    					case "C03":{
+    						spend_type = "微信消费";
+    						break;
+    					}
+    					case "C04":{
+    						spend_type = "支付宝消费";
+    						break;
+    					}
+    					default:
+    						spend_type = "";
+    						break;
+    					}
+                    }
+                    
+                    
+                    content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,should_payment,spend_type,credit_account,transportion_name,channel,plates_number,remark,user_name};
                     i++;
                 }
             }
@@ -1082,6 +1154,13 @@ public class TransportionController extends BaseContoller{
 		            vehicle.setPageNum(GlobalConstant.PAGE_NUM);
 		            vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
 		        }
+		        if(vehicle.getConvertPageNum() != null){
+					if(vehicle.getConvertPageNum() > vehicle.getPageNumMax()){
+						vehicle.setPageNum(vehicle.getPageNumMax());
+					}else{
+						vehicle.setPageNum(vehicle.getConvertPageNum());
+					}
+				}
 		        if(StringUtils.isEmpty(vehicle.getOrderby())){
 		        	vehicle.setOrderby("created_date desc");
 				}
@@ -1163,6 +1242,13 @@ public class TransportionController extends BaseContoller{
 				order.setOrderby("deal_date desc");
 				order.setPageNum(1);
 				order.setPageSize(10);
+			}
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
 			}
 			order.setDebitAccount(stationId);
 			order.setCash(new BigDecimal(BigInteger.ZERO));
@@ -1295,7 +1381,7 @@ public class TransportionController extends BaseContoller{
 					i++;
 				}
 			}
-			//合计交易金额和返现金额
+			//合计实收金额和返现金额
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			content[1] = new String[]{"合计："+totalCash.toString(),"导出时间："+sdf.format(new Date())};
 			reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, wcell, 0, null, 0, font, null, false);
@@ -1326,6 +1412,13 @@ public class TransportionController extends BaseContoller{
 			if(loger.getPageNum() == null){
 				loger.setPageNum(1);
 				loger.setPageSize(10);
+			}
+			if(loger.getConvertPageNum() != null){
+				if(loger.getConvertPageNum() > loger.getPageNumMax()){
+					loger.setPageNum(loger.getPageNumMax());
+				}else{
+					loger.setPageNum(loger.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(loger.getOrderby())){
 				loger.setOrderby("sys_transportion_id desc");
@@ -1426,6 +1519,13 @@ public class TransportionController extends BaseContoller{
 			if(loger.getPageNum() == null){
 				loger.setPageNum(1);
 				loger.setPageSize(10);
+			}
+			if(loger.getConvertPageNum() != null){
+				if(loger.getConvertPageNum() > loger.getPageNumMax()){
+					loger.setPageNum(loger.getPageNumMax());
+				}else{
+					loger.setPageNum(loger.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(loger.getOrderby())){
 				loger.setOrderby("sys_transportion_id desc");

@@ -9,7 +9,6 @@ import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.coupon.model.Coupon;
 import com.sysongy.poms.coupon.model.CouponGroup;
-import com.sysongy.poms.coupon.model.UserCoupon;
 import com.sysongy.poms.coupon.service.CouponGroupService;
 import com.sysongy.poms.coupon.service.CouponService;
 import com.sysongy.poms.driver.model.SysDriver;
@@ -30,8 +29,8 @@ import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.permi.service.SysUserService;
 import com.sysongy.poms.system.model.SysCashBack;
-import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysCashBackService;
 import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
@@ -52,6 +51,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -170,6 +170,20 @@ public class CRMCashServiceContoller {
 				if (listBack!=null && listBack.size() > 0) {
 					SysCashBack back= listBack.get(0);//获取返现规则
 					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+					//添加首次充值订单-xyq
+					SysOrderDeal newDeal=new SysOrderDeal();
+//					orderDealService
+					newDeal.setOrderId(record.getOrderId());
+					newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
+					newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
+					newDeal.setDealDate(new Date());
+					newDeal.setDealType(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);
+					newDeal.setCashBack(new BigDecimal(back.getCash_per()));
+					newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
+					newDeal.setRemark("");
+					orderDealService.insert(newDeal);
+//					orderService.saveOrder(newOrder);
+
 				}else{
 					logger.info("找不到匹配的返现规则，返现失败");
 				}
@@ -639,6 +653,10 @@ public class CRMCashServiceContoller {
                 logger.error("发送充值短信出错， mobilePhone：" + sysDriver.getMobilePhone());
             }
 
+            //如果是POS支付，则发送消费短信
+            if(record.getSpend_type().equals(GlobalConstant.ORDER_SPEND_TYPE.POS)){
+                sendMessage(record, sysDriver.getMobilePhone());
+            }
 
             recordNew.setCoupon_id(record.getCoupon_number());
             recordNew.setCoupon_number(record.getCoupon_id());
@@ -850,6 +868,14 @@ public class CRMCashServiceContoller {
         return ajaxJson;
     }
 
+    /**
+     * 根据订单编号查询订单信息
+     * @param request
+     * @param response
+     * @param record
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping("/web/queryNotHedgeOrder")
     public AjaxJson queryNotHedgeOrder(HttpServletRequest request, HttpServletResponse response, SysOrder record) throws Exception {
@@ -894,6 +920,14 @@ public class CRMCashServiceContoller {
         return ajaxJson;
     }
 
+    /**
+     * 充值消费记录查询
+     * @param request
+     * @param response
+     * @param sysOrderDeal
+     * @return
+     * @throws Exception IsCharge 0 消费 1 充值
+     */
     @ResponseBody
     @RequestMapping("/web/queryOrderChangeDeal")
     public AjaxJson queryOrderChangeDeal(HttpServletRequest request, HttpServletResponse response,
@@ -1069,6 +1103,14 @@ public class CRMCashServiceContoller {
         return null;
     }
 
+    /**
+     * 消费明细查询
+     * @param request
+     * @param response
+     * @param sysOrderGoodsForCRMReport
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping("/web/queryGoodsOrderInfos")
     public AjaxJson queryGoodsOrderInfos(HttpServletRequest request, HttpServletResponse response,
@@ -1178,4 +1220,122 @@ public class CRMCashServiceContoller {
         return payAmount;
     }
 
+    //CRM POS消费时添加短信提醒
+    private void sendMessage(SysOrder recordNew, String mobilePhone){
+        AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+        aliShortMessageBean.setSendNumber(mobilePhone);
+        if(recordNew.getOrderDate() != null){
+            String curStrDate = DateTimeHelper.formatDateTimetoString(recordNew.getOrderDate(),
+                    DateTimeHelper.FMT_yyyyMMddHHmmss);
+            aliShortMessageBean.setTime(curStrDate);
+        }
+        aliShortMessageBean.setName(recordNew.getChannel());
+        aliShortMessageBean.setString("POS机");
+        aliShortMessageBean.setMoney(recordNew.getCash().toString());
+        AliShortMessage.sendShortMessage(aliShortMessageBean,
+                AliShortMessage.SHORT_MESSAGE_TYPE.APP_CONSUME);
+    }
+
+    /**
+     * 查询APP支付订单列表
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = {"/web/queryAppOrderList"})
+    @ResponseBody
+    public AjaxJson queryAppOrderList(HttpServletRequest request, HttpServletResponse response ){
+        AjaxJson ajaxJson = new AjaxJson();
+        String stationId = request.getParameter("stationId");
+        if(StringUtils.isEmpty(stationId)){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("气站ID为空！！！" );
+            return ajaxJson;
+        }
+        SysOrder record = new SysOrder();
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            record.setOperator(GlobalConstant.appOperatorId);
+            record.setChargeType(GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE);
+            record.setChannelNumber(stationId);
+            record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
+            record.setPageNum(1);
+            record.setPageSize(100);
+
+            PageInfo<SysOrder> orderPageInfo = orderService.queryAppOrderForPage(record);
+            List<SysOrder> sysOrderList = new ArrayList<>();
+            if((orderPageInfo == null) || (orderPageInfo.getList().size() == 0)){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("没有查询到所需内容！！！");
+                return ajaxJson;
+            }else{
+                for(SysOrder order:orderPageInfo.getList()){
+                    if(order.getCoupon() != null){
+                        order.setCoupon_title(order.getCoupon().getCoupon_title());
+                        order.setCoupon_cash(new BigDecimal(order.getCoupon().getPreferential_discount()));
+                    }else{
+                        order.setCoupon_cash(BigDecimal.ZERO);
+                    }
+                }
+            }
+
+            attributes.put("PageInfo", orderPageInfo);
+            attributes.put("sysOrders", orderPageInfo.getList());
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
+
+    /**
+     * CRM处理APP支付订单
+     * @param request
+     * @param response
+     * @param strRecord
+     * @return
+     */
+    @RequestMapping(value = {"/web/appPayDeal"})
+    @ResponseBody
+    public AjaxJson appPayDeal(HttpServletRequest request, HttpServletResponse response, String strRecord){
+        AjaxJson ajaxJson = new AjaxJson();
+        SysOrder record = JSON.parseObject(strRecord, SysOrder.class);
+        if(StringUtils.isEmpty(record.getOrderId())){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("订单ID为空！！！" );
+            return ajaxJson;
+        }
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        try
+        {
+            SysOrder order = new SysOrder();
+            order.setOrderId(record.getOrderId());
+
+            order.setChk_user(record.getChk_user());
+            order.setChk_time(new Date());
+            if(record.getOrderStatus() == -1){
+                //订单退回
+                order.setOrderStatus(record.getOrderStatus());
+                order.setChk_memo(record.getChk_memo());
+            }else{
+                //订单确认
+                order.setOrderStatus(1);
+                order.setChk_memo(null);
+            }
+            orderService.updateByPrimaryKey(order);
+            ajaxJson.setSuccess(true);
+            ajaxJson.setMsg("处理成功！！！");
+        } catch (Exception e) {
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg(InterfaceConstants.QUERY_CRM_USER_ERROR + e.getMessage());
+            logger.error("queryCardInfo error： " + e);
+            e.printStackTrace();
+        }
+        ajaxJson.setAttributes(attributes);
+        return ajaxJson;
+    }
 }

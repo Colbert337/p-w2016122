@@ -79,7 +79,7 @@
 
 	function changeMessageType(messageType){
 		var type = messageType.value;
-		if(type=='2' && $("#province").css("display")=='none'){
+		if(type=='2' ){
 			$("#province").css("display","");
 			$("select[name='province_id']").trigger("change");
 		}else{

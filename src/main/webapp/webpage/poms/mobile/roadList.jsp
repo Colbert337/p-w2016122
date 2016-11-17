@@ -9,12 +9,36 @@
 			+ path;
 	String imagePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 %>
+<style>
+<!--
 
+-->
+a:link {
+	color: #337ab7;
+     
+}
+
+a:visited {
+    color: #337ab7;
+    
+}
+    
+a:hover {
+    color: #337ab7;
+     
+    }
+    
+a:active {
+    color: #337ab7;
+     
+}
+</style>
 <script src="<%=basePath%>/dist/js/mobile/roadList.js"></script>
-
-<div class="">
+<link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
+<script src="<%=basePath%>/dist/js/message/show.js"></script>
+<div class="" id="div">
 	<!-- /.page-header -->
-	<form id="formRoad">
+	<form id="formRoad" action="../web/mobile/road/outExcel">
 
 		<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -64,15 +88,24 @@
 					<div class="item">
 						<button class="btn btn-sm btn-primary" type="button"
 							onclick="loadPage('#main','<%=basePath%>/webpage/poms/mobile/roadAdd.jsp');">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 添加
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i>添加
 						</button>
 						<button class="btn btn-sm btn-primary" type="button"
 							onclick="commitForm();">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 查询
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i>查询
 						</button>
 						<button class="btn btn-sm" type="button" onclick="init();">
-							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 重置
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i>重置
 						</button>
+						<button class="btn btn-sm btn-primary" type="button" onclick="outExcel();">
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i>导出Excel
+						</button>
+						<c:if test="${currUser.user.userName  eq 'sjnyadmin' }">
+						<button class="btn btn-sm btn-primary" type="button"
+							onclick="restoreRedis()">
+							<i class="ace-icon fa fa-flask align-top bigger-125"></i> 恢复redis
+						</button>
+						</c:if>
 					</div>
 				</div>
 
@@ -216,11 +249,10 @@
 
 				<div class="row">
 					<div class="col-sm-6">
-						<div class="dataTables_info sjny-page" id="dynamic-table_info"
-							role="status" aria-live="polite">
-							每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共
-							${pageInfo.total} 条 <span class="line">|</span> 共
-							${pageInfo.pages} 页
+						<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+							每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+							&nbsp;&nbsp;转到第 <input type="text" name="convertPageNum" style="height:25px;width:45px" maxlength="4"/>  页
+							<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm();">跳转</button>
 						</div>
 					</div>
 					<div class="col-sm-6">

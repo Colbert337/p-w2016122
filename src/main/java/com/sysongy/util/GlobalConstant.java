@@ -210,7 +210,7 @@ public class GlobalConstant {
 	
 	/*
 	 * 	110运输公司预付款充值  120 加油站预付款充值 130个人充值 210运输公司消费 220 司机消费 310 运输公司对个人转账 320个人对个人转账
-	 * 	410注册返现 420邀请返现
+	 * 	410注册返现 420邀请返现 430首次充值返现
 	 */
 	public interface OrderType{
 		public static final String CHARGE_TO_TRANSPORTION ="110";
@@ -218,10 +218,12 @@ public class GlobalConstant {
 		public static final String CHARGE_TO_DRIVER ="130";
 		public static final String CONSUME_BY_TRANSPORTION ="210";
 		public static final String CONSUME_BY_DRIVER ="220";
+		public static final String CASHBACK ="430";
 		public static final String TRANSFER_TRANSPORTION_TO_DRIVER ="310";
 		public static final String TRANSFER_DRIVER_TO_DRIVER ="320";
 		public static final String REGISTER_CASHBACK ="410";
 		public static final String INVITED_CASHBACK ="420";
+		
 	}
 
 	/**

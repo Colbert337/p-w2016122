@@ -117,12 +117,12 @@
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<!--<tr id="listobj">-->
 								<tr id="${list.sys_gas_station_id}">
-									<%--<td class="center">
+									<td class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.sys_gas_station_id}"/> 
 											<span class="lbl"></span>
 										</label>
-									</td>--%>
+									</td>
 
 									<td>${list.sys_gas_station_id}</td>
 								 	<td>${list.gas_station_name}</td> 
@@ -168,7 +168,12 @@
 
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
+					<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+						每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+	
+						    &nbsp;&nbsp;转到第 <input type="text" name="pageNum" style="height:25px;width:45px" maxlength="4"/>  页
+							<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm(this);">跳转</button>
+					</div>
 				</div>
 				<div class="col-sm-6">
 					<nav>
@@ -182,9 +187,14 @@
 								<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formgastation');">
 									<span aria-hidden="true">下一页</span>
 								</a>
-							</li>  
+							</li>
 						</ul>
 					</nav>
+								
+				</div>
+				
+				<div class="col-sm-1">
+					
 				</div>
 			</div>
 

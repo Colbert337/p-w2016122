@@ -36,67 +36,53 @@ function showCheck(){
 }
 
 
-function showBreak(tradeNo1, type1, cash1, orderId1, no, retype,tr) {
-	$('#titleNo').text("退款");
-	 $.ajax({
+function showBreak(tradeNo1,type1,cash1,orderId1,no,retype){
+	if (retype == 1) {
+		$('#div').showLoading();
+		$.ajax({
 			type : "post",
-			url : "../web/order/queryOrder",
+			url : "../web/order/BreakMoney",
 			data : {
-				orderNumber :no
+				orderNumber : no
 			},
 			dataType : "json",
 			success : function(data) {
-//				 bootbox.alert(data);
-				var str=data.split(",");
-				 
-				if (str[1]!=null&&str[1]!="null") {
-					 $("#plate_number").text(str[1]);
+				$("#title").text("本订单累计退款金额为：" + data + "元");
+				orderNumber = data * 1;
+				$('#div').hideLoading();
+				closeDialog('content');
+				type = type1;
+				cash = cash1;
+				tradeNo = tradeNo1;
+				orderId = orderId1;
+				if (cash * 1 <= orderNumber) {
+					bootbox.alert("累计退款金额（" + orderNumber + "）大于交易金额(" + cash
+							+ "),不能继续退款");
+					return;
+				} else {
+					$("#content").modal('show');
 				}
-				if (str[0]!=null&&str[0]!="null") {
-					 $("#user_id").text(str[0]);
-				}
-				if (str[2]!=null&&str[2]!="null") {
-					 $("#gas_name").text(str[2]);
-				}
-				
-				 
-				
-				
-				 $("#order_number").text($("#"+orderId1).children('td').eq(0).text())
-				 $("#gas_id").text($("#"+orderId1).children('td').eq(9).text())
-				
-				 $("#order_c").text($("#"+orderId1).children('td').eq(2).text())
-				 
-				 $("#order_time").text( $("#"+orderId1).children('td').eq(4).text());
-//				alert($("#"+orderId1).children('td').eq(5).text());
-				if (data=='获取验证码成功！') {
-					
-				}else{
-					
-				}
-				$('#content').hideLoading();
-				$("#content").modal('show');
+
+				$("#money").val("");
+				$("#msgcontent").val('');
+
 			},
-			error:function(){
-				$('#content').hideLoading();
-				 bootbox.alert("获取验证失败！");
+			error : function() {
+				$('#div').hideLoading();
+				bootbox.alert("查询退款金额失败");
 			}
 		});
-	
-	$('#content').hideLoading();
-	closeDialog('content');
-	type = type1;
-	cash = cash1;
-	tradeNo = tradeNo1;
-	orderId = orderId1;
-	
-	// $("#title").text( );
-	 
-	// $("#content").modal('show');
-	$("#money").val("");
-	$("#retype").val(retype);
-	$("#msgcontent").val('');
 
+	}else{
+		type=type1;
+		cash=cash1;
+		tradeNo=tradeNo1;
+		orderId=orderId1;
+		 $("#content").modal('show');	 
+		 $("#money").val("");
+		 $("#retype").val(retype);
+		 $("#msgcontent").val('');
+	}
 }
 
 jQuery(function($) {
@@ -218,7 +204,7 @@ obj.value = obj.value.replace(/[^\d.]/g,"");
  
 
 function subCheck(tradeNo1,type1,cash1,orderId1,no,retype){
-	$('#content').showLoading();
+	$('#div').showLoading();
 	 $.ajax({
 			type : "post",
 			url : "../web/order/checkPhone",
@@ -233,19 +219,17 @@ function subCheck(tradeNo1,type1,cash1,orderId1,no,retype){
 				}else{
 					
 				}
-				$('#content').hideLoading();
+				$('#div').hideLoading();
 			},
 			error:function(){
-				$('#content').hideLoading();
+				$('#div').hideLoading();
 				 bootbox.alert("获取验证失败！");
 			}
 		});
 	
 	
 }
-function showOrderForBack(number){
-	loadPage('#main', '../web/order/showOrderForBack?orderNumber='+number);
-}
+
 function subbreak() {
 	if ($('#phone').val()=="") {
 		 bootbox.alert("请先输入手机号码获取验证码！");
@@ -263,7 +247,7 @@ function subbreak() {
 		 bootbox.alert("退款金额不能为0");
 		 return;
 	}
-	if($('#msgcontent').val().trim()==""){
+	if($('#msgcontent').val()==""){
 		 bootbox.alert("退款原因不能为空");
 		 return;
 	}
@@ -302,16 +286,14 @@ function subbreak() {
 //			$("#modal-table").modal("show");
 			bootbox.alert(data);
 //			$("#conditionStatus").val(oldtype);
-			$('#content').hideLoading();
+			$('#div').hideLoading();
 			commitForm();
 			
 		},
 		error : function(XMLHttpRequest, textStatus, errorThrown) {
-			$('#content').hideLoading();
+			$('#div').hideLoading();
 		}
 	}
-	$('#content').showLoading();
+	$('#div').showLoading();
 	$("#formRoad").ajaxSubmit(options);
-	
-	
 }

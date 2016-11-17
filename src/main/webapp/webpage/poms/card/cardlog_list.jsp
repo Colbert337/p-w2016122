@@ -133,10 +133,10 @@
 
 									<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 										<tr id="listobj">
-											<%--<td class="center"><label class="pos-rel"> <input
+											<td class="center"  style="display:none"><label class="pos-rel"> <input
 													type="checkbox" class="ace" id="pks"
 													value="${list.card_no}" /> <span class="lbl"></span>
-											</label></td>--%>
+											</label></td>
 
 											<td>${list.card_no}</td>
 											<td><s:Code2Name mcode="${list.card_type}"
@@ -172,12 +172,11 @@
 
 				<div class="row">
 					<div class="col-sm-6">
-						<div class="dataTables_info sjny-page" id="dynamic-table_info"
-							role="status" aria-live="polite">
-							每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共
-							${pageInfo.total} 条 <span class="line">|</span> 共
-							${pageInfo.pages} 页
-						</div>
+						<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+						每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+						&nbsp;&nbsp;转到第 <input type="text" name="convertPageNum" style="height:25px;width:45px" maxlength="4"/>  页
+						<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm();">跳转</button>
+					</div>
 					</div>
 					<div class="col-sm-6">
 						<nav>

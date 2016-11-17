@@ -16,7 +16,9 @@ public interface CouponMapper {
 	 int insert(Coupon record);
 	 
 	 Coupon selectByPrimaryKey(String coupon_id);
-	 
+
+	Coupon queryCouponById(String coupon_id);
+
 	 int updateByPrimaryKey(Coupon record);
 	 
 	 List<UserCoupon> selectByUser_Coupon(UserCoupon record);
@@ -51,4 +53,10 @@ public interface CouponMapper {
 	 * @return
 	 */
 	List<Coupon> queryAllCouponForPage(String driverId);
+	
+	String queryUserCouponId(UserCoupon record);
+	
+	int updateStatus(String couponId, String sysDriverId);
+	
+	
 }

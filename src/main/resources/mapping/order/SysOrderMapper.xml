@@ -41,11 +41,16 @@
 		<result column="coupon_cash" property="coupon_cash" jdbcType="DECIMAL" />
 		<result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
 		<result column="trade_no" property="trade_no" jdbcType="VARCHAR" />
-
+		<result column="gas_station_name" property="gas_station_name"
+			jdbcType="VARCHAR" />
 
 		<association property="orderTypeInfo" column="order_type"
 			javaType="com.sysongy.poms.usysparam.model.Usysparam"
 			select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
+		</association>
+		<association property="coupon" column="coupon_number"
+					 javaType="com.sysongy.poms.coupon.model.Coupon"
+					 select="com.sysongy.poms.coupon.dao.CouponMapper.queryCouponById">
 		</association>
 		<association property="chargeTypeInfo" column="charge_type"
 			javaType="com.sysongy.poms.usysparam.model.Usysparam"
@@ -53,6 +58,9 @@
 		</association>
 		<association property="operatorInfo" column="operator"
 			javaType="com.sysongy.poms.permi.model.SysUser" select="com.sysongy.poms.permi.dao.SysUserMapper.queryUserById">
+		</association>
+		<association property="sysDriver" column="credit_account"
+					 javaType="com.sysongy.poms.driver.model.SysDriver" select="com.sysongy.poms.driver.dao.SysDriverMapper.queryByPK">
 		</association>
 		<association property="consume_cardInfo" column="consume_card"
 			javaType="com.sysongy.poms.card.model.GasCard" select="com.sysongy.poms.card.dao.GasCardMapper.selectByPrimaryKey">
@@ -108,6 +116,8 @@
 		<result column="order_date" property="order_date" jdbcType="TIMESTAMP" />
 		<result column="is_discharge" property="is_discharge" jdbcType="VARCHAR" />
 		<result column="cash" property="cash" jdbcType="DECIMAL" />
+		<result column="should_payment" property="should_payment" jdbcType="DECIMAL" />
+		<result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
 		<result column="cash_back" property="cash_back" jdbcType="DECIMAL" />
 		<result column="credit_account" property="creditAccount"
 			jdbcType="VARCHAR" />
@@ -153,8 +163,7 @@
 	<select id="queryForPageForBack" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
 			select a.*,b.mobile_phone ,c.mobile_phone as creditPhone from sys_order a left join sys_driver b on 
-			a.debit_account=b.sys_driver_id  LEFT JOIN sys_driver c ON a.credit_account=c.sys_driver_id where 1=1 and (a.charge_type="103" or
-			a.charge_type="104" or a.charge_type="110" or a.charge_type="111" or a.charge_type="112" or SPEND_TYPE="C01" or  SPEND_TYPE="C03" or SPEND_TYPE="C04")
+			a.debit_account=b.sys_driver_id  LEFT JOIN sys_driver c ON a.credit_account=c.sys_driver_id where 1=1   and order_type <![CDATA[   <>  ]]>230 and order_type <![CDATA[   <>  ]]>210  and (order_status=-1 or chk_memo is not null) and operator_source_id='8aa4ba67855a11e6a356000c291aa9e3'
 		<if test="orderId != null &amp;&amp; orderId != ''">
 			and a.order_id = #{orderId,jdbcType=VARCHAR}
 		</if>
@@ -167,10 +176,21 @@
 		<if test="chargeType != null &amp;&amp; chargeType != ''">
 			and a.charge_type = #{chargeType,jdbcType=VARCHAR}
 		</if>
-		
+		<if test="creditPhone != null &amp;&amp; creditPhone != ''">
+			and c.mobile_phone like CONCAT("%",#{creditPhone,jdbcType=VARCHAR},"%")
+		</if>
 		<if test="endDate != null &amp;&amp; endDate != ''">
 			 and DATE_FORMAT(order_date,"%Y/%m/%d")   <![CDATA[   >=  ]]> #{startDate,jdbcType=VARCHAR} and   DATE_FORMAT(order_date,"%Y/%m/%d")  <![CDATA[   <=  ]]> #{endDate,jdbcType=VARCHAR}
 		</if>
+	</select>
+	
+	
+	
+	<select id="queryForPageForBack2" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+			
+select * from sys_order where order_type='230' and  order_number=#{orderNumber,jdbcType=VARCHAR}
+	 
 	</select>
 
 	<!--查询微信充值订单列表-->
@@ -198,6 +218,11 @@
 
 
 
+<select id="queryOrderForSearch" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select b.user_name,b.plate_number,c.gas_station_name from sys_order a LEFT JOIN sys_driver b on a.credit_account=b.sys_driver_id LEFT JOIN sys_gas_station c on a.channel_number=c.sys_gas_station_id where a.order_number=#{orderNumber,jdbcType=VARCHAR} and a.order_type!=230
+	</select>
+
 	<select id="queryForPage" resultMap="BaseResultMap"
 		parameterType="java.lang.String">
 		select
@@ -213,6 +238,12 @@
 		<if test="creditAccount != null &amp;&amp; creditAccount != ''">
 			and credit_account = #{creditAccount,jdbcType=VARCHAR}
 		</if>
+	</select>
+
+	<!--根据操作人及chargeType查询APP订单-->
+	<select id="queryAppOrderForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.order.model.SysOrder">
+		select * from sys_order where operator = #{operator,jdbcType=VARCHAR} and charge_type = #{chargeType,jdbcType=VARCHAR}
+		 and channel_number = #{channelNumber,jdbcType=VARCHAR} and chk_user is null and order_status = #{orderStatus,jdbcType=VARCHAR}
 	</select>
 
 	<select id="queryOrderLogs" resultMap="OrderLogResultMap"
@@ -371,6 +402,15 @@
 			<if test="batch_no != null">
 				batch_no,
 			</if>
+			<if test="chk_user != null">
+				chk_user,
+			</if>
+			<if test="chk_time != null">
+				chk_time,
+			</if>
+			<if test="chk_memo != null">
+				chk_memo,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="orderId != null">
@@ -432,6 +472,15 @@
 			</if>
 			<if test="batch_no != null">
 				#{batch_no,jdbcType=INTEGER},
+			</if>
+			<if test="chk_user != null">
+				#{chk_user,jdbcType=INTEGER},
+			</if>
+			<if test="chk_time != null">
+				#{chk_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="chk_memo != null">
+				#{chk_memo,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -497,6 +546,15 @@
 			</if>
 			<if test="trade_no != null">
 				trade_no = #{trade_no,jdbcType=VARCHAR},
+			</if>
+			<if test="chk_user != null">
+				chk_user = #{chk_user,jdbcType=VARCHAR},
+			</if>
+			<if test="chk_time != null">
+				chk_time = #{chk_time,jdbcType=VARCHAR},
+			</if>
+			<if test="chk_memo != null">
+				chk_memo = #{chk_memo,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where order_id = #{orderId,jdbcType=VARCHAR}
@@ -689,7 +747,7 @@
 				#{orderId,jdbcType=VARCHAR})
 			</if>
 			<if test="operatorSourceId != null &amp;&amp; operatorSourceId != ''">
-				and operator_source_id = #{operatorSourceId, jdbcType=VARCHAR}
+				and b.channel_number = #{operatorSourceId, jdbcType=VARCHAR}
 			</if>
 			<if test="storage_time_after != null &amp;&amp; storage_time_after != ''">
 				and order_date between CONCAT(#{storage_time_after,jdbcType=VARCHAR},'
@@ -863,8 +921,8 @@
 	<select id="queryGastationConsumeReport" resultMap="HenryResultMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		SELECT
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sod.deal_type,so.credit_account,so.channel,so.channel_number,sd.user_name,su.user_name
-		operator
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,sod.deal_type,so.credit_account,so.channel,so.channel_number,sd.user_name,su.user_name
+		operator,sod.remark
 		FROM sys_order so
 		INNER JOIN sys_order_deal sod ON so.order_id = sod.order_id
 		LEFT JOIN sys_driver sd ON sd.sys_driver_id = so.credit_account
@@ -949,7 +1007,7 @@
 	<select id="queryRechargeReport" resultMap="HenryResultMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		select
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
 		from sys_order so
 		inner join sys_order_deal sod on so.order_id = sod.order_id
 		left join tc_vehicle tv on so.consume_card=tv.card_no
@@ -982,7 +1040,7 @@
 	<select id="queryRechargeDriverReport" resultMap="HenryResultMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		select
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name
 		operator, sd.mobile_phone
 		from sys_order so
 		inner join sys_order_deal sod on so.order_id = sod.order_id
@@ -1055,7 +1113,7 @@
 	<select id="queryRechargeDriverReportTotal" resultMap="HenryTotalMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		select sum(cash) total from (select
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,sd.user_name,so.credit_account,so.channel,so.channel_number,st.transportion_name,sod.remark,su.user_name
 		operator, sd.mobile_phone
 		from sys_order so
 		inner join sys_order_deal sod on so.order_id = sod.order_id
@@ -1094,7 +1152,7 @@
 	<select id="queryRechargeReportTotal" resultMap="HenryTotalMap"
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		select sum(cash) total from (select
-		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
+		so.order_id,so.order_number,so.order_type,sod.deal_number,so.order_date,so.is_discharge,so.cash,so.should_payment,spend_type,so.credit_account,st.transportion_name,so.channel,tv.plates_number,sod.remark,su.user_name
 		from sys_order so
 		inner join sys_order_deal sod on so.order_id = sod.order_id
 		left join tc_vehicle tv on so.consume_card=tv.card_no
@@ -1221,7 +1279,7 @@
 		order_date,
 		order_status
 		FROM sys_order
-		WHERE order_type = '130'
+		WHERE (order_type = '130' or order_type = '430')
 		AND is_discharge = '0'
 		AND been_discharged = '0'
 		AND order_status = '1'
@@ -1237,9 +1295,14 @@
 		parameterType="com.sysongy.poms.order.model.SysOrder">
 		SELECT
 		B.order_number,
-		(SELECT SUM(sys_order_goods.number) FROM sys_order_goods WHERE
-		sys_order_goods.order_id = (SELECT a.order_id FROM sys_order AS a
-		WHERE a.order_number = B.order_number)) AS goods_sum,
+		(
+			SELECT
+				SUM(sys_order_goods.number)
+			FROM
+				sys_order_goods
+			WHERE
+				sys_order_goods.order_id = B.order_id
+		) AS goods_sum,
 		cash,
 		B.channel,
 		B.channel_number,
@@ -1250,10 +1313,16 @@
 		remark
 		FROM
 		sys_order_deal rc
-		WHERE
+		WHERE 
 		rc.order_id = B.order_id
 		) AS remark,
-		(SELECT sys_coupon.coupon_title FROM sys_coupon WHERE sys_coupon.coupon_no = B.coupon_number) AS couponTitle,
+		(SELECT
+			coupon_title
+		FROM
+			sys_coupon
+		WHERE
+			sys_coupon.coupon_id  = B.coupon_number
+		) AS couponTitle,
 		B.order_date,
 		B.order_status,
 		B.been_discharged,
@@ -1262,7 +1331,7 @@
 		B.should_payment,
 		B.coupon_cash
 		FROM sys_order AS B
-		WHERE B.order_type = '220'
+		WHERE 2=2 and B.order_type = '220'
 		AND B.order_status = '1'
 		AND B.is_discharge = '0'
 		AND B.been_discharged = '0'
@@ -1321,6 +1390,7 @@
 			and temp.order_date like
 			CONCAT('%',SUBSTR(#{orderDate,jdbcType=VARCHAR},1,7),'%')
 		</if>
+		ORDER BY temp.order_date DESC
 	</select>
 	<!-- 消费订单详情 -->
 	<select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -1350,7 +1420,7 @@
 		select
 		count(order_id)
 		from sys_order
-		where order_type = '220' and credit_account = #{driverID,jdbcType=VARCHAR}
+		where order_type = '220' and order_status='1' and credit_account = #{driverID,jdbcType=VARCHAR}
 	</select>
 	<!-- 根据订单号查询返现金额 -->
 	<select id="backCash" resultType="java.lang.Double" parameterType="java.lang.String">

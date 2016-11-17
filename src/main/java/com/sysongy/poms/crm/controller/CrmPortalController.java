@@ -602,7 +602,7 @@ public class CrmPortalController extends BaseContoller {
     @ResponseBody
     public String checkCode(@RequestParam String phone,@RequestParam String vcode ){
         String resultStr = "true";
-        String veCode = (String) redisClientImpl.getFromCache(phone);
+        String veCode = (String) redisClientImpl.getFromCache("msg_"+phone);
         if(!veCode.equals(vcode)){
             resultStr = "false";
         }

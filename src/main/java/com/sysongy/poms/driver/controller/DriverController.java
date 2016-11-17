@@ -3,7 +3,6 @@ package com.sysongy.poms.driver.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,12 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.sysongy.api.client.controller.model.PayCodeValidModel;
-import com.sysongy.poms.transportion.model.Transportion;
-import com.sysongy.poms.transportion.service.TransportionService;
-import com.sysongy.tcms.advance.model.TcFleet;
-import com.sysongy.tcms.advance.model.TcFleetQuota;
-import com.sysongy.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
@@ -39,9 +33,17 @@ import com.sysongy.poms.driver.service.DriverService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
-import com.sysongy.poms.system.model.SysDepositLog;
 import com.sysongy.poms.system.model.SysOperationLog;
 import com.sysongy.poms.system.service.SysOperationLogService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.DateUtil;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.ExportUtil;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.RedisClientInterface;
+import com.sysongy.util.UUIDGenerator;
 
 import net.sf.json.JSONObject;
 
@@ -85,6 +87,13 @@ public class DriverController extends BaseContoller{
             driver.setPageNum(GlobalConstant.PAGE_NUM);
             driver.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+		if(driver.getConvertPageNum() != null){
+			if(driver.getConvertPageNum() > driver.getPageNumMax()){
+				driver.setPageNum(driver.getPageNumMax());
+			}else{
+				driver.setPageNum(driver.getConvertPageNum());
+			}
+		}
 		driver.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
@@ -120,6 +129,13 @@ public class DriverController extends BaseContoller{
             driver.setPageNum(GlobalConstant.PAGE_NUM);
             driver.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+		if(driver.getConvertPageNum() != null){
+			if(driver.getConvertPageNum() > driver.getPageNumMax()){
+				driver.setPageNum(driver.getPageNumMax());
+			}else{
+				driver.setPageNum(driver.getConvertPageNum());
+			}
+		}
 		driver.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
@@ -198,6 +214,13 @@ public class DriverController extends BaseContoller{
 		try {
         PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
         
+        if(driver.getConvertPageNum() != null){
+			if(driver.getConvertPageNum() > driver.getPageNumMax()){
+				driver.setPageNum(driver.getPageNumMax());
+			}else{
+				driver.setPageNum(driver.getConvertPageNum());
+			}
+		}
         if(StringUtils.isEmpty(driver.getOrderby())){
         	driver.setOrderby("checked_status=1 desc");
         }
@@ -240,6 +263,13 @@ public class DriverController extends BaseContoller{
 		try {
 	        PageInfo<SysDriver> pageinfo = new PageInfo<SysDriver>();
 
+	        if(driver.getConvertPageNum() != null){
+				if(driver.getConvertPageNum() > driver.getPageNumMax()){
+					driver.setPageNum(driver.getPageNumMax());
+				}else{
+					driver.setPageNum(driver.getConvertPageNum());
+				}
+			}
 	        if(StringUtils.isEmpty(driver.getOrderby())){
 	        	driver.setOrderby("created_date desc");
 	        }
@@ -454,8 +484,15 @@ public class DriverController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
+			if(sysOrder.getConvertPageNum() != null){
+				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
+					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else{
+					sysOrder.setPageNum(sysOrder.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
-				//transportion.setOrderby("created_time desc");
+				sysOrder.setOrderby("order_date desc");
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeDriverReport(sysOrder);
@@ -497,8 +534,15 @@ public class DriverController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
+			if(sysOrder.getConvertPageNum() != null){
+				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
+					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else{
+					sysOrder.setPageNum(sysOrder.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
-				//transportion.setOrderby("created_time desc");
+				sysOrder.setOrderby("order_date desc");
 			}
 
 			PageInfo<Map<String, Object>> pageinfo = orderService.queryRechargeDriverReportDetail(sysOrder);
@@ -558,7 +602,7 @@ public class DriverController extends BaseContoller{
 
 			String[][] content = new String[cells+1][9];//[行数][列数]
 			//第一列
-			content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","交易金额","会员账号","电话号码","加注站编号","加注站名称","关联运输公司","备注","操作人"};
+			content[0] = new String[]{"订单号","订单类型","交易流水号","交易时间","交易类型","实收金额","订单金额","支付方式","会员账号","电话号码","加注站编号","加注站名称","关联运输公司","备注","操作人"};
 
 			int i = 1;
 			if(list != null && list.size() > 0){
@@ -569,7 +613,9 @@ public class DriverController extends BaseContoller{
 					String deal_number = tmpMap.get("deal_number")==null?"":tmpMap.get("deal_number").toString();
 					String order_date = tmpMap.get("order_date")==null?"":tmpMap.get("order_date").toString();
 					String is_discharge = tmpMap.get("is_discharge")==null?"":"0".equals(tmpMap.get("is_discharge").toString())?"消费":"冲红";
-					String cash = tmpMap.get("cash")==null?"":tmpMap.get("cash").toString();
+					String cash = tmpMap.get("cash")==null?"0.0":tmpMap.get("cash").toString();
+					String should_payment = tmpMap.get("should_payment") == null?"0.0":tmpMap.get("should_payment").toString();
+            		String spend_type = tmpMap.get("spend_type") == null?"":tmpMap.get("spend_type").toString();
 					String user_name = tmpMap.get("user_name")==null?"":tmpMap.get("user_name").toString();
 					String mobile_phone = tmpMap.get("mobile_phone")==null?"":tmpMap.get("mobile_phone").toString();
 					String channel = tmpMap.get("channel")==null?"":tmpMap.get("channel").toString();
@@ -592,9 +638,33 @@ public class DriverController extends BaseContoller{
 							order_type = "";
 							break;
 					}
+					
+					if(!StringUtils.isEmpty(spend_type)){
+                    	switch (tmpMap.get("spend_type").toString()) {
+    					case "C01":{
+    						spend_type = "卡余额消费";
+    						break;
+    					}
+    					case "C02":{
+    						spend_type = "POS消费";
+    						break;
+    					}
+    					case "C03":{
+    						spend_type = "微信消费";
+    						break;
+    					}
+    					case "C04":{
+    						spend_type = "支付宝消费";
+    						break;
+    					}
+    					default:
+    						spend_type = "";
+    						break;
+    					}
+                    }
 
 
-					content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,user_name,mobile_phone,channel_number,channel,transportion_name,remark,operator};
+					content[i] = new String[]{order_number,order_type,deal_number,order_date,is_discharge,cash,should_payment,spend_type,user_name,mobile_phone,channel_number,channel,transportion_name,remark,operator};
 					i++;
 				}
 			}

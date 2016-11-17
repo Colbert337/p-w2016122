@@ -45,5 +45,5 @@ public interface GastationMapper {
 
 	int delete(String gas);
 
-	Integer queryGastationByPhone(String phone);
+	Gastation queryGastationByPhone(String phone);
 }

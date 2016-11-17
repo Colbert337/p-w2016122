@@ -147,20 +147,18 @@ public class DriverServiceImpl implements DriverService {
             //判断是否是导入数据，导入数据不返现不发优惠券
             if(!"1".equals(record.getIsImport())){
             	 //如果没有邀请么 则触发注册返现规则
-//                if(StringUtils.isEmpty(invitationCode)){
-//        			List<SysCashBack> list=sysCashBackService.queryForBreak("201");
-//        			if (list!=null && list.size() > 0 ) {
-//        				SysCashBack back= list.get(0);//获取返现规则
-//        				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-//    				}else{
-//    					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
-//    				}
-//     
-////                	this.cashBackForRegister(record, invitationCode, operator_id);
-//                }
-                
+                if(StringUtils.isEmpty(invitationCode)){
+        			List<SysCashBack> list=sysCashBackService.queryForBreak("201");
+        			if (list!=null && list.size() > 0 ) {
+        				SysCashBack back= list.get(0);//获取返现规则
+        				sysUserAccountService.addCashToAccount(record.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
+    				}else{
+    					logger.info("找不到匹配的返现规则，注册成功，返现失败");    
+    				}
+     
+                	this.cashBackForRegister(record, invitationCode, operator_id);
+                }
                 //发优惠卷
-
                 CouponGroup couponGroup = new CouponGroup();
                 couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.NEW_REGISTER_USER);
 
@@ -334,7 +332,21 @@ public class DriverServiceImpl implements DriverService {
 					throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
 				}
 			}
-			
+			cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
+		}
+		//转账
+		if(GlobalConstant.OrderType.TRANSFER_DRIVER_TO_DRIVER.equals(order.getChargeType())){
+			//给账户减去
+			String driver_account = driver.getSysUserAccountId();
+			cash = order.getCash();
+			//因为这个步骤是扣除，订单传过来的cash是正值，则是正常扣除(用于跟人对个人转账的时候，扣除转出账户的钱，还有个人消费的时候也是正值)，如果是负值，则是冲红扣除（个人消费的时候冲红），负负得正
+			BigDecimal addcash = cash.multiply(new BigDecimal(-1));
+			//如果是负值，但是is_discharge却不是冲红，则返回错误
+			if(cash.compareTo(new BigDecimal("0")) < 0 ){
+				if(is_discharge !=null && (!is_discharge.equalsIgnoreCase(GlobalConstant.ORDER_ISCHARGE_YES))){
+					throw new Exception( GlobalConstant.OrderProcessResult.ORDER_TYPE_IS_NOT_DISCHARGE);
+				}
+			}
 			cash_success = sysUserAccountService.addCashToAccount(driver_account,addcash,order.getOrderType());
 		}
 		

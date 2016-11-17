@@ -30,7 +30,13 @@ public class SysOperationLogController extends BaseContoller {
 				sysOperationLog.setPageNum(1);
 				sysOperationLog.setPageSize(10);
 			}
-
+			if(sysOperationLog.getConvertPageNum() != null){
+				if(sysOperationLog.getConvertPageNum() > sysOperationLog.getPageNumMax()){
+					sysOperationLog.setPageNum(sysOperationLog.getPageNumMax());
+				}else{
+					sysOperationLog.setPageNum(sysOperationLog.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(sysOperationLog.getOrderby())){
 				sysOperationLog.setOrderby("created_date desc");
 			}

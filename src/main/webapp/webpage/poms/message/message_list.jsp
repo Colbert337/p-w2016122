@@ -132,7 +132,7 @@
 													class="ace-icon fa fa-search-plus bigger-130"
 													onclick="showUser('${list.id}');"></i>
 											</a> 
-											</c:if>
+										</c:if>
 										<a class="logic-del" href="javascript:void(0);" title="删除" data-rel="tooltip">
 											<i class="ace-icon fa fa-trash-o bigger-130" onclick="del(this);"></i>
 										</a>
@@ -146,8 +146,12 @@
 
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
+				<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+					每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+					&nbsp;&nbsp;转到第 <input type="text" name="convertPageNum" style="height:25px;width:45px" maxlength="4"/>  页
+					<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm();">跳转</button>
 				</div>
+			</div>
 				<div class="col-sm-6">
 					<nav>
 						<ul id="ulhandle" class="pagination pull-right no-margin">

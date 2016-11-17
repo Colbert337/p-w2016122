@@ -43,4 +43,8 @@ public interface GsGasPriceMapper {
      * @return
      */
     List<Map<String, Object>> queryDiscount(String stationId);
+    
+    public GsGasPrice queryGsPrice(String gastationId,String gasPrice);
+    
+    GsGasPrice queryGsGasPriceInfo(String gsGasPriceId);
 }

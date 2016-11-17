@@ -150,9 +150,12 @@
   	select 
     <include refid="Base_Column_List" />
     from sys_gas_station where sys_gas_station_id !='GS12900004' 
-    <!-- and status ='0' -->
+    and status ='1'
     <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
         and (gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}),'%') or company LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') or address LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') )
+    </if>
+    <if test="type != null &amp;&amp; type != ''" >
+        and type = #{type,jdbcType=VARCHAR}
     </if>
   </select> 
    <select id="exists" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -778,7 +781,9 @@
 	</trim>
     group by sgs.sys_gas_station_id) as total
   </select>
-<select id="queryGastationByPhone" resultType="java.lang.Integer" parameterType="java.lang.String">
-	select count(sys_gas_station_id) FROM sys_gas_station WHERE contact_phone = #{phone, jdbcType=VARCHAR}
+<select id="queryGastationByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select 
+	<include refid="Base_Column_List" />
+	FROM sys_gas_station WHERE admin_username = #{phone, jdbcType=VARCHAR}
 </select>
 </mapper>

@@ -42,6 +42,9 @@
     <result column="cash_back" property="cashBack" jdbcType="DECIMAL" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="run_success" property="runSuccess" jdbcType="VARCHAR" />
+    <result column="coupon_kind" property="couponKind" jdbcType="VARCHAR" />
+    <result column="coupon_title" property="couponTitle" jdbcType="VARCHAR" />
+    <result column="preferential_discount" property="preferentialDiscount" jdbcType="VARCHAR" />
     <association property="sysOrderInfo" column="order_id"
                  javaType="com.sysongy.poms.order.model.SysOrder"
                  select="com.sysongy.poms.order.dao.SysOrderMapper.selectByPrimaryKey">
@@ -94,11 +97,14 @@
 
   <select id="queryForPageCRM" resultMap="MapResultMapCRM" parameterType="com.sysongy.poms.order.model.SysOrderDeal" >
     select
-    <include refid="Base_Column_List1" />
+    deal_id, a.order_id as order_id, deal_number, deal_date, deal_type, cash_back_per, cash_back,
+    remark, run_success,sc.coupon_kind,sc.coupon_title,
+    case when sc.preferential_discount is null then 0 else sc.preferential_discount end as preferential_discount
     from sys_order_deal a
     left join sys_order b on a.order_id=b.order_id
     left join sys_driver cc on b.debit_account = cc.sys_driver_id
     left join sys_driver d on b.credit_account = d.sys_driver_id
+    left join sys_coupon sc on b.coupon_number = sc.coupon_id
     where 1=1
     <if test="orderId != null &amp;&amp; orderId != ''" >
       and (a.order_id = #{orderId,jdbcType=VARCHAR} or b.order_number = #{orderId,jdbcType=VARCHAR})
@@ -124,7 +130,7 @@
     <if test="dealType != null &amp;&amp; dealType != ''" >
       and deal_type=#{dealType,jdbcType=VARCHAR}
     </if>
-    and  b.operator_source_id=#{stationID,jdbcType=VARCHAR}
+    and  b.channel_number=#{stationID,jdbcType=VARCHAR}
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >

@@ -7,9 +7,27 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
+<script type="text/javascript"
+		src="<%=basePath%>/assets/js/global/jedate.js"></script>
 
 <script src="<%=basePath %>/dist/js/sysparam/driver_rechargereport.js"></script>
+<script type="text/javascript">
 
+	jeDate({
+		dateCell : "#startDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+	jeDate({
+		dateCell : "#endDate",
+		format : "YYYY-MM-DD hh:mm:ss",
+		isTime : true,
+		festival : true,
+		minDate : "2014-09-19 00:00:00"
+	})
+</script>
 <div class="">
 	<!-- /.page-header -->
 	<form id="formgastation" action="<%=basePath%>/web/driver/consumeReport">
@@ -47,14 +65,14 @@
 							</select>
 						</div>
 						<div class="item">
-							<div class="input-daterange top" id="j-input-daterange-top">
-								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${sysOrder.startDate}" readonly="readonly"/>
-								<span class="">
+								<label   >交易时间:</label>
+									<span>
+								<input type="text" style="width:140px;"   name="startDate" id="startDate" value="${sysOrder.startDate}" readonly/>
+
 									<i class="fa fa-exchange"></i>
-								</span>
-								<input type="text" class="" name="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
-							</div>			
+
+								<input type="text" style="width:140px;"  name="endDate"  id="endDate" value="${sysOrder.endDate}" readonly/>
+									</span>
 						</div>
 						<%--<div class="item">
 						    <label>充值渠道：</label>
@@ -90,8 +108,8 @@
 							<thead>
 								<tr>
 									<th class="center">
-										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
+										<label class="pos-rel">
+											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" />
 											<span class="lbl"></span>
 										</label>
 									</th>
@@ -100,7 +118,9 @@
 									<th onclick="orderBy(this,'deal_number');commitForm();" id="deal_number_order">交易流水号</th>
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th onclick="orderBy(this,'is_discharge');commitForm();" id="is_discharge_order">交易类型</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">实收金额</th>
+									<th onclick="orderBy(this,'should_payment');commitForm();" id="should_payment_order">订单金额</th>
+									<th onclick="orderBy(this,'spend_type');commitForm();" id="spend_type_order">支付方式</th>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
 									<th onclick="orderBy(this,'mobile_phone');commitForm();" id="mobile_phone_order">电话号码 </th>
 									<th onclick="orderBy(this,'channel_number');commitForm();" id="channel_number_order">加注站编号</th>
@@ -113,12 +133,12 @@
 							</thead>
 
 							<tbody>
-								
+
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj" <c:if test="${list.is_discharge == 1}">style="color: #A60000;" </c:if> >
 									<td class="center">
-										<label class="pos-rel"> 
-											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
+										<label class="pos-rel">
+											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/>
 											<span class="lbl"></span>
 										</label>
 									</td>
@@ -132,6 +152,8 @@
 										<c:if test="${list.is_discharge == 1}">冲红</c:if>
 									</td>
 									<td>${list.cash}</td>
+									<td>${list.should_payment}</td>
+									<td><s:Code2Name mcode="${list.spend_type}" gcode="SPEND_TYPE"></s:Code2Name></td>
 									<td>${list.user_name}</td>
 									<td>${list.mobile_phone}</td>
 									<td>${list.channel_number}</td>
@@ -163,7 +185,11 @@
 					<%--分页start--%>
 					<div class="row">
 						<div class="col-sm-6">
-							<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
+							<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+								每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+								&nbsp;&nbsp;转到第 <input type="text" name="convertPageNum" style="height:25px;width:45px" maxlength="4"/>  页
+								<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm();">跳转</button>
+							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">

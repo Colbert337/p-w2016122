@@ -74,7 +74,7 @@
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center td-w1">
+									<th class="center td-w1" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -98,7 +98,7 @@
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 
 								<tr id="listobj">
-									<td class="center">
+									<td class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.gsGasPriceId}"/> 
 											<span class="lbl"></span>
@@ -133,7 +133,11 @@
 
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
+					<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+						每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+						&nbsp;&nbsp;转到第 <input type="text" name="convertPageNum" style="height:25px;width:45px" maxlength="4"/>  页
+						<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm();">跳转</button>
+					</div>
 				</div>
 				<div class="col-sm-6">
 					<nav>

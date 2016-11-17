@@ -1,5 +1,9 @@
 package com.sysongy.poms.mobile.controller;
 
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,23 +22,29 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alipay.util.httpClient.HttpResponse;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.mobile.model.base.MobileReturn;
 import com.sysongy.api.util.DESUtil;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.model.SysRoadConditionStr;
 import com.sysongy.poms.mobile.service.SysRoadService;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.usysparam.model.Usysparam;
+import com.sysongy.poms.usysparam.service.UsysparamService;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.DateUtil;
+import com.sysongy.util.ExportUtil;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.UUIDGenerator;
 
 import net.sf.json.JSONObject;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisSentinelPool;
 
 /**
  * @FileName: SysRoadController
@@ -53,6 +64,9 @@ public class SysRoadController extends BaseContoller {
 	SysRoadService sysRoadService;
 
 	@Autowired
+	private UsysparamService usysparamservice;
+
+	@Autowired
 	RedisClientInterface redisClientImpl;
 
 	@Autowired
@@ -68,6 +82,13 @@ public class SysRoadController extends BaseContoller {
 			if (road.getPageNum() == null || "".equals(road.getPageNum())) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
 				road.setPageSize(20);
+			}
+			if(road.getConvertPageNum() != null){
+				if(road.getConvertPageNum() > road.getPageNumMax()){
+					road.setPageNum(road.getPageNumMax());
+				}else{
+					road.setPageNum(road.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(road.getOrderby())) {
 				road.setOrderby("start_time desc");
@@ -111,6 +132,13 @@ public class SysRoadController extends BaseContoller {
 			if (road.getPageNum() == null) {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
 				road.setPageSize(5);
+			}
+			if(road.getConvertPageNum() != null){
+				if(road.getConvertPageNum() > road.getPageNumMax()){
+					road.setPageNum(road.getPageNumMax());
+				}else{
+					road.setPageNum(road.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(road.getOrderby())) {
 				road.setOrderby(" publisher_time desc");
@@ -192,7 +220,8 @@ public class SysRoadController extends BaseContoller {
 			road.setPublisherName(user.getUser().getUserName());
 			road.setConditionStatus("2");
 			road.setPublisherPhone(user.getUser().getMobilePhone());
-			int time = sumTime(road);
+			Usysparam param= usysparamservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType());
+			int time = sumTime(road,Integer.valueOf(param.getData()));
 			int a = sysRoadService.saveRoad(road);
 			bean.setRetCode(100);
 			bean.setRetMsg("保存成功");
@@ -232,29 +261,38 @@ public class SysRoadController extends BaseContoller {
 		}
 		return null;
 	}
-
-	public static int sumTime(SysRoadCondition road) {
+/**
+ * 考虑通用性，不修改原有算法，传入参数需要路况对象和失效时间
+ * @param road 路况对象
+ * @param m 失效时间(分钟)
+ * @return
+ */
+	public static int sumTime(SysRoadCondition road,Integer m) {
 		// TODO Auto-generated method stub
-		int h = 0;
-		switch (road.getConditionType()) {
-		case "01":
-			h = 1;
-			break;
-		case "02":
-			h = 2;
-			break;
-		case "05":
-			h = 4;
-			break;
-		default:
-			break;
+		
+		if (m==0||null==m) {
+			return -1;
 		}
+		
+//		switch (road.getConditionType()) {
+//		case "01":
+//			h = 1;
+//			break;
+//		case "02":
+//			h = 2;
+//			break;
+//		case "05":
+//			h = 4;
+//			break;
+//		default:
+//			break;
+//		}
 
-		if (h != 0) {
+		if (m != 0) {
 
 			long a = road.getStartTime().getTime() - new Date().getTime();
-			int time = h * 60 * 60 + (int) a / 1000;
-			road.setEndTime(new Date(new Date().getTime() + h * 60 * 60 * 1000 + a));
+			int time = m * 60 + (int) a / 1000;
+			road.setEndTime(new Date(new Date().getTime() + m* 60 * 1000 + a));
 			return time;
 		} else if (road.getEndTime() != null) {
 			long a = road.getAuditorTime().getTime() - road.getEndTime().getTime();
@@ -386,7 +424,9 @@ public class SysRoadController extends BaseContoller {
 			if ("2".equals(road.getConditionStatus())) {
 				// 放到redis
 				msg = "审核成功";
-				int time = sumTime(road);
+				
+				Usysparam param= usysparamservice.queryUsysparamByCode("CONDITION_TYPE", road.getConditionType());
+				int time = sumTime(road,Integer.valueOf(param.getData()));
 				if (time == -1 || time > 0) {
 					road.setUsefulCount("0");
 					redisClientImpl.addToCache("Road" + road.getId(), road, time);
@@ -452,5 +492,116 @@ public class SysRoadController extends BaseContoller {
 		String ret = "redirect:/web/mobile/road/roadList?type=delete";
 		PageBean bean = new PageBean();
 		return ret;
+	}
+	@RequestMapping("/restoreRedis")	
+	@ResponseBody
+	public String restoreRedis( ModelMap map){
+		PageBean bean = new PageBean();
+		if (sysRoadService.restoreRedis(redisClientImpl)) {
+			bean.setRetMsg("恢复成功");
+		}else{
+			bean.setRetMsg("恢复失败");
+		}
+		return bean.getRetMsg();
+	}
+	@RequestMapping("/outExcel")	
+	public String outExcel(ModelMap map, SysRoadCondition road, HttpServletResponse response) {
+		PageBean bean = new PageBean();
+		try {
+			/*
+			 * if(StringUtils.isNotBlank(gascard.getStorage_time_after()) ||
+			 * StringUtils.isNotBlank(gascard.getStorage_time_before())
+			 * ||StringUtils.isNotBlank(gascard.getCard_property())||StringUtils
+			 * .isNotBlank(gascard.getCard_status())||
+			 * StringUtils.isNotBlank(gascard.getOperator())) {
+			 */
+			road.setPageNum(1);
+			road.setPageSize(1048576);
+			// }
+
+			if (StringUtils.isEmpty(road.getOrderby())) {
+				road.setOrderby("order_date desc");
+			}
+
+			PageInfo<SysRoadCondition> pageinfo = sysRoadService.queryForExcel(road);
+			List<SysRoadCondition> list = pageinfo.getList();
+
+			int cells = 0; // 记录条数
+
+			if (list != null && list.size() > 0) {
+				cells += list.size();
+			}
+			OutputStream os = response.getOutputStream();
+			ExportUtil reportExcel = new ExportUtil();
+
+			String downLoadFileName = DateTimeHelper.formatDateTimetoString(new Date(),
+					DateTimeHelper.FMT_yyyyMMdd_noseparator) + ".xls";
+			downLoadFileName = "路况信息_" + downLoadFileName;
+
+			try {
+				response.addHeader("Content-Disposition",
+						"attachment;filename=" + new String(downLoadFileName.getBytes("GB2312"), "ISO-8859-1"));
+			} catch (UnsupportedEncodingException e1) {
+				response.setHeader("Content-Disposition", "attachment;filename=" + downLoadFileName);
+			}
+
+			String[][] content = new String[cells + 1][9];// [行数][列数]
+			// 第一列
+			content[0] = new String[] { "审核人电话", "审核人", "路况类型", "审核状态", "拍照时间", "路况说明", "备注", "创建人", "创建人电话",
+					"发布时间","审核时间" };
+			int i = 1;
+			if (list != null && list.size() > 0) {
+				for (SysRoadCondition one : pageinfo.getList()) {
+					SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+					String publisherPhone = one.getPublisherPhone() == null ? "" : one.getPublisherPhone().toString();
+					String publisherName = one.getPublisherName() == null ? "" : one.getPublisherName().toString();
+					String condition_type = one.getConditionType() == null ? "" : one.getConditionType();
+					String captureTime = one.getCaptureTime() == null ? "" : sdf.format(one.getCaptureTime());
+					String workstation = "";
+					String condStatus = "";
+					switch (one.getConditionStatus()) {
+					case "0":
+						condStatus = "已失效";
+						break;
+					case "1":
+						condStatus = "待审核";
+						break;
+					case "2":
+						condStatus = "审核通过";
+						break;
+					case "3":
+						condStatus = "未通过";
+						break;
+					default:
+						condStatus = "";
+						break;
+					}
+					String mname=one.getMname();
+					String msg = one.getConditionMsg(); 
+					String memo = one.getMemo() == null ? ""
+							: one.getMemo().toString();
+					String auditor = one.getAuditor() == null ? "" : one.getAuditor();
+					String auditorPhone = one.getAuditorPhone() == null ? "" : one.getAuditorPhone();
+					String auditorTime = one.getAuditorTime() == null ? "" : DateUtil.format(one.getAuditorTime());
+					String release_time = one.getPublisherTime() == null ? "" : DateUtil.format(one.getPublisherTime());
+//				content[0] = new String[] { "审核人电话", "审核人", "路况类型", "审核状态", "拍照时间", "路况说明", "备注", "创建人", "创界人电话",
+//					"发布时间","审核时间" };
+					content[i] = new String[] { auditorPhone, auditor, mname, condStatus, captureTime,
+							msg, memo, publisherName, publisherPhone, release_time,auditorTime };
+					i++;
+				}
+			}
+
+			String[] mergeinfo = new String[] { "0,0,0,0" };
+			// 单元格默认宽度
+			String sheetName = "用户卡信息报表";
+			reportExcel.exportFormatExcel(content, sheetName, mergeinfo, os, null, 22, null, 0, null, null, false);
+
+		} catch (Exception e) {
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+		}
+		return null;
+
 	}
 }

@@ -83,7 +83,7 @@
 							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th class="center">
+									<th class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" onclick="checkedAllRows(this);" /> 
 											<span class="lbl"></span>
@@ -97,7 +97,7 @@
 									<th onclick="orderBy(this,'transportion_name');commitForm();" id="transportion_name_order">运输公司名称</th>
 									<th onclick="orderBy(this,'credit_account');commitForm();" id="credit_account_order">运输公司编号</th>
 									<th onclick="orderBy(this,'user_name');commitForm();" id="debit_account_order">个人账号</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">交易金额</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="cash_order">实收金额</th>
 									<th onclick="orderBy(this,'cash_back');commitForm();" id="cash_back_order">返现金额</th>
 									<th onclick="orderBy(this,'operator');commitForm();" id="operator_order">操作人</th>
 								</tr>
@@ -107,7 +107,7 @@
 								
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="listobj">
-									<td class="center">
+									<td class="center" style="display:none">
 										<label class="pos-rel"> 
 											<input type="checkbox" class="ace" id="pks" value="${list.order_id}"/> 
 											<span class="lbl"></span>
@@ -135,7 +135,11 @@
 					<%--分页start--%>
 					<div class="row">
 						<div class="col-sm-6">
-							<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
+							<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+								每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+								&nbsp;&nbsp;转到第 <input type="text" name="convertPageNum" style="height:25px;width:45px" maxlength="4"/>  页
+								<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm();">跳转</button>
+							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="dataTables_paginate paging_simple_numbers" id="dynamic-table_paginate">

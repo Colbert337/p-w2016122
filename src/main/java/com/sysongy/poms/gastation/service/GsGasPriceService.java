@@ -44,4 +44,12 @@ public interface GsGasPriceService {
      * @return
      */
     List<Map<String, Object>> queryDiscount(String stationId);
+    
+    public GsGasPrice queryGsPrice(String gastationId,String gasPrice) throws Exception;
+    /**
+     * 根据气站ID查询气站当前最高气价信息
+     * @param gsGasPriceId
+     * @return
+     */
+    GsGasPrice queryGsGasPriceInfo(String gsGasPriceId);
 }

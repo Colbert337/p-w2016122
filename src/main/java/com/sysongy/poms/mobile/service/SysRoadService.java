@@ -7,6 +7,7 @@ import java.util.Map;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
 import com.sysongy.poms.mobile.model.SysRoadConditionStr;
+import com.sysongy.util.RedisClientInterface;
 
 /**
  * @FileName: SysRoadService
@@ -57,5 +58,9 @@ public interface SysRoadService {
 	
 	List<SysRoadCondition> queryAll() throws Exception;
 	public int updateByPrimaryKey(SysRoadCondition record)throws Exception;
+  
+	boolean restoreRedis(RedisClientInterface redisClientImpl);
+ 
+	PageInfo<SysRoadCondition> queryForExcel(SysRoadCondition record) throws Exception;
 	
 }
