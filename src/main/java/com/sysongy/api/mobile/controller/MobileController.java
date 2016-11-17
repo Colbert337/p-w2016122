@@ -206,7 +206,6 @@ public class MobileController {
 	public String login(String params) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg(MobileReturn.STATUS_MSG_SUCCESS);
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 		try {
@@ -238,6 +237,44 @@ public class MobileController {
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", queryDriver.getSysDriverId());
 						result.setData(tokenMap);
+						// 判断二维码是否为空
+						if (queryDriver != null
+								&& (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
+							// 图片路径
+							String rootPath = (String) prop.get("images_upload_path") + "/driver/";
+							File file = new File(rootPath);
+							// 如果根文件夹不存在则创建
+							if (!file.exists() && !file.isDirectory()) {
+								file.mkdir();
+							}
+							String path = rootPath + mainObj.optString("username") + "/";
+							File file1 = new File(path);
+							// 如果用户文件夹不存在则创建
+							if (!file1.exists() && !file1.isDirectory()) {
+								file1.mkdir();
+							}
+							// 二维码路径
+							String imgPath = path + mainObj.optString("username") + ".jpg";
+							String show_path = (String) prop.get("show_images_path") + "/driver/"
+									+ mainObj.optString("username") + "/" + mainObj.optString("username") + ".jpg";
+							// 生成二维码
+							driver.setDriverQrcode(show_path);
+							driver.setSysDriverId(queryDriver.getSysDriverId());
+							Integer tmp = driverService.saveDriver(driver, "update", null, this.appOperatorId);
+							String encoderContent = null;
+							if (queryDriver.getFullName() == null || "".equals(queryDriver.getFullName())) {
+								encoderContent = mainObj.optString("username");
+							} else {
+								encoderContent = mainObj.optString("username") + "_" + queryDriver.getFullName();
+							}
+							if (tmp > 0) {
+								TwoDimensionCode handler = new TwoDimensionCode();
+								handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null,
+										TwoDimensionCode.size);
+							}else{
+								throw new Exception("二维码更新失败！");
+							}
+						}
 					} else {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("用户名或密码错误！");
@@ -251,56 +288,54 @@ public class MobileController {
 						queryDriver = driverService.queryByUserName(driver);
 						if (queryDriver == null) {
 							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("用户名或密码错误！");
+							result.setMsg("无此用户！");
 						} else {
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token", queryDriver.getSysDriverId());
 							result.setData(tokenMap);
+							// 判断二维码是否为空
+							if (queryDriver != null
+									&& (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
+								// 图片路径
+								String rootPath = (String) prop.get("images_upload_path") + "/driver/";
+								File file = new File(rootPath);
+								// 如果根文件夹不存在则创建
+								if (!file.exists() && !file.isDirectory()) {
+									file.mkdir();
+								}
+								String path = rootPath + mainObj.optString("username") + "/";
+								File file1 = new File(path);
+								// 如果用户文件夹不存在则创建
+								if (!file1.exists() && !file1.isDirectory()) {
+									file1.mkdir();
+								}
+								// 二维码路径
+								String imgPath = path + mainObj.optString("username") + ".jpg";
+								String show_path = (String) prop.get("show_images_path") + "/driver/"
+										+ mainObj.optString("username") + "/" + mainObj.optString("username") + ".jpg";
+								// 生成二维码
+								driver.setDriverQrcode(show_path);
+								driver.setSysDriverId(queryDriver.getSysDriverId());
+								Integer tmp = driverService.saveDriver(driver, "update", null, this.appOperatorId);
+								String encoderContent = null;
+								if (queryDriver.getFullName() == null || "".equals(queryDriver.getFullName())) {
+									encoderContent = mainObj.optString("username");
+								} else {
+									encoderContent = mainObj.optString("username") + "_" + queryDriver.getFullName();
+								}
+								if (tmp > 0) {
+									TwoDimensionCode handler = new TwoDimensionCode();
+									handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null,
+											TwoDimensionCode.size);
+								}else{
+									throw new Exception("二维码更新失败！");
+								}
+							}
 						}
-
 					} else {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("验证码无效！");
 					}
-				}
-				// 判断二维码是否为空
-				if (queryDriver != null
-						&& (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
-					// 图片路径
-					String rootPath = (String) prop.get("images_upload_path") + "/driver/";
-					File file = new File(rootPath);
-					// 如果根文件夹不存在则创建
-					if (!file.exists() && !file.isDirectory()) {
-						file.mkdir();
-					}
-					String path = rootPath + mainObj.optString("username") + "/";
-					File file1 = new File(path);
-					// 如果用户文件夹不存在则创建
-					if (!file1.exists() && !file1.isDirectory()) {
-						file1.mkdir();
-					}
-					// 二维码路径
-					String imgPath = path + mainObj.optString("username") + ".jpg";
-					String show_path = (String) prop.get("show_images_path") + "/driver/"
-							+ mainObj.optString("username") + "/" + mainObj.optString("username") + ".jpg";
-					// 生成二维码
-					driver.setDriverQrcode(show_path);
-					driver.setSysDriverId(queryDriver.getSysDriverId());
-					Integer tmp = driverService.saveDriver(driver, "update", null, this.appOperatorId);
-					String encoderContent = null;
-					if (queryDriver.getFullName() == null || "".equals(queryDriver.getFullName())) {
-						encoderContent = mainObj.optString("username");
-					} else {
-						encoderContent = mainObj.optString("username") + "_" + queryDriver.getFullName();
-					}
-					if (tmp > 0) {
-						TwoDimensionCode handler = new TwoDimensionCode();
-						handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null,
-								TwoDimensionCode.size);
-					}
-				} else {
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("用户名或密码错误！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5723,9 +5758,15 @@ public class MobileController {
 						dataMap.put("stationName", gastation.getGas_station_name());
 						dataMap.put("phone", gastation.getContact_phone());
 						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
-						dataMap.put("price", gsGasPrice.getPrice());
-						dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getProduct_unit()).get(0).getMname());
-						dataMap.put("discount", gastation.getPromotions());
+						if(gsGasPrice!=null){
+							dataMap.put("price", gsGasPrice.getPrice());
+							dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getProduct_unit()).get(0).getMname());
+							dataMap.put("discount", gastation.getPromotions());
+						}else{
+							dataMap.put("price","");
+							dataMap.put("unit","");
+							dataMap.put("discount","");
+						}
 						result.setData(dataMap);
 					}else{
 						result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -5746,9 +5787,9 @@ public class MobileController {
 			resultStr = DESUtil.encode(keyStr, resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("获取折扣信息失败！");
+			result.setMsg("获取加注站信息失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("获取折扣信息失败： " + e);
+			logger.error("获取加注站信息失败： " + e);
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);
 			return resultStr;
