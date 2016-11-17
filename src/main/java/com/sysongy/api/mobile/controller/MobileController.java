@@ -497,7 +497,7 @@ public class MobileController {
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
 				String invitationCode = mainObj.optString("invitationCode");
 				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
-				if (veCode != null && !"".equals(veCode)) {
+				if (veCode != null && !"".equals(veCode) && veCode.equals(invitationCode)) {
 					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
