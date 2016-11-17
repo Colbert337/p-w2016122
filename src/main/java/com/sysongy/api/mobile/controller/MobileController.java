@@ -5725,7 +5725,7 @@ public class MobileController {
 						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
 						dataMap.put("price", gsGasPrice.getPrice());
 						dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getProduct_unit()).get(0).getMname());
-						dataMap.put("gasName", usysparamService.query("CARDTYPE", gsGasPrice.getGasName()).get(0).getMname());
+						dataMap.put("discount", gastation.getPromotions());
 						result.setData(dataMap);
 					}else{
 						result.setStatus(MobileReturn.STATUS_SUCCESS);
