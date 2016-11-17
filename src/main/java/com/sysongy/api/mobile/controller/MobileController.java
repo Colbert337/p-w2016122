@@ -5758,17 +5758,22 @@ public class MobileController {
 						dataMap.put("address", gastation.getAddress());
 						dataMap.put("stationName", gastation.getGas_station_name());
 						dataMap.put("phone", gastation.getContact_phone());
+						dataMap.put("discount", gastation.getPromotions());
 						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
 						if(gsGasPrice!=null){
-							dataMap.put("price", gsGasPrice.getPrice());
-							dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getProduct_unit()).get(0).getMname());
-							dataMap.put("discount", gastation.getPromotions());
-							dataMap.put("unitCode", gsGasPrice.getProduct_unit());
-							
+							ProductPrice productPrice = gsGasPrice.getProductPriceInfo();
+							if(productPrice!=null){
+								dataMap.put("price", productPrice.getProductPrice());
+								dataMap.put("unit",usysparamService.queryUsysparamByCode("GAS_UNIT", productPrice.getProductUnit()).getMname());
+								dataMap.put("unitCode", productPrice.getProductUnit());
+							}else{
+								dataMap.put("price","");
+								dataMap.put("unit","");
+								dataMap.put("unitCode","");
+							}
 						}else{
 							dataMap.put("price","");
 							dataMap.put("unit","");
-							dataMap.put("discount","");
 							dataMap.put("unitCode","");
 						}
 						result.setData(dataMap);
