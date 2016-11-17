@@ -206,6 +206,7 @@ public class MobileController {
 	public String login(String params) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
+		result.setMsg("登陆成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 		try {
