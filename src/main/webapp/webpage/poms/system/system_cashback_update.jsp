@@ -29,7 +29,7 @@
 										<div class="col-sm-4">
 											<label class="control-label no-padding-right" > <s:Code2Name mcode="${sysCashBack.sys_cash_back_no}" gcode="CASHBACK"></s:Code2Name> </label>
 											<input type="hidden" name="sys_cash_back_id" value="${sysCashBack.sys_cash_back_id}"/>
-											<input type="hidden" name="sys_cash_back_no" value="${sysCashBack.sys_cash_back_no}"/>
+											<input type="hidden" name="sys_cash_back_no" id="sys_cash_back_no" value="${sysCashBack.sys_cash_back_no}"/>
 										</div>
 									</div>
 									
