@@ -766,17 +766,20 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
-				SysDriver sysDriver = new SysDriver();
-				sysDriver.setSysDriverId(mainObj.optString("token"));
-				password = mainObj.optString("password");
-				if (password != null && !"".equals(password)) {
+				verificationCode = mainObj.optString("verificationCode");
+				SysDriver sysDriver = driverService.queryDriverByPK(mainObj.optString("token"));
+				String	veCode = (String) redisClientImpl.getFromCache(sysDriver.getUserName());
+				if(verificationCode.equals(veCode)){
+					password = mainObj.optString("password");
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
-
-					driverService.saveDriver(sysDriver, "update", null, null);
-				} else {
+					int rs = driverService.saveDriver(sysDriver, "update", null, null);
+					if(rs < 1){
+						throw new Exception("更新密码失败！");
+					}
+				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("密码为空！");
+					result.setMsg("验证码无效！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
