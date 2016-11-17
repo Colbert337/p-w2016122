@@ -529,7 +529,7 @@ public class CRMCustomerContoller {
             int renum = driverService.saveDriver(sysDriver, "insert", null, suserId);
 			//系统关键日志记录
 			SysOperationLog sysOperationLog = new SysOperationLog();
-			sysOperationLog.setOperation_type("kh");
+			sysOperationLog.setOperation_type("zc");
 			String name = sysDriver.getFullName();
 			if("".equals(name)||null==name){
 				name = sysDriver.getUserName();
@@ -539,7 +539,7 @@ public class CRMCustomerContoller {
 			}
 			sysOperationLog.setUser_name(name);
 			sysOperationLog.setLog_platform("3");
-			sysOperationLog.setLog_content(gastation.getGas_station_name()+"气站用户"+name+"通过CRM开户成功！"); 
+			sysOperationLog.setLog_content(gastation.getGas_station_name()+"气站用户"+name+"通过CRM注册成功！"); 
 			//操作日志
 			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriver.getSysDriverId());		
 			

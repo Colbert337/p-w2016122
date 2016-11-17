@@ -177,7 +177,7 @@ public class CRMProductPriceController {
         			SysOperationLog aSysOperationLog = new SysOperationLog();
         			aSysOperationLog.setUser_name(user.getUserName());
         			aSysOperationLog.setOperation_type("tj");
-        			aSysOperationLog.setLog_platform("4");
+        			aSysOperationLog.setLog_platform("3");
         			aSysOperationLog.setLog_content("用户添加新价格成功！调价商品为："+productPrice.getProductPriceId()+"，调整价格为："+productPrice.getProductPrice());
         			//操作日志
         			sysOperationLogService.saveOperationLog(aSysOperationLog,sysUser.getSysUserId());
@@ -197,7 +197,7 @@ public class CRMProductPriceController {
     			SysOperationLog sysOperationLog = new SysOperationLog();
     			sysOperationLog.setUser_name(user.getUserName());
     			sysOperationLog.setOperation_type("tj");
-    			sysOperationLog.setLog_platform("4");
+    			sysOperationLog.setLog_platform("3");
         		sysOperationLog.setLog_content("用户将所有价格状态改为无效成功！调价商品为："+productPrice.getProductPriceId()+"，调整价格为："+productPrice.getProductPrice()); 
     			//操作日志
     			sysOperationLogService.saveOperationLog(sysOperationLog,sysUser.getSysUserId());
@@ -280,7 +280,7 @@ public class CRMProductPriceController {
 	    	SysUser sysUser = sysUserService.queryUserByUserInfo(user);
 	    	sysOperationLog.setUser_name(user.getUserName());
 			sysOperationLog.setOperation_type("tj");
-			sysOperationLog.setLog_platform("4");
+			sysOperationLog.setLog_platform("3");
     		sysOperationLog.setLog_content("用户创建商品价格成功！调价商品为："+productPrice.getProductPriceId()+"，调整价格为："+productPrice.getProductPrice());
 			//操作日志
 			sysOperationLogService.saveOperationLog(sysOperationLog,sysUser.getSysUserId());

@@ -9,7 +9,7 @@ public class SysOperationLog extends BaseModel {
 	private String sys_operation_log_id;
 	//用户类型：1、app用户 2、微信用户 3、CRM用户 4、后台用户
 	private String log_platform;
-	//操作类型，kh开户，cz充值，xf消费，dj冻结，jd解冻，bcj补换卡，ch冲红
+	//操作类型，zc注册，cz充值，xf消费，djk冻结卡，djzh冻结账户，jd解冻，bcj补换卡，ch冲红
 	private String operation_type;
 	//订单号
 	private String order_number;

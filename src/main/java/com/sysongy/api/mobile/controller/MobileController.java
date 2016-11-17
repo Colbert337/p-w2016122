@@ -490,7 +490,7 @@ public class MobileController {
 						Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, this.appOperatorId);
 						//系统关键日志记录
 						SysOperationLog sysOperationLog = new SysOperationLog();
-						sysOperationLog.setOperation_type("kh");
+						sysOperationLog.setOperation_type("zc");
 						String name = driver.getFullName();
 						if("".equals(name)||null==name){
 							name = driver.getUserName();
@@ -499,7 +499,7 @@ public class MobileController {
 							name = driver.getMobilePhone();
 						}
 						sysOperationLog.setLog_platform("1");
-						sysOperationLog.setLog_content(name+"的账户卡通过APP开户成功！"); 
+						sysOperationLog.setLog_content(name+"的账户卡通过APP注册成功！"); 
 						//操作日志
 						sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysDriverId());	
 						if (tmp > 0) {

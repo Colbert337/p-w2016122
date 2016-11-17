@@ -335,7 +335,7 @@ public class DriverController extends BaseContoller{
 					sysOperationLog.setOperation_type("djk");
 					operation= "冻结卡";
 				}else{
-					sysOperationLog.setOperation_type("jcgs");
+					sysOperationLog.setOperation_type("jd");
 					operation="解除挂失";
 				}
 				List<SysDriver> driverlist = driverService.queryeSingleList(driver);

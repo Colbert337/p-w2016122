@@ -258,7 +258,7 @@ public class WechatController {
 					Integer tmp = driverService.saveDriver(driver, "insert", null, this.wechatOperatorId);
 					//系统关键日志记录
 					SysOperationLog sysOperationLog = new SysOperationLog();
-					sysOperationLog.setOperation_type("kh");
+					sysOperationLog.setOperation_type("zc");
 					//手机端
 					String name = driver.getFullName();
 					if("".equals(name)||null==name){
@@ -268,7 +268,7 @@ public class WechatController {
 						name = driver.getMobilePhone();
 					}
 					sysOperationLog.setLog_platform("2");
-					sysOperationLog.setLog_content(name+"的账户卡通过微信开户成功！");
+					sysOperationLog.setLog_content(name+"的账户卡通过微信注册成功！");
 					//操作日志
 					sysOperationLogService.saveOperationLog(sysOperationLog,driver.getSysDriverId());
 

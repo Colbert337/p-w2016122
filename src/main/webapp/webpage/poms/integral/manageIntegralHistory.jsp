@@ -7,43 +7,39 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
-<script src="<%=basePath %>/dist/js/sysparam/systemOperation_LogList.js"></script>
+	<script src="<%=basePath %>/dist/js/integral/manageIntegralHistory.js"></script>
 <!-- /section:basics/content.breadcrumbs -->
 <div class="">
 	<!-- /.page-header -->
 	<div class="row">
 		<div class="col-xs-12">
-			<form class="form-horizontal"  id="sysOperationLog">
+			<form class="form-horizontal"  id="integralHistoryform">
 				<jsp:include page="/common/page_param.jsp"></jsp:include>
 					<div class="page-header">
 						<h1>
-							系统日志查询
+							积分历史查询
 						</h1>
 					</div>
 					<div class="search-types">
 						<div class="item">
-							<label>用户类型：</label>
-							<select class="chosen-select" name="log_platform" >
-								<s:option flag="true" gcode="LOG_PLATFORM" form="sysOperationLog" field="log_platform" />
-							</select>
+							<label>会员账号/手机号码：</label>
+							<input type="text" name="full_name" placeholder="会员账号/手机号码"  maxlength="32" value="${integralHistory.full_name}"/>
 						</div>
 						<div class="item">
-							<label>操作类型：</label>
-							<select class="chosen-select" name="operation_type" >
-								<s:option flag="true" gcode="OPERATION_TYPE" form="sysOperationLog" field="operation_type" />
-							</select>
-						</div>
-						<div class="item">
-							<label>日志内容：</label>
-							<input type="text" name="log_content" placeholder="优惠卷名称"  maxlength="32" value="${sysOperationLog.log_content}"/>
-						</div>
-						<div class="item">
-							<label>时间：</label>
-								<input type="text" class="date-picker" name="created_date_after" id="created_date_after" style="width:150px" value="${sysOperationLog.created_date_after}"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
+							<label>积分数量：</label>
+								<input type="text" name="integral_num_less" class="number" style="width:60px" size="4"/>
 									<span class="">
 										<i class="fa fa-exchange"></i>
 									</span>
-								<input type="text" class="date-picker" name="created_date_before" id="created_date_before"  style="width:150px" value="${sysOperationLog.created_date_before}" readonly="readonly" data-date-format="yyyy-mm-dd"/>
+							<input type="text" name="integral_num_more" class="number" style="width:60px" size="4"/>
+						</div>
+						<div class="item">
+							<label>时间：</label>
+							<input type="text" class="date-picker" name="created_date_after" id="created_date_after" style="width:150px" value="${integralHistory.created_date_after}"  readonly="readonly" data-date-format="yyyy-mm-dd"/>
+							<span class="">
+								<i class="fa fa-exchange"></i>
+							</span>
+							<input type="text" class="date-picker" name="created_date_before" id="created_date_before"  style="width:150px" value="${integralHistory.created_date_before}" readonly="readonly" data-date-format="yyyy-mm-dd"/>
 						</div>
 						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
@@ -58,28 +54,32 @@
 					<div class="clearfix">
 						<div class="pull-right tableTools-container"></div>
 					</div>
-					<div class="table-header">系统日志信息列表</div>
+					<div class="table-header">积分历史查询列表</div>
 					<!-- div.table-responsive -->
 					<!-- div.dataTables_borderWrap -->
 					<div class="sjny-table-responsive">
 						<table id="dynamic-table" class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th style="width:8%" onclick="orderBy(this,'log_platform');commitForm();" id="log_platform_order">用户类型</th>
-									<th style="width:8%" onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">操作人</th>
-									<th style="width:8%" onclick="orderBy(this,'operation_type');commitForm();" id="operation_type_order">操作类型</th>
-									<th style="width:15%" onclick="orderBy(this,'log_content');commitForm();" id="log_content_order">日志内容</th>
-									<th style="width:8%" onclick="orderBy(this,'created_date');commitForm();" class="td-w2" id="created_date_order"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480">创建时间</i></th>
+									<th style="width:8%" onclick="orderBy(this,'user_name');commitForm();" id="user_name_order">会员账号</th>
+									<th style="width:8%" onclick="orderBy(this,'full_name');commitForm();" id="full_name_order">认证姓名</th>
+									<th style="width:10%" onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">注册工作站编号</th>
+									<th style="width:15%" onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册工作站名称</th>
+									<th style="width:10%" onclick="orderBy(this,'integral_type');commitForm();" id="integral_type_order">积分类别</th>
+									<th style="width:10%" onclick="orderBy(this,'integral_num');commitForm();" id="integral_num_order">积分数量</th>
+									<th style="width:8%" onclick="orderBy(this,'create_time');commitForm();" id="create_time_order">时间</th>
 								</tr>
 							</thead>
 							<tbody>
 								<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 									<tr>
-										<td><s:Code2Name mcode="${list.log_platform}" gcode="LOG_PLATFORM"></s:Code2Name></td>
-										<td>${list.user_name}</td>
-										<td><s:Code2Name mcode="${list.operation_type}" gcode="OPERATION_TYPE"></s:Code2Name></td>
-										<td>${list.log_content}</td>
-										<td>${list.createdDateStr}</td>
+									    <td>${list.user_name}</td>
+										<td>${list.full_name}</td>
+										<td>${list.station_id}</td>
+										<td>${list.regis_source}</td>
+										<td><s:Code2Name mcode="${list.integral_type}" gcode="INTEGRAL_TYPE"></s:Code2Name></td>
+										<td>${list.integral_num}</td>
+										<td>${list.create_time}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -93,12 +93,12 @@
 						<nav>
 							<ul id="ulhandle" class="pagination pull-right no-margin">
 								<li id="previous">
-									<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#sysOperationLog');">
+									<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#integralHistoryform');">
 										<span aria-hidden="true">上一页</span>
 									</a>
 								</li>
 								<li id="next">
-									<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#sysOperationLog');">
+									<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#integralHistoryform');">
 										<span aria-hidden="true">下一页</span>
 									</a>
 								</li>

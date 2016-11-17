@@ -562,7 +562,7 @@ public class CrmPortalController extends BaseContoller {
                         Integer tmp = driverService.saveDriver(driver, "insert", invitationCode, GlobalConstant.appOperatorId);
             			//系统关键日志记录
             			SysOperationLog sysOperationLog = new SysOperationLog();
-            			sysOperationLog.setOperation_type("kh");
+            			sysOperationLog.setOperation_type("zc");
             			String name = driver.getFullName();
             			if("".equals(name)||null==name){
             				name = driver.getUserName();
@@ -570,8 +570,8 @@ public class CrmPortalController extends BaseContoller {
             			if("".equals(name)||null==name){
             				name = driver.getMobilePhone();
             			}
-            			sysOperationLog.setLog_platform("1");
-            			sysOperationLog.setLog_content("被邀请用户"+name+"通过APP开户成功！"); 
+            			sysOperationLog.setLog_platform("3");
+            			sysOperationLog.setLog_content("被邀请用户"+name+"通过CRM注册成功！"); 
             			//操作日志
             			sysOperationLogService.saveOperationLog(sysOperationLog,sysDriverId);
             			
@@ -756,7 +756,7 @@ public class CrmPortalController extends BaseContoller {
 		            	int count = driverService.saveDriver(driver,"insert", null, "8aa4ba67855a11e6a356000c291aa9e3");
             			//系统关键日志记录
             			SysOperationLog sysOperationLog = new SysOperationLog();
-            			sysOperationLog.setOperation_type("kh");
+            			sysOperationLog.setOperation_type("zc");
             			String name = driver.getFullName();
             			if("".equals(name)||null==name){
             				name = driver.getUserName();
@@ -765,7 +765,7 @@ public class CrmPortalController extends BaseContoller {
             				name = driver.getMobilePhone();
             			}
             			sysOperationLog.setLog_platform("4");
-            			sysOperationLog.setLog_content("批量导入用户开户成功！"); 
+            			sysOperationLog.setLog_content("批量导入用户注册成功！"); 
             			//操作日志
             			sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
 				        sum = sum + count;
