@@ -5762,10 +5762,13 @@ public class MobileController {
 							dataMap.put("price", gsGasPrice.getPrice());
 							dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getProduct_unit()).get(0).getMname());
 							dataMap.put("discount", gastation.getPromotions());
+							dataMap.put("unitCode", gsGasPrice.getProduct_unit());
+							
 						}else{
 							dataMap.put("price","");
 							dataMap.put("unit","");
 							dataMap.put("discount","");
+							dataMap.put("unitCode","");
 						}
 						result.setData(dataMap);
 					}else{
