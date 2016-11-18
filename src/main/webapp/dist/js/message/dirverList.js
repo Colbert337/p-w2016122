@@ -4,7 +4,7 @@ var listOptions = {
 	type : 'post',
 	dataType : 'html',
 	success : function(data) {
-		// console.log("这里分页之后");
+		
 		$("#content").html(data);
 		oncheck();
 		$("#editModel").modal('show');
@@ -22,13 +22,14 @@ function scher() {
 }
 
 function checkchange(obj) {
-	console.log('check');
+	
 	if ($(obj).prop("checked")) {
 		if (driver_name.split(",").length == 21) {
 			bootbox.alert("单次发送不能超过20个人");
 			$(obj).prop("checked", false);
-			return;
-		}
+			
+			return false;
+		} 
 	}
 
 	while (device_token.indexOf("#" + $(obj).val() + ',') != -1) {
@@ -64,6 +65,7 @@ function checkchange(obj) {
 		user_id+=$(obj).attr('value2') + ',';
 	}
 	$("#text").html(driver_name.replace(/(.{120})/g, '$1<br\>'));
+	return true;
 	// alert(device_token);
 	/*
 	 * $('.checkbox').each(function(i,obj){ console.log('11')
@@ -80,8 +82,12 @@ function checkedAllRows() {
 			return;
 		} else {
 			$(".checkbox").prop("checked", !$(".checkbox").prop("checked"));
-			for (var i = 0; i < $(".checkbox").length; i++) {
-				checkchange($(".checkbox")[i]);
+			for (var i = 0; i < $(".checkbox").length  ; i++) {
+				 if(!checkchange($(".checkbox")[i])){
+					 
+					 return ;
+			 };
+			 oncheck();
 			}
 		}
 	}else{
@@ -90,7 +96,7 @@ function checkedAllRows() {
 			checkchange($(".checkbox")[i]);
 		}
 	}
-	// console.log($(".checkbox"));
+ 
 }
 
 function commitForm(obj) {
@@ -107,7 +113,7 @@ function oncheck() {
 	if (device_token != '') {
 		$("#allcheckbox").prop("checked", true);
 		var token = device_token.split(',')
-		// console.log(token);
+		 
 		for (var i = 0; i < token.length; i++) {
 			eval('$( token[i] ).prop("checked", true);')
 
