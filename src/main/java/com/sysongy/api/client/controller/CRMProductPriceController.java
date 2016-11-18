@@ -230,6 +230,11 @@ public class CRMProductPriceController {
                     ajaxJson.setMsg("无商品价格变动！！！");
                     return ajaxJson;
                 }
+                
+                gastation.setSys_gas_station_id(gsGasPrice.getSysGasStationId());
+                gastation.setLng_price("LNG:"+productPrice.getProductPrice()+"元/KG");
+                
+                gastationService.updateByPrimaryKeySelective(gastation);
 
             }
 
