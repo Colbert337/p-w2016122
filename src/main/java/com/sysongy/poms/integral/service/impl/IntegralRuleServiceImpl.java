@@ -1,6 +1,7 @@
 package com.sysongy.poms.integral.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.text.html.HTMLDocument.Iterator;
@@ -113,7 +114,7 @@ public class IntegralRuleServiceImpl implements IntegralRuleService {
 		return integralRuleMapper.deleteByPrimaryKey(integral_rule_id);
 	}
 	@Override
-	public String selectRepeatIntegralType(String integral_type) throws Exception{
+	public HashMap<String,String> selectRepeatIntegralType(String integral_type) throws Exception{
 		return integralRuleMapper.selectRepeatIntegralType(integral_type);
 	}
 

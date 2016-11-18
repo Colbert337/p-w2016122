@@ -1,6 +1,8 @@
 package com.sysongy.poms.integral.service;
 
 
+import java.util.HashMap;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.integral.model.IntegralRule;
 
@@ -17,6 +19,6 @@ public interface IntegralRuleService {
 	
 	public IntegralRule queryIntegralRuleByPK(String integral_rule_id) throws Exception;
 	
-	public String selectRepeatIntegralType(String integral_type) throws Exception;
+	public HashMap<String,String> selectRepeatIntegralType(String integral_type) throws Exception;
 	
 }

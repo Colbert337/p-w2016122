@@ -11,7 +11,7 @@ public class IntegralHistory extends BaseModel {
 	private String sys_driver_id;
 	//积分规则ID
 	private String integral_rule_id;
-	//积分规则ID
+	//积分类别
 	private String integral_type;	
 	//积分数量
 	private String integral_num;
@@ -35,7 +35,27 @@ public class IntegralHistory extends BaseModel {
 	private String integral_num_more;
 	//会员账号
 	private String user_name;	
+	//创建时间字符格式
+	private String createdTimeStr;
+	//创建时间字符格式
+	private String integral_total;	
 	
+	public String getIntegral_total() {
+		return integral_total;
+	}
+
+	public void setIntegral_total(String integral_total) {
+		this.integral_total = integral_total;
+	}
+
+	public String getCreatedTimeStr() {
+		return createdTimeStr;
+	}
+
+	public void setCreatedTimeStr(String createdTimeStr) {
+		this.createdTimeStr = createdTimeStr;
+	}
+
 	public String getUser_name() {
 		return user_name;
 	}

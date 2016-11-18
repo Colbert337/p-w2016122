@@ -3,6 +3,7 @@ package com.sysongy.poms.driver.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.model.SysDriverReviewStr;
 import com.sysongy.poms.gastation.model.Gastation;
@@ -61,7 +62,7 @@ public interface DriverService {
 
 	public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception;
 
-	public Integer updateAndReview(String driverid, String type, String memo, String operator) throws Exception;
+	public Integer updateAndReview(String driverid, String type, String memo, CurrUser currUser) throws Exception;
 	/**
 	 * 条件查询司机列表
 	 * @param record
@@ -103,4 +104,6 @@ public interface DriverService {
 	public void cashBackForRegister(SysDriver driver, String invitationCode, String operator_id) throws Exception;
 
 	public SysDriver selectByAccount(String sys_user_account_id) throws Exception ;
+	
+	 public int updateDriverByIntegral(SysDriver sysDriver) throws Exception ;
 }

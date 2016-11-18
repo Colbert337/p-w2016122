@@ -22,6 +22,12 @@
 					</div>
 					<div class="search-types">
 						<div class="item">
+							<label>积分类型：</label>
+							<select class="chosen-select" name="integral_type">
+								<s:option flag="true" gcode="INTEGRAL_TYPE" form="integralHistoryform" field="integral_type" />
+							</select>
+						</div>
+						<div class="item">
 							<label>会员账号/手机号码：</label>
 							<input type="text" name="full_name" placeholder="会员账号/手机号码"  maxlength="32" value="${integralHistory.full_name}"/>
 						</div>
@@ -66,8 +72,9 @@
 									<th style="width:10%" onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">注册工作站编号</th>
 									<th style="width:15%" onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册工作站名称</th>
 									<th style="width:10%" onclick="orderBy(this,'integral_type');commitForm();" id="integral_type_order">积分类别</th>
-									<th style="width:10%" onclick="orderBy(this,'integral_num');commitForm();" id="integral_num_order">积分数量</th>
-									<th style="width:8%" onclick="orderBy(this,'create_time');commitForm();" id="create_time_order">时间</th>
+									<th style="width:10%;text-align:center;" onclick="orderBy(this,'integral_num');commitForm();" id="integral_num_order">积分奖励</th>
+									<th style="width:10%;text-align:center;" onclick="orderBy(this,'integral_total');commitForm();" id="integral_total_order">积分总数</th>
+									<th style="width:8%" onclick="orderBy(this,'create_time');commitForm();" class="td-w2" id="create_time_order"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480">创建时间</i></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -78,8 +85,9 @@
 										<td>${list.station_id}</td>
 										<td>${list.regis_source}</td>
 										<td><s:Code2Name mcode="${list.integral_type}" gcode="INTEGRAL_TYPE"></s:Code2Name></td>
-										<td>${list.integral_num}</td>
-										<td>${list.create_time}</td>
+										<td style="text-align:center;">${list.integral_num}</td>
+										<td style="text-align:center;">${list.integral_total}</td>
+										<td>${list.createdTimeStr}</td>
 									</tr>
 								</c:forEach>
 							</tbody>

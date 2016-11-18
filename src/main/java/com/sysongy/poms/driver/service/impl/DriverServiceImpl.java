@@ -3,6 +3,7 @@ package com.sysongy.poms.driver.service.impl;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.card.dao.GasCardLogMapper;
 import com.sysongy.poms.card.dao.GasCardMapper;
@@ -28,13 +30,19 @@ import com.sysongy.poms.driver.dao.SysDriverReviewStrMapper;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.model.SysDriverReviewStr;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.integral.model.IntegralHistory;
+import com.sysongy.poms.integral.model.IntegralRule;
+import com.sysongy.poms.integral.service.IntegralHistoryService;
+import com.sysongy.poms.integral.service.IntegralRuleService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.system.model.SysCashBack;
+import com.sysongy.poms.system.model.SysOperationLog;
 import com.sysongy.poms.system.service.SysCashBackService;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.AliShortMessage;
@@ -82,6 +90,13 @@ public class DriverServiceImpl implements DriverService {
 
     @Autowired
     private CouponGroupService couponGroupService;
+    
+	@Autowired
+	SysOperationLogService sysOperationLogService;
+	@Autowired
+	IntegralRuleService integralRuleService;
+	@Autowired
+	IntegralHistoryService integralHistoryService;
 
     @Override
     public PageInfo<SysDriver> queryDrivers(SysDriver record) throws Exception {
@@ -144,6 +159,24 @@ public class DriverServiceImpl implements DriverService {
 				record.setRegisCompany(invitationCode);//存储邀请人邀请码
 			}
             int count = sysDriverMapper.insertSelective(record);
+            
+			//设置密保手机成功发放积分
+			IntegralHistory integralHistory = new IntegralHistory();
+			HashMap<String, String> ruleMap =  integralRuleService.selectRepeatIntegralType("szmbsj");
+			//设置积分规则向积分记录表中插入积分历史数据
+			if("true".equals(ruleMap.get("STATUS"))&&"1".equals(String.valueOf(ruleMap.get("integral_rule_num")))){
+				integralHistory.setIntegral_type("szmbsj");
+				String integral_rule_id = ruleMap.get("integral_rule_id");
+				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
+				integralHistory.setIntegral_rule_id(ruleMap.get("integral_rule_id"));
+				integralHistory.setSys_driver_id(record.getSysDriverId());
+				integralHistory.setIntegral_num(integralRule.getIntegral_reward());
+				integralHistoryService.addIntegralHistory(integralHistory, operator_id);
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setIntegral_num(integralRule.getIntegral_reward());
+				sysDriver.setSysDriverId(record.getSysDriverId());
+				sysDriverMapper.updateDriverByIntegral(sysDriver);
+			}
             //判断是否是导入数据，导入数据不返现不发优惠券
             if(!"1".equals(record.getIsImport())){
             	 //如果没有邀请么 则触发注册返现规则
@@ -434,12 +467,28 @@ public class DriverServiceImpl implements DriverService {
         		driver.setIsFirstCharge(GlobalConstant.FIRST_CHAGRE_NO);
         		sysDriverMapper.updateFirstCharge(driver);        		
         	}
+		//系统关键日志记录
+		SysOperationLog sysOperationLog = new SysOperationLog();
+		sysOperationLog.setOperation_type("fx");
+		sysOperationLog.setLog_platform("1");
+		sysOperationLog.setOrder_number(order.getOrderNumber());
+		sysOperationLog.setLog_content("个人首次充值返现成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
+		//操作日志
+		sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
         }
 		//2.根据当前充值类型，调用对应的返现规则
         String charge_type = order.getChargeType();
     	List<SysCashBack>  cashBackList_specific_type = sysCashBackService.queryCashBackByNumber(charge_type);
     	String driver_accountId = driver.getSysUserAccountId();
     	String cashTo_success_specific_type = sysCashBackService.cashToAccount(order, cashBackList_specific_type, driver_accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CASHBACK);
+		//系统关键日志记录
+		SysOperationLog sysOperationLog = new SysOperationLog();
+		sysOperationLog.setOperation_type("fx");
+		sysOperationLog.setLog_platform("1");
+		sysOperationLog.setOrder_number(order.getOrderNumber());
+		sysOperationLog.setLog_content("个人充值返现成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
+		//操作日志
+		sysOperationLogService.saveOperationLog(sysOperationLog,driver_accountId);
     	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success_specific_type)){
     		//如果出错，直接退出
     		throw new Exception( cashTo_success_specific_type);
@@ -507,7 +556,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
 	@Override
-	public Integer updateAndReview(String driverid, String type,String memo, String operator) throws Exception {
+	public Integer updateAndReview(String driverid, String type,String memo, CurrUser currUser) throws Exception {
 		SysDriver record = new SysDriver();
 		record.setSysDriverId(driverid);
 		record = sysDriverMapper.selectByPrimaryKey(driverid);
@@ -520,7 +569,7 @@ public class DriverServiceImpl implements DriverService {
 			
 		SysDriverReviewStr log = new SysDriverReviewStr();
 		BeanUtils.copyProperties(log, record);
-		log.setOperator(operator);
+		log.setOperator(currUser.getUser().getUserName());
 		
 		int retn = sysDriverReviewStrMapper.insert(log);
 		
@@ -529,6 +578,23 @@ public class DriverServiceImpl implements DriverService {
 			aliShortMessageBean.setSendNumber(record.getMobilePhone());
 			aliShortMessageBean.setString("已");
 			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_AUDIT_SUCCESS);
+			//实名认证成功发放积分
+			IntegralHistory integralHistory = new IntegralHistory();
+			HashMap<String, String> ruleMap =  integralRuleService.selectRepeatIntegralType("smrz");
+			//设置积分规则向积分记录表中插入积分历史数据
+			if("true".equals(ruleMap.get("STATUS"))&&"1".equals(String.valueOf(ruleMap.get("integral_rule_num")))){
+				integralHistory.setIntegral_type("smrz");
+				String integral_rule_id = ruleMap.get("integral_rule_id");
+				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
+				integralHistory.setIntegral_rule_id(ruleMap.get("integral_rule_id"));
+				integralHistory.setSys_driver_id(driverid);
+				integralHistory.setIntegral_num(integralRule.getIntegral_reward());
+				integralHistoryService.addIntegralHistory(integralHistory, currUser.getUserId());	
+				SysDriver sysDriver = new SysDriver();
+				sysDriver.setIntegral_num(integralRule.getIntegral_reward());
+				sysDriver.setSysDriverId(driverid);
+				sysDriverMapper.updateDriverByIntegral(sysDriver);
+			}
 		}else if(GlobalConstant.DriverStatus.NOPASS.equals(type)){
 			AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 			aliShortMessageBean.setSendNumber(record.getMobilePhone());
@@ -586,5 +652,11 @@ public class DriverServiceImpl implements DriverService {
     public SysDriver selectByAccount(String sys_user_account_id) throws Exception {
         SysDriver sysDriver =  sysDriverMapper.selectByAccount(sys_user_account_id);
         return sysDriver;
+    }
+    
+    
+    @Override
+    public int updateDriverByIntegral(SysDriver sysDriver) {
+        return sysDriverMapper.updateDriverByIntegral(sysDriver);
     }
 }

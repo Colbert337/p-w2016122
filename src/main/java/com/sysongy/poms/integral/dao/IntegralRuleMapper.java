@@ -1,5 +1,6 @@
 package com.sysongy.poms.integral.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.sysongy.poms.integral.model.IntegralRule;
@@ -18,6 +19,6 @@ public interface IntegralRuleMapper {
 	 
 	 int updateByPrimaryKey(IntegralRule integralRule);
 
-	 String selectRepeatIntegralType(String integral_type);
+	 HashMap<String,String> selectRepeatIntegralType(String integral_type);
 	 
 }

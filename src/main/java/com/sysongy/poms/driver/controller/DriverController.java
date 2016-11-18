@@ -30,6 +30,8 @@ import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.model.SysDriverReviewStr;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.integral.model.IntegralHistory;
+import com.sysongy.poms.integral.service.IntegralHistoryService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -408,7 +410,7 @@ public class DriverController extends BaseContoller{
 
 		try {
 				if(driverid != null && !"".equals(driverid)){
-					rowcount = driverService.updateAndReview(driverid, type, memo, currUser.getUser().getUserName());
+					rowcount = driverService.updateAndReview(driverid, type, memo, currUser);
 				}
 
 				ret = this.queryDriverList(this.driver ==null?new SysDriver():this.driver, map);

@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,7 +85,7 @@ public class IntegralRuleController extends BaseContoller {
 			bean.setRetCode(5000);
 			bean.setRetMsg("登录信息过期，请重新登录！");
 			return ret;
-		}
+		} 
 		try {
 			if (null == integralRule.getIntegral_rule_id()) {
 				integral_rule_id = service.addIntegralRule(integralRule, currUser.getUserId());
@@ -179,23 +180,23 @@ public class IntegralRuleController extends BaseContoller {
 	}
 	
 	/**
-	 * 查询加注站信息
-	 * @param map
-	 * @return gastationList
+	 * 查询积分规则信息
+	 * @param integral_type
+	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/selectRepeatIntegralType")
 	@ResponseBody
 	public JSONObject selectRepeatIntegralType(@RequestParam String integral_type) throws Exception {
-		String status = "false";
+		HashMap<String,String> statusMap = new HashMap<String,String>();
 		try {
-			status = service.selectRepeatIntegralType(integral_type);
+			statusMap = service.selectRepeatIntegralType(integral_type);
 		} catch (Exception e) {
 			logger.error("查询加注站信息出错！", e);
 			throw e;
 		}
 		JSONObject jSONObject = new JSONObject();
-		jSONObject.put("status", status);
+		jSONObject.putAll(statusMap);
 		return jSONObject;
 	}
 }

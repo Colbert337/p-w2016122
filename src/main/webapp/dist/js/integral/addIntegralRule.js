@@ -303,7 +303,7 @@ function save(){
 		success:function(data){
 			console.log("data",data);
 			console.log("integral_label",integral_label);
-			if(data.status=='true'){
+			if(data.STATUS=='true'){
 				bootbox.alert(integral_label+"已经存在，只能修改，不能增加！");
 				return false;
 			}else{

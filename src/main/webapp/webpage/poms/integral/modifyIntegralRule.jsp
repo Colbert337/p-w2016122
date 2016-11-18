@@ -23,9 +23,11 @@
 						<div class="form-group">
 							<label for="integral_type" class="col-sm-3 control-label no-padding-right">积分类型：</label>
 							<div class="col-sm-4">
-								<select class="form-control" name="integral_type" onchange="changeintegralType()">
+								<select class="form-control" name="integral_type" onchange="changeintegralType()" disabled="disabled">
 									<s:option flag="true" gcode="INTEGRAL_TYPE" form="integralRule" field="integral_type" />
 								</select>
+								<input type="hidden" name="integral_rule_id" value="${integralRule.integral_rule_id}"/>
+								<input type="hidden" name="integral_type" value="${integralRule.integral_type}"/>
 								<input type="hidden" name="integral_reward_type" value="${integralRule.integral_reward_type}"/>
 								<input type="hidden" name="ladder_befores" value="${integralRule.ladder_before}"/>
 								<input type="hidden" name="ladder_afters" value="${integralRule.ladder_after}"/>
@@ -93,12 +95,6 @@
 								<button class="btn btn-info" type="button" onclick="save();">
 									<i class="ace-icon fa fa-check bigger-110"></i>
 									保存
-								</button>
-								&nbsp; &nbsp; &nbsp;
-
-								<button class="btn" type="reset" onclick="resetform();">
-									<i class="ace-icon fa fa-repeat bigger-110"></i>
-									重置
 								</button>
 								&nbsp; &nbsp; &nbsp;
 

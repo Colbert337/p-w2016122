@@ -1,5 +1,6 @@
 package com.sysongy.poms.integral.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import com.github.pagehelper.PageHelper;
 import com.sysongy.poms.integral.model.IntegralHistory;
 import com.sysongy.poms.integral.dao.IntegralHistoryMapper;
 import com.sysongy.poms.integral.service.IntegralHistoryService;
+import com.sysongy.poms.system.model.SysOperationLog;
 
 @Service
 public class IntegralHistoryServiceImpl implements IntegralHistoryService {
@@ -34,6 +36,9 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 		}
 		PageHelper.startPage(integralHistory.getPageNum(), integralHistory.getPageSize(), integralHistory.getOrderby());
 		List<IntegralHistory> list = integralHistoryMapper.queryForPage(integralHistory);
+        for(IntegralHistory integral:list){																	
+        	integral.setCreatedTimeStr((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(integral.getCreate_time())));
+        }
 		PageInfo<IntegralHistory> pageInfo = new PageInfo<IntegralHistory>(list);
 		return pageInfo;
 	}

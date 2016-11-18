@@ -3450,6 +3450,14 @@ public class MobileController {
 							}else{
 								account.setAccountBalance(account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
 								sysUserAccountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal("-"+money)), "230");
+								//系统关键日志记录
+				    			SysOperationLog sysOperationLog = new SysOperationLog();
+				    			sysOperationLog.setOperation_type("tf");
+				    			sysOperationLog.setLog_platform("1");
+				        		sysOperationLog.setOrder_number(order.getOrderNumber());
+				        		sysOperationLog.setLog_content("司机个人通过支付宝退费成功！退费金额："+money+"，订单号为："+order.getOrderNumber()); 
+				    			//操作日志
+				    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 							}
 					}else {
 						//支付宝消费回调
@@ -5972,7 +5980,7 @@ public class MobileController {
 		}
 	}
 
-	private String genNonceStr() {
+	private String genNonceStr() { 
 		Random random = new Random();
 		return MD5.getMessageDigest(String.valueOf(random.nextInt(10000)).getBytes());
 	}

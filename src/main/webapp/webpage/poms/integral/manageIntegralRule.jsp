@@ -22,27 +22,8 @@
 					</div>
 					<div class="search-types">
 						<div class="item">
-						    <label>积分类别：</label>
-							<select class="chosen-select" name="integral_type" >
-								<s:option flag="true" gcode="INTEGRAL_TYPE" form="integralRuleForm" field="integral_type" />
-							</select>
-						</div>
-						<div class="item">
-							<label>奖励周期：</label>
-							<select class="chosen-select" name="reward_cycle" >
-								<s:option flag="true" gcode="REWARD_CYCLE" form="integralRuleForm" field="reward_cycle" />
-							</select>
-						</div>
-						<div class="item">
 							<button class="btn btn-sm btn-primary" type="button" onclick="loadPage('#main','<%=basePath%>/webpage/poms/integral/addIntegralRule.jsp');">
 								<i class="ace-icon fa fa-flask align-top bigger-125">新建</i>
-							</button>
-							<button class="btn btn-sm btn-primary" type="button" onclick="commitForm();">
-								<i class="ace-icon fa fa-flask align-top bigger-125">查询</i>
-
-							</button>
-							<button class="btn btn-sm" type="button" onclick="init();">
-								<i class="ace-icon fa fa-flask align-top bigger-125">重置</i>
 							</button>
 						</div>
 					</div>

@@ -337,26 +337,8 @@ function save(){
 			bootbox.alert("操作失败！");
 		}
 	}
-	$.ajax({
-		url:'../web/integralRule/selectRepeatIntegralType',
-		type:'get',
-		data:{
-			'integral_type':integral_type
-		},
-		dataType:'json',
-		success:function(data){
-			console.log("data",data);
-			console.log("integral_label",integral_label);
-			if(data.status=='true'){
-				bootbox.alert(integral_label+"已经存在，只能修改，不能增加！");
-				return false;
-			}else{
-				$("#integralRuleform").ajaxSubmit(options);
-			}
-		},error:function(XMLHttpRequest, textStatus, errorThrown) {
-			bootbox.alert("操作失败！");
-		}
-	});
+	$("#integralRuleform").ajaxSubmit(options);
+
 }
 
 function resetform(){
