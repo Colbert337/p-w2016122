@@ -44,6 +44,10 @@
 		<result column="gas_station_name" property="gas_station_name"
 			jdbcType="VARCHAR" />
 
+		<association property="orderStatusInfo" column="order_status"
+					 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+					 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderStatusByMcode">
+		</association>
 		<association property="orderTypeInfo" column="order_type"
 			javaType="com.sysongy.poms.usysparam.model.Usysparam"
 			select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">

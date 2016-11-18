@@ -50,6 +50,8 @@ public interface UsysparamMapper {
 
     public Usysparam queryOrderTypeByMcode(String mcode);
 
+    public Usysparam queryOrderStatusByMcode(Integer mcode);
+
     public Usysparam queryOrderPropertyByMcode(String mcode);
 
     public Usysparam queryDealTypeByMcode(String mcode);
