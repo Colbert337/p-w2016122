@@ -631,8 +631,11 @@ public class CRMCustomerContoller {
             }
             //将支付密码改为小写
             String payCode = sysDriver.getPayCode();
-            payCode = payCode.toLowerCase();
-            sysDriver.setPayCode(payCode);
+            if(payCode != null && !"".equals(payCode)){
+                payCode = payCode.toLowerCase();
+                sysDriver.setPayCode(payCode);
+            }
+
             SysDriver updateSysDriver = updateDriver(sysDriver);
             if(updateSysDriver == null){
                 ajaxJson.setSuccess(false);
