@@ -77,7 +77,7 @@ function checkchange(obj) {
 function checkedAllRows() {
 
 	if (!$(".checkbox").prop("checked")) {
-		if (driver_name.split(",").length >= 20) {
+		if (driver_name.split(",").length > 20) {
 			bootbox.alert("单次发送不能超过20个人");
 			return;
 		} else {
@@ -85,7 +85,7 @@ function checkedAllRows() {
 			for (var i = 0; i < $(".checkbox").length  ; i++) {
 				$($(".checkbox")[i]).prop('checked',true);
  
-				if (driver_name.split(",").length >= 20) {
+				if (driver_name.split(",").length > 20) {
 					bootbox.alert("单次发送不能超过20个人");
 					return;
 				} else{
