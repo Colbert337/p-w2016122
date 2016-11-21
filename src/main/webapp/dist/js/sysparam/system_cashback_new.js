@@ -20,8 +20,16 @@
 			bootbox.alert("该优先级已有数据 请重新选择优先级");
 			return;
 		}
-	}
 		
+	}else{
+		 
+		if($('#input3').val()*1>100){
+			bootbox.alert('返现系数不能大于100');
+			return ;
+		}
+		
+	}
+			 
 			var options ={   
 		            url:'../web/sysparam/saveCashback',   
 		            type:'post',                    

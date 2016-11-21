@@ -14,8 +14,9 @@
 		$("#formdriver").submit();
 	}
 </script>
-
-<div class="">
+<link rel="stylesheet" href="<%=basePath%>/dist/js/message/show.css">
+<script src="<%=basePath%>/dist/js/message/show.js"></script>
+<div class="" id="div">
 	<!-- /.page-header -->
 	<form id="formdriver" action="<%=basePath%>/web/driver/driverInfoListReport">
 
@@ -117,7 +118,7 @@
 									</td>
 
 									<%-- <td>${list.sysDriverId}</td> --%>
-								 	<td>${list.userName}</td>
+								 	<td id="sysUserAccountNo" >${list.userName}</td>
 								 	<td id="sysUserAccountId" style="display: none;">${list.sysUserAccountId}</td>
 									<td>${list.cardId}</td>
 									<td>${list.mobilePhone}</td>
@@ -146,17 +147,17 @@
 									<td><s:Code2Name mcode="${list.checkedStatus}" gcode="CHECKED_STATUS"></s:Code2Name></td>
 									<td><s:Code2Name mcode="${list.account.account_status}" gcode="ACCOUNT_STATUS"></s:Code2Name></td>
 									<td class="text-center">
-										<a class="option-btn-m" href="javascript:void(0);" onclick="change(this,0);" title="冻结用户" data-rel="tooltip">
+										<a  style="color:#337ab7"  class="option-btn-m"  href="javascript:void(0);" onclick="change(this,0);" title="冻结用户" data-rel="tooltip">
 											<i class="ace-icon fa fa-user-times bigger-130"></i>
 										</a>
-										<a class="option-btn-m" href="javascript:void(0);" onclick="change(this,1,'${list.cardId}');" title="冻结卡" data-rel="tooltip">
+										<a  style="color:#337ab7"  class="option-btn-m" href="javascript:void(0);" onclick="change(this,1,'${list.cardId}');" title="冻结卡" data-rel="tooltip">
 											<i class="ace-icon fa fa-archive bigger-130"></i>
 										</a>
-										<a class="" href="javascript:void(0);" onclick="change(this,2,'${list.cardId}');" title="解冻" data-rel="tooltip">
+										<a  style="color:#337ab7"  class="" href="javascript:void(0);" onclick="change(this,2,'${list.cardId}');" title="解冻" data-rel="tooltip">
 											<i class="ace-icon fa fa-pencil-square-o bigger-130 green"></i>
 										</a>
 										<c:if test="${list.isLocked ==1}">
-											<a class="" href="javascript:void(0);" onclick="unLockUser(this,2,'${list.sysUserAccountId}');" title="解锁" data-rel="tooltip">
+											<a  style="color:#337ab7"  class="" href="javascript:void(0);" onclick="unLockUser(this,2,'${list.sysUserAccountId}');" title="解锁" data-rel="tooltip">
 												<i class="ace-icon fa fa-lock bigger-130"></i>
 											</a>
 										</c:if>

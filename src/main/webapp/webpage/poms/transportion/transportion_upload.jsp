@@ -141,7 +141,7 @@
 											</button>
 
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn" type="reset">
+											<button class="btn" onclick="clera();">
 												<i class="ace-icon fa fa-repeat bigger-110"></i>
 												重置
 											</button>
@@ -188,7 +188,11 @@
 		        $(this).fileinput(projectfileoptions);
 		    }
 		});
-	
+			function clera(){
+				/* $("#gastationform") */			
+				loadPage('#main', '../webpage/poms/transportion/transportion_upload.jsp?transportionid='+$("#sys_transportion_id").val());
+				/* indu_com_certif_select */
+			}
 		var contral = "0";
 		
 			//bootstrap验证控件		

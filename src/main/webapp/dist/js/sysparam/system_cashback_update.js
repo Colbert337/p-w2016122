@@ -102,6 +102,15 @@
 			if(!$('#cashbackform').data('bootstrapValidator').isValid()){
 				return ;
 			}
+			  if ($("#sys_cash_back_no").val() != "203"
+					&& $("#sys_cash_back_no").val() != "202"
+					&& $("#sys_cash_back_no").val() != "201") {
+					if($('#input3').val()*1>100){
+						bootbox.alert('返现系数不能大于100');
+						return ;
+					}
+			  }
+			  
 			
 			var options ={   
 		            url:'../web/sysparam/saveCashback',   
