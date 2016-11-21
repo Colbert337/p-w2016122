@@ -5763,6 +5763,7 @@ public class MobileController {
 						dataMap.put("stationName", gastation.getGas_station_name());
 						dataMap.put("phone", gastation.getContact_phone());
 						dataMap.put("discount", gastation.getPromotions());
+						dataMap.put("priceEffectiveTime", gastation.getPrice_effective_time());
 						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
 						if(gsGasPrice!=null){
 							ProductPrice productPrice = gsGasPrice.getProductPriceInfo();
@@ -5840,13 +5841,80 @@ public class MobileController {
 			 */
 			if (b) {
 				stationId = mainObj.optString("stationId");
-				Gastation gastation = new Gastation();
-				gastation.setSys_gas_station_id(stationId);
+				//原对象
+				Gastation gastation = gastationService.queryGastationByPK(stationId);
 				String stationName = mainObj.optString("stationName");
 				String phone = mainObj.optString("phone");
 				String price = mainObj.optString("price");
 				String unit = mainObj.optString("unit");
 				String promotions = mainObj.optString("promotions");
+				String priceEffectiveTime = mainObj.optString("priceEffectiveTime");
+				//气品价格
+				GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(stationId);
+				//获取气品价格信息
+				ProductPrice productPrice = productPriceService.queryProductPriceByPK(gsGasPrice.getPrice_id());
+				//通过原对象克隆新对象
+				ProductPrice newProductPrice = productPrice.clone();
+				newProductPrice.setId(UUIDGenerator.getUUID());
+				if(price!=null && !"".equals(price)){
+					//如果价格和原来不同，进行更改操作
+					if(!price.equals(String.valueOf(productPrice.getProductPrice()))){
+						//获取生效时间约束
+						String oldPriceEffectiveTime = gastation.getPrice_effective_time();
+						//新生效时间
+						SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
+						Date date = sft.parse(priceEffectiveTime);
+						//0立即生效，12半天生效(12小时候生效)，24一天生效(24小时生效)
+						if(oldPriceEffectiveTime.equals("0")){
+							//0立即生效时，更新原价格信息状态为不生效，新加一条价格生效信息
+							productPrice.setProductPriceStatus("0");
+							int updateTemp = productPriceService.updatePriceById(productPrice);
+							if(updateTemp>0){
+								newProductPrice.setProductPriceStatus("1");
+								newProductPrice.setStartTime(date);
+								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
+								if(insertTemp < 0){
+									throw new Exception("新价格添加失败");
+								}
+							}else{
+								throw new Exception("原价格状态更新失败");
+							}
+						}else if(oldPriceEffectiveTime.equals("12")){
+							newProductPrice.setProductPriceStatus("0");
+							newProductPrice.setStartTime(date);
+							int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
+							if(insertTemp < 0){
+								throw new Exception("新价格添加失败");
+							}
+						}else{
+							newProductPrice.setProductPriceStatus("0");
+							newProductPrice.setStartTime(date);
+							int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
+							if(insertTemp < 0){
+								throw new Exception("新价格添加失败");
+							}
+						}
+					}
+				}
+				//更新气品单位信息
+				ProductPrice queryNewProductPrice = productPriceService.queryProductPriceByPK(newProductPrice.getProduct_id());
+				//如果新对象数据库中存在说明价格已更改，需要更改新添加数据的单位信息
+				if(queryNewProductPrice!=null){
+					queryNewProductPrice.setProductUnit(unit);
+					queryNewProductPrice.setId(newProductPrice.getProduct_id());
+					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
+					if(insertTemp < 0 ){
+						throw new Exception("气品单位更新失败！");
+					}
+				}else{//如果新对象为空，说明价格没有改动，只需更改原对象气品单位
+					productPrice.setProductUnit(unit);
+					productPrice.setId(gsGasPrice.getPrice_id());
+					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
+					if(insertTemp < 0 ){
+						throw new Exception("气品单位更新失败！");
+					}
+				}
+				//更新气站信息
 				if(stationName!=null && !"".equals(stationName)){
 					gastation.setGas_station_name(stationName);
 				}
@@ -5856,21 +5924,9 @@ public class MobileController {
 				if(promotions!=null && !"".equals(promotions)){
 					gastation.setPromotions(promotions);
 				}
-				//气品价格
-				GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(stationId);
-				ProductPrice productPrice = new ProductPrice();
-				productPrice.setId(gsGasPrice.getPrice_id());
-				if(price!=null && !"".equals(price)){
-					productPrice.setProductPrice(Double.valueOf(price));
-				}
-				if(unit!=null && !"".equals(unit)){
-					productPrice.setProductUnit(unit);
-				}
-				//更新气品价格单位信息
-				int pprs = productPriceService.updatePriceById(productPrice);
 				//更新气站名称电话信息
 				int gsrs = gastationService.updateByPrimaryKeySelective(gastation);
-				if(pprs > 0 && gsrs >0){
+				if(gsrs >0){
 					result.setMsg("修改成功！");
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
