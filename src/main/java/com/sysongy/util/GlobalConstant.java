@@ -206,7 +206,7 @@ public class GlobalConstant {
 	/*
 	 * 未实名认证司机累计充值金额 
 	 */
-	public static final BigDecimal DRIVER_NOT_CERTIFICATE_LIMIT= new BigDecimal("5000"); 
+	public static final BigDecimal DRIVER_NOT_CERTIFICATE_LIMIT= new BigDecimal("10000");
 	
 	/*
 	 * 	110运输公司预付款充值  120 加油站预付款充值 130个人充值 210运输公司消费 220 司机消费 310 运输公司对个人转账 320个人对个人转账
