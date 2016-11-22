@@ -307,6 +307,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		from sys_order
 		where debit_account = #{userId,jdbcType=VARCHAR}
 		and order_type = #{CHARGE_TO_DRIVER,jdbcType=VARCHAR}
+		and order_status = '1'
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
