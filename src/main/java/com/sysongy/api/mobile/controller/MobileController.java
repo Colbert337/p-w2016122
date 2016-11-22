@@ -5817,6 +5817,7 @@ public class MobileController {
 				if(price!=null && !"".equals(price)){
 					//如果价格和原来不同，进行更改操作
 					if(!price.equals(String.valueOf(productPrice.getProductPrice()))){
+						newProductPrice.setProductPrice(Double.valueOf(price));
 						//获取生效时间约束
 						String oldPriceEffectiveTime = gastation.getPrice_effective_time();
 						//新生效时间
@@ -5880,7 +5881,9 @@ public class MobileController {
 				ProductPrice queryNewProductPrice = productPriceService.queryProductPriceByPK(id);
 				//如果新对象数据库中存在说明价格已更改，需要更改新添加数据的单位信息
 				if(queryNewProductPrice!=null){
-					queryNewProductPrice.setProductUnit(unit);
+					if(unit !=null && !"".equals(unit)){
+						queryNewProductPrice.setProductUnit(unit);
+					}
 					queryNewProductPrice.setId(id);
 					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
 					if(insertTemp < 1 ){
