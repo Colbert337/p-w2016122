@@ -41,4 +41,8 @@ public interface SysMessageService {
 	 * @throws Exception
 	 */
 	public String saveMessageTransaction(String content, SysOrder order,String type) throws Exception;
+	/**
+	 * 上传路况成功APP提醒
+	 */
+	public String sendMessageUploadRoad(String content, SysOrder order,String type) throws Exception;
 }

@@ -791,4 +791,13 @@ public class CrmPortalController extends BaseContoller {
 			return null;
 		}
     }
+    /**
+     * 常见问题
+     */
+    @RequestMapping("/question")
+    public String question(@RequestParam String phoneType,ModelMap map) throws Exception{
+    	//http://localhost:8080/poms-web/portal/crm/help/question?phoneType=
+    	map.addAttribute("phoneType",phoneType);
+    	return "/webpage/crm/webapp-question";
+    }
 }
