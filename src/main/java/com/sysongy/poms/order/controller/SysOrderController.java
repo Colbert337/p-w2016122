@@ -634,7 +634,8 @@ public class SysOrderController extends BaseContoller {
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.info(e.getMessage());
 			bean.setRetMsg("退款失败:"+e.getMessage());
 		}finally {
 			return bean.getRetMsg();

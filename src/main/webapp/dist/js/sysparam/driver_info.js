@@ -53,20 +53,54 @@ var listOptions ={
 	
 	function change(obj,status,cardno){
 		var accountid = $(obj).parents("tr").find("td[id=sysUserAccountId]").text();
-		$.ajax({
-			   type: "POST",
-			   url:'../web/driver/changeDriverStatus?accountid='+accountid+'&status='+status+'&cardno='+cardno,   
-	           contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-	           dataType:'text',
-	           async:false,
-	           success:function(data){
-	        	   $("#main").html(data);
-		           $("#modal-table").modal("show");
-				   $('[data-rel="tooltip"]').tooltip();
-	           }
+		var accountNo= $(obj).parents("tr").find("td[id=sysUserAccountNo]").text();
+		var mes="";
+		if(status==0){
+			mes="您确定冻结用户["+accountNo+"]吗？";
+		}
+		if (status==1) {
+			mes="您确定冻结卡["+cardno+"]吗？";
+		}
+		if(status==2){
+			mes="您确定解冻用户["+accountNo+"]吗？";
+		}
+		var isok=false;
+		console.log('111111111');
+		bootbox.setLocale("zh_CN");
+		bootbox.confirm(mes,function(result) {
+				if (result) {
+					update(accountid,status,cardno)
+				}
+			
+				
 			});
-	}
 
+	}
+function update(accountid,status,cardno){
+
+	$("#div").showLoading();
+	
+	$
+	.ajax({
+		type : "POST",
+		url : '../web/driver/changeDriverStatus?accountid='
+				+ accountid
+				+ '&status='
+				+ status + '&cardno=' + cardno,
+		contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+		dataType : 'text',
+		success : function(data) {
+			$("#main").html(data);
+			$("#modal-table").modal("show");
+			$('[data-rel="tooltip"]').tooltip();
+			$("#div").hideLoading();
+		},
+		error:function(){
+			$("#div").hideLoading();
+		}
+	});
+
+}
 	function unLockUser(obj,status,cardno){
 		var accountid = $(obj).parents("tr").find("td[id=sysUserAccountId]").text();
 		$.ajax({

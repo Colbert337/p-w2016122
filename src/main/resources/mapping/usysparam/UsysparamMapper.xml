@@ -143,6 +143,10 @@
         select * from usysparam where gcode = 'ORDER_TYPE' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>
 
+    <select id="queryOrderStatusByMcode" resultMap="BaseResultMap"  parameterType="java.lang.Integer" >
+        select * from usysparam where gcode = 'ORDER_STATUS' and mcode = #{0}
+    </select>
+
     <select id="queryOrderPropertyByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
       select * from usysparam where gcode = 'CARDPROPERTY' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>

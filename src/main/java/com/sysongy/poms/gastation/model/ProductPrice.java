@@ -7,8 +7,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.Date;
 
-public class ProductPrice extends BaseModel {
-    private String id;
+public class ProductPrice extends BaseModel implements Cloneable {
+
+	private String id;
 
     private String productPriceId;
 
@@ -219,4 +220,8 @@ public class ProductPrice extends BaseModel {
     public void setStart_time_before(Date start_time_before) {
         this.start_time_before = start_time_before;
     }
+    @Override
+    public ProductPrice clone() throws CloneNotSupportedException {
+ 		return (ProductPrice) super.clone();
+ 	}
 }

@@ -77,6 +77,8 @@ public class SysOrder extends BaseModel{
     private Transportion transportion;
 
     private Usysparam chargeTypeInfo;
+
+    private Usysparam orderStatusInfo;
     
     private SysOrderDeal order_deal;
 
@@ -628,5 +630,13 @@ public class SysOrder extends BaseModel{
 
     public void setCoupon_title(String coupon_title) {
         this.coupon_title = coupon_title;
+    }
+
+    public Usysparam getOrderStatusInfo() {
+        return orderStatusInfo;
+    }
+
+    public void setOrderStatusInfo(Usysparam orderStatusInfo) {
+        this.orderStatusInfo = orderStatusInfo;
     }
 }
