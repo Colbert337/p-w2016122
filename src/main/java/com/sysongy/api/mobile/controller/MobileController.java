@@ -5812,6 +5812,7 @@ public class MobileController {
 				//通过原对象克隆新对象
 				ProductPrice newProductPrice = productPrice.clone();
 				newProductPrice.setId(UUIDGenerator.getUUID());
+				newProductPrice.setVersion(null);
 				if(price!=null && !"".equals(price)){
 					//如果价格和原来不同，进行更改操作
 					if(!price.equals(String.valueOf(productPrice.getProductPrice()))){
