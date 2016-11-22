@@ -9,7 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html class="index" lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>帮助热phoneType = ${phoneType}点问题</title>
+<title>帮助热点问题</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet"
