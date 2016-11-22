@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.integral.dao.IntegralRuleMapper">
+	<resultMap id="BaseResultMap" type="com.sysongy.poms.integral.model.IntegralRule">
+		<id column="integral_rule_id" property="integral_rule_id" jdbcType="VARCHAR" />
+		<result column="integral_type" property="integral_type" jdbcType="VARCHAR" />
+		<result column="reward_cycle" property="reward_cycle" jdbcType="VARCHAR" />
+		<result column="limit_number" property="limit_number" jdbcType="VARCHAR" />
+		<result column="reward_type" property="reward_type" jdbcType="VARCHAR" />
+		<result column="integral_reward" property="integral_reward" jdbcType="VARCHAR" />
+		<result column="reward_factor" property="reward_factor" jdbcType="VARCHAR" />
+		<result column="reward_max" property="reward_max" jdbcType="VARCHAR" />
+		<result column="ladder_before" property="ladder_before" jdbcType="VARCHAR" />
+		<result column="ladder_after" property="ladder_after" jdbcType="VARCHAR" />
+		<result column="integral_reward_type" property="integral_reward_type" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+			integral_rule_id,
+			integral_type,
+			reward_cycle,
+			limit_number,
+			reward_type,
+			ladder_before,
+			ladder_after,
+			integral_reward,
+			reward_factor,
+			reward_max,
+			integral_reward_type
+	</sql>
+	<select id="queryForPage" resultMap="BaseResultMap" parameterType="com.sysongy.poms.integral.model.IntegralRule">
+		select
+		<include refid="Base_Column_List" />
+		from `sys_integral_rule` 
+		where 1=1
+		<trim>
+			<if test="integral_type != null &amp;&amp; integral_type != ''">
+				and integral_type = #{integral_type,jdbcType=VARCHAR}
+			</if>
+			<if test="reward_cycle != null &amp;&amp; reward_cycle != ''">
+				and reward_cycle = #{reward_cycle,jdbcType=VARCHAR}
+			</if>			
+		</trim>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from `sys_integral_rule`
+		where integral_rule_id = #{integral_rule_id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from `sys_integral_rule` 
+		where integral_rule_id = #{integral_rule_id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.sysongy.poms.integral.model.IntegralRule">
+		insert into `sys_integral_rule` (integral_rule_id,integral_type, reward_cycle, limit_number,reward_type, integral_reward, reward_factor,ladder_before,ladder_after,
+		integral_reward_type,reward_max,create_person_id,create_time,lastmodify_person_id,lastmodify_time
+		)
+		values (#{integral_rule_id,jdbcType=VARCHAR}, #{integral_type,jdbcType=VARCHAR}, #{reward_cycle,jdbcType=VARCHAR},#{limit_number,jdbcType=VARCHAR},#{reward_type,jdbcType=VARCHAR},#{integral_reward,jdbcType=VARCHAR},#{reward_factor,jdbcType=VARCHAR}, #{ladder_before,jdbcType=VARCHAR},#{ladder_after,jdbcType=VARCHAR},
+		#{integral_reward_type,jdbcType=VARCHAR},#{reward_max,jdbcType=VARCHAR},#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.sysongy.poms.integral.model.IntegralRule">
+		update `sys_integral_rule`
+		set integral_type = #{integral_type,jdbcType=VARCHAR},
+		reward_cycle = #{reward_cycle,jdbcType=VARCHAR},
+		limit_number = #{limit_number,jdbcType=VARCHAR},
+		reward_type = #{reward_type,jdbcType=VARCHAR},
+		integral_reward = #{integral_reward,jdbcType=VARCHAR},
+		reward_factor = #{reward_factor,jdbcType=VARCHAR},
+		ladder_before = #{ladder_before,jdbcType=VARCHAR},
+		ladder_after = #{ladder_after,jdbcType=VARCHAR},	
+		reward_max = #{reward_max,jdbcType=VARCHAR},
+		integral_reward_type = #{integral_reward_type,jdbcType=VARCHAR},
+		lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
+		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
+		where integral_rule_id = #{integral_rule_id,jdbcType=VARCHAR}
+	</update>
+		<select id="selectRepeatIntegralType" resultType="java.util.HashMap"
+		parameterType="java.lang.String">
+			SELECT
+				CASE
+			WHEN COUNT(integral_rule_id) > 0 THEN
+				'true'
+			ELSE
+				'false'
+			END STATUS,integral_rule_id,COUNT(integral_rule_id) integral_rule_num
+			FROM
+				`sys_integral_rule`
+			WHERE
+		 integral_type = #{integral_type,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

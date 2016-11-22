@@ -1,5 +1,6 @@
 package com.sysongy.poms.mobile.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
@@ -40,4 +41,11 @@ public interface SysRoadConditionMapper {
 	List<SysRoadCondition> queryForRedis();
 
 	List<SysRoadCondition> queryForExcel(SysRoadCondition record);
+	
+	/**
+	 * 根据电话和积分周期查询积分数量
+	 * @param HashMap
+	 * @return
+	 */
+	List<HashMap<String,String>> queryConditionByPhone(HashMap<String,String> HashMap); 
 }

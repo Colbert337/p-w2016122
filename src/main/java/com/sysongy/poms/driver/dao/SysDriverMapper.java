@@ -1,5 +1,6 @@
 package com.sysongy.poms.driver.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.sysongy.poms.driver.model.SysDriver;
@@ -80,4 +81,11 @@ public interface SysDriverMapper {
 	
 	//增加司机积分
 	int updateDriverByIntegral(SysDriver sysDriver);
+	
+	/**
+	 * 根据邀请码和积分周期查询积分数量
+	 * @param HashMap
+	 * @return
+	 */
+	List<HashMap<String,String>> queryInvitationByCode(HashMap<String,String> HashMap); 
 }

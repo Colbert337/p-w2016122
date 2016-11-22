@@ -755,4 +755,45 @@
 			</if>
 		</trim>
 	</insert>
+    <!--  根据发布人电话统计发布路况成功的信息  -->
+  <select id="queryConditionByPhone" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    SELECT
+        <choose>  
+            <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
+               DATE_FORMAT(publisher_time,'%Y%m%d') days,
+            </when>  
+             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">  
+               DATE_FORMAT(publisher_time, '%Y%u') weeks,
+            </when>  
+           <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">  
+                DATE_FORMAT(publisher_time,'%Y%m') months, 
+           </when>  
+        </choose>  
+	count(id) count
+FROM
+	sys_road_condition  where
+	  id  = #{id,jdbcType=VARCHAR}
+        <choose>  
+            <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
+                AND DATE_FORMAT(publisher_time, '%Y%m%d') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id  = #{id,jdbcType=VARCHAR}),'%Y%m%d')
+            </when>  
+             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">  
+               AND DATE_FORMAT(publisher_time, '%Y%u') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id = #{id,jdbcType=VARCHAR}),'%Y%m%d')
+            </when>  
+           <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">  
+              AND DATE_FORMAT(publisher_time,'%Y%m') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id = #{id,jdbcType=VARCHAR}),'%Y%m%d')
+           </when>  
+        </choose>  	  
+     <choose>  
+          <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
+            group by days
+          </when>  
+           <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">  
+            group by  weeks
+          </when>  
+          <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">  
+             group by months
+          </when>  
+      </choose>  
+  </select>
 </mapper>

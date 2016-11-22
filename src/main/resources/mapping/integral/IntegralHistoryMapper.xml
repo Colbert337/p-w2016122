@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sysongy.poms.integral.dao.IntegralHistoryMapper">
+	<resultMap id="BaseResultMap" type="com.sysongy.poms.integral.model.IntegralHistory">
+		<id column="integral_history_id" property="integral_history_id" jdbcType="VARCHAR" />
+		<result column="sys_driver_id" property="sys_driver_id" jdbcType="VARCHAR" />
+		<result column="integral_rule_id" property="integral_rule_id" jdbcType="VARCHAR" />
+		<result column="integral_num" property="integral_num" jdbcType="VARCHAR" />
+		<result column="integral_type" property="integral_type" jdbcType="VARCHAR" />
+		<result column="full_name" property="full_name" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="user_name" property="user_name" jdbcType="VARCHAR" />
+		<result column="station_id" property="station_id" jdbcType="VARCHAR" /> 
+		<result column="regis_source" property="regis_source" jdbcType="VARCHAR" />
+		<result column="integral_total" property="integral_total" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+			integral_history_id,
+			 sys_driver_id,
+			 integral_rule_id,
+			 sih.integral_type,
+			 integral_num,
+			 (
+				SELECT
+					sd.full_name
+				FROM
+					`sys_driver` sd
+				WHERE
+					sd.sys_driver_id = sys_driver_id
+			) full_name,
+			 DATE_FORMAT(
+				create_time,
+				'%Y-%m-%d %H:%i:%S'
+			) create_time
+	</sql>
+	<select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+			sih.integral_history_id,
+			sih.sys_driver_id,
+			sih.integral_rule_id,
+			sih.integral_type,
+			integral_num,
+			DATE_FORMAT(
+				create_time,
+				'%Y-%m-%d %H:%i:%S'
+			) create_time,
+			sd.user_name,
+			sd.full_name,
+			sd.station_id,
+			sd.regis_source,
+			sd.integral_total
+		FROM
+			`sys_integral_history` sih
+		LEFT JOIN `sys_driver` sd ON sih.sys_driver_id = sd.sys_driver_id
+		WHERE
+			1 = 1
+		<trim>
+			<if test="integral_type != null &amp;&amp; integral_type != ''">
+				and sih.integral_type = #{integral_type,jdbcType=VARCHAR}
+			</if>	
+			<if test="full_name != null &amp;&amp; full_name != ''">
+				and sih.sys_driver_id IN (SELECT	sd.sys_driver_id	FROM sys_driver sd	WHERE	(sd.full_name	 like CONCAT('%',CONCAT(#{full_name,jdbcType=VARCHAR},'%')) or sd.mobile_phone like CONCAT('%',CONCAT(#{full_name,jdbcType=VARCHAR},'%'))))
+			</if>
+			<if test="integral_num_less != null &amp;&amp; integral_num_less != ''">
+	         <![CDATA[	and   CAST(integral_num AS SIGNED) >= CAST(#{integral_num_less,jdbcType=VARCHAR} AS SIGNED)]]>
+	        </if>
+	        <if test="integral_num_more != '' &amp;&amp; integral_num_more != null">
+	         <![CDATA[	and CAST(integral_num AS SIGNED) <= CAST(#{integral_num_more,jdbcType=VARCHAR} AS SIGNED)   ]]>
+	        </if>
+	        <if test="created_date_after != null &amp;&amp; created_date_after != ''">
+	        <![CDATA[  and create_time >= CONCAT(#{created_date_after,jdbcType=VARCHAR},' 0:00:00')]]>
+	      </if>
+	        <if test="created_date_before != null &amp;&amp; created_date_before != ''">
+	       <![CDATA[and create_time <= CONCAT(#{created_date_before,jdbcType=VARCHAR},' 23:59:59') ]]>
+	      </if>	      
+			<if test="sys_driver_id != null &amp;&amp; sys_driver_id != ''">
+				and sih.sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}
+			</if>	  
+			<if test="integral_num != null &amp;&amp; integral_num != ''">
+				and sih.integral_num = #{integral_num,jdbcType=VARCHAR}
+			</if>		
+		</trim>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from `sys_integral_history` 
+		where integral_history_id = #{integral_history_id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from `sys_integral_history` 
+		where integral_history_id = #{integral_history_id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.sysongy.poms.integral.model.IntegralHistory">
+		insert into `sys_integral_history`  (integral_history_id,sys_driver_id,integral_rule_id,integral_type,integral_num, 
+		create_person_id,create_time,lastmodify_person_id,lastmodify_time
+		)
+		values (#{integral_history_id,jdbcType=VARCHAR}, #{sys_driver_id,jdbcType=VARCHAR}, 
+		 #{integral_rule_id,jdbcType=VARCHAR},#{integral_type,jdbcType=VARCHAR}, #{integral_num,jdbcType=VARCHAR},
+		#{create_person_id,jdbcType=VARCHAR},#{create_time,jdbcType=TIMESTAMP},#{lastmodify_person_id,jdbcType=VARCHAR},#{lastmodify_time,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.sysongy.poms.integral.model.IntegralHistory">
+		update `sys_integral_history`
+	   <set>
+	      <if test="sys_driver_id != null &amp;&amp; sys_driver_id != ''">
+	        sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR},
+	      </if>
+	      <if test="integral_rule_id != null &amp;&amp; integral_rule_id != ''">
+	        integral_rule_id=#{integral_rule_id,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="integral_num != null &amp;&amp; integral_num != ''">
+	        integral_num=#{integral_num,jdbcType=TIMESTAMP},
+	      </if>
+	    </set>
+	   	lastmodify_person_id=#{lastmodify_person_id,jdbcType=VARCHAR},
+		lastmodify_time=#{lastmodify_time,jdbcType=TIMESTAMP}
+	    where integral_history_id = #{integral_history_id,jdbcType=VARCHAR}
+	  </update>
+</mapper>

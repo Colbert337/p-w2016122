@@ -48,7 +48,7 @@ public interface SysRoadService {
 	 */
 	public int cancelSysRoadCondition(SysRoadCondition record) throws Exception;
 
-	int updateRoad(SysRoadCondition road);
+	int updateRoad(SysRoadCondition road,String userID) throws Exception;
 
 	int deleteRoad(SysRoadCondition road);
 
