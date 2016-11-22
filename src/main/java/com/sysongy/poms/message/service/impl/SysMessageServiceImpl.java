@@ -225,4 +225,9 @@ public class SysMessageServiceImpl implements SysMessageService {
 			return null;
 		}
 	}
+
+	@Override
+	public String sendMessageUploadRoad(String content, SysOrder order, String type) throws Exception {
+		return null;
+	}
 }
