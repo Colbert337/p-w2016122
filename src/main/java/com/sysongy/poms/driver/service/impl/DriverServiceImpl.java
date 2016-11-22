@@ -161,22 +161,78 @@ public class DriverServiceImpl implements DriverService {
             int count = sysDriverMapper.insertSelective(record);
             
 			//设置密保手机成功发放积分
-			IntegralHistory integralHistory = new IntegralHistory();
-			HashMap<String, String> ruleMap =  integralRuleService.selectRepeatIntegralType("szmbsj");
-			//设置积分规则向积分记录表中插入积分历史数据
-			if("true".equals(ruleMap.get("STATUS"))&&"1".equals(String.valueOf(ruleMap.get("integral_rule_num")))){
-				integralHistory.setIntegral_type("szmbsj");
-				String integral_rule_id = ruleMap.get("integral_rule_id");
+			HashMap<String, String> szmbsjMap =  integralRuleService.selectRepeatIntegralType("szmbsj");
+			//设置密保手机向积分记录表中插入积分历史数据
+			if("true".equals(szmbsjMap.get("STATUS"))&&"1".equals(String.valueOf(szmbsjMap.get("integral_rule_num")))){
+				String integral_rule_id = szmbsjMap.get("integral_rule_id");
 				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
-				integralHistory.setIntegral_rule_id(ruleMap.get("integral_rule_id"));
-				integralHistory.setSys_driver_id(record.getSysDriverId());
-				integralHistory.setIntegral_num(integralRule.getIntegral_reward());
-				integralHistoryService.addIntegralHistory(integralHistory, operator_id);
-				SysDriver sysDriver = new SysDriver();
-				sysDriver.setIntegral_num(integralRule.getIntegral_reward());
-				sysDriver.setSysDriverId(record.getSysDriverId());
-				sysDriverMapper.updateDriverByIntegral(sysDriver);
+				if(null!=integralRule){
+					IntegralHistory aIntegralHistory = new IntegralHistory();
+					aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
+					aIntegralHistory.setSys_driver_id(record.getSysDriverId()); 
+					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
+					PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
+					List<IntegralHistory> integralHistoryList =list.getList();
+					if(integralHistoryList.size()==0){
+						IntegralHistory szmbsjHistory = new IntegralHistory();
+						szmbsjHistory.setIntegral_type("szmbsj");
+						szmbsjHistory.setIntegral_rule_id(szmbsjMap.get("integral_rule_id"));
+						szmbsjHistory.setSys_driver_id(record.getSysDriverId());
+						szmbsjHistory.setIntegral_num(integralRule.getIntegral_reward());
+						integralHistoryService.addIntegralHistory(szmbsjHistory, operator_id);
+						SysDriver sysDriver = new SysDriver();
+						sysDriver.setIntegral_num(integralRule.getIntegral_reward());
+						sysDriver.setSysDriverId(record.getSysDriverId());
+						sysDriverMapper.updateDriverByIntegral(sysDriver);			
+					}
+				}
 			}
+			//判断邀请码是否存在，存在则根据条件发放积分
+			if(null!=invitationCode &&!"".equals(invitationCode)){
+				//邀请成功则发放积分
+				HashMap<String, String> yqcgMap =  integralRuleService.selectRepeatIntegralType("yqcg");
+				String integral_rule_id = yqcgMap.get("integral_rule_id");
+				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
+				//存在积分规则
+				if(null!=integralRule){
+					IntegralHistory aIntegralHistory = new IntegralHistory();
+					aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
+					aIntegralHistory.setSys_driver_id(record.getSysDriverId()); 
+					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
+					PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
+					List<IntegralHistory> integralHistoryList =list.getList();
+					//没有发送过积分则进行积分规则判断
+					if(integralHistoryList.size()==0){
+						HashMap<String,String> yqcgHashMap = new HashMap<String,String>();
+						yqcgHashMap.put("reward_cycle", integralRule.getReward_cycle());
+						yqcgHashMap.put("regis_company", invitationCode);
+						yqcgHashMap.put("sys_driver_id",record.getSysDriverId());
+						List<HashMap<String,String>> driverList = sysDriverMapper.queryInvitationByCode(yqcgHashMap);
+						//当前日/周/月 存在的 司机注册数
+						if(driverList.size()>0){
+								HashMap<String, String> driverMap = driverList.get(0);
+								//设置密保手机向积分记录表中插入积分历史数据
+								if("true".equals(yqcgMap.get("STATUS"))&&"1".equals(String.valueOf(yqcgMap.get("integral_rule_num")))){
+									//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
+										if("不限".equals(integralRule.getLimit_number())||((!"one".equals(integralRule.getLimit_number())&&!"不限".equals(integralRule.getLimit_number()))&&(Integer.parseInt(driverMap.get("count"))>=Integer.parseInt(integralRule.getLimit_number())))||
+												("one".equals(integralRule.getLimit_number())&&(Integer.parseInt(driverMap.get("count"))-1==Integer.parseInt(integralRule.getLimit_number())))){
+											IntegralHistory yqcgHistory = new IntegralHistory();
+											yqcgHistory.setIntegral_type("yqcg");
+											yqcgHistory.setIntegral_rule_id(yqcgMap.get("integral_rule_id"));
+											yqcgHistory.setSys_driver_id(record.getSysDriverId());
+											yqcgHistory.setIntegral_num(integralRule.getIntegral_reward());
+											integralHistoryService.addIntegralHistory(yqcgHistory, operator_id);
+											SysDriver sysDriver = new SysDriver();
+											sysDriver.setIntegral_num(integralRule.getIntegral_reward());
+											sysDriver.setSysDriverId(record.getSysDriverId());
+											sysDriverMapper.updateDriverByIntegral(sysDriver);				
+									}	
+							}					
+						}	
+					}
+			}
+		}
+			
             //判断是否是导入数据，导入数据不返现不发优惠券
             if(!"1".equals(record.getIsImport())){
             	 //如果没有邀请么 则触发注册返现规则
@@ -580,21 +636,31 @@ public class DriverServiceImpl implements DriverService {
 			aliShortMessageBean.setString("已");
 			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_AUDIT_SUCCESS);
 			//实名认证成功发放积分
-			IntegralHistory integralHistory = new IntegralHistory();
-			HashMap<String, String> ruleMap =  integralRuleService.selectRepeatIntegralType("smrz");
+			HashMap<String, String> smrzMap =  integralRuleService.selectRepeatIntegralType("smrz");
 			//设置积分规则向积分记录表中插入积分历史数据
-			if("true".equals(ruleMap.get("STATUS"))&&"1".equals(String.valueOf(ruleMap.get("integral_rule_num")))){
-				integralHistory.setIntegral_type("smrz");
-				String integral_rule_id = ruleMap.get("integral_rule_id");
+			if("true".equals(smrzMap.get("STATUS"))&&"1".equals(String.valueOf(smrzMap.get("integral_rule_num")))){
+				String integral_rule_id = smrzMap.get("integral_rule_id");
 				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
-				integralHistory.setIntegral_rule_id(ruleMap.get("integral_rule_id"));
-				integralHistory.setSys_driver_id(driverid);
-				integralHistory.setIntegral_num(integralRule.getIntegral_reward());
-				integralHistoryService.addIntegralHistory(integralHistory, currUser.getUserId());	
-				SysDriver sysDriver = new SysDriver();
-				sysDriver.setIntegral_num(integralRule.getIntegral_reward());
-				sysDriver.setSysDriverId(driverid);
-				sysDriverMapper.updateDriverByIntegral(sysDriver);
+				if(null!=integralRule){
+					IntegralHistory aIntegralHistory = new IntegralHistory();
+					aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
+					aIntegralHistory.setSys_driver_id(record.getSysDriverId()); 
+					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
+					PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
+					List<IntegralHistory> integralHistoryList =list.getList();
+					if(integralHistoryList.size()==0){
+						IntegralHistory integralHistory = new IntegralHistory();
+						integralHistory.setIntegral_type("smrz");
+						integralHistory.setIntegral_rule_id(smrzMap.get("integral_rule_id"));
+						integralHistory.setSys_driver_id(driverid);
+						integralHistory.setIntegral_num(integralRule.getIntegral_reward());
+						integralHistoryService.addIntegralHistory(integralHistory, currUser.getUserId());	
+						SysDriver sysDriver = new SysDriver();
+						sysDriver.setIntegral_num(integralRule.getIntegral_reward());
+						sysDriver.setSysDriverId(driverid);
+						sysDriverMapper.updateDriverByIntegral(sysDriver);				
+					}
+				}
 			}
 		}else if(GlobalConstant.DriverStatus.NOPASS.equals(type)){
 			AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
@@ -660,4 +726,6 @@ public class DriverServiceImpl implements DriverService {
     public int updateDriverByIntegral(SysDriver sysDriver) {
         return sysDriverMapper.updateDriverByIntegral(sysDriver);
     }
+    
+    
 }

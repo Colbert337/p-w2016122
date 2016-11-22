@@ -1,6 +1,7 @@
 package com.sysongy.poms.mobile.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.driver.model.SysDriver;
+import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.integral.model.IntegralHistory;
+import com.sysongy.poms.integral.model.IntegralRule;
+import com.sysongy.poms.integral.service.IntegralHistoryService;
+import com.sysongy.poms.integral.service.IntegralRuleService;
 import com.sysongy.poms.mobile.dao.SysRoadConditionMapper;
 import com.sysongy.poms.mobile.dao.SysRoadConditionStrMapper;
 import com.sysongy.poms.mobile.model.SysRoadCondition;
@@ -39,7 +46,14 @@ public class SysRoadServiceImpl implements SysRoadService {
 	@Autowired
 	private UsysparamService usysparamservice;
 	
-
+	@Autowired
+	IntegralRuleService integralRuleService;
+	
+	@Autowired
+	DriverService driverService;
+	
+	@Autowired
+	IntegralHistoryService integralHistoryService;
 	
 	RedisClientInterface redisClientImpl;
 	
@@ -127,9 +141,58 @@ public class SysRoadServiceImpl implements SysRoadService {
 
 	/**
 	 * 修改（审核）-pc
+	 * @throws Exception 
 	 */
 	@Override
-	public int updateRoad(SysRoadCondition road) {
+	public int updateRoad(SysRoadCondition road,String userID) throws Exception {
+		//判断上报路况审核是否通过，存在则根据条件发放积分
+		if(null!=road.getConditionStatus() &&!"".equals(road.getConditionStatus())&&"2".equals(road.getConditionStatus())){
+			//上报路况成功发放积分
+			HashMap<String, String> sblkMap =  integralRuleService.selectRepeatIntegralType("sblk");
+			String integral_rule_id = sblkMap.get("integral_rule_id");
+			IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
+			//存在积分规则
+			if(null!=integralRule){
+				IntegralHistory aIntegralHistory = new IntegralHistory();
+				aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
+				SysDriver aSysDriver = new SysDriver();
+				aSysDriver.setMobilePhone(road.getAuditorPhone());
+				SysDriver sysDriver = driverService.queryDriverByMobilePhone(aSysDriver);
+				aIntegralHistory.setSys_driver_id(sysDriver.getSysDriverId()); 
+				aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
+				PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
+				List<IntegralHistory> integralHistoryList =list.getList();
+				//没有发送过积分则进行积分规则判断
+				if(integralHistoryList.size()==0){
+					HashMap<String,String> sblkHashMap = new HashMap<String,String>();
+					sblkHashMap.put("reward_cycle", integralRule.getReward_cycle());
+					sblkHashMap.put("publisher_phone", road.getPublisherPhone());
+					sblkHashMap.put("id",road.getId());
+					List<HashMap<String,String>> driverList = sysRoadConditionMapper.queryConditionByPhone(sblkHashMap);
+					//当前日/周/月 存在的 司机注册数
+					if(driverList.size()>0){
+							HashMap<String, String> driverMap = driverList.get(0);
+							//设置密保手机向积分记录表中插入积分历史数据
+							if("true".equals(sblkMap.get("STATUS"))&&"1".equals(String.valueOf(sblkMap.get("integral_rule_num")))){
+								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
+									if("不限".equals(integralRule.getLimit_number())||((!"one".equals(integralRule.getLimit_number())&&!"不限".equals(integralRule.getLimit_number()))&&(Integer.parseInt(driverMap.get("count"))>=Integer.parseInt(integralRule.getLimit_number())))||
+											("one".equals(integralRule.getLimit_number())&&(Integer.parseInt(driverMap.get("count"))-1==Integer.parseInt(integralRule.getLimit_number())))){
+										IntegralHistory sblkHistory = new IntegralHistory();
+										sblkHistory.setIntegral_type("sblk");
+										sblkHistory.setIntegral_rule_id(sblkHashMap.get("integral_rule_id"));
+										sblkHistory.setSys_driver_id(sysDriver.getSysDriverId());
+										sblkHistory.setIntegral_num(integralRule.getIntegral_reward());
+										integralHistoryService.addIntegralHistory(sblkHistory, userID);
+										SysDriver driver = new SysDriver();
+										driver.setIntegral_num(integralRule.getIntegral_reward());
+										driver.setSysDriverId(sysDriver.getSysDriverId());
+										driverService.updateDriverByIntegral(driver);				
+								}	
+						}					
+					}	
+				}
+		}
+	}
 		// TODO Auto-generated method stub
 		return sysRoadConditionMapper.updateByPrimaryKeyToCheck(road);
 	}

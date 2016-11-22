@@ -24,7 +24,7 @@
 						<div class="item">
 							<label>积分类型：</label>
 							<select class="chosen-select" name="integral_type">
-								<s:option flag="true" gcode="INTEGRAL_TYPE" form="integralHistoryform" field="integral_type" />
+								<s:option flag="true" gcode="INTEGRAL_TYPE" form="integralHistory" field="integral_type" />
 							</select>
 						</div>
 						<div class="item">
@@ -33,11 +33,11 @@
 						</div>
 						<div class="item">
 							<label>积分数量：</label>
-								<input type="text" name="integral_num_less" class="number" style="width:60px" size="4"/>
+								<input type="text" name="integral_num_less" class="number" style="width:60px" size="4" value="${integralHistory.integral_num_less}"/>
 									<span class="">
 										<i class="fa fa-exchange"></i>
 									</span>
-							<input type="text" name="integral_num_more" class="number" style="width:60px" size="4"/>
+							<input type="text" name="integral_num_more" class="number" style="width:60px" size="4" value="${integralHistory.integral_num_more}"/>
 						</div>
 						<div class="item">
 							<label>时间：</label>
