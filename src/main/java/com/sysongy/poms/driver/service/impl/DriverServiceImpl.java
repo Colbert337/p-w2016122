@@ -424,6 +424,7 @@ public class DriverServiceImpl implements DriverService {
         String accountId = driver.getSysUserAccountId();
         
         if(is_first_charge.intValue() == GlobalConstant.FIRST_CHAGRE_YES){
+        	order.setIs_first_charge("1");
         	List<SysCashBack>  cashBackList = sysCashBackService.queryCashBackByNumber(GlobalConstant.CashBackNumber.CASHBACK_FIRST_CHARGE);
         	String cashTo_success = sysCashBackService.cashToAccount(order, cashBackList, accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);
         	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success)){

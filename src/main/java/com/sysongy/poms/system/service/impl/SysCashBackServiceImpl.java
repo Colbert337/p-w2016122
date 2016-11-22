@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sysongy.poms.permi.service.SysUserAccountService;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -200,11 +201,16 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 				//大于等于0 则是当前日期大于等于start_date.
 				if((now.compareTo(start_date)>=0)&&(now.compareTo(end_date)<=0)){
 					//判断阈值是否在区间
-					if(!StringUtils.isEmpty(cashback.getThreshold_min_value()) && !StringUtils.isEmpty(cashback.getThreshold_max_value())){
-						BigDecimal min = new BigDecimal(cashback.getThreshold_min_value());
-						BigDecimal max = new BigDecimal(cashback.getThreshold_max_value());
-						if((cash.compareTo(min)>=0)&&(cash.compareTo(max)<0)){
-							eligible_list.add(cashback);
+					if ("1".equals(order.getIs_first_charge())) {
+						eligible_list.add(cashback);
+					} else {
+						if (!StringUtils.isEmpty(cashback.getThreshold_min_value())
+								&& !StringUtils.isEmpty(cashback.getThreshold_max_value())) {
+							BigDecimal min = new BigDecimal(cashback.getThreshold_min_value());
+							BigDecimal max = new BigDecimal(cashback.getThreshold_max_value());
+							if ((cash.compareTo(min) >= 0) && (cash.compareTo(max) < 0)) {
+								eligible_list.add(cashback);
+							}
 						}
 					}
 
@@ -232,10 +238,16 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		}
 		
 		//2.步骤二：根据得到符合条件的一条返现规则：计算当前的返现金额
+		BigDecimal back_money;
 		String cash_per_str = eligible_cashback.getCash_per();
 		BigDecimal cash_per = new BigDecimal(cash_per_str);  
-		BigDecimal back_money = cash.multiply(cash_per);
-		
+		if ("1".equals(order.getIs_first_charge())) {
+			back_money=cash_per;
+			//首次充值后把状态置为空，以免其他返现时判断状态出错
+			order.setIs_first_charge(null);
+		}else{
+			back_money = cash.multiply(cash_per);
+		}
 		//3.给这个账户增加返现
 		String addCash_success = sysUserAccountService.addCashToAccount(accountId, back_money,order.getOrderType());
 		//增加逻辑，如果是运输公司转账，则要将返现的金额加到额度里面：
