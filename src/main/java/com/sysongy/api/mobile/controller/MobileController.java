@@ -5820,7 +5820,7 @@ public class MobileController {
 						//获取生效时间约束
 						String oldPriceEffectiveTime = gastation.getPrice_effective_time();
 						//新生效时间
-						SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
+						SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						Date date = sft.parse(priceEffectiveTime);
 						//0立即生效，12半天生效(12小时候生效)，24一天生效(24小时生效)
 						if(oldPriceEffectiveTime.equals("0")){
