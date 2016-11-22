@@ -5885,7 +5885,7 @@ public class MobileController {
 						queryNewProductPrice.setProductUnit(unit);
 					}
 					queryNewProductPrice.setId(id);
-					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
+					int insertTemp = productPriceService.saveProductPrice(queryNewProductPrice,"update");
 					if(insertTemp < 1 ){
 						throw new Exception("气品单位更新失败！");
 					}else{
@@ -5897,7 +5897,7 @@ public class MobileController {
 					}
 				}else{//如果新对象为空，说明价格没有改动，只需更改原对象气品单位
 					productPrice.setProductUnit(unit);
-					productPrice.setId(gsGasPrice.getPrice_id());
+					productPrice.setId(id);
 					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
 					if(insertTemp < 1 ){
 						throw new Exception("气品单位更新失败！");
