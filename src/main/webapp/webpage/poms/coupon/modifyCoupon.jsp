@@ -8,11 +8,6 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 	<script src="<%=basePath %>/dist/js/coupon/modifyCoupon.js"></script>
-	<style type="text/css">
-	#limit i.form-control-feedback{
-		right: -28px;
-	}
-	</style>
 	<div class="">
 		<!-- /section:settings.box -->
 		<div class="page-header">
@@ -254,10 +249,6 @@
 					<div class="col-md-offset-3 col-md-9">
 						<button class="btn btn-info" type="button" onclick="save();">
 							<i class="ace-icon fa fa-check bigger-110"></i>保存
-						</button>
-						&nbsp; &nbsp; &nbsp;
-						<button class="btn" type="reset" onclick="resetform();">
-							<i class="ace-icon fa fa-repeat bigger-110"></i>重置
 						</button>
 						&nbsp; &nbsp; &nbsp;
 						<button class="btn btn-success" type="button" onclick="returnpage();">

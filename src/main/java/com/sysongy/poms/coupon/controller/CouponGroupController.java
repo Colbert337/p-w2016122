@@ -63,6 +63,13 @@ public class CouponGroupController extends BaseContoller {
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/coupon/manageCouponGroup";
 		try {
+			if(couponGroup.getConvertPageNum() != null){
+				if(couponGroup.getConvertPageNum() > couponGroup.getPageNumMax()){
+					couponGroup.setPageNum(couponGroup.getPageNumMax());
+				}else{
+					couponGroup.setPageNum(couponGroup.getConvertPageNum());
+				}
+			}
 			PageInfo<CouponGroup> pageinfo = service.queryCouponGroup(couponGroup);
 			bean.setRetCode(100);
 			bean.setRetMsg("查询成功");

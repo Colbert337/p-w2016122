@@ -1,6 +1,5 @@
 package com.sysongy.poms.card.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -11,9 +10,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sysongy.poms.driver.model.SysDriver;
-import com.sysongy.util.DateTimeHelper;
-import com.sysongy.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +27,8 @@ import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.model.GasCardLog;
 import com.sysongy.poms.card.model.GasCardReturn;
 import com.sysongy.poms.card.service.GasCardService;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.DateUtil;
 import com.sysongy.util.ExportUtil;
 import com.sysongy.util.GlobalConstant;
 
@@ -62,7 +60,13 @@ public class CardController extends BaseContoller {
 			if (StringUtils.isEmpty(gascard.getOrderby())) {
 				gascard.setOrderby("card_no desc");
 			}
-
+			if(gascard.getConvertPageNum() != null){
+				if(gascard.getConvertPageNum() > gascard.getPageNumMax()){
+					gascard.setPageNum(gascard.getPageNumMax());
+				}else{
+					gascard.setPageNum(gascard.getConvertPageNum());
+				}
+			}
 			PageInfo<GasCard> pageinfo = service.queryGasCard(gascard);
 
 			bean.setRetCode(100);
@@ -464,7 +468,13 @@ public class CardController extends BaseContoller {
 			if (StringUtils.isEmpty(gascardlog.getOrderby())) {
 				gascardlog.setOrderby("optime desc");
 			}
-
+			if(gascardlog.getConvertPageNum() != null){
+				if(gascardlog.getConvertPageNum() > gascardlog.getPageNumMax()){
+					gascardlog.setPageNum(gascardlog.getPageNumMax());
+				}else{
+					gascardlog.setPageNum(gascardlog.getConvertPageNum());
+				}
+			}
 			PageInfo<GasCardLog> pageinfo = service.queryGasCardLog(gascardlog);
 
 			bean.setRetCode(100);
@@ -496,7 +506,7 @@ public class CardController extends BaseContoller {
 				gascard.setPageNum(1);
 				gascard.setPageSize(1048576);
 		//	}
-
+					
 			if(StringUtils.isEmpty(gascard.getOrderby())){
 				gascard.setOrderby("order_date desc");
 			}

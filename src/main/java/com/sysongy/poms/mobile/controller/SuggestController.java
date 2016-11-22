@@ -47,6 +47,13 @@ public class SuggestController extends BaseContoller {
 				suggest.setPageNum(GlobalConstant.PAGE_NUM);
 				suggest.setPageSize(GlobalConstant.PAGE_SIZE);
 			}
+			if(suggest.getConvertPageNum() != null){
+				if(suggest.getConvertPageNum() > suggest.getPageNumMax()){
+					suggest.setPageNum(suggest.getPageNumMax());
+				}else{
+					suggest.setPageNum(suggest.getConvertPageNum());
+				}
+			}
 			if (StringUtils.isEmpty(suggest.getOrderby())) {
 				suggest.setOrderby("created_date desc");
 			}

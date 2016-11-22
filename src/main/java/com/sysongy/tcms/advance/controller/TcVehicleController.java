@@ -83,6 +83,13 @@ public class TcVehicleController extends BaseContoller {
             vehicle.setPageNum(GlobalConstant.PAGE_NUM);
             vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+        if(vehicle.getConvertPageNum() != null){
+			if(vehicle.getConvertPageNum() > vehicle.getPageNumMax()){
+				vehicle.setPageNum(vehicle.getPageNumMax());
+			}else{
+				vehicle.setPageNum(vehicle.getConvertPageNum());
+			}
+		}
         vehicle.setStationId(stationId);
 
         //封装分页参数，用于查询分页内容
@@ -230,7 +237,7 @@ public class TcVehicleController extends BaseContoller {
             sendMsgApi(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.CARD_FROZEN);
     		//系统关键日志记录
     		SysOperationLog sysOperationLog = new SysOperationLog();
-    		sysOperationLog.setOperation_type("dj");
+    		sysOperationLog.setOperation_type("djk");
     		sysOperationLog.setLog_platform("4");
     		sysOperationLog.setLog_content("网站用户冻结卡成功！实体卡编号为："+gasCard.getCard_no());
 			//操作日志

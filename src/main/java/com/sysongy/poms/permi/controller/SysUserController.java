@@ -1,31 +1,34 @@
 package com.sysongy.poms.permi.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.base.model.AjaxJson;
 import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.permi.model.SysRole;
 import com.sysongy.poms.permi.model.SysUser;
 import com.sysongy.poms.permi.service.SysRoleService;
 import com.sysongy.poms.permi.service.SysUserService;
-import com.sysongy.tcms.advance.model.TcFleet;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
 
 import net.sf.json.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 /**
  * @FileName: SystemUserController
@@ -58,6 +61,13 @@ public class SysUserController extends BaseContoller{
 		if(sysUser.getPageNum() == null){
 			sysUser.setPageNum(GlobalConstant.PAGE_NUM);
 			sysUser.setPageSize(GlobalConstant.PAGE_SIZE);
+		}
+		if(sysUser.getConvertPageNum() != null){
+			if(sysUser.getConvertPageNum() > sysUser.getPageNumMax()){
+				sysUser.setPageNum(sysUser.getPageNumMax());
+			}else{
+				sysUser.setPageNum(sysUser.getConvertPageNum());
+			}
 		}
 		sysUser.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
 

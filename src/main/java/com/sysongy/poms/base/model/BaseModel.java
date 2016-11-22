@@ -8,8 +8,26 @@ public class BaseModel {
 	private Object model;
 	private Integer pageNum = 1;
 	private Integer pageSize = 20;
+	private Integer pageNumMax;
+	private Integer convertPageNum;
 	private Long total;
 	private String orderby;
+
+	public Integer getConvertPageNum() {
+		return convertPageNum;
+	}
+
+	public void setConvertPageNum(Integer convertPageNum) {
+		this.convertPageNum = convertPageNum;
+	}
+
+	public Integer getPageNumMax() {
+		return pageNumMax;
+	}
+
+	public void setPageNumMax(Integer pageNumMax) {
+		this.pageNumMax = pageNumMax;
+	}
 
 	public String getOrderby() {
 		return orderby;

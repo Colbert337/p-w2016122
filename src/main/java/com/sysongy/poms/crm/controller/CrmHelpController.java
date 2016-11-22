@@ -52,6 +52,13 @@ public class CrmHelpController extends BaseContoller{
     		crmHelp.setPageNum(1);
     		crmHelp.setPageSize(10);
 		}
+    	if(crmHelp.getConvertPageNum() != null){
+			if(crmHelp.getConvertPageNum() > crmHelp.getPageNumMax()){
+				crmHelp.setPageNum(crmHelp.getPageNumMax());
+			}else{
+				crmHelp.setPageNum(crmHelp.getConvertPageNum());
+			}
+		}
 		if(StringUtils.isEmpty(crmHelp.getOrderby())){
 			crmHelp.setOrderby("created_date desc");
 		}
@@ -139,6 +146,13 @@ public class CrmHelpController extends BaseContoller{
     	if(crmHelpType.getPageNum() == null){
     		crmHelpType.setPageNum(1);
     		crmHelpType.setPageSize(10);
+		}
+    	if(crmHelpType.getConvertPageNum() != null){
+			if(crmHelpType.getConvertPageNum() > crmHelpType.getPageNumMax()){
+				crmHelpType.setPageNum(crmHelpType.getPageNumMax());
+			}else{
+				crmHelpType.setPageNum(crmHelpType.getConvertPageNum());
+			}
 		}
 		if(StringUtils.isEmpty(crmHelpType.getOrderby())){
 			crmHelpType.setOrderby("created_date desc");

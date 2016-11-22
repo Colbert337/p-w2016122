@@ -27,7 +27,7 @@
 								<td style="text-align:left">
 									<span id="coupon_no">${couponGroup.coupongroup_no}</span>
 								</td>
-								<th width="15%" style="text-align:right">优惠卷名称：</th>
+								<th width="15%" style="text-align:right">优惠卷组名称：</th>
 								<td style="text-align:left">
 									<input type="hidden" value="${couponGroup.coupongroup_id}" name="coupongroup_id"/>
 									<input type="hidden" value="${couponGroup.coupon_ids}" name="coupon_ids"/>
