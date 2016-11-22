@@ -52,4 +52,8 @@ public interface GsGasPriceService {
      * @return
      */
     GsGasPrice queryGsGasPriceInfo(String gsGasPriceId);
+    /**
+     * 根据ID更新信息
+     */
+    public Integer updateByPrimaryKeySelective(GsGasPrice record);
 }
