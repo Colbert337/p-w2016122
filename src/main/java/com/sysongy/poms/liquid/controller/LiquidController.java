@@ -35,6 +35,13 @@ public class LiquidController extends BaseContoller{
 				gasource.setPageNum(1);
 				gasource.setPageSize(10);
 			}
+			if(gasource.getConvertPageNum() != null){
+				if(gasource.getConvertPageNum() > gasource.getPageNumMax()){
+					gasource.setPageNum(gasource.getPageNumMax());
+				}else{
+					gasource.setPageNum(gasource.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(gasource.getOrderby())){
 				gasource.setOrderby("created_date desc");
 			}

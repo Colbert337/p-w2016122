@@ -1,11 +1,38 @@
 package com.sysongy.poms.transportion.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.support.SessionStatus;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.PayCodeValidModel;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
 import com.sysongy.poms.order.service.OrderService;
@@ -19,31 +46,15 @@ import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.poms.transportion.service.TransportionService;
 import com.sysongy.tcms.advance.model.TcVehicle;
 import com.sysongy.tcms.advance.service.TcVehicleService;
-import com.sysongy.util.*;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.Encoder;
+import com.sysongy.util.ExportUtil;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.RedisClientInterface;
 import com.sysongy.util.mail.MailEngine;
+
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.support.SessionStatus;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 
 @RequestMapping("/web/transportion")
@@ -98,6 +109,13 @@ public class TransportionController extends BaseContoller{
 				transportion.setPageNum(1);
 				transportion.setPageSize(10);
 			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(transportion.getOrderby())){
 				transportion.setOrderby("created_time desc");
 			}
@@ -144,6 +162,13 @@ public class TransportionController extends BaseContoller{
 				transportion.setPageNum(1);
 				transportion.setPageSize(10);
 			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(transportion.getOrderby())){
 				transportion.setOrderby("created_time desc");
 			}
@@ -188,6 +213,13 @@ public class TransportionController extends BaseContoller{
 			if(sysOrder.getPageNum() == null){
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
+			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				//transportion.setOrderby("created_time desc");
@@ -331,6 +363,13 @@ public class TransportionController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				sysOrder.setOrderby("order_date desc");
 			}
@@ -373,6 +412,13 @@ public class TransportionController extends BaseContoller{
 			if(sysOrder.getPageNum() == null){
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
+			}
+			if(transportion.getConvertPageNum() != null){
+				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
+					transportion.setPageNum(transportion.getPageNumMax());
+				}else{
+					transportion.setPageNum(transportion.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				//transportion.setOrderby("created_time desc");
@@ -1108,6 +1154,13 @@ public class TransportionController extends BaseContoller{
 		            vehicle.setPageNum(GlobalConstant.PAGE_NUM);
 		            vehicle.setPageSize(GlobalConstant.PAGE_SIZE);
 		        }
+		        if(vehicle.getConvertPageNum() != null){
+					if(vehicle.getConvertPageNum() > vehicle.getPageNumMax()){
+						vehicle.setPageNum(vehicle.getPageNumMax());
+					}else{
+						vehicle.setPageNum(vehicle.getConvertPageNum());
+					}
+				}
 		        if(StringUtils.isEmpty(vehicle.getOrderby())){
 		        	vehicle.setOrderby("created_date desc");
 				}
@@ -1189,6 +1242,13 @@ public class TransportionController extends BaseContoller{
 				order.setOrderby("deal_date desc");
 				order.setPageNum(1);
 				order.setPageSize(10);
+			}
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
 			}
 			order.setDebitAccount(stationId);
 			order.setCash(new BigDecimal(BigInteger.ZERO));
@@ -1353,6 +1413,13 @@ public class TransportionController extends BaseContoller{
 				loger.setPageNum(1);
 				loger.setPageSize(10);
 			}
+			if(loger.getConvertPageNum() != null){
+				if(loger.getConvertPageNum() > loger.getPageNumMax()){
+					loger.setPageNum(loger.getPageNumMax());
+				}else{
+					loger.setPageNum(loger.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(loger.getOrderby())){
 				loger.setOrderby("sys_transportion_id desc");
 			}
@@ -1452,6 +1519,13 @@ public class TransportionController extends BaseContoller{
 			if(loger.getPageNum() == null){
 				loger.setPageNum(1);
 				loger.setPageSize(10);
+			}
+			if(loger.getConvertPageNum() != null){
+				if(loger.getConvertPageNum() > loger.getPageNumMax()){
+					loger.setPageNum(loger.getPageNumMax());
+				}else{
+					loger.setPageNum(loger.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(loger.getOrderby())){
 				loger.setOrderby("sys_transportion_id desc");

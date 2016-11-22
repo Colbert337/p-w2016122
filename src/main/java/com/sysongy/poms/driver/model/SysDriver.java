@@ -115,8 +115,28 @@ public class SysDriver extends BaseModel{
     private String verifySource;//实名认证来源，默认为CRM认证来源0，APP认证来源是改为1
     
     private String isImport;//虚拟字段是否导入，导入时值为1
+    //积分数量
+    private String integral_num;
+    //积分总数
+    private String integral_total;
 
-    public String getMemo() {
+    public String getIntegral_num() {
+		return integral_num;
+	}
+
+	public void setIntegral_num(String integral_num) {
+		this.integral_num = integral_num;
+	}
+
+	public String getIntegral_total() {
+		return integral_total;
+	}
+
+	public void setIntegral_total(String integral_total) {
+		this.integral_total = integral_total;
+	}
+
+	public String getMemo() {
 		return memo;
 	}
 

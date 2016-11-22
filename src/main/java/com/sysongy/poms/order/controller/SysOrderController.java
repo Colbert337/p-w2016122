@@ -31,6 +31,8 @@ import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.util.AliShortMessage;
 import com.sysongy.util.Encoder;
 import com.sysongy.util.GlobalConstant;
@@ -52,6 +54,9 @@ public class SysOrderController extends BaseContoller {
 	@Autowired
 	private SysUserAccountService accountService;
 
+	@Autowired
+	SysOperationLogService sysOperationLogService;
+
 	@RequestMapping("/queryOrderDeal")
 	public String queryProductPriceList(ModelMap map, OrderLog order) throws Exception {
 
@@ -64,7 +69,13 @@ public class SysOrderController extends BaseContoller {
 				order.setPageNum(1);
 				order.setPageSize(10);
 			}
-
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
+			}
 			PageInfo<OrderLog> pageinfo = service.queryOrderLogs(order);
 
 			bean.setRetCode(100);
@@ -98,7 +109,13 @@ public class SysOrderController extends BaseContoller {
 				order.setPageNum(1);
 				order.setPageSize(10);
 			}
-
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
+			}
 			PageInfo<OrderLog> pageinfo = service.queryOrderLogs(order);
 
 			bean.setRetCode(100);
@@ -138,6 +155,13 @@ public class SysOrderController extends BaseContoller {
 			if (order.getPageNum() == null || "".equals(order.getPageNum())) {
 				order.setPageNum(GlobalConstant.PAGE_NUM);
 				order.setPageSize(20);
+			}
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(order.getOrderby())) {
 				order.setOrderby("order_status ASC");
@@ -187,6 +211,13 @@ public class SysOrderController extends BaseContoller {
 			if (order.getPageNum() == null || "".equals(order.getPageNum())) {
 				order.setPageNum(GlobalConstant.PAGE_NUM);
 				order.setPageSize(20);
+			}
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(order.getOrderby())) {
 				order.setOrderby("order_date desc");
@@ -602,6 +633,14 @@ public class SysOrderController extends BaseContoller {
 						account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
 				
 				accountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal("-"+money)), "230");
+				//系统关键日志记录
+    			SysOperationLog sysOperationLog = new SysOperationLog();
+    			sysOperationLog.setOperation_type("tf");
+    			sysOperationLog.setLog_platform("1");
+        		sysOperationLog.setOrder_number(order.getOrderNumber());
+        		sysOperationLog.setLog_content("司机个人通过微信退费成功！退费金额："+money+"，订单号为："+order.getOrderNumber()); 
+    			//操作日志
+    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 			}
 			}
 		} catch (Exception e) {

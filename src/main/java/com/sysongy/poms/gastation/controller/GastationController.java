@@ -76,6 +76,16 @@ public class GastationController extends BaseContoller{
 				gastation.setPageNum(1);
 				gastation.setPageSize(10);
 			}
+			if(gastation.getConvertPageNum() != null){
+				if(gastation.getConvertPageNum() > gastation.getPageNumMax()){
+					gastation.setPageNum(gastation.getPageNumMax());
+				}else{
+					gastation.setPageNum(gastation.getConvertPageNum());
+				}
+			}
+			if(gastation.getPageNumMax() != null && gastation.getPageNum() > gastation.getPageNumMax()){
+				gastation.setPageNum(gastation.getPageNumMax());
+			}
 			if(StringUtils.isEmpty(gastation.getOrderby())){
 				gastation.setOrderby("created_time desc");
 			}
@@ -115,6 +125,13 @@ public class GastationController extends BaseContoller{
 			if(gastation.getPageNum() == null){
 				gastation.setPageNum(1);
 				gastation.setPageSize(10);
+			}
+			if(gastation.getConvertPageNum() != null){
+				if(gastation.getConvertPageNum() > gastation.getPageNumMax()){
+					gastation.setPageNum(gastation.getPageNumMax());
+				}else{
+					gastation.setPageNum(gastation.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(gastation.getOrderby())){
 				gastation.setOrderby("created_time desc");
@@ -286,6 +303,13 @@ public class GastationController extends BaseContoller{
 			if(deposit.getPageNum() == null){
 				deposit.setPageNum(1);
 				deposit.setPageSize(10);
+			}
+			if(deposit.getConvertPageNum() != null){
+				if(deposit.getConvertPageNum() > deposit.getPageNumMax()){
+					deposit.setPageNum(deposit.getPageNumMax());
+				}else{
+					deposit.setPageNum(deposit.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(deposit.getOrderby())){
 				deposit.setOrderby("optime desc");
@@ -541,7 +565,14 @@ public class GastationController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
-			if(StringUtils.isEmpty(sysOrder.getOrderby())){
+			if(sysOrder.getConvertPageNum() != null){
+				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
+					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else{
+					sysOrder.setPageNum(sysOrder.getConvertPageNum());
+				}
+			}
+ 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				sysOrder.setOrderby("order_date desc");
 			}
 			if(GlobalConstant.USER_TYPE_STATION == currUser.getUser().getUserType()){
@@ -775,6 +806,13 @@ public class GastationController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
+			if(sysOrder.getConvertPageNum() != null){
+				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
+					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else{
+					sysOrder.setPageNum(sysOrder.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				sysOrder.setOrderby("order_date desc");
 			}
@@ -965,6 +1003,13 @@ public class GastationController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
+			if(sysOrder.getConvertPageNum() != null){
+				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
+					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else{
+					sysOrder.setPageNum(sysOrder.getConvertPageNum());
+				}
+			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
 				sysOrder.setOrderby("order_date desc");
 			}
@@ -1002,6 +1047,13 @@ public class GastationController extends BaseContoller{
 			if(order.getPageNum() == null){
 				order.setPageNum(1);
 				order.setPageSize(10);
+			}
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(order.getOrderby())){
 				order.setOrderby("sys_gas_station_id desc");
@@ -1111,6 +1163,13 @@ public class GastationController extends BaseContoller{
 			if(order.getPageNum() == null || order.getPageSize() == null){
 				order.setPageNum(1);
 				order.setPageSize(10);
+			}
+			if(order.getConvertPageNum() != null){
+				if(order.getConvertPageNum() > order.getPageNumMax()){
+					order.setPageNum(order.getPageNumMax());
+				}else{
+					order.setPageNum(order.getConvertPageNum());
+				}
 			}
 			if(StringUtils.isEmpty(order.getOrderby())){
 				order.setOrderby("sys_gas_station_id desc");

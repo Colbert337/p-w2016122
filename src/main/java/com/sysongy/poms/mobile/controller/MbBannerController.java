@@ -64,7 +64,13 @@ public class MbBannerController extends BaseContoller {
 			mbBanner.setPageNum(GlobalConstant.PAGE_NUM);
 			mbBanner.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
-
+		if(mbBanner.getConvertPageNum() != null){
+			if(mbBanner.getConvertPageNum() > mbBanner.getPageNumMax()){
+				mbBanner.setPageNum(mbBanner.getPageNumMax());
+			}else{
+				mbBanner.setPageNum(mbBanner.getConvertPageNum());
+			}
+		}
 		if (StringUtils.isEmpty(mbBanner.getImgType())) {
 			mbBanner.setImgType(GlobalConstant.ImgType.TOP);
 		}

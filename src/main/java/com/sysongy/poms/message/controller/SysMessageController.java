@@ -39,7 +39,13 @@ public class SysMessageController extends BaseContoller {
 		try {
 			if (driver.getPageNum() == null) {
 				driver.setPageNum(1);
-
+			}
+			if(driver.getConvertPageNum() != null){
+				if(driver.getConvertPageNum() > driver.getPageNumMax()){
+					driver.setPageNum(driver.getPageNumMax());
+				}else{
+					driver.setPageNum(driver.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(message.getOrderby())) {
 				driver.setOrderby("created_date desc");
@@ -80,7 +86,13 @@ public class SysMessageController extends BaseContoller {
 		try {
 			if (message.getPageNum() == null) {
 				message.setPageNum(1);
-
+			}
+			if(message.getConvertPageNum() != null){
+				if(message.getConvertPageNum() > message.getPageNumMax()){
+					message.setPageNum(message.getPageNumMax());
+				}else{
+					message.setPageNum(message.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(message.getOrderby())) {
 				message.setOrderby("message_created_time desc");
@@ -125,6 +137,13 @@ public class SysMessageController extends BaseContoller {
 			if (message.getPageNum() == null) {
 				message.setPageNum(1);
 				message.setPageSize(10);
+			}
+			if(message.getConvertPageNum() != null){
+				if(message.getConvertPageNum() > message.getPageNumMax()){
+					message.setPageNum(message.getPageNumMax());
+				}else{
+					message.setPageNum(message.getConvertPageNum());
+				}
 			}
 			if (StringUtils.isEmpty(message.getOrderby())) {
 				message.setOrderby("message_created_time desc");

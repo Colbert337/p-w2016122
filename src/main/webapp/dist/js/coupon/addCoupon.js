@@ -120,6 +120,10 @@ function changeCouponType(){
 						notEmpty: {
 							message: '限制金额不能为空'
 						},
+						stringLength: {
+							max: 8,
+							message: '限制金额不能超过8位'
+						},
 						callback: {
 							message: '限制金额必须是正数',
 							callback: function (value, validator) {

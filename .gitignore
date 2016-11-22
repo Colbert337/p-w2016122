@@ -8,3 +8,4 @@ poms-web.iml
 /target/
 /out/
 /lib/
+/.metadata/*

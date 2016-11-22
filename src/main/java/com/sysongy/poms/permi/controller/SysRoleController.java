@@ -53,7 +53,13 @@ public class SysRoleController extends BaseContoller{
 			role.setPageNum(GlobalConstant.PAGE_NUM);
 			role.setPageSize(GlobalConstant.PAGE_SIZE);
 		}
-
+		if(role.getConvertPageNum() != null){
+			if(role.getConvertPageNum() > role.getPageNumMax()){
+				role.setPageNum(role.getPageNumMax());
+			}else{
+				role.setPageNum(role.getConvertPageNum());
+			}
+		}
 		role.setIsDeleted(GlobalConstant.STATUS_NOTDELETE);
 
 		//查询CRM角色列表

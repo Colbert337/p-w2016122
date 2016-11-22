@@ -762,4 +762,13 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
     *
     from sys_driver where sys_driver_id = #{driverId,jdbcType=VARCHAR}
   </select>  
+  <update id="updateDriverByIntegral" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+	  UPDATE sys_driver
+		SET integral_total = (
+		CONVERT (
+			IFNULL(integral_total, 0),
+			UNSIGNED
+		) + #{integral_num,jdbcType=VARCHAR}	)
+	 where sys_driver_id = #{sysDriverId,jdbcType=VARCHAR}
+  </update>
 </mapper>

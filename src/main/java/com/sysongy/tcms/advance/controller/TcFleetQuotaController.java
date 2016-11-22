@@ -302,6 +302,13 @@ public class TcFleetQuotaController extends BaseContoller {
                 tcFleet.setPageNum(1);
                 tcFleet.setPageSize(10);
             }
+            if(tcFleet.getConvertPageNum() != null){
+    			if(tcFleet.getConvertPageNum() > tcFleet.getPageNumMax()){
+    				tcFleet.setPageNum(tcFleet.getPageNumMax());
+    			}else{
+    				tcFleet.setPageNum(tcFleet.getConvertPageNum());
+    			}
+    		}
             tcFleet.setStationId(stationId);
             PageInfo<Map<String, Object>> pageinfo = tcFleetQuotaService.queryQuotaList(tcFleet);
 
@@ -456,6 +463,13 @@ public class TcFleetQuotaController extends BaseContoller {
                 transferAccount.setPageNum(1);
                 transferAccount.setPageSize(10);
             }
+            if(transferAccount.getConvertPageNum() != null){
+    			if(transferAccount.getConvertPageNum() > transferAccount.getPageNumMax()){
+    				transferAccount.setPageNum(transferAccount.getPageNumMax());
+    			}else{
+    				transferAccount.setPageNum(transferAccount.getConvertPageNum());
+    			}
+    		}
             transferAccount.setStationId(stationId);
             transferAccount.setSysDriverId(GlobalConstant.OrderType.TRANSFER_TRANSPORTION_TO_DRIVER);//订单类型为转账
             PageInfo<Map<String, Object>> pageinfo = tcTransferAccountService.queryTransferListPage(transferAccount);
@@ -654,6 +668,13 @@ public class TcFleetQuotaController extends BaseContoller {
                 order.setPageNum(1);
                 order.setPageSize(10);
             }
+            if(order.getConvertPageNum() != null){
+    			if(order.getConvertPageNum() > order.getPageNumMax()){
+    				order.setPageNum(order.getPageNumMax());
+    			}else{
+    				order.setPageNum(order.getConvertPageNum());
+    			}
+    		}
             order.setDebitAccount(stationId);
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageinfo = orderService.queryTcPersonalReport(order);
@@ -901,6 +922,13 @@ public class TcFleetQuotaController extends BaseContoller {
                 order.setPageNum(1);
                 order.setPageSize(10);
             }
+            if(order.getConvertPageNum() != null){
+    			if(order.getConvertPageNum() > order.getPageNumMax()){
+    				order.setPageNum(order.getPageNumMax());
+    			}else{
+    				order.setPageNum(order.getConvertPageNum());
+    			}
+    		}
             order.setDebitAccount(stationId);
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageinfo = orderService.queryTcFleetReport(order);
@@ -1134,6 +1162,13 @@ public class TcFleetQuotaController extends BaseContoller {
                 order.setPageNum(1);
                 order.setPageSize(10);
             }
+            if(order.getConvertPageNum() != null){
+    			if(order.getConvertPageNum() > order.getPageNumMax()){
+    				order.setPageNum(order.getPageNumMax());
+    			}else{
+    				order.setPageNum(order.getConvertPageNum());
+    			}
+    		}
             order.setDebitAccount(stationId);
             order.setCash(new BigDecimal(BigInteger.ZERO));
             PageInfo<Map<String, Object>> pageinfo = orderService.queryTcFleetMgReport(order);

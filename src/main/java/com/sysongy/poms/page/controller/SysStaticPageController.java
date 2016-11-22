@@ -42,6 +42,13 @@ public class SysStaticPageController extends BaseContoller {
 				page.setPageNum(1);
 				page.setPageSize(10);
 			}
+			if(page.getConvertPageNum() != null){
+				if(page.getConvertPageNum() > page.getPageNumMax()){
+					page.setPageNum(page.getPageNumMax());
+				}else{
+					page.setPageNum(page.getConvertPageNum());
+				}
+			}
 			if (StringUtils.isEmpty(page.getOrderby())) {
 				page.setOrderby("page_created_time desc");
 			}

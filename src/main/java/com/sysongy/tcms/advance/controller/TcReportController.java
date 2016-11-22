@@ -1,27 +1,5 @@
 package com.sysongy.tcms.advance.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.sysongy.poms.base.controller.BaseContoller;
-import com.sysongy.poms.base.model.CurrUser;
-import com.sysongy.poms.base.model.PageBean;
-import com.sysongy.poms.order.model.SysOrder;
-import com.sysongy.poms.order.service.OrderService;
-import com.sysongy.poms.system.model.SysDepositLog;
-import com.sysongy.poms.transportion.model.Transportion;
-import com.sysongy.poms.transportion.service.TransportionService;
-import com.sysongy.poms.usysparam.model.Usysparam;
-import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.DateTimeHelper;
-import com.sysongy.util.ExportUtil;
-import com.sysongy.util.GlobalConstant;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -30,6 +8,27 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.base.controller.BaseContoller;
+import com.sysongy.poms.base.model.CurrUser;
+import com.sysongy.poms.base.model.PageBean;
+import com.sysongy.poms.order.service.OrderService;
+import com.sysongy.poms.system.model.SysDepositLog;
+import com.sysongy.poms.transportion.model.Transportion;
+import com.sysongy.poms.transportion.service.TransportionService;
+import com.sysongy.poms.usysparam.service.UsysparamService;
+import com.sysongy.util.DateTimeHelper;
+import com.sysongy.util.ExportUtil;
 
 /**
  * @FileName: TcReportController
@@ -69,6 +68,13 @@ public class TcReportController extends BaseContoller{
                 loger.setPageNum(1);
                 loger.setPageSize(20);
             }
+            if(loger.getConvertPageNum() != null){
+    			if(loger.getConvertPageNum() > loger.getPageNumMax()){
+    				loger.setPageNum(loger.getPageNumMax());
+    			}else{
+    				loger.setPageNum(loger.getConvertPageNum());
+    			}
+    		}
             if(StringUtils.isEmpty(loger.getOrderby())){
                 loger.setOrderby("sys_driver_id desc");
             }
@@ -234,6 +240,13 @@ public class TcReportController extends BaseContoller{
                 loger.setPageNum(1);
                 loger.setPageSize(10);
             }
+            if(loger.getConvertPageNum() != null){
+    			if(loger.getConvertPageNum() > loger.getPageNumMax()){
+    				loger.setPageNum(loger.getPageNumMax());
+    			}else{
+    				loger.setPageNum(loger.getConvertPageNum());
+    			}
+    		}
             if(StringUtils.isEmpty(loger.getOrderby())){
                 loger.setOrderby("sys_transportion_id desc");
             }

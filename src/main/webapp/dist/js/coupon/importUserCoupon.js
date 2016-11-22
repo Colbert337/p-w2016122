@@ -208,9 +208,6 @@ function initTable() {
 		bAutoWidth: false,
 		"aoColumns": [null, null,null, null, null, null, null],
 		"aaSorting": [],
-		"oLanguage" :lang, //提示信息
-		select: {
-			style: 'multi'
-		}
+		"oLanguage" :lang //提示信息
 	} );
 }

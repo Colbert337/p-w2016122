@@ -35,6 +35,13 @@ public class SysCashBackController extends BaseContoller {
 				sysCashBack.setPageNum(1);
 				sysCashBack.setPageSize(10);
 			}
+			if(sysCashBack.getConvertPageNum() != null){
+				if(sysCashBack.getConvertPageNum() > sysCashBack.getPageNumMax()){
+					sysCashBack.setPageNum(sysCashBack.getPageNumMax());
+				}else{
+					sysCashBack.setPageNum(sysCashBack.getConvertPageNum());
+				}
+			}
 			if(sysCashBack.getSys_cash_back_no() == null || sysCashBack.getSys_cash_back_no() == ""){
 				sysCashBack.setSys_cash_back_no("101");
 			}

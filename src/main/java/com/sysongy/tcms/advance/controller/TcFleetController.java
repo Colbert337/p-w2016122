@@ -1,5 +1,19 @@
 package com.sysongy.tcms.advance.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.base.controller.BaseContoller;
 import com.sysongy.poms.base.model.CurrUser;
@@ -14,20 +28,8 @@ import com.sysongy.tcms.advance.service.TcFleetVehicleService;
 import com.sysongy.tcms.advance.service.TcVehicleService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.UUIDGenerator;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import net.sf.json.JSONObject;
 
 /**
  * @FileName: TcFleetController
@@ -64,6 +66,13 @@ public class TcFleetController extends BaseContoller {
             fleet.setPageNum(GlobalConstant.PAGE_NUM);
             fleet.setPageSize(GlobalConstant.PAGE_SIZE);
         }
+        if(fleet.getConvertPageNum() != null){
+			if(fleet.getConvertPageNum() > fleet.getPageNumMax()){
+				fleet.setPageNum(fleet.getPageNumMax());
+			}else{
+				fleet.setPageNum(fleet.getConvertPageNum());
+			}
+		}
         fleet.setStationId(stationId);
         //封装分页参数，用于查询分页内容
         PageInfo<Map<String, Object>> fleetPageInfo = new PageInfo<Map<String, Object>>();

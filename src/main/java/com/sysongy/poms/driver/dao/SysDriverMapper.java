@@ -77,4 +77,7 @@ public interface SysDriverMapper {
 	List<SysDriver> queryAll();
 	
 	SysDriver queryByPK(String driverId);
+	
+	//增加司机积分
+	int updateDriverByIntegral(SysDriver sysDriver);
 }
