@@ -206,7 +206,7 @@ public class MobileController {
 	public String login(String params) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg(MobileReturn.STATUS_MSG_SUCCESS);
+		result.setMsg("登陆成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 		try {
@@ -238,6 +238,44 @@ public class MobileController {
 						Map<String, Object> tokenMap = new HashMap<>();
 						tokenMap.put("token", queryDriver.getSysDriverId());
 						result.setData(tokenMap);
+						// 判断二维码是否为空
+						if (queryDriver != null
+								&& (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
+							// 图片路径
+							String rootPath = (String) prop.get("images_upload_path") + "/driver/";
+							File file = new File(rootPath);
+							// 如果根文件夹不存在则创建
+							if (!file.exists() && !file.isDirectory()) {
+								file.mkdir();
+							}
+							String path = rootPath + mainObj.optString("username") + "/";
+							File file1 = new File(path);
+							// 如果用户文件夹不存在则创建
+							if (!file1.exists() && !file1.isDirectory()) {
+								file1.mkdir();
+							}
+							// 二维码路径
+							String imgPath = path + mainObj.optString("username") + ".jpg";
+							String show_path = (String) prop.get("show_images_path") + "/driver/"
+									+ mainObj.optString("username") + "/" + mainObj.optString("username") + ".jpg";
+							// 生成二维码
+							driver.setDriverQrcode(show_path);
+							driver.setSysDriverId(queryDriver.getSysDriverId());
+							Integer tmp = driverService.saveDriver(driver, "update", null, this.appOperatorId);
+							String encoderContent = null;
+							if (queryDriver.getFullName() == null || "".equals(queryDriver.getFullName())) {
+								encoderContent = mainObj.optString("username");
+							} else {
+								encoderContent = mainObj.optString("username") + "_" + queryDriver.getFullName();
+							}
+							if (tmp > 0) {
+								TwoDimensionCode handler = new TwoDimensionCode();
+								handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null,
+										TwoDimensionCode.size);
+							}else{
+								throw new Exception("二维码更新失败！");
+							}
+						}
 					} else {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("用户名或密码错误！");
@@ -251,56 +289,54 @@ public class MobileController {
 						queryDriver = driverService.queryByUserName(driver);
 						if (queryDriver == null) {
 							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("用户名或密码错误！");
+							result.setMsg("无此用户！");
 						} else {
 							Map<String, Object> tokenMap = new HashMap<>();
 							tokenMap.put("token", queryDriver.getSysDriverId());
 							result.setData(tokenMap);
+							// 判断二维码是否为空
+							if (queryDriver != null
+									&& (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
+								// 图片路径
+								String rootPath = (String) prop.get("images_upload_path") + "/driver/";
+								File file = new File(rootPath);
+								// 如果根文件夹不存在则创建
+								if (!file.exists() && !file.isDirectory()) {
+									file.mkdir();
+								}
+								String path = rootPath + mainObj.optString("username") + "/";
+								File file1 = new File(path);
+								// 如果用户文件夹不存在则创建
+								if (!file1.exists() && !file1.isDirectory()) {
+									file1.mkdir();
+								}
+								// 二维码路径
+								String imgPath = path + mainObj.optString("username") + ".jpg";
+								String show_path = (String) prop.get("show_images_path") + "/driver/"
+										+ mainObj.optString("username") + "/" + mainObj.optString("username") + ".jpg";
+								// 生成二维码
+								driver.setDriverQrcode(show_path);
+								driver.setSysDriverId(queryDriver.getSysDriverId());
+								Integer tmp = driverService.saveDriver(driver, "update", null, this.appOperatorId);
+								String encoderContent = null;
+								if (queryDriver.getFullName() == null || "".equals(queryDriver.getFullName())) {
+									encoderContent = mainObj.optString("username");
+								} else {
+									encoderContent = mainObj.optString("username") + "_" + queryDriver.getFullName();
+								}
+								if (tmp > 0) {
+									TwoDimensionCode handler = new TwoDimensionCode();
+									handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null,
+											TwoDimensionCode.size);
+								}else{
+									throw new Exception("二维码更新失败！");
+								}
+							}
 						}
-
 					} else {
 						result.setStatus(MobileReturn.STATUS_FAIL);
 						result.setMsg("验证码无效！");
 					}
-				}
-				// 判断二维码是否为空
-				if (queryDriver != null
-						&& (queryDriver.getDriverQrcode() == null || "".equals(queryDriver.getDriverQrcode()))) {
-					// 图片路径
-					String rootPath = (String) prop.get("images_upload_path") + "/driver/";
-					File file = new File(rootPath);
-					// 如果根文件夹不存在则创建
-					if (!file.exists() && !file.isDirectory()) {
-						file.mkdir();
-					}
-					String path = rootPath + mainObj.optString("username") + "/";
-					File file1 = new File(path);
-					// 如果用户文件夹不存在则创建
-					if (!file1.exists() && !file1.isDirectory()) {
-						file1.mkdir();
-					}
-					// 二维码路径
-					String imgPath = path + mainObj.optString("username") + ".jpg";
-					String show_path = (String) prop.get("show_images_path") + "/driver/"
-							+ mainObj.optString("username") + "/" + mainObj.optString("username") + ".jpg";
-					// 生成二维码
-					driver.setDriverQrcode(show_path);
-					driver.setSysDriverId(queryDriver.getSysDriverId());
-					Integer tmp = driverService.saveDriver(driver, "update", null, this.appOperatorId);
-					String encoderContent = null;
-					if (queryDriver.getFullName() == null || "".equals(queryDriver.getFullName())) {
-						encoderContent = mainObj.optString("username");
-					} else {
-						encoderContent = mainObj.optString("username") + "_" + queryDriver.getFullName();
-					}
-					if (tmp > 0) {
-						TwoDimensionCode handler = new TwoDimensionCode();
-						handler.encoderQRCode(encoderContent, imgPath, TwoDimensionCode.imgType, null,
-								TwoDimensionCode.size);
-					}
-				} else {
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("用户名或密码错误！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -461,8 +497,9 @@ public class MobileController {
 				driver.setUserName(mainObj.optString("phoneNum"));
 				driver.setMobilePhone(mainObj.optString("phoneNum"));
 				String invitationCode = mainObj.optString("invitationCode");
+				verificationCode = mainObj.optString("verificationCode");
 				String veCode = (String) redisClientImpl.getFromCache(driver.getMobilePhone());
-				if (veCode != null && !"".equals(veCode)) {
+				if (veCode != null && !"".equals(veCode) && veCode.equals(verificationCode)) {
 					List<SysDriver> driverlist = driverService.queryeSingleList(driver);
 					if (driverlist != null && driverlist.size() > 0) {
 						result.setStatus(MobileReturn.STATUS_FAIL);
@@ -730,17 +767,20 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
-				SysDriver sysDriver = new SysDriver();
-				sysDriver.setSysDriverId(mainObj.optString("token"));
-				password = mainObj.optString("password");
-				if (password != null && !"".equals(password)) {
+				verificationCode = mainObj.optString("verificationCode");
+				SysDriver sysDriver = driverService.queryDriverByPK(mainObj.optString("token"));
+				String	veCode = (String) redisClientImpl.getFromCache(sysDriver.getUserName());
+				if(verificationCode.equals(veCode)){
+					password = mainObj.optString("password");
 					sysDriver.setPassword(password);
 					sysDriver.setSysDriverId(mainObj.optString("token"));
-
-					driverService.saveDriver(sysDriver, "update", null, null);
-				} else {
+					int rs = driverService.saveDriver(sysDriver, "update", null, null);
+					if(rs < 1){
+						throw new Exception("更新密码失败！");
+					}
+				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("密码为空！");
+					result.setMsg("验证码无效！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3160,8 +3200,8 @@ public class MobileController {
 							SysOrder sorder = orderService.queryById(orderId);
 							//查询消费订单个数
 							int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
-							//首次消费成功，发放优惠券
-							if(number==0){
+							//首次消费成功，发放优惠券(因为上面已把订单状态改为有效，所以现在数据库中能查出一条数据的话，则为首次消费)
+							if(number==1){
 								CouponGroup couponGroup = new CouponGroup();
 					            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
 					            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
@@ -3180,8 +3220,12 @@ public class MobileController {
 							aliShortMessageBean.setString("微信");
 							aliShortMessageBean.setMoney(feeCount);
 							AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-							//APP提示
-							sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
+							try {
+								//APP提示
+								sysMessageService.saveMessageTransaction("微信消费", sorder,"2");
+							} catch (Exception e) {
+								logger.error("消息推送失败： " + e);
+							}
 						}
 					}else{
 						throw new Exception("修改订单状态失败！");
@@ -3363,7 +3407,7 @@ public class MobileController {
 							//查询消费订单个数
 							int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
 							//首次消费成功，发放优惠券
-							if(number==0){
+							if(number==1){
 								CouponGroup couponGroup = new CouponGroup();
 					            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
 					            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
@@ -3381,8 +3425,12 @@ public class MobileController {
 							aliShortMessageBean.setString("支付宝");
 							aliShortMessageBean.setMoney(feeCount);
 							AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-							//APP提示
-							sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
+							try {
+								//APP提示
+								sysMessageService.saveMessageTransaction("支付宝消费", sorder,"2");
+							} catch (Exception e) {
+								logger.error("消息推送失败： " + e);
+							}
 						}
 					}else{
 						throw new Exception("修改订单状态失败！");
@@ -4779,10 +4827,13 @@ public class MobileController {
 					String type;
 					String discountAmount = "0";
 					if(preferentialType!=null && !"".equals(preferentialType)){
-						discountAmount = gsGasPriceList.get(0).get("minus_money")==null?gsGasPriceList.get(0).get("fixed_discount").toString():gsGasPriceList.get(0).get("minus_money").toString();
+						discountAmount = gsGasPriceList.get(0).get("minus_money")==null||"".equals(gsGasPriceList.get(0).get("minus_money"))?gsGasPriceList.get(0).get("fixed_discount").toString():gsGasPriceList.get(0).get("minus_money").toString();
 						type = preferentialType.toString();
 					}else{
 						type="";
+					}
+					if(discountAmount==null || discountAmount.equals("")){
+						discountAmount="0.0";
 					}
 					gasName = usysparamService.query("CARDTYPE",gsGasPriceList.get(0).get("gas_name").toString()).get(0).getMname();
 					double cashBack = 0;
@@ -4803,7 +4854,9 @@ public class MobileController {
 						reChargeList.add(reChargeMap);
 					}else if(type.equals("1")){//固定折扣(整单折扣)
 						//优惠总金额(消费总金额乘以折扣)
-						cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						if(!discountAmount.equals("0.0")){
+							cashBack = new BigDecimal(amount).subtract(new BigDecimal(amount).multiply(new BigDecimal(discountAmount))).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+						}
 						reChargeMap.put("cashBack",cashBack);
 						reChargeMap.put("preferential_type",preferentialType );
 						reChargeMap.put("gasName",gasName);
@@ -5192,7 +5245,7 @@ public class MobileController {
 											//查询消费订单个数
 											int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
 											//首次消费成功，发放优惠券
-											if(number==0){
+											if(number==1){
 												CouponGroup couponGroup = new CouponGroup();
 									            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
 									            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
@@ -5209,8 +5262,12 @@ public class MobileController {
 											aliShortMessageBean.setString("账户余额");
 											aliShortMessageBean.setMoney(amount);
 											AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-											//APP提示
-											sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+											try {
+												//APP提示
+												sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+											} catch (Exception e) {
+												logger.error("消息推送失败： " + e);
+											}
 										}else{
 											throw new Exception("orderGoods信息添加失败");
 										}
@@ -5241,7 +5298,7 @@ public class MobileController {
 			result.setStatus(MobileReturn.STATUS_FAIL);
 			result.setMsg("订单支付失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("订单支付情失败： " + e);
+			logger.error("订单支付失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
@@ -5705,10 +5762,25 @@ public class MobileController {
 						dataMap.put("address", gastation.getAddress());
 						dataMap.put("stationName", gastation.getGas_station_name());
 						dataMap.put("phone", gastation.getContact_phone());
+						dataMap.put("discount", gastation.getPromotions());
+						dataMap.put("priceEffectiveTime", gastation.getPrice_effective_time());
 						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
-						dataMap.put("price", gsGasPrice.getPrice());
-						dataMap.put("unit", usysparamService.query("GAS_UNIT", gsGasPrice.getProduct_unit()).get(0).getMname());
-						dataMap.put("gasName", usysparamService.query("CARDTYPE", gsGasPrice.getGasName()).get(0).getMname());
+						if(gsGasPrice!=null){
+							ProductPrice productPrice = gsGasPrice.getProductPriceInfo();
+							if(productPrice!=null){
+								dataMap.put("price", productPrice.getProductPrice());
+								dataMap.put("unit",usysparamService.queryUsysparamByCode("GAS_UNIT", productPrice.getProductUnit()).getMname());
+								dataMap.put("unitCode", productPrice.getProductUnit());
+							}else{
+								dataMap.put("price","");
+								dataMap.put("unit","");
+								dataMap.put("unitCode","");
+							}
+						}else{
+							dataMap.put("price","");
+							dataMap.put("unit","");
+							dataMap.put("unitCode","");
+						}
 						result.setData(dataMap);
 					}else{
 						result.setStatus(MobileReturn.STATUS_SUCCESS);
@@ -5729,9 +5801,9 @@ public class MobileController {
 			resultStr = DESUtil.encode(keyStr, resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("获取折扣信息失败！");
+			result.setMsg("获取加注站信息失败！");
 			resutObj = JSONObject.fromObject(result);
-			logger.error("获取折扣信息失败： " + e);
+			logger.error("获取加注站信息失败： " + e);
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);
 			return resultStr;
@@ -5769,13 +5841,80 @@ public class MobileController {
 			 */
 			if (b) {
 				stationId = mainObj.optString("stationId");
-				Gastation gastation = new Gastation();
-				gastation.setSys_gas_station_id(stationId);
+				//原对象
+				Gastation gastation = gastationService.queryGastationByPK(stationId);
 				String stationName = mainObj.optString("stationName");
 				String phone = mainObj.optString("phone");
 				String price = mainObj.optString("price");
 				String unit = mainObj.optString("unit");
 				String promotions = mainObj.optString("promotions");
+				String priceEffectiveTime = mainObj.optString("priceEffectiveTime");
+				//气品价格
+				GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(stationId);
+				//获取气品价格信息
+				ProductPrice productPrice = productPriceService.queryProductPriceByPK(gsGasPrice.getPrice_id());
+				//通过原对象克隆新对象
+				ProductPrice newProductPrice = productPrice.clone();
+				newProductPrice.setId(UUIDGenerator.getUUID());
+				if(price!=null && !"".equals(price)){
+					//如果价格和原来不同，进行更改操作
+					if(!price.equals(String.valueOf(productPrice.getProductPrice()))){
+						//获取生效时间约束
+						String oldPriceEffectiveTime = gastation.getPrice_effective_time();
+						//新生效时间
+						SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
+						Date date = sft.parse(priceEffectiveTime);
+						//0立即生效，12半天生效(12小时候生效)，24一天生效(24小时生效)
+						if(oldPriceEffectiveTime.equals("0")){
+							//0立即生效时，更新原价格信息状态为不生效，新加一条价格生效信息
+							productPrice.setProductPriceStatus("0");
+							int updateTemp = productPriceService.updatePriceById(productPrice);
+							if(updateTemp>0){
+								newProductPrice.setProductPriceStatus("1");
+								newProductPrice.setStartTime(date);
+								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
+								if(insertTemp < 0){
+									throw new Exception("新价格添加失败");
+								}
+							}else{
+								throw new Exception("原价格状态更新失败");
+							}
+						}else if(oldPriceEffectiveTime.equals("12")){
+							newProductPrice.setProductPriceStatus("0");
+							newProductPrice.setStartTime(date);
+							int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
+							if(insertTemp < 0){
+								throw new Exception("新价格添加失败");
+							}
+						}else{
+							newProductPrice.setProductPriceStatus("0");
+							newProductPrice.setStartTime(date);
+							int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
+							if(insertTemp < 0){
+								throw new Exception("新价格添加失败");
+							}
+						}
+					}
+				}
+				//更新气品单位信息
+				ProductPrice queryNewProductPrice = productPriceService.queryProductPriceByPK(newProductPrice.getProduct_id());
+				//如果新对象数据库中存在说明价格已更改，需要更改新添加数据的单位信息
+				if(queryNewProductPrice!=null){
+					queryNewProductPrice.setProductUnit(unit);
+					queryNewProductPrice.setId(newProductPrice.getProduct_id());
+					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
+					if(insertTemp < 0 ){
+						throw new Exception("气品单位更新失败！");
+					}
+				}else{//如果新对象为空，说明价格没有改动，只需更改原对象气品单位
+					productPrice.setProductUnit(unit);
+					productPrice.setId(gsGasPrice.getPrice_id());
+					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
+					if(insertTemp < 0 ){
+						throw new Exception("气品单位更新失败！");
+					}
+				}
+				//更新气站信息
 				if(stationName!=null && !"".equals(stationName)){
 					gastation.setGas_station_name(stationName);
 				}
@@ -5785,21 +5924,9 @@ public class MobileController {
 				if(promotions!=null && !"".equals(promotions)){
 					gastation.setPromotions(promotions);
 				}
-				//气品价格
-				GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(stationId);
-				ProductPrice productPrice = new ProductPrice();
-				productPrice.setId(gsGasPrice.getPrice_id());
-				if(price!=null && !"".equals(price)){
-					productPrice.setProductPrice(Double.valueOf(price));
-				}
-				if(unit!=null && !"".equals(unit)){
-					productPrice.setProductUnit(unit);
-				}
-				//更新气品价格单位信息
-				int pprs = productPriceService.updatePriceById(productPrice);
 				//更新气站名称电话信息
 				int gsrs = gastationService.updateByPrimaryKeySelective(gastation);
-				if(pprs > 0 && gsrs >0){
+				if(gsrs >0){
 					result.setMsg("修改成功！");
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
