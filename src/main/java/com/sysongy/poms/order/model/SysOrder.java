@@ -101,8 +101,20 @@ public class SysOrder extends BaseModel{
     private String amount;//优惠后金额
 
     private String batch_no;
+    /**
+     * 临时标记订单为首次充值订单（首次充值时 才有值 充值结束后置为空）
+     */    
+    private String is_first_charge;
     
-    public String getBatch_no() {
+    public String getIs_first_charge() {
+		return is_first_charge;
+	}
+
+	public void setIs_first_charge(String is_first_charge) {
+		this.is_first_charge = is_first_charge;
+	}
+
+	public String getBatch_no() {
 		return batch_no;
 	}
 
