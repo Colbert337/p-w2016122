@@ -84,13 +84,20 @@
   
   
    <select id="queryRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     id,start_time,condition_type
     from sys_road_condition  where 1=1 and condition_status='2' ORDER BY publisher_time DESC
-  </select> 
-  
-  
-   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  </select>
+
+    <!--获取限高限重路况列表-->
+    <select id="queryHighWeightRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        id,start_time,condition_type
+        from sys_road_condition  where 1=1 and condition_status='2' and (condition_type = '07' or condition_type = '08') ORDER BY publisher_time DESC
+    </select>
+
+
+    <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from sys_road_condition  where 1=1 

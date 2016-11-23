@@ -151,6 +151,14 @@ public class SysRoadServiceImpl implements SysRoadService {
 		// TODO Auto-generated method stub
 		return sysRoadConditionMapper.queryRoadId();
 	}
+	/**
+	 * 获取限高限重路况列表
+	 * @return
+	 */
+	@Override
+	public List<SysRoadCondition> queryHighWeightRoadId() {
+		return sysRoadConditionMapper.queryHighWeightRoadId();
+	}
 
 	@Override
 	public List<SysRoadCondition> queryAll() throws Exception {

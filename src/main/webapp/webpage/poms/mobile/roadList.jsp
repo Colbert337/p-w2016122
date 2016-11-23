@@ -129,12 +129,7 @@ a:active {
 								<th onclick="orderBy(this,'end_time');commitForm();" style="display:none"
 									id="end_time_order"><i
 										class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
-								<th onclick="orderBy(this,'province');commitForm();"  style="display:none"
-									id="province_orber">省份信息</th>
-								<th onclick="orderBy(this,'useful_count');commitForm();"  style="display:none"
-									id="useful_count_orber">点赞数量</th>
-								<th  style="display:none">坐标</th>
-								<th  style="display:none">方向</th>
+							 
 								<th onclick="orderBy(this,'auditor_phone');commitForm();"
 									id="auditor_phone_orber">审核人电话</th>
 								<th onclick="orderBy(this,'auditor');commitForm();"
@@ -168,13 +163,25 @@ a:active {
 						<tbody>
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="${list.id }">
+								<!-- 隐藏列用于战士详情信息 -->
+									<td  style="display:none"><s:Code2Name mcode="${list.conditionType}"
+											gcode="CONDITION_TYPE"></s:Code2Name></td>
+									<td  style="display:none"><div class="td-inner-warp">${list.conditionMsg}</div></td>
+									<td  style="display:none">${list.province}</td>
+									<td  style="display:none"><fmt:formatDate value="${list.captureTime}"	type="both" /></td>											
+									<td  style="display:none"><s:Code2Name mcode="${list.direction}" gcode="DIRECTION_CODE"></s:Code2Name></td>
+									<td  style="display:none"><div class="td-inner-warp">${list.longitude},${list.latitude }</div></td>
 									<td  style="display:none"><fmt:formatDate value="${list.startTime}" type="both" /></td>
 									<td  style="display:none"><fmt:formatDate value="${list.endTime}" type="both" /></td>
-									<td  style="display:none">${list.province}</td>
-									<td  style="display:none">${list.usefulCount}</td>
-									<td  style="display:none"><div class="td-inner-warp">${list.longitude},${list.latitude }</div></td>
-									<td  style="display:none"><s:Code2Name mcode="${list.direction}"
-													 gcode="DIRECTION_CODE"></s:Code2Name></td>
+									<td  style="display:none"><c:if test="${list.conditionStatus == '0' }">已失效</c:if>
+										<c:if test="${list.conditionStatus == '1' }">待审核</c:if> <c:if
+											test="${list.conditionStatus == '2' }">审核通过</c:if> <c:if
+											test="${list.conditionStatus == '3' }">未通过</c:if></td>
+									<td  style="display:none">${list.auditor}</td>
+									<td  style="display:none"><fmt:formatDate value="${list.auditorTime}" type="both" /></td>
+									<td  style="display:none">${list.publisherName}</td>
+									<td  style="display:none"><div class="td-inner-warp">${list.memo}</div></td>
+									<!-- end -->
 									<td>${list.auditorPhone}</td>
 									<td>${list.auditor}</td>
 									<td><s:Code2Name mcode="${list.conditionType}"
@@ -267,60 +274,75 @@ a:active {
 				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
 			</div>--%>
 			<div class="modal-body">
-				<div class="shenhe-items-hd">路况信息2</div>
-				<table class="table">
-					<tbody>
-					<tr>
-						<th>开始时间</th>
-						<td><div id="indu_com_number" name="show"></div></td>
-						<th>结束时间</th>
-						<td colspan="3"><div id="status" name="show"></div></td>
+				<div class="shenhe-items-hd">路况信息</div>
+				<div class="row">
+					<div class="col-md-4">
+						<ul class="ace-thumbnails clearfix">
+							<li><a class="" href="" data-rel="colorbox"> <img
+									class="img-responsive" src="" alt="" id="innerimg1" />
+								<div class="text">
+									<div class="inner">点击放大</div>
+								</div>
+							</a></li>
+						</ul>
+					</div>
+					<div class="col-md-8">
+						<table class="table">
+							<tbody>
+							<tr>
+								<th>路况类型</th>
+								<td><div id="indu_com_number" name="show"></div></td>
+								<th>路况说明</th>
+								<td colspan="3"><div id="status" name="show"></div></td>
 
-					</tr>
-					<tr>
-						<th>省份信息</th>
-						<td><div name="show"></div></td>
-						<th>点赞数量</th>
-						<td><div id="prepay_phone" name="show"></div></td>
-					</tr>
-					<tr>
-						<th>坐标</th>
-						<td><div id="salesmen_name" name="show"></div></td>
-						<th>方向</th>
-						<td><div id="salesmen_name" name="show"></div></td>
-					</tr>
-					<tr>
-						<th>审核人电话</th>
-						<td><div id="prepay_phone" name="show"></div></td>
-						<th>审核人</th>
-						<td><div id="prepay_balance" name="show"></div></td>
-					</tr>
-					<tr>
-						<th width="15%">路况类型</th>
-						<td><div id="sys_gas_station_id" name="show"></div></td>
-						<th width="15%">审核状态</th>
-						<td><div id="gas_station_name" name="show"></div></td>
-					</tr>
-					<tr>
-						<th>拍照时间</th>
-						<td><div id="operations_name" name="show"></div></td>
-						<th>路况说明</th>
-						<td><div id="admin_username" name="show"></div></td>
-					</tr>
-					<tr>
-						<th>备注</th>
-						<td colspan="3"><div id="prepay_balance" name="show"></div></td>
+							</tr>
+							<tr>
+								<th>省份信息</th>
+								<td><div name="show"></div></td>
+								<th>拍照时间</th>
+								<td><div id="prepay_phone" name="show"></div></td>
+							</tr>
+							<tr>
+								<th>方向</th>
+								<td><div id="salesmen_name" name="show"></div></td>
+								<th>坐标</th>
+								<td><div id="salesmen_name" name="show"></div></td>
+							</tr>
+							<tr>
+								<th>开始时间</th>
+								<td><div id="prepay_phone" name="show"></div></td>
+								<th>结束时间</th>
+								<td><div id="prepay_balance" name="show"></div></td>
+							</tr>
+							<tr>
+								<th width="15%">审核状态</th>
+								<td><div id="sys_gas_station_id" name="show"></div></td>
+								<th width="15%">审核人</th>
+								<td><div id="gas_station_name" name="show"></div></td>
+							</tr>
+							<tr>
+								<th>审核时间</th>
+								<td><div id="operations_name" name="show"></div></td>
+								<th>创建人</th>
+								<td><div id="admin_username" name="show"></div></td>
+							</tr>
+							<tr>
+								<th>备注</th>
+								<td colspan="3"><div id="prepay_balance" name="show"></div></td>
 
-					</tr>
-					<tr>
-						<th>创建人</th>
-						<td><div id="address" name="show"></div></td>
-						<th>创建人电话</th>
-						<td><div id="created_time" name="show"></div></td>
-					</tr>
-					</tbody>
-				</table>
-				<div class="shenhe-items-hd">创建信息</div>
+							</tr>
+							<!-- <tr>
+								<th>创建人</th>
+								<td><div id="address" name="show"></div></td>
+								<th>创建人电话</th>
+								<td><div id="created_time" name="show"></div></td>
+							</tr> -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<%--<div class="shenhe-items-hd">创建信息</div>
 				<table class="table">
 					<tbody>
 
@@ -329,8 +351,8 @@ a:active {
 							<td colspan="3"><div id="created_time" name="show"></div></td>
 						</tr>
 					</tbody>
-				</table>
-				<div class="shenhe-items-hd">审核信息</div>
+				</table>--%>
+				<%--<div class="shenhe-items-hd">审核信息</div>
 				<table class="table">
 					<tr>
 						<th>审核时间</th>
@@ -342,9 +364,9 @@ a:active {
 				<div class="shenhe-items-hd">其他信息</div>
 				<table class="table">
 					</tbody>
-				</table>
+				</table>--%>
 
-				<div class="shenhe-items-hd">路况照片</div>
+				<%--<div class="shenhe-items-hd">路况照片</div>
 				<div class="row">
 					<div class="col-sm-3">
 						<ul class="ace-thumbnails clearfix">
@@ -356,7 +378,7 @@ a:active {
 							</a></li>
 						</ul>
 					</div>
-				</div>
+				</div>--%>
 
 			</div>
 			<input type="hidden" id="roadId" />
