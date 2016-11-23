@@ -1,14 +1,14 @@
 	$('#j-input-daterange-top').datepicker({autoclose:true, format: 'yyyy/mm/dd', language: 'cn'});
 	
 	var listOptions ={   
-            url:'../web/page/pageList',
+            url:'../web/page/getBannerPageUrl?pageStatus=0',
             type:'post',                    
             dataType:'html',
             success:function(data){
-	              $("#main").html(data);
-	              if($("#retCode").val() != "100"){
+	              $("#showUrlList").html(data);
+	            /*  if($("#retCode").val() != "100"){
 	            	  $("#modal-table").modal("show");
-		          }
+		          }*/
             },error:function(XMLHttpRequest, textStatus, errorThrown) {
             
 	       }

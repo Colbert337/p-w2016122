@@ -24,12 +24,12 @@ function scher() {
 function checkchange(obj) {
 //	alert(driver_name.split(",").length);
 	if ($(obj).prop("checked")) {
-		if (driver_name.split(",").length == 21) {
-			bootbox.alert("单次发送不能超过20个人");
-			$(obj).prop("checked", false);
-			
-			return;
-		} 
+//		if (driver_name.split(",").length == 21) {
+//			bootbox.alert("单次发送不能超过20个人");
+//			$(obj).prop("checked", false);
+//			
+//			return;
+//		} 
 	}
 
 	while (device_token.indexOf("#" + $(obj).val() + ',') != -1) {
@@ -97,6 +97,7 @@ function checkedAllRows() {
 	}else{
 		
 		for (var i = 0; i < $(".checkbox").length; i++) {
+			$($(".checkbox")[i]).prop('checked',false);
 			checkchange($(".checkbox")[i]);
 		}
 	}

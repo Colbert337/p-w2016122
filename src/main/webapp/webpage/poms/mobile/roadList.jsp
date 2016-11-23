@@ -139,8 +139,6 @@ a:active {
 									id="auditor_phone_orber">审核人电话</th>
 								<th onclick="orderBy(this,'auditor');commitForm();"
 									id="auditor_orber">审核人</th>
-
-
 								<th onclick="orderBy(this,'condition_type');commitForm();"
 									id="condition_type_order">路况类型</th>
 								<th onclick="orderBy(this,'condition_status');commitForm();"
@@ -152,9 +150,6 @@ a:active {
 								<th onclick="orderBy(this,'condition_msg');commitForm();"
 									id="condition_msg_order">路况说明</th>
 								<th onclick="orderBy(this,'memo');commitForm();" id="memo_orber">备注</th>
-
-
-
 								<th onclick="orderBy(this,'publisher_name');commitForm();"
 									id="publisher_name_orber">创建人</th>
 								<th onclick="orderBy(this,'publisher_phone');commitForm();"
@@ -163,19 +158,14 @@ a:active {
 									id="publisher_time_order" class="td-w2"><i
 									id="created_date"
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>发布时间</th>
-
 								<th onclick="orderBy(this,'auditor_time');commitForm();"
 									id="auditor_time_orber">审核时间</th>
-
-
 								<th onclick="orderBy(this,'invalid_count');commitForm();"
 									id="invalid_count_orber">失效请求</th>
 								<th class="text-center td-w3">操作</th>
 							</tr>
 						</thead>
-
 						<tbody>
-
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="${list.id }">
 									<td  style="display:none"><fmt:formatDate value="${list.startTime}" type="both" /></td>
@@ -187,8 +177,6 @@ a:active {
 													 gcode="DIRECTION_CODE"></s:Code2Name></td>
 									<td>${list.auditorPhone}</td>
 									<td>${list.auditor}</td>
-
-
 									<td><s:Code2Name mcode="${list.conditionType}"
 											gcode="CONDITION_TYPE"></s:Code2Name></td>
 									<td><c:if test="${list.conditionStatus == '0' }">已失效</c:if>
@@ -197,13 +185,9 @@ a:active {
 											test="${list.conditionStatus == '3' }">未通过</c:if></td>
 									<%-- 		<td><img width="150" height="150" alt="150x150"
 												src="<%=imagePath %>${list.imgPath}" /></td> --%>
-
 									<td><fmt:formatDate value="${list.captureTime}"
 											type="both" /></td>
 									<td><div class="td-inner-warp">${list.conditionMsg}</div></td>
-
-
-
 									<td><div class="td-inner-warp">${list.memo}</div></td>
 									<td>${list.publisherName}</td>
 									<td>${list.publisherPhone}</td>
@@ -212,17 +196,11 @@ a:active {
 									<td><fmt:formatDate value="${list.auditorTime}"
 											type="both" /></td>
 									<%-- <td>${list.operator}</td> --%>
-
-
 									<td><c:if test="${list.conditionStatus == '2'}">
-
 											<a class="option-btn-m" href="javascript:void(0);"
 												title="查看失效请求"
 												onclick="showShixiao('../web/mobile/road/roadListStr?id=${list.id }')"
 												data-rel="tooltip"> --${list.invalid_count}-- </a>
-
-
-
 										</c:if></td>
 									<td class="text-center"><c:if
 											test="${list.conditionStatus == '1' }">
@@ -245,8 +223,6 @@ a:active {
 						</tbody>
 					</table>
 				</div>
-
-
 				<div class="row">
 					<div class="col-sm-6">
 						<div class="dataTables_info sjny-page" id="dynamic-table_info"
@@ -281,7 +257,6 @@ a:active {
 	</form>
 </div>
 
-
 <div id="innerModel" class="modal fade" role="dialog"
 	aria-labelledby="gridSystemModalLabel" data-backdrop="static"
 	tabindex="-1">
@@ -292,7 +267,7 @@ a:active {
 				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
 			</div>--%>
 			<div class="modal-body">
-				<div class="shenhe-items-hd">路况信息</div>
+				<div class="shenhe-items-hd">路况信息2</div>
 				<table class="table">
 					<tbody>
 					<tr>
@@ -343,11 +318,6 @@ a:active {
 						<th>创建人电话</th>
 						<td><div id="created_time" name="show"></div></td>
 					</tr>
-
-
-
-
-
 					</tbody>
 				</table>
 				<div class="shenhe-items-hd">创建信息</div>
@@ -362,7 +332,6 @@ a:active {
 				</table>
 				<div class="shenhe-items-hd">审核信息</div>
 				<table class="table">
-
 					<tr>
 						<th>审核时间</th>
 						<td colspan="3"><div id="prepay_balance" name="show"></div></td>
@@ -372,7 +341,6 @@ a:active {
 				</table>
 				<div class="shenhe-items-hd">其他信息</div>
 				<table class="table">
-
 					</tbody>
 				</table>
 
