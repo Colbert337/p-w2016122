@@ -168,13 +168,12 @@
 
 			<div class="row">
 				<div class="col-sm-6">
-					<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
-						每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
-	
-						    &nbsp;&nbsp;转到第 <input type="text" name="pageNum" style="height:25px;width:45px" maxlength="4"/>  页
-							<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm(this);">跳转</button>
+						<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+							每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+							&nbsp;&nbsp;转到第 <input type="text" name="convertPageNum" style="height:25px;width:45px" maxlength="4"/>  页
+							<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm();">跳转</button>
+						</div>
 					</div>
-				</div>
 				<div class="col-sm-6">
 					<nav>
 						<ul id="ulhandle" class="pagination pull-right no-margin">
