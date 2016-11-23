@@ -5834,6 +5834,29 @@ public class MobileController {
 								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
 								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
+								}else{
+									/** 0，失败
+									 * 	1，气品单位更新失败
+									 *  2，成功
+									 */
+									Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
+									if(res==0){
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("修改失败！");
+									}else if(res==1){
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("气品单位更新失败！");
+									}else{
+										//立即生效时更新关联
+										gsGasPrice.setPrice_id(id);
+										int temp = gsGasPriceService.updateByPrimaryKeySelective(gsGasPrice);
+										if(temp > 0){
+											result.setMsg("修改成功！");
+										}else{
+											result.setStatus(MobileReturn.STATUS_FAIL);
+											result.setMsg("更新关联失败！");
+										}
+									}
 								}
 							}else{
 								throw new Exception("原价格状态更新失败");
@@ -5852,9 +5875,25 @@ public class MobileController {
 								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
 								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
+								}else{
+									/** 0，失败
+									 * 	1，气品单位更新失败
+									 *  2，成功
+									 */
+									Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
+									if(res==0){
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("修改失败！");
+									}else if(res==1){
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("气品单位更新失败！");
+									}else{
+										result.setMsg("修改成功！");
+									}
 								}
 							}else{
-								throw new Exception("时间不在生效范围！！！");
+								result.setStatus(MobileReturn.STATUS_FAIL);
+								result.setMsg("时间不在生效范围(12小时后)！！！");
 							}
 						}else{
 							Date now = new Date();
@@ -5870,56 +5909,28 @@ public class MobileController {
 								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
 								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
+								}else{
+									/** 0，失败
+									 * 	1，气品单位更新失败
+									 *  2，成功
+									 */
+									Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
+									if(res==0){
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("修改失败！");
+									}else if(res==1){
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("气品单位更新失败！");
+									}else{
+										result.setMsg("修改成功！");
+									}
 								}
 							}else{
-								throw new Exception("时间不在生效范围！！！");
+								result.setStatus(MobileReturn.STATUS_FAIL);
+								result.setMsg("时间不在生效范围(24小时后)！！！");
 							}
 						}
 					}
-				}
-				//更新气品单位信息
-				ProductPrice queryNewProductPrice = productPriceService.queryProductPriceByPK(id);
-				//如果新对象数据库中存在说明价格已更改，需要更改新添加数据的单位信息
-				if(queryNewProductPrice!=null){
-					if(unit !=null && !"".equals(unit)){
-						queryNewProductPrice.setProductUnit(unit);
-					}
-					queryNewProductPrice.setId(id);
-					int insertTemp = productPriceService.saveProductPrice(queryNewProductPrice,"update");
-					if(insertTemp < 1 ){
-						throw new Exception("气品单位更新失败！");
-					}else{
-						gsGasPrice.setPrice_id(id);
-						int temp = gsGasPriceService.updateByPrimaryKeySelective(gsGasPrice);
-						if(temp < 1){
-							throw new Exception("更新关联失败！");
-						}
-					}
-				}else{//如果新对象为空，说明价格没有改动，只需更改原对象气品单位
-					productPrice.setProductUnit(unit);
-					productPrice.setId(id);
-					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
-					if(insertTemp < 1 ){
-						throw new Exception("气品单位更新失败！");
-					}
-				}
-				//更新气站信息
-				if(stationName!=null && !"".equals(stationName)){
-					gastation.setGas_station_name(stationName);
-				}
-				if(phone!=null && !"".equals(phone)){
-					gastation.setContact_phone(phone);
-				}
-				if(promotions!=null && !"".equals(promotions)){
-					gastation.setPromotions(promotions);
-				}
-				//更新气站名称电话信息
-				int gsrs = gastationService.updateByPrimaryKeySelective(gastation);
-				if(gsrs > 0){
-					result.setMsg("修改成功！");
-				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("修改失败！");
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -6237,9 +6248,61 @@ public class MobileController {
 			listNodes(e);
 		}
 	}
-
-
-
+	/**
+	 * 更新气品、气站信息(修改商户信息接口调用)
+	 */
+	private Integer updateStationAndProductPrice(String id,String unit,GsGasPrice gsGasPrice,ProductPrice productPrice,Gastation gastation,String stationName,String phone,String promotions){
+		//默认0为失败
+		Integer  result= 0;
+		try {
+		//更新气品单位信息
+		ProductPrice queryNewProductPrice = productPriceService.queryProductPriceByPK(id);
+		//如果新对象数据库中存在说明价格已更改，需要更改新添加数据的单位信息
+		if(queryNewProductPrice!=null){
+			if(unit !=null && !"".equals(unit)){
+				queryNewProductPrice.setProductUnit(unit);
+			}
+			queryNewProductPrice.setId(id);
+			int insertTemp = productPriceService.saveProductPrice(queryNewProductPrice,"update");
+			if(insertTemp < 1 ){
+				result = 1;//新气品单位更新失败;
+				return result;
+			}
+		}else{//如果新对象为空，说明价格没有改动，只需更改原对象气品单位
+			if(!unit.equals(productPrice.getProductUnit())){
+				productPrice.setProductUnit(unit);
+				productPrice.setId(id);
+				int insertTemp = productPriceService.saveProductPrice(productPrice,"update");
+				if(insertTemp < 1 ){
+					result = 1;//原气品单位更新失败;
+					return result;
+				}
+			}
+		}
+		//更新气站信息
+		if(stationName!=null && !"".equals(stationName)){
+			gastation.setGas_station_name(stationName);
+		}
+		if(phone!=null && !"".equals(phone)){
+			gastation.setContact_phone(phone);
+		}
+		if(promotions!=null && !"".equals(promotions)){
+			gastation.setPromotions(promotions);
+		}
+		//更新气站名称电话信息
+		int gsrs = gastationService.updateByPrimaryKeySelective(gastation);
+			if(gsrs > 0){
+				result =2;//修改成功;
+				return result;
+			}else{
+				return result;
+			}
+		} catch (Exception e) {
+			throw new Exception("更新气品、气站信息失败");
+		}finally {
+			return result;
+		}
+	}
 	@RequestMapping(value = "/QR")
 	@ResponseBody
 	public void getQR() {
