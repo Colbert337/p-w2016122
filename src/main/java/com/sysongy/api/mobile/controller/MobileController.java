@@ -5830,7 +5830,7 @@ public class MobileController {
 							int updateTemp = productPriceService.updatePriceById(productPrice);
 							if(updateTemp > 0){
 								newProductPrice.setProductPriceStatus("1");
-								newProductPrice.setStartTime(date);
+								newProductPrice.setStartTime(new Date());
 								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
 								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
