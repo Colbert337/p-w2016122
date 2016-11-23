@@ -371,9 +371,9 @@ public class CrmPortalController extends BaseContoller {
         String phone = roadCondition.getPublisherPhone();
         String conditionType = roadCondition.getConditionType();
         conditionType = GlobalConstant.getConditionType(conditionType);
-        if(name == null || name.equals("")){
+        if(name == null || name.equals("") || name.equals(phone) ){
             if(phone != null && phone.length() == 11){
-                phone = phone.substring(0,2) + "****" + phone.substring(7,phone.length());
+                phone = phone.substring(0,3) + "****" + phone.substring(7,phone.length());
             }
             name = phone;
         }
@@ -416,9 +416,9 @@ public class CrmPortalController extends BaseContoller {
         String phone = roadCondition.getPublisherPhone();
         String conditionType = roadCondition.getConditionType();
         conditionType = GlobalConstant.getConditionType(conditionType);
-        if(name == null || name.equals("")){
+        if(name == null || name.equals("") || name.equals(phone) ){
             if(phone != null && phone.length() == 11){
-                phone = phone.substring(0,2) + "****" + phone.substring(7,phone.length());
+                phone = phone.substring(0,3) + "****" + phone.substring(7,phone.length());
             }
             name = phone;
         }
@@ -797,6 +797,14 @@ public class CrmPortalController extends BaseContoller {
     @RequestMapping("/question")
     public String question(@RequestParam String phoneType,ModelMap map) throws Exception{
     	//http://localhost:8080/poms-web/portal/crm/help/question?phoneType=
+    	/*	小米		Xiaomi
+    		三星		samsung
+    		oppo	OPPO
+    		vivo	vivo
+    		华为		HUAWEI
+    		金立		GiONEE
+    		酷派		Coolpad
+    	*/
     	map.addAttribute("phoneType",phoneType);
     	return "/webpage/crm/webapp-question";
     }
