@@ -14,6 +14,16 @@ public class CommonParams {
 	private String title;
 	private String text;
 	private String content;
+	private String province;//当按照地域组播时 用来存储地域信息
+	
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
 	public String getContent() {
 		return content;
 	}

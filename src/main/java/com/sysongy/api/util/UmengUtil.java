@@ -1,10 +1,11 @@
 package com.sysongy.api.util;
 
+import java.util.Properties;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sysongy.api.umeng.push.AndroidNotification;
-import com.sysongy.api.umeng.push.Demo;
 import com.sysongy.api.umeng.push.PushClient;
 import com.sysongy.api.umeng.push.android.AndroidBroadcast;
 import com.sysongy.api.umeng.push.android.AndroidCustomizedcast;
@@ -17,6 +18,8 @@ import com.sysongy.api.umeng.push.ios.IOSFilecast;
 import com.sysongy.api.umeng.push.ios.IOSGroupcast;
 import com.sysongy.api.umeng.push.ios.IOSUnicast;
 import com.sysongy.api.umeng.push.model.CommonParams;
+import com.sysongy.util.GlobalConstant;
+import com.sysongy.util.PropertyUtil;
 
 public class UmengUtil {
 
@@ -24,7 +27,7 @@ public class UmengUtil {
 	private String appMasterSecret = null;
 	private String timestamp = null;
 	private PushClient client = new PushClient();
-
+	public Properties prop = PropertyUtil.read(GlobalConstant.CONF_PATH);
 	public UmengUtil(String key, String secret) {
 		try {
 			appkey = key;
@@ -36,36 +39,47 @@ public class UmengUtil {
 	}
 
 	public int sendAndroidBroadcast(CommonParams params) throws Exception {
+
 		AndroidBroadcast broadcast = new AndroidBroadcast(appkey, appMasterSecret);
+		if ("true".equalsIgnoreCase((String) prop.get("umengMode"))) {
+			broadcast.setProductionMode();//设置为正常模式
+		} else {
+			broadcast.setTestMode();//设置为测试模式
+		}
 		broadcast.setTicker(params.getTicker());
 		broadcast.setTitle(params.getTitle());
 		broadcast.setText(params.getText());
-		broadcast.goAppAfterOpen();
+		
 		broadcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
 		broadcast.goActivityAfterOpen("com.sysongy.main.MessageDialogActivity");// 设置弹出
 		// TODO Set 'production_mode' to 'false' if it's a test device.
 		// For how to register a test device, please see the developer doc.
-		broadcast.setProductionMode();
+//		broadcast.setProductionMode();
 		// Set customized fields
 		broadcast.setExtraField("content", params.getContent());// 弹出内容
-		broadcast.setExtraField("title", params.getTitle());//设置自定义title
+		broadcast.setExtraField("title", params.getTitle());// 设置自定义title
 		return client.send(broadcast);
 	}
 
 	public int sendAndroidUnicast(CommonParams params) throws Exception {
 		AndroidUnicast unicast = new AndroidUnicast(appkey, appMasterSecret);
 		// TODO Set your device token
+		if ("true".equalsIgnoreCase((String) prop.get("umengMode"))) {
+			unicast.setProductionMode();//s设置为正常模式
+		} else {
+			unicast.setTestMode();//设置为测试模式
+		}
 		unicast.setDeviceToken(params.getDevice_tokens());
 		unicast.setTicker(params.getTicker());
 		unicast.setTitle(params.getTitle());
 		unicast.setText(params.getText());
-		unicast.goAppAfterOpen();
+		
 		unicast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
 		unicast.goActivityAfterOpen("com.sysongy.main.MessageDialogActivity");// 设置弹出
 
 		// TODO Set 'production_mode' to 'false' if it's a test device.
 		// For how to register a test device, please see the developer doc.
-		unicast.setProductionMode();
+//		unicast.setProductionMode();
 		// Set customized fields
 
 		unicast.setExtraField("content", params.getContent());// 弹出内容
@@ -73,7 +87,8 @@ public class UmengUtil {
 		return client.send(unicast);
 	}
 
-	public void sendAndroidGroupcast() throws Exception {
+	public int sendAndroidGroupcast(CommonParams params) throws Exception {
+		
 		AndroidGroupcast groupcast = new AndroidGroupcast(appkey, appMasterSecret);
 		/*
 		 * TODO Construct the filter condition: "where": { "and": [
@@ -84,24 +99,31 @@ public class UmengUtil {
 		JSONArray tagArray = new JSONArray();
 		JSONObject testTag = new JSONObject();
 		JSONObject TestTag = new JSONObject();
-		testTag.put("tag", "test");
-		TestTag.put("tag", "Test");
+		testTag.put("province", params.getProvince());
+//		TestTag.put("tag", "Test");
 		tagArray.put(testTag);
-		tagArray.put(TestTag);
+//		tagArray.put(TestTag);
 		whereJson.put("and", tagArray);
 		filterJson.put("where", whereJson);
 		System.out.println(filterJson.toString());
+		if ("true".equalsIgnoreCase((String) prop.get("umengMode"))) {
+			groupcast.setProductionMode();//设置为正常模式
+		} else {
+			groupcast.setTestMode();//设置为测试模式
+		} 
 
-		groupcast.setFilter(filterJson);
-		groupcast.setTicker("Android groupcast ticker");
-		groupcast.setTitle("中文的title");
-		groupcast.setText("Android groupcast text");
-		groupcast.goAppAfterOpen();
 		groupcast.setDisplayType(AndroidNotification.DisplayType.NOTIFICATION);
+		groupcast.goActivityAfterOpen("com.sysongy.main.MessageDialogActivity");// 设置弹出
+		groupcast.setFilter(filterJson);
+		groupcast.setTicker(params.getTicker());
+		groupcast.setTitle(params.getTitle());
+		groupcast.setText(params.getText());
+		groupcast.setExtraField("content", params.getContent());// 弹出内容
+		groupcast.setExtraField("title", params.getTitle());//设置自定义title
 		// TODO Set 'production_mode' to 'false' if it's a test device.
 		// For how to register a test device, please see the developer doc.
-		groupcast.setProductionMode();
-		client.send(groupcast);
+//		groupcast.setProductionMode(); //设置正式模式
+		return client.send(groupcast);
 	}
 
 	public void sendAndroidCustomizedcast() throws Exception {

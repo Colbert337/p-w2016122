@@ -73,8 +73,14 @@ public class SysMessageServiceImpl implements SysMessageService {
 		params.setText(obj.getMessageBody());
 		params.setContent(obj.getContent());
 		params.setDevice_tokens(token);
+		params.setProvince(obj.getProvince_name());
 		obj.setMessageGroup("1000");
-		int status = umeng.sendAndroidBroadcast(params);
+		int status =0;
+		if (obj.getMessageTicker().equals(2)) {
+			status = umeng.sendAndroidBroadcast(params);//设置广播
+		}else{
+			status = umeng.sendAndroidGroupcast(params);//设置组播
+		}
 
 		if (status == 200) {
 			return String.valueOf(messageMapper.insert(obj));
