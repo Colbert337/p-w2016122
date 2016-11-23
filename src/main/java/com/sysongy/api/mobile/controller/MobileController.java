@@ -5819,25 +5819,28 @@ public class MobileController {
 				ProductPrice productPrice = productPriceService.queryProductPriceByPK(gsGasPrice.getPrice_id());
 				//通过原对象克隆新对象
 				ProductPrice newProductPrice = productPrice.clone();
-				newProductPrice.setId(UUIDGenerator.getUUID());
+				String id = UUIDGenerator.getUUID();
+				newProductPrice.setId(id);
+				newProductPrice.setVersion(null);
 				if(price!=null && !"".equals(price)){
 					//如果价格和原来不同，进行更改操作
 					if(!price.equals(String.valueOf(productPrice.getProductPrice()))){
+						newProductPrice.setProductPrice(Double.valueOf(price));
 						//获取生效时间约束
 						String oldPriceEffectiveTime = gastation.getPrice_effective_time();
 						//新生效时间
-						SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd");
+						SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						Date date = sft.parse(priceEffectiveTime);
 						//0立即生效，12半天生效(12小时候生效)，24一天生效(24小时生效)
 						if(oldPriceEffectiveTime.equals("0")){
 							//0立即生效时，更新原价格信息状态为不生效，新加一条价格生效信息
 							productPrice.setProductPriceStatus("0");
 							int updateTemp = productPriceService.updatePriceById(productPrice);
-							if(updateTemp>0){
+							if(updateTemp > 0){
 								newProductPrice.setProductPriceStatus("1");
-								newProductPrice.setStartTime(date);
+								newProductPrice.setStartTime(new Date());
 								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
-								if(insertTemp < 0){
+								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
 								}
 							}else{
@@ -5853,9 +5856,9 @@ public class MobileController {
 							int rs = cal.compareTo(calIn);
 							if(rs < 0){
 								newProductPrice.setStartTime(date);
-								newProductPrice.setProductPriceStatus("0");
+								newProductPrice.setProductPriceStatus("2");
 								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
-								if(insertTemp < 0){
+								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
 								}
 							}else{
@@ -5871,9 +5874,9 @@ public class MobileController {
 							int rs = cal.compareTo(calIn);
 							if(rs < 0){
 								newProductPrice.setStartTime(date);
-								newProductPrice.setProductPriceStatus("0");
+								newProductPrice.setProductPriceStatus("2");
 								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
-								if(insertTemp < 0){
+								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
 								}
 							}else{
@@ -5883,20 +5886,28 @@ public class MobileController {
 					}
 				}
 				//更新气品单位信息
-				ProductPrice queryNewProductPrice = productPriceService.queryProductPriceByPK(newProductPrice.getProduct_id());
+				ProductPrice queryNewProductPrice = productPriceService.queryProductPriceByPK(id);
 				//如果新对象数据库中存在说明价格已更改，需要更改新添加数据的单位信息
 				if(queryNewProductPrice!=null){
-					queryNewProductPrice.setProductUnit(unit);
-					queryNewProductPrice.setId(newProductPrice.getProduct_id());
-					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
-					if(insertTemp < 0 ){
+					if(unit !=null && !"".equals(unit)){
+						queryNewProductPrice.setProductUnit(unit);
+					}
+					queryNewProductPrice.setId(id);
+					int insertTemp = productPriceService.saveProductPrice(queryNewProductPrice,"update");
+					if(insertTemp < 1 ){
 						throw new Exception("气品单位更新失败！");
+					}else{
+						gsGasPrice.setPrice_id(id);
+						int temp = gsGasPriceService.updateByPrimaryKeySelective(gsGasPrice);
+						if(temp < 1){
+							throw new Exception("更新关联失败！");
+						}
 					}
 				}else{//如果新对象为空，说明价格没有改动，只需更改原对象气品单位
 					productPrice.setProductUnit(unit);
-					productPrice.setId(gsGasPrice.getPrice_id());
+					productPrice.setId(id);
 					int insertTemp = productPriceService.saveProductPrice(newProductPrice,"update");
-					if(insertTemp < 0 ){
+					if(insertTemp < 1 ){
 						throw new Exception("气品单位更新失败！");
 					}
 				}
@@ -5912,7 +5923,7 @@ public class MobileController {
 				}
 				//更新气站名称电话信息
 				int gsrs = gastationService.updateByPrimaryKeySelective(gastation);
-				if(gsrs >0){
+				if(gsrs > 0){
 					result.setMsg("修改成功！");
 				}else{
 					result.setStatus(MobileReturn.STATUS_FAIL);
