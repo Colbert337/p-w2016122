@@ -6298,7 +6298,7 @@ public class MobileController {
 				return result;
 			}
 		} catch (Exception e) {
-			
+			throw new Exception("更新气品、气站信息失败");
 		}finally {
 			return result;
 		}
