@@ -88,4 +88,7 @@ public interface SysDriverMapper {
 	 * @return
 	 */
 	List<HashMap<String,String>> queryInvitationByCode(HashMap<String,String> HashMap); 
+	
+	
+	SysDriver selectByinvitationCode(String invitation_Code);
 }

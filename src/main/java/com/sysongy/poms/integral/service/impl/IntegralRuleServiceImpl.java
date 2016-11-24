@@ -42,26 +42,28 @@ public class IntegralRuleServiceImpl implements IntegralRuleService {
 		for(int i=0;i<list.size();i++){
 			IntegralRule aIntegralRule = list.get(i);
 			if("2".equals(aIntegralRule.getIntegral_reward_type())){
-				String[] ladder_befores = aIntegralRule.getLadder_before().split(",");
-				String[] ladder_afters = aIntegralRule.getLadder_after().split(",");
-				String[] reward_factors = aIntegralRule.getReward_factor().split(",");
-				String[] reward_maxs = aIntegralRule.getReward_max().split(",");
-				String[] integral_rewards = aIntegralRule.getIntegral_reward().split(",");
-				String[] reward_types = aIntegralRule.getReward_type().split(",");
-				String integralStrs ="";
-				for(int j=0;j<ladder_befores.length;j++){
-					String ladderStr = "";
-					String integralStr = "";
-					ladderStr = "积分阶梯为："+ladder_befores[j]+"元~"+ladder_afters[j]+"元，";
-					if("1".equals(reward_types[j])){
-						integralStr = integral_rewards[j]+"分";
-					}else{
-						integralStr = "金额*"+reward_factors[j]+"<="+reward_maxs[j]+"分";
+				if(null!=aIntegralRule.getLadder_before()&&!"".equals(aIntegralRule.getLadder_before())){
+					String[] ladder_befores = aIntegralRule.getLadder_before().split(",");
+					String[] ladder_afters = aIntegralRule.getLadder_after().split(",");
+					String[] reward_factors = aIntegralRule.getReward_factor().split(",");
+					String[] reward_maxs = aIntegralRule.getReward_max().split(",");
+					String[] integral_rewards = aIntegralRule.getIntegral_reward().split(",");
+					String[] reward_types = aIntegralRule.getReward_type().split(",");
+					String integralStrs ="";
+					for(int j=0;j<ladder_befores.length;j++){
+						String ladderStr = "";
+						String integralStr = "";
+						ladderStr = "积分阶梯为："+ladder_befores[j]+"元~"+ladder_afters[j]+"元，";
+						if("1".equals(reward_types[j])){
+							integralStr = integral_rewards[j]+"分";
+						}else{
+							integralStr = "金额*"+reward_factors[j]+"<="+reward_maxs[j]+"分";
+						}
+						integralStrs+=ladderStr+integralStr+",";
 					}
-					integralStrs+=ladderStr+integralStr+",";
+					integralStrs = integralStrs.substring(0, integralStrs.length()-1);
+					aIntegralRule.setIntegralStr(integralStrs);	
 				}
-				integralStrs = integralStrs.substring(0, integralStrs.length()-1);
-				aIntegralRule.setIntegralStr(integralStrs);
 			}
 		}
 		

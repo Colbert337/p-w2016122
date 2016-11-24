@@ -76,6 +76,10 @@ import com.sysongy.poms.gastation.model.ProductPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.gastation.service.ProductPriceService;
+import com.sysongy.poms.integral.model.IntegralHistory;
+import com.sysongy.poms.integral.model.IntegralRule;
+import com.sysongy.poms.integral.service.IntegralHistoryService;
+import com.sysongy.poms.integral.service.IntegralRuleService;
 import com.sysongy.poms.message.model.SysMessage;
 import com.sysongy.poms.message.service.SysMessageService;
 import com.sysongy.poms.mobile.controller.SysRoadController;
@@ -195,6 +199,12 @@ public class MobileController {
 	OrderDealService orderDealService;
 	@Autowired
 	ProductPriceService productPriceService;
+	
+	@Autowired
+	IntegralRuleService integralRuleService;
+	
+	@Autowired
+	IntegralHistoryService integralHistoryService;
 	/**
 	 * 用户登录
 	 * 
@@ -3056,6 +3066,8 @@ public class MobileController {
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
+					//充值增加积分
+					addIntegralHistory(order);
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3153,6 +3165,8 @@ public class MobileController {
 					int orderRs = orderService.updateByPrimaryKey(sysOrder);
 					if(orderRs > 0){
 						String orderCharge = orderService.consumeByDriver(order);
+						//充值增加积分
+						addIntegralHistory(order);	
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
 		    			sysOperationLog.setOperation_type("cz");
@@ -3258,6 +3272,8 @@ public class MobileController {
 				orderService.updateByPrimaryKey(sysOrder);
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
+					//充值增加积分
+					addIntegralHistory(order);	
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3335,6 +3351,8 @@ public class MobileController {
 				try {
 					if(orderRs > 0 ){
 						String orderCharge = orderService.consumeByDriver(order);
+						//充值增加积分
+						addIntegralHistory(order);	
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
 		    			sysOperationLog.setOperation_type("cz");
@@ -5161,6 +5179,68 @@ public class MobileController {
 									order.setOrderId(orderID);
 									order.setOrderStatus(1);
 									int temp = orderService.updateByPrimaryKey(order);
+					                //消费增加积分
+					        		if(null!=order.getOperator()&&!"".equals(order.getOperator())){
+					        			//充值成功发放积分
+					        			HashMap<String, String> integralMap =  integralRuleService.selectRepeatIntegralType("xf");
+					        			String integral_rule_id = integralMap.get("integral_rule_id");
+					        			IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
+					        			//存在积分规则
+					        			if(null!=integralRule){
+					        					HashMap<String,String> xfHashMap = new HashMap<String,String>();
+					        					xfHashMap.put("reward_cycle", integralRule.getReward_cycle());
+					        					xfHashMap.put("debit_Account", order.getDebitAccount());
+					        					xfHashMap.put("order_id",order.getOrderId());
+					        					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(xfHashMap);
+					        					//当前日/周/月 存在的 司机注册数
+					        					if(orderList.size()>0){
+					        							HashMap<String, String> driverMap = orderList.get(0);
+					        							//充值成功向积分记录表中插入积分历史数据
+					        							if("true".equals(integralMap.get("STATUS"))&&"1".equals(String.valueOf(integralMap.get("integral_rule_num")))){
+					        								String llimitnumber = integralRule.getLimit_number();
+					        								String reward_cycle = integralRule.getReward_cycle();
+					        								String count = String.valueOf(driverMap.get("count"));
+					        							boolean nolimit="不限".equals(llimitnumber);
+					        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)>=Integer.parseInt(llimitnumber));	
+					        							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
+					        								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
+					        									if(nolimit||one||pass){
+					        										IntegralHistory xfHistory = new IntegralHistory();
+					        										xfHistory.setIntegral_type("xf");
+					        										xfHistory.setIntegral_rule_id(integralMap.get("integral_rule_id"));
+					        										xfHistory.setSys_driver_id(order.getDebitAccount());
+					        										String[] ladder_before = integralMap.get("ladder_before").split(",");
+					        										String[] ladder_after = integralMap.get("ladder_after").split(",");
+					        										String[] integral_reward = integralMap.get("integral_reward").split(",");
+					        										String[] reward_factor = integralMap.get("reward_factor").split(",");
+					        										String[] reward_max = integralMap.get("reward_max").split(",");
+					        										String integralreward = "";
+					        										for(int i=0;i<ladder_before.length;i++){
+					        											//判断是否在阶梯的消费区间内
+					        											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>=0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<0){
+					        												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
+					        													xfHistory.setIntegral_num(integral_reward[i]);
+					        													integralreward = integral_reward[i];
+					        												}else{
+					        													xfHistory.setIntegral_num((order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString()); 
+					        													integralreward = (order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+					        													if(order.getCash().multiply(new BigDecimal(reward_factor[i])).compareTo(new BigDecimal(reward_max[i]))>0){
+					        														xfHistory.setIntegral_num(reward_max[i]);
+					        														integralreward = reward_max[i];
+					        													}
+					        												}
+					        											}
+					        										}
+					        										integralHistoryService.addIntegralHistory(xfHistory, order.getDebitAccount());
+					        										SysDriver aSysDriver = new SysDriver();
+					        										aSysDriver.setIntegral_num(integralreward);
+					        										aSysDriver.setSysDriverId(order.getDebitAccount());
+					        										driverService.updateDriverByIntegral(aSysDriver);				
+					        								}	
+					        						}					
+					        					}	
+					        				}				
+					        		}	
 									if(temp > 0 ){
 										//系统关键日志记录
 						    			SysOperationLog sysOperationLog = new SysOperationLog();
@@ -6361,5 +6441,74 @@ public class MobileController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 充值增加积分
+	 * @param order
+	 * @throws Exception
+	 */
+	public void addIntegralHistory(SysOrder order) throws Exception{
+		if(null!=order.getOperator()&&!"".equals(order.getOperator())){
+			//充值成功发放积分
+			HashMap<String, String> integralMap =  integralRuleService.selectRepeatIntegralType("cz");
+			String integral_rule_id = integralMap.get("integral_rule_id");
+			IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
+			//存在积分规则
+			if(null!=integralRule){
+					HashMap<String,String> czHashMap = new HashMap<String,String>();
+					czHashMap.put("reward_cycle", integralRule.getReward_cycle());
+					czHashMap.put("debit_Account", order.getDebitAccount());
+					czHashMap.put("order_id",order.getOrderId());
+					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(czHashMap);
+					//当前日/周/月 存在的 司机注册数
+					if(orderList.size()>0){
+							HashMap<String, String> driverMap = orderList.get(0);
+							//充值成功向积分记录表中插入积分历史数据
+							if("true".equals(integralMap.get("STATUS"))&&"1".equals(String.valueOf(integralMap.get("integral_rule_num")))){
+								String llimitnumber = integralRule.getLimit_number();
+								String reward_cycle = integralRule.getReward_cycle();
+								String count = String.valueOf(driverMap.get("count"));
+							boolean nolimit="不限".equals(llimitnumber);
+							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)>=Integer.parseInt(llimitnumber));	
+							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
+								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
+									if(nolimit||one||pass){
+										IntegralHistory czHistory = new IntegralHistory();
+										czHistory.setIntegral_type("cz");
+										czHistory.setIntegral_rule_id(integralMap.get("integral_rule_id"));
+										czHistory.setSys_driver_id(order.getDebitAccount());
+										String[] ladder_before = integralMap.get("ladder_before").split(",");
+										String[] ladder_after = integralMap.get("ladder_after").split(",");
+										String[] integral_reward = integralMap.get("integral_reward").split(",");
+										String[] reward_factor = integralMap.get("reward_factor").split(",");
+										String[] reward_max = integralMap.get("reward_max").split(",");
+										String integralreward = "";
+										for(int i=0;i<ladder_before.length;i++){
+											//判断是否在阶梯的消费区间内
+											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>=0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<0){
+												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
+													czHistory.setIntegral_num(integral_reward[i]);
+													integralreward = integral_reward[i];
+												}else{
+													czHistory.setIntegral_num((order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString()); 
+													integralreward = (order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+													if(order.getCash().multiply(new BigDecimal(reward_factor[i])).compareTo(new BigDecimal(reward_max[i]))>0){
+														czHistory.setIntegral_num(reward_max[i]);
+														integralreward = reward_max[i];
+													}
+												}
+											}
+										}
+										integralHistoryService.addIntegralHistory(czHistory, order.getDebitAccount());
+										SysDriver driver = new SysDriver();
+										driver.setIntegral_num(integralreward);
+										driver.setSysDriverId(order.getDebitAccount());
+										driverService.updateDriverByIntegral(driver);				
+								}	
+						}					
+					}	
+				}				
+		}		
 	}
 }

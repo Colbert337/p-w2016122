@@ -1,5 +1,6 @@
 package com.sysongy.poms.order.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -144,4 +145,11 @@ public interface SysOrderMapper {
 	List<SysOrder> queryForPageForBack2(SysOrder order);
 
 	 List<SysOrder> queryOrderForSearch(String orderNumber);
+	 
+	/**
+	 * 根据操作人和积分周期查询积分数量
+	 * @param HashMap
+	 * @return
+	 */
+	List<HashMap<String,String>> queryOrderByOperator(HashMap<String,String> HashMap); 
 }

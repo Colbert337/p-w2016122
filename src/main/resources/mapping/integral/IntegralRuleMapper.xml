@@ -84,7 +84,12 @@
 				'true'
 			ELSE
 				'false'
-			END STATUS,integral_rule_id,COUNT(integral_rule_id) integral_rule_num
+			END STATUS,integral_rule_id,COUNT(integral_rule_id) integral_rule_num,
+			 ladder_before,
+			 ladder_after,
+			 integral_reward,
+			 reward_factor,
+			 reward_max
 			FROM
 				`sys_integral_rule`
 			WHERE
