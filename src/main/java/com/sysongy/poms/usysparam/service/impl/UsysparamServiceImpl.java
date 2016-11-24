@@ -90,4 +90,8 @@ public class UsysparamServiceImpl implements UsysparamService {
 	public List<Usysparam> queryCardTypeByMcodeAndScode(Usysparam record) throws Exception {
 		return usysparamMapper.queryCardTypeByMcodeAndScode(record);
 	}
+	@Override
+	public Usysparam queryUsysparamByGcodeAndMname(String gcode, String mname) {
+		return usysparamMapper.queryUsysparamByGcodeAndMname(gcode, mname);
+	}
 }
