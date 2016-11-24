@@ -4199,27 +4199,6 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
-				// 创建对象
-				SysRoadCondition roadCondition = new SysRoadCondition();
-				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				roadCondition.setId(UUIDGenerator.getUUID());
-				roadCondition.setConditionImg(mainObj.optString("condition_img"));
-				roadCondition.setConditionType(mainObj.optString("conditionType"));
-				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
-				roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
-				roadCondition.setCaptureTime(sft.parse(mainObj.optString("flashTime")));
-				roadCondition.setConditionMsg(mainObj.optString("conditionMsg"));
-				roadCondition.setLongitude(mainObj.optString("longitude"));
-				roadCondition.setLatitude(mainObj.optString("latitude"));
-				roadCondition.setAddress(mainObj.optString("address"));
-				roadCondition.setPublisherName(mainObj.optString("publisherName"));
-				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
-				roadCondition.setPublisherTime(sft.parse(mainObj.optString("publisherTime")));
-				roadCondition.setRoadId(mainObj.optString("roadId"));
-				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
-				if (tmp > 0) {
-					result.setStatus(MobileReturn.STATUS_SUCCESS);
-					result.setMsg("取消路况提交成功！");
 					// 添加记录
 					MbStatistics mbStatistics = new MbStatistics();
 					mbStatistics.setSysDriverId(mainObj.optString("token"));
@@ -4232,15 +4211,37 @@ public class MobileController {
 						mbStatistics.setMbStatisticsId(UUIDGenerator.getUUID());
 						int rs1 = mbStatisticsService.insertSelective(mbStatistics);
 						if (rs1 > 0) {
-							logger.error("记录取消成功");
+							// 创建对象
+							SysRoadCondition roadCondition = new SysRoadCondition();
+							SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+							roadCondition.setId(UUIDGenerator.getUUID());
+							roadCondition.setConditionImg(mainObj.optString("condition_img"));
+							roadCondition.setConditionType(mainObj.optString("conditionType"));
+							roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
+							roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
+							roadCondition.setCaptureTime(sft.parse(mainObj.optString("flashTime")));
+							roadCondition.setConditionMsg(mainObj.optString("conditionMsg"));
+							roadCondition.setLongitude(mainObj.optString("longitude"));
+							roadCondition.setLatitude(mainObj.optString("latitude"));
+							roadCondition.setAddress(mainObj.optString("address"));
+							roadCondition.setPublisherName(mainObj.optString("publisherName"));
+							roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
+							roadCondition.setPublisherTime(sft.parse(mainObj.optString("publisherTime")));
+							roadCondition.setRoadId(mainObj.optString("roadId"));
+							int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
+							if(tmp > 0){
+								result.setStatus(MobileReturn.STATUS_SUCCESS);
+								result.setMsg("取消路况提交成功！");
+							}else{
+								throw new Exception("取消路况提交失败！！！");
+							}
 						} else {
-							logger.error("记录取消失败");
+							throw new Exception("添加取消记录失败！！！");
 						}
 					} else {
 						result.setStatus(MobileReturn.STATUS_SUCCESS);
 						result.setMsg("已提交过啦！");
 					}
-				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
