@@ -140,7 +140,7 @@ public class CRMGasPriceController {
             gsGasPrice = createProductPrice(gsGasPrice, lPrice, effectiveTime,request);
 
 
-            int resultCount = 0;
+            int resultCount = gsGasPriceService.queryGasCount(gsGasPrice);
             if(resultCount > 0){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("已经存在气品，无法再添加！");
