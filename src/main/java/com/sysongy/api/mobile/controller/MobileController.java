@@ -6360,7 +6360,7 @@ public class MobileController {
 		try {
 			// 获取当前气站最高气价
 			String priceStr = gastation.getLng_price();
-			List<Double> priceList = new ArrayList<Double>();
+			List<String> priceList = new ArrayList<String>();
 			if (priceStr != null && !"".equals(priceStr)) {
 				priceStr = priceStr.replaceAll("，", ",");
 				priceStr = priceStr.replaceAll("：", ":");
@@ -6370,19 +6370,19 @@ public class MobileController {
 						String strInfo = strArray[x].trim();
 						String strArray1[] = strInfo.split(":");
 						String strArray2[] = strArray1[1].split("/");
-						Double m = Double.valueOf(strArray2[0].substring(0, strArray2[0].length() - 1));
+						String m = strArray2[0].substring(0, strArray2[0].length() - 1);
 						priceList.add(m);
 					}
 				} else {
-					priceList.add(0.0);
+					priceList.add("0");
 				}
 			} else {
-				priceList.add(0.0);
+				priceList.add("0");
 			}
 			// 按价格重新正序排序，取最高价取最后一个
 			Collections.sort(priceList);
 			// 最高价格
-			Double price = priceList.get(priceList.size() - 1);
+			String price = priceList.get(priceList.size() - 1);
 			// 获取最高价格气品类型
 			String Str = gastation.getLng_price();
 			String gasType;
@@ -6398,6 +6398,9 @@ public class MobileController {
 			gasType = gasType.substring(0, gasType.length() - 1);
 			gasUnit = Str.substring(i, Str.length());
 			gasUnit = gasUnit.split(",")[0].split("/")[1];
+			if(gasUnit.equalsIgnoreCase("KG")){
+				gasUnit="公斤";
+			}
 			// 获取气品单位的Mcode,Scode(gas_num字段),单位
 			Usysparam McodeUsysparam = usysparamService.queryUsysparamByGcodeAndMname("CARDTYPE", gasType);
 			Usysparam ScodeUsysparam = usysparamService.queryUsysparamByGcodeAndMname("CARDTYPE", gasType);
@@ -6437,7 +6440,7 @@ public class MobileController {
 				if (ScodeUsysparam != null) {
 					productPrice.setProductPriceId(ScodeUsysparam.getMcode());
 				}
-				productPrice.setProductPrice(price);
+				productPrice.setProductPrice(Double.valueOf(price));
 				if (UnitUsysparam != null) {
 					productPrice.setProductUnit(UnitUsysparam.getMcode());
 				}
