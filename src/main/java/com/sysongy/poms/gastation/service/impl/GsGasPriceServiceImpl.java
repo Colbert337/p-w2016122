@@ -85,6 +85,11 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 		return gsGasPriceMapper.isExists(obj);
 	}
 
+	@Override
+	public Integer queryGasCount(GsGasPrice obj) throws Exception {
+		return gsGasPriceMapper.queryGasCount(obj);
+	}
+
 	/**
 	 * 查询加注站价格列表
 	 * @param stationId 加注站编号

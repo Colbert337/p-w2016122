@@ -139,6 +139,13 @@ public class CRMGasPriceController {
             }
             gsGasPrice = createProductPrice(gsGasPrice, lPrice, effectiveTime,request);
 
+
+            int resultCount = 0;
+            if(resultCount > 0){
+                ajaxJson.setSuccess(false);
+                ajaxJson.setMsg("已经存在气品，无法再添加！");
+                return ajaxJson;
+            }
             int renum = gsGasPriceService.saveGsPrice(gsGasPrice, "insert");
             if(renum < 1){
                 ajaxJson.setSuccess(false);

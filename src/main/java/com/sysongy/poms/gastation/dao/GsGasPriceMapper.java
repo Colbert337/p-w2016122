@@ -30,6 +30,7 @@ public interface GsGasPriceMapper {
 
     int isExists(GsGasPrice record);
 
+    Integer queryGasCount(GsGasPrice obj);
     /**
      * 查询加注站价格列表
      * @param stationId 加注站编号
