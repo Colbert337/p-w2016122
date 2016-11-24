@@ -5967,8 +5967,8 @@ public class MobileController {
 						if(!stationName.equals(gastation.getGas_station_name())){
 							gastation.setGas_station_name(stationName);
 						}
-						if(!stationName.equals(gastation.getGas_station_name())){
-							gastation.setGas_station_name(stationName);
+						if(!promotions.equals(gastation.getPromotions())){
+							gastation.setGas_station_name(promotions);
 						}
 						int updatepTemp = productPriceService.saveProductPrice(productPrice,"update");
 						int updatesTemp = gastationService.updateByPrimaryKeySelective(gastation);
