@@ -177,7 +177,7 @@ function updateCheck(obj1, tr, id) {
 	}
 	var show = $("div[name='show']");
 	for (var i = 0; i < show.length; i++) {
-		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{50})/g,
+		show[i].innerHTML = tr.children('td').eq(i).text().replace(/(.{30})/g,
 				'$1<br\>');
 	}
 	if(obj1==""){
@@ -240,7 +240,7 @@ function updateRoad(type) {
 			status:type
 //			conditionStatus:type
 		},
-		
+		async:false,
 		dataType : 'text',
 		success : function(data) {
 			$("body").removeClass('modal-open').removeAttr('style');

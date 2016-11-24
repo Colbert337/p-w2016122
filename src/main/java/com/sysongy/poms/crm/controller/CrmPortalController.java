@@ -371,9 +371,9 @@ public class CrmPortalController extends BaseContoller {
         String phone = roadCondition.getPublisherPhone();
         String conditionType = roadCondition.getConditionType();
         conditionType = GlobalConstant.getConditionType(conditionType);
-        if(name == null || name.equals("")){
+        if(name == null || name.equals("") || name.equals(phone) ){
             if(phone != null && phone.length() == 11){
-                phone = phone.substring(0,2) + "****" + phone.substring(7,phone.length());
+                phone = phone.substring(0,3) + "****" + phone.substring(7,phone.length());
             }
             name = phone;
         }
@@ -416,9 +416,9 @@ public class CrmPortalController extends BaseContoller {
         String phone = roadCondition.getPublisherPhone();
         String conditionType = roadCondition.getConditionType();
         conditionType = GlobalConstant.getConditionType(conditionType);
-        if(name == null || name.equals("")){
+        if(name == null || name.equals("") || name.equals(phone) ){
             if(phone != null && phone.length() == 11){
-                phone = phone.substring(0,2) + "****" + phone.substring(7,phone.length());
+                phone = phone.substring(0,3) + "****" + phone.substring(7,phone.length());
             }
             name = phone;
         }
@@ -446,7 +446,7 @@ public class CrmPortalController extends BaseContoller {
      * 反馈信息
      */
     @RequestMapping("/suggest")
-    public String suggest(@RequestParam String title,@RequestParam String info) throws Exception{
+    public String suggest(@RequestParam String title,@RequestParam String info,ModelMap map) throws Exception{
     	MbUserSuggest ms = new MbUserSuggest ();
     	ms.setMbUserSuggestId(UUIDGenerator.getUUID());
     	ms.setMobilePhone(title);
@@ -454,9 +454,21 @@ public class CrmPortalController extends BaseContoller {
     	ms.setSuggestRes("来自APP");
     	int rs = mbUserSuggestServices.saveSuggester(ms);
     	if(rs > 0){
-    		return "/webpage/crm/webapp-download-app";
+    		logger.info("反馈信息记录成功...");
+    		if("帮助热点问题-手机型号提交".equals(info)){
+    			map.addAttribute("result", "ok");
+    			return "/webpage/crm/webapp-question";
+    		}else{
+    			return "/webpage/crm/webapp-download-app";
+    		}
     	}else{
-    		return "/webpage/crm/webapp-download-app";
+    		logger.error("反馈信息记录失败...");
+    		if("帮助热点问题-手机型号提交".equals(info)){
+    			map.addAttribute("result", "error");
+    			return "/webpage/crm/webapp-question";
+    		}else{
+    			return "/webpage/crm/webapp-download-app";
+    		}
     	}
     }
     /**
@@ -797,6 +809,14 @@ public class CrmPortalController extends BaseContoller {
     @RequestMapping("/question")
     public String question(@RequestParam String phoneType,ModelMap map) throws Exception{
     	//http://localhost:8080/poms-web/portal/crm/help/question?phoneType=
+    	/*	小米		Xiaomi
+    		三星		samsung
+    		oppo	OPPO
+    		vivo	vivo
+    		华为		HUAWEI
+    		金立		GiONEE
+    		酷派		Coolpad
+    	*/
     	map.addAttribute("phoneType",phoneType);
     	return "/webpage/crm/webapp-question";
     }

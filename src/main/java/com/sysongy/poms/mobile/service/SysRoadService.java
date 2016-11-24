@@ -53,6 +53,11 @@ public interface SysRoadService {
 	int deleteRoad(SysRoadCondition road);
 
 	List<SysRoadCondition> queryRoadIDList();
+	/**
+	 * 获取限高限重路况列表
+	 * @return
+	 */
+	List<SysRoadCondition> queryHighWeightRoadId();
 
 	PageInfo<SysRoadConditionStr> queryRoadListStr(SysRoadCondition road);
 	

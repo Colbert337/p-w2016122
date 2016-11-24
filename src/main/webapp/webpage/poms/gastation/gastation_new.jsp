@@ -587,6 +587,10 @@
 		                    notEmpty: {
 		                        message: '管理员账号不能为空'
 		                    },
+						regexp: {
+							regexp: /^[^\s]+$/,
+							message: '不能输入空格'
+						},
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
@@ -611,6 +615,10 @@
 		                    notEmpty: {
 		                        message: '管理员密码不能为空'
 		                    },
+							regexp: {
+								regexp: /^[^\s]+$/,
+								message: '不能输入空格'
+							},
 		                    stringLength: {
 		                        min: 6,
 		                        max: 20,
@@ -636,6 +644,10 @@
 		                    notEmpty: {
 		                        message: '管理员密码确认不能为空'
 		                    },
+							regexp: {
+								regexp: /^[^\s]+$/,
+								message: '不能输入空格'
+							},
 		                    callback: {
 		                    	message: '管理员密码不一致',
 		                    	callback: function (value, validator, $field) {

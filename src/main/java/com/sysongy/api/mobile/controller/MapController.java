@@ -6,12 +6,12 @@ import com.sysongy.api.util.DistCnvter;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.gastation.model.Gastation;
 import com.sysongy.poms.gastation.service.GastationService;
+import com.sysongy.poms.mobile.model.SysRoadCondition;
+import com.sysongy.poms.mobile.service.SysRoadService;
+import com.sysongy.poms.mobile.service.impl.SysRoadServiceImpl;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
-import com.sysongy.util.GlobalConstant;
-import com.sysongy.util.HttpUtil;
-import com.sysongy.util.JsonTool;
-import com.sysongy.util.PropertyUtil;
+import com.sysongy.util.*;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -50,6 +51,10 @@ public class MapController {
     GastationService gastationService;
     @Autowired
     UsysparamService usysparamService;
+    @Autowired
+    SysRoadService sysRoadService;
+    @Autowired
+    RedisClientInterface redisClientImpl;
     /**
      * 获取路径规划方案
      *
@@ -173,6 +178,124 @@ public class MapController {
             resutObj = JSONObject.fromObject(result);
             logger.error("查询气站信息失败： " + e);
             e.printStackTrace();
+            resutObj.remove("data");
+            resultStr = resutObj.toString();
+            resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+            return resultStr;
+        } finally {
+            return resultStr;
+        }
+    }
+
+    /**
+     * 获取限高、限重路况列表
+     */
+    @RequestMapping(value = "/map/getHighWeightRoadList")
+    @ResponseBody
+    public String getHighWeightRoadList(String params) {
+        MobileReturn result = new MobileReturn();
+        result.setStatus(MobileReturn.STATUS_SUCCESS);
+        result.setMsg("获取限高、限重路况成功！");
+        JSONObject resutObj = new JSONObject();
+        String resultStr = "";
+        try {
+            /**
+             * 解析参数
+             */
+            params = DESUtil.decode(keyStr, params);
+            JSONObject paramsObj = JSONObject.fromObject(params);
+            JSONObject mainObj = paramsObj.optJSONObject("main");
+            // 创建对象
+            SysRoadCondition roadCondition = new SysRoadCondition();
+            boolean b = false;
+            if(mainObj != null && !"".equals(mainObj)){
+                b=true;
+            }
+            /**
+             * 请求接口
+             */
+            if (b) {
+
+                List<SysRoadCondition> roadIdList = sysRoadService.queryHighWeightRoadId();
+                List<SysRoadCondition> redisList = new ArrayList<>();
+                for (int i = 0; i < roadIdList.size(); i++) {
+                    SysRoadCondition sysRoadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId());
+                    if (sysRoadCondition != null) {
+                        redisList.add(sysRoadCondition);
+                    }else{
+                        Usysparam param=usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadIdList.get(i).getConditionType());
+                        int time = SysRoadServiceImpl.sumTime( roadIdList.get(i).getStartTime(), Integer.valueOf(param.getData()));
+                        if(time <= 0 ){
+                            SysRoadCondition src = new SysRoadCondition();
+                            src.setId(roadIdList.get(i).getId());
+                            src.setConditionStatus("0");
+                            int rs = sysRoadService.updateByPrimaryKey(src);
+                            if (rs ==1) {
+                                logger.info("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：成功!!!");
+                            }else{
+                                logger.error("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：失败!!!");
+                            }
+                        }
+                    }
+                }
+                List<Map<String, Object>> reChargeList = new ArrayList<>();
+                Map<String, Object> reCharge = new HashMap<>();
+                SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                String http_poms_path = (String) prop.get("http_poms_path");
+                if (redisList != null && redisList.size() > 0) {
+                    for (SysRoadCondition roadConditionInfo : redisList) {
+                        Map<String, Object> reChargeMap = new HashMap<>();
+                        reChargeMap.put("roadId", roadConditionInfo.getId());
+                        reChargeMap.put("conditionType", roadConditionInfo.getConditionType());
+                        reChargeMap.put("longitude", roadConditionInfo.getLongitude());
+                        reChargeMap.put("latitude", roadConditionInfo.getLatitude());
+                        String url = roadConditionInfo.getConditionImg();
+                        //没有上传图片添加默认图片
+                        if(url==null || "".equals(url)){
+                            url = prop.get("default_img").toString();
+                        }
+                        reChargeMap.put("conditionImg", http_poms_path + url);
+                        reChargeMap.put("address", roadConditionInfo.getAddress());
+                        reChargeMap.put("publisherName", roadConditionInfo.getPublisherName());
+                        reChargeMap.put("publisherPhone", roadConditionInfo.getPublisherPhone());
+                        reChargeMap.put("direction", roadConditionInfo.getDirection());
+                        reChargeMap.put("conditionMsg", roadConditionInfo.getConditionMsg());
+                        reChargeMap.put("usefulCount", roadConditionInfo.getUsefulCount());
+                        reChargeMap.put("contentUrl", http_poms_path + "/portal/crm/help/trafficDetail?trafficId="
+                                + roadConditionInfo.getId());
+                        reChargeMap.put("shareUrl", http_poms_path + "/portal/crm/help/trafficShare?trafficId="
+                                + roadConditionInfo.getId());
+                        String publisherTime = "";
+                        if (roadConditionInfo.getPublisherTime() != null
+                                && !"".equals(roadConditionInfo.getPublisherTime().toString())) {
+                            publisherTime = sft.format(roadConditionInfo.getPublisherTime());
+                        } else {
+                            publisherTime = sft.format(new Date());
+                        }
+                        reChargeMap.put("publisherTime", publisherTime);
+                        reChargeList.add(reChargeMap);
+                    }
+                    result.setStatus(MobileReturn.STATUS_SUCCESS);
+                    reCharge.put("listMap", reChargeList);
+                } else {
+                    result.setStatus(MobileReturn.STATUS_SUCCESS);
+                    reCharge.put("listMap", new ArrayList<>());
+                }
+                result.setListMap(reChargeList);
+            } else {
+                result.setStatus(MobileReturn.STATUS_FAIL);
+                result.setMsg("参数有误！");
+            }
+            resutObj = JSONObject.fromObject(result);
+            resutObj.remove("data");
+            resultStr = resutObj.toString();
+            logger.error("获取限高、限重路况信息： " + resultStr);
+            resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
+        } catch (Exception e) {
+            result.setStatus(MobileReturn.STATUS_FAIL);
+            result.setMsg("获取路况失败！");
+            resutObj = JSONObject.fromObject(result);
+            logger.error("获取路况失败： " + e);
             resutObj.remove("data");
             resultStr = resutObj.toString();
             resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密

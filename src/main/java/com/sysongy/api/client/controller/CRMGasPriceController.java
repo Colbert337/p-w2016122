@@ -421,9 +421,13 @@ public class CRMGasPriceController {
         int gastationid ;
 
         try {
-            if (gsGasPrice.getFixed_discount() != null && gsGasPrice.getMinus_money()!=null) {
+            if (gsGasPrice.getFixed_discount() != null && StringUtils.isNotBlank(gsGasPrice.getMinus_money())) {//保证优惠政策只能选一个
                 return "" ;
             }
+            if(gsGasPrice.getFixed_discount() ==  null && StringUtils.isBlank(gsGasPrice.getMinus_money())){
+                gsGasPrice.setPreferential_type(null);
+            }
+            if(StringUtils.isBlank(gsGasPrice.getMinus_money())){gsGasPrice.setMinus_money(null);}
                 ret = "webpage/poms/gastation/gastation_update";
                 gsGasPrice.setGasNum(null);
                 gsGasPrice.setGasName(null);
