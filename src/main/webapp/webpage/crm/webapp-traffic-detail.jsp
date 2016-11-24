@@ -17,50 +17,80 @@
 	<link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/webapp.css">
 </head>
 <body>
-	<div >
+	<div style="max-width: 500px;margin: 0 auto;padding: 15px;" >
 			<div class="row">
-				<div class="col-xs-12">
-					<div class="col-sm-5"><span style="font-size: large;font-weight: bold;color: red;">${conditionType}</span></div>
-					<div class="col-sm-7">发布时间：<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm:ss" /></div>
+				<div class="">
+					<label style="font-size: large;font-weight: bold;color: red;" >${conditionType}</label>
+					<span style="float: right;padding-right: 20px;">发布时间：<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm:ss" /></span>
 				</div>
 			</div>
-			<div style="border-bottom: 1px solid #ccc;"></div>
+			<%--<div style="border-bottom: 1px solid #ccc;"></div>--%>
 			<div class="row">
-				<div class="col-xs-12">
-					<div class="form-group">
+				<div class="col-md-8">
+					<table class="table">
+						<tbody>
+						<tr>
+							<th>路况详情：</th>
+							<td><div id="" name="show">${conditionMsg}</div></td>
+						</tr>
+						<tr>
+							<th>行驶方向：</th>
+							<td><div id="" name="show">${direction}</div></td>
+						</tr>
+						<tr>
+							<th width="28%">位置信息：</th>
+							<td><div  name="show">${roadCondition.address}</div></td>
+						</tr>
+						<tr>
+							<th>发布人：</th>
+							<td><div  name="show">${name}</div></td>
+						<tr>
+						<c:if test="${conditionImg != null}" >
+							<tr>
+								<td colspan="2">
+									<div class="img col-sm-7">
+										<img class="img-responsive" src="${conditionImg}" alt="">
+									</div>
+								</td>
+							<tr>
+						</c:if>
+						</tbody>
+					</table>
+				<%--<div class="col-xs-12">
+
+					<div class="row">
 						<label class="col-sm-1" > 位置信息： </label>
 						<div class="col-sm-3">${roadCondition.address}</div>
 					</div>
+
 					<div style="clear:both;"></div>
-					<div class="form-group">
+					<div class="row">
 						<label class="col-sm-1" > 行驶方向： </label>
 						<div class="col-sm-3">${direction}</div>
 					</div>
 					<div style="clear:both;"></div>
-					<div class="form-group">
+					<div class="row">
 						<label class="col-sm-2 " > 路况详情： </label>
 						<div class="col-sm-5">${conditionMsg}</div>
 					</div>
 					<div style="clear:both;"></div>
-					<div class="form-group">
+					<div class="row">
 						<label class="col-sm-2" > 路况发布人： </label>
 						<div class="col-sm-5">${name}</div>
 					</div>
 					<div style="clear:both;"></div>
-					<%--<div>行驶方向：${direction}</div>
+					&lt;%&ndash;<div>行驶方向：${direction}</div>
 					<div>路况详情：${conditionMsg}</div>
-					<div>路况发布人：${name}</div>--%>
+					<div>路况发布人：${name}</div>&ndash;%&gt;
 					<c:if test="${conditionImg != null}" >
 						<div class="row">
-							<div class="form-group">
-								<div class="img col-sm-7">
-									<img class="img-responsive" src="${conditionImg}" alt="">
-								</div>
+							<div class="img col-sm-7">
+								<img class="img-responsive" src="${conditionImg}" alt="">
 							</div>
 						</div>
 					</c:if>
 				</div>
-			</div>
+			</div>--%>
 			<%--<div class="date">
 				发布时间：
 				<fmt:formatDate value="${roadCondition.publisherTime}" pattern="yyyy-MM-dd-HH:mm:ss" />
