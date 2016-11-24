@@ -794,10 +794,10 @@ FROM
                 AND DATE_FORMAT(created_date, '%Y%m%d') = DATE_FORMAT((SELECT	created_date FROM	sys_driver	WHERE	sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}),'%Y%m%d')
             </when>  
              <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">  
-               AND DATE_FORMAT(created_date, '%Y%u') = DATE_FORMAT((SELECT	created_date FROM	sys_driver	WHERE	sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}),'%Y%m%d')
+               AND DATE_FORMAT(created_date, '%Y%u') = DATE_FORMAT((SELECT	created_date FROM	sys_driver	WHERE	sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}),'%Y%u')
             </when>  
            <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">  
-              AND DATE_FORMAT(created_date,'%Y%m') = DATE_FORMAT((SELECT	created_date FROM	sys_driver	WHERE	sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}),'%Y%m%d')
+              AND DATE_FORMAT(created_date,'%Y%m') = DATE_FORMAT((SELECT	created_date FROM	sys_driver	WHERE	sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}),'%Y%m')
            </when>  
         </choose>  	  
      <choose>  

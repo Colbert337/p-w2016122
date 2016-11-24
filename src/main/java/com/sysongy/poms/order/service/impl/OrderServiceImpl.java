@@ -1355,4 +1355,16 @@ public class OrderServiceImpl implements OrderService {
 		return sysOrderMapper.queryOrderForSearch(orderNumber);
 	
 	}
+	
+	
+	/**
+	 * 根据操作人统计订单信息
+	 * @param OrderMap
+	 * @return
+	 * @throws Exception
+	 */
+	public List<HashMap<String,String>> queryOrderByOperator(HashMap<String,String> OrderMap) throws Exception{
+		
+		return sysOrderMapper.queryOrderByOperator(OrderMap);
+	}
 }

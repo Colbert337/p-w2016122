@@ -193,7 +193,7 @@ public class CRMGasPriceController {
 			SysOperationLog aSysOperationLog = new SysOperationLog();
 			aSysOperationLog.setOperation_type("tj");
 			aSysOperationLog.setUser_name(user.getUserName());
-			aSysOperationLog.setLog_platform("4");
+			aSysOperationLog.setLog_platform("3");
 			aSysOperationLog.setLog_content(user.getUserName()+"添加新价格成功！调价商品为："+productPrice.getProductPriceId()+"，调整价格为："+productPrice.getProductPrice());
 			//操作日志
 			sysOperationLogService.saveOperationLog(aSysOperationLog,sysUser.getSysUserId());

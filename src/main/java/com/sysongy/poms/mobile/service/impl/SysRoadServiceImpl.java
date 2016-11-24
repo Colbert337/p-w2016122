@@ -153,17 +153,9 @@ public class SysRoadServiceImpl implements SysRoadService {
 			IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
 			//存在积分规则
 			if(null!=integralRule){
-				IntegralHistory aIntegralHistory = new IntegralHistory();
-				aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
 				SysDriver aSysDriver = new SysDriver();
 				aSysDriver.setMobilePhone(road.getAuditorPhone());
 				SysDriver sysDriver = driverService.queryDriverByMobilePhone(aSysDriver);
-				aIntegralHistory.setSys_driver_id(sysDriver.getSysDriverId()); 
-				aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
-				PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
-				List<IntegralHistory> integralHistoryList =list.getList();
-				//没有发送过积分则进行积分规则判断
-				if(integralHistoryList.size()==0){
 					HashMap<String,String> sblkHashMap = new HashMap<String,String>();
 					sblkHashMap.put("reward_cycle", integralRule.getReward_cycle());
 					sblkHashMap.put("publisher_phone", road.getPublisherPhone());
@@ -172,14 +164,14 @@ public class SysRoadServiceImpl implements SysRoadService {
 					//当前日/周/月 存在的 司机注册数
 					if(driverList.size()>0){
 							HashMap<String, String> driverMap = driverList.get(0);
-							//设置密保手机向积分记录表中插入积分历史数据
+							//上报路况向积分记录表中插入积分历史数据
 							if("true".equals(sblkMap.get("STATUS"))&&"1".equals(String.valueOf(sblkMap.get("integral_rule_num")))){
 								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 									if("不限".equals(integralRule.getLimit_number())||((!"one".equals(integralRule.getLimit_number())&&!"不限".equals(integralRule.getLimit_number()))&&(Integer.parseInt(driverMap.get("count"))>=Integer.parseInt(integralRule.getLimit_number())))||
 											("one".equals(integralRule.getLimit_number())&&(Integer.parseInt(driverMap.get("count"))-1==Integer.parseInt(integralRule.getLimit_number())))){
 										IntegralHistory sblkHistory = new IntegralHistory();
 										sblkHistory.setIntegral_type("sblk");
-										sblkHistory.setIntegral_rule_id(sblkHashMap.get("integral_rule_id"));
+										sblkHistory.setIntegral_rule_id(sblkMap.get("integral_rule_id"));
 										sblkHistory.setSys_driver_id(sysDriver.getSysDriverId());
 										sblkHistory.setIntegral_num(integralRule.getIntegral_reward());
 										integralHistoryService.addIntegralHistory(sblkHistory, userID);
@@ -190,7 +182,6 @@ public class SysRoadServiceImpl implements SysRoadService {
 								}	
 						}					
 					}	
-				}
 		}
 	}
 		// TODO Auto-generated method stub
