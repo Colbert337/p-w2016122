@@ -154,5 +154,9 @@
     <select id="queryDealTypeByMcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
         select * from usysparam where gcode = 'DEAL_TYPE' and mcode = #{mcode,jdbcType=VARCHAR}
     </select>
+    
+    <select id="queryUsysparamByGcodeAndMname" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+        select * from usysparam where gcode = #{0} and mname = #{1}
+    </select>
 
 </mapper>

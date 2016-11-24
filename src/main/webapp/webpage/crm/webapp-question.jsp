@@ -15,33 +15,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <link rel="stylesheet"
 	href="<%=basePath %>/webpage/crm/css/fontello.css">
 <link rel="stylesheet" href="<%=basePath %>/webpage/crm/css/webapp.css">
-<script type="text/javascript">
-	if($("#phoneTypeFrom").length){
-		$("#phoneTypeFrom").validate({
-			//debug: true, //调试模式取消submit的默认提交功能    
-			submitHandler: function(form) { //表单提交句柄,为一回调函数，带一个参数：form   
-				//alert("提交表单");
-				form.submit(); //提交表单   
-			},
-			rules: {
-				title: {
-					required: true
-				},
-	            info: {
-	                required: true
-	            }
-			},
-			messages: {
-				title: {
-					required: "请填写手机型号。。"
-				},
-	            info: {
-	                required: "请在这里输入您的手机机型，以便我们更好的为您服务"
-	            }
-			}
-		});
-	}
-</script>
+<c:if test="${result=='ok'}">
+	<script type="text/javascript">
+		alert("提交成功...");
+	</script>
+</c:if>
+<c:if test="${result=='error'}">
+	<script type="text/javascript">
+		alert("提交失败...");
+	</script>
+</c:if>
 </head>
 <body>
 	<div class="share">
@@ -115,9 +98,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					</div>
 				<form class="app-intro-form" action="<%=basePath %>/portal/crm/help/suggest" method="post" id="phoneTypeFrom">
 					<div class="item">
-						<input id="title" name="title" tabIndex="1" type="text" class="txt" placeholder="请在这里输入您的手机机型，以便我们更好的为您服务">
-						<textarea id="info" name="info" tabIndex="1" class="txt" style="display: none;" >帮助热点问题-手机型号提交</textarea>
+						<input id="title" name="title" tabIndex="1" type="text" class="txt required" placeholder="请在这里输入您的手机机型，以便我们更好的为您服务">
 					</div>
+					<textarea id="info" name="info" tabIndex="1" class="txt" style="display: none;" >帮助热点问题-手机型号提交</textarea>
 					<button type="submit" class="btn-app-primary">提交</button>
 				</form>
 				</c:otherwise>

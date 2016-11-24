@@ -4199,27 +4199,6 @@ public class MobileController {
 			 * 请求接口
 			 */
 			if (b) {
-				// 创建对象
-				SysRoadCondition roadCondition = new SysRoadCondition();
-				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				roadCondition.setId(UUIDGenerator.getUUID());
-				roadCondition.setConditionImg(mainObj.optString("condition_img"));
-				roadCondition.setConditionType(mainObj.optString("conditionType"));
-				roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
-				roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
-				roadCondition.setCaptureTime(sft.parse(mainObj.optString("flashTime")));
-				roadCondition.setConditionMsg(mainObj.optString("conditionMsg"));
-				roadCondition.setLongitude(mainObj.optString("longitude"));
-				roadCondition.setLatitude(mainObj.optString("latitude"));
-				roadCondition.setAddress(mainObj.optString("address"));
-				roadCondition.setPublisherName(mainObj.optString("publisherName"));
-				roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
-				roadCondition.setPublisherTime(sft.parse(mainObj.optString("publisherTime")));
-				roadCondition.setRoadId(mainObj.optString("roadId"));
-				int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
-				if (tmp > 0) {
-					result.setStatus(MobileReturn.STATUS_SUCCESS);
-					result.setMsg("取消路况提交成功！");
 					// 添加记录
 					MbStatistics mbStatistics = new MbStatistics();
 					mbStatistics.setSysDriverId(mainObj.optString("token"));
@@ -4232,15 +4211,37 @@ public class MobileController {
 						mbStatistics.setMbStatisticsId(UUIDGenerator.getUUID());
 						int rs1 = mbStatisticsService.insertSelective(mbStatistics);
 						if (rs1 > 0) {
-							logger.error("记录取消成功");
+							// 创建对象
+							SysRoadCondition roadCondition = new SysRoadCondition();
+							SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+							roadCondition.setId(UUIDGenerator.getUUID());
+							roadCondition.setConditionImg(mainObj.optString("condition_img"));
+							roadCondition.setConditionType(mainObj.optString("conditionType"));
+							roadCondition.setCaptureLongitude(mainObj.optString("flashLongitude"));
+							roadCondition.setCaptureLatitude(mainObj.optString("flashLatitude"));
+							roadCondition.setCaptureTime(sft.parse(mainObj.optString("flashTime")));
+							roadCondition.setConditionMsg(mainObj.optString("conditionMsg"));
+							roadCondition.setLongitude(mainObj.optString("longitude"));
+							roadCondition.setLatitude(mainObj.optString("latitude"));
+							roadCondition.setAddress(mainObj.optString("address"));
+							roadCondition.setPublisherName(mainObj.optString("publisherName"));
+							roadCondition.setPublisherPhone(mainObj.optString("publisherPhone"));
+							roadCondition.setPublisherTime(sft.parse(mainObj.optString("publisherTime")));
+							roadCondition.setRoadId(mainObj.optString("roadId"));
+							int tmp = sysRoadService.cancelSysRoadCondition(roadCondition);
+							if(tmp > 0){
+								result.setStatus(MobileReturn.STATUS_SUCCESS);
+								result.setMsg("取消路况提交成功！");
+							}else{
+								throw new Exception("取消路况提交失败！！！");
+							}
 						} else {
-							logger.error("记录取消失败");
+							throw new Exception("添加取消记录失败！！！");
 						}
 					} else {
 						result.setStatus(MobileReturn.STATUS_SUCCESS);
 						result.setMsg("已提交过啦！");
 					}
-				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误！");
@@ -4764,20 +4765,6 @@ public class MobileController {
 				List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
 				String gasName = null;
 				if(gsGasPriceList!=null&&gsGasPriceList.size()>0){
-//					List<BigDecimal> priceList = new ArrayList<BigDecimal>();
-//					for (Map<String, Object> map : gsGasPriceList) {
-//						gasName = usysparamService.query("CARDTYPE",map.get("gas_name").toString()).get(0).getMname();
-//						if(gasName.indexOf("LNG")!=-1 || gasName.indexOf("lng")!=-1){
-//							//获取最高单价
-//							String gasPrice = map.get("product_price").toString();
-//							priceList.add(new BigDecimal(gasPrice));
-//						}
-//					}
-					//重排获取最高价格
-//					Collections.sort(priceList);
-//					String gasPrice = priceList.get(priceList.size()-1).toString();
-					//通过价格获取气品名称及优惠规则
-//					GsGasPrice ggp = gsGasPriceService.queryGsPrice(gastationId, gasPrice);
 					Map<String, Object> reChargeMap = new HashMap<>();
 					Object preferentialType = gsGasPriceList.get(0).get("preferential_type");//折扣类型
 					String type;
@@ -5719,13 +5706,32 @@ public class MobileController {
 						dataMap.put("stationName", gastation.getGas_station_name());
 						dataMap.put("phone", gastation.getContact_phone());
 						dataMap.put("discount", gastation.getPromotions());
-						dataMap.put("priceEffectiveTime", gastation.getPrice_effective_time());
+						//更改价格后生效时间，非联盟为空。设置默认为0
+						String priceEffectiveTime = gastation.getPrice_effective_time();
+						if(priceEffectiveTime==null){
+							//设置非联盟更改价格默认生效时间为立即生效
+							gastation.setPrice_effective_time("0");
+							int updateTriceEffectiveTime = gastationService.updateByPrimaryKeySelective(gastation);
+							if(updateTriceEffectiveTime < 1){
+								throw new Exception("更新气站修改价格生效时间失败！！！");
+							}else{
+								priceEffectiveTime="0";
+							}
+						}
+						dataMap.put("priceEffectiveTime",priceEffectiveTime);
 						GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(gastation.getSys_gas_station_id());
-						if(gsGasPrice!=null){
-							ProductPrice productPrice = gsGasPrice.getProductPriceInfo();
+						//非联盟气站，添加关联信息gsGasPrice，ProductPrice
+						if(gsGasPrice==null){
+							logger.info("非联盟气站获取商户信息： gsGasPrice为null调用创建关联方发...");
+							ProductPrice productPrice = insertRelation(gastation,gsGasPrice);//添加关联信息
 							if(productPrice!=null){
 								dataMap.put("price", productPrice.getProductPrice());
-								dataMap.put("unit",usysparamService.queryUsysparamByCode("GAS_UNIT", productPrice.getProductUnit()).getMname());
+								Usysparam unitUsysparam = usysparamService.queryUsysparamByCode("GAS_UNIT", productPrice.getProductUnit());
+								if(unitUsysparam!=null){
+									dataMap.put("unit",unitUsysparam.getMname());
+								}else{
+									dataMap.put("unit","");
+								}
 								dataMap.put("unitCode", productPrice.getProductUnit());
 							}else{
 								dataMap.put("price","");
@@ -5733,9 +5739,21 @@ public class MobileController {
 								dataMap.put("unitCode","");
 							}
 						}else{
-							dataMap.put("price","");
-							dataMap.put("unit","");
-							dataMap.put("unitCode","");
+							ProductPrice productPrice = gsGasPrice.getProductPriceInfo();
+							if(productPrice!=null){
+								dataMap.put("price", productPrice.getProductPrice());
+								Usysparam unitUsysparam = usysparamService.queryUsysparamByCode("GAS_UNIT", productPrice.getProductUnit());
+								if(unitUsysparam!=null){
+									dataMap.put("unit",unitUsysparam.getMname());
+								}else{
+									dataMap.put("unit","");
+								}
+								dataMap.put("unitCode", productPrice.getProductUnit());
+							}else{
+								dataMap.put("price","");
+								dataMap.put("unit","");
+								dataMap.put("unitCode","");
+							}
 						}
 						result.setData(dataMap);
 					}else{
@@ -5777,7 +5795,7 @@ public class MobileController {
 	public String updateStationInfo(String params) {
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
-		result.setMsg("查询成功！");
+		result.setMsg("修改成功！");
 		JSONObject resutObj = new JSONObject();
 		String resultStr = "";
 		try {
@@ -5809,14 +5827,14 @@ public class MobileController {
 				GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(stationId);
 				//获取气品价格信息
 				ProductPrice productPrice = productPriceService.queryProductPriceByPK(gsGasPrice.getPrice_id());
-				//通过原对象克隆新对象
-				ProductPrice newProductPrice = productPrice.clone();
-				String id = UUIDGenerator.getUUID();
-				newProductPrice.setId(id);
-				newProductPrice.setVersion(null);
 				if(price!=null && !"".equals(price)){
 					//如果价格和原来不同，进行更改操作
 					if(!price.equals(String.valueOf(productPrice.getProductPrice()))){
+						//通过原对象克隆新对象
+						ProductPrice newProductPrice = productPrice.clone();
+						String id = UUIDGenerator.getUUID();
+						newProductPrice.setId(id);
+						newProductPrice.setVersion(null);
 						newProductPrice.setProductPrice(Double.valueOf(price));
 						//获取生效时间约束
 						String oldPriceEffectiveTime = gastation.getPrice_effective_time();
@@ -5835,10 +5853,7 @@ public class MobileController {
 								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
 								}else{
-									/** 0，失败
-									 * 	1，气品单位更新失败
-									 *  2，成功
-									 */
+									/**0，失败 1，气品单位更新失败 2，成功 */
 									Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
 									if(res==0){
 										result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5876,10 +5891,7 @@ public class MobileController {
 								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
 								}else{
-									/** 0，失败
-									 * 	1，气品单位更新失败
-									 *  2，成功
-									 */
+									/** 0，失败 1，气品单位更新失败  2，成功 */
 									Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
 									if(res==0){
 										result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5910,10 +5922,7 @@ public class MobileController {
 								if(insertTemp < 1){
 									throw new Exception("新价格添加失败");
 								}else{
-									/** 0，失败
-									 * 	1，气品单位更新失败
-									 *  2，成功
-									 */
+									/** 0，失败 1，气品单位更新失败 2，成功 */
 									Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
 									if(res==0){
 										result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5929,6 +5938,37 @@ public class MobileController {
 								result.setStatus(MobileReturn.STATUS_FAIL);
 								result.setMsg("时间不在生效范围(24小时后)！！！");
 							}
+						}
+					}else{//更新价格以外的其他信息
+						if(!stationName.equals(gastation.getGas_station_name())){
+							gastation.setGas_station_name(stationName);
+						}
+						if(!phone.equals(gastation.getContact_phone())){
+							gastation.setContact_phone(phone);
+						}
+						if(!unit.equals(productPrice.getProductUnit())){
+							productPrice.setProductUnit(unit);
+						}
+						if(!priceEffectiveTime.equals(productPrice.getStartTime())){
+							SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+							productPrice.setStartTime(sft.parse(priceEffectiveTime));
+						}
+						if(!stationName.equals(gastation.getGas_station_name())){
+							gastation.setGas_station_name(stationName);
+						}
+						if(!stationName.equals(gastation.getGas_station_name())){
+							gastation.setGas_station_name(stationName);
+						}
+						if(!stationName.equals(gastation.getGas_station_name())){
+							gastation.setGas_station_name(stationName);
+						}
+						int updatepTemp = productPriceService.saveProductPrice(productPrice,"update");
+						int updatesTemp = gastationService.updateByPrimaryKeySelective(gastation);
+						if(updatepTemp < 1){
+							throw new Exception("价格信息更新失败");
+						}
+						if(updatesTemp < 1){
+							throw new Exception("气站信息更新失败");
 						}
 					}
 				}
@@ -6303,6 +6343,116 @@ public class MobileController {
 			return result;
 		}
 	}
+	/**
+	 * 非联盟站获取商户信息添加关联(非联盟获气站取商户信息调用)
+	 */
+	private ProductPrice insertRelation(Gastation gastation, GsGasPrice gsGasPrice) {
+		logger.info("非联盟气站获取商户信息：调用创建关联方发...");
+		ProductPrice productPrice=null;
+		try {
+			// 获取当前气站最高气价
+			String priceStr = gastation.getLng_price();
+			List<Double> priceList = new ArrayList<Double>();
+			if (priceStr != null && !"".equals(priceStr)) {
+				priceStr = priceStr.replaceAll("，", ",");
+				priceStr = priceStr.replaceAll("：", ":");
+				if (priceStr.indexOf(":") != -1 && priceStr.indexOf("/") != -1) {
+					String strArray[] = priceStr.split(",");
+					for (int x = 0; x < strArray.length; x++) {
+						String strInfo = strArray[x].trim();
+						String strArray1[] = strInfo.split(":");
+						String strArray2[] = strArray1[1].split("/");
+						Double m = Double.valueOf(strArray2[0].substring(0, strArray2[0].length() - 1));
+						priceList.add(m);
+					}
+				} else {
+					priceList.add(0.0);
+				}
+			} else {
+				priceList.add(0.0);
+			}
+			// 按价格重新正序排序，取最高价取最后一个
+			Collections.sort(priceList);
+			// 最高价格
+			Double price = priceList.get(priceList.size() - 1);
+			// 获取最高价格气品类型
+			String Str = gastation.getLng_price();
+			String gasType;
+			String gasUnit;
+			int i = Str.indexOf(String.valueOf(price));
+			gasType = Str.substring(0, i);
+			String[] array = gasType.split(",");
+			if (array.length > 1) {
+				gasType = array[array.length - 1];
+			} else {
+				gasType = array[0];
+			}
+			gasType = gasType.substring(0, gasType.length() - 1);
+			gasUnit = Str.substring(i, Str.length());
+			gasUnit = gasUnit.split(",")[0].split("/")[1];
+			// 获取气品单位的Mcode,Scode(gas_num字段),单位
+			Usysparam McodeUsysparam = usysparamService.queryUsysparamByGcodeAndMname("CARDTYPE", gasType);
+			Usysparam ScodeUsysparam = usysparamService.queryUsysparamByGcodeAndMname("CARDTYPE", gasType);
+			Usysparam UnitUsysparam = usysparamService.queryUsysparamByGcodeAndMname("GAS_UNIT", gasUnit);
+			String Mcode = null;
+			if (McodeUsysparam != null) {
+				Mcode = McodeUsysparam.getMcode();
+			}
+			String Scode = null;
+			if (ScodeUsysparam != null) {
+				Scode = ScodeUsysparam.getScode();
+				if(Scode==null){
+					Scode = ScodeUsysparam.getMcode();
+				}
+			}
+			String Unit = null;
+			if (UnitUsysparam != null) {
+				Unit = UnitUsysparam.getMcode();
+			}
+			gsGasPrice = new GsGasPrice();
+			String gsGasPriceId = UUIDGenerator.getUUID();
+			String productPriceId = UUIDGenerator.getUUID();
+			gsGasPrice.setGsGasPriceId(gsGasPriceId);
+			gsGasPrice.setSysGasStationId(gastation.getSys_gas_station_id());
+			gsGasPrice.setGasNum(Scode);
+			gsGasPrice.setGasName(Mcode);
+			gsGasPrice.setPrice_id(productPriceId);
+			gsGasPrice.setUnit(Unit);
+			gsGasPrice.setRemark("非联盟气站APP获取商户信息创建...");
+			// 添加关联价格信息
+			int gsGasPriceTemp = gsGasPriceService.saveGsPrice(gsGasPrice, "insert");
+			if (gsGasPriceTemp > 0) {
+				logger.info("非联盟气站获取商户信息：调用创建关联方发创建gsGasPrice成功...");
+				// 添加商品信息
+				productPrice = new ProductPrice();
+				productPrice.setId(productPriceId);
+				if (ScodeUsysparam != null) {
+					productPrice.setProductPriceId(ScodeUsysparam.getMcode());
+				}
+				productPrice.setProductPrice(price);
+				if (UnitUsysparam != null) {
+					productPrice.setProductUnit(UnitUsysparam.getMcode());
+				}
+				productPrice.setProductPriceStatus("1");
+				productPrice.setProduct_id(gsGasPriceId);
+				productPrice.setStartTime(new Date());
+				int productPriceTemp = productPriceService.saveProductPrice(productPrice, "insert");
+				if (productPriceTemp < 1) {
+					throw new Exception("添加关联信息失败！！！");
+				}else{
+					logger.info("非联盟气站获取商户信息：调用创建关联方发创建productPrice成功...");
+				}
+			} else {
+				throw new Exception("添加关联信息失败！！！");
+			}
+		} catch (Exception e) {
+			logger.error("非联盟气站获取商户信息：调用创建关联方发抛出异常..."+e.getMessage());
+			e.printStackTrace();
+		}finally {
+			return productPrice;
+		}
+	}
+
 	@RequestMapping(value = "/QR")
 	@ResponseBody
 	public void getQR() {
