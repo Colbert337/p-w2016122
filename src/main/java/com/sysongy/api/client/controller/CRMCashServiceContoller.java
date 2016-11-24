@@ -161,33 +161,7 @@ public class CRMCashServiceContoller {
                 record.setChannel(gastation.getGas_station_name());
                 record.setChannelNumber(gastation.getSys_gas_station_id());
             }
-
             record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
-            //判读首次充值
-            if(!orderService.exisit(record.getDebitAccount())){
-				SysUserAccount account=sysUserAccountService.queryUserAccountByDriverId(record.getDebitAccount());
-				List<SysCashBack> listBack=sysCashBackService.queryForBreak("202");
-				if (listBack!=null && listBack.size() > 0) {
-					SysCashBack back= listBack.get(0);//获取返现规则
-					sysUserAccountService.addCashToAccount(account.getSysUserAccountId(), BigDecimal.valueOf(Double.valueOf(back.getCash_per())), GlobalConstant.OrderType.REGISTER_CASHBACK);
-					//添加首次充值订单-xyq
-					SysOrderDeal newDeal=new SysOrderDeal();
-//					orderDealService
-					newDeal.setOrderId(record.getOrderId());
-					newDeal.setDealId(UUID.randomUUID().toString().replaceAll("-", ""));
-					newDeal.setDealNumber(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()));
-					newDeal.setDealDate(new Date());
-					newDeal.setDealType(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK);
-					newDeal.setCashBack(new BigDecimal(back.getCash_per()));
-					newDeal.setRunSuccess(GlobalConstant.OrderProcessResult.SUCCESS);
-					newDeal.setRemark("");
-					orderDealService.insert(newDeal);
-//					orderService.saveOrder(newOrder);
-
-				}else{
-					logger.info("找不到匹配的返现规则，返现失败");
-				}
-			}
             int nCreateOrder = orderService.insert(record, null);
             if(nCreateOrder < 1){
                 ajaxJson.setSuccess(false);
