@@ -240,7 +240,7 @@ function updateRoad(type) {
 			status:type
 //			conditionStatus:type
 		},
-		
+		async:false,
 		dataType : 'text',
 		success : function(data) {
 			$("body").removeClass('modal-open').removeAttr('style');

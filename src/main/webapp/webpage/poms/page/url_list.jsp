@@ -202,6 +202,7 @@ $("#pageStatus").val("${page.pageStatus}");
 		indexUrlForBannerUrl=obj.getAttribute('chooseUrl');
 		$('#target_url').val('/portal/crm/help/showPage?pageid='+indexUrlForBannerUrl);
 		$("#innerModel").modal('hide');
+		$('#target_url').focus();
 	}
 	
 </script>

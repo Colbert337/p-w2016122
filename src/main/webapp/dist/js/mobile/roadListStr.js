@@ -14,6 +14,21 @@ $('#j-input-daterange-top').datepicker({
 	language : 'cn'
 });
 
+var listOptions={
+	url : '../web/mobile/road/roadListStr',
+	type : 'post',
+	dataType : 'html',
+	success : function(data) {
+		$("#main").html(data);
+		if ($("#retCode").val() != "100") {
+			$("#modal-table").modal("show");
+		}
+	},
+	error : function(XMLHttpRequest, textStatus, errorThrown) {
+
+	}
+}
+
 var listOptions1 = {
 	url : '../web/mobile/road/roadListStr',
 	type : 'post',
