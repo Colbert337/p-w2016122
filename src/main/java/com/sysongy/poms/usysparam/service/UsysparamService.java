@@ -35,4 +35,6 @@ public interface UsysparamService {
 	public String saveUsysparam(Usysparam obj,  String operation) throws Exception;
 
 	public List<Usysparam> queryCardTypeByMcodeAndScode(Usysparam record) throws Exception;
+	
+	public Usysparam queryUsysparamByGcodeAndMname(String gcode,String mname);
 }
