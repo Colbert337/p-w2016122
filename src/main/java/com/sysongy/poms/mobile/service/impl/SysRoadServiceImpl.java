@@ -166,9 +166,14 @@ public class SysRoadServiceImpl implements SysRoadService {
 							HashMap<String, String> driverMap = driverList.get(0);
 							//上报路况向积分记录表中插入积分历史数据
 							if("true".equals(sblkMap.get("STATUS"))&&"1".equals(String.valueOf(sblkMap.get("integral_rule_num")))){
-								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
-									if("不限".equals(integralRule.getLimit_number())||((!"one".equals(integralRule.getLimit_number())&&!"不限".equals(integralRule.getLimit_number()))&&(Integer.parseInt(driverMap.get("count"))>=Integer.parseInt(integralRule.getLimit_number())))||
-											("one".equals(integralRule.getLimit_number())&&(Integer.parseInt(driverMap.get("count"))-1==Integer.parseInt(integralRule.getLimit_number())))){
+        							String llimitnumber = integralRule.getLimit_number();
+        							String reward_cycle = integralRule.getReward_cycle();
+        							String count = String.valueOf(driverMap.get("count"));
+        							boolean nolimit="不限".equals(llimitnumber);
+        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)>=Integer.parseInt(llimitnumber));	
+        							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
+        								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
+        								if(nolimit||one||pass){	
 										IntegralHistory sblkHistory = new IntegralHistory();
 										sblkHistory.setIntegral_type("sblk");
 										sblkHistory.setIntegral_rule_id(sblkMap.get("integral_rule_id"));
