@@ -173,7 +173,7 @@
 								for="target_url"><span class="red_star">*</span> 链接地址： </label>
 							<div class="col-sm-8">
 								<input type="text" id="target_url"  maxlength="150"
-									name="targetUrl" placeholder="链接地址" class="col-xs-10 col-sm-12" />
+									name="targetUrl" placeholder="链接地址" class="col-xs-10 col-sm-12" onclick="queryBannerPageUrl()" />
 							</div>
 						</div>
 						<div class="form-group">
@@ -317,6 +317,34 @@
 	</div>
 </div>
 </div>
+<div id="innerModel" class="modal fade" role="dialog"
+	 aria-labelledby="gridSystemModalLabel" data-backdrop="static"
+	 tabindex="-1">
+	<div class="modal-dialog modal-lg" role="document" >
+		<div class="modal-content" >
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
+			</div>
+			<div class="modal-body">
+				<div id="showUrlList" >
+					<%--两行表单 开始--%>
+
+					<%--两行表单 结束--%>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+			<div class="modal-footer">
+				<button class="btn btn-primary btn-sm" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+</div><!-- model-->
 </div>
 </div>
 </div>
@@ -679,4 +707,29 @@ obj.value = obj.value.replace(/[^\d.]/g,"");
 		loadPage('#main', '../web/mobile/img/list/page?imgType='
 				+ $("[name=imgType]").val());
 	}
+
+	/**
+	* 查询页面配置管理的页面 生效的 页面编号&页面标题
+	 */
+	function queryBannerPageUrl(){
+
+		/*$.ajax({
+			url : "../web/page/getBannerPageUrl",
+			data : {
+				pageStatus : 0   //生效的页面
+			},
+			async : false,
+			type : "POST",
+			success : function(data) {
+				$("#showUrlList").html(data);
+				$("#innerModel").modal('show');
+			}
+		})*/
+		loadPage('#showUrlList', '../web/page/getBannerPageUrl?pageStatus=0');
+		if($('#target_url').val()==''){
+			$('#target_url').val('链接地址');
+		}
+		$("#innerModel").modal('show');
+	}
+
 </script>

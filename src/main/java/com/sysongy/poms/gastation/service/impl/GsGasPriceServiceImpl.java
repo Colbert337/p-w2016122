@@ -109,4 +109,9 @@ public class GsGasPriceServiceImpl implements GsGasPriceService {
 	public GsGasPrice queryGsGasPriceInfo(String gsGasPriceId) {
 		return gsGasPriceMapper.queryGsGasPriceInfo(gsGasPriceId);
 	}
+
+	@Override
+	public Integer updateByPrimaryKeySelective(GsGasPrice record) {
+		return gsGasPriceMapper.updateByPrimaryKeySelective(record);
+	}
 }

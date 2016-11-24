@@ -26,14 +26,12 @@ function commitForm(obj) {
 };
 
 function del(obj) {
-
 	var cardid = $(obj).parents('tr').find("td:first").find("input").val();
-	var tmp = confirm("是否删除卡号为[" + cardid + "]的用户卡?");
-	if (!tmp) {
-		$('[data-rel=tooltip]').tooltip('hide');
-		return;
-	}
-	var deloptions = {
+	bootbox.setLocale("zh_CN");
+	bootbox.confirm("是否删除卡号为[" + cardid + "]的用户卡?", function(result) {
+		if(result){
+
+ 	var deloptions = {
 		url: sjny.basePath + '/web/card/deleteCard?cardid=' + cardid,
 		type: 'post',
 		dataType: 'text',
@@ -49,6 +47,9 @@ function del(obj) {
 	}
 
 	$("#formcard").ajaxSubmit(deloptions);
+		}
+	}
+	 );
 };
 
 function init() {

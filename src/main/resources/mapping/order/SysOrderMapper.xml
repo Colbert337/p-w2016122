@@ -44,6 +44,10 @@
 		<result column="gas_station_name" property="gas_station_name"
 			jdbcType="VARCHAR" />
 
+		<association property="orderStatusInfo" column="order_status"
+					 javaType="com.sysongy.poms.usysparam.model.Usysparam"
+					 select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderStatusByMcode">
+		</association>
 		<association property="orderTypeInfo" column="order_type"
 			javaType="com.sysongy.poms.usysparam.model.Usysparam"
 			select="com.sysongy.poms.usysparam.dao.UsysparamMapper.queryOrderTypeByMcode">
@@ -306,7 +310,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		sum(cash) as sumcash
 		from sys_order
 		where debit_account = #{userId,jdbcType=VARCHAR}
-		and order_type = #{CHARGE_TO_DRIVER,jdbcType=VARCHAR}
+		and order_type = #{CHARGE_TO_DRIVER,jdbcType=VARCHAR} and order_status='1'
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -1424,7 +1428,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	</select>
 	<!-- 根据订单号查询返现金额 -->
 	<select id="backCash" resultType="java.lang.Double" parameterType="java.lang.String">
-		select cash_back from sys_order_deal where cash_back_per is not null and cash_back_per !="" and  order_id= #{orderId,jdbcType=VARCHAR} 
+		select SUM(cash_back) from sys_order_deal where cash_back_per is not null and cash_back_per !="" and  order_id= #{orderId,jdbcType=VARCHAR} 
 	</select>	
 	
 	

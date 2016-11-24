@@ -239,4 +239,53 @@ public class SysStaticPageController extends BaseContoller {
 		}
 
 	}
+
+	/**
+	 * 查询生效的App页面
+	 * pageStatus=0
+	 * @param map
+	 * @param page
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/getBannerPageUrl")
+	public String getBannerPageUrl(ModelMap map, SysStaticPage page, String type) throws Exception {
+		this.page = page;
+		PageBean bean = new PageBean();
+		String ret = "webpage/poms/page/url_list";
+		String message = "查询成功";
+		if ("1".equals(type)) {
+			message = "失效成功";
+		} else if("2".equals(type)) {
+			message = "修改成功";
+		}
+		try {
+			if (page.getPageNum() == null) {
+				page.setPageNum(1);
+				page.setPageSize(10);
+			}
+			if (StringUtils.isEmpty(page.getOrderby())) {
+				page.setOrderby("page_created_time desc");
+			}
+			PageInfo<SysStaticPage> pageinfo = service.queryForPage(page);
+			bean.setRetCode(100);
+			// bean.setRetMsg("查询成功");
+			bean.setPageInfo(ret);
+			bean.setRetMsg(message);
+			map.addAttribute("ret", bean);
+			map.addAttribute("pageInfo", pageinfo);
+			map.addAttribute("page", page);
+		} catch (Exception e) {
+			bean.setRetCode(5000);
+			bean.setRetMsg(e.getMessage());
+			map.addAttribute("ret", bean);
+			logger.error("", e);
+			throw e;
+		} finally {
+			return ret;
+		}
+	}
+
+
 }
