@@ -446,7 +446,7 @@ public class CrmPortalController extends BaseContoller {
      * 反馈信息
      */
     @RequestMapping("/suggest")
-    public String suggest(@RequestParam String title,@RequestParam String info) throws Exception{
+    public String suggest(@RequestParam String title,@RequestParam String info,ModelMap map) throws Exception{
     	MbUserSuggest ms = new MbUserSuggest ();
     	ms.setMbUserSuggestId(UUIDGenerator.getUUID());
     	ms.setMobilePhone(title);
@@ -454,9 +454,21 @@ public class CrmPortalController extends BaseContoller {
     	ms.setSuggestRes("来自APP");
     	int rs = mbUserSuggestServices.saveSuggester(ms);
     	if(rs > 0){
-    		return "/webpage/crm/webapp-download-app";
+    		logger.info("反馈信息记录成功...");
+    		if("帮助热点问题-手机型号提交".equals(info)){
+    			map.addAttribute("result", "ok");
+    			return "/webpage/crm/webapp-question";
+    		}else{
+    			return "/webpage/crm/webapp-download-app";
+    		}
     	}else{
-    		return "/webpage/crm/webapp-download-app";
+    		logger.error("反馈信息记录失败...");
+    		if("帮助热点问题-手机型号提交".equals(info)){
+    			map.addAttribute("result", "error");
+    			return "/webpage/crm/webapp-question";
+    		}else{
+    			return "/webpage/crm/webapp-download-app";
+    		}
     	}
     }
     /**

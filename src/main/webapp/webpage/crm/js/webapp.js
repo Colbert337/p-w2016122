@@ -124,7 +124,24 @@ $(function(){
 			}
 		});
 	}
-
+    if($("#phoneTypeFrom").length){
+    	$("#phoneTypeFrom").validate({
+    		debug: true, //调试模式取消submit的默认提交功能    
+    		submitHandler: function(form) { //表单提交句柄,为一回调函数，带一个参数：form   
+    			form.submit(); //提交表单   
+    		},
+    		rules: {
+    			title: {
+    				required: true
+    			}
+    		},
+    		messages: {
+    			title: {
+    				required: "请填写手机型号。。"
+    			}
+    		}
+    	});
+    }
 	//单页切换
 	if($('#download-fullpage').length){
 		$('#download-fullpage').fullpage({
@@ -230,3 +247,4 @@ function sendMessage(){
 
 
 }
+
