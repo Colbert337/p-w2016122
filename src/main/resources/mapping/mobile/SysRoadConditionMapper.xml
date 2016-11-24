@@ -785,10 +785,10 @@ FROM
                 AND DATE_FORMAT(publisher_time, '%Y%m%d') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id  = #{id,jdbcType=VARCHAR}),'%Y%m%d')
             </when>  
              <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">  
-               AND DATE_FORMAT(publisher_time, '%Y%u') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id = #{id,jdbcType=VARCHAR}),'%Y%m%d')
+               AND DATE_FORMAT(publisher_time, '%Y%u') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id = #{id,jdbcType=VARCHAR}),'%Y%u')
             </when>  
            <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">  
-              AND DATE_FORMAT(publisher_time,'%Y%m') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id = #{id,jdbcType=VARCHAR}),'%Y%m%d')
+              AND DATE_FORMAT(publisher_time,'%Y%m') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id = #{id,jdbcType=VARCHAR}),'%Y%m')
            </when>  
         </choose>  	  
      <choose>  

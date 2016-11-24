@@ -115,7 +115,7 @@
 						</table>
 					</div>
 
-					<%--分页start--%>
+					<%-->
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
@@ -141,7 +141,7 @@
 							</div>
 						</div>
 					</div>
-					<%--分页 end--%>
+					--%>
 					<jsp:include page="/common/message.jsp"></jsp:include>
 
 

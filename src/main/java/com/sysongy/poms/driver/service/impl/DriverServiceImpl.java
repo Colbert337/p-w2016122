@@ -195,14 +195,7 @@ public class DriverServiceImpl implements DriverService {
 				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
 				//存在积分规则
 				if(null!=integralRule){
-					IntegralHistory aIntegralHistory = new IntegralHistory();
-					aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
-					aIntegralHistory.setSys_driver_id(record.getSysDriverId()); 
-					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
-					PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
-					List<IntegralHistory> integralHistoryList =list.getList();
 					//没有发送过积分则进行积分规则判断
-					if(integralHistoryList.size()==0){
 						HashMap<String,String> yqcgHashMap = new HashMap<String,String>();
 						yqcgHashMap.put("reward_cycle", integralRule.getReward_cycle());
 						yqcgHashMap.put("regis_company", invitationCode);
@@ -213,23 +206,28 @@ public class DriverServiceImpl implements DriverService {
 								HashMap<String, String> driverMap = driverList.get(0);
 								//设置密保手机向积分记录表中插入积分历史数据
 								if("true".equals(yqcgMap.get("STATUS"))&&"1".equals(String.valueOf(yqcgMap.get("integral_rule_num")))){
-									//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
-										if("不限".equals(integralRule.getLimit_number())||((!"one".equals(integralRule.getLimit_number())&&!"不限".equals(integralRule.getLimit_number()))&&(Integer.parseInt(driverMap.get("count"))>=Integer.parseInt(integralRule.getLimit_number())))||
-												("one".equals(integralRule.getLimit_number())&&(Integer.parseInt(driverMap.get("count"))-1==Integer.parseInt(integralRule.getLimit_number())))){
+									String llimitnumber = integralRule.getLimit_number();
+									String reward_cycle = integralRule.getReward_cycle();
+									String countDriver = String.valueOf(driverMap.get("count"));
+									boolean nolimit="不限".equals(llimitnumber);
+									boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(countDriver)>=Integer.parseInt(llimitnumber));	
+									boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(countDriver)-1==Integer.parseInt(llimitnumber));	
+										//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
+											if(nolimit||one||pass){
 											IntegralHistory yqcgHistory = new IntegralHistory();
 											yqcgHistory.setIntegral_type("yqcg");
 											yqcgHistory.setIntegral_rule_id(yqcgMap.get("integral_rule_id"));
-											yqcgHistory.setSys_driver_id(record.getSysDriverId());
+											SysDriver aSysDriver  = sysDriverMapper.selectByinvitationCode(invitationCode);	
+											yqcgHistory.setSys_driver_id(aSysDriver.getSysDriverId());
 											yqcgHistory.setIntegral_num(integralRule.getIntegral_reward());
 											integralHistoryService.addIntegralHistory(yqcgHistory, operator_id);
 											SysDriver sysDriver = new SysDriver();
 											sysDriver.setIntegral_num(integralRule.getIntegral_reward());
-											sysDriver.setSysDriverId(record.getSysDriverId());
+											sysDriver.setSysDriverId(aSysDriver.getSysDriverId());
 											sysDriverMapper.updateDriverByIntegral(sysDriver);				
 									}	
 							}					
 						}	
-					}
 			}
 		}
 			
@@ -524,28 +522,32 @@ public class DriverServiceImpl implements DriverService {
         		driver.setIsFirstCharge(GlobalConstant.FIRST_CHAGRE_NO);
         		sysDriverMapper.updateFirstCharge(driver);        		
         	}
-		//系统关键日志记录
-		SysOperationLog sysOperationLog = new SysOperationLog();
-		sysOperationLog.setOperation_type("fx");
-		sysOperationLog.setLog_platform("1");
-		sysOperationLog.setOrder_number(order.getOrderNumber());
-		sysOperationLog.setLog_content("个人首次充值返现成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
-		//操作日志
-		sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
+        	if((null!=order.getOrder_deal())&&(order.getOrder_deal().getCashBack()!=null)&&(!"".equals(order.getOrder_deal().getCashBack()))&&(!order.getOrder_deal().getCashBack().equals(BigDecimal.ZERO))){
+        		//系统关键日志记录
+        		SysOperationLog sysOperationLog = new SysOperationLog();
+        		sysOperationLog.setOperation_type("fx");
+        		sysOperationLog.setLog_platform("1");
+        		sysOperationLog.setOrder_number(order.getOrderNumber());
+        		sysOperationLog.setLog_content("个人首次充值返现成功！充值金额："+order.getCash()+"，返现金额："+order.getOrder_deal().getCashBack()+"，订单号为："+order.getOrderNumber()); 
+        		//操作日志
+        		sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());	
+        	}
         }
 		//2.根据当前充值类型，调用对应的返现规则
         String charge_type = order.getChargeType();
     	List<SysCashBack>  cashBackList_specific_type = sysCashBackService.queryCashBackByNumber(charge_type);
     	String driver_accountId = driver.getSysUserAccountId();
     	String cashTo_success_specific_type = sysCashBackService.cashToAccount(order, cashBackList_specific_type, driver_accountId, accountUserName, GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_CASHBACK);
-		//系统关键日志记录
-		SysOperationLog sysOperationLog = new SysOperationLog();
-		sysOperationLog.setOperation_type("fx");
-		sysOperationLog.setLog_platform("1");
-		sysOperationLog.setOrder_number(order.getOrderNumber());
-		sysOperationLog.setLog_content("个人充值返现成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
-		//操作日志
-		sysOperationLogService.saveOperationLog(sysOperationLog,driver_accountId);
+    	if((null!=order.getOrder_deal())&&(order.getOrder_deal().getCashBack()!=null)&&(!"".equals(order.getOrder_deal().getCashBack()))&&(!order.getOrder_deal().getCashBack().equals(BigDecimal.ZERO))){
+	    	//系统关键日志记录
+			SysOperationLog sysOperationLog = new SysOperationLog();
+			sysOperationLog.setOperation_type("fx");
+			sysOperationLog.setLog_platform("1");
+			sysOperationLog.setOrder_number(order.getOrderNumber());
+			sysOperationLog.setLog_content("个人充值返现成功！充值金额："+order.getCash()+"，返现金额："+order.getOrder_deal().getCashBack()+"，订单号为："+order.getOrderNumber()); 
+			//操作日志
+			sysOperationLogService.saveOperationLog(sysOperationLog,driver_accountId);
+    	}
     	if(!GlobalConstant.OrderProcessResult.SUCCESS.equalsIgnoreCase(cashTo_success_specific_type)){
     		//如果出错，直接退出
     		throw new Exception( cashTo_success_specific_type);
