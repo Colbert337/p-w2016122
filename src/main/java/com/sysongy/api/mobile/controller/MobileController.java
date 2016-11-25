@@ -2510,11 +2510,12 @@ public class MobileController {
 				sysDriver.setSysDriverId(mainObj.optString("token"));
 				order.setSysDriver(sysDriver);
 				order.setOrderDate(sft1.parse(mainObj.optString("time")));
+				//获取分页数据
 				PageInfo<Map<String, Object>> pageInfo = orderService.queryDriverConsumePage(order);
 				List<Map<String, Object>> reChargeList = new ArrayList<>();
 				Map<String, Object> reCharge = new HashMap<>();
 				BigDecimal totalCash = new BigDecimal(BigInteger.ZERO);
-				BigDecimal totalBack = new BigDecimal(BigInteger.ZERO);
+				//计算消费金额
 				List<Map<String, Object>> list = orderService.queryDriverConsume(order);
 				for (Map<String, Object> data : list) {
 					// 汇总消费总额
@@ -2526,6 +2527,7 @@ public class MobileController {
 
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
+						reChargeMap.put("orderType", map.get("orderType"));
 						reChargeMap.put("orderNum", map.get("orderNumber"));
 						reChargeMap.put("amount", map.get("cash"));
 						reChargeMap.put("gasStationName", gastationService.queryGastationByPK(map.get("channelNumber").toString()).getGas_station_name());
@@ -2543,11 +2545,6 @@ public class MobileController {
 							status = "待支付订单";
 						}
 						reChargeMap.put("payStatus", status);
-						/*String chargeType = "";
-						if (map.get("chargeType") != null && !"".equals(map.get("chargeType").toString())) {
-							chargeType = GlobalConstant.getCashBackNumber(map.get("chargeType").toString());
-						}
-						reChargeMap.put("paymentType", chargeType);*/
 						reChargeMap.put("remark", map.get("remark"));
 						String dateTime = "";
 						if (map.get("orderDate") != null && !"".equals(map.get("orderDate").toString())) {

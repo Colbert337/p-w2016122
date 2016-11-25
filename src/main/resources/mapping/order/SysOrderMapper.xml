@@ -1333,9 +1333,10 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		B.preferential_cash,
 		B.spend_type,
 		B.should_payment,
-		B.coupon_cash
+		B.coupon_cash,
+		B.order_type
 		FROM sys_order AS B
-		WHERE 2=2 and B.order_type = '220'
+		WHERE 2=2 and (B.order_type = '220' or B.order_type = '230') 
 		AND B.order_status = '1'
 		AND B.is_discharge = '0'
 		AND B.been_discharged = '0'
