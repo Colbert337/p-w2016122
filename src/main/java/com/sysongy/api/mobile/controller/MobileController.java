@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -106,6 +108,7 @@ import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.AliShortMessage;
 import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
+import com.sysongy.util.CheckPhone;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.HttpUtil;
 import com.sysongy.util.JsonTool;
@@ -5923,6 +5926,35 @@ public class MobileController {
 				String unit = mainObj.optString("unit");
 				String promotions = mainObj.optString("promotions");
 				String priceEffectiveTime = mainObj.optString("priceEffectiveTime");
+				if(phone!=null&&!"".equals(phone)){
+					if(phone.length()==11){
+						boolean boo = CheckPhone.isMobile(phone);
+						if(!boo){
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("手机号码格式有误！");
+							resutObj = JSONObject.fromObject(result);
+							resutObj.remove("listMap");
+							resutObj.remove("data");
+							resultStr = resutObj.toString();
+							logger.error("信息： " + resultStr);
+							resultStr = DESUtil.encode(keyStr, resultStr);
+							return resultStr;
+						}
+					}else{
+						boolean boo = CheckPhone.isPhoneWithArea(phone);
+						if(!boo){
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("电话号码格式有误！(如加区号，用‘-’分隔)");
+							resutObj = JSONObject.fromObject(result);
+							resutObj.remove("listMap");
+							resutObj.remove("data");
+							resultStr = resutObj.toString();
+							logger.error("信息： " + resultStr);
+							resultStr = DESUtil.encode(keyStr, resultStr);
+							return resultStr;
+						}
+					}
+				}
 				//气品价格
 				GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(stationId);
 				//获取气品价格信息
