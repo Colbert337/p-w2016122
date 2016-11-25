@@ -17,7 +17,10 @@
 	}
 
 	function commitForm(obj){
-		
+		if(compareDateMonth($('#startDate').val(),$('#endDate').val())==0){
+			alert('请输入查询时间，且查询时间范围不能超过31天');
+			return false;
+		}
 		//设置当前页的值
 		if(typeof obj == "undefined") {
 			$("#pageNum").val("1");
