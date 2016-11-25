@@ -5287,8 +5287,16 @@ public class MobileController {
 			String pageSize = "pageSize";
 			boolean b = JsonTool.checkJson(mainObj,sortType,infoType,pageNum,pageSize);
 			if(b){
-				String longitude = mainObj.getString("longitude");
-				String latitude = mainObj.getString("latitude");
+				String longitude = null;
+				String latitude = null;
+				boolean blongitude = mainObj.containsKey("longitude");
+				if(blongitude){
+					longitude = mainObj.getString("longitude");
+				}
+				boolean blatitude = mainObj.containsKey("latitude");
+				if(blatitude){
+					latitude = mainObj.getString("latitude");
+				}
 				Gastation gastation = new Gastation();
 				int pageNumIn = mainObj.optInt("pageNum");
 				int pageSizeIn = mainObj.optInt("pageSize");
