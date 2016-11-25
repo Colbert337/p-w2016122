@@ -1,7 +1,7 @@
 var rewardTypeNum=0;
-$(function(){
+function initNumber(){
 	$(".number").bind("input propertychange", function () {
-		if (isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) <= 0){
+		if (isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) < 0){
 			$(this).val("");
 		}
 	});
@@ -14,6 +14,9 @@ $(function(){
 			return false;
 		}
 	});
+}
+$(function(){
+	initNumber();
 });
 function changeintegralType(){
 	var type = $('select[name="integral_type"] option:selected').val();
@@ -78,16 +81,17 @@ function addLadder(){
 	var reward_type='reward_type'+rewardTypeNum;
 	$("#integralRule").append(
 	"<tr>"
-	+"<td><input type='text' size='5' style='width:50px' onchange='checkladdermoney(this)' name='ladder_before'/>元~<input type='text'  size='5' style='width:50px'  onchange='checkladdermoney(this)' name='ladder_after'/>元</td>"
+	+"<td><input type='text' size='5' style='width:50px' maxlength='5' class='number' onchange='checkladdermoney(this)' name='ladder_before'/>元~<input type='text'  size='5' style='width:50px'  onchange='checkladdermoney(this)'  maxlength='5' class='number' name='ladder_after'/>元</td>"
 	+"<td>"
 	+"<input name="+reward_type+"  type='radio' class='ace' value='1' checked='checked' onclick='changeRewardType(this)'>"
 	+"<span class='lbl'>"
-	+"<input type='text' class='number' style='width:60px'  size='5' name='rewardintegral' />"
+	+"<input type='text' class='number' style='width:60px' maxlength='5'  size='5'  name='rewardintegral' />"
 	+"</span>"
 	+"<input name="+reward_type+" type='radio' class='ace' value='2' onclick='changeRewardType(this)'>"
-	+"<span class='lbl'>金额 * <input type='text' class='number'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' size='5' name='rewardmax' disabled='disabled'/>分</span>"
+	+"<span class='lbl'>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' size='5' name='rewardmax' maxlength='5' disabled='disabled'/>分</span>"
 	+"</td>"
 	+"</tr>");
+	initNumber();
 }
 function delLadder(){
 	var flag = window.confirm("您确定要清空设置的积分阶梯和积分奖励吗？");
@@ -100,8 +104,8 @@ function delLadder(){
 	return false;
 }
 function checkladdermoney(laddermoney){
-	$(laddermoney).css("background-color","#FFF");
 	var ladder_falg=false;
+	$(laddermoney).css("background-color","#FFF");
 	if($(laddermoney).attr("name")=="ladder_before"){
 		var ladder_after =  $(laddermoney).parent().find('input[name=ladder_after]');
 		if($(ladder_after).length>0&&$(ladder_after).val()!="undefined"&&$(ladder_after).val()!=""){
@@ -225,15 +229,20 @@ function save(){
 		var rewardmaxs = "";
 		$("#integralRule").find("tr").each(function(i){
 			var tdArr = $(this).children();
-			var ladder_before = tdArr.eq(0).find("input[name='ladder_before']").val();//前积分阶梯
-			var ladder_after = tdArr.eq(0).find("input[name='ladder_after']").val();//后积分阶梯
+			var ladder_before = tdArr.eq(0).find("input[name='ladder_before']");//前积分阶梯
+			var ladder_after = tdArr.eq(0).find("input[name='ladder_after']");//后积分阶梯
 			var reward_type = tdArr.eq(1).find("input[type='radio'][class='ace']:checked").val();//积分奖励类型
 			var rewardfactor = tdArr.eq(1).find("input[name='rewardfactor']").val();//积分奖励百分比
 			var rewardmax = tdArr.eq(1).find("input[name='rewardmax']").val();//积分奖励最大值
 			var rewardintegral = tdArr.eq(1).find("input[name='rewardintegral']").val();//积分奖励值
-			if(typeof(ladder_before) == "undefined"|| ladder_before.length==0||typeof(ladder_after) == "undefined"|| ladder_after.length==0){
+			if(typeof($(ladder_before).val()) == "undefined"|| $(ladder_before).val().length==0||typeof($(ladder_after)) == "undefined"|| $(ladder_after).val().length==0){
 				i=i+1;
 				str = "积分阶梯不能为空！第"+i+"行积分阶梯为空！";
+				return false;
+			}
+			if($(ladder_before).css('background-color')=='rgb(255, 0, 0)'||$(ladder_after).css('background-color')=='rgb(255, 0, 0)'){
+				i=i+1;
+				str = "积分阶梯中第"+i+"行积分设置不合理，请设置后再提交！";
 				return false;
 			}
 			if(reward_type=='1'){

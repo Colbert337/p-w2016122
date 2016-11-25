@@ -41,7 +41,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="reward_cycle" class="col-sm-3 control-label no-padding-right">限制周期：</label>
+							<label for="reward_cycle" class="col-sm-3 control-label no-padding-right">奖励周期：</label>
 								<div class="col-sm-4">
 									<select class="form-control" name="reward_cycle">
 										<s:option flag="true" gcode="REWARD_CYCLE" form="integralRule" field="reward_cycle" />
@@ -49,7 +49,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="limit_number" class="col-sm-3 control-label no-padding-right">限制次数：</label>
+							<label for="limit_number" class="col-sm-3 control-label no-padding-right">奖励次数：</label>
 							<div class="col-sm-4">
 								<label class="radio-inline">
 									<input name="limit"  type="radio" class="ace" value="1" <c:if test="${integralRule.limit_number!='不限'}"> checked="checked"</c:if>  onclick="changeLimitType()">
@@ -62,7 +62,7 @@
 							</div>
 						</div>
 						<div class="form-group" id="integralReward">
-							<label for="integralreward" class="col-sm-3 control-label no-padding-right">积分奖励：</label>
+							<label for="integralreward" class="col-sm-3 control-label no-padding-right">奖励积分：</label>
 							<div class="col-sm-4">
 								<select  name="integral_reward">
 									<s:option flag="true" gcode="INTEGRAL_REWARD" form="integralRule" field="integral_reward" />
@@ -70,7 +70,7 @@
 							</div>
 						</div>
 						<div class="form-group" style="display:none" id="integralLadder">
-							<label class="col-sm-3 control-label no-padding-right">积分：</label>
+							<label class="col-sm-3 control-label no-padding-right">奖励积分：</label>
 							<div class="col-sm-4">
 								<div>
 									<button class="btn btn-sm btn-primary" type="button" onclick="addLadder()">新增积分阶梯</button>

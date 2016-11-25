@@ -397,13 +397,13 @@ public class CashServiceInterface {
         					//当前日/周/月 存在的 司机注册数
         					if(orderList.size()>0){
         							HashMap<String, String> driverMap = orderList.get(0);
-        							//充值成功向积分记录表中插入积分历史数据
+        							//消费成功向积分记录表中插入积分历史数据
         							if("true".equals(integralMap.get("STATUS"))&&"1".equals(String.valueOf(integralMap.get("integral_rule_num")))){
         								String llimitnumber = integralRule.getLimit_number();
         								String reward_cycle = integralRule.getReward_cycle();
         								String count = String.valueOf(driverMap.get("count"));
         							boolean nolimit="不限".equals(llimitnumber);
-        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)>=Integer.parseInt(llimitnumber));	
+        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
         							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
         								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
         									if(nolimit||one||pass){
