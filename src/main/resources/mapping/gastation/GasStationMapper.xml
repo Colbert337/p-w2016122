@@ -506,7 +506,7 @@
          <if test="lng_price != null &amp;&amp; lng_price != ''" >
         lng_price = #{lng_price,jdbcType=VARCHAR},
       </if>
-         <if test="promotions != null &amp;&amp; promotions != ''" >
+         <if test="promotions != null" >
         promotions = #{promotions,jdbcType=VARCHAR},
       </if>
          <if test="viewCount != null &amp;&amp; viewCount != ''" >

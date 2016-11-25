@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -5280,28 +5281,22 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
-			String longitude = "longitude";
-			String latitude = "latitude";
 			String sortType = "sortType";
 			String infoType = "infoType";
 			String pageNum = "pageNum";
 			String pageSize = "pageSize";
-			boolean b = JsonTool.checkJson(mainObj,longitude,latitude,sortType,infoType,pageNum,pageSize);
+			boolean b = JsonTool.checkJson(mainObj,sortType,infoType,pageNum,pageSize);
 			if(b){
-				longitude = mainObj.getString("longitude");
-				latitude = mainObj.getString("latitude");
-				sortType =  mainObj.getString("sortType");//排序类型 1默认2 距离 3 价格(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
-				List<Map<String, Object>> gastationArray = new ArrayList<>();
-				Double longIn = new Double(longitude);
-				Double langIn = new Double(latitude);
+				String longitude = mainObj.getString("longitude");
+				String latitude = mainObj.getString("latitude");
+				Gastation gastation = new Gastation();
 				int pageNumIn = mainObj.optInt("pageNum");
 				int pageSizeIn = mainObj.optInt("pageSize");
-				Gastation gastation = new Gastation();
+				List<Map<String, Object>> gastationArray = new ArrayList<>();
 				//获取所有数据
 				List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
-				//默认排序(置顶两个联盟站)
-				if(sortType.equals("1")){
-					gastationArray = defaultList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
+				if(longitude==null || "".equals(longitude) || latitude==null || "".equals(latitude)){
+					gastationArray = defaultOrder(gastationAllList,pageNumIn,pageSizeIn);
 					if(gastationArray!=null && gastationArray.size() > 0 ){
 						result.setListMap(gastationArray);
 					}else{
@@ -5309,25 +5304,40 @@ public class MobileController {
 						result.setMsg("暂无数据！");
 						result.setListMap(new ArrayList<Map<String, Object>>());
 					}
-				//按距离排序
-				}else if(sortType.equals("2")){
-					gastationArray = orderByDistanceList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
-					if(gastationArray!=null && gastationArray.size() > 0 ){
-						result.setListMap(gastationArray);
-					}else{
-						result.setStatus(MobileReturn.STATUS_SUCCESS);
-						result.setMsg("暂无数据！");
-						result.setListMap(new ArrayList<Map<String, Object>>());
-					}
-				//按价格排序
-				}else if(sortType.equals("3")){
-					gastationArray = orderByPriceList(gastationAllList,pageNumIn,pageSizeIn);
-					if(gastationArray!=null && gastationArray.size() > 0 ){
-						result.setListMap(gastationArray);
-					}else{
-						result.setStatus(MobileReturn.STATUS_SUCCESS);
-						result.setMsg("暂无数据！");
-						result.setListMap(new ArrayList<Map<String, Object>>());
+				}else{
+					sortType =  mainObj.getString("sortType");//排序类型 1默认2 距离 3 价格(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
+					Double longIn = new Double(longitude);
+					Double langIn = new Double(latitude);
+					//默认排序(置顶两个联盟站)
+					if(sortType.equals("1")){
+						gastationArray = defaultList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
+						if(gastationArray!=null && gastationArray.size() > 0 ){
+							result.setListMap(gastationArray);
+						}else{
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
+					//按距离排序
+					}else if(sortType.equals("2")){
+						gastationArray = orderByDistanceList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
+						if(gastationArray!=null && gastationArray.size() > 0 ){
+							result.setListMap(gastationArray);
+						}else{
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
+					//按价格排序
+					}else if(sortType.equals("3")){
+						gastationArray = orderByPriceList(gastationAllList,pageNumIn,pageSizeIn);
+						if(gastationArray!=null && gastationArray.size() > 0 ){
+							result.setListMap(gastationArray);
+						}else{
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
 					}
 				}
 			}else{
@@ -5675,6 +5685,80 @@ public class MobileController {
 		return gastationArray;
 	}
 	/**
+	 * 获取加注站信息列表(defaultOrder,定位失败时，默认显示)
+	 */
+	private List<Map<String, Object>> defaultOrder(List<Gastation> gastationAllList,int pageNumIn,int pageSizeIn){
+		List<Map<String, Object>> gastationArray = new ArrayList<>();
+		String http_poms_path = (String) prop.get("http_poms_path");
+		if(gastationAllList!=null && gastationAllList.size() > 0){
+	        //进行分页
+			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
+			if(allPage >= pageNumIn ){
+				if (pageNumIn == 0) {
+					pageNumIn = 1;
+				}
+				int end = pageNumIn * pageSizeIn;
+				if (end > gastationAllList.size()) {
+					end  = gastationAllList.size();
+				}
+				int begin = (pageNumIn - 1) * pageSizeIn;
+				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
+				List<Gastation> gastationList1 = pageInfo.getList();
+				if (gastationList1 != null && gastationList1.size() > 0) {
+					for (Gastation gastationInfo : gastationList1) {
+						Map<String, Object> gastationMap = new HashMap<>();
+						gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
+						gastationMap.put("name", gastationInfo.getGas_station_name());
+						gastationMap.put("type", gastationInfo.getType());
+						gastationMap.put("longitude", gastationInfo.getLongitude());
+						gastationMap.put("latitude", gastationInfo.getLatitude());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",gastationInfo.getType());
+						gastationMap.put("stationType", usysparam.getMname());
+						gastationMap.put("service",gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
+						gastationMap.put("preferential",gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
+						// 获取当前气站价格列表
+						String price = gastationInfo.getLng_price();
+						if (price != null && !"".equals(price)) {
+							price = price.replaceAll("，", ",");
+							price = price.replaceAll("：", ":");
+							if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+								String strArray[] = price.split(",");
+								Map[] map = new Map[strArray.length];
+								for (int i = 0; i < strArray.length; i++) {
+									String strInfo = strArray[i].trim();
+									String strArray1[] = strInfo.split(":");
+									String strArray2[] = strArray1[1].split("/");
+									Map<String, Object> dataMap = new HashMap<>();
+									dataMap.put("gasName", strArray1[0]);
+									dataMap.put("gasPrice", strArray2[0]);
+									dataMap.put("gasUnit", strArray2[1]);
+									map[i] = dataMap;
+								}
+								gastationMap.put("priceList", map);
+							} else {
+								gastationMap.put("priceList", new ArrayList());
+							}
+						} else {
+							gastationMap.put("priceList", new ArrayList());
+						}
+						gastationMap.put("phone", gastationInfo.getContact_phone());
+						if (gastationInfo.getStatus().equals("0")) {
+							gastationMap.put("state", "开启");
+						} else {
+							gastationMap.put("state", "关闭");
+						}
+						gastationMap.put("address", gastationInfo.getAddress());
+						String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="+ gastationInfo.getSys_gas_station_id();
+						gastationMap.put("infoUrl", infoUrl);
+						gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="+ gastationInfo.getSys_gas_station_id());
+						gastationArray.add(gastationMap);
+					}
+				}
+			}
+		}
+		return gastationArray;
+	}
+	/**
 	 * 获取单个商户信息
 	 * @param params
 	 * @return
@@ -5733,7 +5817,7 @@ public class MobileController {
 							logger.info("非联盟气站获取商户信息： gsGasPrice为null调用创建关联方发...");
 							ProductPrice productPrice = insertRelation(gastation,gsGasPrice);//添加关联信息
 							if(productPrice!=null){
-								dataMap.put("price", productPrice.getProductPrice());
+								dataMap.put("price", Double.valueOf(productPrice.getProductPrice()).toString());
 								Usysparam unitUsysparam = usysparamService.queryUsysparamByCode("GAS_UNIT", productPrice.getProductUnit());
 								if(unitUsysparam!=null){
 									dataMap.put("unit",unitUsysparam.getMname());
@@ -5749,7 +5833,7 @@ public class MobileController {
 						}else{
 							ProductPrice productPrice = gsGasPrice.getProductPriceInfo();
 							if(productPrice!=null){
-								dataMap.put("price", productPrice.getProductPrice());
+								dataMap.put("price", Double.valueOf(productPrice.getProductPrice()).toString());
 								Usysparam unitUsysparam = usysparamService.queryUsysparamByCode("GAS_UNIT", productPrice.getProductUnit());
 								if(unitUsysparam!=null){
 									dataMap.put("unit",unitUsysparam.getMname());
@@ -5874,7 +5958,13 @@ public class MobileController {
 										gsGasPrice.setPrice_id(id);
 										int temp = gsGasPriceService.updateByPrimaryKeySelective(gsGasPrice);
 										if(temp > 0){
-											result.setMsg("修改成功！");
+											int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
+											if(updTemp > 0 ){
+												result.setMsg("修改成功！");
+											}else{
+												result.setStatus(MobileReturn.STATUS_FAIL);
+												result.setMsg("更新信息失败！");
+											}
 										}else{
 											result.setStatus(MobileReturn.STATUS_FAIL);
 											result.setMsg("更新关联失败！");
@@ -5908,7 +5998,13 @@ public class MobileController {
 										result.setStatus(MobileReturn.STATUS_FAIL);
 										result.setMsg("气品单位更新失败！");
 									}else{
-										result.setMsg("修改成功！");
+										int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
+										if(updTemp > 0 ){
+											result.setMsg("修改成功！");
+										}else{
+											result.setStatus(MobileReturn.STATUS_FAIL);
+											result.setMsg("更新信息失败！");
+										}
 									}
 								}
 							}else{
@@ -5939,7 +6035,13 @@ public class MobileController {
 										result.setStatus(MobileReturn.STATUS_FAIL);
 										result.setMsg("气品单位更新失败！");
 									}else{
-										result.setMsg("修改成功！");
+										int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
+										if(updTemp > 0 ){
+											result.setMsg("修改成功！");
+										}else{
+											result.setStatus(MobileReturn.STATUS_FAIL);
+											result.setMsg("更新信息失败！");
+										}
 									}
 								}
 							}else{
@@ -5948,35 +6050,12 @@ public class MobileController {
 							}
 						}
 					}else{//更新价格以外的其他信息
-						if(!stationName.equals(gastation.getGas_station_name())){
-							gastation.setGas_station_name(stationName);
-						}
-						if(!phone.equals(gastation.getContact_phone())){
-							gastation.setContact_phone(phone);
-						}
-						if(!unit.equals(productPrice.getProductUnit())){
-							productPrice.setProductUnit(unit);
-						}
-						if(!priceEffectiveTime.equals(productPrice.getStartTime())){
-							SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
-							productPrice.setStartTime(sft.parse(priceEffectiveTime));
-						}
-						if(!stationName.equals(gastation.getGas_station_name())){
-							gastation.setGas_station_name(stationName);
-						}
-						if(!stationName.equals(gastation.getGas_station_name())){
-							gastation.setGas_station_name(stationName);
-						}
-						if(!stationName.equals(gastation.getGas_station_name())){
-							gastation.setGas_station_name(stationName);
-						}
-						int updatepTemp = productPriceService.saveProductPrice(productPrice,"update");
-						int updatesTemp = gastationService.updateByPrimaryKeySelective(gastation);
-						if(updatepTemp < 1){
-							throw new Exception("价格信息更新失败");
-						}
-						if(updatesTemp < 1){
-							throw new Exception("气站信息更新失败");
+						int temp = updateSastationInfo(stationName,phone,unit,priceEffectiveTime,promotions,gastation,productPrice);
+						if(temp > 0 ){
+							result.setMsg("修改成功！");
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("更新信息失败！");
 						}
 					}
 				}
@@ -6327,6 +6406,13 @@ public class MobileController {
 				}
 			}
 		}
+		//更新gsGasPrice表气品单位字段(与productPrice统一保持一致，取的时候取productPrice的单位字段)
+		gsGasPrice.setUnit(unit);
+		int temp = gsGasPriceService.saveGsPrice(gsGasPrice, "update");
+		if(temp < 1 ){
+			result = 1;//新气品单位更新失败;
+			return result;
+		}
 		//更新气站信息
 		if(stationName!=null && !"".equals(stationName)){
 			gastation.setGas_station_name(stationName);
@@ -6360,7 +6446,7 @@ public class MobileController {
 		try {
 			// 获取当前气站最高气价
 			String priceStr = gastation.getLng_price();
-			List<Double> priceList = new ArrayList<Double>();
+			List<String> priceList = new ArrayList<String>();
 			if (priceStr != null && !"".equals(priceStr)) {
 				priceStr = priceStr.replaceAll("，", ",");
 				priceStr = priceStr.replaceAll("：", ":");
@@ -6370,21 +6456,23 @@ public class MobileController {
 						String strInfo = strArray[x].trim();
 						String strArray1[] = strInfo.split(":");
 						String strArray2[] = strArray1[1].split("/");
-						Double m = Double.valueOf(strArray2[0].substring(0, strArray2[0].length() - 1));
+						String m = strArray2[0].substring(0, strArray2[0].length() - 1);
 						priceList.add(m);
 					}
 				} else {
-					priceList.add(0.0);
+					priceList.add("0");
 				}
 			} else {
-				priceList.add(0.0);
+				priceList.add("0");
 			}
 			// 按价格重新正序排序，取最高价取最后一个
 			Collections.sort(priceList);
 			// 最高价格
-			Double price = priceList.get(priceList.size() - 1);
+			String price = priceList.get(priceList.size() - 1);
 			// 获取最高价格气品类型
 			String Str = gastation.getLng_price();
+			Str = Str.replaceAll("，", ",");
+			Str = Str.replaceAll("：", ":");
 			String gasType;
 			String gasUnit;
 			int i = Str.indexOf(String.valueOf(price));
@@ -6398,6 +6486,13 @@ public class MobileController {
 			gasType = gasType.substring(0, gasType.length() - 1);
 			gasUnit = Str.substring(i, Str.length());
 			gasUnit = gasUnit.split(",")[0].split("/")[1];
+			gasUnit = gasUnit.split(",")[0];
+			if(gasUnit.equalsIgnoreCase("KG")){
+				gasUnit="公斤";
+			}
+			if(gasUnit.equalsIgnoreCase("L")){
+				gasUnit="升";
+			}
 			// 获取气品单位的Mcode,Scode(gas_num字段),单位
 			Usysparam McodeUsysparam = usysparamService.queryUsysparamByGcodeAndMname("CARDTYPE", gasType);
 			Usysparam ScodeUsysparam = usysparamService.queryUsysparamByGcodeAndMname("CARDTYPE", gasType);
@@ -6437,7 +6532,7 @@ public class MobileController {
 				if (ScodeUsysparam != null) {
 					productPrice.setProductPriceId(ScodeUsysparam.getMcode());
 				}
-				productPrice.setProductPrice(price);
+				productPrice.setProductPrice(Double.valueOf(price));
 				if (UnitUsysparam != null) {
 					productPrice.setProductUnit(UnitUsysparam.getMcode());
 				}
@@ -6460,10 +6555,76 @@ public class MobileController {
 			return productPrice;
 		}
 	}
-
+	/**
+	 * 非联盟站修改商户信息接口(当价格不变时，修改除价格以外的信息)
+	 * @param productPrice 
+	 * @param gastation 
+	 * @param promotions 
+	 * @param priceEffectiveTime 
+	 * @param unit 
+	 * @param phone 
+	 * @param stationName 
+	 * @param promotions 
+	 * @param priceEffectiveTime 
+	 * @param unit 
+	 * @param phone 
+	 * @param stationName 
+	 */
+	private  Integer updateSastationInfo(String stationName, String phone, String unit, String priceEffectiveTime, String promotions, Gastation gastation, ProductPrice productPrice){
+		int result = 0;//默认0失败
+		try {
+			if (!stationName.equals(gastation.getGas_station_name())) {
+				gastation.setGas_station_name(stationName);
+			}
+			if (!phone.equals(gastation.getContact_phone())) {
+				gastation.setContact_phone(phone);
+			}
+			if (!unit.equals(productPrice.getProductUnit())) {
+				productPrice.setProductUnit(unit);
+			}
+			if (!priceEffectiveTime.equals(productPrice.getStartTime()) && !priceEffectiveTime.equals("0") && !"".equals(priceEffectiveTime)) {
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+				productPrice.setStartTime(sft.parse(priceEffectiveTime));
+			}
+			if (!promotions.equals(gastation.getPromotions())) {
+				gastation.setPromotions(promotions);
+			}
+			String gasType = productPrice.getProductPriceId();
+			Double gasPrice = Double.valueOf(productPrice.getProductPrice());
+			String gasUnit = productPrice.getProductUnit();
+			gasUnit = usysparamService.queryUsysparamByCode("GAS_UNIT",gasUnit).getMname();
+			if(gasUnit.equalsIgnoreCase("公斤")){
+				gasUnit="KG";
+			}
+			if(gasUnit.equalsIgnoreCase("升")){
+				gasUnit="L";
+			}
+			String lngStr=usysparamService.queryUsysparamByCode("CARDTYPE",gasType).getMname()+":"+gasPrice+"元/"+gasUnit;
+			gastation.setLng_price(lngStr);
+			int updatepTemp = productPriceService.saveProductPrice(productPrice, "update");
+			int updatesTemp = gastationService.updateByPrimaryKeySelective(gastation);
+			if (updatepTemp < 1) {
+				throw new Exception("价格信息更新失败");
+			}else{
+				result=1;
+			}
+			if (updatesTemp < 1) {
+				throw new Exception("气站信息更新失败");
+			}else{
+				result=1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			return result;
+		}
+	}
+	
+	
+	
 	@RequestMapping(value = "/QR")
 	@ResponseBody
-	public void getQR() {
+  	public void getQR() {
 		try {
 			List<SysDriver> list = driverService.queryAll();
 			System.out.println(list.size());
