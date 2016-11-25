@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -5733,7 +5734,7 @@ public class MobileController {
 							logger.info("非联盟气站获取商户信息： gsGasPrice为null调用创建关联方发...");
 							ProductPrice productPrice = insertRelation(gastation,gsGasPrice);//添加关联信息
 							if(productPrice!=null){
-								dataMap.put("price", productPrice.getProductPrice());
+								dataMap.put("price", Double.valueOf(productPrice.getProductPrice()).toString());
 								Usysparam unitUsysparam = usysparamService.queryUsysparamByCode("GAS_UNIT", productPrice.getProductUnit());
 								if(unitUsysparam!=null){
 									dataMap.put("unit",unitUsysparam.getMname());
@@ -5749,7 +5750,7 @@ public class MobileController {
 						}else{
 							ProductPrice productPrice = gsGasPrice.getProductPriceInfo();
 							if(productPrice!=null){
-								dataMap.put("price", productPrice.getProductPrice());
+								dataMap.put("price", Double.valueOf(productPrice.getProductPrice()).toString());
 								Usysparam unitUsysparam = usysparamService.queryUsysparamByCode("GAS_UNIT", productPrice.getProductUnit());
 								if(unitUsysparam!=null){
 									dataMap.put("unit",unitUsysparam.getMname());
@@ -5874,7 +5875,13 @@ public class MobileController {
 										gsGasPrice.setPrice_id(id);
 										int temp = gsGasPriceService.updateByPrimaryKeySelective(gsGasPrice);
 										if(temp > 0){
-											result.setMsg("修改成功！");
+											int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
+											if(updTemp > 0 ){
+												result.setMsg("修改成功！");
+											}else{
+												result.setStatus(MobileReturn.STATUS_FAIL);
+												result.setMsg("更新信息失败！");
+											}
 										}else{
 											result.setStatus(MobileReturn.STATUS_FAIL);
 											result.setMsg("更新关联失败！");
@@ -5908,7 +5915,13 @@ public class MobileController {
 										result.setStatus(MobileReturn.STATUS_FAIL);
 										result.setMsg("气品单位更新失败！");
 									}else{
-										result.setMsg("修改成功！");
+										int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
+										if(updTemp > 0 ){
+											result.setMsg("修改成功！");
+										}else{
+											result.setStatus(MobileReturn.STATUS_FAIL);
+											result.setMsg("更新信息失败！");
+										}
 									}
 								}
 							}else{
@@ -5939,7 +5952,13 @@ public class MobileController {
 										result.setStatus(MobileReturn.STATUS_FAIL);
 										result.setMsg("气品单位更新失败！");
 									}else{
-										result.setMsg("修改成功！");
+										int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
+										if(updTemp > 0 ){
+											result.setMsg("修改成功！");
+										}else{
+											result.setStatus(MobileReturn.STATUS_FAIL);
+											result.setMsg("更新信息失败！");
+										}
 									}
 								}
 							}else{
@@ -5948,35 +5967,12 @@ public class MobileController {
 							}
 						}
 					}else{//更新价格以外的其他信息
-						if(!stationName.equals(gastation.getGas_station_name())){
-							gastation.setGas_station_name(stationName);
-						}
-						if(!phone.equals(gastation.getContact_phone())){
-							gastation.setContact_phone(phone);
-						}
-						if(!unit.equals(productPrice.getProductUnit())){
-							productPrice.setProductUnit(unit);
-						}
-						if(!priceEffectiveTime.equals(productPrice.getStartTime())){
-							SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
-							productPrice.setStartTime(sft.parse(priceEffectiveTime));
-						}
-						if(!stationName.equals(gastation.getGas_station_name())){
-							gastation.setGas_station_name(stationName);
-						}
-						if(!stationName.equals(gastation.getGas_station_name())){
-							gastation.setGas_station_name(stationName);
-						}
-						if(!promotions.equals(gastation.getPromotions())){
-							gastation.setGas_station_name(promotions);
-						}
-						int updatepTemp = productPriceService.saveProductPrice(productPrice,"update");
-						int updatesTemp = gastationService.updateByPrimaryKeySelective(gastation);
-						if(updatepTemp < 1){
-							throw new Exception("价格信息更新失败");
-						}
-						if(updatesTemp < 1){
-							throw new Exception("气站信息更新失败");
+						int temp = updateSastationInfo(stationName,phone,unit,priceEffectiveTime,promotions,gastation,productPrice);
+						if(temp > 0 ){
+							result.setMsg("修改成功！");
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("更新信息失败！");
 						}
 					}
 				}
@@ -6327,6 +6323,13 @@ public class MobileController {
 				}
 			}
 		}
+		//更新gsGasPrice表气品单位字段(与productPrice统一保持一致，取的时候取productPrice的单位字段)
+		gsGasPrice.setUnit(unit);
+		int temp = gsGasPriceService.saveGsPrice(gsGasPrice, "update");
+		if(temp < 1 ){
+			result = 1;//新气品单位更新失败;
+			return result;
+		}
 		//更新气站信息
 		if(stationName!=null && !"".equals(stationName)){
 			gastation.setGas_station_name(stationName);
@@ -6385,6 +6388,8 @@ public class MobileController {
 			String price = priceList.get(priceList.size() - 1);
 			// 获取最高价格气品类型
 			String Str = gastation.getLng_price();
+			Str = Str.replaceAll("，", ",");
+			Str = Str.replaceAll("：", ":");
 			String gasType;
 			String gasUnit;
 			int i = Str.indexOf(String.valueOf(price));
@@ -6398,8 +6403,12 @@ public class MobileController {
 			gasType = gasType.substring(0, gasType.length() - 1);
 			gasUnit = Str.substring(i, Str.length());
 			gasUnit = gasUnit.split(",")[0].split("/")[1];
+			gasUnit = gasUnit.split(",")[0];
 			if(gasUnit.equalsIgnoreCase("KG")){
 				gasUnit="公斤";
+			}
+			if(gasUnit.equalsIgnoreCase("L")){
+				gasUnit="升";
 			}
 			// 获取气品单位的Mcode,Scode(gas_num字段),单位
 			Usysparam McodeUsysparam = usysparamService.queryUsysparamByGcodeAndMname("CARDTYPE", gasType);
@@ -6463,10 +6472,76 @@ public class MobileController {
 			return productPrice;
 		}
 	}
-
+	/**
+	 * 非联盟站修改商户信息接口(当价格不变时，修改除价格以外的信息)
+	 * @param productPrice 
+	 * @param gastation 
+	 * @param promotions 
+	 * @param priceEffectiveTime 
+	 * @param unit 
+	 * @param phone 
+	 * @param stationName 
+	 * @param promotions 
+	 * @param priceEffectiveTime 
+	 * @param unit 
+	 * @param phone 
+	 * @param stationName 
+	 */
+	private  Integer updateSastationInfo(String stationName, String phone, String unit, String priceEffectiveTime, String promotions, Gastation gastation, ProductPrice productPrice){
+		int result = 0;//默认0失败
+		try {
+			if (!stationName.equals(gastation.getGas_station_name())) {
+				gastation.setGas_station_name(stationName);
+			}
+			if (!phone.equals(gastation.getContact_phone())) {
+				gastation.setContact_phone(phone);
+			}
+			if (!unit.equals(productPrice.getProductUnit())) {
+				productPrice.setProductUnit(unit);
+			}
+			if (!priceEffectiveTime.equals(productPrice.getStartTime()) && !priceEffectiveTime.equals("0") && !"".equals(priceEffectiveTime)) {
+				SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:mm");
+				productPrice.setStartTime(sft.parse(priceEffectiveTime));
+			}
+			if (!promotions.equals(gastation.getPromotions())) {
+				gastation.setPromotions(promotions);
+			}
+			String gasType = productPrice.getProductPriceId();
+			Double gasPrice = Double.valueOf(productPrice.getProductPrice());
+			String gasUnit = productPrice.getProductUnit();
+			gasUnit = usysparamService.queryUsysparamByCode("GAS_UNIT",gasUnit).getMname();
+			if(gasUnit.equalsIgnoreCase("公斤")){
+				gasUnit="KG";
+			}
+			if(gasUnit.equalsIgnoreCase("升")){
+				gasUnit="L";
+			}
+			String lngStr=usysparamService.queryUsysparamByCode("CARDTYPE",gasType).getMname()+":"+gasPrice+"元/"+gasUnit;
+			gastation.setLng_price(lngStr);
+			int updatepTemp = productPriceService.saveProductPrice(productPrice, "update");
+			int updatesTemp = gastationService.updateByPrimaryKeySelective(gastation);
+			if (updatepTemp < 1) {
+				throw new Exception("价格信息更新失败");
+			}else{
+				result=1;
+			}
+			if (updatesTemp < 1) {
+				throw new Exception("气站信息更新失败");
+			}else{
+				result=1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			return result;
+		}
+	}
+	
+	
+	
 	@RequestMapping(value = "/QR")
 	@ResponseBody
-	public void getQR() {
+  	public void getQR() {
 		try {
 			List<SysDriver> list = driverService.queryAll();
 			System.out.println(list.size());
