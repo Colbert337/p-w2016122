@@ -203,12 +203,12 @@ a:active {
 									<td><fmt:formatDate value="${list.auditorTime}"
 											type="both" /></td>
 									<%-- <td>${list.operator}</td> --%>
-									<td><c:if test="${list.conditionStatus == '2'}">
-											<a class="option-btn-m" href="javascript:void(0);"
+									<td>
+										<a class="option-btn-m" href="javascript:void(0);"
 												title="查看失效请求"
 												onclick="showShixiao('../web/mobile/road/roadListStr?id=${list.id }')"
 												data-rel="tooltip"> --${list.invalid_count}-- </a>
-										</c:if></td>
+										 </td>
 									<td class="text-center"><c:if
 											test="${list.conditionStatus == '1' }">
 											<a class="option-btn-m" href="javascript:void(0);" title="审核"
