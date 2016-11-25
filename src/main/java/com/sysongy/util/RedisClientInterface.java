@@ -1,7 +1,5 @@
 package com.sysongy.util;
 
-import java.io.Serializable;
-
 /**
  * Created by Administrator on 2016/5/26.
  */
