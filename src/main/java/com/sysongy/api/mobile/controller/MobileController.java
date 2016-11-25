@@ -2563,16 +2563,8 @@ public class MobileController {
 						reChargeMap.put("couponTitle", map.get("couponTitle")==null?"":map.get("couponTitle"));//优惠券标题
 						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费
 						String chargeType = (String) map.get("spend_type");
-						if(chargeType.equals("C01")){
-							chargeType = "卡余额消费";
-						}else if(chargeType.equals("C02")){
-							chargeType = "POS消费";
-						}else if(chargeType.equals("C03")){
-							chargeType = "微信消费";
-						}else if(chargeType.equals("C04 ")){
-							chargeType = "支付宝消费";
-						}
-						reChargeMap.put("chargeType", chargeType);//
+						Usysparam param=usysparamService.queryUsysparamByCode("SPEND_TYPE",chargeType);
+						reChargeMap.put("chargeType", param.getMname());//
 						reChargeList.add(reChargeMap);
 					}
 					reCharge.put("listMap", reChargeList);
