@@ -32,6 +32,8 @@ public interface GsGasPriceService {
 
     public Integer isExists(GsGasPrice obj) throws Exception;
 
+    public Integer queryGasCount(GsGasPrice obj) throws Exception;
+
     /**
      * 查询加注站价格列表
      * @param stationId 加注站编号

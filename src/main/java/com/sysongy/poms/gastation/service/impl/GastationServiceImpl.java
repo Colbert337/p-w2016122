@@ -568,6 +568,12 @@ public class GastationServiceImpl implements GastationService {
 					gsGasPriceService.saveGsPrice(gsGasPrice, "update");
 
 					productPriceService.saveProductPrice(tmp, "update");
+					
+					Gastation gastation = new Gastation();
+					gastation.setSys_gas_station_id(gsGasPrice.getSysGasStationId());
+					gastation.setLng_price("LNG:"+record.getProductPrice()+"元/KG");
+					
+					this.updateByPrimaryKeySelective(gastation);
 				}else{
 					newrecord.setProductPriceStatus("0");
 				}

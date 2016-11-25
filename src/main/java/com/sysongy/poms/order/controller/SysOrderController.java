@@ -423,7 +423,7 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
 						newOrder.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
 						newOrder.setIs_discharge("0");
-						newOrder.setOrderStatus(3);
+						newOrder.setOrderStatus(0);
 						newOrder.setOrderDate(new Date());
 						newOrder.setOrderType("230");
 						newOrder.setShould_payment(order.getCash());
@@ -556,7 +556,7 @@ public class SysOrderController extends BaseContoller {
 					newOrder.setOrderId(UUID.randomUUID().toString().replaceAll("-", ""));
 					newOrder.setCash(new BigDecimal(money).multiply(new BigDecimal(-1)));
 					newOrder.setIs_discharge("0");
-					newOrder.setOrderStatus(3);
+					newOrder.setOrderStatus(0);
 					newOrder.setOrderDate(new Date());
 					newOrder.setOrderType("230");
 					newOrder.setDebitAccount(order.getDebitAccount());
