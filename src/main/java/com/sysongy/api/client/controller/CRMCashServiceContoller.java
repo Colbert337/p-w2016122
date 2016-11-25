@@ -524,7 +524,11 @@ public class CRMCashServiceContoller {
                 record.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_TRANSPORTION));
                 String orderConsume = orderService.consumeByTransportion(record, transportion, tcFleet);
 
-                if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
+                if(orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.FLEET_ERROR_BALANCE_IS_NOT_ENOUGH)){
+                    ajaxJson.setSuccess(false);
+                    ajaxJson.setMsg("车队余额不足：" + orderConsume);
+                    return ajaxJson;
+                }else if(!orderConsume.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)){
                     ajaxJson.setSuccess(false);
                     ajaxJson.setMsg("订单消费错误：" + orderConsume);
                     return ajaxJson;
