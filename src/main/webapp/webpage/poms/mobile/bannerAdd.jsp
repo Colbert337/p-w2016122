@@ -170,22 +170,22 @@
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								for="target_url"><span class="red_star">*</span> 链接地址： </label>
-							<div class="col-sm-8">
+								for=""><span class="red_star">*</span> 链接地址： </label>
+							<div class="col-sm-8"><span>
 								<input type="text" id="target_url"  maxlength="150"
-									name="targetUrl" placeholder="链接地址" class="col-xs-10 col-sm-12" onclick="queryBannerPageUrl()" />
+									name="targetUrl" placeholder="链接地址" class="col-xs-10 col-sm-12" onclick="queryBannerPageUrl()" /></span>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-10 control-label no-padding-right"
-								for="target_url">
+								for="">
 								链接地址如：/portal/crm/help/showPage?pageid=<span class="red_star">66b24d910a0f4ce68689682f497c0349</span>
 							</label>
 
 						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right"
-								for="target_url"><span class="red_star">*</span>顺序 </label>
+								for=""><span class="red_star">*</span>顺序 </label>
 							<div class="col-sm-8">
 								<input type="text" id="sort" onkeyup="clearNoNum2(this)" value="${mbBanner.sort }"
 									placeholder="顺序" maxlength="11" name="sort"

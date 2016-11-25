@@ -103,7 +103,7 @@ window.onload = setCurrentPage();
 	
 function commitForm(obj) {
 	// 设置当前页的值
-	
+	$('#pageNum').val(page);
 	if(obj=='return'){
 	
 		$("#formRoad").ajaxSubmit( {
@@ -149,7 +149,9 @@ var roadStatus;
 var roadType;
 var roadPT;
 var roadAT;
+var page;
 function showShixiao(url){
+	page=$('#pageNum').val();
 	roadmsg=$('#msg').val();
 	roadStatus=$('#conditionStatus').val();
 	roadType=$('#type').val();
