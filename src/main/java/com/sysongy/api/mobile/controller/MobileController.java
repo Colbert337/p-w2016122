@@ -5306,14 +5306,27 @@ public class MobileController {
 				List<Map<String, Object>> gastationArray = new ArrayList<>();
 				//获取所有数据
 				List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
+				//定位失败时按价格排序不变
 				if(longitude==null || "".equals(longitude) || latitude==null || "".equals(latitude)){
-					gastationArray = defaultOrder(gastationAllList,pageNumIn,pageSizeIn);
-					if(gastationArray!=null && gastationArray.size() > 0 ){
-						result.setListMap(gastationArray);
+					sortType =  mainObj.getString("sortType");//排序类型 1默认2 距离 3 价格(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
+					if(sortType.equals("3")){
+						gastationArray = orderByPriceList(gastationAllList,pageNumIn,pageSizeIn);
+						if(gastationArray!=null && gastationArray.size() > 0 ){
+							result.setListMap(gastationArray);
+						}else{
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
 					}else{
-						result.setStatus(MobileReturn.STATUS_SUCCESS);
-						result.setMsg("暂无数据！");
-						result.setListMap(new ArrayList<Map<String, Object>>());
+						gastationArray = defaultOrder(gastationAllList,pageNumIn,pageSizeIn);
+						if(gastationArray!=null && gastationArray.size() > 0 ){
+							result.setListMap(gastationArray);
+						}else{
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
 					}
 				}else{
 					sortType =  mainObj.getString("sortType");//排序类型 1默认2 距离 3 价格(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
@@ -5944,7 +5957,7 @@ public class MobileController {
 						boolean boo = CheckPhone.isPhoneWithArea(phone);
 						if(!boo){
 							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("电话号码格式有误！(如加区号，用‘-’分隔)");
+							result.setMsg("电话号码格式有误,如有区号用‘-’分隔！");
 							resutObj = JSONObject.fromObject(result);
 							resutObj.remove("listMap");
 							resutObj.remove("data");
@@ -5967,7 +5980,11 @@ public class MobileController {
 						String id = UUIDGenerator.getUUID();
 						newProductPrice.setId(id);
 						newProductPrice.setVersion(null);
-						newProductPrice.setProductPrice(Double.valueOf(price));
+						try {
+							newProductPrice.setProductPrice(Double.valueOf(price));
+						} catch (Exception e) {
+							throw new Exception("价格格式有误！");
+						}
 						//获取生效时间约束
 						String oldPriceEffectiveTime = gastation.getPrice_effective_time();
 						//新生效时间
@@ -6111,9 +6128,9 @@ public class MobileController {
 			resultStr = DESUtil.encode(keyStr, resultStr);
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("获取折扣信息失败！");
+			result.setMsg("修改信息失败："+e.toString().split(":")[1]);
 			resutObj = JSONObject.fromObject(result);
-			logger.error("获取折扣信息失败： " + e);
+			logger.error("修改信息失败： " + e);
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);
 			return resultStr;
