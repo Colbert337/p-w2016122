@@ -431,6 +431,7 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setCreditAccount(order.getCreditAccount());
 						newOrder.setSpend_type(order.getSpend_type());
 						newOrder.setChargeType("110");
+						newOrder.setSpend_type("110");
 						newOrder.setBatch_no(batch_no);
 						newOrder.setOrderRemark(msg);
 						order.setCash(order.getCash().subtract(new BigDecimal(money)));
@@ -484,6 +485,7 @@ public class SysOrderController extends BaseContoller {
 							newOrder.setCreditAccount(order.getCreditAccount());
 							newOrder.setSpend_type(order.getSpend_type());
 							newOrder.setChargeType("111");
+							newOrder.setSpend_type("111");
 							newOrder.setOrderRemark(msg);
 							newOrder.setShould_payment(order.getCash());
 							newOrder.setBatch_no(batch_no);
@@ -563,6 +565,7 @@ public class SysOrderController extends BaseContoller {
 					newOrder.setCreditAccount(order.getCreditAccount());
 					newOrder.setSpend_type(order.getSpend_type());
 					newOrder.setChargeType("110");
+					newOrder.setSpend_type("110");
 					newOrder.setShould_payment(order.getCash());
 					newOrder.setBatch_no(batch_no);
 					CurrUser user = (CurrUser) session.getAttribute("currUser");
@@ -612,6 +615,7 @@ public class SysOrderController extends BaseContoller {
 						newOrder.setCreditAccount(order.getCreditAccount());
 						newOrder.setSpend_type(order.getSpend_type());
 						newOrder.setChargeType("111");
+						newOrder.setSpend_type("111");
 						newOrder.setOrderRemark(msg);
 						newOrder.setShould_payment(order.getCash());
 						newOrder.setBatch_no(batch_no);

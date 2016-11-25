@@ -415,6 +415,9 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			<if test="chk_memo != null">
 				chk_memo,
 			</if>
+			<if test="spend_type != null">
+				spend_type,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="orderId != null">
@@ -486,6 +489,10 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			<if test="chk_memo != null">
 				#{chk_memo,jdbcType=INTEGER},
 			</if>
+			<if test="spend_type != null">
+				#{spend_type,jdbcType=INTEGER},
+			</if>
+			
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.order.model.SysOrder">

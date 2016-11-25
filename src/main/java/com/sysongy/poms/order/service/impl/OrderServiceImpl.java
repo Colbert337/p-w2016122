@@ -1316,7 +1316,7 @@ public class OrderServiceImpl implements OrderService {
 			newOrder.setShould_payment(order.getCash());
 			newOrder.setDebitAccount(order.getDebitAccount());
 			newOrder.setCreditAccount(order.getCreditAccount());
-			newOrder.setSpend_type(order.getSpend_type());
+			newOrder.setSpend_type("112");
 			newOrder.setChargeType("112");
 			CurrUser user = (CurrUser) session.getAttribute("currUser");
 			newOrder.setOperator(user.getUser().getSysUserId());
