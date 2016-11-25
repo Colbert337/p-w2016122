@@ -59,4 +59,6 @@ public interface UsysparamMapper {
     public Usysparam queryChargeTypeByMcode(String mcode);
 
     public List<Usysparam> queryCardTypeByMcodeAndScode(Usysparam record);
+    
+    public Usysparam queryUsysparamByGcodeAndMname(String gcode,String mname);
 }

@@ -35,7 +35,13 @@ public interface SysRoadConditionMapper {
 	int updateByPrimaryKeyToCheck(SysRoadCondition road);
 
 	List<SysRoadCondition> queryRoadId();
-	
+
+    /**
+     * 获取限高限重路况列表
+     * @return
+     */
+    List<SysRoadCondition> queryHighWeightRoadId();
+
 	List<SysRoadCondition> queryAll();
 
 	List<SysRoadCondition> queryForRedis();

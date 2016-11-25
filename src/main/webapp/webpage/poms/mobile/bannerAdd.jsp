@@ -726,10 +726,8 @@ obj.value = obj.value.replace(/[^\d.]/g,"");
 			}
 		})*/
 		loadPage('#showUrlList', '../web/page/getBannerPageUrl?pageStatus=0');
-		if($('#target_url').val()==''){
-			$('#target_url').val('链接地址');
-		}
 		$("#innerModel").modal('show');
 	}
+
 
 </script>
