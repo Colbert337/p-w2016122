@@ -8,6 +8,14 @@
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 		<script src="<%=basePath %>/dist/js/integral/modifyIntegralRule.js"></script>
+		<style type="text/css">
+			#limitNumber i.form-control-feedback{
+				right: -100px;
+			}
+			#integralLadder i.form-control-feedback{
+				display:none !important;
+			}
+		</style>
 		<div class="">
 			<!-- /section:settings.box -->
 			<div class="page-header">

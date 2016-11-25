@@ -10,7 +10,10 @@
 	<script src="<%=basePath %>/dist/js/integral/addIntegralRule.js"></script>
 	<style type="text/css">
 	#limitNumber i.form-control-feedback{
-	right: -100px;
+		right: -100px;
+	}
+	#integralLadder i.form-control-feedback{
+		display:none !important;
 	}
 	</style>
 	<div class="">
