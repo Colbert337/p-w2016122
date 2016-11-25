@@ -6008,6 +6008,9 @@ public class MobileController {
 				String unit = mainObj.optString("unit");
 				String promotions = mainObj.optString("promotions");
 				String priceEffectiveTime = mainObj.optString("priceEffectiveTime");
+				if(price==null ||"".equals(price)){
+					price="0.0";
+				}
 				if(phone!=null&&!"".equals(phone)){
 					if(phone.length()==11){
 						boolean boo = CheckPhone.isMobile(phone);
@@ -6041,89 +6044,48 @@ public class MobileController {
 				GsGasPrice gsGasPrice = gsGasPriceService.queryGsGasPriceInfo(stationId);
 				//获取气品价格信息
 				ProductPrice productPrice = productPriceService.queryProductPriceByPK(gsGasPrice.getPrice_id());
-				if(price!=null && !"".equals(price)){
 					//如果价格和原来不同，进行更改操作
 					if(!price.equals(String.valueOf(productPrice.getProductPrice()))){
-						//通过原对象克隆新对象
-						ProductPrice newProductPrice = productPrice.clone();
-						String id = UUIDGenerator.getUUID();
-						newProductPrice.setId(id);
-						newProductPrice.setVersion(null);
-						try {
-							newProductPrice.setProductPrice(Double.valueOf(price));
-						} catch (Exception e) {
-							throw new Exception("价格格式有误！");
-						}
-						//获取生效时间约束
-						String oldPriceEffectiveTime = gastation.getPrice_effective_time();
-						//新生效时间
-						SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						Date date = sft.parse(priceEffectiveTime);
-						//0立即生效，12半天生效(12小时候生效)，24一天生效(24小时生效)
-						if(oldPriceEffectiveTime.equals("0")){
-							//0立即生效时，更新原价格信息状态为不生效，新加一条价格生效信息
-							productPrice.setProductPriceStatus("0");
-							int updateTemp = productPriceService.updatePriceById(productPrice);
-							if(updateTemp > 0){
-								newProductPrice.setProductPriceStatus("1");
-								newProductPrice.setStartTime(new Date());
-								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
-								if(insertTemp < 1){
-									throw new Exception("新价格添加失败");
-								}else{
-									/**0，失败 1，气品单位更新失败 2，成功 */
-									Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
-									if(res==0){
-										result.setStatus(MobileReturn.STATUS_FAIL);
-										result.setMsg("修改失败！");
-									}else if(res==1){
-										result.setStatus(MobileReturn.STATUS_FAIL);
-										result.setMsg("气品单位更新失败！");
-									}else{
-										//立即生效时更新关联
-										gsGasPrice.setPrice_id(id);
-										int temp = gsGasPriceService.updateByPrimaryKeySelective(gsGasPrice);
-										if(temp > 0){
-											int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
-											if(updTemp > 0 ){
-												result.setMsg("修改成功！");
-											}else{
-												result.setStatus(MobileReturn.STATUS_FAIL);
-												result.setMsg("更新信息失败！");
-											}
-										}else{
-											result.setStatus(MobileReturn.STATUS_FAIL);
-											result.setMsg("更新关联失败！");
-										}
-									}
-								}
+					//通过原对象克隆新对象
+					ProductPrice newProductPrice = productPrice.clone();
+					String id = UUIDGenerator.getUUID();
+					newProductPrice.setId(id);
+					newProductPrice.setVersion(null);
+					try {
+						newProductPrice.setProductPrice(Double.valueOf(price));
+					} catch (Exception e) {
+						throw new Exception("价格格式有误！");
+					}
+					//获取生效时间约束
+					String oldPriceEffectiveTime = gastation.getPrice_effective_time();
+					//新生效时间
+					SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					Date date = sft.parse(priceEffectiveTime);
+					//0立即生效，12半天生效(12小时候生效)，24一天生效(24小时生效)
+					if(oldPriceEffectiveTime.equals("0")){
+						//0立即生效时，更新原价格信息状态为不生效，新加一条价格生效信息
+						productPrice.setProductPriceStatus("0");
+						int updateTemp = productPriceService.updatePriceById(productPrice);
+						if(updateTemp > 0){
+							newProductPrice.setProductPriceStatus("1");
+							newProductPrice.setStartTime(new Date());
+							int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
+							if(insertTemp < 1){
+								throw new Exception("新价格添加失败");
 							}else{
-								throw new Exception("原价格状态更新失败");
-							}
-						}else if(oldPriceEffectiveTime.equals("12")){
-							Date now = new Date();
-							Calendar cal = Calendar.getInstance();
-							Calendar calIn = Calendar.getInstance();
-							calIn.setTime(date);
-							cal.setTime(now);
-							cal.add(Calendar.HOUR, 12);
-							int rs = cal.compareTo(calIn);
-							if(rs < 0){
-								newProductPrice.setStartTime(date);
-								newProductPrice.setProductPriceStatus("2");
-								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
-								if(insertTemp < 1){
-									throw new Exception("新价格添加失败");
+								/**0，失败 1，气品单位更新失败 2，成功 */
+								Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
+								if(res==0){
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("修改失败！");
+								}else if(res==1){
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("气品单位更新失败！");
 								}else{
-									/** 0，失败 1，气品单位更新失败  2，成功 */
-									Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
-									if(res==0){
-										result.setStatus(MobileReturn.STATUS_FAIL);
-										result.setMsg("修改失败！");
-									}else if(res==1){
-										result.setStatus(MobileReturn.STATUS_FAIL);
-										result.setMsg("气品单位更新失败！");
-									}else{
+									//立即生效时更新关联
+									gsGasPrice.setPrice_id(id);
+									int temp = gsGasPriceService.updateByPrimaryKeySelective(gsGasPrice);
+									if(temp > 0){
 										int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
 										if(updTemp > 0 ){
 											result.setMsg("修改成功！");
@@ -6131,58 +6093,97 @@ public class MobileController {
 											result.setStatus(MobileReturn.STATUS_FAIL);
 											result.setMsg("更新信息失败！");
 										}
+									}else{
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("更新关联失败！");
 									}
 								}
-							}else{
-								result.setStatus(MobileReturn.STATUS_FAIL);
-								result.setMsg("时间不在生效范围(12小时后)！！！");
 							}
 						}else{
-							Date now = new Date();
-							Calendar cal = Calendar.getInstance();
-							Calendar calIn = Calendar.getInstance();
-							calIn.setTime(date);
-							cal.setTime(now);
-							cal.add(Calendar.HOUR,24);
-							int rs = cal.compareTo(calIn);
-							if(rs < 0){
-								newProductPrice.setStartTime(date);
-								newProductPrice.setProductPriceStatus("2");
-								int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
-								if(insertTemp < 1){
-									throw new Exception("新价格添加失败");
+							throw new Exception("原价格状态更新失败");
+						}
+					}else if(oldPriceEffectiveTime.equals("12")){
+						Date now = new Date();
+						Calendar cal = Calendar.getInstance();
+						Calendar calIn = Calendar.getInstance();
+						calIn.setTime(date);
+						cal.setTime(now);
+						cal.add(Calendar.HOUR, 12);
+						int rs = cal.compareTo(calIn);
+						if(rs < 0){
+							newProductPrice.setStartTime(date);
+							newProductPrice.setProductPriceStatus("2");
+							int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
+							if(insertTemp < 1){
+								throw new Exception("新价格添加失败");
+							}else{
+								/** 0，失败 1，气品单位更新失败  2，成功 */
+								Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
+								if(res==0){
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("修改失败！");
+								}else if(res==1){
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("气品单位更新失败！");
 								}else{
-									/** 0，失败 1，气品单位更新失败 2，成功 */
-									Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
-									if(res==0){
-										result.setStatus(MobileReturn.STATUS_FAIL);
-										result.setMsg("修改失败！");
-									}else if(res==1){
-										result.setStatus(MobileReturn.STATUS_FAIL);
-										result.setMsg("气品单位更新失败！");
+									int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
+									if(updTemp > 0 ){
+										result.setMsg("修改成功！");
 									}else{
-										int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
-										if(updTemp > 0 ){
-											result.setMsg("修改成功！");
-										}else{
-											result.setStatus(MobileReturn.STATUS_FAIL);
-											result.setMsg("更新信息失败！");
-										}
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("更新信息失败！");
 									}
 								}
-							}else{
-								result.setStatus(MobileReturn.STATUS_FAIL);
-								result.setMsg("时间不在生效范围(24小时后)！！！");
 							}
-						}
-					}else{//更新价格以外的其他信息
-						int temp = updateSastationInfo(stationName,phone,unit,priceEffectiveTime,promotions,gastation,productPrice);
-						if(temp > 0 ){
-							result.setMsg("修改成功！");
 						}else{
 							result.setStatus(MobileReturn.STATUS_FAIL);
-							result.setMsg("更新信息失败！");
+							result.setMsg("时间不在生效范围(12小时后)！！！");
 						}
+					}else{
+						Date now = new Date();
+						Calendar cal = Calendar.getInstance();
+						Calendar calIn = Calendar.getInstance();
+						calIn.setTime(date);
+						cal.setTime(now);
+						cal.add(Calendar.HOUR,24);
+						int rs = cal.compareTo(calIn);
+						if(rs < 0){
+							newProductPrice.setStartTime(date);
+							newProductPrice.setProductPriceStatus("2");
+							int insertTemp = productPriceService.saveProductPrice(newProductPrice,"insert");
+							if(insertTemp < 1){
+								throw new Exception("新价格添加失败");
+							}else{
+								/** 0，失败 1，气品单位更新失败 2，成功 */
+								Integer res = updateStationAndProductPrice(id, unit, gsGasPrice, newProductPrice, gastation, stationName, phone, promotions);
+								if(res==0){
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("修改失败！");
+								}else if(res==1){
+									result.setStatus(MobileReturn.STATUS_FAIL);
+									result.setMsg("气品单位更新失败！");
+								}else{
+									int updTemp = updateSastationInfo(stationName, phone, unit, oldPriceEffectiveTime, promotions, gastation, newProductPrice);
+									if(updTemp > 0 ){
+										result.setMsg("修改成功！");
+									}else{
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("更新信息失败！");
+									}
+								}
+							}
+						}else{
+							result.setStatus(MobileReturn.STATUS_FAIL);
+							result.setMsg("时间不在生效范围(24小时后)！！！");
+						}
+					}
+				}else{//更新价格以外的其他信息
+					int temp = updateSastationInfo(stationName,phone,unit,priceEffectiveTime,promotions,gastation,productPrice);
+					if(temp > 0 ){
+						result.setMsg("修改成功！");
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("更新信息失败！");
 					}
 				}
 			} else {
@@ -6593,31 +6594,38 @@ public class MobileController {
 			}
 			// 按价格重新正序排序，取最高价取最后一个
 			Collections.sort(priceList);
-			// 最高价格
-			String price = priceList.get(priceList.size() - 1);
-			// 获取最高价格气品类型
-			String Str = gastation.getLng_price();
-			Str = Str.replaceAll("，", ",");
-			Str = Str.replaceAll("：", ":");
 			String gasType;
 			String gasUnit;
-			int i = Str.indexOf(String.valueOf(price));
-			gasType = Str.substring(0, i);
-			String[] array = gasType.split(",");
-			if (array.length > 1) {
-				gasType = array[array.length - 1];
-			} else {
-				gasType = array[0];
-			}
-			gasType = gasType.substring(0, gasType.length() - 1);
-			gasUnit = Str.substring(i, Str.length());
-			gasUnit = gasUnit.split(",")[0].split("/")[1];
-			gasUnit = gasUnit.split(",")[0];
-			if(gasUnit.equalsIgnoreCase("KG")){
+			String price;
+			String Str = gastation.getLng_price();
+			// 最高价格
+			if(Str==null||"".equals(Str)){
 				gasUnit="公斤";
-			}
-			if(gasUnit.equalsIgnoreCase("L")){
-				gasUnit="升";
+				gasType="LNG";
+				price="0.0";
+			}else{
+				// 获取最高价格气品类型
+				price = priceList.get(priceList.size() - 1);
+				Str = Str.replaceAll("，", ",");
+				Str = Str.replaceAll("：", ":");
+				int i = Str.indexOf(String.valueOf(price));
+				gasType = Str.substring(0, i);
+				String[] array = gasType.split(",");
+				if (array.length > 1) {
+					gasType = array[array.length - 1];
+				} else {
+					gasType = array[0];
+				}
+				gasType = gasType.substring(0, gasType.length() - 1);
+				gasUnit = Str.substring(i, Str.length());
+				gasUnit = gasUnit.split(",")[0].split("/")[1];
+				gasUnit = gasUnit.split(",")[0];
+				if(gasUnit.equalsIgnoreCase("KG")){
+					gasUnit="公斤";
+				}
+				if(gasUnit.equalsIgnoreCase("L")){
+					gasUnit="升";
+				}
 			}
 			// 获取气品单位的Mcode,Scode(gas_num字段),单位
 			Usysparam McodeUsysparam = usysparamService.queryUsysparamByGcodeAndMname("CARDTYPE", gasType);
