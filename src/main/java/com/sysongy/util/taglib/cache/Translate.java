@@ -5,17 +5,18 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 import com.github.abel533.sql.SqlMapper;
+import com.sysongy.util.RedisClientImpl;
 /**
  * 
  * @author user
  *
  */
-public class Translate {
+public class Translate extends WebApplicationObjectSupport{
 	
 	public static final String SYSPARAM = "SYSPARAM";
 
@@ -42,15 +43,29 @@ public class Translate {
 	 * 				名称
 	 */
 	public String getName(String gcode, String mcode) {
-		WebApplicationContext wac = ContextLoader.getCurrentWebApplicationContext();
-		SqlSessionFactory sessionFactory = (SqlSessionFactory) wac.getBean("sqlSessionFactory");
-		SqlSession session = sessionFactory.openSession();
-		SqlMapper sqlMapper = new SqlMapper(session);
-		String excuteSQL = "SELECT MNAME FROM USYSPARAM WHERE GCODE ='"+gcode+"' AND MCODE ='"+mcode+"'";
-		UsysparamVO vo = sqlMapper.selectOne(excuteSQL, UsysparamVO.class);
-		session.close();
 		
-		return vo == null ?"":vo.getMname();
+		WebApplicationContext wac = ContextLoader.getCurrentWebApplicationContext();
+		
+		RedisClientImpl redisClientImpl =  (RedisClientImpl) wac.getBean("redisClientImpl");
+		
+		String mname = (String) redisClientImpl.getFromCache(gcode + mcode);
+		
+		if(StringUtils.isEmpty(mname)){
+			SqlSessionFactory sessionFactory = (SqlSessionFactory) wac.getBean("sqlSessionFactory");
+			SqlSession session = sessionFactory.openSession();
+			SqlMapper sqlMapper = new SqlMapper(session);
+			
+			String excuteSQL = "SELECT MNAME FROM USYSPARAM WHERE GCODE ='"+gcode+"' AND MCODE ='"+mcode+"'";
+			UsysparamVO vo = sqlMapper.selectOne(excuteSQL, UsysparamVO.class);
+			
+			session.close();
+			
+			mname = vo == null ?"":vo.getMname();
+		}
+		
+		
+		
+		return mname;
 	}
 	
 //	
