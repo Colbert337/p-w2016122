@@ -50,7 +50,7 @@ public class CheckPhone {
 	}
 	public static boolean isPhoneWithoutAreaNumber(String Phone) {
 		boolean b = false;
-		Pattern p2 = Pattern.compile("^[1-9]{1}[1-9]{5,8}$"); // 验证没有区号的
+		Pattern p2 = Pattern.compile("^[1-9]{1}[0-9]{7,8}$"); // 验证没有区号的
 		Matcher m = p2.matcher(Phone);
 		b = m.matches();
 		return b;
