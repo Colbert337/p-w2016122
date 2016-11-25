@@ -207,3 +207,21 @@ $(document).ready(function() {
 function compareDate(d1,d2){
 	return Date.parse(new Date(d1)) > Date.parse(new Date(d2));
 }
+
+//比较日期是否大于31天
+var compareDateMonth=function(d1,d2){
+	if(d1=='' || d2==''){return 0;}
+	var d1arry=new Array();
+	var d2arry=new Array();
+	d1arry =d1.split(' ');
+	d2arry =d2.split(' ');
+	var a = new Date(d1arry[0]).getTime();
+	var b= new Date(d2arry[0]).getTime();
+	var c = 60*60*24*1000;
+	var res = (b - a)/c;
+	if(parseInt(res)>31){
+		return 0;
+	}
+	return 1;
+};
+//console.log(compareDateMonth('2016-08-24 10:51:18','2016-09-24 10:51:18'));

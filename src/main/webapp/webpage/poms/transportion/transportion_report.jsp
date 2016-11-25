@@ -47,11 +47,11 @@
 						<div class="item">
 							<div class="input-daterange top" id="j-input-daterange-top">
 								<label>交易时间:</label>
-								<input type="text" class="" name="startDate" value="${sysOrder.startDate}" readonly="readonly"/>
+								<input type="text" class="" id="startDate" name="startDate" value="${sysOrder.startDate}" readonly="readonly"/>
 								<span class="">
 									<i class="fa fa-exchange"></i>
 								</span>
-								<input type="text" class="" name="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
+								<input type="text" class="" id="endDate" name="endDate" value="${sysOrder.endDate}" readonly="readonly"/>
 							</div>			
 						</div>
 
