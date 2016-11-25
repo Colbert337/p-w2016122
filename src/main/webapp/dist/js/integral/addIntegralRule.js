@@ -213,6 +213,11 @@ function save(){
 	}
 	//校验积分阶梯和积分奖励
 	if($("#integralLadder").is(':visible')){
+		var integralSize = $("#integralRule").find("tr").length;
+		if(integralSize==0){
+			bootbox.alert("积分奖励不能为空！");
+			return false;
+		}
 		var str="";
 		var rewardtypes = "";
 		var rewardintegrals = "";

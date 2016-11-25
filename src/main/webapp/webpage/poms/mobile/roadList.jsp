@@ -130,21 +130,16 @@ a:active {
 									id="end_time_order"><i
 										class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>结束时间</th>
 							 
-								<th onclick="orderBy(this,'auditor_phone');commitForm();"
-									id="auditor_phone_orber">审核人电话</th>
-								<th onclick="orderBy(this,'auditor');commitForm();"
-									id="auditor_orber">审核人</th>
+							 	<th class="text-center td-w3">操作</th>
+							 	
+							 	<th onclick="orderBy(this,'invalid_count');commitForm();"
+									id="invalid_count_orber">失效请求</th>
+									
 								<th onclick="orderBy(this,'condition_type');commitForm();"
 									id="condition_type_order">路况类型</th>
+								
 								<th onclick="orderBy(this,'condition_status');commitForm();"
 									id="condition_status_order">审核状态</th>
-								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
-											id="threshold_max_value_order">缩略图</th> -->
-								<th onclick="orderBy(this,'capture_time');commitForm();"
-									id="capture_time_order">拍照时间</th>
-								<th onclick="orderBy(this,'condition_msg');commitForm();"
-									id="condition_msg_order">路况说明</th>
-								<th onclick="orderBy(this,'memo');commitForm();" id="memo_orber">备注</th>
 								<th onclick="orderBy(this,'publisher_name');commitForm();"
 									id="publisher_name_orber">创建人</th>
 								<th onclick="orderBy(this,'publisher_phone');commitForm();"
@@ -155,15 +150,31 @@ a:active {
 									class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>发布时间</th>
 								<th onclick="orderBy(this,'auditor_time');commitForm();"
 									id="auditor_time_orber">审核时间</th>
-								<th onclick="orderBy(this,'invalid_count');commitForm();"
-									id="invalid_count_orber">失效请求</th>
-								<th class="text-center td-w3">操作</th>
+								<th onclick="orderBy(this,'auditor_phone');commitForm();"
+									id="auditor_phone_orber">审核人电话</th>
+								<th onclick="orderBy(this,'auditor');commitForm();"
+									id="auditor_orber">审核人</th>
+								
+								
+								<!-- 	<th onclick="orderBy(this,'img_path');commitForm();"
+											id="threshold_max_value_order">缩略图</th> -->
+								<th onclick="orderBy(this,'capture_time');commitForm();"
+									id="capture_time_order">拍照时间</th>
+								<th onclick="orderBy(this,'condition_msg');commitForm();"
+									id="condition_msg_order">路况说明</th>
+								<th onclick="orderBy(this,'memo');commitForm();" id="memo_orber">备注</th>
+								
+								
+								
+								
+								
+								
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach items="${pageInfo.list}" var="list" varStatus="s">
 								<tr id="${list.id }">
-								<!-- 隐藏列用于战士详情信息 -->
+								<!-- 隐藏列用于展示详情信息 -->
 									<td  style="display:none"><s:Code2Name mcode="${list.conditionType}"
 											gcode="CONDITION_TYPE"></s:Code2Name></td>
 									<td  style="display:none"><div class="td-inner-warp">${list.conditionMsg}</div></td>
@@ -182,33 +193,8 @@ a:active {
 									<td  style="display:none">${list.publisherName}</td>
 									<td  style="display:none"><div class="td-inner-warp">${list.memo}</div></td>
 									<!-- end -->
-									<td>${list.auditorPhone}</td>
-									<td>${list.auditor}</td>
-									<td><s:Code2Name mcode="${list.conditionType}"
-											gcode="CONDITION_TYPE"></s:Code2Name></td>
-									<td><c:if test="${list.conditionStatus == '0' }">已失效</c:if>
-										<c:if test="${list.conditionStatus == '1' }">待审核</c:if> <c:if
-											test="${list.conditionStatus == '2' }">审核通过</c:if> <c:if
-											test="${list.conditionStatus == '3' }">未通过</c:if></td>
-									<%-- 		<td><img width="150" height="150" alt="150x150"
-												src="<%=imagePath %>${list.imgPath}" /></td> --%>
-									<td><fmt:formatDate value="${list.captureTime}"
-											type="both" /></td>
-									<td><div class="td-inner-warp">${list.conditionMsg}</div></td>
-									<td><div class="td-inner-warp">${list.memo}</div></td>
-									<td>${list.publisherName}</td>
-									<td>${list.publisherPhone}</td>
-									<td><fmt:formatDate value="${list.publisherTime}"
-														type="both" /></td>
-									<td><fmt:formatDate value="${list.auditorTime}"
-											type="both" /></td>
-									<%-- <td>${list.operator}</td> --%>
-									<td><c:if test="${list.conditionStatus == '2'}">
-											<a class="option-btn-m" href="javascript:void(0);"
-												title="查看失效请求"
-												onclick="showShixiao('../web/mobile/road/roadListStr?id=${list.id }')"
-												data-rel="tooltip"> --${list.invalid_count}-- </a>
-										</c:if></td>
+									
+									
 									<td class="text-center"><c:if
 											test="${list.conditionStatus == '1' }">
 											<a class="option-btn-m" href="javascript:void(0);" title="审核"
@@ -220,11 +206,52 @@ a:active {
 										title="查看图片" data-rel="tooltip"> <i
 											class="ace-icon fa fa-search-plus bigger-130"
 											onclick="updateCheck('${list.conditionImg}',$('#${list.id }'));"></i>
-									</a> <a class="" href="javascript:void(0);"
+										</a> <a class="" href="javascript:void(0);"
 										onclick="deleteRoad('${list.id}');" title="删除"
 										data-rel="tooltip"> <i
 											class="ace-icon fa fa-trash-o bigger-130"></i>
-									</a></td>
+										</a>
+									</td>
+									
+									<td>
+										<a class="option-btn-m" href="javascript:void(0);"
+												title="查看失效请求"
+												onclick="showShixiao('../web/mobile/road/roadListStr?id=${list.id }')"
+												data-rel="tooltip"> --${list.invalid_count}-- </a>
+									</td>
+									
+									<td><s:Code2Name mcode="${list.conditionType}"
+											gcode="CONDITION_TYPE"></s:Code2Name>
+									</td>
+									
+									<td><c:if test="${list.conditionStatus == '0' }">已失效</c:if>
+										<c:if test="${list.conditionStatus == '1' }">待审核</c:if> <c:if
+											test="${list.conditionStatus == '2' }">审核通过</c:if> <c:if
+											test="${list.conditionStatus == '3' }">未通过</c:if></td> 
+									<td>${list.publisherName}</td>
+									<td>${list.publisherPhone}</td>	
+								
+									<td><fmt:formatDate value="${list.publisherTime}"
+														type="both" /></td>
+									 <td><fmt:formatDate value="${list.auditorTime}"
+											type="both" /></td>
+									<td>${list.auditorPhone}</td>
+									<td>${list.auditor}</td>
+									
+									
+									<%-- 		<td><img width="150" height="150" alt="150x150"
+												src="<%=imagePath %>${list.imgPath}" /></td> --%>
+									<td><fmt:formatDate value="${list.captureTime}"
+											type="both" /></td>
+									<td><div class="td-inner-warp">${list.conditionMsg}</div></td>
+									<td><div class="td-inner-warp">${list.memo}</div></td>
+									
+									
+									
+									
+									<%-- <td>${list.operator}</td> --%>
+									
+								
 								</tr>
 							</c:forEach>
 						</tbody>

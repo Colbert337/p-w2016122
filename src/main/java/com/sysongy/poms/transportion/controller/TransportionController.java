@@ -208,11 +208,13 @@ public class TransportionController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_report";
-
+		if(StringUtils.isBlank(sysOrder.getStartDate()) || StringUtils.isBlank(sysOrder.getEndDate())){//首次载入页面不加载数据
+			return ret;
+		}
 		try {
-			if(sysOrder.getPageNum() == null){
+			if(sysOrder.getPageNum() == null || sysOrder.getPageSize()==null){
 				sysOrder.setPageNum(1);
-				sysOrder.setPageSize(10);
+				sysOrder.setPageSize(20);
 			}
 			if(transportion.getConvertPageNum() != null){
 				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
@@ -357,9 +359,11 @@ public class TransportionController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_rechargereport";
-
+		if(StringUtils.isBlank(sysOrder.getStartDate()) || StringUtils.isBlank(sysOrder.getEndDate())){//首次载入页面不加载数据
+			return ret;
+		}
 		try {
-			if(sysOrder.getPageNum() == null){
+			if(sysOrder.getPageNum() == null || sysOrder.getPageSize() == null){
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
@@ -1407,11 +1411,13 @@ public class TransportionController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_rechargecollectreport";
-
+		if(StringUtils.isBlank(loger.getStartDate()) || StringUtils.isBlank(loger.getEndDate())){//首次载入页面不加载数据
+			return ret;
+		}
 		try {
-			if(loger.getPageNum() == null){
+			if(loger.getPageNum() == null || loger.getPageSize()==null){
 				loger.setPageNum(1);
-				loger.setPageSize(10);
+				loger.setPageSize(20);
 			}
 			if(loger.getConvertPageNum() != null){
 				if(loger.getConvertPageNum() > loger.getPageNumMax()){
@@ -1514,11 +1520,13 @@ public class TransportionController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/transportion/transportion_consumecollectreport";
-
+		if(StringUtils.isBlank(loger.getStartDate()) || StringUtils.isBlank(loger.getEndDate())){//首次载入页面不加载数据
+			return ret;
+		}
 		try {
-			if(loger.getPageNum() == null){
+			if(loger.getPageNum() == null || loger.getPageSize()==null){
 				loger.setPageNum(1);
-				loger.setPageSize(10);
+				loger.setPageSize(20);
 			}
 			if(loger.getConvertPageNum() != null){
 				if(loger.getConvertPageNum() > loger.getPageNumMax()){

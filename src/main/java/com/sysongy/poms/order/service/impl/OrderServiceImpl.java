@@ -662,14 +662,17 @@ public class OrderServiceImpl implements OrderService {
 	   if(tcfleet!=null){
 		   is_allot = tcfleet.getIsAllot();
 	   }
-	   //扣除车队额度//传过去负值
-	   /*BigDecimal cash = order.getCash();
+	   //扣除车队额度//传过去负值 如果车队不为空，则同时扣除车队额度
+	   BigDecimal cash = order.getCash();
+
+		if(cash.compareTo(tcfleet.getQuota()) > 0){
+			//车队余额不足
+			return GlobalConstant.OrderProcessResult.FLEET_ERROR_BALANCE_IS_NOT_ENOUGH;
+		}
 	   BigDecimal addcash = cash.multiply(new BigDecimal(-1));
 	   if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_YES){
 		   tcFleetService.updateFleetQuota(tran.getSys_transportion_id(), tcfleet.getTcFleetId(), addcash);
-	   }else if(is_allot.intValue()==GlobalConstant.TCFLEET_IS_ALLOT_NO){
-		   transportionService.modifyDeposit(tran, addcash);
-	   }*/
+	   }
 
 	   //2.扣除运输公司账户金额
 	   //消费的时候传过去的cash是正值,冲红的时候传过去的是负值
@@ -1354,5 +1357,17 @@ public class OrderServiceImpl implements OrderService {
 		// TODO Auto-generated method stub
 		return sysOrderMapper.queryOrderForSearch(orderNumber);
 	
+	}
+	
+	
+	/**
+	 * 根据操作人统计订单信息
+	 * @param OrderMap
+	 * @return
+	 * @throws Exception
+	 */
+	public List<HashMap<String,String>> queryOrderByOperator(HashMap<String,String> OrderMap) throws Exception{
+		
+		return sysOrderMapper.queryOrderByOperator(OrderMap);
 	}
 }

@@ -3,12 +3,15 @@ package com.sysongy.api.client.controller;
 import com.github.pagehelper.PageInfo;
 import com.sysongy.api.client.controller.model.CRMCardUpdateInfo;
 import com.sysongy.poms.base.model.AjaxJson;
+import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.base.model.InterfaceConstants;
 import com.sysongy.poms.base.model.PageBean;
 import com.sysongy.poms.card.model.GasCard;
 import com.sysongy.poms.card.service.GasCardService;
 import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.driver.service.DriverService;
+import com.sysongy.poms.system.model.SysOperationLog;
+import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.util.GlobalConstant;
 import com.sysongy.util.PropertyUtil;
 import org.apache.commons.io.FileUtils;
@@ -23,6 +26,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -43,6 +48,9 @@ public class CRMCardContoller {
 
     @Autowired
     private DriverService driverService;
+    
+    @Autowired
+    private SysOperationLogService sysOperationLogService;
 
     @RequestMapping(value = {"/web/queryCardInfo"})
     @ResponseBody
@@ -140,6 +148,11 @@ public class CRMCardContoller {
     @RequestMapping(value = {"/web/distributeCard"})
     @ResponseBody
     public AjaxJson distributeCard(HttpServletRequest request, HttpServletResponse response, GasCard gascard){
+		HttpSession session = request.getSession(true);
+		CurrUser currUser = (CurrUser) session.getAttribute("currUser");// 登录人角色
+		if (null == currUser) {
+			currUser = new CurrUser();
+		}
         AjaxJson ajaxJson = new AjaxJson();
         if((gascard == null) || (!StringUtils.isNotEmpty(gascard.getCard_no()))){
             ajaxJson.setSuccess(false);
@@ -169,6 +182,18 @@ public class CRMCardContoller {
 
             gasCardNew.setCard_status(InterfaceConstants.CARD_STSTUS_IN_USE);
             Integer nRet = gasCardService.updateGasCardInfo(gasCardNew);
+            String cardproperty="车辆卡";
+            if("1".equals(gasCardNew.getCard_property())){
+            	cardproperty = "个人卡";
+            }
+    		//系统关键日志记录
+    		SysOperationLog sysOperationLog = new SysOperationLog();
+    		sysOperationLog.setOperation_type("bhk");
+    		sysOperationLog.setLog_platform("3");
+    		sysOperationLog.setLog_content("CRM用户补换"+cardproperty+"成功！用户卡号为："+gasCardNew.getCard_no()); 
+    		//操作日志
+    		sysOperationLogService.saveOperationLog(sysOperationLog,currUser.getUserId());
+            
             if(nRet < 1){
                 ajaxJson.setSuccess(false);
                 ajaxJson.setMsg("无卡信息修改！！！");

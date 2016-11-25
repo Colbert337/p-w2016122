@@ -1,6 +1,7 @@
 package com.sysongy.poms.order.service;
 
 import com.github.pagehelper.PageInfo;
+import com.sysongy.poms.driver.model.SysDriver;
 import com.sysongy.poms.order.model.OrderLog;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.ordergoods.model.SysOrderGoods;
@@ -8,6 +9,7 @@ import com.sysongy.poms.ordergoods.model.SysOrderGoodsForCRMReport;
 import com.sysongy.poms.transportion.model.Transportion;
 import com.sysongy.tcms.advance.model.TcFleet;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -297,4 +299,12 @@ public interface OrderService {
 void saveBareakForRe(HttpSession session, String msg, String money, String orderId) throws Exception;
 
 List<SysOrder> queryOrderForSearch(String orderNumber);
+
+/**
+ * 根据操作人统计订单信息
+ * @param Order
+ * @return
+ * @throws Exception
+ */
+public List<HashMap<String,String>> queryOrderByOperator(HashMap<String,String> Order) throws Exception;
 }

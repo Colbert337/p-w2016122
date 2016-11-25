@@ -212,7 +212,7 @@ public class CRMProductPriceController {
     			SysOperationLog aSysOperationLog = new SysOperationLog();
     			sysOperationLog.setUser_name(user.getUserName());
     			aSysOperationLog.setOperation_type("tj");
-    			aSysOperationLog.setLog_platform("4");
+    			aSysOperationLog.setLog_platform("3");
     			aSysOperationLog.setLog_content("用户添加新价格成功！调价商品为："+productPrice.getProductPriceId()+"，调整价格为："+productPrice.getProductPrice()); 
     			//操作日志
     			sysOperationLogService.saveOperationLog(aSysOperationLog,sysUser.getSysUserId());
