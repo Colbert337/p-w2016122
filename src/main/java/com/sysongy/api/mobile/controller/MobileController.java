@@ -5281,28 +5281,22 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
-			String longitude = "longitude";
-			String latitude = "latitude";
 			String sortType = "sortType";
 			String infoType = "infoType";
 			String pageNum = "pageNum";
 			String pageSize = "pageSize";
-			boolean b = JsonTool.checkJson(mainObj,longitude,latitude,sortType,infoType,pageNum,pageSize);
+			boolean b = JsonTool.checkJson(mainObj,sortType,infoType,pageNum,pageSize);
 			if(b){
-				longitude = mainObj.getString("longitude");
-				latitude = mainObj.getString("latitude");
-				sortType =  mainObj.getString("sortType");//排序类型 1默认2 距离 3 价格(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
-				List<Map<String, Object>> gastationArray = new ArrayList<>();
-				Double longIn = new Double(longitude);
-				Double langIn = new Double(latitude);
+				String longitude = mainObj.getString("longitude");
+				String latitude = mainObj.getString("latitude");
+				Gastation gastation = new Gastation();
 				int pageNumIn = mainObj.optInt("pageNum");
 				int pageSizeIn = mainObj.optInt("pageSize");
-				Gastation gastation = new Gastation();
+				List<Map<String, Object>> gastationArray = new ArrayList<>();
 				//获取所有数据
 				List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
-				//默认排序(置顶两个联盟站)
-				if(sortType.equals("1")){
-					gastationArray = defaultList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
+				if(longitude==null || "".equals(longitude) || latitude==null || "".equals(latitude)){
+					gastationArray = defaultOrder(gastationAllList,pageNumIn,pageSizeIn);
 					if(gastationArray!=null && gastationArray.size() > 0 ){
 						result.setListMap(gastationArray);
 					}else{
@@ -5310,25 +5304,40 @@ public class MobileController {
 						result.setMsg("暂无数据！");
 						result.setListMap(new ArrayList<Map<String, Object>>());
 					}
-				//按距离排序
-				}else if(sortType.equals("2")){
-					gastationArray = orderByDistanceList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
-					if(gastationArray!=null && gastationArray.size() > 0 ){
-						result.setListMap(gastationArray);
-					}else{
-						result.setStatus(MobileReturn.STATUS_SUCCESS);
-						result.setMsg("暂无数据！");
-						result.setListMap(new ArrayList<Map<String, Object>>());
-					}
-				//按价格排序
-				}else if(sortType.equals("3")){
-					gastationArray = orderByPriceList(gastationAllList,pageNumIn,pageSizeIn);
-					if(gastationArray!=null && gastationArray.size() > 0 ){
-						result.setListMap(gastationArray);
-					}else{
-						result.setStatus(MobileReturn.STATUS_SUCCESS);
-						result.setMsg("暂无数据！");
-						result.setListMap(new ArrayList<Map<String, Object>>());
+				}else{
+					sortType =  mainObj.getString("sortType");//排序类型 1默认2 距离 3 价格(默认时按距离置顶两个联盟站，按距离和价格时不置顶)
+					Double longIn = new Double(longitude);
+					Double langIn = new Double(latitude);
+					//默认排序(置顶两个联盟站)
+					if(sortType.equals("1")){
+						gastationArray = defaultList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
+						if(gastationArray!=null && gastationArray.size() > 0 ){
+							result.setListMap(gastationArray);
+						}else{
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
+					//按距离排序
+					}else if(sortType.equals("2")){
+						gastationArray = orderByDistanceList(gastationAllList,longIn,langIn,pageNumIn,pageSizeIn);
+						if(gastationArray!=null && gastationArray.size() > 0 ){
+							result.setListMap(gastationArray);
+						}else{
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
+					//按价格排序
+					}else if(sortType.equals("3")){
+						gastationArray = orderByPriceList(gastationAllList,pageNumIn,pageSizeIn);
+						if(gastationArray!=null && gastationArray.size() > 0 ){
+							result.setListMap(gastationArray);
+						}else{
+							result.setStatus(MobileReturn.STATUS_SUCCESS);
+							result.setMsg("暂无数据！");
+							result.setListMap(new ArrayList<Map<String, Object>>());
+						}
 					}
 				}
 			}else{
@@ -5608,6 +5617,80 @@ public class MobileController {
 	            }
 	        });
 	        gastationAllList.addAll(wrongList);
+	        //进行分页
+			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
+			if(allPage >= pageNumIn ){
+				if (pageNumIn == 0) {
+					pageNumIn = 1;
+				}
+				int end = pageNumIn * pageSizeIn;
+				if (end > gastationAllList.size()) {
+					end  = gastationAllList.size();
+				}
+				int begin = (pageNumIn - 1) * pageSizeIn;
+				PageInfo<Gastation> pageInfo = new PageInfo<Gastation>(gastationAllList.subList(begin, end ));
+				List<Gastation> gastationList1 = pageInfo.getList();
+				if (gastationList1 != null && gastationList1.size() > 0) {
+					for (Gastation gastationInfo : gastationList1) {
+						Map<String, Object> gastationMap = new HashMap<>();
+						gastationMap.put("stationId", gastationInfo.getSys_gas_station_id());
+						gastationMap.put("name", gastationInfo.getGas_station_name());
+						gastationMap.put("type", gastationInfo.getType());
+						gastationMap.put("longitude", gastationInfo.getLongitude());
+						gastationMap.put("latitude", gastationInfo.getLatitude());
+						Usysparam usysparam = usysparamService.queryUsysparamByCode("STATION_DATA_TYPE",gastationInfo.getType());
+						gastationMap.put("stationType", usysparam.getMname());
+						gastationMap.put("service",gastationInfo.getGas_server() == null ? "暂无" : gastationInfo.getGas_server());// 提供服务
+						gastationMap.put("preferential",gastationInfo.getPromotions() == null ? "暂无" : gastationInfo.getPromotions());// 优惠活动
+						// 获取当前气站价格列表
+						String price = gastationInfo.getLng_price();
+						if (price != null && !"".equals(price)) {
+							price = price.replaceAll("，", ",");
+							price = price.replaceAll("：", ":");
+							if (price.indexOf(":") != -1 && price.indexOf("/") != -1) {
+								String strArray[] = price.split(",");
+								Map[] map = new Map[strArray.length];
+								for (int i = 0; i < strArray.length; i++) {
+									String strInfo = strArray[i].trim();
+									String strArray1[] = strInfo.split(":");
+									String strArray2[] = strArray1[1].split("/");
+									Map<String, Object> dataMap = new HashMap<>();
+									dataMap.put("gasName", strArray1[0]);
+									dataMap.put("gasPrice", strArray2[0]);
+									dataMap.put("gasUnit", strArray2[1]);
+									map[i] = dataMap;
+								}
+								gastationMap.put("priceList", map);
+							} else {
+								gastationMap.put("priceList", new ArrayList());
+							}
+						} else {
+							gastationMap.put("priceList", new ArrayList());
+						}
+						gastationMap.put("phone", gastationInfo.getContact_phone());
+						if (gastationInfo.getStatus().equals("0")) {
+							gastationMap.put("state", "开启");
+						} else {
+							gastationMap.put("state", "关闭");
+						}
+						gastationMap.put("address", gastationInfo.getAddress());
+						String infoUrl = http_poms_path + "/portal/crm/help/station?stationId="+ gastationInfo.getSys_gas_station_id();
+						gastationMap.put("infoUrl", infoUrl);
+						gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="+ gastationInfo.getSys_gas_station_id());
+						gastationArray.add(gastationMap);
+					}
+				}
+			}
+		}
+		return gastationArray;
+	}
+	/**
+	 * 获取加注站信息列表(defaultOrder,定位失败时，默认显示)
+	 */
+	private List<Map<String, Object>> defaultOrder(List<Gastation> gastationAllList,int pageNumIn,int pageSizeIn){
+		List<Map<String, Object>> gastationArray = new ArrayList<>();
+		String http_poms_path = (String) prop.get("http_poms_path");
+		if(gastationAllList!=null && gastationAllList.size() > 0){
 	        //进行分页
 			int allPage = gastationAllList.size()/pageSizeIn==0?gastationAllList.size()/pageSizeIn+1:(gastationAllList.size()/pageSizeIn)+1;
 			if(allPage >= pageNumIn ){
