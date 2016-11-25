@@ -216,11 +216,11 @@ public class TransportionController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(20);
 			}
-			if(transportion.getConvertPageNum() != null){
-				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
-					transportion.setPageNum(transportion.getPageNumMax());
+			if(sysOrder.getConvertPageNum() != null){
+				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
+					sysOrder.setPageNum(sysOrder.getPageNumMax());
 				}else{
-					transportion.setPageNum(transportion.getConvertPageNum());
+					sysOrder.setPageNum(sysOrder.getConvertPageNum());
 				}
 			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
@@ -367,11 +367,11 @@ public class TransportionController extends BaseContoller{
 				sysOrder.setPageNum(1);
 				sysOrder.setPageSize(10);
 			}
-			if(transportion.getConvertPageNum() != null){
-				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
-					transportion.setPageNum(transportion.getPageNumMax());
+			if(sysOrder.getConvertPageNum() != null){
+				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
+					sysOrder.setPageNum(sysOrder.getPageNumMax());
 				}else{
-					transportion.setPageNum(transportion.getConvertPageNum());
+					sysOrder.setPageNum(sysOrder.getConvertPageNum());
 				}
 			}
 			if(StringUtils.isEmpty(sysOrder.getOrderby())){
