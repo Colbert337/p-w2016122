@@ -235,7 +235,7 @@ var month_first = firstdate+" 00:00:00";
 
 var day = new Date(year,month,0);
 var lastdate = year + '-' + month + '-' + day.getDate();
-var month_last = lastdate+" 24:00:00";
+var month_last = lastdate+" 23:59:59";
 	return month_first+"||"+month_last;
 };
 //console.log(getMonthFirstDayToEndDate());
