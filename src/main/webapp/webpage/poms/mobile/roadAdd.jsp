@@ -73,7 +73,7 @@
 					<label class="col-sm-3 control-label no-padding-right">坐标：</label>
 
 					<div class="col-sm-4">
-						<input type="text" name="longitude" placeholder="输入坐标,格式为：经度，纬度，（如：12.15,15.475）"
+						<input type="text" name="longitude" id='longitude' placeholder="输入坐标,格式为：经度，纬度，（如：12.15,15.475）"
 							   class="form-control" maxlength="40"></input>
 					</div>
 				</div>
@@ -104,7 +104,7 @@
 					<label class="col-sm-3 control-label no-padding-right">拍照时坐标：</label>
 
 					<div class="col-sm-4">
-						<input type="text" name="captureLongitude" placeholder="输入拍照坐标,格式为：经度，纬度，（如：12.15,15.475）"
+						<input type="text" name="captureLongitude" id='captureLongitude' placeholder="输入拍照坐标,格式为：经度，纬度，（如：12.15,15.475）"
 							   class="form-control" maxlength="40"></input>
 					</div>
 				</div>
