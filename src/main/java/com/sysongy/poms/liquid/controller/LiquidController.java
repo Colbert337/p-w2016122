@@ -38,6 +38,8 @@ public class LiquidController extends BaseContoller{
 			if(gasource.getConvertPageNum() != null){
 				if(gasource.getConvertPageNum() > gasource.getPageNumMax()){
 					gasource.setPageNum(gasource.getPageNumMax());
+				}else if(gasource.getConvertPageNum() < 1){
+					gasource.setPageNum(1);
 				}else{
 					gasource.setPageNum(gasource.getConvertPageNum());
 				}

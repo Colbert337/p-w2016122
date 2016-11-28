@@ -43,6 +43,8 @@ public class SysMessageController extends BaseContoller {
 			if(driver.getConvertPageNum() != null){
 				if(driver.getConvertPageNum() > driver.getPageNumMax()){
 					driver.setPageNum(driver.getPageNumMax());
+				}else if(driver.getConvertPageNum() < 1){
+					driver.setPageNum(1);
 				}else{
 					driver.setPageNum(driver.getConvertPageNum());
 				}
@@ -90,6 +92,8 @@ public class SysMessageController extends BaseContoller {
 			if(message.getConvertPageNum() != null){
 				if(message.getConvertPageNum() > message.getPageNumMax()){
 					message.setPageNum(message.getPageNumMax());
+				}else if(message.getConvertPageNum() < 1){
+					message.setPageNum(1);
 				}else{
 					message.setPageNum(message.getConvertPageNum());
 				}
@@ -141,6 +145,8 @@ public class SysMessageController extends BaseContoller {
 			if(message.getConvertPageNum() != null){
 				if(message.getConvertPageNum() > message.getPageNumMax()){
 					message.setPageNum(message.getPageNumMax());
+				}else if(message.getConvertPageNum() < 1){
+					message.setPageNum(1);
 				}else{
 					message.setPageNum(message.getConvertPageNum());
 				}

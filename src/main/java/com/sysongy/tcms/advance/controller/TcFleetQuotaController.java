@@ -305,6 +305,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(tcFleet.getConvertPageNum() != null){
     			if(tcFleet.getConvertPageNum() > tcFleet.getPageNumMax()){
     				tcFleet.setPageNum(tcFleet.getPageNumMax());
+    			}else if(tcFleet.getConvertPageNum() < 1){
+    				tcFleet.setPageNum(1);
     			}else{
     				tcFleet.setPageNum(tcFleet.getConvertPageNum());
     			}
@@ -671,6 +673,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(order.getConvertPageNum() != null){
     			if(order.getConvertPageNum() > order.getPageNumMax()){
     				order.setPageNum(order.getPageNumMax());
+    			}else if(order.getConvertPageNum() < 1){
+    				order.setPageNum(1);
     			}else{
     				order.setPageNum(order.getConvertPageNum());
     			}
@@ -936,6 +940,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(order.getConvertPageNum() != null){
     			if(order.getConvertPageNum() > order.getPageNumMax()){
     				order.setPageNum(order.getPageNumMax());
+    			}else if(order.getConvertPageNum() < 1){
+    				order.setPageNum(1);
     			}else{
     				order.setPageNum(order.getConvertPageNum());
     			}
@@ -1176,6 +1182,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(order.getConvertPageNum() != null){
     			if(order.getConvertPageNum() > order.getPageNumMax()){
     				order.setPageNum(order.getPageNumMax());
+    			}else if(order.getConvertPageNum() < 1){
+    				order.setPageNum(1);
     			}else{
     				order.setPageNum(order.getConvertPageNum());
     			}

@@ -55,6 +55,8 @@ public class CrmHelpController extends BaseContoller{
     	if(crmHelp.getConvertPageNum() != null){
 			if(crmHelp.getConvertPageNum() > crmHelp.getPageNumMax()){
 				crmHelp.setPageNum(crmHelp.getPageNumMax());
+			}else if(crmHelp.getConvertPageNum() < 1){
+				crmHelp.setPageNum(1);
 			}else{
 				crmHelp.setPageNum(crmHelp.getConvertPageNum());
 			}
@@ -150,6 +152,8 @@ public class CrmHelpController extends BaseContoller{
     	if(crmHelpType.getConvertPageNum() != null){
 			if(crmHelpType.getConvertPageNum() > crmHelpType.getPageNumMax()){
 				crmHelpType.setPageNum(crmHelpType.getPageNumMax());
+			}else if(crmHelpType.getConvertPageNum() < 1){
+				crmHelpType.setPageNum(1);
 			}else{
 				crmHelpType.setPageNum(crmHelpType.getConvertPageNum());
 			}

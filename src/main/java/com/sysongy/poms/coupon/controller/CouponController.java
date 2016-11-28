@@ -65,6 +65,8 @@ public class CouponController extends BaseContoller {
 			if(coupon.getConvertPageNum() != null){
 				if(coupon.getConvertPageNum() > coupon.getPageNumMax()){
 					coupon.setPageNum(coupon.getPageNumMax());
+				}else if(coupon.getConvertPageNum() < 1){
+					coupon.setPageNum(1);
 				}else{
 					coupon.setPageNum(coupon.getConvertPageNum());
 				}
@@ -475,6 +477,8 @@ public class CouponController extends BaseContoller {
 			if(userCoupon.getConvertPageNum() != null){
 				if(userCoupon.getConvertPageNum() > userCoupon.getPageNumMax()){
 					userCoupon.setPageNum(userCoupon.getPageNumMax());
+				}else if(userCoupon.getConvertPageNum() < 1){
+					userCoupon.setPageNum(1);
 				}else{
 					userCoupon.setPageNum(userCoupon.getConvertPageNum());
 				}

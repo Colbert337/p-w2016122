@@ -79,6 +79,8 @@ public class GastationController extends BaseContoller{
 			if(gastation.getConvertPageNum() != null){
 				if(gastation.getConvertPageNum() > gastation.getPageNumMax()){
 					gastation.setPageNum(gastation.getPageNumMax());
+				}else if(gastation.getConvertPageNum() < 1){
+					gastation.setPageNum(1);
 				}else{
 					gastation.setPageNum(gastation.getConvertPageNum());
 				}
@@ -129,6 +131,8 @@ public class GastationController extends BaseContoller{
 			if(gastation.getConvertPageNum() != null){
 				if(gastation.getConvertPageNum() > gastation.getPageNumMax()){
 					gastation.setPageNum(gastation.getPageNumMax());
+				}else if(gastation.getConvertPageNum() < 1){
+					gastation.setPageNum(1);
 				}else{
 					gastation.setPageNum(gastation.getConvertPageNum());
 				}
@@ -307,6 +311,8 @@ public class GastationController extends BaseContoller{
 			if(deposit.getConvertPageNum() != null){
 				if(deposit.getConvertPageNum() > deposit.getPageNumMax()){
 					deposit.setPageNum(deposit.getPageNumMax());
+				}else if(deposit.getConvertPageNum() < 1){
+					deposit.setPageNum(1);
 				}else{
 					deposit.setPageNum(deposit.getConvertPageNum());
 				}
@@ -568,6 +574,8 @@ public class GastationController extends BaseContoller{
 			if(sysOrder.getConvertPageNum() != null){
 				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
 					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else if(sysOrder.getConvertPageNum() < 1){
+					sysOrder.setPageNum(1);
 				}else{
 					sysOrder.setPageNum(sysOrder.getConvertPageNum());
 				}
@@ -809,6 +817,8 @@ public class GastationController extends BaseContoller{
 			if(sysOrder.getConvertPageNum() != null){
 				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
 					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else if(sysOrder.getConvertPageNum() < 1){
+					sysOrder.setPageNum(1);
 				}else{
 					sysOrder.setPageNum(sysOrder.getConvertPageNum());
 				}
@@ -1006,6 +1016,8 @@ public class GastationController extends BaseContoller{
 			if(sysOrder.getConvertPageNum() != null){
 				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
 					sysOrder.setPageNum(sysOrder.getPageNumMax());
+				}else if(sysOrder.getConvertPageNum() < 1){
+					sysOrder.setPageNum(1);
 				}else{
 					sysOrder.setPageNum(sysOrder.getConvertPageNum());
 				}
@@ -1051,6 +1063,8 @@ public class GastationController extends BaseContoller{
 			if(order.getConvertPageNum() != null){
 				if(order.getConvertPageNum() > order.getPageNumMax()){
 					order.setPageNum(order.getPageNumMax());
+				}else if(order.getConvertPageNum() < 1){
+					order.setPageNum(1);
 				}else{
 					order.setPageNum(order.getConvertPageNum());
 				}
@@ -1167,6 +1181,8 @@ public class GastationController extends BaseContoller{
 			if(order.getConvertPageNum() != null){
 				if(order.getConvertPageNum() > order.getPageNumMax()){
 					order.setPageNum(order.getPageNumMax());
+				}else if(order.getConvertPageNum() < 1){
+					order.setPageNum(1);
 				}else{
 					order.setPageNum(order.getConvertPageNum());
 				}

@@ -86,6 +86,8 @@ public class TcVehicleController extends BaseContoller {
         if(vehicle.getConvertPageNum() != null){
 			if(vehicle.getConvertPageNum() > vehicle.getPageNumMax()){
 				vehicle.setPageNum(vehicle.getPageNumMax());
+			}else if(vehicle.getConvertPageNum() < 1){
+				vehicle.setPageNum(1);
 			}else{
 				vehicle.setPageNum(vehicle.getConvertPageNum());
 			}

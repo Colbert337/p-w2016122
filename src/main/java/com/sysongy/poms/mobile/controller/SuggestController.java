@@ -50,6 +50,8 @@ public class SuggestController extends BaseContoller {
 			if(suggest.getConvertPageNum() != null){
 				if(suggest.getConvertPageNum() > suggest.getPageNumMax()){
 					suggest.setPageNum(suggest.getPageNumMax());
+				}else if(suggest.getConvertPageNum() < 1){
+					suggest.setPageNum(1);
 				}else{
 					suggest.setPageNum(suggest.getConvertPageNum());
 				}

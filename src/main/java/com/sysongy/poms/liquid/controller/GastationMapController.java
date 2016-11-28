@@ -65,6 +65,8 @@ public class GastationMapController extends BaseContoller {
 			if(gastation.getConvertPageNum() != null){
 				if(gastation.getConvertPageNum() > gastation.getPageNumMax()){
 					gastation.setPageNum(gastation.getPageNumMax());
+				}else if(gastation.getConvertPageNum() < 1){
+					gastation.setPageNum(1);
 				}else{
 					gastation.setPageNum(gastation.getConvertPageNum());
 				}

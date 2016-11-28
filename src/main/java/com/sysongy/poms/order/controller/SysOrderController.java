@@ -72,6 +72,8 @@ public class SysOrderController extends BaseContoller {
 			if(order.getConvertPageNum() != null){
 				if(order.getConvertPageNum() > order.getPageNumMax()){
 					order.setPageNum(order.getPageNumMax());
+				}else if(order.getConvertPageNum() < 1){
+					order.setPageNum(1);
 				}else{
 					order.setPageNum(order.getConvertPageNum());
 				}
@@ -112,6 +114,8 @@ public class SysOrderController extends BaseContoller {
 			if(order.getConvertPageNum() != null){
 				if(order.getConvertPageNum() > order.getPageNumMax()){
 					order.setPageNum(order.getPageNumMax());
+				}else if(order.getConvertPageNum() < 1){
+					order.setPageNum(1);
 				}else{
 					order.setPageNum(order.getConvertPageNum());
 				}
@@ -159,6 +163,8 @@ public class SysOrderController extends BaseContoller {
 			if(order.getConvertPageNum() != null){
 				if(order.getConvertPageNum() > order.getPageNumMax()){
 					order.setPageNum(order.getPageNumMax());
+				}else if(order.getConvertPageNum() < 1){
+					order.setPageNum(1);
 				}else{
 					order.setPageNum(order.getConvertPageNum());
 				}
@@ -215,6 +221,8 @@ public class SysOrderController extends BaseContoller {
 			if(order.getConvertPageNum() != null){
 				if(order.getConvertPageNum() > order.getPageNumMax()){
 					order.setPageNum(order.getPageNumMax());
+				}else if(order.getConvertPageNum() < 1){
+					order.setPageNum(1);
 				}else{
 					order.setPageNum(order.getConvertPageNum());
 				}

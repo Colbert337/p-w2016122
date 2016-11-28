@@ -38,6 +38,8 @@ public class SysCashBackController extends BaseContoller {
 			if(sysCashBack.getConvertPageNum() != null){
 				if(sysCashBack.getConvertPageNum() > sysCashBack.getPageNumMax()){
 					sysCashBack.setPageNum(sysCashBack.getPageNumMax());
+				}else if(sysCashBack.getConvertPageNum() < 1){
+					sysCashBack.setPageNum(1);
 				}else{
 					sysCashBack.setPageNum(sysCashBack.getConvertPageNum());
 				}

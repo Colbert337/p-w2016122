@@ -61,6 +61,8 @@ public class MbAppVersionController extends BaseContoller {
 		if(mbAppVersion.getConvertPageNum() != null){
 			if(mbAppVersion.getConvertPageNum() > mbAppVersion.getPageNumMax()){
 				mbAppVersion.setPageNum(mbAppVersion.getPageNumMax());
+			}else if(mbAppVersion.getConvertPageNum() < 1){
+				mbAppVersion.setPageNum(1);
 			}else{
 				mbAppVersion.setPageNum(mbAppVersion.getConvertPageNum());
 			}
