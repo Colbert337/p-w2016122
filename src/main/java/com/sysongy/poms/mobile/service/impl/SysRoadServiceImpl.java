@@ -145,6 +145,8 @@ public class SysRoadServiceImpl implements SysRoadService {
 	 */
 	@Override
 	public int updateRoad(SysRoadCondition road,String userID) throws Exception {
+		// TODO Auto-generated method stub
+		int updateNum =  sysRoadConditionMapper.updateByPrimaryKeyToCheck(road);
 		//判断上报路况审核是否通过，存在则根据条件发放积分
 		if(null!=road.getConditionStatus() &&!"".equals(road.getConditionStatus())&&"2".equals(road.getConditionStatus())){
 			//上报路况成功发放积分
@@ -188,9 +190,8 @@ public class SysRoadServiceImpl implements SysRoadService {
 						}					
 					}	
 		}
-	}
-		// TODO Auto-generated method stub
-		return sysRoadConditionMapper.updateByPrimaryKeyToCheck(road);
+	}	
+		return updateNum;
 	}
 
 	/**
