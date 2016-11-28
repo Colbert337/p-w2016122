@@ -419,7 +419,7 @@ public class CashServiceInterface {
         										String integralreward = "";
         										for(int i=0;i<ladder_before.length;i++){
         											//判断是否在阶梯的消费区间内
-        											if(record.getCash().compareTo(new BigDecimal(ladder_before[i]))>=0&&record.getCash().compareTo(new BigDecimal(ladder_after[i]))<0){
+        											if(record.getCash().compareTo(new BigDecimal(ladder_before[i]))>0&&record.getCash().compareTo(new BigDecimal(ladder_after[i]))<=0){
         												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
         													xfHistory.setIntegral_num(integral_reward[i]);
         													integralreward = integral_reward[i];
