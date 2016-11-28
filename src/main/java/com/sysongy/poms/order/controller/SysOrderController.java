@@ -440,6 +440,15 @@ public class SysOrderController extends BaseContoller {
 						
 						service.updateByPrimaryKey(order);
 						service.saveOrder(newOrder);
+						
+				    	//系统关键日志记录
+						SysOperationLog sysOperationLog = new SysOperationLog();
+						sysOperationLog.setOperation_type("tf");
+						sysOperationLog.setLog_platform("4");
+						sysOperationLog.setOrder_number(order.getOrderNumber());
+						sysOperationLog.setLog_content("支付宝退费成功！退款批次号："+batch_no+"，退费金额为："+money); 
+						//操作日志
+						sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());
 					} else {
 						throw new Exception("退款失败,错误代码：" + sHtmlText);
 					}
@@ -492,6 +501,15 @@ public class SysOrderController extends BaseContoller {
 							
 							service.updateByPrimaryKey(order);
 							service.saveOrder(newOrder);
+							
+					    	//系统关键日志记录
+							SysOperationLog sysOperationLog = new SysOperationLog();
+							sysOperationLog.setOperation_type("tf");
+							sysOperationLog.setLog_platform("4");
+							sysOperationLog.setOrder_number(order.getOrderNumber());
+							sysOperationLog.setLog_content("微信退费成功！退款批次号："+batch_no+"，退费金额为："+money); 
+							//操作日志
+							sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());
 						}
 					} else {
 						throw new Exception("退款失败,错误信息："
@@ -573,6 +591,15 @@ public class SysOrderController extends BaseContoller {
 					 
 					service.updateByPrimaryKey(order);
 					service.saveOrder(newOrder);
+					
+			    	//系统关键日志记录
+					SysOperationLog sysOperationLog = new SysOperationLog();
+					sysOperationLog.setOperation_type("tf");
+					sysOperationLog.setLog_platform("4");
+					sysOperationLog.setOrder_number(order.getOrderNumber());
+					sysOperationLog.setLog_content("支付宝退费成功！退款批次号："+batch_no+"，退费金额为："+money); 
+					//操作日志
+					sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());
 				} else {
 					throw new Exception("退款失败,错误代码：" + sHtmlText);
 				}
@@ -623,6 +650,15 @@ public class SysOrderController extends BaseContoller {
 					 
 						service.updateByPrimaryKey(order);
 						service.saveOrder(newOrder);
+						
+				    	//系统关键日志记录
+						SysOperationLog sysOperationLog = new SysOperationLog();
+						sysOperationLog.setOperation_type("tf");
+						sysOperationLog.setLog_platform("4");
+						sysOperationLog.setOrder_number(order.getOrderNumber());
+						sysOperationLog.setLog_content("微信退费成功！退款批次号："+batch_no+"，退费金额为："+money); 
+						//操作日志
+						sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());
 					}
 				} else {
 					throw new Exception("退款失败,错误信息："
@@ -633,14 +669,6 @@ public class SysOrderController extends BaseContoller {
 						account.getAccountBalanceBigDecimal().subtract(new BigDecimal(money)).toString());
 				
 				accountService.addCashToAccount(account.getSysUserAccountId(),  (new BigDecimal("-"+money)), "230");
-				//系统关键日志记录
-    			SysOperationLog sysOperationLog = new SysOperationLog();
-    			sysOperationLog.setOperation_type("tf");
-    			sysOperationLog.setLog_platform("1");
-        		sysOperationLog.setOrder_number(order.getOrderNumber());
-        		sysOperationLog.setLog_content("司机个人通过微信退费成功！退费金额："+money+"，订单号为："+order.getOrderNumber()); 
-    			//操作日志
-    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 			}
 			}
 		} catch (Exception e) {
@@ -658,10 +686,20 @@ public class SysOrderController extends BaseContoller {
 	@ResponseBody
 	public String saveBreakForRe(HttpSession session,String msg, String money, String orderId,String phone,String code) {
 		PageBean bean = new PageBean();
+		CurrUser user = (CurrUser) session.getAttribute("currUser");
 		try {
 			if (code!=null) {
 				if ((code.equalsIgnoreCase((String)redisClientImpl.getFromCache(phone)))) {
 					service.saveBareakForRe(session,msg,money,orderId);
+					SysOrder aSysOrder = service.queryById(orderId);
+			    	//系统关键日志记录
+					SysOperationLog sysOperationLog = new SysOperationLog();
+					sysOperationLog.setOperation_type("tf");
+					sysOperationLog.setLog_platform("4");
+					sysOperationLog.setOrder_number(aSysOrder.getOrderNumber());
+					sysOperationLog.setLog_content("账户余额退费成功！退款批次号："+aSysOrder.getBatch_no()+"，退费金额为："+money); 
+					//操作日志
+					sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());				
 					bean.setRetMsg("退款成功");
 				}else{
 					throw new Exception("验证码不正确");

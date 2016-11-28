@@ -17,7 +17,7 @@
 				<jsp:include page="/common/page_param.jsp"></jsp:include>
 					<div class="page-header">
 						<h1>
-							优惠规则管理
+							积分规则管理
 						</h1>
 					</div>
 					<div class="search-types">

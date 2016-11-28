@@ -50,7 +50,7 @@
 						<div class="col-sm-4">
 							<label class="radio-inline">
 								<input name="limit"  type="radio" class="ace" value="1" checked="checked" onclick="changeLimitType()">
-									<span class="lbl"><input type="text" name="limit_number" class="number" style="width:60px" size="4"/>&nbsp;次</span>
+									<span class="lbl"><input type="text" name="limit_number" class="number" style="width:60px" maxlength="4" size="4"/>&nbsp;次</span>
 							</label>
 							<label class="radio-inline">
 								<input name="limit"  type="radio" class="ace" value="2" onclick="changeLimitType()">
