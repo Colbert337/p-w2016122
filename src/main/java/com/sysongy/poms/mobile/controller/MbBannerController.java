@@ -67,6 +67,8 @@ public class MbBannerController extends BaseContoller {
 		if(mbBanner.getConvertPageNum() != null){
 			if(mbBanner.getConvertPageNum() > mbBanner.getPageNumMax()){
 				mbBanner.setPageNum(mbBanner.getPageNumMax());
+			}else if(mbBanner.getConvertPageNum() < 1){
+				mbBanner.setPageNum(1);
 			}else{
 				mbBanner.setPageNum(mbBanner.getConvertPageNum());
 			}

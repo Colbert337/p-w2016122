@@ -63,6 +63,8 @@ public class CardController extends BaseContoller {
 			if(gascard.getConvertPageNum() != null){
 				if(gascard.getConvertPageNum() > gascard.getPageNumMax()){
 					gascard.setPageNum(gascard.getPageNumMax());
+				}else if(gascard.getConvertPageNum() < 1){
+					gascard.setPageNum(1);
 				}else{
 					gascard.setPageNum(gascard.getConvertPageNum());
 				}
@@ -471,6 +473,8 @@ public class CardController extends BaseContoller {
 			if(gascardlog.getConvertPageNum() != null){
 				if(gascardlog.getConvertPageNum() > gascardlog.getPageNumMax()){
 					gascardlog.setPageNum(gascardlog.getPageNumMax());
+				}else if(gascardlog.getConvertPageNum() < 1){
+					gascardlog.setPageNum(1);
 				}else{
 					gascardlog.setPageNum(gascardlog.getConvertPageNum());
 				}

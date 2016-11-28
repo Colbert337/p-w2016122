@@ -66,6 +66,8 @@ public class CouponGroupController extends BaseContoller {
 			if(couponGroup.getConvertPageNum() != null){
 				if(couponGroup.getConvertPageNum() > couponGroup.getPageNumMax()){
 					couponGroup.setPageNum(couponGroup.getPageNumMax());
+				}else if(couponGroup.getConvertPageNum() < 1){
+					couponGroup.setPageNum(1);
 				}else{
 					couponGroup.setPageNum(couponGroup.getConvertPageNum());
 				}

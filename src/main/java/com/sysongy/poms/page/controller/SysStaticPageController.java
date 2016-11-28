@@ -45,6 +45,8 @@ public class SysStaticPageController extends BaseContoller {
 			if(page.getConvertPageNum() != null){
 				if(page.getConvertPageNum() > page.getPageNumMax()){
 					page.setPageNum(page.getPageNumMax());
+				}else if(page.getConvertPageNum() < 1){
+					page.setPageNum(1);
 				}else{
 					page.setPageNum(page.getConvertPageNum());
 				}
