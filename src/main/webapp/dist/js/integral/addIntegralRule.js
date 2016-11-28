@@ -43,6 +43,20 @@ function changeintegralType(){
 		$("input:radio[name='limit']").removeAttr("disabled");;
 	}
 }
+
+function changeRewardCycle(){
+	var cycle = $('select[name="reward_cycle"] option:selected').val();
+	if(cycle=='one'){
+		$("input[name='limit_number']").val('1');
+		$("input[name='limit_number']").attr("readonly","readonly");
+		$("input[name='limit'][value='1']").prop("checked","checked");
+		$("input:radio[name='limit']").attr("disabled","disabled");
+	}else{
+		$("input[name='limit_number']").attr("readonly",false);
+		$("input:radio[name='limit']").removeAttr("disabled");;	
+	}
+}
+
 function changeRewardType(rewardType){
 	var reward_factor = $(rewardType).parent().find('input[name=rewardfactor]');
 	var reward_max = $(rewardType).parent().find('input[name=rewardmax]');

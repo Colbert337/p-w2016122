@@ -40,7 +40,7 @@
 					<div class="form-group">
 						<label for="reward_cycle" class="col-sm-3 control-label no-padding-right">奖励周期：</label>
 						<div class="col-sm-4">
-							<select class="form-control" name="reward_cycle">
+							<select class="form-control" name="reward_cycle" onchange="changeRewardCycle()">
 								<s:option flag="true" gcode="REWARD_CYCLE" form="integralRuleform" field="reward_cycle" />
 							</select>
 						</div>

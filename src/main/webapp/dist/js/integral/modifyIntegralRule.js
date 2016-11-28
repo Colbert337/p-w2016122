@@ -19,6 +19,7 @@ $(function(){
 	initNumber();
 	changeintegralType();
 	initIntegral();
+	changeRewardCycle();
 });
 function initIntegral(){
 var integral_reward_type = $("input[name='integral_reward_type']").val();
@@ -62,6 +63,19 @@ var integral_reward_type = $("input[name='integral_reward_type']").val();
 		initNumber();
 	}
 }
+function changeRewardCycle(){
+	var cycle = $('select[name="reward_cycle"] option:selected').val();
+	if(cycle=='one'){
+		$("input[name='limit_number']").val("1");
+		$("input[name='limit_number']").attr("readonly","readonly");
+		$("input[name='limit'][value='1']").prop("checked","checked");
+		$("input:radio[name='limit']").attr("disabled","disabled");
+	}else{
+		$("input[name='limit_number']").attr("readonly",false);
+		$("input:radio[name='limit']").removeAttr("disabled");;	
+	}
+}
+
 function changeintegralType(){
 	var type = $('select[name="integral_type"] option:selected').val();
 	if(type=='qd'||type=='smrz'||type=='szmbsj'||type=='yqcg'||type=='sblk'||type=='fx'){
