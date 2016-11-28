@@ -225,3 +225,18 @@ var compareDateMonth=function(d1,d2){
 	return 1;
 };
 //console.log(compareDateMonth('2016-08-24 10:51:18','2016-09-24 10:51:18'));
+//获取当月第一天和最后一天的日期
+var getMonthFirstDayToEndDate=function(){
+var date_ = new Date();
+var year = date_.getFullYear();
+var month = date_.getMonth() + 1;
+var firstdate = year + '-' + month + '-01';
+var month_first = firstdate+" 00:00:00";
+
+var day = new Date(year,month,0);
+var lastdate = year + '-' + month + '-' + day.getDate();
+var month_last = lastdate+" 23:59:59";
+	return month_first+"||"+month_last;
+};
+//console.log(getMonthFirstDayToEndDate());
+

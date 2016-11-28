@@ -40,7 +40,7 @@
 								<td><div id="gas_station_name" >
 										<c:if test="${road.conditionStatus == '0' }">已失效</c:if>
 										<c:if test="${road.conditionStatus == '1' }">待审核</c:if>
-										<c:if test="${road.conditionStatus == '2' }">已审核</c:if>
+										<c:if test="${road.conditionStatus == '2' }">审核通过</c:if>
 										<c:if test="${road.conditionStatus == '3' }">未通过</c:if></td>
 
 								<th>坐标</th>
