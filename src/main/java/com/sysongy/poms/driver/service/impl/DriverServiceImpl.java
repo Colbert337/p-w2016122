@@ -159,34 +159,6 @@ public class DriverServiceImpl implements DriverService {
 				record.setRegisCompany(invitationCode);//存储邀请人邀请码
 			}
             int count = sysDriverMapper.insertSelective(record);
-            
-			//设置密保手机成功发放积分
-			HashMap<String, String> szmbsjMap =  integralRuleService.selectRepeatIntegralType("szmbsj");
-			//设置密保手机向积分记录表中插入积分历史数据
-			if("true".equals(szmbsjMap.get("STATUS"))&&"1".equals(String.valueOf(szmbsjMap.get("integral_rule_num")))){
-				String integral_rule_id = szmbsjMap.get("integral_rule_id");
-				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
-				if(null!=integralRule){
-					IntegralHistory aIntegralHistory = new IntegralHistory();
-					aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
-					aIntegralHistory.setSys_driver_id(record.getSysDriverId()); 
-					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
-					PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
-					List<IntegralHistory> integralHistoryList =list.getList();
-					if(integralHistoryList.size()==0){
-						IntegralHistory szmbsjHistory = new IntegralHistory();
-						szmbsjHistory.setIntegral_type("szmbsj");
-						szmbsjHistory.setIntegral_rule_id(szmbsjMap.get("integral_rule_id"));
-						szmbsjHistory.setSys_driver_id(record.getSysDriverId());
-						szmbsjHistory.setIntegral_num(integralRule.getIntegral_reward());
-						integralHistoryService.addIntegralHistory(szmbsjHistory, operator_id);
-						SysDriver sysDriver = new SysDriver();
-						sysDriver.setIntegral_num(integralRule.getIntegral_reward());
-						sysDriver.setSysDriverId(record.getSysDriverId());
-						sysDriverMapper.updateDriverByIntegral(sysDriver);			
-					}
-				}
-			}
 			//判断邀请码是否存在，存在则根据条件发放积分
 			if(null!=invitationCode &&!"".equals(invitationCode)){
 				//邀请成功则发放积分
