@@ -35,7 +35,7 @@
 						<label>页面状态:</label>
 					</div>
 					<div class="item">
-						<select  name="pageStatus" value="${page.pageStatus}" >
+						<select  name="pageStatus" id="pageStatus" value="${page.pageStatus}" >
 							<option value="">--请选择--</option>
 							<option value="0">生效</option>
 							<option value="1">失效</option>
@@ -190,10 +190,6 @@
 
 </div>
 <script>
-
- 
 //$("#pageStatus").find("option[value='${page.pageStatus}']").attr("selected",true);
 $("#pageStatus").val("${page.pageStatus}");
-	
-	
 </script>
