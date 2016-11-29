@@ -3555,7 +3555,7 @@ public class MobileController {
 										if ("1".equals(phoneType)) {
 											sysDriver.setUserName(newPhoneNum);
 											sysDriver.setMobilePhone(newPhoneNum);
-										} else {
+										} else {//修改密保手机
 											sysDriver.setSecurityMobilePhone(newPhoneNum);
 										}
 										sysDriver.setDriverType(driver.get(0).getDriverType());
@@ -6038,6 +6038,11 @@ public class MobileController {
 				String unit = mainObj.optString("unit");
 				String promotions = mainObj.optString("promotions");
 				String priceEffectiveTime = mainObj.optString("priceEffectiveTime");
+				//当生效时间为立即生效时，设置生效时间为当前时间
+				if(gastation != null && "0".equals(gastation.getPrice_effective_time())){
+					SimpleDateFormat format = new SimpleDateFormat();
+					priceEffectiveTime = format.format(new Date());
+				}
 				if(price==null ||"".equals(price)){
 					price="0.0";
 				}
