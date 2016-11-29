@@ -38,6 +38,7 @@ public interface SysDriverMapper {
 
     SysDriver queryDriverByMobilePhone(SysDriver record);
 
+    SysDriver queryDriverBySecurityPhone(SysDriver record);
     /**
      * 条件查询司机列表
      * @param record

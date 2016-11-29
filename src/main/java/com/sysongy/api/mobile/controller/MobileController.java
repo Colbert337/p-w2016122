@@ -3520,6 +3520,9 @@ public class MobileController {
 			 */
 			if (b) {
 				String payCode = mainObj.optString("payCode");
+				phoneType = mainObj.optString("phoneType");
+				phoneNum = mainObj.optString("phoneNum");
+				newPhoneNum = mainObj.optString("newPhoneNum");
 				SysDriver oldDriver = new SysDriver();
 				oldDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				SysDriver oldD = driverService.queryDriverByMobilePhone(oldDriver);
@@ -3530,17 +3533,50 @@ public class MobileController {
 				// 获取验证码
 				String inVeCode = mainObj.optString("veCode");
 				newCode = mainObj.optString("newCode");
-				veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+
+				if(phoneType.equals("1")){//修改账户手机
+					if(phoneNum.equals(newPhoneNum)){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("新账号手机号不能跟原来一样！");
+						resutObj = JSONObject.fromObject(result);
+						logger.error("新账号手机号不能跟原来一样！");
+						resutObj.remove("listMap");
+						resultStr = resutObj.toString();
+						resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+						return resultStr;
+					}
+					veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+				}else{//修改密保手机
+					if(phoneNum.equals(newPhoneNum)){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("密保手机号不能跟账号一样！");
+						resutObj = JSONObject.fromObject(result);
+						logger.error("密保手机号不能跟账号一样！");
+						resutObj.remove("listMap");
+						resultStr = resutObj.toString();
+						resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+						return resultStr;
+					}
+					inVeCode = newCode;
+					veCode = (String) redisClientImpl.getFromCache(newPhoneNum);
+				}
+
 				if (veCode != null && !"".equals(veCode) && inVeCode.equals(veCode)) {
-					phoneType = mainObj.optString("phoneType");
+
 					// 数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 					if (!driver.isEmpty()) {
 						// 新电话号码
-						newPhoneNum = mainObj.optString("newPhoneNum");
+
 						SysDriver temp = new SysDriver();
 						temp.setMobilePhone(newPhoneNum);
-						SysDriver rs = driverService.queryDriverByMobilePhone(temp);
+						SysDriver rs = new SysDriver();
+						if(phoneType.equals("1")){
+							rs = driverService.queryDriverByMobilePhone(temp);
+						}else{
+							rs = driverService.queryDriverBySecurityPhone(temp);
+						}
+
 						Map<String, Object> dataMap = new HashMap<>();
 						if(rs!=null && !"".equals(rs)){
 							result.setStatus(MobileReturn.STATUS_FAIL);

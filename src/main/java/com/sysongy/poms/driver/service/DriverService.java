@@ -62,6 +62,8 @@ public interface DriverService {
 
 	public SysDriver queryDriverByMobilePhone(SysDriver record) throws Exception;
 
+	public SysDriver queryDriverBySecurityPhone(SysDriver record) throws Exception;
+
 	public Integer updateAndReview(String driverid, String type, String memo, CurrUser currUser) throws Exception;
 	/**
 	 * 条件查询司机列表
