@@ -3555,7 +3555,7 @@ public class MobileController {
 										if ("1".equals(phoneType)) {
 											sysDriver.setUserName(newPhoneNum);
 											sysDriver.setMobilePhone(newPhoneNum);
-										} else {
+										} else {//修改密保手机
 											sysDriver.setSecurityMobilePhone(newPhoneNum);
 										}
 										sysDriver.setDriverType(driver.get(0).getDriverType());
