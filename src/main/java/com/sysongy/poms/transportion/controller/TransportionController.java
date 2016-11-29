@@ -112,6 +112,8 @@ public class TransportionController extends BaseContoller{
 			if(transportion.getConvertPageNum() != null){
 				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
 					transportion.setPageNum(transportion.getPageNumMax());
+				}else if(transportion.getConvertPageNum() < 1){
+					transportion.setPageNum(1);
 				}else{
 					transportion.setPageNum(transportion.getConvertPageNum());
 				}
@@ -165,6 +167,8 @@ public class TransportionController extends BaseContoller{
 			if(transportion.getConvertPageNum() != null){
 				if(transportion.getConvertPageNum() > transportion.getPageNumMax()){
 					transportion.setPageNum(transportion.getPageNumMax());
+				}else if(transportion.getConvertPageNum() < 1){
+					transportion.setPageNum(1);
 				}else{
 					transportion.setPageNum(transportion.getConvertPageNum());
 				}

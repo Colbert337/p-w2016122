@@ -86,6 +86,8 @@ public class SysRoadController extends BaseContoller {
 			if(road.getConvertPageNum() != null){
 				if(road.getConvertPageNum() > road.getPageNumMax()){
 					road.setPageNum(road.getPageNumMax());
+				}else if(road.getConvertPageNum() < 1){
+					road.setPageNum(1);
 				}else{
 					road.setPageNum(road.getConvertPageNum());
 				}
@@ -138,6 +140,8 @@ public class SysRoadController extends BaseContoller {
 			if(road.getConvertPageNum() != null){
 				if(road.getConvertPageNum() > road.getPageNumMax()){
 					road.setPageNum(road.getPageNumMax());
+				}else if(road.getConvertPageNum() < 1){
+					road.setPageNum(1);
 				}else{
 					road.setPageNum(road.getConvertPageNum());
 				}

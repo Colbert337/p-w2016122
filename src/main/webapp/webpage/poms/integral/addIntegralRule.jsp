@@ -10,7 +10,10 @@
 	<script src="<%=basePath %>/dist/js/integral/addIntegralRule.js"></script>
 	<style type="text/css">
 	#limitNumber i.form-control-feedback{
-	right: -100px;
+		right: -100px;
+	}
+	#integralLadder i.form-control-feedback{
+		display:none !important;
 	}
 	</style>
 	<div class="">
@@ -35,19 +38,19 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="reward_cycle" class="col-sm-3 control-label no-padding-right">限制周期：</label>
+						<label for="reward_cycle" class="col-sm-3 control-label no-padding-right">奖励周期：</label>
 						<div class="col-sm-4">
-							<select class="form-control" name="reward_cycle">
+							<select class="form-control" name="reward_cycle" onchange="changeRewardCycle()">
 								<s:option flag="true" gcode="REWARD_CYCLE" form="integralRuleform" field="reward_cycle" />
 							</select>
 						</div>
 					</div>
 					<div class="form-group" id="limitNumber">
-						<label for="limit_number" class="col-sm-3 control-label no-padding-right">限制次数：</label>
+						<label for="limit_number" class="col-sm-3 control-label no-padding-right">奖励次数：</label>
 						<div class="col-sm-4">
 							<label class="radio-inline">
 								<input name="limit"  type="radio" class="ace" value="1" checked="checked" onclick="changeLimitType()">
-									<span class="lbl"><input type="text" name="limit_number" class="number" style="width:60px" size="4"/>&nbsp;次</span>
+									<span class="lbl"><input type="text" name="limit_number" class="number" style="width:60px" maxlength="4" size="4"/>&nbsp;次</span>
 							</label>
 							<label class="radio-inline">
 								<input name="limit"  type="radio" class="ace" value="2" onclick="changeLimitType()">
@@ -56,7 +59,7 @@
 						</div>
 					</div>
 					<div class="form-group" id="integralReward">
-						<label for="integralreward" class="col-sm-3 control-label no-padding-right">积分奖励：</label>
+						<label for="integralreward" class="col-sm-3 control-label no-padding-right">奖励积分：</label>
 						<div class="col-sm-4">
 							<select  name="integral_reward">
 							<s:option flag="true" gcode="INTEGRAL_REWARD" form="integralRuleform" field="integral_reward" />
@@ -64,7 +67,7 @@
 						</div>
 					</div>
 					<div class="form-group" style="display:none" id="integralLadder">
-						<label class="col-sm-3 control-label no-padding-right">积分：</label>
+						<label class="col-sm-3 control-label no-padding-right">奖励积分：</label>
 						<div class="col-sm-4">
 							<div>
 								<button class="btn btn-sm btn-primary" type="button" onclick="addLadder()">新增积分阶梯</button>
@@ -84,14 +87,14 @@
 									</thead>
 									<tbody id="integralRule">
 										<tr>
-											<td><input type="text"  size="5" style="width:50px" class="number" onchange="checkladdermoney(this)" name="ladder_before"/>元~<input type="text"  size="5" style="width:50px" onchange="checkladdermoney(this)" class="number" name="ladder_after"/>元</td>
+											<td><input type="text" maxlength="5" size="5" style="width:50px" class="number" onchange="checkladdermoney(this)" name="ladder_before"/>元~<input type="text"  size="5" style="width:50px" onchange="checkladdermoney(this)" maxlength="5" class="number" name="ladder_after"/>元</td>
 											<td>
 												<input name="reward_type0"  type="radio" class="ace" value="1" checked="checked" onclick="changeRewardType(this)">
 												<span class="lbl">
-														<input type="text" class="number" style="width:60px"  size="5" name="rewardintegral" />
+														<input type="text" class="number" style="width:60px" maxlength="5"  size="5" name="rewardintegral" />
 												</span>
 												<input name="reward_type0"  type="radio" class="ace" value="2" onclick="changeRewardType(this)">
-												<span class="lbl">金额 * <input type="text" class="number" style="width:60px" onchange="checkfactor(this)"  size="5" name="rewardfactor" disabled='disabled' />%<=<input type="text"  style="width:60px"  class="number" size="5" name="rewardmax" disabled='disabled' />分</span>
+												<span class="lbl">金额 * <input type="text" class="number" maxlength="5" style="width:60px" onchange="checkfactor(this)"  size="5" name="rewardfactor" disabled='disabled' />%<=<input type="text"  style="width:60px"  class="number" size="5" maxlength="5" name="rewardmax" disabled='disabled' />分</span>
 											</td>
 										</tr>
 									</tbody>

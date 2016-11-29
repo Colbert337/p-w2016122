@@ -56,6 +56,8 @@ public class SysRoleController extends BaseContoller{
 		if(role.getConvertPageNum() != null){
 			if(role.getConvertPageNum() > role.getPageNumMax()){
 				role.setPageNum(role.getPageNumMax());
+			}else if(role.getConvertPageNum() < 1){
+				role.setPageNum(1);
 			}else{
 				role.setPageNum(role.getConvertPageNum());
 			}

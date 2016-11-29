@@ -65,6 +65,8 @@ public class SysUserController extends BaseContoller{
 		if(sysUser.getConvertPageNum() != null){
 			if(sysUser.getConvertPageNum() > sysUser.getPageNumMax()){
 				sysUser.setPageNum(sysUser.getPageNumMax());
+			}else if(sysUser.getConvertPageNum() < 1){
+				sysUser.setPageNum(1);
 			}else{
 				sysUser.setPageNum(sysUser.getConvertPageNum());
 			}

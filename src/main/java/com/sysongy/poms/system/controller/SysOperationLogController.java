@@ -33,6 +33,8 @@ public class SysOperationLogController extends BaseContoller {
 			if(sysOperationLog.getConvertPageNum() != null){
 				if(sysOperationLog.getConvertPageNum() > sysOperationLog.getPageNumMax()){
 					sysOperationLog.setPageNum(sysOperationLog.getPageNumMax());
+				}else if(sysOperationLog.getConvertPageNum() < 1){
+					sysOperationLog.setPageNum(1);
 				}else{
 					sysOperationLog.setPageNum(sysOperationLog.getConvertPageNum());
 				}

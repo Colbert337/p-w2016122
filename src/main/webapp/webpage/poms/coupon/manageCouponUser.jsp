@@ -99,7 +99,7 @@
 								maxlength="4" /> 页
 							<button type="button" class="btn btn-white btn-sm btn-primary"
 								onclick="commitForm();">跳转</button>
-						</div>		
+						</div>
 					</div>
 					<div class="col-sm-6">
 						<nav>

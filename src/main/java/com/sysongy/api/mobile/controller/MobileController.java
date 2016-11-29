@@ -3561,6 +3561,36 @@ public class MobileController {
 										sysDriver.setDriverType(driver.get(0).getDriverType());
 										sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 										int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
+											//修改密保手机，密码手机存在则发放积分
+								           if(null!=sysDriver.getSecurityMobilePhone()&&!"".equals(sysDriver.getSecurityMobilePhone())){
+								   			//设置密保手机成功发放积分
+								   			HashMap<String, String> szmbsjMap =  integralRuleService.selectRepeatIntegralType("szmbsj");
+								   			//设置密保手机向积分记录表中插入积分历史数据
+								   			if("true".equals(szmbsjMap.get("STATUS"))&&"1".equals(String.valueOf(szmbsjMap.get("integral_rule_num")))){
+								   				String integral_rule_id = szmbsjMap.get("integral_rule_id");
+								   				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
+								   				if(null!=integralRule){
+								   					IntegralHistory aIntegralHistory = new IntegralHistory();
+								   					aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
+								   					aIntegralHistory.setSys_driver_id(sysDriver.getSysDriverId()); 
+								   					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
+								   					PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
+								   					List<IntegralHistory> integralHistoryList =list.getList();
+								   					if(integralHistoryList.size()==0){
+								   						IntegralHistory szmbsjHistory = new IntegralHistory();
+								   						szmbsjHistory.setIntegral_type("szmbsj");
+								   						szmbsjHistory.setIntegral_rule_id(szmbsjMap.get("integral_rule_id"));
+								   						szmbsjHistory.setSys_driver_id(sysDriver.getSysDriverId());
+								   						szmbsjHistory.setIntegral_num(integralRule.getIntegral_reward());
+								   						integralHistoryService.addIntegralHistory(szmbsjHistory, sysDriver.getSysDriverId());
+								   						SysDriver aSysDriver = new SysDriver();
+								   						aSysDriver.setIntegral_num(integralRule.getIntegral_reward());
+								   						aSysDriver.setSysDriverId(sysDriver.getSysDriverId());
+								   						driverService.updateDriverByIntegral(aSysDriver);			
+								   					}
+								   				}
+								   			}     
+								           }
 										// 返回大于0，成功
 										if (resultVal <= 0) {
 											result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5181,7 +5211,7 @@ public class MobileController {
 					        								String reward_cycle = integralRule.getReward_cycle();
 					        								String count = String.valueOf(driverMap.get("count"));
 					        							boolean nolimit="不限".equals(llimitnumber);
-					        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)>=Integer.parseInt(llimitnumber));	
+					        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
 					        							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
 					        								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 					        									if(nolimit||one||pass){
@@ -5197,7 +5227,7 @@ public class MobileController {
 					        										String integralreward = "";
 					        										for(int i=0;i<ladder_before.length;i++){
 					        											//判断是否在阶梯的消费区间内
-					        											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>=0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<0){
+					        											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<=0){
 					        												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
 					        													xfHistory.setIntegral_num(integral_reward[i]);
 					        													integralreward = integral_reward[i];
@@ -6835,7 +6865,7 @@ public class MobileController {
 								String reward_cycle = integralRule.getReward_cycle();
 								String count = String.valueOf(driverMap.get("count"));
 							boolean nolimit="不限".equals(llimitnumber);
-							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)>=Integer.parseInt(llimitnumber));	
+							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
 							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
 								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 									if(nolimit||one||pass){
@@ -6851,7 +6881,7 @@ public class MobileController {
 										String integralreward = "";
 										for(int i=0;i<ladder_before.length;i++){
 											//判断是否在阶梯的消费区间内
-											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>=0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<0){
+											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<=0){
 												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
 													czHistory.setIntegral_num(integral_reward[i]);
 													integralreward = integral_reward[i];

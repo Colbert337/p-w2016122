@@ -145,6 +145,8 @@ public class SysRoadServiceImpl implements SysRoadService {
 	 */
 	@Override
 	public int updateRoad(SysRoadCondition road,String userID) throws Exception {
+		// TODO Auto-generated method stub
+		int updateNum =  sysRoadConditionMapper.updateByPrimaryKeyToCheck(road);
 		//判断上报路况审核是否通过，存在则根据条件发放积分
 		if(null!=road.getConditionStatus() &&!"".equals(road.getConditionStatus())&&"2".equals(road.getConditionStatus())){
 			//上报路况成功发放积分
@@ -170,7 +172,7 @@ public class SysRoadServiceImpl implements SysRoadService {
         							String reward_cycle = integralRule.getReward_cycle();
         							String count = String.valueOf(driverMap.get("count"));
         							boolean nolimit="不限".equals(llimitnumber);
-        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)>=Integer.parseInt(llimitnumber));	
+        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
         							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
         								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
         								if(nolimit||one||pass){	
@@ -188,9 +190,8 @@ public class SysRoadServiceImpl implements SysRoadService {
 						}					
 					}	
 		}
-	}
-		// TODO Auto-generated method stub
-		return sysRoadConditionMapper.updateByPrimaryKeyToCheck(road);
+	}	
+		return updateNum;
 	}
 
 	/**

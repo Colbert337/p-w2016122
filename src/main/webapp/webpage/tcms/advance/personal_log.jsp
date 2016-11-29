@@ -95,7 +95,8 @@
 									<th onclick="orderBy(this,'goods_type');commitForm();" id="goods_type_order">商品名称</th>
 									<th onclick="orderBy(this,'price');commitForm();" id="price_order">结算单价</th>
 									<th onclick="orderBy(this,'number');commitForm();" id="number_order">消费数量</th>
-									<th onclick="orderBy(this,'cash');commitForm();" id="sum_price_order">消费金额</th>
+									<th onclick="orderBy(this,'cash');commitForm();" id="sum_price_order">实收金额</th>
+									<th onclick="orderBy(this,'should_payment');commitForm();" id="should_payment_order">订单金额</th>
 									<th onclick="orderBy(this,'order_date');commitForm();" id="order_date_order"><i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>交易时间</th>
 									<th>备注</th>
 								</tr>
@@ -127,7 +128,8 @@
 									<td><s:Code2Name mcode="${list.goods_type}" gcode="CARDTYPE"></s:Code2Name></td>
 									<td>${list.price}</td>
 									<td>${list.number}</td>
-									<td><c:if test="${list.is_discharge == 1}"> -</c:if>${list.sumPrice}</td>
+									<td><c:if test="${list.is_discharge == 1}"> -</c:if>${list.cash}</td>
+									<td>${list.should_payment}</td>
 									<td><fmt:formatDate value="${list.orderDate}" type="both"/></td>
 									<td>${list.remark}</td>
 								</tr>

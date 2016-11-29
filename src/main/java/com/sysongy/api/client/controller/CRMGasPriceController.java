@@ -312,6 +312,8 @@ public class CRMGasPriceController {
 			if(gsGasPrice.getConvertPageNum() != null){
 				if(gsGasPrice.getConvertPageNum() > gsGasPrice.getPageNumMax()){
 					gsGasPrice.setPageNum(gsGasPrice.getPageNumMax());
+				}else if(gsGasPrice.getConvertPageNum() < 1){
+					gsGasPrice.setPageNum(1);
 				}else{
 					gsGasPrice.setPageNum(gsGasPrice.getConvertPageNum());
 				}
@@ -366,6 +368,8 @@ public class CRMGasPriceController {
    			if(productPrice.getConvertPageNum() != null){
 				if(productPrice.getConvertPageNum() > productPrice.getPageNumMax()){
 					productPrice.setPageNum(productPrice.getPageNumMax());
+				}else if(productPrice.getConvertPageNum() < 1){
+					productPrice.setPageNum(1);
 				}else{
 					productPrice.setPageNum(productPrice.getConvertPageNum());
 				}

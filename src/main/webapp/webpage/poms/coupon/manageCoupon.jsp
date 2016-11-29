@@ -153,7 +153,7 @@
 								name="convertPageNum" style="height: 25px; width: 45px"
 								maxlength="4" /> 页
 							<button type="button" class="btn btn-white btn-sm btn-primary"
-								onclick="commitForm();">跳转</button>						
+								onclick="commitForm();">跳转</button>
 						</div>
 					</div>
 					<div class="col-sm-6">

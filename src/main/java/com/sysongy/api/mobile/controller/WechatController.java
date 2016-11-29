@@ -655,7 +655,7 @@ public class WechatController {
 								String reward_cycle = integralRule.getReward_cycle();
 								String count = String.valueOf(driverMap.get("count"));
 							boolean nolimit="不限".equals(llimitnumber);
-							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)>=Integer.parseInt(llimitnumber));	
+							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
 							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
 								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 									if(nolimit||one||pass){
@@ -671,7 +671,7 @@ public class WechatController {
 										String integralreward = "";
 										for(int i=0;i<ladder_before.length;i++){
 											//判断是否在阶梯的消费区间内
-											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>=0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<0){
+											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<=0){
 												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
 													czHistory.setIntegral_num(integral_reward[i]);
 													integralreward = integral_reward[i];

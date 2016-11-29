@@ -71,6 +71,8 @@ public class TcReportController extends BaseContoller{
             if(loger.getConvertPageNum() != null){
     			if(loger.getConvertPageNum() > loger.getPageNumMax()){
     				loger.setPageNum(loger.getPageNumMax());
+    			}else if(loger.getConvertPageNum() < 1){
+    				loger.setPageNum(1);
     			}else{
     				loger.setPageNum(loger.getConvertPageNum());
     			}
@@ -243,6 +245,8 @@ public class TcReportController extends BaseContoller{
             if(loger.getConvertPageNum() != null){
     			if(loger.getConvertPageNum() > loger.getPageNumMax()){
     				loger.setPageNum(loger.getPageNumMax());
+    			}else if(loger.getConvertPageNum() < 1){
+    				loger.setPageNum(1);
     			}else{
     				loger.setPageNum(loger.getConvertPageNum());
     			}

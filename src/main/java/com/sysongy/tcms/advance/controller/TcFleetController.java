@@ -69,6 +69,8 @@ public class TcFleetController extends BaseContoller {
         if(fleet.getConvertPageNum() != null){
 			if(fleet.getConvertPageNum() > fleet.getPageNumMax()){
 				fleet.setPageNum(fleet.getPageNumMax());
+			}else if(fleet.getConvertPageNum() < 1){
+				fleet.setPageNum(1);
 			}else{
 				fleet.setPageNum(fleet.getConvertPageNum());
 			}

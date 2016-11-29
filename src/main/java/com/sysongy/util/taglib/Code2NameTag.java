@@ -44,11 +44,12 @@ public class Code2NameTag extends BodyTagSupport {
 			if (type == null) {
 				type = SYSPARAM;
 			}
-			if (type != null && type.trim().length() > 0 && mcode != null
-					&& mcode.trim().length() > 0) {
+			if (type != null && type.trim().length() > 0 && mcode != null && mcode.trim().length() > 0) {
 				if (SYSPARAM.equals(type)) {
 					if (gcode != null && gcode.trim().length() > 0) {
+						
 						String r = Translate.getInstance().getName(gcode, mcode.trim());
+						
 						if (link) {
 							pageContext.getOut().print(mcode + " - " + r);
 						} else {

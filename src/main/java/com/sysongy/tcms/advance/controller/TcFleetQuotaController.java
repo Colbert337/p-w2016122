@@ -305,6 +305,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(tcFleet.getConvertPageNum() != null){
     			if(tcFleet.getConvertPageNum() > tcFleet.getPageNumMax()){
     				tcFleet.setPageNum(tcFleet.getPageNumMax());
+    			}else if(tcFleet.getConvertPageNum() < 1){
+    				tcFleet.setPageNum(1);
     			}else{
     				tcFleet.setPageNum(tcFleet.getConvertPageNum());
     			}
@@ -671,6 +673,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(order.getConvertPageNum() != null){
     			if(order.getConvertPageNum() > order.getPageNumMax()){
     				order.setPageNum(order.getPageNumMax());
+    			}else if(order.getConvertPageNum() < 1){
+    				order.setPageNum(1);
     			}else{
     				order.setPageNum(order.getConvertPageNum());
     			}
@@ -767,7 +771,7 @@ public class TcFleetQuotaController extends BaseContoller {
             //设置表头
             content[0] = new String[]{transName+"个人消费报表"};
             content[2] = new String[]{"订单编号","订单类型","交易类型","姓名","手机号码","加注站名称",
-                    "商品名称","结算单价","消费数量","消费金额","交易时间","备注"};
+                    "商品名称","结算单价","消费数量","实收金额","订单金额","交易时间","备注"};
             //设置列宽
             String [] wcell = new String []{"0,26","1,13","2,13","3,13","4,13","5,20","6,13","7,13","8,13","9,13","10,23","11,23"};
             //合并第一行单元格
@@ -814,15 +818,26 @@ public class TcFleetQuotaController extends BaseContoller {
                         }
                     }
                     String cash = "";
-                    if(quotaMap.get("sumPrice") != null){
+                    if(quotaMap.get("cash") != null){
                         if(quotaMap.get("is_discharge") != null && quotaMap.get("is_discharge").toString().equals("0")){
-                            cash = quotaMap.get("sumPrice").toString();
+                            cash = quotaMap.get("cash").toString();
                         }else{
-                            cash = "-"+quotaMap.get("sumPrice").toString();
+                            cash = "-"+quotaMap.get("cash").toString();
                         }
 
                     }else{
                         cash = "0.00";
+                    }
+                    String should_payment = "";
+                    if(quotaMap.get("should_payment") != null){
+                        if(quotaMap.get("is_discharge") != null && quotaMap.get("is_discharge").toString().equals("0")){
+                        	should_payment = quotaMap.get("should_payment").toString();
+                        }else{
+                        	should_payment = "-"+quotaMap.get("should_payment").toString();
+                        }
+
+                    }else{
+                    	should_payment = "0.00";
                     }
                     String fullName = "";
                     if(quotaMap.get("full_name") != null){
@@ -873,7 +888,7 @@ public class TcFleetQuotaController extends BaseContoller {
                     if(quotaMap.get("remark") != null){
                         remark = quotaMap.get("remark").toString();
                     }
-                    content[i] = new String[]{orderNumber,orderType,isDischarge,fullName,mobilePhone,gasStationName,goodsType,price,number,sumPrice,orderDate,remark};
+                    content[i] = new String[]{orderNumber,orderType,isDischarge,fullName,mobilePhone,gasStationName,goodsType,price,number,cash,should_payment,orderDate,remark};
                     i++;
                 }
             }
@@ -925,6 +940,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(order.getConvertPageNum() != null){
     			if(order.getConvertPageNum() > order.getPageNumMax()){
     				order.setPageNum(order.getPageNumMax());
+    			}else if(order.getConvertPageNum() < 1){
+    				order.setPageNum(1);
     			}else{
     				order.setPageNum(order.getConvertPageNum());
     			}
@@ -1165,6 +1182,8 @@ public class TcFleetQuotaController extends BaseContoller {
             if(order.getConvertPageNum() != null){
     			if(order.getConvertPageNum() > order.getPageNumMax()){
     				order.setPageNum(order.getPageNumMax());
+    			}else if(order.getConvertPageNum() < 1){
+    				order.setPageNum(1);
     			}else{
     				order.setPageNum(order.getConvertPageNum());
     			}
