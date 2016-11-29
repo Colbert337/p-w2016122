@@ -92,7 +92,7 @@
     <!--获取限高限重路况列表-->
     <select id="queryHighWeightRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
-        id,start_time,condition_type
+        *
         from sys_road_condition  where 1=1 and condition_status='2' and (condition_type = '07' or condition_type = '08') ORDER BY publisher_time DESC
     </select>
 

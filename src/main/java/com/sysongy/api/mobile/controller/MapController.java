@@ -270,7 +270,7 @@ public class MapController {
             resutObj.remove("data");
             resultStr = resutObj.toString();
             logger.error("获取限高、限重路况信息： " + resultStr);
-            resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
+//            resultStr = DESUtil.encode(keyStr, resultStr);// 参数解密
         } catch (Exception e) {
             result.setStatus(MobileReturn.STATUS_FAIL);
             result.setMsg("获取路况失败！");
