@@ -132,6 +132,13 @@
 											<input type="text" id="contact_phone"  name="contact_phone" placeholder="输入联系电话" class="form-control" maxlength="15" value="${station.contact_phone}"/>
 										</div>
 									</div>
+									<div class="form-group">
+										<label for="station_telephone" class="col-sm-3 control-label no-padding-right"> 气站座机电话： </label>
+
+										<div class="col-sm-4">
+											<input type="text" id="station_telephone"  name="station_telephone" placeholder="输入气站座机电话" class="form-control" maxlength="18" value="${station.station_telephone}"/>
+										</div>
+									</div>
 									
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right">管理员账号（建议为11位手机号码）： </label>
