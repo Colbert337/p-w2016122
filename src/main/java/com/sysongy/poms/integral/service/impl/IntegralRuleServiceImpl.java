@@ -34,6 +34,15 @@ public class IntegralRuleServiceImpl implements IntegralRuleService {
 			integralRule.setPageNum(1);
 			integralRule.setPageSize(10);
 		}
+		if(integralRule.getConvertPageNum() != null){
+			if(integralRule.getConvertPageNum() > integralRule.getPageNumMax()){
+				integralRule.setPageNum(integralRule.getPageNumMax());
+			}else if(integralRule.getConvertPageNum() < 1){
+				integralRule.setPageNum(1);
+			}else{
+				integralRule.setPageNum(integralRule.getConvertPageNum());
+			}
+		}
 		if (StringUtils.isEmpty(integralRule.getOrderby())) {
 			integralRule.setOrderby("lastmodify_time desc");
 		}
@@ -57,7 +66,7 @@ public class IntegralRuleServiceImpl implements IntegralRuleService {
 						if("1".equals(reward_types[j])){
 							integralStr = integral_rewards[j]+"分";
 						}else{
-							integralStr = "金额*"+reward_factors[j]+"<="+reward_maxs[j]+"分";
+							integralStr = "金额*"+reward_factors[j]+"%<="+reward_maxs[j]+"分";
 						}
 						integralStrs+=ladderStr+integralStr+",";
 					}

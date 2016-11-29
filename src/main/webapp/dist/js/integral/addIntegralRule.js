@@ -42,6 +42,7 @@ function changeintegralType(){
 		$("input[name='limit_number']").removeAttr("readonly");
 		$("input:radio[name='limit']").removeAttr("disabled");;
 	}
+	changeRewardCycle();
 }
 
 function changeRewardCycle(){

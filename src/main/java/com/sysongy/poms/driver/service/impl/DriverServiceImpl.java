@@ -172,6 +172,8 @@ public class DriverServiceImpl implements DriverService {
 						yqcgHashMap.put("reward_cycle", integralRule.getReward_cycle());
 						yqcgHashMap.put("regis_company", invitationCode);
 						yqcgHashMap.put("sys_driver_id",record.getSysDriverId());
+    					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+    					yqcgHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
 						List<HashMap<String,String>> driverList = sysDriverMapper.queryInvitationByCode(yqcgHashMap);
 						//当前日/周/月 存在的 司机注册数
 						if(driverList.size()>0){
@@ -182,7 +184,7 @@ public class DriverServiceImpl implements DriverService {
 									String reward_cycle = integralRule.getReward_cycle();
 									String countDriver = String.valueOf(driverMap.get("count"));
 									boolean nolimit="不限".equals(llimitnumber);
-									boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(countDriver)<=Integer.parseInt(llimitnumber));	
+									boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(countDriver)<=Integer.parseInt(llimitnumber));	
 									boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(countDriver)-1==Integer.parseInt(llimitnumber));	
 										//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 											if(nolimit||one||pass){
