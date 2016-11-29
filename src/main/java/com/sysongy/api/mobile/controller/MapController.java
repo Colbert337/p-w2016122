@@ -216,28 +216,8 @@ public class MapController {
              */
             if (b) {
 
-                List<SysRoadCondition> roadIdList = sysRoadService.queryHighWeightRoadId();
-                List<SysRoadCondition> redisList = new ArrayList<>();
-                for (int i = 0; i < roadIdList.size(); i++) {
-                    SysRoadCondition sysRoadCondition = (SysRoadCondition) redisClientImpl.getFromCache("Road" + roadIdList.get(i).getId());
-                    if (sysRoadCondition != null) {
-                        redisList.add(sysRoadCondition);
-                    }else{
-                        Usysparam param=usysparamService.queryUsysparamByCode("CONDITION_TYPE", roadIdList.get(i).getConditionType());
-                        int time = SysRoadServiceImpl.sumTime( roadIdList.get(i).getStartTime(), Integer.valueOf(param.getData()));
-                        if(time <= 0 ){
-                            SysRoadCondition src = new SysRoadCondition();
-                            src.setId(roadIdList.get(i).getId());
-                            src.setConditionStatus("0");
-                            int rs = sysRoadService.updateByPrimaryKey(src);
-                            if (rs ==1) {
-                                logger.info("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：成功!!!");
-                            }else{
-                                logger.error("更新 ID为Road" + roadIdList.get(i).getId()+"的路况状态为失效：失败!!!");
-                            }
-                        }
-                    }
-                }
+                List<SysRoadCondition> redisList = sysRoadService.queryHighWeightRoadId();
+
                 List<Map<String, Object>> reChargeList = new ArrayList<>();
                 Map<String, Object> reCharge = new HashMap<>();
                 SimpleDateFormat sft = new SimpleDateFormat("yyyy-MM-dd HH:mm");
