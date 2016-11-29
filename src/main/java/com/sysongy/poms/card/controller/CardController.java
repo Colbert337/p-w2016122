@@ -553,7 +553,7 @@ public class CardController extends BaseContoller {
 						workstation =	tmpMap.getTransportion().getTransportion_name();
 					}
 					if(tmpMap.getGasStationInfo()!=null){
-						workstation =	tmpMap.getGasStationInfo().getStation_manager();
+						workstation =	tmpMap.getGasStationInfo().getGas_station_name();//取气站管理员改为去气站名称 xyq 2016年11月24日
 					}
 				//	String workstation = tmpMap.getWorkstation()==null?"":tmpMap.getTransportion().getTransportion_name();
 

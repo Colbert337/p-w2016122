@@ -311,7 +311,8 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		sum(cash) as sumcash
 		from sys_order
 		where debit_account = #{userId,jdbcType=VARCHAR}
-		and order_type = #{CHARGE_TO_DRIVER,jdbcType=VARCHAR} and order_status='1'
+		and order_type = #{CHARGE_TO_DRIVER,jdbcType=VARCHAR}
+		and order_status = '1'
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -416,6 +417,9 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			<if test="chk_memo != null">
 				chk_memo,
 			</if>
+			<if test="spend_type != null">
+				spend_type,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="orderId != null">
@@ -487,6 +491,10 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			<if test="chk_memo != null">
 				#{chk_memo,jdbcType=INTEGER},
 			</if>
+			<if test="spend_type != null">
+				#{spend_type,jdbcType=INTEGER},
+			</if>
+			
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.sysongy.poms.order.model.SysOrder">
@@ -1334,9 +1342,10 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		B.preferential_cash,
 		B.spend_type,
 		B.should_payment,
-		B.coupon_cash
+		B.coupon_cash,
+		B.order_type
 		FROM sys_order AS B
-		WHERE 2=2 and B.order_type = '220'
+		WHERE 2=2 and (B.order_type = '220' or B.order_type = '230') 
 		AND B.order_status = '1'
 		AND B.is_discharge = '0'
 		AND B.been_discharged = '0'
@@ -1429,24 +1438,24 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	</select>
 	<!-- 根据订单号查询返现金额 -->
 	<select id="backCash" resultType="java.lang.Double" parameterType="java.lang.String">
-		select SUM(cash_back) from sys_order_deal where cash_back_per is not null and cash_back_per !="" and  order_id= #{orderId,jdbcType=VARCHAR} 
-	</select>	
-	
-	
+		select SUM(cash_back) from sys_order_deal where cash_back_per is not null and cash_back_per !="" and  order_id= #{orderId,jdbcType=VARCHAR}
+	</select>
+
+
 	    <!-- 根据操作人统计订单信息 -->
   <select id="queryOrderByOperator" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
     SELECT
-        <choose>  
-            <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
+        <choose>
+            <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">
                DATE_FORMAT(order_date,'%Y%m%d') days,
-            </when>  
-             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">  
+            </when>
+             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">
                DATE_FORMAT(order_date, '%Y%u') weeks,
-            </when>  
-           <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">  
-                DATE_FORMAT(order_date,'%Y%m') months, 
-           </when>  
-        </choose>  
+            </when>
+           <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">
+                DATE_FORMAT(order_date,'%Y%m') months,
+           </when>
+        </choose>
 	count(order_id) count
 FROM
 	sys_order  where
@@ -1455,24 +1464,24 @@ FROM
         <choose>  
             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
                 AND DATE_FORMAT(order_date, '%Y%m%d') = DATE_FORMAT((SELECT	order_date FROM	sys_order	WHERE	order_id = #{order_id,jdbcType=VARCHAR}),'%Y%m%d')
-            </when>  
-             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">  
+            </when>
+             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">
                AND DATE_FORMAT(order_date, '%Y%u') = DATE_FORMAT((SELECT	order_date FROM	sys_order	WHERE	order_id = #{order_id,jdbcType=VARCHAR}),'%Y%u')
-            </when>  
-           <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">  
+            </when>
+           <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">
               AND DATE_FORMAT(order_date,'%Y%m') = DATE_FORMAT((SELECT	order_date FROM	sys_order	WHERE	order_id = #{order_id,jdbcType=VARCHAR}),'%Y%m')
-           </when>  
-        </choose>  	  
-     <choose>  
-          <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
+           </when>
+        </choose>
+     <choose>
+          <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">
             group by days
-          </when>  
-           <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">  
+          </when>
+           <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">
             group by  weeks
-          </when>  
-          <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">  
+          </when>
+          <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">
              group by months
-          </when>  
-      </choose>  
+          </when>
+      </choose>
   </select>
 </mapper>

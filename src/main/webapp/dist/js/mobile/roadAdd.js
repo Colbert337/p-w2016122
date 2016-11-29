@@ -76,6 +76,17 @@ function saveRoad(){
 		bootbox.alert("开始日期不能为空！");
 		return;
 	}
+	if($("#longitude").val().indexOf(',')<0){
+		bootbox.alert("坐标格式不对！");
+		return;
+	}
+	
+	if($('#captureLongitude').val()!=""){
+		if ($('#captureLongitude').val().indexOf(',')<0) {
+			bootbox.alert('拍照坐标格式不对！');
+			return;
+		}
+	}
 	
 	$('#roadform').data('bootstrapValidator').validate();
 	if(!$('#roadform').data('bootstrapValidator').isValid()){

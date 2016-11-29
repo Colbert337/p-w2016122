@@ -166,27 +166,33 @@
 							</table>
 						</div>
 
-						<%--<div class="row">
+						<div class="row">
 								<div class="col-sm-6">
-									<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
+									<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+									&nbsp;&nbsp;转到第 <input type="text"
+								name="convertPageNum" style="height: 25px; width: 45px"
+								maxlength="4" /> 页
+							<button type="button" class="btn btn-white btn-sm btn-primary"
+								onclick="commitForm();">跳转</button>
+									</div>
 								</div>
 								<div class="col-sm-6">
 									<nav>
 										<ul id="ulhandle" class="pagination pull-right no-margin">
 											<li id="previous">
-												<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#formcard');">
+												<a href="javascript:void(0);" aria-label="Previous" onclick="prepage('#listForm');">
 													<span aria-hidden="true">上一页</span>
 												</a>
 											</li>
 											<li id="next">
-												<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#formcard');">
+												<a id="nexthandle" href="javascript:void(0);" aria-label="Next" onclick="nextpage('#listForm');">
 													<span aria-hidden="true">下一页</span>
 												</a>
 											</li>
 										</ul>
 									</nav>
 								</div>
-							</div>--%>
+							</div>
 
 					</div>
 				</div>

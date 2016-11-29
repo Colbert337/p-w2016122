@@ -296,6 +296,18 @@ SET
     </trim>
   </select>
 
+  <select id="queryGasCount" resultType="java.lang.Integer" parameterType="com.sysongy.poms.gastation.model.GsGasPrice" >
+    select
+    count(*)
+    from gs_gas_price
+    where 1=1
+    <trim>
+      <if test="sysGasStationId!= null &amp;&amp; sysGasStationId != ''" >
+        and sys_gas_station_id = #{sysGasStationId,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </select>
+
   <!--查询价格信息列表-->
   <select id="queryPriceList" resultMap="MapResultMap" >
     select b.mname as gasName,pp.product_price as gasPrice,ggp.unit from gs_gas_price ggp left join product_price pp on ggp.price_id = pp.id

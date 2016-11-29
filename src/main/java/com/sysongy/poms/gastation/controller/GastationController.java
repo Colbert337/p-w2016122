@@ -565,11 +565,13 @@ public class GastationController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_rechargereport";
-		
+		if(StringUtils.isBlank(sysOrder.getStartDate()) || StringUtils.isBlank(sysOrder.getEndDate())){//首次载入页面不加载数据
+			return ret;
+		}
 		try {
-			if(sysOrder.getPageNum() == null){
+			if(sysOrder.getPageNum() == null  || sysOrder.getPageSize()==null){
 				sysOrder.setPageNum(1);
-				sysOrder.setPageSize(10);
+				sysOrder.setPageSize(20);
 			}
 			if(sysOrder.getConvertPageNum() != null){
 				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
@@ -808,11 +810,13 @@ public class GastationController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_consumereport";
-
+		if(StringUtils.isBlank(sysOrder.getStartDate()) || StringUtils.isBlank(sysOrder.getEndDate())){//首次载入页面不加载数据
+			return ret;
+		}
 		try {
-			if(sysOrder.getPageNum() == null){
+			if(sysOrder.getPageNum() == null || sysOrder.getPageSize()==null){
 				sysOrder.setPageNum(1);
-				sysOrder.setPageSize(10);
+				sysOrder.setPageSize(20);
 			}
 			if(sysOrder.getConvertPageNum() != null){
 				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){
@@ -1054,11 +1058,13 @@ public class GastationController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_consumecollectreport";
-
+		if(StringUtils.isBlank(order.getStartDate()) || StringUtils.isBlank(order.getEndDate())){//首次载入页面不加载数据
+			return ret;
+		}
 		try {
-			if(order.getPageNum() == null){
+			if(order.getPageNum() == null || order.getPageSize()==null){
 				order.setPageNum(1);
-				order.setPageSize(10);
+				order.setPageSize(20);
 			}
 			if(order.getConvertPageNum() != null){
 				if(order.getConvertPageNum() > order.getPageNumMax()){
@@ -1172,11 +1178,13 @@ public class GastationController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/gastation/gastation_rechargecollectreport";
-
+		if(StringUtils.isBlank(order.getStartDate()) || StringUtils.isBlank(order.getEndDate())){//首次载入页面不加载数据
+			return ret;
+		}
 		try {
 			if(order.getPageNum() == null || order.getPageSize() == null){
 				order.setPageNum(1);
-				order.setPageSize(10);
+				order.setPageSize(20);
 			}
 			if(order.getConvertPageNum() != null){
 				if(order.getConvertPageNum() > order.getPageNumMax()){

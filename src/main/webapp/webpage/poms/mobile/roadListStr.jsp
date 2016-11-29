@@ -36,17 +36,18 @@
 								<td><div id="gas_station_name" >
 										<s:Code2Name mcode="${road.conditionType}"
 											gcode="CONDITION_TYPE"></s:Code2Name></td>
-								<th width="15%">路况类型</th>
+								<th width="15%">路况状态</th>
 								<td><div id="gas_station_name" >
 										<c:if test="${road.conditionStatus == '0' }">已失效</c:if>
 										<c:if test="${road.conditionStatus == '1' }">待审核</c:if>
-										<c:if test="${road.conditionStatus == '2' }">已审核</c:if>
+										<c:if test="${road.conditionStatus == '2' }">审核通过</c:if>
 										<c:if test="${road.conditionStatus == '3' }">未通过</c:if></td>
 
 								<th>坐标</th>
 								<td><div id="salesmen_name" >
 										${road.longitude},${road.latitude}</div></td>
 													<input type="hidden" name="id" value="${road.id }" />
+													<input type="hidden" id="conditionStatus" value="${road.conditionStatus }" />
 							</tr>
 							<tr>
 								<th>拍照时间</th>
@@ -205,11 +206,12 @@
 					</div>
 				</div>
 				<div class="col-md-offset-3 col-md-9">
-
-					<button class="btn btn-info" type="button"
+					<c:if test="${road.conditionStatus =='2'}">
+					<button class="btn btn-info" id='button' type="button"
 						onclick="shixiao();">
 						<i class="ace-icon fa fa-check bigger-110"></i> 失效
 					</button>
+					</c:if>
 					&nbsp; &nbsp; &nbsp;
 
 

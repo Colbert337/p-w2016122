@@ -488,11 +488,13 @@ public class DriverController extends BaseContoller{
 		
 		PageBean bean = new PageBean();
 		String ret = "webpage/poms/system/driver_rechargereport";
-
+		if(StringUtils.isBlank(sysOrder.getStartDate()) || StringUtils.isBlank(sysOrder.getEndDate())){//首次载入页面不加载数据
+			return ret;
+		}
 		try {
-			if(sysOrder.getPageNum() == null){
+			if(sysOrder.getPageNum() == null || sysOrder.getPageSize()==null){
 				sysOrder.setPageNum(1);
-				sysOrder.setPageSize(10);
+				sysOrder.setPageSize(20);
 			}
 			if(sysOrder.getConvertPageNum() != null){
 				if(sysOrder.getConvertPageNum() > sysOrder.getPageNumMax()){

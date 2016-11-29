@@ -95,8 +95,9 @@ public class SysRoadController extends BaseContoller {
 			if (StringUtils.isEmpty(road.getOrderby())) {
 				road.setOrderby("start_time desc");
 			}
-
+			
 			PageInfo<SysRoadCondition> pageinfo = new PageInfo<SysRoadCondition>();
+			 
 			pageinfo = sysRoadService.queryRoadList(road);
 			bean.setRetCode(100);
 			if (type != null && !"".equals(type)) {
@@ -135,6 +136,7 @@ public class SysRoadController extends BaseContoller {
 				road.setPageNum(GlobalConstant.PAGE_NUM);
 				road.setPageSize(5);
 			}
+			 
 			if(road.getConvertPageNum() != null){
 				if(road.getConvertPageNum() > road.getPageNumMax()){
 					road.setPageNum(road.getPageNumMax());
@@ -145,7 +147,7 @@ public class SysRoadController extends BaseContoller {
 				}
 			}
 			if (StringUtils.isEmpty(road.getOrderby())) {
-				road.setOrderby(" publisher_time desc");
+				road.setOrderby("publisher_time desc");
 			}
 			pageNum = road.getPageNum();
 			PageInfo<SysRoadConditionStr> pageinfo = new PageInfo<SysRoadConditionStr>();
