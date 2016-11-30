@@ -149,51 +149,7 @@ public class SysRoadServiceImpl implements SysRoadService {
 		// TODO Auto-generated method stub
 		int updateNum =  sysRoadConditionMapper.updateByPrimaryKeyToCheck(road);
 		//判断上报路况审核是否通过，存在则根据条件发放积分
-		if(null!=road.getConditionStatus() &&!"".equals(road.getConditionStatus())&&"2".equals(road.getConditionStatus())){
-			//上报路况成功发放积分
-			HashMap<String, String> sblkMap =  integralRuleService.selectRepeatIntegralType("sblk");
-			String integral_rule_id = sblkMap.get("integral_rule_id");
-			IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
-			//存在积分规则
-			if(null!=integralRule){
-				SysDriver aSysDriver = new SysDriver();
-				aSysDriver.setMobilePhone(road.getPublisherPhone());
-				SysDriver sysDriver = driverService.queryDriverByMobilePhone(aSysDriver);
-					HashMap<String,String> sblkHashMap = new HashMap<String,String>();
-					sblkHashMap.put("reward_cycle", integralRule.getReward_cycle());
-					sblkHashMap.put("publisher_phone", road.getPublisherPhone());
-					sblkHashMap.put("id",road.getId());
-					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-					sblkHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
-					List<HashMap<String,String>> driverList = sysRoadConditionMapper.queryConditionByPhone(sblkHashMap);
-					//当前日/周/月 存在的 司机注册数
-					if(driverList.size()>0){
-							HashMap<String, String> driverMap = driverList.get(0);
-							//上报路况向积分记录表中插入积分历史数据
-							if("true".equals(sblkMap.get("STATUS"))&&"1".equals(String.valueOf(sblkMap.get("integral_rule_num")))){
-        							String llimitnumber = integralRule.getLimit_number();
-        							String reward_cycle = integralRule.getReward_cycle();
-        							String count = String.valueOf(driverMap.get("count"));
-        							boolean nolimit="不限".equals(llimitnumber);
-        							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
-        							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
-        								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
-        								if(nolimit||one||pass){	
-										IntegralHistory sblkHistory = new IntegralHistory();
-										sblkHistory.setIntegral_type("sblk");
-										sblkHistory.setIntegral_rule_id(sblkMap.get("integral_rule_id"));
-										sblkHistory.setSys_driver_id(sysDriver.getSysDriverId());
-										sblkHistory.setIntegral_num(integralRule.getIntegral_reward());
-										integralHistoryService.addIntegralHistory(sblkHistory, userID);
-										SysDriver driver = new SysDriver();
-										driver.setIntegral_num(integralRule.getIntegral_reward());
-										driver.setSysDriverId(sysDriver.getSysDriverId());
-										driverService.updateDriverByIntegral(driver);				
-								}	
-						}					
-					}	
-		}
-	}	
+		integralHistoryService.addsblkIntegralHistory(road,userID);
 		return updateNum;
 	}
 

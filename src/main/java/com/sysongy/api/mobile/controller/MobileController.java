@@ -6961,8 +6961,8 @@ public class MobileController {
 				}				
 		}		
 	}
-	
-	
+
+
 	public static void main(String[] args) {
 		List<Gastation> gastationAllList = new ArrayList<Gastation>();
 		for(int i=0;i< 5;i++){
