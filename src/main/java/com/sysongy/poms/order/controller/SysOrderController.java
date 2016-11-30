@@ -455,7 +455,7 @@ public class SysOrderController extends BaseContoller {
 						sysOperationLog.setOperation_type("tf");
 						sysOperationLog.setLog_platform("4");
 						sysOperationLog.setOrder_number(order.getOrderNumber());
-						sysOperationLog.setLog_content("支付宝退费成功！退款批次号："+batch_no+"，退费金额为："+money); 
+						sysOperationLog.setLog_content("支付宝退费成功！退费金额为："+money); 
 						//操作日志
 						sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());
 					} else {
@@ -517,7 +517,7 @@ public class SysOrderController extends BaseContoller {
 							sysOperationLog.setOperation_type("tf");
 							sysOperationLog.setLog_platform("4");
 							sysOperationLog.setOrder_number(order.getOrderNumber());
-							sysOperationLog.setLog_content("微信退费成功！退款批次号："+batch_no+"，退费金额为："+money); 
+							sysOperationLog.setLog_content("微信退费成功！退费金额为："+money); 
 							//操作日志
 							sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());
 						}
@@ -608,7 +608,7 @@ public class SysOrderController extends BaseContoller {
 					sysOperationLog.setOperation_type("tf");
 					sysOperationLog.setLog_platform("4");
 					sysOperationLog.setOrder_number(order.getOrderNumber());
-					sysOperationLog.setLog_content("支付宝退费成功！退款批次号："+batch_no+"，退费金额为："+money); 
+					sysOperationLog.setLog_content("支付宝退费成功！退费金额为："+money); 
 					//操作日志
 					sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());
 				} else {
@@ -668,7 +668,7 @@ public class SysOrderController extends BaseContoller {
 						sysOperationLog.setOperation_type("tf");
 						sysOperationLog.setLog_platform("4");
 						sysOperationLog.setOrder_number(order.getOrderNumber());
-						sysOperationLog.setLog_content("微信退费成功！退款批次号："+batch_no+"，退费金额为："+money); 
+						sysOperationLog.setLog_content("微信退费成功！退费金额为："+money); 
 						//操作日志
 						sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());
 					}
@@ -709,7 +709,7 @@ public class SysOrderController extends BaseContoller {
 					sysOperationLog.setOperation_type("tf");
 					sysOperationLog.setLog_platform("4");
 					sysOperationLog.setOrder_number(aSysOrder.getOrderNumber());
-					sysOperationLog.setLog_content("账户余额退费成功！退款批次号："+aSysOrder.getBatch_no()+"，退费金额为："+money); 
+					sysOperationLog.setLog_content("账户余额退费成功！退费金额为："+money); 
 					//操作日志
 					sysOperationLogService.saveOperationLog(sysOperationLog,user.getUser().getSysUserId());				
 					bean.setRetMsg("退款成功");

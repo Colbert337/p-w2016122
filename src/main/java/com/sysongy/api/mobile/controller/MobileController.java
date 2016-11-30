@@ -3060,7 +3060,7 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					addIntegralHistory(order);
+					addIntegralHistory(order,"cz");
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3159,13 +3159,13 @@ public class MobileController {
 					if(orderRs > 0){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						addIntegralHistory(order);	
+						addIntegralHistory(order,"xf");	
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
-		    			sysOperationLog.setOperation_type("cz");
+		    			sysOperationLog.setOperation_type("xf");
 		    			sysOperationLog.setLog_platform("2");
 		        		sysOperationLog.setOrder_number(order.getOrderNumber());
-		        		sysOperationLog.setLog_content("司机个人通过微信充值成功！充值金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
+		        		sysOperationLog.setLog_content("司机个人通过微信消费成功！消费金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
 		    			//操作日志
 		    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 						if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -3266,7 +3266,7 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					addIntegralHistory(order);	
+					addIntegralHistory(order,"cz");	
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3345,13 +3345,13 @@ public class MobileController {
 					if(orderRs > 0 ){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						addIntegralHistory(order);	
+						addIntegralHistory(order,"xf");	
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
-		    			sysOperationLog.setOperation_type("cz");
+		    			sysOperationLog.setOperation_type("xf");
 		    			sysOperationLog.setLog_platform("1");
 		        		sysOperationLog.setOrder_number(order.getOrderNumber());
-		        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
+		        		sysOperationLog.setLog_content("司机个人通过支付宝消费成功！消费金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
 		    			//操作日志
 		    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 						if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -5237,6 +5237,8 @@ public class MobileController {
 					        					xfHashMap.put("reward_cycle", integralRule.getReward_cycle());
 					        					xfHashMap.put("debit_Account", order.getDebitAccount());
 					        					xfHashMap.put("order_id",order.getOrderId());
+					        					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+					        					xfHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
 					        					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(xfHashMap);
 					        					//当前日/周/月 存在的 司机注册数
 					        					if(orderList.size()>0){
@@ -5247,7 +5249,7 @@ public class MobileController {
 					        								String reward_cycle = integralRule.getReward_cycle();
 					        								String count = String.valueOf(driverMap.get("count"));
 					        							boolean nolimit="不限".equals(llimitnumber);
-					        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
+					        							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
 					        							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
 					        								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 					        									if(nolimit||one||pass){
@@ -6884,10 +6886,10 @@ public class MobileController {
 	 * @param order
 	 * @throws Exception
 	 */
-	public void addIntegralHistory(SysOrder order) throws Exception{
+	public void addIntegralHistory(SysOrder order,String type) throws Exception{
 		if(null!=order.getOperator()&&!"".equals(order.getOperator())){
 			//充值成功发放积分
-			HashMap<String, String> integralMap =  integralRuleService.selectRepeatIntegralType("cz");
+			HashMap<String, String> integralMap =  integralRuleService.selectRepeatIntegralType(type);
 			String integral_rule_id = integralMap.get("integral_rule_id");
 			IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
 			//存在积分规则
@@ -6896,6 +6898,8 @@ public class MobileController {
 					czHashMap.put("reward_cycle", integralRule.getReward_cycle());
 					czHashMap.put("debit_Account", order.getDebitAccount());
 					czHashMap.put("order_id",order.getOrderId());
+					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+					czHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
 					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(czHashMap);
 					//当前日/周/月 存在的 司机注册数
 					if(orderList.size()>0){
@@ -6906,7 +6910,7 @@ public class MobileController {
 								String reward_cycle = integralRule.getReward_cycle();
 								String count = String.valueOf(driverMap.get("count"));
 							boolean nolimit="不限".equals(llimitnumber);
-							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
+							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
 							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
 								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 									if(nolimit||one||pass){
