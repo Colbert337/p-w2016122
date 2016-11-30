@@ -1561,18 +1561,24 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
-			String longitudeIn = "longitude";
-			String latitudeIn = "latitude";
 			String infoType = "infoType";
-			boolean b = JsonTool.checkJson(mainObj, longitudeIn, latitudeIn, infoType);
+			boolean b = JsonTool.checkJson(mainObj,infoType);
 
 			/**
 			 * 请求接口
 			 */
 			if (b) {
+				String longitudeStr = null;
+				String latitudeStr = null;
+				boolean blongitude = mainObj.containsKey("longitude");
+				if(blongitude){
+					longitudeStr = mainObj.getString("longitude");
+				}
+				boolean blatitude = mainObj.containsKey("latitude");
+				if(blatitude){
+					latitudeStr = mainObj.getString("latitude");
+				}
 				String radius = mainObj.optString("radius");
-				String longitudeStr = mainObj.optString("longitude");
-				String latitudeStr = mainObj.optString("latitude");
 				String name = mainObj.optString("name");
 				String type = mainObj.optString("type");
 				if(type!=null && !"".equals(type) && "0".equals(type)){
@@ -1593,8 +1599,8 @@ public class MobileController {
 					// 获取气站列表
 					List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
 					if (gastationAllList != null && gastationAllList.size() > 0) {
-						for (int i = 0; i < gastationAllList.size(); i++) {
-							if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+						if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+							for (int i = 0; i < gastationAllList.size(); i++) {
 								longitude = new Double(longitudeStr);
 								latitude = new Double(latitudeStr);
 								String longStr = gastationAllList.get(i).getLongitude();
@@ -1609,9 +1615,11 @@ public class MobileController {
 								Double dist = DistCnvter.getDistance(longitude, latitude, longDb, langDb);
 								gastationAllList.get(i).setDistance(dist);
 							}
+							//按距离重新排序gastationAllList
+							Collections.sort(gastationAllList);
+						}else{
+							logger.error("获取定位失败，无法按距离排序！！！");
 						}
-						//按距离重新排序gastationAllList
-						Collections.sort(gastationAllList);
 						int pageNum = mainObj.optInt("pageNum");
 						int pageSize = mainObj.optInt("pageSize");
 						int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize+1:(gastationAllList.size()/pageSize)+1;
@@ -3965,10 +3973,12 @@ public class MobileController {
 				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
 				int tmp = sysRoadService.reportSysRoadCondition(roadCondition);
 				if (tmp > 0) {
+					//上传成功APP推送
+					token = mainObj.optString("token");
+					SysDriver driver = driverService.queryDriverByPK(token);
+					sysMessageService.sendMessageUploadRoad(driver);
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("上报成功！");
-					//上传成功APP推送
-					//sysMessageService.sendMessageUploadRoad();
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -6946,5 +6956,19 @@ public class MobileController {
 					}	
 				}				
 		}		
+	}
+	
+	
+	public static void main(String[] args) {
+		List<Gastation> gastationAllList = new ArrayList<Gastation>();
+		for(int i=0;i< 5;i++){
+			 Gastation a = new Gastation();
+			 a.setDistance(0.0);;
+			gastationAllList.add(a);
+		}
+		Collections.sort(gastationAllList);
+		for(int i=0;i< 5;i++){
+			gastationAllList.add(new Gastation());
+		}
 	}
 }
