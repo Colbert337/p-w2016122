@@ -125,7 +125,7 @@ public class MapController {
                                 gastationMap.put("type", gastationInfo.getType());
                                 gastationMap.put("longitude", gastationInfo.getLongitude());
                                 gastationMap.put("latitude", gastationInfo.getLatitude());
-                                Object stationObj = redisClientImpl.getFromCache("STATION_DATA_TYPE"+gastationInfo.getType());
+                                /*Object stationObj = redisClientImpl.getFromCache("STATION_DATA_TYPE"+gastationInfo.getType());
                                 String stationType = "";
                                 if(stationObj != null){
                                     stationType = stationObj.toString();
@@ -175,7 +175,7 @@ public class MapController {
                                         + gastationInfo.getSys_gas_station_id();
                                 gastationMap.put("infoUrl", infoUrl);
                                 gastationMap.put("shareUrl", http_poms_path + "/portal/crm/help/share/station?stationId="
-                                        + gastationInfo.getSys_gas_station_id());
+                                        + gastationInfo.getSys_gas_station_id());*/
                                 stationList.add(gastationMap);
                             }
                             stationMap.put("routeName",routeName);

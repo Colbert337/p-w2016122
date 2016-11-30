@@ -130,93 +130,50 @@ public class CardController extends BaseContoller {
 	 * @param response
 	 */
 	@RequestMapping("/generateaTable")
-	public String generateaTable(GasCardLog gascard, HttpServletResponse response, @RequestParam("batch_no") String a) {
+	public String generateaTable(GasCardLog gascard, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		// 第一列
 		try {
-			gascard.setBatch_no(a);
-
-			List<GasCardLog> list = service.queryGasCardForList(gascard);
+//			gascard.setBatch_no(a);
+			if (StringUtils.isEmpty(gascard.getOrderby())) {
+				gascard.setOrderby("optime desc");
+			}
+			List<GasCardLog> list = service.queryGasCardExecl(gascard);
 			int cells = 0; // 记录条数
-
 			if (list != null && list.size() > 0) {
 				cells += list.size();
 			}
 			OutputStream os = response.getOutputStream();
 			ExportUtil reportExcel = new ExportUtil();
 			String downLoadFileName = gascard.getBatch_no() + ".xls";
-			downLoadFileName = "_" + downLoadFileName;
-			// try {
-			// response.setHeader("Content-Disposition",
-			// "attachment;filename=" +
-			// java.net.URLEncoder.encode(downLoadFileName, "UTF-8"));
-			// } catch (UnsupportedEncodingException e1) {
-			// response.setHeader("Content-Disposition", "attachment;filename="
-			// + downLoadFileName);
-			// }
+			downLoadFileName = "CardLog_" + downLoadFileName;
 			response.addHeader("Content-Disposition", "attachment; filename=" + response.encodeURL(downLoadFileName));
 
-			String[][] content = new String[cells + 1][9];// [行数][列数]
-			content[0] = new String[] { "卡号", "批次", "所属工作站", "工作站领取人", "用户卡类型", "用户卡状态", "操作员", "入库时间", "卡属性", "操作动作" };
+			String[][] content = new String[cells + 1][10];// [行数][列数]
+//			content[0] = new String[] { "卡号", "批次", "所属工作站", "工作站领取人", "用户卡类型", "用户卡状态", "操作员", "入库时间", "卡属性", "操作动作" };
+			content[0] = new String[] { "卡号", "用户卡类型",  "用户卡状态","卡属性","所属工作站", "工作站领取人",  "操作员","批次号", "入库时间", "出库时间", "操作动作" };
 			int i = 1;
 			if (list != null && list.size() > 0) {
 				for (GasCardLog card : list) {
 					String card_no = card.getCard_no();
 					String operator = card.getOperator();
 					String batch_no = card.getBatch_no();
-					String card_property = card.getCard_property().equals("1") ? "个人" : "车辆";
-					String card_type = card.getMname();
+					String card_property = card.getCard_property();
+					String card_type = card.getCard_type();
 					String action = card.getAction();
-					String work = card.getWork();
-					String workstation_resp=card.getWorkstation_resp();
-					switch (card.getAction()) {
-					case "0":
-						action = "入库";
-						break;
-					case "1":
-						action = "出库";
-						break;
-					case "2":
-						action = "删除";
-						break;
-
-					default:
-						break;
+					String work = card.getWorkstation();
+					String workstation_resp = card.getWorkstation_resp(); 
+					String card_status = card.getCard_status(); 
+					String release_time=null;
+					if (card.getRelease_time()!=null) {
+						release_time =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format( card.getRelease_time());
+					}else{
+						release_time="";
 					}
-					String card_status = card.getCard_status();
-					switch (card.getCard_status()) {
-					case "0": {
-						card_status = "已冻结";
-						break;
-					}
-					case "1": {
-						card_status = "已入库";
-						break;
-					}
-					case "2": {
-						card_status = "已出库";
-						break;
-					}
-					case "3": {
-						card_status = "未发放";
-						break;
-					}
-					case "4": {
-						card_status = "使用中";
-						break;
-					}
-					case "5": {
-						card_status = "已失效";
-						break;
-					}
-
-					default:
-						break;
-					}
-					String storage_time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(card.getStorage_time());
-
-					content[i] = new String[] { card_no, batch_no, work,workstation_resp, card_type, card_status, operator, storage_time,
-							card_property, action };
+					
+					String storage_time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(card.getStorage_time());
+					content[i] = new String[] { card_no, card_type, card_status,card_property, work, workstation_resp, 
+							operator,batch_no, storage_time,release_time, action };
 					i++;
 				}
 			}
