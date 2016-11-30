@@ -44,6 +44,17 @@
 				</div>
 			</div>
 		</div>
+		<c:if test="${!empty gastation.station_telephone}">
+			<div class="pdp-item">
+				<div class="row">
+					<div class="col-value">气站座机电话:</div>
+					<div class="col-key">
+						<a href="tel:${gastation.station_telephone}" class="station-icon"><span style="color: #669F31;" class="icon-phone-1"></span></a>
+						&nbsp;&nbsp;&nbsp;	${gastation.station_telephone}
+					</div>
+				</div>
+			</div>
+		</c:if>
 		<div class="pdp-item">
 			<div class="pdp-item-title">
 				商品信息：

@@ -44,10 +44,10 @@
          and workstation = #{workstation,jdbcType=VARCHAR}
       </if>
       <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
-         workstation_resp = #{workstation_resp,jdbcType=VARCHAR}
+        and workstation_resp = #{workstation_resp,jdbcType=VARCHAR}
       </if>
-      <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
-         batch_no = #{batch_no,jdbcType=VARCHAR}
+      <if test="batch_no != null &amp;&amp; batch_no != ''">
+       and  batch_no = #{batch_no,jdbcType=VARCHAR}
       </if>
       <if test="optime_after != null &amp;&amp; optime_after != ''">
         and optime between CONCAT(#{optime_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{optime_before,jdbcType=VARCHAR},' 23:59:59')
@@ -253,4 +253,49 @@
     </trim>
   </select>
 
+<select id="queryLogForExecl" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.card.model.GasCardLog" >
+  	 select 
+  	card_log_id,
+	card_no,
+	workstation_resp,
+	optime,
+	batch_no,
+	operator,
+	storage_time,
+	release_time,
+	memo,
+	(select mname from usysparam where gcode='CARDTYPE' and mcode=gc.card_type ) as card_type,
+	(select mname from usysparam where gcode='CARDSTATUS' and mcode=gc.card_status ) as card_status,
+	(select mname from usysparam where gcode='CARDPROPERTY' and mcode=gc.card_property ) as card_property,
+	(select mname from usysparam where gcode='ACTION' and mcode=gc.action ) as action,
+	(select mname from usysparam where gcode='WORKSTATION' and mcode=gc.workstation ) as workstation
+    from gas_card_log gc where 1=1
+    <trim>
+      <if test="card_no != null &amp;&amp; card_no != ''" >
+        and card_no = #{card_no,jdbcType=VARCHAR}
+      </if>
+      <if test="card_type != null &amp;&amp; card_type != ''" >
+        and card_type = #{card_type,jdbcType=VARCHAR}
+      </if>
+      <if test="card_status != null &amp;&amp; card_status != ''" >
+        and card_status = #{card_status,jdbcType=VARCHAR}
+      </if>
+      <if test="operator != null &amp;&amp; operator != ''">
+         and operator LIKE CONCAT(CONCAT('%',  #{operator,jdbcType=VARCHAR}), '%')
+      </if>
+      <if test="workstation != null &amp;&amp; workstation != ''">
+         and workstation = #{workstation,jdbcType=VARCHAR}
+      </if>
+      <if test="workstation_resp != null &amp;&amp; workstation_resp != ''">
+        and workstation_resp = #{workstation_resp,jdbcType=VARCHAR}
+      </if>
+      <if test="batch_no != null &amp;&amp; batch_no != ''">
+       and  batch_no = #{batch_no,jdbcType=VARCHAR}
+      </if>
+      <if test="optime_after != null &amp;&amp; optime_after != ''">
+        and optime between CONCAT(#{optime_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{optime_before,jdbcType=VARCHAR},' 23:59:59')
+      </if> 
+    </trim>
+  </select>
+ 
 </mapper>
