@@ -148,8 +148,10 @@ public class SysRoadServiceImpl implements SysRoadService {
 	public int updateRoad(SysRoadCondition road,String userID) throws Exception {
 		// TODO Auto-generated method stub
 		int updateNum =  sysRoadConditionMapper.updateByPrimaryKeyToCheck(road);
-		//判断上报路况审核是否通过，存在则根据条件发放积分
-		integralHistoryService.addsblkIntegralHistory(road,userID);
+		if("2".equals(road.getConditionStatus())){
+			//判断上报路况审核是否通过，存在则根据条件发放积分
+			integralHistoryService.addsblkIntegralHistory(road,userID);	
+		}
 		return updateNum;
 	}
 
