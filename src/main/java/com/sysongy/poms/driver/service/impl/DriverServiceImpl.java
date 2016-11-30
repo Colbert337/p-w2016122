@@ -587,6 +587,12 @@ public class DriverServiceImpl implements DriverService {
     }
 
 	@Override
+	public SysDriver queryDriverBySecurityPhone(SysDriver record) throws Exception {
+		SysDriver sysDriver = sysDriverMapper.queryDriverBySecurityPhone(record);
+		return sysDriver;
+	}
+
+	@Override
 	public Integer updateAndReview(String driverid, String type,String memo, CurrUser currUser) throws Exception {
 		SysDriver record = new SysDriver();
 		record.setSysDriverId(driverid);

@@ -712,6 +712,17 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
     </if>
   </select>
 
+  <select id="queryDriverBySecurityPhone" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+    *
+    from sys_driver
+    where security_mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+    and user_status = 0
+    <if test="stationId!= null &amp;&amp; stationId != ''" >
+      and station_id = #{stationId,jdbcType=VARCHAR}
+    </if>
+  </select>
+
   <!--司机离职-->
   <update id="deleteDriverByIds" parameterType="java.util.List" >
   update sys_driver  set station_id = ''
