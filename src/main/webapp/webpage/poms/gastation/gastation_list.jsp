@@ -107,7 +107,8 @@
 									<th onclick="orderBy(this,'prepay_balance');commitForm();" id="prepay_balance_order">预付款额度</th>
 									<th style="display: none">钱袋编号</th>
 				 				<th onclick="orderBy(this,'price_effective_time');commitForm();" id="price_effective_order">价格生效时间</th>
-									<%--<th onclick="orderBy(this,'fixed_discount');commitForm();" id="fixed_discount_order">固定折扣</th>--%>
+									<th style="display:none" onclick="orderBy(this,'contact_phone');commitForm();" id="contact_phone">联系电话</th>
+										<th style="display:none" onclick="orderBy(this,'station_telephone');commitForm();" id="station_telephone">气站座机号</th>
 									<th class="text-center td-w2">更多操作</th>
 								</tr>
 							</thead>
@@ -146,8 +147,11 @@
 										<c:if test="${list.price_effective_time == '12' }">12小时后生效</c:if>
 										<c:if test="${list.price_effective_time == '24' }">24小时后生效</c:if>
 									</td>
+									<td style="display:none">${list.contact_phone}</td>
+									<td style="display:none">${list.station_telephone}</td>
 									<%--<td>${list.fixed_discount}</td>--%>
 									<td style="display: none">${list.sys_user_account_id}</td>
+
 									<td class="text-center">
 										<a class="option-btn-m" href="javascript:void(0);" title="修改" data-rel="tooltip">
 											<i class="ace-icon fa fa-pencil bigger-130" onclick="preUpdate(this);"></i>
@@ -275,11 +279,13 @@
 							<th>价格生效时间</th>
 							<td><div id="price_effective_time" name="show"> </div></td>
 						</tr>
-						<%--<tr>
+						 <tr>
 
-							<th>固定折扣</th>
-							<td colspan="3"><div id="fixed_discount" name="show"> </div></td>
-						</tr>--%>
+							<th>联系电话</th>
+							<td><div id="contact_phone" name="show"> </div></td>
+							 <th>气站座机电话</th>
+							 <td><div id="station_telephone" name="show"> </div></td>
+						</tr>
 					</tbody>
 				</table>
 

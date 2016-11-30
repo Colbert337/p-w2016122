@@ -27,7 +27,7 @@
 					<table class="table">
 						<tbody>
 						<tr>
-							<th>路况详情：</th>
+							<th width="32%">路况详情：</th>
 							<td><div id="" name="show">${conditionMsg}</div></td>
 						</tr>
 						<tr>
@@ -35,7 +35,7 @@
 							<td><div id="" name="show">${direction}</div></td>
 						</tr>
 						<tr>
-							<th width="28%">位置信息：</th>
+							<th>位置信息：</th>
 							<td><div  name="show">${roadCondition.address}</div></td>
 						</tr>
 						<tr>

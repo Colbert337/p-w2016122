@@ -1561,18 +1561,24 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
-			String longitudeIn = "longitude";
-			String latitudeIn = "latitude";
 			String infoType = "infoType";
-			boolean b = JsonTool.checkJson(mainObj, longitudeIn, latitudeIn, infoType);
+			boolean b = JsonTool.checkJson(mainObj,infoType);
 
 			/**
 			 * 请求接口
 			 */
 			if (b) {
+				String longitudeStr = null;
+				String latitudeStr = null;
+				boolean blongitude = mainObj.containsKey("longitude");
+				if(blongitude){
+					longitudeStr = mainObj.getString("longitude");
+				}
+				boolean blatitude = mainObj.containsKey("latitude");
+				if(blatitude){
+					latitudeStr = mainObj.getString("latitude");
+				}
 				String radius = mainObj.optString("radius");
-				String longitudeStr = mainObj.optString("longitude");
-				String latitudeStr = mainObj.optString("latitude");
 				String name = mainObj.optString("name");
 				String type = mainObj.optString("type");
 				if(type!=null && !"".equals(type) && "0".equals(type)){
@@ -1593,8 +1599,8 @@ public class MobileController {
 					// 获取气站列表
 					List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
 					if (gastationAllList != null && gastationAllList.size() > 0) {
-						for (int i = 0; i < gastationAllList.size(); i++) {
-							if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+						if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+							for (int i = 0; i < gastationAllList.size(); i++) {
 								longitude = new Double(longitudeStr);
 								latitude = new Double(latitudeStr);
 								String longStr = gastationAllList.get(i).getLongitude();
@@ -1609,9 +1615,11 @@ public class MobileController {
 								Double dist = DistCnvter.getDistance(longitude, latitude, longDb, langDb);
 								gastationAllList.get(i).setDistance(dist);
 							}
+							//按距离重新排序gastationAllList
+							Collections.sort(gastationAllList);
+						}else{
+							logger.error("获取定位失败，无法按距离排序！！！");
 						}
-						//按距离重新排序gastationAllList
-						Collections.sort(gastationAllList);
 						int pageNum = mainObj.optInt("pageNum");
 						int pageSize = mainObj.optInt("pageSize");
 						int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize+1:(gastationAllList.size()/pageSize)+1;
@@ -3520,6 +3528,9 @@ public class MobileController {
 			 */
 			if (b) {
 				String payCode = mainObj.optString("payCode");
+				phoneType = mainObj.optString("phoneType");
+				phoneNum = mainObj.optString("phoneNum");
+				newPhoneNum = mainObj.optString("newPhoneNum");
 				SysDriver oldDriver = new SysDriver();
 				oldDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				SysDriver oldD = driverService.queryDriverByMobilePhone(oldDriver);
@@ -3530,17 +3541,50 @@ public class MobileController {
 				// 获取验证码
 				String inVeCode = mainObj.optString("veCode");
 				newCode = mainObj.optString("newCode");
-				veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+
+				if(phoneType.equals("1")){//修改账户手机
+					if(phoneNum.equals(newPhoneNum)){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("新账号手机号不能跟原来一样！");
+						resutObj = JSONObject.fromObject(result);
+						logger.error("新账号手机号不能跟原来一样！");
+						resutObj.remove("listMap");
+						resultStr = resutObj.toString();
+						resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+						return resultStr;
+					}
+					veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+				}else{//修改密保手机
+					if(phoneNum.equals(newPhoneNum)){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("密保手机号不能跟账号一样！");
+						resutObj = JSONObject.fromObject(result);
+						logger.error("密保手机号不能跟账号一样！");
+						resutObj.remove("listMap");
+						resultStr = resutObj.toString();
+						resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+						return resultStr;
+					}
+					inVeCode = newCode;
+					veCode = (String) redisClientImpl.getFromCache(newPhoneNum);
+				}
+
 				if (veCode != null && !"".equals(veCode) && inVeCode.equals(veCode)) {
-					phoneType = mainObj.optString("phoneType");
+
 					// 数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 					if (!driver.isEmpty()) {
 						// 新电话号码
-						newPhoneNum = mainObj.optString("newPhoneNum");
+
 						SysDriver temp = new SysDriver();
 						temp.setMobilePhone(newPhoneNum);
-						SysDriver rs = driverService.queryDriverByMobilePhone(temp);
+						SysDriver rs = new SysDriver();
+						if(phoneType.equals("1")){
+							rs = driverService.queryDriverByMobilePhone(temp);
+						}else{
+							rs = driverService.queryDriverBySecurityPhone(temp);
+						}
+
 						Map<String, Object> dataMap = new HashMap<>();
 						if(rs!=null && !"".equals(rs)){
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3555,14 +3599,42 @@ public class MobileController {
 										if ("1".equals(phoneType)) {
 											sysDriver.setUserName(newPhoneNum);
 											sysDriver.setMobilePhone(newPhoneNum);
-										} else {
+										} else {//修改密保手机
 											sysDriver.setSecurityMobilePhone(newPhoneNum);
 										}
 										sysDriver.setDriverType(driver.get(0).getDriverType());
 										sysDriver.setSysDriverId(driver.get(0).getSysDriverId());
 										int resultVal = driverService.saveDriver(sysDriver, "update", null, null);
-										//设置密保手机
-										integralHistoryService.addszmbsjIntegralHistory(sysDriver);
+											//修改密保手机，密码手机存在则发放积分
+								           if(null!=sysDriver.getSecurityMobilePhone()&&!"".equals(sysDriver.getSecurityMobilePhone())){
+								   			//设置密保手机成功发放积分
+								   			HashMap<String, String> szmbsjMap =  integralRuleService.selectRepeatIntegralType("szmbsj");
+								   			//设置密保手机向积分记录表中插入积分历史数据
+								   			if("true".equals(szmbsjMap.get("STATUS"))&&"1".equals(String.valueOf(szmbsjMap.get("integral_rule_num")))){
+								   				String integral_rule_id = szmbsjMap.get("integral_rule_id");
+								   				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
+								   				if(null!=integralRule){
+								   					IntegralHistory aIntegralHistory = new IntegralHistory();
+								   					aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
+								   					aIntegralHistory.setSys_driver_id(sysDriver.getSysDriverId());
+								   					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type());
+								   					PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
+								   					List<IntegralHistory> integralHistoryList =list.getList();
+								   					if(integralHistoryList.size()==0){
+								   						IntegralHistory szmbsjHistory = new IntegralHistory();
+								   						szmbsjHistory.setIntegral_type("szmbsj");
+								   						szmbsjHistory.setIntegral_rule_id(szmbsjMap.get("integral_rule_id"));
+								   						szmbsjHistory.setSys_driver_id(sysDriver.getSysDriverId());
+								   						szmbsjHistory.setIntegral_num(integralRule.getIntegral_reward());
+								   						integralHistoryService.addIntegralHistory(szmbsjHistory, sysDriver.getSysDriverId());
+								   						SysDriver aSysDriver = new SysDriver();
+								   						aSysDriver.setIntegral_num(integralRule.getIntegral_reward());
+								   						aSysDriver.setSysDriverId(sysDriver.getSysDriverId());
+								   						driverService.updateDriverByIntegral(aSysDriver);
+								   					}
+								   				}
+								   			}
+								           }
 										// 返回大于0，成功
 										if (resultVal <= 0) {
 											result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3901,10 +3973,12 @@ public class MobileController {
 				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
 				int tmp = sysRoadService.reportSysRoadCondition(roadCondition);
 				if (tmp > 0) {
+					//上传成功APP推送
+					token = mainObj.optString("token");
+					SysDriver driver = driverService.queryDriverByPK(token);
+					sysMessageService.sendMessageUploadRoad(driver);
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("上报成功！");
-					//上传成功APP推送
-					//sysMessageService.sendMessageUploadRoad();
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5949,6 +6023,11 @@ public class MobileController {
 				String unit = mainObj.optString("unit");
 				String promotions = mainObj.optString("promotions");
 				String priceEffectiveTime = mainObj.optString("priceEffectiveTime");
+				//当生效时间为立即生效时，设置生效时间为当前时间
+				if(gastation != null && "0".equals(gastation.getPrice_effective_time())){
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+					priceEffectiveTime = format.format(new Date());
+				}
 				if(price==null ||"".equals(price)){
 					price="0.0";
 				}

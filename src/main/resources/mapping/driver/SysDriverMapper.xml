@@ -60,7 +60,7 @@
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,avatar_s,avatar_b,
     is_ident, plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card,
     card_id, sys_user_account_id, regis_company, regis_source, created_date,
-    updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type, driver_number, invitation_code,verify_source,nickname
+    updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type, driver_number, invitation_code,verify_source,nickname,device_token
   </sql>
 
   <select id="querySearchDriverList" resultMap="BaseResultMap" >
@@ -706,6 +706,17 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
     *
     from sys_driver
     where mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
+    and user_status = 0
+    <if test="stationId!= null &amp;&amp; stationId != ''" >
+      and station_id = #{stationId,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <select id="queryDriverBySecurityPhone" resultMap="BaseResultMap" parameterType="com.sysongy.poms.driver.model.SysDriver" >
+    select
+    *
+    from sys_driver
+    where security_mobile_phone = #{mobilePhone,jdbcType=VARCHAR}
     and user_status = 0
     <if test="stationId!= null &amp;&amp; stationId != ''" >
       and station_id = #{stationId,jdbcType=VARCHAR}

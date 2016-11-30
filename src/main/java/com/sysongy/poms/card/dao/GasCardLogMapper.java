@@ -26,4 +26,6 @@ public interface GasCardLogMapper {
     int batchInsertFromCRM(CRMCardUpdateInfo record);
     
     List<GasCardLog> queryLogForList(GasCardLog obj);
+
+	List<GasCardLog> queryLogForExecl(GasCardLog gascard);
 }

@@ -59,6 +59,15 @@ public class Gastation extends BaseModel implements Comparable {
 	private String type;
 	private String price_effective_time;
 	/*private Float fixed_discount;*/
+	private  String station_telephone;
+
+	public String getStation_telephone() {
+		return station_telephone;
+	}
+
+	public void setStation_telephone(String station_telephone) {
+		this.station_telephone = station_telephone;
+	}
 
 	public String getPrice_effective_time() {
 		return price_effective_time;

@@ -40,6 +40,7 @@
     
 
     <result column="price_effective_time" property="price_effective_time" jdbcType="VARCHAR" />
+    <result column="station_telephone" property="station_telephone" jdbcType="VARCHAR" />
 
     <association column="sys_user_account_id" property="account" javaType="com.sysongy.poms.permi.model.SysUserAccount"
                  select="com.sysongy.poms.permi.dao.SysUserAccountMapper.selectByPrimaryKey">
@@ -74,7 +75,7 @@
     area_id, province_id, city_id, address, longitude, latitude, expiry_date, 
     salesmen_id, salesmen_name, operations_id, operations_name, indu_com_number, tax_number, 
     indu_com_certif, tax_certif, lng_certif, dcp_certif, platform_type, status, created_time, 
-    updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server,LNG_price,promotions,view_count,share_count,price_effective_time
+    updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server,LNG_price,promotions,view_count,share_count,price_effective_time,station_telephone
   </sql>
   
   <select id="queryForPage" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -150,7 +151,7 @@
   	select 
     <include refid="Base_Column_List" />
     from sys_gas_station where sys_gas_station_id !='GS12900004' 
-    and status ='1'
+    and status ='0'
     <if test="gas_station_name != null &amp;&amp; gas_station_name != ''" >
         and (gas_station_name  LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}),'%') or company LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') or address LIKE CONCAT(CONCAT('%', #{gas_station_name,jdbcType=VARCHAR}), '%') )
     </if>
@@ -201,7 +202,7 @@
       indu_com_number, tax_number, indu_com_certif, 
       tax_certif, lng_certif, dcp_certif, 
       platform_type, status, created_time, 
-      updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server ,LNG_price ,promotions,price_effective_time )
+      updated_time,prepay_balance,prepay_version,sys_user_account_id,type,map_type,gas_server ,LNG_price ,promotions,price_effective_time,station_telephone )
     values (#{company,jdbcType=VARCHAR},
     #{sys_gas_station_id,jdbcType=VARCHAR},
       #{gas_station_name,jdbcType=VARCHAR}, 
@@ -220,7 +221,7 @@
       #{updated_time,jdbcType=TIMESTAMP},#{prepay_balance,jdbcType=DECIMAL}, #{prepay_version,jdbcType=INTEGER},
        #{sys_user_account_id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{map_type,jdbcType=VARCHAR},
         #{gas_server ,jdbcType=VARCHAR}, #{lng_price ,jdbcType=VARCHAR}, #{promotions ,jdbcType=VARCHAR},
-        #{price_effective_time,jdbcType=VARCHAR}
+        #{price_effective_time,jdbcType=VARCHAR},#{station_telephone,jdbcType=VARCHAR}
         )
   </insert>
   
@@ -518,6 +519,9 @@
     <if test="price_effective_time != null &amp;&amp; price_effective_time != ''" >
       price_effective_time = #{price_effective_time,jdbcType=VARCHAR},
     </if>
+      <if test="station_telephone != null &amp;&amp; station_telephone != ''" >
+        station_telephone = #{station_telephone,jdbcType=VARCHAR},
+      </if>
     </set>
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </update>
@@ -672,7 +676,7 @@
       prepay_balance = #{prepay_balance,jdbcType=DECIMAL},
 
       price_effective_time = #{price_effective_time,jdbcType=VARCHAR},
-
+      station_telephone = #{station_telephone,jdbcType=VARCHAR}
     where sys_gas_station_id = #{sys_gas_station_id,jdbcType=VARCHAR}
   </update>
   
