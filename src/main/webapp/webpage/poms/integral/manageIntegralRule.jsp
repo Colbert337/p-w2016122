@@ -38,8 +38,8 @@
 							<thead>
 								<tr>
 									<th style="width:15%" onclick="orderBy(this,'integral_type');commitForm();" id="integral_type_order">积分类别</th>
-									<th style="width:15%" onclick="orderBy(this,'reward_cycle');commitForm();" id="reward_cycle_order">限制周期</th>
-									<th style="width:10%"onclick="orderBy(this,'limit_number');commitForm();" id="limit_number_order">限制次数</th>
+									<th style="width:15%" onclick="orderBy(this,'reward_cycle');commitForm();" id="reward_cycle_order">奖励周期</th>
+									<th style="width:10%"onclick="orderBy(this,'limit_number');commitForm();" id="limit_number_order">奖励次数</th>
 									<th style="width:20%" onclick="orderBy(this,'integral_reward');commitForm();" id="integral_reward_order">积分奖励</th>
 									<th style="width:5%" class="text-center td-w3">更多操作</th>
 								</tr>
@@ -77,7 +77,13 @@
 					</div>
 				<div class="row">
 					<div class="col-sm-6">
-						<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页</div>
+						<div class="col-sm-6">
+							<div class="dataTables_info sjny-page" id="dynamic-table_info" role="status" aria-live="polite">
+								每页 ${pageInfo.pageSize} 条 <span class="line">|</span> 共 ${pageInfo.total} 条 <span class="line">|</span> 共 ${pageInfo.pages} 页
+								&nbsp;&nbsp;转到第 <input type="text" name="convertPageNum" style="height:25px;width:45px" maxlength="4"/>  页
+								<button type="button" class="btn btn-white btn-sm btn-primary" onclick="commitForm();">跳转</button>
+							</div>
+						</div>
 					</div>
 					<div class="col-sm-6">
 						<nav>
