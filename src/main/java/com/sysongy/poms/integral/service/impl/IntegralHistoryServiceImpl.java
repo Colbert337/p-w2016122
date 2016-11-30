@@ -261,9 +261,10 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 				SysDriver sysDriver = driverService.queryDriverByMobilePhone(aSysDriver);
 					HashMap<String,String> sblkHashMap = new HashMap<String,String>();
 					sblkHashMap.put("reward_cycle", integralRule.getReward_cycle());
-					sblkHashMap.put("publisher_phone", road.getPublisherPhone());
+					sblkHashMap.put("publisher_phone", aSysRoadCondition.getPublisherPhone());
 					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 					sblkHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
+					sblkHashMap.put("id", road.getId());
 					List<HashMap<String,String>> driverList = sysRoadConditionMapper.queryConditionByPhone(sblkHashMap);
 					//当前日/周/月 存在的 司机注册数
 					if(driverList.size()>0){
