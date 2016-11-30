@@ -6961,18 +6961,4 @@ public class MobileController {
 				}				
 		}		
 	}
-
-
-	public static void main(String[] args) {
-		List<Gastation> gastationAllList = new ArrayList<Gastation>();
-		for(int i=0;i< 5;i++){
-			 Gastation a = new Gastation();
-			 a.setDistance(0.0);;
-			gastationAllList.add(a);
-		}
-		Collections.sort(gastationAllList);
-		for(int i=0;i< 5;i++){
-			gastationAllList.add(new Gastation());
-		}
-	}
 }
