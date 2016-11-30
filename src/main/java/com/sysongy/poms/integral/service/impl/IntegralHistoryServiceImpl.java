@@ -31,6 +31,15 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 			integralHistory.setPageNum(1);
 			integralHistory.setPageSize(10);
 		}
+		if(integralHistory.getConvertPageNum() != null){
+			if(integralHistory.getConvertPageNum() > integralHistory.getPageNumMax()){
+				integralHistory.setPageNum(integralHistory.getPageNumMax());
+			}else if(integralHistory.getConvertPageNum() < 1){
+				integralHistory.setPageNum(1);
+			}else{
+				integralHistory.setPageNum(integralHistory.getConvertPageNum());
+			}
+		}
 		if (StringUtils.isEmpty(integralHistory.getOrderby())) {
 			integralHistory.setOrderby("lastmodify_time desc");
 		}

@@ -100,6 +100,7 @@ function changeintegralType(){
 		$("input[name='limit_number']").removeAttr("readonly");
 		$("input:radio[name='limit']").removeAttr("disabled");;
 	}
+	changeRewardCycle();
 }
 function changeRewardType(rewardType){
 	var reward_factor = $(rewardType).parent().find('input[name=rewardfactor]');
@@ -285,12 +286,13 @@ function save(){
 		var rewardmaxs = "";
 		$("#integralRule").find("tr").each(function(i){
 			var tdArr = $(this).children();
-			var ladder_before = tdArr.eq(0).find("input[name='ladder_before']").val();//前积分阶梯
-			var ladder_after = tdArr.eq(0).find("input[name='ladder_after']").val();//后积分阶梯
+			var ladder_before = tdArr.eq(0).find("input[name='ladder_before']");//前积分阶梯
+			var ladder_after = tdArr.eq(0).find("input[name='ladder_after']");//后积分阶梯
 			var reward_type = tdArr.eq(1).find("input[type='radio'][class='ace']:checked").val();//积分奖励类型
 			var rewardfactor = tdArr.eq(1).find("input[name='rewardfactor']").val();//积分奖励百分比
 			var rewardmax = tdArr.eq(1).find("input[name='rewardmax']").val();//积分奖励最大值
 			var rewardintegral = tdArr.eq(1).find("input[name='rewardintegral']").val();//积分奖励值
+			
 			if(typeof(ladder_before) == "undefined"|| ladder_before.length==0||typeof(ladder_after) == "undefined"|| ladder_after.length==0){
 				i=i+1;
 				str = "积分阶梯不能为空！第"+i+"行积分阶梯为空！";

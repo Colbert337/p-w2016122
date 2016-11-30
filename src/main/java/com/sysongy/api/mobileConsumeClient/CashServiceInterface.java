@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -393,6 +394,8 @@ public class CashServiceInterface {
         					xfHashMap.put("reward_cycle", integralRule.getReward_cycle());
         					xfHashMap.put("debit_Account", record.getDebitAccount());
         					xfHashMap.put("order_id",record.getOrderId());
+        					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+        					xfHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
         					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(xfHashMap);
         					//当前日/周/月 存在的 司机注册数
         					if(orderList.size()>0){
@@ -403,7 +406,7 @@ public class CashServiceInterface {
         								String reward_cycle = integralRule.getReward_cycle();
         								String count = String.valueOf(driverMap.get("count"));
         							boolean nolimit="不限".equals(llimitnumber);
-        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
+        							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
         							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
         								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
         									if(nolimit||one||pass){

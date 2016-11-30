@@ -1,5 +1,6 @@
 package com.sysongy.poms.mobile.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -156,12 +157,14 @@ public class SysRoadServiceImpl implements SysRoadService {
 			//存在积分规则
 			if(null!=integralRule){
 				SysDriver aSysDriver = new SysDriver();
-				aSysDriver.setMobilePhone(road.getAuditorPhone());
+				aSysDriver.setMobilePhone(road.getPublisherPhone());
 				SysDriver sysDriver = driverService.queryDriverByMobilePhone(aSysDriver);
 					HashMap<String,String> sblkHashMap = new HashMap<String,String>();
 					sblkHashMap.put("reward_cycle", integralRule.getReward_cycle());
 					sblkHashMap.put("publisher_phone", road.getPublisherPhone());
 					sblkHashMap.put("id",road.getId());
+					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+					sblkHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
 					List<HashMap<String,String>> driverList = sysRoadConditionMapper.queryConditionByPhone(sblkHashMap);
 					//当前日/周/月 存在的 司机注册数
 					if(driverList.size()>0){
@@ -172,7 +175,7 @@ public class SysRoadServiceImpl implements SysRoadService {
         							String reward_cycle = integralRule.getReward_cycle();
         							String count = String.valueOf(driverMap.get("count"));
         							boolean nolimit="不限".equals(llimitnumber);
-        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
+        							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
         							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
         								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
         								if(nolimit||one||pass){	

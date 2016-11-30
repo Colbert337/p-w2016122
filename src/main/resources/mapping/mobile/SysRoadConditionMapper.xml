@@ -780,6 +780,7 @@
 FROM
 	sys_road_condition  where
 	  id  = #{id,jdbcType=VARCHAR}
+	  and publisher_time > STR_TO_DATE(#{integral_createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
         <choose>  
             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
                 AND DATE_FORMAT(publisher_time, '%Y%m%d') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id  = #{id,jdbcType=VARCHAR}),'%Y%m%d')
