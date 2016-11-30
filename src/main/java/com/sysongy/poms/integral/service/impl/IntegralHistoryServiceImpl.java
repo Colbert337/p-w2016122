@@ -336,7 +336,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 									if(nolimit||one||pass){
 										IntegralHistory aIntegralHistory = new IntegralHistory();
-										aIntegralHistory.setIntegral_type("cz");
+										aIntegralHistory.setIntegral_type(type);
 										aIntegralHistory.setIntegral_rule_id(integralMap.get("integral_rule_id"));
 										aIntegralHistory.setSys_driver_id(order.getDebitAccount());
 										String[] ladder_before = integralMap.get("ladder_before").split(",");
