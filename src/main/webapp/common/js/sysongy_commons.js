@@ -233,8 +233,8 @@ var month = date_.getMonth() + 1;
 var firstdate = year + '-' + month + '-01';
 var month_first = firstdate+" 00:00:00";
 
-var day = new Date(year,month,0);
-var lastdate = year + '-' + month + '-' + day.getDate();
+//var day = new Date(year,month,0);  day.getDate();获取当月最后一天
+var lastdate = year + '-' + month + '-' + date_.getDate();
 var month_last = lastdate+" 23:59:59";
 	return month_first+"||"+month_last;
 };

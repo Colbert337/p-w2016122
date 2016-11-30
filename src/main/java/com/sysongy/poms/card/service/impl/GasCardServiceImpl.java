@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.sysongy.api.client.controller.model.CRMCardUpdateInfo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sysongy.api.client.controller.model.CRMCardUpdateInfo;
 import com.sysongy.poms.base.model.CurrUser;
 import com.sysongy.poms.card.dao.GasCardLogMapper;
 import com.sysongy.poms.card.dao.GasCardMapper;
@@ -252,6 +252,16 @@ public class GasCardServiceImpl implements GasCardService{
 	public List<GasCardLog> queryGasCardForList(GasCardLog obj) throws Exception {
 		// TODO Auto-generated method stub
 		List<GasCardLog> list = gasCardLogMapper.queryLogForList(obj);
+		return list;
+	}
+
+	@Override
+	public List<GasCardLog> queryGasCardExecl(GasCardLog gascard) {
+		// TODO Auto-generated method stub
+		PageHelper.startPage(1, 65536, gascard.getOrderby());//排序生效
+		List<GasCardLog> list = gasCardLogMapper.queryLogForExecl(gascard);
+//		PageInfo<GasCardLog> pageInfo = new PageInfo<GasCardLog>(list);
+	
 		return list;
 	}
 

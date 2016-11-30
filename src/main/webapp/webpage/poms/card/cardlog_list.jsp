@@ -14,7 +14,7 @@
 <div class="">
 
 	<!-- /.page-header -->
-	<form id="formcard">
+	<form id="formcard" action="../web/card/generateaTable">
 
 		<jsp:include page="/common/page_param.jsp"></jsp:include>
 
@@ -54,7 +54,13 @@
 									placeholder="输入操作员" maxlength="10"
 									value="${gascardlog.operator}" />
 							</div>
-
+							
+							<div class="item">
+								<label>退款批次:</label> <input type="text" name="batch_no"
+									placeholder="输入退款批次" maxlength="20"
+									value="${gascardlog.batch_no}" />
+							</div>
+							
 							<div class="item">
 								<div class="input-daterange top" id="j-input-daterange-top">
 									<label>操作时间:</label> <input type="text" class=""
@@ -72,6 +78,10 @@
 								</button>
 								<button class="btn btn-sm" type="button" onclick="init();">
 									<i class="ace-icon fa fa-flask align-top bigger-125"></i> 重置
+								</button>
+								<button class="btn btn-sm btn-primary" type="button"
+									onclick="generateaTable();">
+									<i class="fa fa-bookmark-o bigger-130"></i>导出
 								</button>
 							</div>
 
@@ -124,8 +134,7 @@
 											class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>操作时间</th>
 										<th onclick="orderBy(this,'action');commitForm();"
 											id="action_order">操作动作</th>
-											<th onclick="orderBy(this,'action');commitForm();"
-											id="action_order">操作</th>
+										 
 									</tr>
 								</thead>
 
@@ -147,7 +156,7 @@
 													gcode="CARDPROPERTY"></s:Code2Name></td>
 											<td><s:Code2Name mcode="${list.workstation}"
 													gcode="WORKSTATION"></s:Code2Name>
-												<s:Code2Name mcode="${list.workstation}" gcode="TRANSTION"></s:Code2Name></td>
+											<s:Code2Name mcode="${list.workstation}" gcode="TRANSTION"></s:Code2Name></td>
 											<td>${list.workstation_resp}</td>
 											<td>${list.operator}</td>
 											<td>${list.batch_no}</td>
@@ -157,10 +166,7 @@
 													type="both" /></td>
 											<td><fmt:formatDate value="${list.optime}" type="both" /></td>
 											<td><s:Code2Name mcode="${list.action}" gcode="ACTION"></s:Code2Name></td>
-											<td><a href="../web/card/generateaTable?batch_no=${list.batch_no }"  title="导出记录"
-												><i
-													class="fa fa-bookmark-o bigger-130"></i>
-											</a></td>
+											 
 										</tr>
 									</c:forEach>
 								</tbody>

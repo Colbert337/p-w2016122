@@ -30,3 +30,6 @@
 	function init(){
 		loadPage('#main', '../web/card/cardLogList');
 	}
+	function generateaTable(){
+		$("#formcard").submit();
+	}
