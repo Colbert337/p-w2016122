@@ -5161,7 +5161,7 @@ public class MobileController {
 									order.setOrderId(orderID);
 									order.setOrderStatus(1);
 									int temp = orderService.updateByPrimaryKey(order);
-									integralHistoryService.addIntegralHistory(order,"xf");
+									integralHistoryService.addIntegralHistory(sysOrder,"xf");
 									if(temp > 0 ){
 										//系统关键日志记录
 						    			SysOperationLog sysOperationLog = new SysOperationLog();

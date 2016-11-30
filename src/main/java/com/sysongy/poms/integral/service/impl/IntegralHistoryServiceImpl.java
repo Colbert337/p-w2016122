@@ -121,9 +121,28 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 		if("true".equals(smrzMap.get("STATUS"))&&"1".equals(String.valueOf(smrzMap.get("integral_rule_num")))){
 			String integral_rule_id = smrzMap.get("integral_rule_id");
 			IntegralRule integralRule = integralRuleMapper.selectByPrimaryKey(integral_rule_id);
-
+				if(null!=integralRule){
+						IntegralHistory aIntegralHistory = new IntegralHistory();
+						aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
+						aIntegralHistory.setSys_driver_id(sysDriver.getSysDriverId()); 
+						aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
+						PageInfo<IntegralHistory> list = this.queryIntegralHistory(aIntegralHistory);
+						List<IntegralHistory> integralHistoryList =list.getList();
+						if(integralHistoryList.size()==0){
+							IntegralHistory integralHistory = new IntegralHistory();
+							integralHistory.setIntegral_type("smrz");
+							integralHistory.setIntegral_rule_id(smrzMap.get("integral_rule_id"));
+							integralHistory.setSys_driver_id(sysDriver.getSysDriverId());
+							integralHistory.setIntegral_num(integralRule.getIntegral_reward());
+							this.addIntegralHistory(integralHistory, operator_id);	
+							SysDriver aSysDriver = new SysDriver();
+							aSysDriver.setIntegral_num(integralRule.getIntegral_reward());
+							aSysDriver.setSysDriverId(sysDriver.getSysDriverId());
+							sysDriverMapper.updateDriverByIntegral(aSysDriver);				
+					}
+				}
+			}
 		}
-	}
 	
 	/**
 	 * 设置密保手机增加积分
@@ -243,7 +262,6 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 					HashMap<String,String> sblkHashMap = new HashMap<String,String>();
 					sblkHashMap.put("reward_cycle", integralRule.getReward_cycle());
 					sblkHashMap.put("publisher_phone", road.getPublisherPhone());
-					sblkHashMap.put("id",road.getId());
 					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 					sblkHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
 					List<HashMap<String,String>> driverList = sysRoadConditionMapper.queryConditionByPhone(sblkHashMap);
@@ -285,7 +303,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 	 */
 	@Override
 	public void addIntegralHistory(SysOrder order,String type) throws Exception {
-		if(null!=order.getOperator()&&!"".equals(order.getOperator())){
+		if(null!=order.getOrderId()&&!"".equals(order.getOrderId())){
 			//充值成功发放积分
 			HashMap<String, String> integralMap =  integralRuleMapper.selectRepeatIntegralType(type);
 			String integral_rule_id = integralMap.get("integral_rule_id");
@@ -342,11 +360,13 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 												}
 											}
 										}
-										this.addIntegralHistory(aIntegralHistory, order.getDebitAccount());
-										SysDriver driver = new SysDriver();
-										driver.setIntegral_num(integralreward);
-										driver.setSysDriverId(order.getDebitAccount());
-										driverService.updateDriverByIntegral(driver);				
+										if(!"".equals(integralreward)){
+											this.addIntegralHistory(aIntegralHistory, order.getDebitAccount());
+											SysDriver driver = new SysDriver();
+											driver.setIntegral_num(integralreward);
+											driver.setSysDriverId(order.getDebitAccount());
+											driverService.updateDriverByIntegral(driver);		
+										}
 								}	
 						}					
 					}	
