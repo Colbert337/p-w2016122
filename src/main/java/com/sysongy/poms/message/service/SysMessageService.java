@@ -44,5 +44,5 @@ public interface SysMessageService {
 	/**
 	 * 上传路况成功APP提醒
 	 */
-	public String sendMessageUploadRoad(String content, SysOrder order,String type) throws Exception;
+	public String sendMessageUploadRoad(SysDriver driver) throws Exception;
 }
