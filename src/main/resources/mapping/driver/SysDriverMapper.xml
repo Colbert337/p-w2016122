@@ -60,7 +60,7 @@
     sys_driver_id, user_name, password, full_name, mobile_phone, pay_code, user_status,avatar_s,avatar_b,
     is_ident, plate_number, expiry_date, fuel_type, driving_lice, vehicle_lice, identity_card,
     card_id, sys_user_account_id, regis_company, regis_source, created_date,
-    updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type, driver_number, invitation_code,verify_source,nickname
+    updated_date, is_first_charge, checked_status, checked_date, station_id, driver_type, driver_number, invitation_code,verify_source,nickname,device_token
   </sql>
 
   <select id="querySearchDriverList" resultMap="BaseResultMap" >
@@ -800,6 +800,7 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
 FROM
 	sys_driver  where
 	  regis_company = #{regis_company,jdbcType=VARCHAR}
+	  and created_date > STR_TO_DATE(#{integral_createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s') 
         <choose>  
             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
                 AND DATE_FORMAT(created_date, '%Y%m%d') = DATE_FORMAT((SELECT	created_date FROM	sys_driver	WHERE	sys_driver_id = #{sys_driver_id,jdbcType=VARCHAR}),'%Y%m%d')

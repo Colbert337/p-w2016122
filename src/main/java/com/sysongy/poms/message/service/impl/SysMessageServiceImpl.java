@@ -233,7 +233,23 @@ public class SysMessageServiceImpl implements SysMessageService {
 	}
 
 	@Override
-	public String sendMessageUploadRoad(String content, SysOrder order, String type) throws Exception {
-		return null;
+	public String sendMessageUploadRoad(SysDriver driver) throws Exception {
+		String deviceToken = driver.getDeviceToken();
+		if(deviceToken!=null &&!"".equals(deviceToken)){
+			SysMessage message = new SysMessage();
+			message.setOperator("admin");
+			message.setMessageType(1);
+			message.setDevice_token(driver.getDeviceToken());
+			message.setDriver_name(driver.getSysDriverId());
+			message.setDriverName(driver.getDeviceToken());
+			message.setMessageGroup("999");
+			message.setMessageTicker("上报路况提醒");
+			message.setMessageTitle("上报路况提醒");
+			message.setMessageBody("您于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"上传路况信息成功，感谢您的参与！");
+			message.setContent("您于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"上传路况信息成功，感谢您的参与！");
+			return saveMessage_New(message);
+		}else{
+			return null;
+		}
 	}
 }

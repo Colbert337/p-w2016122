@@ -1561,18 +1561,24 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
-			String longitudeIn = "longitude";
-			String latitudeIn = "latitude";
 			String infoType = "infoType";
-			boolean b = JsonTool.checkJson(mainObj, longitudeIn, latitudeIn, infoType);
+			boolean b = JsonTool.checkJson(mainObj,infoType);
 
 			/**
 			 * 请求接口
 			 */
 			if (b) {
+				String longitudeStr = null;
+				String latitudeStr = null;
+				boolean blongitude = mainObj.containsKey("longitude");
+				if(blongitude){
+					longitudeStr = mainObj.getString("longitude");
+				}
+				boolean blatitude = mainObj.containsKey("latitude");
+				if(blatitude){
+					latitudeStr = mainObj.getString("latitude");
+				}
 				String radius = mainObj.optString("radius");
-				String longitudeStr = mainObj.optString("longitude");
-				String latitudeStr = mainObj.optString("latitude");
 				String name = mainObj.optString("name");
 				String type = mainObj.optString("type");
 				if(type!=null && !"".equals(type) && "0".equals(type)){
@@ -1593,8 +1599,8 @@ public class MobileController {
 					// 获取气站列表
 					List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
 					if (gastationAllList != null && gastationAllList.size() > 0) {
-						for (int i = 0; i < gastationAllList.size(); i++) {
-							if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+						if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+							for (int i = 0; i < gastationAllList.size(); i++) {
 								longitude = new Double(longitudeStr);
 								latitude = new Double(latitudeStr);
 								String longStr = gastationAllList.get(i).getLongitude();
@@ -1609,9 +1615,11 @@ public class MobileController {
 								Double dist = DistCnvter.getDistance(longitude, latitude, longDb, langDb);
 								gastationAllList.get(i).setDistance(dist);
 							}
+							//按距离重新排序gastationAllList
+							Collections.sort(gastationAllList);
+						}else{
+							logger.error("获取定位失败，无法按距离排序！！！");
 						}
-						//按距离重新排序gastationAllList
-						Collections.sort(gastationAllList);
 						int pageNum = mainObj.optInt("pageNum");
 						int pageSize = mainObj.optInt("pageSize");
 						int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize+1:(gastationAllList.size()/pageSize)+1;
@@ -3060,7 +3068,7 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					addIntegralHistory(order);
+					addIntegralHistory(order,"cz");
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3159,13 +3167,13 @@ public class MobileController {
 					if(orderRs > 0){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						addIntegralHistory(order);	
+						addIntegralHistory(order,"xf");	
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
-		    			sysOperationLog.setOperation_type("cz");
+		    			sysOperationLog.setOperation_type("xf");
 		    			sysOperationLog.setLog_platform("2");
 		        		sysOperationLog.setOrder_number(order.getOrderNumber());
-		        		sysOperationLog.setLog_content("司机个人通过微信充值成功！充值金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
+		        		sysOperationLog.setLog_content("司机个人通过微信消费成功！消费金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
 		    			//操作日志
 		    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 						if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -3266,7 +3274,7 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					addIntegralHistory(order);	
+					addIntegralHistory(order,"cz");	
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3345,13 +3353,13 @@ public class MobileController {
 					if(orderRs > 0 ){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						addIntegralHistory(order);	
+						addIntegralHistory(order,"xf");	
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
-		    			sysOperationLog.setOperation_type("cz");
+		    			sysOperationLog.setOperation_type("xf");
 		    			sysOperationLog.setLog_platform("1");
 		        		sysOperationLog.setOrder_number(order.getOrderNumber());
-		        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
+		        		sysOperationLog.setLog_content("司机个人通过支付宝消费成功！消费金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
 		    			//操作日志
 		    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 						if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -3965,10 +3973,12 @@ public class MobileController {
 				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
 				int tmp = sysRoadService.reportSysRoadCondition(roadCondition);
 				if (tmp > 0) {
+					//上传成功APP推送
+					token = mainObj.optString("token");
+					SysDriver driver = driverService.queryDriverByPK(token);
+					sysMessageService.sendMessageUploadRoad(driver);
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("上报成功！");
-					//上传成功APP推送
-					//sysMessageService.sendMessageUploadRoad();
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5237,6 +5247,8 @@ public class MobileController {
 					        					xfHashMap.put("reward_cycle", integralRule.getReward_cycle());
 					        					xfHashMap.put("debit_Account", order.getDebitAccount());
 					        					xfHashMap.put("order_id",order.getOrderId());
+					        					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+					        					xfHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
 					        					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(xfHashMap);
 					        					//当前日/周/月 存在的 司机注册数
 					        					if(orderList.size()>0){
@@ -5247,7 +5259,7 @@ public class MobileController {
 					        								String reward_cycle = integralRule.getReward_cycle();
 					        								String count = String.valueOf(driverMap.get("count"));
 					        							boolean nolimit="不限".equals(llimitnumber);
-					        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
+					        							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
 					        							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
 					        								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 					        									if(nolimit||one||pass){
@@ -6884,10 +6896,10 @@ public class MobileController {
 	 * @param order
 	 * @throws Exception
 	 */
-	public void addIntegralHistory(SysOrder order) throws Exception{
+	public void addIntegralHistory(SysOrder order,String type) throws Exception{
 		if(null!=order.getOperator()&&!"".equals(order.getOperator())){
 			//充值成功发放积分
-			HashMap<String, String> integralMap =  integralRuleService.selectRepeatIntegralType("cz");
+			HashMap<String, String> integralMap =  integralRuleService.selectRepeatIntegralType(type);
 			String integral_rule_id = integralMap.get("integral_rule_id");
 			IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
 			//存在积分规则
@@ -6896,6 +6908,8 @@ public class MobileController {
 					czHashMap.put("reward_cycle", integralRule.getReward_cycle());
 					czHashMap.put("debit_Account", order.getDebitAccount());
 					czHashMap.put("order_id",order.getOrderId());
+					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+					czHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
 					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(czHashMap);
 					//当前日/周/月 存在的 司机注册数
 					if(orderList.size()>0){
@@ -6906,7 +6920,7 @@ public class MobileController {
 								String reward_cycle = integralRule.getReward_cycle();
 								String count = String.valueOf(driverMap.get("count"));
 							boolean nolimit="不限".equals(llimitnumber);
-							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
+							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
 							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
 								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 									if(nolimit||one||pass){
@@ -6946,5 +6960,19 @@ public class MobileController {
 					}	
 				}				
 		}		
+	}
+
+
+	public static void main(String[] args) {
+		List<Gastation> gastationAllList = new ArrayList<Gastation>();
+		for(int i=0;i< 5;i++){
+			 Gastation a = new Gastation();
+			 a.setDistance(0.0);;
+			gastationAllList.add(a);
+		}
+		Collections.sort(gastationAllList);
+		for(int i=0;i< 5;i++){
+			gastationAllList.add(new Gastation());
+		}
 	}
 }

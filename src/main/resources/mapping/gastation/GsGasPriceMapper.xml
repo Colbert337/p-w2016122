@@ -88,7 +88,7 @@
       and created_date between CONCAT(#{created_date_after,jdbcType=VARCHAR},' 0:00:00') and CONCAT(#{created_date_before,jdbcType=VARCHAR},' 23:59:59')
     </if>
     </trim>
-     and is_deleted=0
+     and is_deleted=0 AND (SELECT sgs.type FROM sys_gas_station as sgs WHERE sgs.sys_gas_station_id =a.sys_gas_station_id )= 0
   </select>
 
 
