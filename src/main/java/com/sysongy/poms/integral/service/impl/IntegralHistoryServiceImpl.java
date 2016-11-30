@@ -335,10 +335,14 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
 								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 									if(nolimit||one||pass){
+										String account = order.getCreditAccount();
+										if("cz".equals(type)){
+											account=order.getDebitAccount();
+										}
 										IntegralHistory aIntegralHistory = new IntegralHistory();
 										aIntegralHistory.setIntegral_type(type);
 										aIntegralHistory.setIntegral_rule_id(integralMap.get("integral_rule_id"));
-										aIntegralHistory.setSys_driver_id(order.getDebitAccount());
+										aIntegralHistory.setSys_driver_id(account);
 										String[] ladder_before = integralMap.get("ladder_before").split(",");
 										String[] ladder_after = integralMap.get("ladder_after").split(",");
 										String[] integral_reward = integralMap.get("integral_reward").split(",");
@@ -362,10 +366,10 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 											}
 										}
 										if(!"".equals(integralreward)){
-											this.addIntegralHistory(aIntegralHistory, order.getDebitAccount());
+											this.addIntegralHistory(aIntegralHistory,account);
 											SysDriver driver = new SysDriver();
 											driver.setIntegral_num(integralreward);
-											driver.setSysDriverId(order.getDebitAccount());
+											driver.setSysDriverId(account);
 											driverService.updateDriverByIntegral(driver);		
 										}
 								}	
