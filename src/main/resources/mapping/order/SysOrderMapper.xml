@@ -1461,6 +1461,7 @@ FROM
 	sys_order  where
 	  debit_Account = #{debit_Account,jdbcType=VARCHAR}
 	  and order_date > STR_TO_DATE(#{integral_createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s') 
+	  and order_type=#{order_type,jdbcType=VARCHAR}
         <choose>  
             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
                 AND DATE_FORMAT(order_date, '%Y%m%d') = DATE_FORMAT((SELECT	order_date FROM	sys_order	WHERE	order_id = #{order_id,jdbcType=VARCHAR}),'%Y%m%d')

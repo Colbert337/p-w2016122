@@ -159,52 +159,8 @@ public class DriverServiceImpl implements DriverService {
 				record.setRegisCompany(invitationCode);//存储邀请人邀请码
 			}
             int count = sysDriverMapper.insertSelective(record);
-			//判断邀请码是否存在，存在则根据条件发放积分
-			if(null!=invitationCode &&!"".equals(invitationCode)){
-				//邀请成功则发放积分
-				HashMap<String, String> yqcgMap =  integralRuleService.selectRepeatIntegralType("yqcg");
-				String integral_rule_id = yqcgMap.get("integral_rule_id");
-				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
-				//存在积分规则
-				if(null!=integralRule){
-					//没有发送过积分则进行积分规则判断
-						HashMap<String,String> yqcgHashMap = new HashMap<String,String>();
-						yqcgHashMap.put("reward_cycle", integralRule.getReward_cycle());
-						yqcgHashMap.put("regis_company", invitationCode);
-						yqcgHashMap.put("sys_driver_id",record.getSysDriverId());
-    					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-    					yqcgHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
-						List<HashMap<String,String>> driverList = sysDriverMapper.queryInvitationByCode(yqcgHashMap);
-						//当前日/周/月 存在的 司机注册数
-						if(driverList.size()>0){
-								HashMap<String, String> driverMap = driverList.get(0);
-								//被邀请向积分记录表中插入积分历史数据
-								if("true".equals(yqcgMap.get("STATUS"))&&"1".equals(String.valueOf(yqcgMap.get("integral_rule_num")))){
-									String llimitnumber = integralRule.getLimit_number();
-									String reward_cycle = integralRule.getReward_cycle();
-									String countDriver = String.valueOf(driverMap.get("count"));
-									boolean nolimit="不限".equals(llimitnumber);
-									boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(countDriver)<=Integer.parseInt(llimitnumber));	
-									boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(countDriver)-1==Integer.parseInt(llimitnumber));	
-										//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
-											if(nolimit||one||pass){
-											IntegralHistory yqcgHistory = new IntegralHistory();
-											yqcgHistory.setIntegral_type("yqcg");
-											yqcgHistory.setIntegral_rule_id(yqcgMap.get("integral_rule_id"));
-											SysDriver aSysDriver  = sysDriverMapper.selectByinvitationCode(invitationCode);	
-											yqcgHistory.setSys_driver_id(aSysDriver.getSysDriverId());
-											yqcgHistory.setIntegral_num(integralRule.getIntegral_reward());
-											integralHistoryService.addIntegralHistory(yqcgHistory, operator_id);
-											SysDriver sysDriver = new SysDriver();
-											sysDriver.setIntegral_num(integralRule.getIntegral_reward());
-											sysDriver.setSysDriverId(aSysDriver.getSysDriverId());
-											sysDriverMapper.updateDriverByIntegral(sysDriver);				
-									}	
-							}					
-						}	
-			}
-		}
-			
+            //邀请增加积分
+            integralHistoryService.addyqcgIntegralHistory(record,invitationCode,operator_id);
             //判断是否是导入数据，导入数据不返现不发优惠券
             if(!"1".equals(record.getIsImport())){
             	 //如果没有邀请么 则触发注册返现规则
@@ -611,33 +567,8 @@ public class DriverServiceImpl implements DriverService {
 			aliShortMessageBean.setSendNumber(record.getMobilePhone());
 			aliShortMessageBean.setString("已");
 			AliShortMessage.sendShortMessage(aliShortMessageBean, AliShortMessage.SHORT_MESSAGE_TYPE.DRIVER_AUDIT_SUCCESS);
-			//实名认证成功发放积分
-			HashMap<String, String> smrzMap =  integralRuleService.selectRepeatIntegralType("smrz");
-			//设置积分规则向积分记录表中插入积分历史数据
-			if("true".equals(smrzMap.get("STATUS"))&&"1".equals(String.valueOf(smrzMap.get("integral_rule_num")))){
-				String integral_rule_id = smrzMap.get("integral_rule_id");
-				IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
-				if(null!=integralRule){
-					IntegralHistory aIntegralHistory = new IntegralHistory();
-					aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
-					aIntegralHistory.setSys_driver_id(record.getSysDriverId()); 
-					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
-					PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
-					List<IntegralHistory> integralHistoryList =list.getList();
-					if(integralHistoryList.size()==0){
-						IntegralHistory integralHistory = new IntegralHistory();
-						integralHistory.setIntegral_type("smrz");
-						integralHistory.setIntegral_rule_id(smrzMap.get("integral_rule_id"));
-						integralHistory.setSys_driver_id(driverid);
-						integralHistory.setIntegral_num(integralRule.getIntegral_reward());
-						integralHistoryService.addIntegralHistory(integralHistory, currUser.getUserId());	
-						SysDriver sysDriver = new SysDriver();
-						sysDriver.setIntegral_num(integralRule.getIntegral_reward());
-						sysDriver.setSysDriverId(driverid);
-						sysDriverMapper.updateDriverByIntegral(sysDriver);				
-					}
-				}
-			}
+			//增加实名认证积分
+			integralHistoryService.addsmrzIntegralHistory(record,currUser.getUser().getSysUserId());
 		}else if(GlobalConstant.DriverStatus.NOPASS.equals(type)){
 			AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
 			aliShortMessageBean.setSendNumber(record.getMobilePhone());
