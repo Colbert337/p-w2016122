@@ -46,7 +46,7 @@ public class MapController {
     public static String  routeAPI = "http://restapi.amap.com/v3/direction/driving?";
     public static String key = "a47ee0175f1d1c119ab53e56ea0ad306";
     public static int step = 0;//路径上坐标过滤级别，step为0，则代表每隔0个坐标取一个点
-    public static double radius = 500000;//单位米,默认500公里
+    public static double radius = 20000;//单位米,默认500公里
 
     @Autowired
     GastationService gastationService;
