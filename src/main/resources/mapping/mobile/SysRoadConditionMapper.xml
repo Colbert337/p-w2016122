@@ -92,7 +92,7 @@
     <!--获取限高限重路况列表-->
     <select id="queryHighWeightRoadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
-        id,start_time,condition_type
+        *
         from sys_road_condition  where 1=1 and condition_status='2' and (condition_type = '07' or condition_type = '08') ORDER BY publisher_time DESC
     </select>
 
@@ -779,16 +779,18 @@
 	count(id) count
 FROM
 	sys_road_condition  where
-	  id  = #{id,jdbcType=VARCHAR}
+	  publisher_phone  = #{publisher_phone,jdbcType=VARCHAR}
+	  and condition_status = '2'
+	  and publisher_time > STR_TO_DATE(#{integral_createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
         <choose>  
             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
-                AND DATE_FORMAT(publisher_time, '%Y%m%d') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id  = #{id,jdbcType=VARCHAR}),'%Y%m%d')
+                AND DATE_FORMAT(publisher_time, '%Y%m%d') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	id  = #{id,jdbcType=VARCHAR}),'%Y%m%d')
             </when>  
              <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='week' ">  
-               AND DATE_FORMAT(publisher_time, '%Y%u') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id = #{id,jdbcType=VARCHAR}),'%Y%u')
+               AND DATE_FORMAT(publisher_time, '%Y%u') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	id  = #{id,jdbcType=VARCHAR}),'%Y%u')
             </when>  
            <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='month' ">  
-              AND DATE_FORMAT(publisher_time,'%Y%m') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id = #{id,jdbcType=VARCHAR}),'%Y%m')
+              AND DATE_FORMAT(publisher_time,'%Y%m') = DATE_FORMAT((SELECT	publisher_time FROM	sys_road_condition	WHERE	 id  = #{id,jdbcType=VARCHAR}),'%Y%m')
            </when>  
         </choose>  	  
      <choose>  

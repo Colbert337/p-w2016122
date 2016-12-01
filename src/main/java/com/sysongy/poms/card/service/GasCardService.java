@@ -40,4 +40,6 @@ public interface GasCardService {
 	public int updateByPrimaryKeySelective(GasCard record) throws Exception;
 	
 	public List<GasCardLog> queryGasCardForList(GasCardLog gascard) throws Exception;
+
+	public List<GasCardLog> queryGasCardExecl(GasCardLog gascard);
 }

@@ -1561,18 +1561,24 @@ public class MobileController {
 			/**
 			 * 必填参数
 			 */
-			String longitudeIn = "longitude";
-			String latitudeIn = "latitude";
 			String infoType = "infoType";
-			boolean b = JsonTool.checkJson(mainObj, longitudeIn, latitudeIn, infoType);
+			boolean b = JsonTool.checkJson(mainObj,infoType);
 
 			/**
 			 * 请求接口
 			 */
 			if (b) {
+				String longitudeStr = null;
+				String latitudeStr = null;
+				boolean blongitude = mainObj.containsKey("longitude");
+				if(blongitude){
+					longitudeStr = mainObj.getString("longitude");
+				}
+				boolean blatitude = mainObj.containsKey("latitude");
+				if(blatitude){
+					latitudeStr = mainObj.getString("latitude");
+				}
 				String radius = mainObj.optString("radius");
-				String longitudeStr = mainObj.optString("longitude");
-				String latitudeStr = mainObj.optString("latitude");
 				String name = mainObj.optString("name");
 				String type = mainObj.optString("type");
 				if(type!=null && !"".equals(type) && "0".equals(type)){
@@ -1593,8 +1599,8 @@ public class MobileController {
 					// 获取气站列表
 					List<Gastation> gastationAllList = gastationService.getAllStationList(gastation);
 					if (gastationAllList != null && gastationAllList.size() > 0) {
-						for (int i = 0; i < gastationAllList.size(); i++) {
-							if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+						if (longitudeStr != null && !"".equals(longitudeStr) && latitudeStr != null && !"".equals(latitudeStr)) {
+							for (int i = 0; i < gastationAllList.size(); i++) {
 								longitude = new Double(longitudeStr);
 								latitude = new Double(latitudeStr);
 								String longStr = gastationAllList.get(i).getLongitude();
@@ -1609,9 +1615,11 @@ public class MobileController {
 								Double dist = DistCnvter.getDistance(longitude, latitude, longDb, langDb);
 								gastationAllList.get(i).setDistance(dist);
 							}
+							//按距离重新排序gastationAllList
+							Collections.sort(gastationAllList);
+						}else{
+							logger.error("获取定位失败，无法按距离排序！！！");
 						}
-						//按距离重新排序gastationAllList
-						Collections.sort(gastationAllList);
 						int pageNum = mainObj.optInt("pageNum");
 						int pageSize = mainObj.optInt("pageSize");
 						int allPage = gastationAllList.size()/pageSize==0?gastationAllList.size()/pageSize+1:(gastationAllList.size()/pageSize)+1;
@@ -3060,7 +3068,7 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					addIntegralHistory(order);
+					integralHistoryService.addIntegralHistory(order,"cz");
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3159,13 +3167,13 @@ public class MobileController {
 					if(orderRs > 0){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						addIntegralHistory(order);	
+						integralHistoryService.addIntegralHistory(order,"xf");	
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
-		    			sysOperationLog.setOperation_type("cz");
+		    			sysOperationLog.setOperation_type("xf");
 		    			sysOperationLog.setLog_platform("2");
 		        		sysOperationLog.setOrder_number(order.getOrderNumber());
-		        		sysOperationLog.setLog_content("司机个人通过微信充值成功！充值金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
+		        		sysOperationLog.setLog_content("司机个人通过微信消费成功！消费金额："+order.getCash()+"，订单号："+order.getOrderNumber()); 
 		    			//操作日志
 		    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 						if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -3266,7 +3274,7 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					addIntegralHistory(order);	
+					integralHistoryService.addIntegralHistory(order,"cz");	
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3345,13 +3353,13 @@ public class MobileController {
 					if(orderRs > 0 ){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						addIntegralHistory(order);	
+						integralHistoryService.addIntegralHistory(order,"xf");	
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
-		    			sysOperationLog.setOperation_type("cz");
+		    			sysOperationLog.setOperation_type("xf");
 		    			sysOperationLog.setLog_platform("1");
 		        		sysOperationLog.setOrder_number(order.getOrderNumber());
-		        		sysOperationLog.setLog_content("司机个人通过支付宝充值成功！充值金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
+		        		sysOperationLog.setLog_content("司机个人通过支付宝消费成功！消费金额："+order.getCash()+"，订单号为："+order.getOrderNumber()); 
 		    			//操作日志
 		    			sysOperationLogService.saveOperationLog(sysOperationLog,order.getDebitAccount());
 						if (!orderCharge.equalsIgnoreCase(GlobalConstant.OrderProcessResult.SUCCESS)) {
@@ -3520,6 +3528,9 @@ public class MobileController {
 			 */
 			if (b) {
 				String payCode = mainObj.optString("payCode");
+				phoneType = mainObj.optString("phoneType");
+				phoneNum = mainObj.optString("phoneNum");
+				newPhoneNum = mainObj.optString("newPhoneNum");
 				SysDriver oldDriver = new SysDriver();
 				oldDriver.setMobilePhone(mainObj.optString("phoneNum"));
 				SysDriver oldD = driverService.queryDriverByMobilePhone(oldDriver);
@@ -3530,17 +3541,50 @@ public class MobileController {
 				// 获取验证码
 				String inVeCode = mainObj.optString("veCode");
 				newCode = mainObj.optString("newCode");
-				veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+
+				if(phoneType.equals("1")){//修改账户手机
+					if(phoneNum.equals(newPhoneNum)){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("新账号手机号不能跟原来一样！");
+						resutObj = JSONObject.fromObject(result);
+						logger.error("新账号手机号不能跟原来一样！");
+						resutObj.remove("listMap");
+						resultStr = resutObj.toString();
+						resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+						return resultStr;
+					}
+					veCode = (String) redisClientImpl.getFromCache(sysDriver.getMobilePhone());
+				}else{//修改密保手机
+					if(phoneNum.equals(newPhoneNum)){
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("密保手机号不能跟账号一样！");
+						resutObj = JSONObject.fromObject(result);
+						logger.error("密保手机号不能跟账号一样！");
+						resutObj.remove("listMap");
+						resultStr = resutObj.toString();
+						resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
+						return resultStr;
+					}
+					inVeCode = newCode;
+					veCode = (String) redisClientImpl.getFromCache(newPhoneNum);
+				}
+
 				if (veCode != null && !"".equals(veCode) && inVeCode.equals(veCode)) {
-					phoneType = mainObj.optString("phoneType");
+
 					// 数据库查询
 					List<SysDriver> driver = driverService.queryeSingleList(sysDriver);
 					if (!driver.isEmpty()) {
 						// 新电话号码
-						newPhoneNum = mainObj.optString("newPhoneNum");
+
 						SysDriver temp = new SysDriver();
 						temp.setMobilePhone(newPhoneNum);
-						SysDriver rs = driverService.queryDriverByMobilePhone(temp);
+						SysDriver rs = new SysDriver();
+						if(phoneType.equals("1")){
+							rs = driverService.queryDriverByMobilePhone(temp);
+						}else{
+							rs = driverService.queryDriverBySecurityPhone(temp);
+						}
+
 						Map<String, Object> dataMap = new HashMap<>();
 						if(rs!=null && !"".equals(rs)){
 							result.setStatus(MobileReturn.STATUS_FAIL);
@@ -3555,7 +3599,7 @@ public class MobileController {
 										if ("1".equals(phoneType)) {
 											sysDriver.setUserName(newPhoneNum);
 											sysDriver.setMobilePhone(newPhoneNum);
-										} else {
+										} else {//修改密保手机
 											sysDriver.setSecurityMobilePhone(newPhoneNum);
 										}
 										sysDriver.setDriverType(driver.get(0).getDriverType());
@@ -3572,8 +3616,8 @@ public class MobileController {
 								   				if(null!=integralRule){
 								   					IntegralHistory aIntegralHistory = new IntegralHistory();
 								   					aIntegralHistory.setIntegral_num(integralRule.getIntegral_reward());
-								   					aIntegralHistory.setSys_driver_id(sysDriver.getSysDriverId()); 
-								   					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type()); 
+								   					aIntegralHistory.setSys_driver_id(sysDriver.getSysDriverId());
+								   					aIntegralHistory.setIntegral_type(integralRule.getIntegral_type());
 								   					PageInfo<IntegralHistory> list = integralHistoryService.queryIntegralHistory(aIntegralHistory);
 								   					List<IntegralHistory> integralHistoryList =list.getList();
 								   					if(integralHistoryList.size()==0){
@@ -3586,10 +3630,10 @@ public class MobileController {
 								   						SysDriver aSysDriver = new SysDriver();
 								   						aSysDriver.setIntegral_num(integralRule.getIntegral_reward());
 								   						aSysDriver.setSysDriverId(sysDriver.getSysDriverId());
-								   						driverService.updateDriverByIntegral(aSysDriver);			
+								   						driverService.updateDriverByIntegral(aSysDriver);
 								   					}
 								   				}
-								   			}     
+								   			}
 								           }
 										// 返回大于0，成功
 										if (resultVal <= 0) {
@@ -3929,10 +3973,12 @@ public class MobileController {
 				roadCondition.setPublisherTime(sft.parse(mainObj.optString("flashTime")));
 				int tmp = sysRoadService.reportSysRoadCondition(roadCondition);
 				if (tmp > 0) {
+					//上传成功APP推送
+					token = mainObj.optString("token");
+					SysDriver driver = driverService.queryDriverByPK(token);
+					sysMessageService.sendMessageUploadRoad(driver);
 					result.setStatus(MobileReturn.STATUS_SUCCESS);
 					result.setMsg("上报成功！");
-					//上传成功APP推送
-					//sysMessageService.sendMessageUploadRoad();
 				}
 			} else {
 				result.setStatus(MobileReturn.STATUS_FAIL);
@@ -5189,68 +5235,7 @@ public class MobileController {
 									order.setOrderId(orderID);
 									order.setOrderStatus(1);
 									int temp = orderService.updateByPrimaryKey(order);
-					                //消费增加积分
-					        		if(null!=order.getOperator()&&!"".equals(order.getOperator())){
-					        			//充值成功发放积分
-					        			HashMap<String, String> integralMap =  integralRuleService.selectRepeatIntegralType("xf");
-					        			String integral_rule_id = integralMap.get("integral_rule_id");
-					        			IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
-					        			//存在积分规则
-					        			if(null!=integralRule){
-					        					HashMap<String,String> xfHashMap = new HashMap<String,String>();
-					        					xfHashMap.put("reward_cycle", integralRule.getReward_cycle());
-					        					xfHashMap.put("debit_Account", order.getDebitAccount());
-					        					xfHashMap.put("order_id",order.getOrderId());
-					        					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(xfHashMap);
-					        					//当前日/周/月 存在的 司机注册数
-					        					if(orderList.size()>0){
-					        							HashMap<String, String> driverMap = orderList.get(0);
-					        							//充值成功向积分记录表中插入积分历史数据
-					        							if("true".equals(integralMap.get("STATUS"))&&"1".equals(String.valueOf(integralMap.get("integral_rule_num")))){
-					        								String llimitnumber = integralRule.getLimit_number();
-					        								String reward_cycle = integralRule.getReward_cycle();
-					        								String count = String.valueOf(driverMap.get("count"));
-					        							boolean nolimit="不限".equals(llimitnumber);
-					        							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
-					        							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
-					        								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
-					        									if(nolimit||one||pass){
-					        										IntegralHistory xfHistory = new IntegralHistory();
-					        										xfHistory.setIntegral_type("xf");
-					        										xfHistory.setIntegral_rule_id(integralMap.get("integral_rule_id"));
-					        										xfHistory.setSys_driver_id(order.getDebitAccount());
-					        										String[] ladder_before = integralMap.get("ladder_before").split(",");
-					        										String[] ladder_after = integralMap.get("ladder_after").split(",");
-					        										String[] integral_reward = integralMap.get("integral_reward").split(",");
-					        										String[] reward_factor = integralMap.get("reward_factor").split(",");
-					        										String[] reward_max = integralMap.get("reward_max").split(",");
-					        										String integralreward = "";
-					        										for(int i=0;i<ladder_before.length;i++){
-					        											//判断是否在阶梯的消费区间内
-					        											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<=0){
-					        												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
-					        													xfHistory.setIntegral_num(integral_reward[i]);
-					        													integralreward = integral_reward[i];
-					        												}else{
-					        													xfHistory.setIntegral_num((order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString()); 
-					        													integralreward = (order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-					        													if(order.getCash().multiply(new BigDecimal(reward_factor[i])).compareTo(new BigDecimal(reward_max[i]))>0){
-					        														xfHistory.setIntegral_num(reward_max[i]);
-					        														integralreward = reward_max[i];
-					        													}
-					        												}
-					        											}
-					        										}
-					        										integralHistoryService.addIntegralHistory(xfHistory, order.getDebitAccount());
-					        										SysDriver aSysDriver = new SysDriver();
-					        										aSysDriver.setIntegral_num(integralreward);
-					        										aSysDriver.setSysDriverId(order.getDebitAccount());
-					        										driverService.updateDriverByIntegral(aSysDriver);				
-					        								}	
-					        						}					
-					        					}	
-					        				}				
-					        		}	
+									integralHistoryService.addIntegralHistory(sysOrder,"xf");
 									if(temp > 0 ){
 										//系统关键日志记录
 						    			SysOperationLog sysOperationLog = new SysOperationLog();
@@ -6038,6 +6023,11 @@ public class MobileController {
 				String unit = mainObj.optString("unit");
 				String promotions = mainObj.optString("promotions");
 				String priceEffectiveTime = mainObj.optString("priceEffectiveTime");
+				//当生效时间为立即生效时，设置生效时间为当前时间
+				if(gastation != null && "0".equals(gastation.getPrice_effective_time())){
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+					priceEffectiveTime = format.format(new Date());
+				}
 				if(price==null ||"".equals(price)){
 					price="0.0";
 				}
@@ -6836,74 +6826,5 @@ public class MobileController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * 充值增加积分
-	 * @param order
-	 * @throws Exception
-	 */
-	public void addIntegralHistory(SysOrder order) throws Exception{
-		if(null!=order.getOperator()&&!"".equals(order.getOperator())){
-			//充值成功发放积分
-			HashMap<String, String> integralMap =  integralRuleService.selectRepeatIntegralType("cz");
-			String integral_rule_id = integralMap.get("integral_rule_id");
-			IntegralRule integralRule = integralRuleService.queryIntegralRuleByPK(integral_rule_id);
-			//存在积分规则
-			if(null!=integralRule){
-					HashMap<String,String> czHashMap = new HashMap<String,String>();
-					czHashMap.put("reward_cycle", integralRule.getReward_cycle());
-					czHashMap.put("debit_Account", order.getDebitAccount());
-					czHashMap.put("order_id",order.getOrderId());
-					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(czHashMap);
-					//当前日/周/月 存在的 司机注册数
-					if(orderList.size()>0){
-							HashMap<String, String> driverMap = orderList.get(0);
-							//充值成功向积分记录表中插入积分历史数据
-							if("true".equals(integralMap.get("STATUS"))&&"1".equals(String.valueOf(integralMap.get("integral_rule_num")))){
-								String llimitnumber = integralRule.getLimit_number();
-								String reward_cycle = integralRule.getReward_cycle();
-								String count = String.valueOf(driverMap.get("count"));
-							boolean nolimit="不限".equals(llimitnumber);
-							boolean pass= !"one".equals(reward_cycle)&&!nolimit&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
-							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
-								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
-									if(nolimit||one||pass){
-										IntegralHistory czHistory = new IntegralHistory();
-										czHistory.setIntegral_type("cz");
-										czHistory.setIntegral_rule_id(integralMap.get("integral_rule_id"));
-										czHistory.setSys_driver_id(order.getDebitAccount());
-										String[] ladder_before = integralMap.get("ladder_before").split(",");
-										String[] ladder_after = integralMap.get("ladder_after").split(",");
-										String[] integral_reward = integralMap.get("integral_reward").split(",");
-										String[] reward_factor = integralMap.get("reward_factor").split(",");
-										String[] reward_max = integralMap.get("reward_max").split(",");
-										String integralreward = "";
-										for(int i=0;i<ladder_before.length;i++){
-											//判断是否在阶梯的消费区间内
-											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<=0){
-												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
-													czHistory.setIntegral_num(integral_reward[i]);
-													integralreward = integral_reward[i];
-												}else{
-													czHistory.setIntegral_num((order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString()); 
-													integralreward = (order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-													if(order.getCash().multiply(new BigDecimal(reward_factor[i])).compareTo(new BigDecimal(reward_max[i]))>0){
-														czHistory.setIntegral_num(reward_max[i]);
-														integralreward = reward_max[i];
-													}
-												}
-											}
-										}
-										integralHistoryService.addIntegralHistory(czHistory, order.getDebitAccount());
-										SysDriver driver = new SysDriver();
-										driver.setIntegral_num(integralreward);
-										driver.setSysDriverId(order.getDebitAccount());
-										driverService.updateDriverByIntegral(driver);				
-								}	
-						}					
-					}	
-				}				
-		}		
 	}
 }
