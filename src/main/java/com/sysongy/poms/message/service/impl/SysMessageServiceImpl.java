@@ -245,8 +245,8 @@ public class SysMessageServiceImpl implements SysMessageService {
 			message.setMessageGroup("999");
 			message.setMessageTicker("上报路况提醒");
 			message.setMessageTitle("上报路况提醒");
-			message.setMessageBody("您于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"上传路况信息成功，感谢您的参与！");
-			message.setContent("您于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"上传路况信息成功，感谢您的参与！");
+			message.setMessageBody("您于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"上报路况信息成功，感谢您的参与！");
+			message.setContent("您于"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"上报路况信息成功，感谢您的参与！");
 			return saveMessage_New(message);
 		}else{
 			return null;
