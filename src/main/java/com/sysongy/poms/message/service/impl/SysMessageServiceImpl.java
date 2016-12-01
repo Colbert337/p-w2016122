@@ -76,7 +76,7 @@ public class SysMessageServiceImpl implements SysMessageService {
 		params.setProvince(obj.getProvince_name());
 		obj.setMessageGroup("1000");
 		int status =0;
-		if (obj.getMessageTicker().equals(2)) {
+		if (obj.getMessageType().equals(1)) {
 			status = umeng.sendAndroidBroadcast(params);//设置广播
 		}else{
 			status = umeng.sendAndroidGroupcast(params);//设置组播
