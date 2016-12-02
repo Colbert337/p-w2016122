@@ -217,7 +217,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 								String reward_cycle = integralRule.getReward_cycle();
 								String countDriver = String.valueOf(driverMap.get("count"));
 								boolean nolimit="不限".equals(llimitnumber);
-								boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(countDriver)<=Integer.parseInt(llimitnumber));	
+								boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(countDriver)<Integer.parseInt(llimitnumber));	
 								boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(countDriver)-1==Integer.parseInt(llimitnumber));	
 									//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 										if(nolimit||one||pass){
