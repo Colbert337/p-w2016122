@@ -5254,26 +5254,31 @@ public class MobileController {
 												throw new Exception("优惠券使用状态更新失败！");
 											}
 										}
-										//添加OrderGoods信息
+										//获取折扣信息
 										List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+										//添加OrderGoods信息
 										SysOrderGoods orderGoods = new SysOrderGoods ();
+										if(gsGasPriceList!=null && gsGasPriceList.size()>0){
+											//原始单价
+											orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+											//商品类型
+											orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+											//优惠类型。
+											Object obj = gsGasPriceList.get(0).get("preferential_type");
+											if(obj!=null){
+												orderGoods.setPreferential_type(obj.toString());
+											}
+										}else{
+											throw new Exception("该气站暂无折扣信息，无法添加OrderGoods信息！");
+										}
 										//ID
 										orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
 										//orderID
 										orderGoods.setOrderId(orderID);
-										//原始单价
-										orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
-										//加气总量
+										//加气总量	
 										orderGoods.setNumber(Double.valueOf(gasTotal));
 										//商品总价
 										orderGoods.setSumPrice(new BigDecimal(payableAmount));
-										//商品类型
-										orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
-										//优惠类型。
-										Object obj = gsGasPriceList.get(0).get("preferential_type");
-										if(obj!=null){
-											orderGoods.setPreferential_type(obj.toString());
-										}
 										//平台优惠金额
 										orderGoods.setDiscountSumPrice(preferential_cash);
 										int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
