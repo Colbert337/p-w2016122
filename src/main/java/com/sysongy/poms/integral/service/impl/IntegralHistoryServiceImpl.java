@@ -313,7 +313,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 			if(null!=integralRule){
 					HashMap<String,String> hashMap = new HashMap<String,String>();
 					hashMap.put("reward_cycle", integralRule.getReward_cycle());
-					hashMap.put("debit_Account", order.getDebitAccount());
+					hashMap.put("credit_account", order.getCreditAccount());
 					hashMap.put("order_id",order.getOrderId());
 					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 					hashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
