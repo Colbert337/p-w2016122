@@ -69,14 +69,23 @@ var listOptions ={
 	            url:'../web/driver/review?driverid='+driverid+'&type='+type+'&memo='+memo,   
 	            type:'post',                    
 	            dataType:'text',
+			beforeSend: function () {
+				//$("#importAction").hide();
+				$('body').addClass('modal-open').css('padding-right','17px');
+				$('body').append('<div class="loading-warp"><div class="loading"><i class="ace-icon fa fa-spinner fa-spin"></i></div><div class="modal-backdrop fade in"></div></div>');
+			},
 	            success:function(data){
 		            $("#main").html(data);
 		            $("#modal-table").modal("show");
 	            },
+			complete: function () {
+				$("body").removeClass('modal-open').removeAttr('style');
+				$(".loading-warp").remove();
+			},
 	            error:function(XMLHttpRequest, textStatus, errorThrown) {
 	            	
 	            }
-		}
+		};
 		$("#gridSystemModalLabel").text("输入审核备注");
 		$("#formdriver").ajaxSubmit(deloptions);
 	}
@@ -116,8 +125,8 @@ var listOptions ={
 	
 	function hideInnerModel(){
 		$("#innerModel").modal('hide').removeClass('in');
-		$("body").removeClass('modal-open').removeAttr('style');
-		$(".modal-backdrop").remove();
+		//$("body").removeClass('modal-open').removeAttr('style');
+		//$(".modal-backdrop").remove();
 	}
 	
 	function addMemo(){
