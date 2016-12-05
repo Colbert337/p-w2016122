@@ -58,6 +58,14 @@
 		<link rel="stylesheet" href="<%=basePath %>/assets/css/ace-ie.css" />
 		<![endif]-->
 		<link rel="stylesheet" href="<%=basePath %>/common/css/comm.css" />
-	</head>
 
+	</head>
+	<div style="display:none ">
+		<div><button onclick="closeMusic()">关闭</button></div>
+		<div><button onclick="openMusic()">打开</button></div>
+		<audio id="bgMusic">
+			<source = src="<%=basePath%>/docs/app/shengzhidao.mp3" type="audio/wav" >
+		</audio>
+	</div>
+	<script type="text/javascript">	var audio = document.getElementById("bgMusic");</script>
 	<body class="no-skin">
