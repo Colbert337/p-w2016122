@@ -728,7 +728,6 @@ public class CrmPortalController extends BaseContoller {
     /**
      * 批量导入司集
      * @param currUser
-     * @param map
      * @return
      * @throws Exception
      */
@@ -819,33 +818,40 @@ public class CrmPortalController extends BaseContoller {
     	*/
         String path = request.getContextPath();
         String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
-        String webPage = basePath ;
-        webPage += "/portal/crm/help/showPage?pageid=";
+        String webPage = "/webpage/crm/webapp-question" ;
+
         switch (phoneType){
             case "Xiaomi":
-                webPage += "";
+                webPage = "redirect:/portal/crm/help/showPage?pageid=";
+                webPage += "86534ac5106b49b592ccde6e12a074d7";
                 break;
             case "samsung":
-                webPage += "";
+                webPage = "redirect:/portal/crm/help/showPage?pageid=";
+                webPage += "a8652c8b67044398b635859345b2f081";
                 break;
             case "OPPO":
-                webPage += "";
+                webPage = "redirect:/portal/crm/help/showPage?pageid=";
+                webPage += "2cc0c3d087e242da914291d86e9cd936";
                 break;
             case "vivo":
-                webPage += "";
+                webPage = "redirect:/portal/crm/help/showPage?pageid=";
+                webPage += "73137878f75e48e49317aad6514abe93";//c650fa79e42b4eeeb733e0b345639f9c
                 break;
             case "HUAWEI":
-                webPage += "";
+                webPage = "redirect:/portal/crm/help/showPage?pageid=";
+                webPage += "7e7667b5da974f6f8ba4418c77a78bb6";
                 break;
             case "GiONEE":
-                webPage += "";
+                webPage = "redirect:/portal/crm/help/showPage?pageid=";
+                webPage += "eb4cdbcd69c7401e8aa3d2b35825325b";//395bda1a678d45c3873cc25b572541f7
                 break;
             case "Coolpad":
-                webPage += "";
+                webPage = "redirect:/portal/crm/help/showPage?pageid=";
+                webPage += "0f279fe859a54826b9f622ccb9873bef";
                 break;
         }
 
-    	/*map.addAttribute("phoneType",phoneType);*/
+    	map.addAttribute("phoneType",phoneType);
     	return webPage;
     }
 }
