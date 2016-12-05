@@ -807,7 +807,7 @@ public class CrmPortalController extends BaseContoller {
      * 常见问题
      */
     @RequestMapping("/question")
-    public String question(@RequestParam String phoneType,ModelMap map) throws Exception{
+    public String question(HttpServletRequest request,@RequestParam String phoneType,ModelMap map) throws Exception{
     	//http://localhost:8080/poms-web/portal/crm/help/question?phoneType=
     	/*	小米		Xiaomi
     		三星		samsung
@@ -817,7 +817,35 @@ public class CrmPortalController extends BaseContoller {
     		金立		GiONEE
     		酷派		Coolpad
     	*/
-    	map.addAttribute("phoneType",phoneType);
-    	return "/webpage/crm/webapp-question";
+        String path = request.getContextPath();
+        String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+        String webPage = basePath ;
+        webPage += "/portal/crm/help/showPage?pageid=";
+        switch (phoneType){
+            case "Xiaomi":
+                webPage += "";
+                break;
+            case "samsung":
+                webPage += "";
+                break;
+            case "OPPO":
+                webPage += "";
+                break;
+            case "vivo":
+                webPage += "";
+                break;
+            case "HUAWEI":
+                webPage += "";
+                break;
+            case "GiONEE":
+                webPage += "";
+                break;
+            case "Coolpad":
+                webPage += "";
+                break;
+        }
+
+    	/*map.addAttribute("phoneType",phoneType);*/
+    	return webPage;
     }
 }
