@@ -313,7 +313,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 			if(null!=integralRule){
 					HashMap<String,String> hashMap = new HashMap<String,String>();
 					hashMap.put("reward_cycle", integralRule.getReward_cycle());
-					hashMap.put("debit_Account", order.getDebitAccount());
+					hashMap.put("credit_account", order.getCreditAccount());
 					hashMap.put("order_id",order.getOrderId());
 					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 					hashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
@@ -332,7 +332,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 								String count = String.valueOf(driverMap.get("count"));
 							boolean nolimit="不限".equals(llimitnumber);
 							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
-							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
+							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)==Integer.parseInt(llimitnumber));	
 								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
 									if(nolimit||one||pass){
 										String account = order.getCreditAccount();

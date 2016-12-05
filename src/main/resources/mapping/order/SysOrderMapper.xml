@@ -1460,7 +1460,7 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 	count(order_id) count
 FROM
 	sys_order  where
-	  debit_Account = #{debit_Account,jdbcType=VARCHAR}
+	  credit_account = #{credit_account,jdbcType=VARCHAR}
 	  and order_status='1'
 	  and order_date > STR_TO_DATE(#{integral_createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s') 
 	  and order_type=#{order_type,jdbcType=VARCHAR}
