@@ -155,7 +155,7 @@ public class Translate extends WebApplicationObjectSupport{
 		SqlSessionFactory sessionFactory = (SqlSessionFactory) wac.getBean("sqlSessionFactory");
 		SqlSession session = sessionFactory.openSession();
 		SqlMapper sqlMapper = new SqlMapper(session);
-		String excuteSQL = "SELECT * FROM USYSPARAM WHERE GCODE ='"+gcode+"' AND SCODE is NULL";
+		String excuteSQL = "SELECT * FROM USYSPARAM WHERE GCODE ='"+gcode+"' AND SCODE is NULL order BY  mcode+0 ASC";
 		List<UsysparamVO> list = sqlMapper.selectList(excuteSQL, UsysparamVO.class);
 		
 		session.close();
