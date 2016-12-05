@@ -6,7 +6,14 @@ public class UsysparamVO {
 	private String mcode;
 	private String mname;
 	private String data;
+	private String sort;
 	
+	public String getSort() {
+		return sort;
+	}
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
 	public String getGcode() {
 		return gcode;
 	}
