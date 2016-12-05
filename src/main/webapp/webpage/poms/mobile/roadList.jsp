@@ -437,9 +437,49 @@ a:active {
 	</div>
 </div>
 
-
 <script>
-	$("#conditionStatus").val("${road.conditionStatus}");
 
-	
+	$("#conditionStatus").val("${road.conditionStatus}");
+	/*var audio = document.getElementById("bgMusic");*/
+	//播放(继续播放)
+	/*audio.play();*/
+	//实时扫描数据库，判断是否有新的路况
+	setTime();
+	function setTime(){
+			console.log("进入计时");
+			$.ajax({
+				url:"../web/mobile/road/queryRoadCount",
+				async:false,
+				type: "GET",
+				success: function(data){
+					if(data > 0){
+						console.log("查询成功");
+						openMusic();
+					}else{
+						console.log("查询失败");
+						closeMusic();
+					}
+				}
+			})
+		setTimeout('setTime()',600000)//600000
+	}
+
+	//关闭语音提示
+	function closeMusic(){
+		//停止
+		audio.pause();
+		audio.currentTime = 0;
+	}
+
+	//打开语音提示
+	function openMusic(){
+		//重新播放
+		audio.currentTime = 0;
+		audio.play();
+	}
+	/*//播放(继续播放)
+	audio.play();
+
+	//暂停
+	audio.pause();*/
 </script>

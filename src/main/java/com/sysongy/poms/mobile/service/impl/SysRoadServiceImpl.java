@@ -235,8 +235,9 @@ public class SysRoadServiceImpl implements SysRoadService {
 		}
 	}
 
-	 
-
-	 
+	@Override
+	public Map<String, Object> queryRoadCount() {
+		return sysRoadConditionMapper.queryRoadCount();
+	}
 }
 	

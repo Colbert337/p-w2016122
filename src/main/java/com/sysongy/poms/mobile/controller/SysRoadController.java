@@ -610,4 +610,19 @@ public class SysRoadController extends BaseContoller {
 		return null;
 
 	}
+
+	/**
+	 * 获取待审核路况数量
+	 * @return
+	 */
+	@RequestMapping("/queryRoadCount")
+	@ResponseBody
+	public int queryRoadCount( ModelMap map){
+	   	int count = 0;
+		Map<String,Object> countMap = sysRoadService.queryRoadCount();
+		if(countMap != null && countMap.get("viewCount") != null){
+			count = Integer.parseInt(countMap.get("viewCount").toString());
+		}
+		return count;
+	}
 }
