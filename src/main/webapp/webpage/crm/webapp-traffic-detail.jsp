@@ -39,7 +39,7 @@
 							<td><div  name="show">${roadCondition.address}</div></td>
 						</tr>
 						<tr>
-							<th>提供者：</th>
+							<th>提&nbsp;&nbsp;供&nbsp;&nbsp;者：</th>
 							<td><div  name="show">${name}</div></td>
 						<tr>
 						<c:if test="${conditionImg != null}" >
