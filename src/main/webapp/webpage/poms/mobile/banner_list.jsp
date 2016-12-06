@@ -144,6 +144,7 @@
 											<td><div class="td-inner-warp">${list.city_name}</div></td>
 											<td><fmt:formatDate value="${list.createdDate}"
 													type="both" /></td>
+											<td style="display:none">${list.operator}</td><!-- 隐藏字段 用于详情显示 -->
 											<td><fmt:formatDate value="${list.updatedDate}"
 													type="both" /></td>
 											<td>${list.operator}</td>
@@ -152,7 +153,7 @@
 													<i class="ace-icon fa fa-pencil bigger-130"
 													onclick="bannerAdd('${list.mbBannerId}');"></i>
 											</a> <a class="option-btn-m" href="javascript:void(0);"
-												title="查看图片" data-rel="tooltip"> <i
+												title="详细信息" data-rel="tooltip"> <i
 													class="ace-icon fa fa-search-plus bigger-130"
 													onclick="showInnerModel('${list.imgPath}','${list.imgSmPath}',$('#${list.mbBannerId }'));"></i>
 											</a> <a class="" href="javascript:void(0);"

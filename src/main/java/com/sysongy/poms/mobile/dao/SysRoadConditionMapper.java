@@ -53,5 +53,11 @@ public interface SysRoadConditionMapper {
 	 * @param HashMap
 	 * @return
 	 */
-	List<HashMap<String,String>> queryConditionByPhone(HashMap<String,String> HashMap); 
+	List<HashMap<String,String>> queryConditionByPhone(HashMap<String,String> HashMap);
+
+    /**
+     * 获取待审核路况数量
+     * @return
+     */
+    Map<String,Object> queryRoadCount();
 }

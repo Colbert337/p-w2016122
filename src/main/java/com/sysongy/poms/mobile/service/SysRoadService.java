@@ -67,5 +67,9 @@ public interface SysRoadService {
 	boolean restoreRedis(RedisClientInterface redisClientImpl);
  
 	PageInfo<SysRoadCondition> queryForExcel(SysRoadCondition record) throws Exception;
-	
+	/**
+	 * 获取待审核路况数量
+	 * @return
+	 */
+	Map<String,Object> queryRoadCount();
 }
