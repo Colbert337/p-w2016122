@@ -3022,7 +3022,7 @@ public class MobileController {
 	@ResponseBody
 	public String wechatCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String resultStr = "";
-		String orderId = "";
+ 		String orderId = "";
 		String transaction_id = "";
 		String feeCount = "";
 		logger.debug("微信支付回调获取数据开始");

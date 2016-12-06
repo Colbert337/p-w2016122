@@ -147,7 +147,6 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 	/**
 	 * 设置密保手机增加积分
 	 * @param sysDriver
-	 * @param type
 	 * @throws Exception
 	 */
 	@Override
@@ -332,8 +331,8 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 								String count = String.valueOf(driverMap.get("count"));
 							boolean nolimit="不限".equals(llimitnumber);
 							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
-							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)==Integer.parseInt(llimitnumber));	
-								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
+							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)<Integer.parseInt(llimitnumber));
+								//不限或一次或小于限制次数
 									if(nolimit||one||pass){
 										String account = order.getCreditAccount();
 										if("cz".equals(type)){
@@ -356,9 +355,13 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 													aIntegralHistory.setIntegral_num(integral_reward[i]);
 													integralreward = integral_reward[i];
 												}else{
-													aIntegralHistory.setIntegral_num((order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString()); 
-													integralreward = (order.getCash().multiply(new BigDecimal(reward_factor[i]))).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-													if(order.getCash().multiply(new BigDecimal(reward_factor[i])).compareTo(new BigDecimal(reward_max[i]))>0){
+													BigDecimal integralNum = order.getCash().multiply(new BigDecimal(reward_factor[i]).divide(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP));
+													if(integralNum.compareTo(BigDecimal.ZERO) == 0){
+														integralNum = BigDecimal.ONE;
+													}
+													aIntegralHistory.setIntegral_num(integralNum.toString());
+													integralreward = integralNum.toString();
+													if(order.getCash().multiply(new BigDecimal(reward_factor[i])).compareTo(new BigDecimal(reward_max[i]).multiply(new BigDecimal("100")))>0){
 														aIntegralHistory.setIntegral_num(reward_max[i]);
 														integralreward = reward_max[i];
 													}
