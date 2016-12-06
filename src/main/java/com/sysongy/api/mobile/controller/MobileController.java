@@ -939,6 +939,7 @@ public class MobileController {
 			if (b) {
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
+				verificationCode = mainObj.optString("verificationCode");
 				if (mainObj.optString("token") == null) {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("用户ID为空！");
@@ -951,7 +952,7 @@ public class MobileController {
 				} else {
 					driver = driverService.queryDriverByPK(mainObj.optString("token"));
 					String	veCode = (String) redisClientImpl.getFromCache(driver.getUserName());
-					if (veCode != null && !"".equals(veCode)) {
+					if (veCode != null && !"".equals(veCode)&& verificationCode.equals(veCode)) {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
 						paycode = mainObj.optString("paycode");
