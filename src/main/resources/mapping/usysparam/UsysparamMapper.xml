@@ -88,7 +88,7 @@
   </delete>
 
   <select id="queryUsysparamByGcode" resultMap="BaseResultMapForCard"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >
-    select * from usysparam where gcode = #{0} and (scode is null or scode='')
+    select * from usysparam where gcode = #{0} and (scode is null or scode='') order BY  mcode ASC
   </select>
 
     <select id="queryUsysparamChildByGcode" resultMap="BaseResultMap"  parameterType="com.sysongy.poms.usysparam.model.Usysparam" >

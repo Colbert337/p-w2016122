@@ -62,7 +62,7 @@
  </error-page>
  
  <session-config> 
-	<session-timeout>15</session-timeout>
+	<session-timeout>120</session-timeout>
  </session-config>
   
   <!--登录安全拦截-->
