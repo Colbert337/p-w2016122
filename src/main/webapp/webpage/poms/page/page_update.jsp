@@ -81,7 +81,7 @@
 										<label class="col-sm-3 control-label no-padding-right">创建人：</label>
 
 										<div class="col-sm-4">
-											<input type="text" name="pageCreator" class="form-control" readonly="readonly" value="${sessionScope.currUser.user.userName}"/>
+											<input type="text" name="pageCreator" class="form-control" readonly="readonly" value="${page.pageCreator}"/>
 										</div>
 									</div>
 
