@@ -390,9 +390,9 @@ public class DriverServiceImpl implements DriverService {
 
         String remark = "";
         if(StringUtils.isEmpty(order.getDischarge_reason())){
-            remark = driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。";
+            remark = driver.getFullName()==null?driver.getUserName():driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。";
         } else {
-            remark = driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。" + order.getDischarge_reason();
+            remark = driver.getFullName()==null?driver.getUserName():driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。" + order.getDischarge_reason();
         }
         order.setSysDriver(driver);
         if(order.getCoupon_number() != null){//add by wdq 判断当前订单是否有优惠券
