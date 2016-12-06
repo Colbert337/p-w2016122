@@ -66,10 +66,12 @@ var integral_reward_type = $("input[name='integral_reward_type']").val();
 function changeRewardCycle(){
 	var cycle = $('select[name="reward_cycle"] option:selected').val();
 	if(cycle=='one'){
-		$("input[name='limit_number']").val("1");
-		$("input[name='limit_number']").attr("readonly","readonly");
+		$("input[name='limit_number']").focus();  
 		$("input[name='limit'][value='1']").prop("checked","checked");
 		$("input:radio[name='limit']").attr("disabled","disabled");
+		$("input[name='limit_number']").val("1");
+		$("input[name='limit_number']").attr("readonly","readonly");
+		$("input[name='limit_number']").removeAttr("disabled");;	
 	}else{
 		$("input[name='limit_number']").attr("readonly",false);
 		$("input:radio[name='limit']").removeAttr("disabled");;	
