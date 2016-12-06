@@ -101,6 +101,9 @@ public class SysOrder extends BaseModel{
     private String amount;//优惠后金额
 
     private String batch_no;
+    
+    private String integralType;	//积分类别
+
     /**
      * 临时标记订单为首次充值订单（首次充值时 才有值 充值结束后置为空）
      */    
@@ -651,4 +654,12 @@ public class SysOrder extends BaseModel{
     public void setOrderStatusInfo(Usysparam orderStatusInfo) {
         this.orderStatusInfo = orderStatusInfo;
     }
+
+	public String getIntegralType() {
+		return integralType;
+	}
+
+	public void setIntegralType(String integralType) {
+		this.integralType = integralType;
+	}
 }
