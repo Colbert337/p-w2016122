@@ -5240,7 +5240,7 @@ public class MobileController {
 							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
-								String str = orderService.consumeByDriver(sysOrder);
+								String str = driverService.deductCashToDriver(sysOrder,"0");
 								if(str.equals(GlobalConstant.OrderProcessResult.SUCCESS)){
 									SysOrder order = new SysOrder();
 									order.setOrderId(orderID);

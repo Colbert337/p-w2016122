@@ -36,6 +36,7 @@ import com.sysongy.poms.integral.service.IntegralHistoryService;
 import com.sysongy.poms.integral.service.IntegralRuleService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
+import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -69,6 +70,9 @@ public class DriverServiceImpl implements DriverService {
     
     @Autowired
     private OrderDealService orderDealService;
+    
+    @Autowired
+    private OrderService orderService;
     
     @Autowired
     private SysUserAccountService sysUserAccountService;
@@ -418,7 +422,7 @@ public class DriverServiceImpl implements DriverService {
 
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
         order.setDischarge_reason(remark);
-        
+        orderService.updateByPrimaryKey(order);
 		return cash_success;
 	}
 
