@@ -105,7 +105,13 @@
     left join sys_driver cc on b.debit_account = cc.sys_driver_id
     left join sys_driver d on b.credit_account = d.sys_driver_id
     left join sys_coupon sc on b.coupon_number = sc.coupon_id
-    where 1=1 and b.order_status != 0
+    where 1=1
+    <if test="orderStatus != null &amp;&amp; orderStatus != ''" >
+      and b.order_status = #{orderStatus,jdbcType=VARCHAR}
+    </if>
+    <if test="orderStatus == null &#124;&#124; orderStatus != ''" >
+      and b.order_status != 0
+    </if>
     <if test="orderId != null &amp;&amp; orderId != ''" >
       and (a.order_id = #{orderId,jdbcType=VARCHAR} or b.order_number = #{orderId,jdbcType=VARCHAR})
     </if>
