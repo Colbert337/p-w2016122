@@ -3079,7 +3079,10 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					integralHistoryService.addIntegralHistory(order,"cz");
+					int r = updateOrder(sysOrder,"cz");
+					if(r > 0){
+						integralHistoryService.addIntegralHistory(order,"cz");
+					}
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3178,7 +3181,10 @@ public class MobileController {
 					if(orderRs > 0){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						integralHistoryService.addIntegralHistory(order,"xf");	
+						int r = updateOrder(sysOrder,"xf");
+						if(r > 0){
+							integralHistoryService.addIntegralHistory(order,"xf");
+						}
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
 		    			sysOperationLog.setOperation_type("xf");
@@ -3285,7 +3291,10 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					integralHistoryService.addIntegralHistory(order,"cz");	
+					int r = updateOrder(sysOrder,"cz");
+					if(r > 0){
+						integralHistoryService.addIntegralHistory(order,"cz");
+					}
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3364,7 +3373,10 @@ public class MobileController {
 					if(orderRs > 0 ){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						integralHistoryService.addIntegralHistory(order,"xf");	
+						int r = updateOrder(sysOrder,"xf");
+						if(r > 0){
+							integralHistoryService.addIntegralHistory(order,"xf");
+						}
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
 		    			sysOperationLog.setOperation_type("xf");
