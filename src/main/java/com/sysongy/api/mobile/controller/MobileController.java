@@ -79,6 +79,7 @@ import com.sysongy.poms.gastation.model.ProductPrice;
 import com.sysongy.poms.gastation.service.GastationService;
 import com.sysongy.poms.gastation.service.GsGasPriceService;
 import com.sysongy.poms.gastation.service.ProductPriceService;
+import com.sysongy.poms.integral.dao.IntegralRuleMapper;
 import com.sysongy.poms.integral.model.IntegralHistory;
 import com.sysongy.poms.integral.model.IntegralRule;
 import com.sysongy.poms.integral.service.IntegralHistoryService;
@@ -209,6 +210,9 @@ public class MobileController {
 	
 	@Autowired
 	IntegralHistoryService integralHistoryService;
+	
+	@Autowired
+	private IntegralRuleMapper integralRuleMapper;
 	/**
 	 * 用户登录
 	 * 
@@ -3018,7 +3022,7 @@ public class MobileController {
 	@ResponseBody
 	public String wechatCallBackPay(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String resultStr = "";
-		String orderId = "";
+ 		String orderId = "";
 		String transaction_id = "";
 		String feeCount = "";
 		logger.debug("微信支付回调获取数据开始");
@@ -5235,7 +5239,10 @@ public class MobileController {
 									order.setOrderId(orderID);
 									order.setOrderStatus(1);
 									int temp = orderService.updateByPrimaryKey(order);
-									integralHistoryService.addIntegralHistory(sysOrder,"xf");
+									int r = updateOrder(order,"xf");
+									if(r > 0){
+										integralHistoryService.addIntegralHistory(sysOrder,"xf");
+									}
 									if(temp > 0 ){
 										//系统关键日志记录
 						    			SysOperationLog sysOperationLog = new SysOperationLog();
@@ -6778,7 +6785,28 @@ public class MobileController {
 			return result;
 		}
 	}
-	
+	/**
+	 * 
+	 */
+	private Integer updateOrder(SysOrder order,String type){
+		int temp = 0;
+		if (null != order.getOrderId() && !"".equals(order.getOrderId())) {
+			// 充值成功发放积分
+			HashMap<String, String> integralMap = integralRuleMapper.selectRepeatIntegralType(type);
+			String integral_rule_id = integralMap.get("integral_rule_id");
+			IntegralRule integralRule = integralRuleMapper.selectByPrimaryKey(integral_rule_id);
+			// 存在积分规则
+			if (null != integralRule) {
+				String reward_cycle = integralRule.getReward_cycle();
+				SysOrder o = new SysOrder();
+				o.setOrderId(order.getOrderId());
+				o.setIntegralType(reward_cycle);
+				o.setOrderStatus(order.getOrderStatus());
+				temp = orderService.updateByPrimaryKey(o);
+			}
+		}	
+		return temp;
+	}
 	
 	
 	@RequestMapping(value = "/QR")

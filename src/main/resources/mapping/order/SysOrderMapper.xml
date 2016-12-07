@@ -41,6 +41,7 @@
 		<result column="coupon_cash" property="coupon_cash" jdbcType="DECIMAL" />
 		<result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
 		<result column="trade_no" property="trade_no" jdbcType="VARCHAR" />
+		<result column="integral_type" property="integralType" jdbcType="VARCHAR" />
 		<result column="gas_station_name" property="gas_station_name"
 			jdbcType="VARCHAR" />
 
@@ -162,7 +163,7 @@
 		operator_source_id, operator_source_type,
 		operator_target_type,consume_card,order_status,order_remark,
 		preferential_cash,
-		should_payment, coupon_number, coupon_cash, spend_type,trade_no
+		should_payment, coupon_number, coupon_cash, spend_type,trade_no,integral_type
 	</sql>
 
 	<select id="queryForPageForBack" resultMap="BaseResultMap"
@@ -568,6 +569,9 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			</if>
 			<if test="chk_memo != null">
 				chk_memo = #{chk_memo,jdbcType=VARCHAR},
+			</if>
+			<if test="integralType != null">
+				integral_type = #{integralType,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where order_id = #{orderId,jdbcType=VARCHAR}
@@ -1464,6 +1468,7 @@ FROM
 	  and order_status='1'
 	  and order_date > STR_TO_DATE(#{integral_createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s') 
 	  and order_type=#{order_type,jdbcType=VARCHAR}
+	  and integral_type = #{reward_cycle,jdbcType=VARCHAR}
         <choose>  
             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
                 AND DATE_FORMAT(order_date, '%Y%m%d') = DATE_FORMAT((SELECT	order_date FROM	sys_order	WHERE	order_id = #{order_id,jdbcType=VARCHAR}),'%Y%m%d')

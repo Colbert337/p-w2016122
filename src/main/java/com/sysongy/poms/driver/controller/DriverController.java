@@ -775,10 +775,43 @@ public class DriverController extends BaseContoller{
 					 String stationId = tmpMap.getStationId()==null?"":tmpMap.getStationId().toString();
 					 String accountBalance = tmpMap.getAccount()==null?"":tmpMap.getAccount().getAccountBalance();
 					 String createdDate = tmpMap.getCreatedDate()==null?"": DateUtil.format(tmpMap.getCreatedDate());
-					 String cardStatus = tmpMap.getCardInfo()==null?"":tmpMap.getIsIdentInfo().getMname();//0-已冻结,1-已入库，2-已出库 3-未发放 4-使用中 5-已失效
+					 String cardStatus = tmpMap.getCardInfo()==null?"":tmpMap.getCardInfo().getCard_status().toString();//0-已冻结,1-已入库，2-已出库 3-未发放 4-使用中 5-已失效
 					 String checkedStatus;//审核状态 0 新注册 1 待审核 2 已通过 3 未通过
 					 String account_status;// 0 使用中 1 已冻结 2 已离职
-
+					 
+					 if(!StringUtils.isEmpty(cardStatus)){
+						 switch (cardStatus) {
+						 case "0":{
+							 cardStatus = "已冻结";
+							 break;
+						 }
+						 case "1":{
+							 cardStatus = "已入库";
+							 break;
+						 }
+						 case "2":{
+							 cardStatus = "已出库";
+							 break;
+						 }
+						 case "3":{
+							 cardStatus = "未发放";
+							 break;
+						 }
+						 case "4":{
+							 cardStatus = "使用中";
+							 break;
+						 }
+						 case "5":{
+							 cardStatus = "已失效";
+							 break;
+						 }
+						 default:
+							 cardStatus = "";
+							 break;
+						 }
+					 }
+					 
+					 
 					 switch (tmpMap.getCheckedStatus().toString()) {
 						 case "0":{
 							 checkedStatus = "未认证";
