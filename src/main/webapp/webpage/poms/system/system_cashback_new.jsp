@@ -218,7 +218,7 @@ if('${param.sys_cash_back_no}'=='201'|| '${param.sys_cash_back_no}'=='202'){
                     },
                     regexp: {
                         regexp: '^[0-9]*$',
-                        message: '被邀请人返现金额必须是整数'
+                        message: '被邀请人返现金额必须是整数' 
                     }
                    
                 }
