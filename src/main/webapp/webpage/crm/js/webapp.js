@@ -218,10 +218,8 @@ function settime() {
  */
 function sendMessage(){
 	var isPhone = $("#isPhone").val();
-	alert("isPhone = "+isPhone);
 	if(isPhone == "1"){
 		var hasError = $("#mobile_phone").parents(".form-group").hasClass("has-error");
-		alert("hasError = "+hasError);
 		console.log("hasError:"+hasError);
 		if(hasError){
 			$("#sendMsgA").off("click");
@@ -231,7 +229,6 @@ function sendMessage(){
 		}
 
 		var mobilePhone = $("#phone").val();
-		alert("mobilePhone = "+mobilePhone);
 		/*alert("123");*/
 		if(mobilePhone == ""){
 			return false;
