@@ -419,14 +419,15 @@ a:active {
 <div id="content" class="modal fade" role="dialog"
 	aria-labelledby="gridSystemModalLabel" data-backdrop="static"
 	tabindex="-1">
-	<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-dialog modal-lg" role="document"  style="width: 510px;" >
 		<div class="modal-content">
 			<%--<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="gridSystemModalLabel"></h4>
 			</div>--%>
 			<div class="modal-body">
-			<textarea id="contentmes" placeholder="请输入原因"
+			<div class="shenhe-items-hd">请输入不通过原因</div>
+			<textarea id="contentmes" placeholder="请输入原因" rows='5'
 							class="form-control" maxlength="150"></textarea>
 			</div>
 			<div class="modal-footer" id="buttonList">
