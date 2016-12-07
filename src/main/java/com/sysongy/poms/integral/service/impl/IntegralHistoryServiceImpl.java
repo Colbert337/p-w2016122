@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import com.sysongy.util.BigDecimalArith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
@@ -352,11 +354,11 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 										for(int i=0;i<ladder_before.length;i++){
 											//判断是否在阶梯的消费区间内
 											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<=0){
-												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
+												if(integral_reward != null && integral_reward.length > 0 && null!=integral_reward[i]&&!"".equals(integral_reward[i])){
 													aIntegralHistory.setIntegral_num(integral_reward[i]);
 													integralreward = integral_reward[i];
 												}else{
-													BigDecimal integralNum = order.getCash().multiply(new BigDecimal(reward_factor[i]).divide(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP));
+													BigDecimal integralNum = BigDecimalArith.round(order.getCash().multiply(new BigDecimal(reward_factor[i]).divide(new BigDecimal("100"))),0) ;
 													if(integralNum.compareTo(BigDecimal.ZERO) == 0){
 														integralNum = BigDecimal.ONE;
 													}

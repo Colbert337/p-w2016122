@@ -72,8 +72,8 @@
 									<th style="width:10%" onclick="orderBy(this,'station_id');commitForm();" id="station_id_order">注册工作站编号</th>
 									<th style="width:15%" onclick="orderBy(this,'regis_source');commitForm();" id="regis_source_order">注册工作站名称</th>
 									<th style="width:10%" onclick="orderBy(this,'integral_type');commitForm();" id="integral_type_order">积分类别</th>
-									<th style="width:10%;text-align:center;"  id="integral_num_order">积分奖励</th>
-									<th style="width:10%;text-align:center;" onclick="orderBy(this,'integral_total');commitForm();" id="integral_total_order">积分总数</th>
+									<th style="width:10%;text-align:center;" id="integral_num_order">积分奖励</th>
+									<th style="width:10%;text-align:center;" id="integral_total_order">积分总数</th>
 									<th style="width:8%" onclick="orderBy(this,'create_time');commitForm();" class="td-w2" id="create_time_order"><i id="created_date" class="ace-icon fa fa-clock-o bigger-110 hidden-480">创建时间</i></th>
 								</tr>
 							</thead>
