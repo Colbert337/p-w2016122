@@ -214,11 +214,11 @@ if('${param.sys_cash_back_no}'=='201'|| '${param.sys_cash_back_no}'=='202'){
             threshold_max_value: {
                 validators: { 
                     notEmpty: {
-                        message: '阈最大值不能为空'
+                        message: '被邀请人返现金额不能为空'
                     },
                     regexp: {
                         regexp: '^[0-9]*$',
-                        message: '阈最大值必须是整数'
+                        message: '被邀请人返现金额必须是整数'
                     }
                    
                 }
