@@ -55,6 +55,8 @@ public class SysOrderDeal extends BaseModel {
 
     private BigDecimal preferentialDiscount;
 
+    private String orderStatus;
+
     public String getRemark() {
 		return remark;
 	}
@@ -237,5 +239,13 @@ public class SysOrderDeal extends BaseModel {
 
     public void setPreferentialDiscount(BigDecimal preferentialDiscount) {
         this.preferentialDiscount = preferentialDiscount;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }
