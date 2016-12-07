@@ -46,6 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -120,7 +121,12 @@ public class CRMCashServiceContoller {
             ajaxJson.setSuccess(false);
             ajaxJson.setMsg("订单ID或者气站ID为空！！！");
             return ajaxJson;
+        }else if(record.getCash().toString().substring(0,record.getCash().toString().indexOf(".")).length() >= 8){
+            ajaxJson.setSuccess(false);
+            ajaxJson.setMsg("充值金额不能大于8位数！");
+            return ajaxJson;
         }
+
 	    SysUser user = new SysUser();
        	user.setUserName(request.getParameter("suserName"));
     	user.setPassword(request.getParameter("spassword"));
@@ -909,8 +915,11 @@ public class CRMCashServiceContoller {
     @ResponseBody
     @RequestMapping("/web/queryOrderChangeDeal")
     public AjaxJson queryOrderChangeDeal(HttpServletRequest request, HttpServletResponse response,
-                                         SysOrderDeal sysOrderDeal) throws Exception{
+                                         SysOrderDeal sysOrderDeal, @RequestParam(required = false) String orderStatus) throws Exception{
         AjaxJson ajaxJson = new AjaxJson();
+        if(orderStatus != null){
+            sysOrderDeal.setOrderStatus(orderStatus);
+        }
 
         if(StringUtils.isEmpty(sysOrderDeal.getStationID())){
             ajaxJson.setSuccess(false);

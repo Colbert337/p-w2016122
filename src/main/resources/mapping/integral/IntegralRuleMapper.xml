@@ -14,6 +14,7 @@
 		<result column="ladder_after" property="ladder_after" jdbcType="VARCHAR" />
 		<result column="integral_reward_type" property="integral_reward_type" jdbcType="VARCHAR" />
 		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="lastmodify_time" property="lastmodify_time" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<sql id="Base_Column_List">
 			integral_rule_id,
@@ -26,6 +27,7 @@
 			integral_reward,
 			reward_factor,
 			reward_max,
+			lastmodify_time,
 			integral_reward_type,
 			DATE_FORMAT(
 				create_time,
