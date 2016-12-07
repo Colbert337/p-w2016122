@@ -105,7 +105,7 @@ public class MbAppVersionController extends BaseContoller {
 
 	@RequestMapping("/save")
 	public String saveBanner(MbAppVersion mbAppVersion, ModelMap map, HttpServletRequest request, HttpSession session) throws Exception {
-
+		mbAppVersion.setRemark(mbAppVersion.getRemark().replaceAll("\\s*", ""));
 		CurrUser user = (CurrUser) session.getAttribute("currUser");
 		SysUser u = user.getUser();
 		PageBean bean = new PageBean();

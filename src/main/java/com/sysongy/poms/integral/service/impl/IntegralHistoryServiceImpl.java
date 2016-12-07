@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import com.sysongy.util.BigDecimalArith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.StringUtils;
@@ -312,13 +314,14 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 			if(null!=integralRule){
 					HashMap<String,String> hashMap = new HashMap<String,String>();
 					hashMap.put("reward_cycle", integralRule.getReward_cycle());
-					hashMap.put("credit_account", order.getCreditAccount());
+					hashMap.put("debit_account", order.getDebitAccount());
 					hashMap.put("order_id",order.getOrderId());
 					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 					hashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
 					hashMap.put("order_type","130");
 					if("xf".equals(type)){
 						hashMap.put("order_type","220");
+						hashMap.put("credit_account", order.getCreditAccount());
 					}
 					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(hashMap);
 					//当前日/周/月 存在的 司机注册数
@@ -351,11 +354,11 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 										for(int i=0;i<ladder_before.length;i++){
 											//判断是否在阶梯的消费区间内
 											if(order.getCash().compareTo(new BigDecimal(ladder_before[i]))>0&&order.getCash().compareTo(new BigDecimal(ladder_after[i]))<=0){
-												if(null!=integral_reward[i]&&!"".equals(integral_reward[i])){
+												if(integral_reward != null && integral_reward.length > 0 && null!=integral_reward[i]&&!"".equals(integral_reward[i])){
 													aIntegralHistory.setIntegral_num(integral_reward[i]);
 													integralreward = integral_reward[i];
 												}else{
-													BigDecimal integralNum = order.getCash().multiply(new BigDecimal(reward_factor[i]).divide(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP));
+													BigDecimal integralNum = BigDecimalArith.round(order.getCash().multiply(new BigDecimal(reward_factor[i]).divide(new BigDecimal("100"))),0) ;
 													if(integralNum.compareTo(BigDecimal.ZERO) == 0){
 														integralNum = BigDecimal.ONE;
 													}

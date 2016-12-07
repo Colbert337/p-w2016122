@@ -939,6 +939,7 @@ public class MobileController {
 			if (b) {
 				SysDriver driver = new SysDriver();
 				String sysDriverId = mainObj.optString("token");
+				verificationCode = mainObj.optString("verificationCode");
 				if (mainObj.optString("token") == null) {
 					result.setStatus(MobileReturn.STATUS_FAIL);
 					result.setMsg("用户ID为空！");
@@ -951,7 +952,7 @@ public class MobileController {
 				} else {
 					driver = driverService.queryDriverByPK(mainObj.optString("token"));
 					String	veCode = (String) redisClientImpl.getFromCache(driver.getUserName());
-					if (veCode != null && !"".equals(veCode)) {
+					if (veCode != null && !"".equals(veCode)&& verificationCode.equals(veCode)) {
 						Map<String, Object> resultMap = new HashMap<>();
 						driver.setSysDriverId(sysDriverId);
 						paycode = mainObj.optString("paycode");
@@ -2539,8 +2540,14 @@ public class MobileController {
 
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("orderType", map.get("orderType"));
+						String orderType = map.get("orderType").toString();
+						reChargeMap.put("orderType",orderType);
 						reChargeMap.put("orderNum", map.get("orderNumber"));
+						if("220".equals(orderType)){
+							reChargeMap.put("amount", "-"+map.get("cash").toString());
+						}else{
+							reChargeMap.put("amount", "+"+map.get("cash").toString().substring(1, map.get("cash").toString().length()));
+						}
 						reChargeMap.put("amount", map.get("cash"));
 						reChargeMap.put("gasStationName", gastationService.queryGastationByPK(map.get("channelNumber").toString()).getGas_station_name());
 						reChargeMap.put("gasStationId", map.get("channelNumber"));
@@ -2573,7 +2580,7 @@ public class MobileController {
 						reChargeMap.put("shouldPayment",map.get("should_payment"));//应付金额
 						reChargeMap.put("preferentialCash",cashAll);//优惠金额
 						reChargeMap.put("couponTitle", map.get("couponTitle")==null?"":map.get("couponTitle"));//优惠券标题
-						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费
+						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费,112余额退款
 						String chargeType = (String) map.get("spend_type");
 						Usysparam param=usysparamService.queryUsysparamByCode("SPEND_TYPE",chargeType);
 						reChargeMap.put("chargeType", param.getMname());//
@@ -3072,7 +3079,10 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					integralHistoryService.addIntegralHistory(order,"cz");
+					int r = updateOrder(sysOrder,"cz");
+					if(r > 0){
+						integralHistoryService.addIntegralHistory(order,"cz");
+					}
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3171,7 +3181,10 @@ public class MobileController {
 					if(orderRs > 0){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						integralHistoryService.addIntegralHistory(order,"xf");	
+						int r = updateOrder(sysOrder,"xf");
+						if(r > 0){
+							integralHistoryService.addIntegralHistory(order,"xf");
+						}
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
 		    			sysOperationLog.setOperation_type("xf");
@@ -3278,7 +3291,10 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					integralHistoryService.addIntegralHistory(order,"cz");	
+					int r = updateOrder(sysOrder,"cz");
+					if(r > 0){
+						integralHistoryService.addIntegralHistory(order,"cz");
+					}
           			//系统关键日志记录
         			SysOperationLog sysOperationLog = new SysOperationLog();
         			sysOperationLog.setOperation_type("cz");
@@ -3357,7 +3373,10 @@ public class MobileController {
 					if(orderRs > 0 ){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						integralHistoryService.addIntegralHistory(order,"xf");	
+						int r = updateOrder(sysOrder,"xf");
+						if(r > 0){
+							integralHistoryService.addIntegralHistory(order,"xf");
+						}
 						//系统关键日志记录
 		    			SysOperationLog sysOperationLog = new SysOperationLog();
 		    			sysOperationLog.setOperation_type("xf");
@@ -5233,7 +5252,7 @@ public class MobileController {
 							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
-								String str = orderService.consumeByDriver(sysOrder);
+								String str = driverService.deductCashToDriver(sysOrder,"0");
 								if(str.equals(GlobalConstant.OrderProcessResult.SUCCESS)){
 									SysOrder order = new SysOrder();
 									order.setOrderId(orderID);
@@ -6800,7 +6819,7 @@ public class MobileController {
 				String reward_cycle = integralRule.getReward_cycle();
 				SysOrder o = new SysOrder();
 				o.setOrderId(order.getOrderId());
-				o.setIntegralType(reward_cycle);
+				o.setRewardCycle(reward_cycle);
 				o.setOrderStatus(order.getOrderStatus());
 				temp = orderService.updateByPrimaryKey(o);
 			}

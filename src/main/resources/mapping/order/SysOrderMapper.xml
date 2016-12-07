@@ -41,7 +41,7 @@
 		<result column="coupon_cash" property="coupon_cash" jdbcType="DECIMAL" />
 		<result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
 		<result column="trade_no" property="trade_no" jdbcType="VARCHAR" />
-		<result column="integral_type" property="integralType" jdbcType="VARCHAR" />
+		<result column="reward_cycle" property="rewardCycle" jdbcType="VARCHAR" />
 		<result column="gas_station_name" property="gas_station_name"
 			jdbcType="VARCHAR" />
 
@@ -163,7 +163,7 @@
 		operator_source_id, operator_source_type,
 		operator_target_type,consume_card,order_status,order_remark,
 		preferential_cash,
-		should_payment, coupon_number, coupon_cash, spend_type,trade_no,integral_type
+		should_payment, coupon_number, coupon_cash, spend_type,trade_no,reward_cycle
 	</sql>
 
 	<select id="queryForPageForBack" resultMap="BaseResultMap"
@@ -570,8 +570,8 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			<if test="chk_memo != null">
 				chk_memo = #{chk_memo,jdbcType=VARCHAR},
 			</if>
-			<if test="integralType != null">
-				integral_type = #{integralType,jdbcType=VARCHAR},
+			<if test="rewardCycle != null">
+				reward_cycle = #{rewardCycle,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where order_id = #{orderId,jdbcType=VARCHAR}
@@ -1463,12 +1463,17 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
         </choose>
 	count(order_id) count
 FROM
-	sys_order  where
-	  credit_account = #{credit_account,jdbcType=VARCHAR}
+	sys_order  where 1 = 1
+	  <if test="order_type == '130'">
+		  and debit_account = #{debit_account,jdbcType=VARCHAR}
+	  </if>
+	  <if test="order_type == '220'">
+		  and credit_account = #{credit_account,jdbcType=VARCHAR}
+	  </if>
 	  and order_status='1'
 	  and order_date > STR_TO_DATE(#{integral_createTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s') 
 	  and order_type=#{order_type,jdbcType=VARCHAR}
-	  and integral_type = #{reward_cycle,jdbcType=VARCHAR}
+	  and reward_cycle = #{reward_cycle,jdbcType=VARCHAR}
         <choose>  
             <when test="reward_cycle!= null &amp;&amp; reward_cycle != '' &amp;&amp; reward_cycle=='day' ">  
                 AND DATE_FORMAT(order_date, '%Y%m%d') = DATE_FORMAT((SELECT	order_date FROM	sys_order	WHERE	order_id = #{order_id,jdbcType=VARCHAR}),'%Y%m%d')
