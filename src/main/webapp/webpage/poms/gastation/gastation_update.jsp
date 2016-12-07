@@ -661,7 +661,10 @@
 		                        min: 1,
 		                        max: 20,
 		                        message: '加注站名称不能超过20个汉字'
-		                    }
+		                    },regexp: {
+								regexp: /^[^\s+/?%#&=:-]+$/,
+								message: '不能输入特殊字符：+，/，?，%，#，&，=，:，-，空格'
+							}
 		                }
 		            },
 		        	gas_station_name: {
@@ -674,7 +677,10 @@
 		                        min: 1,
 		                        max: 20,
 		                        message: '加注站名称不能超过20个汉字'
-		                    }
+		                    },regexp: {
+								regexp: /^[^\s+/?%#&=:-]+$/,
+								message: '不能输入特殊字符：+，/，?，%，#，&，=，:，-，空格'
+							}
 		                }
 		            },
 		            station_level: {
@@ -838,7 +844,13 @@
 			if(!$('#gastationform').data('bootstrapValidator').isValid()){
 				return ;
 			}
-			
+
+			//匹配这些中文标点符号 。 ？ ！ ， 、 ； ： “ ” ‘ ' （ ） 《 》 〈 〉 【 】 『 』 「 」 ﹃ ﹄ 〔 〕 … — ～ ﹏ ￥
+			var reg = /[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/;
+			if(reg.test($('#gas_station_name').val()) || reg.test($('#company').val())){
+				alert('所属公司和加注站名称中不能包含中文标点符号');
+				return false;
+			}
 			var options ={   
 		            url:'../web/gastation/saveGastation',   
 		            type:'post',                    

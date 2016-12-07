@@ -1,23 +1,4 @@
 var rewardTypeNum=0;
-function initNumber(){
-	$(".number").bind("input propertychange", function () {
-		if (isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) < 0){
-			$(this).val("");
-		}
-	});
-	//只能输入数字
-	$(".number").bind("keydown", function (e) {
-		var code = parseInt(e.keyCode);
-		if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
-			return true;
-		} else {
-			return false;
-		}
-	});
-}
-$(function(){
-	initNumber();
-});
 function changeintegralType(){
 	var type = $('select[name="integral_type"] option:selected').val();
 	if(type=='qd'||type=='smrz'||type=='szmbsj'||type=='yqcg'||type=='sblk'||type=='fx'){
@@ -94,7 +75,7 @@ function changeLimitType(){
 function addLadder(){
 	var row =document.getElementById("integralRule").rows.length;
 	if(row>4){
-		initNumber();
+	//	initNumber();
 		return;
 	}else{
 		rewardTypeNum++;
@@ -111,7 +92,12 @@ function addLadder(){
 		+"<span class='lbl'>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' size='5' name='rewardmax' maxlength='5' disabled='disabled'/>分</span>"
 		+"</td>"
 		+"</tr>");
-		initNumber();
+	//	initNumber();
+		//因为是append的数据，所以JQ木有用选择器选到，得重新加载jq的选择器来绑定事件。
+		$(".number").keyup(function(){
+			if(isNaN($(this).val()))
+				document.execCommand('undo');
+		});
 	}
 }
 function delLadder(){
@@ -349,3 +335,13 @@ function resetform(){
 function returnpage() {
 	loadPage('#main', '../web/integralRule/integralRuleList');
 }
+
+//给class绑定事件
+$(".number").keyup(function(){
+	if(isNaN($(this).val()))
+		document.execCommand('undo');
+});
+
+
+
+
