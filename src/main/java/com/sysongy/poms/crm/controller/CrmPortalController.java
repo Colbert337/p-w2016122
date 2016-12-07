@@ -265,7 +265,7 @@ public class CrmPortalController extends BaseContoller {
         viewCount = String.valueOf(Integer.parseInt(viewCount)+1);
         gs.setViewCount(viewCount);
         gs.setSys_gas_station_id(gastation.getSys_gas_station_id());
-        gastationService.updateByPrimaryKeySelective(gastation);
+        gastationService.updateByPrimaryKeySelective(gs);
         return "/webpage/crm/webapp-station-detail";
     }
 
@@ -521,7 +521,7 @@ public class CrmPortalController extends BaseContoller {
         shareCount = String.valueOf(Integer.parseInt(shareCount)+1);
         gs.setShareCount(shareCount);
         gs.setSys_gas_station_id(gastation.getSys_gas_station_id());
-        gastationService.updateByPrimaryKeySelective(gastation);
+        gastationService.updateByPrimaryKeySelective(gs);
         return "/webpage/crm/webapp-station-share";
     }
 
