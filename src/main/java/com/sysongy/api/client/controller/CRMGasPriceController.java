@@ -153,6 +153,11 @@ public class CRMGasPriceController {
                 return ajaxJson;
             }
             GsGasPrice gsGasPriceInfo = gsGasPriceService.queryGsPriceByPK(gsGasPrice.getGsGasPriceId());
+            gastation.setSys_gas_station_id(gsGasPrice.getSysGasStationId());
+            gastation.setLng_price("LNG:"+gsGasPrice.getPrice()+"元/KG");
+
+            gastationService.updateByPrimaryKeySelective(gastation);
+
             attributes.put("gsGasPrice", gsGasPriceInfo);
             ajaxJson.setAttributes(attributes);
         } catch (Exception e){

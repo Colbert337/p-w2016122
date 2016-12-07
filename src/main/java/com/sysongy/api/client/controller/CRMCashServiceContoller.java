@@ -123,7 +123,7 @@ public class CRMCashServiceContoller {
             return ajaxJson;
         }else if(record.getCash().toString().substring(0,record.getCash().toString().indexOf(".")).length() >= 8){
             ajaxJson.setSuccess(false);
-            ajaxJson.setMsg("充值金额不能大于8位数！");
+            ajaxJson.setMsg("充值金额应小于8位数！");
             return ajaxJson;
         }
 

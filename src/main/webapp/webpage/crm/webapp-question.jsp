@@ -98,9 +98,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					</div>
 				<form class="app-intro-form" action="<%=basePath %>/portal/crm/help/suggest" method="post" id="phoneTypeFrom">
 					<div class="item">
-						<input id="title" name="title" tabIndex="1" type="text" class="txt required" placeholder="请在这里输入您的手机机型，以便我们更好的为您服务">
+						<input id="info" name="info" tabIndex="1" type="text" class="txt required" placeholder="请在这里输入您的手机机型，以便我们更好的为您服务">
 					</div>
-					<textarea id="info" name="info" tabIndex="1" class="txt" style="display: none;" >帮助热点问题-手机型号提交</textarea>
+					<textarea id="title" name="title" tabIndex="1" class="txt" style="display: none;" >帮助热点问题-手机型号提交</textarea>
 					<button type="submit" class="btn-app-primary">提交</button>
 				</form>
 				</c:otherwise>
