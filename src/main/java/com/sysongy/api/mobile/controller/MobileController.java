@@ -6807,7 +6807,7 @@ public class MobileController {
 				String reward_cycle = integralRule.getReward_cycle();
 				SysOrder o = new SysOrder();
 				o.setOrderId(order.getOrderId());
-				o.setIntegralType(reward_cycle);
+				o.setRewardCycle(reward_cycle);
 				o.setOrderStatus(order.getOrderStatus());
 				temp = orderService.updateByPrimaryKey(o);
 			}

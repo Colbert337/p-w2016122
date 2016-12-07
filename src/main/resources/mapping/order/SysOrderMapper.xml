@@ -41,7 +41,7 @@
 		<result column="coupon_cash" property="coupon_cash" jdbcType="DECIMAL" />
 		<result column="spend_type" property="spend_type" jdbcType="VARCHAR" />
 		<result column="trade_no" property="trade_no" jdbcType="VARCHAR" />
-		<result column="integral_type" property="integralType" jdbcType="VARCHAR" />
+		<result column="reward_cycle" property="rewardCycle" jdbcType="VARCHAR" />
 		<result column="gas_station_name" property="gas_station_name"
 			jdbcType="VARCHAR" />
 
@@ -163,7 +163,7 @@
 		operator_source_id, operator_source_type,
 		operator_target_type,consume_card,order_status,order_remark,
 		preferential_cash,
-		should_payment, coupon_number, coupon_cash, spend_type,trade_no,integral_type
+		should_payment, coupon_number, coupon_cash, spend_type,trade_no,reward_cycle
 	</sql>
 
 	<select id="queryForPageForBack" resultMap="BaseResultMap"
@@ -570,8 +570,8 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 			<if test="chk_memo != null">
 				chk_memo = #{chk_memo,jdbcType=VARCHAR},
 			</if>
-			<if test="integralType != null">
-				integral_type = #{integralType,jdbcType=VARCHAR},
+			<if test="rewardCycle != null">
+				reward_cycle = #{rewardCycle,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where order_id = #{orderId,jdbcType=VARCHAR}

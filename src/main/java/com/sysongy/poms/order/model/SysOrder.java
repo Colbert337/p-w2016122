@@ -101,8 +101,8 @@ public class SysOrder extends BaseModel{
     private String amount;//优惠后金额
 
     private String batch_no;
-    
-    private String integralType;	//积分类别
+
+    private String rewardCycle;	//奖励周期
 
     /**
      * 临时标记订单为首次充值订单（首次充值时 才有值 充值结束后置为空）
@@ -655,11 +655,11 @@ public class SysOrder extends BaseModel{
         this.orderStatusInfo = orderStatusInfo;
     }
 
-	public String getIntegralType() {
-		return integralType;
-	}
+    public String getRewardCycle() {
+        return rewardCycle;
+    }
 
-	public void setIntegralType(String integralType) {
-		this.integralType = integralType;
-	}
+    public void setRewardCycle(String rewardCycle) {
+        this.rewardCycle = rewardCycle;
+    }
 }
