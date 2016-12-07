@@ -34,6 +34,8 @@ $(function(){
 				result = ("true" == data);
 				if(data == "false"){
 					$("#isPhone").val("0");//标记手机号码无效
+				}else{
+					$("#isPhone").val("1");//标记手机号码有效
 				}
 			});
 			// 恢复异步
@@ -216,8 +218,10 @@ function settime() {
  */
 function sendMessage(){
 	var isPhone = $("#isPhone").val();
+	alert("isPhone = "+isPhone);
 	if(isPhone == "1"){
 		var hasError = $("#mobile_phone").parents(".form-group").hasClass("has-error");
+		alert("hasError = "+hasError);
 		console.log("hasError:"+hasError);
 		if(hasError){
 			$("#sendMsgA").off("click");
@@ -227,6 +231,7 @@ function sendMessage(){
 		}
 
 		var mobilePhone = $("#phone").val();
+		alert("mobilePhone = "+mobilePhone);
 		/*alert("123");*/
 		if(mobilePhone == ""){
 			return false;
