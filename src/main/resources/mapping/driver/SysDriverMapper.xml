@@ -586,7 +586,7 @@ open="(" separator="," close=")">#{item,jdbcType=VARCHAR} </foreach>
       <if test="fuelType != null" >
         fuel_type = #{fuelType,jdbcType=VARCHAR},
       </if>
-      <if test="drivingLice != null" >
+      <if test="drivingLice != null  &amp;&amp; drivingLice != ''" ><!-- 修改bug-SJAPP-246 xyq-->
         driving_lice = #{drivingLice,jdbcType=VARCHAR},
       </if>
       <if test="vehicleLice != null" >
