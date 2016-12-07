@@ -202,6 +202,9 @@ if('${sysCashBack.sys_cash_back_no}'=='201'|| '${sysCashBack.sys_cash_back_no}'=
 	$("#input1").attr('placeholder','请输入邀请人返现金额');
 	$("#label2").text('被邀请人返现金额');
 	$("#input2").attr('placeholder','请输入被邀请人返现金额');
+	$("#input1").attr('readonly',false);
+	$("#input2").attr('readonly',false);
+	 
 	$("#div3").hide();
 	$('#cashbackform').bootstrapValidator({
         message: 'This value is not valid',
@@ -214,21 +217,12 @@ if('${sysCashBack.sys_cash_back_no}'=='201'|| '${sysCashBack.sys_cash_back_no}'=
             threshold_max_value: {
                 validators: { 
                     notEmpty: {
-                        message: '阈最大值不能为空'
+                        message: '被邀请人返现金额不能为空'
                     },
                     regexp: {
                         regexp: '^[0-9]*$',
-                        message: '阈最大值必须是整数'
-                    },
-                    callback: {
-                    	message: '阈最大值必须大于最小值',
-                    	callback: function (value, validator, $field) {
-                             if(parseFloat($('[name=threshold_min_value]').val()) >= value){
-                            	 return false;
-                             }
-                             return true;
-                        }
-                    }
+                        message: '被邀请人返现金额必须是整数'
+                    } 
                 }
             },
             cash_per: {
