@@ -87,14 +87,18 @@
 									</thead>
 									<tbody id="integralRule">
 										<tr>
-											<td><input type="text" maxlength="5" size="5" style="width:50px" class="number" onchange="checkladdermoney(this)" name="ladder_before"/>元~<input type="text"  size="5" style="width:50px" onchange="checkladdermoney(this)" maxlength="5" class="number" name="ladder_after"/>元</td>
+											<td><input type="text"  maxlength="5" size="5" style="width:50px" class="number" onchange="checkladdermoney(this)" name="ladder_before"/>元~
+												<input type="text"   size="5" style="width:50px" onchange="checkladdermoney(this)" maxlength="5" class="number" name="ladder_after"/>元</td>
 											<td>
 												<input name="reward_type0"  type="radio" class="ace" value="1" checked="checked" onclick="changeRewardType(this)">
-												<span class="lbl">
+												<span class="lbl"></span>
 														<input type="text" class="number" style="width:60px" maxlength="5"  size="5" name="rewardintegral" />
-												</span>
+
 												<input name="reward_type0"  type="radio" class="ace" value="2" onclick="changeRewardType(this)">
-												<span class="lbl">金额 * <input type="text" class="number" maxlength="5" style="width:60px" onchange="checkfactor(this)"  size="5" name="rewardfactor" disabled='disabled' />%<=<input type="text"  style="width:60px"  class="number" size="5" maxlength="5" name="rewardmax" disabled='disabled' />分</span>
+												<span class="lbl">	</span>金额 * <input type="text" class="number" maxlength="5" style="width:60px" onchange="checkfactor(this)"
+																			  size="5" name="rewardfactor" disabled='disabled' />
+													%<=<input type="text"  style="width:60px"  class="number" size="5" maxlength="5" name="rewardmax" disabled='disabled' />分
+
 											</td>
 										</tr>
 									</tbody>
