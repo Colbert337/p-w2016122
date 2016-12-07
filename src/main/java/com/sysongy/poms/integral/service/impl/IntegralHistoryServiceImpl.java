@@ -317,13 +317,19 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 					hashMap.put("debit_account", order.getDebitAccount());
 					hashMap.put("order_id",order.getOrderId());
 					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-					hashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
+					hashMap.put("integral_createTime",sdf.format(integralRule.getLastmodify_time()));
 					hashMap.put("order_type","130");
 					if("xf".equals(type)){
 						hashMap.put("order_type","220");
 						hashMap.put("credit_account", order.getCreditAccount());
 					}
 					List<HashMap<String,String>> orderList = orderService.queryOrderByOperator(hashMap);
+					if(orderList.size()==0){
+						HashMap<String,String> temp = new HashMap<String,String>();
+						temp.put("days","0");
+						temp.put("count","0");
+						orderList.add(temp);
+					}
 					//当前日/周/月 存在的 司机注册数
 					if(orderList.size()>0){
 							HashMap<String, String> driverMap = orderList.get(0);
@@ -333,7 +339,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 								String reward_cycle = integralRule.getReward_cycle();
 								String count = String.valueOf(driverMap.get("count"));
 							boolean nolimit="不限".equals(llimitnumber);
-							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
+							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<Integer.parseInt(llimitnumber));	
 							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)<Integer.parseInt(llimitnumber));
 								//不限或一次或小于限制次数
 									if(nolimit||one||pass){
