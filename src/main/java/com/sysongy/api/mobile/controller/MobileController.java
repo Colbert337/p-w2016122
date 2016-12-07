@@ -112,6 +112,7 @@ import com.sysongy.poms.system.service.SysOperationLogService;
 import com.sysongy.poms.usysparam.model.Usysparam;
 import com.sysongy.poms.usysparam.service.UsysparamService;
 import com.sysongy.util.AliShortMessage;
+import com.sysongy.util.BigDecimalArith;
 import com.sysongy.util.AliShortMessage.SHORT_MESSAGE_TYPE;
 import com.sysongy.util.CheckPhone;
 import com.sysongy.util.GlobalConstant;
@@ -3079,8 +3080,11 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					int r = updateOrder(sysOrder,"cz");
-					if(r > 0){
+					boolean boo = getCount(sysOrder, "cz");
+					if(boo){
+							integralHistoryService.addIntegralHistory(order,"cz");
+							updateOrder(sysOrder,"cz");
+					}else{
 						integralHistoryService.addIntegralHistory(order,"cz");
 					}
           			//系统关键日志记录
@@ -3181,8 +3185,11 @@ public class MobileController {
 					if(orderRs > 0){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						int r = updateOrder(sysOrder,"xf");
-						if(r > 0){
+						boolean boo = getCount(sysOrder, "xf");
+						if(boo){
+							integralHistoryService.addIntegralHistory(order,"xf");
+							updateOrder(sysOrder,"xf");
+						}else{
 							integralHistoryService.addIntegralHistory(order,"xf");
 						}
 						//系统关键日志记录
@@ -3291,8 +3298,11 @@ public class MobileController {
 				try {
 					String orderCharge = orderService.chargeToDriver(order);
 					//充值增加积分
-					int r = updateOrder(sysOrder,"cz");
-					if(r > 0){
+					boolean boo = getCount(sysOrder, "cz");
+					if(boo){
+						integralHistoryService.addIntegralHistory(order,"cz");
+						updateOrder(sysOrder,"cz");
+					}else{
 						integralHistoryService.addIntegralHistory(order,"cz");
 					}
           			//系统关键日志记录
@@ -3373,8 +3383,11 @@ public class MobileController {
 					if(orderRs > 0 ){
 						String orderCharge = orderService.consumeByDriver(order);
 						//充值增加积分
-						int r = updateOrder(sysOrder,"xf");
-						if(r > 0){
+						boolean boo = getCount(sysOrder, "xf");
+						if(boo){
+							integralHistoryService.addIntegralHistory(order,"xf");
+							updateOrder(sysOrder,"xf");
+						}else{
 							integralHistoryService.addIntegralHistory(order,"xf");
 						}
 						//系统关键日志记录
@@ -5169,6 +5182,7 @@ public class MobileController {
 	@RequestMapping(value = "/deal/accountSpend")
 	@ResponseBody
 	public String accountSpend(String params) {
+		long t1= System.currentTimeMillis();
 		MobileReturn result = new MobileReturn();
 		result.setStatus(MobileReturn.STATUS_SUCCESS);
 		result.setMsg("订单支付成功！");
@@ -5258,8 +5272,11 @@ public class MobileController {
 									order.setOrderId(orderID);
 									order.setOrderStatus(1);
 									int temp = orderService.updateByPrimaryKey(order);
-									int r = updateOrder(order,"xf");
-									if(r > 0){
+									boolean boo = getCount(sysOrder, "xf");
+									if(boo){
+										integralHistoryService.addIntegralHistory(sysOrder,"xf");
+										updateOrder(order,"xf");
+									}else{
 										integralHistoryService.addIntegralHistory(sysOrder,"xf");
 									}
 									if(temp > 0 ){
@@ -5374,6 +5391,8 @@ public class MobileController {
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 			return resultStr;
 		} finally {
+			long t2= System.currentTimeMillis();
+			long t = t1-t2;
 			return resultStr;
 		}
 	}
@@ -6805,7 +6824,7 @@ public class MobileController {
 		}
 	}
 	/**
-	 * 
+	 * 更新Order积分规则
 	 */
 	private Integer updateOrder(SysOrder order,String type){
 		int temp = 0;
@@ -6826,7 +6845,48 @@ public class MobileController {
 		}	
 		return temp;
 	}
-	
+	/**
+	 * 获取规格对应的的order个数，小于规则返回真，大于等于返回假	
+	 */
+	private boolean getCount(SysOrder order, String type) {
+		boolean b = false;
+		try {
+			if (null != order.getOrderId() && !"".equals(order.getOrderId())) {
+				// 充值成功发放积分
+				HashMap<String, String> integralMap = integralRuleMapper.selectRepeatIntegralType(type);
+				String integral_rule_id = integralMap.get("integral_rule_id");
+				IntegralRule integralRule = integralRuleMapper.selectByPrimaryKey(integral_rule_id);
+				// 存在积分规则
+				if (null != integralRule) {
+					HashMap<String, String> hashMap = new HashMap<String, String>();
+					hashMap.put("reward_cycle", integralRule.getReward_cycle());
+					hashMap.put("debit_account", order.getDebitAccount());
+					hashMap.put("order_id", order.getOrderId());
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					hashMap.put("integral_createTime", sdf.format(integralRule.getLastmodify_time()));
+					hashMap.put("order_type", "130");
+					if ("xf".equals(type)) {
+						hashMap.put("order_type", "220");
+						hashMap.put("credit_account", order.getCreditAccount());
+					}
+					List<HashMap<String, String>> orderList = orderService.queryOrderByOperator(hashMap);
+					if(orderList.size()>0){
+						String count = String.valueOf(orderList.get(0).get("count"));
+						if (Integer.parseInt(count) < Integer.parseInt(integralRule.getLimit_number())) {
+							b = true;
+						}
+					}else{
+						b = true;
+					}
+				}
+			}
+			return b;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return b;
+		}
+	}
 	
 	@RequestMapping(value = "/QR")
 	@ResponseBody
