@@ -36,6 +36,7 @@ import com.sysongy.poms.integral.service.IntegralHistoryService;
 import com.sysongy.poms.integral.service.IntegralRuleService;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.service.OrderDealService;
+import com.sysongy.poms.order.service.OrderService;
 import com.sysongy.poms.permi.dao.SysUserAccountMapper;
 import com.sysongy.poms.permi.model.SysUserAccount;
 import com.sysongy.poms.permi.service.SysUserAccountService;
@@ -69,6 +70,9 @@ public class DriverServiceImpl implements DriverService {
     
     @Autowired
     private OrderDealService orderDealService;
+    
+    @Autowired
+    private OrderService orderService;
     
     @Autowired
     private SysUserAccountService sysUserAccountService;
@@ -389,10 +393,11 @@ public class DriverServiceImpl implements DriverService {
 		}
 
         String remark = "";
+        remark = driver.getFullName()==null?driver.getUserName():driver.getFullName();
         if(StringUtils.isEmpty(order.getDischarge_reason())){
-            remark = driver.getFullName()==null?driver.getUserName():driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。";
+            remark = remark +"的账户，"+chong+cash.toString() +","+ preferential_cash + "。";
         } else {
-            remark = driver.getFullName()==null?driver.getUserName():driver.getFullName()+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。" + order.getDischarge_reason();
+            remark = remark+"的账户，"+chong+cash.toString() +","+ preferential_cash + "。" + order.getDischarge_reason();
         }
         order.setSysDriver(driver);
         if(order.getCoupon_number() != null){//add by wdq 判断当前订单是否有优惠券
@@ -417,7 +422,7 @@ public class DriverServiceImpl implements DriverService {
 
 		orderDealService.createOrderDeal(order.getOrderId(), orderDealType, remark,cash_success);
         order.setDischarge_reason(remark);
-        
+        orderService.updateByPrimaryKey(order);
 		return cash_success;
 	}
 

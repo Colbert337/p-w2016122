@@ -2540,8 +2540,14 @@ public class MobileController {
 
 					for (Map<String, Object> map : pageInfo.getList()) {
 						Map<String, Object> reChargeMap = new HashMap<>();
-						reChargeMap.put("orderType", map.get("orderType"));
+						String orderType = map.get("orderType").toString();
+						reChargeMap.put("orderType",orderType);
 						reChargeMap.put("orderNum", map.get("orderNumber"));
+						if("220".equals(orderType)){
+							reChargeMap.put("amount", "-"+map.get("cash").toString());
+						}else{
+							reChargeMap.put("amount", "+"+map.get("cash").toString().substring(1, map.get("cash").toString().length()));
+						}
 						reChargeMap.put("amount", map.get("cash"));
 						reChargeMap.put("gasStationName", gastationService.queryGastationByPK(map.get("channelNumber").toString()).getGas_station_name());
 						reChargeMap.put("gasStationId", map.get("channelNumber"));
@@ -2574,7 +2580,7 @@ public class MobileController {
 						reChargeMap.put("shouldPayment",map.get("should_payment"));//应付金额
 						reChargeMap.put("preferentialCash",cashAll);//优惠金额
 						reChargeMap.put("couponTitle", map.get("couponTitle")==null?"":map.get("couponTitle"));//优惠券标题
-						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费
+						//C01 卡余额消费,C02 POS消费,C03	微信消费,C04 支付宝消费,112余额退款
 						String chargeType = (String) map.get("spend_type");
 						Usysparam param=usysparamService.queryUsysparamByCode("SPEND_TYPE",chargeType);
 						reChargeMap.put("chargeType", param.getMname());//
@@ -5234,7 +5240,7 @@ public class MobileController {
 							if (nCreateOrder < 1){
 								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 							}else{
-								String str = orderService.consumeByDriver(sysOrder);
+								String str = driverService.deductCashToDriver(sysOrder,"0");
 								if(str.equals(GlobalConstant.OrderProcessResult.SUCCESS)){
 									SysOrder order = new SysOrder();
 									order.setOrderId(orderID);
