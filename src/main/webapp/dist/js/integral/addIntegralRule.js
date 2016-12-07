@@ -88,7 +88,7 @@ function addLadder(){
 		+"<span class='lbl'>&nbsp;"+"</span>&nbsp;"
 		+"<input type='text' class='number' style='width:60px' maxlength='5'  size='5'  name='rewardintegral' />"
 
-		+"<input name="+reward_type+" type='radio' class='ace' value='2' onclick='changeRewardType(this)'>"
+		+"&nbsp;&nbsp;<input name="+reward_type+" type='radio' class='ace' value='2' onclick='changeRewardType(this)'>"
 		+"<span class='lbl'></span>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' size='5' name='rewardmax' maxlength='5' disabled='disabled'/>分"
 		+"</td>"
 		+"</tr>");
