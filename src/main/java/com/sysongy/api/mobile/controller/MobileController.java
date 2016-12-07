@@ -5391,9 +5391,9 @@ public class MobileController {
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("订单支付失败！"+e.toString().split(": ")[1]);
+			result.setMsg("操作失败！"+e.getMessage());
 			resutObj = JSONObject.fromObject(result);
-			logger.error("订单支付失败： " + e);
+			logger.error("操作失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
