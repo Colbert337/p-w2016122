@@ -334,7 +334,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 								String count = String.valueOf(driverMap.get("count"));
 							boolean nolimit="不限".equals(llimitnumber);
 							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
-							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)<Integer.parseInt(llimitnumber));
+							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)==Integer.parseInt(llimitnumber));
 								//不限或一次或小于限制次数
 									if(nolimit||one||pass){
 										String account = order.getCreditAccount();
