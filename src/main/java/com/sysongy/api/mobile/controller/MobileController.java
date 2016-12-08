@@ -2816,7 +2816,7 @@ public class MobileController {
 					//账户正常使用
 					//获取折扣信息
 					List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
-					if(gsGasPriceList==null && gsGasPriceList.size()==0){
+					if(gsGasPriceList==null || gsGasPriceList.size()==0){
 						throw new Exception("该气站暂无气品信息！");
 					}
 					if(driverService.queryDriverByPK(driverID).getUserStatus().equals("0")){
@@ -5230,167 +5230,168 @@ public class MobileController {
 				Gastation gas = gastationService.queryGastationByPK(gastationId);
 				//获取折扣信息
 				List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
-				if(gsGasPriceList==null && gsGasPriceList.size()==0){
+				if(gsGasPriceList==null || gsGasPriceList.size()==0){
 					throw new Exception("该气站暂无气品信息！");
-				}
-				Map<String, Object> data = new HashedMap();
-				if(payCode.equals(driver.getPayCode())){
-					String couponId = mainObj.optString("couponId");
-					String couponCash = mainObj.optString("couponCash");
-					String orderID = UUIDGenerator.getUUID();
-					amount = mainObj.optString("amount");
-					gastationId = mainObj.optString("gastationId");
-					payableAmount = mainObj.optString("payableAmount");
-					//设置平台优惠金额
-					BigDecimal preferential_cash = new BigDecimal(0);
-					preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));//总优惠金额
-						SysOrder sysOrder = new SysOrder();
-						sysOrder.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
-						sysOrder.setSpend_type(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
-						sysOrder.setOrderId(orderID);
-						sysOrder.setCreditAccount(token);
-						sysOrder.setOperator(appOperatorId);
-						sysOrder.setOperatorSourceId(appOperatorId);
-						sysOrder.setChargeType(GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE);
-						sysOrder.setIs_discharge("0");
-						sysOrder.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.DRIVER);
-						sysOrder.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);
-						sysOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
-						sysOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
-						sysOrder.setOrderStatus(0);
-						sysOrder.setOrderDate(new Date());
-						//设置优惠券ID
-						if(couponId!=null && !"".equals(couponId)){
-							UserCoupon uc = new UserCoupon();
-							uc.setCoupon_id(couponId);
-							uc.setSys_driver_id(token);
-							sysOrder.setCoupon_number(couponId);
-						}
-						//设置优惠金额
-						if(couponCash!=null && !"".equals(couponCash)){
-							sysOrder.setCoupon_cash(new BigDecimal(couponCash));
-							preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));//总优惠金额减去优惠券优惠金额为平台优惠金额
-						}
-						//设置气站ID
-						sysOrder.setChannelNumber(gastationId);
-						sysOrder.setChannel("APP-余额消费-"+gas.getGas_station_name());
-						sysOrder.setDebitAccount(gastationId);
-						//设置实付金额
-						sysOrder.setCash(new BigDecimal(amount));
-						//设置应付金额
-						sysOrder.setShould_payment(new BigDecimal(payableAmount));
-						sysOrder.setPreferential_cash(preferential_cash);
-						//订单状态
-						sysOrder.setOrderStatus(0);
-						if (sysOrder != null) {
-							int nCreateOrder = orderService.insert(sysOrder, null);
-							if (nCreateOrder < 1){
-								throw new Exception("订单生成错误：" + sysOrder.getOrderId());
-							}else{
-								String str = driverService.deductCashToDriver(sysOrder,"0");
-								if(str.equals(GlobalConstant.OrderProcessResult.SUCCESS)){
-									SysOrder order = new SysOrder();
-									order.setOrderId(orderID);
-									order.setOrderStatus(1);
-									int temp = orderService.updateByPrimaryKey(order);
-									boolean boo = getCount(sysOrder, "xf");
-									if(boo){
-										integralHistoryService.addIntegralHistory(sysOrder,"xf");
-										updateOrder(order,"xf");
-									}else{
-										integralHistoryService.addIntegralHistory(sysOrder,"xf");
-									}
-									if(temp > 0 ){
-										//系统关键日志记录
-						    			SysOperationLog sysOperationLog = new SysOperationLog();
-						    			sysOperationLog.setOperation_type("xf");
-						    			sysOperationLog.setLog_platform("1");
-						        		sysOperationLog.setOrder_number(sysOrder.getOrderNumber());
-						        		sysOperationLog.setLog_content("司机个人通过账户消费"+sysOrder.getCash()+"元！订单号为："+sysOrder.getOrderNumber());
-						    			//操作日志
-						    			sysOperationLogService.saveOperationLog(sysOperationLog,token);
-										data.put("orderId", orderID);
-										data.put("orderNum", sysOrder.getOrderNumber());
-										//更新优惠券使用状态
-										if(couponId!=null && !couponId.equals("")){
-											int rs = couponService.updateStatus(couponId, token);
-											if(rs < 1){
-												throw new Exception("优惠券使用状态更新失败！");
-											}
-										}
-										//添加OrderGoods信息
-										SysOrderGoods orderGoods = new SysOrderGoods ();
-										if(gsGasPriceList!=null && gsGasPriceList.size()>0){
-											//原始单价
-											orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
-											//商品类型
-											orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
-											//优惠类型。
-											Object obj = gsGasPriceList.get(0).get("preferential_type");
-											if(obj!=null){
-												orderGoods.setPreferential_type(obj.toString());
-											}
-										}else{
-											throw new Exception("该气站暂无气品信息！");
-										}
-										//ID
-										orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
-										//orderID
-										orderGoods.setOrderId(orderID);
-										//加气总量	
-										orderGoods.setNumber(Double.valueOf(gasTotal));
-										//商品总价
-										orderGoods.setSumPrice(new BigDecimal(payableAmount));
-										//平台优惠金额
-										orderGoods.setDiscountSumPrice(preferential_cash);
-										int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
-										if(rs > 0 ){
-											//余额消费短信通知
-											AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
-											SysOrder sorder = orderService.queryById(orderID);
-											//查询消费订单个数
-											int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
-											//首次消费成功，发放优惠券
-											if(number==1){
-												CouponGroup couponGroup = new CouponGroup();
-									            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
-									            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
-									            if(list.size()>0){
-									            	couponGroupService.sendCouponGroup(sorder.getCreditAccount(), list, this.appOperatorId);
-									            }
-											}
-											SysDriver sdriver = driverService.queryDriverByPK(sorder.getCreditAccount());
-											String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
-											aliShortMessageBean.setSendNumber(sdriver.getMobilePhone());
-											aliShortMessageBean.setAccountNumber(sdriver.getMobilePhone());
-											aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-											aliShortMessageBean.setName(gasName);
-											aliShortMessageBean.setString("账户余额");
-											aliShortMessageBean.setMoney(amount);
-											AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
-											try {
-												//APP提示
-												sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
-											} catch (Exception e) {
-												logger.error("消息推送失败： " + e);
-											}
-										}else{
-											throw new Exception("orderGoods信息添加失败");
-										}
-									}else{
-										throw new Exception("订单状态更新失败");
-									}
+				}else{
+					Map<String, Object> data = new HashedMap();
+					if(payCode.equals(driver.getPayCode())){
+						String couponId = mainObj.optString("couponId");
+						String couponCash = mainObj.optString("couponCash");
+						String orderID = UUIDGenerator.getUUID();
+						amount = mainObj.optString("amount");
+						gastationId = mainObj.optString("gastationId");
+						payableAmount = mainObj.optString("payableAmount");
+						//设置平台优惠金额
+						BigDecimal preferential_cash = new BigDecimal(0);
+						preferential_cash = new BigDecimal(payableAmount).subtract(new BigDecimal(amount));//总优惠金额
+							SysOrder sysOrder = new SysOrder();
+							sysOrder.setOrderType(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
+							sysOrder.setSpend_type(GlobalConstant.ORDER_SPEND_TYPE.CASH_BOX);
+							sysOrder.setOrderId(orderID);
+							sysOrder.setCreditAccount(token);
+							sysOrder.setOperator(appOperatorId);
+							sysOrder.setOperatorSourceId(appOperatorId);
+							sysOrder.setChargeType(GlobalConstant.OrderChargeType.APP_CONSUME_CHARGE);
+							sysOrder.setIs_discharge("0");
+							sysOrder.setOperatorSourceType(GlobalConstant.OrderOperatorSourceType.DRIVER);
+							sysOrder.setOrderType(GlobalConstant.OrderType.CONSUME_BY_DRIVER);
+							sysOrder.setOperatorTargetType(GlobalConstant.OrderOperatorTargetType.DRIVER);
+							sysOrder.setOrderNumber(orderService.createOrderNumber(GlobalConstant.OrderType.CONSUME_BY_DRIVER));
+							sysOrder.setOrderStatus(0);
+							sysOrder.setOrderDate(new Date());
+							//设置优惠券ID
+							if(couponId!=null && !"".equals(couponId)){
+								UserCoupon uc = new UserCoupon();
+								uc.setCoupon_id(couponId);
+								uc.setSys_driver_id(token);
+								sysOrder.setCoupon_number(couponId);
+							}
+							//设置优惠金额
+							if(couponCash!=null && !"".equals(couponCash)){
+								sysOrder.setCoupon_cash(new BigDecimal(couponCash));
+								preferential_cash = preferential_cash.subtract(new BigDecimal(couponCash));//总优惠金额减去优惠券优惠金额为平台优惠金额
+							}
+							//设置气站ID
+							sysOrder.setChannelNumber(gastationId);
+							sysOrder.setChannel("APP-余额消费-"+gas.getGas_station_name());
+							sysOrder.setDebitAccount(gastationId);
+							//设置实付金额
+							sysOrder.setCash(new BigDecimal(amount));
+							//设置应付金额
+							sysOrder.setShould_payment(new BigDecimal(payableAmount));
+							sysOrder.setPreferential_cash(preferential_cash);
+							//订单状态
+							sysOrder.setOrderStatus(0);
+							if (sysOrder != null) {
+								int nCreateOrder = orderService.insert(sysOrder, null);
+								if (nCreateOrder < 1){
+									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 								}else{
-									result.setStatus(MobileReturn.STATUS_FAIL);
-									result.setMsg("支付失败！！");
+									String str = driverService.deductCashToDriver(sysOrder,"0");
+									if(str.equals(GlobalConstant.OrderProcessResult.SUCCESS)){
+										SysOrder order = new SysOrder();
+										order.setOrderId(orderID);
+										order.setOrderStatus(1);
+										int temp = orderService.updateByPrimaryKey(order);
+										boolean boo = getCount(sysOrder, "xf");
+										if(boo){
+											integralHistoryService.addIntegralHistory(sysOrder,"xf");
+											updateOrder(order,"xf");
+										}else{
+											integralHistoryService.addIntegralHistory(sysOrder,"xf");
+										}
+										if(temp > 0 ){
+											//系统关键日志记录
+							    			SysOperationLog sysOperationLog = new SysOperationLog();
+							    			sysOperationLog.setOperation_type("xf");
+							    			sysOperationLog.setLog_platform("1");
+							        		sysOperationLog.setOrder_number(sysOrder.getOrderNumber());
+							        		sysOperationLog.setLog_content("司机个人通过账户消费"+sysOrder.getCash()+"元！订单号为："+sysOrder.getOrderNumber());
+							    			//操作日志
+							    			sysOperationLogService.saveOperationLog(sysOperationLog,token);
+											data.put("orderId", orderID);
+											data.put("orderNum", sysOrder.getOrderNumber());
+											//更新优惠券使用状态
+											if(couponId!=null && !couponId.equals("")){
+												int rs = couponService.updateStatus(couponId, token);
+												if(rs < 1){
+													throw new Exception("优惠券使用状态更新失败！");
+												}
+											}
+											//添加OrderGoods信息
+											SysOrderGoods orderGoods = new SysOrderGoods ();
+											if(gsGasPriceList!=null && gsGasPriceList.size()>0){
+												//原始单价
+												orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+												//商品类型
+												orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+												//优惠类型。
+												Object obj = gsGasPriceList.get(0).get("preferential_type");
+												if(obj!=null){
+													orderGoods.setPreferential_type(obj.toString());
+												}
+											}else{
+												throw new Exception("该气站暂无气品信息！");
+											}
+											//ID
+											orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
+											//orderID
+											orderGoods.setOrderId(orderID);
+											//加气总量	
+											orderGoods.setNumber(Double.valueOf(gasTotal));
+											//商品总价
+											orderGoods.setSumPrice(new BigDecimal(payableAmount));
+											//平台优惠金额
+											orderGoods.setDiscountSumPrice(preferential_cash);
+											int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
+											if(rs > 0 ){
+												//余额消费短信通知
+												AliShortMessageBean aliShortMessageBean = new AliShortMessageBean();
+												SysOrder sorder = orderService.queryById(orderID);
+												//查询消费订单个数
+												int number = orderService.queryConsumerOrderNumber(sorder.getCreditAccount());
+												//首次消费成功，发放优惠券
+												if(number==1){
+													CouponGroup couponGroup = new CouponGroup();
+										            couponGroup.setIssued_type(GlobalConstant.COUPONGROUP_TYPE.FIRST_CONSUME);
+										            List<CouponGroup> list = couponGroupService.queryCouponGroup(couponGroup).getList();
+										            if(list.size()>0){
+										            	couponGroupService.sendCouponGroup(sorder.getCreditAccount(), list, this.appOperatorId);
+										            }
+												}
+												SysDriver sdriver = driverService.queryDriverByPK(sorder.getCreditAccount());
+												String gasName = gastationService.queryGastationByPK(sorder.getChannelNumber()).getGas_station_name();
+												aliShortMessageBean.setSendNumber(sdriver.getMobilePhone());
+												aliShortMessageBean.setAccountNumber(sdriver.getMobilePhone());
+												aliShortMessageBean.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+												aliShortMessageBean.setName(gasName);
+												aliShortMessageBean.setString("账户余额");
+												aliShortMessageBean.setMoney(amount);
+												AliShortMessage.sendShortMessage(aliShortMessageBean, SHORT_MESSAGE_TYPE.APP_CONSUME);
+												try {
+													//APP提示
+													sysMessageService.saveMessageTransaction("余额消费", sysOrder,"2");
+												} catch (Exception e) {
+													logger.error("消息推送失败： " + e);
+												}
+											}else{
+												throw new Exception("orderGoods信息添加失败");
+											}
+										}else{
+											throw new Exception("订单状态更新失败");
+										}
+									}else{
+										result.setStatus(MobileReturn.STATUS_FAIL);
+										result.setMsg("支付失败！！");
+									}
 								}
 							}
-						}
-				}else{
-					result.setStatus(MobileReturn.STATUS_FAIL);
-					result.setMsg("支付密码错误");
+					}else{
+						result.setStatus(MobileReturn.STATUS_FAIL);
+						result.setMsg("支付密码错误");
+					}
+					result.setData(data);
 				}
-				result.setData(data);
 			}else{
 				result.setStatus(MobileReturn.STATUS_FAIL);
 				result.setMsg("参数有误");
