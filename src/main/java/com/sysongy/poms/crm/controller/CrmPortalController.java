@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -449,13 +450,18 @@ public class CrmPortalController extends BaseContoller {
     public String suggest(@RequestParam String title,@RequestParam String info,ModelMap map) throws Exception{
     	MbUserSuggest ms = new MbUserSuggest ();
     	ms.setMbUserSuggestId(UUIDGenerator.getUUID());
-    	ms.setMobilePhone(title);
-    	ms.setSuggest(info);
+    	if(!"帮助热点问题-手机型号提交".equals(title)){
+    		ms.setMobilePhone(title);
+    		ms.setSuggest(info);
+    	}else{
+    		ms.setMobilePhone("");
+    		ms.setSuggest("【"+title+"】  "+info);
+    	}
     	ms.setSuggestRes("来自APP");
     	int rs = mbUserSuggestServices.saveSuggester(ms);
     	if(rs > 0){
     		logger.info("反馈信息记录成功...");
-    		if("帮助热点问题-手机型号提交".equals(info)){
+    		if("帮助热点问题-手机型号提交".equals(title)){
     			map.addAttribute("result", "ok");
     			return "/webpage/crm/webapp-question";
     		}else{
@@ -463,7 +469,7 @@ public class CrmPortalController extends BaseContoller {
     		}
     	}else{
     		logger.error("反馈信息记录失败...");
-    		if("帮助热点问题-手机型号提交".equals(info)){
+    		if("帮助热点问题-手机型号提交".equals(title)){
     			map.addAttribute("result", "error");
     			return "/webpage/crm/webapp-question";
     		}else{
@@ -850,7 +856,6 @@ public class CrmPortalController extends BaseContoller {
                 webPage += "0f279fe859a54826b9f622ccb9873bef";
                 break;
         }
-
     	map.addAttribute("phoneType",phoneType);
     	return webPage;
     }

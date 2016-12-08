@@ -207,7 +207,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 					yqcgHashMap.put("regis_company", invitationCode);
 					yqcgHashMap.put("sys_driver_id",record.getSysDriverId());
 					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-					yqcgHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
+					yqcgHashMap.put("integral_createTime",sdf.format(integralRule.getLastmodify_time()));
 					List<HashMap<String,String>> driverList = sysDriverMapper.queryInvitationByCode(yqcgHashMap);
 					//当前日/周/月 存在的 司机注册数
 					if(driverList.size()>0){

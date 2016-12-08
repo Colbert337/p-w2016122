@@ -2695,7 +2695,12 @@ public class MobileController {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum", map.get("orderNumber"));
 						reChargeMap.put("amount", map.get("cash"));
-						reChargeMap.put("operator", map.get("operator"));
+						Object obj =  map.get("channel");
+						if(obj==null){
+							reChargeMap.put("operator",map.get("operator"));
+						}else{
+							reChargeMap.put("operator",map.get("channel"));
+						}
 						reChargeMap.put("remark", map.get("remark"));
 						reChargeMap.put("type", map.get("type"));
 						String dateTime = "";
@@ -2853,23 +2858,27 @@ public class MobileController {
 								//添加OrderGoods信息
 								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
 								SysOrderGoods orderGoods = new SysOrderGoods ();
+								if(gsGasPriceList!=null && gsGasPriceList.size()>0){
+									//原始单价
+									orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+									//商品类型
+									orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+									//优惠类型。
+									Object obj = gsGasPriceList.get(0).get("preferential_type");
+									if(obj!=null){
+										orderGoods.setPreferential_type(obj.toString());
+									}
+								}else{
+									throw new Exception("该气站暂无气品信息！");
+								}
 								//ID
 								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
 								//orderID
 								orderGoods.setOrderId(orderID);
-								//原始单价
-								orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
 								//加气总量
 								orderGoods.setNumber(Double.valueOf(gasTotal));
 								//商品总价
 								orderGoods.setSumPrice(new BigDecimal(payableAmount));
-								//商品类型
-								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
-								//优惠类型。
-								Object obj = gsGasPriceList.get(0).get("preferential_type");
-								if(obj!=null){
-									orderGoods.setPreferential_type(obj.toString());
-								}
 								//平台优惠金额
 								orderGoods.setDiscountSumPrice(preferential_cash);
 								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
@@ -2925,23 +2934,27 @@ public class MobileController {
 								//添加OrderGoods信息
 								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
 								SysOrderGoods orderGoods = new SysOrderGoods ();
+								if(gsGasPriceList!=null && gsGasPriceList.size()>0){
+									//原始单价
+									orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
+									//商品类型
+									orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
+									//优惠类型。
+									Object obj = gsGasPriceList.get(0).get("preferential_type");
+									if(obj!=null){
+										orderGoods.setPreferential_type(obj.toString());
+									}
+								}else{
+									throw new Exception("该气站暂无气品信息！");
+								}
 								//ID
 								orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
 								//orderID
 								orderGoods.setOrderId(orderID);
-								//原始单价
-								orderGoods.setPrice(new BigDecimal(gsGasPriceList.get(0).get("product_price").toString()));
 								//加气总量
 								orderGoods.setNumber(Double.valueOf(gasTotal));
 								//商品总价
 								orderGoods.setSumPrice(new BigDecimal(payableAmount));
-								//商品类型
-								orderGoods.setGoodsType(gsGasPriceList.get(0).get("gas_name").toString());
-								//优惠类型。
-								Object obj = gsGasPriceList.get(0).get("preferential_type");
-								if(obj!=null){
-									orderGoods.setPreferential_type(obj.toString());
-								}
 								//平台优惠金额
 								orderGoods.setDiscountSumPrice(preferential_cash);
 								int rs = sysOrderGoodsService.saveOrderGoods(orderGoods);
@@ -3013,9 +3026,9 @@ public class MobileController {
 			return resultStr;
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("充值失败！" + e.getMessage());
+			result.setMsg("操作失败！" + e.getMessage());
 			resutObj = JSONObject.fromObject(result);
-			logger.error("充值失败： " + e.getMessage());
+			logger.error("操作失败： " + e.getMessage());
 			resutObj.remove("listMap");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
@@ -5312,7 +5325,7 @@ public class MobileController {
 												orderGoods.setPreferential_type(obj.toString());
 											}
 										}else{
-											throw new Exception("该气站暂无折扣信息，无法添加OrderGoods信息！");
+											throw new Exception("该气站暂无气品信息！");
 										}
 										//ID
 										orderGoods.setOrderGoodsId(UUIDGenerator.getUUID());
@@ -5383,9 +5396,9 @@ public class MobileController {
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("订单支付失败！");
+			result.setMsg("操作失败！"+e.getMessage());
 			resutObj = JSONObject.fromObject(result);
-			logger.error("订单支付失败： " + e);
+			logger.error("操作失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
