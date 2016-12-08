@@ -818,7 +818,7 @@ public class CrmPortalController extends BaseContoller {
     		三星		samsung
     		oppo	OPPO
     		vivo	vivo
-    		华为		HUAWEI
+    		华为		HUAWEI/Honor
     		金立		GiONEE
     		酷派		Coolpad
     	*/
@@ -842,6 +842,10 @@ public class CrmPortalController extends BaseContoller {
             case "vivo":
                 webPage = "redirect:/portal/crm/help/showPage?pageid=";
                 webPage += "73137878f75e48e49317aad6514abe93";//c650fa79e42b4eeeb733e0b345639f9c
+                break;
+            case "Honor":
+                webPage = "redirect:/portal/crm/help/showPage?pageid=";
+                webPage += "7e7667b5da974f6f8ba4418c77a78bb6";
                 break;
             case "HUAWEI":
                 webPage = "redirect:/portal/crm/help/showPage?pageid=";
