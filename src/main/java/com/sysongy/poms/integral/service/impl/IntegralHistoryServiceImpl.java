@@ -264,7 +264,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
 					sblkHashMap.put("reward_cycle", integralRule.getReward_cycle());
 					sblkHashMap.put("publisher_phone", aSysRoadCondition.getPublisherPhone());
 					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-					sblkHashMap.put("integral_createTime",sdf.format(integralRule.getCreate_time()));
+					sblkHashMap.put("integral_createTime",sdf.format(integralRule.getLastmodify_time()));
 					sblkHashMap.put("id", road.getId());
 					List<HashMap<String,String>> driverList = sysRoadConditionMapper.queryConditionByPhone(sblkHashMap);
 					//当前日/周/月 存在的 司机注册数
@@ -277,7 +277,7 @@ public class IntegralHistoryServiceImpl implements IntegralHistoryService {
         							String count = String.valueOf(driverMap.get("count"));
         							boolean nolimit="不限".equals(llimitnumber);
         							boolean pass= (!"one".equals(reward_cycle))&&(!nolimit)&&(Integer.parseInt(count)<=Integer.parseInt(llimitnumber));	
-        							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)-1==Integer.parseInt(llimitnumber));	
+        							boolean one = "one".equals(reward_cycle)&&(Integer.parseInt(count)==Integer.parseInt(llimitnumber));	
         								//如果不限则不判断，一次则数量比限制值大1条，否则只要比限制值多则都加
         								if(nolimit||one||pass){	
 										IntegralHistory sblkHistory = new IntegralHistory();
