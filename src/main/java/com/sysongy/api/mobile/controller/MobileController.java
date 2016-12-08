@@ -2814,6 +2814,11 @@ public class MobileController {
 					//实付金额
 					amount =  mainObj.optString("amount");	
 					//账户正常使用
+					//获取折扣信息
+					List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+					if(gsGasPriceList==null && gsGasPriceList.size()==0){
+						throw new Exception("该气站暂无气品信息！");
+					}
 					if(driverService.queryDriverByPK(driverID).getUserStatus().equals("0")){
 						if (payType.equalsIgnoreCase("2")) { // 支付宝消费
 							//设置平台优惠金额
@@ -2856,7 +2861,6 @@ public class MobileController {
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 								}
 								//添加OrderGoods信息
-								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
 								SysOrderGoods orderGoods = new SysOrderGoods ();
 								if(gsGasPriceList!=null && gsGasPriceList.size()>0){
 									//原始单价
@@ -2932,7 +2936,6 @@ public class MobileController {
 									throw new Exception("订单生成错误：" + sysOrder.getOrderId());
 								}
 								//添加OrderGoods信息
-								List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
 								SysOrderGoods orderGoods = new SysOrderGoods ();
 								if(gsGasPriceList!=null && gsGasPriceList.size()>0){
 									//原始单价
@@ -5225,6 +5228,11 @@ public class MobileController {
 				gastationId = mainObj.optString("gastationId");
 				SysDriver driver = driverService.queryDriverByPK(token);
 				Gastation gas = gastationService.queryGastationByPK(gastationId);
+				//获取折扣信息
+				List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
+				if(gsGasPriceList==null && gsGasPriceList.size()==0){
+					throw new Exception("该气站暂无气品信息！");
+				}
 				Map<String, Object> data = new HashedMap();
 				if(payCode.equals(driver.getPayCode())){
 					String couponId = mainObj.optString("couponId");
@@ -5310,8 +5318,6 @@ public class MobileController {
 												throw new Exception("优惠券使用状态更新失败！");
 											}
 										}
-										//获取折扣信息
-										List<Map<String, Object>> gsGasPriceList = gsGasPriceService.queryDiscount(gastationId);
 										//添加OrderGoods信息
 										SysOrderGoods orderGoods = new SysOrderGoods ();
 										if(gsGasPriceList!=null && gsGasPriceList.size()>0){
