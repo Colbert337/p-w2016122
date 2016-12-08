@@ -455,7 +455,7 @@ public class CrmPortalController extends BaseContoller {
     		ms.setSuggest(info);
     	}else{
     		ms.setMobilePhone("");
-    		ms.setSuggest(title+":"+info);
+    		ms.setSuggest("【"+title+"】  "+info);
     	}
     	ms.setSuggestRes("来自APP");
     	int rs = mbUserSuggestServices.saveSuggester(ms);
