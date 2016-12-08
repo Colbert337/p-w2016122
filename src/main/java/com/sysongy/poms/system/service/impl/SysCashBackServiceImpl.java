@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.sysongy.poms.permi.service.SysUserAccountService;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,7 @@ import com.github.pagehelper.PageInfo;
 import com.sysongy.poms.order.model.SysOrder;
 import com.sysongy.poms.order.model.SysOrderDeal;
 import com.sysongy.poms.order.service.OrderDealService;
+import com.sysongy.poms.permi.service.SysUserAccountService;
 import com.sysongy.poms.system.dao.SysCashBackMapper;
 import com.sysongy.poms.system.model.SysCashBack;
 import com.sysongy.poms.system.service.SysCashBackService;
@@ -201,7 +200,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 				//大于等于0 则是当前日期大于等于start_date.
 				if((now.compareTo(start_date)>=0)&&(now.compareTo(end_date)<=0)){
 					//判断阈值是否在区间
-					if ("1".equals(order.getIs_first_charge())) {
+					if ("1".equals(order.getIs_first_charge())&&orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK)) {
 						eligible_list.add(cashback);
 					} else {
 						if (!StringUtils.isEmpty(cashback.getThreshold_min_value())
@@ -241,7 +240,7 @@ public class SysCashBackServiceImpl implements SysCashBackService {
 		BigDecimal back_money;
 		String cash_per_str = eligible_cashback.getCash_per();
 		BigDecimal cash_per = new BigDecimal(cash_per_str);  
-		if ("1".equals(order.getIs_first_charge())) {
+		if ("1".equals(order.getIs_first_charge())&&orderDealType.equalsIgnoreCase(GlobalConstant.OrderDealType.CHARGE_TO_DRIVER_FIRSTCHARGE_CASHBACK)) {
 			back_money=cash_per;
 			//首次充值后把状态置为空，以免其他返现时判断状态出错
 			order.setIs_first_charge(null);
