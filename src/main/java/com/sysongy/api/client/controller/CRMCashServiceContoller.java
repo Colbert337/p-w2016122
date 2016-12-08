@@ -836,6 +836,8 @@ public class CRMCashServiceContoller {
 
         //创建冲红订单
         record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
+        //设置冲红订单状态为成功
+        hedgeRecord.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
         int nRet = orderService.insert(hedgeRecord, originalOrder.getSysOrderGoods());
         if(nRet < 1){
             logger.error("订单冲红保存错误：" + originalOrder.getOrderId());

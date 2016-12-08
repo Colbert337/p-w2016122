@@ -28,7 +28,7 @@
 					<p>更新于 2016-09-22</p>
 				</div>
 				<div class="download-app-bd" onclick="statistics(${version})">
-					<a class="btn-app-primary logic-download-app" href="http://www.sysongy.net/workspace/apk/sysongy-website-release-1.1.0.apk"><span class="icon-android"></span>下载安卓</a>
+					<a class="btn-app-primary logic-download-app" href="http://www.sysongy.net/workspace/apk/sysongy-website-release-1.1.1.apk"><span class="icon-android"></span>下载安卓</a>
 				</div>
 			</div>
 		</div>
