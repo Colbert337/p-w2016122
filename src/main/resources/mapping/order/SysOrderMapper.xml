@@ -1381,7 +1381,19 @@ select * from sys_order where order_type='230' and  order_number=#{orderNumber,j
 		WHEN '1' THEN
 		(SELECT full_name FROM sys_driver WHERE sys_driver_id=(SELECT credit_account
 		FROM sys_order WHERE order_number = temp.order_number))
-		END)AS operator ,sys_order.order_status
+		END)AS channel ,
+		(CASE channel
+		WHEN ISNULL(channel) THEN 
+			(SELECT
+			sd.channel
+			FROM
+				sys_order AS sd
+			WHERE
+				sd.order_number = temp.order_number)
+		ELSE
+		channel
+		END) AS operator,		
+		sys_order.order_status
 		FROM
 		(
 		SELECT

@@ -2695,7 +2695,12 @@ public class MobileController {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum", map.get("orderNumber"));
 						reChargeMap.put("amount", map.get("cash"));
-						reChargeMap.put("operator", map.get("operator"));
+						Object obj =  map.get("channel");
+						if(obj==null){
+							reChargeMap.put("operator",map.get("operator"));
+						}else{
+							reChargeMap.put("operator",map.get("channel"));
+						}
 						reChargeMap.put("remark", map.get("remark"));
 						reChargeMap.put("type", map.get("type"));
 						String dateTime = "";
