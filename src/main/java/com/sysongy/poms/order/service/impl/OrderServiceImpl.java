@@ -135,6 +135,8 @@ public class OrderServiceImpl implements OrderService {
 				}
 			}
 		}
+		//设置冲红订单状态为成功
+		record.setOrderStatus(GlobalConstant.ORDER_STATUS.ORDER_SUCCESS);
 		return sysOrderMapper.insert(record);
 	}
 
