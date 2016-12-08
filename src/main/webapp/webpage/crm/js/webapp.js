@@ -133,13 +133,13 @@ $(function(){
     			form.submit(); //提交表单   
     		},
     		rules: {
-    			title: {
+                info: {
     				required: true
     			}
     		},
     		messages: {
-    			title: {
-    				required: "请填写手机型号。。"
+                info: {
+    				required: "请填写手机型号..."
     			}
     		}
     	});
