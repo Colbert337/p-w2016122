@@ -2695,7 +2695,12 @@ public class MobileController {
 						Map<String, Object> reChargeMap = new HashMap<>();
 						reChargeMap.put("orderNum", map.get("orderNumber"));
 						reChargeMap.put("amount", map.get("cash"));
-						reChargeMap.put("operator", map.get("operator"));
+						Object obj =  map.get("channel");
+						if(obj==null){
+							reChargeMap.put("operator",map.get("operator"));
+						}else{
+							reChargeMap.put("operator",map.get("channel"));
+						}
 						reChargeMap.put("remark", map.get("remark"));
 						reChargeMap.put("type", map.get("type"));
 						String dateTime = "";
@@ -5391,9 +5396,9 @@ public class MobileController {
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密
 		} catch (Exception e) {
 			result.setStatus(MobileReturn.STATUS_FAIL);
-			result.setMsg("订单支付失败！"+e.toString().split(": ")[1]);
+			result.setMsg("操作失败！"+e.getMessage());
 			resutObj = JSONObject.fromObject(result);
-			logger.error("订单支付失败： " + e);
+			logger.error("操作失败： " + e);
 			resutObj.remove("data");
 			resultStr = resutObj.toString();
 			resultStr = DESUtil.encode(keyStr, resultStr);// 参数加密

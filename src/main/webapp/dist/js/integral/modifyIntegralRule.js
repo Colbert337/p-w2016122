@@ -1,22 +1,5 @@
 var rewardTypeNum=0;
-function initNumber(){
-	$(".number").bind("input propertychange", function () {
-		if (isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) < 0){
-			$(this).val("");
-		}
-	});
-	//只能输入数字
-	$(".number").bind("keydown", function (e) {
-		var code = parseInt(e.keyCode);
-		if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
-			return true;
-		} else {
-			return false;
-		}
-	});
-}
 $(function(){
-	initNumber();
 	changeintegralType();
 	initIntegral();
 	changeRewardCycle();
@@ -41,10 +24,10 @@ var integral_reward_type = $("input[name='integral_reward_type']").val();
 					integral1  = "<input type='text' class='number' style='width:60px' maxlength='5'  size='5' name='rewardintegral' value='"+reward_integrals[i]+"' />";
 				}
 				var redioStr2 ="<input name="+reward_type+" type='radio' class='ace' value='2' onclick='changeRewardType(this)'>";
-				var integral2 ="<span class='lbl'>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' value='"+reward_factors[i]+"' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' maxlength='5' size='5' value='"+reward_maxs[i]+"' name='rewardmax' disabled='disabled'/>分</span>";
+				var integral2 ="<span class='lbl'></span>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' value='"+reward_factors[i]+"' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' maxlength='5' size='5' value='"+reward_maxs[i]+"' name='rewardmax' disabled='disabled'/>分";
 				if(reward_types[i]=='2'){
 					redioStr2 = "<input name="+reward_type+"  type='radio' class='ace' value='2'  checked='checked' onclick='changeRewardType(this)'>";
-					integral2 ="<span class='lbl'>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' value='"+reward_factors[i]+"'  />%<=<input type='text'  style='width:60px'  class='number' maxlength='5' size='5' value='"+reward_maxs[i]+"' name='rewardmax' />分</span>";
+					integral2 ="<span class='lbl'></span>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' value='"+reward_factors[i]+"'  />%<=<input type='text'  style='width:60px'  class='number' maxlength='5' size='5' value='"+reward_maxs[i]+"' name='rewardmax' />分";
 				}
 				$("#integralRule").append(
 					"<tr>"
@@ -60,7 +43,10 @@ var integral_reward_type = $("input[name='integral_reward_type']").val();
 					+"</tr>");
 			}
 		}
-		initNumber();
+		$(".number").keyup(function(){
+			if(isNaN($(this).val()))
+				document.execCommand('undo');
+		});
 	}
 }
 function changeRewardCycle(){
@@ -145,14 +131,17 @@ function addLadder(){
 		+"<td><input type='text' size='5' style='width:50px' maxlength='5' onchange='checkladdermoney(this)' class='number' name='ladder_before'/>元~<input type='text'  size='5' style='width:50px'  onchange='checkladdermoney(this)' maxlength='5' class='number' name='ladder_after'/>元</td>"
 		+"<td>"
 		+"<input name="+reward_type+"  type='radio' class='ace' value='1' checked='checked' onclick='changeRewardType(this)'>"
-		+"<span class='lbl'>&nbsp;"
+		+"<span class='lbl'>&nbsp;"+"</span>&nbsp;"
 		+"<input type='text' class='number' style='width:60px' maxlength='5'  size='5' name='rewardintegral' />"
-		+"</span>&nbsp;"
+
 		+"<input name="+reward_type+" type='radio' class='ace' value='2' onclick='changeRewardType(this)'>"
-		+"<span class='lbl'>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' size='5' maxlength='5' name='rewardmax' disabled='disabled'/>分</span>"
+		+"<span class='lbl'></span>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' size='5' maxlength='5' name='rewardmax' disabled='disabled'/>分"
 		+"</td>"
 		+"</tr>");
-	initNumber();
+	$(".number").keyup(function(){
+		if(isNaN($(this).val()))
+			document.execCommand('undo');
+	});
 }
 function delLadder(){
 	var flag = window.confirm("您确定要清空设置的积分阶梯和积分奖励吗？");
@@ -374,3 +363,7 @@ function resetform(){
 function returnpage(){
 	loadPage('#main', '../web/integralRule/integralRuleList');
 }
+$(".number").keyup(function(){
+	if(isNaN($(this).val()))
+		document.execCommand('undo');
+});
