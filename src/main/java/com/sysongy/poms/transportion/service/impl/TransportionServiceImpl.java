@@ -271,7 +271,7 @@ public class TransportionServiceImpl implements TransportionService {
 		BigDecimal deposit = tran.getDeposit();
 		deposit = BigDecimalArith.add(deposit, addCash);
 		transportion.setDeposit(deposit);
-		transportionMapper.updateByPrimaryKeySelective(transportion);
+		transportionMapper.updateDeposit(transportion);
 
 		//更新车队额度
 
