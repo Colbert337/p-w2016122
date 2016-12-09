@@ -95,7 +95,8 @@ function addLadder(){
 	//	initNumber();
 		//因为是append的数据，所以JQ木有用选择器选到，得重新加载jq的选择器来绑定事件。
 		$(".number").keyup(function(){
-			if(isNaN($(this).val()))
+			var reg = /\s/;
+			if(isNaN($(this).val()) || reg.exec($(this).val())!=null)
 				document.execCommand('undo');
 		});
 	}
@@ -338,7 +339,8 @@ function returnpage() {
 
 //给class绑定事件
 $(".number").keyup(function(){
-	if(isNaN($(this).val()))
+	var reg = /\s/;
+	if(isNaN($(this).val()) || reg.exec($(this).val())!=null)
 		document.execCommand('undo');
 });
 

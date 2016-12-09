@@ -44,7 +44,8 @@ var integral_reward_type = $("input[name='integral_reward_type']").val();
 			}
 		}
 		$(".number").keyup(function(){
-			if(isNaN($(this).val()))
+			var reg = /\s/;
+			if(isNaN($(this).val()) || reg.exec($(this).val())!=null)
 				document.execCommand('undo');
 		});
 	}
@@ -139,7 +140,8 @@ function addLadder(){
 		+"</td>"
 		+"</tr>");
 	$(".number").keyup(function(){
-		if(isNaN($(this).val()))
+		var reg = /\s/;
+		if(isNaN($(this).val()) || reg.exec($(this).val())!=null)
 			document.execCommand('undo');
 	});
 }
@@ -364,6 +366,7 @@ function returnpage(){
 	loadPage('#main', '../web/integralRule/integralRuleList');
 }
 $(".number").keyup(function(){
-	if(isNaN($(this).val()))
+	var reg = /\s/;
+	if(isNaN($(this).val()) || reg.exec($(this).val())!=null)
 		document.execCommand('undo');
 });
