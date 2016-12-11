@@ -75,28 +75,28 @@ function changeLimitType(){
 function addLadder(){
 	var row =document.getElementById("integralRule").rows.length;
 	if(row>4){
-	//	initNumber();
+		//	initNumber();
 		return;
 	}else{
 		rewardTypeNum++;
 		var reward_type='reward_type'+rewardTypeNum;
 		$("#integralRule").append(
-		"<tr>"
-		+"<td><input type='text' size='5' style='width:50px' maxlength='5' class='number' onchange='checkladdermoney(this)' name='ladder_before'/>元~<input type='text'  size='5' style='width:50px'  onchange='checkladdermoney(this)'  maxlength='5' class='number' name='ladder_after'/>元</td>"
-		+"<td>"
-		+"<input name="+reward_type+"  type='radio' class='ace' value='1' checked='checked' onclick='changeRewardType(this)'>"
-		+"<span class='lbl'>&nbsp;"+"</span>&nbsp;"
-		+"<input type='text' class='number' style='width:60px' maxlength='5'  size='5'  name='rewardintegral' />"
+			"<tr>"
+			+"<td><input type='text' size='5' style='width:50px' maxlength='5' class='number' onchange='checkladdermoney(this)' name='ladder_before'/>元~<input type='text'  size='5' style='width:50px'  onchange='checkladdermoney(this)'  maxlength='5' class='number' name='ladder_after'/>元</td>"
+			+"<td>"
+			+"<input name="+reward_type+"  type='radio' class='ace' value='1' checked='checked' onclick='changeRewardType(this)'>"
+			+"<span class='lbl'>&nbsp;"+"</span>&nbsp;"
+			+"<input type='text' class='number' style='width:60px' maxlength='5'  size='5'  name='rewardintegral' />"
 
-		+"&nbsp;&nbsp;<input name="+reward_type+" type='radio' class='ace' value='2' onclick='changeRewardType(this)'>"
-		+"<span class='lbl'></span>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' size='5' name='rewardmax' maxlength='5' disabled='disabled'/>分"
-		+"</td>"
-		+"</tr>");
-	//	initNumber();
+			+"&nbsp;&nbsp;<input name="+reward_type+" type='radio' class='ace' value='2' onclick='changeRewardType(this)'>"
+			+"<span class='lbl'></span>金额 * <input type='text' class='number' maxlength='5'  style='width:60px' size='5' name='rewardfactor' onchange='checkfactor(this)' disabled='disabled' />%<=<input type='text'  style='width:60px'  class='number' size='5' name='rewardmax' maxlength='5' disabled='disabled'/>分"
+			+"</td>"
+			+"</tr>");
+		//	initNumber();
 		//因为是append的数据，所以JQ木有用选择器选到，得重新加载jq的选择器来绑定事件。
 		$(".number").keyup(function(){
 			var reg = /\s/;
-			if(isNaN($(this).val()) || reg.exec($(this).val())!=null)
+			if(isNaN($(this).val())|| reg.exec($(this).val())!=null)
 				document.execCommand('undo');
 		});
 	}
@@ -212,6 +212,17 @@ $('#integralRuleform').bootstrapValidator({
 });
 
 function save(){
+	if($('select[name="integral_type"] option:selected').val()=='cz' || $('select[name="integral_type"] option:selected').val()=='xf')
+	{
+	var els =document.getElementsByClassName("number");
+	for (var i = 0, j = els.length; i < j; i++){
+		if(els[i].disabled!=1 && els[i].value==''){
+			bootbox.alert("请补充内容！");
+			return false;
+		}
+	}
+	}
+
 	/*手动验证表单，当是普通按钮时。*/
 	$('#integralRuleform').data('bootstrapValidator').validate();
 	if(!$('#integralRuleform').data('bootstrapValidator').isValid()){

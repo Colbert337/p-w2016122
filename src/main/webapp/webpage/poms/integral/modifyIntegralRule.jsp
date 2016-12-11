@@ -61,7 +61,7 @@
 							<div class="col-sm-4">
 								<label class="radio-inline">
 									<input name="limit"  type="radio" class="ace" value="1" <c:if test="${integralRule.limit_number!='不限'}"> checked="checked"</c:if>  onclick="changeLimitType()">
-									<span class="lbl"><input type="text" name="limit_number" maxlength="4" <c:if test="${integralRule.limit_number!='不限'}"> value="${integralRule.limit_number}" </c:if> <c:if test="${integralRule.limit_number=='不限'}">disabled='disabled'</c:if> class="number" style="width:60px" maxlength="4" size="4"/>&nbsp;次</span>
+									<span class="lbl"><input type="number" step="1" min="1" value="1"  name="limit_number" maxlength="4" <c:if test="${integralRule.limit_number!='不限'}"> value="${integralRule.limit_number}" </c:if> <c:if test="${integralRule.limit_number=='不限'}">disabled='disabled'</c:if> class="number" style="width:60px" maxlength="4" size="4"/>&nbsp;次</span>
 								</label>
 								<label class="radio-inline">
 									<input name="limit"  type="radio" class="ace" value="2" <c:if test="${integralRule.limit_number=='不限'}">checked="checked"</c:if> onclick="changeLimitType()">
