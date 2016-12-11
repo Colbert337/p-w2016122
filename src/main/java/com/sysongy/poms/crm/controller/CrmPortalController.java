@@ -813,7 +813,7 @@ public class CrmPortalController extends BaseContoller {
      */
     @RequestMapping("/question")
     public String question(HttpServletRequest request,@RequestParam String phoneType,ModelMap map) throws Exception{
-    	//http://localhost:8080/poms-web/portal/crm/help/question?phoneType=
+    
     	/*	小米		Xiaomi
     		三星		samsung
     		oppo	OPPO
