@@ -2,7 +2,7 @@
 /.settings/*
 /target/*
 *.iml
-poms-web.iml
+p-w.iml
 .project
 .classpath
 /target/
